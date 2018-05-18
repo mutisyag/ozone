@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  app:
+    build:
+      context: .
+      args:
+        REQUIREMENTS_FILE: requirements/local.txt
+    ports:
+      - "8000:8000"
+      - "8080:8080"
+
+  postgres:
+    ports:
+      - "5432:5432"
+
+  tusd:
+    ports:
+      - "1080:1080"
+
+  nginx:
+    entrypoint: /bin/true
+    ports:
+      - "80:80"
+
+volumes:
+  pg-data:
+    driver: local
+  pg-backups:
+    driver: local
+  tusd-uploads:
+    driver: local
+  static-files:
+    driver: local
+  envelope-files:
+    driver: local

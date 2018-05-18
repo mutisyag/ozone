@@ -1,3 +1,7 @@
+# project-related files
+config/setting/local.py
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,21 +12,28 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+env/
+bin
 build/
 develop-eggs/
 dist/
 downloads/
 eggs/
 .eggs/
+include/
 lib/
 lib64/
 parts/
 sdist/
+share/
 var/
 wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.DS_Store
+node_modules/
+.vscode
 MANIFEST
 
 # PyInstaller
@@ -45,6 +56,8 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
+test/
+tests/e2e/reports/
 .pytest_cache/
 
 # Translations
@@ -54,7 +67,6 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
-db.sqlite3
 
 # Flask stuff:
 instance/
@@ -81,12 +93,15 @@ celerybeat-schedule
 # SageMath parsed files
 *.sage.py
 
-# Environments
+# dotenv
 .env
+
+# virtualenv
 .venv
-env/
 venv/
 ENV/
+pyvenv.cfg
+env/
 env.bak/
 venv.bak/
 
@@ -102,3 +117,15 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Docker
+docker-compose.override.yml
+*.env
+
+celerybeat*
+
+# IDE
+.idea/
+
+# direnv
+.envrc
