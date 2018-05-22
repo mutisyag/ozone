@@ -24,7 +24,7 @@ At this stage, it should be possible for *Parties* to copy a previous submission
 
 In this state, data has been officially submitted by the *Party* and is awaiting action from the *Ozone Secretariat*.
 
-Data can be only submitted by its author (either the *Party* or, in the case of data received via mail, the *Ozone Secretariat*).
+Data can be only submitted by its author (either the *Party* or, in the case of data received via mail, the *Ozone Secretariat* on behalf of the Party).
 
 Once successfully Submitted, data cannot be edited anymore. However, a different revision may be created by copying an existing submission.
 

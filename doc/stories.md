@@ -1,8 +1,20 @@
-# [EPIC] User roles & workflow
+# Account management
+
+## As any user, I should be able to:
+
+- reset my password
+- receive a notification when my account is created, blocked, de-activated or when my password is reset by an administrator
+- authenticate using the same credentials to the ORS and to the Ozone Secretariat website
+
+
+
+WORK IN PROGRESS BELOW
+========================
+
+# Workflow
 
 As a user, I should be able to perform only the actions available for my assigned user role.
 Available roles:
-- anonymous (can only view public data) ?
 - reporter (party side)
 - ozone secretariat
 - admin
