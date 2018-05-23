@@ -31,7 +31,7 @@ Notes:
 * Differentiating among party administrators, focal points, primary contacts, secondary contacts, etc. is not necessary [^TODO2]
 
 
-[^TODO2]: That can be described as a secondary requirement (different permissions within the Party role: read-only / read-write / submit data / create additional users)
+[^TODO2]: That can be added as a secondary (low priority) requirement (different permissions within the Party role: read-only / read-write / submit data / create additional users)
 
 
 ## Public users

@@ -16,6 +16,10 @@ I can send notification and reminders
 - to a list of users, manually selected
 
 
+# Type of notifications:
+
+TODO
+
 # WIP
 
 - Submissions marked with the provisional flag are processed by the OS like any other submission

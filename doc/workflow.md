@@ -1,79 +1,222 @@
-Here is a complete overview of the process of *Data Submission* for a *Party*.
+# Overview of the *Data Submission* process
 
-We are going to discuss each possible state during the submission process, together with the possible transitions:
+The description below covers all possible states during the submission process, together with entry conditions, possible transitions and remarks:
 
-##1. Ongoing (data entry in progress)
+## Versioning of submissions
 
-This is the initial state in which data entry is in progress, but the current version of the data has not been submitted yet.
+The ORS shall implement versioning of reported data, meaning that whenever a set of data is passed to a different state or responsible, a copy is kept in the archive. We will refer to these copies as _submissions_ and the term should be understood as a version of the reported data at a particular point in time.
 
-There shall be at most one **Ongoing** (data entry in progress/submission of data) submission for a *Party*, for the same reporting year, at any given time. However, data for several different years could be in the **Ongoing** state at the same time.
+Each submission can be viewed and manipulated independently.
 
-At this stage, it should be possible for *Parties* to copy a previous submission in order to create a new one, as follows:
-- when creating the first submission for a certain year, allow them to copy data from *the final* submission of any previous year. *By default:* the most recent year which is smaller than the selected reporting year.
-- otherwise, allow them to pick any other intermediary submission (within the current year), but not ones for previous years. *By default:* most recent submission from current year. Copying Recalled submission shall be possible.
+Intermediary changes to a submission will be audited, but full copies of the data will not be kept while the submission remains in the same state of the workflow.
 
-####Possible transitions from this state:
-- to **Submitted**: from Ongoing, data can become Submitted by the *Party* once the Submit button is pressed. In this case, a new *Submission* (which can be thought of as a version/revision of data for the current year) is created. 
+A submission is always linked to a single:
 
-**N.B.:** The data for a given year can have multiple *Submissions* (versions):
-- The first *Submission* (version) for a given year is only created after the Submit button is pushed for the first time.
-- Each new Submit action for the same year will generate a new *Submission* (version of the data) that can be viewed and manipulated independently.
+- party
+- reporting period
+- and reporting obligation
 
+## Access rights
 
-##2. Submitted
+In general, a submission is only visible to _reporter_ users from the corresponding Party, to the _Secretariat_ users and to the _Administrators_.
+Reporters belonging to another Party are not allowed to see other's data.
 
-In this state, data has been officially submitted by the *Party* and is awaiting action from the *Ozone Secretariat*.
+## Attributes (flags) of submissions
 
-Data can be only submitted by its author (either the *Party* or, in the case of data received via mail, the *Ozone Secretariat* on behalf of the Party).
+During the data entry step and before submitting, several flags (checkboxes) are available to the reporter.
 
-Once successfully Submitted, data cannot be edited anymore. However, a different revision may be created by copying an existing submission.
+### Provisional flag
+The _provisional_ flag can be set or removed by the reporter while a Submission is ongoing.
+It signals that future changes (updated submissions for the same reporting period) are foreseen.
+A provisional submission is processed by the Ozone Secretariat like any other submission.
 
-####Possible transitions from this state:
-- to **Processing**: The *Ozone Secretariat* can change the state to **Processing**, so that parties know their data is being processed.
-- to **Recalled**: A *Party* may choose to recall a specific *Submission* if its data is deemed incorrect, signalling to the *Ozone Secretariat* that the *Party* needs to revise its data.
+TODO: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
 
+### Incomplete flag
+The _incomplete_ flag can be set or removed by the reporter while a Submission is ongoing.
+It signals that some data is not included in the submission and that the reporter is aware.
 
-##3. Recalled
+The flag can be set also automatically by the ORS, but only after getting the reporter's confirmation.
 
-This state signifies that the *Party* considers this *Submission* incorrect. The data is basically "frozen", **does not** return to **Ongoing**.
+TODO: how granular should it be? per-submission, per data form or per-substance?
 
-The data can be recalled only by the *Party* that submitted it.
+## Creating a submission
 
-The data in this *Submission* can be copied (and then modified) to create a new *Submission*.
+- _Reporters_ can create a new empty submission or can copy data from a previous submission, as follows:
 
-####Possible transitions from this state:
-- to **Submitted**: A **Recalled** submission can be re-instated only by its *Party*, thus changing back its state to **Submitted**.
+  - from _the final_ (latest _Valid_) submission of any previous period, *by default:* the most recent period which is smaller than the selected reporting period.
+  - from any other intermediary submission (within the current period), but not ones for previous periods. *By default:* most recent submission from current period. Copying _Valid_, _Not valid_ and _Recalled_ submissions shall be possible.
 
+- _Secretariat_ users can also impersonate reporters and create new submissions on their behalf (e.g. when data is received via email).
 
-##4. Processing
-*Entering this state requires Ozone Secretariat input.*
-
-The *Ozone Secretariat* can change a **Submitted** submission to **Processing**, so that the party knows their data is being processed.
-
-At this point, the *Ozone Secretariat* is doing the handling of the data.
-
-####Possible transitions from this state:
-- to **Recalled**: A *Party* can recall a *Submission* that is being **Processed** if it realizes there is an error.
-- to **Valid**: If the *Ozone Secretariat* considers the data correct, it will change it to **Valid**. 
-- to **Invalid**: Submitted data can be rejected by the *Ozone Secretariat* if it has problems. To correct the errors, the *Party* is required to create a new *Submission*, which can be based on the rejected data (with the necessary modifications).
+TODO: should any special flag be set in such cases?
 
 
+The initial state of a new submission is _Ongoing_.
 
-##5. Valid
-*Entering this state requires Ozone Secretariat input.*
+## List of workflow states
 
-Such a *Submission* is considered correct by the *Ozone Secretariat* - with possible assumptions and comments. It is up to the *Party* to copy the data, make changes and create a new Submission if any of the OS's comments require action.
+- Ongoing
+- Submitted
+- Processing
+- Recalled
+- Valid
+- Invalid
 
-Valid Submissions can be copied to create a new **Ongoing** one, without changing the initial Submission's state. 
+## State diagram
 
-####Possible transitions from this state:
-- to **Invalid**: An accepted *Submission* could become **Invalid** at a later date through the *Ozone Secreatariat*'s specific action if an error in the data becomes apparent.
+The diagram below has been generated using https://state-machine-cat.js.org and the source code from [this file](workflow.src).
+
+![State diagram](state_diagram.png "State diagram")
+
+## 1. ONGOING 
+
+This represents the initial state in which data entry by a reporter has been initiated, but is still in progress and has not yet been submitted.
+
+At any given time, there is only one _ongoing_ submission per Party and per reporting period.
+However, there can be multiple _ongoing_ submissions at the same time (for different reporting periods).
+
+### Entry and exit
+
+A submission can enter the _Ongoing_ state only when it is created and remains _ongoing_ until the reporter initiates the _submit_ action.
+
+From the _Ongoing_ state, the state of the submission can change to:
+
+- _Submitted_, at the request of the reporter (or the Secretariat acting on behalf of the reporter)
+
+### Actions by role
+
+#### Reporter
+
+While a submission is ongoing, _reporter_ users (from the corresponding Party) will be able to:
+
+- make changes to the data using the web forms
+- upload data in the form of an xls or xlsx file
+- delete the submission
+- _submit_, which triggers the transition to _Submitted_ and sends a notification to all users holding the Secretariat role
+
+TODO: should notifications be sent also to other reporters from the same party?
+
+TODO: should any user be able to submit or only the author?
+
+#### Secretariat
+
+_Secretariat_ users are able to view the submission details, but not make any changes.
+
+TODO: validate with Gerald
+TODO: maybe a better option is to prevent changes unless the submission was created by a Secretariat user?.
 
 
-##6. Invalid
-*Entering this state requires Ozone Secretariat input.*
+## 2. SUBMITTED
 
-Rejected submissions can be copied to create a new **Ongoing** *Submission* (revision), but the initial submission's final state will remain **Invalid**.
+In this state, data has been officially submitted by the reporter and is awaiting action from the Ozone Secretariat.
 
-####Possible transitions from this state:
-None.
+### Entry and exit
+
+Submission which are _Ongoing_ or _Recalled_ can enter the _Submitted_ state.
+From the _Submitted_ state, the state of the submission can change to:
+
+- _Processing_: The Secretariat can change the state to Processing, so that parties know their data is being processed;
+- _Valid_ or _Not valid_, at the Secretariat's request, as a shortcut (skipping the _Processing_ state);
+- _Recalled_: A reporter may choose to recall a specific submission if its data is deemed incorrect, signalling to the Ozone Secretariat that the Party shall revise the data.
+
+### Actions by role
+
+#### Reporter
+
+Once submitted, data cannot be edited anymore by reporters. However, a different submission may be created after _recalling_ the existing submission and optionally copying data from it.
+
+#### Secretariat
+
+The Secretariat can set the next state of the submission to either _Valid_ or _Not valid_, depending on their findings.
+
+TODO: link to the section where business rules and validation are described.
+
+TODO: What else can the secretariat do while a submission is Submitted?
+
+## 3. RECALLED
+
+This state signifies that the reporter considers this submission incorrect or incomplete. The submission is basically "frozen" (it does not return to to _Ongoing_ state and data is not physically erased, but rather archived for historical and audit purposes).
+
+As explained above, data in a recalled submission can be copied (and then modified) to create a new submission.
+
+### Entry and exit
+
+Submissions which are _Submitted_ or _Processing_ can enter the _Recalled_ state.
+From the _Recalled_ state, the state of the submission can change to:
+
+- _Submitted_: A recalled submission can be _re-instated_ by the reporter, thus changing back its state back to Submitted.
+
+TODO: When re-instating a submission, should the ORS allow changes to the data or simply it means re-submitting the same data which was recalled?
+
+### Actions by role
+
+#### Reporter
+
+A reporter can re-instante the submission or create a new Ongoing submission in case changes are necessary.
+
+#### Secretariat
+
+Secretariat users can only view a recalled submission.
+
+TODO: Ask Gerald about comments
+
+## 4. PROCESSING
+
+At this point, the Ozone Secretariat is doing the processing of the reported data and the reporter knows their data is being processed.
+
+### Entry and exit
+
+Only submissions which are _Submitted_ can enter the _Processing_ state.
+From _Processing_, the state of the submission can change to:
+
+- _Recalled_, at the reporter's request, or
+- either one of _Valid_ or _Not valid_, based the Secretariat's decision.
+
+### Actions by role
+
+Reporters can _Recall_ the submission.
+Secretariat users can _Validate_ or _Invalidate_ the submission.
+
+TODO: link to the section where business rules are described.
+
+
+## 5. VALID
+
+At this point, the Ozone Secretariat considers that the data is correct and potentially final (unless the provisional flag is set).
+
+Such a submission is considered correct by the Ozone Secretariat - with possible assumptions and comments. 
+
+TODO: Ask Gerald about *commenting* (adding remarks or further instructions) feature.
+
+It is up to the *Party* to create a new submission, copy the data, make changes and submit it, in case any of the OS's comments require action.
+
+### Entry and exit
+
+Submission found in _Submitted_, _Processing_ and _Not valid_ states can enter the _Valid_ state.
+Although _Valid_ is a final state, the Ozone Secretariat will be allowed to reconsider their initial decision and change the state to _Not valid_ when necessary (e.g. in case of a mistake) and viceversa.
+
+### Actions by role
+
+Reporters can only view the submission, but are allowed to create a new one in case revisioning the data is necessary.
+
+The secretariat can invalidate a valid submission.
+
+
+## 6. NOT VALID
+
+At this point, the Ozone Secretariat considers that the data is incorrect and requires changes.
+To correct the errors, the reporter is required to create a new submission, which can be based on the rejected data (with the necessary modifications).
+
+Rejected submissions can be copied to create a new _Ongoing_ submission, but the final state of the original submission will remain _Not valid_ and a copy of the data will be kept in the ORS.
+
+### Entry and exit
+
+Submission found in _Submitted_, _Processing_ and _Valid_ states can enter the _Not valid_ state.
+Although _Not valid_ is a final state, the Ozone Secretariat will be allowed to reconsider their initial decision and change the state to _Valid_ when necessary (e.g. in case of a mistake) and viceversa.
+
+### Actions by role
+
+Reporters can only view the submission, but are allowed to create a new one in case revisioning the data is necessary.
+
+The secretariat can validate a _Not valid_ submission.
