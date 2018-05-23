@@ -56,12 +56,12 @@ The initial state of a new submission is _Ongoing_.
 
 ## List of workflow states
 
-- Ongoing
-- Submitted
-- Processing
-- Recalled
-- Valid
-- Invalid
+- [Ongoing](#1-ongoing)
+- [Submitted](#2-submitted)
+- [Processing](#3-processing)
+- [Recalled](#4-recalled)
+- [Valid](#5-valid)
+- [Not valid](#6-not-valid)
 
 ## State diagram
 
@@ -69,7 +69,7 @@ The diagram below has been generated using https://state-machine-cat.js.org and 
 
 ![State diagram](state_diagram.png "State diagram")
 
-## 1. ONGOING 
+## 1. ONGOING
 
 This represents the initial state in which data entry by a reporter has been initiated, but is still in progress and has not yet been submitted.
 
