@@ -4,7 +4,7 @@ The description below covers all possible states during the submission process, 
 
 ## Versioning of submissions
 
-The ORS shall implement versioning of reported data, meaning that whenever a set of data is passed to a different state or responsible, a copy is kept in the archive. We will refer to these copies as _submissions_ and the term should be understood as a version of the reported data at a particular point in time.
+The ORS shall implement versioning of reported data, meaning that whenever a set of data is submitted, a copy of it is kept in the archive. We will refer to these copies as _submissions_ and the term should be understood as a version of the reported data at a particular point in time.
 
 Each submission can be viewed and manipulated independently.
 
@@ -44,8 +44,8 @@ TODO: how granular should it be? per-submission, per data form or per-substance?
 
 - _Reporters_ can create a new empty submission or can copy data from a previous submission, as follows:
 
-  - from _the final_ (latest _Valid_) submission of any previous period, *by default:* the most recent period which is smaller than the selected reporting period.
-  - from any other intermediary submission (within the current period), but not ones for previous periods. *By default:* most recent submission from current period. Copying _Valid_, _Not valid_ and _Recalled_ submissions shall be possible.
+  - from _the final_ (latest _Valid_) submission of any previous period - **if** no submission exists for the currently selected period. *By default*, the interface will show the most recent period which is smaller than the selected reporting period.
+  - from any other intermediary submission (within the current period), but not ones for previous periods - **if** submissions for the current period already exist. *By default*, the interface will show most recent submission from current period. Copying _Valid_, _Not valid_ and _Recalled_ submissions shall be possible.
 
 - _Secretariat_ users can also impersonate reporters and create new submissions on their behalf (e.g. when data is received via email).
 
@@ -74,7 +74,7 @@ The diagram below has been generated using https://state-machine-cat.js.org and 
 This represents the initial state in which data entry by a reporter has been initiated, but is still in progress and has not yet been submitted.
 
 At any given time, there is only one _ongoing_ submission per Party and per reporting period.
-However, there can be multiple _ongoing_ submissions at the same time (for different reporting periods).
+However, there can be multiple _ongoing_ submissions at the same time for a given Party (for different reporting periods).
 
 ### Entry and exit
 
@@ -153,7 +153,7 @@ TODO: When re-instating a submission, should the ORS allow changes to the data o
 
 #### Reporter
 
-A reporter can re-instante the submission or create a new Ongoing submission in case changes are necessary.
+A reporter can re-instate the submission or create a new Ongoing submission in case changes are necessary.
 
 #### Secretariat
 
