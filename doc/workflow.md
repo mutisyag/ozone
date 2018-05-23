@@ -30,7 +30,8 @@ The _provisional_ flag can be set or removed by the reporter while a Submission 
 It signals that future changes (updated submissions for the same reporting period) are foreseen.
 A provisional submission is processed by the Ozone Secretariat like any other submission.
 
-TODO: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
+TODO EDW: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
+TODO Gerald: to think and agree on more details about these notifications.
 
 ### Incomplete flag
 The _incomplete_ flag can be set or removed by the reporter while a Submission is ongoing.
@@ -38,7 +39,7 @@ It signals that some data is not included in the submission and that the reporte
 
 The flag can be set also automatically by the ORS, but only after getting the reporter's confirmation.
 
-TODO: how granular should it be? per-submission, per data form or per-substance?
+TODO Gerald: how granular should it be? per-submission, per data form or per-substance?
 
 ## Creating a submission
 
@@ -49,7 +50,7 @@ TODO: how granular should it be? per-submission, per data form or per-substance?
 
 - _Secretariat_ users can also impersonate reporters and create new submissions on their behalf (e.g. when data is received via email).
 
-TODO: should any special flag be set in such cases?
+TODO Gerald: should any special flag be set in such cases (when the secretariats reports on behalf of users)?
 
 
 The initial state of a new submission is _Ongoing_.
@@ -95,16 +96,16 @@ While a submission is ongoing, _reporter_ users (from the corresponding Party) w
 - delete the submission
 - _submit_, which triggers the transition to _Submitted_ and sends a notification to all users holding the Secretariat role
 
-TODO: should notifications be sent also to other reporters from the same party?
+TODO Gerald: should notifications be sent also to other (all) reporters from the same party?
 
-TODO: should any user be able to submit or only the author?
+TODO Gerald: should any colleague be able to submit or only the author?
 
 #### Secretariat
 
 _Secretariat_ users are able to view the submission details, but not make any changes.
 
-TODO: validate with Gerald
-TODO: maybe a better option is to prevent changes unless the submission was created by a Secretariat user?.
+TODO Gerald: validate that the Secretariat cannot make any changes unless they report on behalf of the Party (fully)
+TODO Gerald: maybe a better option is to prevent changes unless the submission was created by a Secretariat user?.
 
 
 ## 2. SUBMITTED
@@ -130,9 +131,9 @@ Once submitted, data cannot be edited anymore by reporters. However, a different
 
 The Secretariat can set the next state of the submission to either _Valid_ or _Not valid_, depending on their findings.
 
-TODO: link to the section where business rules and validation are described.
+TODO EDW: link to the section where business rules and validation are described.
 
-TODO: What else can the secretariat do while a submission is Submitted?
+TODO Gerald: Anything else that the secretariat can do while a submission is Submitted?
 
 ## 3. RECALLED
 
@@ -147,7 +148,7 @@ From the _Recalled_ state, the state of the submission can change to:
 
 - _Submitted_: A recalled submission can be _re-instated_ by the reporter, thus changing back its state back to Submitted.
 
-TODO: When re-instating a submission, should the ORS allow changes to the data or simply it means re-submitting the same data which was recalled?
+TODO Gerald: When re-instating a submission, should the ORS allow changes to the data or simply it means re-submitting the same data which was recalled?
 
 ### Actions by role
 
@@ -159,7 +160,7 @@ A reporter can re-instate the submission or create a new Ongoing submission in c
 
 Secretariat users can only view a recalled submission.
 
-TODO: Ask Gerald about comments
+TODO Gerald: Should you be able to insert comments/remarks, etc? If so, at which stages and how granular?
 
 ## 4. PROCESSING
 
@@ -178,7 +179,7 @@ From _Processing_, the state of the submission can change to:
 Reporters can _Recall_ the submission.
 Secretariat users can _Validate_ or _Invalidate_ the submission.
 
-TODO: link to the section where business rules are described.
+TODO EDW: link to the section where business rules are described.
 
 
 ## 5. VALID
@@ -187,7 +188,7 @@ At this point, the Ozone Secretariat considers that the data is correct and pote
 
 Such a submission is considered correct by the Ozone Secretariat - with possible assumptions and comments. 
 
-TODO: Ask Gerald about *commenting* (adding remarks or further instructions) feature.
+TODO Gerald: More details about *commenting* (adding remarks or further instructions) feature.
 
 It is up to the *Party* to create a new submission, copy the data, make changes and submit it, in case any of the OS's comments require action.
 
