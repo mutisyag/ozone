@@ -58,8 +58,8 @@ The initial state of a new submission is _Ongoing_.
 
 - [Ongoing](#1-ongoing)
 - [Submitted](#2-submitted)
-- [Processing](#3-processing)
-- [Recalled](#4-recalled)
+- [Recalled](#3-recalled)
+- [Processing](#4-processing)
 - [Valid](#5-valid)
 - [Not valid](#6-not-valid)
 
