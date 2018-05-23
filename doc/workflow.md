@@ -50,7 +50,7 @@ TODO Gerald: how granular should it be? per-submission, per data form or per-sub
 
 - _Secretariat_ users can also impersonate reporters and create new submissions on their behalf (e.g. when data is received via email).
 
-TODO Gerald: should any special flag be set in such cases (when the secretariats reports on behalf of users)?
+TODO Gerald: should any special flag be set in such cases (when the secretariats enters data on behalf of users)?
 
 
 The initial state of a new submission is _Ongoing_.
@@ -104,7 +104,7 @@ TODO Gerald: should any colleague be able to submit or only the author?
 
 _Secretariat_ users are able to view the submission details, but not make any changes.
 
-TODO Gerald: validate that the Secretariat cannot make any changes unless they report on behalf of the Party (fully)
+TODO Gerald: validate that the Secretariat cannot make any changes unless they enter data on behalf of the Party (fully)
 TODO Gerald: maybe a better option is to prevent changes unless the submission was created by a Secretariat user?.
 
 
