@@ -1,3 +1,5 @@
+
+
 # flag: provisional
 # flag: incomplete
 submitted,
@@ -8,10 +10,13 @@ valid,
 "not valid",
 
 # OS decision
-^choice;
+^choice,
 
-# start new revision
-# optional: copy data from previous revision
+# finished
+final;
+
+# start new submission
+# optional: copy data from a previous submission
 initial => ongoing: "start";
 
 ongoing => initial: delete;
@@ -22,6 +27,11 @@ ongoing => ongoing: "edit/upload";
 submitted => recalled: recall;
 
 recalled => submitted: reinstate;
+
+
+recalled => final;
+valid => final;
+"not valid" => final;
 submitted => processing;
 
 processing => recalled: recall;

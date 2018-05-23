@@ -67,7 +67,7 @@ The initial state of a new submission is _Ongoing_.
 
 The diagram below has been generated using https://state-machine-cat.js.org and the source code from [this file](workflow.src).
 
-![State diagram](state_diagram.png "State diagram")
+![State diagram](state_diagram.svg "State diagram")
 
 ## 1. ONGOING
 
