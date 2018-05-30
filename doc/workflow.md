@@ -1,68 +1,90 @@
 # Overview of the *Data Submission* process
 
-The description below covers all possible states during the submission process, together with entry conditions, possible transitions and remarks:
+The description below covers all possible states during the submission process, together with entry conditions, possible transitions and remarks.
+
+The ORS will be able to show at any time what the Party has submitted and what were the changes done by the Secretariat afterwards – including minor corrections.
+
+The process of computing derived data from a submission (by the Ozone Secretariat) is outside the scope of this document and will be detailed somewhere else. This process only starts once a submission has been Finalized.
+
+__TODO EDW - is the below section OK?__
+## Common terminology
+- ORS - the Ozone Reporting System
+- Submission - a collection of data, possibly having several versions, for a certain Party-Reporting Period-Reporting Obligation combination. Each such combination can have one submission, but several versions.
+- Version - a specific version of reported data. A version is tied to one specific submission (see below for details).
 
 ## Versioning of submissions
 
-The ORS shall implement versioning of reported data, meaning that whenever a set of data is submitted, a copy of it is kept in the archive. We will refer to these copies as _submissions_ and the term should be understood as a version of the reported data at a particular point in time.
+The ORS shall implement versioning of reported data, meaning that whenever a set of data is submitted, a copy of it is kept in the archive. We will refer to these copies as _versions_ and the term should be understood as a version of the reported data at a particular point in time.
 
-Each submission can be viewed and manipulated independently.
+Once a _version_ is created, __the data__ within it __never changes__. Any permanent change (done both by Party and Secretariat users) starting from the data within a _version_ will result in a __new version__.
 
-Intermediary changes to a submission will be audited, but full copies of the data will not be kept while the submission remains in the same state of the workflow.
+However, a specific version's state and flags can change - and these changes will be audited/recorded by the ORS.
 
-A submission is always linked to a single:
+Each version can be viewed and manipulated independently.
 
+Both _Party Reporter_ and _Secretariat Edit_ users can create new versions starting from existing data.
+
+A version is always linked to a single:
 - party
 - reporting period
 - and reporting obligation
+
 
 ## Access rights
 
 In general, a submission is only visible to _reporter_ users from the corresponding Party, to the _Secretariat_ users and to the _Administrators_.
 Reporters belonging to another Party are not allowed to see other's data.
 
+
 ## Attributes (flags) of submissions
 
-During the data entry step and before submitting, several flags (checkboxes) are available to the reporter.
-
 ### Provisional flag
-The _provisional_ flag can be set or removed by the reporter while a Submission is ongoing.
+The _provisional_ flag can be set or removed by the reporter while a Submission is _Ongoing_.
 It signals that future changes (updated submissions for the same reporting period) are foreseen.
-A provisional submission is processed by the Ozone Secretariat like any other submission.
+A provisional version is processed by the Ozone Secretariat like any other version. However, versions derived by the OS from provisional data will also have this flag automatically set - it can be manually unset when needed.
+
+This flag's granularity is per version.
 
 TODO EDW: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
 TODO Gerald: to think and agree on more details about these notifications.
 
 ### Incomplete flag
-The _incomplete_ flag can be set or removed by the reporter while a Submission is ongoing.
-It signals that some data is not included in the submission and that the reporter is aware.
+The _incomplete_ flag can be set or removed by the reporter at any time (TODO EDW - this probably requires a notification to the OS).
+It signals that some data (related to some of the substance groups) is not included in the submission and that the reporter is aware of that.
 
 The flag can be set also automatically by the ORS, but only after getting the reporter's confirmation.
 
-TODO Gerald: how granular should it be? per-submission, per data form or per-substance?
+This flag's granularity is per annex groups (if one substance is incomplete in a group, the whole group is incomplete).
 
-## Creating a submission
+### Invalid flag
+The _invalid_ flag can be set by the Secretariat during the Processing state.
+It signals that the data from the report cannot be used at all.
 
-- _Reporters_ can create a new empty submission or can copy data from a previous submission, as follows:
 
-  - from _the final_ (latest _Valid_) submission of any previous period - **if** no submission exists for the currently selected period. *By default*, the interface will show the most recent period which is smaller than the selected reporting period.
+## Creating a version
+
+- _Reporters_ can create a new empty version or can copy data from a previous version, as follows:
+
+  - from _the final_ (latest _Valid_) version of any previous period - **if** no submission exists for the currently selected period. *By default*, the interface will show the most recent period which is smaller than the selected reporting period.
   - from any other intermediary submission (within the current period), but not ones for previous periods - **if** submissions for the current period already exist. *By default*, the interface will show most recent submission from current period. Copying _Valid_, _Not valid_ and _Recalled_ submissions shall be possible.
 
-- _Secretariat_ users can also impersonate reporters and create new submissions on their behalf (e.g. when data is received via email).
-
-TODO Gerald: should any special flag be set in such cases (when the secretariats enters data on behalf of users)?
-
+- _Secretariat_ users can create new versions on the behalf of a Party (e.g. when data is received via email).
 
 The initial state of a new submission is _Ongoing_.
 
+Both Party users and the Secretariat will have the ability to add supporting files to a specific version (for example emails or PDF/Excel files containing the data) - these files should only be treated as supporting info, not as actual data.
+
+When the Secretariat picks a version from a Party to process, the source version is recorded/associated with the new version that the Secretariat creates.
+
+If the Secretariat enters new data from a Party's email submission, the absence of a first version from the Party side will indicate that the submission was not made through the ORS.
+
 ## List of workflow states
 
-- [Ongoing](#1-ongoing)
+- [Data Entry](#1-data entry)
 - [Submitted](#2-submitted)
 - [Recalled](#3-recalled)
 - [Processing](#4-processing)
-- [Valid](#5-valid)
-- [Not valid](#6-not-valid)
+- [Finalized](#5-finalized)
 
 ## State diagram
 
@@ -70,7 +92,7 @@ The diagram below has been generated using https://state-machine-cat.js.org and 
 
 ![State diagram](state_diagram.svg "State diagram")
 
-## 1. ONGOING
+## 1. DATA ENTRY
 
 This represents the initial state in which data entry by a reporter has been initiated, but is still in progress and has not yet been submitted.
 
@@ -182,20 +204,22 @@ Secretariat users can _Validate_ or _Invalidate_ the submission.
 TODO EDW: link to the section where business rules are described.
 
 
-## 5. VALID
+## 5. FINALIZED
 
-At this point, the Ozone Secretariat considers that the data is correct and potentially final (unless the provisional flag is set).
+At this point, the Ozone Secretariat considers that the data has been fully processed and is either valid or invalid.
 
-Such a submission is considered correct by the Ozone Secretariat - with possible assumptions and comments. 
+The Ozone Secreatariat considers such a version either:
+- correct (with possible assumptions and comments - in which case it is up to the *Party* to create a new version based on this data, if any of the OS's comments require action)
+- incorrect - in which case it is up to the *Party* to supply a new version
+
+The Ozone Secretariat will be allowed to reconsider their initial decision and change the _Valid_ flag to _Not valid_ when necessary (e.g. in case of a mistake) and viceversa.
 
 TODO Gerald: More details about *commenting* (adding remarks or further instructions) feature.
 
-It is up to the *Party* to create a new submission, copy the data, make changes and submit it, in case any of the OS's comments require action.
 
 ### Entry and exit
 
-Submission found in _Submitted_, _Processing_ and _Not valid_ states can enter the _Valid_ state.
-Although _Valid_ is a final state, the Ozone Secretariat will be allowed to reconsider their initial decision and change the state to _Not valid_ when necessary (e.g. in case of a mistake) and viceversa.
+Submission found in _Submitted_ and  _Processing_ states can enter the _Finalized_ state.
 
 ### Actions by role
 
@@ -203,21 +227,6 @@ Reporters can only view the submission, but are allowed to create a new one in c
 
 The secretariat can invalidate a valid submission.
 
+Since this is a final state, any further state change is not permitted.
 
-## 6. NOT VALID
-
-At this point, the Ozone Secretariat considers that the data is incorrect and requires changes.
-To correct the errors, the reporter is required to create a new submission, which can be based on the rejected data (with the necessary modifications).
-
-Rejected submissions can be copied to create a new _Ongoing_ submission, but the final state of the original submission will remain _Not valid_ and a copy of the data will be kept in the ORS.
-
-### Entry and exit
-
-Submission found in _Submitted_, _Processing_ and _Valid_ states can enter the _Not valid_ state.
-Although _Not valid_ is a final state, the Ozone Secretariat will be allowed to reconsider their initial decision and change the state to _Valid_ when necessary (e.g. in case of a mistake) and viceversa.
-
-### Actions by role
-
-Reporters can only view the submission, but are allowed to create a new one in case revisioning the data is necessary.
-
-The secretariat can validate a _Not valid_ submission.
+TODO: _Recalled_?
