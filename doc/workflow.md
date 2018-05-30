@@ -2,23 +2,22 @@
 
 The description below covers all possible states during the submission process, together with entry conditions, possible transitions and remarks.
 
-The ORS will be able to show at any time what the Party has submitted and what were the changes done by the Secretariat afterwards – including minor corrections.
+The ORS will be able to show at any time what the Party has submitted and what were the changes done by the Secretariat afterwards.
 
 The process of computing derived data from a submission (by the Ozone Secretariat) is outside the scope of this document and will be detailed somewhere else. This process only starts once a submission has been Finalized.
 
-__TODO EDW - is the below section OK?__
 ## Common terminology
 - ORS - the Ozone Reporting System
-- Submission - a collection of data, possibly having several versions, for a certain Party-Reporting Period-Reporting Obligation combination. Each such combination can have one submission, but several versions.
-- Version - a specific version of reported data. A version is tied to one specific submission (see below for details).
+- Version - a specific version of reported data, permanently saved within the ORS, for a specific Party-Reporting Period-Reporting Obligation combination. Any such combination can have several versions, which can be created by both Secretariat and Party users.
+
 
 ## Versioning of submissions
 
 The ORS shall implement versioning of reported data, meaning that whenever a set of data is submitted, a copy of it is kept in the archive. We will refer to these copies as _versions_ and the term should be understood as a version of the reported data at a particular point in time.
 
-Once a _version_ is created, __the data__ within it __never changes__. Any permanent change (done both by Party and Secretariat users) starting from the data within a _version_ will result in a __new version__.
+Once a _version_ is created, __the data__ within it __never changes__. Any permanent change (done both by Party and Secretariat users) to the data within a _version_ will result in a __new version__, no matter how small the data change is.
 
-However, a specific version's state and flags can change - and these changes will be audited/recorded by the ORS.
+However, a specific version's state and flags can change, which will __not__ trigger the creation of a new version. These changes will be audited/recorded by the ORS.
 
 Each version can be viewed and manipulated independently.
 
@@ -32,33 +31,40 @@ A version is always linked to a single:
 
 ## Access rights
 
-In general, a submission is only visible to _reporter_ users from the corresponding Party, to the _Secretariat_ users and to the _Administrators_.
-Reporters belonging to another Party are not allowed to see other's data.
+In general, a submission is visible (read-only) to all users from its corresponding _Party_, to all _Secretariat_ users and to the _Administrators_.
+Users belonging to a Party are not allowed to see other Parties' data.
 
 
 ## Attributes (flags) of submissions
 
-### Provisional flag
-The _provisional_ flag can be set or removed by the reporter while a Submission is _Ongoing_.
-It signals that future changes (updated submissions for the same reporting period) are foreseen.
-A provisional version is processed by the Ozone Secretariat like any other version. However, versions derived by the OS from provisional data will also have this flag automatically set - it can be manually unset when needed.
+The flags below are used to describe the completeness and correctness of a specific version and are intrinsically tied to it. Thus, changing any of these flags does not create a new version.
 
-This flag's granularity is per version.
+### Provisional flag
+The _provisional_ flag can be set or removed by the reporter while a Submission is in _Data Entry_.
+It signals that future changes (updated submissions for the same reporting period) are foreseen.
+A version marked as _provisional_ is processed by the Ozone Secretariat like any other version. However, versions derived by the OS from provisional data will also have this flag automatically set - it can be manually unset when needed.
+
+This flag's granularity is per version, it covers all data contained within it.
 
 TODO EDW: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
 TODO Gerald: to think and agree on more details about these notifications.
 
 ### Incomplete flag
 The _incomplete_ flag can be set or removed by the reporter at any time (TODO EDW - this probably requires a notification to the OS).
-It signals that some data (related to some of the substance groups) is not included in the submission and that the reporter is aware of that.
+It signals that data related to some of the substance groups is not included in the submission and that the reporter is aware of that.
 
-The flag can be set also automatically by the ORS, but only after getting the reporter's confirmation.
-
-This flag's granularity is per annex groups (if one substance is incomplete in a group, the whole group is incomplete).
+This flag's granularity is per annex groups (if even one substance is incomplete in a group, the whole group is incomplete).
 
 ### Invalid flag
-The _invalid_ flag can be set by the Secretariat during the Processing state.
-It signals that the data from the report cannot be used at all.
+The _invalid_ flag can be set by the Secretariat during the _Processing_ or _Finalized_ states.
+It signals that the data in the current version is flawed and cannot be used at all.
+
+### Valid flag
+The _valid_ flag can be set by the Secretariat during the _Processing_ or _Finalized_ states.
+It signals that the data in the current version is considered correct (with possible comments/question which might elicit the creation of a new version).
+
+__NB__: the _Valid_ and _Invalid_ flags are mutually exclusive, they cannot be set at the same time. However, it is possible that none of them are set at a given time - which basically means that the data in a version has not been fully processed by the Secretariat yet.
+Changing the state of a version from _Processing_ to _Finalized_ should only be possible when either one of these two flags is specifically set. If none are set, the ORS will ask the _Secretariat_ user for a resolution.
 
 
 ## Creating a version
@@ -221,12 +227,10 @@ TODO Gerald: More details about *commenting* (adding remarks or further instruct
 
 Submission found in _Submitted_ and  _Processing_ states can enter the _Finalized_ state.
 
+From _Finalized_, the state of the version can only change to _Recalled_, through specific action of the _Party_. Any other state change is not permitted.
+
 ### Actions by role
 
 Reporters can only view the submission, but are allowed to create a new one in case revisioning the data is necessary.
 
 The secretariat can invalidate a valid submission.
-
-Since this is a final state, any further state change is not permitted.
-
-TODO: _Recalled_?
