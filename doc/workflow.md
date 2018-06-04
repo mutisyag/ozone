@@ -158,21 +158,22 @@ In this state, data has been officially submitted by the reporter and is awaitin
 
 ### Entry and exit
 
-Submission which are in  _Data Entry_ or _Recalled_ can enter the _Submitted_ state.
+Versions which are in  _Data Entry_ or _Recalled_ can enter the _Submitted_ state.
 From the _Submitted_ state, the state of the version can change to:
 
 - _Processing_: The Secretariat can change the state to Processing, so that parties know their data is being processed;
-- _Recalled_: A reporter may choose to recall a specific submission if its data is deemed incorrect, signalling to the Ozone Secretariat that the Party shall revise the data.
+- _Recalled_: A reporter may choose to recall a specific version if its data is deemed incorrect, signalling to the Ozone Secretariat that the Party shall revise the data.
 
 ### Actions by role
 
 #### Reporter
 
-Once submitted, data cannot be edited anymore by reporters. However, a different submission may be created after _recalling_ the existing submission and optionally copying data from it.
+Once submitted, data cannot be edited anymore by reporters, they can just view it.
+However, a new version may be created, optionally copying data from the current one.
 
 #### Secretariat
 
-The Secretariat can set the next state of the submission to _Processing_.
+The Secretariat can set the next state of the version to _Processing_.
 
 TODO EDW: link to the section where business rules and validation are described.
 
@@ -181,9 +182,9 @@ TODO Gerald: Anything else that the secretariat can do while a submission is Sub
 
 ## 3. RECALLED
 
-This state signifies that the reporter considers this submission incorrect or incomplete. The submission is basically "frozen" (it does not return to to _Data Entry_ state and data is not physically erased, but rather archived for historical and audit purposes).
+This state signifies that the reporter considers this version incorrect or incomplete. The version is basically "frozen" and moved aside. (it does not return to to _Data Entry_ state and data is not physically erased - all information needed to re-instate the version at a later date is kept, including its original state).
 
-As explained above, data in a recalled submission can be copied (and then modified) to create a new submission.
+As explained above, data in a recalled version can be copied (and then modified) to create a new version.
 
 When a version is _Recalled_, the Secretariat should be notified. OS should also be notified about any _Data Entry_ version created by the OS with its data based on the _Recalled_ one.
 
@@ -193,19 +194,19 @@ _Recalling_ a version also means that the "current" version has to change. If th
 
 Submissions which are _Submitted_, _Processing_ or _Finalized_ can enter the _Recalled_ state, as long as they are not considered _superseded_, in which case the transition would be pointless.
 
-From the _Recalled_ state, the state of the submission can change to:
+From the _Recalled_ state, the state of the version can change to:
 
-- the state it had prior to being _Recalled_ (one of _Submitted_, _Processing_ or _Finalized_): A recalled submission can be _re-instated_ by the reporter, thus changing its state back to what it was before. In this case, any other version becomes _superseded_ and the re-instated one becomes "current".
+- the state it had prior to being _Recalled_ (one of _Submitted_, _Processing_ or _Finalized_): A recalled version can be _re-instated_ by the reporter, thus changing its state back to what it was before. In this case, any other version becomes _superseded_ and the re-instated one becomes "current".
 
 ### Actions by role
 
 #### Reporter
 
-A reporter can re-instate the submission or create a new version (in _Data Entry_) in case changes are necessary.
+A reporter can re-instate the version or create a new version (in _Data Entry_) in case changes are necessary.
 
 #### Secretariat
 
-Secretariat users can only view a recalled submission.
+Secretariat users can only view a recalled version.
 
 TODO Gerald: Should you be able to insert comments/remarks, etc? If so, at which stages and how granular?
 
@@ -226,8 +227,8 @@ From _Processing_, the state of the version can change to:
 
 ### Actions by role
 
-Reporters can _Recall_ the submission.
-Secretariat users can _Finalize_ the submission.
+Reporters can view the version or _Recall_ it.
+Secretariat users can _Finalize_ the version.
 
 TODO EDW: link to the section where business rules are described.
 
@@ -253,7 +254,7 @@ From _Finalized_, the state of the version can only change to _Recalled_, throug
 
 ### Actions by role
 
-Reporters can view the submission, _recall_ it or may create a new one in case revisioning the data is necessary.
+Reporters can view the version or _Recall_ it. They may create a new one in case changes to the data are necessary.
 
-The secretariat can invalidate a valid submission.
+The secretariat can invalidate a valid version and vice-versa.
 
