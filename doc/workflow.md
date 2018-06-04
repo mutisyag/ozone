@@ -56,11 +56,11 @@ It signals that data related to some of the substance groups is not included in 
 This flag's granularity is per annex groups (if even one substance is incomplete in a group, the whole group is incomplete).
 
 ### Invalid flag
-The _invalid_ flag can be set by the Secretariat during the _Processing_ or _Finalized_ states.
+The _invalid_ flag can be set by the Secretariat during _Processing_ or at the transition between the _Processing_ or _Finalized_ states.
 It signals that the data in the current version is flawed and cannot be used at all.
 
 ### Valid flag
-The _valid_ flag can be set by the Secretariat during the _Processing_ or _Finalized_ states.
+The _valid_ flag can be set by the Secretariat during _Processing_ or at the transition between the _Processing_ or _Finalized_ states.
 It signals that the data in the current version is considered correct (with possible comments/question which might elicit the creation of a new version).
 
 __NB__: the _Valid_ and _Invalid_ flags are mutually exclusive, they cannot be set at the same time. However, it is possible that none of them are set at a given time - which basically means that the data in a version has not been fully processed by the Secretariat yet.
@@ -69,7 +69,7 @@ Changing the state of a version from _Processing_ to _Finalized_ should only be 
 ### Superseded flag
 This automatically-computed flag marks those versions that have become superseded (i.e. are not considered current/relevant anymore). It is set by the ORS only, and its calculation is performed whenever a version enters the _Submitted_ state (either from _Data Entry_ or from user _reinstating_ a _Recalled_ one).
 
-If a newer version of data is _Submitted_ (either by Reporter or the Secretariat), the current is automatically flagged as _Superseded_ - the flag change will be performed by the ORS.
+If a newer version of data is _Submitted_ (either by Reporter or the Secretariat), the current one (if it exists) is automatically flagged as _Superseded_ - the flag change will be performed by the ORS. The newer version becomes current.
 
 At any point in time, at most one already-submitted version is not _superseded_ - and is considered current (per Party + Reporting Period + Obligation).
 
@@ -134,7 +134,7 @@ From the _Data Entry_ state, the state of the submission can change to:
 
 #### Reporter
 
-While a submission is ongoing, _Party Reporter_ users (from the corresponding Party) will be able to:
+While a submission is in _Data Entry_, _Party Reporter_ users (from the corresponding Party) will be able to:
 
 - make changes to the data using the web forms
 - upload data in the form of an xls or xlsx file, that can be automatically converted to ORS data
@@ -158,7 +158,7 @@ In this state, data has been officially submitted by the reporter and is awaitin
 
 ### Entry and exit
 
-Submission which are _Ongoing_ or _Recalled_ can enter the _Submitted_ state.
+Submission which are in  _Data Entry_ or _Recalled_ can enter the _Submitted_ state.
 From the _Submitted_ state, the state of the version can change to:
 
 - _Processing_: The Secretariat can change the state to Processing, so that parties know their data is being processed;
@@ -180,7 +180,7 @@ TODO Gerald: Anything else that the secretariat can do while a submission is Sub
 
 ## 3. RECALLED
 
-This state signifies that the reporter considers this submission incorrect or incomplete. The submission is basically "frozen" (it does not return to to _Ongoing_ state and data is not physically erased, but rather archived for historical and audit purposes).
+This state signifies that the reporter considers this submission incorrect or incomplete. The submission is basically "frozen" (it does not return to to _Data Entry_ state and data is not physically erased, but rather archived for historical and audit purposes).
 
 As explained above, data in a recalled submission can be copied (and then modified) to create a new submission.
 
@@ -199,7 +199,7 @@ TODO EDW: is this OK? Sure it can be simplified.
 
 #### Reporter
 
-A reporter can re-instate the submission or create a new Ongoing submission in case changes are necessary.
+A reporter can re-instate the submission or create a new version (in _Data Entry_) in case changes are necessary.
 
 #### Secretariat
 
