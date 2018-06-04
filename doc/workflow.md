@@ -178,6 +178,7 @@ TODO EDW: link to the section where business rules and validation are described.
 
 TODO Gerald: Anything else that the secretariat can do while a submission is Submitted?
 
+
 ## 3. RECALLED
 
 This state signifies that the reporter considers this submission incorrect or incomplete. The submission is basically "frozen" (it does not return to to _Data Entry_ state and data is not physically erased, but rather archived for historical and audit purposes).
@@ -186,14 +187,15 @@ As explained above, data in a recalled submission can be copied (and then modifi
 
 When a version is _Recalled_, the Secretariat should be notified. OS should also be notified about any _Data Entry_ version created by the OS with its data based on the _Recalled_ one.
 
+_Recalling_ a version also means that the "current" version has to change. If there are any versions flagged as _Superseded_, the most recent one will be un-flagged and will become the current version.
+
 ### Entry and exit
 
 Submissions which are _Submitted_, _Processing_ or _Finalized_ can enter the _Recalled_ state, as long as they are not considered _superseded_, in which case the transition would be pointless.
+
 From the _Recalled_ state, the state of the submission can change to:
 
-- the previous state it was in (one of _Submitted_, _Processing_ or _Finalized_): A recalled submission can be _re-instated_ by the reporter, thus changing its state back to what it was before.
-
-TODO EDW: is this OK? Sure it can be simplified.
+- the state it had prior to being _Recalled_ (one of _Submitted_, _Processing_ or _Finalized_): A recalled submission can be _re-instated_ by the reporter, thus changing its state back to what it was before. In this case, any other version becomes _superseded_ and the re-instated one becomes "current".
 
 ### Actions by role
 
@@ -251,7 +253,7 @@ From _Finalized_, the state of the version can only change to _Recalled_, throug
 
 ### Actions by role
 
-Reporters can only view the submission, but are allowed to create a new one in case revisioning the data is necessary.
+Reporters can view the submission, _recall_ it or may create a new one in case revisioning the data is necessary.
 
 The secretariat can invalidate a valid submission.
 
