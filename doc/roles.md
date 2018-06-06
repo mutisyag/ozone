@@ -42,7 +42,7 @@ Notes:
 
 ## Party Read-Only
 
-Contacts belong to one party and can **view** all data reported by their party. It's similar to the _Auditor_ role, but restricted to a single Party.
+Contacts belong to one party and can **view** all data reported by their party. It's similar to the _Secretariat Read-Only_ role, but restricted to a single Party.
 
 ## Public users
 

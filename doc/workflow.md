@@ -101,7 +101,7 @@ If the Secretariat enters new data from a Party's email submission, the absence 
 
 ## List of workflow states
 
-- [Data Entry](#1-data entry)
+- [Data Entry](#1-data-entry)
 - [Submitted](#2-submitted)
 - [Recalled](#3-recalled)
 - [Processing](#4-processing)
@@ -127,7 +127,7 @@ A submission can enter the _Data Entry_ state only when it is created and remain
 From the _Data Entry_ state, the state of the submission can change to:
 
 - _Submitted_, at the request of the reporter 
-- _Finalized_ (with _valid_ flag set), if the data has been submitted the Secretariat acting upon written request of the Party (the state is fast-tracked as no processing is needed)
+- _Finalized_ (with _valid_ flag set), if the version has been submitted by the Secretariat acting upon written request of the Party. In this case, as the OS made the version, the state is fast-tracked to _Finalized_ as no processing is needed.
 
 
 ### Actions by role
@@ -186,9 +186,9 @@ This state signifies that the reporter considers this version incorrect or incom
 
 As explained above, data in a recalled version can be copied (and then modified) to create a new version.
 
-When a version is _Recalled_, the Secretariat should be notified. OS should also be notified about any _Data Entry_ version created by the OS with its data based on the _Recalled_ one.
+When a version is _Recalled_, the Secretariat should be notified. If there is a _Data Entry_ version (created by the Secretariat) based on the Party version that is now _Recalled_, OS should be notified that they are modifying possibly obsolete data.
 
-_Recalling_ a version also means that the "current" version has to change. If there are any versions flagged as _Superseded_, the most recent one will be un-flagged and will become the current version.
+_Recalling_ a version also means that the "current" version has to change. If there are any versions flagged as _Superseded_, the most recent one will be un-flagged and will become the current version. If there are no _Superseded_ versions to make current, there will be no current version.
 
 ### Entry and exit
 
