@@ -93,7 +93,7 @@ At any point in time, at most one already-submitted version is not _superseded_ 
 
 Secretariat shall be warned by the ORS when a version in _Processing_ has become _superseded_.
 
-A version in _Data Entry_ cannot become superseded.
+A version in _Data Entry_ can only become superseded when the Secretariat must continue tha data entry started by the Reporter, thus creating a new version.
 
 It is preferred for this to be a flag instead of a state, as it makes the the state transitions and their logic much easier to follow.
 
