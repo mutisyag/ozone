@@ -1,48 +1,39 @@
-
+# start new submission
+# optional: copy data from a previous submission
+initial,
 
 # flag: provisional
 # flag: incomplete
-submitted,
+Submitted,
 
-# assumptions/comments
-valid,
-# remarks/comments
-"not valid",
+# flag: valid | invalid
+Finalized,
 
-# OS decision
+# go to previous state
 ^choice,
 
 # finished
 final;
 
-# start new submission
-# optional: copy data from a previous submission
-initial => ongoing: "start";
+initial => "Data Entry": "start";
 
-ongoing => initial: delete;
-ongoing => submitted: "submit/reinstate";
-ongoing => ongoing: "edit/upload";
+"Data Entry" => initial: delete;
+"Data Entry" => Submitted: "submit";
+"Data Entry" => "Finalized": "fast-track processing";
 
 
-submitted => recalled: recall;
+Submitted => Processing;
+Submitted => Recalled: recall;
 
-recalled => submitted: reinstate;
+^choice => Submitted: reinstate;
+^choice => Processing: reinstate;
+^choice => Finalized: reinstate;
 
+Processing => Recalled: recall;
+Processing  => Finalized: process;
 
-recalled => final;
-valid => final;
-"not valid" => final;
-submitted => processing;
+Recalled => ^choice: reinstate;
 
-processing => recalled: recall;
-submitted => ^choice;
-processing  => ^choice;
-
-
-^choice => valid: "validate";
-^choice => "not valid": reject;
-
-valid => "not valid": reject;
-"not valid" => "valid": validate;
-
+Recalled => final;
+Finalized => final;
 
