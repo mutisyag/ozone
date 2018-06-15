@@ -11,16 +11,17 @@ Can create new users and assign permissions.
 Ozone Secretariat staff can:
 
 * enter data on behalf of a Party that submits its information by means other than the online reporting tool (e.g. via e-mail)
-* save the document(s) used for the submission as files associated with that specific version of the submission.
-* create new versions based on existing data versions submitted by a Party or by the Secretariat (on behalf of a Party that does not report directly through the ORS).
-* change flags/status information on existing data versions submitted by a Party or by the Secretariat.
-* maintain all tables and other types of data under the Secretariat’s control - permissions granted "per-table" [^TODO1]
-* act (e.g. change a submission's state) during the reporting workflow (detailed in the [workflow specifications](workflow.md))
+* attach document(s) received from a Party to the corresponding version of the submission.
+* create new versions based on existing versions and make changes to the submitted data under instructions from a Party.
+* change flags on existing versions.
+* maintain all tables under the Secretariat’s control - permissions granted "per-table" [^TODO1]
+* review and process submissions
+* change a submission's state as detailed in the [workflow specifications](workflow.md)
 * send notifications and reminders to Parties
 
 [^TODO1]: More details needed, it's possible to define more specialized roles, easier to assign and manage. That will be known once the data model is finished.
 
-## Secretariat Read-Only 
+## Secretariat Read-Only
 
 These Ozone Secretariat users can **view** all data reported by any party, but can't make any changes.
 
@@ -30,7 +31,7 @@ Party Reporters can:
 * report data for ANY reporting cycle for which they have not previously submitted data (up to the current reporting period).
 * add associated documents to a submission - these will be saved as files, tied to the specific version to which they were added.
 * revise previous submissions - this will always create a new version of the revised submission (Note: revisions of data for baseline periods require a special approval).
-* act (e.g. change a submission's state) during the reporting workflow (detailed in the [workflow specifications](workflow.md)).
+* change a submission's state as detailed in the [workflow specifications](workflow.md)
 
 Notes:
 
@@ -42,7 +43,7 @@ Notes:
 
 ## Party Read-Only
 
-Contacts belong to one party and can **view** all data reported by their party. It's similar to the _Secretariat Read-Only_ role, but restricted to a single Party.
+These users belong to one party and can **view** all data reported by their party. It's similar to the _Secretariat Read-Only_ role, but restricted to a single Party.
 
 ## Public users
 

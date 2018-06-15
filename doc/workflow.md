@@ -2,14 +2,18 @@
 
 The description below covers all possible states during the submission process, together with entry conditions, possible transitions and remarks.
 
-The ORS will be able to show at any time what the Party has submitted and what were the changes done by the Secretariat afterwards.
+The ORS will be able to show at any time the original data as submitted by a Party and what were the changes done by the Secretariat afterwards.
 
 The process of computing derived data from a submission (by the Ozone Secretariat) is outside the scope of this document and will be detailed somewhere else. This process only starts once a submission has been Finalized.
 
 ## Common terminology
+
 - ORS - the Ozone Reporting System
 - Version - a specific version of reported data, permanently saved within the ORS, for a specific Party-Reporting Period-Reporting Obligation combination. Any such combination can have several versions, which can be created by both Secretariat and Party users.
 
+## Roles involved
+
+The roles involved in the workflow are _Party Reporter_ and _Secretariat Edit_. For simplicity, we will call them _Reporter_ and _Secretariat_ in this document.
 
 ## Versioning of submissions
 
@@ -31,7 +35,8 @@ A version is always linked to a single:
 
 ## Access rights
 
-In general, a submission is visible (read-only) to all users from its corresponding _Party_, to all _Secretariat_ users and to the _Administrators_.
+A submission is visible to all users from its corresponding _Party_, to all _Secretariat_ users and to the _Administrators_.
+The read/only and read/write permissions depend on the current state of the submission/version, as detailed for each state below.
 Users belonging to a Party are not allowed to see other Parties' data.
 
 
@@ -40,6 +45,7 @@ Users belonging to a Party are not allowed to see other Parties' data.
 The flags below are used to describe the completeness and correctness of a specific version and are intrinsically tied to it. Thus, changing any of these flags does not create a new version.
 
 ### Provisional flag
+
 The _provisional_ flag can be set or removed by the reporter while a Submission is in _Data Entry_.
 It signals that future changes (updated submissions for the same reporting period) are foreseen.
 A version marked as _provisional_ is processed by the Ozone Secretariat like any other version. However, versions derived by the OS from provisional data will also have this flag automatically set - it can be manually unset when needed.
@@ -47,19 +53,30 @@ A version marked as _provisional_ is processed by the Ozone Secretariat like any
 This flag's granularity is per version, it covers all data contained within it.
 
 TODO EDW: It is likely that some additional reminders/notifications are going to be sent to the reporter at certain times during the reporting cycle (e.g. close to deadlines).
+
 TODO Gerald: to think and agree on more details about these notifications.
 
 ### Incomplete flag
-The _incomplete_ flag can be set or removed by the reporter at any time (TODO EDW - this probably requires a notification to the OS).
+
+The _incomplete_ flag can be set or removed by the reporter at any time.
+
+TODO EDW - this probably requires a notification to the OS if the flag is changed after Submit.
+
 It signals that data related to some of the substance groups is not included in the submission and that the reporter is aware of that.
 
 This flag's granularity is per annex groups (if even one substance is incomplete in a group, the whole group is incomplete).
 
+The ORS can set this flag automatically when data for an entire form is not reported, but should be, according to the questionnaire. In this case a notification is displayed to the reporter before submitting.
+
+Derived/Calculated data will not be evaluated for incomplete annex groups.
+
 ### Invalid flag
+
 The _invalid_ flag can be set by the Secretariat during _Processing_ or at the transition between the _Processing_ or _Finalized_ states.
 It signals that the data in the current version is flawed and cannot be used at all.
 
 ### Valid flag
+
 The _valid_ flag can be set by the Secretariat during _Processing_ or at the transition between the _Processing_ or _Finalized_ states.
 It signals that the data in the current version is considered correct (with possible comments/question which might elicit the creation of a new version).
 
@@ -67,7 +84,8 @@ __NB__: the _Valid_ and _Invalid_ flags are mutually exclusive, they cannot be s
 Changing the state of a version from _Processing_ to _Finalized_ should only be possible when either one of these two flags is specifically set. If none are set, the ORS will ask the _Secretariat_ user for a resolution.
 
 ### Superseded flag
-This automatically-computed flag marks those versions that have become superseded (i.e. are not considered current/relevant anymore). It is set by the ORS only, and its calculation is performed whenever a version enters the _Submitted_ state (either from _Data Entry_ or from user _reinstating_ a _Recalled_ one).
+
+This automatically-computed flag marks those versions that have become superseded (i.e. are not current/relevant anymore). It is set by the ORS only, and its calculation is performed whenever a version enters the _Submitted_ state (either from _Data Entry_ or from user _reinstating_ a _Recalled_ one).
 
 If a newer version of data is _Submitted_ (either by Reporter or the Secretariat), the current one (if it exists) is automatically flagged as _Superseded_ - the flag change will be performed by the ORS. The newer version becomes current.
 
@@ -79,7 +97,7 @@ A version in _Data Entry_ cannot become superseded.
 
 It is preferred for this to be a flag instead of a state, as it makes the the state transitions and their logic much easier to follow.
 
-# TODO EDW - maybe we should have a _current_ flag instead?
+TODO EDW - maybe we should have a _current_ flag instead?
 
 
 ## Creating a version
@@ -95,7 +113,7 @@ The initial state of any new version is _Data Entry_.
 
 Both Party users and the Secretariat will have the ability to add supporting files to a specific version (for example emails or PDF/Excel files containing the data) - these files should only be treated as supporting info, not as actual data.
 
-When the Secretariat picks a version from a Party to process, the source version is recorded/associated with the new version that the Secretariat creates.
+When the Secretariat picks a submitted version from a Party for further processing, the new version that the Secretariat creates is linked to the version submitted by the Reporter.
 
 If the Secretariat enters new data from a Party's email submission, the absence of a first version from the Party side will indicate that the submission was not made through the ORS.
 
@@ -127,7 +145,7 @@ A submission can enter the _Data Entry_ state only when it is created and remain
 From the _Data Entry_ state, the state of the submission can change to:
 
 - _Submitted_, at the request of the reporter 
-- _Finalized_ (with _valid_ flag set), if the version has been submitted by the Secretariat acting upon written request of the Party. In this case, as the OS made the version, the state is fast-tracked to _Finalized_ as no processing is needed.
+- _Finalized_ (with _valid_ flag set), if the version has been created by the Secretariat acting upon the written request of the Party. In this case, as the OS made the version, the state is fast-tracked to _Finalized_ as no processing is needed.
 
 
 ### Actions by role
@@ -140,25 +158,25 @@ While a submission is in _Data Entry_, _Party Reporter_ users (from the correspo
 - upload data in the form of an xls or xlsx file, that can be automatically converted to ORS data
 - upload supporting files (PDF, Excel, emails) that will be attached to this specific version
 - delete the submission
-- _Submit_, which triggers the transition to _Submitted_ and sends a notification to all users holding the Secretariat role _and_ all reporters from the corresponding Party.
-__NB:__ Any _Party Reporter_ user from the corresponding Party should be able to press the _Submit_ button.
+- _Submit_, which triggers the transition to _Submitted_ and sends a notification to all users holding the Secretariat role _and_ all reporters from the same Party.
+
+__NB:__ Any _Party Reporter_ user from the corresponding Party is able to initiate the _Submit_ action.
 
 #### Secretariat
 
-In case the version was initiated by a _Party Reporter_ user:
-- _Secretariat_ users are able to view the submission details, but not make any changes.
+In case the version was created by a _Party Reporter_ user, _Secretariat_ users are able to view the submission details, but not make any changes. In case the Secretariat is mandated (via a supporting document) to continue the data entry started by the Party, they can create a new revision based on the current one.
 
-In case the version was initiated by a _Secretariat Edit_ user:
+In case the version was created by a _Secretariat Edit_ user:
 - all permissions listed above for _Reporters_ (make changes, upload, delete, submit etc) apply to _Secretariat_ users too, as this is data entered upon written request of the Party.
-
 
 ## 2. SUBMITTED
 
 In this state, data has been officially submitted by the reporter and is awaiting action from the Ozone Secretariat.
+When a version enters the Submitted state, the ORS may automatically set the _Superseded_ flag on a previously "current" version (see also the [Superseded flag paragraph](#superseded-flag)).
 
 ### Entry and exit
 
-Versions which are in  _Data Entry_ or _Recalled_ can enter the _Submitted_ state.
+Versions which are in _Data Entry_ or _Recalled_ can enter the _Submitted_ state.
 From the _Submitted_ state, the state of the version can change to:
 
 - _Processing_: The Secretariat can change the state to Processing, so that parties know their data is being processed;
@@ -170,33 +188,31 @@ From the _Submitted_ state, the state of the version can change to:
 
 Once submitted, data cannot be edited anymore by reporters, they can just view it.
 However, a new version may be created, optionally copying data from the current one.
+Reporters can also upload supporting documents to a submitted version.
 
 #### Secretariat
 
-The Secretariat can set the next state of the version to _Processing_.
+The Secretariat can set flags and can change the next state of the submitted version to _Processing_.
 
 TODO EDW: link to the section where business rules and validation are described.
-
-TODO Gerald: Anything else that the secretariat can do while a submission is Submitted?
 
 
 ## 3. RECALLED
 
-This state signifies that the reporter considers this version incorrect or incomplete. The version is basically "frozen" and moved aside. (it does not return to to _Data Entry_ state and data is not physically erased - all information needed to re-instate the version at a later date is kept, including its original state).
+This state signifies that the reporter considers the version incorrect or incomplete. The version is basically "frozen" and moved aside. (it does not return to to _Data Entry_ state and data is not physically erased - all information needed to re-instate the version at a later date is kept, including the previous workflow state).
 
-As explained above, data in a recalled version can be copied (and then modified) to create a new version.
+As explained above, data in a recalled version can be copied into a new version (and then modified).
 
-When a version is _Recalled_, the Secretariat should be notified. If there is a _Data Entry_ version (created by the Secretariat) based on the Party version that is now _Recalled_, OS should be notified that they are modifying possibly obsolete data.
+When a version becomes _Recalled_, the Secretariat is notified. If there is a _Data Entry_ version (created by the Secretariat) based on the Party version that is being recalled, OS is notified that they might be modifying obsolete data.
 
-_Recalling_ a version also means that the "current" version has to change. If there are any versions flagged as _Superseded_, the most recent one will be un-flagged and will become the current version. If there are no _Superseded_ versions to make current, there will be no current version.
+_Recalling_ a version also means that the "current" version changes. If there are any versions flagged as _Superseded_, the most recent one will be un-flagged and will become the current version. If there are no _Superseded_ versions to make current, there will be no current version.
 
 ### Entry and exit
 
-Submissions which are _Submitted_, _Processing_ or _Finalized_ can enter the _Recalled_ state, as long as they are not considered _superseded_, in which case the transition would be pointless.
+Submissions which are _Submitted_, _Processing_ or _Finalized_ can enter the _Recalled_ state, as long as they are not _superseded_. In other words, only the _current_ version can be recalled, while older revisions cannot be recalled if newer revisions in any state other than _Recalled_ are present in the system.
 
-From the _Recalled_ state, the state of the version can change to:
+A recalled version can be _re-instated_ by the reporter, thus changing its state back to what it was before (one of _Submitted_, _Processing_ or _Finalized_). In this case, the previously _current_ version becomes _superseded_ and the re-instated one becomes _current_. In case there is a version in _Data Entry_, it is still possible to reinstate the recalled version, but users will see a warning before.
 
-- the state it had prior to being _Recalled_ (one of _Submitted_, _Processing_ or _Finalized_): A recalled version can be _re-instated_ by the reporter, thus changing its state back to what it was before. In this case, any other version becomes _superseded_ and the re-instated one becomes "current".
 
 ### Actions by role
 
@@ -207,8 +223,6 @@ A reporter can re-instate the version or create a new version (in _Data Entry_) 
 #### Secretariat
 
 Secretariat users can only view a recalled version.
-
-TODO Gerald: Should you be able to insert comments/remarks, etc? If so, at which stages and how granular?
 
 
 ## 4. PROCESSING
@@ -248,7 +262,8 @@ TODO Gerald: More details about *commenting* (adding remarks or further instruct
 
 ### Entry and exit
 
-Submission found in _Submitted_ and  _Processing_ states can enter the _Finalized_ state.
+Submission found in _Processing_ states can enter the _Finalized_ state.
+_Data Entry_ versions created by the Secretariat (acting upon the written request of the Party) can go directly to _Finalized_ (fast-track) if no processing is necessary.
 
 From _Finalized_, the state of the version can only change to _Recalled_, through specific action of the _Party_. Any other state change is not permitted.
 
@@ -256,5 +271,5 @@ From _Finalized_, the state of the version can only change to _Recalled_, throug
 
 Reporters can view the version or _Recall_ it. They may create a new one in case changes to the data are necessary.
 
-The secretariat can invalidate a valid version and vice-versa.
+Like for any state, both Reporters and Secretariat can set and unset flags.
 
