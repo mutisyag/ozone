@@ -11,9 +11,9 @@ Can create new users and assign permissions.
 Ozone Secretariat staff can:
 
 * enter data on behalf of a Party that submits its information by means other than the online reporting tool (e.g. via e-mail)
-* attach document(s) received from a Party to the corresponding version of the submission.
-* create new versions based on existing versions and make changes to the submitted data under instructions from a Party.
-* change flags on existing versions.
+* attach document(s) received from a Party to the corresponding version of the submission
+* create new versions based on existing versions to make further changes to the submitted data under instructions from a Party
+* change flags on existing versions
 * maintain all tables under the Secretariat’s control - permissions granted "per-table" [^TODO1]
 * review and process submissions
 * change a submission's state as detailed in the [workflow specifications](workflow.md)
