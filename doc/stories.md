@@ -8,11 +8,11 @@ It should be possible to add & edit data through at least:
 
 Reporting is done via the data forms listed below (Article 7 and non-Article 7).
 
-# Article 7 reporting
+## Article 7 reporting
 
 Although there are different forms for reporting different types of Article 7 data, all of it is reported together, in a single submission. Moreover, the submission contains raw data for some non-Article 7 reporting, as described [below](#reports-already-included-in-article-7-data-forms)
 
-## List of data entry forms
+### List of data entry forms
 
 TODO: link each form to the document describing in more detail the structure of the forms.
 
@@ -23,23 +23,23 @@ TODO: link each form to the document describing in more detail the structure of 
 4. Destruction
 5. Trade with non-parties
 6. HFC-23 emissions
-7. Data form 7 (TODO)
-8. Data form 8 (TODO)
 
-# Non-Article 7 reporting
+## Non-Article 7 reporting
 
 Non-article 7 data is reported as individual submissions. There are two types of submissions: one as data-entry forms and the second as documents (narratives).
 
 TODO: more refining needed to define the final list of reporting obligations.
 
-## List of data entry forms
+### List of data entry forms
 
 * Transfer or addition of production or consumption [Letters, ProdTransfers, ProdTransfersLetters]
 * Quantities and uses of controlled substances produced and consumed for essential uses other than laboratory and analytical uses [EssenNom, EssenExemp, EssenUse]
 * Quantities and uses of methyl bromide produced, imported and exported for critical uses
 * Process agent uses [ProcAgentUsesDateReported, ProcAgentUsesReported]
+* Consumption (imports) under the exemption for high-ambient-temperature parties (data form 7)
+* Production under the exemption for high-ambient-temperature parties (data form 8)
 
-## List of narrative reports (documents/letters)
+### List of narrative reports (documents/letters)
 
 * Licensing information
     * Establishment and operation of licensing system
@@ -69,13 +69,17 @@ TODO: the fourth category is listed above as "Quantities and uses of methyl brom
 
 TODO: Each bullet in its on submission?
 
-## Reports already included in Article 7 data forms
+### Reports already included in Article 7 data forms
 
 * Controlled substance produced for laboratory and analytical uses
+TODO: sometimes party report these separately and not include them in the Article 7 reports?
+
 * Trade with non-parties (Article 4)
 * Essential use exemptions: laboratory and analytical uses [LabUses]
 
-# Processing
+TODO: are these a separate report as well or always included in Article 7?
+
+# Process and manage the submitted data
 
 TODO: describe the use-cases related to processing:
 
