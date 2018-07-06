@@ -11,7 +11,7 @@
 
 ### 1.2 Parties to complete these forms
 
-* Transfer of production: any parties; both parties involved 
+* Transfer of production: any party; both parties involved 
 * Transfer of consumption: non-article 5 parties; both parties involved
 
 ### 1.3 Frequency of reporting
@@ -77,13 +77,18 @@ Reporting data for this will comprise several forms:
 
 Each nomination will be reported by the Ozone Secretariat in a form comprised of the following fields:
 
+* Country - multiple choice field; mandatory; references a Countries table
+* Period for use - multiple choice field; mandatory; references a Periods table
+* Substance - multiple choice field; mandatory; references a Substances table
+* Submission date - date field; mandatory
+* Submission Amount - numerical; metric tonnes; mandatory; must be > 0
 
 #### 2.4.2 Essential Use Exemptions
 
 Each exemption will be reported by the Ozone Secretariat in a form comprised of the following fields:
 
 * Country - multiple choice field; mandatory; references a Countries table
-* Period for Exemption - mutiple choice field; mandatory; references a Periods table
+* Period for use - multiple choice field; mandatory; references a Periods table
 * Substance - multiple choice field; mandatory; references a Substances table
 * Approval Decision - multiple choice field; mandatory; references a Decisions table
 * Quantity approved by the TEAP - numerical; not mandatory; metric tonnes
@@ -99,11 +104,30 @@ Notes:
 
 Each essential use will be reported by the Party (or by the Ozone Secretariat) in a form comprised of the following fields:
 
+* Country - multiple choice field; mandatory; references a Countries table
+* Period of use - mutiple choice field; mandatory; references a Periods table
+* Substance - multiple choice field; mandatory; references a Substances table
+* Import Country - multiple choice field; mandatory; references a Countries table; can be empty
+* Amount exempted for period - numerical; metric tonnes; not mandatory
+* Amount produced - numerical; metric tonnes; not mandatory
+* Country imported from - multiple choice field; not mandatory; references a Countries table
+* Amount imported - numerical; metric tonnes; not mandatory; to be filled for each `Country imported from` field
+* Available for use in current period - numerical; metric tonnes; not mandatory
+* Used for essential use - numerical; metric tonnes; mandatory; can be 0
+* Exported - numerical; metric tonnes; not mandatory
+* Destroyed - numerical; metric tonnes; not mandatory
+* Remark - free-form text field; not mandatory
+
+Notes:
+* see section 3.2 in the handbook
 
 ### 2.5 Processing by the secretariat
 
+TBD
 
 ### 2.6 Questions
+
+* Maybe `Available for use in current period` should be mandatory; but a few rows of existing data do not have it
 
 
 
@@ -151,6 +175,8 @@ Each actual critical use will be reported by the Party (or by the Secretariat) i
 
 ### 3.5 Processing by the secretariat
 
+TBD
+
 ### 3.6 Questions
 
 * Is there any restriction to be placed on the `Categories of permitted critical uses` field?
@@ -166,7 +192,7 @@ Each actual critical use will be reported by the Party (or by the Secretariat) i
 
 ### 4.2 Parties to complete these forms
 
-Any party
+All parties
 
 ### 4.3 Frequency of reporting
 
@@ -187,6 +213,8 @@ Each process agent use will be reported by the Party (or by the Secretariat) in 
 
 ### 4.5 Processing by the secretariat
 
+TBD
+
 ### 4.6 Questions
 
 * do not understand the meaning of the `Process Number` field in ProcAgentUsesReported
@@ -203,23 +231,34 @@ Each process agent use will be reported by the Party (or by the Secretariat) in 
 
 ### 5.2 Parties to complete these forms
 
-Parties listed in Decision XXVIII/2 (Algeria, Bahrain, Benin, Burkina Faso, Central African Republic, Chad, Côte d'Ivoire, Djibouti, Egypt, Eritrea,
-Gambia, Ghana, Guinea, Guinea-Bissau, Iran (Islamic Republic of), Iraq, Jordan, Kuwait, Libya, Mali,
-Mauritania, Niger, Nigeria, Oman, Pakistan, Qatar, Saudi Arabia, Senegal, Sudan, Syrian Arab Republic, Togo,
-Tunisia, Turkmenistan, United Arab Emirates).
+Parties listed in Decision XXVIII/2 (Algeria, Bahrain, Benin, Burkina Faso, Central African Republic, Chad, Côte d'Ivoire, Djibouti, Egypt, Eritrea, Gambia, Ghana, Guinea, Guinea-Bissau, Iran (Islamic Republic of), Iraq, Jordan, Kuwait, Libya, Mali, Mauritania, Niger, Nigeria, Oman, Pakistan, Qatar, Saudi Arabia, Senegal, Sudan, Syrian Arab Republic, Togo, Tunisia, Turkmenistan, United Arab Emirates).
 
 ### 5.3 Frequency of reporting
 
-Reported the year following an exemption
+Reported yearly, as long as exemptions are in place.
 
 ### 5.4 Structure
+
+Parties need to report the exemption-related data (for the below exemption subsectors) separately.
+
+Proposed format:
+* Country - multiple choice field; mandatory; references a Countries table
+* Period for consumption - mutiple choice field; mandatory; references a Periods table
+* Susbsector - mutiple choice field; mandatory; one of the exemption subsectors below
+* Substance - multiple choice field; mandatory; references a Substances table
+* Consumption Amount - numerical; metric tonnes; mandatory
+* Remark - free-form text field; not mandatory
 
 Exemption subsectors:
 (a) Multi-split air conditioners (commercial and residential)
 (b) Split ducted air conditioners (commercial and residential)
 (c) Ducted commercial packaged (self-contained) air-conditioners
 
+*N.B.*: Any transfer of consumption allowances for this high-ambient-temperature exemption will be reported to the Secretariat under Article 7 of the Protocol by each of the parties concerned.
+
 ### 5.5 Processing by the secretariat
+
+TBD
 
 
 
@@ -229,20 +268,29 @@ Exemption subsectors:
 
 ### 6.2 Parties to complete these forms
 
-Parties listed in Decision XXVIII/2 (Algeria, Bahrain, Benin, Burkina Faso, Central African Republic, Chad, Côte d'Ivoire, Djibouti, Egypt, Eritrea,
-Gambia, Ghana, Guinea, Guinea-Bissau, Iran (Islamic Republic of), Iraq, Jordan, Kuwait, Libya, Mali,
-Mauritania, Niger, Nigeria, Oman, Pakistan, Qatar, Saudi Arabia, Senegal, Sudan, Syrian Arab Republic, Togo,
-Tunisia, Turkmenistan, United Arab Emirates).
+Parties listed in Decision XXVIII/2 (Algeria, Bahrain, Benin, Burkina Faso, Central African Republic, Chad, Côte d'Ivoire, Djibouti, Egypt, Eritrea, Gambia, Ghana, Guinea, Guinea-Bissau, Iran (Islamic Republic of), Iraq, Jordan, Kuwait, Libya, Mali, Mauritania, Niger, Nigeria,Oman, Pakistan, Qatar, Saudi Arabia, Senegal, Sudan, Syrian Arab Republic, Togo, Tunisia, Turkmenistan, United Arab Emirates).
 
 ### 6.3 Frequency of reporting
 
-Reported the year following an exemption
+Reported yearly, as long as exemptions are in place.
 
 ### 6.4 Structure
+
+Parties need to report the exemption-related data (for the below exemption subsectors) separately.
+
+Proposed format:
+* Country - multiple choice field; mandatory; references a Countries table
+* Period for production - mutiple choice field; mandatory; references a Periods table
+* Susbsector - mutiple choice field; mandatory; one of the exemption subsectors below
+* Substance - multiple choice field; mandatory; references a Substances table
+* Consumption Amount - numerical; metric tonnes; mandatory
+* Remark - free-form text field; not mandatory
 
 Exemption subsectors:
 (a) Multi-split air conditioners (commercial and residential)
 (b) Split ducted air conditioners (commercial and residential)
 (c) Ducted commercial packaged (self-contained) air-conditioners
+
+*N.B.*: Any transfer of production allowances for this high-ambient-temperature exemption will be reported to the Secretariat under Article 7 of the Protocol by each of the parties concerned.
 
 ### 6.5 Processing by the secretariat
