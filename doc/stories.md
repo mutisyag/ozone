@@ -56,9 +56,9 @@ TODO: more refining needed to define the final list of reporting obligations.
 	* Decision Ex.I/4, paragraph 2
 	* Decision Ex.I/4, paragraphs 3 and 6
 
-TODO: the fourth category is listed above as "Quantities and uses of methyl bromide".
+TODO: the fourth category is listed above (List of data entry forms) as "Quantities and uses of methyl bromide".
 
-* Requests for changes in reported baseline data 
+* Requests for changes in reported baseline data
 
 * Other information
 	* Information relevant to international halon bank management (Decision V/15)
