@@ -1,0 +1,51 @@
+# Development environment settings for direnv [ https://direnv.net/ ]
+
+export DJANGO_SETTINGS_MODULE=config.settings.local
+export SECRET_KEY='secret-key'
+export ALLOWED_HOSTS=*
+export DEBUG=yes
+
+export POSTGRES_HOST=localhost
+export POSTGRES_DB=ozone
+export POSTGRES_USER=ozone
+export POSTGRES_PASSWORD=ozone
+
+export USE_DOCKER=yes
+
+#export DJANGO_LOG_LEVEL=DEBUG
+export DJANGO_COLLECT_STATIC=yes
+export DJANGO_MIGRATE=yes
+export DJANGO_LOAD_ROD_FIXTURES=yes
+
+# Used to build fully qualified URLs for file download
+export OZONE_DOMAIN=<LAN IP>:8000
+
+# Accepts yes/no
+export OZONE_USE_TLS=no
+
+export OZONE_HOST=localhost
+export OZONE_GUNICORN_PORT=8000
+
+# Can be a list of comma-separated <host>:<port> pairs
+export CORS_ORIGIN_WHITELIST=<LAN IP>:8000
+
+# export OZONE_TZ=UTC
+
+export TUSD_UPLOADS_DIR=$HOME/src/tusd-bin/data
+
+# Comma-separated list, e.g. xml,tif
+export ALLOWED_UPLOADS_ARCHIVE_EXTENSIONS=zip
+export ALLOWED_UPLOADS_EXTENSIONS=xml
+export ALLOWED_UPLOADS_CONVERTIBLE_EXTENSIONS=xls,ods
+
+# Used by tusd on hooks URL
+export API_VERSION=0.1
+
+# Used for frontend configuration
+export HOST=0.0.0.0
+export BACKEND_HOST=<LAN_IP>
+export BACKEND_PORT=8000
+export TUSD_HOST=<LAN_IP>
+export TUSD_PORT=1080
+
+export TOKEN_EXPIRE_INTERVAL=30

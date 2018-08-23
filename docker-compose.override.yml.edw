@@ -1,0 +1,20 @@
+version: '2'
+
+services:
+  postgres:
+    labels:
+      io.rancher.scheduler.affinity:host_label_ne: frontend=yes
+
+  app:
+    image: eaudeweb/ozone:latest
+    labels:
+      io.rancher.container.pull_image: always
+      io.rancher.scheduler.affinity:host_label_ne: frontend=yes
+
+  tusd:
+    labels:
+      io.rancher.scheduler.affinity:host_label_ne: frontend=yes
+
+  nginx:
+    labels:
+      io.rancher.scheduler.affinity:host_label_ne: frontend=yes
