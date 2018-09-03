@@ -123,6 +123,7 @@ class Party(models.Model):
 def current_year():
     return datetime.date.today().year
 
+
 def max_value_current_year(value):
     """
     Wrapping the MaxValueValidator in a function avoids a new migration
@@ -130,11 +131,15 @@ def max_value_current_year(value):
     """
     return MaxValueValidator(current_year())(value)
 
+
 class PartyHistory(models.Model):
     """
     Detailed Party information, per year (population, flags etc) can change
     based on the specified period.
     """
+
+    class Meta:
+        unique_together = ('party', 'year')
 
     party = models.ForeignKey(
         Party, related_name='history', on_delete=models.PROTECT
@@ -171,6 +176,10 @@ class ReportingPeriod(models.Model):
     There is definitely a need to support non-standard reporting periods.
     """
 
+    # TODO: how will these be used in the event of one-time reports?
+    # The system could create a custom period based on the date(s) the transfer
+    # took place, but that seems a bit overkill.
+
     # This will usually be '2017', '2018' etc; most periods (but not all!)
     # are mapped to calendar years
     name = models.CharField(max_length=64, unique=True)
@@ -183,26 +192,35 @@ class ReportingPeriod(models.Model):
 
     # we are always working with 'closed' reporting periods
     # TODO: is above assumption really true? what about one-time reports?
-    # I guess those could have no reporting period
     end_date = models.DateField()
 
     description = models.CharField(max_length=256, blank=True)
 
 
 class Obligation(models.Model):
-    '''
-    TODO: add desc
-    `data_forms` will point to all data forms filled in for
-    this obligation.
-    '''
+    """
+    TODO: analysis!
+    """
+
     name = models.CharField(max_length=256, unique=True)
     # TODO: obligation-party mapping!
+
+    is_continuous = models.BooleanField(default=True)
 
 
 class Submission(models.Model):
     """
     One specific data submission (version!)
     """
+
+    class Meta:
+        # TODO: this constraint may not be true in the corner case of
+        # obligations where reporting is done per-case (e.g. transfers).
+        # It may happen that several transfers take place in the same
+        # reporting period - this means that the constraint should be checked
+        # using custom logic on save() rather than enforced here. Investigate!
+        unique_together = ('party', 'reporting_period', 'obligation',
+                           'version')
 
     @enum.unique
     class SubmissionMethods(enum.Enum):
