@@ -138,9 +138,6 @@ class PartyHistory(models.Model):
     based on the specified period.
     """
 
-    class Meta:
-        unique_together = ('party', 'year')
-
     party = models.ForeignKey(
         Party, related_name='history', on_delete=models.PROTECT
     )
@@ -165,6 +162,9 @@ class PartyHistory(models.Model):
 
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        unique_together = ('party', 'year')
 
 
 # Base reporting models: period, obligation etc
@@ -212,15 +212,6 @@ class Submission(models.Model):
     """
     One specific data submission (version!)
     """
-
-    class Meta:
-        # TODO: this constraint may not be true in the corner case of
-        # obligations where reporting is done per-case (e.g. transfers).
-        # It may happen that several transfers take place in the same
-        # reporting period - this means that the constraint should be checked
-        # using custom logic on save() rather than enforced here. Investigate!
-        unique_together = ('party', 'reporting_period', 'obligation',
-                           'version')
 
     @enum.unique
     class SubmissionMethods(enum.Enum):
@@ -283,6 +274,15 @@ class Submission(models.Model):
     remarks_party = models.CharField(max_length=256, blank=True)
     remarks_secretariat = models.CharField(max_length=256, blank=True)
 
+    class Meta:
+        # TODO: this constraint may not be true in the corner case of
+        # obligations where reporting is done per-case (e.g. transfers).
+        # It may happen that several transfers take place in the same
+        # reporting period - this means that the constraint should be checked
+        # using custom logic on save() rather than enforced here. Investigate!
+        unique_together = ('party', 'reporting_period', 'obligation',
+                           'version')
+
 
 # MEETINGS & FRIENDS
 
@@ -325,6 +325,22 @@ class Treaty(models.Model):
     base_year = models.IntegerField(null=True)
 
     description = models.CharField(max_length=256, blank=True)
+
+
+class Decision(models.Model):
+    """
+    Decision
+    """
+
+    decision_id = models.CharField(max_length=16, unique=True)
+
+    meeting = models.ForeignKey(
+        Meeting, related_name='decisions', on_delete=models.PROTECT
+    )
+
+    name = models.CharField(max_length=256, unique=True)
+
+    remarks = models.CharField(max_length=256, blank=True)
 
 
 # SUBSTANCES! YAY!
@@ -476,3 +492,70 @@ class BlendComponent(models.Model):
     percentage = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
+
+
+# Reporting
+
+class BaseReport(models.Model):
+    """
+    This will be used as a base for all reporting models.
+    """
+
+    # Django syntax for generating proper related_name in concrete model
+    submission = models.ForeignKey(
+        Submission, related_name='%(class)ss', on_delete=models.PROTECT
+    )
+
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class Article7Questionnaire(BaseReport):
+    """
+    Model for a simple Article 7 Questionnaire report row
+    """
+
+    has_imports = models.BooleanField()
+
+    has_exports = models.BooleanField()
+
+    has_produced = models.BooleanField()
+
+    has_destroyed = models.BooleanField()
+
+    has_nonparty = models.BooleanField()
+
+    has_emissions = models.BooleanField()
+
+    class Meta:
+        db_table = 'reporting_article_seven_questionnaire'
+
+
+class Article7Exports(BaseReport):
+    """
+    Model for a simple Article 7 Questionnaire report
+    """
+
+    # TODO: ensure that one and only one of these two is non-null
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
+    blend = models.ForeignKey(
+        Blend, null=True, on_delete=models.PROTECT
+    )
+
+    quantity_total_new = models.PositiveIntegerField(null=True)
+
+    quantity_total_recovered = models.PositiveIntegerField(null=True)
+
+    quantity_feedstock = models.PositiveIntegerField(null=True)
+
+    decision = models.ForeignKey(
+        Decision, null=True, on_delete=models.PROTECT
+    )
+
+    class Meta:
+        db_table = 'reporting_article_seven_questionnaire'
