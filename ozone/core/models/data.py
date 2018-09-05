@@ -73,4 +73,4 @@ class Article7Exports(BaseReport):
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_questionnaire'
+        db_table = 'reporting_article_seven_questionnaire_exports'
