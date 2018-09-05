@@ -134,9 +134,9 @@ class Blend(models.Model):
 
     gwp = models.IntegerField(null=True)
 
-    hfc = models.BooleanField(null=True)
+    hfc = models.NullBooleanField()
 
-    hcfc = models.BooleanField(null=True)
+    hcfc = models.NullBooleanField()
 
     mp_control = models.CharField(max_length=256, blank=True)
 

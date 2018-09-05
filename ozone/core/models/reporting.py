@@ -96,7 +96,7 @@ class Submission(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    created_by = models.ForeignKey(User, on_delete=models.PROTECT)
+    created_by = models.ForeignKey(User, related_name='submissions_created', on_delete=models.PROTECT)
     last_edited_by = models.ForeignKey(User, on_delete=models.PROTECT)
 
     # per Obligation-ReportingPeriod-Party
