@@ -2,8 +2,8 @@ import enum
 
 from django.db import models
 
-# TODO: this should probably be a single app
-from ...ozone.users.models import User
+from ozone.users.models import User
+
 from .party import Party
 
 
