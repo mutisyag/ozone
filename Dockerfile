@@ -21,7 +21,7 @@ ENV PROTECTED_ROOT = /var/local/protected_uploads
 ENV DOWNLOAD_STAGING_ROOT = /var/local/download_staging
 
 RUN apt-get update -y \
-  && apt-get install -y --no-install-recommends apt-utils curl bzip2 netcat-traditional lsb-release ca-certificates \
+  && apt-get install -y --no-install-recommends apt-utils curl bzip2 netcat-traditional lsb-release ca-certificates gnupg \
   && sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list' \
   && curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add - \
   && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
