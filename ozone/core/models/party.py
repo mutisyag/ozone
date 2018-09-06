@@ -36,9 +36,9 @@ class Subregion(models.Model):
     flexibility and easier maintenance.
     """
 
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256)
     # Since it can be blank but is unique, it also has to be nullable
-    abbr = models.CharField(max_length=32, unique=True, blank=True, null=True)
+    abbr = models.CharField(max_length=32, blank=True, null=True)
 
     region = models.ForeignKey(
         Region, related_name='subregions', on_delete=models.PROTECT
@@ -46,6 +46,9 @@ class Subregion(models.Model):
 
     def __str__(self):
         return f'Subregion "{self.name}", region "{self.region.name}"'
+
+    class Meta:
+        unique_together = ('name', 'region')
 
 
 class Party(models.Model):
@@ -58,6 +61,9 @@ class Party(models.Model):
     # Subregion also includes region information
     subregion = models.ForeignKey(
         Subregion, related_name='parties', on_delete=models.PROTECT
+    )
+    region = models.ForeignKey(
+        Region, related_name='parties', on_delete=models.PROTECT
     )
 
     # TODO:
