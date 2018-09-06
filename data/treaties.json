@@ -1,0 +1,93 @@
+[
+    {
+        "pk": 1,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "VC",
+            "name": "Vienna Convention",
+            "meeting_id": 1,
+            "date": "1985-03-22",
+            "entry_into_force_date": "1988-09-22",
+            "base_year": null,
+            "description": "The Vienna Convention for the Protection of the Ozone Layer"  
+        }
+    },
+    {
+        "pk": 2,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "MP",
+            "name": "Montreal Protocol",
+            "meeting_id": 2,
+            "date": "1987-09-16",
+            "entry_into_force_date": "1989-01-01",
+            "base_year": "1986",
+            "description": "The Montreal Protocol on Substances that Deplete the Ozone Layer"  
+        }
+    },
+    {
+        "pk": 3,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "LA",
+            "name": "London Amendment",
+            "meeting_id": 4,
+            "date": "1990-06-27",
+            "entry_into_force_date": "1992-08-10",
+            "base_year": 1989,
+            "description": ""  
+        }
+    },
+    {
+        "pk": 4,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "CA",
+            "name": "Copenhagen Amendment",
+            "meeting_id": 6,
+            "date": "1992-11-23",
+            "entry_into_force_date": "1994-06-14",
+            "base_year": 1991,
+            "description": "...adjusted by the Seventh Meeting of the Parties "  
+        }
+    },
+    {
+        "pk": 5,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "MA",
+            "name": "Montreal Amendment",
+            "meeting_id": 11,
+            "date": "1997-09-15",
+            "entry_into_force_date": "1999-11-10",
+            "base_year": null,
+            "description": ""  
+        }
+    },
+    {
+        "pk": 6,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "BA",
+            "name": "Beijing Amendment",
+            "meeting_id": 13,
+            "date": "1999-11-29",
+            "entry_into_force_date": "2002-02-25",
+            "base_year": null,
+            "description": "...adjusted by the Nineteenth Meeting of the Parties"  
+        }
+    },
+    {
+        "pk": 7,
+        "model": "core.treaty",
+        "fields": {
+            "treaty_id": "KA",
+            "name": "Kigali Amendment",
+            "meeting_id": 33,
+            "date": "2016-10-15",
+            "entry_into_force_date": "2019-01-01",
+            "base_year": null,
+            "description": ""  
+        }
+    }
+]
