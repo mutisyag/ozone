@@ -120,8 +120,8 @@ class Submission(models.Model):
     )
 
     # We want these to be able to be empty in forms
-    remarks_party = models.CharField(max_length=256, blank=True)
-    remarks_secretariat = models.CharField(max_length=256, blank=True)
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_secretariat = models.CharField(max_length=512, blank=True)
 
     class Meta:
         # TODO: this constraint may not be true in the corner case of
