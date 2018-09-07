@@ -22,10 +22,8 @@ class Region(models.Model):
     flexibility and easier maintenance.
     """
 
+    abbr = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=256, unique=True)
-    # It needs `null=True` to ensure uniqueness constraint is not violated
-    # by blank fields. `blank=True` ensures forms accept empty strings.
-    abbr = models.CharField(max_length=32, unique=True, blank=True, null=True)
 
 
 class Subregion(models.Model):
@@ -36,9 +34,8 @@ class Subregion(models.Model):
     flexibility and easier maintenance.
     """
 
+    abbr = models.CharField(max_length=32)
     name = models.CharField(max_length=256)
-    # Since it can be blank but is unique, it also has to be nullable
-    abbr = models.CharField(max_length=32, blank=True, null=True)
 
     region = models.ForeignKey(
         Region, related_name='subregions', on_delete=models.PROTECT
@@ -48,7 +45,7 @@ class Subregion(models.Model):
         return f'Subregion "{self.name}", region "{self.region.name}"'
 
     class Meta:
-        unique_together = ('name', 'region')
+        unique_together = ('abbr', 'region')
 
 
 class Party(models.Model):
@@ -61,9 +58,6 @@ class Party(models.Model):
     # Subregion also includes region information
     subregion = models.ForeignKey(
         Subregion, related_name='parties', on_delete=models.PROTECT
-    )
-    region = models.ForeignKey(
-        Region, related_name='parties', on_delete=models.PROTECT
     )
 
     # TODO:
