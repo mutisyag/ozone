@@ -77,7 +77,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'ozone.users.apps.UsersConfig',
     # Your stuff: custom apps go here
-    'core',
+    'ozone.core.apps.CoreConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -207,7 +207,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (
-    str(APPS_DIR.path('fixtures')),
+    str(ROOT_DIR.path('data/fixtures')),
 )
 
 # EMAIL

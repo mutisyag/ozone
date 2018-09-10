@@ -1,0 +1,398 @@
+[
+    {
+        "pk": 1,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "VC",
+            "treaty_flag": true,
+            "start_date": null,
+            "end_date": null,
+            "location": "Vienna",
+            "description": "Vienna Convention"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "MP",
+            "treaty_flag": true,
+            "start_date": null,
+            "end_date": null,
+            "location": "Montreal",
+            "description": "Montreal Protocol"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "I",
+            "treaty_flag": false,
+            "start_date": "1989-05-02",
+            "end_date": "1989-05-05",
+            "location": "Helsinki",
+            "description": "First Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "II",
+            "treaty_flag": true,
+            "start_date": "1990-06-27",
+            "end_date": "1990-06-29",
+            "location": "London",
+            "description": "Second Meeting of the Parties - London Amendment, Adjustment"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "III",
+            "treaty_flag": false,
+            "start_date": "1991-06-19",
+            "end_date": "1991-06-21",
+            "location": "Nairobi",
+            "description": "Third Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 6,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "IV",
+            "treaty_flag": true,
+            "start_date": "1992-11-23",
+            "end_date": "1992-11-25",
+            "location": "Copenhagen",
+            "description": "Fourth Meeting of the Parties - Copenhagen Amendment, Adjustment"
+        }
+    },
+    {
+        "pk": 7,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "V",
+            "treaty_flag": false,
+            "start_date": "1993-11-17",
+            "end_date": "1993-11-19",
+            "location": "Bangkok",
+            "description": "Fifth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 8,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "VI",
+            "treaty_flag": false,
+            "start_date": "1994-10-06",
+            "end_date": "1994-10-07",
+            "location": "Nairobi",
+            "description": "Sixth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 9,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "VII",
+            "treaty_flag": false,
+            "start_date": "1995-12-05",
+            "end_date": "1995-12-07",
+            "location": "Vienna",
+            "description": "Seventh Meeting of the Parties - Adjustment"
+        }
+    },
+    {
+        "pk": 10,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "VIII",
+            "treaty_flag": false,
+            "start_date": "1996-11-25",
+            "end_date": "1996-11-27",
+            "location": "San José",
+            "description": "Eighth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 11,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "IX",
+            "treaty_flag": true,
+            "start_date": "1997-09-15",
+            "end_date": "1997-09-17",
+            "location": "Montreal",
+            "description": "Ninth Meeting of the Parties - Montreal Amendment, Adjustment"
+        }
+    },
+    {
+        "pk": 12,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "X",
+            "treaty_flag": false,
+            "start_date": "1998-11-23",
+            "end_date": "1998-11-24",
+            "location": "Cairo",
+            "description": "Tenth Meeting of the Parties "
+        }
+    },
+    {
+        "pk": 13,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XI",
+            "treaty_flag": true,
+            "start_date": "1999-11-29",
+            "end_date": "1999-12-03",
+            "location": "Beijing",
+            "description": "Eleventh Meeting of the Parties - Beijing Amendment, Adjustment"
+        }
+    },
+    {
+        "pk": 14,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XII",
+            "treaty_flag": false,
+            "start_date": "2000-12-11",
+            "end_date": "2000-12-14",
+            "location": "Ouagadougou",
+            "description": "Twelfth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 15,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XIII",
+            "treaty_flag": false,
+            "start_date": "2001-10-16",
+            "end_date": "2001-10-19",
+            "location": "Colombo",
+            "description": "Thirteenth Meeting of the Parties "
+        }
+    },
+    {
+        "pk": 16,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XIV",
+            "treaty_flag": false,
+            "start_date": "2002-11-25",
+            "end_date": "2002-11-29",
+            "location": "Rome",
+            "description": "Fourteenth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 17,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XV",
+            "treaty_flag": false,
+            "start_date": "2003-11-10",
+            "end_date": "2003-11-14",
+            "location": "Nairobi",
+            "description": "Fifteenth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 18,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "Ex.I",
+            "treaty_flag": false,
+            "start_date": "2004-03-24",
+            "end_date": "2004-03-26",
+            "location": "Montreal",
+            "description": "First Extraordinary Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 19,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XVI",
+            "treaty_flag": false,
+            "start_date": "2004-11-22",
+            "end_date": "2004-11-26",
+            "location": "Prague",
+            "description": "Sixteenth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 20,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "Ex.II",
+            "treaty_flag": false,
+            "start_date": "2005-07-01",
+            "end_date": "2005-07-01",
+            "location": "Montreal",
+            "description": "Second Extraordinary Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 21,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XVII",
+            "treaty_flag": false,
+            "start_date": "2005-12-12",
+            "end_date": "2005-12-16",
+            "location": "Dakar",
+            "description": "Seventeenth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 22,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XVIII",
+            "treaty_flag": false,
+            "start_date": "2006-10-30",
+            "end_date": "2006-11-03",
+            "location": "New Delhi",
+            "description": "Eighteenth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 23,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XIX",
+            "treaty_flag": false,
+            "start_date": "2007-09-17",
+            "end_date": "2007-09-21",
+            "location": "Montreal",
+            "description": "Nineteenth Meeting of the Parties - Adjustment"
+        }
+    },
+    {
+        "pk": 24,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XX",
+            "treaty_flag": false,
+            "start_date": "2008-11-16",
+            "end_date": "2008-11-20",
+            "location": "Doha",
+            "description": "Twentieth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 25,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXI",
+            "treaty_flag": false,
+            "start_date": "2009-11-04",
+            "end_date": "2009-11-08",
+            "location": "Port Ghalib, Egypt",
+            "description": "Twenty-First Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 26,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXII",
+            "treaty_flag": false,
+            "start_date": "2010-11-08",
+            "end_date": "2010-11-12",
+            "location": "Bangkok",
+            "description": "Twenty-Second Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 27,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXIII",
+            "treaty_flag": false,
+            "start_date": "2011-11-21",
+            "end_date": "2011-11-25",
+            "location": "Bali",
+            "description": "Twenty-Third Meeting of the Parties "
+        }
+    },
+    {
+        "pk": 28,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXIV",
+            "treaty_flag": false,
+            "start_date": "2012-11-12",
+            "end_date": "2012-11-16",
+            "location": "Geneva",
+            "description": "Twenty-Fourth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 29,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXV",
+            "treaty_flag": false,
+            "start_date": "2013-10-21",
+            "end_date": "2013-10-25",
+            "location": "Bangkok",
+            "description": "Twenty-Fifth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 30,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXVI",
+            "treaty_flag": false,
+            "start_date": "2014-11-17",
+            "end_date": "2014-11-21",
+            "location": "Paris",
+            "description": "Twenty-Sixth Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 31,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXVII",
+            "treaty_flag": false,
+            "start_date": "2015-11-01",
+            "end_date": "2015-11-05",
+            "location": "Dubai",
+            "description": "Twenty-Seventh Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 32,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "Ex.III",
+            "treaty_flag": false,
+            "start_date": "2016-07-22",
+            "end_date": "2016-07-23",
+            "location": "Vienna",
+            "description": "Third Extraordinary Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 33,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXVIII",
+            "treaty_flag": true,
+            "start_date": "2016-10-10",
+            "end_date": "2016-10-15",
+            "location": "Kigali",
+            "description": "Twenty-Eighth Meeting of the Parties - Kigali Amendment"
+        }
+    }
+]

@@ -1,0 +1,164 @@
+[
+    {
+        "pk": 1,
+        "model": "core.subregion",
+        "fields": {
+            "name": "English-Speaking",
+            "abbr": "AFE",
+            "region": 1
+        }
+    },
+    {
+        "pk": 2,
+        "model": "core.subregion",
+        "fields": {
+            "name": "French-Speaking",
+            "abbr": "AFF",
+            "region": 1
+        }
+    },
+    {
+        "pk": 3,
+        "model": "core.subregion",
+        "fields": {
+            "name": "South East Asia and Pacific",
+            "abbr": "ASE",
+            "region": 2
+        }
+    },
+    {
+        "pk": 4,
+        "model": "core.subregion",
+        "fields": {
+            "name": "South Asia",
+            "abbr": "ASO",
+            "region": 2
+        }
+    },
+    {
+        "pk": 5,
+        "model": "core.subregion",
+        "fields": {
+            "name": "West Asia",
+            "abbr": "ASR",
+            "region": 2
+        }
+    },
+    {
+        "pk": 6,
+        "model": "core.subregion",
+        "fields": {
+            "name": "East/Central Europe Network",
+            "abbr": "ECAN",
+            "region": 2
+        }
+    },
+    {
+        "pk": 7,
+        "model": "core.subregion",
+        "fields": {
+            "name": "East/Central Europe Network",
+            "abbr": "ECAN",
+            "region": 3
+        }
+    },
+    {
+        "pk": 8,
+        "model": "core.subregion",
+        "fields": {
+            "name": "East/Central Europe Network",
+            "abbr": "ECAN",
+            "region": 6
+        }
+    },
+    {
+        "pk": 9,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Caribbean",
+            "abbr": "LCA",
+            "region": 4
+        }
+    },
+    {
+        "pk": 10,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Central",
+            "abbr": "LCE",
+            "region": 4
+        }
+    },
+    {
+        "pk": 11,
+        "model": "core.subregion",
+        "fields": {
+            "name": "South",
+            "abbr": "LCS",
+            "region": 4
+        }
+    },
+    {
+        "pk": 12,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Pacific Island Countries",
+            "abbr": "PIC",
+            "region": 2
+        }
+    },
+    {
+        "pk": 13,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 1
+        }
+    },
+    {
+        "pk": 14,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 2
+        }
+    },
+    {
+        "pk": 15,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 3
+        }
+    },
+    {
+        "pk": 16,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 4
+        }
+    },
+    {
+        "pk": 17,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 5
+        }
+    },
+    {
+        "pk": 18,
+        "model": "core.subregion",
+        "fields": {
+            "name": "Unspecified",
+            "abbr": "UNK",
+            "region": 6
+        }
+    }
+]

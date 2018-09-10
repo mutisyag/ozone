@@ -1,0 +1,47 @@
+[
+    {
+        "pk": 1,
+        "model": "core.annex",
+        "fields": {
+            "annex_id": "A",
+            "name": "Annex A",
+            "description": "Chlorofluorocarbons (CFCs) and Halons - Montreal Protocol (1989)"
+        }
+    },
+    {
+        "pk": 2,
+        "model": "core.annex",
+        "fields": {
+            "annex_id": "B",
+            "name": "Annex B",
+            "description": "Other Fully Halogenated CFCs, Carbon Tetrachloride (CTC), Methyl Chloroform (MC) - London Amendment (1990)"
+        }
+    },
+    {
+        "pk": 3,
+        "model": "core.annex",
+        "fields": {
+            "annex_id": "C",
+            "name": "Annex C",
+            "description": "Hydrochlorofluorocarbons (HCFCs) – London Amendment (1990)\\nHydrobromofluorocarbons (HBFCs) - Copenhagen Amendment (1992)\\nBromochloromethane (BCM) - Beijing Amendment (1999)"
+        }
+    },
+    {
+        "pk": 4,
+        "model": "core.annex",
+        "fields": {
+            "annex_id": "E",
+            "name": "Annex E",
+            "description": "Methyl Bromide (MB) - Copenhagen Amendment (1992)"
+        }
+    },
+    {
+        "pk": 5,
+        "model": "core.annex",
+        "fields": {
+            "annex_id": "F",
+            "name": "Annex F",
+            "description": "Hydrofluorocarbons (HFCs) - Kigali Amendment (2016)"
+        }
+    }
+]
