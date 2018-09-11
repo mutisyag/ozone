@@ -55,7 +55,7 @@ admin.site.register(Group)
 
 @admin.register(Substance)
 class SubstanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group_id')
+    list_display = ('name', 'group')
 
 
 admin.site.register(Blend)

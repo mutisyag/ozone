@@ -9,7 +9,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Trichlorofluoromethane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -19,7 +19,7 @@
           "max_odp": 1,
           "fluorines": "F",
           "formula": "CFCl3",
-          "group_id": 1,
+          "group": 1,
           "min_odp": 1
       }
   },
@@ -33,7 +33,7 @@
           "hydrogens": "",
           "odp": 0.8,
           "carbons": "C2",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Trichlorotrifluoroethanes",
           "chlorines": "Cl3",
           "bromines": "",
@@ -43,7 +43,7 @@
           "max_odp": 0.8,
           "fluorines": "F3",
           "formula": "C2F3Cl3",
-          "group_id": 1,
+          "group": 1,
           "min_odp": 0.8
       }
   },
@@ -57,7 +57,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C2",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Dichlorotetrafluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -67,7 +67,7 @@
           "max_odp": 1,
           "fluorines": "F4",
           "formula": "C2F4Cl2",
-          "group_id": 1,
+          "group": 1,
           "min_odp": 1
       }
   },
@@ -81,7 +81,7 @@
           "hydrogens": "",
           "odp": 0.6,
           "carbons": "C2",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Chloropentafluoroethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -91,7 +91,7 @@
           "max_odp": 0.6,
           "fluorines": "F5",
           "formula": "C2F5Cl",
-          "group_id": 1,
+          "group": 1,
           "min_odp": 0.6
       }
   },
@@ -105,7 +105,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Dichlorodifluoromethane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -115,7 +115,7 @@
           "max_odp": 1,
           "fluorines": "F2",
           "formula": "CF2Cl2",
-          "group_id": 1,
+          "group": 1,
           "min_odp": 1
       }
   },
@@ -129,7 +129,7 @@
           "hydrogens": "",
           "odp": 3,
           "carbons": "C",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Bromochlorodifluoromethane",
           "chlorines": "Cl",
           "bromines": "Br",
@@ -138,7 +138,7 @@
           "max_odp": 3,
           "fluorines": "F2",
           "formula": "CF2BrCl",
-          "group_id": 2,
+          "group": 2,
           "min_odp": 3
       }
   },
@@ -152,7 +152,7 @@
           "hydrogens": "",
           "odp": 10,
           "carbons": "C",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Bromotrifluoromethane or R13b1",
           "chlorines": "",
           "bromines": "Br",
@@ -161,7 +161,7 @@
           "max_odp": 10,
           "fluorines": "F3",
           "formula": "CF3Br",
-          "group_id": 2,
+          "group": 2,
           "min_odp": 10
       }
   },
@@ -175,7 +175,7 @@
           "hydrogens": "",
           "odp": 6,
           "carbons": "C2",
-          "annex_id": 1,
+          "annex": 1,
           "description": "Dibromotetrafluoroethanes",
           "chlorines": "",
           "bromines": "Br2",
@@ -184,7 +184,7 @@
           "max_odp": 6,
           "fluorines": "F4",
           "formula": "C2F4Br2",
-          "group_id": 2,
+          "group": 2,
           "min_odp": 6
       }
   },
@@ -198,7 +198,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C2",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Pentachlorofluoroethane",
           "chlorines": "Cl5",
           "bromines": "",
@@ -206,7 +206,7 @@
           "max_odp": 1,
           "fluorines": "F",
           "formula": "C2FCl5",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -220,7 +220,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C2",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Tetrachlorodifluoroethanes",
           "chlorines": "Cl4",
           "bromines": "",
@@ -228,7 +228,7 @@
           "max_odp": 1,
           "fluorines": "F2",
           "formula": "C2F2Cl4",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -242,7 +242,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Chlorotrifluoromethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -251,7 +251,7 @@
           "max_odp": 1,
           "fluorines": "F3",
           "formula": "CF3Cl",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -265,7 +265,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Heptachlorofluoropropanes",
           "chlorines": "Cl7",
           "bromines": "",
@@ -273,7 +273,7 @@
           "max_odp": 1,
           "fluorines": "F",
           "formula": "C3FCl7",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -287,7 +287,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Hexachlorodifluoropropanes",
           "chlorines": "Cl6",
           "bromines": "",
@@ -295,7 +295,7 @@
           "max_odp": 1,
           "fluorines": "F2",
           "formula": "C3F2Cl6",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -309,7 +309,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Pentachlorotrifluoroprapanes",
           "chlorines": "Cl5",
           "bromines": "",
@@ -317,7 +317,7 @@
           "max_odp": 1,
           "fluorines": "F3",
           "formula": "C3F3Cl5",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -331,7 +331,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Tetrachlorotetrafluoropropanes",
           "chlorines": "Cl4",
           "bromines": "",
@@ -339,7 +339,7 @@
           "max_odp": 1,
           "fluorines": "F4",
           "formula": "C3F4Cl4",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -353,7 +353,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Trichloropentafluoropropanes",
           "chlorines": "Cl3",
           "bromines": "",
@@ -361,7 +361,7 @@
           "max_odp": 1,
           "fluorines": "F5",
           "formula": "C3F5Cl3",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -375,7 +375,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Dichlorohexafluoropropanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -383,7 +383,7 @@
           "max_odp": 1,
           "fluorines": "F6",
           "formula": "C3F6Cl2",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -397,7 +397,7 @@
           "hydrogens": "",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Chloroheptafluoropropanes",
           "chlorines": "Cl",
           "bromines": "",
@@ -405,7 +405,7 @@
           "max_odp": 1,
           "fluorines": "F7",
           "formula": "C3F7Cl",
-          "group_id": 3,
+          "group": 3,
           "min_odp": 1
       }
   },
@@ -419,7 +419,7 @@
           "hydrogens": "",
           "odp": 1.1,
           "carbons": "C",
-          "annex_id": 2,
+          "annex": 2,
           "description": "Carbon Tetrachloride",
           "chlorines": "Cl4",
           "bromines": "",
@@ -428,7 +428,7 @@
           "max_odp": 1.1,
           "fluorines": "",
           "formula": "CCl4",
-          "group_id": 4,
+          "group": 4,
           "min_odp": 1.1
       }
   },
@@ -442,7 +442,7 @@
           "hydrogens": "H3",
           "odp": 0.1,
           "carbons": "C2",
-          "annex_id": 2,
+          "annex": 2,
           "description": "1,1,1-trichloroethane (methyl chloroform)",
           "chlorines": "Cl3",
           "bromines": "",
@@ -451,7 +451,7 @@
           "max_odp": 0.1,
           "fluorines": "",
           "formula": "C2H3Cl3",
-          "group_id": 5,
+          "group": 5,
           "min_odp": 0.1
       }
   },
@@ -465,7 +465,7 @@
           "hydrogens": "H",
           "odp": 0.04,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrachlorofluoroethane",
           "chlorines": "Cl4",
           "bromines": "",
@@ -473,7 +473,7 @@
           "max_odp": 0.04,
           "fluorines": "F",
           "formula": "C2HFCl4",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.01
       }
   },
@@ -487,7 +487,7 @@
           "hydrogens": "H",
           "odp": 0.08,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorodifluoroethane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -496,7 +496,7 @@
           "max_odp": 0.08,
           "fluorines": "F2",
           "formula": "C2HF2Cl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -510,7 +510,7 @@
           "hydrogens": "H",
           "odp": 0.06,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorotrifluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -519,7 +519,7 @@
           "max_odp": 0.06,
           "fluorines": "F3",
           "formula": "C2HF3Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -533,7 +533,7 @@
           "hydrogens": "H",
           "odp": 0.02,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorotrifluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -541,7 +541,7 @@
           "max_odp": 0.02,
           "fluorines": "F3",
           "formula": "CHCl2CF3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -555,7 +555,7 @@
           "hydrogens": "H",
           "odp": 0.04,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorotetrafluoroethanes",
           "chlorines": "Cl",
           "bromines": "",
@@ -564,7 +564,7 @@
           "max_odp": 0.04,
           "fluorines": "F4",
           "formula": "C2HF4Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -578,7 +578,7 @@
           "hydrogens": "H",
           "odp": 0.022,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorotetrafluoroethanes",
           "chlorines": "Cl",
           "bromines": "",
@@ -586,7 +586,7 @@
           "max_odp": 0.022,
           "fluorines": "F4",
           "formula": "CHFClCF3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.022
       }
   },
@@ -600,7 +600,7 @@
           "hydrogens": "H2",
           "odp": 0.05,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorofluoroethane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -608,7 +608,7 @@
           "max_odp": 0.05,
           "fluorines": "F",
           "formula": "C2H2FCl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.007
       }
   },
@@ -622,7 +622,7 @@
           "hydrogens": "H2",
           "odp": 0.05,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorodifluoroethane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -631,7 +631,7 @@
           "max_odp": 0.05,
           "fluorines": "F2",
           "formula": "C2H2F2Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.008
       }
   },
@@ -645,7 +645,7 @@
           "hydrogens": "H2",
           "odp": 0.06,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorotrifluoroethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -653,7 +653,7 @@
           "max_odp": 0.06,
           "fluorines": "F3",
           "formula": "C2H2F3Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -667,7 +667,7 @@
           "hydrogens": "H3",
           "odp": 0.07,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorofluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -675,7 +675,7 @@
           "max_odp": 0.07,
           "fluorines": "F",
           "formula": "C2H3FCl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.005
       }
   },
@@ -689,7 +689,7 @@
           "hydrogens": "H3",
           "odp": 0.11,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorofluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -698,7 +698,7 @@
           "max_odp": 0.11,
           "fluorines": "F",
           "formula": "CH3CFCl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.11
       }
   },
@@ -712,7 +712,7 @@
           "hydrogens": "H3",
           "odp": 0.07,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorodifluoroethanes",
           "chlorines": "Cl",
           "bromines": "",
@@ -720,7 +720,7 @@
           "max_odp": 0.07,
           "fluorines": "F2",
           "formula": "C2H3F2Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.008
       }
   },
@@ -734,7 +734,7 @@
           "hydrogens": "H3",
           "odp": 0.065,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorodifluoroethanes",
           "chlorines": "Cl",
           "bromines": "",
@@ -743,7 +743,7 @@
           "max_odp": 0.065,
           "fluorines": "F2",
           "formula": "CH3CF2Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.065
       }
   },
@@ -757,7 +757,7 @@
           "hydrogens": "H4",
           "odp": 0.005,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorofluoroethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -765,7 +765,7 @@
           "max_odp": 0.005,
           "fluorines": "F",
           "formula": "C2H4FCl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.003
       }
   },
@@ -779,7 +779,7 @@
           "hydrogens": "H",
           "odp": 0.04,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorofluoromethane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -788,7 +788,7 @@
           "max_odp": 0.04,
           "fluorines": "F",
           "formula": "CHFCl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.04
       }
   },
@@ -802,7 +802,7 @@
           "hydrogens": "H",
           "odp": 0.055,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorodifluoromethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -812,7 +812,7 @@
           "max_odp": 0.055,
           "fluorines": "F2",
           "formula": "CHF2Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.055
       }
   },
@@ -826,7 +826,7 @@
           "hydrogens": "H",
           "odp": 0.07,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Hexachlorofluoropropane",
           "chlorines": "Cl6",
           "bromines": "",
@@ -834,7 +834,7 @@
           "max_odp": 0.07,
           "fluorines": "F",
           "formula": "C3HFCl6",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.015
       }
   },
@@ -848,7 +848,7 @@
           "hydrogens": "H",
           "odp": 0.09,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Pentachlorodifluoropropane",
           "chlorines": "Cl5",
           "bromines": "",
@@ -856,7 +856,7 @@
           "max_odp": 0.09,
           "fluorines": "F2",
           "formula": "C3HF2Cl5",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.01
       }
   },
@@ -870,7 +870,7 @@
           "hydrogens": "H",
           "odp": 0.08,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrachlorotrifluoropropane",
           "chlorines": "Cl4",
           "bromines": "",
@@ -878,7 +878,7 @@
           "max_odp": 0.08,
           "fluorines": "F3",
           "formula": "C3HF3Cl4",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.01
       }
   },
@@ -892,7 +892,7 @@
           "hydrogens": "H",
           "odp": 0.09,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorotetrafluoropropane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -900,7 +900,7 @@
           "max_odp": 0.09,
           "fluorines": "F4",
           "formula": "C3HF4Cl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.01
       }
   },
@@ -914,7 +914,7 @@
           "hydrogens": "H",
           "odp": 0.07,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichloropentafluoropropanes",
           "chlorines": "Cl2",
           "bromines": "",
@@ -922,7 +922,7 @@
           "max_odp": 0.07,
           "fluorines": "F5",
           "formula": "C3HF5Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -936,7 +936,7 @@
           "hydrogens": "H",
           "odp": 0.025,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichloropentafluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -944,7 +944,7 @@
           "max_odp": 0.025,
           "fluorines": "F5",
           "formula": "CF3CF2CHCl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.025
       }
   },
@@ -958,7 +958,7 @@
           "hydrogens": "H",
           "odp": 0.033,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichloropentafluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -966,7 +966,7 @@
           "max_odp": 0.033,
           "fluorines": "F5",
           "formula": "CF2ClCF2CHClF",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.033
       }
   },
@@ -980,7 +980,7 @@
           "hydrogens": "H",
           "odp": 0.1,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorohexafluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -988,7 +988,7 @@
           "max_odp": 0.1,
           "fluorines": "F6",
           "formula": "C3HF6Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -1002,7 +1002,7 @@
           "hydrogens": "H2",
           "odp": 0.09,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Pentachlorofluoropropane",
           "chlorines": "Cl5",
           "bromines": "",
@@ -1010,7 +1010,7 @@
           "max_odp": 0.09,
           "fluorines": "F",
           "formula": "C3H2FCl5",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.05
       }
   },
@@ -1024,7 +1024,7 @@
           "hydrogens": "H2",
           "odp": 0.1,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrachlorodifluoropropane",
           "chlorines": "Cl4",
           "bromines": "",
@@ -1032,7 +1032,7 @@
           "max_odp": 0.1,
           "fluorines": "F2",
           "formula": "C3H2F2Cl4",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.008
       }
   },
@@ -1046,7 +1046,7 @@
           "hydrogens": "H2",
           "odp": 0.23,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorotrifluoropropane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -1054,7 +1054,7 @@
           "max_odp": 0.23,
           "fluorines": "F3",
           "formula": "C3H2F3Cl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.007
       }
   },
@@ -1068,7 +1068,7 @@
           "hydrogens": "H2",
           "odp": 0.28,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorotetrafluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -1076,7 +1076,7 @@
           "max_odp": 0.28,
           "fluorines": "F4",
           "formula": "C3H2F4Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.01
       }
   },
@@ -1090,7 +1090,7 @@
           "hydrogens": "H2",
           "odp": 0.52,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chloropentafluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1098,7 +1098,7 @@
           "max_odp": 0.52,
           "fluorines": "F5",
           "formula": "C3H2F5Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.03
       }
   },
@@ -1112,7 +1112,7 @@
           "hydrogens": "H3",
           "odp": 0.09,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrachlorofluoropropane",
           "chlorines": "Cl4",
           "bromines": "",
@@ -1120,7 +1120,7 @@
           "max_odp": 0.09,
           "fluorines": "F",
           "formula": "C3H3FCl4",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.004
       }
   },
@@ -1134,7 +1134,7 @@
           "hydrogens": "H3",
           "odp": 0.13,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorodifluoropropane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -1142,7 +1142,7 @@
           "max_odp": 0.13,
           "fluorines": "F2",
           "formula": "C3H3F2Cl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.005
       }
   },
@@ -1156,7 +1156,7 @@
           "hydrogens": "H3",
           "odp": 0.12,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorotrifluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -1164,7 +1164,7 @@
           "max_odp": 0.12,
           "fluorines": "F3",
           "formula": "C3H3F3Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.006999999999999999
       }
   },
@@ -1178,7 +1178,7 @@
           "hydrogens": "H3",
           "odp": 0.14,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorotetrafluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1186,7 +1186,7 @@
           "max_odp": 0.14,
           "fluorines": "F4",
           "formula": "C3H3F4Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.009
       }
   },
@@ -1200,7 +1200,7 @@
           "hydrogens": "H4",
           "odp": 0.01,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Trichlorofluoropropane",
           "chlorines": "Cl3",
           "bromines": "",
@@ -1208,7 +1208,7 @@
           "max_odp": 0.01,
           "fluorines": "F",
           "formula": "C3H4FCl3",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.001
       }
   },
@@ -1222,7 +1222,7 @@
           "hydrogens": "H4",
           "odp": 0.04,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorodifluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -1230,7 +1230,7 @@
           "max_odp": 0.04,
           "fluorines": "F2",
           "formula": "C3H4F2Cl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.005
       }
   },
@@ -1244,7 +1244,7 @@
           "hydrogens": "H4",
           "odp": 0.03,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorotrifluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1252,7 +1252,7 @@
           "max_odp": 0.03,
           "fluorines": "F3",
           "formula": "C3H4F3Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.003
       }
   },
@@ -1266,7 +1266,7 @@
           "hydrogens": "H5",
           "odp": 0.02,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dichlorofluoropropane",
           "chlorines": "Cl2",
           "bromines": "",
@@ -1274,7 +1274,7 @@
           "max_odp": 0.02,
           "fluorines": "F",
           "formula": "C3H5FCl2",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.002
       }
   },
@@ -1288,7 +1288,7 @@
           "hydrogens": "H5",
           "odp": 0.02,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorodifluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1296,7 +1296,7 @@
           "max_odp": 0.02,
           "fluorines": "F2",
           "formula": "C3H5F2Cl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.002
       }
   },
@@ -1310,7 +1310,7 @@
           "hydrogens": "H6",
           "odp": 0.03,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorofluoropropane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1318,7 +1318,7 @@
           "max_odp": 0.03,
           "fluorines": "F",
           "formula": "C3H6FCl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.001
       }
   },
@@ -1332,7 +1332,7 @@
           "hydrogens": "H2",
           "odp": 0.02,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Chlorofluoromethane",
           "chlorines": "Cl",
           "bromines": "",
@@ -1340,7 +1340,7 @@
           "max_odp": 0.02,
           "fluorines": "F",
           "formula": "CH2FCl",
-          "group_id": 6,
+          "group": 6,
           "min_odp": 0.02
       }
   },
@@ -1354,7 +1354,7 @@
           "hydrogens": "H2",
           "odp": 1.5,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromodifluoroethane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1362,7 +1362,7 @@
           "max_odp": 1.5,
           "fluorines": "F2",
           "formula": "C2H2F2Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.2
       }
   },
@@ -1376,7 +1376,7 @@
           "hydrogens": "H2",
           "odp": 1.6,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromotrifluoroethane",
           "chlorines": "",
           "bromines": "Br",
@@ -1384,7 +1384,7 @@
           "max_odp": 1.6,
           "fluorines": "F3",
           "formula": "C2H2F3Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.7
       }
   },
@@ -1398,7 +1398,7 @@
           "hydrogens": "H2",
           "odp": 1.1,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromofluoroethane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1406,7 +1406,7 @@
           "max_odp": 1.1,
           "fluorines": "F",
           "formula": "C2H2FBr3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1420,7 +1420,7 @@
           "hydrogens": "H3",
           "odp": 1.1,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromodifluoroethane",
           "chlorines": "",
           "bromines": "Br",
@@ -1428,7 +1428,7 @@
           "max_odp": 1.1,
           "fluorines": "F2",
           "formula": "C2H3F2Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.2
       }
   },
@@ -1442,7 +1442,7 @@
           "hydrogens": "H3",
           "odp": 1.7,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromofluoroethane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1450,7 +1450,7 @@
           "max_odp": 1.7,
           "fluorines": "F",
           "formula": "C2H3FBr2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1464,7 +1464,7 @@
           "hydrogens": "H4",
           "odp": 0.1,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromofluoroethane",
           "chlorines": "",
           "bromines": "Br",
@@ -1472,7 +1472,7 @@
           "max_odp": 0.1,
           "fluorines": "F",
           "formula": "C2H4FBr",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.07
       }
   },
@@ -1486,7 +1486,7 @@
           "hydrogens": "H",
           "odp": 1.8,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromodifluoroethane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1494,7 +1494,7 @@
           "max_odp": 1.8,
           "fluorines": "F2",
           "formula": "C2HF2Br3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.5
       }
   },
@@ -1508,7 +1508,7 @@
           "hydrogens": "H",
           "odp": 1.6,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromotrifluoroethane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1516,7 +1516,7 @@
           "max_odp": 1.6,
           "fluorines": "F3",
           "formula": "C2HF3Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.4
       }
   },
@@ -1530,7 +1530,7 @@
           "hydrogens": "H",
           "odp": 1.2,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromotetrafluoroethane",
           "chlorines": "",
           "bromines": "Br",
@@ -1538,7 +1538,7 @@
           "max_odp": 1.2,
           "fluorines": "F4",
           "formula": "C2HF4Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.7
       }
   },
@@ -1552,7 +1552,7 @@
           "hydrogens": "H",
           "odp": 0.8,
           "carbons": "C2",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrabromofluoroethane",
           "chlorines": "",
           "bromines": "Br4",
@@ -1560,7 +1560,7 @@
           "max_odp": 0.8,
           "fluorines": "F",
           "formula": "C2HFBr4",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.3
       }
   },
@@ -1574,7 +1574,7 @@
           "hydrogens": "H2",
           "odp": 2.1,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrabromodifluoropropane",
           "chlorines": "",
           "bromines": "Br4",
@@ -1582,7 +1582,7 @@
           "max_odp": 2.1,
           "fluorines": "F2",
           "formula": "C3H2F2Br4",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.2
       }
   },
@@ -1596,7 +1596,7 @@
           "hydrogens": "H2",
           "odp": 5.6,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromotrifluoropropane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1604,7 +1604,7 @@
           "max_odp": 5.6,
           "fluorines": "F3",
           "formula": "C3H2F3Br3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.2
       }
   },
@@ -1618,7 +1618,7 @@
           "hydrogens": "H2",
           "odp": 7.5,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromotetrafluoropropane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1626,7 +1626,7 @@
           "max_odp": 7.5,
           "fluorines": "F4",
           "formula": "C3H2F4Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.3
       }
   },
@@ -1640,7 +1640,7 @@
           "hydrogens": "H2",
           "odp": 1.4,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromopentafluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -1648,7 +1648,7 @@
           "max_odp": 1.4,
           "fluorines": "F5",
           "formula": "C3H2F5Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.9
       }
   },
@@ -1662,7 +1662,7 @@
           "hydrogens": "H2",
           "odp": 1.9,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Pentabromofluoropropane",
           "chlorines": "",
           "bromines": "Br5",
@@ -1670,7 +1670,7 @@
           "max_odp": 1.9,
           "fluorines": "F",
           "formula": "C3H2FBr5",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1684,7 +1684,7 @@
           "hydrogens": "H3",
           "odp": 3.1,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromodifluoropropane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1692,7 +1692,7 @@
           "max_odp": 3.1,
           "fluorines": "F2",
           "formula": "C3H3F2Br3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1706,7 +1706,7 @@
           "hydrogens": "H3",
           "odp": 2.5,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromotrifluoropropane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1714,7 +1714,7 @@
           "max_odp": 2.5,
           "fluorines": "F3",
           "formula": "C3H3F3Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1728,7 +1728,7 @@
           "hydrogens": "H3",
           "odp": 4.4,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromotetrafluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -1736,7 +1736,7 @@
           "max_odp": 4.4,
           "fluorines": "F4",
           "formula": "C3H3F4Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.3
       }
   },
@@ -1750,7 +1750,7 @@
           "hydrogens": "H3",
           "odp": 1.9,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrabromofluoropropane",
           "chlorines": "",
           "bromines": "Br4",
@@ -1758,7 +1758,7 @@
           "max_odp": 1.9,
           "fluorines": "F",
           "formula": "C3H3FBr4",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.08
       }
   },
@@ -1772,7 +1772,7 @@
           "hydrogens": "H4",
           "odp": 1,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromodifluoropropane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1780,7 +1780,7 @@
           "max_odp": 1,
           "fluorines": "F2",
           "formula": "C3H4F2Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.1
       }
   },
@@ -1794,7 +1794,7 @@
           "hydrogens": "H4",
           "odp": 0.8,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromotrifluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -1802,7 +1802,7 @@
           "max_odp": 0.8,
           "fluorines": "F3",
           "formula": "C3H4F3Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.07
       }
   },
@@ -1816,7 +1816,7 @@
           "hydrogens": "H4",
           "odp": 0.3,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromofluoropropane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1824,7 +1824,7 @@
           "max_odp": 0.3,
           "fluorines": "F",
           "formula": "C3H4FBr3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.03
       }
   },
@@ -1838,7 +1838,7 @@
           "hydrogens": "H5",
           "odp": 0.8,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromodifluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -1846,7 +1846,7 @@
           "max_odp": 0.8,
           "fluorines": "F2",
           "formula": "C3H5F2Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.07
       }
   },
@@ -1860,7 +1860,7 @@
           "hydrogens": "H5",
           "odp": 0.4,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromofluoropropane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1868,7 +1868,7 @@
           "max_odp": 0.4,
           "fluorines": "F",
           "formula": "C3H5FBr2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.04
       }
   },
@@ -1882,7 +1882,7 @@
           "hydrogens": "H6",
           "odp": 0.7,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromofluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -1890,7 +1890,7 @@
           "max_odp": 0.7,
           "fluorines": "F",
           "formula": "C3H6FBr",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.02
       }
   },
@@ -1904,7 +1904,7 @@
           "hydrogens": "H",
           "odp": 1.9,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Pentabromodifluoropropane",
           "chlorines": "",
           "bromines": "Br5",
@@ -1912,7 +1912,7 @@
           "max_odp": 1.9,
           "fluorines": "F2",
           "formula": "C3HF2Br5",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.2
       }
   },
@@ -1926,7 +1926,7 @@
           "hydrogens": "H",
           "odp": 1.8,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tetrabromotrifluoropropane",
           "chlorines": "",
           "bromines": "Br4",
@@ -1934,7 +1934,7 @@
           "max_odp": 1.8,
           "fluorines": "F3",
           "formula": "C3HF3Br4",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.3
       }
   },
@@ -1948,7 +1948,7 @@
           "hydrogens": "H",
           "odp": 2.2,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Tribromotetrafluoropropane",
           "chlorines": "",
           "bromines": "Br3",
@@ -1956,7 +1956,7 @@
           "max_odp": 2.2,
           "fluorines": "F4",
           "formula": "C3HF4Br3",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.5
       }
   },
@@ -1970,7 +1970,7 @@
           "hydrogens": "H",
           "odp": 2,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromopentafluoropropane",
           "chlorines": "",
           "bromines": "Br2",
@@ -1978,7 +1978,7 @@
           "max_odp": 2,
           "fluorines": "F5",
           "formula": "C3HF5Br2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.9
       }
   },
@@ -1992,7 +1992,7 @@
           "hydrogens": "H",
           "odp": 3.3,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromohexafluoropropane",
           "chlorines": "",
           "bromines": "Br",
@@ -2000,7 +2000,7 @@
           "max_odp": 3.3,
           "fluorines": "F6",
           "formula": "C3HF6Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.7
       }
   },
@@ -2014,7 +2014,7 @@
           "hydrogens": "H",
           "odp": 1.5,
           "carbons": "C3",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Hexabromofluoropropane",
           "chlorines": "",
           "bromines": "Br6",
@@ -2022,7 +2022,7 @@
           "max_odp": 1.5,
           "fluorines": "F",
           "formula": "C3HFBr6",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.3
       }
   },
@@ -2036,7 +2036,7 @@
           "hydrogens": "H2",
           "odp": 0.73,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromofluoromethane",
           "chlorines": "",
           "bromines": "Br",
@@ -2044,7 +2044,7 @@
           "max_odp": 0.73,
           "fluorines": "F",
           "formula": "CH2FBr",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.73
       }
   },
@@ -2058,7 +2058,7 @@
           "hydrogens": "H",
           "odp": 1,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Dibromofluoromethane",
           "chlorines": "",
           "bromines": "Br2",
@@ -2066,7 +2066,7 @@
           "max_odp": 1,
           "fluorines": "F",
           "formula": "CHFBr2",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 1
       }
   },
@@ -2080,7 +2080,7 @@
           "hydrogens": "H",
           "odp": 0.74,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromodifluoromethane",
           "chlorines": "",
           "bromines": "Br",
@@ -2088,7 +2088,7 @@
           "max_odp": 0.74,
           "fluorines": "F2",
           "formula": "CHF2Br",
-          "group_id": 7,
+          "group": 7,
           "min_odp": 0.74
       }
   },
@@ -2102,7 +2102,7 @@
           "hydrogens": "H3",
           "odp": 0.6,
           "carbons": "C",
-          "annex_id": 4,
+          "annex": 4,
           "description": "Bromomethane",
           "chlorines": "",
           "bromines": "Br",
@@ -2111,7 +2111,7 @@
           "max_odp": 0.6,
           "fluorines": "",
           "formula": "CH3Br",
-          "group_id": 9,
+          "group": 9,
           "min_odp": 0.6
       }
   },
@@ -2125,7 +2125,7 @@
           "hydrogens": "H2",
           "odp": 0.12,
           "carbons": "C",
-          "annex_id": 3,
+          "annex": 3,
           "description": "Bromochloromethane (Halon 1011)",
           "chlorines": "Cl",
           "bromines": "Br",
@@ -2133,7 +2133,7 @@
           "max_odp": 0.12,
           "fluorines": "",
           "formula": "CH2BrCl",
-          "group_id": 8,
+          "group": 8,
           "min_odp": 0.12
       }
   },
@@ -2147,7 +2147,7 @@
           "hydrogens": "H",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "Pentafluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2155,7 +2155,7 @@
           "max_odp": 0,
           "fluorines": "F5",
           "formula": "CHF2CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2169,7 +2169,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,2,2-Tetrafluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2177,7 +2177,7 @@
           "max_odp": 0,
           "fluorines": "F4",
           "formula": "CHF2CHF2",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2191,7 +2191,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,2-Tetrafluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2199,7 +2199,7 @@
           "max_odp": 0,
           "fluorines": "F4",
           "formula": "CH2FCF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2213,7 +2213,7 @@
           "hydrogens": "H3",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,2-Trifluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2221,7 +2221,7 @@
           "max_odp": 0,
           "fluorines": "F3",
           "formula": "CH2FCHF2",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2235,7 +2235,7 @@
           "hydrogens": "H3",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1-Trifluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2243,7 +2243,7 @@
           "max_odp": 0,
           "fluorines": "F3",
           "formula": "CH3CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2257,7 +2257,7 @@
           "hydrogens": "H4",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,2-Difluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2265,7 +2265,7 @@
           "max_odp": 0,
           "fluorines": "F2",
           "formula": "CH2FCH2F",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2279,7 +2279,7 @@
           "hydrogens": "H4",
           "odp": 0,
           "carbons": "C2",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1-Difluoroethane",
           "chlorines": "",
           "bromines": "",
@@ -2287,7 +2287,7 @@
           "max_odp": 0,
           "fluorines": "F2",
           "formula": "CH3CHF2",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2301,7 +2301,7 @@
           "hydrogens": "H",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,2,3,3,3-Heptafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2309,7 +2309,7 @@
           "max_odp": 0,
           "fluorines": "F7",
           "formula": "CF3CHFCF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2323,7 +2323,7 @@
           "hydrogens": "H",
           "odp": 0,
           "carbons": "C",
-          "annex_id": 5,
+          "annex": 5,
           "description": "Trifluoromethane (Fluoroform)",
           "chlorines": "",
           "bromines": "",
@@ -2331,7 +2331,7 @@
           "max_odp": 0,
           "fluorines": "F3",
           "formula": "CHF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2345,7 +2345,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,2,2,3-Hexafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2353,7 +2353,7 @@
           "max_odp": 0,
           "fluorines": "F6",
           "formula": "CH2FCF2CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2367,7 +2367,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,2,3,3-Hexafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2375,7 +2375,7 @@
           "max_odp": 0,
           "fluorines": "F6",
           "formula": "CHF2CHFCF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2389,7 +2389,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,3,3,3-Hexafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2397,7 +2397,7 @@
           "max_odp": 0,
           "fluorines": "F6",
           "formula": "CF3CH2CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2411,7 +2411,7 @@
           "hydrogens": "H3",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,2,2,3-Pentafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2419,7 +2419,7 @@
           "max_odp": 0,
           "fluorines": "F5",
           "formula": "CH2FCF2CHF2",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2433,7 +2433,7 @@
           "hydrogens": "H3",
           "odp": 0,
           "carbons": "C3",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,3,3-Pentafluoropropane",
           "chlorines": "",
           "bromines": "",
@@ -2441,7 +2441,7 @@
           "max_odp": 0,
           "fluorines": "F5",
           "formula": "CHF2CH2CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2455,7 +2455,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C",
-          "annex_id": 5,
+          "annex": 5,
           "description": "Difluoromethane",
           "chlorines": "",
           "bromines": "",
@@ -2463,7 +2463,7 @@
           "max_odp": 0,
           "fluorines": "F2",
           "formula": "CH2F2",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2477,7 +2477,7 @@
           "hydrogens": "H5",
           "odp": 0,
           "carbons": "C4",
-          "annex_id": 5,
+          "annex": 5,
           "description": "1,1,1,3,3-Pentafluorobutane",
           "chlorines": "",
           "bromines": "",
@@ -2485,7 +2485,7 @@
           "max_odp": 0,
           "fluorines": "F5",
           "formula": "CF3CH2CF2CH3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2499,7 +2499,7 @@
           "hydrogens": "H3",
           "odp": 0,
           "carbons": "C",
-          "annex_id": 5,
+          "annex": 5,
           "description": "Fluoromethane",
           "chlorines": "",
           "bromines": "",
@@ -2507,7 +2507,7 @@
           "max_odp": 0,
           "fluorines": "F",
           "formula": "CH3F",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   },
@@ -2521,7 +2521,7 @@
           "hydrogens": "H2",
           "odp": 0,
           "carbons": "C5",
-          "annex_id": 5,
+          "annex": 5,
           "description": "2H,3H-Decafluoropentane; 1,1,1,2,2,3,4,5,5,5-Decafluoropentane; 2H,3H-Perfluoropentane; HFC-4310mee; 1,1,1,2,3,4,4,5,5,5-Decafluoropentane",
           "chlorines": "",
           "bromines": "",
@@ -2529,7 +2529,7 @@
           "max_odp": 0,
           "fluorines": "F10",
           "formula": "CF3CHFCHFCF2CF3",
-          "group_id": 10,
+          "group": 10,
           "min_odp": 0
       }
   }

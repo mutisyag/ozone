@@ -83,10 +83,10 @@ class Substance(models.Model):
     # the 'Other Substances' dummy substance, for which these can be null.
     # That should be modeled differently, by a nullable foreign key to
     # `Substance`, instead of making a lot of fields nullable in this model.
-    annex_id = models.ForeignKey(
+    annex = models.ForeignKey(
         Annex, related_name='substances', on_delete=models.PROTECT
     )
-    group_id = models.ForeignKey(
+    group = models.ForeignKey(
         Group, related_name='substances', on_delete=models.PROTECT
     )
 
@@ -125,7 +125,7 @@ class Substance(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('group_id', 'substance_id')
+        ordering = ('group', 'substance_id')
 
 
 class Blend(models.Model):
