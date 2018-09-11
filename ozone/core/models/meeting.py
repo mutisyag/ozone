@@ -29,7 +29,7 @@ class Meeting (models.Model):
         return self.description
 
     class Meta:
-        ordering = ['pk']
+        ordering = ('pk',)
 
 
 class Treaty(models.Model):

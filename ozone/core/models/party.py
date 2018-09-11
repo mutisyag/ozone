@@ -29,7 +29,7 @@ class Region(models.Model):
         return self.name
 
     class Meta:
-        ordering = ['name']
+        ordering = ('name',)
 
 
 class Subregion(models.Model):
@@ -52,7 +52,7 @@ class Subregion(models.Model):
 
     class Meta:
         unique_together = ('abbr', 'region')
-        ordering = ['region', 'name']
+        ordering = ('region', 'name')
 
 
 class Party(models.Model):
@@ -149,7 +149,7 @@ class Party(models.Model):
 
     class Meta:
         verbose_name_plural = 'parties'
-        ordering = ['name']
+        ordering = ('name',)
 
 
 def current_year():
