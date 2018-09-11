@@ -25,6 +25,13 @@ class Annex(models.Model):
 
     description = models.CharField(max_length=256, blank=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'annexes'
+        ordering = ('name',)
+
 
 class Group(models.Model):
     """
@@ -45,8 +52,8 @@ class Group(models.Model):
         Treaty, related_name='report_substance_groups', on_delete=models.PROTECT
     )
 
-    phase_out_year_article_5 = models.DateField(null=True)
-    phase_out_year_non_article_5 = models.DateField(null=True)
+    phase_out_year_article_5 = models.DateField(blank=True, null=True)
+    phase_out_year_non_article_5 = models.DateField(blank=True, null=True)
 
     # TODO: should this be a foreign key?
     exemption = models.CharField(max_length=64, blank=True)
@@ -54,6 +61,12 @@ class Group(models.Model):
     # TODO: figure out a way to model consumption and production baselines.
     # These will probably have to sit in a special table, with foreign keys
     # to parties and Group IDs
+
+    def __str__(self):
+        return f'Group {self.group_id}'
+
+    class Meta:
+        ordering = ('annex', 'group_id')
 
 
 class Substance(models.Model):
@@ -108,6 +121,12 @@ class Substance(models.Model):
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
 
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ('group_id', 'substance_id')
+
 
 class Blend(models.Model):
     """
@@ -144,6 +163,9 @@ class Blend(models.Model):
 
     remark = models.CharField(max_length=256, blank=True)
 
+    def __str__(self):
+        return self.blend_id
+
 
 class BlendComponent(models.Model):
     """
@@ -162,3 +184,9 @@ class BlendComponent(models.Model):
     percentage = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
+
+    def __str__(self):
+        return f'Blend {self.blend.blend_id} - substance {self.substance.name}'
+
+    class Meta:
+        ordering = ('blend', 'substance')

@@ -17,13 +17,19 @@ class Meeting (models.Model):
     treaty_flag = models.BooleanField(default=False)
 
     # Two existing data fields have null start/end dates
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     # No need for anything else than a CharField
     location = models.CharField(max_length=128)
 
     description = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.description
+
+    class Meta:
+        ordering = ['pk']
 
 
 class Treaty(models.Model):
@@ -46,6 +52,12 @@ class Treaty(models.Model):
     base_year = models.IntegerField(null=True)
 
     description = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = 'treaties'
 
 
 class Decision(models.Model):

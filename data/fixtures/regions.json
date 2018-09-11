@@ -27,7 +27,7 @@
         "pk": 4,
         "model": "core.region",
         "fields": {
-            "name": "Latin America and the CaribbeanLAC",
+            "name": "Latin America and the Caribbean",
             "abbr": "LAC"
         }
     },

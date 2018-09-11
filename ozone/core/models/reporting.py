@@ -41,6 +41,9 @@ class ReportingPeriod(models.Model):
 
     description = models.CharField(max_length=256, blank=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Obligation(models.Model):
     """
@@ -51,6 +54,9 @@ class Obligation(models.Model):
     # TODO: obligation-party mapping!
 
     is_continuous = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Submission(models.Model):
@@ -92,7 +98,6 @@ class Submission(models.Model):
     # make minor modifications on Party's submissions.
     filled_by_secretariat = models.BooleanField(default=False)
 
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -122,6 +127,10 @@ class Submission(models.Model):
     # We want these to be able to be empty in forms
     remarks_party = models.CharField(max_length=512, blank=True)
     remarks_secretariat = models.CharField(max_length=512, blank=True)
+
+    def __str__(self):
+        return f'{self.party.name} report on {self.obligation.name} ' \
+                'for {self.reporting_period.name} - version {self.version}'
 
     class Meta:
         # TODO: this constraint may not be true in the corner case of
