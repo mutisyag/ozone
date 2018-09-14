@@ -1,8 +1,30 @@
 from rest_framework import viewsets
 
-from ..models import Region, Subregion, Party, Submission, Article7Questionnaire
+from ozone.users.models import User
 
-from ..serializers import RegionSerializer, SubregionSerializer, PartySerializer
+from ..models import (
+    Region,
+    Subregion,
+    Party,
+    ReportingPeriod,
+    Obligation,
+    Submission,
+    Article7Questionnaire,
+    Article7Destruction,
+)
+
+from ..serializers import (
+    RegionSerializer,
+    SubregionSerializer,
+    PartySerializer,
+    ReportingPeriodSerializer,
+    ObligationSerializer,
+    UserSerializer,
+    SubmissionSerializer,
+    Article7QuestionnaireSerializer,
+    Article7DestructionSerializer,
+    CreateArticle7DestructionSerializer,
+)
 
 
 class ReadOnlyMixin:
@@ -23,3 +45,38 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all()
     serializer_class = PartySerializer
+
+
+class ReportingPeriodViewSet(viewsets.ModelViewSet):
+    queryset = ReportingPeriod.objects.all()
+    serializer_class = ReportingPeriodSerializer
+
+
+class ObligationViewSet(viewsets.ModelViewSet):
+    queryset = Obligation.objects.all()
+    serializer_class = ObligationSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class SubmissionViewSet(viewsets.ModelViewSet):
+    queryset = Submission.objects.all()
+    serializer_class = SubmissionSerializer
+
+
+class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
+    queryset = Article7Questionnaire.objects.all()
+
+    serializer_class = Article7QuestionnaireSerializer
+
+
+class Article7DestructionViewSet(viewsets.ModelViewSet):
+    queryset = Article7Destruction.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7DestructionSerializer
+        return Article7DestructionSerializer

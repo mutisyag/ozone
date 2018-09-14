@@ -89,6 +89,7 @@ class Article7Questionnaire(BaseDataReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
+    # TODO: this really should not inherit BaseDataReport
 
     has_imports = models.BooleanField()
 
