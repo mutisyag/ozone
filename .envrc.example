@@ -1,7 +1,7 @@
 # Development environment settings for direnv [ https://direnv.net/ ]
 
 export DJANGO_SETTINGS_MODULE=config.settings.local
-export SECRET_KEY='secret-key'
+export DJANGO_SECRET_KEY='secret-key'
 export ALLOWED_HOSTS=*
 export DEBUG=yes
 
