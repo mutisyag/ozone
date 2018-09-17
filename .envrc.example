@@ -15,7 +15,7 @@ export USE_DOCKER=yes
 #export DJANGO_LOG_LEVEL=DEBUG
 export DJANGO_COLLECT_STATIC=yes
 export DJANGO_MIGRATE=yes
-export DJANGO_LOAD_ROD_FIXTURES=yes
+export DJANGO_LOAD_INITIAL_FIXTURES=yes
 
 # Used to build fully qualified URLs for file download
 export OZONE_DOMAIN=<LAN IP>:8000
