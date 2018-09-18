@@ -90,7 +90,7 @@ class BlendCompositionMixin:
         # We want save() to call clean() to perform validation
         self.full_clean()
 
-        super().save(args, kwargs)
+        super().save(*args, **kwargs)
 
         if self.blend is None:
             return
@@ -109,7 +109,7 @@ class BlendCompositionMixin:
                         if quantity else None
 
                 # Now save the component substance row
-                report = self.concrete_model.objects.create(
+                report = self.__class__.objects.create(
                     submission=self.submission,
                     substance=component.substance,
                     blend=None,
