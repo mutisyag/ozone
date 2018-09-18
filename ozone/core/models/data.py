@@ -158,20 +158,20 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
     )
 
     quantity_total_new = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_total_recovered = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_feedstock = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     # Exemption quantity w/ type & decision
     # TODO: should maybe ensure that type & decision are not null if
     # quantity is not null
     quantity_exempted = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     type_exempted = models.CharField(
         max_length=32,
@@ -220,7 +220,7 @@ class Article7Questionnaire(models.Model):
     """
     Model for a simple Article 7 Questionnaire report row
     """
-
+    # TODO: is this related name OK?
     submission = models.ForeignKey(
         Submission,
         related_name='article_7_questionnaires',
@@ -278,21 +278,21 @@ class Article7Production(models.Model):
     # TODO: implement this properly!
     """
     quantity_total_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_feedstock = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # TODO: ensure in save() that this is reported only for annex C group I.
     # "Production for supply to Article 5 countries in accordance
     # with Articles 2A‑2H and 5"
     quantity_article_5 = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     # Exemption quantity w/ type & decision
     quantity_exempted = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     type_exempted = models.CharField(
         max_length=32,
@@ -375,16 +375,16 @@ class Article7NonPartyTrade(BlendCompositionMixin, models.Model):
 
     # TODO: save() - ensure at least one of these quantity fields is non-null
     quantity_import_new = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_import_recovered = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_export_new = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_export_recovered = models.FloatField(
-        validators=[MinValueValidator(0.0)], null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     remarks_party = models.CharField(max_length=512, blank=True)
