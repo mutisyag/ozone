@@ -139,11 +139,12 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
     )
 
     # One row should refer to either a substance or a blend
+    # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
+        Substance, blank=True, null=True, on_delete=models.PROTECT
     )
     blend = models.ForeignKey(
-        Blend, null=True, on_delete=models.PROTECT
+        Blend, blank=True, null=True, on_delete=models.PROTECT
     )
 
     # When non-null, this is used to signal that this particular
@@ -179,7 +180,7 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
         blank=True
     )
     decision = models.ForeignKey(
-        Decision, null=True, on_delete=models.PROTECT
+        Decision, blank=True, null=True, on_delete=models.PROTECT
     )
 
     # Each entry in the Article 7 forms can have remarks
