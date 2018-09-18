@@ -88,7 +88,7 @@ class BlendCompositionMixin:
         TODO: extend for update operations!!!
         """
         # We want save() to call clean() to perform validation
-        super().full_clean()
+        self.full_clean()
 
         super().save(args, kwargs)
 
