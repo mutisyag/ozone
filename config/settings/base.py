@@ -72,6 +72,8 @@ THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'rest_framework',
+    'bootstrap_admin',
+    'import_export',
 ]
 LOCAL_APPS = [
     'ozone.users.apps.UsersConfig',
@@ -79,7 +81,7 @@ LOCAL_APPS = [
     'ozone.core.apps.CoreConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------

@@ -1,66 +1,104 @@
 from django.contrib import admin
 
+from import_export.admin import ImportExportActionModelAdmin, ImportExportModelAdmin, ImportExportMixin
+
 # Register your models here.
-from .models import (
-    Meeting,
-    Treaty,
-    Decision,
-    Region,
-    Subregion,
-    Party,
-    PartyHistory,
-    ReportingPeriod,
-    Obligation,
-    Annex,
-    Group,
-    Substance,
-    Blend,
-    BlendComponent,
-)
+from .models import (Meeting, Treaty, Decision, Region, Subregion, Party,
+                     PartyHistory, ReportingPeriod, Obligation, Annex, Group,
+                     Substance, Blend, BlendComponent)
+from .resources import (MeetingResource, TreatyResource, SubstanceResource, PartyResource, DecisionResource,
+                        RegionResource, SubregionResource, PartyHistoryResource, AnnexResource,
+                        GroupResource, BlendResource, BlendComponentResource,
+                        ReportingPeriodResource, ObligationResource)
+
 
 # Meeting-related models
-admin.site.register(Meeting)
+@admin.register(Meeting)
+class MeetingAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["meeting_id", "description"]
+    resource_class = MeetingResource
 
 
 @admin.register(Treaty)
-class TreatyAdmin(admin.ModelAdmin):
-    pass
+class TreatyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["name"]
+    resource_class = TreatyResource
 
 
-admin.site.register(Decision)
+@admin.register(Decision)
+class DecisionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["decision_id", "name"]
+    resource_class = DecisionResource
+
 
 # Party-related models
-admin.site.register(Region)
-admin.site.register(Subregion)
+@admin.register(Region)
+class RegionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["abbr", "name"]
+    resource_class = RegionResource
+
+
+@admin.register(Subregion)
+class SubregionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["abbr", "name"]
+    resource_class = SubregionResource
 
 
 @admin.register(Party)
-class PartyAdmin(admin.ModelAdmin):
+class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
     list_display = ('name', 'subregion')
+    search_fields = ["name"]
+    resource_class = PartyResource
 
 
 @admin.register(PartyHistory)
-class PartyHistoryAdmin(admin.ModelAdmin):
+class PartyHistoryAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
     list_display = ('party', 'year')
+    search_fields = ["party"]
+    resource_class = PartyHistoryResource
 
 
 # Substance-related models
 @admin.register(Annex)
-class AnnexAdmin(admin.ModelAdmin):
+class AnnexAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
     list_display = ('name', 'description')
+    search_fields = ["name"]
+    resource_class = AnnexResource
 
 
-admin.site.register(Group)
+@admin.register(Group)
+class GroupAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["group_id", "annex"]
+    resource_class = GroupResource
 
 
 @admin.register(Substance)
-class SubstanceAdmin(admin.ModelAdmin):
+class SubstanceAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
     list_display = ('name', 'group')
+    search_fields = ["name"]
+    resource_class = SubstanceResource
 
 
-admin.site.register(Blend)
-admin.site.register(BlendComponent)
+@admin.register(Blend)
+class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["blend_id"]
+    resource_class = BlendResource
+
+
+@admin.register(BlendComponent)
+class BlendComponentAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["blend", "substance"]
+    resource_class = BlendComponentResource
+
 
 # Reporting-related models
-admin.site.register(ReportingPeriod)
-admin.site.register(Obligation)
+@admin.register(ReportingPeriod)
+class ReportingPeriodAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["name"]
+    resource_class = ReportingPeriodResource
+
+
+@admin.register(Obligation)
+class ObligationAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["name"]
+    resource_class = ObligationResource
