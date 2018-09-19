@@ -5,6 +5,8 @@ from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
+from model_utils import FieldTracker
+
 from .meeting import Decision
 from .reporting import Submission
 from .substance import Annex, Group, Substance, Blend, BlendComponent
@@ -21,6 +23,9 @@ __all__ = [
     'Article7Emission',
 ]
 
+# TODO: implement delete-prevention logic on data reports for submitted
+# submissions. :)
+
 
 @enum.unique
 class ExemptionTypes(enum.Enum):
@@ -31,7 +36,7 @@ class ExemptionTypes(enum.Enum):
     ESSENTIAL = 'Essential use'
     HIGH_AMBIENT = 'High ambient'
     PROCESS_AGENT = 'Process agent'
-    LABORATORY = 'Laboratory'       # TODO: not sure this should be here
+    LABORATORY = 'Laboratory'
     OTHER = 'Other'
 
 
@@ -47,61 +52,85 @@ class BlendCompositionMixin:
         'quantity_total_recovered',
         'quantity_feedstock'
     ]
+    Also, all models using it need a field tracker.
+
     In case a blend-based row is created, additional substance-based rows for
     each blend component will be created.
 
-    NB: order of inheritance!
-    TODO: document more!
+    NB: order of inheritance - this should come before models.Model!
     """
+
     def clean(self):
         """
-        TODO: document more!
+        Overriding the clean() method to ensure that substances and blends are
+        not both specified.
+
+        This is called explicitly from the save() method, also overridden in
+        this class.
         """
         if self.substance is None and self.blend is None:
             raise ValidationError(
                 {
-                    'substance': _(
+                    'substance': [_(
                         'Data should refer to one substance or one blend'
-                    ),
-                    'blend': _(
+                    )],
+                    'blend': [_(
                         'Data should refer to one substance or one blend'
-                    )
+                    )]
                 }
             )
         if self.substance is not None and self.blend is not None:
             raise ValidationError(
                 {
-                    'substance': _(
+                    'substance': [_(
                         'Data should not refer to both a substance and a blend'
-                    ),
-                    'blend': _(
+                    )],
+                    'blend': [_(
                         'Data should not refer to both a substance and a blend'
-                    )
+                    )]
                 }
             )
-        # TODO: should this one be at start?
+
+        # Also, no changes are allowed on blend_item != null objects
+        if self.tracker.changed() and self.tracker.previous('blend_item_id'):
+            raise ValidationError(
+                _('Substance rows derived from blends cannot be changed!')
+            )
+
         super().clean()
 
     def save(self, *args, **kwargs):
         """
-        TODO: document!!
-        TODO: extend for update operations!!!
+        This overrides save() to also create rows for each substance (component)
+        in a blend.
         """
-        # We want save() to call clean() to perform validation
+
+        # Call clean() to perform either-substance-or-blend validation
         self.full_clean()
 
         super().save(*args, **kwargs)
 
-        if self.blend is None:
+        # If blend has changed, child rows should be deleted.
+        # Tracker adds an '_id' to foreign key field names.
+        if self.tracker.has_changed('blend_id'):
+            changed_fields = self.QUANTITY_FIELDS
+        else:
+            # If any of the QUANTITY_FIELDS have changed for a blend,
+            # child rows should be deleted.
+            changed_fields = [field for field in self.QUANTITY_FIELDS
+                              if self.tracker.has_changed(field)]
+        if not changed_fields:
             return
 
         with transaction.atomic():
+            # First delete all child rows (using related_name)
+            self.components.all().delete()
+
+            # Then recreate
             components = BlendComponent.objects.filter(blend=self.blend)
             for component in components:
-                # Initialize kwargs for each component's save()
+                # Init & populate kwargs for each blend component's save()
                 field_dictionary = dict()
-
-                # Fill in
                 for field in self.QUANTITY_FIELDS:
                     # Compute individual substance quantities
                     quantity = getattr(self, field)
@@ -124,14 +153,14 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
     """
     This will be used as a base for all reporting models.
     """
+
+    # This is an abstract model, but QUANTITY_FIELDS should be the same for both
+    # models that inherit from it.
     QUANTITY_FIELDS = [
         'quantity_total_new',
         'quantity_total_recovered',
         'quantity_feedstock'
     ]
-
-    # TODO: implement delete-prevention logic on data reports for submitted
-    # submissions. :)
 
     # Django syntax for generating proper related_name in concrete model
     submission = models.ForeignKey(
@@ -146,7 +175,6 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
     blend = models.ForeignKey(
         Blend, blank=True, null=True, on_delete=models.PROTECT
     )
-
     # When non-null, this is used to signal that this particular
     # substance entry was automatically generated from an entry containing
     # a blend.
@@ -254,6 +282,9 @@ class Article7Export(BaseImportExportReport):
     All quantities expressed in metric tonnes.
     """
 
+    # FieldTracker does not work on abstract models
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_exports'
 
@@ -265,19 +296,31 @@ class Article7Import(BaseImportExportReport):
     All quantities expressed in metric tonnes.
     """
 
+    # FieldTracker does not work on abstract models
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_imports'
 
 
 class Article7Production(models.Model):
-    pass
     """
     Model for a simple Article 7 data report on production.
 
     All quantities expressed in metric tonnes.
     """
-    # TODO: implement this properly!
-    """
+
+    submission = models.ForeignKey(
+        Submission,
+        related_name='article7productions',
+        on_delete=models.PROTECT
+    )
+
+    # One row should refer to either a substance or a blend
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
+
     quantity_total_produced = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -304,17 +347,26 @@ class Article7Production(models.Model):
         Decision, null=True, on_delete=models.PROTECT
     )
 
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
+
     class Meta:
         db_table = 'reporting_article_seven_production'
-    """
 
 
-class Article7Destruction(models.Model):
+class Article7Destruction(BlendCompositionMixin, models.Model):
     """
     Model for a simple Article 7 data report on destruction.
 
     All quantities expressed in metric tonnes.
     """
+
+    # Needed by the BlendCompositionMixin
+    tracker = FieldTracker()
+    QUANTITY_FIELDS = [
+        'quantity_destroyed',
+    ]
+
     submission = models.ForeignKey(
         Submission,
         related_name='article7destructions',
@@ -325,10 +377,26 @@ class Article7Destruction(models.Model):
     substance = models.ForeignKey(
         Substance, null=True, on_delete=models.PROTECT
     )
+    blend = models.ForeignKey(
+        Blend, blank=True, null=True, on_delete=models.PROTECT
+    )
+    # When non-null, this is used to signal that this particular
+    # substance entry was automatically generated from an entry containing
+    # a blend.
+    blend_item = models.ForeignKey(
+        'self',
+        related_name='components',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
 
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
+
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_destruction'
