@@ -4,6 +4,7 @@ Pillow==5.1.0  # https://github.com/python-pillow/Pillow
 argon2-cffi==18.1.0  # https://github.com/hynek/argon2_cffi
 redis>=2.10.5  # https://github.com/antirez/redis
 bootstrap-admin==0.4.0
+openpyxl==2.4.9
 
 # Django
 # ------------------------------------------------------------------------------
