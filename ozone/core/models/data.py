@@ -156,7 +156,7 @@ class BaseReport(models.Model):
 
     # Django syntax for generating proper related_name in concrete model
     submission = models.ForeignKey(
-        Submission, related_name='%(class)ss', on_delete=models.PROTECT
+        Submission, related_name='%(class)ss', on_delete=models.CASCADE
     )
 
     # Each entry in the Article 7 forms can have remarks
@@ -167,27 +167,16 @@ class BaseReport(models.Model):
         abstract = True
 
 
-class BaseSubstanceReport(BaseReport):
-    """
-    This will be used as a base for all reporting models that accept
-    only substances.
-    """
-
-    # One row should refer to either a substance or a blend
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
-
-    class Meta:
-        abstract = True
-
-
-class BaseSubstanceBlendReport(BaseSubstanceReport):
+class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
     """
     This will be used as a base for all reporting models that accept
     both substances and blends.
     """
 
+    # `blank=True` is needed for full_clean() calls performed by save()
+    substance = models.ForeignKey(
+        Substance, blank=True, null=True, on_delete=models.PROTECT
+    )
     blend = models.ForeignKey(
         Blend, blank=True, null=True, on_delete=models.PROTECT
     )
@@ -231,7 +220,7 @@ class BaseExemption(models.Model):
         abstract = True
 
 
-class BaseImportExportReport(BlendCompositionMixin, BaseSubstanceBlendReport, BaseExemption):
+class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
     """
     This will be used as a base for data reporting models on import and export.
     """
@@ -243,11 +232,6 @@ class BaseImportExportReport(BlendCompositionMixin, BaseSubstanceBlendReport, Ba
         'quantity_total_recovered',
         'quantity_feedstock'
     ]
-
-    # `blank=True` is needed for full_clean() calls performed by save()
-    substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
-    )
 
     quantity_total_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -293,12 +277,6 @@ class Article7Questionnaire(BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
-    # TODO: is this related name OK?
-    submission = models.ForeignKey(
-        Submission,
-        related_name='article_7_questionnaires',
-        on_delete=models.CASCADE
-    )
 
     has_imports = models.BooleanField()
 
@@ -344,12 +322,17 @@ class Article7Import(BaseImportExportReport):
         db_table = 'reporting_article_seven_imports'
 
 
-class Article7Production(BaseSubstanceReport, BaseExemption):
+class Article7Production(BaseReport, BaseExemption):
     """
     Model for a simple Article 7 data report on production.
 
     All quantities expressed in metric tonnes.
     """
+
+    # One row should refer to either a substance or a blend
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
 
     quantity_total_produced = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -364,15 +347,11 @@ class Article7Production(BaseSubstanceReport, BaseExemption):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    decision = models.ForeignKey(
-        Decision, null=True, on_delete=models.PROTECT
-    )
-
     class Meta:
         db_table = 'reporting_article_seven_production'
 
 
-class Article7Destruction(BlendCompositionMixin, BaseSubstanceBlendReport):
+class Article7Destruction(BaseBlendCompositionReport):
     """
     Model for a simple Article 7 data report on destruction.
 
@@ -393,7 +372,7 @@ class Article7Destruction(BlendCompositionMixin, BaseSubstanceBlendReport):
         db_table = 'reporting_article_seven_destruction'
 
 
-class Article7NonPartyTrade(BlendCompositionMixin, BaseSubstanceBlendReport):
+class Article7NonPartyTrade(BaseBlendCompositionReport):
     """
     Model for a simple Article 7 data report on non-party trade.
 
@@ -406,10 +385,6 @@ class Article7NonPartyTrade(BlendCompositionMixin, BaseSubstanceBlendReport):
         'quantity_export_new',
         'quantity_export_recovered',
     ]
-
-    blend = models.ForeignKey(
-        Blend, null=True, on_delete=models.PROTECT
-    )
 
     trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
 
