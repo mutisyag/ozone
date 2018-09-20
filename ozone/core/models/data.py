@@ -149,29 +149,45 @@ class BlendCompositionMixin:
                 report.save()
 
 
-class BaseImportExportReport(BlendCompositionMixin, models.Model):
+class BaseReport(models.Model):
     """
-    This will be used as a base for all reporting models.
+    This will be used as a base for all reporting models, except Article7Flags.
     """
-
-    # This is an abstract model, but QUANTITY_FIELDS should be the same for both
-    # models that inherit from it.
-    QUANTITY_FIELDS = [
-        'quantity_total_new',
-        'quantity_total_recovered',
-        'quantity_feedstock'
-    ]
 
     # Django syntax for generating proper related_name in concrete model
     submission = models.ForeignKey(
         Submission, related_name='%(class)ss', on_delete=models.PROTECT
     )
 
+    # Each entry in the Article 7 forms can have remarks
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class BaseSubstanceReport(BaseReport):
+    """
+    This will be used as a base for all reporting models that accept
+    only substances.
+    """
+
     # One row should refer to either a substance or a blend
-    # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
+        Substance, null=True, on_delete=models.PROTECT
     )
+
+    class Meta:
+        abstract = True
+
+
+class BaseSubstanceBlendReport(BaseSubstanceReport):
+    """
+    This will be used as a base for all reporting models that accept
+    both substances and blends.
+    """
+
     blend = models.ForeignKey(
         Blend, blank=True, null=True, on_delete=models.PROTECT
     )
@@ -186,15 +202,15 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
         on_delete=models.CASCADE
     )
 
-    quantity_total_new = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    quantity_total_recovered = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    quantity_feedstock = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
+    class Meta:
+        abstract = True
+
+
+class BaseExemption(models.Model):
+    """
+    This will be used as a base for data reporting models that contains informations
+    about exempted substances.
+    """
 
     # Exemption quantity w/ type & decision
     # TODO: should maybe ensure that type & decision are not null if
@@ -211,9 +227,37 @@ class BaseImportExportReport(BlendCompositionMixin, models.Model):
         Decision, blank=True, null=True, on_delete=models.PROTECT
     )
 
-    # Each entry in the Article 7 forms can have remarks
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
+    class Meta:
+        abstract = True
+
+
+class BaseImportExportReport(BlendCompositionMixin, BaseSubstanceBlendReport, BaseExemption):
+    """
+    This will be used as a base for data reporting models on import and export.
+    """
+
+    # This is an abstract model, but QUANTITY_FIELDS should be the same for both
+    # models that inherit from it.
+    QUANTITY_FIELDS = [
+        'quantity_total_new',
+        'quantity_total_recovered',
+        'quantity_feedstock'
+    ]
+
+    # `blank=True` is needed for full_clean() calls performed by save()
+    substance = models.ForeignKey(
+        Substance, blank=True, null=True, on_delete=models.PROTECT
+    )
+
+    quantity_total_new = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_total_recovered = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
 
     class Meta:
         abstract = True
@@ -245,7 +289,7 @@ class Article7Flags(models.Model):
         db_table = 'reporting_article_seven_flags'
 
 
-class Article7Questionnaire(models.Model):
+class Article7Questionnaire(BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
@@ -267,9 +311,6 @@ class Article7Questionnaire(models.Model):
     has_nonparty = models.BooleanField()
 
     has_emissions = models.BooleanField()
-
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
@@ -303,23 +344,12 @@ class Article7Import(BaseImportExportReport):
         db_table = 'reporting_article_seven_imports'
 
 
-class Article7Production(models.Model):
+class Article7Production(BaseSubstanceReport, BaseExemption):
     """
     Model for a simple Article 7 data report on production.
 
     All quantities expressed in metric tonnes.
     """
-
-    submission = models.ForeignKey(
-        Submission,
-        related_name='article7productions',
-        on_delete=models.PROTECT
-    )
-
-    # One row should refer to either a substance or a blend
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
 
     quantity_total_produced = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -334,27 +364,15 @@ class Article7Production(models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    # Exemption quantity w/ type & decision
-    quantity_exempted = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    type_exempted = models.CharField(
-        max_length=32,
-        choices=((e.value, e.name) for e in ExemptionTypes),
-        blank=True
-    )
     decision = models.ForeignKey(
         Decision, null=True, on_delete=models.PROTECT
     )
-
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_production'
 
 
-class Article7Destruction(BlendCompositionMixin, models.Model):
+class Article7Destruction(BlendCompositionMixin, BaseSubstanceBlendReport):
     """
     Model for a simple Article 7 data report on destruction.
 
@@ -367,42 +385,15 @@ class Article7Destruction(BlendCompositionMixin, models.Model):
         'quantity_destroyed',
     ]
 
-    submission = models.ForeignKey(
-        Submission,
-        related_name='article7destructions',
-        on_delete=models.PROTECT
-    )
-
-    # One row should refer to either a substance or a blend
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
-    blend = models.ForeignKey(
-        Blend, blank=True, null=True, on_delete=models.PROTECT
-    )
-    # When non-null, this is used to signal that this particular
-    # substance entry was automatically generated from an entry containing
-    # a blend.
-    blend_item = models.ForeignKey(
-        'self',
-        related_name='components',
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE
-    )
-
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_destruction'
 
 
-class Article7NonPartyTrade(BlendCompositionMixin, models.Model):
+class Article7NonPartyTrade(BlendCompositionMixin, BaseSubstanceBlendReport):
     """
     Model for a simple Article 7 data report on non-party trade.
 
@@ -416,28 +407,8 @@ class Article7NonPartyTrade(BlendCompositionMixin, models.Model):
         'quantity_export_recovered',
     ]
 
-    submission = models.ForeignKey(
-        Submission,
-        related_name='article7nonpartytrades',
-        on_delete=models.PROTECT
-    )
-
-    # One row should refer to either a substance or a blend
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
     blend = models.ForeignKey(
         Blend, null=True, on_delete=models.PROTECT
-    )
-    # When non-null, this is used to signal that this particular
-    # substance entry was automatically generated from an entry containing
-    # a blend.
-    blend_item = models.ForeignKey(
-        'self',
-        related_name='components',
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE
     )
 
     trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
@@ -456,35 +427,22 @@ class Article7NonPartyTrade(BlendCompositionMixin, models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
-
     class Meta:
         db_table = 'reporting_article_seven_non_party_trade'
 
 
-class Article7Emission(models.Model):
+class Article7Emission(BaseReport):
     """
     Model for a simple Article 7 data report on HFC-23 emissions.
 
     All quantities expressed in metric tonnes.
     """
 
-    # related_name respecting the convention for all other models here.
-    submission = models.ForeignKey(
-        Submission,
-        related_name='article7emissions',
-        on_delete=models.PROTECT
-    )
-
     facility_name = models.CharField(max_length=256)
 
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_emissions'
