@@ -329,7 +329,6 @@ class Article7Production(BaseReport, BaseExemption):
     All quantities expressed in metric tonnes.
     """
 
-    # One row should refer to either a substance or a blend
     substance = models.ForeignKey(
         Substance, null=True, on_delete=models.PROTECT
     )
