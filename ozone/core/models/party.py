@@ -11,6 +11,7 @@ __all__ = [
     'Subregion',
     'Party',
     'PartyHistory',
+    'Language',
 ]
 
 
@@ -142,7 +143,7 @@ class Party(models.Model):
         blank=True
     )
 
-    remarks = models.CharField(max_length=512, blank=True)
+    remark = models.CharField(max_length=512, blank=True)
 
     def __str__(self):
         return self.name
@@ -202,3 +203,21 @@ class PartyHistory(models.Model):
         unique_together = ('party', 'year')
         ordering = ('party', 'year')
         verbose_name_plural = 'parties history'
+
+
+class Language(models.Model):
+    """
+    Model for languages used by Ozone Secretariat.
+    """
+
+    language_id = models.CharField(max_length=16, unique=True)
+
+    name = models.CharField(max_length=64, unique=True)
+
+    remark = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ('name',)

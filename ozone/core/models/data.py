@@ -1,5 +1,3 @@
-import enum
-
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
@@ -7,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
-from .meeting import Decision
+from .meeting import Decision, ExemptionTypes
 from .reporting import Submission
 from .substance import Annex, Group, Substance, Blend, BlendComponent
 from .party import Party
@@ -25,19 +23,6 @@ __all__ = [
 
 # TODO: implement delete-prevention logic on data reports for submitted
 # submissions. :)
-
-
-@enum.unique
-class ExemptionTypes(enum.Enum):
-    """
-    General enum of ratification types; should be useful in other models too
-    """
-    CRITICAL = 'Critical use'
-    ESSENTIAL = 'Essential use'
-    HIGH_AMBIENT = 'High ambient'
-    PROCESS_AGENT = 'Process agent'
-    LABORATORY = 'Laboratory'
-    OTHER = 'Other'
 
 
 class BlendCompositionMixin:
