@@ -3,8 +3,7 @@ import enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-from .meeting import Treaty
-
+from .meeting import ExemptionTypes, Treaty
 
 __all__ = [
     'Annex',
@@ -43,6 +42,8 @@ class Group(models.Model):
         Annex, related_name='groups', on_delete=models.PROTECT
     )
 
+    name = models.CharField(max_length=64, unique=True, default="")
+
     description = models.CharField(max_length=256)
 
     control_treaty = models.ForeignKey(
@@ -56,7 +57,11 @@ class Group(models.Model):
     phase_out_year_non_article_5 = models.DateField(blank=True, null=True)
 
     # TODO: should this be a foreign key?
-    exemption = models.CharField(max_length=64, blank=True)
+    exemption = models.CharField(
+        max_length=64,
+        choices=((e.value, e.name) for e in ExemptionTypes),
+        blank=True
+    )
 
     def __str__(self):
         return f'Group {self.group_id}'

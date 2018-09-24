@@ -1,10 +1,26 @@
+import enum
+
 from django.db import models
 
 __all__ = [
+    'ExemptionTypes',
     'Meeting',
     'Treaty',
     'Decision',
 ]
+
+
+@enum.unique
+class ExemptionTypes(enum.Enum):
+    """
+    General enum of ratification types; should be useful in other models too
+    """
+    CRITICAL = 'Critical use'
+    ESSENTIAL = 'Essential use'
+    HIGH_AMBIENT = 'High ambient'
+    PROCESS_AGENT = 'Process agent'
+    LABORATORY = 'Laboratory'
+    OTHER = 'Other'
 
 
 class Meeting (models.Model):
@@ -73,4 +89,4 @@ class Decision(models.Model):
 
     name = models.CharField(max_length=256, unique=True)
 
-    remarks = models.CharField(max_length=256, blank=True)
+    remark = models.CharField(max_length=256, blank=True)

@@ -5,12 +5,13 @@
         "fields": {
             "group_id": "AI",
             "annex": 1,
+            "name": "Annex A Group I",
             "description": "Chlorofluorocarbons (CFCs)",
             "control_treaty": 2,
             "report_treaty": 2,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -19,12 +20,13 @@
         "fields": {
             "group_id": "AII",
             "annex": 1,
+            "name": "Annex A Group II",
             "description": "Halons",
             "control_treaty": 2,
             "report_treaty": 2,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1994-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -33,12 +35,13 @@
         "fields": {
             "group_id": "BI",
             "annex": 2,
+            "name": "Annex B Group I",
             "description": "Other Fully Halogenated CFCs",
             "control_treaty": 3,
             "report_treaty": 3,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -47,12 +50,13 @@
         "fields": {
             "group_id": "BII",
             "annex": 2,
+            "name": "Annex B Group II",
             "description": "Carbon Tetrachloride (CTC)",
             "control_treaty": 3,
             "report_treaty": 3,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -61,12 +65,13 @@
         "fields": {
             "group_id": "BIII",
             "annex": 2,
+            "name": "Annex B Group III",
             "description": "Methyl Chloroform (MC)",
             "control_treaty": 3,
             "report_treaty": 3,
             "phase_out_year_article_5": "2015-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -75,12 +80,13 @@
         "fields": {
             "group_id": "CI",
             "annex": 3,
+            "name": "Annex C Group I",
             "description": "Hydrochlorofluorocarbons (HCFCs)",
             "control_treaty": 4,
             "report_treaty": 3,
             "phase_out_year_article_5": "2030-01-01",
             "phase_out_year_non_article_5": "2020-01-01",
-            "exemption": "See Section 1.2"
+            "exemption": "Other"
         }
     },
     {
@@ -89,12 +95,13 @@
         "fields": {
             "group_id": "CII",
             "annex": 3,
+            "name": "Annex C Group II",
             "description": "Hydrobromofluorocarbons (HBFCs)",
             "control_treaty": 4,
             "report_treaty": 4,
             "phase_out_year_article_5": "1996-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -103,12 +110,13 @@
         "fields": {
             "group_id": "CIII",
             "annex": 3,
+            "name": "Annex C Group III",
             "description": "Bromochloromethane (BCM)",
             "control_treaty": 6,
             "report_treaty": 6,
             "phase_out_year_article_5": "2002-01-01",
             "phase_out_year_non_article_5": "2002-01-01",
-            "exemption": "EU"
+            "exemption": "Essential use"
         }
     },
     {
@@ -117,12 +125,13 @@
         "fields": {
             "group_id": "EI",
             "annex": 4,
+            "name": "Annex E Group I",
             "description": "Methyl Bromide (MB)",
             "control_treaty": 4,
             "report_treaty": 4,
             "phase_out_year_article_5": "2015-01-01",
             "phase_out_year_non_article_5": "2005-01-01",
-            "exemption": "CU"
+            "exemption": "Critical use"
         }
     },
     {
@@ -131,6 +140,7 @@
         "fields": {
             "group_id": "FI",
             "annex": 5,
+            "name": "Annex F Group I",
             "description": "Hydrofluorocarbons (HFCs)",
             "control_treaty": 7,
             "report_treaty": 7,
@@ -145,6 +155,7 @@
         "fields": {
             "group_id": "FII",
             "annex": 5,
+            "name": "Annex F Group II",
             "description": "HFC-23",
             "control_treaty": 7,
             "report_treaty": 7,

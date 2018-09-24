@@ -13,6 +13,7 @@ class Command(BaseCommand):
                 'annexes',
                 'groups',
                 'substances',
+                'languages',
                 )
 
     def handle(self, *args, **options):

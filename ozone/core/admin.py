@@ -1,15 +1,46 @@
 from django.contrib import admin
 
-from import_export.admin import ImportExportActionModelAdmin, ImportExportModelAdmin, ImportExportMixin
+from import_export.admin import (
+    ImportExportActionModelAdmin,
+    ImportExportModelAdmin,
+    ImportExportMixin,
+)
 
 # Register your models here.
-from .models import (Meeting, Treaty, Decision, Region, Subregion, Party,
-                     PartyHistory, ReportingPeriod, Obligation, Annex, Group,
-                     Substance, Blend, BlendComponent)
-from .resources import (MeetingResource, TreatyResource, SubstanceResource, PartyResource, DecisionResource,
-                        RegionResource, SubregionResource, PartyHistoryResource, AnnexResource,
-                        GroupResource, BlendResource, BlendComponentResource,
-                        ReportingPeriodResource, ObligationResource)
+from .models import (
+    Meeting,
+    Treaty,
+    Decision,
+    Region,
+    Subregion,
+    Party,
+    PartyHistory,
+    ReportingPeriod,
+    Obligation,
+    Annex,
+    Group,
+    Substance,
+    Blend,
+    BlendComponent,
+    Language,
+)
+from .resources import (
+    MeetingResource,
+    TreatyResource,
+    SubstanceResource,
+    PartyResource,
+    DecisionResource,
+    RegionResource,
+    SubregionResource,
+    PartyHistoryResource,
+    AnnexResource,
+    GroupResource,
+    BlendResource,
+    BlendComponentResource,
+    ReportingPeriodResource,
+    ObligationResource,
+    LanguageResource,
+)
 
 
 # Meeting-related models
@@ -52,10 +83,18 @@ class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 
 
 @admin.register(PartyHistory)
-class PartyHistoryAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class PartyHistoryAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('party', 'year')
     search_fields = ["party"]
     resource_class = PartyHistoryResource
+
+
+@admin.register(Language)
+class Language(ImportExportModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    search_fields = ["name"]
+    resource_class = LanguageResource
 
 
 # Substance-related models
@@ -86,19 +125,25 @@ class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 
 
 @admin.register(BlendComponent)
-class BlendComponentAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class BlendComponentAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     search_fields = ["blend", "substance"]
     resource_class = BlendComponentResource
 
 
 # Reporting-related models
 @admin.register(ReportingPeriod)
-class ReportingPeriodAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class ReportingPeriodAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     search_fields = ["name"]
     resource_class = ReportingPeriodResource
 
 
 @admin.register(Obligation)
-class ObligationAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class ObligationAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     search_fields = ["name"]
     resource_class = ObligationResource

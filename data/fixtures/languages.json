@@ -1,0 +1,56 @@
+[
+    {
+        "pk": 1,
+        "model": "core.language",
+        "fields": {
+            "language_id": "A",
+            "name": "Arabic",
+            "remark": ""
+        }
+    },
+    {
+        "pk": 2,
+        "model": "core.language",
+        "fields": {
+            "language_id": "C",
+            "name": "Chinese",
+            "remark": ""
+        }
+    },
+    {
+        "pk": 3,
+        "model": "core.language",
+        "fields": {
+            "language_id": "E",
+            "name": "English",
+            "remark": ""
+        }
+    },
+    {
+        "pk": 4,
+        "model": "core.language",
+        "fields": {
+            "language_id": "F",
+            "name": "French",
+            "remark": ""
+        }
+    },
+    {
+        "pk": 5,
+        "model": "core.language",
+        "fields": {
+            "language_id": "R",
+            "name": "Russian",
+            "remark": ""
+        }
+    },
+    {
+        "pk": 6,
+        "model": "core.language",
+        "fields": {
+            "language_id": "S",
+            "name": "Spanish",
+            "remark": ""
+        }
+    }
+]
