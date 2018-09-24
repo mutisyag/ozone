@@ -75,12 +75,9 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 
 class Article7DestructionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
-        try:
-            return Article7Destruction.objects.filter(
-                submission=self.kwargs['submission_pk']
-            )
-        except KeyError:
-            raise Exception(str(self.kwargs))
+        return Article7Destruction.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
 
     def get_serializer_class(self):
         if self.request.method == "POST":
