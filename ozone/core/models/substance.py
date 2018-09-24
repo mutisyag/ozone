@@ -58,10 +58,6 @@ class Group(models.Model):
     # TODO: should this be a foreign key?
     exemption = models.CharField(max_length=64, blank=True)
 
-    # TODO: figure out a way to model consumption and production baselines.
-    # These will probably have to sit in a special table, with foreign keys
-    # to parties and Group IDs
-
     def __str__(self):
         return f'Group {self.group_id}'
 
@@ -175,8 +171,6 @@ class BlendComponent(models.Model):
         Blend, related_name='components', on_delete=models.PROTECT
     )
 
-    # TODO: 'Ozone Business Data Tables' document *seems* to suggest that
-    # the SubstanceRCode should be used instead - any need for that?
     substance = models.ForeignKey(
         Substance, related_name='blends', on_delete=models.PROTECT
     )
