@@ -52,7 +52,7 @@ destructions_router = routers.NestedSimpleRouter(
 destructions_router.register(
     "article7-destructions",
     views.Article7DestructionViewSet,
-    base_name="submission-article7-destruction",
+    base_name="submission-article7-destructions",
 )
 
 nested_routers = [
