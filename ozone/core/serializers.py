@@ -1,4 +1,3 @@
-from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
@@ -75,10 +74,12 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
     )
     substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
+    blend_item = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Article7Destruction
-        fields = ('submission', 'substance', 'blend', 'quantity_destroyed',)
+        fields = ('submission', 'substance', 'blend', 'blend_item',
+                  'quantity_destroyed',)
 
 
 class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
@@ -145,4 +146,9 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
                   'article7questionnaires', 'article7destructions',
                   'created_by', 'last_edited_by', 'obligation')
 
-# TODO: CreateSubmissionSerializer
+
+class CreateSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ('party', 'reporting_period', 'obligation', 'version',
+                  'created_by', 'last_edited_by',)

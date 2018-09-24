@@ -21,6 +21,7 @@ from ..serializers import (
     ObligationSerializer,
     UserSerializer,
     SubmissionSerializer,
+    CreateSubmissionSerializer,
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
@@ -65,7 +66,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
-    serializer_class = SubmissionSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateSubmissionSerializer
+        return SubmissionSerializer
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
