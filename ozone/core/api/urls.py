@@ -1,24 +1,24 @@
-from django.conf.urls import url, include
 from rest_framework_nested import routers
 
 from . import views
 
 # Needed by Django >= 2.0
-app_name = 'core'
+app_name = "core"
 
 
 class DefaultRouter(routers.DefaultRouter):
     """
     Extends `DefaultRouter` class to add a method for extending url routes from another router.
     """
-    def extend(self, router):
+
+    def extend(self, added_router):
         """
         Extend the routes with url routes of the passed in router.
 
         Args:
              router: SimpleRouter instance containing route definitions.
         """
-        self.registry.extend(router.registry)
+        self.registry.extend(added_router.registry)
 
 
 router = DefaultRouter()
@@ -33,20 +33,33 @@ router.register(r"obligations", views.ObligationViewSet)
 
 # Submissions
 submissions_router = routers.SimpleRouter()
-submissions_router.register(r'submissions', views.SubmissionViewSet)
+submissions_router.register(r"submissions", views.SubmissionViewSet)
 router.extend(submissions_router)
 
 # Data reports, nested on submissions
+questionnaire_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+questionnaire_router.register(
+    "article7-questionnaire",
+    views.Article7QuestionnaireViewSet,
+    base_name="submission-article7-questionnaire",
+)
+
 destructions_router = routers.NestedSimpleRouter(
-    submissions_router, 'submissions', lookup='submission'
+    submissions_router, "submissions", lookup="submission"
 )
 destructions_router.register(
-    'article7-destructions',
+    "article7-destructions",
     views.Article7DestructionViewSet,
-    base_name='submission-article7-destruction'
+    base_name="submission-article7-destruction",
 )
-#router.register(r"article7questionnaires", views.Article7QuestionnaireViewSet)
 
-nested_routers = [destructions_router, ]
+nested_routers = [
+    questionnaire_router,
+    destructions_router,
+]
 
-urlpatterns = router.urls + [url for router in nested_routers for url in router.urls]
+urlpatterns = router.urls + [url
+                             for router in nested_routers
+                             for url in router.urls]

@@ -22,6 +22,7 @@ from ..serializers import (
     UserSerializer,
     SubmissionSerializer,
     Article7QuestionnaireSerializer,
+    CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
     CreateArticle7DestructionSerializer,
 )
@@ -68,9 +69,15 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
-    queryset = Article7Questionnaire.objects.all()
+    def get_queryset(self):
+        return Article7Questionnaire.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
 
-    serializer_class = Article7QuestionnaireSerializer
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7QuestionnaireSerializer
+        return Article7QuestionnaireSerializer
 
 
 class Article7DestructionViewSet(viewsets.ModelViewSet):

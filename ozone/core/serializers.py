@@ -1,5 +1,6 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
+from rest_framework_nested.relations import NestedHyperlinkedRelatedField
 
 from ozone.users.models import User
 from .models import (
@@ -14,19 +15,21 @@ from .models import (
 )
 
 
-class RegionSerializer(serializers.HyperlinkedModelSerializer):
+class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
         fields = ('name', 'abbr')
 
 
-class SubregionSerializer(serializers.HyperlinkedModelSerializer):
+class SubregionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subregion
         fields = ('name', 'abbr', 'region')
 
 
-class PartySerializer(serializers.HyperlinkedModelSerializer):
+class PartySerializer(serializers.ModelSerializer):
+    subregion = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = Party
         fields = ('name', 'abbr', 'subregion')
@@ -60,6 +63,12 @@ class Article7QuestionnaireSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Questionnaire
+        fields = '__all__'
+
+
 class Article7DestructionSerializer(serializers.ModelSerializer):
     submission = serializers.PrimaryKeyRelatedField(
         read_only=True, many=False
@@ -76,15 +85,23 @@ class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SubmissionSerializer(serializers.ModelSerializer):
+class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
     submission.
     """
+    party = PartySerializer(many=False, read_only=True)
+
+
+    # TODO: singularize this (inc. Model)
     # At most one questionnaire per emission, but multiple other data
-    article7questionnaires = Article7QuestionnaireSerializer(
-        many=False, read_only=True
+    article7questionnaires = serializers.HyperlinkedIdentityField(
+        many=False,
+        read_only=True,
+        view_name='submission-article7-questionnaire-list',
+        lookup_url_kwarg='submission_pk'
     )
+
     article7destructions = Article7DestructionSerializer(
         many=True, read_only=True
     )

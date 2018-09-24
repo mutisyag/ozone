@@ -23,7 +23,7 @@ urlpatterns = [
 
     # Your stuff: custom urls includes go here
     path("api/",
-         include("ozone.core.api.urls", namespace="api"),
+         include("ozone.core.api.urls", namespace="core"),
     ),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
