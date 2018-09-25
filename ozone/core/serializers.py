@@ -152,3 +152,9 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
         model = Submission
         fields = ('party', 'reporting_period', 'obligation', 'version',
                   'created_by', 'last_edited_by',)
+
+
+class ListSubmissionSerializer(CreateSubmissionSerializer):
+    class Meta(CreateSubmissionSerializer.Meta):
+        fields = ('url',) + CreateSubmissionSerializer.Meta.fields
+        extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}

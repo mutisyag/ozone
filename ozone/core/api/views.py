@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.response import Response
 
 from ozone.users.models import User
 
@@ -21,6 +22,7 @@ from ..serializers import (
     ObligationSerializer,
     UserSerializer,
     SubmissionSerializer,
+    ListSubmissionSerializer,
     CreateSubmissionSerializer,
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
@@ -71,6 +73,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         if self.request.method == "POST":
             return CreateSubmissionSerializer
         return SubmissionSerializer
+
+    def list(self, request, *args, **kwargs):
+        serializer = ListSubmissionSerializer(
+            self.queryset, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
