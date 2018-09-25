@@ -76,16 +76,14 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article7Destruction
-        fields = ('id', 'substance', 'blend', 'blend_item',
-                  'quantity_destroyed', 'remarks_party', 'remarks_os',)
+        exclude = ('submission',)
 
 
 class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Destruction
-        # TODO: automate fields population! (using model)
-        fields = ('substance', 'blend', 'quantity_destroyed', 'remarks_party',
-                  'remarks_os',)
+        # TODO: create base class for these serializers
+        exclude = ('submission', 'blend_item')
 
 
 class SubmissionArticle7DestructionSerializer(
