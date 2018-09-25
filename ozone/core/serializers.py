@@ -70,16 +70,13 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
-    submission = serializers.PrimaryKeyRelatedField(
-        read_only=True, many=False
-    )
     substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Article7Destruction
-        fields = ('submission', 'substance', 'blend', 'blend_item',
+        fields = ('id', 'substance', 'blend', 'blend_item',
                   'quantity_destroyed',)
 
 
