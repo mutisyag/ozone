@@ -126,8 +126,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=False, read_only=True
     )
 
-    # TODO: singular-ize this (inc. Model)
-    # At most one questionnaire per emission, but multiple other data
+    # At most one questionnaire per submission, but multiple other data
     article7questionnaire_url = serializers.SerializerMethodField()
     article7questionnaire = serializers.HyperlinkedIdentityField(
         many=False,
