@@ -60,6 +60,16 @@ class Article7QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        submission_id = validated_data.pop('submission_id')
+        submission = Submission.objects.get(pk=submission_id)
+
+        questionnaire, created = Article7Questionnaire.objects.update_or_create(
+            submission=submission,
+            defaults=validated_data
+        )
+        return questionnaire
+
     class Meta:
         model = Article7Questionnaire
         exclude = ('submission',)
