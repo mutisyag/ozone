@@ -258,7 +258,7 @@ class Article7Flags(models.Model):
         db_table = 'reporting_article_seven_flags'
 
 
-class Article7Questionnaire(BaseReport):
+class Article7Questionnaire(models.Model):
     """
     Model for a simple Article 7 Questionnaire report row
     """
