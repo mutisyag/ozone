@@ -106,11 +106,20 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
+    # TODO: these URL fields could have a common implementation, by
+    # extending the HyperlinkedModelSerializer class
     def get_article7destructions_url(self, obj):
         return reverse(
             'core:submission-article7-destructions-list',
             kwargs={'submission_pk': obj.id},
             request = self.context['request']
+        )
+
+    def get_article7questionnaires_url(self, obj):
+        return reverse(
+            'core:submission-article7-questionnaire-list',
+            kwargs={'submission_pk': obj.id},
+            request=self.context['request']
         )
 
     party = serializers.StringRelatedField(many=False, read_only=True)
@@ -123,6 +132,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 
     # TODO: singular-ize this (inc. Model)
     # At most one questionnaire per emission, but multiple other data
+    article7questionnaires_url = serializers.SerializerMethodField()
     article7questionnaires = serializers.HyperlinkedIdentityField(
         many=False,
         read_only=True,
@@ -149,11 +159,18 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Submission
-        fields = ('id', 'party', 'reporting_period', 'version',
-                  'article7questionnaires', #'article7questionnaires_url',
-                  'article7destructions', 'article7destructions_url',
-                  'created_by', 'last_edited_by', 'obligation')
-        read_only_fields = ('article7destructions_url',)
+
+        fields = (
+            'id', 'party', 'reporting_period', 'obligation', 'version',
+            'article7questionnaires_url', 'article7questionnaires',
+            'article7destructions_url', 'article7destructions',
+            'created_by', 'last_edited_by',
+        )
+
+        read_only_fields = (
+            'article7questionnaires_url',
+            'article7destructions_url',
+        )
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
