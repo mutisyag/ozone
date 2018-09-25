@@ -103,3 +103,7 @@ class Article7DestructionViewSet(viewsets.ModelViewSet):
         if self.request.method == "POST":
             return CreateArticle7DestructionSerializer
         return Article7DestructionSerializer
+
+    # Needed to ensure that serializer uses the correct submission
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])

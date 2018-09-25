@@ -77,13 +77,15 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Destruction
         fields = ('id', 'substance', 'blend', 'blend_item',
-                  'quantity_destroyed',)
+                  'quantity_destroyed', 'remarks_party', 'remarks_os',)
 
 
 class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Destruction
-        fields = '__all__'
+        # TODO: automate fields population! (using model)
+        fields = ('substance', 'blend', 'quantity_destroyed', 'remarks_party',
+                  'remarks_os',)
 
 
 class SubmissionArticle7DestructionSerializer(
