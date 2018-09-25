@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
+from rest_framework.reverse import reverse
 
 from ozone.users.models import User
 from .models import (
@@ -108,6 +109,13 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
+    @staticmethod
+    def get_article7destructions_url(obj):
+        return reverse(
+            'core:submission-article7-destructions-list',
+            kwargs={'submission_pk': obj.id},
+        )
+
     party = serializers.StringRelatedField(many=False, read_only=True)
     reporting_period = serializers.StringRelatedField(
         many=False, read_only=True
@@ -125,10 +133,12 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg='submission_pk'
     )
 
-    article7destructions = SubmissionArticle7DestructionSerializer(
-        many=True,
-        read_only=True
+    # We want to add a URL for the destructions list
+    article7destructions_url = serializers.SerializerMethodField()
+    article7destructions = Article7DestructionSerializer(
+        many=True, read_only=True
     )
+
     created_by = serializers.PrimaryKeyRelatedField(
         many=False,
         queryset=User.objects.all(),
@@ -143,8 +153,10 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Submission
         fields = ('id', 'party', 'reporting_period', 'version',
-                  'article7questionnaires', 'article7destructions',
+                  'article7questionnaires', #'article7questionnaires_url',
+                  'article7destructions', 'article7destructions_url',
                   'created_by', 'last_edited_by', 'obligation')
+        read_only_fields = ('article7destructions_url',)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
