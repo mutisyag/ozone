@@ -128,11 +128,8 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 
     # At most one questionnaire per submission, but multiple other data
     article7questionnaire_url = serializers.SerializerMethodField()
-    article7questionnaire = serializers.HyperlinkedIdentityField(
-        many=False,
-        read_only=True,
-        view_name='core:submission-article7-questionnaire',
-        lookup_url_kwarg='submission_pk'
+    article7questionnaire = Article7QuestionnaireSerializer(
+        many=False, read_only=True
     )
 
     # We want to add a URL for the destructions list
