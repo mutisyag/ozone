@@ -112,7 +112,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "AFR_UNK",
             "region": 1
         }
     },
@@ -121,7 +121,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "ASIA_UNK",
             "region": 2
         }
     },
@@ -130,7 +130,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "EEUR_UNK",
             "region": 3
         }
     },
@@ -139,7 +139,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "LAC_UNK",
             "region": 4
         }
     },
@@ -148,7 +148,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "UNK_UNK",
             "region": 5
         }
     },
@@ -157,7 +157,7 @@
         "model": "core.subregion",
         "fields": {
             "name": "Unspecified",
-            "abbr": "UNK",
+            "abbr": "WEUR_UNK",
             "region": 6
         }
     }

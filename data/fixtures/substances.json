@@ -20,7 +20,11 @@
           "fluorines": "F",
           "formula": "CFCl3",
           "group": 1,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-11",
+          "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
+          "main_usage": "Refrigerant / Solvent / Process agent / Feedstock / Foam blowing agent / Propellant"
       }
   },
   {
@@ -44,7 +48,11 @@
           "fluorines": "F3",
           "formula": "C2F3Cl3",
           "group": 1,
-          "min_odp": 0.8
+          "min_odp": 0.8,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-113",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -68,7 +76,11 @@
           "fluorines": "F4",
           "formula": "C2F4Cl2",
           "group": 1,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-114",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -92,7 +104,11 @@
           "fluorines": "F5",
           "formula": "C2F5Cl",
           "group": 1,
-          "min_odp": 0.6
+          "min_odp": 0.6,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-115",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -116,7 +132,11 @@
           "fluorines": "F2",
           "formula": "CF2Cl2",
           "group": 1,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-12",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -139,7 +159,11 @@
           "fluorines": "F2",
           "formula": "CF2BrCl",
           "group": 2,
-          "min_odp": 3
+          "min_odp": 3,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-12B1",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -162,7 +186,11 @@
           "fluorines": "F3",
           "formula": "CF3Br",
           "group": 2,
-          "min_odp": 10
+          "min_odp": 10,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-13B1",
+          "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
+          "main_usage": "Feedstock / Firefighting"
       }
   },
   {
@@ -185,7 +213,11 @@
           "fluorines": "F4",
           "formula": "C2F4Br2",
           "group": 2,
-          "min_odp": 6
+          "min_odp": 6,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-114B2",
+          "mp_control": "",
+          "main_usage": "Refrigerant / Firefighting"
       }
   },
   {
@@ -207,7 +239,11 @@
           "fluorines": "F",
           "formula": "C2FCl5",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-111",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -229,7 +265,11 @@
           "fluorines": "F2",
           "formula": "C2F2Cl4",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-112",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -252,7 +292,11 @@
           "fluorines": "F3",
           "formula": "CF3Cl",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-13",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -274,7 +318,11 @@
           "fluorines": "F",
           "formula": "C3FCl7",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-211",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -296,7 +344,11 @@
           "fluorines": "F2",
           "formula": "C3F2Cl6",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-212",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -318,7 +370,11 @@
           "fluorines": "F3",
           "formula": "C3F3Cl5",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-213",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -340,7 +396,11 @@
           "fluorines": "F4",
           "formula": "C3F4Cl4",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-214",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -362,7 +422,11 @@
           "fluorines": "F5",
           "formula": "C3F5Cl3",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-215",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -384,7 +448,11 @@
           "fluorines": "F6",
           "formula": "C3F6Cl2",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-216",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -406,7 +474,11 @@
           "fluorines": "F7",
           "formula": "C3F7Cl",
           "group": 3,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-217",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -429,7 +501,10 @@
           "fluorines": "",
           "formula": "CCl4",
           "group": 4,
-          "min_odp": 1.1
+          "min_odp": 1.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
+          "main_usage": "Solvent / Process agent / Feedstock"
       }
   },
   {
@@ -452,7 +527,11 @@
           "fluorines": "",
           "formula": "C2H3Cl3",
           "group": 5,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-140a",
+          "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
+          "main_usage": "Solvent / Feedstock / Cleaning"
       }
   },
   {
@@ -474,7 +553,11 @@
           "fluorines": "F",
           "formula": "C2HFCl4",
           "group": 6,
-          "min_odp": 0.01
+          "min_odp": 0.01,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-121",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -497,7 +580,11 @@
           "fluorines": "F2",
           "formula": "C2HF2Cl3",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-122",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -520,7 +607,11 @@
           "fluorines": "F3",
           "formula": "C2HF3Cl2",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-123",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -537,12 +628,16 @@
           "description": "Dichlorotrifluoroethanes",
           "chlorines": "Cl2",
           "bromines": "",
+          "number_of_isomers": null,
           "gwp": 77,
           "max_odp": 0.02,
           "fluorines": "F3",
           "formula": "CHCl2CF3",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -565,7 +660,11 @@
           "fluorines": "F4",
           "formula": "C2HF4Cl",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-124",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -587,7 +686,10 @@
           "fluorines": "F4",
           "formula": "CHFClCF3",
           "group": 6,
-          "min_odp": 0.022
+          "min_odp": 0.022,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -609,7 +711,11 @@
           "fluorines": "F",
           "formula": "C2H2FCl3",
           "group": 6,
-          "min_odp": 0.007
+          "min_odp": 0.007,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-131",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -632,7 +738,11 @@
           "fluorines": "F2",
           "formula": "C2H2F2Cl2",
           "group": 6,
-          "min_odp": 0.008
+          "min_odp": 0.008,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-132",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -654,7 +764,11 @@
           "fluorines": "F3",
           "formula": "C2H2F3Cl",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-133",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -676,7 +790,11 @@
           "fluorines": "F",
           "formula": "C2H3FCl2",
           "group": 6,
-          "min_odp": 0.005
+          "min_odp": 0.005,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-141",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -699,7 +817,11 @@
           "fluorines": "F",
           "formula": "CH3CFCl2",
           "group": 6,
-          "min_odp": 0.11
+          "min_odp": 0.11,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-141b",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -721,7 +843,11 @@
           "fluorines": "F2",
           "formula": "C2H3F2Cl",
           "group": 6,
-          "min_odp": 0.008
+          "min_odp": 0.008,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-142",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -744,7 +870,11 @@
           "fluorines": "F2",
           "formula": "CH3CF2Cl",
           "group": 6,
-          "min_odp": 0.065
+          "min_odp": 0.065,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-142b",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -766,7 +896,11 @@
           "fluorines": "F",
           "formula": "C2H4FCl",
           "group": 6,
-          "min_odp": 0.003
+          "min_odp": 0.003,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-151",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -789,7 +923,11 @@
           "fluorines": "F",
           "formula": "CHFCl2",
           "group": 6,
-          "min_odp": 0.04
+          "min_odp": 0.04,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-21",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -813,7 +951,11 @@
           "fluorines": "F2",
           "formula": "CHF2Cl",
           "group": 6,
-          "min_odp": 0.055
+          "min_odp": 0.055,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-22",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -835,7 +977,11 @@
           "fluorines": "F",
           "formula": "C3HFCl6",
           "group": 6,
-          "min_odp": 0.015
+          "min_odp": 0.015,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-221",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -857,7 +1003,11 @@
           "fluorines": "F2",
           "formula": "C3HF2Cl5",
           "group": 6,
-          "min_odp": 0.01
+          "min_odp": 0.01,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-222",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -879,7 +1029,11 @@
           "fluorines": "F3",
           "formula": "C3HF3Cl4",
           "group": 6,
-          "min_odp": 0.01
+          "min_odp": 0.01,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-223",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -901,7 +1055,11 @@
           "fluorines": "F4",
           "formula": "C3HF4Cl3",
           "group": 6,
-          "min_odp": 0.01
+          "min_odp": 0.01,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-224",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -923,7 +1081,11 @@
           "fluorines": "F5",
           "formula": "C3HF5Cl2",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-225",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -945,7 +1107,11 @@
           "fluorines": "F5",
           "formula": "CF3CF2CHCl2",
           "group": 6,
-          "min_odp": 0.025
+          "min_odp": 0.025,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-225ca",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -967,7 +1133,11 @@
           "fluorines": "F5",
           "formula": "CF2ClCF2CHClF",
           "group": 6,
-          "min_odp": 0.033
+          "min_odp": 0.033,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-225cb",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -989,7 +1159,11 @@
           "fluorines": "F6",
           "formula": "C3HF6Cl",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-226",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1011,7 +1185,11 @@
           "fluorines": "F",
           "formula": "C3H2FCl5",
           "group": 6,
-          "min_odp": 0.05
+          "min_odp": 0.05,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-231",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1033,7 +1211,11 @@
           "fluorines": "F2",
           "formula": "C3H2F2Cl4",
           "group": 6,
-          "min_odp": 0.008
+          "min_odp": 0.008,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-232",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1055,7 +1237,11 @@
           "fluorines": "F3",
           "formula": "C3H2F3Cl3",
           "group": 6,
-          "min_odp": 0.007
+          "min_odp": 0.007,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-233",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1077,7 +1263,11 @@
           "fluorines": "F4",
           "formula": "C3H2F4Cl2",
           "group": 6,
-          "min_odp": 0.01
+          "min_odp": 0.01,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-234",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1099,7 +1289,11 @@
           "fluorines": "F5",
           "formula": "C3H2F5Cl",
           "group": 6,
-          "min_odp": 0.03
+          "min_odp": 0.03,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-235",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1121,7 +1315,11 @@
           "fluorines": "F",
           "formula": "C3H3FCl4",
           "group": 6,
-          "min_odp": 0.004
+          "min_odp": 0.004,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-241",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1143,7 +1341,11 @@
           "fluorines": "F2",
           "formula": "C3H3F2Cl3",
           "group": 6,
-          "min_odp": 0.005
+          "min_odp": 0.005,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-242",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1165,7 +1367,11 @@
           "fluorines": "F3",
           "formula": "C3H3F3Cl2",
           "group": 6,
-          "min_odp": 0.006999999999999999
+          "min_odp": 0.006999999999999999,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-243",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1187,7 +1393,11 @@
           "fluorines": "F4",
           "formula": "C3H3F4Cl",
           "group": 6,
-          "min_odp": 0.009
+          "min_odp": 0.009,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-244",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1209,7 +1419,11 @@
           "fluorines": "F",
           "formula": "C3H4FCl3",
           "group": 6,
-          "min_odp": 0.001
+          "min_odp": 0.001,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-251",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1231,7 +1445,11 @@
           "fluorines": "F2",
           "formula": "C3H4F2Cl2",
           "group": 6,
-          "min_odp": 0.005
+          "min_odp": 0.005,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-252",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1253,7 +1471,11 @@
           "fluorines": "F3",
           "formula": "C3H4F3Cl",
           "group": 6,
-          "min_odp": 0.003
+          "min_odp": 0.003,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-253",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1275,7 +1497,11 @@
           "fluorines": "F",
           "formula": "C3H5FCl2",
           "group": 6,
-          "min_odp": 0.002
+          "min_odp": 0.002,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-261",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1297,7 +1523,11 @@
           "fluorines": "F2",
           "formula": "C3H5F2Cl",
           "group": 6,
-          "min_odp": 0.002
+          "min_odp": 0.002,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-262",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1319,7 +1549,11 @@
           "fluorines": "F",
           "formula": "C3H6FCl",
           "group": 6,
-          "min_odp": 0.001
+          "min_odp": 0.001,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-271",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1341,7 +1575,11 @@
           "fluorines": "F",
           "formula": "CH2FCl",
           "group": 6,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-31",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1363,7 +1601,10 @@
           "fluorines": "F2",
           "formula": "C2H2F2Br2",
           "group": 7,
-          "min_odp": 0.2
+          "min_odp": 0.2,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1385,7 +1626,10 @@
           "fluorines": "F3",
           "formula": "C2H2F3Br",
           "group": 7,
-          "min_odp": 0.7
+          "min_odp": 0.7,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1407,7 +1651,10 @@
           "fluorines": "F",
           "formula": "C2H2FBr3",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1429,7 +1676,10 @@
           "fluorines": "F2",
           "formula": "C2H3F2Br",
           "group": 7,
-          "min_odp": 0.2
+          "min_odp": 0.2,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1451,7 +1701,10 @@
           "fluorines": "F",
           "formula": "C2H3FBr2",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1473,7 +1726,10 @@
           "fluorines": "F",
           "formula": "C2H4FBr",
           "group": 7,
-          "min_odp": 0.07
+          "min_odp": 0.07,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1495,7 +1751,10 @@
           "fluorines": "F2",
           "formula": "C2HF2Br3",
           "group": 7,
-          "min_odp": 0.5
+          "min_odp": 0.5,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1517,7 +1776,10 @@
           "fluorines": "F3",
           "formula": "C2HF3Br2",
           "group": 7,
-          "min_odp": 0.4
+          "min_odp": 0.4,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1539,7 +1801,10 @@
           "fluorines": "F4",
           "formula": "C2HF4Br",
           "group": 7,
-          "min_odp": 0.7
+          "min_odp": 0.7,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1561,7 +1826,10 @@
           "fluorines": "F",
           "formula": "C2HFBr4",
           "group": 7,
-          "min_odp": 0.3
+          "min_odp": 0.3,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1583,7 +1851,10 @@
           "fluorines": "F2",
           "formula": "C3H2F2Br4",
           "group": 7,
-          "min_odp": 0.2
+          "min_odp": 0.2,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1605,7 +1876,10 @@
           "fluorines": "F3",
           "formula": "C3H2F3Br3",
           "group": 7,
-          "min_odp": 0.2
+          "min_odp": 0.2,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1627,7 +1901,10 @@
           "fluorines": "F4",
           "formula": "C3H2F4Br2",
           "group": 7,
-          "min_odp": 0.3
+          "min_odp": 0.3,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1649,7 +1926,10 @@
           "fluorines": "F5",
           "formula": "C3H2F5Br",
           "group": 7,
-          "min_odp": 0.9
+          "min_odp": 0.9,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1671,7 +1951,10 @@
           "fluorines": "F",
           "formula": "C3H2FBr5",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1693,7 +1976,10 @@
           "fluorines": "F2",
           "formula": "C3H3F2Br3",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1715,7 +2001,10 @@
           "fluorines": "F3",
           "formula": "C3H3F3Br2",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1737,7 +2026,10 @@
           "fluorines": "F4",
           "formula": "C3H3F4Br",
           "group": 7,
-          "min_odp": 0.3
+          "min_odp": 0.3,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1759,7 +2051,10 @@
           "fluorines": "F",
           "formula": "C3H3FBr4",
           "group": 7,
-          "min_odp": 0.08
+          "min_odp": 0.08,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1781,7 +2076,10 @@
           "fluorines": "F2",
           "formula": "C3H4F2Br2",
           "group": 7,
-          "min_odp": 0.1
+          "min_odp": 0.1,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1803,7 +2101,10 @@
           "fluorines": "F3",
           "formula": "C3H4F3Br",
           "group": 7,
-          "min_odp": 0.07
+          "min_odp": 0.07,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1825,7 +2126,10 @@
           "fluorines": "F",
           "formula": "C3H4FBr3",
           "group": 7,
-          "min_odp": 0.03
+          "min_odp": 0.03,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1847,7 +2151,10 @@
           "fluorines": "F2",
           "formula": "C3H5F2Br",
           "group": 7,
-          "min_odp": 0.07
+          "min_odp": 0.07,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1869,7 +2176,10 @@
           "fluorines": "F",
           "formula": "C3H5FBr2",
           "group": 7,
-          "min_odp": 0.04
+          "min_odp": 0.04,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1891,7 +2201,10 @@
           "fluorines": "F",
           "formula": "C3H6FBr",
           "group": 7,
-          "min_odp": 0.02
+          "min_odp": 0.02,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1913,7 +2226,10 @@
           "fluorines": "F2",
           "formula": "C3HF2Br5",
           "group": 7,
-          "min_odp": 0.2
+          "min_odp": 0.2,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1935,7 +2251,10 @@
           "fluorines": "F3",
           "formula": "C3HF3Br4",
           "group": 7,
-          "min_odp": 0.3
+          "min_odp": 0.3,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1957,7 +2276,10 @@
           "fluorines": "F4",
           "formula": "C3HF4Br3",
           "group": 7,
-          "min_odp": 0.5
+          "min_odp": 0.5,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -1979,7 +2301,10 @@
           "fluorines": "F5",
           "formula": "C3HF5Br2",
           "group": 7,
-          "min_odp": 0.9
+          "min_odp": 0.9,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -2001,7 +2326,10 @@
           "fluorines": "F6",
           "formula": "C3HF6Br",
           "group": 7,
-          "min_odp": 0.7
+          "min_odp": 0.7,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -2023,7 +2351,10 @@
           "fluorines": "F",
           "formula": "C3HFBr6",
           "group": 7,
-          "min_odp": 0.3
+          "min_odp": 0.3,
+          "gwp_error_plus_minus": null,
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
@@ -2045,7 +2376,11 @@
           "fluorines": "F",
           "formula": "CH2FBr",
           "group": 7,
-          "min_odp": 0.73
+          "min_odp": 0.73,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-31B1",
+          "mp_control": "",
+          "main_usage": "Feedstock"
       }
   },
   {
@@ -2067,7 +2402,11 @@
           "fluorines": "F",
           "formula": "CHFBr2",
           "group": 7,
-          "min_odp": 1
+          "min_odp": 1,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-21B2",
+          "mp_control": "",
+          "main_usage": "Feedstock"
       }
   },
   {
@@ -2089,7 +2428,11 @@
           "fluorines": "F2",
           "formula": "CHF2Br",
           "group": 7,
-          "min_odp": 0.74
+          "min_odp": 0.74,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-22B1",
+          "mp_control": "",
+          "main_usage": "Refrigerant / Feedstock / Firefighting"
       }
   },
   {
@@ -2112,7 +2455,10 @@
           "fluorines": "",
           "formula": "CH3Br",
           "group": 9,
-          "min_odp": 0.6
+          "min_odp": 0.6,
+          "gwp_error_plus_minus": null,
+          "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
+          "main_usage": "Pesticide / Fumigant / Feedstock"
       }
   },
   {
@@ -2134,11 +2480,15 @@
           "fluorines": "",
           "formula": "CH2BrCl",
           "group": 8,
-          "min_odp": 0.12
+          "min_odp": 0.12,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-1011",
+          "mp_control": "",
+          "main_usage": "Feedstock / Firefighting"
       }
   },
   {
-      "pk": 96,
+      "pk": 97,
       "model": "core.substance",
       "fields": {
           "substance_id": 1250,
@@ -2156,11 +2506,15 @@
           "fluorines": "F5",
           "formula": "CHF2CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-125",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 97,
+      "pk": 98,
       "model": "core.substance",
       "fields": {
           "substance_id": 1340,
@@ -2178,11 +2532,15 @@
           "fluorines": "F4",
           "formula": "CHF2CHF2",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-134",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 98,
+      "pk": 99,
       "model": "core.substance",
       "fields": {
           "substance_id": 1341,
@@ -2200,11 +2558,15 @@
           "fluorines": "F4",
           "formula": "CH2FCF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-134a",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 99,
+      "pk": 100,
       "model": "core.substance",
       "fields": {
           "substance_id": 1430,
@@ -2222,11 +2584,15 @@
           "fluorines": "F3",
           "formula": "CH2FCHF2",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-143",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 100,
+      "pk": 101,
       "model": "core.substance",
       "fields": {
           "substance_id": 1431,
@@ -2244,11 +2610,15 @@
           "fluorines": "F3",
           "formula": "CH3CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-143a",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 101,
+      "pk": 102,
       "model": "core.substance",
       "fields": {
           "substance_id": 1520,
@@ -2266,11 +2636,15 @@
           "fluorines": "F2",
           "formula": "CH2FCH2F",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-152",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 102,
+      "pk": 103,
       "model": "core.substance",
       "fields": {
           "substance_id": 1521,
@@ -2288,11 +2662,15 @@
           "fluorines": "F2",
           "formula": "CH3CHF2",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-152a",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 103,
+      "pk": 104,
       "model": "core.substance",
       "fields": {
           "substance_id": 2275,
@@ -2310,11 +2688,15 @@
           "fluorines": "F7",
           "formula": "CF3CHFCF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-227ea",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 104,
+      "pk": 105,
       "model": "core.substance",
       "fields": {
           "substance_id": 2300,
@@ -2332,11 +2714,15 @@
           "fluorines": "F3",
           "formula": "CHF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-23",
+          "mp_control": "Controls on HFCs come into force from 2019 (2024 in developing countries). Control/monitoring measures may be in place at national/regional level",
+          "main_usage": "Refrigerant"
       }
   },
   {
-      "pk": 105,
+      "pk": 106,
       "model": "core.substance",
       "fields": {
           "substance_id": 2363,
@@ -2354,11 +2740,15 @@
           "fluorines": "F6",
           "formula": "CH2FCF2CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-236cb",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 106,
+      "pk": 107,
       "model": "core.substance",
       "fields": {
           "substance_id": 2365,
@@ -2376,11 +2766,15 @@
           "fluorines": "F6",
           "formula": "CHF2CHFCF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-236ea",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 107,
+      "pk": 108,
       "model": "core.substance",
       "fields": {
           "substance_id": 2366,
@@ -2398,11 +2792,15 @@
           "fluorines": "F6",
           "formula": "CF3CH2CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-236fa",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 108,
+      "pk": 109,
       "model": "core.substance",
       "fields": {
           "substance_id": 2453,
@@ -2420,11 +2818,15 @@
           "fluorines": "F5",
           "formula": "CH2FCF2CHF2",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-245ca",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 109,
+      "pk": 110,
       "model": "core.substance",
       "fields": {
           "substance_id": 2456,
@@ -2442,11 +2844,15 @@
           "fluorines": "F5",
           "formula": "CHF2CH2CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-245fa",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 110,
+      "pk": 111,
       "model": "core.substance",
       "fields": {
           "substance_id": 3200,
@@ -2464,11 +2870,15 @@
           "fluorines": "F2",
           "formula": "CH2F2",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-32",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 111,
+      "pk": 112,
       "model": "core.substance",
       "fields": {
           "substance_id": 3659,
@@ -2486,11 +2896,15 @@
           "fluorines": "F5",
           "formula": "CF3CH2CF2CH3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-365mfc",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 112,
+      "pk": 113,
       "model": "core.substance",
       "fields": {
           "substance_id": 4100,
@@ -2508,11 +2922,15 @@
           "fluorines": "F",
           "formula": "CH3F",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-41",
+          "mp_control": "",
+          "main_usage": ""
       }
   },
   {
-      "pk": 113,
+      "pk": 114,
       "model": "core.substance",
       "fields": {
           "substance_id": 4310,
@@ -2530,7 +2948,11 @@
           "fluorines": "F10",
           "formula": "CF3CHFCHFCF2CF3",
           "group": 10,
-          "min_odp": 0
+          "min_odp": 0,
+          "gwp_error_plus_minus": null,
+          "rcode": "R-43-10mee",
+          "mp_control": "Controls on HFCs come into force from 2019 (2024 in developing countries). Control/monitoring measures may be in place at national/regional level",
+          "main_usage": "Solvent"
       }
   }
 ]

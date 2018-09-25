@@ -123,7 +123,7 @@ class Substance(models.Model):
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
 
-    rcode = models.CharField(max_length=128, unique=True)
+    rcode = models.CharField(max_length=128, unique=True, blank=True, null=True)
 
     mp_control = models.CharField(max_length=256, blank=True)
 
