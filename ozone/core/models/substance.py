@@ -106,6 +106,7 @@ class Substance(models.Model):
 
     # TODO: what is this?
     gwp2 = models.IntegerField(null=True)
+    gwp_error_plus_minus = models.IntegerField(null=True)
 
     # Existing data seems to suggest this field is always non-blank,
     # allowing it though just in case...
@@ -121,6 +122,12 @@ class Substance(models.Model):
 
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
+
+    rcode = models.CharField(max_length=128, unique=True)
+
+    mp_control = models.CharField(max_length=256, blank=True)
+
+    main_usage = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
         return self.name
