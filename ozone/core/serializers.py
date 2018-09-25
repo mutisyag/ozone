@@ -54,19 +54,15 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class Article7QuestionnaireSerializer(serializers.ModelSerializer):
-    submission = serializers.PrimaryKeyRelatedField(
-        read_only=True, many=False
-    )
-
     class Meta:
         model = Article7Questionnaire
-        fields = '__all__'
+        exclude = ('submission',)
 
 
 class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Questionnaire
-        fields = '__all__'
+        exclude = ('submission',)
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
@@ -115,7 +111,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             request = self.context['request']
         )
 
-    def get_article7questionnaires_url(self, obj):
+    def get_article7questionnaire_url(self, obj):
         return reverse(
             'core:submission-article7-questionnaire-list',
             kwargs={'submission_pk': obj.id},
@@ -132,11 +128,11 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 
     # TODO: singular-ize this (inc. Model)
     # At most one questionnaire per emission, but multiple other data
-    article7questionnaires_url = serializers.SerializerMethodField()
-    article7questionnaires = serializers.HyperlinkedIdentityField(
+    article7questionnaire_url = serializers.SerializerMethodField()
+    article7questionnaire = serializers.HyperlinkedIdentityField(
         many=False,
         read_only=True,
-        view_name='core:submission-article7-questionnaire-list',
+        view_name='core:submission-article7-questionnaire',
         lookup_url_kwarg='submission_pk'
     )
 
@@ -146,6 +142,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
+    # TODO: on POST, these should be auto-populated! (in views.py)
     created_by = serializers.PrimaryKeyRelatedField(
         many=False,
         queryset=User.objects.all(),
@@ -162,13 +159,13 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 
         fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
-            'article7questionnaires_url', 'article7questionnaires',
+            'article7questionnaire_url', 'article7questionnaire',
             'article7destructions_url', 'article7destructions',
             'created_by', 'last_edited_by',
         )
 
         read_only_fields = (
-            'article7questionnaires_url',
+            'article7questionnaire_url',
             'article7destructions_url',
         )
 

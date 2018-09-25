@@ -92,6 +92,9 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
             return CreateArticle7QuestionnaireSerializer
         return Article7QuestionnaireSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
 
 class Article7DestructionViewSet(viewsets.ModelViewSet):
     def get_queryset(self):

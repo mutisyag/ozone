@@ -262,6 +262,13 @@ class Article7Questionnaire(BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
+    submission = models.OneToOneField(
+        Submission,
+        blank=True,
+        null=True,
+        related_name='article7questionnaire',
+        on_delete=models.CASCADE
+    )
 
     has_imports = models.BooleanField()
 
@@ -274,6 +281,9 @@ class Article7Questionnaire(BaseReport):
     has_nonparty = models.BooleanField()
 
     has_emissions = models.BooleanField()
+
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
