@@ -109,11 +109,11 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
-    @staticmethod
-    def get_article7destructions_url(obj):
+    def get_article7destructions_url(self, obj):
         return reverse(
             'core:submission-article7-destructions-list',
             kwargs={'submission_pk': obj.id},
+            request = self.context['request']
         )
 
     party = serializers.StringRelatedField(many=False, read_only=True)
