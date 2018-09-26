@@ -218,8 +218,6 @@ class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
         'quantity_feedstock'
     ]
 
-    party = models.ForeignKey(Party, on_delete=models.PROTECT)
-
     quantity_total_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )

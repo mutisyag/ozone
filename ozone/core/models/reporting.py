@@ -10,8 +10,6 @@ from .party import Party
 __all__ = [
     'ReportingPeriod',
     'Obligation',
-    'ReportingObligationType',
-    'SubmissionStatus',
     'Submission',
 ]
 
@@ -55,34 +53,12 @@ class Obligation(models.Model):
     name = models.CharField(max_length=256, unique=True)
     # TODO: obligation-party mapping!
 
+    description = models.CharField(max_length=256, blank=True)
+
     is_continuous = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
-
-
-class ReportingObligationType(models.Model):
-    """
-    List of reporting obligations that have a formal structure.
-    """
-
-    obligation_type_id = models.CharField(max_length=16, unique=True)
-
-    name = models.CharField(max_length=256, unique=True)
-
-    description = models.CharField(max_length=256, blank=True)
-
-
-class SubmissionStatus(models.Model):
-    """
-    Model used for declaring states of a submission.
-    """
-
-    status_id = models.CharField(max_length=16, unique=True)
-
-    name = models.CharField(max_length=256, unique=True)
-
-    remark = models.CharField(max_length=256, blank=True)
 
 
 class Submission(models.Model):
@@ -103,9 +79,6 @@ class Submission(models.Model):
     # mappings should be modeled.
     obligation = models.ForeignKey(
         Obligation, related_name='submissions', on_delete=models.PROTECT
-    )
-    obligation_type = models.ForeignKey(
-        ReportingObligationType, related_name='submissions', on_delete=models.PROTECT
     )
 
     # TODO (related to the above):
@@ -142,9 +115,7 @@ class Submission(models.Model):
     version = models.PositiveSmallIntegerField(default=1)
 
     # TODO: make this workflow-based, including logic on save()
-    status = models.ForeignKey(
-        SubmissionStatus, on_delete=models.PROTECT
-    )
+    status = models.CharField(max_length=64)
 
     flag_provisional = models.BooleanField(default=False)
     flag_valid = models.BooleanField(default=False)
