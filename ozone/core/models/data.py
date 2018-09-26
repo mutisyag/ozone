@@ -258,14 +258,14 @@ class Article7Flags(models.Model):
         db_table = 'reporting_article_seven_flags'
 
 
-class Article7Questionnaire(models.Model):
+class Article7Questionnaire(BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
+    # Overriding submission field; there can be only one questionnaire
+    # per submission
     submission = models.OneToOneField(
         Submission,
-        blank=True,
-        null=True,
         related_name='article7questionnaire',
         on_delete=models.CASCADE
     )
