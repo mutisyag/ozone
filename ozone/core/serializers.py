@@ -141,17 +141,8 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
-    # TODO: on POST, these should be auto-populated! (in views.py)
-    created_by = serializers.PrimaryKeyRelatedField(
-        many=False,
-        queryset=User.objects.all(),
-        default=serializers.CurrentUserDefault()
-    )
-    last_edited_by = serializers.PrimaryKeyRelatedField(
-        many=False,
-        queryset=User.objects.all(),
-        default=serializers.CurrentUserDefault()
-    )
+    created_by = serializers.StringRelatedField(read_only=True)
+    last_edited_by = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Submission
@@ -166,6 +157,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = (
             'article7questionnaire_url',
             'article7destructions_url',
+            'created_by', 'last_edited_by',
         )
 
 
@@ -174,6 +166,17 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
         model = Submission
         fields = ('party', 'reporting_period', 'obligation', 'version',
                   'created_by', 'last_edited_by',)
+
+    created_by = serializers.PrimaryKeyRelatedField(
+        many=False,
+        queryset=User.objects.all(),
+        default=serializers.CurrentUserDefault()
+    )
+    last_edited_by = serializers.PrimaryKeyRelatedField(
+        many=False,
+        queryset=User.objects.all(),
+        default=serializers.CurrentUserDefault()
+    )
 
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
