@@ -104,7 +104,9 @@ class SubmissionArticle7DestructionSerializer(
     class Meta(Article7DestructionSerializer.Meta):
         fields = ('url',)
         extra_kwargs = {
-            'url': {'view_name': 'core:submission-article7-destructions-detail'}
+            'url': {
+                'view_name': 'core:submission-article7-destructions-detail'
+            }
         }
 
 
@@ -113,22 +115,6 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
-    # TODO: these URL fields could have a common implementation, by
-    # extending the HyperlinkedModelSerializer class
-    def get_article7destructions_url(self, obj):
-        return reverse(
-            'core:submission-article7-destructions-list',
-            kwargs={'submission_pk': obj.id},
-            request = self.context['request']
-        )
-
-    def get_article7questionnaire_url(self, obj):
-        return reverse(
-            'core:submission-article7-questionnaire-list',
-            kwargs={'submission_pk': obj.id},
-            request=self.context['request']
-        )
-
     party = serializers.StringRelatedField(many=False, read_only=True)
     reporting_period = serializers.StringRelatedField(
         many=False, read_only=True
@@ -138,13 +124,19 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     # At most one questionnaire per submission, but multiple other data
-    article7questionnaire_url = serializers.SerializerMethodField()
+    article7questionnaire_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-questionnaire-list',
+        lookup_url_kwarg='submission_pk'
+    )
     article7questionnaire = Article7QuestionnaireSerializer(
         many=False, read_only=True
     )
 
     # We want to add a URL for the destructions list
-    article7destructions_url = serializers.SerializerMethodField()
+    article7destructions_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-destructions-list',
+        lookup_url_kwarg='submission_pk'
+    )
     article7destructions = Article7DestructionSerializer(
         many=True, read_only=True
     )
