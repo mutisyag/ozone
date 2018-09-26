@@ -155,8 +155,6 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         )
 
         read_only_fields = (
-            'article7questionnaire_url',
-            'article7destructions_url',
             'created_by', 'last_edited_by',
         )
 
