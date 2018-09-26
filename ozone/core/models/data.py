@@ -292,6 +292,13 @@ class Article7Questionnaire(BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
+    # Overriding submission field; there can be only one questionnaire
+    # per submission
+    submission = models.OneToOneField(
+        Submission,
+        related_name='article7questionnaire',
+        on_delete=models.CASCADE
+    )
 
     has_imports = models.BooleanField()
 
