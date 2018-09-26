@@ -218,6 +218,8 @@ class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
         'quantity_feedstock'
     ]
 
+    party = models.ForeignKey(Party, on_delete=models.PROTECT)
+
     quantity_total_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -227,6 +229,36 @@ class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
     quantity_feedstock = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+
+    quantity_new_cu = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_cu = models.CharField(max_length=256, blank=True)
+
+    quantity_new_eu = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_eu = models.CharField(max_length=256, blank=True)
+
+    quantity_new_hat = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_hat = models.CharField(max_length=256, blank=True)
+
+    quantity_new_lau = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_lau = models.CharField(max_length=256, blank=True)
+
+    quantity_new_pau = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_pau = models.CharField(max_length=256, blank=True)
+
+    quantity_new_qps = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_qps = models.CharField(max_length=256, blank=True)
 
     class Meta:
         abstract = True
