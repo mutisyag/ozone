@@ -282,9 +282,6 @@ class Article7Questionnaire(BaseReport):
 
     has_emissions = models.BooleanField()
 
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
-
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
 
