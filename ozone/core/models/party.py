@@ -1,4 +1,5 @@
 import datetime
+import enum
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -17,8 +18,20 @@ __all__ = [
     'Language',
     'Nomination',
     'PartyRatification',
-    'PartyType',
+    'PartyTypes',
 ]
+
+
+@enum.unique
+class PartyTypes(enum.Enum):
+    """
+    Party classification.
+    """
+
+    A5 = 'Article 5'
+    A5G1 = 'Article 5 Group 1'
+    A5G2 = 'Article 5 Group 2'
+    NA5 = 'Non Article 5'
 
 
 class Region(models.Model):
@@ -184,21 +197,6 @@ def max_value_current_year(value):
     return MaxValueValidator(current_year())(value)
 
 
-class PartyType(models.Model):
-    """
-    Party classification.
-    """
-
-    party_type_id = models.CharField(max_length=16, unique=True)
-    name = models.CharField(max_length=256, unique=True)
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        ordering = ('name',)
-
-
 class PartyHistory(models.Model):
     """
     Detailed Party information, per year (population, flags etc) can change
@@ -218,8 +216,10 @@ class PartyHistory(models.Model):
 
     population = models.FloatField(validators=[MinValueValidator(0.0)])
 
-    party_type = models.ForeignKey(
-        PartyType, on_delete=models.PROTECT
+    party_type = models.CharField(
+        max_length=40,
+        choices=((s.value, s.name) for s in PartyTypes),
+        blank=True
     )
 
     is_hat = models.BooleanField()
@@ -247,8 +247,6 @@ class PartyRatification(models.Model):
     Ratification information of all treaties and amendments, for each party.
     """
 
-    ratification_id = models.CharField(max_length=16, unique=True)
-
     party = models.ForeignKey(
         Party, related_name='ratifications', on_delete=models.PROTECT
     )
@@ -264,12 +262,6 @@ class PartyRatification(models.Model):
     )
 
     date = models.DateField()
-
-    def __str__(self):
-        return self.ratification_id
-
-    class Meta:
-        ordering = ('ratification_id',)
 
 
 class Language(models.Model):
