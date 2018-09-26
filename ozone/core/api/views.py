@@ -24,6 +24,7 @@ from ..serializers import (
     SubmissionSerializer,
     ListSubmissionSerializer,
     CreateSubmissionSerializer,
+    UpdateSubmissionSerializer,
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
@@ -72,6 +73,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == "POST":
             return CreateSubmissionSerializer
+        if self.request.method in ["PUT", "PATCH"]:
+            return UpdateSubmissionSerializer
         return SubmissionSerializer
 
     def list(self, request, *args, **kwargs):

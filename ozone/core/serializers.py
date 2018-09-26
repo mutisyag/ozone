@@ -162,19 +162,26 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
-        fields = ('party', 'reporting_period', 'obligation', 'version',
-                  'created_by', 'last_edited_by',)
+        fields = ('party', 'reporting_period', 'obligation', 'version',)
 
-    created_by = serializers.PrimaryKeyRelatedField(
-        many=False,
-        queryset=User.objects.all(),
-        default=serializers.CurrentUserDefault()
-    )
-    last_edited_by = serializers.PrimaryKeyRelatedField(
-        many=False,
-        queryset=User.objects.all(),
-        default=serializers.CurrentUserDefault()
-    )
+    def create(self, validated_data):
+        if 'created_by' not in validated_data:
+            validated_data['created_by'] = self.context['request'].user
+        if 'last_edited_by' not in validated_data:
+            validated_data['last_edited_by'] = self.context['request'].user
+
+        return super().create(validated_data)
+
+
+class UpdateSubmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Submission
+        fields = ('party', 'reporting_period', 'obligation', 'version',)
+
+    def update(self, instance, validated_data):
+        if 'last_edited_by' not in validated_data:
+            validated_data['last_edited_by'] = self.context['request'].user
+        return super().update(instance, validated_data)
 
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
