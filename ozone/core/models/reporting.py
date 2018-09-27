@@ -1,6 +1,6 @@
 import enum
 
-from django.db import models
+from django.db import models, transaction
 
 from ozone.users.models import User
 
@@ -143,8 +143,9 @@ class Submission(models.Model):
         unique_together = ('party', 'reporting_period', 'obligation',
                            'version')
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
-        submissions = Submission.objects.filter(
+        submissions = Submission.objects.select_for_update().filter(
             party=self.party,
             reporting_period=self.reporting_period,
             obligation=self.obligation
