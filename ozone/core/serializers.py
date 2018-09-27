@@ -162,7 +162,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
-        fields = ('party', 'reporting_period', 'obligation', 'version',)
+        fields = ('party', 'reporting_period', 'obligation',)
 
     def create(self, validated_data):
         if 'created_by' not in validated_data:
@@ -176,7 +176,7 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 class UpdateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
-        fields = ('party', 'reporting_period', 'obligation', 'version',)
+        fields = ('party', 'reporting_period', 'obligation',)
 
     def update(self, instance, validated_data):
         if 'last_edited_by' not in validated_data:
@@ -186,5 +186,5 @@ class UpdateSubmissionSerializer(serializers.ModelSerializer):
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
     class Meta(CreateSubmissionSerializer.Meta):
-        fields = ('url',) + CreateSubmissionSerializer.Meta.fields
+        fields = ('url',) + CreateSubmissionSerializer.Meta.fields + ('version',)
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
