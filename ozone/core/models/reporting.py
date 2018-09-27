@@ -142,3 +142,13 @@ class Submission(models.Model):
         # using custom logic on save() rather than enforced here. Investigate!
         unique_together = ('party', 'reporting_period', 'obligation',
                            'version')
+
+    def save(self, *args, **kwargs):
+        submissions = Submission.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation
+        )
+        if submissions:
+            self.version = submissions.latest('version').version + 1
+        return super(Submission, self).save(*args, **kwargs)
