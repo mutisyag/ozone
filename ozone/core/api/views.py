@@ -146,3 +146,6 @@ class Article7ExportViewSet(viewsets.ModelViewSet):
         if self.request.method == "POST":
             return CreateArticle7ExportSerializer
         return Article7ExportSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])

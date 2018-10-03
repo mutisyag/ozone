@@ -168,7 +168,7 @@ class SubmissionArticle7ExportSerializer(
         'submission_pk': 'submission__pk',
     }
 
-    class Meta(Article7DestructionSerializer.Meta):
+    class Meta(Article7ExportSerializer.Meta):
         fields = ('url',)
         extra_kwargs = {
             'url': {
