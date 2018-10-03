@@ -381,6 +381,7 @@ class Article7Destruction(BaseBlendCompositionReport):
 
     # Needed by the BlendCompositionMixin
     tracker = FieldTracker()
+
     QUANTITY_FIELDS = [
         'quantity_destroyed',
     ]
@@ -399,6 +400,8 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
 
     All quantities expressed in metric tonnes.
     """
+
+    tracker = FieldTracker()
 
     QUANTITY_FIELDS = [
         'quantity_import_new',

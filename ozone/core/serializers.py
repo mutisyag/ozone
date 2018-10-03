@@ -13,7 +13,9 @@ from .models import (
     Article7Questionnaire,
     Article7Destruction,
     Article7Production,
-    Article7Export
+    Article7Export,
+    Article7NonPartyTrade,
+    Article7Emission
 )
 
 
@@ -139,7 +141,7 @@ class SubmissionArticle7ProductionSerializer(
         fields = ('url',)
         extra_kwargs = {
             'url': {
-                'view_name': 'core:submission-article7-productions-details'
+                'view_name': 'core:submission-article7-productions-detail'
             }
         }
 
@@ -173,6 +175,69 @@ class SubmissionArticle7ExportSerializer(
         extra_kwargs = {
             'url': {
                 'view_name': 'core:submission-article7-exports-detail'
+            }
+        }
+
+
+class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
+    substance = serializers.StringRelatedField(many=False, read_only=True)
+    blend = serializers.StringRelatedField(many=False, read_only=True)
+    blend_item = serializers.StringRelatedField(many=False, read_only=True)
+    trade_party = serializers.StringRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Article7NonPartyTrade
+        exclude = ('submission',)
+
+
+class CreateArticle7NonPartyTradeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7NonPartyTrade
+        exclude = ('submission', 'blend_item')
+
+
+class SubmissionArticle7NonPartyTradeSerializer(
+    NestedHyperlinkedModelSerializer,
+    Article7NonPartyTradeSerializer
+):
+    parent_lookup_kwargs = {
+        'submission_pk': 'submission__pk',
+    }
+
+    class Meta(Article7NonPartyTradeSerializer.Meta):
+        fields = ('url',)
+        extra_kwargs = {
+            'url': {
+                'view_name': 'core:submission-article7-nonpartytrades-detail'
+            }
+        }
+
+
+class Article7EmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Emission
+        exclude = ('submission',)
+
+
+class CreateArticle7EmissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Emission
+        exclude = ('submission',)
+
+
+class SubmissionArticle7EmissionSerializer(
+    NestedHyperlinkedModelSerializer,
+    Article7EmissionSerializer
+):
+    parent_lookup_kwargs = {
+        'submission_pk': 'submission__pk',
+    }
+
+    class Meta(Article7EmissionSerializer.Meta):
+        fields = ('url',)
+        extra_kwargs = {
+            'url': {
+                'view_name': 'core:submission-article7-emissions-detail'
             }
         }
 
@@ -224,6 +289,22 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
+    article7nonpartytrades_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-nonpartytrades-list',
+        lookup_url_kwarg='submission_pk'
+    )
+    article7nonpartytrades = Article7NonPartyTradeSerializer(
+        many=True, read_only=True
+    )
+
+    article7emissions_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-emissions-list',
+        lookup_url_kwarg='submission_pk'
+    )
+    article7emissions = Article7EmissionSerializer(
+        many=True, read_only=True
+    )
+
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
@@ -236,6 +317,8 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7destructions_url', 'article7destructions',
             'article7productions_url', 'article7productions',
             'article7exports_url', 'article7exports',
+            'article7nonpartytrades_url', 'article7nonpartytrades',
+            'article7emissions_url', 'article7emissions',
             'created_by', 'last_edited_by',
         )
 
