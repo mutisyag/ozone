@@ -14,6 +14,8 @@ from ..models import (
     Article7Destruction,
     Article7Production,
     Article7Export,
+    Article7NonPartyTrade,
+    Article7Emission,
 )
 
 from ..serializers import (
@@ -35,6 +37,10 @@ from ..serializers import (
     CreateArticle7ProductionSerializer,
     Article7ExportSerializer,
     CreateArticle7ExportSerializer,
+    Article7NonPartyTradeSerializer,
+    CreateArticle7NonPartyTradeSerializer,
+    Article7EmissionSerializer,
+    CreateArticle7EmissionSerializer,
 )
 
 
@@ -146,6 +152,36 @@ class Article7ExportViewSet(viewsets.ModelViewSet):
         if self.request.method == "POST":
             return CreateArticle7ExportSerializer
         return Article7ExportSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class Article7NonPartyTradeViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return Article7NonPartyTrade.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7NonPartyTradeSerializer
+        return Article7NonPartyTradeSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class Article7EmissionViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return Article7Emission.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7EmissionSerializer
+        return Article7EmissionSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
