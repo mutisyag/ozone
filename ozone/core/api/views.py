@@ -12,6 +12,8 @@ from ..models import (
     Submission,
     Article7Questionnaire,
     Article7Destruction,
+    Article7Production,
+    Article7Export,
 )
 
 from ..serializers import (
@@ -29,6 +31,10 @@ from ..serializers import (
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
     CreateArticle7DestructionSerializer,
+    Article7ProductionSerializer,
+    CreateArticle7ProductionSerializer,
+    Article7ExportSerializer,
+    CreateArticle7ExportSerializer,
 )
 
 
@@ -111,5 +117,35 @@ class Article7DestructionViewSet(viewsets.ModelViewSet):
         return Article7DestructionSerializer
 
     # Needed to ensure that serializer uses the correct submission
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class Article7ProductionViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return Article7Production.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7ProductionSerializer
+        return Article7ProductionSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class Article7ExportViewSet(viewsets.ModelViewSet):
+    def get_queryset(self):
+        return Article7Export.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateArticle7ExportSerializer
+        return Article7ExportSerializer
+
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])

@@ -11,7 +11,9 @@ from .models import (
     Obligation,
     Submission,
     Article7Questionnaire,
-    Article7Destruction
+    Article7Destruction,
+    Article7Production,
+    Article7Export
 )
 
 
@@ -110,6 +112,71 @@ class SubmissionArticle7DestructionSerializer(
         }
 
 
+class Article7ProductionSerializer(serializers.ModelSerializer):
+    substance = serializers.StringRelatedField(many=False, read_only=True)
+    decision = serializers.StringRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Article7Production
+        exclude = ('submission',)
+
+
+class CreateArticle7ProductionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Production
+        exclude = ('submission',)
+
+
+class SubmissionArticle7ProductionSerializer(
+    NestedHyperlinkedModelSerializer,
+    Article7ProductionSerializer
+):
+    parent_lookup_kwargs = {
+        'submission_pk': 'submission__pk',
+    }
+
+    class Meta(Article7ProductionSerializer.Meta):
+        fields = ('url',)
+        extra_kwargs = {
+            'url': {
+                'view_name': 'core:submission-article7-productions-details'
+            }
+        }
+
+
+class Article7ExportSerializer(serializers.ModelSerializer):
+    substance = serializers.StringRelatedField(many=False, read_only=True)
+    blend = serializers.StringRelatedField(many=False, read_only=True)
+    blend_item = serializers.StringRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Article7Export
+        exclude = ('submission',)
+
+
+class CreateArticle7ExportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Export
+        exclude = ('submission', 'blend_item')
+
+
+class SubmissionArticle7ExportSerializer(
+    NestedHyperlinkedModelSerializer,
+    Article7ExportSerializer
+):
+    parent_lookup_kwargs = {
+        'submission_pk': 'submission__pk',
+    }
+
+    class Meta(Article7ExportSerializer.Meta):
+        fields = ('url',)
+        extra_kwargs = {
+            'url': {
+                'view_name': 'core:submission-article7-exports-detail'
+            }
+        }
+
+
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
@@ -141,6 +208,22 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
+    article7productions_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-productions-list',
+        lookup_url_kwarg='submission_pk'
+    )
+    article7productions = Article7ProductionSerializer(
+        many=True, read_only=True
+    )
+
+    article7exports_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-exports-list',
+        lookup_url_kwarg='submission_pk'
+    )
+    article7exports = Article7ExportSerializer(
+        many=True, read_only=True
+    )
+
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
@@ -151,6 +234,8 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'id', 'party', 'reporting_period', 'obligation', 'version',
             'article7questionnaire_url', 'article7questionnaire',
             'article7destructions_url', 'article7destructions',
+            'article7productions_url', 'article7productions',
+            'article7exports_url', 'article7exports',
             'created_by', 'last_edited_by',
         )
 

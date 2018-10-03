@@ -55,9 +55,29 @@ destructions_router.register(
     base_name="submission-article7-destructions",
 )
 
+productions_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+productions_router.register(
+    "article7-productions",
+    views.Article7ProductionViewSet,
+    base_name="submission-article7-productions"
+)
+
+exports_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+exports_router.register(
+    "article7-exports",
+    views.Article7ExportViewSet,
+    base_name="submission-article7-exports"
+)
+
 nested_routers = [
     questionnaire_router,
     destructions_router,
+    productions_router,
+    exports_router,
 ]
 
 urlpatterns = router.urls + [url
