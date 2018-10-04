@@ -118,8 +118,7 @@ class Submission(models.Model):
         User, related_name='submissions_last_edited', on_delete=models.PROTECT
     )
 
-    # per Obligation-ReportingPeriod-Party
-    # TODO: auto-increment version on save()
+    # Per Obligation-ReportingPeriod-Party
     version = models.PositiveSmallIntegerField(default=1)
 
     # TODO: make this workflow-based, including logic on save()
@@ -178,6 +177,5 @@ class Submission(models.Model):
             )
             workflow.save()
             self.workflow = workflow
-
 
         return super().save(*args, **kwargs)
