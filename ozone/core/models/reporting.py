@@ -125,7 +125,7 @@ class Submission(models.Model):
     status = models.CharField(max_length=64)
 
     flag_provisional = models.BooleanField(default=False)
-    flag_valid = models.BooleanField(default=False)
+    flag_valid = models.NullBooleanField(default=None)
     flag_superseded = models.BooleanField(default=False)
 
     submitted_via = models.CharField(

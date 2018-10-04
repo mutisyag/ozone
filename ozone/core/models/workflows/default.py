@@ -35,6 +35,26 @@ class DefaultArticle7WorkflowStateMachine(BaseStateMachine):
 
     state = DefaultArticle7WorkflowStateDescription()
 
+    @xworkflows.transition_check('unrecall_to_submitted')
+    def check_unrecall_to_submitted(self):
+        """
+        Ensure that we only allow un-recalling submissions back to their
+        initial state.
+        """
+        return self.model_instance.previous_state == 'submitted'
+
+    @xworkflows.transition_check('unrecall_to_processing')
+    def check_unrecall_to_processing(self):
+        return self.model_instance.previous_state == 'processing'
+
+    @xworkflows.transition_check('unrecall_to_finalized')
+    def check_unrecall_to_finalized(self):
+        return self.model_instance.previous_state == 'finalized'
+
+    @xworkflows.transition_check('finalize')
+    def check_finalize(self):
+        return self.model_instance.submission.flag_valid is not None
+
 
 class DefaultArticle7Workflow(BaseWorkflow):
     WORKFLOW_CLASS = DefaultArticle7WorkflowStateMachine

@@ -28,6 +28,11 @@ class BaseStateMachine(xworkflows.WorkflowEnabled):
 
     state = BaseStateDescription()
 
+    def __init__(self, model_instance):
+        # We need this to add a back-reference to the model using this object
+        self.model_instance = model_instance
+        super().__init__()
+
     @property
     def finished(self):
         return self.state in self.final_states
@@ -125,7 +130,7 @@ class BaseWorkflow(models.Model):
     @property
     def workflow(self):
         # Create workflow instance and set last *persisted* state on it
-        wf = self.WORKFLOW_CLASS()
+        wf = self.WORKFLOW_CLASS(model_instance=self)
         state = self.tracker.previous('_current_state') \
             if self.tracker.has_changed('_current_state') \
             else self.current_state
