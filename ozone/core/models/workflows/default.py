@@ -1,11 +1,12 @@
 import xworkflows
 
-from .base import BaseStateMachine, BaseWorkflow
+from .base import BaseWorkflow
 
 
 class DefaultArticle7WorkflowStateDescription(xworkflows.Workflow):
     """
-    This is the default submission workflow for Article 7 reporting
+    These are the default submission states and transitions
+    for Article 7 reporting.
     """
     states = (
         ('data_entry', 'Data Entry'),
@@ -28,8 +29,11 @@ class DefaultArticle7WorkflowStateDescription(xworkflows.Workflow):
     initial_state = 'data_entry'
 
 
-class DefaultArticle7WorkflowStateMachine(BaseStateMachine):
-    # No states are truly final in this workflow
+class DefaultArticle7Workflow(BaseWorkflow):
+    """
+    Implements custom transition logic for the default article 7 workflow.
+    No states are truly final in this workflow.
+    """
     final_states = []
     editable_data_states = ['data_entry']
 
@@ -53,8 +57,4 @@ class DefaultArticle7WorkflowStateMachine(BaseStateMachine):
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
-        return self.model_instance.submission.flag_valid is not None
-
-
-class DefaultArticle7Workflow(BaseWorkflow):
-    WORKFLOW_CLASS = DefaultArticle7WorkflowStateMachine
+        return self.model_instance.flag_valid is not None
