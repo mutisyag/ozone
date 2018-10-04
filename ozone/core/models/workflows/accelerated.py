@@ -1,13 +1,15 @@
 import xworkflows
 
-from .base import BaseStateMachine, BaseWorkflow
+from .base import BaseWorkflow
 
 
 class AcceleratedArticle7WorkflowStateDescription(xworkflows.Workflow):
     """
-    This one does not include the `submitted` or `processing` states.
+    These are the "accelerated" submission states and transitions
+    for Article 7 reporting. They do not include the `submitted` or
+    `processing` states.
 
-    It is meant to be used by Secretariat when amending submissions.
+    This workflow is meant to be used by Secretariat when amending submissions.
     """
 
     states = (
@@ -25,13 +27,9 @@ class AcceleratedArticle7WorkflowStateDescription(xworkflows.Workflow):
     initial_state = 'data_entry'
 
 
-class AcceleratedArticle7WorkflowStateMachine(BaseStateMachine):
+class AcceleratedArticle7Workflow(BaseWorkflow):
     # No states are truly final in this workflow
     final_states = []
     editable_data_states = ['data_entry']
 
     state = AcceleratedArticle7WorkflowStateDescription()
-
-
-class AcceleratedArticle7Workflow(BaseWorkflow):
-    WORKFLOW_CLASS = AcceleratedArticle7WorkflowStateMachine
