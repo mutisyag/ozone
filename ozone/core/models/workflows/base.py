@@ -204,7 +204,7 @@ class BaseWorkflow(models.Model):
         self.save()
 
     def save(self, *args, **kwargs):
-        # Set current state to initial state on first save
+        # Set current state to initial state on first save if not there
         self._current_state = self._current_state or \
-                              self.workflow.initial_state.name
+                              self.workflow.state.workflow.initial_state.name
         super().save(*args, **kwargs)
