@@ -5,6 +5,8 @@ from django.db import models, transaction
 from ozone.users.models import User
 
 from .party import Party
+from .workflows.base import BaseWorkflow
+from .workflows.default import DefaultArticle7Workflow
 
 __all__ = [
     'ReportingPeriod',
@@ -80,6 +82,12 @@ class Submission(models.Model):
         Obligation, related_name='submissions', on_delete=models.PROTECT
     )
 
+    # The proper workflow will be chosen at runtime and will be set during
+    # the first save().
+    workflow = models.OneToOneField(
+        BaseWorkflow, on_delete=models.PROTECT, related_name='submission'
+    )
+
     # TODO (related to the above):
     # It looks like the simplest (best?) solution for handling
     # reporting format changes (i.e. schema versions) is to keep separate
@@ -144,6 +152,10 @@ class Submission(models.Model):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
+        # Auto-increment submission version if saving for a
+        # party-obligation-reporting_period combo which already has submissions.
+        # select_for_update() is used to lock the rows and ensure proper
+        # concurrency.
         submissions = Submission.objects.select_for_update().filter(
             party=self.party,
             reporting_period=self.reporting_period,
@@ -151,4 +163,20 @@ class Submission(models.Model):
         )
         if submissions:
             self.version = submissions.latest('version').version + 1
-        return super(Submission, self).save(*args, **kwargs)
+
+        # On first save we need to instantiate the submission's workflow
+        if not self.pk or kwargs.get('force_insert', False):
+            # TODO: get the proper workflow based on obligation and context
+            # (e.g. fast-tracked secretariat submissions).
+            # For now we will naively instantiate all submissions with
+            # the default workflow.
+            workflow_class = DefaultArticle7Workflow
+            workflow = workflow_class.objects.create(
+                previous_state=None,
+                current_state=workflow_class.initial_state
+            )
+            workflow.save()
+            self.workflow = workflow
+
+
+        return super().save(*args, **kwargs)
