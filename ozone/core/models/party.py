@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .meeting import Treaty
-from .substance import Substance
+from .substance import Substance, Group, Annex
 from .utils import RatificationTypes
 
 
@@ -338,3 +338,189 @@ class Nomination(models.Model):
 
     class Meta:
         ordering = ('nomination_id',)
+
+
+class ControlMeasure(models.Model):
+    """
+    Restrictions on level of production and consumption for Parties.
+    """
+
+    party = models.ForeignKey(
+        Party, on_delete=models.PROTECT
+    )
+
+    group = models.ForeignKey(
+        Group, on_delete=models.PROTECT
+    )
+
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', on_delete=models.PROTECT
+    )
+
+    production_allowed = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
+    )
+    consumption_allowed = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
+    )
+    bdn_allowed = models.FloatField(
+        validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
+        blank=True, null=True
+    )
+
+
+class BaseExemption(models.Model):
+
+    party = models.ForeignKey(
+        Party, related_name='%(class)ss', on_delete=models.PROTECT
+    )
+
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', on_delete=models.PROTECT
+    )
+
+    substance = models.ForeignKey(
+        Substance, on_delete=models.PROTECT
+    )
+
+    uses_type = models.ForeignKey(
+        UsesType, on_delete=models.PROTECT
+    )
+
+    cu_category = models.CharField(max_length=256, blank=True)
+
+    remark = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        abstract = True
+
+
+class ExemptionApproved(BaseExemption):
+
+    emergency = models.BooleanField(default=False)
+
+    approved_teap_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    approved_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    approved_decision = models.CharField(max_length=256, blank=True)
+
+    lau_category = models.CharField(max_length=256, blank=True)
+
+
+class ExemptionReported(BaseExemption):
+
+    import_party = models.ForeignKey(
+        Party, on_delete=models.PROTECT
+    )
+
+    quantity_exempted = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_produced = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_imported = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    # TODO: what is this?
+    quantity_open_bal = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_eu = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_exported = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_destroyed = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+
+class Limit(models.Model):
+    """
+    Production and Consumption Limits for Substances in a Group / Annex,
+    for a Period, for a Party (EDT)
+    """
+
+    party = models.ForeignKey(
+        Party, on_delete=models.PROTECT
+    )
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', on_delete=models.PROTECT
+    )
+    group = models.ForeignKey(
+        Group, on_delete=models.PROTECT
+    )
+
+    production = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+
+    )
+    consumption = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    bdn_production = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+
+class ProcessAgentEmitLimit(models.Model):
+    """
+    Emission limits for process agent uses, for non-Article 5 parties.
+    """
+
+    party = models.ForeignKey(
+        Party, on_delete=models.PROTECT
+    )
+
+    decision = models.CharField(max_length=256)
+
+    makeup_consumption = models.FloatField(validators=[MinValueValidator(0.0)])
+
+    max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
+
+    remark = models.CharField(max_length=512, blank=True)
+
+
+class Transfer(models.Model):
+    """
+    Records amounts of production rights transferred between Parties.
+    """
+    TRANSFER_TYPE = (
+        ('P', 'Production'),
+        ('C', 'Consumption')
+    )
+    transfer_type = models.CharField(
+        max_length=1,
+        choices=TRANSFER_TYPE
+    )
+
+    substance = models.ForeignKey(
+        Substance, on_delete=models.PROTECT
+    )
+
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', related_name='transfers', on_delete=models.PROTECT
+    )
+
+    transferred_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    used_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    is_bdn = models.BooleanField(default=False)
+
+    source_party = models.ForeignKey(
+        Party, related_name='sent_transfers', on_delete=models.PROTECT
+    )
+    destination_party = models.ForeignKey(
+        Party, related_name='received_transfers', on_delete=models.PROTECT
+    )
+
+    remark = models.CharField(max_length=512, blank=True)

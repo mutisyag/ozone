@@ -450,6 +450,15 @@ class Article7Emission(BaseReport):
 
     facility_name = models.CharField(max_length=256)
 
+    quantity_generated = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_destroyed = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )

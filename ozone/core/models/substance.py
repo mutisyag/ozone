@@ -140,6 +140,7 @@ class Blend(models.Model):
     """
     Description of blends
     """
+
     @enum.unique
     class BlendTypes(enum.Enum):
         ZEOTROPE = 'Zeotrope'
@@ -179,6 +180,7 @@ class BlendComponent(models.Model):
     """
     Model describing the substances composition of each blend
     """
+
     blend = models.ForeignKey(
         Blend, related_name='components', on_delete=models.PROTECT
     )
@@ -196,3 +198,76 @@ class BlendComponent(models.Model):
 
     class Meta:
         ordering = ('blend', 'substance')
+
+
+class HATProduce(models.Model):
+    """
+    Production under the exemption for high-ambient-temperature parties
+    """
+
+    submission = models.ForeignKey(
+        'core.Submission', on_delete=models.PROTECT
+    )
+
+    substance = models.ForeignKey(
+        Substance, on_delete=models.PROTECT
+    )
+
+    msac_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    sdac_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    dcpac_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
+
+
+class HATImport(HATProduce):
+    """
+    Consumption (imports) under the exemption for high-ambient-temperature parties
+    """
+
+    blend = models.ForeignKey(
+        Blend, on_delete=models.PROTECT
+    )
+    blend_hat_import = models.ForeignKey('self', on_delete=models.PROTECT)
+
+
+class ProcessAgentApplication(models.Model):
+    """
+    Applications of controlled substances as process agents, as approved
+    in table A of decision X/14 and updated periodically by the Meeting of the Parties.
+    """
+
+    decision = models.CharField(max_length=256, blank=True)
+
+    counter = models.IntegerField()
+
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
+
+    application = models.CharField(max_length=256)
+
+    remark = models.CharField(max_length=512, blank=True)
+
+
+class ProcessAgentContainTechnology(models.Model):
+    """
+    Reported containment technologies
+    """
+
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', on_delete=models.PROTECT
+    )
+
+    party = models.ForeignKey(
+        'core.Party', on_delete=models.PROTECT
+    )
+
+    contain_technology = models.CharField(max_length=512)
