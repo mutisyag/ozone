@@ -228,32 +228,43 @@ class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_new_cu = models.FloatField(
+    class Meta:
+        abstract = True
+
+
+class BaseUses(models.Model):
+    """
+    This will be used as a base for data reporting models on import, export
+    and production.
+    This model contains the quantities and the decisions to use controlled substances.
+    """
+
+    quantity_cu = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_cu = models.CharField(max_length=256, blank=True)
 
-    quantity_new_eu = models.FloatField(
+    quantity_eu = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_eu = models.CharField(max_length=256, blank=True)
 
-    quantity_new_hat = models.FloatField(
+    quantity_hat = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_hat = models.CharField(max_length=256, blank=True)
 
-    quantity_new_lau = models.FloatField(
+    quantity_lau = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_lau = models.CharField(max_length=256, blank=True)
 
-    quantity_new_pau = models.FloatField(
+    quantity_pau = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_pau = models.CharField(max_length=256, blank=True)
 
-    quantity_new_qps = models.FloatField(
+    quantity_qps = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_qps = models.CharField(max_length=256, blank=True)
@@ -316,7 +327,7 @@ class Article7Questionnaire(BaseReport):
         db_table = 'reporting_article_seven_questionnaire'
 
 
-class Article7Export(BaseImportExportReport):
+class Article7Export(BaseImportExportReport, BaseUses):
     """
     Model for a simple Article 7 data report on exports.
 
@@ -330,7 +341,7 @@ class Article7Export(BaseImportExportReport):
         db_table = 'reporting_article_seven_exports'
 
 
-class Article7Import(BaseImportExportReport):
+class Article7Import(BaseImportExportReport, BaseUses):
     """
     Model for a simple Article 7 data report on imports.
 
@@ -344,7 +355,7 @@ class Article7Import(BaseImportExportReport):
         db_table = 'reporting_article_seven_imports'
 
 
-class Article7Production(BaseReport, BaseExemption):
+class Article7Production(BaseReport, BaseUses, BaseExemption):
     """
     Model for a simple Article 7 data report on production.
 
