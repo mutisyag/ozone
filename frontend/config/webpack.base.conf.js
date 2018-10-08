@@ -26,7 +26,7 @@ module.exports = {
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
-      '@': resolve('assets'),
+      '@': resolve('assets/js'),
     }
   },
   module: {
@@ -71,7 +71,7 @@ module.exports = {
     plugins: [
     new BundleTracker({
       // force this to do a full path match
-      path: path.parse(config.build.assetsRoot).root,
+      // path: config.build.assetsRoot,
       filename: path.resolve(config.build.assetsRoot, '../stats.json'),
       indent: 2,
     }),
