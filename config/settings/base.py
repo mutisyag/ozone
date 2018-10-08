@@ -3,16 +3,20 @@ Base settings to build other settings files upon.
 """
 
 import environ
+from pathlib import Path
 
-ROOT_DIR = environ.Path(__file__) - 3  # (ozone/config/settings/base.py - 3 = ozone/)
-APPS_DIR = ROOT_DIR.path('ozone')
+# ROOT_DIR = environ.Path(__file__) - 3  # (ozone/config/settings/base.py - 3 = ozone/)
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+
+ROOT_DIR = Path(str(ROOT_DIR))
+APPS_DIR = ROOT_DIR / 'ozone' 
 
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool('DJANGO_READ_DOT_ENV_FILE', default=False)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
-    env.read_env(str(ROOT_DIR.path('.env')))
+    env.read_env(str(ROOT_DIR / '.env' ))
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -73,6 +77,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'rest_framework',
     'bootstrap_admin',
+    'webpack_loader',
     'import_export',
 ]
 LOCAL_APPS = [
@@ -147,25 +152,56 @@ MIDDLEWARE = [
 # STATIC
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-root
-STATIC_ROOT = str(ROOT_DIR('staticfiles'))
+STATIC_ROOT = ROOT_DIR / 'static'
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = [
-    str(APPS_DIR.path('static')),
-]
+# STATICFILES_DIRS = [
+#     str(APPS_DIR / 'static'),
+# ]
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
-STATICFILES_FINDERS = [
-    'django.contrib.staticfiles.finders.FileSystemFinder',
-    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-]
+# STATICFILES_FINDERS = [
+#     'django.contrib.staticfiles.finders.FileSystemFinder',
+#     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+# ]
 
 # MEDIA
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
-MEDIA_ROOT = str(APPS_DIR('media'))
+MEDIA_ROOT = str(APPS_DIR / 'media')
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-url
 MEDIA_URL = '/media/'
+
+
+
+
+
+# TODO: this part should be synchronized with Webpack
+# (see /frontend/config/conf.js)
+_WEBPACK_DIST_DIR = ROOT_DIR / 'frontend' / 'dist'
+
+# TODO: enable this only in production. (this is just a hack
+# because the staticfiles app breaks if the directory doesn't exist.)
+
+_WEBPACK_BUILD_DIR = _WEBPACK_DIST_DIR / 'build'
+if _WEBPACK_BUILD_DIR.is_dir():
+    STATICFILES_DIRS = (
+        _WEBPACK_BUILD_DIR,
+    )
+WEBPACK_LOADER = {
+    'DEFAULT': {
+        'CACHE': not DEBUG,
+        # 'BUNDLE_DIR_NAME': 'webpack_bundles/',  # must end with slash
+        'BUNDLE_DIR_NAME': '',
+        'STATS_FILE': _WEBPACK_DIST_DIR / 'stats.json',
+        'POLL_INTERVAL': 0.1,
+        'TIMEOUT': None,
+        'IGNORE': ['.+\.hot-update.js', '.+\.map']
+    }
+}
+
+
+
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -176,39 +212,39 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         # https://docs.djangoproject.com/en/dev/ref/settings/#template-dirs
         'DIRS': [
-            str(APPS_DIR.path('templates')),
+            ROOT_DIR / 'templates',
         ],
         'OPTIONS': {
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-debug
-            'debug': DEBUG,
+            # 'debug': DEBUG,
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-loaders
             # https://docs.djangoproject.com/en/dev/ref/templates/api/#loader-types
-            'loaders': [
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',
-            ],
+            # 'loaders': [
+                # 'django.template.loaders.filesystem.Loader',
+                # 'django.template.loaders.app_directories.Loader',
+            # ],
             # https://docs.djangoproject.com/en/dev/ref/settings/#template-context-processors
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.template.context_processors.i18n',
-                'django.template.context_processors.media',
-                'django.template.context_processors.static',
-                'django.template.context_processors.tz',
+                # 'django.template.context_processors.i18n',
+                # 'django.template.context_processors.media',
+                # 'django.template.context_processors.static',
+                # 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
             ],
         },
     },
 ]
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 # FIXTURES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (
-    str(ROOT_DIR.path('data/fixtures')),
+    str(ROOT_DIR / 'data/fixtures'),
 )
 
 # EMAIL
