@@ -190,7 +190,7 @@ class Submission(models.Model):
         state = self.tracker.previous('_current_state') \
             if self.tracker.has_changed('_current_state') \
             else self.current_state
-        wf.state = state
+        wf.state = state or wf.state.workflow.initial_state
         return wf
 
     @property
