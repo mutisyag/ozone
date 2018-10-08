@@ -216,7 +216,7 @@ class Submission(models.Model):
         transition_name = None
         for t in workflow.state.transitions():
             if value == t.target.name:
-                transition_name = t
+                transition_name = t.name
                 break
         if transition_name is None:
             raise self.TransitionNotAvailable(
@@ -235,13 +235,13 @@ class Submission(models.Model):
         # If everything went OK, persist the result and the transition.
         self._previous_state = self._current_state
         self._current_state = workflow.state.name
+        self.save()
         TransitionEvent.objects.create(
             submission=self,
             transition=transition_name,
             from_state=self._previous_state,
             to_state=self._current_state,
         )
-        self.save()
 
     @property
     def previous_state(self):
