@@ -314,13 +314,13 @@ class Submission(models.Model):
         # If everything went OK, persist the result and the transition.
         self._previous_state = self._current_state
         self._current_state = workflow.state.name
+        self.save()
         TransitionEvent.objects.create(
             submission=self,
             transition=trans_name,
             from_state=self._previous_state,
             to_state=self._current_state,
         )
-        self.save()
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
