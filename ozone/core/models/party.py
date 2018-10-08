@@ -405,7 +405,7 @@ class ExemptionApproved(BaseExemption):
     approved_amount = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    approved_decision = models.CharField(max_length=256, blank=True)
+    decision_approved = models.CharField(max_length=256, blank=True)
 
     laboratory_analytical_uses_category = models.CharField(max_length=256, blank=True)
 
@@ -429,7 +429,7 @@ class ExemptionReported(BaseExemption):
     quantity_open_bal = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    essential_uses_quantity = models.FloatField(
+    quantity_essential_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_exported = models.FloatField(

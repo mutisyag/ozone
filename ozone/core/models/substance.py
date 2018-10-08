@@ -231,6 +231,7 @@ class HighAmbientTemperatureProduce(BaseHighAmbientTemperature):
     """
     Production under the exemption for high-ambient-temperature parties
     """
+    pass
 
 
 class HighAmbientTemperatureImport(BaseHighAmbientTemperature):

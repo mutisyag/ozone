@@ -239,35 +239,35 @@ class BaseUses(models.Model):
     This model contains the quantities and the decisions to use controlled substances.
     """
 
-    critical_uses_quantity = models.FloatField(
+    quantity_critical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    critical_uses_decision = models.CharField(max_length=256, blank=True)
+    decision_critical_uses = models.CharField(max_length=256, blank=True)
 
-    essential_uses_quantity = models.FloatField(
+    quantity_essential_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    essential_uses_decision = models.CharField(max_length=256, blank=True)
+    decision_essential_uses = models.CharField(max_length=256, blank=True)
 
-    high_ambient_temperature_quantity = models.FloatField(
+    quantity_high_ambient_temperature = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    high_ambient_temperature_decision = models.CharField(max_length=256, blank=True)
+    decision_high_ambient_temperature = models.CharField(max_length=256, blank=True)
 
-    laboratory_analytical_uses_quantity = models.FloatField(
+    quantity_laboratory_analytical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    laboratory_analytical_uses_decision = models.CharField(max_length=256, blank=True)
+    decision_laboratory_analytical_uses = models.CharField(max_length=256, blank=True)
 
-    process_agent_uses_quantity = models.FloatField(
+    quantity_process_agent_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    process_agent_uses_decision = models.CharField(max_length=256, blank=True)
+    decision_process_agent_uses = models.CharField(max_length=256, blank=True)
 
-    quarantine_pre_shipment_quantity = models.FloatField(
+    quantity_quarantine_pre_shipment = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quarantine_pre_shipment_decision = models.CharField(max_length=256, blank=True)
+    decision_quarantine_pre_shipment = models.CharField(max_length=256, blank=True)
 
     class Meta:
         abstract = True
