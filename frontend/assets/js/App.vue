@@ -1,9 +1,5 @@
 <template>
-  <!-- <router-view></router-view> -->
-  <div>
-    ASD
-  </div>
-
+  <router-view></router-view>
 </template>
 
 <script>
@@ -11,7 +7,6 @@ export default {
   name: 'app'
 }
 </script>
-
 <style lang="scss">
   // CoreUI Icons Set
   @import '~@coreui/icons/css/coreui-icons.min.css';

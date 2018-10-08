@@ -1,0 +1,1962 @@
+[
+  {
+    "id": 1,
+    "name": "R-401A",
+    "composition": [
+      {
+        "name": "R-152a",
+        "percent": 0.13
+      },
+      {
+        "name": "R-124",
+        "percent": 0.34
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "R-401B",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.61
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.11
+      },
+      {
+        "name": "R-124",
+        "percent": 0.28
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "R-401C",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.33
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.15
+      },
+      {
+        "name": "R-124",
+        "percent": 0.52
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "R-402A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.6
+      },
+      {
+        "name": "R-290",
+        "percent": 0.02
+      },
+      {
+        "name": "R-22",
+        "percent": 0.38
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "R-402B",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.38
+      },
+      {
+        "name": "R-290",
+        "percent": 0.02
+      },
+      {
+        "name": "R-22",
+        "percent": 0.6
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "R-403A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.05
+      },
+      {
+        "name": "R-22",
+        "percent": 0.75
+      },
+      {
+        "name": "R-218",
+        "percent": 0.2
+      }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "R-403B",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.05
+      },
+      {
+        "name": "R-22",
+        "percent": 0.56
+      },
+      {
+        "name": "R-218",
+        "percent": 0.39
+      }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "R-404A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.44
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.52
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.04
+      }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "R-406A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.55
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.04
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.41
+      }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "R-407A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.2
+      },
+      {
+        "name": "R-125",
+        "percent": 0.4
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.4
+      }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "R-407B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.1
+      },
+      {
+        "name": "R-125",
+        "percent": 0.7
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.2
+      }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "R-407C",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.23
+      },
+      {
+        "name": "R-125",
+        "percent": 0.25
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.52
+      }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "R-407D",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.15
+      },
+      {
+        "name": "R-125",
+        "percent": 0.15
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.7
+      }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "R-407E",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.25
+      },
+      {
+        "name": "R-125",
+        "percent": 0.15
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.6
+      }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "R-407F",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.3
+      },
+      {
+        "name": "R-125",
+        "percent": 0.3
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.4
+      }
+    ]
+  },
+  {
+    "id": 16,
+    "name": "R-407G",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.025
+      },
+      {
+        "name": "R-125",
+        "percent": 0.025
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.95
+      }
+    ]
+  },
+  {
+    "id": 17,
+    "name": "R-408A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.07
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.46
+      },
+      {
+        "name": "R-22",
+        "percent": 0.47
+      }
+    ]
+  },
+  {
+    "id": 18,
+    "name": "R-409A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.6
+      },
+      {
+        "name": "R-124",
+        "percent": 0.25
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.15
+      }
+    ]
+  },
+  {
+    "id": 19,
+    "name": "R-409B",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.65
+      },
+      {
+        "name": "R-124",
+        "percent": 0.25
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.1
+      }
+    ]
+  },
+  {
+    "id": 20,
+    "name": "R-410A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.5
+      },
+      {
+        "name": "R-125",
+        "percent": 0.5
+      }
+    ]
+  },
+  {
+    "id": 21,
+    "name": "R-410B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.45
+      },
+      {
+        "name": "R-125",
+        "percent": 0.55
+      }
+    ]
+  },
+  {
+    "id": 22,
+    "name": "R-411A",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.015
+      },
+      {
+        "name": "R-22",
+        "percent": 0.875
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.11
+      }
+    ]
+  },
+  {
+    "id": 23,
+    "name": "R-411B",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.03
+      },
+      {
+        "name": "R-22",
+        "percent": 0.94
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 24,
+    "name": "R-412A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.7
+      },
+      {
+        "name": "R-218",
+        "percent": 0.05
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.25
+      }
+    ]
+  },
+  {
+    "id": 25,
+    "name": "R-413A",
+    "composition": [
+      {
+        "name": "R-218",
+        "percent": 0.09
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.88
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 26,
+    "name": "R-414A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.51
+      },
+      {
+        "name": "R-124",
+        "percent": 0.285
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.04
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.165
+      }
+    ]
+  },
+  {
+    "id": 27,
+    "name": "R-414B",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.5
+      },
+      {
+        "name": "R-124",
+        "percent": 0.39
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.015
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.095
+      }
+    ]
+  },
+  {
+    "id": 28,
+    "name": "R-415A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.82
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.18
+      }
+    ]
+  },
+  {
+    "id": 29,
+    "name": "R-415B",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.25
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.75
+      }
+    ]
+  },
+  {
+    "id": 30,
+    "name": "R-416A",
+    "composition": [
+      {
+        "name": "R-134a",
+        "percent": 0.59
+      },
+      {
+        "name": "R-124",
+        "percent": 0.395
+      },
+      {
+        "name": "R-600",
+        "percent": 0.015
+      }
+    ]
+  },
+  {
+    "id": 31,
+    "name": "R-417A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.466
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.5
+      },
+      {
+        "name": "R-600",
+        "percent": 0.034
+      }
+    ]
+  },
+  {
+    "id": 32,
+    "name": "R-417B",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.79
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.183
+      },
+      {
+        "name": "R-600",
+        "percent": 0.027
+      }
+    ]
+  },
+  {
+    "id": 33,
+    "name": "R-417C",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.195
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.788
+      },
+      {
+        "name": "R-600",
+        "percent": 0.017
+      }
+    ]
+  },
+  {
+    "id": 34,
+    "name": "R-418A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.015
+      },
+      {
+        "name": "R-22",
+        "percent": 0.96
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.025
+      }
+    ]
+  },
+  {
+    "id": 35,
+    "name": "R-419A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.77
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.19
+      },
+      {
+        "name": "R-E170",
+        "percent": 0.04
+      }
+    ]
+  },
+  {
+    "id": 36,
+    "name": "R-419B",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.485
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.48
+      },
+      {
+        "name": "R-E170",
+        "percent": 0.035
+      }
+    ]
+  },
+  {
+    "id": 37,
+    "name": "R-420A",
+    "composition": [
+      {
+        "name": "R-134a",
+        "percent": 0.88
+      },
+      {
+        "name": "R-142b",
+        "percent": 0.12
+      }
+    ]
+  },
+  {
+    "id": 38,
+    "name": "R-421A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.58
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.42
+      }
+    ]
+  },
+  {
+    "id": 39,
+    "name": "R-421B",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.85
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.15
+      }
+    ]
+  },
+  {
+    "id": 40,
+    "name": "R-422A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.851
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.115
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.034
+      }
+    ]
+  },
+  {
+    "id": 41,
+    "name": "R-422B",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.55
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.42
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 42,
+    "name": "R-422C",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.82
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.15
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 43,
+    "name": "R-422D",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.651
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.315
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.034
+      }
+    ]
+  },
+  {
+    "id": 44,
+    "name": "R-422E",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.58
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.393
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.027
+      }
+    ]
+  },
+  {
+    "id": 45,
+    "name": "R-423A",
+    "composition": [
+      {
+        "name": "R-134a",
+        "percent": 0.525
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.475
+      }
+    ]
+  },
+  {
+    "id": 46,
+    "name": "R-424A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.505
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.47
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.009
+      },
+      {
+        "name": "R-600",
+        "percent": 0.01
+      },
+      {
+        "name": "R-601a",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 47,
+    "name": "R-425A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.185
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.695
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.12
+      }
+    ]
+  },
+  {
+    "id": 48,
+    "name": "R-426A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.051
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.93
+      },
+      {
+        "name": "R-600",
+        "percent": 0.013
+      },
+      {
+        "name": "R-601a",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 49,
+    "name": "R-427A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.15
+      },
+      {
+        "name": "R-125",
+        "percent": 0.25
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.1
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.5
+      }
+    ]
+  },
+  {
+    "id": 50,
+    "name": "R-428A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.775
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.2
+      },
+      {
+        "name": "R-290",
+        "percent": 0.006
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.019
+      }
+    ]
+  },
+  {
+    "id": 51,
+    "name": "R-429A",
+    "composition": [
+      {
+        "name": "R-E170",
+        "percent": 0.6
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.1
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.3
+      }
+    ]
+  },
+  {
+    "id": 52,
+    "name": "R-430A",
+    "composition": [
+      {
+        "name": "R-152a",
+        "percent": 0.76
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.24
+      }
+    ]
+  },
+  {
+    "id": 53,
+    "name": "R-431A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.71
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.29
+      }
+    ]
+  },
+  {
+    "id": 54,
+    "name": "R-432A",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.8
+      },
+      {
+        "name": "R-E170",
+        "percent": 0.2
+      }
+    ]
+  },
+  {
+    "id": 55,
+    "name": "R-433A",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.3
+      },
+      {
+        "name": "R-290",
+        "percent": 0.7
+      }
+    ]
+  },
+  {
+    "id": 56,
+    "name": "R-433B",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.05
+      },
+      {
+        "name": "R-290",
+        "percent": 0.95
+      }
+    ]
+  },
+  {
+    "id": 57,
+    "name": "R-433C",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.25
+      },
+      {
+        "name": "R-290",
+        "percent": 0.75
+      }
+    ]
+  },
+  {
+    "id": 58,
+    "name": "R-434A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.632
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.18
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.16
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.028
+      }
+    ]
+  },
+  {
+    "id": 59,
+    "name": "R-435A",
+    "composition": [
+      {
+        "name": "R-E170",
+        "percent": 0.8
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.2
+      }
+    ]
+  },
+  {
+    "id": 60,
+    "name": "R-436A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.56
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.44
+      }
+    ]
+  },
+  {
+    "id": 61,
+    "name": "R-436B",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.52
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.48
+      }
+    ]
+  },
+  {
+    "id": 62,
+    "name": "R-437A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.195
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.785
+      },
+      {
+        "name": "R-600",
+        "percent": 0.014
+      },
+      {
+        "name": "R-601",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 63,
+    "name": "R-438A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.085
+      },
+      {
+        "name": "R-125",
+        "percent": 0.45
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.442
+      },
+      {
+        "name": "R-600",
+        "percent": 0.017
+      },
+      {
+        "name": "R-601a",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 64,
+    "name": "R-439A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.5
+      },
+      {
+        "name": "R-125",
+        "percent": 0.47
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 65,
+    "name": "R-440A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.006
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.016
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.978
+      }
+    ]
+  },
+  {
+    "id": 66,
+    "name": "R-441A",
+    "composition": [
+      {
+        "name": "R-170",
+        "percent": 0.031
+      },
+      {
+        "name": "R-290",
+        "percent": 0.548
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.06
+      },
+      {
+        "name": "R-600",
+        "percent": 0.361
+      }
+    ]
+  },
+  {
+    "id": 67,
+    "name": "R-442A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.31
+      },
+      {
+        "name": "R-125",
+        "percent": 0.31
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.3
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.03
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.05
+      }
+    ]
+  },
+  {
+    "id": 68,
+    "name": "R-443A",
+    "composition": [
+      {
+        "name": "R-1270",
+        "percent": 0.55
+      },
+      {
+        "name": "R-290",
+        "percent": 0.4
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.05
+      }
+    ]
+  },
+  {
+    "id": 69,
+    "name": "R-444A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.12
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.05
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.83
+      }
+    ]
+  },
+  {
+    "id": 70,
+    "name": "R-444B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.415
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.485
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.1
+      }
+    ]
+  },
+  {
+    "id": 71,
+    "name": "R-445A",
+    "composition": [
+      {
+        "name": "R-744",
+        "percent": 0.06
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.09
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.85
+      }
+    ]
+  },
+  {
+    "id": 72,
+    "name": "R-446A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.68
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.29
+      },
+      {
+        "name": "R-600",
+        "percent": 0.03
+      }
+    ]
+  },
+  {
+    "id": 73,
+    "name": "R-447A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.68
+      },
+      {
+        "name": "R-125",
+        "percent": 0.035
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.285
+      }
+    ]
+  },
+  {
+    "id": 74,
+    "name": "R-447B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.68
+      },
+      {
+        "name": "R-125",
+        "percent": 0.08
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.24
+      }
+    ]
+  },
+  {
+    "id": 75,
+    "name": "R-448A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.26
+      },
+      {
+        "name": "R-125",
+        "percent": 0.26
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.2
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.21
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.07
+      }
+    ]
+  },
+  {
+    "id": 76,
+    "name": "R-449A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.243
+      },
+      {
+        "name": "R-125",
+        "percent": 0.247
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.253
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.257
+      }
+    ]
+  },
+  {
+    "id": 77,
+    "name": "R-449B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.252
+      },
+      {
+        "name": "R-125",
+        "percent": 0.243
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.232
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.273
+      }
+    ]
+  },
+  {
+    "id": 78,
+    "name": "R-449C",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.2
+      },
+      {
+        "name": "R-125",
+        "percent": 0.2
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.31
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.29
+      }
+    ]
+  },
+  {
+    "id": 79,
+    "name": "R-450A",
+    "composition": [
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.58
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.42
+      }
+    ]
+  },
+  {
+    "id": 80,
+    "name": "R-451A",
+    "composition": [
+      {
+        "name": "R-1234yf",
+        "percent": 0.898
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.102
+      }
+    ]
+  },
+  {
+    "id": 81,
+    "name": "R-451B",
+    "composition": [
+      {
+        "name": "R-1234yf",
+        "percent": 0.888
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.112
+      }
+    ]
+  },
+  {
+    "id": 82,
+    "name": "R-452A",
+    "composition": [
+      {
+        "name": "R-1234yf",
+        "percent": 0.3
+      },
+      {
+        "name": "R-32",
+        "percent": 0.11
+      },
+      {
+        "name": "R-125",
+        "percent": 0.59
+      }
+    ]
+  },
+  {
+    "id": 83,
+    "name": "R-452B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.67
+      },
+      {
+        "name": "R-125",
+        "percent": 0.07
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.26
+      }
+    ]
+  },
+  {
+    "id": 84,
+    "name": "R-452C",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.125
+      },
+      {
+        "name": "R-125",
+        "percent": 0.61
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.265
+      }
+    ]
+  },
+  {
+    "id": 85,
+    "name": "R-453A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.2
+      },
+      {
+        "name": "R-125",
+        "percent": 0.2
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.538
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.05
+      },
+      {
+        "name": "R-600",
+        "percent": 0.006
+      },
+      {
+        "name": "R-601a",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 86,
+    "name": "R-454A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.35
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.65
+      }
+    ]
+  },
+  {
+    "id": 87,
+    "name": "R-454B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.689
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.311
+      }
+    ]
+  },
+  {
+    "id": 88,
+    "name": "R-454C",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.215
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.785
+      }
+    ]
+  },
+  {
+    "id": 89,
+    "name": "R-455A",
+    "composition": [
+      {
+        "name": "R-744",
+        "percent": 0.03
+      },
+      {
+        "name": "R-32",
+        "percent": 0.215
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.755
+      }
+    ]
+  },
+  {
+    "id": 90,
+    "name": "R-456A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.06
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.45
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.49
+      }
+    ]
+  },
+  {
+    "id": 91,
+    "name": "R-457A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.18
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.7
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.12
+      }
+    ]
+  },
+  {
+    "id": 92,
+    "name": "R-458A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.205
+      },
+      {
+        "name": "R-125",
+        "percent": 0.04
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.614
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.135
+      },
+      {
+        "name": "R-236fa",
+        "percent": 0.006
+      }
+    ]
+  },
+  {
+    "id": 93,
+    "name": "R-459A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.68
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.26
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.06
+      }
+    ]
+  },
+  {
+    "id": 94,
+    "name": "R-459B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.21
+      },
+      {
+        "name": "R-1234yf",
+        "percent": 0.69
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.1
+      }
+    ]
+  },
+  {
+    "id": 95,
+    "name": "R-460A",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.12
+      },
+      {
+        "name": "R-125",
+        "percent": 0.52
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.14
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.22
+      }
+    ]
+  },
+  {
+    "id": 96,
+    "name": "R-460B",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.28
+      },
+      {
+        "name": "R-125",
+        "percent": 0.25
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.2
+      },
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.27
+      }
+    ]
+  },
+  {
+    "id": 97,
+    "name": "R-500",
+    "composition": [
+      {
+        "name": "R-12",
+        "percent": 0.738
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.262
+      }
+    ]
+  },
+  {
+    "id": 98,
+    "name": "R-501",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.75
+      },
+      {
+        "name": "R-12",
+        "percent": 0.25
+      }
+    ]
+  },
+  {
+    "id": 99,
+    "name": "R-502",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.488
+      },
+      {
+        "name": "R-115",
+        "percent": 0.512
+      }
+    ]
+  },
+  {
+    "id": 100,
+    "name": "R-503",
+    "composition": [
+      {
+        "name": "R-23",
+        "percent": 0.401
+      },
+      {
+        "name": "R-13",
+        "percent": 0.599
+      }
+    ]
+  },
+  {
+    "id": 101,
+    "name": "R-504",
+    "composition": [
+      {
+        "name": "R-32",
+        "percent": 0.482
+      },
+      {
+        "name": "R-115",
+        "percent": 0.518
+      }
+    ]
+  },
+  {
+    "id": 102,
+    "name": "R-507A",
+    "composition": [
+      {
+        "name": "R-125",
+        "percent": 0.5
+      },
+      {
+        "name": "R-143a",
+        "percent": 0.5
+      }
+    ]
+  },
+  {
+    "id": 103,
+    "name": "R-508A",
+    "composition": [
+      {
+        "name": "R-23",
+        "percent": 0.39
+      },
+      {
+        "name": "R-116",
+        "percent": 0.61
+      }
+    ]
+  },
+  {
+    "id": 104,
+    "name": "R-508B",
+    "composition": [
+      {
+        "name": "R-23",
+        "percent": 0.46
+      },
+      {
+        "name": "R-116",
+        "percent": 0.54
+      }
+    ]
+  },
+  {
+    "id": 105,
+    "name": "R-509A",
+    "composition": [
+      {
+        "name": "R-22",
+        "percent": 0.44
+      },
+      {
+        "name": "R-218",
+        "percent": 0.56
+      }
+    ]
+  },
+  {
+    "id": 106,
+    "name": "R-510A",
+    "composition": [
+      {
+        "name": "R-E170",
+        "percent": 0.88
+      },
+      {
+        "name": "R-600a",
+        "percent": 0.12
+      }
+    ]
+  },
+  {
+    "id": 107,
+    "name": "R-511A",
+    "composition": [
+      {
+        "name": "R-290",
+        "percent": 0.95
+      },
+      {
+        "name": "R-E170",
+        "percent": 0.05
+      }
+    ]
+  },
+  {
+    "id": 108,
+    "name": "R-512A",
+    "composition": [
+      {
+        "name": "R-134a",
+        "percent": 0.05
+      },
+      {
+        "name": "R-152a",
+        "percent": 0.95
+      }
+    ]
+  },
+  {
+    "id": 109,
+    "name": "R-513A",
+    "composition": [
+      {
+        "name": "R-1234yf",
+        "percent": 0.56
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.44
+      }
+    ]
+  },
+  {
+    "id": 110,
+    "name": "R-513B",
+    "composition": [
+      {
+        "name": "R-1234yf",
+        "percent": 0.585
+      },
+      {
+        "name": "R-134a",
+        "percent": 0.415
+      }
+    ]
+  },
+  {
+    "id": 111,
+    "name": "R-514A",
+    "composition": [
+      {
+        "name": "R-1336mzz(Z)",
+        "percent": 0.747
+      },
+      {
+        "name": "R-1130(E)",
+        "percent": 0.253
+      }
+    ]
+  },
+  {
+    "id": 112,
+    "name": "R-515A",
+    "composition": [
+      {
+        "name": "R-1234ze(E)",
+        "percent": 0.88
+      },
+      {
+        "name": "R-227ea",
+        "percent": 0.12
+      }
+    ]
+  }
+]
