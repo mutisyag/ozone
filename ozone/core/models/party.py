@@ -222,7 +222,7 @@ class PartyHistory(models.Model):
         blank=True
     )
 
-    is_hat = models.BooleanField()
+    is_high_ambient_temperature = models.BooleanField()
 
     # Reflects EU membership for that specific year
     is_eu_member = models.BooleanField()
@@ -363,7 +363,7 @@ class ControlMeasure(models.Model):
     consumption_allowed = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
-    bdn_allowed = models.FloatField(
+    basic_domestic_needs_allowed = models.FloatField(
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)],
         blank=True, null=True
     )
@@ -387,7 +387,7 @@ class BaseExemption(models.Model):
         UsesType, on_delete=models.PROTECT
     )
 
-    cu_category = models.CharField(max_length=256, blank=True)
+    critical_uses_category = models.CharField(max_length=256, blank=True)
 
     remark = models.CharField(max_length=256, blank=True)
 
@@ -407,7 +407,7 @@ class ExemptionApproved(BaseExemption):
     )
     approved_decision = models.CharField(max_length=256, blank=True)
 
-    lau_category = models.CharField(max_length=256, blank=True)
+    laboratory_analytical_uses_category = models.CharField(max_length=256, blank=True)
 
 
 class ExemptionReported(BaseExemption):
@@ -429,7 +429,7 @@ class ExemptionReported(BaseExemption):
     quantity_open_bal = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_eu = models.FloatField(
+    essential_uses_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_exported = models.FloatField(
@@ -463,7 +463,7 @@ class Limit(models.Model):
     consumption = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    bdn_production = models.FloatField(
+    basic_domestic_needs_production = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -514,7 +514,7 @@ class Transfer(models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    is_bdn = models.BooleanField(default=False)
+    is_basic_domestic_need = models.BooleanField(default=False)
 
     source_party = models.ForeignKey(
         Party, related_name='sent_transfers', on_delete=models.PROTECT

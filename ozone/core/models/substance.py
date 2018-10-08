@@ -200,10 +200,7 @@ class BlendComponent(models.Model):
         ordering = ('blend', 'substance')
 
 
-class HATProduce(models.Model):
-    """
-    Production under the exemption for high-ambient-temperature parties
-    """
+class BaseHighAmbientTemperature(models.Model):
 
     submission = models.ForeignKey(
         'core.Submission', on_delete=models.PROTECT
@@ -213,21 +210,30 @@ class HATProduce(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    msac_production = models.FloatField(
+    multi_split_air_conditioners_production = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    sdac_production = models.FloatField(
+    split_ducted_air_conditioners_production = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    dcpac_production = models.FloatField(
+    ducted_commercial_packaged_air_conditioners_production = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
 
     remarks_party = models.CharField(max_length=512, blank=True)
     remarks_os = models.CharField(max_length=512, blank=True)
 
+    class Meta:
+        abstract = True
 
-class HATImport(HATProduce):
+
+class HighAmbientTemperatureProduce(BaseHighAmbientTemperature):
+    """
+    Production under the exemption for high-ambient-temperature parties
+    """
+
+
+class HighAmbientTemperatureImport(BaseHighAmbientTemperature):
     """
     Consumption (imports) under the exemption for high-ambient-temperature parties
     """
@@ -235,7 +241,7 @@ class HATImport(HATProduce):
     blend = models.ForeignKey(
         Blend, on_delete=models.PROTECT
     )
-    blend_hat_import = models.ForeignKey('self', on_delete=models.PROTECT)
+    blend_high_ambient_temperature_import = models.ForeignKey('self', on_delete=models.PROTECT)
 
 
 class ProcessAgentApplication(models.Model):

@@ -239,35 +239,35 @@ class BaseUses(models.Model):
     This model contains the quantities and the decisions to use controlled substances.
     """
 
-    quantity_cu = models.FloatField(
+    critical_uses_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_cu = models.CharField(max_length=256, blank=True)
+    critical_uses_decision = models.CharField(max_length=256, blank=True)
 
-    quantity_eu = models.FloatField(
+    essential_uses_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_eu = models.CharField(max_length=256, blank=True)
+    essential_uses_decision = models.CharField(max_length=256, blank=True)
 
-    quantity_hat = models.FloatField(
+    high_ambient_temperature_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_hat = models.CharField(max_length=256, blank=True)
+    high_ambient_temperature_decision = models.CharField(max_length=256, blank=True)
 
-    quantity_lau = models.FloatField(
+    laboratory_analytical_uses_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_lau = models.CharField(max_length=256, blank=True)
+    laboratory_analytical_uses_decision = models.CharField(max_length=256, blank=True)
 
-    quantity_pau = models.FloatField(
+    process_agent_uses_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_pau = models.CharField(max_length=256, blank=True)
+    process_agent_uses_decision = models.CharField(max_length=256, blank=True)
 
-    quantity_qps = models.FloatField(
+    quarantine_pre_shipment_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_qps = models.CharField(max_length=256, blank=True)
+    quarantine_pre_shipment_decision = models.CharField(max_length=256, blank=True)
 
     class Meta:
         abstract = True
