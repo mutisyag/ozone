@@ -23,7 +23,7 @@ class ExemptionTypes(enum.Enum):
     OTHER = 'Other'
 
 
-class Meeting (models.Model):
+class Meeting(models.Model):
     """
     Information on Ozone-related meetings
     """
