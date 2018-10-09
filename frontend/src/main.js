@@ -5,6 +5,8 @@ import 'core-js/es6/string'
 import 'core-js/es7/array'
 // import cssVars from 'css-vars-ponyfill'
 import Vue from 'vue'
+
+
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
@@ -15,13 +17,15 @@ import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 // todo
 // cssVars()
+Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 
 /* eslint-disable no-new */
 new Vue({
-  el: '#app',
-  components: { App },
   router,
-  template: '<App/>'
-})
+  render: h => h(App)
+}).$mount('#app')
+
+
+

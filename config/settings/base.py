@@ -183,23 +183,10 @@ _WEBPACK_DIST_DIR = ROOT_DIR / 'frontend' / 'dist'
 # TODO: enable this only in production. (this is just a hack
 # because the staticfiles app breaks if the directory doesn't exist.)
 
-_WEBPACK_BUILD_DIR = _WEBPACK_DIST_DIR / 'build'
-if _WEBPACK_BUILD_DIR.is_dir():
+if _WEBPACK_DIST_DIR.is_dir():
     STATICFILES_DIRS = (
-        _WEBPACK_BUILD_DIR,
+        _WEBPACK_DIST_DIR,
     )
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        # 'BUNDLE_DIR_NAME': 'webpack_bundles/',  # must end with slash
-        'BUNDLE_DIR_NAME': '',
-        'STATS_FILE': _WEBPACK_DIST_DIR / 'stats.json',
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': ['.+\.hot-update.js', '.+\.map']
-    }
-}
-
 
 
 
