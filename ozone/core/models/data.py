@@ -6,11 +6,13 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 
 from .meeting import Decision, ExemptionTypes
-from .reporting import Submission
-from .substance import Annex, Group, Substance, Blend, BlendComponent
 from .party import Party
+from .reporting import Submission
+from .substance import BlendComponent, Substance
 
 __all__ = [
+    'BaseReport',
+    'BaseBlendCompositionReport',
     'Article7Flags',
     'Article7Questionnaire',
     'Article7Export',
@@ -160,10 +162,10 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
 
     # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
+        "core.Substance", blank=True, null=True, on_delete=models.PROTECT
     )
     blend = models.ForeignKey(
-        Blend, blank=True, null=True, on_delete=models.PROTECT
+        "core.Blend", blank=True, null=True, on_delete=models.PROTECT
     )
     # When non-null, this is used to signal that this particular
     # substance entry was automatically generated from an entry containing
@@ -285,10 +287,10 @@ class Article7Flags(models.Model):
     )
 
     annex = models.ForeignKey(
-        Annex, related_name='incomplete_flags', on_delete=models.PROTECT
+        "core.Annex", related_name='incomplete_flags', on_delete=models.PROTECT
     )
     group = models.ForeignKey(
-        Group, related_name='incomplete_flags', on_delete=models.PROTECT
+        "core.Group", related_name='incomplete_flags', on_delete=models.PROTECT
     )
 
     # Generally this model will be instantiated only when there is incomplete
@@ -363,7 +365,7 @@ class Article7Production(BaseReport, BaseUses, BaseExemption):
     """
 
     substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
+        "core.Substance", null=True, on_delete=models.PROTECT
     )
 
     quantity_total_produced = models.FloatField(
@@ -465,3 +467,36 @@ class Article7Emission(BaseReport):
 
     class Meta:
         db_table = 'reporting_article_seven_emissions'
+
+
+class BaseHighAmbientTemperature(models.Model):
+
+    multi_split_air_conditioners_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    split_ducted_air_conditioners_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    ducted_commercial_packaged_air_conditioners_production = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+
+    class Meta:
+        abstract = True
+
+
+class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
+    """
+    Production under the exemption for high-ambient-temperature parties
+    """
+    substance = models.ForeignKey(
+        Substance, blank=True, null=True, on_delete=models.PROTECT
+    )
+
+
+class HighAmbientTemperatureImport(BaseBlendCompositionReport, BaseHighAmbientTemperature):
+    """
+    Consumption (imports) under the exemption for high-ambient-temperature parties
+    """
+
+    pass

@@ -5,7 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .meeting import Treaty
-from .substance import Substance, Group, Annex
+from .substance import Substance, Group
 from .utils import RatificationTypes
 
 

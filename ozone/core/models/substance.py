@@ -3,6 +3,7 @@ import enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+import ozone.core.models.data
 from .meeting import ExemptionTypes, Treaty
 
 __all__ = [
@@ -198,51 +199,6 @@ class BlendComponent(models.Model):
 
     class Meta:
         ordering = ('blend', 'substance')
-
-
-class BaseHighAmbientTemperature(models.Model):
-
-    submission = models.ForeignKey(
-        'core.Submission', on_delete=models.PROTECT
-    )
-
-    substance = models.ForeignKey(
-        Substance, on_delete=models.PROTECT
-    )
-
-    multi_split_air_conditioners_production = models.FloatField(
-        validators=[MinValueValidator(0.0)]
-    )
-    split_ducted_air_conditioners_production = models.FloatField(
-        validators=[MinValueValidator(0.0)]
-    )
-    ducted_commercial_packaged_air_conditioners_production = models.FloatField(
-        validators=[MinValueValidator(0.0)]
-    )
-
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
-
-    class Meta:
-        abstract = True
-
-
-class HighAmbientTemperatureProduce(BaseHighAmbientTemperature):
-    """
-    Production under the exemption for high-ambient-temperature parties
-    """
-    pass
-
-
-class HighAmbientTemperatureImport(BaseHighAmbientTemperature):
-    """
-    Consumption (imports) under the exemption for high-ambient-temperature parties
-    """
-
-    blend = models.ForeignKey(
-        Blend, on_delete=models.PROTECT
-    )
-    blend_high_ambient_temperature_import = models.ForeignKey('self', on_delete=models.PROTECT)
 
 
 class ProcessAgentApplication(models.Model):
