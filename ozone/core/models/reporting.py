@@ -5,7 +5,7 @@ from django.db import models, transaction
 from ozone.users.models import User
 
 from .party import Party
-
+from .substance import Substance
 
 __all__ = [
     'ReportingPeriod',
@@ -153,3 +153,38 @@ class Submission(models.Model):
         if submissions:
             self.version = submissions.latest('version').version + 1
         return super(Submission, self).save(*args, **kwargs)
+
+
+class ProcessAgentApplication(models.Model):
+    """
+    Applications of controlled substances as process agents, as approved
+    in table A of decision X/14 and updated periodically by the Meeting of the Parties.
+    """
+
+    decision = models.CharField(max_length=256, blank=True)
+
+    counter = models.IntegerField()
+
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
+
+    application = models.CharField(max_length=256)
+
+    remark = models.CharField(max_length=512, blank=True)
+
+
+class ProcessAgentContainTechnology(models.Model):
+    """
+    Reported containment technologies
+    """
+
+    reporting_period = models.ForeignKey(
+        'core.ReportingPeriod', on_delete=models.PROTECT
+    )
+
+    party = models.ForeignKey(
+        'core.Party', on_delete=models.PROTECT
+    )
+
+    contain_technology = models.CharField(max_length=512)

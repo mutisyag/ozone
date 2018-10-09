@@ -3,7 +3,6 @@ import enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-import ozone.core.models.data
 from .meeting import ExemptionTypes, Treaty
 
 __all__ = [
@@ -199,38 +198,3 @@ class BlendComponent(models.Model):
 
     class Meta:
         ordering = ('blend', 'substance')
-
-
-class ProcessAgentApplication(models.Model):
-    """
-    Applications of controlled substances as process agents, as approved
-    in table A of decision X/14 and updated periodically by the Meeting of the Parties.
-    """
-
-    decision = models.CharField(max_length=256, blank=True)
-
-    counter = models.IntegerField()
-
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
-
-    application = models.CharField(max_length=256)
-
-    remark = models.CharField(max_length=512, blank=True)
-
-
-class ProcessAgentContainTechnology(models.Model):
-    """
-    Reported containment technologies
-    """
-
-    reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', on_delete=models.PROTECT
-    )
-
-    party = models.ForeignKey(
-        'core.Party', on_delete=models.PROTECT
-    )
-
-    contain_technology = models.CharField(max_length=512)
