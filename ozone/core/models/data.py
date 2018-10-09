@@ -11,8 +11,6 @@ from .reporting import Submission
 from .substance import BlendComponent, Substance
 
 __all__ = [
-    'BaseReport',
-    'BaseBlendCompositionReport',
     'Article7Flags',
     'Article7Questionnaire',
     'Article7Export',
@@ -162,7 +160,7 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
 
     # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        "core.Substance", blank=True, null=True, on_delete=models.PROTECT
+        Substance, blank=True, null=True, on_delete=models.PROTECT
     )
     blend = models.ForeignKey(
         "core.Blend", blank=True, null=True, on_delete=models.PROTECT
