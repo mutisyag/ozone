@@ -3,10 +3,14 @@
 </template>
 
 <script>
+import Router from './router'
+
 export default {
-  name: 'app'
+  name: 'app',
+  components: {routerview: Router}
 }
 </script>
+
 <style lang="scss">
   // CoreUI Icons Set
   @import '~@coreui/icons/css/coreui-icons.min.css';
