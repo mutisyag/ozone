@@ -8,7 +8,7 @@ from model_utils import FieldTracker
 from .meeting import Decision, ExemptionTypes
 from .party import Party
 from .reporting import Submission
-from .substance import BlendComponent, Substance
+from .substance import BlendComponent, Substance, Blend, Annex, Group
 
 __all__ = [
     'Article7Flags',
@@ -163,7 +163,7 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
         Substance, blank=True, null=True, on_delete=models.PROTECT
     )
     blend = models.ForeignKey(
-        "core.Blend", blank=True, null=True, on_delete=models.PROTECT
+        Blend, blank=True, null=True, on_delete=models.PROTECT
     )
     # When non-null, this is used to signal that this particular
     # substance entry was automatically generated from an entry containing
@@ -285,10 +285,10 @@ class Article7Flags(models.Model):
     )
 
     annex = models.ForeignKey(
-        "core.Annex", related_name='incomplete_flags', on_delete=models.PROTECT
+        Annex, related_name='incomplete_flags', on_delete=models.PROTECT
     )
     group = models.ForeignKey(
-        "core.Group", related_name='incomplete_flags', on_delete=models.PROTECT
+        Group, related_name='incomplete_flags', on_delete=models.PROTECT
     )
 
     # Generally this model will be instantiated only when there is incomplete
@@ -363,7 +363,7 @@ class Article7Production(BaseReport, BaseUses, BaseExemption):
     """
 
     substance = models.ForeignKey(
-        "core.Substance", null=True, on_delete=models.PROTECT
+        Substance, null=True, on_delete=models.PROTECT
     )
 
     quantity_total_produced = models.FloatField(

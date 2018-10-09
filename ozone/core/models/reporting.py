@@ -4,8 +4,8 @@ from django.db import models, transaction
 
 from ozone.users.models import User
 
-from .party import Party
 from .substance import Substance
+from .party import Party
 
 __all__ = [
     'ReportingPeriod',
@@ -180,11 +180,11 @@ class ProcessAgentContainTechnology(models.Model):
     """
 
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', on_delete=models.PROTECT
+        ReportingPeriod, on_delete=models.PROTECT
     )
 
     party = models.ForeignKey(
-        'core.Party', on_delete=models.PROTECT
+        Party, on_delete=models.PROTECT
     )
 
     contain_technology = models.CharField(max_length=512)

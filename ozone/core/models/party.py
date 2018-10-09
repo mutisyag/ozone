@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .meeting import Treaty
+from .reporting import ReportingPeriod
 from .substance import Substance, Group
 from .utils import RatificationTypes
 
@@ -316,7 +317,7 @@ class Nomination(models.Model):
     )
 
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', related_name='nominations', on_delete=models.PROTECT
+        ReportingPeriod, related_name='nominations', on_delete=models.PROTECT
     )
 
     uses_type = models.ForeignKey(
@@ -354,7 +355,7 @@ class ControlMeasure(models.Model):
     )
 
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', on_delete=models.PROTECT
+        ReportingPeriod, on_delete=models.PROTECT
     )
 
     production_allowed = models.FloatField(
@@ -376,7 +377,7 @@ class BaseExemption(models.Model):
     )
 
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', on_delete=models.PROTECT
+        ReportingPeriod, on_delete=models.PROTECT
     )
 
     substance = models.ForeignKey(
@@ -450,7 +451,7 @@ class Limit(models.Model):
         Party, on_delete=models.PROTECT
     )
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', on_delete=models.PROTECT
+        ReportingPeriod, on_delete=models.PROTECT
     )
     group = models.ForeignKey(
         Group, on_delete=models.PROTECT
@@ -504,7 +505,7 @@ class Transfer(models.Model):
     )
 
     reporting_period = models.ForeignKey(
-        'core.ReportingPeriod', related_name='transfers', on_delete=models.PROTECT
+        ReportingPeriod, related_name='transfers', on_delete=models.PROTECT
     )
 
     transferred_amount = models.FloatField(
