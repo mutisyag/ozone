@@ -469,13 +469,13 @@ class Article7Emission(BaseReport):
 
 class BaseHighAmbientTemperature(models.Model):
 
-    multi_split_air_conditioners_production = models.FloatField(
+    quantity_multi_split_air_conditioners_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    split_ducted_air_conditioners_production = models.FloatField(
+    quantity_split_ducted_air_conditioners_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    ducted_commercial_packaged_air_conditioners_production = models.FloatField(
+    quantity_ducted_commercial_packaged_air_conditioners_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
 
@@ -497,4 +497,10 @@ class HighAmbientTemperatureImport(BaseBlendCompositionReport, BaseHighAmbientTe
     Consumption (imports) under the exemption for high-ambient-temperature parties
     """
 
-    pass
+    tracker = FieldTracker()
+
+    QUANTITY_FIELDS = [
+        'quantity_multi_split_air_conditioners_produced',
+        'quantity_split_ducted_air_conditioners_produced',
+        'quantity_ducted_commercial_packaged_air_conditioners_produced',
+    ]
