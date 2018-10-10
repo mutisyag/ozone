@@ -561,9 +561,6 @@ class Transfer(BaseReport):
 
     is_basic_domestic_need = models.BooleanField(default=False)
 
-    party = models.ForeignKey(
-        Party, related_name='sent_transfers', on_delete=models.PROTECT
-    )
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
