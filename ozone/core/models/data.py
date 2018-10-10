@@ -6,9 +6,9 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 
 from .meeting import Decision, ExemptionTypes
-from .reporting import Submission
-from .substance import Annex, Group, Substance, Blend, BlendComponent
 from .party import Party
+from .reporting import Submission
+from .substance import BlendComponent, Substance, Blend, Annex, Group
 
 __all__ = [
     'Article7Flags',
@@ -239,35 +239,35 @@ class BaseUses(models.Model):
     This model contains the quantities and the decisions to use controlled substances.
     """
 
-    quantity_cu = models.FloatField(
+    quantity_critical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_cu = models.CharField(max_length=256, blank=True)
+    decision_critical_uses = models.CharField(max_length=256, blank=True)
 
-    quantity_eu = models.FloatField(
+    quantity_essential_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_eu = models.CharField(max_length=256, blank=True)
+    decision_essential_uses = models.CharField(max_length=256, blank=True)
 
-    quantity_hat = models.FloatField(
+    quantity_high_ambient_temperature = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_hat = models.CharField(max_length=256, blank=True)
+    decision_high_ambient_temperature = models.CharField(max_length=256, blank=True)
 
-    quantity_lau = models.FloatField(
+    quantity_laboratory_analytical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_lau = models.CharField(max_length=256, blank=True)
+    decision_laboratory_analytical_uses = models.CharField(max_length=256, blank=True)
 
-    quantity_pau = models.FloatField(
+    quantity_process_agent_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_pau = models.CharField(max_length=256, blank=True)
+    decision_process_agent_uses = models.CharField(max_length=256, blank=True)
 
-    quantity_qps = models.FloatField(
+    quantity_quarantine_pre_shipment = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_qps = models.CharField(max_length=256, blank=True)
+    decision_quarantine_pre_shipment = models.CharField(max_length=256, blank=True)
 
     class Meta:
         abstract = True
@@ -450,9 +450,57 @@ class Article7Emission(BaseReport):
 
     facility_name = models.CharField(max_length=256)
 
+    quantity_generated = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_destroyed = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
 
     class Meta:
         db_table = 'reporting_article_seven_emissions'
+
+
+class BaseHighAmbientTemperature(models.Model):
+
+    quantity_multi_split_air_conditioners_produced = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    quantity_split_ducted_air_conditioners_produced = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+    quantity_ducted_commercial_packaged_air_conditioners_produced = models.FloatField(
+        validators=[MinValueValidator(0.0)]
+    )
+
+    class Meta:
+        abstract = True
+
+
+class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
+    """
+    Production under the exemption for high-ambient-temperature parties
+    """
+    substance = models.ForeignKey(
+        Substance, blank=True, null=True, on_delete=models.PROTECT
+    )
+
+
+class HighAmbientTemperatureImport(BaseBlendCompositionReport, BaseHighAmbientTemperature):
+    """
+    Consumption (imports) under the exemption for high-ambient-temperature parties
+    """
+
+    tracker = FieldTracker()
+
+    QUANTITY_FIELDS = [
+        'quantity_multi_split_air_conditioners_produced',
+        'quantity_split_ducted_air_conditioners_produced',
+        'quantity_ducted_commercial_packaged_air_conditioners_produced',
+    ]

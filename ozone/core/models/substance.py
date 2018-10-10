@@ -140,6 +140,7 @@ class Blend(models.Model):
     """
     Description of blends
     """
+
     @enum.unique
     class BlendTypes(enum.Enum):
         ZEOTROPE = 'Zeotrope'
@@ -179,6 +180,7 @@ class BlendComponent(models.Model):
     """
     Model describing the substances composition of each blend
     """
+
     blend = models.ForeignKey(
         Blend, related_name='components', on_delete=models.PROTECT
     )
