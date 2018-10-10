@@ -19,7 +19,7 @@ __all__ = [
     'Article7Destruction',
     'Article7NonPartyTrade',
     'Article7Emission',
-    'HighAmbientTemperatureProduce',
+    'HighAmbientTemperatureProduction',
     'HighAmbientTemperatureImport',
     'Transfer',
 ]
@@ -507,9 +507,7 @@ class BaseHighAmbientTemperature(models.Model):
         abstract = True
 
 
-# TODO: let's rename this to `HighAmbientTemperatureProduction`, "produce"
-# means something else :)
-class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
     """
     Production under the exemption for high-ambient-temperature parties
     """
