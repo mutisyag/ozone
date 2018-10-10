@@ -11,6 +11,7 @@ __all__ = [
     'Substance',
     'Blend',
     'BlendComponent',
+    'ProcessAgentApplication',
 ]
 
 
@@ -198,3 +199,23 @@ class BlendComponent(models.Model):
 
     class Meta:
         ordering = ('blend', 'substance')
+
+
+class ProcessAgentApplication(models.Model):
+    """
+    Applications of controlled substances as process agents, as approved
+    in table A of decision X/14 and updated periodically by the Meeting of the
+    Parties.
+    """
+
+    decision = models.CharField(max_length=256, blank=True)
+
+    counter = models.IntegerField()
+
+    substance = models.ForeignKey(
+        Substance, null=True, on_delete=models.PROTECT
+    )
+
+    application = models.CharField(max_length=256)
+
+    remark = models.CharField(max_length=512, blank=True)
