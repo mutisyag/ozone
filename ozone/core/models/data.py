@@ -156,6 +156,17 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
     """
     This will be used as a base for all reporting models that accept
     both substances and blends.
+
+    Since it uses the blend composition mixin, all models inheriting this
+    need the following:
+    - a FieldTracker called `tracker`
+    - the proper `QUANTITY_FIELDS` attribute set, e.g.:
+    QUANTITY_FIELDS = [
+        'quantity_total_new',
+        'quantity_total_recovered',
+        'quantity_feedstock'
+    ]
+
     """
 
     # `blank=True` is needed for full_clean() calls performed by save()
