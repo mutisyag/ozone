@@ -6,7 +6,7 @@ from django.db import models
 
 from .meeting import Treaty
 from .reporting import ReportingPeriod
-from .substance import Substance, Group
+from .substance import Group
 from .utils import RatificationTypes
 
 
@@ -352,45 +352,5 @@ class ProcessAgentEmitLimit(models.Model):
     makeup_consumption = models.FloatField(validators=[MinValueValidator(0.0)])
 
     max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
-
-    remark = models.CharField(max_length=512, blank=True)
-
-
-class Transfer(models.Model):
-    """
-    Records amounts of production rights transferred between Parties.
-    """
-    TRANSFER_TYPE = (
-        ('P', 'Production'),
-        ('C', 'Consumption')
-    )
-    transfer_type = models.CharField(
-        max_length=1,
-        choices=TRANSFER_TYPE
-    )
-
-    substance = models.ForeignKey(
-        Substance, on_delete=models.PROTECT
-    )
-
-    reporting_period = models.ForeignKey(
-        ReportingPeriod, related_name='transfers', on_delete=models.PROTECT
-    )
-
-    transferred_amount = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    used_amount = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-
-    is_basic_domestic_need = models.BooleanField(default=False)
-
-    source_party = models.ForeignKey(
-        Party, related_name='sent_transfers', on_delete=models.PROTECT
-    )
-    destination_party = models.ForeignKey(
-        Party, related_name='received_transfers', on_delete=models.PROTECT
-    )
 
     remark = models.CharField(max_length=512, blank=True)

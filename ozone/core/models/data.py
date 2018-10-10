@@ -19,6 +19,9 @@ __all__ = [
     'Article7Destruction',
     'Article7NonPartyTrade',
     'Article7Emission',
+    'HighAmbientTemperatureProduce',
+    'HighAmbientTemperatureImport',
+    'Transfer',
 ]
 
 # TODO: implement delete-prevention logic on data reports for submitted
@@ -493,6 +496,8 @@ class BaseHighAmbientTemperature(models.Model):
         abstract = True
 
 
+# TODO: let's rename this to `HighAmbientTemperatureProduction`, "produce"
+# means something else :)
 class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
     """
     Production under the exemption for high-ambient-temperature parties
@@ -510,10 +515,52 @@ class HighAmbientTemperatureImport(
     parties
     """
 
+    # Needed because of BaseBlendCompositionReport
     tracker = FieldTracker()
 
+    # Needed because of BaseBlendCompositionReport
     QUANTITY_FIELDS = [
         'quantity_multi_split_air_conditioners_produced',
         'quantity_split_ducted_air_conditioners_produced',
         'quantity_ducted_commercial_packaged_air_conditioners_produced',
     ]
+
+
+class Transfer(models.Model):
+    """
+    Records amounts of production rights transferred between Parties.
+    """
+    TRANSFER_TYPE = (
+        ('P', 'Production'),
+        ('C', 'Consumption')
+    )
+    transfer_type = models.CharField(
+        max_length=1,
+        choices=TRANSFER_TYPE
+    )
+
+    substance = models.ForeignKey(
+        Substance, on_delete=models.PROTECT
+    )
+
+    # TODO: this should really have an associated *Submission* instead
+    # of the now-removed reporting period!
+    transferred_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    used_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    is_basic_domestic_need = models.BooleanField(default=False)
+
+    # TODO: this should become `party`, and then we can use the above
+    # base reporting models!
+    source_party = models.ForeignKey(
+        Party, related_name='sent_transfers', on_delete=models.PROTECT
+    )
+    destination_party = models.ForeignKey(
+        Party, related_name='received_transfers', on_delete=models.PROTECT
+    )
+
+    remark = models.CharField(max_length=512, blank=True)
