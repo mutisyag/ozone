@@ -22,7 +22,7 @@
           "group": 1,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-11",
+          "r_code": "R-11",
           "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
           "main_usage": "Refrigerant / Solvent / Process agent / Feedstock / Foam blowing agent / Propellant"
       }
@@ -50,7 +50,7 @@
           "group": 1,
           "min_odp": 0.8,
           "gwp_error_plus_minus": null,
-          "rcode": "R-113",
+          "r_code": "R-113",
           "mp_control": "",
           "main_usage": ""
       }
@@ -78,7 +78,7 @@
           "group": 1,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-114",
+          "r_code": "R-114",
           "mp_control": "",
           "main_usage": ""
       }
@@ -106,7 +106,7 @@
           "group": 1,
           "min_odp": 0.6,
           "gwp_error_plus_minus": null,
-          "rcode": "R-115",
+          "r_code": "R-115",
           "mp_control": "",
           "main_usage": ""
       }
@@ -134,7 +134,7 @@
           "group": 1,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-12",
+          "r_code": "R-12",
           "mp_control": "",
           "main_usage": ""
       }
@@ -161,7 +161,7 @@
           "group": 2,
           "min_odp": 3,
           "gwp_error_plus_minus": null,
-          "rcode": "R-12B1",
+          "r_code": "R-12B1",
           "mp_control": "",
           "main_usage": ""
       }
@@ -188,7 +188,7 @@
           "group": 2,
           "min_odp": 10,
           "gwp_error_plus_minus": null,
-          "rcode": "R-13B1",
+          "r_code": "R-13B1",
           "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
           "main_usage": "Feedstock / Firefighting"
       }
@@ -215,7 +215,7 @@
           "group": 2,
           "min_odp": 6,
           "gwp_error_plus_minus": null,
-          "rcode": "R-114B2",
+          "r_code": "R-114B2",
           "mp_control": "",
           "main_usage": "Refrigerant / Firefighting"
       }
@@ -241,7 +241,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-111",
+          "r_code": "R-111",
           "mp_control": "",
           "main_usage": ""
       }
@@ -267,7 +267,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-112",
+          "r_code": "R-112",
           "mp_control": "",
           "main_usage": ""
       }
@@ -294,7 +294,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-13",
+          "r_code": "R-13",
           "mp_control": "",
           "main_usage": ""
       }
@@ -320,7 +320,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-211",
+          "r_code": "R-211",
           "mp_control": "",
           "main_usage": ""
       }
@@ -346,7 +346,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-212",
+          "r_code": "R-212",
           "mp_control": "",
           "main_usage": ""
       }
@@ -372,7 +372,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-213",
+          "r_code": "R-213",
           "mp_control": "",
           "main_usage": ""
       }
@@ -398,7 +398,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-214",
+          "r_code": "R-214",
           "mp_control": "",
           "main_usage": ""
       }
@@ -424,7 +424,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-215",
+          "r_code": "R-215",
           "mp_control": "",
           "main_usage": ""
       }
@@ -450,7 +450,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-216",
+          "r_code": "R-216",
           "mp_control": "",
           "main_usage": ""
       }
@@ -476,7 +476,7 @@
           "group": 3,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-217",
+          "r_code": "R-217",
           "mp_control": "",
           "main_usage": ""
       }
@@ -529,7 +529,7 @@
           "group": 5,
           "min_odp": 0.1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-140a",
+          "r_code": "R-140a",
           "mp_control": "Substance has been phased out and is no longer produced (except for some limited exempted uses). Any proposed international trade should be investigated.",
           "main_usage": "Solvent / Feedstock / Cleaning"
       }
@@ -555,7 +555,7 @@
           "group": 6,
           "min_odp": 0.01,
           "gwp_error_plus_minus": null,
-          "rcode": "R-121",
+          "r_code": "R-121",
           "mp_control": "",
           "main_usage": ""
       }
@@ -582,7 +582,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-122",
+          "r_code": "R-122",
           "mp_control": "",
           "main_usage": ""
       }
@@ -609,7 +609,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-123",
+          "r_code": "R-123",
           "mp_control": "",
           "main_usage": ""
       }
@@ -662,7 +662,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-124",
+          "r_code": "R-124",
           "mp_control": "",
           "main_usage": ""
       }
@@ -713,7 +713,7 @@
           "group": 6,
           "min_odp": 0.007,
           "gwp_error_plus_minus": null,
-          "rcode": "R-131",
+          "r_code": "R-131",
           "mp_control": "",
           "main_usage": ""
       }
@@ -740,7 +740,7 @@
           "group": 6,
           "min_odp": 0.008,
           "gwp_error_plus_minus": null,
-          "rcode": "R-132",
+          "r_code": "R-132",
           "mp_control": "",
           "main_usage": ""
       }
@@ -766,7 +766,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-133",
+          "r_code": "R-133",
           "mp_control": "",
           "main_usage": ""
       }
@@ -792,7 +792,7 @@
           "group": 6,
           "min_odp": 0.005,
           "gwp_error_plus_minus": null,
-          "rcode": "R-141",
+          "r_code": "R-141",
           "mp_control": "",
           "main_usage": ""
       }
@@ -819,7 +819,7 @@
           "group": 6,
           "min_odp": 0.11,
           "gwp_error_plus_minus": null,
-          "rcode": "R-141b",
+          "r_code": "R-141b",
           "mp_control": "",
           "main_usage": ""
       }
@@ -845,7 +845,7 @@
           "group": 6,
           "min_odp": 0.008,
           "gwp_error_plus_minus": null,
-          "rcode": "R-142",
+          "r_code": "R-142",
           "mp_control": "",
           "main_usage": ""
       }
@@ -872,7 +872,7 @@
           "group": 6,
           "min_odp": 0.065,
           "gwp_error_plus_minus": null,
-          "rcode": "R-142b",
+          "r_code": "R-142b",
           "mp_control": "",
           "main_usage": ""
       }
@@ -898,7 +898,7 @@
           "group": 6,
           "min_odp": 0.003,
           "gwp_error_plus_minus": null,
-          "rcode": "R-151",
+          "r_code": "R-151",
           "mp_control": "",
           "main_usage": ""
       }
@@ -925,7 +925,7 @@
           "group": 6,
           "min_odp": 0.04,
           "gwp_error_plus_minus": null,
-          "rcode": "R-21",
+          "r_code": "R-21",
           "mp_control": "",
           "main_usage": ""
       }
@@ -953,7 +953,7 @@
           "group": 6,
           "min_odp": 0.055,
           "gwp_error_plus_minus": null,
-          "rcode": "R-22",
+          "r_code": "R-22",
           "mp_control": "",
           "main_usage": ""
       }
@@ -979,7 +979,7 @@
           "group": 6,
           "min_odp": 0.015,
           "gwp_error_plus_minus": null,
-          "rcode": "R-221",
+          "r_code": "R-221",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1005,7 +1005,7 @@
           "group": 6,
           "min_odp": 0.01,
           "gwp_error_plus_minus": null,
-          "rcode": "R-222",
+          "r_code": "R-222",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1031,7 +1031,7 @@
           "group": 6,
           "min_odp": 0.01,
           "gwp_error_plus_minus": null,
-          "rcode": "R-223",
+          "r_code": "R-223",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1057,7 +1057,7 @@
           "group": 6,
           "min_odp": 0.01,
           "gwp_error_plus_minus": null,
-          "rcode": "R-224",
+          "r_code": "R-224",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1083,7 +1083,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-225",
+          "r_code": "R-225",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1109,7 +1109,7 @@
           "group": 6,
           "min_odp": 0.025,
           "gwp_error_plus_minus": null,
-          "rcode": "R-225ca",
+          "r_code": "R-225ca",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1135,7 +1135,7 @@
           "group": 6,
           "min_odp": 0.033,
           "gwp_error_plus_minus": null,
-          "rcode": "R-225cb",
+          "r_code": "R-225cb",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1161,7 +1161,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-226",
+          "r_code": "R-226",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1187,7 +1187,7 @@
           "group": 6,
           "min_odp": 0.05,
           "gwp_error_plus_minus": null,
-          "rcode": "R-231",
+          "r_code": "R-231",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1213,7 +1213,7 @@
           "group": 6,
           "min_odp": 0.008,
           "gwp_error_plus_minus": null,
-          "rcode": "R-232",
+          "r_code": "R-232",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1239,7 +1239,7 @@
           "group": 6,
           "min_odp": 0.007,
           "gwp_error_plus_minus": null,
-          "rcode": "R-233",
+          "r_code": "R-233",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1265,7 +1265,7 @@
           "group": 6,
           "min_odp": 0.01,
           "gwp_error_plus_minus": null,
-          "rcode": "R-234",
+          "r_code": "R-234",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1291,7 +1291,7 @@
           "group": 6,
           "min_odp": 0.03,
           "gwp_error_plus_minus": null,
-          "rcode": "R-235",
+          "r_code": "R-235",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1317,7 +1317,7 @@
           "group": 6,
           "min_odp": 0.004,
           "gwp_error_plus_minus": null,
-          "rcode": "R-241",
+          "r_code": "R-241",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1343,7 +1343,7 @@
           "group": 6,
           "min_odp": 0.005,
           "gwp_error_plus_minus": null,
-          "rcode": "R-242",
+          "r_code": "R-242",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1369,7 +1369,7 @@
           "group": 6,
           "min_odp": 0.006999999999999999,
           "gwp_error_plus_minus": null,
-          "rcode": "R-243",
+          "r_code": "R-243",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1395,7 +1395,7 @@
           "group": 6,
           "min_odp": 0.009,
           "gwp_error_plus_minus": null,
-          "rcode": "R-244",
+          "r_code": "R-244",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1421,7 +1421,7 @@
           "group": 6,
           "min_odp": 0.001,
           "gwp_error_plus_minus": null,
-          "rcode": "R-251",
+          "r_code": "R-251",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1447,7 +1447,7 @@
           "group": 6,
           "min_odp": 0.005,
           "gwp_error_plus_minus": null,
-          "rcode": "R-252",
+          "r_code": "R-252",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1473,7 +1473,7 @@
           "group": 6,
           "min_odp": 0.003,
           "gwp_error_plus_minus": null,
-          "rcode": "R-253",
+          "r_code": "R-253",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1499,7 +1499,7 @@
           "group": 6,
           "min_odp": 0.002,
           "gwp_error_plus_minus": null,
-          "rcode": "R-261",
+          "r_code": "R-261",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1525,7 +1525,7 @@
           "group": 6,
           "min_odp": 0.002,
           "gwp_error_plus_minus": null,
-          "rcode": "R-262",
+          "r_code": "R-262",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1551,7 +1551,7 @@
           "group": 6,
           "min_odp": 0.001,
           "gwp_error_plus_minus": null,
-          "rcode": "R-271",
+          "r_code": "R-271",
           "mp_control": "",
           "main_usage": ""
       }
@@ -1577,7 +1577,7 @@
           "group": 6,
           "min_odp": 0.02,
           "gwp_error_plus_minus": null,
-          "rcode": "R-31",
+          "r_code": "R-31",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2378,7 +2378,7 @@
           "group": 7,
           "min_odp": 0.73,
           "gwp_error_plus_minus": null,
-          "rcode": "R-31B1",
+          "r_code": "R-31B1",
           "mp_control": "",
           "main_usage": "Feedstock"
       }
@@ -2404,7 +2404,7 @@
           "group": 7,
           "min_odp": 1,
           "gwp_error_plus_minus": null,
-          "rcode": "R-21B2",
+          "r_code": "R-21B2",
           "mp_control": "",
           "main_usage": "Feedstock"
       }
@@ -2430,7 +2430,7 @@
           "group": 7,
           "min_odp": 0.74,
           "gwp_error_plus_minus": null,
-          "rcode": "R-22B1",
+          "r_code": "R-22B1",
           "mp_control": "",
           "main_usage": "Refrigerant / Feedstock / Firefighting"
       }
@@ -2482,7 +2482,7 @@
           "group": 8,
           "min_odp": 0.12,
           "gwp_error_plus_minus": null,
-          "rcode": "R-1011",
+          "r_code": "R-1011",
           "mp_control": "",
           "main_usage": "Feedstock / Firefighting"
       }
@@ -2508,7 +2508,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-125",
+          "r_code": "R-125",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2534,7 +2534,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-134",
+          "r_code": "R-134",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2560,7 +2560,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-134a",
+          "r_code": "R-134a",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2586,7 +2586,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-143",
+          "r_code": "R-143",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2612,7 +2612,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-143a",
+          "r_code": "R-143a",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2638,7 +2638,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-152",
+          "r_code": "R-152",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2664,7 +2664,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-152a",
+          "r_code": "R-152a",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2690,7 +2690,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-227ea",
+          "r_code": "R-227ea",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2716,7 +2716,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-23",
+          "r_code": "R-23",
           "mp_control": "Controls on HFCs come into force from 2019 (2024 in developing countries). Control/monitoring measures may be in place at national/regional level",
           "main_usage": "Refrigerant"
       }
@@ -2742,7 +2742,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-236cb",
+          "r_code": "R-236cb",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2768,7 +2768,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-236ea",
+          "r_code": "R-236ea",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2794,7 +2794,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-236fa",
+          "r_code": "R-236fa",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2820,7 +2820,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-245ca",
+          "r_code": "R-245ca",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2846,7 +2846,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-245fa",
+          "r_code": "R-245fa",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2872,7 +2872,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-32",
+          "r_code": "R-32",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2898,7 +2898,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-365mfc",
+          "r_code": "R-365mfc",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2924,7 +2924,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-41",
+          "r_code": "R-41",
           "mp_control": "",
           "main_usage": ""
       }
@@ -2950,7 +2950,7 @@
           "group": 10,
           "min_odp": 0,
           "gwp_error_plus_minus": null,
-          "rcode": "R-43-10mee",
+          "r_code": "R-43-10mee",
           "mp_control": "Controls on HFCs come into force from 2019 (2024 in developing countries). Control/monitoring measures may be in place at national/regional level",
           "main_usage": "Solvent"
       }
