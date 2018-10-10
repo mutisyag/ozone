@@ -670,7 +670,8 @@ button img.icon {
 
 }
 
-.aside-menu-show .aside-menu .navbar-toggler span:before{
+.aside-menu-show .aside-menu .navbar-toggler span:before,
+.aside-menu-lg-show .aside-menu .navbar-toggler span:before{
   content:"\E917";
 }
 
@@ -697,7 +698,8 @@ button img.icon {
   width: 300px;
 }
 
-.aside-menu-show .aside-menu {
+.aside-menu-show .aside-menu,
+.aside-menu-lg-show .aside-menu {
   width: 500px;
 }
 
