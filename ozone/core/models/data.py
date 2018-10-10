@@ -529,9 +529,9 @@ class HighAmbientTemperatureImport(
 
     # Needed because of BaseBlendCompositionReport
     QUANTITY_FIELDS = [
-        'quantity_multi_split_air_conditioners_produced',
-        'quantity_split_ducted_air_conditioners_produced',
-        'quantity_ducted_commercial_packaged_air_conditioners_produced',
+        'quantity_msac_produced',
+        'quantity_sdac_produced',
+        'quantity_dcpac_produced',
     ]
 
 
