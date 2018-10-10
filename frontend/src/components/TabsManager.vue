@@ -153,9 +153,9 @@ export default {
           var body = document.querySelector('body')
           console.log(new_val)
           if([2,3,4,5].includes(new_val)) {
-            body.classList.add('aside-menu-show')
+            body.classList.add('aside-menu-lg-show')
           } else {
-            body.classList.remove('aside-menu-show')
+            body.classList.remove('aside-menu-lg-show')
           }
         }
       }
