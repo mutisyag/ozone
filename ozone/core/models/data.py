@@ -535,7 +535,7 @@ class HighAmbientTemperatureImport(
     ]
 
 
-class Transfer(models.Model):
+class Transfer(BaseReport):
     """
     Records amounts of production rights transferred between Parties.
     """
@@ -552,8 +552,6 @@ class Transfer(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    # TODO: this should really have an associated *Submission* instead
-    # of the now-removed reporting period!
     transferred_amount = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -563,13 +561,9 @@ class Transfer(models.Model):
 
     is_basic_domestic_need = models.BooleanField(default=False)
 
-    # TODO: this should become `party`, and then we can use the above
-    # base reporting models!
-    source_party = models.ForeignKey(
+    party = models.ForeignKey(
         Party, related_name='sent_transfers', on_delete=models.PROTECT
     )
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
-
-    remark = models.CharField(max_length=512, blank=True)
