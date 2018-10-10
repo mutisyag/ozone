@@ -12,7 +12,7 @@ class ProcessAgentContainTechnology(models.Model):
     """
     Reported containment technologies
     """
-    
+
     # TODO: shouldn't this have a Submission?
     reporting_period = models.ForeignKey(
         ReportingPeriod, on_delete=models.PROTECT

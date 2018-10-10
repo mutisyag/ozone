@@ -8,6 +8,7 @@ from .meeting import ExemptionTypes, Treaty
 __all__ = [
     'Annex',
     'Group',
+    'UsesType',
     'Substance',
     'Blend',
     'BlendComponent',
@@ -124,7 +125,9 @@ class Substance(models.Model):
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
 
-    rcode = models.CharField(max_length=128, unique=True, blank=True, null=True)
+    r_code = models.CharField(
+        max_length=128, unique=True, blank=True, null=True
+    )
 
     mp_control = models.CharField(max_length=256, blank=True)
 
@@ -210,7 +213,7 @@ class ProcessAgentApplication(models.Model):
 
     decision = models.CharField(max_length=256, blank=True)
 
-    counter = models.IntegerField()
+    counter = models.PositiveIntegerField()
 
     substance = models.ForeignKey(
         Substance, null=True, on_delete=models.PROTECT
@@ -219,3 +222,26 @@ class ProcessAgentApplication(models.Model):
     application = models.CharField(max_length=256)
 
     remark = models.CharField(max_length=512, blank=True)
+
+
+class UsesType(models.Model):
+    """
+    The different categories of uses of controlled substances that need to be
+    reported.
+    """
+
+    uses_type_id = models.CharField(max_length=16, unique=True)
+
+    name = models.CharField(max_length=128, unique=True)
+
+    remark = models.CharField(max_length=256, blank=True)
+
+    decision_flag = models.BooleanField()
+
+    forms = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ('name',)
