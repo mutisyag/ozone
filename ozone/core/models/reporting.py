@@ -152,19 +152,3 @@ class Submission(models.Model):
         if submissions:
             self.version = submissions.latest('version').version + 1
         return super(Submission, self).save(*args, **kwargs)
-
-
-class ProcessAgentContainTechnology(models.Model):
-    """
-    Reported containment technologies
-    """
-
-    reporting_period = models.ForeignKey(
-        ReportingPeriod, on_delete=models.PROTECT
-    )
-
-    party = models.ForeignKey(
-        Party, on_delete=models.PROTECT
-    )
-
-    contain_technology = models.CharField(max_length=512)
