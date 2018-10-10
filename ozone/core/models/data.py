@@ -182,8 +182,8 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
 
 class BaseExemption(models.Model):
     """
-    This will be used as a base for data reporting models that contains informations
-    about exempted substances.
+    This will be used as a base for data reporting models that contain
+    information about exempted substances.
     """
 
     # Exemption quantity w/ type & decision
@@ -236,7 +236,8 @@ class BaseUses(models.Model):
     """
     This will be used as a base for data reporting models on import, export
     and production.
-    This model contains the quantities and the decisions to use controlled substances.
+    This model contains the quantities and the decisions to use controlled
+    substances.
     """
 
     quantity_critical_uses = models.FloatField(
@@ -252,12 +253,16 @@ class BaseUses(models.Model):
     quantity_high_ambient_temperature = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_high_ambient_temperature = models.CharField(max_length=256, blank=True)
+    decision_high_ambient_temperature = models.CharField(
+        max_length=256, blank=True
+    )
 
     quantity_laboratory_analytical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_laboratory_analytical_uses = models.CharField(max_length=256, blank=True)
+    decision_laboratory_analytical_uses = models.CharField(
+        max_length=256, blank=True
+    )
 
     quantity_process_agent_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -267,7 +272,9 @@ class BaseUses(models.Model):
     quantity_quarantine_pre_shipment = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_quarantine_pre_shipment = models.CharField(max_length=256, blank=True)
+    decision_quarantine_pre_shipment = models.CharField(
+        max_length=256, blank=True
+    )
 
     class Meta:
         abstract = True
@@ -469,13 +476,16 @@ class Article7Emission(BaseReport):
 
 class BaseHighAmbientTemperature(models.Model):
 
-    quantity_multi_split_air_conditioners_produced = models.FloatField(
+    # Multi-split air conditioners
+    quantity_msac_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    quantity_split_ducted_air_conditioners_produced = models.FloatField(
+    # Split ducted air conditioners
+    quantity_sdac_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-    quantity_ducted_commercial_packaged_air_conditioners_produced = models.FloatField(
+    # Ducted commercial packaged air conditioners
+    quantity_dcpac_produced = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
 
@@ -492,9 +502,12 @@ class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
     )
 
 
-class HighAmbientTemperatureImport(BaseBlendCompositionReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureImport(
+    BaseBlendCompositionReport, BaseHighAmbientTemperature
+):
     """
-    Consumption (imports) under the exemption for high-ambient-temperature parties
+    Consumption (imports) under the exemption for high-ambient-temperature
+    parties
     """
 
     tracker = FieldTracker()
