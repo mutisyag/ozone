@@ -2,6 +2,8 @@ version: '2.1'
 
 services:
   app:
+    volumes: 
+      - ./config/settings :/var/local/ozone/config/settings
     build:
       context: .
       args:
