@@ -5,10 +5,8 @@ Base settings to build other settings files upon.
 import environ
 from pathlib import Path
 
-# ROOT_DIR = environ.Path(__file__) - 3  # (ozone/config/settings/base.py - 3 = ozone/)
+# ROOT_DIR = ozone/config/settings/base.py - 3 = ozone/
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
-
-ROOT_DIR = Path(str(ROOT_DIR))
 APPS_DIR = ROOT_DIR / 'ozone' 
 
 env = environ.Env()
@@ -222,7 +220,7 @@ TEMPLATES = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
 FIXTURE_DIRS = (
-    str(ROOT_DIR / 'data/fixtures'),
+    str(ROOT_DIR / 'data' / 'fixtures'),
 )
 
 # EMAIL
