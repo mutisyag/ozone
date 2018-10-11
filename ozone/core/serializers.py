@@ -15,7 +15,8 @@ from .models import (
     Article7Production,
     Article7Export,
     Article7NonPartyTrade,
-    Article7Emission
+    Article7Emission,
+    Group,
 )
 
 
@@ -356,3 +357,13 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     class Meta(CreateSubmissionSerializer.Meta):
         fields = ('url',) + CreateSubmissionSerializer.Meta.fields + ('version',)
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    substances = serializers.StringRelatedField(
+        many=True, read_only=True
+    )
+
+    class Meta:
+        model = Group
+        fields = ('group_id', 'substances')

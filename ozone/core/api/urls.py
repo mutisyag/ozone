@@ -100,6 +100,12 @@ nested_routers = [
     emissions_router,
 ]
 
+# Groups
+groups_router = routers.SimpleRouter()
+groups_router.register(r"group-substances", views.GroupViewSet)
+router.extend(groups_router)
+
+
 urlpatterns = router.urls + [url
                              for router in nested_routers
                              for url in router.urls]
