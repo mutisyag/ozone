@@ -25,11 +25,7 @@ const User = () => import('@/views/users/User')
 
 Vue.use(Router)
 
-export default new Router({
-  mode: 'history', // https://router.vuejs.org/api/#mode
-  linkActiveClass: 'open active',
-  scrollBehavior: () => ({ y: 0 }),
-  routes: [
+const  routes = [
     {
       path: '/',
       redirect: '/dashboard',
@@ -113,4 +109,33 @@ export default new Router({
       ]
     }
   ]
-})
+
+
+const routerOptions = {
+  routes,
+  linkActiveClass: 'open active',
+  mode:'history',
+  scrollBehavior: (to, from, savedPosition) => ({ y: 0 }),
+  base: '/',
+}
+
+const router = new Router(routerOptions);
+
+
+
+router.beforeEach((to, from, next) => {
+  console.log(to)
+  if (to.meta.requiresAuth) {
+    const authToken = window.$cookies.get('authToken');
+    
+    if (!authToken) {
+      next({ name:'Login' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+export default router
