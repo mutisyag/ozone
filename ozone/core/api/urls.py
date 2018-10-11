@@ -101,9 +101,7 @@ nested_routers = [
 ]
 
 # Groups
-groups_router = routers.SimpleRouter()
-groups_router.register(r"group-substances", views.GroupViewSet)
-router.extend(groups_router)
+router.register(r"group-substances", views.GroupViewSet)
 
 
 urlpatterns = router.urls + [url
