@@ -11,7 +11,7 @@ export default {
     {
       name: 'New submission',
       icon: 'icon-docs',
-      url: '/form',
+      url: '/dashboard/form',
     },
     {
       title: true,
@@ -25,7 +25,7 @@ export default {
     {
       name: 'Letter',
       icon: 'icon-docs',
-      url: '/form',
+      url: '/dashboard/form',
       badge: {
         variant: 'primary',
         text: 'demo'
