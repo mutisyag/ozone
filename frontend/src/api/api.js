@@ -67,6 +67,14 @@ function getCookie(name) {
   }
 }
 
+ function getUsers() {
+    return fetch('users/')
+}
+
+
+function getSubmissions() {
+    return fetch('users/')
+}
 
  function getExportBlends() {
   if(isTestSession) {
@@ -84,4 +92,4 @@ function getCookie(name) {
 }
 
 
-export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getImportSubstances, getExportBlends, getInstructions};
+export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getImportSubstances, getExportBlends, getInstructions, getUsers, getSubmissions};
