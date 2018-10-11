@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Containers
-const DefaultContainer = () => import('@/containers/DefaultContainer')
+const Base = () => import('@/views/Base')
 
 // Views
 const Dashboard = () => import('@/views/Dashboard')
@@ -30,7 +30,7 @@ const  routes = [
       path: '/',
       redirect: '/dashboard',
       name: 'Home',
-      component: DefaultContainer,
+      component: Base,
       children: [
         {
           path: 'dashboard',

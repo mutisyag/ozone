@@ -17,7 +17,7 @@
           <i class="icon-bell"></i>
           <b-badge pill variant="danger">5</b-badge>
         </b-nav-item>
-        <DefaultHeaderDropdownAccnt/>
+        <Header/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
@@ -42,7 +42,7 @@
 <script>
 import nav from '@/_nav'
 import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
-import DefaultHeaderDropdownAccnt from './DefaultHeaderDropdownAccnt'
+import Header from './Header'
 
 export default {
   name: 'full',
@@ -52,7 +52,7 @@ export default {
     AppAside,
     TheFooter,
     Breadcrumb,
-    DefaultHeaderDropdownAccnt,
+    Header,
     SidebarForm,
     SidebarFooter,
     SidebarToggler,
