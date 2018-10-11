@@ -8,16 +8,10 @@ ARG BACKEND_PORT=80
 ARG TUSD_HOST=ozone.eaudeweb.ro
 ARG TUSD_PORT=8080
 
-
-
-ARG BACKEND_HOST=demo-forests.eea.europa.eu
-ARG SCRIPT_NAME=/nfi_search
-
 # Overriden in compose as needed
 ENV BACKEND_HOST=$BACKEND_HOST
-ENV SCRIPT_NAME=$SCRIPT_NAME
 
-ENV APP_HOME=/var/local/fise.nfi.search
+ENV APP_HOME=/var/local/ozone
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends apt-utils curl software-properties-common gnupg \
     && curl -sL https://deb.nodesource.com/setup_8.x | bash - \
@@ -35,8 +29,6 @@ RUN npm_config_tmp=$APP_HOME yarn
 RUN npm run build
 
 FROM python:3.6-slim
-ARG REQUIREMENTS_FILE=requirements.txt
-ENV APP_HOME=/var/local/fise.nfi.search
 RUN runDeps="netcat libpq-dev" \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends $runDeps \
@@ -48,8 +40,8 @@ WORKDIR $APP_HOME
 RUN buildDeps="build-essential gcc" \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends $buildDeps \
-    && pip install --no-cache-dir -r $REQUIREMENTS_FILE \
     && apt-get -y remove --purge --auto-remove $buildDeps
+RUN pip install --no-cache-dir -r $REQUIREMENTS_FILE \
 COPY . $APP_HOME
 RUN rm -rf frontend package.json postcss.config.js yarn.lock \
     && mkdir -p $APP_HOME/frontend/dist \
