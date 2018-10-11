@@ -208,7 +208,7 @@
 <script>
 
 import fieldGenerator from "./fieldGenerator"
-import {getImportSubstances} from '../api.js'
+import {getImportSubstances} from '@/api/api.js'
 import CloneFieldExports from './exports/CloneFieldExports.vue' 
 import {Aside as AppAside} from '@coreui/vue'
 import DefaultAside from './exports/DefaultAside'

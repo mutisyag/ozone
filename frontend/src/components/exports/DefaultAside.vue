@@ -21,7 +21,7 @@
 <script>
 
 import Add from './Add';
-import {getImportSubstances, getExportBlends} from '../../api.js'
+import {getImportSubstances, getExportBlends} from '@/api/api.js'
 import {AsideToggler} from '@coreui/vue'
 import AddBlend from './AddBlend'
 

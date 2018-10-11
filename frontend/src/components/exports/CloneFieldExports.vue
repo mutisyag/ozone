@@ -13,7 +13,7 @@
 
 import countryOptions from "@/assets/countryList.js"
 import Multiselect from 'vue-multiselect'
-import {getImportSubstances} from '@/api.js'
+import {getImportSubstances} from '@/api/api.js'
 
 export default {
 

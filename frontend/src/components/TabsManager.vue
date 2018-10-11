@@ -89,7 +89,7 @@ import Tab5 from "./Tab5.vue";
 import Tab6 from "./Tab6.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachements from "./Attachements.vue";
-import {getInstructions} from '../api.js'
+import {getInstructions} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 
 export default {
