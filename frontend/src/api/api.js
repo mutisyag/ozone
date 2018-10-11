@@ -6,12 +6,17 @@ const logRequests = process.env.NODE_ENV === 'development';
 const BACKEND_HOST = 'localhost';
 const BACKEND_PORT = 8000;
 
-const apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
+let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
 
 const api = axios.create({
   baseURL: apiURL,
   withCredentials: true,
 });
+
+let isTestSession = true
+if(isTestSession) {
+ apiURL = `http://localhost:8080`;
+}
 
 api.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 api.defaults.xsrfCookieName = "csrftoken";
@@ -55,4 +60,28 @@ function getCookie(name) {
   return cookie[name];
 }
 
-export { apiURL, filesURL, api, fetch, post, update, remove, getCookie };
+
+ function getImportSubstances() {
+  if(isTestSession) {
+    return fetch(window.location.origin + '/substances.json')
+  }
+}
+
+
+ function getExportBlends() {
+  if(isTestSession) {
+    return fetch(window.location.origin + '/blends.json')
+  }
+}
+
+
+
+
+ function getInstructions() {
+  if(isTestSession) {
+    return fetch(window.location.origin + '/test.html')
+  }
+}
+
+
+export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getImportSubstances, getExportBlends, getInstructions};
