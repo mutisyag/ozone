@@ -1,6 +1,10 @@
 export default {
   items: [
     {
+      name: 'Dashboard',
+      url: '/dashboard'
+    },
+    {
       title: true,
       name: 'Art. 7'
     },

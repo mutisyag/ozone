@@ -5,7 +5,9 @@ import Router from 'vue-router'
 const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 // Views
+const Dashboard = () => import('@/views/Dashboard')
 const Form = () => import('@/views/Form')
+
 
 
 // Views - Components
@@ -24,22 +26,26 @@ const User = () => import('@/views/users/User')
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash', // https://router.vuejs.org/api/#mode
+  mode: 'history', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
       path: '/',
-      redirect: '/form',
+      redirect: '/dashboard',
       name: 'Home',
       component: DefaultContainer,
       children: [
         {
-          path: 'form',
+          path: 'dashboard',
+          name: 'Dashboard',
+          component: Dashboard
+        },
+        {
+          path: 'dashboard/form',
           name: 'Form',
           component: Form
         },
-
         {
           path: 'users',
           meta: { label: 'Users'},
