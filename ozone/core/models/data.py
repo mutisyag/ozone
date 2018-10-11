@@ -19,7 +19,7 @@ __all__ = [
     'Article7Destruction',
     'Article7NonPartyTrade',
     'Article7Emission',
-    'HighAmbientTemperatureProduce',
+    'HighAmbientTemperatureProduction',
     'HighAmbientTemperatureImport',
     'Transfer',
 ]
@@ -507,9 +507,7 @@ class BaseHighAmbientTemperature(models.Model):
         abstract = True
 
 
-# TODO: let's rename this to `HighAmbientTemperatureProduction`, "produce"
-# means something else :)
-class HighAmbientTemperatureProduce(BaseReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
     """
     Production under the exemption for high-ambient-temperature parties
     """
@@ -531,13 +529,13 @@ class HighAmbientTemperatureImport(
 
     # Needed because of BaseBlendCompositionReport
     QUANTITY_FIELDS = [
-        'quantity_multi_split_air_conditioners_produced',
-        'quantity_split_ducted_air_conditioners_produced',
-        'quantity_ducted_commercial_packaged_air_conditioners_produced',
+        'quantity_msac_produced',
+        'quantity_sdac_produced',
+        'quantity_dcpac_produced',
     ]
 
 
-class Transfer(models.Model):
+class Transfer(BaseReport):
     """
     Records amounts of production rights transferred between Parties.
     """
@@ -554,8 +552,6 @@ class Transfer(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    # TODO: this should really have an associated *Submission* instead
-    # of the now-removed reporting period!
     transferred_amount = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -565,13 +561,6 @@ class Transfer(models.Model):
 
     is_basic_domestic_need = models.BooleanField(default=False)
 
-    # TODO: this should become `party`, and then we can use the above
-    # base reporting models!
-    source_party = models.ForeignKey(
-        Party, related_name='sent_transfers', on_delete=models.PROTECT
-    )
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
-
-    remark = models.CharField(max_length=512, blank=True)
