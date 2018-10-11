@@ -1,7 +1,7 @@
 <template>
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email'">
-        <b-form-input :disabled="disabledField" @keydown="field.type === 'number' ? preventArrows: null" v-model="field.selected" :type="field.type"></b-form-input>
+        <input class="form-control" :min="field.type === 'number' ? 0: false" :step="field.type === 'number' ? 'any' : false" :disabled="disabledField"  v-model="field.selected" :type="field.type" @blur="field.type === 'number' ? preventTwoDots(field.selected, field) : false"></input>
     </div>
     <b-form-radio-group :disabled="disabledField" v-else-if="field.type === 'radio'" v-model="field.selected" @change="selectTabs($event,field)" :created="selectTabs(field.selected, field)" :options="field.options"></b-form-radio-group>
     <b-form-checkbox-group :disabled="disabledField" v-else-if="field.type === 'checkbox'" v-model="field.selected" :options="field.options"></b-form-checkbox-group>
@@ -30,7 +30,14 @@ export default {
         }
       }
     },
+    preventTwoDots(value, field) {
+      console.log(value)
+      if(isNaN(parseFloat(value)))
+        field.selected = null
+    },
+
     preventArrows(e){
+      console.log('preventing', e)
       if (e.which === 38 || e.which === 40) {
         e.preventDefault();
       }
