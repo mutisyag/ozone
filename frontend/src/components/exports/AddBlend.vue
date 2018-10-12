@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && section && blends">
+  <div v-if="substances && section && blends && countryOptions">
     <div class="container">
 
      
@@ -58,7 +58,6 @@
 
 <script>
 
-import countryOptions from "@/assets/countryList.js"
 import Multiselect from 'vue-multiselect'
 
 export default {
@@ -67,6 +66,7 @@ export default {
     substances: null,
     section: null,
     blends: null,
+    countryOptions: null,
   },
 
   components: {
@@ -81,7 +81,7 @@ export default {
     return {
       selected_countries: {
         selected: null,
-        options: countryOptions,
+        options: this.countryOptions,
       },
 
       new_blend: null,
@@ -158,7 +158,6 @@ export default {
     addSubstance(type) {
       if(type === 'selected') {
         for(let blend of this.selected_blends.selected) {
-          console.log(blnd.name)
           let substance_fields = {
             get label () { return this.selected.name} ,
             name: this.removeSpecialChars(blend.name),
@@ -188,7 +187,7 @@ export default {
               type: 'select',
               duplicate: true,
               selected: null,
-              options: countryOptions,
+              options: this.countryOptions,
             },
             {
               label: 'Total Quantity Exported for All Uses',
@@ -385,7 +384,7 @@ export default {
               type: 'select',
               duplicate: true,
               selected: null,
-              options: countryOptions,
+              options: this.countryOptions,
             },
             {
               label: 'Total Quantity Exported for All Uses',
@@ -553,12 +552,8 @@ export default {
 
 
     resetData() {
-      this.countryOptions=[]
 
-      this.selected_countries = {
-        selected: null,
-        options: countryOptions,
-      },
+      this.selected_countries.selected = null
 
       this.group_field = {
         label: 'Blend',

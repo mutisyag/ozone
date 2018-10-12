@@ -6,13 +6,13 @@
         <template slot="title">
           Substances
         </template>
-          <add v-if="substances" :section="form.form_fields" :substances="substances"></add>
+          <add :countryOptions="data.countryOptions" :section="form.form_fields" :substances="data.substances"></add>
       </b-tab>
       <b-tab>
         <template slot="title">
           Blends
         </template>
-          <AddBlend v-if="blends" :section="form.form_fields" :substances="substances" :blends="blends"></AddBlend>
+          <AddBlend :countryOptions="data.countryOptions"  :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
       </b-tab>
     </b-tabs>
   </div>
@@ -21,7 +21,6 @@
 <script>
 
 import Add from './Add';
-import {getSubstances, getExportBlends} from '@/api/api.js'
 import {AsideToggler} from '@coreui/vue'
 import AddBlend from './AddBlend'
 
@@ -35,29 +34,8 @@ export default {
 
   props: {
     form: null,
+    data: null,
   },
-
-  data () {
-    return {
-      substances: null,
-      blends: null,
-    }
-  },
-
-
-  created(){
-    this.getSubstances()
-  },
-
-  methods: {
-    getSubstances(){
-      getSubstances().then((response) => {
-        this.substances = response.data 
-        getExportBlends().then((response) => {
-          this.blends = response.data
-        })
-      })
-    }
-  },
+ 
 }
 </script>

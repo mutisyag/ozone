@@ -1,5 +1,5 @@
 <template>
-  <div v-if="section && field && inner_field">
+  <div v-if="section && field && inner_field && countryOptions">
     <div class="container">
       <div style="position: relative">
           <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="selected_countries.options"></multiselect>
@@ -11,7 +11,6 @@
 
 <script>
 
-import countryOptions from "@/assets/countryList.js"
 import Multiselect from 'vue-multiselect'
 
 export default {
@@ -20,6 +19,7 @@ export default {
     section: null,
     current_field: Object,
     inner_field: Object,
+    countryOptions: Array,
   },
 
   components: {
@@ -36,7 +36,7 @@ export default {
       field: null,
       selected_countries: {
         selected: null,
-        options: countryOptions,
+        options: this.countryOptions,
       },
     }
   },
@@ -73,12 +73,7 @@ export default {
     },
 
     resetData() {
-      this.countryOptions=[]
-
-      this.selected_countries = {
-        selected: null,
-        options: countryOptions,
-      }
+      this.selected_countries.selected = null
     },
 
     removeSpecialChars(str) {

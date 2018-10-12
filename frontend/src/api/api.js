@@ -70,8 +70,8 @@ function getCookie(name) {
 }
 
 
-function getSubmissions() {
-    return fetch('users/')
+function getParties() {
+    return fetch('parties/')
 }
 
  function getExportBlends() {
@@ -90,4 +90,4 @@ function getSubmissions() {
 }
 
 
-export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getSubstances, getExportBlends, getInstructions, getUsers, getSubmissions};
+export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getSubstances, getExportBlends, getInstructions, getUsers, getParties};

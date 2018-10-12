@@ -5,7 +5,7 @@
       <table class="table">
         <thead>
           <tr class="first-header">
-            <th v-for="header in info.section_1_headers" :colspan="header.colspan">
+            <th v-for="header in tab_info.section_1_headers" :colspan="header.colspan">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 {{header.label}} <i class="fa fa-info-circle fa-lg"></i>
               </div>
@@ -15,8 +15,8 @@
             </th>
           </tr>
           <tr class="subheader">
-            <th v-for="subheader in info.section_1_subheaders">
-            <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, info.form_fields, subheader, subheader.type)">
+            <th v-for="subheader in tab_info.section_1_subheaders">
+            <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
               <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
             </div>  
             <div v-else>
@@ -25,7 +25,7 @@
             </th>
           </tr>
         </thead>
-        <tbody  v-for="(outer_field,outer_field_index) in info.form_fields" class="form-fields">
+        <tbody  v-for="(outer_field,outer_field_index) in tab_info.form_fields" class="form-fields">
           <tr v-if="outer_field.name != 'blend'">
             <td style="padding-right: 2rem;">
               <div class="table-btn-group">
@@ -41,7 +41,7 @@
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
               <fieldGenerator v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'country_of_destination_exports'" :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               <div v-else-if="inner_field.name === 'country_of_destination_exports' && !inner_field.selected">
-                  <clonefield :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
+                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if="inner_field.name === 'country_of_destination_exports' && inner_field.selected">
                 {{inner_field.selected}}
@@ -88,7 +88,7 @@
                 <fieldGenerator :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               </div>
               <div v-else-if="inner_field.name === 'country_of_destination_exports' && !inner_field.selected">
-                  <clonefield :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
+                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if="inner_field.name === 'country_of_destination_exports' && inner_field.selected">
                 {{inner_field.selected}}
@@ -151,17 +151,17 @@
         </tbody>
       </table>
     </div>
-    <div v-for="comment in info.comments" class="comments-input">
+    <div v-for="comment in tab_info.comments" class="comments-input">
       <label>{{comment.label}}</label>
       <textarea class="form-control" v-model="comment.selected"></textarea>
     </div>
     <hr>
     <div class="footnotes">
-      <p v-for="footnote in info.footnotes"><small>{{footnote}}</small></p>
+      <p v-for="footnote in tab_info.footnotes"><small>{{footnote}}</small></p>
     </div>
 
     <AppAside fixed>
-      <DefaultAside :form="tab_info"> </DefaultAside>
+      <DefaultAside :data="tab_data" :form="tab_info"> </DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
@@ -215,11 +215,13 @@ import Multiselect from 'vue-multiselect'
 
 export default {
   props: {
-    info: Object,
+    structure: Object,
+    data: Object
   },
 
   created(){
-    this.tab_info = this.info
+    this.tab_info = this.structure
+    this.tab_data = this.data
   },
 
   components: {
@@ -231,6 +233,7 @@ export default {
   data () {
     return {
       tab_info: null,
+      tab_data: null,
       modal_data: null,
       current_field: null,
       modal_comments: null,
@@ -239,7 +242,7 @@ export default {
 
   methods: {
     remove_field(parent, field) {
-      this.info.form_fields.splice(this.info.form_fields.indexOf(parent), 1)
+      this.structure.form_fields.splice(this.structure.form_fields.indexOf(parent), 1)
     },
 
     getDecisions(field){
@@ -359,7 +362,7 @@ export default {
       })
 
       subheader.sort = -subheader.sort
-      this.$set(this.info, 'form_fields', sortObj)
+      this.$set(this.structure, 'form_fields', sortObj)
     },
 
 

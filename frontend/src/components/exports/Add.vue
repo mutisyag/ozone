@@ -1,16 +1,11 @@
 <template>
-  <div v-if="substances">
+  <div v-if="substances && countryOptions && section">
     <div class="container">
-
       <h3>Add substances</h3>
-
       <h5>Filter Groups</h5>
-
       <multiselect @input="prepareSubstances" :multiple="true"  v-model="selected_groups.selected" :options="selected_groups.options" placeholder="Select annex group(s)"></multiselect>
       <hr>
       <multiselect :clear-on-select="false" :hide-selected="true" :close-on-select="false" class="mb-2" label="text" track-by="text" :multiple="true" placeholder="Select substance(s)" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
-
-      <!-- <multiselect  label="text" track-by="value" placeholder="Select countries" v-model="selected_countries.selected" :options="selected_countries.options"></multiselect> -->
       <hr>
       <b-btn @click="addSubstance" variant="success">Add rows</b-btn>
     </div>
@@ -19,14 +14,14 @@
 
 <script>
 
-import countryOptions from "@/assets/countryList.js"
 import Multiselect from 'vue-multiselect'
 
 export default {
 
   props: {
     substances: null,
-    section: null
+    section: null,
+    countryOptions: null,
   },
 
   components: {
@@ -41,7 +36,7 @@ export default {
     return {
       selected_countries: {
         selected: null,
-        options: countryOptions,
+        options: this.countryOptions,
       },
 
       selected_substance: {
@@ -129,7 +124,7 @@ export default {
             type: 'select',
             duplicate: true,
             selected: null,
-            options: countryOptions,
+            options: this.countryOptions,
           },
           {
             label: 'Total Quantity Exported for All Uses',
@@ -302,12 +297,8 @@ export default {
     },
 
     resetData() {
-      this.countryOptions=[]
 
-      this.selected_countries = {
-        selected: null,
-        options: countryOptions,
-      },
+      this.selected_countries.selected = null
 
       this.group_field = {
         label: '',

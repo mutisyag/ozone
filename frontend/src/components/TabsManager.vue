@@ -30,36 +30,33 @@
       <b-form>
         <b-tabs v-model="tabIndex" card>
           <b-tab title="Submission Info">
-            <subinfo :info="data.tabs.sub_info" :tabId="-1"></subinfo>
+            <subinfo :info="data.form.tabs.sub_info" :tabId="-1"></subinfo>
           </b-tab>
           <b-tab title="Questionaire" active>
-            <intro tabId="0" :tabs="display_tabs" :info="data.tabs.tab_1"></intro>
+            <intro tabId="0" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.tabs.tab_2.name]" :title="data.tabs.tab_2.title">
-            <tab2 tabId="1" :info="data.tabs.tab_2"></tab2>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]" :title="data.form.tabs.tab_2.title">
+            <tab2 tabId="1" :info="data.form.tabs.tab_2"></tab2>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.tabs.tab_3.name]" :title="data.tabs.tab_3.title">
-            <tab3 tabId="2" :info="data.tabs.tab_3"></tab3>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]" :title="data.form.tabs.tab_3.title">
+            <tab3 tabId="2" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></tab3>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.tabs.tab_4.name]" :title="data.tabs.tab_4.title">
-            <tab4 tabId="3" :info="data.tabs.tab_4"></tab4>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]" :title="data.form.tabs.tab_4.title">
+            <tab4 tabId="3" :structure="data.form.tabs.tab_4"></tab4>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.tabs.tab_5.name]" :title="data.tabs.tab_5.title">
-            <tab5 tabId="4" :info="data.tabs.tab_5"></tab5>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]" :title="data.form.tabs.tab_5.title">
+            <tab5 tabId="4" :info="data.form.tabs.tab_5"></tab5>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.tabs.tab_6.name]" :title="data.tabs.tab_6.title">
-            <tab6 tabId="5" :info="data.tabs.tab_6"></tab6>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]" :title="data.form.tabs.tab_6.title">
+            <tab6 tabId="5" :info="data.form.tabs.tab_6"></tab6>
           </b-tab>
            <b-tab title="Attachements">
-            <attachements :info="data.tabs.attachements" tabId="6"></attachements>
+            <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
           </b-tab>
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
       </b-form>
     </b-card>
-  <!--   <div v-if="!prefilled" class="spinner">
-      <div class="loader"></div>
-    </div> -->
     </b-container>
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
@@ -113,9 +110,7 @@ export default {
   },
 
   created() {
-    getUsers().then(response => {
-      console.log(response.data)
-    })
+    console.log(this.data)
   },
 
   methods: {
@@ -170,40 +165,4 @@ export default {
 
 <style lang="css" scoped>
 
-.spinner {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-   border-top: 16px solid blue;
-   border-right: 16px solid green;
-   border-bottom: 16px solid red;
-   border-left: 16px solid pink;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-}
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 </style>
