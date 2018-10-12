@@ -80,6 +80,22 @@ function getParties() {
   }
 }
 
+function getSubmissions(){
+  return fetch('submissions/')
+}
+
+function getPeriods(){
+  return fetch('periods/')
+}
+
+function getObligations(){
+  return fetch('obligations/')
+}
+
+
+function createSubmission(submisson_data){
+  return post('submissions/', submisson_data)
+}
 
 
 
@@ -90,4 +106,22 @@ function getParties() {
 }
 
 
-export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getSubstances, getExportBlends, getInstructions, getUsers, getParties};
+export { 
+ apiURL,
+ filesURL,
+ api,
+ fetch,
+ post,
+ update,
+ remove,
+ getCookie,
+ getSubstances,
+ getExportBlends,
+ getInstructions,
+ getUsers,
+ getParties,
+ getSubmissions,
+ getPeriods,
+ getObligations,
+ createSubmission,
+};
