@@ -2,8 +2,28 @@
 Base settings to build other settings files upon.
 """
 
+import os
+import datetime
 import environ
 from pathlib import Path
+from django.core.exceptions import ImproperlyConfigured
+
+
+def get_env_var(var_name, default=None):
+    var = os.getenv(var_name, default)
+    if var is None and default is None:
+        raise ImproperlyConfigured(f'Set the {var_name} environment variable')
+    return var
+
+
+def get_int_env_var(var_name, default=None):
+    var = get_env_var(var_name, default)
+    try:
+        return int(var)
+    except ValueError:
+        raise ImproperlyConfigured(f'Environment variable {var_name} '
+                                   f'must be an integer or integer-convertible string')
+
 
 # ROOT_DIR = ozone/config/settings/base.py - 3 = ozone/
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
@@ -74,6 +94,7 @@ THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'rest_framework',
+    'rest_framework.authtoken',
     'bootstrap_admin',
     'webpack_loader',
     'import_export',
@@ -100,6 +121,10 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
+
+TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_INTERVAL'))
+
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = 'users.User'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url

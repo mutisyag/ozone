@@ -1,4 +1,6 @@
+from django.conf import settings
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework.reverse import reverse
 
@@ -367,3 +369,20 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('group_id', 'substances')
+
+
+class AuthTokenByValueSerializer(serializers.ModelSerializer):
+    token = serializers.SerializerMethodField()
+    expires = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Token
+        fields = ('token', 'created', 'expires')
+
+    @staticmethod
+    def get_token(obj):
+        return obj.key
+
+    @staticmethod
+    def get_expires(obj):
+        return obj.created + settings.TOKEN_EXPIRE_INTERVAL

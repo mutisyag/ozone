@@ -103,6 +103,15 @@ nested_routers = [
 # Groups
 router.register(r"group-substances", views.GroupViewSet)
 
+# Authentication
+auth_tokens = routers.SimpleRouter()
+auth_tokens.register(
+    'auth-token',
+    views.AuthTokenViewSet,
+    base_name='auth-token'
+)
+router.extend(auth_tokens)
+
 
 urlpatterns = router.urls + [url
                              for router in nested_routers
