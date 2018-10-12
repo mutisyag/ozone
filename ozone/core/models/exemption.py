@@ -32,13 +32,11 @@ class Nomination(models.Model):
         UsesType, related_name='nominations', on_delete=models.PROTECT
     )
 
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
+    substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
     submit_date = models.DateField()
 
-    submit_amt = models.FloatField()
+    submit_amount = models.FloatField(validators=[MinValueValidator(0.0)])
 
     remark = models.CharField(max_length=256, blank=True)
 
@@ -47,6 +45,7 @@ class Nomination(models.Model):
 
     class Meta:
         ordering = ('nomination_id',)
+
 
 class BaseExemption(models.Model):
 
