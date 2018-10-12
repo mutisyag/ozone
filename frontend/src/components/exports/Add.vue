@@ -67,9 +67,10 @@ export default {
 
     prepareSubstances(){
       this.selected_substance.options = []
-      for(let group in this.substances) {
-        if(this.selected_groups.selected.includes(group)) {
-          for(let substance of this.substances[group]){
+      for(let group of this.substances) {
+        console.log(group)
+        if(this.selected_groups.selected.includes(group.group_id)) {
+          for(let substance of group.substances){
             this.selected_substance.options.push({value: substance, text: substance, group: group})
           }
         }
@@ -77,8 +78,8 @@ export default {
     },
 
     prepareGroups(){
-      for(let group in this.substances) {
-          this.selected_groups.options.push(group)
+      for(let group of this.substances) {
+          this.selected_groups.options.push(group.group_id)
           //this.selected_groups.selected.push(group)
       }
       this.prepareSubstances()
@@ -86,11 +87,11 @@ export default {
 
     updateGroup(selected_substance){
       console.log(selected_substance)
-       for(let group in this.substances) {
-        for(let substance of this.substances[group]){
+       for(let group of this.substances) {
+        for(let substance of group.substances){
           if(selected_substance === substance) {
-            this.group_field.label = group
-            this.group_field.name = this.removeSpecialChars(group)
+            this.group_field.label = group.group_id
+            this.group_field.name = this.removeSpecialChars(group.group_id)
           }
         }
       }

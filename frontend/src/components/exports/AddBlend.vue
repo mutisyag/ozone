@@ -112,8 +112,8 @@ export default {
 
     prepareSubstances(){
       this.selected_substance.options = []
-      for(let group in this.substances) {
-          for(let substance of this.substances[group]){
+      for(let group of this.substances) {
+          for(let substance of group.substances){
             this.selected_substance.options.push({value: substance, text: substance, group: group})
             this.selected_blends.substance_options.push({value: substance, text: substance, group: group})
           }
@@ -158,6 +158,7 @@ export default {
     addSubstance(type) {
       if(type === 'selected') {
         for(let blend of this.selected_blends.selected) {
+          console.log(blnd.name)
           let substance_fields = {
             get label () { return this.selected.name} ,
             name: this.removeSpecialChars(blend.name),

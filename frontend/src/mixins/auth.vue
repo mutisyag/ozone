@@ -22,7 +22,6 @@ export default {
     },
 
     logout() {
-      console.log('loging out')
       removeLoginToken().then((response)=> {
         console.log(this.$cookies)
         this.$cookies.remove('authToken');

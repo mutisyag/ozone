@@ -61,10 +61,8 @@ function getCookie(name) {
 }
 
 
- function getImportSubstances() {
-  if(isTestSession) {
-    return fetch(window.location.origin + '/substances.json')
-  }
+ function getSubstances() {
+    return fetch('group-substances/')
 }
 
  function getUsers() {
@@ -92,4 +90,4 @@ function getSubmissions() {
 }
 
 
-export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getImportSubstances, getExportBlends, getInstructions, getUsers, getSubmissions};
+export { apiURL, filesURL, api, fetch, post, update, remove, getCookie, getSubstances, getExportBlends, getInstructions, getUsers, getSubmissions};

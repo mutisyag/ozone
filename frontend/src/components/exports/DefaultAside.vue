@@ -21,7 +21,7 @@
 <script>
 
 import Add from './Add';
-import {getImportSubstances, getExportBlends} from '@/api/api.js'
+import {getSubstances, getExportBlends} from '@/api/api.js'
 import {AsideToggler} from '@coreui/vue'
 import AddBlend from './AddBlend'
 
@@ -51,7 +51,7 @@ export default {
 
   methods: {
     getSubstances(){
-      getImportSubstances().then((response) => {
+      getSubstances().then((response) => {
         this.substances = response.data 
         getExportBlends().then((response) => {
           this.blends = response.data

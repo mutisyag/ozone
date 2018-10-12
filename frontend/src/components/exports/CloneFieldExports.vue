@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && section && field && inner_field">
+  <div v-if="section && field && inner_field">
     <div class="container">
       <div style="position: relative">
           <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="selected_countries.options"></multiselect>
@@ -13,7 +13,6 @@
 
 import countryOptions from "@/assets/countryList.js"
 import Multiselect from 'vue-multiselect'
-import {getImportSubstances} from '@/api/api.js'
 
 export default {
 
@@ -28,7 +27,6 @@ export default {
   },
 
   created(){
-    this.getSubstances();
     this.field = JSON.parse(JSON.stringify(this.current_field))
   },
 
@@ -44,15 +42,8 @@ export default {
   },
 
   methods: {
-  getSubstances(){
-      getImportSubstances().then((response) => {
-        this.substances = response.data 
-      })
-    },
-
 
     addSubstance() {
-      // console.log(this.field)
       let exact_duplication = false
       if(this.selected_countries.selected.length === 1) {
          exact_duplication = true
