@@ -16,6 +16,7 @@ from ..models import (
     Article7Export,
     Article7NonPartyTrade,
     Article7Emission,
+    Group,
 )
 
 from ..serializers import (
@@ -41,6 +42,7 @@ from ..serializers import (
     CreateArticle7NonPartyTradeSerializer,
     Article7EmissionSerializer,
     CreateArticle7EmissionSerializer,
+    GroupSerializer,
 )
 
 
@@ -185,3 +187,8 @@ class Article7EmissionViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
