@@ -9,7 +9,7 @@ from .substance import Group
 __all__ = [
     'ControlMeasure',
     'Limit',
-    'ProcessAgentEmitLimit',
+    'ProcessAgentEmissionLimit',
 ]
 
 
@@ -19,15 +19,17 @@ class ControlMeasure(models.Model):
     """
 
     party = models.ForeignKey(
-        Party, on_delete=models.PROTECT
+        Party, related_name='control_measures', on_delete=models.PROTECT
     )
 
     group = models.ForeignKey(
-        Group, on_delete=models.PROTECT
+        Group, related_name='control_measures', on_delete=models.PROTECT
     )
 
     reporting_period = models.ForeignKey(
-        ReportingPeriod, on_delete=models.PROTECT
+        ReportingPeriod,
+        related_name='control_measures',
+        on_delete=models.PROTECT
     )
 
     production_allowed = models.FloatField(
@@ -49,13 +51,13 @@ class Limit(models.Model):
     """
 
     party = models.ForeignKey(
-        Party, on_delete=models.PROTECT
+        Party, related_name='limits', on_delete=models.PROTECT
     )
     reporting_period = models.ForeignKey(
-        ReportingPeriod, on_delete=models.PROTECT
+        ReportingPeriod, related_name='limits', on_delete=models.PROTECT
     )
     group = models.ForeignKey(
-        Group, on_delete=models.PROTECT
+        Group, related_name='limits', on_delete=models.PROTECT
     )
 
     production = models.FloatField(
@@ -70,13 +72,15 @@ class Limit(models.Model):
     )
 
 
-class ProcessAgentEmitLimit(models.Model):
+class ProcessAgentEmissionLimit(models.Model):
     """
     Emission limits for process agent uses, for non-Article 5 parties.
     """
 
     party = models.ForeignKey(
-        Party, on_delete=models.PROTECT
+        Party,
+        related_name='process_agent_emission_limits',
+        on_delete=models.PROTECT
     )
 
     decision = models.CharField(max_length=256)
