@@ -211,6 +211,8 @@ class BaseExemption(models.Model):
         choices=((e.value, e.name) for e in ExemptionTypes),
         blank=True
     )
+    # TODO: Should this be a foreign key? Other models in this file
+    # use a char field for decisions.
     decision = models.ForeignKey(
         Decision, blank=True, null=True, on_delete=models.PROTECT
     )
@@ -224,8 +226,8 @@ class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
     This will be used as a base for data reporting models on import and export.
     """
 
-    # This is an abstract model, but QUANTITY_FIELDS should be the same for both
-    # models that inherit from it.
+    # This is an abstract model, but QUANTITY_FIELDS should be the same for
+    # both models that inherit from it (import & export).
     QUANTITY_FIELDS = [
         'quantity_total_new',
         'quantity_total_recovered',
@@ -383,9 +385,7 @@ class Article7Production(BaseReport, BaseUses, BaseExemption):
     All quantities expressed in metric tonnes.
     """
 
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
+    substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
     quantity_total_produced = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -492,15 +492,15 @@ class BaseHighAmbientTemperature(models.Model):
 
     # Multi-split air conditioners
     quantity_msac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Split ducted air conditioners
     quantity_sdac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Ducted commercial packaged air conditioners
     quantity_dcpac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     class Meta:
@@ -512,7 +512,7 @@ class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
     Production under the exemption for high-ambient-temperature parties
     """
     substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
+        Substance, on_delete=models.PROTECT
     )
 
 
