@@ -39,6 +39,11 @@ const  routes = [
           component: Dashboard
         },
         {
+          path: 'login',
+          name: 'Login',
+          component: Login
+        },
+        {
           path: 'dashboard/form',
           name: 'Form',
           meta:{requiresAuth : true},
@@ -97,11 +102,6 @@ const  routes = [
           path: '500',
           name: 'Page500',
           component: Page500
-        },
-        {
-          path: 'login',
-          name: 'Login',
-          component: Login
         },
         {
           path: 'register',
