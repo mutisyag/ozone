@@ -49,10 +49,14 @@ class Group(models.Model):
     description = models.CharField(max_length=256)
 
     control_treaty = models.ForeignKey(
-        Treaty, related_name='control_substance_groups', on_delete=models.PROTECT
+        Treaty,
+        related_name='control_substance_groups',
+        on_delete=models.PROTECT
     )
     report_treaty = models.ForeignKey(
-        Treaty, related_name='report_substance_groups', on_delete=models.PROTECT
+        Treaty,
+        related_name='report_substance_groups',
+        on_delete=models.PROTECT
     )
 
     phase_out_year_article_5 = models.DateField(blank=True, null=True)
@@ -215,9 +219,7 @@ class ProcessAgentApplication(models.Model):
 
     counter = models.PositiveIntegerField()
 
-    substance = models.ForeignKey(
-        Substance, null=True, on_delete=models.PROTECT
-    )
+    substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
     application = models.CharField(max_length=256)
 
