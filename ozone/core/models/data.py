@@ -492,15 +492,15 @@ class BaseHighAmbientTemperature(models.Model):
 
     # Multi-split air conditioners
     quantity_msac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Split ducted air conditioners
     quantity_sdac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Ducted commercial packaged air conditioners
     quantity_dcpac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     class Meta:
