@@ -35,18 +35,22 @@
       </b-dropdown-item>
       <b-dropdown-divider />
       <b-dropdown-item><i class="fa fa-shield" /> Lock Account</b-dropdown-item>
-      <b-dropdown-item><i class="fa fa-lock" /> Logout</b-dropdown-item>
+      <b-dropdown-item @click="logout"><i class="fa fa-lock" /> Logout</b-dropdown-item>
     </template>
   </AppHeaderDropdown>
 </template>
 
 <script>
+
+import authMixin from '@/mixins/auth';
+
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
 export default {
   name: 'DefaultHeaderDropdownAccnt',
   components: {
     AppHeaderDropdown
   },
+  mixins: [authMixin],
   data: () => {
     return { itemsCount: 42 }
   }

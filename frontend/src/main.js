@@ -3,6 +3,7 @@
 import 'core-js/es6/promise'
 import 'core-js/es6/string'
 import 'core-js/es7/array'
+import VueCookies from 'vue-cookies'
 // import cssVars from 'css-vars-ponyfill'
 import Vue from 'vue'
 
@@ -14,7 +15,8 @@ import VeeValidate from 'vee-validate';
 Vue.use(VeeValidate);
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
-
+// Globally register vue cookies
+Vue.use(VueCookies)
 // todo
 // cssVars()
 Vue.config.productionTip = false

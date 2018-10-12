@@ -1,4 +1,4 @@
-import { post, fetch, api, getCookie } from './config_api.js';
+import { post, fetch, api, getCookie, remove } from './api.js';
 
 
 export function removeLoginToken() {
@@ -16,7 +16,7 @@ export function removeLoginToken() {
 
 export function getLoginToken(username, password) {
   return new Promise((resolve, reject) => {
-    post('/auth-token/', { 'username': username, 'password': password })
+    post('/auth-token/', { 'username': 'admin', 'password': 'admin1234' })
       .then((response) => {
         api.defaults.headers.authorization = 'token ' + response.data.token;
         resolve(response);

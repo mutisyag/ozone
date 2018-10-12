@@ -35,11 +35,13 @@ const  routes = [
         {
           path: 'dashboard',
           name: 'Dashboard',
+          meta:{requiresAuth : true},
           component: Dashboard
         },
         {
           path: 'dashboard/form',
           name: 'Form',
+          meta:{requiresAuth : true},
           component: Form
         },
         {
@@ -124,8 +126,9 @@ const router = new Router(routerOptions);
 
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  console.log('to',to)
   if (to.meta.requiresAuth) {
+    console.log(window)
     const authToken = window.$cookies.get('authToken');
     
     if (!authToken) {
