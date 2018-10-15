@@ -11,6 +11,8 @@ from .models import (
     Party,
     ReportingPeriod,
     Obligation,
+    Substance,
+    Group,
     Submission,
     Article7Questionnaire,
     Article7Destruction,
@@ -18,7 +20,6 @@ from .models import (
     Article7Export,
     Article7NonPartyTrade,
     Article7Emission,
-    Group,
 )
 
 
@@ -361,8 +362,14 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
 
 
+class SubstanceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Substance
+        fields = ('id', 'name')
+
+
 class GroupSerializer(serializers.ModelSerializer):
-    substances = serializers.StringRelatedField(
+    substances = SubstanceSerializer(
         many=True, read_only=True
     )
 
