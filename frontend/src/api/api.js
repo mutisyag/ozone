@@ -94,6 +94,7 @@ function getObligations(){
 
 
 function createSubmission(submisson_data){
+  console.log(api.defaults)
   return post('submissions/', submisson_data)
 }
 

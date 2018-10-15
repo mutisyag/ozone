@@ -14,7 +14,26 @@
           form
           </router-link>
 
-          <div v-if="submissions && submissions.length">{{submissions}}</div>
+          <div v-if="submissions && periods && obligations && parties && submissions.length">
+         <!--    <pre>
+              {{submissions}}
+            </pre> -->
+            <div v-for="submission in submissions">
+              <h5>Submission</h5>
+              
+              <div>
+                obligation: {{getSumissionInfo(submission).obligation()}}
+              </div>
+              <div>
+                period: {{getSumissionInfo(submission).period()}}
+              </div>
+              <div>
+                party: {{getSumissionInfo(submission).party()}}
+                
+              </div>
+
+            </div>
+          </div>
 
           </div>
         </b-card>
@@ -70,6 +89,7 @@ export default {
   },
 
   created(){
+
   	getSubmissions().then( response => {
   		this.submissions = response.data
   	})
@@ -77,7 +97,7 @@ export default {
    getParties().then( response => {
     let countryOptions = []
       for (let country of response.data) {
-        countryOptions.push({ value: country.abbr, text: country.name})
+        countryOptions.push({ value: country.pk, text: country.name})
       }
       this.parties = countryOptions
     })
@@ -86,6 +106,7 @@ export default {
       for(let period of response.data) {
         this.periods.push({value: period.id, text: `${period.name} (${period.start_date} - ${period.end_date})`})
       }
+      this.periods.push({value: 59, text:"asdasda"})
     })
 
     getObligations().then( response => {
@@ -98,18 +119,31 @@ export default {
 
   methods: {
     addSubmission() {
-      let party_pk;
-      for(let party of this.parties) {
-        if(this.current.party === party.value){
-          party_pk = this.parties.indexOf(party)
-          console.log('partyppk',party_pk)
-          break;
-        }
-      }
-
-      this.current.party = party_pk
       createSubmission(this.current)
     },
+
+    getSumissionInfo(submission){
+      console.log(submission)
+      let submissionInfo = {
+        obligation: () => {
+          return this.obligations.length > 1 ? 
+          this.obligations.reduce(a => {return (a.value === submission.obligation) ? a.text : null})
+          :
+          this.obligations.reduce(a => {return (a.value === submission.obligation) ? a.text : null}).text
+        },
+        period: () => {
+          return this.periods.length > 1 ?
+           this.periods.reduce(a => {return (a.value === submission.reporting_period) ? a.text : null})
+           :
+           this.periods.reduce(a => {return (a.value === submission.reporting_period) ? a.text : null}).text
+        },
+        party: () => {
+           this.parties.reduce(a => {return (a.value === submission.party) ? a.text : null})
+        }
+      }
+      return submissionInfo
+    },
+
   }
 }
 </script>
