@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.auth import get_user_model
 
 from import_export.admin import (
     ImportExportActionModelAdmin,
@@ -41,6 +42,8 @@ from .resources import (
     ObligationResource,
     LanguageResource,
 )
+
+User = get_user_model()
 
 
 # Meeting-related models
@@ -147,3 +150,8 @@ class ObligationAdmin(
 ):
     search_fields = ["name"]
     resource_class = ObligationResource
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    search_fields = ["username", "first_name", "last_name"]
