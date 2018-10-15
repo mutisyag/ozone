@@ -50,8 +50,21 @@ from ..serializers import (
 
 
 class ReadOnlyMixin:
+    """Does what it says on the tin"""
     def _allowed_methods(self):
         return ['GET', 'OPTIONS']
+
+
+class BulkCreateMixin:
+    """
+    Allows bulk creation of resources (given as a list in a JSON),
+    while still permitting a single resource to be created.
+    """
+    def get_serializer(self, *args, **kwargs):
+        if isinstance(kwargs.get('data', {}), list):
+            kwargs['many'] = True
+
+        return super().get_serializer(*args, **kwargs)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -116,7 +129,7 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7DestructionViewSet(viewsets.ModelViewSet):
+class Article7DestructionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -132,7 +145,7 @@ class Article7DestructionViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ProductionViewSet(viewsets.ModelViewSet):
+class Article7ProductionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -147,7 +160,7 @@ class Article7ProductionViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ExportViewSet(viewsets.ModelViewSet):
+class Article7ExportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -162,7 +175,7 @@ class Article7ExportViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(viewsets.ModelViewSet):
+class Article7NonPartyTradeViewSet(BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -177,7 +190,7 @@ class Article7NonPartyTradeViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7EmissionViewSet(viewsets.ModelViewSet):
+class Article7EmissionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
