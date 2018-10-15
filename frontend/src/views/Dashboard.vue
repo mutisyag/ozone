@@ -2,43 +2,6 @@
   <div class="animated fadeIn">
     <b-row>
       <b-col sm="6">
-        <b-card v-if="submissions && periods && obligations && parties && submissions.length">
-          <div slot="header">
-            <strong>Latest submissions </strong>
-          </div>
-          <div>
-          <router-link
-            class="nav-link btn btn-primary"
-            :to="{ name: 'Form'}"
-          >
-          form
-          </router-link>
-
-          <div>
-         <!--    <pre>
-              {{submissions}}
-            </pre> -->
-            <div v-for="submission in submissions">
-              <h5>Submission</h5>
-              
-              <div>
-                obligation: {{getSumissionInfo(submission).obligation()}}
-              </div>
-              <div>
-                period: {{getSumissionInfo(submission).period()}}
-              </div>
-              <div>
-                party: {{getSumissionInfo(submission).party()}}
-                
-              </div>
-
-            </div>
-          </div>
-
-          </div>
-        </b-card>
-      </b-col>
-      <b-col sm="6">
         <b-card v-if="periods && obligations && parties">
           <div slot="header">
             <strong>Create new submission </strong>
@@ -63,6 +26,44 @@
           </div>
 
         </b-card>
+      </b-col>
+      <b-col sm="12">
+          <b-card no-body header="Latest submissions" v-if="submissions && periods && obligations && parties && submissions.length">
+            <table class="table center">
+              <thead>
+                <tr>
+                  <th>Obligation</th>
+                  <th>Reporting period</th>
+                  <th>Reporting party</th>
+                  <th>Version</th>
+                  <th>Edit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="submission in submissions">
+                  <td>
+                   {{getSumissionInfo(submission).obligation()}}
+                  </td>
+                  <td>
+                    {{getSumissionInfo(submission).period()}}
+                  </td>
+                  <td>
+                    {{getSumissionInfo(submission).party()}}
+                  </td>
+                  <td>{{submission.version}}</td>
+                 <td>
+                    <!-- <b-btn class="mt-1" variant="primary" v-if="!submission.editable">Open form</b-btn> -->
+                  <router-link
+                      class="nav-link btn btn-primary btn-sm"
+                      :to="{ name: 'Form'}"
+                    >
+                    form
+                  </router-link>
+                 </td>
+                </tr>
+              </tbody>
+            </table>
+          </b-card>
       </b-col>
     </b-row>
   </div>
