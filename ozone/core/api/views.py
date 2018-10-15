@@ -92,6 +92,11 @@ class ObligationViewSet(viewsets.ModelViewSet):
     serializer_class = ObligationSerializer
 
 
+class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -203,11 +208,6 @@ class Article7EmissionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
-
-
-class GroupViewSet(viewsets.ModelViewSet):
-    queryset = Group.objects.all()
-    serializer_class = GroupSerializer
 
 
 class AuthTokenViewSet(mixins.ListModelMixin,
