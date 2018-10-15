@@ -1,4 +1,6 @@
 from django.conf import settings
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
@@ -19,8 +21,9 @@ from .models import (
     Article7Export,
     Article7NonPartyTrade,
     Article7Emission,
-    Group,
 )
+
+User = get_user_model()
 
 
 class RegionSerializer(serializers.ModelSerializer):
