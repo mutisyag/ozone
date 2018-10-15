@@ -35,7 +35,7 @@
                 <b-btn variant="outline-danger" @click="remove_field(outer_field)" class="table-btn">Delete</b-btn>
               </div>
               <span v-b-tooltip.hover  placement="left" :title="outer_field.label" :class="outer_field.name">
-                {{outer_field.substance.label}}
+                {{outer_field.substance.selected.text}}
               </span>
             </td>
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
@@ -58,7 +58,7 @@
               </div>
               <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment_apl' && quantity.fields[0].selected" >
                 <hr>
-                Quantity of new {{outer_field.substance.label}} exported to be used for QPS applications
+                Quantity of new {{outer_field.substance.selected.text}} exported to be used for QPS applications
                 <hr>
                 <span>
                   {{quantity.fields[0].selected}}
@@ -80,7 +80,7 @@
                 <b-btn variant="outline-danger" @click="remove_field(outer_field)" class="table-btn">Delete</b-btn>
               </div>
               <span style="cursor:pointer" @click="outer_field.expand = !outer_field.expand" v-b-tooltip.hover  placement="left" :title="outer_field.label" :class="outer_field.name">
-                {{outer_field.substance.label}} <i :class="`fa fa-caret-square-o-${expandedStatus(outer_field.expand)}`"></i>
+                {{outer_field.substance.selected.text}} <i :class="`fa fa-caret-square-o-${expandedStatus(outer_field.expand)}`"></i>
               </span>
             </td>
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
@@ -106,7 +106,7 @@
               </div>
               <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'B-Group I' && quantity.name === 'quarantine_pre_shipment_apl' && quantity.fields[0].selected" >
                 <hr>
-                Quantity of new {{outer_field.substance.label.label}} exported to be used for quarantine and pre shipment applications 
+                Quantity of new {{outer_field.substance.selected.text}} exported to be used for quarantine and pre shipment applications 
                 <hr>
                 <span>
                   {{quantity.fields[0].selected}}
@@ -165,7 +165,7 @@
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
-     <div v-if="modal_data" slot="modal-title">{{modal_data.label}}</div>
+     <div v-if="modal_data" slot="modal-title">{{modal_data.selected.text}}</div>
      <div v-if="modal_data">
        <b-row  v-if="!modal_data.selected.composition" >
          <b-col>
@@ -317,7 +317,7 @@ export default {
 
       for(let field of section) {
           if(value === 'substances') {
-            field.index = field.substance.label
+            field.index = field.substance.selected.text
           }
           else {
             field.index = ''

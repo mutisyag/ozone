@@ -39,6 +39,8 @@ export default {
         options: this.countryOptions,
       },
 
+      substancesOptions: [],
+
       selected_substance: {
         selected: null,
         group: null,
@@ -63,11 +65,12 @@ export default {
     prepareSubstances(){
       this.selected_substance.options = []
       for(let group of this.substances) {
-        if(this.selected_groups.selected.includes(group.group_id)) {
           for(let substance of group.substances){
-            this.selected_substance.options.push({value: substance, text: substance, group: group})
+            if(this.selected_groups.selected.includes(group.group_id)) {
+              this.selected_substance.options.push({value: substance.id, text: substance.name, group: group})
+            }
+            this.substancesOptions.push({value: substance.id, text: substance.name, group: group})
           }
-        }
       }
     },
 
@@ -82,9 +85,10 @@ export default {
     updateGroup(selected_substance){
        for(let group of this.substances) {
         for(let substance of group.substances){
-          if(selected_substance === substance) {
+          if(selected_substance === substance.id) {
             this.group_field.label = group.group_id
-            this.group_field.name = this.removeSpecialChars(group.group_id)
+            this.group_field.name = group.group_id
+            console.log(this.group_field)
           }
         }
       }
@@ -94,9 +98,8 @@ export default {
       for(let substance of this.selected_substance.selected) {
         this.updateGroup(substance.value)
         let substance_fields = {
-          get label () { return this.selected.value} ,
-          name: this.removeSpecialChars(substance.value),
-          options: this.selected_substance.options,
+          name: substance.value,
+          options: this.substancesOptions,
           selected: substance,
           comments: [{
               name: "party_remarks",

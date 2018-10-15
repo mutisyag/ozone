@@ -114,7 +114,7 @@ export default {
       this.selected_substance.options = []
       for(let group of this.substances) {
           for(let substance of group.substances){
-            this.selected_substance.options.push({value: substance, text: substance, group: group})
+            this.selected_substance.options.push({value: substance.id, text: substance.name, group: group})
             this.selected_blends.substance_options.push({value: substance, text: substance, group: group})
           }
       }
