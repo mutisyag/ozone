@@ -2,7 +2,7 @@
   <div class="animated fadeIn">
     <b-row>
       <b-col sm="6">
-        <b-card>
+        <b-card v-if="submissions && periods && obligations && parties && submissions.length">
           <div slot="header">
             <strong>Latest submissions </strong>
           </div>
@@ -14,7 +14,7 @@
           form
           </router-link>
 
-          <div v-if="submissions && periods && obligations && parties && submissions.length">
+          <div>
          <!--    <pre>
               {{submissions}}
             </pre> -->
@@ -39,7 +39,7 @@
         </b-card>
       </b-col>
       <b-col sm="6">
-        <b-card>
+        <b-card v-if="periods && obligations && parties">
           <div slot="header">
             <strong>Create new submission </strong>
           </div>
@@ -77,8 +77,8 @@ export default {
   data () {
     return {
     	submissions: null,
-      periods: [],
-      obligations: [],
+      periods: null,
+      obligations: null,
       parties: null,
       current: {
         obligation: null,
@@ -90,29 +90,32 @@ export default {
 
   created(){
 
-  	getSubmissions().then( response => {
+  getSubmissions().then( response => {
   		this.submissions = response.data
   	})
 
    getParties().then( response => {
-    let countryOptions = []
+    let parties_temp = [];
       for (let country of response.data) {
-        countryOptions.push({ value: country.pk, text: country.name})
+        parties_temp.push({ value: country.id, text: country.name})
       }
-      this.parties = countryOptions
+      this.parties = JSON.parse(JSON.stringify(parties_temp))
     })
 
     getPeriods().then( response => {
+      let periods_temp = [];
       for(let period of response.data) {
-        this.periods.push({value: period.id, text: `${period.name} (${period.start_date} - ${period.end_date})`})
+        periods_temp.push({value: period.id, text: `${period.name} (${period.start_date} - ${period.end_date})`})
       }
-      this.periods.push({value: 59, text:"asdasda"})
+      this.periods = JSON.parse(JSON.stringify(periods_temp)) 
     })
 
     getObligations().then( response => {
+      let obligations_temp = [];
       for(let obligation of response.data) {
-        this.obligations.push({value: obligation.id, text: obligation.name})
+        obligations_temp.push({value: obligation.id, text: obligation.name})
       }
+      this.obligations = JSON.parse(JSON.stringify(obligations_temp)) 
     })
 
   },
@@ -123,22 +126,15 @@ export default {
     },
 
     getSumissionInfo(submission){
-      console.log(submission)
       let submissionInfo = {
         obligation: () => {
-          return this.obligations.length > 1 ? 
-          this.obligations.reduce(a => {return (a.value === submission.obligation) ? a.text : null})
-          :
-          this.obligations.reduce(a => {return (a.value === submission.obligation) ? a.text : null}).text
+          return this.obligations.find( a => { return a.value === submission.obligation }).text
         },
         period: () => {
-          return this.periods.length > 1 ?
-           this.periods.reduce(a => {return (a.value === submission.reporting_period) ? a.text : null})
-           :
-           this.periods.reduce(a => {return (a.value === submission.reporting_period) ? a.text : null}).text
+          return this.periods.find(a => {return a.value === submission.reporting_period}).text
         },
         party: () => {
-           this.parties.reduce(a => {return (a.value === submission.party) ? a.text : null})
+          return this.parties.find(a => { return a.value === submission.party}).text
         }
       }
       return submissionInfo
