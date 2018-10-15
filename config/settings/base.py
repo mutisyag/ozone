@@ -98,9 +98,9 @@ THIRD_PARTY_APPS = [
     'bootstrap_admin',
     'webpack_loader',
     'import_export',
+    'guardian',
 ]
 LOCAL_APPS = [
-    'ozone.users.apps.UsersConfig',
     # Your stuff: custom apps go here
     'ozone.core.apps.CoreConfig',
 ]
@@ -120,15 +120,14 @@ MIGRATION_MODULES = {
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend',
 ]
 
 TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_INTERVAL'))
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
-AUTH_USER_MODEL = 'users.User'
-# https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
-LOGIN_REDIRECT_URL = 'users:redirect'
+AUTH_USER_MODEL = 'core.User'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
 LOGIN_URL = 'account_login'
 

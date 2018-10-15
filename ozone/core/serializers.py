@@ -4,7 +4,6 @@ from rest_framework.authtoken.models import Token
 from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 from rest_framework.reverse import reverse
 
-from ozone.users.models import User
 from .models import (
     Region,
     Subregion,
@@ -20,6 +19,7 @@ from .models import (
     Article7Export,
     Article7NonPartyTrade,
     Article7Emission,
+    Group,
 )
 
 

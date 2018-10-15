@@ -4,7 +4,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
-from ozone.users.models import User
+from ozone.core.models.user import User
 
 from ..models import (
     Region,

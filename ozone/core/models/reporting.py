@@ -1,12 +1,11 @@
 import enum
 
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models, transaction
 
 from model_utils import FieldTracker
-
-from ozone.users.models import User
 
 from .party import Party
 from .workflows.base import BaseWorkflow
@@ -129,10 +128,10 @@ class Submission(models.Model):
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
     created_by = models.ForeignKey(
-        User, related_name='submissions_created', on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL, related_name='submissions_created', on_delete=models.PROTECT
     )
     last_edited_by = models.ForeignKey(
-        User, related_name='submissions_last_edited', on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL, related_name='submissions_last_edited', on_delete=models.PROTECT
     )
 
     # Per Obligation-ReportingPeriod-Party
@@ -378,7 +377,7 @@ class TransitionEvent(models.Model):
     from_state = models.CharField(max_length=60)
     to_state = models.CharField(max_length=60)
     triggered_by = models.ForeignKey(
-        User, related_name='transitions_triggered', on_delete=models.PROTECT
+        settings.AUTH_USER_MODEL, related_name='transitions_triggered', on_delete=models.PROTECT
     )
     extra = JSONField(encoder=DjangoJSONEncoder, null=True)
 
