@@ -241,6 +241,16 @@ TEMPLATES = [
 # http://django-crispy-forms.readthedocs.io/en/latest/install.html#template-packs
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+
+# DRF
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+}
+
+
 # FIXTURES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#fixture-dirs
