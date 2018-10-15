@@ -39,7 +39,7 @@ class PartySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Party
-        fields = ('name', 'abbr', 'subregion')
+        fields = ('id', 'name', 'abbr', 'subregion')
 
 
 class ReportingPeriodSerializer(serializers.ModelSerializer):
