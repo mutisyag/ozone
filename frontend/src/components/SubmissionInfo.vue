@@ -23,9 +23,8 @@
     <!-- <h2>{{info.title}}</h2> -->
             
     <form class="form-sections">
-      <b-card :key="section.name" v-for="section in info.form_sections">
-        <h4>{{section.title}}</h4>
-        <div class="form-fields" v-for="field in section.form_fields" :key="field.name">
+      <b-card>
+        <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <b-row class="field-wrapper">
             <b-col lg='3'>
               <label><b>{{field.label}}</b></label>

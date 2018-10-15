@@ -24,13 +24,7 @@ var form = {
       description: '',
       // used for identification when adding labels
       name: 'form_intro',
-      form_sections: [
-        {
-          title: 'Reporting Party',
-          name: 'reporting_party',
-          form_fields: reporting_party
-        },
-      ]
+      form_fields: reporting_party
     },
     tab_1: {
       intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
@@ -54,12 +48,7 @@ var form = {
       description: '',
       // used for identification when adding labels
       name: 'form_intro',
-      form_sections: [{
-          title: 'Questionnaire',
-          name: 'questionnaire',
-          form_fields: intro_fields
-        },
-      ]
+      form_fields: intro_fields
     },
     tab_3: {
       intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
