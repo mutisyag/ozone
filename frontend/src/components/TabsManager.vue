@@ -106,11 +106,14 @@ export default {
   },
 
   props: {
-    data: null
+    data: null,
+    submission: Object,
   },
 
   created() {
-    console.log(this.data)
+    console.log(this.submission)
+    this.data.form.tabs.sub_info.party.selected = this.submission.party
+    this.data.form.tabs.sub_info.reporting_year.selected = this.submission.reporting_period
   },
 
   methods: {

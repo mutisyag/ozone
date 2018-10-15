@@ -1,6 +1,6 @@
 <template>
   <div class="animated fadeIn">
-      <dataManager></dataManager>
+      <dataManager :submission="$route.query.submission"></dataManager>
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
   data: function () {
     return {}
   },
+
   methods: {
   }
 }

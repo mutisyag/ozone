@@ -55,7 +55,7 @@
                     <!-- <b-btn class="mt-1" variant="primary" v-if="!submission.editable">Open form</b-btn> -->
                   <router-link
                       class="nav-link btn btn-primary btn-sm"
-                      :to="{ name: 'Form'}"
+                      :to="{ name: 'Form', query: {submission: submission.url}} "
                     >
                     form
                   </router-link>

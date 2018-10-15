@@ -63,7 +63,6 @@ export default {
     prepareSubstances(){
       this.selected_substance.options = []
       for(let group of this.substances) {
-        console.log(group)
         if(this.selected_groups.selected.includes(group.group_id)) {
           for(let substance of group.substances){
             this.selected_substance.options.push({value: substance, text: substance, group: group})
@@ -81,7 +80,6 @@ export default {
     },
 
     updateGroup(selected_substance){
-      console.log(selected_substance)
        for(let group of this.substances) {
         for(let substance of group.substances){
           if(selected_substance === substance) {

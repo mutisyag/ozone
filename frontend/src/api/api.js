@@ -106,6 +106,10 @@ function createSubmission(submisson_data){
   }
 }
 
+function getSubmission(url) {
+  return api.get(url)
+}
+
 
 export { 
  apiURL,
@@ -125,4 +129,5 @@ export {
  getPeriods,
  getObligations,
  createSubmission,
+ getSubmission
 };

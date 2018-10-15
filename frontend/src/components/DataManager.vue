@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabsmanager v-if="countryOptions && substances && blends" :data="{form: form, countryOptions: countryOptions, substances: substances, blends:blends}"></tabsmanager>
+    <tabsmanager v-if="countryOptions && substances && blends && current_submission" :submission="current_submission" :data="{form: form, countryOptions: countryOptions, substances: substances, blends:blends}"></tabsmanager>
     <div v-else class="spinner">
       <div class="loader"></div>
     </div>
@@ -12,7 +12,7 @@
 import tabsManager from './TabsManager'
 import form from '../assets/form.js'
 import countryOptions from "@/assets/countryList.js"
-import {getSubstances, getExportBlends, getParties} from '@/api/api.js'
+import {getSubstances, getExportBlends, getParties, getSubmission} from '@/api/api.js'
 
 
 export default {
@@ -21,6 +21,9 @@ export default {
     tabsmanager:tabsManager
   },
 
+  props: {
+    submission: String,
+  },
 
   data () {
     return {
@@ -28,12 +31,14 @@ export default {
       countryOptions: null,
       substances: null,
       blends: null,
+      current_submission: null,
     }
   },
 
   created() {
     this.getSubstances()
     this.importCountries()
+    getSubmission(this.submission).then( (response) => this.current_submission = response.data)
   },
 
   methods: {
