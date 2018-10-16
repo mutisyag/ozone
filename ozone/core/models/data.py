@@ -439,7 +439,6 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
 
     trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
 
-    # TODO: save() - ensure at least one of these quantity fields is non-null
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -455,6 +454,25 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
 
     class Meta:
         db_table = 'reporting_article_seven_non_party_trade'
+
+    def clean(self):
+        if not (
+            self.quantity_import_new
+            or self.quantity_import_recovered
+            or self.quantity_export_new
+            or self.quantity_export_recovered
+        ):
+            raise ValidationError(
+                {
+                    'quantity_fields': [_(
+                        'At least one quantity field should be non-null!'
+                    )]
+                }
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Article7Emission(BaseReport):
