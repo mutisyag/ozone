@@ -194,34 +194,7 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
         abstract = True
 
 
-class BaseExemption(models.Model):
-    """
-    This will be used as a base for data reporting models that contain
-    information about exempted substances.
-    """
-
-    # Exemption quantity w/ type & decision
-    # TODO: should maybe ensure that type & decision are not null if
-    # quantity is not null
-    quantity_exempted = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    type_exempted = models.CharField(
-        max_length=32,
-        choices=((e.value, e.name) for e in ExemptionTypes),
-        blank=True
-    )
-    # TODO: Should this be a foreign key? Other models in this file
-    # use a char field for decisions.
-    decision = models.ForeignKey(
-        Decision, blank=True, null=True, on_delete=models.PROTECT
-    )
-
-    class Meta:
-        abstract = True
-
-
-class BaseImportExportReport(BaseBlendCompositionReport, BaseExemption):
+class BaseImportExportReport(BaseBlendCompositionReport):
     """
     This will be used as a base for data reporting models on import and export.
     """
@@ -378,7 +351,7 @@ class Article7Import(BaseImportExportReport, BaseUses):
         db_table = 'reporting_article_seven_imports'
 
 
-class Article7Production(BaseReport, BaseUses, BaseExemption):
+class Article7Production(BaseReport, BaseUses):
     """
     Model for a simple Article 7 data report on production.
 
