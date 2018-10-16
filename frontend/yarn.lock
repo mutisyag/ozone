@@ -7617,6 +7617,11 @@ vue-clickaway@^2.2.2:
   dependencies:
     loose-envify "^1.2.0"
 
+vue-cookies@^1.5.7:
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.5.7.tgz#44b3940b0cbb853ba3f7848f1905cb127ec45eb4"
+  integrity sha512-XAZDLIrTM7M8CaPAdUaAybQeFfRmyTAYOjAnKHe7BY9w0hJs9hpNZS41mk9Z+ElMUad5RvyAP4MIJbSoNf50Eg==
+
 vue-functional-data-merge@^2.0.5:
   version "2.0.7"
   resolved "https://registry.yarnpkg.com/vue-functional-data-merge/-/vue-functional-data-merge-2.0.7.tgz#bdee655181eacdcb1f96ce95a4cc14e75313d1da"
