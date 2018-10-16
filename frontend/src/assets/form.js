@@ -29,6 +29,7 @@ var form = {
     tab_1: {
       intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
       title: 'Questionnaire',
+      name: 'questionaire_questions',
       party: {
         label: 'Party',
         name: 'party',
@@ -47,7 +48,6 @@ var form = {
       },
       description: '',
       // used for identification when adding labels
-      name: 'form_intro',
       form_fields: intro_fields
     },
     tab_3: {
