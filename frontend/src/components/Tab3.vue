@@ -249,7 +249,7 @@ export default {
       let decisions = []
       for(let item of field.fields) {
         let filtered = item.fields
-                        .filter(inner_field => inner_field.name === 'decision' && inner_field.selected)
+                        .filter(inner_field => inner_field.name.split('_')[0] === 'decision' && inner_field.selected)
                         .map(field => field.selected) 
         decisions.push(filtered)
       }
@@ -409,7 +409,7 @@ export default {
       let toShow = '';
       for(let item of field.fields) {
         for(let subItem of item.fields) {
-          if(subItem.name === 'decision' && subItem.selected) {
+          if(subItem.name.split('_')[0] === 'decision' && subItem.selected) {
             toShow += item.label + ': ' + subItem.selected + '\n' 
           }
         }
