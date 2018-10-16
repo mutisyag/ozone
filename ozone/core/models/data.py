@@ -194,7 +194,7 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
         abstract = True
 
 
-class BaseImportExportReport(BaseBlendCompositionReport):
+class BaseImportExportReport(models.Model):
     """
     This will be used as a base for data reporting models on import and export.
     """
@@ -315,7 +315,9 @@ class Article7Questionnaire(BaseReport):
         db_table = 'reporting_article_seven_questionnaire'
 
 
-class Article7Export(BaseImportExportReport, BaseUses):
+class Article7Export(
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
+):
     """
     Model for a simple Article 7 data report on exports.
 
@@ -332,7 +334,7 @@ class Article7Export(BaseImportExportReport, BaseUses):
         'quantity_quarantine_pre_shipment',
         'quantity_total_new',
         'quantity_total_recovered',
-        'quantity_feedstock'
+        'quantity_feedstock',
     ]
 
     # FieldTracker does not work on abstract models
@@ -342,7 +344,9 @@ class Article7Export(BaseImportExportReport, BaseUses):
         db_table = 'reporting_article_seven_exports'
 
 
-class Article7Import(BaseImportExportReport, BaseUses):
+class Article7Import(
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
+):
     """
     Model for a simple Article 7 data report on imports.
 
@@ -359,7 +363,7 @@ class Article7Import(BaseImportExportReport, BaseUses):
         'quantity_quarantine_pre_shipment',
         'quantity_total_new',
         'quantity_total_recovered',
-        'quantity_feedstock'
+        'quantity_feedstock',
     ]
 
     # FieldTracker does not work on abstract models
