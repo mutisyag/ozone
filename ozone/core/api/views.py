@@ -1,10 +1,11 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import viewsets, mixins, status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
-from ozone.users.models import User
 
 from ..models import (
     Region,
@@ -47,6 +48,9 @@ from ..serializers import (
     CreateArticle7EmissionSerializer,
     GroupSerializer,
 )
+
+
+User = get_user_model()
 
 
 class ReadOnlyMixin:
