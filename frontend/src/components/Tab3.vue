@@ -66,7 +66,7 @@
               </div>
               <span v-if="doComments(outer_field.substance.comments)" class="comments-section">
                 <b-btn variant="link" class="comments-button" v-b-tooltip.hover  placement="left" :title="doComments(outer_field.substance.comments)" :id="`${outer_field.substance.name}_${outer_field_index}`">
-                    <img class="icon" src="comments.svg">
+                    <img class="icon" src="/comments.svg">
                 </b-btn>
               </span>
             </td>

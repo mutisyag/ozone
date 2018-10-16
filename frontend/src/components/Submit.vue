@@ -65,27 +65,30 @@ export default {
 
     submitData(field) {
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
-       console.log(current_tab)
+
+       // for some reason calling [0,1].forEach() in a certain iteration causes erros. Probably babel stuff
+       let small_iterator = [0,1]
        let current_tab_data = []
-       for(let form_field of current_tab.form_fields) {
+       current_tab.form_fields.forEach( form_field => {
         let substance = form_field.substance 
         let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-        for(let comment of substance.comments) {
-          save_obj[comment.name] = comment.selected
-        }
-         save_obj['substance'] = substance.selected.value
-         for(let inner_field of substance.inner_fields) {
-          if(inner_field.type != 'multiple_fields') {
-            save_obj[inner_field.name] = inner_field.selected
-          } else {
-            for(let inner_inner_field of inner_field.fields)  {
-              [0,1].forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
-            }
-          }
-         }
+
+        small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
+        
+        save_obj['substance'] = substance.selected.value
+        substance.inner_fields.forEach( inner_field => {
+          inner_field.type != 'multiple_fields' 
+          ? 
+          save_obj[inner_field.name] = inner_field.selected
+          :
+          inner_field.fields.forEach( inner_inner_field => {
+            small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
+          })          
+        })
+
          current_tab_data.push(save_obj)
-       }
-       console.log(current_tab_data)
+       })
+       
        post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {console.log(response) })
 
     },
