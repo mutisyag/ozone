@@ -340,10 +340,6 @@ class Article7Export(
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
 
-    destination_party = models.ForeignKey(
-        Party, related_name='article7exports_to', on_delete=models.PROTECT
-    )
-
     class Meta:
         db_table = 'reporting_article_seven_exports'
 
@@ -372,10 +368,6 @@ class Article7Import(
 
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
-
-    source_party = models.ForeignKey(
-        Party, related_name='article7imports_from', on_delete=models.PROTECT
-    )
 
     class Meta:
         db_table = 'reporting_article_seven_imports'
