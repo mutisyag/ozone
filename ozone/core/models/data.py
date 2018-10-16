@@ -199,14 +199,6 @@ class BaseImportExportReport(BaseBlendCompositionReport):
     This will be used as a base for data reporting models on import and export.
     """
 
-    # This is an abstract model, but QUANTITY_FIELDS should be the same for
-    # both models that inherit from it (import & export).
-    QUANTITY_FIELDS = [
-        'quantity_total_new',
-        'quantity_total_recovered',
-        'quantity_feedstock'
-    ]
-
     quantity_total_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -330,6 +322,19 @@ class Article7Export(BaseImportExportReport, BaseUses):
     All quantities expressed in metric tonnes.
     """
 
+    # Quantity fields needed for blend-to-substance breakdown
+    QUANTITY_FIELDS = [
+        'quantity_critical_uses',
+        'quantity_essential_uses',
+        'quantity_high_ambient_temperature',
+        'quantity_laboratory_analytical_uses',
+        'quantity_process_agent_uses',
+        'quantity_quarantine_pre_shipment',
+        'quantity_total_new',
+        'quantity_total_recovered',
+        'quantity_feedstock'
+    ]
+
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
 
@@ -343,6 +348,19 @@ class Article7Import(BaseImportExportReport, BaseUses):
 
     All quantities expressed in metric tonnes.
     """
+
+    # Quantity fields needed for blend-to-substance breakdown
+    QUANTITY_FIELDS = [
+        'quantity_critical_uses',
+        'quantity_essential_uses',
+        'quantity_high_ambient_temperature',
+        'quantity_laboratory_analytical_uses',
+        'quantity_process_agent_uses',
+        'quantity_quarantine_pre_shipment',
+        'quantity_total_new',
+        'quantity_total_recovered',
+        'quantity_feedstock'
+    ]
 
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
