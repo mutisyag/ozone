@@ -89,14 +89,6 @@ class Party(models.Model):
         Subregion, related_name='parties', on_delete=models.PROTECT
     )
 
-    # TODO:
-    # What are:
-    # - CntryID_org ?
-    # - CntryName20 - name truncated to 20 - no need for it
-    # - MDG_CntryCode(Int) (both are the same)
-    # - ISO alpha3 code?
-    # - www_country_id ???
-
     # Some parties (e.g. EU) can encompass several other full-featured parties
     # TODO: come up with better name (and better related_name)
     parent_party = models.ForeignKey(
