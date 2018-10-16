@@ -56,7 +56,7 @@
               <div v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
                 <div v-html="getDecisions(inner_field)"></div>
               </div>
-              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment_apl' && quantity.fields[0].selected" >
+              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
                 <hr>
                 Quantity of new {{outer_field.substance.selected.text}} exported to be used for QPS applications
                 <hr>
@@ -104,7 +104,7 @@
               <div v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
                 <div v-html="getDecisions(inner_field)"></div>
               </div>
-              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'B-Group I' && quantity.name === 'quarantine_pre_shipment_apl' && quantity.fields[0].selected" >
+              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'B-Group I' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
                 <hr>
                 Quantity of new {{outer_field.substance.selected.text}} exported to be used for quarantine and pre shipment applications 
                 <hr>
@@ -270,7 +270,7 @@ export default {
     }, 
 
     getSubheaderSpanType(field_name){
-      if(field_name === 'substances' || field_name ==='quantity_import_exempted_essential_critical_uses')
+      if(field_name === 'substances' || field_name ==='quantity_exempted')
         return 2
     },
 
@@ -375,7 +375,7 @@ export default {
       let count = 0;
       for(let item of field.fields) {
         for(let subItem of item.fields) {
-          if(subItem.name === 'quantity_in_metric' && subItem.selected) {
+          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
             count += parseFloat(subItem.selected)
           }
         }
@@ -396,7 +396,7 @@ export default {
       let toShow = '';
       for(let item of field.fields) {
         for(let subItem of item.fields) {
-          if(subItem.name === 'quantity_in_metric' && subItem.selected) {
+          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
             toShow += item.label + ': ' + subItem.selected + '\n' 
           }
         }

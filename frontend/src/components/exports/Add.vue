@@ -102,13 +102,13 @@ export default {
           options: this.substancesOptions,
           selected: substance,
           comments: [{
-              name: "party_remarks",
+              name: "remarks_party",
               label: "Remarks (party)",
               selected: '',
               type: "text",
             },
             {
-              name: "secretariat_remarks",
+              name: "remarks_os",
               selected: '',
               type: "text",
               label: "Remarks (Secretariat)",
@@ -129,7 +129,7 @@ export default {
           },
           {
             label: 'Total Quantity Exported for All Uses',
-            name: 'total_import_quantity_all_uses_new',
+            name: 'quantity_total_new',
             disabled: false,
             description: 'New',
             validation: 'numeric',
@@ -138,7 +138,7 @@ export default {
           },
           {
             label: 'Total Quantity Exported for All Uses',
-            name: 'total_import_quantity_all_uses_recovered',
+            name: 'quantity_total_recovered',
             description: 'Recovered and Reclaimed',
             disabled: false,
             type: 'number',
@@ -147,7 +147,7 @@ export default {
           },
           {
             label: 'Quantity of New Substances Exported as Feedstock',
-            name: 'import_quantity_new_substances_as_feedstock',
+            name: 'quantity_feedstock',
             description: '',
             disabled: false,
             type: 'number',
@@ -156,7 +156,9 @@ export default {
           },
           {
             label: 'Quantity of New Substances Exported for Exempted Essential and Critical Uses*',
-            name: 'quantity_import_exempted_essential_critical_uses',
+            name: 'quantity_exempted',
+            name_type: 'type_exempted',
+            total_type: null,
             disabled: false,
             modalShow: false,
             description: 'Quantity',
@@ -165,18 +167,18 @@ export default {
             fields: [
               {
                 label: 'Essential use, other than L&A',
-                name: 'essential_use',
+                name: 'quantity_essential_uses',
                 fields: [
                   {
                     label: "Quantity in metric",
-                    name: "quantity_in_metric",
+                    name: "quantity_essential_uses",
                     validation: 'numeric',
                     selected: null,
                     type: "number",
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_essential_uses",
                     selected: null,
                     type: "text",
                   }
@@ -184,11 +186,11 @@ export default {
               }, 
               {
                 label: 'Critical use',
-                name: 'critical_use',
+                name: 'quantity_critical_uses',
                 fields: [
                   {
                     label: "Quantity in metric",
-                    name: "quantity_in_metric",
+                    name: "quantity_critical_uses",
                     validation: 'numeric',
                     selected: null,
                     type: "number",
@@ -203,37 +205,55 @@ export default {
               }, 
               {
                 label: 'High ambient temperature',
-                name: 'high_ambient_temp',
+                name: 'high_ambient_temperature',
                 fields: [
                   {
                     label: "Quantity in metric",
-                    name: "quantity_in_metric",
+                    name: "quantity_high_ambient_temperature",
                     validation: 'numeric',
                     selected: null,
                     type: "number",
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_high_ambient_temperature",
                     selected: null,
                     type: "text",
                   }
                 ]
               }, 
               {
+                  label: 'Process agent uses',
+                  name: 'process_agent_uses',
+                  fields: [
+                    {
+                      label: "Quantity in metric",
+                      name: "quantity_process_agent_uses",
+                      selected: null,
+                      type: "text",
+                    },
+                    {
+                      label: "Decision",
+                      name: "decision_process_agent_uses",
+                      selected: null,
+                      type: "text",
+                    }
+                  ]
+                }, 
+              {
                 label: 'Laboratory and analytical',
-                name: 'lab_analytical',
+                name: 'laboratory_analytical_uses',
                 fields: [
                   {
                     label: "Quantity in metric",
                     validation: 'numeric',
-                    name: "quantity_in_metric",
+                    name: "quantity_laboratory_analytical_uses",
                     selected: null,
                     type: "number",
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_laboratory_analytical_uses",
                     selected: null,
                     type: "text",
                   }
@@ -241,18 +261,18 @@ export default {
               }, 
               {
                 label: 'Quarantine and pre-shipment applications',
-                name: 'quarantine_pre_shipment_apl',
+                name: 'quarantine_pre_shipment',
                 fields: [
                   {
                     label: "Quantity in metric",
                     validation: 'numeric',
-                    name: "quantity_in_metric",
+                    name: "quantity_quarantine_pre_shipment",
                     selected: null,
                     type: "number",
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_quarantine_pre_shipment",
                     selected: null,
                     type: "text",
                   }
@@ -265,13 +285,13 @@ export default {
                   {
                     label: "Quantity in metric",
                     validation: 'numeric',
-                    name: "quantity_in_metric",
+                    name: "quantity_other",
                     selected: null,
                     type: "number",
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_other",
                     selected: null,
                     type: "text",
                   }

@@ -801,3 +801,9 @@ input[type=number]::-webkit-outer-spin-button {
 input[type=number] {
     -moz-appearance:textfield;
 }
+
+.table.center {
+  td {
+    text-align: center;
+  }
+}

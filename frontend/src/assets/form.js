@@ -73,25 +73,25 @@ var form = {
         },
         {
           label: "New <br> 3",
-          name: 'total_import_quantity_all_uses_new',
+          name: 'quantity_total_new',
           sort: 1,
           type: 'number',
         },
         {
           label: "Recovered and Reclaimed <br> 4",
-          name: 'total_import_quantity_all_uses_recovered',
+          name: 'quantity_total_recovered',
           sort: 1,
           type: 'number',
         },
         {
           label: "<br> 5",
-          name: 'import_quantity_new_substances_as_feedstock',
+          name: 'quantity_feedstock',
           sort: 1,
           type: 'number',
         },
         {
           label: "Quantity <br> 6",
-          name: 'quantity_import_exempted_essential_critical_uses',
+          name: 'quantity_exempted',
           sort: 1,
           type: 'number',
         },
@@ -128,13 +128,13 @@ var form = {
  
       comments: [
         {
-          name: 'party_comments',
+          name: 'comments_party',
           selected: '',
           type: 'textarea',
           label: 'Party Comments',
         },
         {
-          name: 'secretariat_comments',
+          name: 'comments_secretariat',
           selected: '',
           type: 'textarea',
           label: 'Secretariat Comments',
