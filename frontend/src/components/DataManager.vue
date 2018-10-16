@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabsmanager v-if="countryOptions && substances && blends && current_submission" :submission="current_submission" :data="{form: form, countryOptions: countryOptions, substances: substances, blends:blends}"></tabsmanager>
+    <tabsmanager v-if="countryOptions && substances && blends && current_submission && prefilled" :submission="current_submission" :data="{form: form, countryOptions: countryOptions, substances: substances, blends:blends}"></tabsmanager>
     <div v-else class="spinner">
       <div class="loader"></div>
     </div>
@@ -32,13 +32,26 @@ export default {
       substances: null,
       blends: null,
       current_submission: null,
+      prefilled: false,
+      fields_to_prefill: {
+          'article7questionnaire_url' : 'questionaire_questions',
+          'import_question' : 'article7imports_url',
+          'article7exports_url ' : 'export_question',
+          'production_question' : 'article7productions_url',
+          'destruction_question' : 'article7destructions_url',
+          'nonparty_question' : 'article7nonpartytrades_url',
+          'emissions_question' : 'article7emissions_url',
+      },
     }
   },
 
   created() {
     this.getSubstances()
     this.importCountries()
-    getSubmission(this.submission).then( (response) => this.current_submission = response.data)
+    getSubmission(this.submission).then( (response) => {
+      this.current_submission = response.data
+      this.prefill(form, this.current_submission)
+    })
   },
 
   methods: {
@@ -52,6 +65,13 @@ export default {
     //     })
     //   });
     // },
+
+    prefill(form, prefill_data) {
+      console.log(prefill_data)
+      this.prefilled = true
+    },
+
+
     importCountries() {
       getParties().then(response => {
         let countryOptions = []
