@@ -73,6 +73,15 @@ exports_router.register(
     base_name="submission-article7-exports"
 )
 
+imports_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+imports_router.register(
+    "article7-imports",
+    views.Article7ImportViewSet,
+    base_name="submission-article7-imports"
+)
+
 nonpartytrades_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )
@@ -96,6 +105,7 @@ nested_routers = [
     destructions_router,
     productions_router,
     exports_router,
+    imports_router,
     nonpartytrades_router,
     emissions_router,
 ]

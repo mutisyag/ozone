@@ -19,6 +19,7 @@ from .models import (
     Article7Destruction,
     Article7Production,
     Article7Export,
+    Article7Import,
     Article7NonPartyTrade,
     Article7Emission,
 )
@@ -186,6 +187,39 @@ class SubmissionArticle7ExportSerializer(
         }
 
 
+class Article7ImportSerializer(serializers.ModelSerializer):
+    substance = serializers.StringRelatedField(many=False, read_only=True)
+    blend = serializers.StringRelatedField(many=False, read_only=True)
+    blend_item = serializers.StringRelatedField(many=False, read_only=True)
+
+    class Meta:
+        model = Article7Import
+        exclude = ('submission',)
+
+
+class CreateArticle7ImportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article7Import
+        exclude = ('submission', 'blend_item')
+
+
+class SubmissionArticle7ImportSerializer(
+    NestedHyperlinkedModelSerializer,
+    Article7ImportSerializer
+):
+    parent_lookup_kwargs = {
+        'submission_pk': 'submission__pk',
+    }
+
+    class Meta(Article7ImportSerializer.Meta):
+        fields = ('url',)
+        extra_kwargs = {
+            'url': {
+                'view_name': 'core:submission-article7-imports-detail'
+            }
+        }
+
+
 class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
     substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
@@ -296,6 +330,14 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
+    article7imports_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-article7-imports-list',
+        lookup_url_kwarg='submission_pk'
+    )
+    article7imports = Article7ImportSerializer(
+        many=True, read_only=True
+    )
+
     article7nonpartytrades_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-nonpartytrades-list',
         lookup_url_kwarg='submission_pk'
@@ -324,6 +366,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7destructions_url', 'article7destructions',
             'article7productions_url', 'article7productions',
             'article7exports_url', 'article7exports',
+            'article7imports_url', 'article7imports',
             'article7nonpartytrades_url', 'article7nonpartytrades',
             'article7emissions_url', 'article7emissions',
             'created_by', 'last_edited_by',
