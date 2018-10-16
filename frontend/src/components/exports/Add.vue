@@ -197,7 +197,7 @@ export default {
                   },
                   {
                     label: "Decision",
-                    name: "decision",
+                    name: "decision_critical_uses",
                     selected: null,
                     type: "text",
                   }
