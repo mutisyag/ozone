@@ -76,6 +76,7 @@ export default {
 
         small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
         
+        console.log('----------saving substance -----------', substance)
         save_obj['substance'] = substance.selected.value
         substance.inner_fields.forEach( inner_field => {
           inner_field.type != 'multiple_fields' 

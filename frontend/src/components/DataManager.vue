@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tabsmanager v-if="countryOptions && substances && blends && current_submission && prefilled" :submission="current_submission" :data="{form: form, countryOptions: countryOptions, substances: substances, blends:blends}"></tabsmanager>
+    <tabsmanager v-if="initialData.countryOptions && initialData.substances && initialData.blends && current_submission && prefilled" :submission="current_submission" :data="{form: form, countryOptions: initialData.countryOptions, substances: initialData.substances, blends: initialData.blends}"></tabsmanager>
     <div v-else class="spinner">
       <div class="loader"></div>
     </div>
@@ -11,10 +11,9 @@
 
 import tabsManager from './TabsManager'
 import form from '../assets/form.js'
-import countryOptions from "@/assets/countryList.js"
+import prefillSubstance from '@/mixins/prefill.js'
 import {getSubstances, getExportBlends, getParties, getSubmission} from '@/api/api.js'
-import prefill from '@/mixins/prefill'
-console.log(prefill)
+
 
 export default {
   name: 'DataManager',
@@ -22,9 +21,9 @@ export default {
     tabsmanager:tabsManager
   },
 
-  mixins: [
-    prefill
-  ],
+  // mixins: [
+  //   prefill
+  // ],
 
   props: {
     submission: String,
@@ -33,11 +32,13 @@ export default {
   data () {
     return {
       form: JSON.parse(JSON.stringify(form)),
-      countryOptions: null,
-      substances: null,
-      blends: null,
       current_submission: null,
       prefilled: false,
+      initialData: {
+        countryOptions: null,
+        substances: null,
+        blends: null,
+      },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
           'import_question' : 'article7imports_url',
@@ -50,26 +51,53 @@ export default {
     }
   },
 
+
   created() {
-    this.getSubstances()
-    this.importCountries()
-    getSubmission(this.submission).then( (response) => {
-      this.current_submission = response.data
-      this.prePrefill(form, this.current_submission)
-    })
+    this.getInitialData()
   },
 
   methods: {
 
-    // ASYNC IMPORT IS SO SLOW
-    // importCountries(){
-    //   import('@/assets/countryList.js').then( (response ) => {
-    //     let module = response.default
-    //     module().then( exported => {
-    //       this.countryOptions = exported
-    //     })
-    //   });
-    // },
+  getInitialData(){
+    this.getBlends();
+    this.getCountries();
+    this.getSubstances();
+  },
+
+
+  getCurrentSubmission(){
+        getSubmission(this.submission).then( (response) => {
+        this.current_submission = response.data
+        this.prePrefill(this.form, this.current_submission)
+      })
+  },
+
+   getCountries() {
+    let countryOptions = []
+    getParties().then(response => {
+          for (let country of response.data) {
+            countryOptions.push({ value: country.id, text: country.name})
+          }
+      this.initialData.countryOptions = countryOptions
+    })
+  },
+
+  getSubstances(){
+    let tempSubstances = []
+        getSubstances().then((response) => {
+          for(let group of response.data) {
+              for(let substance of group.substances){
+                tempSubstances.push({value: substance.id, text: substance.name, group: group})
+              }
+          }
+          this.initialData.substances = tempSubstances 
+        })
+  },
+  getBlends(){
+        getExportBlends().then((response) => {
+          this.initialData.blends = response.data
+        })
+  },
 
     prePrefill(form, prefill_data) {
       let data = JSON.parse(JSON.stringify(prefill_data))
@@ -81,43 +109,41 @@ export default {
             to_prefill.push(key)
           }
         })
-
-       console.log('toprefill',to_prefill)
-      Object.keys(form.tabs).forEach( (tab) => {
-       if(to_prefill.includes(this.fields_to_prefill[form.tabs[tab].name])) this.prefill(form.tabs[tab], data[this.fields_to_prefill[form.tabs[tab].name]])
-      })
+      if(to_prefill.length){
+        Object.keys(form.tabs).forEach( (tab) => {
+         if(to_prefill.includes(this.fields_to_prefill[form.tabs[tab].name])) this.prefill(form.tabs[tab], data[this.fields_to_prefill[form.tabs[tab].name]],this.initialData.countryOptions)
+        })
+      } else {
+        this.prefilled = true
+      }
     },
 
-    prefill(tab, data) {
-      console.log('daatataaaaa', data)
+    prefill(tab, data, countries) {
       for(let entry of data) {
-        this.prefillSubstance(entry, tab.form_fields)
+        let current_substance = this.initialData.substances.find( val => val.text === entry.substance )
+        let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party)
+        prefillSubstance(entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances)
       }
 
-      console.log(tab.form_fields)
       this.prefilled = true
     },
 
 
-    importCountries() {
-      getParties().then(response => {
-        let countryOptions = []
-          for (let country of response.data) {
-            countryOptions.push({ value: country.id, text: country.name})
-          }
-          this.countryOptions = countryOptions
-      })
-    },
 
-    getSubstances(){
-        getSubstances().then((response) => {
-          this.substances = response.data 
-          getExportBlends().then((response) => {
-            this.blends = response.data
-          })
-        })
-      }
   },
+
+
+  watch: {
+     initialData: {
+         handler(val){
+            if(val.blends && val.countryOptions && val.substances) {
+              this.getCurrentSubmission()
+            }
+         },
+         deep: true
+      }
+    }
+
 }
 </script>
 

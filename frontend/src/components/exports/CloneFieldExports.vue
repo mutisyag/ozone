@@ -58,7 +58,7 @@ export default {
         for(let fields of current_field.substance.inner_fields) {
             if(fields.name === 'destination_party'){
               fields.duplicate = false
-              fields.selected = country.value
+              fields.selected = country
             }
         }
         if(current_field.name === 'blend') {

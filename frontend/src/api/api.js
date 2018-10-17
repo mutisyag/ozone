@@ -76,7 +76,8 @@ function getParties() {
 
  function getExportBlends() {
   if(isTestSession) {
-    return fetch(window.location.origin + '/blends.json')
+    console.log('getting blends')
+    return axios.get(window.location.origin + '/blends.json')
   }
 }
 

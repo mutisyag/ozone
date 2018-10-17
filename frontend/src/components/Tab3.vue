@@ -44,7 +44,7 @@
                   <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if="inner_field.name === 'destination_party' && inner_field.selected">
-                {{inner_field.selected}}
+                {{inner_field.selected.text}}
               </div>
               <div v-else>
                 <div v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
