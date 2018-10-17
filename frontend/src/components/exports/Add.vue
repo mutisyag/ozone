@@ -303,7 +303,7 @@ export default {
 
         substance_fields.inner_fields = inner_fields
         this.group_field.substance = substance_fields
-
+        console.log('section', this.section)
         var current_fields = this.section
         current_fields.push(this.group_field)
         this.section = current_fields

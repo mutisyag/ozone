@@ -13,13 +13,18 @@ import tabsManager from './TabsManager'
 import form from '../assets/form.js'
 import countryOptions from "@/assets/countryList.js"
 import {getSubstances, getExportBlends, getParties, getSubmission} from '@/api/api.js'
-
+import prefill from '@/mixins/prefill'
+console.log(prefill)
 
 export default {
   name: 'DataManager',
   components: {
     tabsmanager:tabsManager
   },
+
+  mixins: [
+    prefill
+  ],
 
   props: {
     submission: String,
@@ -34,9 +39,9 @@ export default {
       current_submission: null,
       prefilled: false,
       fields_to_prefill: {
-          'article7questionnaire_url' : 'questionaire_questions',
+          'questionaire_questions' : 'article7questionnaire',
           'import_question' : 'article7imports_url',
-          'article7exports_url ' : 'export_question',
+          'export_question' : 'article7exports',
           'production_question' : 'article7productions_url',
           'destruction_question' : 'article7destructions_url',
           'nonparty_question' : 'article7nonpartytrades_url',
@@ -50,7 +55,7 @@ export default {
     this.importCountries()
     getSubmission(this.submission).then( (response) => {
       this.current_submission = response.data
-      this.prefill(form, this.current_submission)
+      this.prePrefill(form, this.current_submission)
     })
   },
 
@@ -66,16 +71,30 @@ export default {
     //   });
     // },
 
-    prefill(form, prefill_data) {
+    prePrefill(form, prefill_data) {
       let data = JSON.parse(JSON.stringify(prefill_data))
+      let to_prefill = [];
+       Object.keys(data).forEach( (key) => {
+          if(typeof(data[key]) != 'object' || !data[key] || !data[key].length){
+            delete data[key]
+          } else {
+            to_prefill.push(key)
+          }
+        })
 
-     Object.keys(data, key => {
-        if(typeOf(data[key]) != 'object' && data[key].length === 0)
-          delete data[key]
+       console.log('toprefill',to_prefill)
+      Object.keys(form.tabs).forEach( (tab) => {
+       if(to_prefill.includes(this.fields_to_prefill[form.tabs[tab].name])) this.prefill(form.tabs[tab], data[this.fields_to_prefill[form.tabs[tab].name]])
       })
+    },
 
-      console.log(data)
+    prefill(tab, data) {
+      console.log('daatataaaaa', data)
+      for(let entry of data) {
+        this.prefillSubstance(entry, tab.form_fields)
+      }
 
+      console.log(tab.form_fields)
       this.prefilled = true
     },
 
