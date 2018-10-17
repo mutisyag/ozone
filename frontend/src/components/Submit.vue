@@ -46,6 +46,7 @@ export default {
             "decision_process_agent_uses": "",
             "quantity_quarantine_pre_shipment": null,
             "decision_quarantine_pre_shipment": "",
+            "destination_party": null,
             "substance": null,
             "blend": null,
             "decision": null
@@ -79,7 +80,7 @@ export default {
         substance.inner_fields.forEach( inner_field => {
           inner_field.type != 'multiple_fields' 
           ? 
-          save_obj[inner_field.name] = inner_field.selected
+          save_obj[inner_field.name] = inner_field.selected 
           :
           inner_field.fields.forEach( inner_inner_field => {
             small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
@@ -88,7 +89,8 @@ export default {
 
          current_tab_data.push(save_obj)
        })
-       
+        
+      console.log(current_tab_data)
        post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {console.log(response) })
 
     },

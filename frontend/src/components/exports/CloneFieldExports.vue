@@ -56,7 +56,7 @@ export default {
           current_field = JSON.parse(JSON.stringify(this.current_field))
         }
         for(let fields of current_field.substance.inner_fields) {
-            if(fields.name === 'country_of_destination_exports'){
+            if(fields.name === 'destination_party'){
               fields.duplicate = false
               fields.selected = country.value
             }

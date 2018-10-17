@@ -66,7 +66,7 @@ var form = {
         },
         {
           label: "2",
-          name: 'country_of_destination_exports',
+          name: 'destination_party',
           sort: 1,
           type: 'string',
           tooltip: 'Applicable to all substances, including those contained in mixtures and blends.',

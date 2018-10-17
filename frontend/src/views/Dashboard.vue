@@ -91,9 +91,7 @@ export default {
 
   created(){
 
-  getSubmissions().then( response => {
-  		this.submissions = response.data
-  	})
+   this.getSubmissions()
 
    getParties().then( response => {
     let parties_temp = [];
@@ -123,7 +121,13 @@ export default {
 
   methods: {
     addSubmission() {
-      createSubmission(this.current)
+      createSubmission(this.current).then( (response) => { console.log(response);this.getSubmissions()} )
+    },
+
+    getSubmissions(){
+      getSubmissions().then( response => {
+        this.submissions = response.data
+      })
     },
 
     getSumissionInfo(submission){

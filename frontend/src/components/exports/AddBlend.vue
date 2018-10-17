@@ -182,7 +182,7 @@ export default {
           let inner_fields = [
             {
               label: 'Country of Destination of Exports**',
-              name: 'country_of_destination_exports',
+              name: 'destination_party',
               description: '',
               type: 'select',
               duplicate: true,
@@ -237,7 +237,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_essential_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -255,7 +255,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_critical_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -273,7 +273,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_high_ambient_temperature",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -291,7 +291,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_process_agent_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -309,7 +309,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_laboratory_analytical_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -327,7 +327,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_quarantine_pre_shipment",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -345,7 +345,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_other ",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -399,7 +399,7 @@ export default {
           let inner_fields = [
             {
               label: 'Country of Destination of Exports**',
-              name: 'country_of_destination_exports',
+              name: 'destination_party',
               description: '',
               type: 'select',
               duplicate: true,
@@ -454,7 +454,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_essential_uses",
-                      selected: null,
+                      selected:'',
                       type: "text",
                     }
                   ]
@@ -472,7 +472,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_critical_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -490,7 +490,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_high_ambient_temperature",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -508,7 +508,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_process_agent_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -526,7 +526,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_laboratory_analytical_uses",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -544,7 +544,7 @@ export default {
                     {
                       label: "Decision",
                       name: "decision_quarantine_pre_shipment",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]
@@ -562,7 +562,7 @@ export default {
                    {
                       label: "Decision",
                       name: "decision_other",
-                      selected: null,
+                      selected: '',
                       type: "text",
                     }
                   ]

@@ -39,11 +39,11 @@
               </span>
             </td>
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
-              <fieldGenerator v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'country_of_destination_exports'" :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
-              <div v-else-if="inner_field.name === 'country_of_destination_exports' && !inner_field.selected">
+              <fieldGenerator v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'destination_party'" :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
+              <div v-else-if="inner_field.name === 'destination_party' && !inner_field.selected">
                   <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
-              <div v-else-if="inner_field.name === 'country_of_destination_exports' && inner_field.selected">
+              <div v-else-if="inner_field.name === 'destination_party' && inner_field.selected">
                 {{inner_field.selected}}
               </div>
               <div v-else>
@@ -84,13 +84,13 @@
               </span>
             </td>
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
-              <div  v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'country_of_destination_exports'" >
+              <div  v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'destination_party'" >
                 <fieldGenerator :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               </div>
-              <div v-else-if="inner_field.name === 'country_of_destination_exports' && !inner_field.selected">
+              <div v-else-if="inner_field.name === 'destination_party' && !inner_field.selected">
                   <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
-              <div v-else-if="inner_field.name === 'country_of_destination_exports' && inner_field.selected">
+              <div v-else-if="inner_field.name === 'destination_party' && inner_field.selected">
                 {{inner_field.selected}}
               </div>
               <div v-else>
@@ -129,8 +129,8 @@
                 </b-row>
               </div>
             </td>
-            <td :colspan="getSpanType(inner_field.type)" v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.name != 'country_of_destination_exports'">
-              <div v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'country_of_destination_exports'" >
+            <td :colspan="getSpanType(inner_field.type)" v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.name != 'destination_party'">
+              <div v-if="inner_field.type != 'multiple_fields' && inner_field.name != 'destination_party'" >
                   <b-row v-if="splitBlend(inner_field.selected,substance.percent)">
                     <b-col> <b>{{splitBlend(inner_field.selected,substance.percent)}}</b></b-col>
                   </b-row>
@@ -322,7 +322,7 @@ export default {
           else {
             field.index = ''
             for(let inner_field of field.substance.inner_fields) {
-              if(value === 'country_of_destination_exports') {
+              if(value === 'destination_party') {
                 if(inner_field.name === value){
                   field.index = inner_field.selected || stringSortType[sortType]
                 }

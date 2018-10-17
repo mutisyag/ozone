@@ -67,7 +67,15 @@ export default {
     // },
 
     prefill(form, prefill_data) {
-      console.log(prefill_data)
+      let data = JSON.parse(JSON.stringify(prefill_data))
+
+     Object.keys(data, key => {
+        if(typeOf(data[key]) != 'object' && data[key].length === 0)
+          delete data[key]
+      })
+
+      console.log(data)
+
       this.prefilled = true
     },
 
@@ -76,7 +84,7 @@ export default {
       getParties().then(response => {
         let countryOptions = []
           for (let country of response.data) {
-            countryOptions.push({ value: country.name, text: country.name})
+            countryOptions.push({ value: country.id, text: country.name})
           }
           this.countryOptions = countryOptions
       })
