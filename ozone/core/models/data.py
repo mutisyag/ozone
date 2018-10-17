@@ -396,7 +396,6 @@ class Article7Production(BaseReport, BaseUses):
     quantity_feedstock = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    # TODO: ensure in save() that this is reported only for annex C group I.
     # "Production for supply to Article 5 countries in accordance
     # with Articles 2A‑2H and 5"
     quantity_article_5 = models.FloatField(
@@ -405,6 +404,33 @@ class Article7Production(BaseReport, BaseUses):
 
     class Meta:
         db_table = 'reporting_article_seven_production'
+
+    def clean(self):
+        if self.quantity_article_5:
+            if not self.substance.group.name == 'Annex C Group I':
+                raise ValidationError(
+                    {
+                        'quantity_article_5': [_(
+                            'If Quantity article 5 field has an amount, '
+                            'then Substance must by only from Annex C Group I.'
+                        )]
+                    }
+                )
+        if self.quantity_quarantine_pre_shipment:
+            if not self.substance.group.name == 'Annex E Group I':
+                raise ValidationError(
+                    {
+                        'quantity_quarantine_pre_shipment': [_(
+                            'If Quantity quarantine pre shipment field has'
+                            'an amount then Substance must be'
+                            'only Annex E Group I (i.e. Methyl Bromide).'
+                        )]
+                    }
+                )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Article7Destruction(BaseBlendCompositionReport):
@@ -447,7 +473,6 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
 
     trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
 
-    # TODO: save() - ensure at least one of these quantity fields is non-null
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -463,6 +488,25 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
 
     class Meta:
         db_table = 'reporting_article_seven_non_party_trade'
+
+    def clean(self):
+        if not (
+            self.quantity_import_new
+            or self.quantity_import_recovered
+            or self.quantity_export_new
+            or self.quantity_export_recovered
+        ):
+            raise ValidationError(
+                {
+                    'quantity_fields': [_(
+                        'At least one quantity field should be non-null!'
+                    )]
+                }
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Article7Emission(BaseReport):
