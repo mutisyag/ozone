@@ -33,11 +33,6 @@ export CORS_ORIGIN_WHITELIST=<LAN IP>:8000
 
 export TUSD_UPLOADS_DIR=$HOME/src/tusd-bin/data
 
-# Comma-separated list, e.g. xml,tif
-export ALLOWED_UPLOADS_ARCHIVE_EXTENSIONS=zip
-export ALLOWED_UPLOADS_EXTENSIONS=xml
-export ALLOWED_UPLOADS_CONVERTIBLE_EXTENSIONS=xls,ods
-
 # Used by tusd on hooks URL
 export API_VERSION=0.1
 
