@@ -2,8 +2,10 @@ import enum
 
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models, transaction
+from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
@@ -41,7 +43,7 @@ class ReportingPeriod(models.Model):
     # this is always required, and can be in the future
     start_date = models.DateField()
 
-    # we are always working with 'closed' reporting periods
+    # we are always working with 'closed interval' reporting periods
     # TODO: is above assumption really true? what about one-time reports?
     end_date = models.DateField()
 
@@ -49,6 +51,20 @@ class ReportingPeriod(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.end_date and self.start_date > self.end_date:
+            raise ValidationError(
+                {
+                    'end_date': [
+                        _('End date has to be temporally after start date.')
+                    ]
+                }
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Obligation(models.Model):
