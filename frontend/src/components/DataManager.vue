@@ -66,7 +66,7 @@ export default {
 
 
   getCurrentSubmission(){
-        getSubmission(this.submission).then( (response) => {
+      getSubmission(this.submission).then( (response) => {
         this.current_submission = response.data
         this.prePrefill(this.form, this.current_submission)
       })
@@ -120,7 +120,7 @@ export default {
 
     prefill(tab, data, countries) {
       for(let entry of data) {
-        let current_substance = this.initialData.substances.find( val => val.text === entry.substance )
+        let current_substance = this.initialData.substances.find( val => val.value === entry.substance )
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party)
         prefillSubstance(entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances)
       }
