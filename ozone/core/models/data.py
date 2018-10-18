@@ -33,7 +33,7 @@ class ModifyPreventionMixin:
 
     def clean(self):
         if not self.submission.data_changes_allowed:
-            raise Exception(
+            raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
         super().clean()

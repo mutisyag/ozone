@@ -357,14 +357,14 @@ class Submission(models.Model):
 
     def delete(self, using=None, keep_parents=False):
         if not self.data_changes_allowed:
-            raise Exception(
+            raise RuntimeError(
                 _("Submitted submissions cannot be modified.")
             )
         super().delete()
 
     def clean(self):
         if not self.data_changes_allowed:
-            raise Exception(
+            raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
         super().clean()
