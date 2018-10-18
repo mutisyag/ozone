@@ -5,6 +5,8 @@ var form = {
       sub_info: {
       intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
       title: 'Questionnaire',
+      name: 'sub_info',
+      isInvalid: false,
       party: {
         label: 'Party',
         name: 'party',
@@ -30,6 +32,7 @@ var form = {
       intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
       title: 'Questionnaire',
       name: 'questionaire_questions',
+      isInvalid: false,
       party: {
         label: 'Party',
         name: 'party',
@@ -56,7 +59,7 @@ var form = {
       name: 'export_question',
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
-
+      isInvalid: false,
       section_1_subheaders: [
         {
           label: "1",
@@ -150,6 +153,7 @@ var form = {
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
       form_fields: null,
+      isInvalid: false,
       comments: '',
     },
     tab_4: {
@@ -157,6 +161,7 @@ var form = {
       title: 'Data on production',
       name: 'production_question',
       subtitle: 'in metric tonnes (not ODP tonnes)',
+      isInvalid: false,
       description: 'Annexes A, B, C and E substances',
       // used for identification when adding labels
       form_sections: [{
@@ -174,6 +179,7 @@ var form = {
       name: 'destruction_question',
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
+      isInvalid: false,
       // used for identification when adding labels
       form_sections: [{
           title: 'Section 1',
@@ -197,6 +203,7 @@ var form = {
       name: 'nonparty_question',
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
+      isInvalid: false,
       // used for identification when adding labels
       form_sections: [{
           title: 'Section 1',

@@ -34,7 +34,7 @@ function prefillSubstance(data, section, countryOptions, current_country, substa
                     name: 'quantity_total_new',
                     disabled: false,
                     description: 'New',
-                    validation: 'numeric',
+                    validation: 'required',
                     type: 'number',
                     selected: data.quantity_total_new,
                 },
@@ -44,7 +44,7 @@ function prefillSubstance(data, section, countryOptions, current_country, substa
                     description: 'Recovered and Reclaimed',
                     disabled: false,
                     type: 'number',
-                    validation: 'numeric',
+                    validation: 'required',
                     selected: data.quantity_total_recovered,
                 },
                 {
@@ -53,7 +53,7 @@ function prefillSubstance(data, section, countryOptions, current_country, substa
                     description: '',
                     disabled: false,
                     type: 'number',
-                    validation: 'numeric',
+                    validation: 'required',
                     selected: data.quantity_feedstock,
                 },
                 {

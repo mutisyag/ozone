@@ -79,7 +79,7 @@ export default {
         substance.inner_fields.forEach( inner_field => {
           inner_field.type != 'multiple_fields' 
           ? 
-          inner_field.type != 'select' ? save_obj[inner_field.name]  = inner_field.selected : save_obj[inner_field.name]  = inner_field.selected.value 
+          inner_field.type != 'select'  ? save_obj[inner_field.name]  = inner_field.selected : inner_field.selected ? save_obj[inner_field.name]  = inner_field.selected.value : save_obj[inner_field.name] = inner_field.selected 
           :
           inner_field.fields.forEach( inner_inner_field => {
             small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
@@ -90,7 +90,25 @@ export default {
        })
         
       console.log(current_tab_data)
-       post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {console.log(response) })
+       post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+        console.log(response)
+      }).catch((error) => {
+        console.log(this.$validator)
+            this.$validator._base.validateAll().then((result) => {
+              if (result) {
+                // eslint-disable-next-line
+                // console.log(result)
+                alert('Form Submitted!');
+                return;
+              }
+
+              
+
+              alert('Correct erros');
+            });
+
+        console.log('here',error)
+      })
 
     },
   }

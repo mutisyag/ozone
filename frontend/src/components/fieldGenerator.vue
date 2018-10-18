@@ -1,7 +1,11 @@
 <template>
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email'">
-        <input class="form-control" :min="field.type === 'number' ? 0: false" :step="field.type === 'number' ? 'any' : false" :disabled="disabledField"  v-model="field.selected" :type="field.type" @blur="field.type === 'number' ? preventTwoDots(field.selected, field) : false"></input>
+      <p class="control has-icon has-icon-right">
+        <input :name="field.label" v-validate="field.validation" :ref="errors.has(field.label) ? 'invalid' : 'none'" :class="{'form-control': true, 'is-invalid': errors.has(field.label) }"  :min="field.type === 'number' ? 0: false" :step="field.type === 'number' ? 'any' : false" :disabled="disabledField"  v-model="field.selected" :type="field.type" @blur="field.type === 'number' ? preventTwoDots(field.selected, field) : false"></input>
+        <i v-show="errors.has(field.label)" class="fa fa-warning invalid-feedback"></i>
+        <span v-show="errors.has(field.label)" class="invalid-feedback">{{ errors.first(field.label) }}</span>
+      </p>
     </div>
     <b-form-radio-group :disabled="disabledField" v-else-if="field.type === 'radio'" v-model="field.selected" @change="selectTabs($event,field)" :created="selectTabs(field.selected, field)" :options="field.options"></b-form-radio-group>
     <b-form-checkbox-group :disabled="disabledField" v-else-if="field.type === 'checkbox'" v-model="field.selected" :options="field.options"></b-form-checkbox-group>

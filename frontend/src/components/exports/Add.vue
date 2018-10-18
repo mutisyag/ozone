@@ -126,7 +126,7 @@ export default {
             name: 'quantity_total_new',
             disabled: false,
             description: 'New',
-            validation: 'numeric',
+            validation: 'required',
             type: 'number',
             selected: null,
           },
@@ -136,7 +136,7 @@ export default {
             description: 'Recovered and Reclaimed',
             disabled: false,
             type: 'number',
-            validation: 'numeric',
+            validation: 'required',
             selected: null,
           },
           {
@@ -145,7 +145,7 @@ export default {
             description: '',
             disabled: false,
             type: 'number',
-            validation: 'numeric',
+            validation: 'required',
             selected: null,
           },
           {

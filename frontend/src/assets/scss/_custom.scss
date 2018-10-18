@@ -807,3 +807,10 @@ input[type=number] {
     text-align: center;
   }
 }
+
+
+.nav-link .invalid-feedback {
+    display: block;
+    font-size: inherit;
+    margin: 0;
+}

@@ -28,7 +28,12 @@
       <b-form>
         <b-tabs v-model="tabIndex" card>
           <b-tab title="Submission Info">
-            <subinfo :info="data.form.tabs.sub_info" :tabId="-1"></subinfo>
+             <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.sub_info.isInvalid}">
+                Submission Info
+              </div>
+             </template>
+            <subinfo ref="sub_info" :info="data.form.tabs.sub_info" :tabId="-1"></subinfo>
           </b-tab>
           <b-tab title="Questionaire" active>
             <intro tabId="0" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
@@ -36,8 +41,14 @@
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]" :title="data.form.tabs.tab_2.title">
             <tab2 tabId="1" :info="data.form.tabs.tab_2"></tab2>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]" :title="data.form.tabs.tab_3.title">
-            <tab3 tabId="2" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></tab3>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]">
+             <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_3.isInvalid}">
+                {{data.form.tabs.tab_3.title}}
+              </div>
+             </template>
+            <tab3 tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></tab3>
+
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]" :title="data.form.tabs.tab_4.title">
             <tab4 tabId="3" :structure="data.form.tabs.tab_4"></tab4>
@@ -110,9 +121,19 @@ export default {
   },
 
   created() {
-    console.log(this.submission)
     this.data.form.tabs.sub_info.party.selected = this.submission.party
     this.data.form.tabs.sub_info.reporting_year.selected = this.submission.reporting_period
+  },
+
+
+
+  computed: {
+
+    getValidatorValues(){
+      console.log('here')
+      console.log(this.$validator._base.errors.items)
+      return this.$validator._base.errors.items
+    },
   },
 
   methods: {
@@ -122,6 +143,26 @@ export default {
         this.modal_data = response.data
         this.$refs.instructions_modal.show()
       })
+    },
+
+
+    getValidationStatus(tab_name){
+     this.$nextTick( () => {
+
+      let validationTabContent = this.$refs[tab_name]
+      let tabIsInvalid = validationTabContent ? validationTabContent.$children.find( child => {return child.$refs.invalid}) : null
+      if(tabIsInvalid) {
+        this.data.form.tabs[tab_name].isInvalid = true
+      }
+      else {
+        this.data.form.tabs[tab_name].isInvalid = false
+      }
+     })
+
+      this.$nextTick().then(() => {                                                                                 
+        this.$forceUpdate()                                                              
+      })
+
     },
 
   },
@@ -158,8 +199,21 @@ export default {
             body.classList.remove('aside-menu-lg-show')
           }
         }
-      }
+      },
+      getValidatorValues: {
+       handler: function(val) {
+        if(this.data.form){
+          for(let tab in this.data.form.tabs) {
+            if(tab != 'sub_info') {
+              this.getValidationStatus(tab)
+            }
+          }
+        }
+      },
+      deep: true
+
     },
+  }
 }
 
 
