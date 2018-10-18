@@ -157,12 +157,10 @@ export default {
       else {
         this.data.form.tabs[tab_name].isInvalid = false
       }
-     })
-
-      this.$nextTick().then(() => {                                                                                 
-        this.$forceUpdate()                                                              
+      this.$nextTick().then(() => {
+       this.$forceUpdate()
       })
-
+     })
     },
 
   },
