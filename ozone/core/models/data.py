@@ -24,8 +24,23 @@ __all__ = [
     'Transfer',
 ]
 
-# TODO: implement delete-prevention logic on data reports for submitted
-# submissions. :)
+
+class ModifyPreventionMixin:
+    """
+    Mixin to be used by all data report models to prevent modification of
+    submitted submissions.
+    """
+
+    def clean(self):
+        if not self.submission.data_changes_allowed:
+            raise Exception(
+                _("Submitted submissions cannot be modified.")
+            )
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class BlendCompositionMixin:
@@ -287,7 +302,7 @@ class Article7Flags(models.Model):
         db_table = 'reporting_article_seven_flags'
 
 
-class Article7Questionnaire(BaseReport):
+class Article7Questionnaire(ModifyPreventionMixin, BaseReport):
     """
     Model for a simple Article 7 Questionnaire report row
     """
@@ -316,7 +331,8 @@ class Article7Questionnaire(BaseReport):
 
 
 class Article7Export(
-    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
+    ModifyPreventionMixin, BaseBlendCompositionReport, BaseImportExportReport,
+    BaseUses
 ):
     """
     Model for a simple Article 7 data report on exports.
@@ -352,7 +368,8 @@ class Article7Export(
 
 
 class Article7Import(
-    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
+    ModifyPreventionMixin, BaseBlendCompositionReport, BaseImportExportReport,
+    BaseUses
 ):
     """
     Model for a simple Article 7 data report on imports.
@@ -387,7 +404,7 @@ class Article7Import(
         db_table = 'reporting_article_seven_imports'
 
 
-class Article7Production(BaseReport, BaseUses):
+class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     """
     Model for a simple Article 7 data report on production.
 
@@ -433,13 +450,14 @@ class Article7Production(BaseReport, BaseUses):
                         )]
                     }
                 )
+        super().clean()
 
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
 
 
-class Article7Destruction(BaseBlendCompositionReport):
+class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
     """
     Model for a simple Article 7 data report on destruction.
 
@@ -461,7 +479,7 @@ class Article7Destruction(BaseBlendCompositionReport):
         db_table = 'reporting_article_seven_destruction'
 
 
-class Article7NonPartyTrade(BaseBlendCompositionReport):
+class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
     """
     Model for a simple Article 7 data report on non-party trade.
 
@@ -509,13 +527,14 @@ class Article7NonPartyTrade(BaseBlendCompositionReport):
                     )]
                 }
             )
+        super().clean()
 
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
 
 
-class Article7Emission(BaseReport):
+class Article7Emission(ModifyPreventionMixin, BaseReport):
     """
     Model for a simple Article 7 data report on HFC-23 emissions.
 
