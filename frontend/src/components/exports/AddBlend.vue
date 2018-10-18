@@ -30,7 +30,7 @@
                 <b-btn  style="z-index:initial;"  variant="danger" @click="removeSubstanceFromBlend(substance)">X</b-btn>
               </b-input-group-prepend>
 
-              <multiselect label="text" track-by="text" placeholder="Substance" v-model="substance.name" :options="selected_substance.options"></multiselect>
+              <multiselect label="text" track-by="text" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
               <b-input-group-append>
                 <b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
               </b-input-group-append>
@@ -112,11 +112,9 @@ export default {
 
     prepareSubstances(){
       this.selected_substance.options = []
-      for(let group of this.substances) {
-          for(let substance of group.substances){
-            this.selected_substance.options.push({value: substance.id, text: substance.name, group: group})
-            this.selected_blends.substance_options.push({value: substance, text: substance, group: group})
-          }
+      for(let substance of this.substances) {
+            this.selected_substance.options.push({value: substance.id, text: substance.name, group: substance.group})
+            this.selected_blends.substance_options.push({value: substance, text: substance, group: substance.group})
       }
     },
 
@@ -124,7 +122,7 @@ export default {
       this.selected_blends.selected = null
       this.new_blend = {
         "name": null,
-        substance_options: this.selected_blends.substance_options,
+        substance_options: this.substances,
         "composition": [
           {
             "name": null,
@@ -162,7 +160,9 @@ export default {
             get label () { return this.selected.name} ,
             name: this.removeSpecialChars(blend.name),
             substance_options: this.selected_blends.substance_options,
+            custom_blend: false,
             selected: blend,
+            type:"blend",
             comments: [{
                 name: "remarks_party",
                 label: "Remarks (party)",
@@ -195,6 +195,7 @@ export default {
               disabled: false,
               description: 'New',
               type: 'text',
+              validation: 'required',
               selected: null,
             },
             {
@@ -203,6 +204,7 @@ export default {
               description: 'Recovered and Reclaimed',
               disabled: false,
               type: 'text',
+              validation: 'required',
               selected: null,
             },
             {
@@ -210,6 +212,7 @@ export default {
               name: 'quantity_feedstock',
               description: '',
               disabled: false,
+              validation: 'required',
               type: 'text',
               selected: null,
             },
@@ -370,15 +373,13 @@ export default {
         }
       } else {
             // let current_substances;
-            for(let subst of this.new_blend.composition){
-              subst.name = subst.name.value
-            }
-
+    
             let substance_fields = {
             get label () { return this.selected.name} ,
             name: this.removeSpecialChars(this.new_blend.name),
             substance_options: this.selected_blends.substance_options,
-            // options: this.selected_substance.options,
+            custom_blend: true,
+            type: 'blend',
             selected: this.new_blend,
             comments: [{
                 name: "remarks_party",
@@ -410,6 +411,7 @@ export default {
               label: 'Total Quantity Exported for All Uses',
               name: 'quantity_total_new',
               disabled: false,
+              validation: 'required',
               description: 'New',
               type: 'text',
               selected: null,
@@ -419,6 +421,7 @@ export default {
               name: 'quantity_total_recovered',
               description: 'Recovered and Reclaimed',
               disabled: false,
+              validation: 'required',
               type: 'text',
               selected: null,
             },
@@ -427,6 +430,7 @@ export default {
               name: 'quantity_feedstock',
               description: '',
               disabled: false,
+              validation: 'required',
               type: 'text',
               selected: null,
             },

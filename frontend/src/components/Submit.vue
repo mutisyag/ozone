@@ -75,7 +75,10 @@ export default {
         let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
 
         small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
-        save_obj['substance'] = substance.selected.value
+        console.log(substance)
+        
+        substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
+        
         substance.inner_fields.forEach( inner_field => {
           inner_field.type != 'multiple_fields' 
           ? 

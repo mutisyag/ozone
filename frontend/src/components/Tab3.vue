@@ -80,7 +80,7 @@
                 <b-btn variant="outline-danger" @click="remove_field(outer_field)" class="table-btn">Delete</b-btn>
               </div>
               <span style="cursor:pointer" @click="outer_field.expand = !outer_field.expand" v-b-tooltip.hover  placement="left" :title="outer_field.label" :class="outer_field.name">
-                {{outer_field.substance.selected.text}} <i :class="`fa fa-caret-square-o-${expandedStatus(outer_field.expand)}`"></i>
+                {{outer_field.substance.selected.name}} <i :class="`fa fa-caret-square-o-${expandedStatus(outer_field.expand)}`"></i>
               </span>
             </td>
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
@@ -91,7 +91,7 @@
                   <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if="inner_field.name === 'destination_party' && inner_field.selected">
-                {{inner_field.selected}}
+                {{inner_field.selected.text}}
               </div>
               <div v-else>
                 <div v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
@@ -124,7 +124,7 @@
             <td colspan="2">
               <div>
                 <b-row>
-                  <b-col>{{substance.name}}</b-col>
+                  <b-col>{{computeSubstanceName(outer_field.substance, substance)}}</b-col>
                   <b-col><b>{{substance.percent}}%</b></b-col>
                 </b-row>
               </div>
@@ -230,6 +230,7 @@ export default {
     clonefield: CloneFieldExports 
   },
 
+
   data () {
     return {
       tab_info: null,
@@ -244,7 +245,14 @@ export default {
     remove_field(parent, field) {
       this.structure.form_fields.splice(this.structure.form_fields.indexOf(parent), 1)
     },
-
+    computeSubstanceName(field, substance){
+      if(field.custom_blend) {
+        return substance.name.text
+      } else {
+        console.log(substance)
+        return substance.name
+      }
+    },
     getDecisions(field){
       let decisions = []
       for(let item of field.fields) {
