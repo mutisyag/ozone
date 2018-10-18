@@ -6,13 +6,13 @@
         <template slot="title">
           Substances
         </template>
-          <add :countryOptions="data.countryOptions" :section="form.form_fields" :substances="data.substances"></add>
+          <add :countryOptions="data.countryOptions" :currentSection="form.name" :section="form.form_fields" :substances="data.substances"></add>
       </b-tab>
       <b-tab>
         <template slot="title">
           Blends
         </template>
-          <AddBlend :countryOptions="data.countryOptions"  :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
+          <AddBlend :countryOptions="data.countryOptions"  :currentSection="form.name" :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
       </b-tab>
     </b-tabs>
   </div>
@@ -36,6 +36,9 @@ export default {
     form: null,
     data: null,
   },
+  created(){
+    console.log('-----------form--------', this.form)
+  }
  
 }
 </script>

@@ -11,7 +11,7 @@
 
 import tabsManager from './TabsManager'
 import form from '../assets/form.js'
-import prefillSubstance from '@/mixins/prefill.js'
+import prefill from '@/mixins/prefill'
 import {getSubstances, getExportBlends, getParties, getSubmission} from '@/api/api.js'
 
 
@@ -21,9 +21,9 @@ export default {
     tabsmanager:tabsManager
   },
 
-  // mixins: [
-  //   prefill
-  // ],
+  mixins: [
+    prefill
+  ],
 
   props: {
     submission: String,
@@ -93,11 +93,11 @@ export default {
           this.initialData.substances = tempSubstances 
         })
   },
-  getBlends(){
-        getExportBlends().then((response) => {
-          this.initialData.blends = response.data
-        })
-  },
+    getBlends(){
+          getExportBlends().then((response) => {
+            this.initialData.blends = response.data
+          })
+    },
 
     prePrefill(form, prefill_data) {
       let data = JSON.parse(JSON.stringify(prefill_data))
@@ -121,8 +121,8 @@ export default {
     prefill(tab, data, countries) {
       for(let entry of data) {
         let current_substance = this.initialData.substances.find( val => val.value === entry.substance )
-        let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party)
-        prefillSubstance(entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances)
+        let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
+        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances)
       }
 
       this.prefilled = true

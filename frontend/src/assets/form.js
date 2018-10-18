@@ -215,7 +215,7 @@ var form = {
           label: "Substances",
         },
         {
-          label: "Country of Destination of Exports",
+          label: "Country of Destination of Imports",
           tooltip: 'Applicable to all substances, including those contained in mixtures and blends.',
         },
         {

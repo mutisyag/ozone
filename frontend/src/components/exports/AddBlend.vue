@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && section && blends && countryOptions">
+  <div v-if="substances && section && blends && countryOptions && currentSection">
     <div class="container">
 
      
@@ -59,15 +59,19 @@
 <script>
 
 import Multiselect from 'vue-multiselect'
+import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
 
 export default {
 
   props: {
     substances: null,
     section: null,
+    currentSection: null,
     blends: null,
     countryOptions: null,
   },
+  
+  mixins: [fieldsPerTab],
 
   components: {
     Multiselect 
@@ -181,8 +185,8 @@ export default {
 
           let inner_fields = [
             {
-              label: 'Country of Destination of Exports**',
-              name: 'destination_party',
+              label: this.getCountryLabel(this.currentSection),
+              name:  this.getCountryField(this.currentSection),
               description: '',
               type: 'select',
               duplicate: true,
@@ -399,8 +403,8 @@ export default {
 
           let inner_fields = [
             {
-              label: 'Country of Destination of Exports**',
-              name: 'destination_party',
+              label: this.getCountryLabel(this.currentSection),
+              name:  this.getCountryField(this.currentSection),
               description: '',
               type: 'select',
               duplicate: true,

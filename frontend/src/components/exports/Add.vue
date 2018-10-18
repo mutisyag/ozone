@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && countryOptions && section">
+  <div v-if="substances && countryOptions && section && currentSection">
     <div class="container">
       <h3>Add substances</h3>
       <h5>Filter Groups</h5>
@@ -15,18 +15,22 @@
 <script>
 
 import Multiselect from 'vue-multiselect'
+import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
 
 export default {
 
   props: {
     substances: null,
     section: null,
+    currentSection: null,
     countryOptions: null,
   },
 
   components: {
     Multiselect 
   },
+
+  mixins: [fieldsPerTab],
 
   mounted(){
     this.prepareGroups()
@@ -60,6 +64,10 @@ export default {
     }
   },
 
+  created(){
+    console.log(this.section)
+  },
+
   methods: {
 
     prepareSubstances(){
@@ -70,6 +78,7 @@ export default {
           }
         }
     },
+
 
     prepareGroups(){
       for(let substance of this.substances) {
@@ -113,8 +122,8 @@ export default {
 
         let inner_fields = [
           {
-            label: 'Country of Destination of Exports**',
-            name: 'destination_party',
+            label: this.getCountryLabel(this.currentSection),
+            name: this.getCountryField(this.currentSection),
             description: '',
             type: 'select',
             duplicate: true,
