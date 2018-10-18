@@ -89,7 +89,6 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
-    substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
 
@@ -123,7 +122,6 @@ class SubmissionArticle7DestructionSerializer(
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
-    substance = serializers.StringRelatedField(many=False, read_only=True)
     decision = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
@@ -155,7 +153,6 @@ class SubmissionArticle7ProductionSerializer(
 
 
 class Article7ExportSerializer(serializers.ModelSerializer):
-    substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
 
@@ -188,7 +185,6 @@ class SubmissionArticle7ExportSerializer(
 
 
 class Article7ImportSerializer(serializers.ModelSerializer):
-    substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
 
@@ -221,7 +217,6 @@ class SubmissionArticle7ImportSerializer(
 
 
 class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
-    substance = serializers.StringRelatedField(many=False, read_only=True)
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
     trade_party = serializers.StringRelatedField(many=False, read_only=True)
