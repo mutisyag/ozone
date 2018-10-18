@@ -341,7 +341,10 @@ class Article7Export(
     tracker = FieldTracker()
 
     destination_party = models.ForeignKey(
-        Party, related_name='article7exports_to', on_delete=models.PROTECT
+        Party,
+        null=True,
+        related_name='article7exports_to',
+        on_delete=models.PROTECT
     )
 
     class Meta:
@@ -374,7 +377,10 @@ class Article7Import(
     tracker = FieldTracker()
 
     source_party = models.ForeignKey(
-        Party, related_name='article7imports_from', on_delete=models.PROTECT
+        Party,
+        null=True,
+        related_name='article7imports_from',
+        on_delete=models.PROTECT
     )
 
     class Meta:
