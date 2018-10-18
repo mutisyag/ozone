@@ -355,6 +355,20 @@ class Submission(models.Model):
             'party', 'reporting_period', 'obligation', 'version'
         )
 
+    def delete(self, using=None, keep_parents=False):
+        if not self.data_changes_allowed:
+            raise RuntimeError(
+                _("Submitted submissions cannot be modified.")
+            )
+        super().delete()
+
+    def clean(self):
+        if not self.data_changes_allowed:
+            raise ValidationError(
+                _("Submitted submissions cannot be modified.")
+            )
+        super().clean()
+
     @transaction.atomic
     def save(self, *args, **kwargs):
         # Auto-increment submission version if saving for a
@@ -380,6 +394,7 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow.state.workflow.initial_state.name
 
+        self.clean()
         return super().save(*args, **kwargs)
 
 
