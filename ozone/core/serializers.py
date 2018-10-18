@@ -14,6 +14,7 @@ from .models import (
     Obligation,
     Substance,
     Group,
+    Blend,
     Submission,
     Article7Questionnaire,
     Article7Destruction,
@@ -417,6 +418,19 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('group_id', 'substances')
+
+
+class BlendSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Blend
+        fields = ('id', 'blend_id')
+
+
+class CreateBlendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Blend
+        fields = ('id', 'blend_id', 'composition', 'type')
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
