@@ -41,7 +41,7 @@ export default {
       },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
-          'import_question' : 'article7imports_url',
+          'import_question' : 'article7imports',
           'export_question' : 'article7exports',
           'production_question' : 'article7productions_url',
           'destruction_question' : 'article7destructions_url',

@@ -38,8 +38,13 @@
           <b-tab title="Questionaire" active>
             <intro tabId="0" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]" :title="data.form.tabs.tab_2.title">
-            <tab2 tabId="1" :info="data.form.tabs.tab_2"></tab2>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]">
+            <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_2.isInvalid}">
+                {{data.form.tabs.tab_2.title}}
+              </div>
+             </template>
+            <tab3 ref="tab_2" tabId="1"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></tab3>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]">
              <template slot="title">

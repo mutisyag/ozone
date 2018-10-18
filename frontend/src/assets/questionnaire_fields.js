@@ -7,7 +7,7 @@ export const intro_fields = [
 		label: '1.1. Did your country import CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, or methyl bromide in the reporting year?',
 		type: 'radio',
 		name: 'import_question',
-		selected: null,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info:'If No, ignore data form 1 and go to question 1.2. If Yes, please complete data form 1. Please read Instruction I of the document carefully before filling in the form.',
 	},

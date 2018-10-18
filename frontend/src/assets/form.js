@@ -150,11 +150,92 @@ var form = {
       intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
       title: 'Data on imports',
       name: 'import_question',
+      comments: [
+        {
+          name: 'comments_party',
+          selected: '',
+          type: 'textarea',
+          label: 'Party Comments',
+        },
+        {
+          name: 'comments_secretariat',
+          selected: '',
+          type: 'textarea',
+          label: 'Secretariat Comments',
+        },
+      ],
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
-      form_fields: null,
+      section_1_subheaders: [
+        {
+          label: "1",
+          name: 'substances',
+          sort: 1,
+          type: 'string',
+        },
+        {
+          label: "2",
+          name: 'destination_party',
+          sort: 1,
+          type: 'string',
+          tooltip: 'Applicable to all substances, including those contained in mixtures and blends.',
+        },
+        {
+          label: "New <br> 3",
+          name: 'quantity_total_new',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "Recovered and Reclaimed <br> 4",
+          name: 'quantity_total_recovered',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "<br> 5",
+          name: 'quantity_feedstock',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "Quantity <br> 6",
+          name: 'quantity_exempted',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "Decision / type of use**** or Remark <br> 7",
+          name: 'decision',
+        },
+      ],
+
+      section_1_headers: [
+        {
+          label: "Substances",
+        },
+        {
+          label: "Country of Destination of Exports",
+          tooltip: 'Applicable to all substances, including those contained in mixtures and blends.',
+        },
+        {
+          label: "Total Quantity Imported for All Uses",
+          colspan: 2,
+        },
+        {
+          label: "Quantity of New Substances Imported as Feedstock",
+          tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).',
+        },
+        {
+          label: "Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses",
+          colspan: 2,
+          tooltip: 'Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.',
+        }
+      ],
+
+      form_fields: [],
       isInvalid: false,
-      comments: '',
+      footnotes: ['[1] Tonne = Metric ton.'],
     },
     tab_4: {
       intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -163,14 +244,7 @@ var form = {
       subtitle: 'in metric tonnes (not ODP tonnes)',
       isInvalid: false,
       description: 'Annexes A, B, C and E substances',
-      // used for identification when adding labels
-      form_sections: [{
-          title: 'Section 1',
-          description: "",
-          name: 'imports_table',
-          form_fields: null
-        },
-      ],
+          form_fields: [],
       comments: '',
     },
     tab_5: {
