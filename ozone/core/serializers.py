@@ -14,6 +14,7 @@ from .models import (
     Obligation,
     Substance,
     Group,
+    BlendComponent,
     Blend,
     Submission,
     Article7Questionnaire,
@@ -420,17 +421,28 @@ class GroupSerializer(serializers.ModelSerializer):
         fields = ('group_id', 'substances')
 
 
+class BlendComponentSerializer(serializers.ModelSerializer):
+    substance_name = serializers.StringRelatedField(source='substance',
+                                                    many=False, read_only=True)
+
+    class Meta:
+        model = BlendComponent
+        fields = ('substance', 'substance_name', 'percentage')
+
+
 class BlendSerializer(serializers.ModelSerializer):
+    components = BlendComponentSerializer(many=True)
 
     class Meta:
         model = Blend
-        fields = ('id', 'blend_id')
+        fields = ('id', 'blend_id', 'type', 'components')
 
-
-class CreateBlendSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Blend
-        fields = ('id', 'blend_id', 'composition', 'type')
+    def create(self, validated_data):
+        components_data = validated_data.pop('components')
+        blend = Blend.objects.create(**validated_data)
+        for component_data in components_data:
+            BlendComponent.objects.create(blend=blend, **component_data)
+        return blend
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):

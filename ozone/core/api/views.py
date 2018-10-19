@@ -22,6 +22,7 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     Group,
+    BlendComponent,
     Blend,
 )
 
@@ -52,7 +53,7 @@ from ..serializers import (
     CreateArticle7EmissionSerializer,
     GroupSerializer,
     BlendSerializer,
-    CreateBlendSerializer,
+    BlendComponentSerializer,
 )
 
 
@@ -111,8 +112,6 @@ class BlendViewSet(viewsets.ModelViewSet):
     queryset = Blend.objects.all()
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateBlendSerializer
         return BlendSerializer
 
 
