@@ -67,8 +67,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 class BlendComponentSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
-    substance_name = serializers.StringRelatedField(source='substance',
-                                                    many=False, read_only=True)
+    substance_name = serializers.StringRelatedField(
+        source='substance', many=False, read_only=True
+    )
 
     class Meta:
         model = BlendComponent
@@ -118,12 +119,15 @@ class UpdateBlendSerializer(serializers.ModelSerializer):
         blend = super().update(instance, validated_data)
         for component_data in components_data:
             component_id = component_data.get('id', None)
-            component = BlendComponent.objects.get(id=component_id,
-                                                   blend=instance)
-            component.substance = component_data.get('substance',
-                                                     component.substance)
-            component.percentage = component_data.get('percentage',
-                                                      component.percentage)
+            component = BlendComponent.objects.get(
+                id=component_id, blend=instance
+            )
+            component.substance = component_data.get(
+                'substance', component.substance
+            )
+            component.percentage = component_data.get(
+                'percentage', component.percentage
+            )
             component.save()
         return blend
 
