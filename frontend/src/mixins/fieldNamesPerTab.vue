@@ -400,6 +400,31 @@ export default {
             ]
 
               break;
+            case 'destruction_question':
+            return [
+              {
+                label: 'Quantity Destroyed',
+                name: 'quantity_destroyed',
+                disabled: false,
+                // description: 'New',
+                validation: 'required',
+                type: 'number',
+                selected: null,
+              },
+              {
+                name: 'remarks_party',
+                selected: '',
+                type: 'textarea',
+                label: 'Remarks (Secretariat)',
+              },
+              {
+                name: 'remarks_os',
+                selected: '',
+                type: 'textarea',
+                label: 'Remarks (Secretariat)',
+              },
+            ]
+            break;
             default:
               // statements_def
               break;

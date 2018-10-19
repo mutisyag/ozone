@@ -405,6 +405,56 @@ methods: {
         }
         }
 
+
+          if(tab_name === 'destruction_question') {
+            console.log('-------------hereeeeeeeee------')
+             group_field = {
+                label: substance.group.group_id,
+                name: substance.group.group_id,
+                substance: {
+                    name: substance.value,
+                    options: substances,
+                    selected: substance,
+                    comments: [{
+                            name: "remarks_party",
+                            label: "Remarks (party)",
+                            selected: data.remarks_party,
+                            type: "text",
+                        },
+                        {
+                            name: "remarks_os",
+                            selected: data.remarks_os,
+                            type: "text",
+                            label: "Remarks (Secretariat)",
+                        },
+                    ],
+                    inner_fields:[
+                          {
+                            label: 'Quantity Destroyed',
+                            name: 'quantity_destroyed',
+                            disabled: false,
+                            // description: 'New',
+                            validation: 'required',
+                            type: 'number',
+                            selected: data.quantity_destroyed,
+                          },
+                         {
+                          name: 'comments_party',
+                          selected: data.remarks_party,
+                          type: 'textarea',
+                          label: 'Remarks (Secretariat)',
+                        },
+                        {
+                          name: 'comments_secretariat',
+                          selected: data.remarks_os,
+                          type: 'textarea',
+                          label: 'Remarks (Secretariat)',
+                        },
+                    ]
+                }
+            }
+        }
+
         section.push(group_field)
         console.log('section', section)
     }

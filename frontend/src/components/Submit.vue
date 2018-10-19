@@ -94,6 +94,13 @@ export default {
               "quantity_article_5": null,
               "substance": null
           },
+          'destruction_question' : {
+              "remarks_party": "",
+              "remarks_os": "",
+              "quantity_destroyed": null,
+              "substance": null,
+              "blend": null
+          },
         },
     }
   },
@@ -117,9 +124,9 @@ export default {
         let substance = form_field.substance 
         let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
         console.log(save_obj)
-
-        small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
-        console.log(substance)
+        if(substance.comments) {
+         small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
+        }
         
         substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
         
@@ -136,10 +143,9 @@ export default {
          current_tab_data.push(save_obj)
        })
         
-      console.log(current_tab_data)
        post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
         console.log(response)
-      }).catch((error) => {
+        }).catch((error) => {
         console.log(this.$validator)
             this.$validator._base.validateAll().then((result) => {
               if (result) {

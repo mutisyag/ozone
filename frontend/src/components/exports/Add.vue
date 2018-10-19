@@ -104,7 +104,7 @@ export default {
           name: substance.value,
           options: this.substances,
           selected: substance,
-          comments: [{
+          comments: this.currentSection != 'destruction_question' ? [{
               name: "remarks_party",
               label: "Remarks (party)",
               selected: '',
@@ -116,7 +116,7 @@ export default {
               type: "text",
               label: "Remarks (Secretariat)",
             },
-          ],
+          ] : null,
           inner_fields: '',
         }
 

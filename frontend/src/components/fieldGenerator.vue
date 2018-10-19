@@ -10,7 +10,7 @@
     <b-form-radio-group :disabled="disabledField" v-else-if="field.type === 'radio'" v-model="field.selected" @change="selectTabs($event,field)" :created="selectTabs(field.selected, field)" :options="field.options"></b-form-radio-group>
     <b-form-checkbox-group :disabled="disabledField" v-else-if="field.type === 'checkbox'" v-model="field.selected" :options="field.options"></b-form-checkbox-group>
     <b-form-select :disabled="disabledField" v-else-if="field.type === 'select'" v-model="field.selected" :options="field.options"></b-form-select>
-    <textarea v-else-if="field.type === 'textarea'" v-model="field.selected"></textarea>
+    <textarea class="form-control" v-else-if="field.type === 'textarea'" v-model="field.selected"></textarea>
   </div>
 </template>
 

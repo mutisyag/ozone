@@ -44,7 +44,7 @@ export default {
           'import_question' : 'article7imports',
           'export_question' : 'article7exports',
           'production_question' : 'article7productions',
-          'destruction_question' : 'article7destructions_url',
+          'destruction_question' : 'article7destructions',
           'nonparty_question' : 'article7nonpartytrades_url',
           'emissions_question' : 'article7emissions_url',
       },

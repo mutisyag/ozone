@@ -31,7 +31,7 @@ export const intro_fields = [
 		label: '1.4. Did your country destroy any ODSs in the reporting year?',
 		type: 'radio',
 		name: 'destruction_question',
-		selected: null,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info: 'If No, ignore data form 4 and go to question 1.5. If Yes, please complete data form 4. Please read Instruction IV of the document carefully before filling in the form.'
 	},		

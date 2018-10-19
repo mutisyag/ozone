@@ -326,22 +326,48 @@ var form = {
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
       isInvalid: false,
-      // used for identification when adding labels
-      form_sections: [{
-          title: 'Section 1',
-          description: "",
-          name: 'imports_table',
-          form_fields: null
+      form_fields: [],
+          section_subheaders: [
+        {
+          label: "1",
+          name: 'substances',
+          sort: 1,
+          type: 'string',
         },
-        // {
-        // 	title: 'test form section 2 title',
-        // 	description: "test form section 2 description",
-        // 	name: 'form_section_2',
-        // 	form_fields: [
-        // 	]
-        // },
+        {
+          label: "2",
+          name: 'quantity_destroyed',
+          sort: 1,
+          type: 'number',
+        },
+         {
+          label: "3",
+          name: 'remarks_party',
+          sort: 1,
+          type: 'text',
+        },
+        {
+          label: "4",
+          name: 'remarks_os',
+          sort: 1,
+          type: 'text',
+        },
       ],
-      comments: '',
+
+      section_headers: [
+        {
+          label: "Substances",
+        },
+        {
+          label: "Quantity destroyed",
+        },
+        {
+          label: "Remarks (party)",
+        },
+        {
+          label: "Remarks (Secretariat)"
+        },
+      ],
     },
     tab_6: {
       intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',

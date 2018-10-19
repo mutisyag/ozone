@@ -63,8 +63,13 @@
              </template>
             <tab3 tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></tab3>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]" :title="data.form.tabs.tab_5.title">
-            <tab5 tabId="4" :info="data.form.tabs.tab_5"></tab5>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]">
+            <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_5.isInvalid}">
+                {{data.form.tabs.tab_5.title}}
+              </div>
+             </template>
+            <tab3 tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></tab3>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]" :title="data.form.tabs.tab_6.title">
             <tab6 tabId="5" :info="data.form.tabs.tab_6"></tab6>
@@ -192,6 +197,8 @@ export default {
       {title:'<b>Data on Imports</b>'},
       {title:'<b>Data on exports</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>', tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'},
       {title:'<b> Data on production </b>'},
+      {title:'<b> Data on Destruction </b>'},
+
       ],
       subtitles: ['', 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.','', 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide']
     }
