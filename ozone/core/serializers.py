@@ -219,7 +219,6 @@ class SubmissionArticle7ImportSerializer(
 class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
     blend = serializers.StringRelatedField(many=False, read_only=True)
     blend_item = serializers.StringRelatedField(many=False, read_only=True)
-    trade_party = serializers.StringRelatedField(many=False, read_only=True)
 
     class Meta:
         model = Article7NonPartyTrade
