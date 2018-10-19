@@ -60,7 +60,7 @@ var form = {
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
       isInvalid: false,
-      section_1_subheaders: [
+      section_subheaders: [
         {
           label: "1",
           name: 'substances',
@@ -104,7 +104,7 @@ var form = {
         },
       ],
 
-      section_1_headers: [
+      section_headers: [
         {
           label: "Substances",
         },
@@ -166,7 +166,7 @@ var form = {
       ],
       subtitle: 'in metric tonnes (not ODP tonnes)',
       description: 'Annexes A, B, C and E substances',
-      section_1_subheaders: [
+      section_subheaders: [
         {
           label: "1",
           name: 'substances',
@@ -210,12 +210,12 @@ var form = {
         },
       ],
 
-      section_1_headers: [
+      section_headers: [
         {
           label: "Substances",
         },
         {
-          label: "Country of Destination of Imports",
+          label: "Exporting party for quantities reported as imports",
           tooltip: 'Applicable to all substances, including those contained in mixtures and blends.',
         },
         {
@@ -244,8 +244,80 @@ var form = {
       subtitle: 'in metric tonnes (not ODP tonnes)',
       isInvalid: false,
       description: 'Annexes A, B, C and E substances',
-          form_fields: [],
+      form_fields: [],
       comments: '',
+      section_subheaders: [
+        {
+          label: "1",
+          name: 'substances',
+          sort: 1,
+          type: 'string',
+        },
+        {
+          label: "2",
+          name: 'quantity_total_produced',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "3",
+          name: 'quantity_feedstock',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "4 <br> Quantity",
+          name: 'quantity_feedstock',
+          sort: 1,
+          type: 'number',
+        },
+        {
+          label: "Decision / type of use <br> 5",
+          name: 'quantity_exempted',
+          sort: 1,
+          type: 'string',
+        },
+        {
+          label: "6",
+          name: "quantity_article_5",
+          sort: 1,
+          type: 'number'
+        },
+      ],
+
+      section_headers: [
+        {
+          label: "Substances",
+        },
+        {
+          label: "Total production for all uses",
+        },
+        {
+          label: "Production for feedstock uses within your country",
+        },
+        {
+          label: "Production for exempted essential, critical or other uses within your country*",
+          colspan: 2,
+          tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.',
+        },
+        {
+          label: "Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5"
+        }
+      ],
+      comments: [
+        {
+          name: 'comments_party',
+          selected: '',
+          type: 'textarea',
+          label: 'Party Comments',
+        },
+        {
+          name: 'comments_secretariat',
+          selected: '',
+          type: 'textarea',
+          label: 'Secretariat Comments',
+        },
+      ],
     },
     tab_5: {
       intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',

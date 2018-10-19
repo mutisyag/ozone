@@ -55,8 +55,13 @@
             <tab3 tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></tab3>
 
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]" :title="data.form.tabs.tab_4.title">
-            <tab4 tabId="3" :structure="data.form.tabs.tab_4"></tab4>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+             <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_4.isInvalid}">
+                {{data.form.tabs.tab_4.title}}
+              </div>
+             </template>
+            <tab3 tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></tab3>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]" :title="data.form.tabs.tab_5.title">
             <tab5 tabId="4" :info="data.form.tabs.tab_5"></tab5>
@@ -184,8 +189,9 @@ export default {
       titles: [
       {title:'Submission Info'},
       {title: 'Questionaire'},
-      {title:'Data on Imports'},
-      {title:'<b>Data on exports</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>', tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'}
+      {title:'<b>Data on Imports</b>'},
+      {title:'<b>Data on exports</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>', tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'},
+      {title:'<b> Data on production </b>'},
       ],
       subtitles: ['', 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.','', 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide']
     }

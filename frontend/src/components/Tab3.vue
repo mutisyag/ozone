@@ -2,10 +2,10 @@
   <div v-if="tab_info">
     <template slot="title">Title</template>
     <div class="form-sections">
-      <table class="table">
+      <table class="table submission-table">
         <thead>
           <tr class="first-header">
-            <th v-for="header in tab_info.section_1_headers" :colspan="header.colspan">
+            <th v-for="header in tab_info.section_headers" :colspan="header.colspan">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 {{header.label}} <i class="fa fa-info-circle fa-lg"></i>
               </div>
@@ -15,7 +15,7 @@
             </th>
           </tr>
           <tr class="subheader">
-            <th v-for="subheader in tab_info.section_1_subheaders">
+            <th v-for="subheader in tab_info.section_subheaders">
             <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
               <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
             </div>  
@@ -38,7 +38,7 @@
                 {{outer_field.substance.selected.text}}
               </span>
             </td>
-            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
+            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.type != 'multiple_fields'">
               <fieldGenerator v-if="inner_field.type != 'multiple_fields' && !['destination_party','source_party'].includes(inner_field.name) " :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               <div v-else-if="['destination_party','source_party'].includes(inner_field.name) && !inner_field.selected">
                   <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
@@ -46,25 +46,24 @@
               <div v-else-if=" ['destination_party','source_party'].includes(inner_field.name) && inner_field.selected">
                 {{inner_field.selected.text}}
               </div>
-              <div v-else>
-                <div v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
-                  {{countDecisions(inner_field)}} {{inner_field.total}}
-                </div>
-              </div>
+            
             </td>
-            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.type ==='multiple_fields'">
-              <div v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
+            <td style="position: static" v-else v-for="i in [0,1]">
+              <div v-if="i === 1" v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
+                  {{countDecisions(inner_field)}} {{inner_field.total}}
+              </div>
+              <div v-else v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
                 <div v-html="getDecisions(inner_field)"></div>
               </div>
-              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
+              <div style="margin-left: -4rem; margin-top: 2rem" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected && i === 1" >
                 <hr>
                 Quantity of new {{outer_field.substance.selected.text}} exported to be used for QPS applications
                 <hr>
                 <span>
-                  {{quantity.fields[0].selected}}
+                  <input class="form-control" :type="quantity.fields[0].type" v-model="quantity.fields[0].selected">
                 </span>
               </div>
-              <span v-if="doComments(outer_field.substance.comments)" class="comments-section">
+              <span v-if="doComments(outer_field.substance.comments) && i === 1" class="comments-section">
                 <b-btn variant="link" class="comments-button" v-b-tooltip.hover  placement="left" :title="doComments(outer_field.substance.comments)" :id="`${outer_field.substance.name}_${outer_field_index}`">
                     <img class="icon" src="/comments.svg">
                 </b-btn>
@@ -104,7 +103,7 @@
               <div v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
                 <div v-html="getDecisions(inner_field)"></div>
               </div>
-              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'B-Group I' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
+              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
                 <hr>
                 Quantity of new {{outer_field.substance.selected.text}} exported to be used for quarantine and pre shipment applications 
                 <hr>
@@ -500,5 +499,15 @@ export default {
   .subheader th > div {
     position: relative;
     margin-bottom: .5rem;
+  }
+
+  .comments-section {
+    position: absolute;
+    right: .5rem;
+    z-index: 1;
+  }
+
+  .submission-table tr td:last-of-type > * {
+    max-width: 90%;
   }
 </style>

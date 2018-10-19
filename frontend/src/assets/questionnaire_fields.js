@@ -23,7 +23,7 @@ export const intro_fields = [
 		label: '1.3. Did your country produce CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, or methyl bromide in the reporting year?',
 		type: 'radio',
 		name: 'production_question',
-		selected: null,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info: 'If No, ignore data form 3 and go to question 1.4. If Yes, please complete data form 3. Please read Instruction III of the document carefully before filling in the form.'
 	},	
