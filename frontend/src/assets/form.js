@@ -454,6 +454,99 @@ var form = {
                 },
             ],
         },
+
+        tab_6: {
+            intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
+            title: 'Data on emissions',
+            name: 'has_nonparty',
+            subtitle: 'in metric tonnes (not ODP tonnes)',
+            description: 'Annexes A, B, C and E substances',
+            isInvalid: false,
+            // used for identification when adding labels
+            form_fields: [],
+            section_subheaders: [{
+                    label: "1",
+                    name: 'facility',
+                    sort: 1,
+                    type: 'string',
+                },
+                {
+                    label: "2",
+                    name: 'quantity_generated',
+                    sort: 1,
+                    type: 'number',
+                },
+                {
+                    label: "3",
+                    name: 'quantity_feedstock',
+                    sort: 1,
+                    type: 'number',
+                },
+                {
+                    label: "4",
+                    name: 'quantity_destroyed',
+                    sort: 1,
+                    type: 'number',
+                },
+                {
+                    label: "5",
+                    name: 'quantity_emitted',
+                    sort: 1,
+                    type: 'number',
+                },
+                {
+                    label: "6",
+                    name: 'remarks_party',
+                    sort: 1,
+                    type: 'string',
+                },
+                {
+                    label: "7",
+                    name: 'remarks_os',
+                    sort: 1,
+                    type: 'string',
+                },
+            ],
+
+            section_headers: [{
+                    label: "Facility name or identifier",
+                },
+                {
+                    label: "Amount [Generated]* <br> (tonnes)",
+                    tooltip: "Amount [Generated] refers to amount that is captured, whether for destruction in another facility, feedstock or any other use. "
+                },
+                {
+                    label: 'Amount Used for Feedstock** <br> (tonnes)',
+                    tooltip: 'Amount converted to other substances shall be treated as feedstock uses.'
+                },
+                {
+                    label: 'Amount Destroyed*** <br> (tonnes)',
+                    tooltip: 'Amount Destroyed  refers to “Amount destroyed in the facility, with or without prior capture”'
+                },
+                {
+                    label: 'Amount of Emissions <br> (tonnes)'
+                },
+                {
+                    label: "Remarks (party)",
+                },
+                {
+                    label: "Remarks (Secretariat)"
+                },
+            ],
+            comments: [{
+                    name: 'comments_party',
+                    selected: '',
+                    type: 'textarea',
+                    label: 'Party Comments',
+                },
+                {
+                    name: 'comments_secretariat',
+                    selected: '',
+                    type: 'textarea',
+                    label: 'Secretariat Comments',
+                },
+            ],
+        },
         attachements: [{
                 name: 'asd',
                 url: 'www.google.com',

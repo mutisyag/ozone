@@ -44,7 +44,7 @@ export const intro_fields = [
 		info: 'If No, ignore data form 5. If Yes, please complete data form 5. Please read Instruction V of the document carefully, and, particularly, the definition of non-Parties before filling in the form.'
 	},
 	{
-		label: '1.6. Emissions ?',
+		label: '1.6. DATA ON GENERATION OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES ?',
 		type: 'radio',
 		name: 'has_emissions',
 		selected: null,
