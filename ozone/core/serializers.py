@@ -437,6 +437,14 @@ class BlendSerializer(serializers.ModelSerializer):
         model = Blend
         fields = ('id', 'blend_id', 'type', 'components')
 
+
+class CreateBlendSerializer(serializers.ModelSerializer):
+    components = BlendComponentSerializer(many=True)
+
+    class Meta:
+        model = Blend
+        fields = '__all__'
+
     def create(self, validated_data):
         components_data = validated_data.pop('components')
         blend = Blend.objects.create(**validated_data)
