@@ -178,6 +178,8 @@ class Blend(models.Model):
 
     main_usage = models.CharField(max_length=256, blank=True)
 
+    custom = models.BooleanField(default=False)
+
     remark = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
