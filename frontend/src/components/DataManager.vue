@@ -43,7 +43,7 @@ export default {
           'questionaire_questions' : 'article7questionnaire',
           'import_question' : 'article7imports',
           'export_question' : 'article7exports',
-          'production_question' : 'article7productions_url',
+          'production_question' : 'article7productions',
           'destruction_question' : 'article7destructions_url',
           'nonparty_question' : 'article7nonpartytrades_url',
           'emissions_question' : 'article7emissions_url',
