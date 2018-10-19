@@ -474,16 +474,13 @@ class UpdateBlendSerializer(serializers.ModelSerializer):
         blend = super().update(instance, validated_data)
         for component_data in components_data:
             component_id = component_data.get('id', None)
-            if component_id:
-                component = BlendComponent.objects.get(id=component_id,
-                                                       blend=instance)
-                component.substance = component_data.get('substance',
-                                                         component.substance)
-                component.percentage = component_data.get('percentage',
-                                                          component.percentage)
-                component.save()
-            else:
-                BlendComponent.objects.create(blend=blend, **component_data)
+            component = BlendComponent.objects.get(id=component_id,
+                                                   blend=instance)
+            component.substance = component_data.get('substance',
+                                                     component.substance)
+            component.percentage = component_data.get('percentage',
+                                                      component.percentage)
+            component.save()
         return blend
 
 
