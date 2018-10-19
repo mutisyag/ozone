@@ -22,6 +22,7 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     Group,
+    Blend,
 )
 
 from ..serializers import (
@@ -50,6 +51,9 @@ from ..serializers import (
     Article7EmissionSerializer,
     CreateArticle7EmissionSerializer,
     GroupSerializer,
+    BlendSerializer,
+    CreateBlendSerializer,
+    UpdateBlendSerializer,
 )
 
 
@@ -102,6 +106,17 @@ class ObligationViewSet(viewsets.ModelViewSet):
 class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+
+
+class BlendViewSet(viewsets.ModelViewSet):
+    queryset = Blend.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return CreateBlendSerializer
+        if self.request.method in ["PUT", "PATCH"]:
+            return UpdateBlendSerializer
+        return BlendSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):

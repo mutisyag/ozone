@@ -113,6 +113,9 @@ nested_routers = [
 # Groups
 router.register(r"group-substances", views.GroupViewSet)
 
+# Blends
+router.register(r"blends", views.BlendViewSet)
+
 # Authentication
 auth_tokens = routers.SimpleRouter()
 auth_tokens.register(

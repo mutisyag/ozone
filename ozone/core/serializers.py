@@ -14,6 +14,8 @@ from .models import (
     Obligation,
     Substance,
     Group,
+    BlendComponent,
+    Blend,
     Submission,
     Article7Questionnaire,
     Article7Destruction,
@@ -416,6 +418,69 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ('group_id', 'substances')
+
+
+class BlendComponentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    substance_name = serializers.StringRelatedField(source='substance',
+                                                    many=False, read_only=True)
+
+    class Meta:
+        model = BlendComponent
+        fields = ('id', 'substance', 'substance_name', 'percentage')
+
+
+class UpdateBlendComponentSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=True)
+
+    class Meta:
+        model = BlendComponent
+        fields = ('id', 'substance', 'percentage')
+
+
+class BlendSerializer(serializers.ModelSerializer):
+    components = BlendComponentSerializer(many=True)
+
+    class Meta:
+        model = Blend
+        fields = ('id', 'blend_id', 'type', 'custom', 'components')
+
+
+class CreateBlendSerializer(serializers.ModelSerializer):
+    components = BlendComponentSerializer(many=True)
+
+    class Meta:
+        model = Blend
+        exclude = ('custom',)
+
+    def create(self, validated_data):
+        components_data = validated_data.pop('components')
+        blend = Blend.objects.create(custom=True, **validated_data)
+        for component_data in components_data:
+            BlendComponent.objects.create(blend=blend, **component_data)
+        return blend
+
+
+class UpdateBlendSerializer(serializers.ModelSerializer):
+    components = UpdateBlendComponentSerializer(many=True)
+
+    class Meta:
+        model = Blend
+        exclude = ('custom',)
+
+    def update(self, instance, validated_data):
+        components_data = validated_data.pop('components')
+        blend = super().update(instance, validated_data)
+        for component_data in components_data:
+            component_id = component_data.get('id', None)
+            component = BlendComponent.objects.get(id=component_id,
+                                                   blend=instance)
+            component.substance = component_data.get('substance',
+                                                     component.substance)
+            component.percentage = component_data.get('percentage',
+                                                      component.percentage)
+            component.save()
+        return blend
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
