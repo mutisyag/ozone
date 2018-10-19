@@ -158,7 +158,7 @@ class Blend(models.Model):
 
     # This is a plain-text description of the composition; see `BlendComponent`
     # model for a relational one
-    composition = models.CharField(max_length=256)
+    composition = models.CharField(max_length=256, blank=True)
 
     other_names = models.CharField(max_length=256, blank=True)
 
