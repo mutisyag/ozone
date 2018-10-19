@@ -20,15 +20,16 @@ export default {
     return {
         fields_to_save: {
           'questionaire_questions' : 'article7questionnaire_url',
-          'import_question' : 'article7imports_url',
-          'export_question' : 'article7exports_url',
-          'production_question' : 'article7productions_url',
-          'destruction_question' : 'article7destructions_url',
-          'nonparty_question' : 'article7nonpartytrades_url',
+          'has_imports' : 'article7imports_url',
+          'has_exports' : 'article7exports_url',
+          'has_produced' : 'article7productions_url',
+          'has_destroyed' : 'article7destructions_url',
+          'has_nonparty' : 'article7nonpartytrades_url',
           'emissions_question' : 'article7emissions_url',
+          'questionaire_questions' : 'article7questionnaire_url',
         },
         form_fields: {
-          'export_question' : {
+          'has_exports' : {
               "remarks_party": "",
               "remarks_os": "",
               "quantity_total_new": null,
@@ -51,7 +52,7 @@ export default {
               "blend": null,
               "decision": null
             },
-          'import_question' : {
+          'has_imports' : {
               "remarks_party": "",
               "remarks_os": "",
               "quantity_total_new": null,
@@ -74,7 +75,7 @@ export default {
               "blend": null,
               "decision": null
             },
-          'production_question' : {
+          'has_produced' : {
               "remarks_party": "",
               "remarks_os": "",
               "quantity_critical_uses": null,
@@ -94,12 +95,33 @@ export default {
               "quantity_article_5": null,
               "substance": null
           },
-          'destruction_question' : {
+          'has_destroyed' : {
               "remarks_party": "",
               "remarks_os": "",
               "quantity_destroyed": null,
               "substance": null,
               "blend": null
+          },
+          'has_nonparty' : {
+              "remarks_party": "",
+              "remarks_os": "",
+              "quantity_import_new": null,
+              "quantity_import_recovered": null,
+              "quantity_export_new": null,
+              "quantity_export_recovered": null,
+              "substance": null,
+              "blend": null,
+              "trade_party": null
+          },
+          'questionaire_questions': {
+              "remarks_party": "",
+              "remarks_os": "",
+              "has_imports": false,
+              "has_exports": false,
+              "has_produced": false,
+              "has_destroyed": false,
+              "has_nonparty": false,
+              "has_emissions": false
           },
         },
     }
@@ -107,12 +129,28 @@ export default {
   methods:{
   	startSubmitting(){
   		console.log(this.data,this.submission)
+      this.submitQuestionaireData('questionaire_questions')
       for(let questionnaire_field of this.data.tabs.tab_1.form_fields) {
         if(questionnaire_field.selected) {
             this.submitData(questionnaire_field.name)
         }
       }
   	},
+
+    submitQuestionaireData(field) {
+       const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
+       let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+       current_tab.form_fields.forEach( form_field => {
+        console.log('asdassdsadasdas',form_field.selected)
+        save_obj[form_field.name]  = form_field.selected
+       })
+
+      post(this.submission[this.fields_to_save[field]], save_obj).then( (response) => {
+        console.log(response)
+        }).catch((error) => {
+        console.log('here',error)
+      })
+    },  
 
     submitData(field) {
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
@@ -124,6 +162,7 @@ export default {
         let substance = form_field.substance 
         let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
         console.log(save_obj)
+          
         if(substance.comments) {
          small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
         }

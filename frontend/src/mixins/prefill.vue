@@ -205,7 +205,7 @@ methods: {
             }
         }
 
-        if(tab_name === 'production_question') {
+        if(tab_name === 'has_produced') {
             console.log('-------------hereeeeeeeee------')
          group_field = {
             label: substance.group.group_id,
@@ -406,7 +406,7 @@ methods: {
         }
 
 
-          if(tab_name === 'destruction_question') {
+          if(tab_name === 'has_destroyed') {
             console.log('-------------hereeeeeeeee------')
              group_field = {
                 label: substance.group.group_id,
@@ -453,6 +453,83 @@ methods: {
                     ]
                 }
             }
+        }
+
+        if(tab_name === 'has_nonparty') {
+            group_field = 
+
+        group_field = {
+                label: substance.group.group_id,
+                name: substance.group.group_id,
+                substance: {
+                    name: substance.value,
+                    options: substances,
+                    selected: substance,
+                    comments: null,
+                    inner_fields:[
+                                  {
+                                    label: "Exporting party for quantities reported as imports OR Country of destination of exports",
+                                    name: 'trade_party',
+                                    description: '',
+                                    type: 'select',
+                                    duplicate: true,
+                                    selected: null,
+                                    options: this.countryOptions,
+                                  },
+                                  {
+                                    label: 'Quantity of new imports from non-parties',
+                                    name: 'quantity_import_new',
+                                    disabled: false,
+                                    // description: 'New',
+                                    // validation: 'required',
+                                    type: 'number',
+                                    selected: data.quantity_import_new,
+                                  },
+                                  {
+                                    label: 'Quantity of recovered and reclaimed imports from non-parties',
+                                    name: 'quantity_import_recovered',
+                                    disabled: false,
+                                    // description: 'New',
+                                    // validation: 'required',
+                                    type: 'number',
+                                    selected: data.quantity_import_recovered,
+                                  },
+                                  {
+                                    label: 'Quantity of new exports to non-parties*',
+                                    name: 'quantity_export_new',
+                                    disabled: false,
+                                    // description: 'New',
+                                    // validation: 'required',
+                                    type: 'number',
+                                    selected: data.quantity_export_new,
+                                  },
+                                  {
+                                    label: 'Quantity of recovered and reclaimed exports to non-parties',
+                                    name: 'quantity_export_recovered',
+                                    disabled: false,
+                                    // description: 'New',
+                                    // validation: 'required',
+                                    type: 'number',
+                                    selected: data.quantity_export_recovered,
+                                  },
+                                  {
+                                    name: 'remarks_party',
+                                    selected: data.remarks_party,
+                                    type: 'textarea',
+                                    label: 'Remarks (Secretariat)',
+                                  },
+                                  {
+                                    name: 'remarks_os',
+                                    selected: data.remarks_os,
+                                    type: 'textarea',
+                                    label: 'Remarks (Secretariat)',
+                                  },
+                                ]
+                }
+            }
+
+
+
         }
 
         section.push(group_field)

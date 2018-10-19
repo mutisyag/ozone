@@ -71,8 +71,13 @@
              </template>
             <tab3 tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></tab3>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]" :title="data.form.tabs.tab_6.title">
-            <tab6 tabId="5" :info="data.form.tabs.tab_6"></tab6>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
+            <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_6.isInvalid}">
+                {{data.form.tabs.tab_6.title}}
+              </div>
+             </template>
+            <tab3 tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></tab3>
           </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
@@ -185,11 +190,11 @@ export default {
       tabIndex: 0,
       modal_data: null,
       display_tabs: {
-        export_question: false,
-        import_question: false,
-        destruction_question: false,
-        nonparty_question: false,
-        production_question: false
+        has_exports: false,
+        has_imports: false,
+        has_destroyed: false,
+        has_nonparty: false,
+        has_produced: false
       },
       titles: [
       {title:'Submission Info'},
@@ -198,6 +203,8 @@ export default {
       {title:'<b>Data on exports</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>', tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'},
       {title:'<b> Data on production </b>'},
       {title:'<b> Data on Destruction </b>'},
+      {title:'<b> Data on Non-party </b>'},
+
 
       ],
       subtitles: ['', 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.','', 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide']

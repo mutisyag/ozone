@@ -41,11 +41,11 @@ export default {
       },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
-          'import_question' : 'article7imports',
-          'export_question' : 'article7exports',
-          'production_question' : 'article7productions',
-          'destruction_question' : 'article7destructions',
-          'nonparty_question' : 'article7nonpartytrades_url',
+          'has_imports' : 'article7imports',
+          'has_exports' : 'article7exports',
+          'has_produced' : 'article7productions',
+          'has_destroyed' : 'article7destructions',
+          'has_nonparty' : 'article7nonpartytrades',
           'emissions_question' : 'article7emissions_url',
       },
     }
@@ -68,6 +68,10 @@ export default {
   getCurrentSubmission(){
       getSubmission(this.submission).then( (response) => {
         this.current_submission = response.data
+        if(this.current_submission.article7questionnaire){
+          this.prefillQuestionaire(this.form, this.current_submission.article7questionnaire)
+        }
+        
         this.prePrefill(this.form, this.current_submission)
       })
   },
@@ -109,6 +113,7 @@ export default {
             to_prefill.push(key)
           }
         })
+
       if(to_prefill.length){
         Object.keys(form.tabs).forEach( (tab) => {
          if(to_prefill.includes(this.fields_to_prefill[form.tabs[tab].name])) this.prefill(form.tabs[tab], data[this.fields_to_prefill[form.tabs[tab].name]],this.initialData.countryOptions)
@@ -128,7 +133,16 @@ export default {
       this.prefilled = true
     },
 
+    prefillQuestionaire(form,data){
+      for(let questionaire_question in data) {
+       let current_field = this.form.tabs.tab_1.form_fields.find( field =>  field.name === questionaire_question )
 
+       // TODO: investigate. The if shouldn't be needed
+       if(current_field){
+        current_field.selected = data[questionaire_question]
+       }
+      }
+    },
 
   },
 

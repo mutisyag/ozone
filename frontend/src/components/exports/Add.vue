@@ -104,7 +104,7 @@ export default {
           name: substance.value,
           options: this.substances,
           selected: substance,
-          comments: this.currentSection != 'destruction_question' ? [{
+          comments:  !['has_destroyed','has_nonparty'].includes(this.currentSection)  ? [{
               name: "remarks_party",
               label: "Remarks (party)",
               selected: '',

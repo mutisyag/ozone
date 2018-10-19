@@ -4,10 +4,10 @@ export default {
     methods: {
         getCountryField(currentSection) {
             switch (currentSection) {
-                case 'export_question':
+                case 'has_exports':
                     return 'destination_party'
                     break;
-                case 'import_question':
+                case 'has_imports':
                     return 'source_party'
                     break;
                 default:
@@ -18,10 +18,10 @@ export default {
 
         getCountryLabel(currentSection) {
             switch (currentSection) {
-                case 'export_question':
+                case 'has_exports':
                     return 'Country of Destination of Exports**'
                     break;
-                case 'import_question':
+                case 'has_imports':
                     return 'Country of Destination of Imports**'
                     break;
                 default:
@@ -217,13 +217,13 @@ export default {
 
 
           switch (section) {
-            case 'export_question':
+            case 'has_exports':
               return baseInnerFields
               break;
-            case 'import_question':
+            case 'has_imports':
               return baseInnerFields
               break;
-            case 'production_question':
+            case 'has_produced':
             return  [
            
               {
@@ -400,7 +400,7 @@ export default {
             ]
 
               break;
-            case 'destruction_question':
+            case 'has_destroyed':
             return [
               {
                 label: 'Quantity Destroyed',
@@ -424,6 +424,67 @@ export default {
                 label: 'Remarks (Secretariat)',
               },
             ]
+            break;
+            case 'has_nonparty':
+            return  [
+                  {
+                    label: "Exporting party for quantities reported as imports OR Country of destination of exports",
+                    name: 'trade_party',
+                    description: '',
+                    type: 'select',
+                    duplicate: true,
+                    selected: null,
+                    options: this.countryOptions,
+                  },
+                  {
+                    label: 'Quantity of new imports from non-parties',
+                    name: 'quantity_import_new',
+                    disabled: false,
+                    // description: 'New',
+                    // validation: 'required',
+                    type: 'number',
+                    selected: null,
+                  },
+                  {
+                    label: 'Quantity of recovered and reclaimed imports from non-parties',
+                    name: 'quantity_import_recovered',
+                    disabled: false,
+                    // description: 'New',
+                    // validation: 'required',
+                    type: 'number',
+                    selected: null,
+                  },
+                  {
+                    label: 'Quantity of new exports to non-parties*',
+                    name: 'quantity_export_new',
+                    disabled: false,
+                    // description: 'New',
+                    // validation: 'required',
+                    type: 'number',
+                    selected: null,
+                  },
+                  {
+                    label: 'Quantity of recovered and reclaimed exports to non-parties',
+                    name: 'quantity_export_recovered',
+                    disabled: false,
+                    // description: 'New',
+                    // validation: 'required',
+                    type: 'number',
+                    selected: null,
+                  },
+                  {
+                    name: 'remarks_party',
+                    selected: '',
+                    type: 'textarea',
+                    label: 'Remarks (Secretariat)',
+                  },
+                  {
+                    name: 'remarks_os',
+                    selected: '',
+                    type: 'textarea',
+                    label: 'Remarks (Secretariat)',
+                  },
+                ]
             break;
             default:
               // statements_def
