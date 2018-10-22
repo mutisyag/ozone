@@ -73,15 +73,20 @@ export default {
       this.selected_substance.options = []
         for(let substance of this.substances){
           if(this.selected_groups.selected.includes(substance.group.group_id)) {
-            this.selected_substance.options.push(substance)
+            this.selected_substance.options.push({text: substance.text, value: substance.value})
           }
         }
     },
 
+    pushUnique(array, item) {
+      if (array.indexOf(item) === -1) {
+        array.push(item);
+      }
+    },
 
     prepareGroups(){
       for(let substance of this.substances) {
-          this.selected_groups.options.push(substance.group.group_id)
+          this.pushUnique(this.selected_groups.options,substance.group.group_id)
           //this.selected_groups.selected.push(group)
       }
       this.prepareSubstances()
@@ -98,10 +103,11 @@ export default {
 
     addSubstance() {
       for(let substance of this.selected_substance.selected) {
+        console.log('substance',substance)
         this.updateGroup(substance.value)
         let substance_fields = {
           name: substance.value,
-          options: this.substances,
+          // options: this.substances,
           selected: substance,
           comments:  !['has_destroyed','has_nonparty'].includes(this.currentSection)  ? [{
               name: "remarks_party",

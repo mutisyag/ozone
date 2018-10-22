@@ -35,7 +35,6 @@ methods: {
                         type: 'select',
                         duplicate: true,
                         selected: current_country,
-                        options: JSON.parse(JSON.stringify(countryOptions)),
                     },
                     {
                         label: 'Total Quantity Exported for All Uses',
@@ -472,7 +471,6 @@ methods: {
                                     type: 'select',
                                     duplicate: true,
                                     selected: null,
-                                    options: JSON.parse(JSON.stringify(countryOptions)),
                                   },
                                   {
                                     label: 'Quantity of new imports from non-parties',

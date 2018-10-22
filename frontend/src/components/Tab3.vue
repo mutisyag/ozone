@@ -170,7 +170,7 @@
             <h6>Change substance</h6>
          </b-col>
          <b-col>
-            <multiselect class="mb-2" label="text" track-by="text" placeholder="Select substance" v-model="modal_data.selected" :options="modal_data.options"></multiselect>
+            <multiselect class="mb-2" label="text" track-by="text" placeholder="Select substance" v-model="modal_data.selected" :options="data.substances"></multiselect>
          </b-col>
        </b-row>
 
@@ -178,14 +178,15 @@
           <b-row v-if="field.type != 'multiple_fields'" >
             <b-col>{{field.label}}</b-col>
             <b-col >
-                  <fieldGenerator :field.sync="field"></fieldGenerator>
+                  <fieldGenerator v-if="!['destination_party','source_party', 'trade_party'].includes(field.name)" :field.sync="field"></fieldGenerator>
+                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" label="text" track-by="value" placeholder="Countries" v-model="field.selected" :options="data.countryOptions"></multiselect>
             </b-col>
           </b-row>
           <b-row v-else v-for="inner_field of field.fields">
             <b-col lg="12"><b>{{inner_field.label}}</b></b-col>
             <b-col lg="6" v-for="sub_field in inner_field.fields">
                   <b-col>{{sub_field.label}}</b-col>
-                   <b-col><fieldGenerator :field.sync="sub_field"></fieldGenerator></b-col>
+                  <b-col><fieldGenerator :field.sync="sub_field"></fieldGenerator></b-col>
             </b-col>
           </b-row>
           <hr>

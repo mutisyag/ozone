@@ -2,7 +2,7 @@
   <div v-if="section && field && inner_field && countryOptions">
     <div class="container">
       <div style="position: relative">
-          <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="this.current_field.substance.inner_fields[0].options"></multiselect>
+          <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="countryOptions"></multiselect>
           <b-btn @click="addSubstance" v-if="selected_countries.selected">Add</b-btn>
       </div>
     </div>
@@ -36,7 +36,6 @@ export default {
     return {
       substances: null,
       field: null,
-      existing_countries: {},
       selected_countries: {
         selected: null,
       },
@@ -45,13 +44,6 @@ export default {
 
 
   methods: {
-
-    pushUnique(array, item) {
-      if (array.indexOf(item) === -1) {
-        array.push(item);
-      }
-    },
-
 
     addSubstance() {
       let exact_duplication = false
