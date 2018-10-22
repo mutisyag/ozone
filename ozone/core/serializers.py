@@ -457,12 +457,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
-
-class UpdateSubmissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Submission
-        fields = ('party', 'reporting_period', 'obligation',)
-
     def update(self, instance, validated_data):
         if 'last_edited_by' not in validated_data:
             validated_data['last_edited_by'] = self.context['request'].user
