@@ -167,6 +167,7 @@ export default {
 
 
     getValidationStatus(tab_name){
+      console.log('----------tab------------',tab_name)
      this.$nextTick( () => {
 
       let validationTabContent = this.$refs[tab_name]
@@ -227,9 +228,7 @@ export default {
        handler: function(val) {
         if(this.data.form){
           for(let tab in this.data.form.tabs) {
-            if(tab != 'sub_info') {
               this.getValidationStatus(tab)
-            }
           }
         }
       },

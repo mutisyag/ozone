@@ -182,25 +182,23 @@ export default {
          current_tab_data.push(save_obj)
        })
         
-       post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
-        console.log(response)
-        }).catch((error) => {
-        console.log(this.$validator)
-            this.$validator._base.validateAll().then((result) => {
-              if (result) {
-                // eslint-disable-next-line
-                // console.log(result)
-                alert('Form Submitted!');
-                return;
-              }
 
+      this.$validator._base.validateAll().then((result) => {
+          if (result) {
+            post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+              }).catch((error) => {
+              console.log(this.$validator)
               
+              console.log('here error',error)
+            })
+          } else {
+            console.log('errors', result)
+          }
+        });
 
-              alert('Correct erros');
-            });
 
-        console.log('here',error)
-      })
+
+
 
     },
   }
