@@ -1,6 +1,6 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework import viewsets, mixins, status
+from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
@@ -22,7 +22,9 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     Group,
+    Substance,
     Blend,
+    Treaty,
 )
 
 from ..serializers import (
@@ -89,6 +91,16 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all().prefetch_related('subregion')
     serializer_class = PartySerializer
+
+
+class GetNonPartiesViewSet(generics.ListAPIView):
+    serializer_class = PartySerializer
+
+    def get_queryset(self):
+        substance = Substance.objects.get(pk=self.kwargs['substance_pk'])
+        groups = Group.objects.filter(annex__annex_id=substance.annex.annex_id)
+        treaties = Treaty.objects.filter(control_substance_groups__in=groups)
+        return Party.objects.exclude(ratifications__treaty__in=treaties)
 
 
 class ReportingPeriodViewSet(viewsets.ModelViewSet):
