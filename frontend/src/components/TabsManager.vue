@@ -79,6 +79,14 @@
              </template>
             <tab3 tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></tab3>
           </b-tab>
+          <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
+            <template slot="title">
+              <div :class="{'invalid-feedback': data.form.tabs.tab_7.isInvalid}">
+                {{data.form.tabs.tab_7.title}}
+              </div>
+             </template>
+            <tab4 tabId="6" ref="tab_7" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></tab4>
+          </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
           </b-tab>
@@ -205,6 +213,8 @@ export default {
       {title:'<b> Data on production </b>'},
       {title:'<b> Data on Destruction </b>'},
       {title:'<b> Data on Non-party </b>'},
+      {title:'<b> Data on Emissions </b>'},
+
 
 
       ],
@@ -217,7 +227,7 @@ export default {
         handler: function(new_val, old_val) {
           var body = document.querySelector('body')
           console.log(new_val)
-          if([2,3,4,5].includes(new_val)) {
+          if([2,3,4,5,6].includes(new_val)) {
             body.classList.add('aside-menu-lg-show')
           } else {
             body.classList.remove('aside-menu-lg-show')

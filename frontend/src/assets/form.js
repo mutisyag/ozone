@@ -455,18 +455,19 @@ var form = {
             ],
         },
 
-        tab_6: {
+        tab_7: {
             intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
             title: 'Data on emissions',
-            name: 'has_nonparty',
+            name: 'has_emissions',
             subtitle: 'in metric tonnes (not ODP tonnes)',
             description: 'Annexes A, B, C and E substances',
             isInvalid: false,
             // used for identification when adding labels
-            form_fields: [],
+            form_fields: [
+            ],
             section_subheaders: [{
                     label: "1",
-                    name: 'facility',
+                    name: 'facility_name',
                     sort: 1,
                     type: 'string',
                 },

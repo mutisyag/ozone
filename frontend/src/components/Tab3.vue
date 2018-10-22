@@ -1,6 +1,5 @@
 <template>
   <div v-if="tab_info">
-    <template slot="title">Title</template>
     <div class="form-sections">
       <table class="table submission-table">
         <thead>
