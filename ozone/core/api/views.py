@@ -53,7 +53,6 @@ from ..serializers import (
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
-    UpdateBlendSerializer,
 )
 
 
@@ -112,10 +111,8 @@ class BlendViewSet(viewsets.ModelViewSet):
     queryset = Blend.objects.all()
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.request.method == ["POST", "PUT", "PATCH"]:
             return CreateBlendSerializer
-        if self.request.method in ["PUT", "PATCH"]:
-            return UpdateBlendSerializer
         return BlendSerializer
 
 
