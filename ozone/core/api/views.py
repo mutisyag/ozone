@@ -35,7 +35,6 @@ from ..serializers import (
     SubmissionSerializer,
     ListSubmissionSerializer,
     CreateSubmissionSerializer,
-    UpdateSubmissionSerializer,
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
@@ -111,7 +110,7 @@ class BlendViewSet(viewsets.ModelViewSet):
     queryset = Blend.objects.all()
 
     def get_serializer_class(self):
-        if self.request.method == ["POST", "PUT", "PATCH"]:
+        if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateBlendSerializer
         return BlendSerializer
 
@@ -125,10 +124,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
 
     def get_serializer_class(self):
-        if self.request.method == "POST":
+        if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateSubmissionSerializer
-        if self.request.method in ["PUT", "PATCH"]:
-            return UpdateSubmissionSerializer
         return SubmissionSerializer
 
     def list(self, request, *args, **kwargs):
