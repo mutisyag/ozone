@@ -66,22 +66,13 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class BlendComponentSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=False)
     substance_name = serializers.StringRelatedField(
         source='substance', many=False, read_only=True
     )
 
     class Meta:
         model = BlendComponent
-        fields = ('id', 'substance', 'substance_name', 'percentage')
-
-
-class UpdateBlendComponentSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(required=True)
-
-    class Meta:
-        model = BlendComponent
-        fields = ('id', 'substance', 'percentage')
+        fields = ('substance', 'substance_name', 'percentage')
 
 
 class BlendSerializer(serializers.ModelSerializer):
@@ -108,7 +99,9 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 
 
 class UpdateBlendSerializer(serializers.ModelSerializer):
-    components = UpdateBlendComponentSerializer(many=True)
+    # TODO: a blend update also needs to trigger a recalculation of
+    # derived substance fields in data reports.
+    components = BlendComponentSerializer(many=True)
 
     class Meta:
         model = Blend
@@ -117,18 +110,21 @@ class UpdateBlendSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         components_data = validated_data.pop('components')
         blend = super().update(instance, validated_data)
+
+        # Delete all components that do not correspond to the substance data
+        qs = BlendComponent.objects.filter(blend=instance)
+        qs.exclude(
+            substance__pk__in=[c.get('substance').pk for c in components_data]
+        ).delete()
+
+        # And create/update the new ones
         for component_data in components_data:
-            component_id = component_data.get('id', None)
-            component = BlendComponent.objects.get(
-                id=component_id, blend=instance
+            BlendComponent.objects.update_or_create(
+                blend=instance,
+                substance=component_data.get('substance'),
+                defaults={'percentage': component_data.get('percentage')}
             )
-            component.substance = component_data.get(
-                'substance', component.substance
-            )
-            component.percentage = component_data.get(
-                'percentage', component.percentage
-            )
-            component.save()
+
         return blend
 
 
