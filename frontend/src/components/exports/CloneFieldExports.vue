@@ -31,17 +31,6 @@ export default {
     this.field = JSON.parse(JSON.stringify(this.current_field))
   },
 
-  computed:{
-    watchParent: {
-       get: function(){
-        return JSON.parse(JSON.stringify(this.$parent.$children.length))
-      }
-    }
-  },
-
-  mounted(){
-    this.prepareCountries();
-  },
 
   data() {
     return {
@@ -55,40 +44,7 @@ export default {
   },
 
 
-  destroyed() {
-      this.$emit('update:recomputeCountries', this.recomputeCountries + 1)
-  },
-
   methods: {
-
-    prepareCountries(){
-      console.log('preparing countries')
-
-      this.section.form_fields.forEach( field => {
-        let substance_key = field.substance.selected.value || field.substance.selected.id
-        console.log('substance_key', substance_key)
-        if(!this.existing_countries[substance_key]) {
-          this.$set(this.existing_countries, substance_key, [])
-        }
-        field.substance.inner_fields.forEach( inner_field => {
-          if(['source_party', 'destination_party', 'trade_party'].includes(inner_field.name) && inner_field.selected) {
-              this.pushUnique(this.existing_countries[substance_key],inner_field.selected.value)
-          } 
-        })
-
-         field.substance.inner_fields.forEach( inner_field => {
-           if (['source_party', 'destination_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected) {
-            this.existing_countries[substance_key].forEach( country => {
-              let to_remove = inner_field.options.find( (country_values) => {
-                return country_values.value === country
-              })
-              inner_field.options.splice(inner_field.options.indexOf(to_remove), 1)
-              
-            })
-          }
-        })
-      });
-    },
 
     pushUnique(array, item) {
       if (array.indexOf(item) === -1) {
@@ -135,20 +91,6 @@ export default {
       return str.replace(/[^a-zA-Z0-9]+/g, "");
     },
   },
-
-
-  watch: {
-    recomputeCountries: function(newVal, oldVal){
-      this.resetData()
-      this.prepareCountries()
-    },
-    existing_countries: {
-      handler: function(newVal, oldVal) {
-        this.prepareCountries()
-      },
-      deep: true
-    }
-  }
 
 }
 </script>
