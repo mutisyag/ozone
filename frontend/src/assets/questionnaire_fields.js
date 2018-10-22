@@ -59,63 +59,63 @@ export const reporting_party = [
 		label: 'Name of reporting officer',
 		name: 'reporting_officer',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required',
 	},
 	{
 		label: 'Designation',
 		name: 'designation',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required'
 	},
 	{
 		label: 'Organization',
 		name: 'organization',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required'
 	},
 	{
 		label: 'Postal Adddress',
 		name: 'postal_address',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required'
 	},
 	{
 		label: 'Country',
 		name: 'country',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required|alpha'
 	},
 	{
 		label: 'Phone',
 		name: 'phone',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required'
 	},
 	{
 		label: 'Fax',
 		name: 'fax',
 		type: 'text',
-		selected: '',
+		selected: 'test',
 		validation: 'required'
 	},
 	{
 		label: 'E-mail',
 		name: 'mail',
 		type: 'email',
-		selected: '',
+		selected: 'test@test',
 		validation: 'required|email'
 	},
 	{
 		label: 'Date',
 		name: 'date',
 		type: 'date',
-		selected: null,
+		selected: '2018-02-05',
 		validation: 'required'
 	}
 ]

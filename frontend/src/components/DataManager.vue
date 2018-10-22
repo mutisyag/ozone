@@ -46,7 +46,7 @@ export default {
           'has_produced' : 'article7productions',
           'has_destroyed' : 'article7destructions',
           'has_nonparty' : 'article7nonpartytrades',
-          'emissions_question' : 'article7emissions_url',
+          'has_emissions' : 'article7emissions',
       },
     }
   },
@@ -124,6 +124,7 @@ export default {
     },
 
     prefill(tab, data, countries) {
+      console.log('-taaaaaab-----------', tab)
       for(let entry of data) {
         let current_substance = this.initialData.substances.find( val => val.value === entry.substance )
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)

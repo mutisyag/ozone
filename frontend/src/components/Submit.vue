@@ -25,8 +25,7 @@ export default {
           'has_produced' : 'article7productions_url',
           'has_destroyed' : 'article7destructions_url',
           'has_nonparty' : 'article7nonpartytrades_url',
-          'emissions_question' : 'article7emissions_url',
-          'questionaire_questions' : 'article7questionnaire_url',
+          'has_emissions' : 'article7emissions_url',
         },
         form_fields: {
           'has_exports' : {
@@ -123,6 +122,15 @@ export default {
               "has_nonparty": false,
               "has_emissions": false
           },
+          'has_emissions' :{
+              "remarks_party": "",
+              "remarks_os": "",
+              "facility_name": "",
+              "quantity_generated": null,
+              "quantity_feedstock": null,
+              "quantity_destroyed": null,
+              "quantity_emitted": null
+          }
         },
     }
   },
@@ -158,29 +166,47 @@ export default {
        // for some reason calling [0,1].forEach() in a certain iteration causes erros. Probably babel stuff
        let small_iterator = [0,1]
        let current_tab_data = []
-       current_tab.form_fields.forEach( form_field => {
-        let substance = form_field.substance 
-        let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-        console.log(save_obj)
-          
-        if(substance.comments) {
-         small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
-        }
-        
-        substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
-        
-        substance.inner_fields.forEach( inner_field => {
-          inner_field.type != 'multiple_fields' 
-          ? 
-          inner_field.type != 'select'  ? save_obj[inner_field.name]  = inner_field.selected : inner_field.selected ? save_obj[inner_field.name]  = inner_field.selected.value : save_obj[inner_field.name] = inner_field.selected 
-          :
-          inner_field.fields.forEach( inner_inner_field => {
-            small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
-          })          
-        })
 
-         current_tab_data.push(save_obj)
-       })
+       if(field === 'has_emissions') {
+
+
+        current_tab.form_fields.forEach( form_field => {
+          let current_field = form_field 
+          let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+            
+          current_field.forEach( inner_field => {
+             save_obj[inner_field.name] = inner_field.selected 
+          })
+
+           current_tab_data.push(save_obj)
+         })
+ 
+       } else {
+
+         current_tab.form_fields.forEach( form_field => {
+          let substance = form_field.substance 
+          let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+          console.log(save_obj)
+            
+          if(substance.comments) {
+           small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
+          }
+          
+          substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
+          
+          substance.inner_fields.forEach( inner_field => {
+            inner_field.type != 'multiple_fields' 
+            ? 
+            inner_field.type != 'select'  ? save_obj[inner_field.name]  = inner_field.selected : inner_field.selected ? save_obj[inner_field.name]  = inner_field.selected.value : save_obj[inner_field.name] = inner_field.selected 
+            :
+            inner_field.fields.forEach( inner_inner_field => {
+              small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
+            })          
+          })
+
+           current_tab_data.push(save_obj)
+         })
+       }
         
 
       this.$validator._base.validateAll().then((result) => {

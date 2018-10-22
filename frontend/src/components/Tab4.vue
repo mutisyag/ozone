@@ -12,7 +12,7 @@
                  <span v-html="header.label"></span>
               </div>
             </th>
-	         <i style="color: green;
+	         <i style="
 				    font-size: 2rem;
 				    position: absolute;
 				    cursor: pointer;
@@ -37,7 +37,7 @@
               <fieldGenerator :disabled="inner_field.disabled" :field="inner_field"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
-	            <i style="color:red" class="fa fa-times-circle fa-lg" @click="remove_field(outer_field)"></i>
+	            <i class="fa fa-times-circle fa-lg" @click="remove_field(outer_field)"></i>
 	         </td>
           </tr>
 
@@ -101,40 +101,45 @@ export default {
                         name: 'facility_name',
                         type: 'text',
                         validation: 'required',
+                        label: 'Facility name or identifier',
                         selected: '',
                     },
                     {
                         name: 'quantity_generated',
                         type: 'number',
                         validation: 'required',
+                        label: 'Amount',
                         selected: '',
                     },
                     {
                         name: 'quantity_feedstock',
                         type: 'number',
                         validation: 'required',
+                        label: 'Amount Used for Feedstock',
                         selected: '',
                     },
                     {
                         name: 'quantity_destroyed',
                         type: 'number',
                         validation: 'required',
+                        label: 'Amount Destroyed',
                         selected: '',
                     },
                     {
                         name: 'quantity_emitted',
                         type: 'number',
                         validation: 'required',
+                        label: 'Amount of Emissions',
                         selected: '',
                     },
                     {
-                        name: 'comments_party',
+                        name: 'remarks_party',
                         selected: '',
                         type: 'textarea',
                         label: 'Party Comments',
                     },
                     {
-                        name: 'comments_secretariat',
+                        name: 'remarks_os',
                         selected: '',
                         type: 'textarea',
                         label: 'Secretariat Comments',

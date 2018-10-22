@@ -1,3 +1,4 @@
+<template></template>
 <script>
 import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
 export default {
@@ -8,7 +9,7 @@ methods: {
 
      prefillSubstance(tab_name, data, section, countryOptions, current_country, substance, substances) {
     	console.log('gruuuuuuuup',tab_name, current_country)
-        let group_field = {
+        let group_field = tab_name != 'has_emissions' ? {
             label: substance.group.group_id,
             name: substance.group.group_id,
             substance: {
@@ -203,7 +204,7 @@ methods: {
                     },
                 ]
             }
-        }
+        } : null
 
         if(tab_name === 'has_produced') {
             console.log('-------------hereeeeeeeee------')
@@ -530,6 +531,58 @@ methods: {
 
 
 
+        }
+
+        if(tab_name === 'has_emissions') {
+             group_field = [
+                    {
+                        name: 'facility_name',
+                        type: 'text',
+                        validation: 'required',
+                        label: 'Facility name or identifier',
+                        selected: data.facility_name,
+                    },
+                    {
+                        name: 'quantity_generated',
+                        type: 'number',
+                        validation: 'required',
+                        label: 'Amount [Generated]',
+                        selected: data.quantity_generated,
+                    },
+                    {
+                        name: 'quantity_feedstock',
+                        type: 'number',
+                        validation: 'required',
+                        label: 'Amount Used for Feedstock',
+                        selected: data.quantity_generated,
+                    },
+                    {
+                        name: 'quantity_destroyed',
+                        type: 'number',
+                        validation: 'required',
+                        label: 'Amount Destroyed',
+                        selected: data.quantity_destroyed,
+                    },
+                    {
+                        name: 'quantity_emitted',
+                        type: 'number',
+                        validation: 'required',
+                        label: 'Amount of Emissions',
+                        selected: data.quantity_emitted,
+                    },
+                    {
+                        name: 'remarks_party',
+                        selected: data.remarks_party,
+                        type: 'textarea',
+                        label: 'Party Comments',
+                    },
+                    {
+                        name: 'remarks_os',
+                        selected: data.remarks_os,
+                        type: 'textarea',
+                        label: 'Secretariat Comments',
+                    },
+                ]
         }
 
         section.push(group_field)
