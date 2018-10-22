@@ -2,7 +2,7 @@
   <div v-if="section && field && inner_field && countryOptions">
     <div class="container">
       <div style="position: relative">
-          <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="selected_countries.options"></multiselect>
+          <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" track-by="value" placeholder="Countries" v-model="selected_countries.selected" :options="this.current_field.substance.inner_fields[0].options"></multiselect>
           <b-btn @click="addSubstance" v-if="selected_countries.selected">Add</b-btn>
       </div>
     </div>
@@ -19,6 +19,7 @@ export default {
     section: null,
     current_field: Object,
     inner_field: Object,
+    recomputeCountries: null,
     countryOptions: Array,
   },
 
@@ -30,18 +31,71 @@ export default {
     this.field = JSON.parse(JSON.stringify(this.current_field))
   },
 
+  computed:{
+    watchParent: {
+       get: function(){
+        return JSON.parse(JSON.stringify(this.$parent.$children.length))
+      }
+    }
+  },
+
+  mounted(){
+    this.prepareCountries();
+  },
+
   data() {
     return {
       substances: null,
       field: null,
+      existing_countries: {},
       selected_countries: {
         selected: null,
-        options: this.countryOptions,
       },
     }
   },
 
+
+  destroyed() {
+      this.$emit('update:recomputeCountries', this.recomputeCountries + 1)
+  },
+
   methods: {
+
+    prepareCountries(){
+      console.log('preparing countries')
+
+      this.section.form_fields.forEach( field => {
+        let substance_key = field.substance.selected.value || field.substance.selected.id
+        console.log('substance_key', substance_key)
+        if(!this.existing_countries[substance_key]) {
+          this.$set(this.existing_countries, substance_key, [])
+        }
+        field.substance.inner_fields.forEach( inner_field => {
+          if(['source_party', 'destination_party', 'trade_party'].includes(inner_field.name) && inner_field.selected) {
+              this.pushUnique(this.existing_countries[substance_key],inner_field.selected.value)
+          } 
+        })
+
+         field.substance.inner_fields.forEach( inner_field => {
+           if (['source_party', 'destination_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected) {
+            this.existing_countries[substance_key].forEach( country => {
+              let to_remove = inner_field.options.find( (country_values) => {
+                return country_values.value === country
+              })
+              inner_field.options.splice(inner_field.options.indexOf(to_remove), 1)
+              
+            })
+          }
+        })
+      });
+    },
+
+    pushUnique(array, item) {
+      if (array.indexOf(item) === -1) {
+        array.push(item);
+      }
+    },
+
 
     addSubstance() {
       let exact_duplication = false
@@ -69,6 +123,7 @@ export default {
       }
 
       this.section.form_fields.splice(this.section.form_fields.indexOf(this.current_field),1)
+      
       this.resetData()
     },
 
@@ -80,6 +135,20 @@ export default {
       return str.replace(/[^a-zA-Z0-9]+/g, "");
     },
   },
+
+
+  watch: {
+    recomputeCountries: function(newVal, oldVal){
+      this.resetData()
+      this.prepareCountries()
+    },
+    existing_countries: {
+      handler: function(newVal, oldVal) {
+        this.prepareCountries()
+      },
+      deep: true
+    }
+  }
 
 }
 </script>

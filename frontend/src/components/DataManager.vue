@@ -124,7 +124,6 @@ export default {
     },
 
     prefill(tab, data, countries) {
-      console.log('-taaaaaab-----------', tab)
       for(let entry of data) {
         let current_substance = this.initialData.substances.find( val => val.value === entry.substance )
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)

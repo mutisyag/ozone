@@ -37,7 +37,6 @@ export default {
     data: null,
   },
   created(){
-    console.log('-----------form--------', this.form)
   }
  
 }

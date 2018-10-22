@@ -8,7 +8,6 @@ methods: {
 
 
      prefillSubstance(tab_name, data, section, countryOptions, current_country, substance, substances) {
-    	console.log('gruuuuuuuup',tab_name, current_country)
         let group_field = tab_name != 'has_emissions' ? {
             label: substance.group.group_id,
             name: substance.group.group_id,
@@ -36,7 +35,7 @@ methods: {
                         type: 'select',
                         duplicate: true,
                         selected: current_country,
-                        options: countryOptions,
+                        options: JSON.parse(JSON.stringify(countryOptions)),
                     },
                     {
                         label: 'Total Quantity Exported for All Uses',
@@ -207,7 +206,6 @@ methods: {
         } : null
 
         if(tab_name === 'has_produced') {
-            console.log('-------------hereeeeeeeee------')
          group_field = {
             label: substance.group.group_id,
             name: substance.group.group_id,
@@ -408,7 +406,6 @@ methods: {
 
 
           if(tab_name === 'has_destroyed') {
-            console.log('-------------hereeeeeeeee------')
              group_field = {
                 label: substance.group.group_id,
                 name: substance.group.group_id,
@@ -475,7 +472,7 @@ methods: {
                                     type: 'select',
                                     duplicate: true,
                                     selected: null,
-                                    options: this.countryOptions,
+                                    options: JSON.parse(JSON.stringify(countryOptions)),
                                   },
                                   {
                                     label: 'Quantity of new imports from non-parties',
@@ -586,7 +583,6 @@ methods: {
         }
 
         section.push(group_field)
-        console.log('section', section)
     }
 }
 

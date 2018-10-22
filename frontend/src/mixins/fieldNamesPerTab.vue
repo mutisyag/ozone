@@ -39,7 +39,7 @@ export default {
                 type: 'select',
                 duplicate: true,
                 selected: null,
-                options: this.countryOptions,
+                options: JSON.parse(JSON.stringify(this.countryOptions)),
               },
               {
                 label: 'Total Quantity Exported for All Uses',
@@ -434,7 +434,7 @@ export default {
                     type: 'select',
                     duplicate: true,
                     selected: null,
-                    options: this.countryOptions,
+                    options: JSON.parse(JSON.stringify(this.countryOptions)),
                   },
                   {
                     label: 'Quantity of new imports from non-parties',

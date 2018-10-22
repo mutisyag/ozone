@@ -35,13 +35,11 @@ export default {
       }
     },
     preventTwoDots(value, field) {
-      console.log(value)
       if(isNaN(parseFloat(value)))
         field.selected = null
     },
 
     preventArrows(e){
-      console.log('preventing', e)
       if (e.which === 38 || e.which === 40) {
         e.preventDefault();
       }

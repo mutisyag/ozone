@@ -158,7 +158,6 @@ export default {
   computed: {
 
     getValidatorValues(){
-      console.log('here')
       console.log(this.$validator._base.errors.items)
       return this.$validator._base.errors.items
     },
@@ -175,7 +174,6 @@ export default {
 
 
     getValidationStatus(tab_name){
-      console.log('----------tab------------',tab_name)
      this.$nextTick( () => {
 
       let validationTabContent = this.$refs[tab_name]
@@ -226,7 +224,6 @@ export default {
       tabIndex: {
         handler: function(new_val, old_val) {
           var body = document.querySelector('body')
-          console.log(new_val)
           if([2,3,4,5,6].includes(new_val)) {
             body.classList.add('aside-menu-lg-show')
           } else {

@@ -40,7 +40,7 @@
             <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.type != 'multiple_fields'">
               <fieldGenerator v-if="inner_field.type != 'multiple_fields' && !['destination_party','source_party', 'trade_party'].includes(inner_field.name) " :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected">
-                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
+                  <clonefield :recomputeCountries.sync="recomputeCountries" :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if=" ['destination_party','source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected">
                 {{inner_field.selected.text}}
@@ -86,7 +86,7 @@
                 <fieldGenerator :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
               </div>
               <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected">
-                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
+                  <clonefield  :recomputeCountries.sync="recomputeCountries" :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
               </div>
               <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected">
                 {{inner_field.selected.text}}
@@ -236,6 +236,7 @@ export default {
       modal_data: null,
       current_field: null,
       modal_comments: null,
+      recomputeCountries: 0,
     }
   },
 
