@@ -7,7 +7,7 @@
           <tr class="first-header">
             <th v-for="header in tab_info.section_headers" :colspan="header.colspan">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-                <span v-html="header.label"></span> <i class="fa fa-info-circle fa-lg"></i>
+                <span v-html="header.label"></span>  <i class="fa fa-info-circle fa-lg"></i>
               </div>
               <div v-else>
                  <span v-html="header.label"></span>
@@ -71,7 +71,7 @@
             </td>
           </tr>
           <tr v-else>
-            <td class="blend-name" style="padding-right: .5rem; vertical-align: middle;">
+            <td class="blend" style="padding-right: .5rem; vertical-align: middle;">
               <div class="table-btn-group">
                 <b-btn variant="info" @click="createModalData(outer_field.substance)">
                   Edit
@@ -441,16 +441,8 @@ export default {
 </script>
 
 <style lang="css" scoped>
-  .AI {
-    color: red;
-  }
-
-  .AII {
-    color: blue;
-  }
-
-  .EI {
-    color: green;
+  .blend {
+    font-weight: bold;
   }
 
   td {
@@ -509,5 +501,9 @@ export default {
 
   .submission-table tr td:last-of-type > * {
     max-width: 90%;
+  }
+
+  .fa-info-circle {
+    margin-left: 5px;
   }
 </style>

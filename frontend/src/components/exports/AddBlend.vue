@@ -198,7 +198,7 @@ export default {
               name: 'quantity_total_new',
               disabled: false,
               description: 'New',
-              type: 'text',
+              type: 'number',
               validation: 'required',
               selected: null,
             },
@@ -207,7 +207,7 @@ export default {
               name: 'quantity_total_recovered',
               description: 'Recovered and Reclaimed',
               disabled: false,
-              type: 'text',
+              type: 'number',
               validation: 'required',
               selected: null,
             },
@@ -217,7 +217,7 @@ export default {
               description: '',
               disabled: false,
               validation: 'required',
-              type: 'text',
+              type: 'number',
               selected: null,
             },
             {
@@ -239,7 +239,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_essential_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -257,7 +257,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_critical_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -275,7 +275,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_high_ambient_temperature",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -293,7 +293,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_process_agent_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -311,7 +311,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_laboratory_analytical_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -329,7 +329,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_quarantine_pre_shipment",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -347,7 +347,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_other",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -417,7 +417,7 @@ export default {
               disabled: false,
               validation: 'required',
               description: 'New',
-              type: 'text',
+              type: 'number',
               selected: null,
             },
             {
@@ -426,7 +426,7 @@ export default {
               description: 'Recovered and Reclaimed',
               disabled: false,
               validation: 'required',
-              type: 'text',
+              type: 'number',
               selected: null,
             },
             {
@@ -435,7 +435,7 @@ export default {
               description: '',
               disabled: false,
               validation: 'required',
-              type: 'text',
+              type: 'number',
               selected: null,
             },
             {
@@ -457,7 +457,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_essential_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -475,7 +475,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_critical_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -493,7 +493,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_high_ambient_temperature",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -511,7 +511,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_process_agent_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -529,7 +529,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_laboratory_analytical_uses",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -547,7 +547,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_quarantine_pre_shipment",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                     {
                       label: "Decision",
@@ -565,7 +565,7 @@ export default {
                       label: "Quantity in metric",
                       name: "quantity_other",
                       selected: null,
-                      type: "text",
+                      type: "number",
                     },
                    {
                       label: "Decision",
