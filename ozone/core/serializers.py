@@ -97,17 +97,9 @@ class CreateBlendSerializer(serializers.ModelSerializer):
             BlendComponent.objects.create(blend=blend, **component_data)
         return blend
 
-
-class UpdateBlendSerializer(serializers.ModelSerializer):
-    # TODO: a blend update also needs to trigger a recalculation of
-    # derived substance fields in data reports.
-    components = BlendComponentSerializer(many=True)
-
-    class Meta:
-        model = Blend
-        exclude = ('custom',)
-
     def update(self, instance, validated_data):
+        # TODO: a blend update also needs to trigger a recalculation of
+        # derived substance fields in data reports.
         components_data = validated_data.pop('components')
         blend = super().update(instance, validated_data)
 
