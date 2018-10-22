@@ -19,7 +19,6 @@ export default {
     section: null,
     current_field: Object,
     inner_field: Object,
-    recomputeCountries: null,
     countryOptions: Array,
   },
 

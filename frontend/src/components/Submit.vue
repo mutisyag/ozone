@@ -18,6 +18,8 @@ export default {
 
   data () {
     return {
+        findDuplicates: {},
+        duplicatesFound: [],
         fields_to_save: {
           'questionaire_questions' : 'article7questionnaire_url',
           'has_imports' : 'article7imports_url',
@@ -168,8 +170,6 @@ export default {
        let current_tab_data = []
 
        if(field === 'has_emissions') {
-
-
         current_tab.form_fields.forEach( form_field => {
           let current_field = form_field 
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
@@ -182,9 +182,8 @@ export default {
          })
  
        } else {
-
          current_tab.form_fields.forEach( form_field => {
-          let substance = form_field.substance 
+          let substance = form_field.substance
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
           console.log(save_obj)
             
@@ -193,7 +192,17 @@ export default {
           }
           
           substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
-          
+         
+
+          if(substance.type != 'blend') {
+          if(!this.findDuplicates[substance.selected.text])
+            this.findDuplicates[substance.selected.text] = []
+          } else {
+            if(!this.findDuplicates[substance.selected.text]) {
+              this.findDuplicates[substance.selected.name] = []
+            }
+          }
+
           substance.inner_fields.forEach( inner_field => {
             inner_field.type != 'multiple_fields' 
             ? 
@@ -201,13 +210,43 @@ export default {
             :
             inner_field.fields.forEach( inner_inner_field => {
               small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
-            })          
+            })
+
+
+
+          if(substance.type != 'blend') {
+          if(inner_field.type == 'select')
+            this.findDuplicates[substance.selected.text].push(inner_field.selected.text)
+          } else {
+            if(inner_field.type == 'select') {
+            this.findDuplicates[substance.selected.name].push(inner_field.selected.text)
+            }
+          }
+
           })
 
            current_tab_data.push(save_obj)
          })
        }
         
+      console.log('duplicates', this.findDuplicates)
+      
+      for(let entry in this.findDuplicates) {
+        let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
+        if(found) {
+          this.duplicatesFound.push(entry + ' - ' + found)
+        }
+        // console.log('found', found)
+      }
+        
+      let current_duplicates = 'Found duplicate: \n'
+
+      if(this.duplicatesFound.length){
+        this.duplicatesFound.forEach(duplicate => current_duplicates += duplicate + '\n')
+        current_duplicates += 'Please correct the errors before submiting the form again'
+        alert(current_duplicates)
+        return false
+      }
 
       this.$validator._base.validateAll().then((result) => {
           if (result) {
