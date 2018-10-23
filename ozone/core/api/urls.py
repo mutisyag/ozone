@@ -1,3 +1,5 @@
+from django.urls import re_path
+
 from rest_framework_nested import routers
 
 from . import views
@@ -126,6 +128,14 @@ auth_tokens.register(
 router.extend(auth_tokens)
 
 
-urlpatterns = router.urls + [url
-                             for router in nested_routers
-                             for url in router.urls]
+urlpatterns = (
+    router.urls
+    + [url for router in nested_routers for url in router.urls]
+    + [
+        re_path(
+            '^get-non-parties/(?P<substance_pk>[0-9]+)',
+            views.GetNonPartiesViewSet.as_view(),
+            name='get_non_parties',
+        )
+    ]
+)
