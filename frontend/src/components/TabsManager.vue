@@ -201,7 +201,8 @@ export default {
         has_imports: false,
         has_destroyed: false,
         has_nonparty: false,
-        has_produced: false
+        has_produced: false,
+        has_emissions: false,
       },
       titles: [
       {title:'Submission Info'},
@@ -212,9 +213,6 @@ export default {
       {title:'<b> Data on Destruction </b>'},
       {title:'<b> Data on Non-party </b>'},
       {title:'<b> Data on Emissions </b>'},
-
-
-
       ],
       subtitles: ['', 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.','', 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide']
     }

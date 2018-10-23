@@ -108,7 +108,7 @@ export const reporting_party = [
 		label: 'E-mail',
 		name: 'mail',
 		type: 'email',
-		selected: 'test@test',
+		selected: 'test@test.test',
 		validation: 'required|email'
 	},
 	{

@@ -189,11 +189,11 @@ export default {
         // let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
         let arrayDuplicates = (a) => {let d=[]; a.sort((a,b) => a-b).reduce((a,b)=>{a==b&&!d.includes(a)&&d.push(a); return b}); return d};
         let duplicates = arrayDuplicates(this.findDuplicates[entry])
-        if(duplicates) {
+
+        if(duplicates.length) {
           this.duplicatesFound.push(entry + ' - ' + duplicates)
         }
       }
-
       this.current_duplicates = 'Found duplicates: <br>'
       
       console.log('duplicatesfound', this.duplicatesFound, this.findDuplicates)
