@@ -1,7 +1,7 @@
 <template>
   <span>
     
-    <b-btn @click="startSubmitting" variant="success">
+    <b-btn @click="validateDuplicates" variant="success">
         Submit
       </b-btn>
 
@@ -163,8 +163,54 @@ export default {
       }
     },
 
+
+    validateDuplicates(){
+      for(let tab in this.data.tabs) {
+        if(['has_imports', 'has_exports', 'has_nonparty'].includes(this.data.tabs[tab].name) && this.data.tabs[tab].form_fields.length){ 
+            this.data.tabs[tab].form_fields.forEach( form_field => {
+              let substance = form_field.substance
+              
+              substance.type != 'blend' ? 
+                !this.findDuplicates[substance.selected.text] && (this.findDuplicates[substance.selected.text] = []) 
+              : 
+                !this.findDuplicates[substance.selected.name] && (this.findDuplicates[substance.selected.name] = [])
+              
+              substance.inner_fields.forEach( inner_field => {
+                 if(['destination_party', 'source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected) {
+                    substance.type != 'blend' ? this.findDuplicates[substance.selected.text].push(inner_field.selected.text) : this.findDuplicates[substance.selected.name].push(inner_field.selected.text)
+                 } 
+              })
+
+          });
+        }
+      }
+
+      for(let entry in this.findDuplicates) {
+        // let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
+        let arrayDuplicates = (a) => {let d=[]; a.sort((a,b) => a-b).reduce((a,b)=>{a==b&&!d.includes(a)&&d.push(a); return b}); return d};
+        let duplicates = arrayDuplicates(this.findDuplicates[entry])
+        if(duplicates) {
+          this.duplicatesFound.push(entry + ' - ' + duplicates)
+        }
+      }
+
+      this.current_duplicates = 'Found duplicates: <br>'
+      
+      console.log('duplicatesfound', this.duplicatesFound, this.findDuplicates)
+
+      if(this.duplicatesFound.length) {
+        this.duplicatesFound.forEach(duplicate => this.current_duplicates += `<b>  (${duplicate})  </b>  `)
+        this.current_duplicates += '<br> Please correct the errors before submiting the form again<br>'
+        this.showDismissibleAlert = true
+        this.duplicatesFound = []
+        this.findDuplicates = {}
+      } else {
+        this.startSubmitting()
+      }
+
+    },
+
   	startSubmitting(){
-  		console.log(this.data,this.submission)
       this.submitQuestionaireData('questionaire_questions')
       for(let questionnaire_field of this.data.tabs.tab_1.form_fields) {
         if(questionnaire_field.selected) {
@@ -189,7 +235,6 @@ export default {
 
     submitData(field) {
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
-       console.log('------current_tab--------', field)
        // for some reason calling [0,1].forEach() in a certain iteration causes erros. Probably babel stuff
        let small_iterator = [0,1]
        let current_tab_data = []
@@ -207,12 +252,10 @@ export default {
          })
  
        } else {
-        // for(let form_field of current_tab.form_fields)
 
          current_tab.form_fields.forEach( form_field => {
           let substance = form_field.substance
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-          console.log(save_obj)
             
           if(substance.comments) {
            small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
@@ -221,14 +264,6 @@ export default {
           substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
          
 
-          if(substance.type != 'blend') {
-          if(!this.findDuplicates[substance.selected.text])
-            this.findDuplicates[substance.selected.text] = []
-          } else {
-            if(!this.findDuplicates[substance.selected.text]) {
-              this.findDuplicates[substance.selected.name] = []
-            }
-          }
 
           substance.inner_fields.forEach( inner_field => {
             inner_field.type != 'multiple_fields' 
@@ -238,42 +273,13 @@ export default {
             inner_field.fields.forEach( inner_inner_field => {
               small_iterator.forEach( i => save_obj[inner_inner_field.fields[i].name] = inner_inner_field.fields[i].selected )
             })
-
-
-
-          if(substance.type != 'blend') {
-          if(inner_field.type == 'select')
-            this.findDuplicates[substance.selected.text].push(inner_field.selected.text)
-          } else {
-            if(inner_field.type == 'select') {
-            this.findDuplicates[substance.selected.name].push(inner_field.selected.text)
-            }
-          }
-
           })
 
            current_tab_data.push(save_obj)
          })
        }
       
-      this.duplicatesFound = []
-
-      for(let entry in this.findDuplicates) {
-        let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
-        if(found) {
-          this.duplicatesFound.push(entry + ' - ' + found)
-        }
-      }
-      
-      this.current_duplicates = 'Found duplicates: <br>'
-
-      if(this.duplicatesFound.length){
-        this.duplicatesFound.forEach(duplicate => this.current_duplicates += `<b>  (${duplicate})  </b>  `)
-        // this.current_duplicates += 'in ' + '<b>' +current_tab.title+ '</b>' + '<br>'
-        this.current_duplicates += '<br> Please correct the errors before submiting the form again<br>'
-        this.showDismissibleAlert = true
-        return false
-      } else {
+  
         this.$validator._base.validateAll().then((result) => {
           if (result) {
             post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
@@ -286,7 +292,6 @@ export default {
             console.log('errors', result)
           }
         });
-      }
 
 
 
