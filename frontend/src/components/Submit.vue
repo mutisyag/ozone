@@ -1,7 +1,25 @@
 <template>
-	  <b-btn @click="startSubmitting" variant="success">
+  <span>
+    
+    <b-btn @click="startSubmitting" variant="success">
         Submit
       </b-btn>
+
+       <b-alert variant="danger"
+             dismissible
+             style="position: fixed;
+                top: 0;
+                z-index: 10000;
+                width: 100%;
+                left: 0;
+                right: 0;"
+             :show="showDismissibleAlert"
+             @dismissed="showDismissibleAlert=false"
+             >
+             <div v-html="current_duplicates"></div>
+    </b-alert>
+  </span>
+
 </template>
 
 <script>
@@ -19,6 +37,8 @@ export default {
   data () {
     return {
         findDuplicates: {},
+        showDismissibleAlert: false,
+        current_duplicates: 'Found duplicate: <br>',
         duplicatesFound: [],
         fields_to_save: {
           'questionaire_questions' : 'article7questionnaire_url',
@@ -137,6 +157,12 @@ export default {
     }
   },
   methods:{
+    pushUnique(array, item) {
+      if (array.indexOf(item) === -1) {
+        array.push(item);
+      }
+    },
+
   	startSubmitting(){
   		console.log(this.data,this.submission)
       this.submitQuestionaireData('questionaire_questions')
@@ -151,7 +177,6 @@ export default {
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
        let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
        current_tab.form_fields.forEach( form_field => {
-        console.log('asdassdsadasdas',form_field.selected)
         save_obj[form_field.name]  = form_field.selected
        })
 
@@ -182,6 +207,8 @@ export default {
          })
  
        } else {
+        // for(let form_field of current_tab.form_fields)
+
          current_tab.form_fields.forEach( form_field => {
           let substance = form_field.substance
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
@@ -228,27 +255,26 @@ export default {
            current_tab_data.push(save_obj)
          })
        }
-        
-      console.log('duplicates', this.findDuplicates)
       
+      this.duplicatesFound = []
+
       for(let entry in this.findDuplicates) {
         let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
         if(found) {
           this.duplicatesFound.push(entry + ' - ' + found)
         }
-        // console.log('found', found)
       }
-        
-      let current_duplicates = 'Found duplicate: \n'
+      
+      this.current_duplicates = 'Found duplicates: <br>'
 
       if(this.duplicatesFound.length){
-        this.duplicatesFound.forEach(duplicate => current_duplicates += duplicate + '\n')
-        current_duplicates += 'Please correct the errors before submiting the form again'
-        alert(current_duplicates)
+        this.duplicatesFound.forEach(duplicate => this.current_duplicates += `<b>  (${duplicate})  </b>  `)
+        // this.current_duplicates += 'in ' + '<b>' +current_tab.title+ '</b>' + '<br>'
+        this.current_duplicates += '<br> Please correct the errors before submiting the form again<br>'
+        this.showDismissibleAlert = true
         return false
-      }
-
-      this.$validator._base.validateAll().then((result) => {
+      } else {
+        this.$validator._base.validateAll().then((result) => {
           if (result) {
             post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               }).catch((error) => {
@@ -260,6 +286,7 @@ export default {
             console.log('errors', result)
           }
         });
+      }
 
 
 
