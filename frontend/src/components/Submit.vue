@@ -165,6 +165,8 @@ export default {
 
 
     validateDuplicates(){
+      this.duplicatesFound = []
+      this.findDuplicates = {}
       for(let tab in this.data.tabs) {
         if(['has_imports', 'has_exports', 'has_nonparty'].includes(this.data.tabs[tab].name) && this.data.tabs[tab].form_fields.length){ 
             this.data.tabs[tab].form_fields.forEach( form_field => {
@@ -177,7 +179,7 @@ export default {
               
               substance.inner_fields.forEach( inner_field => {
                  if(['destination_party', 'source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected) {
-                    substance.type != 'blend' ? this.findDuplicates[substance.selected.text].push(inner_field.selected.text) : this.findDuplicates[substance.selected.name].push(inner_field.selected.text)
+                    substance.type != 'blend' ? this.findDuplicates[substance.selected.text].push(inner_field.selected.text + ' - in ' +  `"${this.data.tabs[tab].title}"`) : this.findDuplicates[substance.selected.name].push(inner_field.selected.text + ' - in ' + `"${this.data.tabs[tab].title}"`)
                  } 
               })
 
@@ -189,9 +191,8 @@ export default {
         // let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
         let arrayDuplicates = (a) => {let d=[]; a.sort((a,b) => a-b).reduce((a,b)=>{a==b&&!d.includes(a)&&d.push(a); return b}); return d};
         let duplicates = arrayDuplicates(this.findDuplicates[entry])
-
         if(duplicates.length) {
-          this.duplicatesFound.push(entry + ' - ' + duplicates)
+          this.duplicatesFound.push(entry + ' : ' + duplicates)
         }
       }
       this.current_duplicates = 'Found duplicates: <br>'
@@ -205,6 +206,7 @@ export default {
         this.duplicatesFound = []
         this.findDuplicates = {}
       } else {
+        this.showDismissibleAlert = false
         this.startSubmitting()
       }
 
