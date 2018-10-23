@@ -22,9 +22,7 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     Group,
-    Substance,
     Blend,
-    Treaty,
 )
 
 from ..serializers import (
@@ -97,10 +95,9 @@ class GetNonPartiesViewSet(generics.ListAPIView):
     serializer_class = PartySerializer
 
     def get_queryset(self):
-        substance = Substance.objects.get(pk=self.kwargs['substance_pk'])
-        groups = Group.objects.filter(annex__annex_id=substance.annex.annex_id)
-        treaties = Treaty.objects.filter(control_substance_groups__in=groups)
-        return Party.objects.exclude(ratifications__treaty__in=treaties)
+        return Article7NonPartyTrade.get_non_parties(
+            self.kwargs["substance_pk"]
+        )
 
 
 class ReportingPeriodViewSet(viewsets.ModelViewSet):

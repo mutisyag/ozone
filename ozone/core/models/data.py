@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
-from .meeting import Decision, ExemptionTypes
+from .meeting import Treaty
 from .party import Party
 from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
@@ -513,6 +513,13 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
     class Meta:
         db_table = 'reporting_article_seven_non_party_trade'
 
+    @staticmethod
+    def get_non_parties(substance_pk):
+        substance = Substance.objects.get(pk=substance_pk)
+        groups = Group.objects.filter(annex__annex_id=substance.annex.annex_id)
+        treaties = Treaty.objects.filter(control_substance_groups__in=groups)
+        return Party.objects.exclude(ratifications__treaty__in=treaties)
+
     def clean(self):
         if not (
             self.quantity_import_new
@@ -527,6 +534,18 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
                     )]
                 }
             )
+
+        non_parties = self.get_non_parties(self.substance.id)
+        if self.trade_party not in non_parties:
+            raise ValidationError(
+                {
+                    'trade_party': [_(
+                        'You need to select a non-party, according to the'
+                        'selected substance.'
+                    )]
+                }
+            )
+
         super().clean()
 
     def save(self, *args, **kwargs):
