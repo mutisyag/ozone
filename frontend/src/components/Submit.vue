@@ -1,7 +1,7 @@
 <template>
   <span>
     
-    <b-btn @click="validateDuplicates" variant="success">
+    <b-btn @click="validateDuplicates" style="border-top-left-radius: 0;border-bottom-left-radius:0" variant="success">
         Submit
       </b-btn>
 
