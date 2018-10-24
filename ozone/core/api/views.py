@@ -72,7 +72,7 @@ class ValidationErrorMixin:
         except ValidationError as e:
             return Response(
                 status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                data=e.message
+                data=e.messages
             )
 
 
