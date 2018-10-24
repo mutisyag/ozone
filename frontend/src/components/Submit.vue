@@ -18,8 +18,23 @@
              >
              <div v-if="current_duplicates" v-html="current_duplicates"></div>
              <div v-if="errorMessage" v-html="errorMessage"></div>
+      </b-alert>
 
-    </b-alert>
+      <b-alert variant="success"
+             dismissible
+             style="
+                  position: fixed;
+                  top: 7rem;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  padding: 3rem;
+                  z-index: 1;
+                  font-weight: bold;"
+             :show="showDismissibleAlertSave"
+             @dismissed="showDismissibleAlertSave=false"
+             >
+             Form saved
+      </b-alert>
   </span>
 
 </template>
@@ -40,6 +55,7 @@ export default {
     return {
         findDuplicates: {},
         showDismissibleAlert: false,
+        showDismissibleAlertSave: false,
         current_duplicates: '',
         errorMessage: null,
         duplicatesFound: [],
@@ -294,6 +310,7 @@ export default {
         this.$validator._base.validateAll().then((result) => {
           if (result) {
             post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+              this.showDismissibleAlertSave = true
               }).catch((error) => {
               console.log(this.$validator)
               
