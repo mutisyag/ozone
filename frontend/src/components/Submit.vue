@@ -16,7 +16,9 @@
              :show="showDismissibleAlert"
              @dismissed="showDismissibleAlert=false"
              >
-             <div v-html="current_duplicates"></div>
+             <div v-if="current_duplicates" v-html="current_duplicates"></div>
+             <div v-if="errorMessage" v-html="errorMessage"></div>
+
     </b-alert>
   </span>
 
@@ -38,7 +40,8 @@ export default {
     return {
         findDuplicates: {},
         showDismissibleAlert: false,
-        current_duplicates: 'Found duplicate: <br>',
+        current_duplicates: '',
+        errorMessage: null,
         duplicatesFound: [],
         fields_to_save: {
           'questionaire_questions' : 'article7questionnaire_url',
@@ -165,6 +168,7 @@ export default {
 
 
     validateDuplicates(){
+      this.errorMessage = null
       this.duplicatesFound = []
       this.findDuplicates = {}
       for(let tab in this.data.tabs) {
@@ -213,6 +217,8 @@ export default {
     },
 
   	startSubmitting(){
+      this.errorMessage = null
+      this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
       for(let questionnaire_field of this.data.tabs.tab_1.form_fields) {
         if(questionnaire_field.selected) {
@@ -280,8 +286,7 @@ export default {
            current_tab_data.push(save_obj)
          })
        }
-      
-  
+        
         this.$validator._base.validateAll().then((result) => {
           if (result) {
             post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
@@ -291,6 +296,10 @@ export default {
               console.log('here error',error)
             })
           } else {
+
+            this.errorMessage = "Please correct the errors before saving the form again"
+            this.showDismissibleAlert = true
+            
             console.log('errors', result)
           }
         });
@@ -305,4 +314,9 @@ export default {
 </script>
 
 <style lang="css" scoped>
+
+.alert b {
+  margin-right: 1rem;
+}
+
 </style>
