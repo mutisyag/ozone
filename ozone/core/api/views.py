@@ -171,7 +171,9 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7DestructionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7DestructionViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -187,7 +189,9 @@ class Article7DestructionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ProductionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7ProductionViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -202,7 +206,9 @@ class Article7ProductionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ExportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7ExportViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -217,7 +223,9 @@ class Article7ExportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ImportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7ImportViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -232,7 +240,9 @@ class Article7ImportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet):
+class Article7NonPartyTradeViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -247,7 +257,9 @@ class Article7NonPartyTradeViewSet(ValidationErrorMixin, BulkCreateMixin, viewse
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7EmissionViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7EmissionViewSet(
+    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+):
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
