@@ -1,5 +1,9 @@
 # frontend
 
+## Prerequisites
+
+    yarn (https://yarnpkg.com/lang/en/docs/install/)
+
 ## Project setup
 ```
 yarn install
