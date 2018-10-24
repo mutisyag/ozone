@@ -314,7 +314,12 @@ export default {
               }).catch((error) => {
               console.log(this.$validator)
               
-              console.log('here error',error)
+              console.log('here error',error.response)
+              if (error.response.status === 422) {
+                this.errorMessage = 'Data on nonparty section was not saved <br>'
+                this.errorMessage += error.response.data[1] + ' in "Data on nonparty'
+                this.showDismissibleAlert = true
+              }
             })
           } else {
 
