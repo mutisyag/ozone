@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
@@ -62,6 +63,17 @@ class ReadOnlyMixin:
     """Does what it says on the tin"""
     def _allowed_methods(self):
         return ['GET', 'OPTIONS']
+
+
+class ValidationErrorMixin:
+    def create(self, request, *args, **kwargs):
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response(
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                data=e.message
+            )
 
 
 class BulkCreateMixin:
@@ -220,7 +232,7 @@ class Article7ImportViewSet(BulkCreateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(BulkCreateMixin, viewsets.ModelViewSet):
+class Article7NonPartyTradeViewSet(ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
