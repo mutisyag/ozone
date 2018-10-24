@@ -194,7 +194,11 @@ export default {
       for(let entry in this.findDuplicates) {
         // let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
         let arrayDuplicates = (a) => {let d=[]; a.sort((a,b) => a-b).reduce((a,b)=>{a==b&&!d.includes(a)&&d.push(a); return b}); return d};
-        let duplicates = arrayDuplicates(this.findDuplicates[entry])
+        // console.log('findduplicates', this.findDuplicates[entry])
+        let duplicates = []
+        if(this.findDuplicates[entry].length){
+          duplicates = arrayDuplicates(this.findDuplicates[entry])
+        }
         if(duplicates.length) {
           this.duplicatesFound.push(entry + ' : ' + duplicates)
         }
