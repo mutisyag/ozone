@@ -140,15 +140,13 @@ class BlendCompositionMixin:
                     field_dictionary[field] = component.percentage * quantity \
                         if quantity else None
 
-                # Now save the component substance row
-                report = self.__class__.objects.create(
-                    submission=self.submission,
-                    substance=component.substance,
-                    blend=None,
-                    blend_item=self,
-                    # Quantities for specific substance
-                    **field_dictionary
-                )
+                report = self.__class__.objects.get(pk=self.pk)
+                report.pk = None
+                report.substance = component.substance
+                report.blend = None
+                report.blend_item = self
+                for key, value in field_dictionary.items():
+                    setattr(report, key, value)
                 report.save()
 
 
