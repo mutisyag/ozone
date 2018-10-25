@@ -24,7 +24,7 @@ methods: {
             let composition = blends.find( blend => blend.id === substance.id).components
 
             composition.forEach( substance => {
-                tempSubstance.composition.push({name: {text:substance.substance_name, value: substance.substance}, percent: substance.percentage})
+                tempSubstance.composition.push({name: {text:substance.substance_name, value: substance.substance}, percent: substance.percentage * 100})
             });
             substance = tempSubstance
         }
