@@ -289,7 +289,8 @@ export default {
            small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
           }
           
-          form_field.name != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
+          console.log('selected substance',substance.selected)
+          form_field.name != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.value 
          
 
           substance.inner_fields.forEach( inner_field => {
@@ -313,10 +314,9 @@ export default {
               }).catch((error) => {
               console.log(this.$validator)
               
-              console.log('here error',error.response)
-              if (error.response.status === 422) {
+              if (error.response.status === 422 && field === 'has_nonparty') {
                 this.errorMessage = 'Data on nonparty section was not saved <br>'
-                this.errorMessage += error.response.data[1] + ' in "Data on nonparty'
+                this.errorMessage += 'At least one quantity field should be non-null! ' + ' in "Data on nonparty'
                 this.showDismissibleAlert = true
               }
             })

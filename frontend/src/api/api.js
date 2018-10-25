@@ -104,6 +104,10 @@ function createBlend(blend){
   return post('blends/', blend)
 }
 
+function getCustomBlends(){
+  return fetch('blends/')
+}
+
 
  function getInstructions() {
   if(isTestSession) {
@@ -135,5 +139,6 @@ export {
  getObligations,
  createSubmission,
  getSubmission,
- createBlend
+ createBlend,
+ getCustomBlends
 };

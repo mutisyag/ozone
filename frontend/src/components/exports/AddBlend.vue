@@ -20,7 +20,7 @@
        <div v-if="new_blend">
           <h5>Composition</h5>
           <b-input-group prepend="Blend name">
-            <b-form-input type="text" v-model="new_blend.name"></b-form-input>
+            <b-form-input type="text" v-model="new_blend.text"></b-form-input>
             <b-input-group-append>
               <b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
             </b-input-group-append>
@@ -132,8 +132,8 @@ export default {
     addNewBlend(){
       this.selected_blends.selected = null
       this.new_blend = {
-        "name": null,
-        substance_options: this.substances,
+        "text": null,
+        "value": null,
         "composition": [
           {
             "name": null,
@@ -166,11 +166,23 @@ export default {
 
     addSubstance(type) {
       if(type === 'selected') {
-        for(let blend of this.selected_blends.selected) {
+        for(let item of this.selected_blends.selected) {
+          let blend = JSON.parse(JSON.stringify(item))
+            let tempBlend = {
+                    value: blend.id,
+                    text: blend.name,
+                    custom: false,
+                    composition: [],
+            }
+
+            blend.composition.forEach( substance => {
+                tempBlend.composition.push({name: {text:substance.name, value: substance.name}, percent: substance.percent})
+            });
+
+            blend = tempBlend
+
           let substance_fields = {
-            get label () { return this.selected.name} ,
-            name: this.removeSpecialChars(blend.name),
-            substance_options: this.selected_blends.substance_options,
+            name: blend.name,
             custom_blend: false,
             selected: blend,
             type:"blend",
@@ -212,9 +224,7 @@ export default {
             // let current_substances;
     
             let substance_fields = {
-            get label () { return this.selected.name} ,
-            name: this.removeSpecialChars(this.new_blend.name),
-            substance_options: this.selected_blends.substance_options,
+            name: this.removeSpecialChars(this.new_blend.text),
             custom_blend: true,
             type: 'blend',
             selected: this.new_blend,
@@ -239,14 +249,17 @@ export default {
           substance_fields.inner_fields = inner_fields
           this.group_field.substance = substance_fields
           this.group_field.custom = true
-
-          this.submit_blend.blend_id = substance_fields.selected.name
+          console.log(substance_fields)
+          this.submit_blend.blend_id = substance_fields.selected.text
           this.submit_blend.components = []
           for(let substance of substance_fields.selected.composition) {
             this.submit_blend.components.push({substance: substance.name.value, percentage: substance.percent/100})
           }
           console.log(this.submit_blend)
-          createBlend(this.submit_blend).then(response =>  substance_fields.selected.id = response.data.id)
+          createBlend(this.submit_blend).then(response =>  {
+            console.log(response)
+            substance_fields.selected.value = response.data.id
+          })
 
           var current_fields = this.section
           current_fields.push(this.group_field)

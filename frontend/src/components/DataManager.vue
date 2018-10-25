@@ -12,7 +12,7 @@
 import tabsManager from './TabsManager'
 import form from '../assets/form.js'
 import prefill from '@/mixins/prefill'
-import {getSubstances, getExportBlends, getParties, getSubmission} from '@/api/api.js'
+import {getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
 
 
 export default {
@@ -38,6 +38,7 @@ export default {
         countryOptions: null,
         substances: null,
         blends: null,
+        customBlends: null,
       },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
@@ -62,6 +63,7 @@ export default {
     this.getBlends();
     this.getCountries();
     this.getSubstances();
+    this.getCustomBlends();
   },
 
 
@@ -103,6 +105,12 @@ export default {
           })
     },
 
+    getCustomBlends(){
+      getCustomBlends().then((response) => {
+        this.initialData.customBlends = response.data
+      })
+    },
+
     prePrefill(form, prefill_data) {
       let data = JSON.parse(JSON.stringify(prefill_data))
       let to_prefill = [];
@@ -125,9 +133,15 @@ export default {
 
     prefill(tab, data, countries) {
       for(let entry of data) {
-        let current_substance = this.initialData.substances.find( val => val.value === entry.substance )
+        let current_substance = entry.substance 
+        ? 
+          this.initialData.substances.find( val => val.value === entry.substance ) 
+        : 
+          this.initialData.customBlends.find( val => val.id === entry.blend )
+
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
-        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances)
+        console.log('current substance', entry.blend)
+        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.customBlends)
       }
 
       this.prefilled = true
@@ -150,7 +164,7 @@ export default {
   watch: {
      initialData: {
          handler(val){
-            if(val.blends && val.countryOptions && val.substances) {
+            if(val.blends && val.countryOptions && val.substances && val.customBlends) {
               this.getCurrentSubmission()
             }
          },

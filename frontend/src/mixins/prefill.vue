@@ -7,10 +7,33 @@ mixins: [fieldsPerTab],
 methods: {
 
 
-     prefillSubstance(tab_name, data, section, countryOptions, current_country, substance, substances) {
+     prefillSubstance(tab_name, data, section, countryOptions, current_country, substance, substances, blends) {
+        if(substance.blend_id) {
+            let tempSubstance = {
+                    value: substance.id,
+                    text: substance.blend_id,
+                    custom: true,
+                    composition: [],
+                    group: {
+                        group_id: 'blend',
+                        group_name: 'Blend'
+                    }
+            }
+            console.log('blends', blends)
+
+            let composition = blends.find( blend => blend.id === substance.id).components
+
+            composition.forEach( substance => {
+                tempSubstance.composition.push({name: {text:substance.substance_name, value: substance.substance}, percent: substance.percentage})
+            });
+            substance = tempSubstance
+        }
+
         let group_field = tab_name != 'has_emissions' ? {
             label: substance.group.group_id,
             name: substance.group.group_id,
+            custom_blend: substance.custom,
+            expand: false,
             substance: {
                 name: substance.value,
                 options: substances,
@@ -208,6 +231,8 @@ methods: {
          group_field = {
             label: substance.group.group_id,
             name: substance.group.group_id,
+            custom_blend: substance.custom,
+            expand: false,
             substance: {
                 name: substance.value,
                 options: substances,
@@ -408,6 +433,8 @@ methods: {
              group_field = {
                 label: substance.group.group_id,
                 name: substance.group.group_id,
+                custom_blend: substance.custom,
+                expand: false,
                 substance: {
                     name: substance.value,
                     options: substances,
@@ -458,6 +485,8 @@ methods: {
         group_field = {
                 label: substance.group.group_id,
                 name: substance.group.group_id,
+                custom_blend: substance.custom,
+                expand: false,
                 substance: {
                     name: substance.value,
                     options: substances,
