@@ -100,6 +100,10 @@ function createSubmission(submisson_data){
 }
 
 
+function createBlend(blend){
+  return post('blends/', blend)
+}
+
 
  function getInstructions() {
   if(isTestSession) {
@@ -130,5 +134,6 @@ export {
  getPeriods,
  getObligations,
  createSubmission,
- getSubmission
+ getSubmission,
+ createBlend
 };

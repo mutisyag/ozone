@@ -110,7 +110,7 @@ export default {
               "decision_process_agent_uses": "",
               "quantity_quarantine_pre_shipment": null,
               "decision_quarantine_pre_shipment": "",
-              "source_party": 1,
+              "source_party": null,
               "substance": null,
               "blend": null,
               "decision": null
@@ -289,9 +289,8 @@ export default {
            small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
           }
           
-          substance.type != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
+          form_field.name != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.id 
          
-
 
           substance.inner_fields.forEach( inner_field => {
             inner_field.type != 'multiple_fields' 

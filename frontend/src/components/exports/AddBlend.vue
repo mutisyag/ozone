@@ -60,6 +60,8 @@
 
 import Multiselect from 'vue-multiselect'
 import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
+import {createBlend} from '@/api/api'
+
 
 export default {
 
@@ -90,6 +92,11 @@ export default {
 
       new_blend: null,
 
+      submit_blend: {
+        components: null,
+        blend_id: null,
+        type: "Zeotrope"
+      },
 
       selected_substance: {
         selected: null,
@@ -183,189 +190,15 @@ export default {
             inner_fields: '',
           }
 
-          let inner_fields = [
-            {
-              label: this.getCountryLabel(this.currentSection),
-              name:  this.getCountryField(this.currentSection),
-              description: '',
-              type: 'select',
-              duplicate: true,
-              selected: null,
-              options: this.countryOptions,
-            },
-            {
-              label: 'Total Quantity Exported for All Uses',
-              name: 'quantity_total_new',
-              disabled: false,
-              description: 'New',
-              type: 'number',
-              validation: 'required',
-              selected: null,
-            },
-            {
-              label: 'Total Quantity Exported for All Uses',
-              name: 'quantity_total_recovered',
-              description: 'Recovered and Reclaimed',
-              disabled: false,
-              type: 'number',
-              validation: 'required',
-              selected: null,
-            },
-            {
-              label: 'Quantity of New Substances Exported as Feedstock',
-              name: 'quantity_feedstock',
-              description: '',
-              disabled: false,
-              validation: 'required',
-              type: 'number',
-              selected: null,
-            },
-            {
-              label: 'Quantity of New Substances Exported for Exempted Essential and Critical Uses*',
-              name: 'quantity_exempted',
-              disabled: false,
-              modalShow: false,
-              name_type: 'type_exempted',
-              total_type: null,
-              description: 'Quantity',
-              total: 0,
-              type: 'multiple_fields',
-              fields: [
-                {
-                  label: 'Essential use, other than L&A',
-                  name: 'essential_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_essential_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_essential_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Critical use',
-                  name: 'critical_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_critical_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_critical_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'High ambient temperature',
-                  name: 'high_ambient_temperature',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_high_ambient_temperature",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_high_ambient_temperature",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Process agent uses',
-                  name: 'process_agent_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_process_agent_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_process_agent_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Laboratory and analytical',
-                  name: 'laboratory_analytical_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_laboratory_analytical_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_laboratory_analytical_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Quarantine and pre-shipment applications',
-                  name: 'quarantine_pre_shipment',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_quarantine_pre_shipment",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_quarantine_pre_shipment",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                 {
-                  label: 'Other/Unspecified',
-                  name: 'other',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_other",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_other ",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-              ]
-            },
-          ]
+          let inner_fields = this.getInnerFields(this.currentSection, this.group_field.name)
 
           substance_fields.inner_fields = inner_fields
           this.group_field.substance = substance_fields
 
           var current_fields = this.section
           current_fields.push(this.group_field)
+
+
           this.section = current_fields
 
           this.group_field = {
@@ -401,190 +234,26 @@ export default {
             inner_fields: '',
           }
 
-          let inner_fields = [
-            {
-              label: this.getCountryLabel(this.currentSection),
-              name:  this.getCountryField(this.currentSection),
-              description: '',
-              type: 'select',
-              duplicate: true,
-              selected: null,
-              options: this.countryOptions,
-            },
-            {
-              label: 'Total Quantity Exported for All Uses',
-              name: 'quantity_total_new',
-              disabled: false,
-              validation: 'required',
-              description: 'New',
-              type: 'number',
-              selected: null,
-            },
-            {
-              label: 'Total Quantity Exported for All Uses',
-              name: 'quantity_total_recovered',
-              description: 'Recovered and Reclaimed',
-              disabled: false,
-              validation: 'required',
-              type: 'number',
-              selected: null,
-            },
-            {
-              label: 'Quantity of New Substances Exported as Feedstock',
-              name: 'quantity_feedstock',
-              description: '',
-              disabled: false,
-              validation: 'required',
-              type: 'number',
-              selected: null,
-            },
-            {
-              label: 'Quantity of New Substances Exported for Exempted Essential and Critical Uses*',
-              name: 'quantity_exempted',
-              disabled: false,
-              modalShow: false,
-              name_type: 'type_exempted',
-              total_type: null,
-              description: 'Quantity',
-              total: 0,
-              type: 'multiple_fields',
-              fields: [
-                {
-                  label: 'Essential use, other than L&A',
-                  name: 'quantity_essential_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_essential_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_essential_uses",
-                      selected:'',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Critical use',
-                  name: 'quantity_critical_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_critical_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_critical_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'High ambient temperature',
-                  name: 'high_ambient_temperature',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_high_ambient_temperature",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_high_ambient_temperature",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                 {
-                  label: 'Process agent uses',
-                  name: 'process_agent_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_process_agent_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_process_agent_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Laboratory and analytical',
-                  name: 'laboratory_analytical_uses',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_laboratory_analytical_uses",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_laboratory_analytical_uses",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                {
-                  label: 'Quarantine and pre-shipment applications',
-                  name: 'quarantine_pre_shipment',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_quarantine_pre_shipment",
-                      selected: null,
-                      type: "number",
-                    },
-                    {
-                      label: "Decision",
-                      name: "decision_quarantine_pre_shipment",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-                 {
-                  label: 'Other/Unspecified',
-                  name: 'other',
-                  fields: [
-                    {
-                      label: "Quantity in metric",
-                      name: "quantity_other",
-                      selected: null,
-                      type: "number",
-                    },
-                   {
-                      label: "Decision",
-                      name: "decision_other",
-                      selected: '',
-                      type: "text",
-                    }
-                  ]
-                }, 
-              ]
-            },
-          ]
+          let inner_fields = this.getInnerFields(this.currentSection, this.group_field.name)
 
           substance_fields.inner_fields = inner_fields
           this.group_field.substance = substance_fields
           this.group_field.custom = true
+
+          this.submit_blend.blend_id = substance_fields.selected.name
+          this.submit_blend.components = []
+          for(let substance of substance_fields.selected.composition) {
+            this.submit_blend.components.push({substance: substance.name.value, percentage: substance.percent/100})
+          }
+          console.log(this.submit_blend)
+          createBlend(this.submit_blend).then(response =>  substance_fields.selected.id = response.data.id)
+
           var current_fields = this.section
           current_fields.push(this.group_field)
+
           this.section = current_fields
+
+          this.new_blend = null
 
           this.group_field = {
             label: 'Blend',
