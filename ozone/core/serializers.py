@@ -28,6 +28,26 @@ from .models import (
 User = get_user_model()
 
 
+class BaseBlendCompositionSerializer(serializers.ModelSerializer):
+    """
+    This will be used as a base for all reporting serializers that accept
+    both substances and blends.
+    """
+
+    derived_substance_data = serializers.SerializerMethodField()
+
+    def get_derived_substance_data(self, obj):
+        derived_substances = []
+        if obj.blend:
+            for component in obj.components.all():
+                component_details = dict()
+                component_details['substance'] = component.substance.name
+                for quantity in obj.QUANTITY_FIELDS:
+                    component_details[quantity] = getattr(component, quantity)
+                derived_substances.append(component_details)
+        return derived_substances
+
+
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
@@ -160,7 +180,8 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class Article7DestructionSerializer(serializers.ModelSerializer):
+class Article7DestructionSerializer(BaseBlendCompositionSerializer):
+
     class Meta:
         model = Article7Destruction
         exclude = ('submission',)
@@ -221,7 +242,7 @@ class SubmissionArticle7ProductionSerializer(
         }
 
 
-class Article7ExportSerializer(serializers.ModelSerializer):
+class Article7ExportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7Export
         exclude = ('submission',)
@@ -250,7 +271,7 @@ class SubmissionArticle7ExportSerializer(
         }
 
 
-class Article7ImportSerializer(serializers.ModelSerializer):
+class Article7ImportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7Import
         exclude = ('submission',)
@@ -279,7 +300,7 @@ class SubmissionArticle7ImportSerializer(
         }
 
 
-class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
+class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7NonPartyTrade
         exclude = ('submission',)

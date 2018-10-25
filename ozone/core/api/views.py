@@ -177,7 +177,7 @@ class Article7DestructionViewSet(
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).filter(blend_item__isnull=True)
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -212,7 +212,7 @@ class Article7ExportViewSet(
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).filter(blend_item__isnull=True)
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -229,7 +229,7 @@ class Article7ImportViewSet(
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).filter(blend_item__isnull=True)
 
     def get_serializer_class(self):
         if self.request.method == "POST":
@@ -246,7 +246,7 @@ class Article7NonPartyTradeViewSet(
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
-        )
+        ).filter(blend_item__isnull=True)
 
     def get_serializer_class(self):
         if self.request.method == "POST":
