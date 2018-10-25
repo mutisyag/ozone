@@ -140,8 +140,15 @@ class BlendCompositionMixin:
                     field_dictionary[field] = component.percentage * quantity \
                         if quantity else None
 
+                """
+                From Django documentation, on copying model instances:
+                Although there is no built-in method for copying model instances,
+                it is possible to easily create new instance with all fields’
+                values copied. In the simplest case, you can just set pk to None
+                """
                 report = self.__class__.objects.get(pk=self.pk)
                 report.pk = None
+                report.id = None
                 report.substance = component.substance
                 report.blend = None
                 report.blend_item = self
