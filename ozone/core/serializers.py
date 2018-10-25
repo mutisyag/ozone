@@ -161,9 +161,6 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
-    blend = serializers.StringRelatedField(many=False, read_only=True)
-    blend_item = serializers.StringRelatedField(many=False, read_only=True)
-
     class Meta:
         model = Article7Destruction
         exclude = ('submission',)
@@ -225,9 +222,6 @@ class SubmissionArticle7ProductionSerializer(
 
 
 class Article7ExportSerializer(serializers.ModelSerializer):
-    blend = serializers.StringRelatedField(many=False, read_only=True)
-    blend_item = serializers.StringRelatedField(many=False, read_only=True)
-
     class Meta:
         model = Article7Export
         exclude = ('submission',)
@@ -257,9 +251,6 @@ class SubmissionArticle7ExportSerializer(
 
 
 class Article7ImportSerializer(serializers.ModelSerializer):
-    blend = serializers.StringRelatedField(many=False, read_only=True)
-    blend_item = serializers.StringRelatedField(many=False, read_only=True)
-
     class Meta:
         model = Article7Import
         exclude = ('submission',)
@@ -289,9 +280,6 @@ class SubmissionArticle7ImportSerializer(
 
 
 class Article7NonPartyTradeSerializer(serializers.ModelSerializer):
-    blend = serializers.StringRelatedField(many=False, read_only=True)
-    blend_item = serializers.StringRelatedField(many=False, read_only=True)
-
     class Meta:
         model = Article7NonPartyTrade
         exclude = ('submission',)
