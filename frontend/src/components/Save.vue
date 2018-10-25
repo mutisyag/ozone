@@ -1,8 +1,8 @@
 <template>
   <span>
     
-    <b-btn @click="validateDuplicates" style="border-top-left-radius: 0;border-bottom-left-radius:0" variant="success">
-        Submit
+    <b-btn @click="validateDuplicates" style="border-top-right-radius: 0;border-bottom-right-radius:0" variant="outline-success">
+        Save
       </b-btn>
 
        <b-alert variant="danger"
@@ -44,7 +44,7 @@
 import {post, fetch} from '@/api/api'
 export default {
 
-  name: 'Submit',
+  name: 'Save',
 
   props:{
   	data: Object,

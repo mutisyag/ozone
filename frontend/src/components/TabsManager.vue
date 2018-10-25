@@ -14,10 +14,10 @@
 
     </div>
     <b-button-group class="actions">
-      <b-btn variant="outline-success">
-        Save
+      <Save v-if="submission && data" :data="data.form" :submission="submission"></Save>
+      <b-btn variant="success">
+        Submit
       </b-btn>
-      <Submit v-if="submission && data" :data="data.form" :submission="submission"></Submit>
     </b-button-group>
   </div>
   <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
@@ -125,7 +125,7 @@ import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachements from "./Attachements.vue";
 import {getInstructions, getUsers} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
-import Submit from './Submit'
+import Save from './Save'
 export default {
 
   name: 'TabsManager',
@@ -140,7 +140,7 @@ export default {
     subinfo: SubmissionInfo,
     attachements: Attachements,
     Footer,
-    Submit
+    Save
   },
 
   props: {

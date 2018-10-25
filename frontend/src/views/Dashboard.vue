@@ -90,6 +90,8 @@ export default {
   },
 
   created(){
+  
+  document.querySelector('body').classList.remove('aside-menu-lg-show')
 
    this.getSubmissions()
 
