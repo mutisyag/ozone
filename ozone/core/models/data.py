@@ -535,16 +535,21 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
                 }
             )
 
-        non_parties = self.get_non_parties(self.substance.id)
-        if self.trade_party not in non_parties:
-            raise ValidationError(
-                {
-                    'trade_party': [_(
-                        'You need to select a non-party, according to the'
-                        'selected substance.'
-                    )]
-                }
-            )
+        """
+        If it's a blend we skip the validation because we will check every
+        component substance particularly.
+        """
+        if not self.blend:
+            non_parties = self.get_non_parties(self.substance.id)
+            if self.trade_party not in non_parties:
+                raise ValidationError(
+                    {
+                        'trade_party': [_(
+                            'You need to select a non-party, according to the'
+                            'selected substance.'
+                        )]
+                    }
+                )
 
         super().clean()
 
