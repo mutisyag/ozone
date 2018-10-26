@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework_nested.serializers import NestedHyperlinkedModelSerializer
 
 from .models import (
     Region,
@@ -181,12 +180,42 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
 
 
 class Article7DestructionListSerializer(serializers.ListSerializer):
-    def update(self, validated_data):
-        raise Exception(validated_data)
+    def update(self, instance, validated_data):
+        """
+        Updating Destructions in a submission will work as follows:
+        - all substances in queryset that do not appear in `validated_data`
+          will be deleted.
+        - substances in queryset that do appear in `validated_data` will be
+          updated.
+        - substances in `validated_data` that do not appear in queryset will
+          have entries created for them
+
+        The update method will *only permit lists* to be passed as parameters.
+        The `instance` parameter is, in this case, a queryset!
+        """
+
+        # TODO: this only works for substances now! Blends also needed!
+        # The good news is that blend_item rows will update automatically :)
+        submission = instance.first().submission
+        new_substances = [data.get('substance') for data in validated_data]
+        to_delete = instance.exclude(substance__in=new_substances)
+        to_delete.delete()
+
+        # Now perform creations and updates
+        ret = []
+        for data in validated_data:
+            substance = data.pop('substance')
+            obj, created = instance.update_or_create(
+                submission=submission,
+                substance=substance,
+                defaults=data
+            )
+            ret.append(obj)
+
+        return ret
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField()
 
     class Meta:
         list_serializer_class = Article7DestructionListSerializer

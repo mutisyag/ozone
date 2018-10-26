@@ -162,7 +162,9 @@ class BaseReport(models.Model):
     This will be used as a base for all reporting models, except Article7Flags.
     """
 
-    # Django syntax for generating proper related_name in concrete model
+    # Data for a "submitted" submission is protected through a different
+    # mechanism. It makes sense to use CASCADE here, as deleting a submission
+    # should also delete its data.
     submission = models.ForeignKey(
         Submission, related_name='%(class)ss', on_delete=models.CASCADE
     )
@@ -540,10 +542,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
                 }
             )
 
-        """
-        If it's a blend we skip the validation because we will check every
-        component substance particularly.
-        """
+        # If it's a blend we skip the validation because we will check every
+        # component substance particularly.
         if not self.blend:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:

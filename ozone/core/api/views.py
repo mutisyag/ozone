@@ -180,10 +180,21 @@ class Article7DestructionViewSet(
     ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7DestructionSerializer
+
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def get_object(self):
+        try:
+            super().get_object()
+        except AssertionError:
+            # If it's not one we return many!
+            return self.get_queryset()
 
     # Needed to ensure that serializer uses the correct submission
     def perform_create(self, serializer):
