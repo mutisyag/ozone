@@ -13,6 +13,8 @@ class Command(BaseCommand):
                 'annexes',
                 'groups',
                 'substances',
+                'blends',
+                'blend_components',
                 'languages',
                 )
 

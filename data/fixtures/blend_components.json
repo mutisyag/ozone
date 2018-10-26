@@ -1,0 +1,803 @@
+[
+  {
+    "model": "core.blendcomponent",
+    "pk": 0,
+    "fields": {
+      "blend_id": 0,
+      "percentage": "0.53",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 1,
+    "fields": {
+      "blend_id": 0,
+      "percentage": "0.13",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 2,
+    "fields": {
+      "blend_id": 0,
+      "percentage": "0.34",
+      "substance": 24
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 3,
+    "fields": {
+      "blend_id": 1,
+      "percentage": "0.61",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 4,
+    "fields": {
+      "blend_id": 1,
+      "percentage": "0.11",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 5,
+    "fields": {
+      "blend_id": 1,
+      "percentage": "0.28",
+      "substance": 24
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 6,
+    "fields": {
+      "blend_id": 2,
+      "percentage": "0.33",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 7,
+    "fields": {
+      "blend_id": 2,
+      "percentage": "0.15",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 8,
+    "fields": {
+      "blend_id": 2,
+      "percentage": "0.52",
+      "substance": 24
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 21,
+    "fields": {
+      "blend_id": 7,
+      "percentage": "0.44",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 22,
+    "fields": {
+      "blend_id": 7,
+      "percentage": "0.52",
+      "substance": 101
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 23,
+    "fields": {
+      "blend_id": 7,
+      "percentage": "0.04",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 27,
+    "fields": {
+      "blend_id": 9,
+      "percentage": "0.2",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 28,
+    "fields": {
+      "blend_id": 9,
+      "percentage": "0.4",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 29,
+    "fields": {
+      "blend_id": 9,
+      "percentage": "0.4",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 30,
+    "fields": {
+      "blend_id": 10,
+      "percentage": "0.1",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 31,
+    "fields": {
+      "blend_id": 10,
+      "percentage": "0.7",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 32,
+    "fields": {
+      "blend_id": 10,
+      "percentage": "0.2",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 33,
+    "fields": {
+      "blend_id": 11,
+      "percentage": "0.23",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 34,
+    "fields": {
+      "blend_id": 11,
+      "percentage": "0.25",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 35,
+    "fields": {
+      "blend_id": 11,
+      "percentage": "0.52",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 36,
+    "fields": {
+      "blend_id": 12,
+      "percentage": "0.15",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 37,
+    "fields": {
+      "blend_id": 12,
+      "percentage": "0.15",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 38,
+    "fields": {
+      "blend_id": 12,
+      "percentage": "0.7",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 39,
+    "fields": {
+      "blend_id": 13,
+      "percentage": "0.25",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 40,
+    "fields": {
+      "blend_id": 13,
+      "percentage": "0.15",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 41,
+    "fields": {
+      "blend_id": 13,
+      "percentage": "0.6",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 42,
+    "fields": {
+      "blend_id": 14,
+      "percentage": "0.3",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 43,
+    "fields": {
+      "blend_id": 14,
+      "percentage": "0.3",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 44,
+    "fields": {
+      "blend_id": 14,
+      "percentage": "0.4",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 45,
+    "fields": {
+      "blend_id": 15,
+      "percentage": "0.025",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 46,
+    "fields": {
+      "blend_id": 15,
+      "percentage": "0.025",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 47,
+    "fields": {
+      "blend_id": 15,
+      "percentage": "0.95",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 48,
+    "fields": {
+      "blend_id": 16,
+      "percentage": "0.07",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 49,
+    "fields": {
+      "blend_id": 16,
+      "percentage": "0.46",
+      "substance": 101
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 50,
+    "fields": {
+      "blend_id": 16,
+      "percentage": "0.47",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 51,
+    "fields": {
+      "blend_id": 17,
+      "percentage": "0.6",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 52,
+    "fields": {
+      "blend_id": 17,
+      "percentage": "0.25",
+      "substance": 24
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 53,
+    "fields": {
+      "blend_id": 17,
+      "percentage": "0.15",
+      "substance": 32
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 54,
+    "fields": {
+      "blend_id": 18,
+      "percentage": "0.65",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 55,
+    "fields": {
+      "blend_id": 18,
+      "percentage": "0.25",
+      "substance": 24
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 56,
+    "fields": {
+      "blend_id": 18,
+      "percentage": "0.1",
+      "substance": 32
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 57,
+    "fields": {
+      "blend_id": 19,
+      "percentage": "0.5",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 58,
+    "fields": {
+      "blend_id": 19,
+      "percentage": "0.5",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 59,
+    "fields": {
+      "blend_id": 20,
+      "percentage": "0.45",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 60,
+    "fields": {
+      "blend_id": 20,
+      "percentage": "0.55",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 81,
+    "fields": {
+      "blend_id": 27,
+      "percentage": "0.82",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 82,
+    "fields": {
+      "blend_id": 27,
+      "percentage": "0.18",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 83,
+    "fields": {
+      "blend_id": 28,
+      "percentage": "0.25",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 84,
+    "fields": {
+      "blend_id": 28,
+      "percentage": "0.75",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 106,
+    "fields": {
+      "blend_id": 36,
+      "percentage": "0.88",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 107,
+    "fields": {
+      "blend_id": 36,
+      "percentage": "0.12",
+      "substance": 32
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 108,
+    "fields": {
+      "blend_id": 37,
+      "percentage": "0.58",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 109,
+    "fields": {
+      "blend_id": 37,
+      "percentage": "0.42",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 110,
+    "fields": {
+      "blend_id": 38,
+      "percentage": "0.85",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 111,
+    "fields": {
+      "blend_id": 38,
+      "percentage": "0.15",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 127,
+    "fields": {
+      "blend_id": 44,
+      "percentage": "0.525",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 128,
+    "fields": {
+      "blend_id": 44,
+      "percentage": "0.475",
+      "substance": 104
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 134,
+    "fields": {
+      "blend_id": 46,
+      "percentage": "0.185",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 135,
+    "fields": {
+      "blend_id": 46,
+      "percentage": "0.695",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 136,
+    "fields": {
+      "blend_id": 46,
+      "percentage": "0.12",
+      "substance": 104
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 141,
+    "fields": {
+      "blend_id": 48,
+      "percentage": "0.15",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 142,
+    "fields": {
+      "blend_id": 48,
+      "percentage": "0.25",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 143,
+    "fields": {
+      "blend_id": 48,
+      "percentage": "0.1",
+      "substance": 101
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 144,
+    "fields": {
+      "blend_id": 48,
+      "percentage": "0.5",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 193,
+    "fields": {
+      "blend_id": 66,
+      "percentage": "0.31",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 194,
+    "fields": {
+      "blend_id": 66,
+      "percentage": "0.31",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 195,
+    "fields": {
+      "blend_id": 66,
+      "percentage": "0.3",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 196,
+    "fields": {
+      "blend_id": 66,
+      "percentage": "0.03",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 197,
+    "fields": {
+      "blend_id": 66,
+      "percentage": "0.05",
+      "substance": 104
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 272,
+    "fields": {
+      "blend_id": 91,
+      "percentage": "0.205",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 273,
+    "fields": {
+      "blend_id": 91,
+      "percentage": "0.04",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 274,
+    "fields": {
+      "blend_id": 91,
+      "percentage": "0.614",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 275,
+    "fields": {
+      "blend_id": 91,
+      "percentage": "0.135",
+      "substance": 104
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 276,
+    "fields": {
+      "blend_id": 91,
+      "percentage": "0.006",
+      "substance": 108
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 291,
+    "fields": {
+      "blend_id": 96,
+      "percentage": "0.738",
+      "substance": 4
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 292,
+    "fields": {
+      "blend_id": 96,
+      "percentage": "0.262",
+      "substance": 103
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 293,
+    "fields": {
+      "blend_id": 97,
+      "percentage": "0.75",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 294,
+    "fields": {
+      "blend_id": 97,
+      "percentage": "0.25",
+      "substance": 4
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 295,
+    "fields": {
+      "blend_id": 98,
+      "percentage": "0.488",
+      "substance": 35
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 296,
+    "fields": {
+      "blend_id": 98,
+      "percentage": "0.512",
+      "substance": 3
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 297,
+    "fields": {
+      "blend_id": 99,
+      "percentage": "0.401",
+      "substance": 105
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 298,
+    "fields": {
+      "blend_id": 99,
+      "percentage": "0.599",
+      "substance": 10
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 299,
+    "fields": {
+      "blend_id": 100,
+      "percentage": "0.48200000000000004",
+      "substance": 111
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 300,
+    "fields": {
+      "blend_id": 100,
+      "percentage": "0.518",
+      "substance": 3
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 301,
+    "fields": {
+      "blend_id": 101,
+      "percentage": "0.5",
+      "substance": 97
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 302,
+    "fields": {
+      "blend_id": 101,
+      "percentage": "0.5",
+      "substance": 101
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 313,
+    "fields": {
+      "blend_id": 107,
+      "percentage": "0.05",
+      "substance": 99
+    }
+  },
+  {
+    "model": "core.blendcomponent",
+    "pk": 314,
+    "fields": {
+      "blend_id": 107,
+      "percentage": "0.95",
+      "substance": 103
+    }
+  }
+]
