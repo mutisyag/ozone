@@ -814,3 +814,17 @@ input[type=number] {
     font-size: inherit;
     margin: 0;
 }
+
+.breadcrumb {
+  transition: all 300ms;
+}
+
+.aside-menu-lg-show {
+  .breadcrumb  {
+    padding-right: 18%;
+  }
+
+  footer {
+    padding-right: 15%!important;
+  }
+}
