@@ -39,7 +39,6 @@ from ..serializers import (
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
-    CreateArticle7DestructionSerializer,
     Article7ProductionSerializer,
     CreateArticle7ProductionSerializer,
     Article7ExportSerializer,
@@ -180,15 +179,11 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 class Article7DestructionViewSet(
     ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7DestructionSerializer
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7DestructionSerializer
-        return Article7DestructionSerializer
 
     # Needed to ensure that serializer uses the correct submission
     def perform_create(self, serializer):

@@ -180,17 +180,17 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class Article7DestructionSerializer(BaseBlendCompositionSerializer):
+class Article7DestructionListSerializer(serializers.ListSerializer):
+    def update(self, validated_data):
+        raise Exception(validated_data)
+
+
+class Article7DestructionSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
 
     class Meta:
+        list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
-        exclude = ('submission',)
-
-
-class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article7Destruction
-        # TODO: create base class for these serializers
         exclude = ('submission', 'blend_item')
 
 
