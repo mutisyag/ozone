@@ -102,7 +102,7 @@ methods: {
                                 fields: [{
                                         label: "Quantity in metric",
                                         name: "quantity_essential_uses",
-                                        validation: 'numeric',
+                                        validation: false,
                                         selected: data.quantity_essential_uses,
                                         type: "number",
                                     },
@@ -120,7 +120,7 @@ methods: {
                                 fields: [{
                                         label: "Quantity in metric",
                                         name: "quantity_critical_uses",
-                                        validation: 'numeric',
+                                        validation: false,
                                         selected: data.quantity_critical_uses,
                                         type: "number",
                                     },
@@ -138,7 +138,7 @@ methods: {
                                 fields: [{
                                         label: "Quantity in metric",
                                         name: "quantity_high_ambient_temperature",
-                                        validation: 'numeric',
+                                        validation: false,
                                         selected: data.quantity_high_ambient_temperature,
                                         type: "number",
                                     },
@@ -172,7 +172,7 @@ methods: {
                                 name: 'laboratory_analytical_uses',
                                 fields: [{
                                         label: "Quantity in metric",
-                                        validation: 'numeric',
+                                        validation: false,
                                         name: "quantity_laboratory_analytical_uses",
                                         selected: data.quantity_laboratory_analytical_uses,
                                         type: "number",
@@ -190,7 +190,7 @@ methods: {
                                 name: 'quarantine_pre_shipment',
                                 fields: [{
                                         label: "Quantity in metric",
-                                        validation: 'numeric',
+                                        validation: false,
                                         name: "quantity_quarantine_pre_shipment",
                                         selected: data.quantity_quarantine_pre_shipment,
                                         type: "number",
@@ -208,7 +208,7 @@ methods: {
                                 name: 'other',
                                 fields: [{
                                         label: "Quantity in metric",
-                                        validation: 'numeric',
+                                        validation: false,
                                         name: "quantity_other",
                                         selected: data.quantity_other,
                                         type: "number",
@@ -286,7 +286,7 @@ methods: {
                               {
                                 label: "Quantity in metric",
                                 name: "quantity_essential_uses",
-                                validation: 'numeric',
+                                validation: false,
                                 selected: data.quantity_essential_uses,
                                 type: "number",
                               },
@@ -305,7 +305,7 @@ methods: {
                               {
                                 label: "Quantity in metric",
                                 name: "quantity_critical_uses",
-                                validation: 'numeric',
+                                validation: false,
                                 selected: data.quantity_critical_uses,
                                 type: "number",
                               },
@@ -324,7 +324,7 @@ methods: {
                               {
                                 label: "Quantity in metric",
                                 name: "quantity_high_ambient_temperature",
-                                validation: 'numeric',
+                                validation: false,
                                 selected: data.quantity_high_ambient_temperature,
                                 type: "number",
                               },
@@ -360,7 +360,7 @@ methods: {
                             fields: [
                               {
                                 label: "Quantity in metric",
-                                validation: 'numeric',
+                                validation: false,
                                 name: "quantity_laboratory_analytical_uses",
                                 selected: data.quantity_laboratory_analytical_uses,
                                 type: "number",
@@ -379,7 +379,7 @@ methods: {
                             fields: [
                               {
                                 label: "Quantity in metric",
-                                validation: 'numeric',
+                                validation: false,
                                 name: "quantity_quarantine_pre_shipment",
                                 selected: data.quantity_quarantine_pre_shipment,
                                 type: "number",
@@ -398,7 +398,7 @@ methods: {
                             fields: [
                               {
                                 label: "Quantity in metric",
-                                validation: 'numeric',
+                                validation: false,
                                 name: "quantity_other",
                                 selected: data.quantity_other,
                                 type: "number",

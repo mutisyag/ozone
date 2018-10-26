@@ -85,7 +85,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_essential_uses",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -104,7 +104,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_critical_uses",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -123,7 +123,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_high_ambient_temperature",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -159,7 +159,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_laboratory_analytical_uses",
                         selected: null,
                         type: "number",
@@ -178,7 +178,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_quarantine_pre_shipment",
                         selected: null,
                         type: "number",
@@ -197,7 +197,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_other",
                         selected: null,
                         type: "number",
@@ -260,7 +260,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_essential_uses",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -279,7 +279,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_critical_uses",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -298,7 +298,7 @@ export default {
                       {
                         label: "Quantity in metric",
                         name: "quantity_high_ambient_temperature",
-                        validation: 'numeric',
+                        validation: false,
                         selected: null,
                         type: "number",
                       },
@@ -334,7 +334,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_laboratory_analytical_uses",
                         selected: null,
                         type: "number",
@@ -353,7 +353,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_quarantine_pre_shipment",
                         selected: null,
                         type: "number",
@@ -372,7 +372,7 @@ export default {
                     fields: [
                       {
                         label: "Quantity in metric",
-                        validation: 'numeric',
+                        validation: false,
                         name: "quantity_other",
                         selected: null,
                         type: "number",
