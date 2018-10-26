@@ -260,7 +260,7 @@ export default {
       if(status) 
         return 'down'
       else 
-        return 'left'
+        return 'up'
     },
 
     getSpanType(field_type) {
