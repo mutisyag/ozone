@@ -1,7 +1,7 @@
 <template>
   <span>
     
-    <b-btn @click="validateDuplicates" style="border-top-right-radius: 0;border-bottom-right-radius:0" variant="outline-success">
+    <b-btn @click="validation" style="border-top-right-radius: 0;border-bottom-right-radius:0" variant="outline-success">
         Save
       </b-btn>
 
@@ -183,6 +183,12 @@ export default {
     },
 
 
+
+    validation(){
+      this.validateDuplicates();
+    },
+
+
     validateDuplicates(){
       this.errorMessage = null
       this.duplicatesFound = []
@@ -221,7 +227,7 @@ export default {
       }
       this.current_duplicates = 'Found duplicates: <br>'
       
-      console.log('duplicatesfound', this.duplicatesFound, this.findDuplicates)
+      // console.log('duplicatesfound', this.duplicatesFound, this.findDuplicates)
 
       if(this.duplicatesFound.length) {
         this.duplicatesFound.forEach(duplicate => this.current_duplicates += `<b>  (${duplicate})  </b>  `)
@@ -231,9 +237,63 @@ export default {
         this.findDuplicates = {}
       } else {
         this.showDismissibleAlert = false
-        this.startSubmitting()
+
+
+
+      let nonparty_validation = JSON.parse(JSON.stringify(this.data.tabs.tab_6.form_fields))
+
+      let nonparty_validation_selected = {}
+
+      if(nonparty_validation.length) {
+        for(let field of nonparty_validation) {
+          nonparty_validation_selected[nonparty_validation.indexOf(field)] = []
+          for(let inner_field of field.substance.inner_fields) {
+            console.log('inner_field', inner_field)
+            if(!['remarks_party','remaks_os','trade_party'].includes(inner_field.name) && inner_field.selected) {
+              nonparty_validation_selected[nonparty_validation.indexOf(field)].push(inner_field.selected)
+            }
+          }
+        }
       }
 
+      console.log('nonparty',nonparty_validation_selected)
+
+      let nonparty_validation_value = true
+
+      for(let value in nonparty_validation_selected){
+        if(nonparty_validation_selected[value].length === 0){
+          nonparty_validation_value = false
+        }
+      }
+
+      if (!nonparty_validation_value) {
+        this.errorMessage = 'Data on nonparty section was not saved <br>'
+        this.errorMessage += 'At least one quantity field should be non-null! ' + ' in "Data on nonparty'
+        this.showDismissibleAlert = true
+      } else {
+
+        this.$validator._base.validateAll().then((result) => {
+          if (result) {
+            this.startSubmitting()
+            
+          } else {
+
+            this.errorMessage = "Please correct the errors before saving the form again"
+            this.showDismissibleAlert = true
+            
+            console.log('errors', result)
+          }
+        });
+
+      }
+
+
+
+
+
+
+
+      }
     },
 
   	startSubmitting(){
@@ -289,7 +349,7 @@ export default {
            small_iterator.forEach( i => save_obj[substance.comments[i].name] = substance.comments[i].selected )
           }
           
-          console.log('selected substance',substance.selected)
+          // console.log('selected substance',substance.selected)
           form_field.name != 'blend' ? save_obj['substance'] = substance.selected.value : save_obj['blend'] = substance.selected.value 
          
 
@@ -307,27 +367,13 @@ export default {
          })
        }
         
-        this.$validator._base.validateAll().then((result) => {
-          if (result) {
-            post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+
+        post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               }).catch((error) => {
-              console.log(this.$validator)
-              
-              if (error.response.status === 422 && field === 'has_nonparty') {
-                this.errorMessage = 'Data on nonparty section was not saved <br>'
-                this.errorMessage += 'At least one quantity field should be non-null! ' + ' in "Data on nonparty'
-                this.showDismissibleAlert = true
-              }
+              console.log(error.response)
             })
-          } else {
 
-            this.errorMessage = "Please correct the errors before saving the form again"
-            this.showDismissibleAlert = true
-            
-            console.log('errors', result)
-          }
-        });
 
 
 
