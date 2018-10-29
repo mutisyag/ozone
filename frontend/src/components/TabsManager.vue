@@ -44,7 +44,7 @@
                 {{data.form.tabs.tab_2.title}}
               </div>
              </template>
-            <tab3 ref="tab_2" tabId="1"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></tab3>
+            <formtemplate ref="tab_2" tabId="1"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></formtemplate>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]">
              <template slot="title">
@@ -52,7 +52,7 @@
                 {{data.form.tabs.tab_3.title}}
               </div>
              </template>
-            <tab3 tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></tab3>
+            <formtemplate tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></formtemplate>
 
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
@@ -61,7 +61,7 @@
                 {{data.form.tabs.tab_4.title}}
               </div>
              </template>
-            <tab3 tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></tab3>
+            <formtemplate tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></formtemplate>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]">
             <template slot="title">
@@ -69,7 +69,7 @@
                 {{data.form.tabs.tab_5.title}}
               </div>
              </template>
-            <tab3 tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></tab3>
+            <formtemplate tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
             <template slot="title">
@@ -77,7 +77,7 @@
                 {{data.form.tabs.tab_6.title}}
               </div>
              </template>
-            <tab3 tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></tab3>
+            <formtemplate tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
           </b-tab>
           <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
             <template slot="title">
@@ -85,7 +85,7 @@
                 {{data.form.tabs.tab_7.title}}
               </div>
              </template>
-            <tab4 tabId="6" ref="tab_7" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></tab4>
+            <emissionstemplate tabId="6" ref="tab_7" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
           </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
@@ -115,12 +115,9 @@
 </template>
 
 <script>
-import Tab1 from "./Tab1.vue";
-import Tab2 from "./Tab2.vue";
-import Tab3 from "./Tab3.vue";
-import Tab4 from "./Tab4.vue";
-import Tab5 from "./Tab5.vue";
-import Tab6 from "./Tab6.vue";
+import PartyInfo from "./PartyInfo.vue";
+import FormTemplate from "./FormTemplate.vue";
+import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachements from "./Attachements.vue";
 import {getInstructions, getUsers} from '@/api/api.js'
@@ -131,12 +128,9 @@ export default {
   name: 'TabsManager',
 
   components: {
-    intro: Tab1,
-    tab2: Tab2,
-    tab3: Tab3,
-    tab4: Tab4,
-    tab5: Tab5,
-    tab6: Tab6,
+    intro: PartyInfo,
+    formtemplate: FormTemplate,
+    emissionstemplate: EmissionsTemplate,
     subinfo: SubmissionInfo,
     attachements: Attachements,
     Footer,
