@@ -12,7 +12,7 @@ methods: {
             let tempSubstance = {
                     value: substance.id,
                     text: substance.blend_id,
-                    custom: true,
+                    custom: substance.custom,
                     composition: [],
                     group: {
                         group_id: 'blend',

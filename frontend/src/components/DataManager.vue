@@ -38,7 +38,6 @@ export default {
         countryOptions: null,
         substances: null,
         blends: null,
-        customBlends: null,
       },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
@@ -60,7 +59,6 @@ export default {
   methods: {
 
   getInitialData(){
-    this.getBlends();
     this.getCountries();
     this.getSubstances();
     this.getCustomBlends();
@@ -99,15 +97,10 @@ export default {
           this.initialData.substances = tempSubstances 
         })
   },
-    getBlends(){
-          getExportBlends().then((response) => {
-            this.initialData.blends = response.data
-          })
-    },
 
     getCustomBlends(){
       getCustomBlends().then((response) => {
-        this.initialData.customBlends = response.data
+        this.initialData.blends = response.data
       })
     },
 
@@ -137,11 +130,11 @@ export default {
         ? 
           this.initialData.substances.find( val => val.value === entry.substance ) 
         : 
-          this.initialData.customBlends.find( val => val.id === entry.blend )
+          this.initialData.blends.find( val => val.id === entry.blend )
 
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
         console.log('current substance', entry.blend)
-        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.customBlends)
+        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
       }
 
       this.prefilled = true
@@ -164,7 +157,7 @@ export default {
   watch: {
      initialData: {
          handler(val){
-            if(val.blends && val.countryOptions && val.substances && val.customBlends) {
+            if(val.blends && val.countryOptions && val.substances) {
               this.getCurrentSubmission()
             }
          },

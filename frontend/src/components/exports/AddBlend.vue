@@ -4,16 +4,16 @@
 
      
         <div class="mt-2 mb-2" style="display: flex;">
-          <multiselect track-by="id"  :clear-on-select="false" :hide-selected="true" :close-on-select="false" :multiple="true" label="name" v-model="selected_blends.selected" @input="new_blend = null" placeholder="Select predefined blend" :options="selected_blends.options"></multiselect>
+          <multiselect track-by="blend_id"  :clear-on-select="false" :hide-selected="true" :close-on-select="false" :multiple="true" label="blend_id" v-model="selected_blends.selected" @input="new_blend = null" placeholder="Select predefined blend" :options="selected_blends.options"></multiselect>
           <div class="add-blend-wrapper"><b>/</b> <b-btn style="margin-left: .5rem" variant="primary" @click="addNewBlend">Add new blend</b-btn></div>
         </div>
 
 
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
-          <h5>Composition of <b>{{blend.name}}</b></h5>
-          <b-row v-for="substance in blend.composition">
-            <b-col>{{substance.name}}</b-col>
-            <b-col>{{substance.percent.toLocaleString("en", {style: "percent"})}}</b-col>
+          <h5>Composition of <b>{{blend.blend_id}}</b></h5>
+          <b-row v-for="substance in blend.components">
+            <b-col>{{substance.substance_name}}</b-col>
+            <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
         </div>
       
@@ -125,7 +125,6 @@ export default {
       this.selected_substance.options = []
       for(let substance of this.substances) {
             this.selected_substance.options.push({value: substance.id, text: substance.name, group: substance.group})
-            this.selected_blends.substance_options.push({value: substance, text: substance, group: substance.group})
       }
     },
 
@@ -160,6 +159,7 @@ export default {
           this.selected_blends.options.push(blend)
         }
       this.prepareSubstances()
+      console.log(this.selected_blends)
     },
 
 
@@ -170,13 +170,13 @@ export default {
           let blend = JSON.parse(JSON.stringify(item))
             let tempBlend = {
                     value: blend.id,
-                    text: blend.name,
+                    text: blend.blend_id,
                     custom: false,
                     composition: [],
             }
 
-            blend.composition.forEach( substance => {
-                tempBlend.composition.push({name: {text:substance.name, value: substance.name}, percent: substance.percent})
+            blend.components.forEach( substance => {
+                tempBlend.composition.push({name: {text:substance.substance_name, value: substance.substance}, percent: substance.percentage})
             });
 
             blend = tempBlend
