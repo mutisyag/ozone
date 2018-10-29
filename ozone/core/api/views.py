@@ -135,6 +135,12 @@ class BlendViewSet(viewsets.ModelViewSet):
             return CreateBlendSerializer
         return BlendSerializer
 
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if instance.custom is False:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.perform_update(instance)
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
