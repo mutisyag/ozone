@@ -12,7 +12,7 @@
 import tabsManager from './TabsManager'
 import form from '../assets/form.js'
 import prefill from '@/mixins/prefill'
-import {getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
+import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
 
 
 export default {
@@ -47,6 +47,15 @@ export default {
           'has_destroyed' : 'article7destructions',
           'has_nonparty' : 'article7nonpartytrades',
           'has_emissions' : 'article7emissions',
+      },
+      fields_to_get: {
+          'questionaire_questions' : 'article7questionnaire_url',
+          'has_imports' : 'article7imports_url',
+          'has_exports' : 'article7exports_url',
+          'has_produced' : 'article7productions_url',
+          'has_destroyed' : 'article7destructions_url',
+          'has_nonparty' : 'article7nonpartytrades_url',
+          'has_emissions' : 'article7emissions_url',
       },
     }
   },
@@ -105,23 +114,20 @@ export default {
     },
 
     prePrefill(form, prefill_data) {
-      let data = JSON.parse(JSON.stringify(prefill_data))
-      let to_prefill = [];
-       Object.keys(data).forEach( (key) => {
-          if(typeof(data[key]) != 'object' || !data[key] || !data[key].length){
-            delete data[key]
-          } else {
-            to_prefill.push(key)
+      
+        Object.keys(form.tabs).forEach( (tab) => {
+          if(this.fields_to_get[form.tabs[tab].name]){
+            
+            fetch(prefill_data[this.fields_to_get[form.tabs[tab].name]]).then( response => {
+              if(response.data.length) {
+                this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)),this.initialData.countryOptions)
+              }
+            }).catch( error => {
+              console.log(error.response)
+            })
           }
         })
-
-      if(to_prefill.length){
-        Object.keys(form.tabs).forEach( (tab) => {
-         if(to_prefill.includes(this.fields_to_prefill[form.tabs[tab].name])) this.prefill(form.tabs[tab], data[this.fields_to_prefill[form.tabs[tab].name]],this.initialData.countryOptions)
-        })
-      } else {
-        this.prefilled = true
-      }
+      
     },
 
     prefill(tab, data, countries) {
@@ -133,7 +139,6 @@ export default {
           this.initialData.blends.find( val => val.id === entry.blend )
 
         let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
-        console.log('current substance', entry.blend)
         this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
       }
 
