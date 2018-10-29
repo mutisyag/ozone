@@ -429,6 +429,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=True, read_only=True
     )
 
+    updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
@@ -444,7 +445,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7imports_url', 'article7imports',
             'article7nonpartytrades_url', 'article7nonpartytrades',
             'article7emissions_url', 'article7emissions',
-            'created_by', 'last_edited_by',
+            'updated_at', 'created_by', 'last_edited_by',
         )
 
         read_only_fields = (
@@ -472,8 +473,14 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
+    updated_at = serializers.DateTimeField(format='%Y-%m-%d')
+
     class Meta(CreateSubmissionSerializer.Meta):
-        fields = ('url',) + CreateSubmissionSerializer.Meta.fields + ('version',)
+        fields = (
+            ('url',)
+            + CreateSubmissionSerializer.Meta.fields
+            + ('version', 'updated_at')
+        )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
 
 
