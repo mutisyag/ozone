@@ -194,23 +194,6 @@ class CreateArticle7DestructionSerializer(serializers.ModelSerializer):
         exclude = ('submission', 'blend_item')
 
 
-class SubmissionArticle7DestructionSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7DestructionSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7DestructionSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-destructions-detail'
-            }
-        }
-
-
 class Article7ProductionSerializer(serializers.ModelSerializer):
     decision = serializers.StringRelatedField(many=False, read_only=True)
 
@@ -225,23 +208,6 @@ class CreateArticle7ProductionSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class SubmissionArticle7ProductionSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7ProductionSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7ProductionSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-productions-detail'
-            }
-        }
-
-
 class Article7ExportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7Export
@@ -252,23 +218,6 @@ class CreateArticle7ExportSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Export
         exclude = ('submission', 'blend_item')
-
-
-class SubmissionArticle7ExportSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7ExportSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7ExportSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-exports-detail'
-            }
-        }
 
 
 class Article7ImportSerializer(BaseBlendCompositionSerializer):
@@ -283,23 +232,6 @@ class CreateArticle7ImportSerializer(serializers.ModelSerializer):
         exclude = ('submission', 'blend_item')
 
 
-class SubmissionArticle7ImportSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7ImportSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7ImportSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-imports-detail'
-            }
-        }
-
-
 class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7NonPartyTrade
@@ -312,23 +244,6 @@ class CreateArticle7NonPartyTradeSerializer(serializers.ModelSerializer):
         exclude = ('submission', 'blend_item')
 
 
-class SubmissionArticle7NonPartyTradeSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7NonPartyTradeSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7NonPartyTradeSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-nonpartytrades-detail'
-            }
-        }
-
-
 class Article7EmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Emission
@@ -339,23 +254,6 @@ class CreateArticle7EmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Emission
         exclude = ('submission',)
-
-
-class SubmissionArticle7EmissionSerializer(
-    NestedHyperlinkedModelSerializer,
-    Article7EmissionSerializer
-):
-    parent_lookup_kwargs = {
-        'submission_pk': 'submission__pk',
-    }
-
-    class Meta(Article7EmissionSerializer.Meta):
-        fields = ('url',)
-        extra_kwargs = {
-            'url': {
-                'view_name': 'core:submission-article7-emissions-detail'
-            }
-        }
 
 
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
