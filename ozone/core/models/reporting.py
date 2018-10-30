@@ -398,6 +398,16 @@ class Submission(models.Model):
         self.clean()
         return super().save(*args, **kwargs)
 
+    def make_current(self):
+        versions = Submission.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation,
+        ).exclude(pk=self.pk)
+        for version in versions:
+            version.flag_superseded = True
+            version.save()
+
 
 class TransitionEvent(models.Model):
     """
