@@ -58,3 +58,19 @@ class DefaultArticle7Workflow(BaseWorkflow):
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
         return self.model_instance.flag_valid is not None
+
+    @xworkflows.transition('submit')
+    def submit(self):
+        self.model_instance.make_current()
+
+    @xworkflows.transition('unrecall_to_submitted')
+    def unrecall_to_submitted(self):
+        self.model_instance.make_current()
+
+    @xworkflows.transition('unrecall_to_processing')
+    def unrecall_to_processing(self):
+        self.model_instance.make_current()
+
+    @xworkflows.transition('unrecall_to_finalized')
+    def unrecall_to_finalized(self):
+        self.model_instance.make_current()

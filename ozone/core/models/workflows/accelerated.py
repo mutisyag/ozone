@@ -33,3 +33,11 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
     editable_data_states = ['data_entry']
 
     state = AcceleratedArticle7WorkflowStateDescription()
+
+    @xworkflows.transition('finalize')
+    def finalize(self):
+        self.model_instance.make_current()
+
+    @xworkflows.transition('unrecall')
+    def unrecall(self):
+        self.model_instance.make_current()

@@ -251,6 +251,10 @@ class Submission(models.Model):
         """
         return [t.target.name for t in self.workflow.state.transitions()]
 
+    @property
+    def editable_states(self):
+        return self.workflow.editable_data_states
+
     def call_transition(self, trans_name):
         """
         Interface for calling a specific transition name on the workflow.
@@ -296,6 +300,31 @@ class Submission(models.Model):
             to_state=self._current_state,
         )
 
+    @staticmethod
+    def get_exempted_fields():
+        """
+        List of exempted fields - fields that can be modified no matter in what
+        state the current submission is.
+        """
+        return [
+            "_current_state",
+            "_previous_state",
+            "flag_provisional",
+            "flag_valid",
+            "flag_superseded",
+        ]
+
+    def non_exempted_fields_modified(self):
+        """
+        Checks whether one of the non-exempted fields was modified.
+        """
+        exempted_fields = Submission.get_exempted_fields()
+        modified_fields = self.tracker.changed()
+        for field in modified_fields.keys():
+            if field not in exempted_fields:
+                return True
+        return False
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -313,12 +342,12 @@ class Submission(models.Model):
     def delete(self, using=None, keep_parents=False):
         if not self.data_changes_allowed:
             raise RuntimeError(
-                _("Submitted submissions cannot be modified.")
+                _("Submitted submissions cannot be deleted.")
             )
         super().delete()
 
     def clean(self):
-        if not self.data_changes_allowed:
+        if self.non_exempted_fields_modified() and not self.data_changes_allowed:
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
@@ -352,6 +381,24 @@ class Submission(models.Model):
 
         self.clean()
         return super().save(*args, **kwargs)
+
+    @transaction.atomic()
+    def make_current(self):
+        versions = (
+            Submission.objects.select_for_update()
+            .filter(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                obligation=self.obligation,
+            )
+            .exclude(pk=self.pk)
+            .exclude(_current_state__in=self.editable_states)
+        )
+        for version in versions:
+            version.flag_superseded = True
+            version.save()
+        self.flag_superseded = False
+        self.save()
 
 
 class TransitionEvent(models.Model):
