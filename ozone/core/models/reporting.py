@@ -296,6 +296,10 @@ class Submission(models.Model):
         """
         return [t.target.name for t in self.workflow.state.transitions()]
 
+    @property
+    def editable_states(self):
+        return self.workflow.editable_data_states
+
     def call_transition(self, trans_name):
         """
         Interface for calling a specific transition name on the workflow.
@@ -433,7 +437,7 @@ class Submission(models.Model):
                 obligation=self.obligation,
             )
             .exclude(pk=self.pk)
-            .exclude(_current_state="data_entry")
+            .exclude(_current_state__in=self.editable_states)
         )
         for version in versions:
             version.flag_superseded = True
