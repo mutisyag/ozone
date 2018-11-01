@@ -4,6 +4,7 @@ import enum
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
+from .legal import ReportingPeriod
 from .meeting import Treaty
 from .utils import RatificationTypes
 
@@ -197,11 +198,10 @@ class PartyHistory(models.Model):
         Party, related_name='history', on_delete=models.PROTECT
     )
 
-    # TODO: should use a ForeignKey to `ReportingPeriod` instead? don't think so
     # This will still require form choices to be generated based on the same
     # start year.
-    year = models.IntegerField(
-        validators=[MinValueValidator, max_value_current_year]
+    reporting_period = models.ForeignKey(
+        ReportingPeriod, related_name='parties_history', on_delete=models.PROTECT
     )
 
     population = models.FloatField(validators=[MinValueValidator(0.0)])
@@ -224,11 +224,11 @@ class PartyHistory(models.Model):
     remark = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
-        return f'{self.party.name} - {self.year}'
+        return f'{self.party.name} - {self.reporting_period}'
 
     class Meta:
-        unique_together = ('party', 'year')
-        ordering = ('party', 'year')
+        unique_together = ('party', 'reporting_period')
+        ordering = ('party', 'reporting_period')
         verbose_name_plural = 'parties history'
 
 

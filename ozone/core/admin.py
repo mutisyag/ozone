@@ -89,7 +89,7 @@ class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 class PartyHistoryAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    list_display = ('party', 'year')
+    list_display = ('party', 'reporting_period')
     search_fields = ["party"]
     resource_class = PartyHistoryResource
 
