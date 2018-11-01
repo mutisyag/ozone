@@ -375,13 +375,14 @@ class Submission(models.Model):
         # party-obligation-reporting_period combo which already has submissions.
         # select_for_update() is used to lock the rows and ensure proper
         # concurrency.
-        submissions = Submission.objects.select_for_update().filter(
-            party=self.party,
-            reporting_period=self.reporting_period,
-            obligation=self.obligation
-        )
-        if submissions:
-            self.version = submissions.latest('version').version + 1
+        if not self.pk:
+            submissions = Submission.objects.select_for_update().filter(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                obligation=self.obligation
+            )
+            if submissions:
+                self.version = submissions.latest('version').version + 1
 
         # TODO: this is not such a nice verification of first save
         # On first save we need to instantiate the submission's workflow
