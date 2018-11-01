@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
@@ -160,6 +161,17 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             self.queryset, many=True, context={'request': request}
         )
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def clone(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        submission.pk = None
+        submission.id = None
+        submission._current_state = (
+            submission.workflow.state.workflow.initial_state.name
+        )
+        submission.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
