@@ -165,13 +165,16 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        submission.pk = None
-        submission.id = None
-        submission._current_state = (
-            submission.workflow.state.workflow.initial_state.name
-        )
-        submission.save()
-        return Response(status=status.HTTP_201_CREATED)
+        if submission.check_cloning():
+            submission.pk = None
+            submission.id = None
+            submission._current_state = (
+                submission.workflow.state.workflow.initial_state.name
+            )
+            submission.save()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
