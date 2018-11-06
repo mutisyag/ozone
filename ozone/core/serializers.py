@@ -344,6 +344,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7nonpartytrades_url', 'article7nonpartytrades',
             'article7emissions_url', 'article7emissions',
             'updated_at', 'created_by', 'last_edited_by',
+            'available_transitions',
         )
 
         read_only_fields = (
@@ -377,7 +378,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
         fields = (
             ('url',)
             + CreateSubmissionSerializer.Meta.fields
-            + ('version', 'updated_at')
+            + ('version', 'updated_at', 'available_transitions')
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
 
