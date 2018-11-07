@@ -158,7 +158,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = ListSubmissionSerializer(
-            self.queryset, many=True, context={'request': request}
+            self.get_queryset(), many=True, context={'request': request}
         )
         return Response(serializer.data)
 
