@@ -1,5 +1,7 @@
 import enum
 
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -324,6 +326,27 @@ class Submission(models.Model):
             if field not in exempted_fields:
                 return True
         return False
+
+    def check_cloning(self):
+        """
+        Checks whether the current submission can be cloned
+        """
+        current_date = datetime.now().date()
+        current_submissions = Submission.objects.filter(
+            reporting_period__start_date__lte=current_date,
+            reporting_period__end_date__gte=current_date,
+            obligation=self.obligation
+        )
+        if self in current_submissions:
+            return True
+        elif (
+            self.current_state == "finalized"
+            and self.flag_valid is True
+            and self.flag_superseded is False
+        ):
+            return True
+        else:
+            return False
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
