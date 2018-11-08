@@ -162,11 +162,11 @@ class BaseReport(models.Model):
     This will be used as a base for all reporting models, except Article7Flags.
     """
 
-    # Data for a "submitted" submission is protected through a different
-    # mechanism. It makes sense to use CASCADE here, as deleting a submission
-    # should also delete its data.
+    # We want to avoid deletion of `Submission`s which contain data reports.
+    # In order to delete a non-submitted submission, its associated reports
+    # will need to be deleted first.
     submission = models.ForeignKey(
-        Submission, related_name='%(class)ss', on_delete=models.CASCADE
+        Submission, related_name='%(class)ss', on_delete=models.PROTECT
     )
 
     # Each entry in the Article 7 forms can have remarks
