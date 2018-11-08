@@ -255,6 +255,15 @@ class Submission(models.Model):
     def editable_states(self):
         return self.workflow.editable_data_states
 
+    @property
+    def is_current(self):
+        if (
+            self.flag_superseded
+            or self.current_state == self.workflow.state.workflow.initial_state.name
+        ):
+            return False
+        return True
+
     def call_transition(self, trans_name):
         """
         Interface for calling a specific transition name on the workflow.
