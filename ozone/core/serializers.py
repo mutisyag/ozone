@@ -194,20 +194,29 @@ class Article7DestructionListSerializer(serializers.ListSerializer):
         The `instance` parameter is, in this case, a queryset!
         """
 
-        # TODO: this only works for substances now! Blends also needed!
-        # The good news is that blend_item rows will update automatically :)
         submission = instance.first().submission
-        new_substances = [data.get('substance') for data in validated_data]
-        to_delete = instance.exclude(substance__in=new_substances)
+        new_substances = [
+            data.get('substance') for data in validated_data
+            if data.get('substance', None) is not None
+        ]
+        new_blends = [
+            data.get('blend') for data in validated_data
+            if data.get('blend', None) is not None
+        ]
+
+        to_delete = instance.exclude(substance__in=new_substances).exclude(blend__in=new_blends)
         to_delete.delete()
 
-        # Now perform creations and updates
+        # Now perform creations and updates; blend_item rows will
+        # update automatically :)
         ret = []
         for data in validated_data:
-            substance = data.pop('substance')
+            substance = data.pop('substance', None)
+            blend = data.pop('blend', None)
             obj, created = instance.update_or_create(
                 submission=submission,
                 substance=substance,
+                blend=blend,
                 defaults=data
             )
             ret.append(obj)
