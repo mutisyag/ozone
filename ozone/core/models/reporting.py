@@ -114,6 +114,14 @@ class Submission(models.Model):
     # Per Obligation-ReportingPeriod-Party
     version = models.PositiveSmallIntegerField(default=1)
 
+    cloned_from = models.ForeignKey(
+        'self',
+        related_name='clones',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
     # Persisted workflow class for this submission. We want this to be only set
     # at submission creation, so it will have no setter implementation.
     _workflow_class = models.CharField(
