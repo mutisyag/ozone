@@ -36,12 +36,16 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         pass
 
     # This needs to be set properly by each class inheriting from it
-    substance_blend_fields = []
+    substance_blend_fields = None
 
     def __init__(self, *args, **kwargs):
-        if not self.substance_blend_fields:
+        if self.substance_blend_fields is None:
             raise self.ConfigurationError(
                 'Class attribute `substance_blend_fields` needs to be non-empty'
+            )
+        if not isinstance(self.substance_blend_fields, list):
+            raise self.ConfigurationError(
+                'Class attribute `substance_blend_fields` needs to be a list'
             )
 
         super().__init__(*args, **kwargs)
