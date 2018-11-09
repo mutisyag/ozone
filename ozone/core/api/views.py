@@ -40,13 +40,10 @@ from ..serializers import (
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
     Article7ProductionSerializer,
-    CreateArticle7ProductionSerializer,
     Article7ExportSerializer,
     Article7ImportSerializer,
     Article7NonPartyTradeSerializer,
-    CreateArticle7NonPartyTradeSerializer,
     Article7EmissionSerializer,
-    CreateArticle7EmissionSerializer,
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
@@ -213,15 +210,12 @@ class Article7DestructionViewSet(
 class Article7ProductionViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ProductionSerializer
+
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
         )
-
-    def get_serializer_class(self):
-        if self.request.method in ["POST", "PUT"]:
-            return CreateArticle7ProductionSerializer
-        return Article7ProductionSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -258,15 +252,12 @@ class Article7ImportViewSet(
 class Article7NonPartyTradeViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7NonPartyTradeSerializer
+
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7NonPartyTradeSerializer
-        return Article7NonPartyTradeSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -275,15 +266,12 @@ class Article7NonPartyTradeViewSet(
 class Article7EmissionViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7EmissionSerializer
+
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
         )
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7EmissionSerializer
-        return Article7EmissionSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])

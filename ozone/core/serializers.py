@@ -249,7 +249,6 @@ class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
-
     class Meta:
         list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
@@ -261,14 +260,6 @@ class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
-    decision = serializers.StringRelatedField(many=False, read_only=True)
-
-    class Meta:
-        model = Article7Production
-        exclude = ('submission',)
-
-
-class CreateArticle7ProductionSerializer(serializers.ModelSerializer):
     class Meta:
         list_serializer_class = Article7ProductionListSerializer
         model = Article7Production
@@ -293,19 +284,7 @@ class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
         exclude = ('submission',)
 
 
-class CreateArticle7NonPartyTradeSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article7NonPartyTrade
-        exclude = ('submission', 'blend_item')
-
-
 class Article7EmissionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article7Emission
-        exclude = ('submission',)
-
-
-class CreateArticle7EmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Emission
         exclude = ('submission',)
