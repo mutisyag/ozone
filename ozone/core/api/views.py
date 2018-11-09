@@ -42,9 +42,7 @@ from ..serializers import (
     Article7ProductionSerializer,
     CreateArticle7ProductionSerializer,
     Article7ExportSerializer,
-    CreateArticle7ExportSerializer,
     Article7ImportSerializer,
-    CreateArticle7ImportSerializer,
     Article7NonPartyTradeSerializer,
     CreateArticle7NonPartyTradeSerializer,
     Article7EmissionSerializer,
@@ -232,15 +230,12 @@ class Article7ProductionViewSet(
 class Article7ExportViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ExportSerializer
+
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7ExportSerializer
-        return Article7ExportSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
@@ -249,15 +244,12 @@ class Article7ExportViewSet(
 class Article7ImportViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ImportSerializer
+
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7ImportSerializer
-        return Article7ImportSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])

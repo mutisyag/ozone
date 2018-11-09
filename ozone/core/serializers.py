@@ -229,7 +229,7 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
     class Meta:
         list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
-        exclude = ('submission', 'blend_item')
+        exclude = ('submission',)
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
@@ -252,22 +252,10 @@ class Article7ExportSerializer(BaseBlendCompositionSerializer):
         exclude = ('submission',)
 
 
-class CreateArticle7ExportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article7Export
-        exclude = ('submission', 'blend_item')
-
-
 class Article7ImportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         model = Article7Import
         exclude = ('submission',)
-
-
-class CreateArticle7ImportSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Article7Import
-        exclude = ('submission', 'blend_item')
 
 
 class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
