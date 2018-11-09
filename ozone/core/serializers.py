@@ -27,6 +27,71 @@ from .models import (
 User = get_user_model()
 
 
+class BaseBulkUpdateSerializer(serializers.ListSerializer):
+    """
+    This is a base class for serializers that allow bulk updates (PUT requests
+    containing a list of objects to create under a specific resource)
+    """
+    class ConfigurationError(Exception):
+        pass
+
+    # This needs to be set properly by each class inheriting from it
+    substance_blend_fields = []
+
+    def __init__(self, *args, **kwargs):
+        if not self.substance_blend_fields:
+            raise self.ConfigurationError(
+                'Class attribute `substance_blend_fields` needs to be non-empty'
+            )
+
+        super().__init__(*args, **kwargs)
+
+    def update(self, instance, validated_data):
+        """
+        Updating data reports in a submission will work as follows:
+        - all substances in queryset that do not appear in `validated_data`
+          will be deleted.
+        - substances in queryset that do appear in `validated_data` will be
+          updated.
+        - substances in `validated_data` that do not appear in queryset will
+          have entries created for them
+
+        The update method will *only permit lists* to be passed as parameters.
+        The `instance` parameter is, in this case, a queryset!
+        """
+        submission = instance.first().submission
+
+        # We will initiate to_delete list as the initial queryset, and then
+        # gradually exclude from it based on the su
+        to_delete = instance
+        for field in self.substance_blend_fields:
+            exclude_list = [
+                data.get(field) for data in validated_data
+                if data.get(field, None) is not None
+            ]
+            exclude_params={f'{field}__in': exclude_list}
+            to_delete = to_delete.exclude(**exclude_params)
+        # After all exclusions performed, delete
+        to_delete.delete()
+
+        # Now perform creations and updates; blend_item rows will
+        # update automatically :)
+        ret = []
+        for data in validated_data:
+            field_params = {
+                field: data.pop(field, None)
+                for field in self.substance_blend_fields
+            }
+            obj, created = instance.update_or_create(
+                submission=submission,
+                **field_params,
+                defaults=data
+            )
+            ret.append(obj)
+
+        return ret
+
+
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
     """
     This will be used as a base for all reporting serializers that accept
@@ -179,49 +244,8 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class Article7DestructionListSerializer(serializers.ListSerializer):
-    def update(self, instance, validated_data):
-        """
-        Updating Destructions in a submission will work as follows:
-        - all substances in queryset that do not appear in `validated_data`
-          will be deleted.
-        - substances in queryset that do appear in `validated_data` will be
-          updated.
-        - substances in `validated_data` that do not appear in queryset will
-          have entries created for them
-
-        The update method will *only permit lists* to be passed as parameters.
-        The `instance` parameter is, in this case, a queryset!
-        """
-
-        submission = instance.first().submission
-        new_substances = [
-            data.get('substance') for data in validated_data
-            if data.get('substance', None) is not None
-        ]
-        new_blends = [
-            data.get('blend') for data in validated_data
-            if data.get('blend', None) is not None
-        ]
-
-        to_delete = instance.exclude(substance__in=new_substances).exclude(blend__in=new_blends)
-        to_delete.delete()
-
-        # Now perform creations and updates; blend_item rows will
-        # update automatically :)
-        ret = []
-        for data in validated_data:
-            substance = data.pop('substance', None)
-            blend = data.pop('blend', None)
-            obj, created = instance.update_or_create(
-                submission=submission,
-                substance=substance,
-                blend=blend,
-                defaults=data
-            )
-            ret.append(obj)
-
-        return ret
+class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', 'blend']
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
@@ -230,6 +254,10 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
         list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
         exclude = ('submission',)
+
+
+class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', ]
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
@@ -242,6 +270,7 @@ class Article7ProductionSerializer(serializers.ModelSerializer):
 
 class CreateArticle7ProductionSerializer(serializers.ModelSerializer):
     class Meta:
+        list_serializer_class = Article7ProductionListSerializer
         model = Article7Production
         exclude = ('submission',)
 
