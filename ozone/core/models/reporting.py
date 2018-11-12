@@ -47,8 +47,6 @@ class Submission(models.Model):
     One specific data submission (version!)
     """
 
-
-
     @enum.unique
     class SubmissionMethods(enum.Enum):
         """
