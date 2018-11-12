@@ -3,9 +3,9 @@
     <div class="container">
       <h3>Add substances</h3>
       <h5>Filter Groups</h5>
-      <multiselect @input="prepareSubstances" :multiple="true"  v-model="selected_groups.selected" :options="selected_groups.options" placeholder="Select annex group(s)"></multiselect>
+      <multiselect @input="prepareSubstances" :multiple="true" label="text" trackBy="value" v-model="selected_groups.selected" :options="selected_groups.options" placeholder="Select annex group(s)"></multiselect>
       <hr>
-      <multiselect :clear-on-select="false" :hide-selected="true" :close-on-select="false" class="mb-2" label="text" track-by="text" :multiple="true" placeholder="Select substance(s)" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
+      <multiselect :clear-on-select="false" :hide-selected="true" :close-on-select="false" class="mb-2" label="text" trackBy="value" :multiple="true" placeholder="Select substance(s)" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
       <hr>
       <b-btn @click="addSubstance" variant="success">Add rows</b-btn>
     </div>
@@ -14,8 +14,8 @@
 
 <script>
 
-import Multiselect from 'vue-multiselect'
-import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
+import Multiselect from '@/mixins/modifiedMultiselect'
+import createSubstance from '@/mixins/createSubstance.vue'
 
 export default {
 
@@ -30,7 +30,7 @@ export default {
     Multiselect 
   },
 
-  mixins: [fieldsPerTab],
+  mixins: [createSubstance],
 
   mounted(){
     this.prepareGroups()
@@ -85,16 +85,20 @@ export default {
     },
 
     prepareGroups(){
+      const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
+      let currentGroups = []
       for(let substance of this.substances) {
-          this.pushUnique(this.selected_groups.options,substance.group.group_id)
-          //this.selected_groups.selected.push(group)
+        currentGroups.push(substance.group.group_id)
+        if(indexOfAll(currentGroups, substance.group.group_id).length <= 1){
+          this.selected_groups.options.push({text:substance.group.group_id, value: substance.group.group_id})
+        }
       }
       this.prepareSubstances()
     },
 
     updateGroup(selected_substance){
        for(let substance of this.substances) {
-          if(selected_substance === substance.value) {
+          if(selected_substance.includes(substance.value)) {
             this.group_field.label = substance.group.group_id
             this.group_field.name = substance.group.group_id
           }
@@ -102,50 +106,17 @@ export default {
     },
 
     addSubstance() {
-      for(let substance of this.selected_substance.selected) {
-        console.log('substance',substance)
-        this.updateGroup(substance.value)
-        let substance_fields = {
-          name: substance.value,
-          // options: this.substances,
-          selected: substance,
-          comments:  !['has_destroyed','has_nonparty'].includes(this.currentSection)  ? [{
-              name: "remarks_party",
-              label: "Remarks (party)",
-              selected: '',
-              type: "text",
-            },
-            {
-              name: "remarks_os",
-              selected: '',
-              type: "text",
-              label: "Remarks (Secretariat)",
-            },
-          ] : null,
-          inner_fields: '',
-        }
-
-        let inner_fields = this.getInnerFields(this.currentSection, this.group_field.name)
-
-        substance_fields.inner_fields = inner_fields
-        this.group_field.substance = substance_fields
-        var current_fields = this.section
-        current_fields.push(this.group_field)
-        this.section = current_fields
-
-        this.group_field = {
-          label: '',
-          name: '',
-          substance: null,
-        }
-      }
+      this.updateGroup(this.selected_substance.selected)
+      console.log('group-field',this.group_field)
+      // substanceList, currentSectionName, groupName, currentSection, country, blend
+      this.createSubstance(this.selected_substance.selected, this.currentSection, this.group_field.name, this.section, null, null)
       this.resetData()
     },
 
     resetData() {
-
       this.selected_countries.selected = null
-
+      this.selected_substance.selected = null
+      this.selected_groups.selected = []
       this.group_field = {
         label: '',
         name: '',

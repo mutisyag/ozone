@@ -53,9 +53,10 @@
               </div>
              </template>
             <formtemplate tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></formtemplate>
-
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+
+          
+         <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
              <template slot="title">
               <div :class="{'invalid-feedback': data.form.tabs.tab_4.isInvalid}">
                 {{data.form.tabs.tab_4.title}}
@@ -71,7 +72,7 @@
              </template>
             <formtemplate tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
+        <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
             <template slot="title">
               <div :class="{'invalid-feedback': data.form.tabs.tab_6.isInvalid}">
                 {{data.form.tabs.tab_6.title}}
@@ -79,7 +80,7 @@
              </template>
             <formtemplate tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
+           <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
             <template slot="title">
               <div :class="{'invalid-feedback': data.form.tabs.tab_7.isInvalid}">
                 {{data.form.tabs.tab_7.title}}
@@ -89,7 +90,7 @@
           </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
-          </b-tab>
+          </b-tab> -->
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
       </b-form>

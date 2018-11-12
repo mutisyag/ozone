@@ -14,6 +14,8 @@ import form from '../assets/form.js'
 import prefill from '@/mixins/prefill'
 import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
 
+import createSubstance from '@/mixins/createSubstance.vue'
+
 
 export default {
   name: 'DataManager',
@@ -22,7 +24,7 @@ export default {
   },
 
   mixins: [
-    prefill
+    prefill, createSubstance
   ],
 
   props: {
@@ -49,7 +51,7 @@ export default {
           'has_emissions' : 'article7emissions',
       },
       fields_to_get: {
-          'questionaire_questions' : 'article7questionnaire_url',
+          // 'questionaire_questions' : 'article7questionnaire_url',
           'has_imports' : 'article7imports_url',
           'has_exports' : 'article7exports_url',
           'has_produced' : 'article7productions_url',
@@ -82,6 +84,7 @@ export default {
         }
         
         this.prePrefill(this.form, this.current_submission)
+        // this.prefilled = true
       })
   },
 
@@ -120,28 +123,40 @@ export default {
             
             fetch(prefill_data[this.fields_to_get[form.tabs[tab].name]]).then( response => {
               if(response.data.length) {
+                console.log(response.data)
                 this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)),this.initialData.countryOptions)
               }
             }).catch( error => {
-              console.log(error.response)
+              console.log(error)
             })
           }
         })
     },
 
-    prefill(tab, data, countries) {
-      for(let entry of data) {
-        let current_substance = entry.substance 
-        ? 
-          this.initialData.substances.find( val => val.value === entry.substance ) 
-        : 
-          this.initialData.blends.find( val => val.id === entry.blend )
+    prefill(tab, data) {
 
-        let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
-        this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
-      }
+      // substanceList, currentSectionName, groupName, currentSection, country, blend
+      if(data) {
+        for(let item of data) {
+          console.log('-----------data-------',item,tab)
+            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend])
+          }
+        }
+
+      // for(let entry of data) {
+      //   let current_substance = entry.substance 
+      //   ? 
+      //     this.initialData.substances.find( val => val.value === entry.substance ) 
+      //   : 
+      //     this.initialData.blends.find( val => val.id === entry.blend )
+
+      //   let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
+      //   this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
+      // }
 
       this.prefilled = true
+
+
     },
 
     prefillQuestionaire(form,data){
