@@ -41,8 +41,8 @@
               </span>
 
               <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg mt-4"></i>
-                <i v-else style="color: green;" class="fa fa-check-circle fa-lg mt-4"></i>
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-circle fa-lg"></i>
 
               </span>
 

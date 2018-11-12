@@ -14,7 +14,7 @@
 
     </div>
     <b-button-group class="actions">
-      <Save v-if="submission && data" :data="data.form" :submission="submission"></Save>
+      <Save v-on:tabStatusChange="updateTabStatus" v-if="submission && data" :data="data.form" :submission="submission"></Save>
       <b-btn variant="success">
         Submit
       </b-btn>
@@ -29,7 +29,7 @@
         <b-tabs v-model="tabIndex" card>
           <b-tab title="Submission Info">
              <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.sub_info.isInvalid}">
+              <div class="tab-title">
                 Submission Info
               </div>
              </template>
@@ -38,52 +38,99 @@
           <b-tab title="Questionaire" active>
             <intro tabId="0" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]">
+          <b-tab :title-link-class="data.form.tabs.tab_2.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_2.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_2.isInvalid}">
+               <div class="tab-title">
                 {{data.form.tabs.tab_2.title}}
+                <div v-if="tabStatus.has_imports === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_imports === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_imports === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
              </template>
             <formtemplate ref="tab_2" tabId="1"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]">
+
+
+          <b-tab :title-link-class="data.form.tabs.tab_3.title ? {} : null"  :disabled="!display_tabs[data.form.tabs.tab_3.name]">
              <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_3.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_3.title}}
+                <div v-if="tabStatus.has_exports === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_exports === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_exports === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
+
              </template>
             <formtemplate tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></formtemplate>
           </b-tab>
 
           
-         <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+         <b-tab :title-link-class="data.form.tabs.tab_3.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_4.name]">
              <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_4.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_4.title}}
+                <div v-if="tabStatus.has_produced === 'saving'" class="spinner">
+                   <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_produced === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_produced === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
              </template>
             <formtemplate tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]">
+
+          <b-tab :title-link-class="data.form.tabs.tab_4.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_5.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_5.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_5.title}}
+                <div v-if="tabStatus.has_destroyed === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_destroyed === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_destroyed === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
              </template>
             <formtemplate tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
           </b-tab>
-        <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
+
+          <b-tab :title-link-class="data.form.tabs.tab_5.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_6.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_6.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_6.title}}
+                <div v-if="tabStatus.has_nonparty === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_nonparty === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_nonparty === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
              </template>
             <formtemplate tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
           </b-tab>
-           <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
+           <b-tab :title-link-class="data.form.tabs.tab_5.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_7.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_7.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_7.title}}
+                <div v-if="tabStatus.has_emissions === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <span v-else>
+                  <i v-if="tabStatus.has_emissions === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                  <i v-if="tabStatus.has_emissions === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                </span>
               </div>
              </template>
             <emissionstemplate tabId="6" ref="tab_7" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
@@ -160,6 +207,11 @@ export default {
 
   methods: {
 
+  updateTabStatus(val) {
+    console.log(val)
+    this.tabStatus[val[0]] = val[1]
+  },
+
     createModalData() {
       getInstructions().then((response) => {
         this.modal_data = response.data
@@ -189,6 +241,14 @@ export default {
 
   data () {
     return {
+      tabStatus : {
+        has_imports: '',
+        has_exports: '',
+        has_produced: '',
+        has_destroyed: '',
+        has_nonparty: '',
+        has_emissions: '',
+      },
       tabIndex: 0,
       modal_data: null,
       display_tabs: {
@@ -242,5 +302,43 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.tab-title {
+  display: flex;
+}
 
+.tab-title i {
+  margin-left: 5px;
+}
+
+.spinner {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.loader {
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+   border-top: 3px solid blue;
+   border-right: 3px solid green;
+   border-bottom: 3px solid red;
+   border-left: 3px solid pink;
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
