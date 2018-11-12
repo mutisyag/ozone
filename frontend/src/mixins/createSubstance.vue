@@ -36,7 +36,6 @@ export default {
 	        currentSection = current_fields
 	      }
 	  }
-
   	}
   },
 

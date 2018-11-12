@@ -320,7 +320,7 @@ export default {
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
        if(current_tab.form_fields.length){
       
-        this.$emit('tabStatusChange', [field,'saving'])
+       current_tab.status = 'saving'
        
        let current_tab_data = []
 
@@ -351,9 +351,9 @@ export default {
 
         post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
-              this.$emit('tabStatusChange', [field,true])
+              current_tab.status = true
               }).catch((error) => {
-              this.$emit('tabStatusChange', [field,false])
+              current_tab.status = false
               console.log(error.response)
             })
 

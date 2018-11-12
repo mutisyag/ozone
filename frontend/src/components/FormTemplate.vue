@@ -201,7 +201,9 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 export default {
   props: {
     structure: Object,
-    data: Object
+    data: Object,
+    tabId: String,
+    tabIndex: Number,
   },
 
   created(){
@@ -459,6 +461,18 @@ export default {
     },
 
   },
+
+  watch: {
+     'tab_info.form_fields': {
+         handler(val){
+          if(parseInt(this.tabId) === this.tabIndex)
+            if(this.tab_info.status != 'edited'){
+              this.tab_info.status = 'edited'
+            }
+         },
+         deep: true
+      }
+    }
 }
 </script>
 

@@ -140,9 +140,10 @@ export default {
       if(data) {
         for(let item of data) {
           console.log('-----------data-------',item,tab)
-            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
-          }
+          this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
         }
+        console.log('tab-status', tab.status)
+      }
 
       if(!data && !tab) {
         this.prefilled = true
@@ -158,6 +159,7 @@ export default {
       //   let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
       //   this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
       // }
+      tab.status = true
 
       this.prefilled = true
 
