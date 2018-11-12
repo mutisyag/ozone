@@ -28,7 +28,7 @@
          <tr>
            <td v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
 
-              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
                 {{row[order].selected}}
               <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
                 <hr>
@@ -38,6 +38,12 @@
                   <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
                 </span>
               </div>
+              </span>
+
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg mt-4"></i>
+                <i v-else style="color: green;" class="fa fa-check-circle fa-lg mt-4"></i>
+
               </span>
 
               <span v-else>

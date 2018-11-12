@@ -14,6 +14,12 @@
         </template>
           <AddBlend :countryOptions="data.countryOptions"  :currentSection="form.name" :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
       </b-tab>
+      <b-tab>
+        <template slot="title">
+          Validation
+        </template>
+        <Validation :section="form.form_fields"></Validation>
+      </b-tab>
     </b-tabs>
   </div>
 </template>
@@ -23,13 +29,15 @@
 import Add from './Add';
 import {AsideToggler} from '@coreui/vue'
 import AddBlend from './AddBlend'
+import Validation from './Validation'
 
 export default {
   name: 'DefaultAside',
   components: {
     add: Add,
     AddBlend,
-    AsideToggler
+    AsideToggler,
+    Validation
   },
 
   props: {
