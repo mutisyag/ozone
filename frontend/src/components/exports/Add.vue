@@ -109,7 +109,7 @@ export default {
       this.updateGroup(this.selected_substance.selected)
       console.log('group-field',this.group_field)
       // substanceList, currentSectionName, groupName, currentSection, country, blend
-      this.createSubstance(this.selected_substance.selected, this.currentSection, this.group_field.name, this.section, null, null)
+      this.createSubstance(this.selected_substance.selected, this.currentSection, this.group_field.name, this.section, null, null, null)
       this.resetData()
     },
 

@@ -116,7 +116,7 @@ export default {
           return returnObj
         },
 
-        getInnerFields(section, substance, group, country, blend) {
+        getInnerFields(section, substance, group, country, blend, prefillData) {
           let self = this
 
           let countryFieldName = this.getCountryField(section)
@@ -241,9 +241,19 @@ export default {
 
           switch (section) {
             case 'has_exports':
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
               return baseInnerFields
               break;
             case 'has_imports':
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
               return baseInnerFields
               break;
             case 'has_produced':
@@ -350,6 +360,12 @@ export default {
                      return returnObj
                   },
                };
+
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
                return baseInnerFields
                break;
             case 'has_destroyed':
@@ -392,6 +408,11 @@ export default {
                      return returnObj
                   },
             }
+            if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
             return baseInnerFields
             break;
             case 'has_nonparty':
@@ -450,6 +471,11 @@ export default {
                      return returnObj
                   },
                }
+                if(prefillData) {
+                  for(let field in prefillData){
+                    baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                  }
+                }
                return baseInnerFields;
                break;
             default:

@@ -135,11 +135,11 @@ export default {
 
     prefill(tab, data) {
 
-      // substanceList, currentSectionName, groupName, currentSection, country, blend
+      // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
       if(data) {
         for(let item of data) {
           console.log('-----------data-------',item,tab)
-            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend])
+            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
           }
         }
 

@@ -171,7 +171,7 @@ export default {
           // console.log(item)
           // substanceList, currentSectionName, groupName, currentSection, country, blend
 
-          this.createSubstance(null, this.currentSection, null, this.section, null, this.selected_blends.selected)
+          this.createSubstance(null, this.currentSection, null, this.section, null, this.selected_blends.selected, null)
 
 
       } else {
