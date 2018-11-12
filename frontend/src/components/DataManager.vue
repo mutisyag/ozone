@@ -117,20 +117,21 @@ export default {
     },
 
     prePrefill(form, prefill_data) {
-      
         Object.keys(form.tabs).forEach( (tab) => {
           if(this.fields_to_get[form.tabs[tab].name]){
-            
             fetch(prefill_data[this.fields_to_get[form.tabs[tab].name]]).then( response => {
               if(response.data.length) {
                 console.log(response.data)
-                this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)),this.initialData.countryOptions)
+                this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
               }
             }).catch( error => {
               console.log(error)
             })
           }
         })
+        this.prefill(null,null)
+
+
     },
 
     prefill(tab, data) {
@@ -142,6 +143,10 @@ export default {
             this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
           }
         }
+
+      if(!data && !tab) {
+        this.prefilled = true
+      }
 
       // for(let entry of data) {
       //   let current_substance = entry.substance 

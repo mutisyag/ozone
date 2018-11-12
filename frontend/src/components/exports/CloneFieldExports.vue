@@ -48,22 +48,30 @@ export default {
   methods: {
 
     addSubstance() {
+      let current_field = JSON.parse(JSON.stringify(this.field))
       let typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
+      let currentTypeOfCountryField = ''
 
-      for(let country of this.selected_countries.selected) {
-        let current_field = JSON.parse(JSON.stringify(this.field))
-        let substance = current_field.substance
-              
-        // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-        this.createSubstance([current_field.substance.selected], this.sectionName, current_field.group, this.section.form_fields, country, [current_field.blend.selected], null)
+      for(let type of typeOfCountryFields){
+        if(current_field.hasOwnProperty(type)) currentTypeOfCountryField =  type 
       }
 
-      // this.section.form_fields.splice(this.section.form_fields.indexOf(this.current_field),1)
+      for(let country of this.selected_countries.selected) {
+        let fieldExists = false
+        for(let existing_field of this.section.form_fields) {
+              if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
+                fieldExists = true
+                break;
+              }
+        }
+        // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+        if(!fieldExists) {
+          this.createSubstance([current_field.substance.selected], this.sectionName, current_field.group, this.section.form_fields, country, [current_field.blend.selected], null)
+        }
+
+      }
       this.$emit('removeThisField')
       this.resetData()
-      // this.$nextTick(() => {
-        // this.$destroy()
-      // });
     },
 
     resetData() {

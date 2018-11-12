@@ -90,7 +90,7 @@
           </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
-          </b-tab> -->
+          </b-tab> 
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
       </b-form>
