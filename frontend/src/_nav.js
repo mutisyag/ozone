@@ -89,12 +89,35 @@ export default {
         }
       ]
     },
-    {
-      name: 'External link',
-      url: 'http://ozone.unep.org',
-      icon: 'icon-cloud-download',
-      class: 'mt-auto',
-      variant: 'success'
-    },
+
+   
+   // {
+   //    name: 'Form status legend',
+   //    // url: '/pages',
+   //    // icon: 'icon-star',
+   //    children: [
+   //      {
+   //        name: 'Edited',
+   //        icon: 'fa fa-edit fa-lg',
+   //      },
+   //      {
+   //        name: 'Invalid',
+   //        icon: 'fa fa-times-circle fa-lg',
+   //        variant: 'danger'
+   //      },      
+   //      {
+   //        name: 'Edited',
+   //        icon: 'fa fa-check-circle fa-lg',
+   //        variant: 'success',
+   //      },      
+   //      {
+   //        name: 'Edited',
+   //        icon: 'fa fa-edit fa-lg'
+   //      },
+   //    ]
+   //  },
+
+
+   
   ]
 }

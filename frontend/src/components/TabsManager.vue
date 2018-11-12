@@ -26,7 +26,10 @@
   <b-container style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
       <b-form>
+
         <b-tabs v-model="tabIndex" card>
+
+
           <b-tab title="Submission Info">
              <template slot="title">
               <div class="tab-title">
@@ -65,6 +68,8 @@
                 </div>
                 <i v-if="data.form.tabs.tab_3.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
                 <i v-if="data.form.tabs.tab_3.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_3.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
 
              </template>
@@ -81,6 +86,8 @@
                 </div>
                 <i v-if="data.form.tabs.tab_4.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
                 <i v-if="data.form.tabs.tab_4.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_4.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
             <formtemplate tabId="4"  ref="tab_4"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></formtemplate>
@@ -95,6 +102,8 @@
                 </div>
                 <i v-if="data.form.tabs.tab_5.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
                 <i v-if="data.form.tabs.tab_5.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_5.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
             <formtemplate tabId="5" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
@@ -109,6 +118,8 @@
                 </div>
                 <i v-if="data.form.tabs.tab_6.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
                 <i v-if="data.form.tabs.tab_6.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_6.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
             <formtemplate tabId="6" ref="tab_6"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
@@ -122,6 +133,8 @@
                 </div>
                 <i v-if="data.form.tabs.tab_7.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
                 <i v-if="data.form.tabs.tab_7.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_7.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
             <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
@@ -131,6 +144,26 @@
           </b-tab> 
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
+        
+        <div class="legend">
+            <b>Legend:</b>
+            <div>
+              <div class="spinner">
+                <div class="loader"></div>
+              </div> - Form is curently being saved 
+            </div>
+            <div>
+              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
+            </div>
+            <div>
+              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server 
+            </div>
+            <div>
+              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
+            </div>
+        </div>
+
+
       </b-form>
     </b-card>
     </b-container>
@@ -243,6 +276,15 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.legend {
+  padding: .2rem 2rem;
+  background: #f0f3f5;
+}
+
+.legend .spinner {
+  margin-left: 0;
+}
+
 .tab-title {
   display: flex;
 }
@@ -253,7 +295,7 @@ export default {
 
 .spinner {
     z-index: 1;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
     margin-left: 5px;

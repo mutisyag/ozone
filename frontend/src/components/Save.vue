@@ -20,21 +20,6 @@
              <div v-if="errorMessage" v-html="errorMessage"></div>
       </b-alert>
 
-      <b-alert variant="success"
-             dismissible
-             style="
-                  position: fixed;
-                  top: 7rem;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  padding: 3rem;
-                  z-index: 1;
-                  font-weight: bold;"
-             :show="showDismissibleAlertSave"
-             @dismissed="showDismissibleAlertSave=false"
-             >
-             Form saved
-      </b-alert>
   </span>
 
 </template>
@@ -190,104 +175,6 @@ export default {
 
 
     validateDuplicates(){
-      // this.errorMessage = null
-      // this.duplicatesFound = []
-      // this.findDuplicates = {}
-      // for(let tab in this.data.tabs) {
-      //   if(['has_imports', 'has_exports', 'has_nonparty'].includes(this.data.tabs[tab].name) && this.data.tabs[tab].form_fields.length){ 
-      //       this.data.tabs[tab].form_fields.forEach( form_field => {
-      //         let substance = form_field.substance
-              
-      //         substance.type != 'blend' ? 
-      //           !this.findDuplicates[substance.selected.text] && (this.findDuplicates[substance.selected.text] = []) 
-      //         : 
-      //           !this.findDuplicates[substance.selected.name] && (this.findDuplicates[substance.selected.name] = [])
-              
-      //         substance.inner_fields.forEach( inner_field => {
-      //            if(['destination_party', 'source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected) {
-      //               substance.type != 'blend' ? this.findDuplicates[substance.selected.text].push(inner_field.selected.text + ' - in ' +  `"${this.data.tabs[tab].title}"`) : this.findDuplicates[substance.selected.name].push(inner_field.selected.text + ' - in ' + `"${this.data.tabs[tab].title}"`)
-      //            } 
-      //         })
-
-      //     });
-      //   }
-      // }
-
-      // for(let entry in this.findDuplicates) {
-      //   // let found = this.findDuplicates[entry].find((element, index) => (this.findDuplicates[entry].indexOf(element) != index));
-      //   let arrayDuplicates = (a) => {let d=[]; a.sort((a,b) => a-b).reduce((a,b)=>{a==b&&!d.includes(a)&&d.push(a); return b}); return d};
-      //   // console.log('findduplicates', this.findDuplicates[entry])
-      //   let duplicates = []
-      //   if(this.findDuplicates[entry].length){
-      //     duplicates = arrayDuplicates(this.findDuplicates[entry])
-      //   }
-      //   if(duplicates.length) {
-      //     this.duplicatesFound.push(entry + ' : ' + duplicates)
-      //   }
-      // }
-      // this.current_duplicates = 'Found duplicates: <br>'
-      
-      // // console.log('duplicatesfound', this.duplicatesFound, this.findDuplicates)
-
-      // if(this.duplicatesFound.length) {
-      //   this.duplicatesFound.forEach(duplicate => this.current_duplicates += `<b>  (${duplicate})  </b>  `)
-      //   this.current_duplicates += '<br> Please correct the errors before submiting the form again<br>'
-      //   this.showDismissibleAlert = true
-      //   this.duplicatesFound = []
-      //   this.findDuplicates = {}
-      // } else {
-      //   this.showDismissibleAlert = false
-
-
-
-      // let nonparty_validation = JSON.parse(JSON.stringify(this.data.tabs.tab_6.form_fields))
-
-      // let nonparty_validation_selected = {}
-
-      // if(nonparty_validation.length) {
-      //   for(let field of nonparty_validation) {
-      //     nonparty_validation_selected[nonparty_validation.indexOf(field)] = []
-      //     for(let inner_field of field.substance.inner_fields) {
-      //       console.log('inner_field', inner_field)
-      //       if(!['remarks_party','remaks_os','trade_party'].includes(inner_field.name) && inner_field.selected) {
-      //         nonparty_validation_selected[nonparty_validation.indexOf(field)].push(inner_field.selected)
-      //       }
-      //     }
-      //   }
-      // }
-
-      // console.log('nonparty',nonparty_validation_selected)
-
-      // let nonparty_validation_value = true
-
-      // for(let value in nonparty_validation_selected){
-      //   if(nonparty_validation_selected[value].length === 0){
-      //     nonparty_validation_value = false
-      //   }
-      // }
-
-      // if (!nonparty_validation_value) {
-      //   this.errorMessage = 'Data on nonparty section was not saved <br>'
-      //   this.errorMessage += 'At least one quantity field should be non-null! ' + ' in "Data on nonparty'
-      //   this.showDismissibleAlert = true
-      // } else {
-
-      //   this.$validator._base.validateAll().then((result) => {
-      //     if (result) {
-      //       this.startSubmitting()
-            
-      //     } else {
-
-      //       this.errorMessage = "Please correct the errors before saving the form again"
-      //       this.showDismissibleAlert = true
-            
-      //       console.log('errors', result)
-      //     }
-      //   });
-
-      // }
-
-      // }
       this.startSubmitting()
     },
 
