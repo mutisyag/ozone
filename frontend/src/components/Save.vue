@@ -42,6 +42,7 @@ export default {
         showDismissibleAlert: false,
         showDismissibleAlertSave: false,
         current_duplicates: '',
+        invalidTabs: [],
         errorMessage: null,
         duplicatesFound: [],
         fields_to_save: {
@@ -170,20 +171,30 @@ export default {
 
 
     validation(){
-      this.validateDuplicates();
-    },
-
-
-    validateDuplicates(){
+      this.invalidTabs = []
+      let tabsToValidate = ['tab_2','tab_3','tab_4','tab_5','tab_6','tab_7',]
+      for(let tab of tabsToValidate){
+        for(let field of this.data.tabs[tab].form_fields){
+          console.log(field)
+          if(field.validation.selected.length){
+            this.invalidTabs.push(this.data.tabs[tab].name)
+            this.data.tabs[tab].status = false
+            break;
+          }
+        }
+      }
+      
       this.startSubmitting()
+      
     },
+
 
   	startSubmitting(){
       this.errorMessage = null
       this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
       for(let questionnaire_field of this.data.tabs.tab_1.form_fields) {
-        if(questionnaire_field.selected) {
+        if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
             this.submitData(questionnaire_field.name)
         }
       }

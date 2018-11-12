@@ -536,8 +536,7 @@ var form = {
             description: 'Annexes A, B, C and E substances',
             isInvalid: false,
             // used for identification when adding labels
-            form_fields: [
-            ],
+            form_fields: [],
 
             fields_order: ["facility_name","quantity_generated","quantity_feedstock","quantity_destroyed","quantity_emitted","remarks_party","remarks_os", 'validation'],
 
