@@ -17,17 +17,19 @@ export default {
   	createSubstance(substanceList, currentSectionName, groupName, currentSection, country, blendList, prefillData){
 
   	let iterator = substanceList 
-  	console.log('substancelist', substanceList)
+  	let substancesHere = (substanceList && substanceList.length) ? substanceList.some( (el) => {return el !== null}) : false
+  	let blendsHere = (blendList && blendList.length) ? blendList.some( (el) => {return el !== null}) : false
 
-  	if(substanceList) {
+  	if(substancesHere) {
 		 for(let substance of substanceList) {
 	        let inner_fields = this.getInnerFields(currentSectionName, substance, groupName, country, null, prefillData)
 	        var current_fields = currentSection
 	        current_fields.push(inner_fields)
 	        currentSection = current_fields
 	      }
-	  } else if(blendList) {
+	  } else if(blendsHere) {
 	  	 for(let blend of blendList) {
+	  	 	console.log(blend)
 	        let inner_fields = this.getInnerFields(currentSectionName, null, groupName, country, blend, prefillData)
 	        var current_fields = currentSection
 	        current_fields.push(inner_fields)

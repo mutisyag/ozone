@@ -54,8 +54,8 @@ export default {
         let current_field = JSON.parse(JSON.stringify(this.field))
         let substance = current_field.substance
               
-        // substanceList, currentSectionName, groupName, currentSection, country, blend
-        this.createSubstance([current_field.substance.selected], this.sectionName, current_field.group, this.section.form_fields, country, null, null)
+        // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+        this.createSubstance([current_field.substance.selected], this.sectionName, current_field.group, this.section.form_fields, country, [current_field.blend.selected], null)
       }
 
       // this.section.form_fields.splice(this.section.form_fields.indexOf(this.current_field),1)
