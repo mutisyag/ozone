@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django_filters import rest_framework as filters
 
 from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
@@ -47,6 +51,7 @@ from ..serializers import (
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
+    ListSubmissionVersionsSerializer,
 )
 
 
@@ -162,6 +167,19 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
+class SubmissionVersionsListViewSet(generics.ListAPIView):
+    serializer_class = ListSubmissionVersionsSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('obligation', 'party',)
+
+    def get_queryset(self):
+        current_date = datetime.now().date()
+        return Submission.objects.filter(
+            reporting_period__start_date__lte=current_date,
+            reporting_period__end_date__gte=current_date,
+        )
+
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
 
@@ -172,9 +190,18 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = ListSubmissionSerializer(
-            self.queryset, many=True, context={'request': request}
+            self.get_queryset(), many=True, context={'request': request}
         )
         return Response(serializer.data)
+
+    @action(detail=True, methods=['post'])
+    def clone(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        if submission.check_cloning():
+            submission.clone()
+            return Response(status=status.HTTP_201_CREATED)
+        else:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):

@@ -26,72 +26,144 @@
   <b-container style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
       <b-form>
+
         <b-tabs v-model="tabIndex" card>
+
+
           <b-tab title="Submission Info">
              <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.sub_info.isInvalid}">
+              <div class="tab-title">
                 Submission Info
               </div>
              </template>
-            <subinfo ref="sub_info" :info="data.form.tabs.sub_info" :tabId="-1"></subinfo>
+            <subinfo ref="sub_info" :info="data.form.tabs.sub_info" :tabId="0"></subinfo>
           </b-tab>
-          <b-tab title="Questionaire" active>
-            <intro tabId="0" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
-          </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_2.name]">
-            <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_2.isInvalid}">
-                {{data.form.tabs.tab_2.title}}
-              </div>
-             </template>
-            <formtemplate ref="tab_2" tabId="1"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></formtemplate>
-          </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_3.name]">
-             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_3.isInvalid}">
-                {{data.form.tabs.tab_3.title}}
-              </div>
-             </template>
-            <formtemplate tabId="2" ref="tab_3" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></formtemplate>
 
+          <b-tab title="Questionaire" active>
+            <intro tabId="1" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+         
+          <b-tab :title-link-class="data.form.tabs.tab_2.status ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_2.name]">
+            <template slot="title">
+               <div class="tab-title">
+                {{data.form.tabs.tab_2.title}}
+                <div v-if="data.form.tabs.tab_2.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_2.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_2.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_2.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              </div>
+             </template>
+            <formtemplate ref="tab_2" tabId="2" :tabIndex="tabIndex" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_2"></formtemplate>
+          </b-tab>
+
+
+          <b-tab :title-link-class="data.form.tabs.tab_3.status ? {} : null"  :disabled="!display_tabs[data.form.tabs.tab_3.name]">
              <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_4.isInvalid}">
+              <div class="tab-title">
+                {{data.form.tabs.tab_3.title}}
+                <div v-if="data.form.tabs.tab_3.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_3.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_3.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_3.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
+              </div>
+
+             </template>
+            <formtemplate tabId="3" ref="tab_3" :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_3"></formtemplate>
+          </b-tab>
+
+          
+         <b-tab :title-link-class="data.form.tabs.tab_4.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+             <template slot="title">
+              <div class="tab-title">
                 {{data.form.tabs.tab_4.title}}
+                <div v-if="data.form.tabs.tab_4.status === 'saving'" class="spinner">
+                   <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_4.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_4.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_4.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
-            <formtemplate tabId="3"  ref="tab_4" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></formtemplate>
+            <formtemplate tabId="4"  ref="tab_4"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_4"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_5.name]">
+
+          <b-tab :title-link-class="data.form.tabs.tab_5.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_5.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_5.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_5.title}}
+                <div v-if="data.form.tabs.tab_5.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_5.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_5.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_5.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
-            <formtemplate tabId="4" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
+            <formtemplate tabId="5" :tabIndex="tabIndex" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_5"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_6.name]">
+
+          <b-tab :title-link-class="data.form.tabs.tab_6.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_6.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_6.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_6.title}}
+                <div v-if="data.form.tabs.tab_6.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_6.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_6.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_6.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
-            <formtemplate tabId="5" ref="tab_6" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
+            <formtemplate tabId="6" ref="tab_6"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_6"></formtemplate>
           </b-tab>
-          <b-tab :disabled="!display_tabs[data.form.tabs.tab_7.name]">
+           <b-tab :title-link-class="data.form.tabs.tab_7.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_7.name]">
             <template slot="title">
-              <div :class="{'invalid-feedback': data.form.tabs.tab_7.isInvalid}">
+              <div class="tab-title">
                 {{data.form.tabs.tab_7.title}}
+                <div v-if="data.form.tabs.tab_7.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="data.form.tabs.tab_7.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_7.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.tab_7.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              
               </div>
              </template>
-            <emissionstemplate tabId="6" ref="tab_7" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
+            <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
           </b-tab>
            <b-tab title="Attachements">
-            <attachements :info="data.form.tabs.attachements" tabId="6"></attachements>
-          </b-tab>
+            <attachements :info="data.form.tabs.attachements" tabId="8"></attachements>
+          </b-tab> 
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
+        
+        <div class="legend">
+            <b>Legend:</b>
+            <div>
+              <div class="spinner">
+                <div class="loader"></div>
+              </div> - Form is curently being saved 
+            </div>
+            <div>
+              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
+            </div>
+            <div>
+              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server 
+            </div>
+            <div>
+              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
+            </div>
+        </div>
+
+
       </b-form>
     </b-card>
     </b-container>
@@ -149,39 +221,13 @@ export default {
 
 
 
-  computed: {
-
-    getValidatorValues(){
-      console.log(this.$validator._base.errors.items)
-      return this.$validator._base.errors.items
-    },
-  },
-
+ 
   methods: {
-
     createModalData() {
       getInstructions().then((response) => {
         this.modal_data = response.data
         this.$refs.instructions_modal.show()
       })
-    },
-
-
-    getValidationStatus(tab_name){
-     this.$nextTick( () => {
-
-      let validationTabContent = this.$refs[tab_name]
-      let tabIsInvalid = validationTabContent ? validationTabContent.$children.find( child => {return child.$refs.invalid}) : null
-      if(tabIsInvalid) {
-        this.data.form.tabs[tab_name].isInvalid = true
-      }
-      else {
-        this.data.form.tabs[tab_name].isInvalid = false
-      }
-      this.$nextTick().then(() => {
-       this.$forceUpdate()
-      })
-     })
     },
 
   },
@@ -223,17 +269,6 @@ export default {
           }
         }
       },
-      getValidatorValues: {
-       handler: function(val) {
-        if(this.data.form){
-          for(let tab in this.data.form.tabs) {
-              this.getValidationStatus(tab)
-          }
-        }
-      },
-      deep: true
-
-    },
   }
 }
 
@@ -241,5 +276,52 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.legend {
+  padding: .2rem 2rem;
+  background: #f0f3f5;
+}
 
+.legend .spinner {
+  margin-left: 0;
+}
+
+.tab-title {
+  display: flex;
+}
+
+.tab-title i {
+  margin-left: 5px;
+}
+
+.spinner {
+    z-index: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+}
+
+.loader {
+  border: 3px solid #f3f3f3;
+  border-radius: 50%;
+   border-top: 3px solid blue;
+   border-right: 3px solid green;
+   border-bottom: 3px solid red;
+   border-left: 3px solid pink;
+  width: 15px;
+  height: 15px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>

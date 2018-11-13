@@ -1,5 +1,18 @@
+<template></template>
 <script>
+import labels from '@/assets/labels'
 export default {
+
+    data(){
+      return {
+        labels: null,
+      }
+    },
+
+
+    created(){
+      this.labels = labels
+    },
 
     methods: {
         getCountryField(currentSection) {
@@ -30,466 +43,446 @@ export default {
             }
         },
 
-        getInnerFields(section, group) {
-          let baseInnerFields = [
-              {
-                label: this.getCountryLabel(this.currentSection),
-                name: this.getCountryField(this.currentSection),
-                description: '',
-                type: 'select',
-                duplicate: true,
-                selected: null,
-              },
-              {
-                label: 'Total Quantity Exported for All Uses',
-                name: 'quantity_total_new',
-                disabled: false,
-                description: 'New',
-                validation: 'required',
-                type: 'number',
-                selected: null,
-              },
-              {
-                label: 'Total Quantity Exported for All Uses',
-                name: 'quantity_total_recovered',
-                description: 'Recovered and Reclaimed',
-                disabled: false,
-                type: 'number',
-                validation: 'required',
-                selected: null,
-              },
-              {
-                label: 'Quantity of New Substances Exported as Feedstock',
-                name: 'quantity_feedstock',
-                description: '',
-                disabled: false,
-                type: 'number',
-                validation: 'required',
-                selected: null,
-              },
-              {
-                label: 'Quantity of New Substances Exported for Exempted Essential and Critical Uses*',
-                name: 'quantity_exempted',
-                name_type: 'type_exempted',
-                total_type: null,
-                disabled: false,
-                modalShow: false,
-                description: 'Quantity',
-                total: 0,
-                type: 'multiple_fields',
-                fields: [
-                  {
-                    label: 'Essential use, other than L&A',
-                    name: 'quantity_essential_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_essential_uses",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_essential_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                    label: 'Critical use',
-                    name: 'quantity_critical_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_critical_uses",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_critical_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                    label: 'High ambient temperature',
-                    name: 'high_ambient_temperature',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_high_ambient_temperature",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_high_ambient_temperature",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                      label: 'Process agent uses',
-                      name: 'process_agent_uses',
-                      fields: [
-                        {
-                          label: "Quantity in metric",
-                          name: "quantity_process_agent_uses",
-                          selected: null,
-                          type: "text",
-                        },
-                        {
-                          label: "Decision",
-                          name: "decision_process_agent_uses",
-                          selected: '',
-                          type: "text",
-                        }
-                      ]
-                    }, 
-                  {
-                    label: 'Laboratory and analytical',
-                    name: 'laboratory_analytical_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_laboratory_analytical_uses",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_laboratory_analytical_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                    label: 'Quarantine and pre-shipment applications',
-                    name: 'quarantine_pre_shipment',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_quarantine_pre_shipment",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_quarantine_pre_shipment",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                   {
-                    label: 'Other/Unspecified',
-                    name: 'other',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_other",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_other",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                ]
-              },
-            ]
+        createTooltip(fields, section){
+          let tooltip_title = ''
 
+          for(let field in fields) {
+              tooltip_title += this.labels[section][field] + ': ' + fields[field] + '\n' 
+          }
+
+          return tooltip_title
+        },
+
+
+        quantityCalculator(fields, parent, section) {
+          let count = 0;
+          let returnObj = {
+            type: 'nonInput',
+            selected: count,
+          }
+
+          let forTooltip = {}
+
+          let quantities = fields 
+
+          for(let quantity of quantities){
+            if(parent[quantity].selected) {
+              count += parseFloat(parent[quantity].selected) 
+              forTooltip[quantity] = parent[quantity].selected
+            }
+          }
+
+          if(count === 0) {
+            returnObj.selected = ''
+          }
+          else if(count < 0) {
+            returnObj.selected = count.toPrecision(3)
+          } else if(count > 999) {
+            returnObj.selected = parseInt(count)
+          } else {
+            returnObj.selected = count.toPrecision(3)
+          }
+
+          let tooltip = this.createTooltip(forTooltip,section)
+
+          returnObj.tooltip = tooltip
+          
+          return returnObj
+        },
+
+        decisionGenerator(fields, parent, section){
+          let decisions = []
+          let returnObj = {
+            type: 'nonInput',
+            selected: '',
+          }
+          let forTooltip = {}
+
+          let decision_fields = fields
+
+            for(let item of decision_fields) {
+              if(parent[item].selected) {
+                decisions.push(parent[item].selected)
+                forTooltip[item] = parent[item].selected
+
+              }
+            }
+
+          let tooltip = this.createTooltip(forTooltip,section)
+          returnObj.tooltip = tooltip
+
+          returnObj.selected = decisions.join(', ')
+          return returnObj
+        },
+
+        getInnerFields(section, substance, group, country, blend, prefillData) {
+          let self = this
+
+          let countryFieldName = this.getCountryField(section)
+
+          let baseInnerFields = {
+            substance: {
+              type: 'select',
+              selected: substance || null,
+            },
+            blend: {
+              type: 'select',
+              selected: blend || null,
+              expand: false,
+            },
+            group: {
+              selected: group,
+            },
+            quantity_total_new: {
+              type: 'number',
+              selected: null,
+            },
+            quantity_total_recovered: {
+              type: 'number',
+              selected: null,
+            },
+            quantity_feedstock: {
+              type: 'number',
+              selected: null,
+            },
+            get quantity_exempted() {
+                let fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses','quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other']
+                 return self.quantityCalculator(fields, this, section)
+            },
+
+            get decision_exempted() {
+                let fields =  ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses','decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other']
+                return self.decisionGenerator(fields, this, section)
+            },
+            quantity_essential_uses: {
+              type: 'number',
+              selected: null,
+            },
+            decision_essential_uses: {
+              type: 'text',
+              selected: 'sss',
+            },
+            quantity_critical_uses: {
+              type: 'number',
+              selected: null,
+            },
+            decision_critical_uses: {
+              type: 'text',
+              selected: '',
+            },
+            quantity_high_ambient_temperature: {
+              type: 'number',
+              selected: null,
+            },
+            decision_high_ambient_temperature: {
+              type: 'text',
+              selected: '',
+            },
+            quantity_process_agent_uses: {
+              type: 'number',
+              selected: null,
+            },
+            decision_process_agent_uses: {
+              type: 'text',
+              selected: '',
+            },
+            quantity_laboratory_analytical_uses: {
+              type: 'number',
+              selected: null,
+            },
+            decision_laboratory_analytical_uses: {
+              type: 'text',
+              selected: '',
+            },
+            quantity_quarantine_pre_shipment: {
+              type: 'number',
+              selected: null,
+            },
+            decision_quarantine_pre_shipment: {
+              type: 'text',
+              selected: '',
+            },
+            quantity_other: {
+              type: 'number',
+              selected: null,
+            },
+            decision_other: {
+              type: 'text',
+              selected: '',
+            },
+            remarks_party: {
+              type: 'textarea',
+              selected: '',
+            },
+            remarks_os: {
+              type: 'textarea',
+              selected: '',
+            },
+            get validation() {
+              let errors = []
+              if(!this.quantity_total_new.selected){
+                errors.push('eroare1')
+              }
+
+              let returnObj = {
+                type: 'nonInput',
+                selected: errors
+              }
+
+              return returnObj
+            },
+          }
+
+          baseInnerFields[countryFieldName] = {
+            type: 'multiselect',
+            selected: country || null,
+          }
 
           switch (section) {
             case 'has_exports':
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
               return baseInnerFields
               break;
             case 'has_imports':
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
               return baseInnerFields
               break;
             case 'has_produced':
-            return  [
-           
-              {
-                label: 'Total production for all uses',
-                name: 'quantity_total_produced',
-                disabled: false,
-                // description: 'New',
-                validation: 'required',
-                type: 'number',
-                selected: null,
-              },
-              {
-                label: 'Production for feedstock uses within your country',
-                name: 'quantity_feedstock',
-                disabled: false,
-                type: 'number',
-                validation: 'required',
-                selected: null,
-              },
-              {
-                label: 'Production for exempted essential, critical or other uses within your country**',
-                name: 'quantity_exempted',
-                name_type: 'type_exempted',
-                total_type: null,
-                disabled: false,
-                modalShow: false,
-                description: 'Quantity',
-                total: 0,
-                type: 'multiple_fields',
-                fields: [
-                  {
-                    label: 'Essential use, other than L&A',
-                    name: 'quantity_essential_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_essential_uses",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_essential_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
+              baseInnerFields = {
+                  remarks_party: {
+                     type: 'textarea',
+                     selected: '',
+                  },
+                  remarks_os: {
+                     type: 'textarea',
+                     selected: '',
+                  },
+                  group: {
+                    selected: group,
+                  },
+                  get quantity_exempted() {
+                     let fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_quarantine_pre_shipment']
+                      return self.quantityCalculator(fields, this, section)
+                  },                               
+                  get decision_exempted() {
+                     let fields = ['decision_critical_uses', 'decision_essential_uses', 'decision_high_ambient_temperature', 'decision_laboratory_analytical_uses', 'decision_process_agent_uses', 'decision_quarantine_pre_shipment']
+                      return self.decisionGenerator(fields, this, section)
+                  },
+                  quantity_critical_uses: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  decision_critical_uses: {
+                     type: 'text',
+                     selected: '',
+                  },
+                  blend: {
+                     type: 'select',
+                     selected: blend || null,
+                     expand: false,
+                  },
+                  quantity_essential_uses: {
+                     type: 'number',
+                     selected: 5,
                   }, 
-                  {
-                    label: 'Critical use',
-                    name: 'quantity_critical_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_critical_uses",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_critical_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
+                  decision_essential_uses: {
+                     type: 'text',
+                     selected: 'sss',
+                  },
+                  quantity_high_ambient_temperature: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  decision_high_ambient_temperature: {
+                     type: 'text',
+                     selected: '',
+                  },
+                  quantity_laboratory_analytical_uses: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  decision_laboratory_analytical_uses: {
+                     type: 'text',
+                     selected: '',
+                  },
+                  quantity_process_agent_uses: {
+                     type: 'number',
+                     selected: null,
                   }, 
-                  {
-                    label: 'High ambient temperature',
-                    name: 'high_ambient_temperature',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        name: "quantity_high_ambient_temperature",
-                        validation: false,
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_high_ambient_temperature",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                      label: 'Process agent uses',
-                      name: 'process_agent_uses',
-                      fields: [
-                        {
-                          label: "Quantity in metric",
-                          name: "quantity_process_agent_uses",
-                          selected: null,
-                          type: "text",
-                        },
-                        {
-                          label: "Decision",
-                          name: "decision_process_agent_uses",
-                          selected: '',
-                          type: "text",
-                        }
-                      ]
-                    }, 
-                  {
-                    label: 'Laboratory and analytical',
-                    name: 'laboratory_analytical_uses',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_laboratory_analytical_uses",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_laboratory_analytical_uses",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                  {
-                    label: 'Quarantine and pre-shipment applications',
-                    name: 'quarantine_pre_shipment',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_quarantine_pre_shipment",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_quarantine_pre_shipment",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                   {
-                    label: 'Other/Unspecified',
-                    name: 'other',
-                    fields: [
-                      {
-                        label: "Quantity in metric",
-                        validation: false,
-                        name: "quantity_other",
-                        selected: null,
-                        type: "number",
-                      },
-                      {
-                        label: "Decision",
-                        name: "decision_other",
-                        selected: '',
-                        type: "text",
-                      }
-                    ]
-                  }, 
-                ]
-              },
-              {
-                label: 'Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5',
-                name: 'quantity_article_5',
-                disabled: ['A','B'].includes(group.split('I')[0]) ? true : false,
-                // description: 'New',
-                validation: ['A','B'].includes(group.split('I')[0]) ? false : 'required',
-                type: 'number',
-                selected: null,
-              },
-            ]
+                  decision_process_agent_uses: {
+                     type: 'text',
+                     selected: '',
+                  },
+                  quantity_quarantine_pre_shipment: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  decision_quarantine_pre_shipment: {
+                     type: 'text',
+                     selected: '',
+                  },
+                  quantity_total_produced: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  quantity_feedstock: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  quantity_article_5: {
+                     type: 'text',
+                     selected: null,
+                  },
+                  substance: {
+                     type: 'select',
+                     selected: substance || null,
+                  },
+                  get validation() {
+                     let errors = []
+                     if(!this.substance.selected){
+                        errors.push('eroare1')
+                     }
 
-              break;
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
+
+                     return returnObj
+                  },
+               };
+
+              if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
+               return baseInnerFields
+               break;
             case 'has_destroyed':
-            return [
-              {
-                label: 'Quantity Destroyed',
-                name: 'quantity_destroyed',
-                disabled: false,
-                // description: 'New',
-                validation: 'required',
-                type: 'number',
-                selected: null,
-              },
-              {
-                name: 'remarks_party',
-                selected: '',
-                type: 'textarea',
-                label: 'Remarks (Secretariat)',
-              },
-              {
-                name: 'remarks_os',
-                selected: '',
-                type: 'textarea',
-                label: 'Remarks (Secretariat)',
-              },
-            ]
+            baseInnerFields = {
+                  substance: {
+                     type: 'select',
+                     selected: substance || null,
+                  }, 
+                  quantity_destroyed: {
+                     type: 'number',
+                     selected: null,
+                  },
+                  group: {
+                    selected: group
+                  },   
+                  blend: {
+                     type: 'select',
+                     selected: blend || null,
+                     expand: false,
+                  },
+                  remarks_party: {
+                     type: 'textarea',
+                     selected: '',
+                  },
+                  remarks_os: {
+                     type: 'textarea',
+                     selected: '',
+                  },
+                  get validation() {
+                     let errors = []
+                     if(!this.substance.selected){
+                        errors.push('eroare1')
+                     }
+
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
+
+                     return returnObj
+                  },
+            }
+            if(prefillData) {
+                for(let field in prefillData){
+                  baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                }
+              }
+            return baseInnerFields
             break;
             case 'has_nonparty':
-            return  [
-                  {
-                    label: "Exporting party for quantities reported as imports OR Country of destination of exports",
-                    name: 'trade_party',
-                    description: '',
-                    type: 'select',
-                    duplicate: true,
-                    selected: null,
+               baseInnerFields = {
+                  remarks_party: {
+                     type: 'textarea',
+                     selected: '',
                   },
-                  {
-                    label: 'Quantity of new imports from non-parties',
-                    name: 'quantity_import_new',
-                    disabled: false,
-                    // description: 'New',
-                    // validation: 'required',
-                    type: 'number',
-                    selected: null,
+                  remarks_os: {
+                     type: 'textarea',
+                     selected: '',
                   },
-                  {
-                    label: 'Quantity of recovered and reclaimed imports from non-parties',
-                    name: 'quantity_import_recovered',
-                    disabled: false,
-                    // description: 'New',
-                    // validation: 'required',
-                    type: 'number',
-                    selected: null,
+                  quantity_import_new: {
+                     type: 'text',
+                     selected: null,
                   },
-                  {
-                    label: 'Quantity of new exports to non-parties*',
-                    name: 'quantity_export_new',
-                    disabled: false,
-                    // description: 'New',
-                    // validation: 'required',
-                    type: 'number',
-                    selected: null,
+                  quantity_import_recovered: {
+                     type: 'text',
+                     selected: null,
                   },
-                  {
-                    label: 'Quantity of recovered and reclaimed exports to non-parties',
-                    name: 'quantity_export_recovered',
-                    disabled: false,
-                    // description: 'New',
-                    // validation: 'required',
-                    type: 'number',
-                    selected: null,
+                  quantity_export_new: {
+                     type: 'text',
+                     selected: null,
                   },
-                  {
-                    name: 'remarks_party',
-                    selected: '',
-                    type: 'textarea',
-                    label: 'Remarks (Secretariat)',
+                  quantity_export_recovered: {
+                     type: 'text',
+                     selected: null,
                   },
-                  {
-                    name: 'remarks_os',
-                    selected: '',
-                    type: 'textarea',
-                    label: 'Remarks (Secretariat)',
+                  substance: {
+                     type: 'select',
+                     selected: substance || null,
                   },
-                ]
-            break;
+                  blend: {
+                     type: 'select',
+                     selected: blend || null,
+                     expand: false,
+                  },
+                  group: {
+                    selected:group
+                  },
+                  trade_party: {
+                     type: 'multiselect',
+                     selected: null,
+                  },
+                  get validation() {
+                     let errors = []
+                     if(!this.quantity_export_new.selected){
+                        errors.push('eroare1')
+                     }
+
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
+
+                     return returnObj
+                  },
+               }
+                if(prefillData) {
+                  for(let field in prefillData){
+                    baseInnerFields.hasOwnProperty(field) ? baseInnerFields[field].selected = prefillData[field] : null
+                  }
+                }
+               return baseInnerFields;
+               break;
             default:
               // statements_def
               break;
-          }
-        }
-    },
+            }
+         } 
+      },
 
 
 }

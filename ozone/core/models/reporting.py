@@ -1,5 +1,7 @@
 import enum
 
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -11,6 +13,8 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party
+from .substance import Substance
+from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
@@ -69,6 +73,18 @@ class Submission(models.Model):
         'accelerated': AcceleratedArticle7Workflow
     }
 
+    RELATED_DATA = [
+        'article7exports',
+        'article7imports',
+        'article7productions',
+        'article7destructions',
+        'article7nonpartytrades',
+        'article7emissions',
+        'highambienttemperatureproductions',
+        'highambienttemperatureimports',
+        'transfers'
+    ]
+
     # TODO: this implements the `submission_type` field from the
     # Ozone Business Data Tables. Analyze how Party-to-Obligation/Version
     # mappings should be modeled.
@@ -111,6 +127,14 @@ class Submission(models.Model):
 
     # Per Obligation-ReportingPeriod-Party
     version = models.PositiveSmallIntegerField(default=1)
+
+    cloned_from = models.ForeignKey(
+        'self',
+        related_name='clones',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
 
     # Persisted workflow class for this submission. We want this to be only set
     # at submission creation, so it will have no setter implementation.
@@ -255,6 +279,15 @@ class Submission(models.Model):
     def editable_states(self):
         return self.workflow.editable_data_states
 
+    @property
+    def is_current(self):
+        if (
+            self.flag_superseded
+            or self.current_state == self.workflow.state.workflow.initial_state.name
+        ):
+            return False
+        return True
+
     def call_transition(self, trans_name):
         """
         Interface for calling a specific transition name on the workflow.
@@ -324,6 +357,60 @@ class Submission(models.Model):
             if field not in exempted_fields:
                 return True
         return False
+
+    def check_cloning(self):
+        """
+        Checks whether the current submission can be cloned
+        """
+        current_date = datetime.now().date()
+        current_submissions = Submission.objects.filter(
+            reporting_period__start_date__lte=current_date,
+            reporting_period__end_date__gte=current_date,
+            obligation=self.obligation
+        )
+        if self in current_submissions:
+            return True
+        elif (
+            self.current_state == "finalized"
+            and self.flag_valid is True
+            and self.flag_superseded is False
+        ):
+            return True
+        else:
+            return False
+
+    def clone(self):
+        clone = Submission.objects.create(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation,
+            cloned_from=self,
+            created_by=self.created_by,
+            last_edited_by=self.last_edited_by
+        )
+
+        """
+        We treat Article7Questionnaire separately because it has a one-to-one
+        relation with submission and this way we avoid nasty verifications
+        """
+        exclude = [
+            'id', 'submission_id', '_state', '_deferred_fields', '_tracker', 'save'
+        ]
+        if (
+            hasattr(self, "article7questionnaire")
+            and self.article7questionnaire is not None
+        ):
+            attributes = model_to_dict(self.article7questionnaire, exclude=exclude)
+            attributes['submission_id'] = clone.pk
+            self.article7questionnaire.__class__.objects.create(**attributes)
+
+        for related_data in self.RELATED_DATA:
+            for instance in getattr(self, related_data).all():
+                if hasattr(instance, 'blend_item') and instance.blend_item is not None:
+                    continue
+                attributes = model_to_dict(instance, exclude=exclude)
+                attributes['submission_id'] = clone.pk
+                instance.__class__.objects.create(**attributes)
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

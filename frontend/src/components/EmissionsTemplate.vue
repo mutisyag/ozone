@@ -32,12 +32,22 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(outer_field,outer_field_index) in tab_info.form_fields" class="form-fields">
-            <td v-for="(inner_field, inner_field_index) in outer_field">
-              <fieldGenerator :disabled="inner_field.disabled" :field="inner_field"></fieldGenerator>
+          <tr v-for="(row,row_index) in tab_info.form_fields" class="form-fields">
+            <td v-for="(order, order_index) in tab_info.fields_order">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'&& order !== 'validation'">
+                {{row[order].selected}}
+              </span>
+
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+              </span>
+
+
+              <fieldGenerator v-else :field="row[order]"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
-	            <i class="fa fa-times-circle fa-lg" @click="remove_field(outer_field)"></i>
+	            <i class="fa fa-close fa-lg " @click="remove_field(tab_info.form_fields, row)"></i>
 	         </td>
           </tr>
 
@@ -65,7 +75,9 @@ import Multiselect from 'vue-multiselect'
 export default {
   props: {
     structure: Object,
-    data: Object
+    data: Object,
+    tabId: String,
+    tabIndex: Number,
   },
 
   created(){
@@ -96,55 +108,49 @@ export default {
     },
 
     addField(){
-    	let row = [
-                    {
-                        name: 'facility_name',
+    	let row = {
+                    facility_name: {
                         type: 'text',
-                        validation: 'required',
-                        label: 'Facility name or identifier',
                         selected: '',
                     },
-                    {
-                        name: 'quantity_generated',
+                  quantity_generated: {
+                        type: 'number',    
+                        selected: '',
+                    },
+                   quantity_feedstock: {
                         type: 'number',
-                        validation: 'required',
-                        label: 'Amount',
                         selected: '',
                     },
-                    {
-                        name: 'quantity_feedstock',
+                   quantity_destroyed: {
                         type: 'number',
-                        validation: 'required',
-                        label: 'Amount Used for Feedstock',
                         selected: '',
                     },
-                    {
-                        name: 'quantity_destroyed',
+                   quantity_emitted: {
                         type: 'number',
-                        validation: 'required',
-                        label: 'Amount Destroyed',
                         selected: '',
                     },
-                    {
-                        name: 'quantity_emitted',
-                        type: 'number',
-                        validation: 'required',
-                        label: 'Amount of Emissions',
-                        selected: '',
+                    remarks_party: {
+                     type: 'textarea',
+                       selected: '',
                     },
-                    {
-                        name: 'remarks_party',
-                        selected: '',
-                        type: 'textarea',
-                        label: 'Party Comments',
+                    remarks_os: {
+                       type: 'textarea',
+                       selected: '',
                     },
-                    {
-                        name: 'remarks_os',
-                        selected: '',
-                        type: 'textarea',
-                        label: 'Secretariat Comments',
-                    },
-                ]
+                    get validation() {
+                     let errors = []
+                     if(!this.facility_name.selected){
+                        errors.push('eroare1')
+                     }
+
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
+
+                     return returnObj
+                  },
+                }
                 this.structure.form_fields.push(row)
     },
 
@@ -237,6 +243,19 @@ export default {
     },
 
   },
+
+  watch: {
+     'tab_info.form_fields': {
+         handler(val){
+          if(parseInt(this.tabId) === this.tabIndex)
+            if(this.tab_info.status != 'edited'){
+              this.tab_info.status = 'edited'
+            }
+         },
+         deep: true
+      }
+    }
+
 }
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div v-if="tab_info && parseInt(tabId) === tabIndex">
     <div class="form-sections">
       <table class="table submission-table">
         <thead>
@@ -24,129 +24,129 @@
             </th>
           </tr>
         </thead>
-        <tbody  v-for="(outer_field,outer_field_index) in tab_info.form_fields" class="form-fields">
-          <tr v-if="outer_field.name != 'blend'">
-            <td style="padding-right: 2rem;">
-              <div class="table-btn-group">
-                <b-btn variant="info" @click="createModalData(outer_field.substance)">
-                  Edit
-                </b-btn>
-                <b-btn variant="outline-danger" @click="remove_field(outer_field)" class="table-btn">Delete</b-btn>
-              </div>
-              <span v-b-tooltip.hover  placement="left" :title="outer_field.label" :class="outer_field.name">
-                {{outer_field.substance.selected.text}}
-              </span>
-            </td>
-            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.type != 'multiple_fields'">
-              <fieldGenerator v-if="inner_field.type != 'multiple_fields' && !['destination_party','source_party', 'trade_party'].includes(inner_field.name) " :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
-              <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected">
-                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
-              </div>
-              <div v-else-if=" ['destination_party','source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected">
-                {{inner_field.selected.text}}
-              </div>
-            
-            </td>
-            <td style="position: static" v-else v-for="i in [0,1]">
-              <div v-if="i === 1" v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
-                  {{countDecisions(inner_field)}} {{inner_field.total}}
-              </div>
-              <div v-else v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
-                <div v-html="getDecisions(inner_field)"></div>
-              </div>
-              <div style="margin-left: -4rem; margin-top: 2rem" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected && i === 1" >
+       <tbody @mouseover="hovered = row.substance.selected" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
+         <tr>
+           <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
+
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
+                {{row[order].selected}}
+              <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
                 <hr>
-                Quantity of new {{outer_field.substance.selected.text}} exported to be used for QPS applications
+                Quantity of new {{labels['quantity_quarantine_pre_shipment']}} exported to be used for QPS applications
                 <hr>
                 <span>
-                  <input class="form-control" :type="quantity.fields[0].type" v-model="quantity.fields[0].selected">
+                  <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
                 </span>
               </div>
-              <span v-if="doComments(outer_field.substance.comments) && i === 1" class="comments-section">
-                <b-btn variant="link" class="comments-button" v-b-tooltip.hover  placement="left" :title="doComments(outer_field.substance.comments)" :id="`${outer_field.substance.name}_${outer_field_index}`">
-                    <img class="icon" src="/comments.svg">
-                </b-btn>
               </span>
-            </td>
-          </tr>
-          <tr v-else>
-            <td class="blend" style="padding-right: .5rem; vertical-align: middle;">
-              <div class="table-btn-group">
-                <b-btn variant="info" @click="createModalData(outer_field.substance)">
-                  Edit
-                </b-btn>
-                <b-btn variant="outline-danger" @click="remove_field(outer_field)" class="table-btn">Delete</b-btn>
-              </div>
-              <span style="cursor:pointer" @click="outer_field.expand = !outer_field.expand" v-b-tooltip.hover  placement="left" :title="outer_field.label" :class="outer_field.name">
-                {{outer_field.substance.selected.text}} <i :class="`fa fa-caret-square-o-${expandedStatus(outer_field.expand)}`"></i>
-              </span>
-            </td>
-            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields">
-              <div  v-if="inner_field.type != 'multiple_fields' && !['destination_party','source_party', 'trade_party'].includes(inner_field.name)" >
-                <fieldGenerator :disabled.sync="inner_field.disabled" :field.sync="inner_field"></fieldGenerator>
-              </div>
-              <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && !inner_field.selected">
-                  <clonefield :countryOptions="data.countryOptions" :current_field="outer_field" :inner_field="inner_field" :section="tab_info"></clonefield>
-              </div>
-              <div v-else-if="['destination_party','source_party', 'trade_party'].includes(inner_field.name) && inner_field.selected">
-                {{inner_field.selected.text}}
-              </div>
-              <div v-else>
-                <div v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
-                  {{countDecisions(inner_field)}} {{inner_field.total}}
-                </div>
-              </div>
-            </td>
 
-            <td v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="inner_field.type ==='multiple_fields'">
-              <div v-b-tooltip.hover placement="left" :title="expandDecisions(inner_field)" >
-                <div v-html="getDecisions(inner_field)"></div>
-              </div>
-              <div style="margin-left: -4rem;" v-for="quantity in inner_field.fields" class="special-field" v-if="outer_field.label === 'EI' && quantity.name === 'quarantine_pre_shipment' && quantity.fields[0].selected" >
-                <hr>
-                Quantity of new {{outer_field.substance.selected.text}} exported to be used for quarantine and pre shipment applications 
-                <hr>
-                <span>
-                  {{quantity.fields[0].selected}}
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+
+              </span>
+
+              <span v-else>
+                <fieldGenerator v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'substance'">
+                  {{tab_data.display.substances[row[order].selected]}}
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row)">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
                 </span>
-              </div>
-              <span v-if="doComments(outer_field.substance.comments)" class="comments-section">
-                <b-btn variant="link" class="comments-button" v-b-tooltip.hover  placement="left" :title="doComments(outer_field.substance.comments)" :id="`${outer_field.substance.name}_${outer_field_index}`">
-                    <img class="icon" src="comments.svg">
-                </b-btn>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
+                <span v-else>
+                   {{tab_data.display.countries[row[order].selected]}}
+                </span>
               </span>
-            </td>
-          </tr>
+           </td>
+         </tr>
 
-          <tr v-for="substance in outer_field.substance.selected.composition" class="small" v-if="outer_field.expand">
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 2"> 
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                  <div>{{labels[field]}}</div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
+       </tbody>
+
+        <tbody @mouseover="hovered = row.blend.selected" @mouseleave="hovered = false" v-if="row.blend.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
+         <tr>
+           <td  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
+                {{row[order].selected}}
+              </span>
+
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+              </span>
+
+
+              <span v-else>
+                <fieldGenerator v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'blend'">
+                  <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">
+                    {{tab_data.display.blends[row[order].selected].name}} 
+                    <i :class="`fa fa-caret-square-o-${expandedStatus(row[order].expand)}`"></i>
+                  </span>
+
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row)">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
+                </span>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.blend.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
+                <span v-else>
+                  {{tab_data.display.countries[row[order].selected]}}
+                </span>
+              </span>
+           </td>
+         </tr>
+
+
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 1"> 
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                  <div><b>{{labels[field]}}</b></div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
+
+          <tr v-for="substance in tab_data.display.blends[row.blend.selected].components" class="small" v-if="row.blend.expand">
             <td colspan="2">
               <div>
                 <b-row>
-                  <b-col>{{substance.name.text}}</b-col>
-                  <b-col><b>{{substance.percent}}%</b></b-col>
+                  <b-col>{{substance.substance_name}}</b-col>
+                  <b-col><b>{{substance.percentage * 100}}%</b></b-col>
                 </b-row>
               </div>
             </td>
-            <td :colspan="getSpanType(inner_field.type)" v-for="(inner_field, inner_field_index) in outer_field.substance.inner_fields" v-if="!['destination_party','source_party', 'trade_party'].includes(inner_field.name)">
-              <div v-if="inner_field.type != 'multiple_fields' && !['destination_party','source_party', 'trade_party'].includes(inner_field.name)" >
-                  <b-row v-if="splitBlend(inner_field.selected,substance.percent)">
-                    <b-col> <b>{{splitBlend(inner_field.selected,substance.percent)}}</b></b-col>
-                  </b-row>
-              </div>
-              <div v-else-if="inner_field.type ==='multiple_fields'">
-                <div v-b-tooltip.hover placement="left" :title="expandQuantity(inner_field)" >
-                  <b-row v-if="splitBlend(inner_field.total,substance.percent)">
-                  <div style="display:none">{{countDecisions(inner_field)}}</div> 
-                    <b-col><b>{{splitBlend(inner_field.total,substance.percent)}}</b></b-col>
-                  </b-row>
-                </div>
-              </div>
-              <div v-else></div>
-            </td>
-            <!-- <td>empty</td> -->
+            
+             <td v-if="!['substance','blend','validation','trade_party','destination_party', 'source_party','decision_exempted'].includes(order)" v-for="(order, order_index) in tab_info.fields_order">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
+                {{splitBlend(row[order].selected,substance.percentage)}}
+              </span>
+              <span v-else>
+                {{splitBlend(row[order].selected,substance.percentage)}}
+              </span>
+           </td>
           </tr>
 
-        </tbody>
+       </tbody>
+
       </table>
     </div>
     <div v-for="comment in tab_info.comments" class="comments-input">
@@ -159,68 +159,88 @@
     </div>
 
     <AppAside fixed>
-      <DefaultAside :data="tab_data" :form="tab_info"> </DefaultAside>
+      <DefaultAside :data="tab_data" :hovered="hovered" :form="tab_info"> </DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
-     <div v-if="modal_data" slot="modal-title">{{modal_data.selected.text}}</div>
-     <div v-if="modal_data">
-       <b-row  v-if="!modal_data.selected.composition" >
-         <b-col>
-            <h6>Change substance</h6>
-         </b-col>
-         <b-col>
-            <multiselect class="mb-2" label="text" track-by="text" placeholder="Select substance" v-model="modal_data.selected" :options="data.substances"></multiselect>
-         </b-col>
-       </b-row>
+       <div v-if="modal_data" slot="modal-title">
+          <span v-if="modal_data.substance.selected">
+            {{tab_data.display.substances[modal_data.substance.selected]}}
 
-        <div :key="field.name" v-for="field in modal_data.inner_fields">
-          <b-row v-if="field.type != 'multiple_fields'" >
-            <b-col>{{field.label}}</b-col>
-            <b-col >
-                  <fieldGenerator v-if="!['destination_party','source_party', 'trade_party'].includes(field.name)" :field.sync="field"></fieldGenerator>
-                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" label="text" track-by="value" placeholder="Countries" v-model="field.selected" :options="data.countryOptions"></multiselect>
-            </b-col>
-          </b-row>
-          <b-row v-else v-for="inner_field of field.fields">
-            <b-col lg="12"><b>{{inner_field.label}}</b></b-col>
-            <b-col lg="6" v-for="sub_field in inner_field.fields">
-                  <b-col>{{sub_field.label}}</b-col>
-                  <b-col><fieldGenerator :field.sync="sub_field"></fieldGenerator></b-col>
-            </b-col>
-          </b-row>
-          <hr>
-        </div>
-        <b-row class="mt-3" v-for="comment_field in modal_data.comments">
-           <b-col lg="3">
-              <h6>{{comment_field.label}}</h6>
+          </span>
+          <span v-else>
+            {{tab_data.display.blends[modal_data.blend.selected].name}}
+          </span>
+       </div>
+       <div v-if="modal_data">
+         <b-row v-if="modal_data.substance.selected">
+           <b-col>
+              <h6>Change substance</h6>
            </b-col>
-           <b-col lg="9">
-              <textarea class="form-control"  v-model="comment_field.selected"></textarea>
+           <b-col>
+              <multiselect class="mb-2" trackBy="value" label="text" placeholder="Select substance" v-model="modal_data.substance.selected" :options="data.substances"></multiselect>
            </b-col>
-        </b-row>
-     </div>
-    </b-modal>
+         </b-row>
+          <div v-for="order in this.tab_info.modal_order">
+            <b-row>
+              <b-col>{{labels[order]}}</b-col>
+              <b-col>
+                  <fieldGenerator v-if="modal_data[order].type != 'multiselect'" :field="modal_data[order]"></fieldGenerator>
+                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries" v-model="modal_data[order].selected" :options="data.countryOptions"></multiselect>
+              </b-col>
+            </b-row>
+            <hr>
+          </div>
+          <div>
+            <b-row v-if="fieldsDecisionQuantity" v-for="order in fieldsDecisionQuantity">
+              <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}</b></b-col>
+              <b-col>
+                    {{labels['quantity']}}
+                    <fieldGenerator :field="modal_data[`quantity_${order}`]"></fieldGenerator>
+              </b-col>
+              <b-col>
+                  {{labels['decision']}}
+                    <fieldGenerator :field="modal_data[`decision_${order}`]"></fieldGenerator>
+              </b-col>
+            </b-row>
+            <hr>
+          </div>
+          <b-row class="mt-3" v-for="comment_field in ['remarks_os','remarks_party']">
+             <b-col lg="3">
+                <h6>{{labels[comment_field]}}</h6>
+             </b-col>
+             <b-col lg="9">
+                <textarea class="form-control"  v-model="modal_data[comment_field].selected"></textarea>
+             </b-col>
+          </b-row>
+       </div>
+      </b-modal>
+
   </div>
 </template>
 
 <script>
 
+
+import labels from '@/assets/labels'
 import fieldGenerator from "./fieldGenerator"
 import CloneFieldExports from './exports/CloneFieldExports.vue' 
 import {Aside as AppAside} from '@coreui/vue'
 import DefaultAside from './exports/DefaultAside'
-import Multiselect from 'vue-multiselect'
+import Multiselect from '@/mixins/modifiedMultiselect'
 
 export default {
   props: {
     structure: Object,
-    data: Object
+    data: Object,
+    tabId: String,
+    tabIndex: Number,
   },
 
   created(){
     this.tab_info = this.structure
     this.tab_data = this.data
+    this.labels = labels[this.tab_info.name]
   },
 
   components: {
@@ -237,13 +257,55 @@ export default {
       modal_data: null,
       current_field: null,
       modal_comments: null,
+      labels: null,
+      hovered: null,
     }
   },
 
-  methods: {
-    remove_field(parent, field) {
-      this.structure.form_fields.splice(this.structure.form_fields.indexOf(parent), 1)
+  computed: {
+    fieldsDecisionQuantity(){
+      if(this.tab_info.hidden_fields_order){
+        let fields = []
+
+        for(let field of this.tab_info.hidden_fields_order) {
+          let current = field.split('_')
+          current.shift()
+          this.pushUnique(fields, current.join('_'))
+        }
+        return fields
+      } else {
+        return false
+      }
     },
+  },
+
+  methods: {
+    intersect(a, b) {
+      var setA = new Set(a);
+      var setB = new Set(b);
+      var intersection = new Set([...setA].filter(x => setB.has(x)));
+      return Array.from(intersection);
+    },
+    doCommentsRow(row) {
+      let fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
+      let intersection = this.intersect(['remarks_os','remarks_party'], fieldsToShow)
+      if(intersection.length === 0 && (row.remarks_os.selected || row.remarks_party.selected)) {
+        return true
+      } else {
+        return false
+      }
+    },
+
+    pushUnique(array, item) {
+      if (array.indexOf(item) === -1) {
+        array.push(item);
+      }
+    },
+ 
+    remove_field(parent, field) {
+      parent.splice(parent.indexOf(field), 1)
+    },
+
 
     getDecisions(field){
       let decisions = []
@@ -274,7 +336,10 @@ export default {
         return 2
     },
 
+    // isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
+
     splitBlend(value, percent) {
+      percent = percent * 100
       if(value && value != 0 && percent) {
         let count = (parseFloat(value) * parseFloat(percent))/100
         if(count === 0) {
@@ -418,18 +483,19 @@ export default {
     },
 
 
-
-    doComments(comments_field) {
-      let final_comments = ''
-      for(let comment of comments_field) {
-        if(comment.selected){
-          final_comments += comment.label + ':' + comment.selected + '\n'
-        }
-      }
-      return final_comments
-    },
-
   },
+
+  watch: {
+     'tab_info.form_fields': {
+         handler(before,after){
+          if(parseInt(this.tabId) === this.tabIndex)
+            if(this.tab_info.status != 'edited'){
+              this.tab_info.status = 'edited'
+            }
+         },
+         deep: true
+      }
+    }
 }
 </script>
 
@@ -492,11 +558,24 @@ export default {
     z-index: 1;
   }
 
-  .submission-table tr td:last-of-type > * {
+/*  .submission-table tr td:last-of-type > * {
     max-width: 90%;
+  }*/
+
+  .comment-row {
+    border-bottom: 3px solid #c8ced3;
+    opacity: 0.9
   }
 
   .fa-info-circle {
     margin-left: 5px;
   }
+
+td[rowspan="2"] {
+    vertical-align: middle;
+    border-right: 1px solid #c8ced3;
+    border-bottom: 3px solid #c8ced3;
+
+}
+
 </style>

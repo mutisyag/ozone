@@ -54,6 +54,8 @@ var form = {
             form_fields: intro_fields
         },
         tab_3: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
             title: 'Data on exports',
             name: 'has_exports',
@@ -101,6 +103,10 @@ var form = {
                     label: "Decision / type of use**** or Remark <br> 7",
                     name: 'decision',
                 },
+                {
+                    label: '8',
+                    name: 'validation'
+                },
             ],
 
             section_headers: [{
@@ -122,9 +128,15 @@ var form = {
                     label: "Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses",
                     colspan: 2,
                     tooltip: 'Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.',
+                },
+                {
+                    label: "Status"
                 }
             ],
 
+            fields_order: ['substance','blend','destination_party','quantity_total_new','quantity_total_recovered','quantity_feedstock','quantity_exempted','decision_exempted', 'validation'],
+            hidden_fields_order: ['quantity_essential_uses','decision_essential_uses','quantity_critical_uses','decision_critical_uses','quantity_high_ambient_temperature','decision_high_ambient_temperature','quantity_process_agent_uses','decision_process_agent_uses','quantity_laboratory_analytical_uses','decision_laboratory_analytical_uses','quantity_quarantine_pre_shipment','decision_quarantine_pre_shipment','quantity_other','decision_other'],
+            modal_order: ['destination_party','quantity_total_new','quantity_total_recovered','quantity_feedstock'],
             form_fields: [],
 
             comments: [{
@@ -144,6 +156,8 @@ var form = {
         },
 
         tab_2: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
             title: 'Data on imports',
             name: 'has_imports',
@@ -203,6 +217,10 @@ var form = {
                     label: "Decision / type of use**** or Remark <br> 7",
                     name: 'decision',
                 },
+                {
+                    label: "7",
+                    name: "validation",
+                },
             ],
 
             section_headers: [{
@@ -224,14 +242,21 @@ var form = {
                     label: "Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses",
                     colspan: 2,
                     tooltip: 'Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.',
-                }
+                },
+                {
+                    label: "Status",
+                },
             ],
-
+            fields_order: ['substance','blend','source_party','quantity_total_new','quantity_total_recovered','quantity_feedstock','quantity_exempted','decision_exempted', 'validation'],
+            hidden_fields_order: ['quantity_essential_uses','decision_essential_uses','quantity_critical_uses','decision_critical_uses','quantity_high_ambient_temperature','decision_high_ambient_temperature','quantity_process_agent_uses','decision_process_agent_uses','quantity_laboratory_analytical_uses','decision_laboratory_analytical_uses','quantity_quarantine_pre_shipment','decision_quarantine_pre_shipment','quantity_other','decision_other'],
+            modal_order: ['source_party','quantity_total_new','quantity_total_recovered','quantity_feedstock'],
             form_fields: [],
             isInvalid: false,
             footnotes: ['[1] Tonne = Metric ton.'],
         },
         tab_4: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
             title: 'Data on production',
             name: 'has_produced',
@@ -240,7 +265,15 @@ var form = {
             description: 'Annexes A, B, C and E substances',
             form_fields: [],
             comments: '',
-            section_subheaders: [{
+
+            fields_order: ['substance','blend','quantity_total_produced','quantity_feedstock','quantity_exempted','decision_exempted','quantity_article_5', 'validation'],
+            
+            hidden_fields_order: ['quantity_essential_uses','decision_essential_uses','quantity_critical_uses','decision_critical_uses','quantity_high_ambient_temperature','decision_high_ambient_temperature','quantity_process_agent_uses','decision_process_agent_uses','quantity_laboratory_analytical_uses','decision_laboratory_analytical_uses','quantity_quarantine_pre_shipment','decision_quarantine_pre_shipment','quantity_other','decision_other'],
+            modal_order:  ['quantity_total_produced','quantity_feedstock','quantity_article_5'],
+
+
+            section_subheaders: [
+                {
                     label: "1",
                     name: 'substances',
                     sort: 1,
@@ -276,9 +309,14 @@ var form = {
                     sort: 1,
                     type: 'number'
                 },
+                {
+                    label: "7",
+                    name: "validation",
+                },
             ],
 
-            section_headers: [{
+            section_headers: [
+                {
                     label: "Substances",
                 },
                 {
@@ -294,6 +332,9 @@ var form = {
                 },
                 {
                     label: "Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5"
+                },
+                {
+                    label: "Status"
                 }
             ],
             comments: [{
@@ -311,11 +352,15 @@ var form = {
             ],
         },
         tab_5: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
             title: 'Data on destruction',
             name: 'has_destroyed',
             subtitle: 'in metric tonnes (not ODP tonnes)',
             description: 'Annexes A, B, C and E substances',
+            fields_order: [ "substance","blend" ,"quantity_destroyed", "remarks_party","remarks_os",'validation'],
+            modal_order: [ "substance","blend" ,"quantity_destroyed"],
             isInvalid: false,
             form_fields: [],
             section_subheaders: [{
@@ -342,6 +387,10 @@ var form = {
                     sort: 1,
                     type: 'string',
                 },
+                {
+                    label: '5',
+                    name: 'validation'
+                },
             ],
 
             section_headers: [{
@@ -356,18 +405,29 @@ var form = {
                 {
                     label: "Remarks (Secretariat)"
                 },
+                {
+                    label: "Status"
+                }
             ],
         },
         tab_6: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
             title: 'Data on nonparty',
             name: 'has_nonparty',
             subtitle: 'in metric tonnes (not ODP tonnes)',
             description: 'Annexes A, B, C and E substances',
             isInvalid: false,
+
+
+            fields_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
+            
+            modal_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'validation'],
             // used for identification when adding labels
             form_fields: [],
-            section_subheaders: [{
+            section_subheaders: [
+                {
                     label: "1",
                     name: 'substances',
                     sort: 1,
@@ -415,9 +475,14 @@ var form = {
                     sort: 1,
                     type: 'string',
                 },
+                {
+                    label: '9',
+                    name: 'validation',
+                }
             ],
 
-            section_headers: [{
+            section_headers: [
+                {
                     label: "Substances",
                 },
                 {
@@ -439,7 +504,12 @@ var form = {
                 {
                     label: "Remarks (Secretariat)"
                 },
+                {
+                    label: "Status"
+                }
             ],
+
+ 
             comments: [{
                     name: 'comments_party',
                     selected: '',
@@ -456,6 +526,8 @@ var form = {
         },
 
         tab_7: {
+            status: null,
+            saving: false,
             intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
             title: 'Data on emissions',
             name: 'has_emissions',
@@ -463,8 +535,10 @@ var form = {
             description: 'Annexes A, B, C and E substances',
             isInvalid: false,
             // used for identification when adding labels
-            form_fields: [
-            ],
+            form_fields: [],
+
+            fields_order: ["facility_name","quantity_generated","quantity_feedstock","quantity_destroyed","quantity_emitted","remarks_party","remarks_os", 'validation'],
+
             section_subheaders: [{
                     label: "1",
                     name: 'facility_name',
@@ -507,6 +581,10 @@ var form = {
                     sort: 1,
                     type: 'string',
                 },
+                {
+                    label: "8",
+                    name: 'validation',
+                }
             ],
 
             section_headers: [{
@@ -533,6 +611,9 @@ var form = {
                 {
                     label: "Remarks (Secretariat)"
                 },
+                {
+                    label: "Status"
+                }
             ],
             comments: [{
                     name: 'comments_party',

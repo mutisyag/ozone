@@ -1,17 +1,17 @@
 <template>
-  <div v-if="substances && section && blends && countryOptions && currentSection">
+  <div v-if="substances && section && blends && countryOptions && currentSection && display">
     <div class="container">
 
      
         <div class="mt-2 mb-2" style="display: flex;">
-          <multiselect track-by="blend_id"  :clear-on-select="false" :hide-selected="true" :close-on-select="false" :multiple="true" label="blend_id" v-model="selected_blends.selected" @input="new_blend = null" placeholder="Select predefined blend" :options="selected_blends.options"></multiselect>
+          <multiselect trackBy="value"  :clear-on-select="false" :hide-selected="true" :close-on-select="false" :multiple="true" label="text" v-model="selected_blends.selected" @input="new_blend = null" placeholder="Select predefined blend" :options="selected_blends.options"></multiselect>
           <div class="add-blend-wrapper"><b>/</b> <b-btn style="margin-left: .5rem" variant="primary" @click="addNewBlend">Add new blend</b-btn></div>
         </div>
 
 
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
-          <h5>Composition of <b>{{blend.blend_id}}</b></h5>
-          <b-row v-for="substance in blend.components">
+          <h5>Composition of <b>{{display.blends[blend].name}}</b></h5>
+          <b-row v-for="substance in display.blends[blend].components">
             <b-col>{{substance.substance_name}}</b-col>
             <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
@@ -29,8 +29,7 @@
               <b-input-group-prepend>
                 <b-btn  style="z-index:initial;"  variant="danger" @click="removeSubstanceFromBlend(substance)">X</b-btn>
               </b-input-group-prepend>
-
-              <multiselect label="text" track-by="text" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
+              <multiselect label="text" trackBy="value" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
               <b-input-group-append>
                 <b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
               </b-input-group-append>
@@ -58,9 +57,9 @@
 
 <script>
 
-import Multiselect from 'vue-multiselect'
-import fieldsPerTab from '@/mixins/fieldNamesPerTab.vue'
 import {createBlend} from '@/api/api'
+import Multiselect from '@/mixins/modifiedMultiselect'
+import createSubstance from '@/mixins/createSubstance.vue'
 
 
 export default {
@@ -71,9 +70,10 @@ export default {
     currentSection: null,
     blends: null,
     countryOptions: null,
+    display: null,
   },
   
-  mixins: [fieldsPerTab],
+  mixins: [createSubstance],
 
   components: {
     Multiselect 
@@ -110,12 +110,6 @@ export default {
         substance_options: [],
       },
 
-      group_field: {
-        label: 'Blend',
-        name: 'blend',
-        expand: false,
-        substance: null,
-      },
     }
   },
 
@@ -128,12 +122,18 @@ export default {
       }
     },
 
+
+
     addNewBlend(){
       this.selected_blends.selected = null
       this.new_blend = {
         "text": null,
         "value": null,
         "composition": [
+          {
+            "name": null,
+            "percent": null,
+          },
           {
             "name": null,
             "percent": null,
@@ -156,125 +156,38 @@ export default {
 
     prepareBlends(){
         for(let blend of this.blends) {
-          this.selected_blends.options.push(blend)
+          this.selected_blends.options.push({text: blend.blend_id, value: blend.id})
         }
       this.prepareSubstances()
-      console.log(this.selected_blends)
     },
 
 
 
     addSubstance(type) {
       if(type === 'selected') {
-        for(let item of this.selected_blends.selected) {
-          let blend = JSON.parse(JSON.stringify(item))
-            let tempBlend = {
-                    value: blend.id,
-                    text: blend.blend_id,
-                    custom: false,
-                    composition: [],
-            }
+          // console.log(item)
+          // substanceList, currentSectionName, groupName, currentSection, country, blend
 
-            blend.components.forEach( substance => {
-                tempBlend.composition.push({name: {text:substance.substance_name, value: substance.substance}, percent: substance.percentage})
-            });
-
-            blend = tempBlend
-
-          let substance_fields = {
-            name: blend.name,
-            custom_blend: false,
-            selected: blend,
-            type:"blend",
-            comments: [{
-                name: "remarks_party",
-                label: "Remarks (party)",
-                selected: '',
-                type: "text",
-              },
-              {
-                name: "remarks_os",
-                selected: '',
-                type: "text",
-                label: "Comments (Secretariat)",
-              },
-            ],
-            inner_fields: '',
-          }
-
-          let inner_fields = this.getInnerFields(this.currentSection, this.group_field.name)
-
-          substance_fields.inner_fields = inner_fields
-          this.group_field.substance = substance_fields
-
-          var current_fields = this.section
-          current_fields.push(this.group_field)
+          this.createSubstance(null, this.currentSection, null, this.section, null, this.selected_blends.selected, null)
 
 
-          this.section = current_fields
-
-          this.group_field = {
-            label: 'Blend',
-            name: 'blend',
-            expand: false,
-            substance: null,
-          }
-        }
       } else {
-            // let current_substances;
-    
-            let substance_fields = {
-            name: this.removeSpecialChars(this.new_blend.text),
-            custom_blend: true,
-            type: 'blend',
-            selected: this.new_blend,
-            comments: [{
-                name: "remarks_party",
-                label: "Remarks (party)",
-                selected: '',
-                type: "text",
-              },
-              {
-                name: "remarks_os",
-                selected: '',
-                type: "text",
-                label: "Comments (Secretariat)",
-              },
-            ],
-            inner_fields: '',
-          }
-
-          let inner_fields = this.getInnerFields(this.currentSection, this.group_field.name)
-
-          substance_fields.inner_fields = inner_fields
-          this.group_field.substance = substance_fields
-          this.group_field.custom = true
-          console.log(substance_fields)
-          this.submit_blend.blend_id = substance_fields.selected.text
+          
+          this.submit_blend.blend_id = this.new_blend.text
           this.submit_blend.components = []
-          for(let substance of substance_fields.selected.composition) {
-            this.submit_blend.components.push({substance: substance.name.value, percentage: substance.percent/100})
+          for(let substance of this.new_blend.composition) {
+            this.submit_blend.components.push({substance: substance.name, percentage: substance.percent/100})
           }
           console.log(this.submit_blend)
           createBlend(this.submit_blend).then(response =>  {
             console.log(response)
-            substance_fields.selected.value = response.data.id
+            this.new_blend.value = response.data.id
+            this.blends.push(response.data)
+            this.display.blends[response.data.id] = {name: response.data.blend_id, components: response.data.components}
+            this.createSubstance(null, this.currentSection, null, this.section, null, [this.new_blend.value])
           })
 
-          var current_fields = this.section
-          current_fields.push(this.group_field)
-
-          this.section = current_fields
-
-          this.new_blend = null
-
-          this.group_field = {
-            label: 'Blend',
-            name: 'blend',
-            expand: false,
-            substance: null,
-          }
-
+          console.log(this.new_blend)
       }
 
       this.resetData()

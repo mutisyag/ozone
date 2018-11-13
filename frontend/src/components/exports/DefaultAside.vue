@@ -12,7 +12,13 @@
         <template slot="title">
           Blends
         </template>
-          <AddBlend :countryOptions="data.countryOptions"  :currentSection="form.name" :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
+          <AddBlend :countryOptions="data.countryOptions" :display="data.display"  :currentSection="form.name" :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
+      </b-tab>
+      <b-tab>
+        <template slot="title">
+          Validation
+        </template>
+        <Validation :hovered="hovered" :display="data.display" :section="form.form_fields"></Validation>
       </b-tab>
     </b-tabs>
   </div>
@@ -23,18 +29,21 @@
 import Add from './Add';
 import {AsideToggler} from '@coreui/vue'
 import AddBlend from './AddBlend'
+import Validation from './Validation'
 
 export default {
   name: 'DefaultAside',
   components: {
     add: Add,
     AddBlend,
-    AsideToggler
+    AsideToggler,
+    Validation
   },
 
   props: {
     form: null,
     data: null,
+    hovered: null,
   },
   created(){
   }
