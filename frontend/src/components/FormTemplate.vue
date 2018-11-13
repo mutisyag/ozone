@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div v-if="tab_info && parseInt(tabId) === tabIndex">
     <div class="form-sections">
       <table class="table submission-table">
         <thead>
