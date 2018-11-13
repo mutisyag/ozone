@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django_filters import rest_framework as filters
 
 from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
@@ -54,6 +57,7 @@ from ..serializers import (
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
+    ListSubmissionVersionsSerializer,
 )
 
 
@@ -146,6 +150,19 @@ class BlendViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
+class SubmissionVersionsListViewSet(generics.ListAPIView):
+    serializer_class = ListSubmissionVersionsSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('obligation', 'party',)
+
+    def get_queryset(self):
+        current_date = datetime.now().date()
+        return Submission.objects.filter(
+            reporting_period__start_date__lte=current_date,
+            reporting_period__end_date__gte=current_date,
+        )
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):

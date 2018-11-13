@@ -97,6 +97,7 @@ THIRD_PARTY_APPS = [
     'webpack_loader',
     'import_export',
     'guardian',
+    'django_filters',
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here
