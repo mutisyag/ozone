@@ -148,7 +148,7 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class BlendViewSet(viewsets.ModelViewSet):
-    queryset = Blend.objects.all()
+    queryset = Blend.objects.all().prefetch_related('components')
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
