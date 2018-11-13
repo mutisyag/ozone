@@ -166,12 +166,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         if submission.check_cloning():
-            submission.pk = None
-            submission.id = None
-            submission._current_state = (
-                submission.workflow.state.workflow.initial_state.name
-            )
-            submission.save()
+            submission.clone()
             return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
