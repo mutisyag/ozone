@@ -35,14 +35,11 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
     class ConfigurationError(Exception):
         pass
 
-    # This needs to be set properly by each class inheriting from it
+    # These need to be set properly by each class that extends this
     substance_blend_fields = None
+    unique_with = None
 
     def __init__(self, *args, **kwargs):
-        if self.substance_blend_fields is None:
-            raise self.ConfigurationError(
-                'Class attribute `substance_blend_fields` needs to be non-empty'
-            )
         if not isinstance(self.substance_blend_fields, list):
             raise self.ConfigurationError(
                 'Class attribute `substance_blend_fields` needs to be a list'
@@ -65,35 +62,69 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         """
         submission = instance.first().submission
 
-        # We will initiate to_delete list as the initial queryset, and then
-        # gradually exclude from it based on the su
-        to_delete = instance
-        for field in self.substance_blend_fields:
-            exclude_list = [
-                data.get(field) for data in validated_data
-                if data.get(field, None) is not None
-            ]
-            exclude_params={f'{field}__in': exclude_list}
-            to_delete = to_delete.exclude(**exclude_params)
-        # After all exclusions performed, delete
-        to_delete.delete()
-
-        # Now perform creations and updates; blend_item rows will
-        # update automatically :)
-        ret = []
-        for data in validated_data:
-            field_params = {
-                field: data.pop(field, None)
-                for field in self.substance_blend_fields
+        # Construct a dictionary with (substance, party) keys using
+        # validated_data. This helps find existing entries.
+        # This does not generate collisions because `entry.get(field)` returns
+        # either a `Blend` or a `Substance` object, not id's
+        data_dictionary = {
+            entry.get(field): entry
+            for field in self.substance_blend_fields
+            for entry in validated_data
+            if entry.get(field, None) is not None
+        }
+        # Add `unique_with` field to key if it is specified
+        if self.unique_with is not None:
+            data_dictionary = {
+                (key , value.get(self.unique_with)): value
+                for key, value in data_dictionary.items()
             }
-            obj, created = instance.update_or_create(
+
+        # List of updated/created items to be returned
+        ret = []
+
+        # Touching the database (one transaction) to construct the list of
+        # existing data is a very small price to pay for potentially avoiding
+        # a lot of unnecessary updates afterwards (e.g. when a single record
+        # changes for an existing submission with a lot of records).
+        for existing_entry in instance:
+            for field in self.substance_blend_fields:
+                field_value = getattr(existing_entry, field)
+                if field_value:
+                    # Construct key to find existing_entry in validated_data
+                    key = field_value
+                    if self.unique_with is not None:
+                        key = (key, getattr(existing_entry, self.unique_with))
+
+                    # If existing entry needs to be deleted, delete it
+                    if key not in data_dictionary:
+                        existing_entry.delete()
+
+                    # If it needs to be updated, update it and remove the
+                    # corresponding entry from validated_data
+                    else:
+                        # Check if it needs to be updated to avoid database hit
+                        entry = data_dictionary.get(key)
+                        changed = False
+                        for field, value in entry.items():
+                            if getattr(existing_entry, field, None) != value:
+                                setattr(existing_entry, field, value)
+                                changed = True
+                        if changed:
+                            existing_entry.save()
+                            ret.append(existing_entry)
+                            data_dictionary.pop(key)
+
+        # After all that is done, just create the entries that need to be
+        # created
+        for key, data in data_dictionary.items():
+            obj = instance.create(
                 submission=submission,
-                **field_params,
-                defaults=data
+                **data
             )
             ret.append(obj)
 
         return ret
+
 
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
@@ -250,6 +281,7 @@ class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
 
 class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
+    unique_with = None
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
@@ -261,6 +293,7 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
 
 class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', ]
+    unique_with = None
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
@@ -270,24 +303,46 @@ class Article7ProductionSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
+class Article7ExportListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', 'blend']
+    unique_with = 'destination_party'
+
+
 class Article7ExportSerializer(BaseBlendCompositionSerializer):
     class Meta:
+        list_serializer_class = Article7ExportListSerializer
         model = Article7Export
         exclude = ('submission',)
 
 
+class Article7ImportListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', 'blend']
+    unique_with = 'source_party'
+
+
 class Article7ImportSerializer(BaseBlendCompositionSerializer):
     class Meta:
+        list_serializer_class = Article7ImportListSerializer
         model = Article7Import
         exclude = ('submission',)
 
 
+class Article7NonPartyTradeListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', 'blend']
+    unique_with = 'trade_party'
+
+
 class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
     class Meta:
+        list_serializer_class = Article7NonPartyTradeListSerializer
         model = Article7NonPartyTrade
         exclude = ('submission',)
 
 
+# TODO: the list serializer for emissions probably needs to delete everything
+# there was and create all data fresh, as there is no field to filter on.
+# This is easy to do with a BaseBulkUpdateSerializer
+# with substance_blend_fields = [] ;)
 class Article7EmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article7Emission
