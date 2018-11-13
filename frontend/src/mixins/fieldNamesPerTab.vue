@@ -11,7 +11,6 @@ export default {
 
 
     created(){
-      console.log(labels)
       this.labels = labels
     },
 

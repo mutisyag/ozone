@@ -77,6 +77,10 @@ export default {
 
 
   getCurrentSubmission(){
+      if(!this.submission) {
+        this.$router.push({ name: 'Dashboard' });
+      }
+
       getSubmission(this.submission).then( (response) => {
         this.current_submission = response.data
         if(this.current_submission.article7questionnaire){
@@ -121,47 +125,95 @@ export default {
           if(this.fields_to_get[form.tabs[tab].name]){
             fetch(prefill_data[this.fields_to_get[form.tabs[tab].name]]).then( response => {
               if(response.data.length) {
-                console.log(response.data)
-                this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
+                form.tabs[tab].status = 'saving'
+                this.$nextTick(() => {
+                  setTimeout(() => {
+                    this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
+                  },100)
+                })
               }
             }).catch( error => {
               console.log(error)
             })
           }
         })
-        this.prefill(null,null)
-
-
+        this.prefilled = true
     },
 
     prefill(tab, data) {
 
-      // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-      if(data) {
-        for(let item of data) {
-          console.log('-----------data-------',item,tab)
-          this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
+      if(tab.name != 'has_emissions'){
+
+        if(data) {
+          for(let item of data) {
+            // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
+          }
         }
-        console.log('tab-status', tab.status)
-      }
+      } else {
 
-      if(!data && !tab) {
-        this.prefilled = true
-      }
+            for(let item of data) {
+              let row = {
+                  id: {
+                    selected: null,
+                  },
+                  facility_name: {
+                        type: 'text',
+                        selected: '',
+                    },
+                  quantity_generated: {
+                        type: 'number',    
+                        selected: '',
+                    },
+                   quantity_feedstock: {
+                        type: 'number',
+                        selected: '',
+                    },
+                   quantity_destroyed: {
+                        type: 'number',
+                        selected: '',
+                    },
+                   quantity_emitted: {
+                        type: 'number',
+                        selected: '',
+                    },
+                    remarks_party: {
+                     type: 'textarea',
+                       selected: '',
+                    },
+                    remarks_os: {
+                       type: 'textarea',
+                       selected: '',
+                    },
+                    get validation() {
+                     let errors = []
+                     if(!this.facility_name.selected){
+                        errors.push('eroare1')
+                     }
 
-      // for(let entry of data) {
-      //   let current_substance = entry.substance 
-      //   ? 
-      //     this.initialData.substances.find( val => val.value === entry.substance ) 
-      //   : 
-      //     this.initialData.blends.find( val => val.id === entry.blend )
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
 
-      //   let current_party = this.initialData.countryOptions.find( val => val.value === entry.destination_party || val.value === entry.source_party)
-      //   this.prefillSubstance(tab.name, entry, tab.form_fields, countries, current_party, current_substance, this.initialData.substances, this.initialData.blends)
-      // }
-      tab.status = true
+                     return returnObj
+                  },
+              }
 
-      this.prefilled = true
+              for(let field in item) {
+                console.log(field)
+                row[field].selected = item[field]
+              }
+
+              tab.form_fields.push(row)
+            }
+         }
+        this.$nextTick(() => {
+            setTimeout(() => {
+              tab.status = true
+            })
+          })
+
 
 
     },

@@ -222,20 +222,6 @@ export default {
        
        let current_tab_data = []
 
-       if(field === 'has_emissions') {
-        current_tab.form_fields.forEach( form_field => {
-          let current_field = form_field 
-          let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-            
-          current_field.forEach( inner_field => {
-             save_obj[inner_field.name] = inner_field.selected 
-          })
-
-           current_tab_data.push(save_obj)
-         })
- 
-       } else {
-
          current_tab.form_fields.forEach( form_field => {
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
           
@@ -245,7 +231,6 @@ export default {
 
            current_tab_data.push(save_obj)
          })
-       }
 
         post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true

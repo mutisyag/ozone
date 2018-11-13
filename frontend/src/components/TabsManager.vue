@@ -43,7 +43,7 @@
             <intro tabId="1" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
           </b-tab>
          
-          <b-tab :title-link-class="data.form.tabs.tab_2.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_2.name]">
+          <b-tab :title-link-class="data.form.tabs.tab_2.status ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_2.name]">
             <template slot="title">
                <div class="tab-title">
                 {{data.form.tabs.tab_2.title}}
@@ -59,7 +59,7 @@
           </b-tab>
 
 
-          <b-tab :title-link-class="data.form.tabs.tab_3.title ? {} : null"  :disabled="!display_tabs[data.form.tabs.tab_3.name]">
+          <b-tab :title-link-class="data.form.tabs.tab_3.status ? {} : null"  :disabled="!display_tabs[data.form.tabs.tab_3.name]">
              <template slot="title">
               <div class="tab-title">
                 {{data.form.tabs.tab_3.title}}

@@ -34,9 +34,16 @@
         <tbody>
           <tr v-for="(row,row_index) in tab_info.form_fields" class="form-fields">
             <td v-for="(order, order_index) in tab_info.fields_order">
-                <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'&& order !== 'validation'">
                 {{row[order].selected}}
               </span>
+
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-circle fa-lg"></i>
+              </span>
+
+
               <fieldGenerator v-else :field="row[order]"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
@@ -68,7 +75,9 @@ import Multiselect from 'vue-multiselect'
 export default {
   props: {
     structure: Object,
-    data: Object
+    data: Object,
+    tabId: String,
+    tabIndex: Number,
   },
 
   created(){
@@ -234,6 +243,19 @@ export default {
     },
 
   },
+
+  watch: {
+     'tab_info.form_fields': {
+         handler(val){
+          if(parseInt(this.tabId) === this.tabIndex)
+            if(this.tab_info.status != 'edited'){
+              this.tab_info.status = 'edited'
+            }
+         },
+         deep: true
+      }
+    }
+
 }
 </script>
 

@@ -69,9 +69,16 @@
         <tbody v-if="row.blend.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
          <tr>
            <td v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
-              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
                 {{row[order].selected}}
               </span>
+
+              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-circle fa-lg"></i>
+              </span>
+
+
               <span v-else>
                 <fieldGenerator v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'blend'">
