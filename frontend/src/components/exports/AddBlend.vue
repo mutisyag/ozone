@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && section && blends && countryOptions && currentSection">
+  <div v-if="substances && section && blends && countryOptions && currentSection && display">
     <div class="container">
 
      
@@ -10,8 +10,8 @@
 
 
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
-          <h5>Composition of <b>{{getBlendComponents(blend).blend_id}}</b></h5>
-          <b-row v-for="substance in getBlendComponents(blend).components">
+          <h5>Composition of <b>{{display.blends[blend].name}}</b></h5>
+          <b-row v-for="substance in display.blends[blend].components">
             <b-col>{{substance.substance_name}}</b-col>
             <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
@@ -70,6 +70,7 @@ export default {
     currentSection: null,
     blends: null,
     countryOptions: null,
+    display: null,
   },
   
   mixins: [createSubstance],
@@ -122,10 +123,6 @@ export default {
     },
 
 
-   getBlendComponents(blend) {
-      let current_blend = this.blends.find( b => b.id === blend)
-      return current_blend
-    },
 
     addNewBlend(){
       this.selected_blends.selected = null
@@ -186,13 +183,11 @@ export default {
             console.log(response)
             this.new_blend.value = response.data.id
             this.blends.push(response.data)
+            this.display.blends[response.data.id] = {name: response.data.blend_id, components: response.data.components}
             this.createSubstance(null, this.currentSection, null, this.section, null, [this.new_blend.value])
           })
 
           console.log(this.new_blend)
-
-
-
       }
 
       this.resetData()

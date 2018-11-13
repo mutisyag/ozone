@@ -1,6 +1,15 @@
 <template>
   <div>
-    <tabsmanager v-if="initialData.countryOptions && initialData.substances && initialData.blends && current_submission && prefilled" :submission="current_submission" :data="{form: form, countryOptions: initialData.countryOptions, substances: initialData.substances, blends: initialData.blends}"></tabsmanager>
+    <tabsmanager v-if="initialData.countryOptions 
+    && initialData.substances 
+    && initialData.blends 
+    && current_submission 
+    && initialData.display.substances 
+    && initialData.display.blends 
+    && initialData.display.countries
+    && prefilled" 
+    :submission="current_submission" 
+    :data="{form: form, countryOptions: initialData.countryOptions, substances: initialData.substances, blends: initialData.blends, display: initialData.display}"></tabsmanager>
     <div v-else class="spinner">
       <div class="loader"></div>
     </div>
@@ -40,6 +49,11 @@ export default {
         countryOptions: null,
         substances: null,
         blends: null,
+        display: {
+          substances: {},
+          blends: {},
+          countries: {},
+        }
       },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
@@ -94,28 +108,39 @@ export default {
 
    getCountries() {
     let countryOptions = []
+    let countryDisplay = {}
     getParties().then(response => {
           for (let country of response.data) {
             countryOptions.push({ value: country.id, text: country.name})
+            countryDisplay[country.id] = country.name
           }
+      this.initialData.display.countries = countryDisplay
       this.initialData.countryOptions = countryOptions
     })
   },
 
   getSubstances(){
     let tempSubstances = []
+    let substancesDisplay = {}
         getSubstances().then((response) => {
           for(let group of response.data) {
               for(let substance of group.substances){
                 tempSubstances.push({value: substance.id, text: substance.name, group: group})
+                substancesDisplay[substance.id] = substance.name
               }
           }
+          this.initialData.display.substances = substancesDisplay
           this.initialData.substances = tempSubstances 
         })
   },
 
     getCustomBlends(){
+      let blendsDisplay = {}
       getCustomBlends().then((response) => {
+        for(let blend of response.data) {
+          blendsDisplay[blend.id] = {name: blend.blend_id, components: blend.components}
+        }
+        this.initialData.display.blends = blendsDisplay
         this.initialData.blends = response.data
       })
     },
@@ -235,7 +260,7 @@ export default {
   watch: {
      initialData: {
          handler(val){
-            if(val.blends && val.countryOptions && val.substances) {
+            if(val.blends && val.countryOptions && val.substances && val.display.substances && val.display.blends && val.display.countries) {
               this.getCurrentSubmission()
             }
          },

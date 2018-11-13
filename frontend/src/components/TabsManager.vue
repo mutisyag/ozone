@@ -55,7 +55,7 @@
                 <i v-if="data.form.tabs.tab_2.status === 'edited'" class="fa fa-edit fa-lg"></i>
               </div>
              </template>
-            <formtemplate ref="tab_2" tabId="2" :tabIndex="tabIndex" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_2"></formtemplate>
+            <formtemplate ref="tab_2" tabId="2" :tabIndex="tabIndex" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_2"></formtemplate>
           </b-tab>
 
 
@@ -73,7 +73,7 @@
               </div>
 
              </template>
-            <formtemplate tabId="3" ref="tab_3" :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_3"></formtemplate>
+            <formtemplate tabId="3" ref="tab_3" :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_3"></formtemplate>
           </b-tab>
 
           
@@ -90,7 +90,7 @@
               
               </div>
              </template>
-            <formtemplate tabId="4"  ref="tab_4"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_4"></formtemplate>
+            <formtemplate tabId="4"  ref="tab_4"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_4"></formtemplate>
           </b-tab>
 
           <b-tab :title-link-class="data.form.tabs.tab_5.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_5.name]">
@@ -106,7 +106,7 @@
               
               </div>
              </template>
-            <formtemplate tabId="5" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_5"></formtemplate>
+            <formtemplate tabId="5" :tabIndex="tabIndex" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_5"></formtemplate>
           </b-tab>
 
           <b-tab :title-link-class="data.form.tabs.tab_6.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_6.name]">
@@ -122,7 +122,7 @@
               
               </div>
              </template>
-            <formtemplate tabId="6" ref="tab_6"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_6"></formtemplate>
+            <formtemplate tabId="6" ref="tab_6"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_6"></formtemplate>
           </b-tab>
            <b-tab :title-link-class="data.form.tabs.tab_7.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_7.name]">
             <template slot="title">
@@ -137,7 +137,7 @@
               
               </div>
              </template>
-            <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
+            <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
           </b-tab>
            <b-tab title="Attachements">
             <attachements :info="data.form.tabs.attachements" tabId="8"></attachements>

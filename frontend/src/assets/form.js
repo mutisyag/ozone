@@ -424,7 +424,6 @@ var form = {
             fields_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
             
             modal_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'validation'],
-
             // used for identification when adding labels
             form_fields: [],
             section_subheaders: [

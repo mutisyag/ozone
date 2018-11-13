@@ -24,9 +24,9 @@
             </th>
           </tr>
         </thead>
-       <tbody v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
+       <tbody @mouseover="hovered = row.substance.selected" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
          <tr>
-           <td v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
+           <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
 
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
                 {{row[order].selected}}
@@ -49,7 +49,7 @@
               <span v-else>
                 <fieldGenerator v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'substance'">
-                  {{getRowSubstance(row[order].selected)}}
+                  {{tab_data.display.substances[row[order].selected]}}
                   <div class="table-btn-group">
                     <b-btn variant="info" @click="createModalData(row)">
                       Edit
@@ -59,16 +59,27 @@
                 </span>
                 <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
                 <span v-else>
-                  {{getRowCountry(row[order].selected)}}
+                   {{tab_data.display.countries[row[order].selected]}}
                 </span>
               </span>
            </td>
          </tr>
+
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 2"> 
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                  <div>{{labels[field]}}</div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
        </tbody>
 
-        <tbody v-if="row.blend.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
+        <tbody @mouseover="hovered = row.blend.selected" @mouseleave="hovered = false" v-if="row.blend.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
          <tr>
-           <td v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
+           <td  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
                 {{row[order].selected}}
               </span>
@@ -82,7 +93,10 @@
               <span v-else>
                 <fieldGenerator v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'blend'">
-                  <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">{{getRowBlend(row[order].selected)}} <i :class="`fa fa-caret-square-o-${expandedStatus(row[order].expand)}`"></i></span>
+                  <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">
+                    {{tab_data.display.blends[row[order].selected].name}} 
+                    <i :class="`fa fa-caret-square-o-${expandedStatus(row[order].expand)}`"></i>
+                  </span>
 
                   <div class="table-btn-group">
                     <b-btn variant="info" @click="createModalData(row)">
@@ -93,20 +107,30 @@
                 </span>
                 <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.blend.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
                 <span v-else>
-                  {{getRowCountry(row[order].selected)}}
+                  {{tab_data.display.countries[row[order].selected]}}
                 </span>
               </span>
            </td>
          </tr>
 
 
-          <tr v-for="substance in getBlendSubstances(row.blend.selected).components" class="small" v-if="row.blend.expand">
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 1"> 
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                  <div><b>{{labels[field]}}</b></div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
 
+          <tr v-for="substance in tab_data.display.blends[row.blend.selected].components" class="small" v-if="row.blend.expand">
             <td colspan="2">
               <div>
                 <b-row>
                   <b-col>{{substance.substance_name}}</b-col>
-                  <b-col><b>{{substance.percentage}}%</b></b-col>
+                  <b-col><b>{{substance.percentage * 100}}%</b></b-col>
                 </b-row>
               </div>
             </td>
@@ -119,9 +143,8 @@
                 {{splitBlend(row[order].selected,substance.percentage)}}
               </span>
            </td>
-
-     
           </tr>
+
        </tbody>
 
       </table>
@@ -136,16 +159,17 @@
     </div>
 
     <AppAside fixed>
-      <DefaultAside :data="tab_data" :form="tab_info"> </DefaultAside>
+      <DefaultAside :data="tab_data" :hovered="hovered" :form="tab_info"> </DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
        <div v-if="modal_data" slot="modal-title">
           <span v-if="modal_data.substance.selected">
-            {{getRowSubstance(modal_data.substance.selected)}}
+            {{tab_data.display.substances[modal_data.substance.selected]}}
+
           </span>
           <span v-else>
-            {{getRowBlend(modal_data.blend.selected)}}
+            {{tab_data.display.blends[modal_data.blend.selected].name}}
           </span>
        </div>
        <div v-if="modal_data">
@@ -234,6 +258,7 @@ export default {
       current_field: null,
       modal_comments: null,
       labels: null,
+      hovered: null,
     }
   },
 
@@ -255,6 +280,21 @@ export default {
   },
 
   methods: {
+    intersect(a, b) {
+      var setA = new Set(a);
+      var setB = new Set(b);
+      var intersection = new Set([...setA].filter(x => setB.has(x)));
+      return Array.from(intersection);
+    },
+    doCommentsRow(row) {
+      let fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
+      let intersection = this.intersect(['remarks_os','remarks_party'], fieldsToShow)
+      if(intersection.length === 0 && (row.remarks_os.selected || row.remarks_party.selected)) {
+        return true
+      } else {
+        return false
+      }
+    },
 
     pushUnique(array, item) {
       if (array.indexOf(item) === -1) {
@@ -266,20 +306,6 @@ export default {
       parent.splice(parent.indexOf(field), 1)
     },
 
-    getBlendSubstances(blend_id){
-      return this.data.blends.find(blend => blend.id === blend_id)
-    },
-
-    getRowSubstance(substance_id) {
-      return this.data.substances.find(substance => substance.value === substance_id).text
-    },
-    getRowBlend(blend_id) {
-      return this.data.blends.find(blend => blend.id === blend_id).blend_id
-    },
-
-    getRowCountry(country_id){
-      return this.data.countryOptions.find(country => country.value === country_id).text
-    },
 
     getDecisions(field){
       let decisions = []
@@ -313,6 +339,7 @@ export default {
     // isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
 
     splitBlend(value, percent) {
+      percent = percent * 100
       if(value && value != 0 && percent) {
         let count = (parseFloat(value) * parseFloat(percent))/100
         if(count === 0) {
@@ -456,22 +483,11 @@ export default {
     },
 
 
-
-    doComments(comments_field) {
-      let final_comments = ''
-      for(let comment of comments_field) {
-        if(comment.selected){
-          final_comments += comment.label + ':' + comment.selected + '\n'
-        }
-      }
-      return final_comments
-    },
-
   },
 
   watch: {
      'tab_info.form_fields': {
-         handler(val){
+         handler(before,after){
           if(parseInt(this.tabId) === this.tabIndex)
             if(this.tab_info.status != 'edited'){
               this.tab_info.status = 'edited'
@@ -542,11 +558,24 @@ export default {
     z-index: 1;
   }
 
-  .submission-table tr td:last-of-type > * {
+/*  .submission-table tr td:last-of-type > * {
     max-width: 90%;
+  }*/
+
+  .comment-row {
+    border-bottom: 3px solid #c8ced3;
+    opacity: 0.9
   }
 
   .fa-info-circle {
     margin-left: 5px;
   }
+
+td[rowspan="2"] {
+    vertical-align: middle;
+    border-right: 1px solid #c8ced3;
+    border-bottom: 3px solid #c8ced3;
+
+}
+
 </style>
