@@ -39,15 +39,15 @@
               </span>
 
               <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-else style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
               </span>
 
 
               <fieldGenerator v-else :field="row[order]"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
-	            <i class="fa fa-times-circle fa-lg" @click="remove_field(tab_info.form_fields, row)"></i>
+	            <i class="fa fa-close fa-lg " @click="remove_field(tab_info.form_fields, row)"></i>
 	         </td>
           </tr>
 

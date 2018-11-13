@@ -601,7 +601,7 @@
 
 
 
-.table tr:hover > td:not([rowspan]){
+.table tr:hover > td{
   background: #eee;
 }
 
