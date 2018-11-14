@@ -1,10 +1,10 @@
 from django.conf import settings
-from django.urls import include, path
+from django.urls import include, path, re_path
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.views.generic import TemplateView
+from django.contrib.staticfiles.views import serve
 from django.views import defaults as default_views
-
+from django.views.generic import RedirectView
 
 urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
@@ -12,6 +12,11 @@ urlpatterns = [
     # User management
 
     # Your stuff: custom urls includes go here
+    path('', serve, kwargs={'path': 'index.html'}),
+    re_path(
+        r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        RedirectView.as_view(url='/static/%(path)s', permanent=False)
+    ),
     path("api/",
          include("ozone.core.api.urls", namespace="core"),
     ),
