@@ -42,7 +42,7 @@ function post(path, data) {
 function update(path, data) {
   logRequests && console.log(`patching ${path} with data ${data}...`);
   checkAuth();
-  return api.patch(path, data);
+  return api.put(path, data);
 }
 
 function remove(path) {

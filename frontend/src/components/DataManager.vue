@@ -19,10 +19,10 @@
 <script>
 
 import tabsManager from './TabsManager'
-import form from '../assets/form.js'
+import form from '@/assets/form.js'
 import prefill from '@/mixins/prefill'
 import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
-
+import newTabs from '@/assets/newTabs'
 import createSubstance from '@/mixins/createSubstance.vue'
 
 
@@ -156,7 +156,10 @@ export default {
                     this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
                   },100)
                 })
+              } else {
+                newTabs.push(form.tabs[tab].name)
               }
+              console.log('-----newTabs----', newTabs)
             }).catch( error => {
               console.log(error)
             })
@@ -166,6 +169,7 @@ export default {
     },
 
     prefill(tab, data) {
+
 
       if(tab.name != 'has_emissions'){
 
