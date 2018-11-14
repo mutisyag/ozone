@@ -59,17 +59,19 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         `entry.get(field)` returns either a `Blend` or a `Substance` object,
         instead of integer id's.
         """
-        data_dictionary = {
-            entry.get(field): entry
-            for field in self.substance_blend_fields
-            for entry in validated_data
-            if entry.get(field, None) is not None
-        }
-        # Add `unique_with` field to key if it is specified
-        if self.unique_with is not None:
+        if self.unique_with is None:
             data_dictionary = {
-                (key , value.get(self.unique_with)): value
-                for key, value in data_dictionary.items()
+                entry.get(field): entry
+                for field in self.substance_blend_fields
+                for entry in validated_data
+                if entry.get(field, None) is not None
+            }
+        else:
+            data_dictionary = {
+                (entry.get(field), entry.get(self.unique_with)): entry
+                for field in self.substance_blend_fields
+                for entry in validated_data
+                if entry.get(field, None) is not None
             }
         return data_dictionary
 
