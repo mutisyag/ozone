@@ -16,7 +16,7 @@ export function removeLoginToken() {
 
 export function getLoginToken(username, password) {
   return new Promise((resolve, reject) => {
-    post('/auth-token/', { 'username': 'admin', 'password': 'admin1234' })
+    post('/auth-token/', { 'username': username, 'password': password })
       .then((response) => {
         api.defaults.headers.authorization = 'token ' + response.data.token;
         resolve(response);
