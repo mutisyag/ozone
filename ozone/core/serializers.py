@@ -82,7 +82,9 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
                 key = field_value
                 if self.unique_with is not None:
                     key = (key, getattr(existing_entry, self.unique_with))
-            return key
+                return key
+        # Should never get here
+        return None
 
     def update(self, instance, validated_data):
         """
