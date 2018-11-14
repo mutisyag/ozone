@@ -43,17 +43,11 @@ from ..serializers import (
     Article7QuestionnaireSerializer,
     CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
-    CreateArticle7DestructionSerializer,
     Article7ProductionSerializer,
-    CreateArticle7ProductionSerializer,
     Article7ExportSerializer,
-    CreateArticle7ExportSerializer,
     Article7ImportSerializer,
-    CreateArticle7ImportSerializer,
     Article7NonPartyTradeSerializer,
-    CreateArticle7NonPartyTradeSerializer,
     Article7EmissionSerializer,
-    CreateArticle7EmissionSerializer,
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
@@ -81,16 +75,37 @@ class ValidationErrorMixin:
             )
 
 
-class BulkCreateMixin:
+class BulkCreateUpdateMixin:
     """
-    Allows bulk creation of resources (given as a list in a JSON),
+    Allows bulk creation and update of resources (given as a list in a JSON),
     while still permitting a single resource to be created.
+
+    put() has been added as otherwise it is not available on the ViewSet. A
+    concrete update() method needs to be implemented in the corresponding
+    serializer.
+
+    If the view receives a list of objects to be updated, get_object() returns
+    a queryset referencing the existing objects corresponding to this
+    submission. The (multiple-)update() implementation in the serializer needs
+    to take this into account.
+
+    This needs to be used by a `ModelViewSet` to properly work.
     """
     def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get('data', {}), list):
             kwargs['many'] = True
 
         return super().get_serializer(*args, **kwargs)
+
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+
+    def get_object(self):
+        try:
+            super().get_object()
+        except AssertionError:
+            # If it's not one we return many!
+            return self.get_queryset()
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -133,7 +148,9 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class BlendViewSet(viewsets.ModelViewSet):
-    queryset = Blend.objects.all()
+    queryset = Blend.objects.all().prefetch_related(
+        'components', 'components__substance'
+    )
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
@@ -205,17 +222,14 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 
 
 class Article7DestructionViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7DestructionSerializer
+
     def get_queryset(self):
         return Article7Destruction.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7DestructionSerializer
-        return Article7DestructionSerializer
 
     # Needed to ensure that serializer uses the correct submission
     def perform_create(self, serializer):
@@ -223,85 +237,70 @@ class Article7DestructionViewSet(
 
 
 class Article7ProductionViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ProductionSerializer
+
     def get_queryset(self):
         return Article7Production.objects.filter(
             submission=self.kwargs['submission_pk']
         )
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7ProductionSerializer
-        return Article7ProductionSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
 class Article7ExportViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ExportSerializer
+
     def get_queryset(self):
         return Article7Export.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7ExportSerializer
-        return Article7ExportSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
 class Article7ImportViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7ImportSerializer
+
     def get_queryset(self):
         return Article7Import.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7ImportSerializer
-        return Article7ImportSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
 class Article7NonPartyTradeViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7NonPartyTradeSerializer
+
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
             submission=self.kwargs['submission_pk']
         ).filter(blend_item__isnull=True)
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7NonPartyTradeSerializer
-        return Article7NonPartyTradeSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
 class Article7EmissionViewSet(
-    ValidationErrorMixin, BulkCreateMixin, viewsets.ModelViewSet
+    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
+    serializer_class = Article7EmissionSerializer
+
     def get_queryset(self):
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
         )
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7EmissionSerializer
-        return Article7EmissionSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
