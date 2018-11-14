@@ -26,7 +26,9 @@
 
 <script>
 
-import {post, fetch} from '@/api/api'
+import {post, fetch, update} from '@/api/api'
+import newTabs from '@/assets/newTabs'
+
 export default {
 
   name: 'Save',
@@ -215,9 +217,34 @@ export default {
     },  
 
     submitData(field) {
+      console.log('-----submitimg',field)
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
-       if(current_tab.form_fields.length){
+       if(newTabs.indexOf(field) === -1){
       
+       current_tab.status = 'saving'
+       
+       let current_tab_data = []
+
+         current_tab.form_fields.forEach( form_field => {
+          let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+          
+          for(let field in form_field) {
+            save_obj[field] = form_field[field].selected
+          }
+
+           current_tab_data.push(save_obj)
+         })
+
+        update(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+              this.showDismissibleAlertSave = true
+              current_tab.status = true
+              }).catch((error) => {
+              current_tab.status = false
+              console.log(error.response)
+            })
+
+       } else if (newTabs.indexOf(field) !== -1 && current_tab.form_fields.length) {
+
        current_tab.status = 'saving'
        
        let current_tab_data = []
@@ -240,9 +267,8 @@ export default {
               console.log(error.response)
             })
 
+              newTabs.splice(newTabs.indexOf(field),1)
        }
-
-
     },
   }
 }

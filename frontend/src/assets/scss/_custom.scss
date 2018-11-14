@@ -601,11 +601,11 @@
 
 
 
-.table tr:hover > td{
+.table tbody:hover  td{
   background: #eee;
 }
 
-.table tr:hover .table-btn-group {
+.table tbody:hover .table-btn-group {
     display: flex;
 }
 
