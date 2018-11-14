@@ -139,9 +139,9 @@
              </template>
             <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
           </b-tab>
-           <b-tab title="Attachements">
-            <attachements :info="data.form.tabs.attachements" tabId="8"></attachements>
-          </b-tab> 
+           <b-tab title="Attachments">
+            <attachments :info="data.form.tabs.attachments" tabId="8"></attachments>
+          </b-tab>
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
         
@@ -191,7 +191,7 @@ import PartyInfo from "./PartyInfo.vue";
 import FormTemplate from "./FormTemplate.vue";
 import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
-import Attachements from "./Attachements.vue";
+import Attachments from "./Attachments.vue";
 import {getInstructions, getUsers} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 import Save from './Save'
@@ -204,7 +204,7 @@ export default {
     formtemplate: FormTemplate,
     emissionstemplate: EmissionsTemplate,
     subinfo: SubmissionInfo,
-    attachements: Attachements,
+    attachments: Attachments,
     Footer,
     Save
   },

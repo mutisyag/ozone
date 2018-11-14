@@ -629,24 +629,24 @@ var form = {
                 },
             ],
         },
-        attachements: [{
-                name: 'asd',
-                url: 'www.google.com',
+        attachments: [{
+                name: 'Test',
+                url: 'https://www.google.com',
                 id: 1,
             },
             {
-                name: 'asd1',
-                url: 'www.google.com',
+                name: 'Test 1',
+                url: 'https://www.google.com',
                 id: 2,
             },
             {
-                name: 'asd2',
-                url: 'www.google.com',
+                name: 'Test 2',
+                url: 'https://www.google.com',
                 id: 3,
             },
             {
-                name: 'asd3',
-                url: 'www.google.com',
+                name: 'Test 3',
+                url: 'https://www.google.com',
                 id: 4,
             },
         ],
