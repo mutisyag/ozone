@@ -47,7 +47,7 @@
               </span>
 
               <span v-else>
-                <fieldGenerator v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <fieldGenerator :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'substance'">
                   {{tab_data.display.substances[row[order].selected]}}
                   <div class="table-btn-group">
@@ -91,7 +91,7 @@
 
 
               <span v-else>
-                <fieldGenerator v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <fieldGenerator :disabled="transitionState" v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'blend'">
                   <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">
                     {{tab_data.display.blends[row[order].selected].name}} 
@@ -185,7 +185,7 @@
             <b-row>
               <b-col>{{labels[order]}}</b-col>
               <b-col>
-                  <fieldGenerator v-if="modal_data[order].type != 'multiselect'" :field="modal_data[order]"></fieldGenerator>
+                  <fieldGenerator :disabled="transitionState" v-if="modal_data[order].type != 'multiselect'" :field="modal_data[order]"></fieldGenerator>
                   <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries" v-model="modal_data[order].selected" :options="data.countryOptions"></multiselect>
               </b-col>
             </b-row>
@@ -196,11 +196,11 @@
               <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}</b></b-col>
               <b-col>
                     {{labels['quantity']}}
-                    <fieldGenerator :field="modal_data[`quantity_${order}`]"></fieldGenerator>
+                    <fieldGenerator :disabled="transitionState" :field="modal_data[`quantity_${order}`]"></fieldGenerator>
               </b-col>
               <b-col>
                   {{labels['decision']}}
-                    <fieldGenerator :field="modal_data[`decision_${order}`]"></fieldGenerator>
+                    <fieldGenerator :disabled="transitionState" :field="modal_data[`decision_${order}`]"></fieldGenerator>
               </b-col>
             </b-row>
             <hr>
@@ -277,9 +277,15 @@ export default {
         return false
       }
     },
-    // countryFieldType (){
-    //   let fieldType = this.intersect([])
-    // },
+
+
+    transitionState(){
+      let currentState = this.$store.state.permissions.dashboard
+        if(this.intersect(currentState, ['edit', 'save']))
+          return false
+        else 
+          return true
+    }
   },
 
   methods: {

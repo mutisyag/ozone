@@ -1,13 +1,6 @@
 <template>
   <div>
-    <tabsmanager v-if="initialData.countryOptions 
-    && initialData.substances 
-    && initialData.blends 
-    && current_submission 
-    && initialData.display.substances 
-    && initialData.display.blends 
-    && initialData.display.countries
-    && prefilled" 
+    <tabsmanager v-if="initialDataReady" 
     :submission="current_submission" 
     :data="{form: form, countryOptions: initialData.countryOptions, substances: initialData.substances, blends: initialData.blends, display: initialData.display}"></tabsmanager>
     <div v-else class="spinner">
@@ -24,13 +17,14 @@ import prefill from '@/mixins/prefill'
 import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
 import newTabs from '@/assets/newTabs'
 import createSubstance from '@/mixins/createSubstance.vue'
-
+import dummyTransition from '@/assets/dummyTransition.js'
 
 export default {
   name: 'DataManager',
   components: {
     tabsmanager:tabsManager
   },
+
 
   mixins: [
     prefill, createSubstance
@@ -81,6 +75,19 @@ export default {
     this.getInitialData()
   },
 
+  computed: {
+    initialDataReady(){
+      return  this.initialData.countryOptions 
+              && this.initialData.substances 
+              && this.initialData.blends 
+              && this.current_submission 
+              && this.initialData.display.substances 
+              && this.initialData.display.blends 
+              && this.initialData.display.countries
+              && this.prefilled
+    }
+  },
+
   methods: {
 
   getInitialData(){
@@ -101,6 +108,10 @@ export default {
           this.prefillQuestionaire(this.form, this.current_submission.article7questionnaire)
         }
         
+        this.$store.commit('updateFormPermissions', dummyTransition)
+
+        // this will be used when api is ready
+        // this.$store.commit('updateFormPermissions', response.data.available_transitions)
         this.prePrefill(this.form, this.current_submission)
         // this.prefilled = true
       })
