@@ -8,7 +8,7 @@
         </template>
           <add :countryOptions="data.countryOptions" :currentSection="form.name" :section="form.form_fields" :substances="data.substances"></add>
       </b-tab>
-      <b-tab>
+      <b-tab v-if="form.name !== 'has_destroyed'">
         <template slot="title">
           Blends
         </template>

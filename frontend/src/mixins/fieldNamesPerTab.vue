@@ -380,11 +380,6 @@ export default {
                   group: {
                     selected: group
                   },   
-                  blend: {
-                     type: 'select',
-                     selected: blend || null,
-                     expand: false,
-                  },
                   remarks_party: {
                      type: 'textarea',
                      selected: '',
