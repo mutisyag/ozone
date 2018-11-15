@@ -1,7 +1,7 @@
 <template>
 	<div v-if="section && display" class="validation-tab">
 		<div v-for="field in section">
-			<div :class="{hovered: (field.substance.selected || field.blend.selected) === hovered }" class="validation-item" v-for="error in field.validation.selected">
+			<div :class="{hovered: (section.indexOf(field)) === hovered }" class="validation-item" v-for="error in field.validation.selected">
 				{{display.substances[field.substance.selected]}}{{display.blends[field.blend.selected] ? display.blends[field.blend.selected].name : null }} - <span style="color: red">{{error}}</span>
 			</div>
 		</div>

@@ -24,7 +24,7 @@
             </th>
           </tr>
         </thead>
-       <tbody @mouseover="hovered = row.substance.selected" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
+       <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
          <tr>
            <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
 
@@ -77,7 +77,7 @@
          </tr>
        </tbody>
 
-        <tbody @mouseover="hovered = row.blend.selected" @mouseleave="hovered = false" v-else class="form-fields">
+        <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-else class="form-fields">
          <tr>
            <td  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
@@ -277,9 +277,13 @@ export default {
         return false
       }
     },
+    // countryFieldType (){
+    //   let fieldType = this.intersect([])
+    // },
   },
 
   methods: {
+
     intersect(a, b) {
       var setA = new Set(a);
       var setB = new Set(b);
