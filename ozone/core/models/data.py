@@ -9,6 +9,7 @@ from .meeting import Treaty
 from .party import Party
 from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
+from .utils import model_to_dict
 
 __all__ = [
     'Article7Flags',
@@ -140,21 +141,16 @@ class BlendCompositionMixin:
                     field_dictionary[field] = component.percentage * quantity \
                         if quantity else None
 
-                """
-                From Django documentation, on copying model instances:
-                Although there is no built-in method for copying model instances,
-                it is possible to easily create new instance with all fields’
-                values copied. In the simplest case, you can just set pk to None
-                """
-                report = self.__class__.objects.get(pk=self.pk)
-                report.pk = None
-                report.id = None
-                report.substance = component.substance
-                report.blend = None
-                report.blend_item = self
-                for key, value in field_dictionary.items():
-                    setattr(report, key, value)
-                report.save()
+                attributes = model_to_dict(
+                    self,
+                    exclude=[
+                        'id', 'substance_id', 'blend_id', 'blend_item_id',
+                        '_state', '_deferred_fields', '_tracker', 'save',
+                    ],
+                )
+                attributes['substance_id'] = component.substance.pk
+                attributes['blend_item_id'] = self.pk
+                self.__class__.objects.create(**attributes)
 
 
 class BaseReport(models.Model):
