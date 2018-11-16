@@ -11,8 +11,7 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
-import VeeValidate from 'vee-validate';
-Vue.use(VeeValidate);
+
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 // Globally register vue cookies
