@@ -1,20 +1,7 @@
-<template></template>
-<script>
+
 import labels from '@/assets/labels'
 export default {
-
-    data(){
-      return {
-        labels: null,
-      }
-    },
-
-
-    created(){
-      this.labels = labels
-    },
-
-    methods: {
+   
         getCountryField(currentSection) {
             switch (currentSection) {
                 case 'has_exports':
@@ -45,9 +32,10 @@ export default {
 
         createTooltip(fields, section){
           let tooltip_title = ''
-
-          for(let field in fields) {
-              tooltip_title += this.labels[section][field] + ': ' + fields[field] + '\n' 
+          if(fields) {
+            for(let field in fields) {
+                tooltip_title += labels[section][field] + ': ' + fields[field] + '\n' 
+            }
           }
 
           return tooltip_title
@@ -477,8 +465,5 @@ export default {
               break;
             }
          } 
-      },
-
 
 }
-</script>

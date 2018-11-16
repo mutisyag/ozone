@@ -27,7 +27,6 @@
 <script>
 
 import {post, fetch, update} from '@/api/api'
-import newTabs from '@/assets/newTabs'
 
 export default {
 
@@ -219,7 +218,7 @@ export default {
     submitData(field) {
       console.log('-----submitimg',field)
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
-       if(newTabs.indexOf(field) === -1){
+       if(this.$store.state.newTabs.indexOf(field) === -1){
       
        current_tab.status = 'saving'
        
@@ -243,7 +242,7 @@ export default {
               console.log(error.response)
             })
 
-       } else if (newTabs.indexOf(field) !== -1 && current_tab.form_fields.length) {
+       } else if (this.$store.state.newTabs.indexOf(field) !== -1 && current_tab.form_fields.length) {
 
        current_tab.status = 'saving'
        
@@ -267,7 +266,8 @@ export default {
               console.log(error.response)
             })
 
-              newTabs.splice(newTabs.indexOf(field),1)
+              this.$store.commit('tabHasBeenSaved', field)
+
        }
     },
   }

@@ -281,7 +281,7 @@ export default {
 
     transitionState(){
       let currentState = this.$store.state.permissions.dashboard
-        if(this.intersect(currentState, ['edit', 'save']))
+        if(this.intersect(currentState, ['edit', 'save']).length)
           return false
         else 
           return true

@@ -1,3 +1,3 @@
-let dummyTransition = ['save', 'view']
+let dummyTransition = ['view']
 
 export default dummyTransition

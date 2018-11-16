@@ -12,11 +12,7 @@
 <script>
 
 import tabsManager from './TabsManager'
-import form from '@/assets/form.js'
-import prefill from '@/mixins/prefill'
 import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
-import newTabs from '@/assets/newTabs'
-import createSubstance from '@/mixins/createSubstance.vue'
 import dummyTransition from '@/assets/dummyTransition.js'
 
 export default {
@@ -26,17 +22,13 @@ export default {
   },
 
 
-  mixins: [
-    prefill, createSubstance
-  ],
-
   props: {
     submission: String,
   },
 
   data () {
     return {
-      form: JSON.parse(JSON.stringify(form)),
+      form: this.$store.state.form,
       current_submission: null,
       prefilled: false,
       initialData: {
@@ -105,15 +97,11 @@ export default {
       getSubmission(this.submission).then( (response) => {
         this.current_submission = response.data
         if(this.current_submission.article7questionnaire){
-          this.prefillQuestionaire(this.form, this.current_submission.article7questionnaire)
+          this.$store.dispatch('prefillQuestionaire', this.current_submission.article7questionnaire)
         }
         
         this.$store.commit('updateFormPermissions', dummyTransition)
-
-        // this will be used when api is ready
-        // this.$store.commit('updateFormPermissions', response.data.available_transitions)
         this.prePrefill(this.form, this.current_submission)
-        // this.prefilled = true
       })
   },
 
@@ -168,9 +156,8 @@ export default {
                   },100)
                 })
               } else {
-                newTabs.push(form.tabs[tab].name)
+                this.$store.commit('updateNewTabs', form.tabs[tab].name)
               }
-              console.log('-----newTabs----', newTabs)
             }).catch( error => {
               console.log(error)
             })
@@ -187,7 +174,14 @@ export default {
         if(data) {
           for(let item of data) {
             // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-            this.createSubstance([item.substance], tab.name, null, tab.form_fields, null, [item.blend], item)
+            this.$store.dispatch('createSubstance',{
+             substanceList: item.substance ? [item.substance] : null,
+             currentSectionName: tab.name, 
+             groupName: null, 
+             country: null, 
+             blendList: item.blend ? [item.blend] : null, 
+             prefillData: item
+            })
           }
         }
       } else {
@@ -258,16 +252,7 @@ export default {
 
     },
 
-    prefillQuestionaire(form,data){
-      for(let questionaire_question in data) {
-       let current_field = this.form.tabs.tab_1.form_fields.find( field =>  field.name === questionaire_question )
-
-       // TODO: investigate. The if shouldn't be needed
-       if(current_field){
-        current_field.selected = data[questionaire_question]
-       }
-      }
-    },
+   
 
   },
 
