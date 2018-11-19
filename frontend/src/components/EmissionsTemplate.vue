@@ -74,15 +74,15 @@ import Multiselect from 'vue-multiselect'
 
 export default {
   props: {
-    structure: Object,
-    data: Object,
+    tabName: String,
     tabId: String,
     tabIndex: Number,
   },
 
   created(){
-    this.tab_info = this.structure
-    this.tab_data = this.data
+    console.log(this.tabName)
+    this.tab_info = this.$store.state.form.tabs[this.tabName]
+    this.tab_data = this.$store.state.initialData
   },
 
   components: {
@@ -104,54 +104,11 @@ export default {
 
   methods: {
     remove_field(field) {
-      this.structure.form_fields.splice(this.structure.form_fields.indexOf(field), 1)
+      this.$store.commit('removeField', {tab: this.tabName, index:this.tab_info.form_fields.indexOf(field)})
     },
 
     addField(){
-    	let row = {
-                    facility_name: {
-                        type: 'text',
-                        selected: '',
-                    },
-                  quantity_generated: {
-                        type: 'number',    
-                        selected: '',
-                    },
-                   quantity_feedstock: {
-                        type: 'number',
-                        selected: '',
-                    },
-                   quantity_destroyed: {
-                        type: 'number',
-                        selected: '',
-                    },
-                   quantity_emitted: {
-                        type: 'number',
-                        selected: '',
-                    },
-                    remarks_party: {
-                     type: 'textarea',
-                       selected: '',
-                    },
-                    remarks_os: {
-                       type: 'textarea',
-                       selected: '',
-                    },
-                    get validation() {
-                     let errors = []
-                     if(!this.facility_name.selected){
-                        errors.push('eroare1')
-                     }
-
-                     let returnObj = {
-                        type: 'nonInput',
-                        selected: errors
-                     }
-
-                     return returnObj
-                  },
-                }
-                this.structure.form_fields.push(row)
+      this.$store.dispatch('prefillEmissionRow')
     },
 
     expandedStatus(status) {

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info && parseInt(tabId) === tabIndex">
+  <div v-if="tab_info">
     <div class="form-sections">
       <table class="table submission-table">
         <thead>
@@ -57,7 +57,7 @@
                     <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
                   </div>
                 </span>
-                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row"></clonefield>
                 <span v-else>
                    {{tab_data.display.countries[row[order].selected]}}
                 </span>
@@ -105,7 +105,7 @@
                     <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
                   </div>
                 </span>
-                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.blend.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :sectionName="tab_info.name" :countryOptions="data.countryOptions" :current_field="row" :section="tab_info"></clonefield>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.blend.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row" :section="tab_info"></clonefield>
                 <span v-else>
                   {{tab_data.display.countries[row[order].selected]}}
                 </span>
@@ -159,7 +159,7 @@
     </div>
 
     <AppAside fixed>
-      <DefaultAside :data="tab_data" :hovered="hovered" :form="tab_info"> </DefaultAside>
+      <DefaultAside :hovered="hovered" :tabName="tabName"> </DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
@@ -178,7 +178,7 @@
               <h6>Change substance</h6>
            </b-col>
            <b-col>
-              <multiselect class="mb-2" trackBy="value" label="text" placeholder="Select substance" v-model="modal_data.substance.selected" :options="data.substances"></multiselect>
+              <multiselect class="mb-2" trackBy="value" label="text" placeholder="Select substance" v-model="modal_data.substance.selected" :options="tab_data.substances"></multiselect>
            </b-col>
          </b-row>
           <div v-for="order in this.tab_info.modal_order">
@@ -186,7 +186,7 @@
               <b-col>{{labels[order]}}</b-col>
               <b-col>
                   <fieldGenerator :disabled="transitionState" v-if="modal_data[order].type != 'multiselect'" :field="modal_data[order]"></fieldGenerator>
-                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries" v-model="modal_data[order].selected" :options="data.countryOptions"></multiselect>
+                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries" v-model="modal_data[order].selected" :options="tab_data.countryOptions"></multiselect>
               </b-col>
             </b-row>
             <hr>
@@ -231,15 +231,14 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 
 export default {
   props: {
-    structure: Object,
-    data: Object,
+    tabName: String,
     tabId: String,
     tabIndex: Number,
   },
 
   created(){
-    this.tab_info = this.structure
-    this.tab_data = this.data
+    this.tab_info = this.$store.state.form.tabs[this.tabName]
+    this.tab_data = this.$store.state.initialData
     this.labels = labels[this.tab_info.name]
   },
 
@@ -312,7 +311,7 @@ export default {
     },
  
     remove_field(parent, field) {
-      parent.splice(parent.indexOf(field), 1)
+      this.$store.commit('removeField', {tab: this.tabName, index: parent.indexOf(field)})
     },
 
 
@@ -436,7 +435,7 @@ export default {
       })
 
       subheader.sort = -subheader.sort
-      this.$set(this.structure, 'form_fields', sortObj)
+      this.$set(this.tabName, 'form_fields', sortObj)
     },
 
 

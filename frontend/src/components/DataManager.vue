@@ -1,8 +1,9 @@
 <template>
   <div>
-    <tabsmanager v-if="initialDataReady" 
-    :submission="current_submission" 
-    :data="{form: form, countryOptions: initialData.countryOptions, substances: initialData.substances, blends: initialData.blends, display: initialData.display}"></tabsmanager>
+    <tabsmanager 
+    v-if="initialDataReady" 
+    >
+    </tabsmanager>
     <div v-else class="spinner">
       <div class="loader"></div>
     </div>
@@ -10,10 +11,8 @@
 </template>
 
 <script>
-
 import tabsManager from './TabsManager'
 import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
-import dummyTransition from '@/assets/dummyTransition.js'
 
 export default {
   name: 'DataManager',
@@ -31,16 +30,6 @@ export default {
       form: this.$store.state.form,
       current_submission: null,
       prefilled: false,
-      initialData: {
-        countryOptions: null,
-        substances: null,
-        blends: null,
-        display: {
-          substances: {},
-          blends: {},
-          countries: {},
-        }
-      },
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
           'has_imports' : 'article7imports',
@@ -64,91 +53,40 @@ export default {
 
 
   created() {
-    this.getInitialData()
+    if(!this.submission) {
+      this.$router.push({ name: 'Dashboard' });
+    }
+    this.$store.dispatch('getInitialData')
+    this.$store.dispatch('getSubmissionData', this.submission).then( (response) => {
+      this.prePrefill()
+    })
+
   },
 
   computed: {
     initialDataReady(){
-      return  this.initialData.countryOptions 
-              && this.initialData.substances 
-              && this.initialData.blends 
-              && this.current_submission 
-              && this.initialData.display.substances 
-              && this.initialData.display.blends 
-              && this.initialData.display.countries
+      return  this.$store.state.initialData.countryOptions 
+              && this.$store.state.initialData.substances 
+              && this.$store.state.initialData.blends 
+              && this.$store.state.current_submission 
+              && this.$store.state.initialData.display.substances 
+              && this.$store.state.initialData.display.blends 
+              && this.$store.state.initialData.display.countries
               && this.prefilled
     }
   },
 
   methods: {
 
-  getInitialData(){
-    this.getCountries();
-    this.getSubstances();
-    this.getCustomBlends();
-  },
-
-
-  getCurrentSubmission(){
-      if(!this.submission) {
-        this.$router.push({ name: 'Dashboard' });
-      }
-
-      getSubmission(this.submission).then( (response) => {
-        this.current_submission = response.data
-        if(this.current_submission.article7questionnaire){
-          this.$store.dispatch('prefillQuestionaire', this.current_submission.article7questionnaire)
-        }
-        
-        this.$store.commit('updateFormPermissions', dummyTransition)
-        this.prePrefill(this.form, this.current_submission)
-      })
-  },
-
-   getCountries() {
-    let countryOptions = []
-    let countryDisplay = {}
-    getParties().then(response => {
-          for (let country of response.data) {
-            countryOptions.push({ value: country.id, text: country.name})
-            countryDisplay[country.id] = country.name
-          }
-      this.initialData.display.countries = countryDisplay
-      this.initialData.countryOptions = countryOptions
-    })
-  },
-
-  getSubstances(){
-    let tempSubstances = []
-    let substancesDisplay = {}
-        getSubstances().then((response) => {
-          for(let group of response.data) {
-              for(let substance of group.substances){
-                tempSubstances.push({value: substance.id, text: substance.name, group: group})
-                substancesDisplay[substance.id] = substance.name
-              }
-          }
-          this.initialData.display.substances = substancesDisplay
-          this.initialData.substances = tempSubstances 
-        })
-  },
-
-    getCustomBlends(){
-      let blendsDisplay = {}
-      getCustomBlends().then((response) => {
-        for(let blend of response.data) {
-          blendsDisplay[blend.id] = {name: blend.blend_id, components: blend.components}
-        }
-        this.initialData.display.blends = blendsDisplay
-        this.initialData.blends = response.data
-      })
-    },
-
-    prePrefill(form, prefill_data) {
+    prePrefill() {
+        const form = this.$store.state.form,
+              prefill_data = this.$store.state.current_submission
+        console.log('here', form, prefill_data)
         Object.keys(form.tabs).forEach( (tab) => {
           if(this.fields_to_get[tab]){
             fetch(prefill_data[this.fields_to_get[tab]]).then( response => {
               if(response.data.length) {
+                console.log(response.data)
                 this.$store.commit('setTabStatus',{tab:tab, value:'saving'})
                 this.$nextTick(() => {
                   setTimeout(() => {
@@ -167,7 +105,6 @@ export default {
     },
 
     prefill(tab, data) {
-
 
       if(tab.name != 'has_emissions'){
 
@@ -197,19 +134,6 @@ export default {
    
 
   },
-
-
-  watch: {
-     initialData: {
-         handler(val){
-            if(val.blends && val.countryOptions && val.substances && val.display.substances && val.display.blends && val.display.countries) {
-              this.getCurrentSubmission()
-            }
-         },
-         deep: true
-      }
-    }
-
 }
 </script>
 

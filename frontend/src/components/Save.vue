@@ -32,11 +32,6 @@ export default {
 
   name: 'Save',
 
-  props:{
-  	data: Object,
-  	submission: Object,
-  },
-
   data () {
     return {
         findDuplicates: {},
@@ -175,11 +170,11 @@ export default {
       this.invalidTabs = []
       let tabsToValidate = ['has_imports','has_exports','has_produced','has_destroyed','has_nonparty','has_emissions',]
       for(let tab of tabsToValidate){
-        for(let field of this.data.tabs[tab].form_fields){
+        for(let field of this.$store.state.form.tabs[tab].form_fields){
           console.log(field)
           if(field.validation.selected.length){
-            this.invalidTabs.push(this.data.tabs[tab].name)
-            this.data.tabs[tab].status = false
+            this.invalidTabs.push(this.$store.state.form.tabs[tab].name)
+            this.$store.state.form.tabs[tab].status = false
             break;
           }
         }
@@ -194,7 +189,7 @@ export default {
       this.errorMessage = null
       this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
-      for(let questionnaire_field of this.data.tabs.questionaire_questions.form_fields) {
+      for(let questionnaire_field of this.$store.state.form.tabs.questionaire_questions.form_fields) {
         if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
             this.submitData(questionnaire_field.name)
         }
@@ -202,13 +197,13 @@ export default {
   	},
 
     submitQuestionaireData(field) {
-       const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
+       const current_tab = Object.values(this.$store.state.form.tabs).find( (value) => { return value.name === field} )
        let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
        current_tab.form_fields.forEach( form_field => {
         save_obj[form_field.name]  = form_field.selected
        })
 
-      post(this.submission[this.fields_to_save[field]], save_obj).then( (response) => {
+      post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then( (response) => {
         console.log(response)
         }).catch((error) => {
         console.log('here',error)
@@ -216,7 +211,7 @@ export default {
     },  
 
     submitData(field) {
-       const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
+       const current_tab = Object.values(this.$store.state.form.tabs).find( (value) => { return value.name === field} )
        if(this.$store.state.newTabs.indexOf(field) === -1){
        current_tab.status = 'saving'
        let current_tab_data = []
@@ -230,7 +225,7 @@ export default {
            current_tab_data.push(save_obj)
          })
 
-        update(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+        update(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               current_tab.status = true
               }).catch((error) => {
@@ -254,7 +249,7 @@ export default {
            current_tab_data.push(save_obj)
          })
 
-        post(this.submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
+        post(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               current_tab.status = true
               }).catch((error) => {

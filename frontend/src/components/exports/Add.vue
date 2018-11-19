@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && countryOptions && section && currentSection">
+  <div v-if="tabName">
     <div class="container">
       <h3>Add substances</h3>
       <h5>Filter Groups</h5>
@@ -20,16 +20,18 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 export default {
 
   props: {
-    substances: null,
-    section: null,
-    currentSection: null,
-    countryOptions: null,
+    tabName: String,
   },
 
   components: {
     Multiselect 
   },
 
+  computed: {
+    substances(){
+      return this.$store.state.initialData.substances
+    },
+  },  
 
   mounted(){
     this.prepareGroups()
@@ -37,10 +39,6 @@ export default {
 
   data() {
     return {
-      selected_countries: {
-        selected: null,
-        options: this.countryOptions,
-      },
 
       substancesOptions: [],
 
@@ -110,9 +108,8 @@ export default {
 
      this.$store.dispatch('createSubstance',{
          substanceList: this.selected_substance.selected,
-         currentSectionName: this.currentSection, 
-         groupName: this.group_field.name, 
-         currentSection: this.section, 
+         currentSectionName: this.tabName, 
+         groupName: this.group_field.name,  
          country: null, 
          blendList: null, 
          prefillData: null
@@ -122,7 +119,6 @@ export default {
     },
 
     resetData() {
-      this.selected_countries.selected = null
       this.selected_substance.selected = null
       this.selected_groups.selected = []
       this.group_field = {

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="substances && section && blends && countryOptions && currentSection && display">
+  <div>
     <div class="container">
 
      
@@ -65,15 +65,24 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 export default {
 
   props: {
-    substances: null,
-    section: null,
-    currentSection: null,
-    blends: null,
-    countryOptions: null,
-    display: null,
+    // blends: null,
+    // countryOptions: null,
+    // display: null,
+    tabName: String,
   },
   
+  computed: {
+    substances(){
+      return this.$store.state.initialData.substances
+    },
+    blends(){
+      return this.$store.state.initialData.blends
+    },
 
+    display(){
+      return this.$store.state.initialData.display
+    },
+  },
 
   components: {
     Multiselect 
@@ -165,12 +174,9 @@ export default {
 
     addSubstance(type) {
       if(type === 'selected') {
-          // console.log(item)
-          // substanceList, currentSectionName, groupName, currentSection, country, blend
-
       this.$store.dispatch('createSubstance',{
          substanceList: null,
-         currentSectionName: this.currentSection, 
+         currentSectionName: this.tabName, 
          groupName: null, 
          country: null, 
          blendList: this.selected_blends.selected, 
@@ -188,14 +194,15 @@ export default {
           createBlend(this.submit_blend).then(response =>  {
             console.log(response)
             this.new_blend.value = response.data.id
-            this.blends.push(response.data)
+
+            this.$store.commit('addCreateBlendToBlendList', response.data)
+            
             this.display.blends[response.data.id] = {name: response.data.blend_id, components: response.data.components}
 
              this.$store.dispatch('createSubstance',{
                    substanceList: null,
-                   currentSectionName: this.currentSection, 
+                   currentSectionName: this.tabName, 
                    groupName: null, 
-                   currentSection: this.section, 
                    country: null, 
                    blendList: [this.new_blend.value], 
                    prefillData: null

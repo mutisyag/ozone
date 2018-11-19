@@ -6,19 +6,19 @@
         <template slot="title">
           Substances
         </template>
-          <add :countryOptions="data.countryOptions" :currentSection="form.name" :section="form.form_fields" :substances="data.substances"></add>
+          <add :tabName="tabName"></add>
       </b-tab>
-      <b-tab v-if="form.name !== 'has_destroyed'">
+      <b-tab v-if="tabName !== 'has_destroyed'">
         <template slot="title">
           Blends
         </template>
-          <AddBlend :countryOptions="data.countryOptions" :display="data.display"  :currentSection="form.name" :section="form.form_fields" :substances="data.substances" :blends="data.blends"></AddBlend>
+          <AddBlend :tabName="tabName"></AddBlend>
       </b-tab>
       <b-tab>
         <template slot="title">
           Validation
         </template>
-        <Validation :hovered="hovered" :display="data.display" :section="form.form_fields"></Validation>
+        <Validation :hovered="hovered" :tabName="tabName"></Validation>
       </b-tab>
     </b-tabs>
   </div>
@@ -41,9 +41,8 @@ export default {
   },
 
   props: {
-    form: null,
-    data: null,
     hovered: null,
+    tabName: String,
   },
   created(){
   }

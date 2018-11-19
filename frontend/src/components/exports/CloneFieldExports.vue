@@ -1,5 +1,5 @@
 <template>
-  <div v-if="section && field && countryOptions && sectionName">
+  <div v-if="field && tabName">
     <div class="container">
       <div style="position: relative">
           <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" trackBy="value" placeholder="Countries" v-model="selected_countries.selected" :options="countryOptions"></multiselect>
@@ -16,10 +16,8 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 export default {
 
   props: {
-    section: null,
+    tabName: String,
     current_field: Object,
-    sectionName: String,
-    countryOptions: Array,
   },
 
   components: {
@@ -31,7 +29,11 @@ export default {
     this.field = JSON.parse(JSON.stringify(this.current_field))
   },
 
-
+  computed: {
+    countryOptions(){
+      return this.$store.state.initialData.countryOptions
+    },
+  },  
 
   data() {
     return {
@@ -56,7 +58,7 @@ export default {
 
       for(let country of this.selected_countries.selected) {
         let fieldExists = false
-        for(let existing_field of this.section.form_fields) {
+        for(let existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
               if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
                 fieldExists = true
                 break;
@@ -67,7 +69,7 @@ export default {
           
            this.$store.dispatch('createSubstance',{
                  substanceList: [current_field.substance.selected],
-                 currentSectionName: this.sectionName, 
+                 currentSectionName: this.tabName, 
                  groupName: current_field.group, 
                  country: country, 
                  blendList: [current_field.blend.selected], 
