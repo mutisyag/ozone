@@ -108,6 +108,9 @@ function getCustomBlends(){
   return fetch('blends/')
 }
 
+function getSubmissionsVersions(){
+  return fetch('submission-versions/')
+}
 
  function getInstructions() {
   if(isTestSession) {
@@ -140,5 +143,6 @@ export {
  createSubmission,
  getSubmission,
  createBlend,
- getCustomBlends
+ getCustomBlends,
+ getSubmissionsVersions
 };

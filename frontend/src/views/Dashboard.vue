@@ -2,7 +2,7 @@
   <div class="animated fadeIn">
     <b-row>
       <b-col sm="6">
-        <b-card v-if="periods && obligations && parties">
+        <b-card v-if="basicDataReady">
           <div slot="header">
             <strong>Create new submission </strong>
           </div>
@@ -16,53 +16,29 @@
               <b-form-select placeholder="Select period" v-model="current.reporting_period" :options="periods"></b-form-select>
             </b-input-group>
 
-            <b-input-group v-if="parties" class="mb-2" prepend="Party">
+            <b-input-group class="mb-2" prepend="Party">
               <b-form-select placeholder="Select period" v-model="current.party" :options="parties"></b-form-select>
             </b-input-group>
 
 
 
-            <b-btn v-if="periods && obligations && parties" variant="primary" @click="addSubmission">Create submission</b-btn>
+            <b-btn v-if="basicDataReady" variant="primary" @click="addSubmission">Create submission</b-btn>
           </div>
 
         </b-card>
       </b-col>
 
       <b-col sm="12">
-          <b-card no-body header="Latest submissions" v-if="submissions && periods && obligations && parties && submissions.length">
+          <b-card no-body header="Latest submissions" v-if="dataReady">
             <b-container fluid>
               <b-row>
                 <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Filter" class="mb-0">
+                  <b-form-group horizontal label="Search" class="mb-0">
                     <b-input-group>
-                      <b-form-input v-model="table.filter" placeholder="Type to Search" />
+                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filter" @click="table.filter = ''">Clear</b-btn>
+                        <b-btn :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
                       </b-input-group-append>
-                    </b-input-group>
-                  </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Sort" class="mb-0">
-                    <b-input-group>
-                      <b-form-select v-model="table.sortBy" :options="table.sortOptions">
-                        <option slot="first" :value="null">-- none --</option>
-                      </b-form-select>
-                      <b-form-select :disabled="!table.sortBy" v-model="table.sortDesc" slot="append">
-                        <option :value="false">Asc</option>
-                        <option :value="true">Desc</option>
-                      </b-form-select>
-                    </b-input-group>
-                  </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Sort direction" class="mb-0">
-                    <b-input-group>
-                      <b-form-select v-model="table.sortDirection" slot="append">
-                        <option value="asc">Asc</option>
-                        <option value="desc">Desc</option>
-                        <option value="last">Last</option>
-                      </b-form-select>
                     </b-input-group>
                   </b-form-group>
                 </b-col>
@@ -72,17 +48,41 @@
                   </b-form-group>
                 </b-col>
               </b-row>
+              <b-row>
+                <b-col md="6" class="my-1">
+                  <b-form-group horizontal label="Filter by period" class="mb-0">
+                    <b-input-group>
+                      <b-form-select v-model="table.filters.period" :options="sortOptionsPeriod">
+                      </b-form-select>
+                      <b-input-group-append>
+                        <b-btn :disabled="!table.filters.period" @click="table.filters.period = ''">Clear</b-btn>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col md="6" class="my-1">
+                  <b-form-group horizontal label="Filter by obligation" class="mb-0">
+                    <b-input-group>
+                      <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+                      <b-input-group-append>
+                        <b-btn :disabled="!table.filters.obligation" @click="table.filters.obligation = ''">Clear</b-btn>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+              </b-row>
               <b-table show-empty
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
                        :current-page="table.currentPage"
                        :per-page="table.perPage"
-                       :filter="table.filter"
                        :sort-by.sync="table.sortBy"
                        :sort-desc.sync="table.sortDesc"
                        :sort-direction="table.sortDirection"
+                       :filter="table.filters.search"
                        @filtered="onFiltered"
+                       ref="table"
               >
                 <template slot="actions" slot-scope="row">
                     <router-link
@@ -109,13 +109,14 @@
 
 <script>
 
-import {getSubmissions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api';
+import {getSubmissions, getSubmissionsVersions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api';
 
 export default {
   name: 'Dashboard',
   data () {
     return {
     	submissions: null,
+      submissionsVersions: null,
       periods: null,
       obligations: null,
       parties: null,
@@ -140,18 +141,26 @@ export default {
           sortBy: null,
           sortDesc: false,
           sortDirection: 'asc',
-          filter: null,
+          filters: {
+            search: null,
+            period: null,
+            obligation: null,
+          },
           modalInfo: { title: '', content: '' }
         }
       
     }
   },
 
-  created(){
+  beforeCreate(){
    document.querySelector('body').classList.remove('aside-menu-lg-show')
 
     getSubmissions().then( response => {
         this.submissions = response.data
+    })
+
+    getSubmissionsVersions().then( response => {
+        this.submissionsVersions = response.data
     })
 
    getParties().then( response => {
@@ -165,7 +174,7 @@ export default {
     getPeriods().then( response => {
       let periods_temp = [];
       for(let period of response.data) {
-        periods_temp.push({value: period.id, text: `${period.name} (${period.start_date} - ${period.end_date})`})
+        periods_temp.push({value: period.id, text:period.name})
       }
       this.periods = JSON.parse(JSON.stringify(periods_temp)) 
     })
@@ -184,16 +193,55 @@ export default {
   computed: {
     tableItems(){
       let tableFields = []
-      this.submissions.forEach( (element, index) => {
-        tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
-         reporting_period: this.getSumissionInfo(element).period(),
-         reporting_party: this.getSumissionInfo(element).party(),
-         version: element.version,
-         details: element})
+      this.submissionsVersions.forEach( (element, index) => {
+        if(
+          (this.table.filters.period ? this.getSumissionInfo(element).period() === this.table.filters.period : true)
+          &&
+          (this.table.filters.obligation ? this.getSumissionInfo(element).obligation() === this.table.filters.obligation : true)
+         ) {
+          tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
+           reporting_period: this.getSumissionInfo(element).period(),
+           reporting_party: this.getSumissionInfo(element).party(),
+           version: element.version,
+           details: element})
+        }
+      
       });
       this.table.totalRows = tableFields.length
       return tableFields
     },
+
+    sortOptionsPeriod () {
+      let options =  this.tableItems.map(f => { return { text: f.reporting_period, value: f.reporting_period } })
+      options.unshift({text: '', value: null})
+      return options
+    },
+
+    sortOptionsObligation () {
+      let options =  this.tableItems.map(f => { return { text: f.obligation, value: f.obligation } })
+      options.unshift({text: '', value: null})
+      return options
+    },
+
+
+    dataReady(){ 
+      if(this.submissionsVersions 
+        && this.submissions 
+        && this.periods 
+        && this.obligations 
+        && this.parties 
+        && this.submissions.length) {
+        return true
+      }
+    },
+
+    basicDataReady(){
+      if(this.periods 
+        && this.obligations 
+        && this.parties){
+          return true
+      }
+    }
   },
 
   methods: {
@@ -201,9 +249,12 @@ export default {
       createSubmission(this.current).then( (response) => { console.log(response);this.getSubmissions()} )
     },
 
-    onFiltered(){
-      return
+    onFiltered (filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.table.totalRows = filteredItems.length
+      this.table.currentPage = 1
     },
+
 
     getSumissionInfo(submission){
       let submissionInfo = {
@@ -211,6 +262,7 @@ export default {
           return this.obligations.find( a => { return a.value === submission.obligation }).text
         },
         period: () => {
+
           return this.periods.find(a => {return a.value === submission.reporting_period}).text
         },
         party: () => {
@@ -220,7 +272,18 @@ export default {
       return submissionInfo
     },
 
-  }
+  },
+
+
+
+watch: {
+    'table.filters': {
+        handler: function () {
+              this.$refs.table.refresh()
+        },
+        deep: true
+    }
+},
 }
 </script>
 
