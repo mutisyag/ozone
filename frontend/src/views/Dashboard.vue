@@ -172,16 +172,10 @@ export default {
     }
   },
 
-  beforeCreate(){
+  created(){
    document.querySelector('body').classList.remove('aside-menu-lg-show')
 
-    getSubmissions().then( response => {
-        this.submissions = response.data
-    })
-
-    getSubmissionsVersions().then( response => {
-        this.submissionsVersions = response.data
-    })
+   this.getCurrentSubmissions()
 
    getParties().then( response => {
     let parties_temp = [];
@@ -276,7 +270,7 @@ export default {
 
   methods: {
     addSubmission() {
-      createSubmission(this.current).then( (response) => { console.log(response);this.getSubmissions()} )
+      createSubmission(this.current).then( (response) => { console.log(response);this.getCurrentSubmissions()} )
     },
 
     onFiltered (filteredItems) {
@@ -285,6 +279,17 @@ export default {
       this.table.currentPage = 1
     },
 
+    getCurrentSubmissions(){
+      
+      getSubmissions().then( response => {
+        this.submissions = response.data
+      })
+
+      getSubmissionsVersions().then( response => {
+          this.submissionsVersions = response.data
+      })
+
+    },
 
     getSumissionInfo(submission){
       let submissionInfo = {
