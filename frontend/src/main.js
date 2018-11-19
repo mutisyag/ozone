@@ -6,7 +6,7 @@ import 'core-js/es7/array'
 import VueCookies from 'vue-cookies'
 // import cssVars from 'css-vars-ponyfill'
 import Vue from 'vue'
-
+import store from '@/store/index'
 
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
@@ -16,15 +16,19 @@ import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 // Globally register vue cookies
 Vue.use(VueCookies)
+
 // todo
 // cssVars()
 Vue.config.productionTip = false
 
 Vue.use(BootstrapVue)
 
+
+
 /* eslint-disable no-new */
 new Vue({
   router,
+  store,
   render: h => h(App)
 }).$mount('#app')
 

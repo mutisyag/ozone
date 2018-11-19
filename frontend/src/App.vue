@@ -4,10 +4,9 @@
 
 <script>
 import Router from './router'
-
 export default {
   name: 'app',
-  components: {routerview: Router}
+  components: {routerview: Router},
 }
 </script>
 

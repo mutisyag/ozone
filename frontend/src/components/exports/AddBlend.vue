@@ -59,7 +59,7 @@
 
 import {createBlend} from '@/api/api'
 import Multiselect from '@/mixins/modifiedMultiselect'
-import createSubstance from '@/mixins/createSubstance.vue'
+
 
 
 export default {
@@ -73,7 +73,7 @@ export default {
     display: null,
   },
   
-  mixins: [createSubstance],
+
 
   components: {
     Multiselect 
@@ -168,8 +168,14 @@ export default {
           // console.log(item)
           // substanceList, currentSectionName, groupName, currentSection, country, blend
 
-          this.createSubstance(null, this.currentSection, null, this.section, null, this.selected_blends.selected, null)
-
+      this.$store.dispatch('createSubstance',{
+         substanceList: null,
+         currentSectionName: this.currentSection, 
+         groupName: null, 
+         country: null, 
+         blendList: this.selected_blends.selected, 
+         prefillData: null
+        })
 
       } else {
           
@@ -184,7 +190,17 @@ export default {
             this.new_blend.value = response.data.id
             this.blends.push(response.data)
             this.display.blends[response.data.id] = {name: response.data.blend_id, components: response.data.components}
-            this.createSubstance(null, this.currentSection, null, this.section, null, [this.new_blend.value])
+
+             this.$store.dispatch('createSubstance',{
+                   substanceList: null,
+                   currentSectionName: this.currentSection, 
+                   groupName: null, 
+                   currentSection: this.section, 
+                   country: null, 
+                   blendList: [this.new_blend.value], 
+                   prefillData: null
+                  })
+
           })
 
           console.log(this.new_blend)

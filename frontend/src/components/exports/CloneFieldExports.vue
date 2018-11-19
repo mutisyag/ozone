@@ -12,7 +12,6 @@
 
 // import Multiselect from 'vue-multiselect'
 import Multiselect from '@/mixins/modifiedMultiselect'
-import createSubstance from '@/mixins/createSubstance.vue'
 
 export default {
 
@@ -27,7 +26,6 @@ export default {
     Multiselect 
   },
 
-  mixins: [createSubstance],
 
   created(){
     this.field = JSON.parse(JSON.stringify(this.current_field))
@@ -66,7 +64,15 @@ export default {
         }
         // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
         if(!fieldExists) {
-          this.createSubstance([current_field.substance.selected], this.sectionName, current_field.group, this.section.form_fields, country, [current_field.blend.selected], null)
+          
+           this.$store.dispatch('createSubstance',{
+                 substanceList: [current_field.substance.selected],
+                 currentSectionName: this.sectionName, 
+                 groupName: current_field.group, 
+                 country: country, 
+                 blendList: [current_field.blend.selected], 
+                 prefillData: null
+                })
         }
 
       }
