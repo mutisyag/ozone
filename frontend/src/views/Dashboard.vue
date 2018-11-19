@@ -29,7 +29,13 @@
       </b-col>
 
       <b-col sm="12">
-          <b-card no-body header="Latest submissions" v-if="dataReady">
+          <b-card no-body v-if="dataReady">
+            <template slot="header">
+              <b-row>
+              <b-col>Latest submissions</b-col>
+              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
+              </b-row> 
+            </template>
             <b-container fluid>
               <b-row>
                 <b-col md="6" class="my-1">
@@ -137,7 +143,7 @@ export default {
           currentPage: 1,
           perPage: 10,
           totalRows: 5,
-          pageOptions: [ 5, 10, 15 ],
+          pageOptions: [ 5, 10, 15, 20, 25, 50 ],
           sortBy: null,
           sortDesc: false,
           sortDirection: 'asc',
@@ -145,6 +151,7 @@ export default {
             search: null,
             period: null,
             obligation: null,
+            isCurrent: null,
           },
           modalInfo: { title: '', content: '' }
         }
@@ -198,6 +205,8 @@ export default {
           (this.table.filters.period ? this.getSumissionInfo(element).period() === this.table.filters.period : true)
           &&
           (this.table.filters.obligation ? this.getSumissionInfo(element).obligation() === this.table.filters.obligation : true)
+          && 
+          (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : false || element.is_current ? true : false) )
          ) {
           tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
            reporting_period: this.getSumissionInfo(element).period(),
