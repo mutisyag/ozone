@@ -231,21 +231,15 @@ export default {
     },
 
     sortOptionsPeriod () {
-      let options =  this.tableItems.map(f => { return { text: f.reporting_period, value: f.reporting_period } })
-      options.unshift({text: '', value: null})
-      return options
+      return [...new Set(this.tableItems.map(f => f.reporting_period ))]
     },
 
     sortOptionsObligation () {
-      let options =  this.tableItems.map(f => { return { text: f.obligation, value: f.obligation } })
-      options.unshift({text: '', value: null})
-      return options
+      return [...new Set(this.tableItems.map(f => f.obligation ))]
     },
     
     sortOptionsParties () {
-      let options =  this.tableItems.map(f => { return { text: f.reporting_party, value: f.reporting_party } })
-      options.unshift({text: '', value: null})
-      return options
+      return [...new Set(this.tableItems.map(f => f.reporting_party ))]
     },
 
     dataReady(){ 
