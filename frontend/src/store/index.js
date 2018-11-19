@@ -20,12 +20,9 @@ const store = new Vuex.Store({
 
   actions: {
      prefillQuestionaire(context,data){
-      for(let questionaire_question in data) {
-       let current_field = store.state.form.tabs.tab_1.form_fields.find( field =>  field.name === questionaire_question )
-       if(current_field){
-        context.commit('updateQuestionaireField', {value: data[questionaire_question], field: current_field.name})
-       }
-      }
+      Object.keys(data).forEach( (element, index) => {
+        context.commit('updateQuestionaireField', {value: data[element], field: element})
+      });
     },
 
     createSubstance(context,data){
@@ -45,21 +42,83 @@ const store = new Vuex.Store({
             context.commit('addSubstance', {sectionName: data.currentSectionName, row: inner_fields})
           }
       }
+    },
+
+    prefillEmissionRow(context, data){
+           let row = {
+                  id: {
+                    selected: null,
+                  },
+                  facility_name: {
+                        type: 'text',
+                        selected: '',
+                    },
+                  quantity_generated: {
+                        type: 'number',    
+                        selected: '',
+                    },
+                   quantity_feedstock: {
+                        type: 'number',
+                        selected: '',
+                    },
+                   quantity_destroyed: {
+                        type: 'number',
+                        selected: '',
+                    },
+                   quantity_emitted: {
+                        type: 'number',
+                        selected: '',
+                    },
+                    remarks_party: {
+                     type: 'textarea',
+                       selected: '',
+                    },
+                    remarks_os: {
+                       type: 'textarea',
+                       selected: '',
+                    },
+                    get validation() {
+                     let errors = []
+                     if(!this.facility_name.selected){
+                        errors.push('eroare1')
+                     }
+
+                     let returnObj = {
+                        type: 'nonInput',
+                        selected: errors
+                     }
+
+                     return returnObj
+                  },
+              }
+              if(data){
+                Object.keys(data).forEach( (element, index) => {
+                  row[element].selected = data[element] 
+                });
+              }
+            context.commit('addEmissionsRow', row)
     }
   },
 
   mutations: {
     
     // questionaire
-    updateQuestionaireField(state, value){
-       let current_field = store.state.form.tabs.tab_1.form_fields.find( field =>  field.name === value.field )
-       current_field.selected = value.value
+    updateQuestionaireField(state, data){
+       store.state.form.tabs.questionaire_questions.form_fields[data.field] = data.value
     },
 
     // addsubstance
     addSubstance(state, data) {
-       let current_tab = Object.keys(store.state.form.tabs).find((tab) => {if(store.state.form.tabs[tab].name === data.sectionName) return tab})
-       store.state.form.tabs[current_tab].form_fields.push(data.row)
+       store.state.form.tabs[data.sectionName].form_fields.push(data.row)
+    },
+
+    addEmissionsRow(state, data) {
+       store.state.form.tabs.tab_7.form_fields.push(data)
+    },
+
+
+    setTabStatus(state, data) {
+      store.state.form.tabs[data.tab].status = data.value
     },
 
     // permissions

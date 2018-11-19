@@ -280,7 +280,7 @@ export default {
 
 
     transitionState(){
-      let currentState = this.$store.state.permissions.dashboard
+      let currentState = this.$store.state.permissions.form
         if(this.intersect(currentState, ['edit', 'save']).length)
           return false
         else 
@@ -289,7 +289,6 @@ export default {
   },
 
   methods: {
-
     intersect(a, b) {
       var setA = new Set(a);
       var setB = new Set(b);

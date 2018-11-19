@@ -40,104 +40,104 @@
           </b-tab>
 
           <b-tab title="Questionaire" active>
-            <intro tabId="1" :tabs="display_tabs" :info="data.form.tabs.tab_1"></intro>
+            <intro tabId="1" :tabs="display_tabs" :info="data.form.tabs.questionaire_questions"></intro>
           </b-tab>
          
-          <b-tab :title-link-class="data.form.tabs.tab_2.status ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_2.name]">
+          <b-tab :title-link-class="data.form.tabs.has_exports.status ? {} : null" :disabled="!display_tabs[data.form.tabs.has_exports.name]">
             <template slot="title">
                <div class="tab-title">
-                {{data.form.tabs.tab_2.title}}
-                <div v-if="data.form.tabs.tab_2.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_exports.title}}
+                <div v-if="data.form.tabs.has_exports.status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_2.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_2.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_2.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_exports.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_exports.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_exports.status === 'edited'" class="fa fa-edit fa-lg"></i>
               </div>
              </template>
-            <formtemplate ref="tab_2" tabId="2" :tabIndex="tabIndex" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_2"></formtemplate>
+            <formtemplate ref="has_exports" tabId="2" :tabIndex="tabIndex" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_exports"></formtemplate>
           </b-tab>
 
 
-          <b-tab :title-link-class="data.form.tabs.tab_3.status ? {} : null"  :disabled="!display_tabs[data.form.tabs.tab_3.name]">
+          <b-tab :title-link-class="data.form.tabs.has_imports.status ? {} : null"  :disabled="!display_tabs[data.form.tabs.has_imports.name]">
              <template slot="title">
               <div class="tab-title">
-                {{data.form.tabs.tab_3.title}}
-                <div v-if="data.form.tabs.tab_3.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_imports.title}}
+                <div v-if="data.form.tabs.has_imports.status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_3.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_3.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_3.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_imports.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_imports.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_imports.status === 'edited'" class="fa fa-edit fa-lg"></i>
               
               </div>
 
              </template>
-            <formtemplate tabId="3" ref="tab_3" :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_3"></formtemplate>
+            <formtemplate tabId="3" ref="has_imports" :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_imports"></formtemplate>
           </b-tab>
 
           
-         <b-tab :title-link-class="data.form.tabs.tab_4.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_4.name]">
+         <b-tab :title-link-class="data.form.tabs.has_produced.title ? {} : null" :disabled="!display_tabs[data.form.tabs.has_produced.name]">
              <template slot="title">
               <div class="tab-title">
-                {{data.form.tabs.tab_4.title}}
-                <div v-if="data.form.tabs.tab_4.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_produced.title}}
+                <div v-if="data.form.tabs.has_produced.status === 'saving'" class="spinner">
                    <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_4.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_4.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_4.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_produced.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_produced.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_produced.status === 'edited'" class="fa fa-edit fa-lg"></i>
               
               </div>
              </template>
-            <formtemplate tabId="4"  ref="tab_4"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_4"></formtemplate>
+            <formtemplate tabId="4"  ref="has_produced"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_produced"></formtemplate>
           </b-tab>
 
-          <b-tab :title-link-class="data.form.tabs.tab_5.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_5.name]">
+          <b-tab :title-link-class="data.form.tabs.has_destroyed.title ? {} : null" :disabled="!display_tabs[data.form.tabs.has_destroyed.name]">
             <template slot="title">
               <div class="tab-title">
-                {{data.form.tabs.tab_5.title}}
-                <div v-if="data.form.tabs.tab_5.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_destroyed.title}}
+                <div v-if="data.form.tabs.has_destroyed.status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_5.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_5.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_5.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_destroyed.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_destroyed.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_destroyed.status === 'edited'" class="fa fa-edit fa-lg"></i>
               
               </div>
              </template>
-            <formtemplate tabId="5" :tabIndex="tabIndex" ref="tab_5" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_5"></formtemplate>
+            <formtemplate tabId="5" :tabIndex="tabIndex" ref="has_destroyed" :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_destroyed"></formtemplate>
           </b-tab>
 
-          <b-tab :title-link-class="data.form.tabs.tab_6.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_6.name]">
+          <b-tab :title-link-class="data.form.tabs.has_nonparty.title ? {} : null" :disabled="!display_tabs[data.form.tabs.has_nonparty.name]">
             <template slot="title">
               <div class="tab-title">
-                {{data.form.tabs.tab_6.title}}
-                <div v-if="data.form.tabs.tab_6.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_nonparty.title}}
+                <div v-if="data.form.tabs.has_nonparty.status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_6.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_6.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_6.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_nonparty.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_nonparty.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_nonparty.status === 'edited'" class="fa fa-edit fa-lg"></i>
               
               </div>
              </template>
-            <formtemplate tabId="6" ref="tab_6"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_6"></formtemplate>
+            <formtemplate tabId="6" ref="has_nonparty"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_nonparty"></formtemplate>
           </b-tab>
-           <b-tab :title-link-class="data.form.tabs.tab_7.title ? {} : null" :disabled="!display_tabs[data.form.tabs.tab_7.name]">
+           <b-tab :title-link-class="data.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[data.form.tabs.has_emissions.name]">
             <template slot="title">
               <div class="tab-title">
-                {{data.form.tabs.tab_7.title}}
-                <div v-if="data.form.tabs.tab_7.status === 'saving'" class="spinner">
+                {{data.form.tabs.has_emissions.title}}
+                <div v-if="data.form.tabs.has_emissions.status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="data.form.tabs.tab_7.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_7.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="data.form.tabs.tab_7.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="data.form.tabs.has_emissions.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_emissions.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="data.form.tabs.has_emissions.status === 'edited'" class="fa fa-edit fa-lg"></i>
               
               </div>
              </template>
-            <emissionstemplate tabId="7" ref="tab_7"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.tab_7"></emissionstemplate>
+            <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  :data="{substances: data.substances, countryOptions: data.countryOptions, blends: data.blends, display: data.display}"  :structure="data.form.tabs.has_emissions"></emissionstemplate>
           </b-tab>
            <b-tab title="Attachments">
             <attachments :info="data.form.tabs.attachments" tabId="8"></attachments>

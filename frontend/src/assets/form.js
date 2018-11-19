@@ -28,7 +28,7 @@ var form = {
             name: 'form_intro',
             form_fields: reporting_party
         },
-        tab_1: {
+        questionaire_questions: {
             intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
             title: 'Questionnaire',
             name: 'questionaire_questions',
@@ -53,7 +53,7 @@ var form = {
             // used for identification when adding labels
             form_fields: intro_fields
         },
-        tab_3: {
+        has_exports: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -155,7 +155,7 @@ var form = {
             footnotes: ['[1] Tonne = Metric ton.'],
         },
 
-        tab_2: {
+        has_imports: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -254,7 +254,7 @@ var form = {
             isInvalid: false,
             footnotes: ['[1] Tonne = Metric ton.'],
         },
-        tab_4: {
+        has_produced: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -351,7 +351,7 @@ var form = {
                 },
             ],
         },
-        tab_5: {
+        has_destroyed: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -410,7 +410,7 @@ var form = {
                 }
             ],
         },
-        tab_6: {
+        has_nonparty: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -525,7 +525,7 @@ var form = {
             ],
         },
 
-        tab_7: {
+        has_emissions: {
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',

@@ -146,17 +146,17 @@ export default {
 
     prePrefill(form, prefill_data) {
         Object.keys(form.tabs).forEach( (tab) => {
-          if(this.fields_to_get[form.tabs[tab].name]){
-            fetch(prefill_data[this.fields_to_get[form.tabs[tab].name]]).then( response => {
+          if(this.fields_to_get[tab]){
+            fetch(prefill_data[this.fields_to_get[tab]]).then( response => {
               if(response.data.length) {
-                form.tabs[tab].status = 'saving'
+                this.$store.commit('setTabStatus',{tab:tab, value:'saving'})
                 this.$nextTick(() => {
                   setTimeout(() => {
                     this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
                   },100)
                 })
               } else {
-                this.$store.commit('updateNewTabs', form.tabs[tab].name)
+                this.$store.commit('updateNewTabs', tab)
               }
             }).catch( error => {
               console.log(error)
@@ -185,71 +185,13 @@ export default {
           }
         }
       } else {
-
-            for(let item of data) {
-              let row = {
-                  id: {
-                    selected: null,
-                  },
-                  facility_name: {
-                        type: 'text',
-                        selected: '',
-                    },
-                  quantity_generated: {
-                        type: 'number',    
-                        selected: '',
-                    },
-                   quantity_feedstock: {
-                        type: 'number',
-                        selected: '',
-                    },
-                   quantity_destroyed: {
-                        type: 'number',
-                        selected: '',
-                    },
-                   quantity_emitted: {
-                        type: 'number',
-                        selected: '',
-                    },
-                    remarks_party: {
-                     type: 'textarea',
-                       selected: '',
-                    },
-                    remarks_os: {
-                       type: 'textarea',
-                       selected: '',
-                    },
-                    get validation() {
-                     let errors = []
-                     if(!this.facility_name.selected){
-                        errors.push('eroare1')
-                     }
-
-                     let returnObj = {
-                        type: 'nonInput',
-                        selected: errors
-                     }
-
-                     return returnObj
-                  },
-              }
-
-              for(let field in item) {
-                console.log(field)
-                row[field].selected = item[field]
-              }
-
-              tab.form_fields.push(row)
-            }
+          data.forEach( el => this.$store.dispatch('prefillEmissionsRow', el))
          }
-        this.$nextTick(() => {
+          this.$nextTick(() => {
             setTimeout(() => {
-              tab.status = true
+                this.$store.commit('setTabStatus',{tab: tab.name, value:true})
             })
           })
-
-
-
     },
 
    
