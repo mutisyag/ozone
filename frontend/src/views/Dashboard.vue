@@ -106,7 +106,7 @@
                         class="nav-link btn btn-primary btn-sm"
                         :to="{ name: 'Form', query: {submission: row.item.details.url}} "
                       >
-                      form
+                      Edit
                     </router-link>
                   </template>
               </b-table>
