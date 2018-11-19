@@ -155,7 +155,7 @@ export default {
           currentPage: 1,
           perPage: 10,
           totalRows: 5,
-          pageOptions: [ 5, 10, 15, 20, 25, 50 ],
+          pageOptions: [ 5, 25, 100 ],
           sortBy: null,
           sortDesc: false,
           sortDirection: 'asc',
