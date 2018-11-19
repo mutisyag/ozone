@@ -138,6 +138,7 @@ export default {
             { key: 'reporting_period', label: 'Reporting period', sortable: true, 'class': 'text-center' },
             { key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc', 'class': 'text-center'},
             { key: 'version', label: 'Version', sortable: true, sortDirection: 'desc' , 'class': 'text-center'},
+            { key: 'current_state', label: 'State', sortable: true, 'class': 'text-center'},
             { key: 'actions', label: 'Actions', 'class': 'text-center' },
           ],
           currentPage: 1,
@@ -211,6 +212,7 @@ export default {
           tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
            reporting_period: this.getSumissionInfo(element).period(),
            reporting_party: this.getSumissionInfo(element).party(),
+           current_state: element.current_state,
            version: element.version,
            details: element})
         }
