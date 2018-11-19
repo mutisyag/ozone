@@ -231,15 +231,15 @@ export default {
     },
 
     sortOptionsPeriod () {
-      return [...new Set(this.tableItems.map(f => f.reporting_period ))]
+      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).period() ))]
     },
 
     sortOptionsObligation () {
-      return [...new Set(this.tableItems.map(f => f.obligation ))]
+      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).obligation() ))]
     },
     
     sortOptionsParties () {
-      return [...new Set(this.tableItems.map(f => f.reporting_party ))]
+      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).party() ))]
     },
 
     dataReady(){ 
