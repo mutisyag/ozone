@@ -138,7 +138,7 @@ const store = new Vuex.Store({
     },
 
     tabHasBeenSaved(state,tab){
-      state.newTabs.splice(state.newTabs.indexOf(field),1)
+      state.newTabs.splice(state.newTabs.indexOf(tab),1)
     }
   }
 })

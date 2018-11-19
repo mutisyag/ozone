@@ -107,7 +107,6 @@ export default {
     addSubstance() {
       this.updateGroup(this.selected_substance.selected)
       console.log('group-field',this.group_field)
-      // substanceList, currentSectionName, groupName, currentSection, country, blend
 
      this.$store.dispatch('createSubstance',{
          substanceList: this.selected_substance.selected,

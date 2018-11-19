@@ -173,7 +173,7 @@ export default {
 
     validation(){
       this.invalidTabs = []
-      let tabsToValidate = ['tab_2','tab_3','tab_4','tab_5','tab_6','tab_7',]
+      let tabsToValidate = ['has_imports','has_exports','has_produced','has_destroyed','has_nonparty','has_emissions',]
       for(let tab of tabsToValidate){
         for(let field of this.data.tabs[tab].form_fields){
           console.log(field)
@@ -194,7 +194,7 @@ export default {
       this.errorMessage = null
       this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
-      for(let questionnaire_field of this.data.tabs.tab_1.form_fields) {
+      for(let questionnaire_field of this.data.tabs.questionaire_questions.form_fields) {
         if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
             this.submitData(questionnaire_field.name)
         }
@@ -216,14 +216,10 @@ export default {
     },  
 
     submitData(field) {
-      console.log('-----submitimg',field)
        const current_tab = Object.values(this.data.tabs).find( (value) => { return value.name === field} )
        if(this.$store.state.newTabs.indexOf(field) === -1){
-      
        current_tab.status = 'saving'
-       
        let current_tab_data = []
-
          current_tab.form_fields.forEach( form_field => {
           let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
           
@@ -266,7 +262,7 @@ export default {
               console.log(error.response)
             })
 
-              this.$store.commit('tabHasBeenSaved', field)
+          this.$store.commit('tabHasBeenSaved', field)
 
        }
     },
