@@ -33,6 +33,12 @@
             <template slot="header">
               <b-row>
               <b-col>Latest submissions</b-col>
+
+              <b-col>
+                  <b-form-group horizontal label="Per page" class="mb-0">
+                    <b-form-select :options="table.pageOptions" v-model="table.perPage" />
+                  </b-form-group>
+              </b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
               </b-row> 
             </template>
@@ -49,8 +55,13 @@
                   </b-form-group>
                 </b-col>
                 <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Per page" class="mb-0">
-                    <b-form-select :options="table.pageOptions" v-model="table.perPage" />
+                  <b-form-group horizontal label="Filter by party" class="mb-0">
+                    <b-input-group>
+                      <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
+                      <b-input-group-append>
+                        <b-btn :disabled="!table.filters.party" @click="table.filters.party = ''">Clear</b-btn>
+                      </b-input-group-append>
+                    </b-input-group>
                   </b-form-group>
                 </b-col>
               </b-row>
@@ -152,6 +163,7 @@ export default {
             search: null,
             period: null,
             obligation: null,
+            party: null,
             isCurrent: null,
           },
           modalInfo: { title: '', content: '' }
@@ -207,6 +219,8 @@ export default {
           &&
           (this.table.filters.obligation ? this.getSumissionInfo(element).obligation() === this.table.filters.obligation : true)
           && 
+          (this.table.filters.party ? this.getSumissionInfo(element).party() === this.table.filters.party : true)
+          &&
           (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : false || element.is_current ? true : false) )
          ) {
           tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
@@ -233,7 +247,12 @@ export default {
       options.unshift({text: '', value: null})
       return options
     },
-
+    
+    sortOptionsParties () {
+      let options =  this.tableItems.map(f => { return { text: f.reporting_party, value: f.reporting_party } })
+      options.unshift({text: '', value: null})
+      return options
+    },
 
     dataReady(){ 
       if(this.submissionsVersions 
