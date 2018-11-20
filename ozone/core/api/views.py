@@ -195,6 +195,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
+    @action(detail=True, methods=['post'])
+    def call_transition(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        submission.call_transition(request.data['transition'], request.user)
+        return Response(status=status.HTTP_202_ACCEPTED)
+
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
