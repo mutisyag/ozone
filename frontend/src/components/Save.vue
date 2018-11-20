@@ -171,7 +171,6 @@ export default {
       let tabsToValidate = ['has_imports','has_exports','has_produced','has_destroyed','has_nonparty','has_emissions',]
       for(let tab of tabsToValidate){
         for(let field of this.$store.state.form.tabs[tab].form_fields){
-          console.log(field)
           if(field.validation.selected.length){
             this.invalidTabs.push(this.$store.state.form.tabs[tab].name)
             this.$store.state.form.tabs[tab].status = false
@@ -192,6 +191,10 @@ export default {
       for(let questionnaire_field of this.$store.state.form.tabs.questionaire_questions.form_fields) {
         if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
             this.submitData(questionnaire_field.name)
+        } else if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length){
+            this.$store.dispatch('removeDataFromTab',questionnaire_field.name).then( r => {
+              this.submitData(questionnaire_field.name)
+            })
         }
       }
   	},
@@ -204,9 +207,8 @@ export default {
        })
 
       post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then( (response) => {
-        console.log(response)
         }).catch((error) => {
-        console.log('here',error)
+        console.log(error)
       })
     },  
 

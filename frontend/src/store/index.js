@@ -176,6 +176,13 @@ const store = new Vuex.Store({
                 });
             }
             context.commit('addEmissionsRow', row)
+        },
+
+        removeDataFromTab(context, data) {
+          return new Promise((resolve, reject) => {
+            context.commit('resetTab',data) 
+            resolve()
+          });
         }
     },
 
@@ -254,6 +261,12 @@ const store = new Vuex.Store({
 
         tabHasBeenSaved(state, tab) {
             state.newTabs.splice(state.newTabs.indexOf(tab), 1)
+        },
+
+        // removal
+
+        resetTab(state, tab) {
+          state.form.tabs[tab].form_fields = []
         },
 
         removeField(state, data) {
