@@ -14,9 +14,15 @@
 
     </div>
     <b-button-group class="actions">
-      <Save :data="$store.state.form" :submission="submission"></Save>
-      <b-btn variant="success">
+      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="submitSubmission" variant="success">
         Submit
+      </b-btn>
+      <b-btn v-if="$store.state.available_transitions.includes('recall')"  variant="warning">
+        Recall
+      </b-btn>
+      <b-btn v-if="$store.state.available_transitions.includes('process')"  variant="primary">
+        Process
       </b-btn>
     </b-button-group>
   </div>
@@ -169,17 +175,15 @@
     </b-container>
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
+        <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+        <b-btn v-if="$store.state.available_transitions.includes('submit')"  @click="submitSubmission" variant="success">
+          Submit
+        </b-btn>
         <b-btn variant="info">
           Versions
         </b-btn>
-        <b-btn variant="danger">
+        <b-btn v-if="$store.state.available_transitions.includes('submit')"  variant="danger">
           Delete Submission
-        </b-btn>
-        <b-btn variant="primary">
-          Save
-        </b-btn>
-        <b-btn variant="success">
-          Submit
         </b-btn>
       </b-button-group>
     </Footer>
@@ -192,7 +196,7 @@ import FormTemplate from "./FormTemplate.vue";
 import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachments from "./Attachments.vue";
-import {getInstructions, getUsers} from '@/api/api.js'
+import {getInstructions, getUsers, callTransition} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 import Save from './Save'
 export default {
@@ -211,7 +215,7 @@ export default {
 
   props: {
     data: null,
-    submission: Object,
+    submission: String,
   },
 
   created() {
@@ -227,6 +231,14 @@ export default {
         this.$refs.instructions_modal.show()
       })
     },
+
+    submitSubmission(){
+      console.log(this.submission)
+      callTransition(this.submission, 'submit').then( (response) => {
+        console.log(response.data)
+      })
+    },
+
 
   },
 
@@ -260,7 +272,7 @@ export default {
       tabIndex: {
         handler: function(new_val, old_val) {
           var body = document.querySelector('body')
-          if([2,3,4,5,6].includes(new_val)) {
+          if([2,3,4,5,6].includes(new_val) && !this.$store.getters.transitionState) {
             body.classList.add('aside-menu-lg-show')
           } else {
             body.classList.remove('aside-menu-lg-show')

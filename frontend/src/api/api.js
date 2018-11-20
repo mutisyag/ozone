@@ -123,6 +123,11 @@ function getSubmission(url) {
 }
 
 
+function callTransition(url, transition) {
+  return post(`${url}call_transition/`, {transition: transition})
+}
+
+
 export { 
  apiURL,
  filesURL,
@@ -144,5 +149,6 @@ export {
  getSubmission,
  createBlend,
  getCustomBlends,
- getSubmissionsVersions
+ getSubmissionsVersions,
+ callTransition,
 };

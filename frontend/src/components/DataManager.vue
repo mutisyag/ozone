@@ -2,6 +2,7 @@
   <div>
     <tabsmanager 
     v-if="initialDataReady" 
+    :submission="submission"
     >
     </tabsmanager>
     <div v-else class="spinner">

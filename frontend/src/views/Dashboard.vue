@@ -210,6 +210,7 @@ export default {
   computed: {
     tableItems(){
       let tableFields = []
+      console.log(this.submissions)
       this.submissions.forEach( (element, index) => {
         if(
           (this.table.filters.period ? this.getSumissionInfo(element).period() === this.table.filters.period : true)

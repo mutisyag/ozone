@@ -158,7 +158,7 @@
       <p v-for="footnote in tab_info.footnotes"><small>{{footnote}}</small></p>
     </div>
 
-    <AppAside fixed>
+    <AppAside v-if="!transitionState" fixed>
       <DefaultAside :hovered="hovered" :tabName="tabName"> </DefaultAside>
     </AppAside>
 
@@ -276,15 +276,9 @@ export default {
         return false
       }
     },
-
-
     transitionState(){
-      let currentState = this.$store.state.permissions.form
-        if(this.intersect(currentState, ['edit', 'save']).length)
-          return false
-        else 
-          return true
-    }
+      return this.$store.getters.transitionState
+    },
   },
 
   methods: {

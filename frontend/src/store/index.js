@@ -7,10 +7,17 @@ import dummyTransition from '@/assets/dummyTransition.js'
 
 Vue.use(Vuex)
 
+function intersect(a, b) {
+  var setA = new Set(a);
+  var setB = new Set(b);
+  var intersection = new Set([...setA].filter(x => setB.has(x)));
+  return Array.from(intersection);
+}
 
 const store = new Vuex.Store({
     state: {
         current_submission: null,
+        available_transitions: null,
         permissions: {
             dashboard: null,
             form: null,
@@ -39,7 +46,25 @@ const store = new Vuex.Store({
             {validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected}
             : 
             null)
-      }
+      },
+
+
+        transitionState: (state) => {
+          const currentState = state.permissions.form
+          const availableTransitions = state.available_transitions
+
+          let tstate = null
+          if(intersect(currentState, ['edit', 'save']).length)
+              tstate = false
+          else 
+              tstate = true
+
+          if(!availableTransitions.includes('submit')){
+            tstate = true
+          }
+
+          return tstate
+        },
     },
 
     actions: {
@@ -61,6 +86,7 @@ const store = new Vuex.Store({
           return new Promise((resolve, reject) => {
             getSubmission(data).then( (response) => {
               context.commit('updateSubmissionData', response.data)
+              context.commit('updateAvailableTransitions', response.data.available_transitions)
               if(context.state.current_submission.article7questionnaire){
                 context.dispatch('prefillQuestionaire')
               }
@@ -200,6 +226,10 @@ const store = new Vuex.Store({
     mutations: {
 
         // initial data
+
+        updateAvailableTransitions(state,data){
+            state.available_transitions = data
+        },
 
         updateSubmissionData(state,data) {
           state.current_submission = data

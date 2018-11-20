@@ -11,7 +11,7 @@
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <div class="field-wrapper">
             <label>{{field.label}}</label>
-            <fieldGenerator :tab.sync="tabs" :field.sync="field"></fieldGenerator>
+            <fieldGenerator :disabled="$store.getters.transitionState" :tab="tabs" :field="field"></fieldGenerator>
           </div>
         </div>
       </b-card>
