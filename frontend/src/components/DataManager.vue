@@ -55,12 +55,13 @@ export default {
   created() {
     if(!this.submission) {
       this.$router.push({ name: 'Dashboard' });
+    } else {    
+      window.addEventListener('beforeunload',  this.alertUnsavedData)
+      this.$store.dispatch('getInitialData')
+      this.$store.dispatch('getSubmissionData', this.submission).then( (response) => {
+        this.prePrefill()
+      })
     }
-    window.addEventListener('beforeunload',  this.alertUnsavedData)
-    this.$store.dispatch('getInitialData')
-    this.$store.dispatch('getSubmissionData', this.submission).then( (response) => {
-      this.prePrefill()
-    })
 
   },
 

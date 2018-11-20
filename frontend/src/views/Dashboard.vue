@@ -188,7 +188,11 @@ export default {
     getPeriods().then( response => {
       let periods_temp = [];
       for(let period of response.data) {
-        periods_temp.push({value: period.id, text:period.name})
+        let start = period.start_date.split('-')[0]
+        let end = period.end_date.split('-')[0]
+        let periodDisplay = ''
+        start === end ?  periodDisplay += start : periodDisplay += start + '-' + end
+        periods_temp.push({value: period.id, text:`${period.name} (${periodDisplay})`})
       }
       this.periods = JSON.parse(JSON.stringify(periods_temp)) 
     })
@@ -291,7 +295,6 @@ export default {
           return this.obligations.find( a => { return a.value === submission.obligation }).text
         },
         period: () => {
-
           return this.periods.find(a => {return a.value === submission.reporting_period}).text
         },
         party: () => {
