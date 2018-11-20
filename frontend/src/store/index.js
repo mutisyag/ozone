@@ -31,6 +31,13 @@ const store = new Vuex.Store({
     },
 
 
+    getters: {
+      // ...
+      getValidationForCurrentTab: (state) => (tab) => {
+        return state.form.tabs[tab].form_fields.map( field => field.validation.selected ? field : null)
+      }
+    },
+
     actions: {
         prefillQuestionaire(context, data) {
             Object.keys(context.state.current_submission.article7questionnaire).forEach((element, index) => {
