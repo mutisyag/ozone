@@ -288,7 +288,7 @@ class Submission(models.Model):
             return False
         return True
 
-    def call_transition(self, trans_name):
+    def call_transition(self, trans_name, user):
         """
         Interface for calling a specific transition name on the workflow.
 
@@ -331,6 +331,7 @@ class Submission(models.Model):
             transition=trans_name,
             from_state=self._previous_state,
             to_state=self._current_state,
+            triggered_by=user
         )
 
     @staticmethod
