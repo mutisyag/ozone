@@ -1,50 +1,56 @@
 [
-    {
-        "pk": 1,
-        "model": "core.region",
-        "fields": {
-            "name": "Africa",
-            "abbr": "AFR"
-        }
+  {
+    "fields": {
+      "abbr": "AFR",
+      "name": "Africa",
+      "remark": ""
     },
-    {
-        "pk": 2,
-        "model": "core.region",
-        "fields": {
-            "name": "Asia-Pacific",
-            "abbr": "ASIA"
-        }
+    "model": "core.region",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "abbr": "ASIA",
+      "name": "Asia-Pacific",
+      "remark": ""
     },
-    {
-        "pk": 3,
-        "model": "core.region",
-        "fields": {
-            "name": "Eastern Europe",
-            "abbr": "EEUR"
-        }
+    "model": "core.region",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "abbr": "EEUR",
+      "name": "Eastern Europe",
+      "remark": ""
     },
-    {
-        "pk": 4,
-        "model": "core.region",
-        "fields": {
-            "name": "Latin America and the Caribbean",
-            "abbr": "LAC"
-        }
+    "model": "core.region",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "abbr": "LAC",
+      "name": "Latin America and the Caribbean",
+      "remark": ""
     },
-    {
-        "pk": 5,
-        "model": "core.region",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "UNK"
-        }
+    "model": "core.region",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "remark": ""
     },
-    {
-        "pk": 6,
-        "model": "core.region",
-        "fields": {
-            "name": "Western Europe and Others",
-            "abbr": "WEUR"
-        }
-    }
+    "model": "core.region",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "abbr": "WEUR",
+      "name": "Western Europe and Others",
+      "remark": ""
+    },
+    "model": "core.region",
+    "pk": 6
+  }
 ]
