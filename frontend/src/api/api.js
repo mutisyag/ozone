@@ -118,6 +118,11 @@ function getSubmissionsVersions(){
   }
 }
 
+
+function deleteSubmission(url) {
+  return remove(url)
+}
+
 function getSubmission(url) {
   return api.get(url)
 }
@@ -151,4 +156,5 @@ export {
  getCustomBlends,
  getSubmissionsVersions,
  callTransition,
+ deleteSubmission
 };

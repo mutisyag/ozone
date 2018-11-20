@@ -182,7 +182,7 @@
         <b-btn variant="info">
           Versions
         </b-btn>
-        <b-btn v-if="$store.state.available_transitions.includes('submit')"  variant="danger">
+        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="danger">
           Delete Submission
         </b-btn>
       </b-button-group>
@@ -196,7 +196,7 @@ import FormTemplate from "./FormTemplate.vue";
 import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachments from "./Attachments.vue";
-import {getInstructions, getUsers, callTransition} from '@/api/api.js'
+import {getInstructions, getUsers, callTransition, deleteSubmission} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 import Save from './Save'
 export default {
@@ -232,11 +232,12 @@ export default {
       })
     },
 
+    removeSubmission() {
+      this.$store.dispatch('removeSubmission', this.submission)
+    },
+
     submitSubmission(){
-      console.log(this.submission)
-      callTransition(this.submission, 'submit').then( (response) => {
-        console.log(response.data)
-      })
+      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'submit'})
     },
 
 

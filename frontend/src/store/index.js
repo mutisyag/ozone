@@ -48,7 +48,6 @@ const store = new Vuex.Store({
             null)
       },
 
-
         transitionState: (state) => {
           const currentState = state.permissions.form
           const availableTransitions = state.available_transitions
@@ -73,6 +72,20 @@ const store = new Vuex.Store({
                 context.commit('updateQuestionaireField', { value: context.state.current_submission.article7questionnaire[element], field: element })
             });
         },
+
+
+        doSubmissionTransition(context, data){   
+            callTransition(data.submission, data.transition).then( (response) => {
+                console.log(response.data)
+            })
+        },
+
+        removeSubmission(context, submissionUrl) {
+          deleteSubmission(submissionUrl).then((response) => {
+            console.log(response)
+          })
+        },
+
 
         getInitialData(context) {
             context.dispatch('getCountries')
@@ -160,7 +173,7 @@ const store = new Vuex.Store({
             }
         },
 
-        prefillEmissionRow(context, data) {
+        prefillEmissionsRow(context, data) {
             let row = {
                 id: {
                     selected: null,
