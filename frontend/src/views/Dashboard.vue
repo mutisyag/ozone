@@ -126,14 +126,13 @@
 
 <script>
 
-import {getSubmissions, getSubmissionsVersions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api';
+import {getSubmissions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api';
 
 export default {
   name: 'Dashboard',
   data () {
     return {
     	submissions: null,
-      submissionsVersions: null,
       periods: null,
       obligations: null,
       parties: null,
@@ -211,7 +210,7 @@ export default {
   computed: {
     tableItems(){
       let tableFields = []
-      this.submissionsVersions.forEach( (element, index) => {
+      this.submissions.forEach( (element, index) => {
         if(
           (this.table.filters.period ? this.getSumissionInfo(element).period() === this.table.filters.period : true)
           &&
@@ -235,20 +234,19 @@ export default {
     },
 
     sortOptionsPeriod () {
-      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).period() ))]
+      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).period() ))]
     },
 
     sortOptionsObligation () {
-      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).obligation() ))]
+      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).obligation() ))]
     },
     
     sortOptionsParties () {
-      return [...new Set(this.submissionsVersions.map(f => this.getSumissionInfo(f).party() ))]
+      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).party() ))]
     },
 
     dataReady(){ 
-      if(this.submissionsVersions 
-        && this.submissions 
+      if(this.submissions 
         && this.periods 
         && this.obligations 
         && this.parties 
@@ -281,10 +279,6 @@ export default {
       
       getSubmissions().then( response => {
         this.submissions = response.data
-      })
-
-      getSubmissionsVersions().then( response => {
-          this.submissionsVersions = response.data
       })
 
     },
