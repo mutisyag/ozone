@@ -199,7 +199,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def call_transition(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         submission.call_transition(request.data['transition'], request.user)
-        return Response(status=status.HTTP_202_ACCEPTED)
+        serializer = SubmissionSerializer(
+            submission,
+            many=False,
+            context={"request": request}
+        )
+        return Response(serializer.data)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
