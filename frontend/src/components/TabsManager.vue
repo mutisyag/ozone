@@ -196,7 +196,7 @@ import FormTemplate from "./FormTemplate.vue";
 import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
 import Attachments from "./Attachments.vue";
-import {getInstructions, getUsers, callTransition, deleteSubmission} from '@/api/api.js'
+import {getInstructions, getUsers} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 import Save from './Save'
 export default {
@@ -233,7 +233,9 @@ export default {
     },
 
     removeSubmission() {
-      this.$store.dispatch('removeSubmission', this.submission)
+      this.$store.dispatch('removeSubmission', this.submission).then( response => {
+        this.$router.push({ name: 'Dashboard' });
+      })
     },
 
     submitSubmission(){

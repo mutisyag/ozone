@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
+import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends,deleteSubmission} from '@/api/api.js'
 import dummyTransition from '@/assets/dummyTransition.js'
 
 Vue.use(Vuex)

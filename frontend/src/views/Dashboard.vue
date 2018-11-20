@@ -103,11 +103,18 @@
               >
                 <template slot="actions" slot-scope="row">
                     <router-link
-                        class="nav-link btn btn-primary btn-sm"
+                        class="btn btn-primary"
                         :to="{ name: 'Form', query: {submission: row.item.details.url}} "
                       >
                       Edit
                     </router-link>
+
+                    <b-btn
+                        variant="danger"
+                        @click="removeSubmission(row.item.details.url)"
+                      >
+                      Delete
+                    </b-btn>
                   </template>
               </b-table>
 
@@ -268,6 +275,11 @@ export default {
   methods: {
     addSubmission() {
       createSubmission(this.current).then( (response) => { console.log(response);this.getCurrentSubmissions()} )
+    },
+
+
+    removeSubmission(url) {
+      this.$store.dispatch('removeSubmission', url)
     },
 
     onFiltered (filteredItems) {
