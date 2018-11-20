@@ -51,7 +51,6 @@ from ..serializers import (
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
-    ListSubmissionVersionsSerializer,
 )
 
 
@@ -169,21 +168,10 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
 
-class SubmissionVersionsListViewSet(generics.ListAPIView):
-    serializer_class = ListSubmissionVersionsSerializer
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('obligation', 'party',)
-
-    def get_queryset(self):
-        current_date = datetime.now().date()
-        return Submission.objects.filter(
-            reporting_period__start_date__lte=current_date,
-            reporting_period__end_date__gte=current_date,
-        )
-
-
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
+    filter_backends = (filters.DjangoFilterBackend,)
+    filter_fields = ('obligation', 'party', 'reporting_period',)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
@@ -192,7 +180,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = ListSubmissionSerializer(
-            self.get_queryset(), many=True, context={'request': request}
+            self.filter_queryset(self.get_queryset()),
+            many=True,
+            context={"request": request},
         )
         return Response(serializer.data)
 

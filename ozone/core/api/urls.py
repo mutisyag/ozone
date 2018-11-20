@@ -137,10 +137,5 @@ urlpatterns = (
             views.GetNonPartiesViewSet.as_view(),
             name='get_non_parties',
         ),
-        path(
-            'submission-versions/',
-            views.SubmissionVersionsListViewSet.as_view(),
-            name='submission_versions',
-        )
     ]
 )

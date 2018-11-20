@@ -495,31 +495,19 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%d')
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
             ('url',)
             + CreateSubmissionSerializer.Meta.fields
-            + ('version', 'updated_at', 'available_transitions')
+            + (
+                'created_at', 'updated_at', 'created_by', 'last_edited_by',
+                'version', 'current_state', 'available_transitions', 'is_current',
+            )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
-
-
-class ListSubmissionVersionsSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='core:submission-detail',
-    )
-    created_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-    updated_at = serializers.DateTimeField(format='%Y-%m-%d %H:%M')
-
-    class Meta:
-        model = Submission
-        fields = (
-            'url', 'party', 'reporting_period', 'obligation', 'version',
-            'created_at', 'updated_at', 'created_by', 'last_edited_by',
-            'current_state', 'available_transitions', 'is_current',
-        )
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
