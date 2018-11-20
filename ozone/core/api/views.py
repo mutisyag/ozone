@@ -197,14 +197,17 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'], url_path='call-transition')
     def call_transition(self, request, pk=None):
-        submission = Submission.objects.get(pk=pk)
-        submission.call_transition(request.data['transition'], request.user)
-        serializer = SubmissionSerializer(
-            submission,
-            many=False,
-            context={"request": request}
-        )
-        return Response(serializer.data)
+        if request.data.get('transition'):
+            submission = Submission.objects.get(pk=pk)
+            submission.call_transition(request.data['transition'], request.user)
+            serializer = SubmissionSerializer(
+                submission,
+                many=False,
+                context={"request": request}
+            )
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
