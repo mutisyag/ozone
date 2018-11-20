@@ -56,6 +56,7 @@ export default {
     if(!this.submission) {
       this.$router.push({ name: 'Dashboard' });
     }
+    window.addEventListener('beforeunload',  this.alertUnsavedData)
     this.$store.dispatch('getInitialData')
     this.$store.dispatch('getSubmissionData', this.submission).then( (response) => {
       this.prePrefill()
@@ -77,6 +78,21 @@ export default {
   },
 
   methods: {
+
+    alertUnsavedData(e){
+      let tabsWithData = []
+      Object.values(this.$store.state.form.tabs).forEach( (tab,index) => {
+        [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title) 
+      })
+      if(tabsWithData.length){
+        // Cancel the event as stated by the standard.
+        e.preventDefault();
+        // Chrome requires returnValue to be set.
+        e.returnValue = '';
+        console.log(tabsWithData)
+      }
+
+    },
 
     prePrefill() {
         const form = this.$store.state.form,

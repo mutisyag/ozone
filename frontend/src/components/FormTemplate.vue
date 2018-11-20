@@ -498,7 +498,7 @@ export default {
          handler(before,after){
           if(parseInt(this.tabId) === this.tabIndex)
             if(this.tab_info.status != 'edited'){
-              this.tab_info.status = 'edited'
+              this.$store.commit('setTabStatus',{tab: this.tabName, value: 'edited'})
             }
          },
          deep: true

@@ -58,7 +58,7 @@
               </div>
 
              </template>
-            <formtemplate tabId="3" ref="has_imports" :tabIndex="tabIndex" tabName="has_imports"></formtemplate>
+            <formtemplate tabId="2" ref="has_imports" :tabIndex="tabIndex" tabName="has_imports"></formtemplate>
           </b-tab>
 
           <b-tab :title-link-class="$store.state.form.tabs.has_exports.status ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_exports.name]">
@@ -73,7 +73,7 @@
                 <i v-if="$store.state.form.tabs.has_exports.status === 'edited'" class="fa fa-edit fa-lg"></i>
               </div>
              </template>
-            <formtemplate ref="has_exports" tabId="2" :tabIndex="tabIndex"  tabName="has_exports"></formtemplate>
+            <formtemplate ref="has_exports" tabId="3" :tabIndex="tabIndex"  tabName="has_exports"></formtemplate>
           </b-tab>
 
 
