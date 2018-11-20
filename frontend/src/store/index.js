@@ -34,7 +34,11 @@ const store = new Vuex.Store({
     getters: {
       // ...
       getValidationForCurrentTab: (state) => (tab) => {
-        return state.form.tabs[tab].form_fields.map( field => field.validation.selected ? field : null)
+        return state.form.tabs[tab].form_fields.map( field => field.validation.selected 
+            ?
+            {validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected}
+            : 
+            null)
       }
     },
 
