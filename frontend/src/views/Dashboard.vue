@@ -279,7 +279,7 @@ export default {
 
 
     removeSubmission(url) {
-      this.$store.dispatch('removeSubmission', url)
+      this.$store.dispatch('removeSubmission', url).then( response => this.getCurrentSubmissions())
     },
 
     onFiltered (filteredItems) {
