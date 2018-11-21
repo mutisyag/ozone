@@ -4,7 +4,7 @@
     "pk": 1,
     "fields": {
       "name": "Article 7",
-      "description": "",
+      "description": "Data forms 1-6",
       "is_continuous": true
     }
   },
@@ -14,6 +14,33 @@
     "fields": {
       "name": "Essential and Critical uses (RAF)",
       "description": "",
+      "is_continuous": true
+    }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 3,
+    "fields": {
+      "name": "HAT Imports",
+      "description": "Data form 7",
+      "is_continuous": true
+    }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 4,
+    "fields": {
+      "name": "HAT Production",
+      "description": "Data form 8",
+      "is_continuous": true
+    }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 5,
+    "fields": {
+      "name": "Other",
+      "description": "Letters and narrative reports",
       "is_continuous": true
     }
   }
