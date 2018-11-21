@@ -233,9 +233,13 @@ export default {
     },
 
     removeSubmission() {
-      this.$store.dispatch('removeSubmission', this.submission).then( response => {
-        this.$router.push({ name: 'Dashboard' });
-      })
+
+      const r = confirm("Deleting the submission is ireversible. Are you sure ?");
+      if (r == true) {
+        this.$store.dispatch('removeSubmission', this.submission).then( response => {
+          this.$router.push({ name: 'Dashboard' });
+        })
+      }
     },
 
     submitSubmission(){

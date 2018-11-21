@@ -261,7 +261,10 @@ export default {
 
 
     removeSubmission(url) {
-      this.$store.dispatch('removeSubmission', url)
+      const r = confirm("Deleting the submission is ireversible. Are you sure ?");
+      if (r == true) {
+        this.$store.dispatch('removeSubmission', url)
+      }
     },
 
     onFiltered (filteredItems) {
