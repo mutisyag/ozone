@@ -130,8 +130,10 @@ class BlendCompositionMixin:
             # First delete all child rows (using related_name)
             self.components.all().delete()
 
-            # Then recreate
-            components = BlendComponent.objects.filter(blend=self.blend)
+            # Then recreate, skipping over substance-less components
+            components = BlendComponent.objects.filter(
+                blend=self.blend, substance__isnull=False
+            )
             for component in components:
                 # Init & populate kwargs for each blend component's save()
                 field_dictionary = dict()
