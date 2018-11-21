@@ -52,6 +52,10 @@ class Command(BaseCommand):
             'fixture': 'blend_components.json',
             'sheet': 'BlendComposition',
         },
+        'reportingperiod': {
+            'fixture': 'reportingperiods.json',
+            'sheet': 'Period',
+        },
     }
 
     OUTPUT_DIR = settings.FIXTURE_DIRS[0]
@@ -234,3 +238,10 @@ class Command(BaseCommand):
         f['percentage'] = row['Percentage']
         # f['cnumber'] = row['CNumber']
         f['substance'] = self.lookup_id('substance', 'substance_id', row['SubstID'])
+
+    def reportingperiod_map(self, f, row):
+        f['name'] = row['PeriodID']
+        f['start_date'] = row['StartDate'].date()
+        f['end_date'] = row['EndDate'].date()
+        f['description'] = row['PeriodDescr']
+        f['is_year'] = f['name'][0].isdigit()

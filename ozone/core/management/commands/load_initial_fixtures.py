@@ -17,6 +17,7 @@ class Command(BaseCommand):
                 'blend_components',
                 'languages',
                 'obligations',
+                'reportingperiods',
                 )
 
     def handle(self, *args, **options):
