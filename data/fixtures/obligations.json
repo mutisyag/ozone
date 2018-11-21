@@ -1,0 +1,20 @@
+[
+  {
+    "model": "core.obligation",
+    "pk": 1,
+    "fields": {
+      "name": "Article 7",
+      "description": "",
+      "is_continuous": true
+    }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 2,
+    "fields": {
+      "name": "Essential and Critical uses (RAF)",
+      "description": "",
+      "is_continuous": true
+    }
+  }
+]

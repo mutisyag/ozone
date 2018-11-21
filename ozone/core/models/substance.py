@@ -196,7 +196,7 @@ class BlendComponent(models.Model):
     )
 
     substance = models.ForeignKey(
-        Substance, related_name='blends', on_delete=models.PROTECT
+        Substance, null=True, related_name='blends', on_delete=models.PROTECT
     )
 
     percentage = models.FloatField(

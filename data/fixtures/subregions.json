@@ -1,164 +1,182 @@
 [
-    {
-        "pk": 1,
-        "model": "core.subregion",
-        "fields": {
-            "name": "English-Speaking",
-            "abbr": "AFE",
-            "region": 1
-        }
+  {
+    "fields": {
+      "abbr": "AFE",
+      "name": "English-Speaking",
+      "region": 1,
+      "remark": "Jeremy.Bazye@unep.org, Patrick.Salifu@unep.org,Gilbert.Bankobeza@unep.org"
     },
-    {
-        "pk": 2,
-        "model": "core.subregion",
-        "fields": {
-            "name": "French-Speaking",
-            "abbr": "AFF",
-            "region": 1
-        }
+    "model": "core.subregion",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "abbr": "AFF",
+      "name": "French-Speaking",
+      "region": 1,
+      "remark": "Jeremy.Bazye@unep.org, Yamar.Guisse@unep.org"
     },
-    {
-        "pk": 3,
-        "model": "core.subregion",
-        "fields": {
-            "name": "South East Asia and Pacific",
-            "abbr": "ASE",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "abbr": "ASE",
+      "name": "South East Asia and Pacific",
+      "region": 2,
+      "remark": "shaofeng.hu@unep.org,atul.bagai@unep.org, meg.seki@unep.org"
     },
-    {
-        "pk": 4,
-        "model": "core.subregion",
-        "fields": {
-            "name": "South Asia",
-            "abbr": "ASO",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "abbr": "ASO",
+      "name": "South Asia",
+      "region": 2,
+      "remark": "atul.bagai@unep.org, meg.seki@unep.org"
     },
-    {
-        "pk": 5,
-        "model": "core.subregion",
-        "fields": {
-            "name": "West Asia",
-            "abbr": "ASR",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "abbr": "ASR",
+      "name": "West Asia",
+      "region": 2,
+      "remark": "Abdulelah.Alwadaee@unep.org,Gilbert.Bankobeza@unep.org"
     },
-    {
-        "pk": 6,
-        "model": "core.subregion",
-        "fields": {
-            "name": "East/Central Europe Network",
-            "abbr": "ECAN",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "abbr": "ECAN",
+      "name": "East/Central Europe Network",
+      "region": 2,
+      "remark": "halvart.koppen@unep.org,Sophia.Mylona@unep.org"
     },
-    {
-        "pk": 7,
-        "model": "core.subregion",
-        "fields": {
-            "name": "East/Central Europe Network",
-            "abbr": "ECAN",
-            "region": 3
-        }
+    "model": "core.subregion",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "abbr": "ECAN",
+      "name": "East/Central Europe Network",
+      "region": 3,
+      "remark": "halvart.koppen@unep.org,Sophia.Mylona@unep.org"
     },
-    {
-        "pk": 8,
-        "model": "core.subregion",
-        "fields": {
-            "name": "East/Central Europe Network",
-            "abbr": "ECAN",
-            "region": 6
-        }
+    "model": "core.subregion",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "abbr": "ECAN",
+      "name": "East/Central Europe Network",
+      "region": 6,
+      "remark": "Turkey is in WEUR according to UN grouping."
     },
-    {
-        "pk": 9,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Caribbean",
-            "abbr": "LCA",
-            "region": 4
-        }
+    "model": "core.subregion",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "abbr": "LCA",
+      "name": "Caribbean",
+      "region": 4,
+      "remark": "Mirian.Vega@unep.org,Paul.Horwitz@unep.org,Marco.Pinzon@unep.org,Erjan.Aisabay@unep.org"
     },
-    {
-        "pk": 10,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Central",
-            "abbr": "LCE",
-            "region": 4
-        }
+    "model": "core.subregion",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "abbr": "LCE",
+      "name": "Central",
+      "region": 4,
+      "remark": "Mirian.Vega@unep.org,Paul.Horwitz@unep.org,Marco.Pinzon@unep.org,Erjan.Aisabay@unep.org"
     },
-    {
-        "pk": 11,
-        "model": "core.subregion",
-        "fields": {
-            "name": "South",
-            "abbr": "LCS",
-            "region": 4
-        }
+    "model": "core.subregion",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "abbr": "LCS",
+      "name": "South",
+      "region": 4,
+      "remark": "Mirian.Vega@unep.org,Paul.Horwitz@unep.org,Marco.Pinzon@unep.org,Erjan.Aisabay@unep.org"
     },
-    {
-        "pk": 12,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Pacific Island Countries",
-            "abbr": "PIC",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "abbr": "PIC",
+      "name": "Pacific Island Countries",
+      "region": 2,
+      "remark": "artie.dubrie@unep.org,atul.bagai@unep.org,Gilbert.Bankobeza@unep.org"
     },
-    {
-        "pk": 13,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "AFR_UNK",
-            "region": 1
-        }
+    "model": "core.subregion",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 1,
+      "remark": ""
     },
-    {
-        "pk": 14,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "ASIA_UNK",
-            "region": 2
-        }
+    "model": "core.subregion",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 2,
+      "remark": ""
     },
-    {
-        "pk": 15,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "EEUR_UNK",
-            "region": 3
-        }
+    "model": "core.subregion",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 3,
+      "remark": ""
     },
-    {
-        "pk": 16,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "LAC_UNK",
-            "region": 4
-        }
+    "model": "core.subregion",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 4,
+      "remark": ""
     },
-    {
-        "pk": 17,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "UNK_UNK",
-            "region": 5
-        }
+    "model": "core.subregion",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 5,
+      "remark": ""
     },
-    {
-        "pk": 18,
-        "model": "core.subregion",
-        "fields": {
-            "name": "Unspecified",
-            "abbr": "WEUR_UNK",
-            "region": 6
-        }
-    }
+    "model": "core.subregion",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "abbr": "UNK",
+      "name": "Unspecified",
+      "region": 6,
+      "remark": ""
+    },
+    "model": "core.subregion",
+    "pk": 18
+  }
 ]
