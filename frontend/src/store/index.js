@@ -60,6 +60,16 @@ const store = new Vuex.Store({
             null)
       },
 
+
+      getDuplicateSubmission: (state) => (data) => {
+        return state.dashboard.submissions.filter( 
+            (sub) => {
+                return sub.obligation === data.obligation 
+                && sub.party === data.party 
+                && sub.reporting_period === data.reporting_period
+            })
+      },
+
         transitionState: (state) => {
           const currentState = state.permissions.form
           const availableTransitions = state.available_transitions || []
@@ -81,12 +91,17 @@ const store = new Vuex.Store({
     actions: {
 
         addSubmission(context,data){
-            createSubmission(data).then( (response) => { 
-                context.dispatch('getCurrentSubmissions')
-                context.dispatch('setAlert', {message:'Submission Created', variant:'success'})
-            }).catch( (error) => {
-                context.dispatch('setAlert', {message:'Failed to create submission', variant:'danger'})
-            })
+            let duplicate = context.getters.getDuplicateSubmission(data)
+            if(duplicate.length) {
+                context.dispatch('setAlert', {message:'This submission already exists', variant:'danger'})
+            } else {
+                createSubmission(data).then( (response) => { 
+                    context.dispatch('getCurrentSubmissions')
+                    context.dispatch('setAlert', {message:'Submission Created', variant:'success'})
+                }).catch( (error) => {
+                    context.dispatch('setAlert', {message:'Failed to create submission', variant:'danger'})
+                })
+            }
         },
 
         getCurrentSubmissions(context){
