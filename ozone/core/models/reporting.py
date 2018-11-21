@@ -13,7 +13,6 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party
-from .substance import Substance
 from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
@@ -427,12 +426,20 @@ class Submission(models.Model):
             'party', 'reporting_period', 'obligation', 'version'
         )
 
-    def delete(self, using=None, keep_parents=False):
+    def delete(self, *args, **kwargs):
         if not self.data_changes_allowed:
             raise RuntimeError(
                 _("Submitted submissions cannot be deleted.")
             )
-        super().delete()
+        # We need to delete all related data entries before being able to
+        # delete the submission. We leave it to the interface to ask "are you
+        # sure?" to the user.
+        for related_data in self.RELATED_DATA:
+            related_qs = getattr(self, related_data).all()
+            if related_qs:
+                related_qs.delete()
+
+        super().delete(*args, **kwargs)
 
     def clean(self):
         if self.non_exempted_fields_modified() and not self.data_changes_allowed:
