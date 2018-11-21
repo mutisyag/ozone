@@ -96,7 +96,7 @@ const store = new Vuex.Store({
             const duplicate = context.getters.getDuplicateSubmission(data)
             const submissionYear = new Date(context.getters.getPeriodYear(data.reporting_period))
             if (duplicate.length) {
-                context.dispatch('setAlert', { message: 'This submission already exists', variant: 'danger' })
+                context.dispatch('setAlert', { message: 'Another submission already exists in Data Entry stage.', variant: 'danger' })
             } else if(submissionYear > new Date()) {
                 context.dispatch('setAlert', { message: 'You can\'t report for this period yet', variant: 'danger' })
             } else {
