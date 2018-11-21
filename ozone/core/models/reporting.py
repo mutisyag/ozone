@@ -460,6 +460,13 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period,
                 obligation=self.obligation
             )
+            if any([s.data_changes_allowed for s in submissions]):
+                raise ValidationError(
+                    _(
+                        "There is already a submission in Data Entry for "
+                        "this party/period/obligation combination"
+                    )
+                )
             if submissions:
                 self.version = submissions.latest('version').version + 1
 
