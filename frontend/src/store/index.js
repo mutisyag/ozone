@@ -128,16 +128,19 @@ const store = new Vuex.Store({
         },
         getDashboardPeriods(context) {
             getPeriods().then(response => {
-                let periods_temp = [];
-                let sortedPeriods = response.data.slice().sort((a, b) => { return (a.is_year && (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))) })
-                for (let period of sortedPeriods) {
+                let current_date = new Date();
+                let sortedPeriods = response.data
+                                    .filter( a => new Date(a.end_date) < current_date)
+                                    .sort((a, b) => { return (a.is_year && (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))) })
+               sortedPeriods = sortedPeriods.map( (period) => {
                     let start = period.start_date.split('-')[0]
                     let end = period.end_date.split('-')[0]
                     let periodDisplay = ''
                     start === end ? periodDisplay += start : periodDisplay += start + '-' + end
-                    periods_temp.push({ value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date})
-                }
-                context.commit('setDashboardPeriods', periods_temp)
+                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date}
+               })
+                
+                context.commit('setDashboardPeriods', sortedPeriods)
             })
         },
 
