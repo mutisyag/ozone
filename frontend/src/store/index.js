@@ -131,7 +131,14 @@ const store = new Vuex.Store({
                 let current_date = new Date();
                 let sortedPeriods = response.data
                                     .filter( a => new Date(a.end_date) < current_date)
-                                    .sort((a, b) => { return (a.is_year && (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))) })
+                                    .sort((a, b) => { 
+                                        return (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
+                                        ?
+                                        (parseInt(b.start_date.split('-')[0]) - parseInt(a.start_date.split('-')[0]))
+                                        :
+                                        (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))
+                                    })
+                                    .sort((a, b) => { return  b.is_year - a.is_year })
                sortedPeriods = sortedPeriods.map( (period) => {
                     let start = period.start_date.split('-')[0]
                     let end = period.end_date.split('-')[0]
