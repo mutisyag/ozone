@@ -1,27 +1,7 @@
 <template>
-  <span>
-    
     <b-btn @click="validation" style="border-top-right-radius: 0;border-bottom-right-radius:0" variant="outline-success">
         Save
       </b-btn>
-
-       <b-alert variant="danger"
-             dismissible
-             style="position: fixed;
-                top: 0;
-                z-index: 10000;
-                width: 100%;
-                left: 0;
-                right: 0;"
-             :show="showDismissibleAlert"
-             @dismissed="showDismissibleAlert=false"
-             >
-             <div v-if="current_duplicates" v-html="current_duplicates"></div>
-             <div v-if="errorMessage" v-html="errorMessage"></div>
-      </b-alert>
-
-  </span>
-
 </template>
 
 <script>

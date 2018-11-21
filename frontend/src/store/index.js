@@ -2,7 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends,deleteSubmission} from '@/api/api.js'
+import {fetch,getSubstances, getExportBlends, getSubmission, getCustomBlends,deleteSubmission,getSubmissions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api.js'
+
 import dummyTransition from '@/assets/dummyTransition.js'
 
 Vue.use(Vuex)
@@ -16,6 +17,17 @@ function intersect(a, b) {
 
 const store = new Vuex.Store({
     state: {
+        dashboard: {
+            submissions: null,
+            periods: null,
+            obligations: null,
+            parties: null,
+        },
+        currentAlert:{
+            message: null,
+            show: false,
+            variant: null,
+        },
         current_submission: null,
         available_transitions: null,
         permissions: {
@@ -50,7 +62,7 @@ const store = new Vuex.Store({
 
         transitionState: (state) => {
           const currentState = state.permissions.form
-          const availableTransitions = state.available_transitions
+          const availableTransitions = state.available_transitions || []
 
           let tstate = null
           if(intersect(currentState, ['edit', 'save']).length)
@@ -67,6 +79,75 @@ const store = new Vuex.Store({
     },
 
     actions: {
+
+        addSubmission(context,data){
+            createSubmission(data).then( (response) => { 
+                context.dispatch('getCurrentSubmissions')
+                context.dispatch('setAlert', {message:'Submission Created', variant:'success'})
+            }).catch( (error) => {
+                context.dispatch('setAlert', {message:'Failed to create submission', variant:'danger'})
+            })
+        },
+
+        getCurrentSubmissions(context){
+          getSubmissions().then( response => {
+            context.commit('setDashboardSubmissions', response.data)
+          })
+        },
+
+        getDashboardParties(context) {
+           getParties().then( response => {
+            let parties_temp = [];
+              for (let country of response.data) {
+                parties_temp.push({ value: country.id, text: country.name})
+              }
+              context.commit('setDashboardParties', parties_temp)
+            })
+        },
+        getDashboardPeriods(context) {
+            getPeriods().then( response => {
+              let periods_temp = [];
+              for(let period of response.data) {
+                let start = period.start_date.split('-')[0]
+                let end = period.end_date.split('-')[0]
+                let periodDisplay = ''
+                start === end ?  periodDisplay += start : periodDisplay += start + '-' + end
+                periods_temp.push({value: period.id, text:`${period.name} (${periodDisplay})`})
+              }
+              context.commit('setDashboardPeriods', periods_temp)
+            })
+        },
+
+        getDashboardObligations(context) {
+            getObligations().then( response => {
+              let obligations_temp = [];
+              for(let obligation of response.data) {
+                obligations_temp.push({value: obligation.id, text: obligation.name})
+              }
+              context.commit('setDashboardObligations', obligations_temp)
+            })
+        },
+
+
+
+
+        resetAlert(context) {
+            return new Promise((resolve, reject) => { 
+                context.commit('setCurrentAlertMessage', null)
+                context.commit('setCurrentAlertVisibility', false)
+                context.commit('setCurrentAlertVariant', null)
+                resolve()
+            });
+        },
+
+        setAlert(context,data){
+            context.dispatch('resetAlert').then(r => {
+                context.commit('setCurrentAlertMessage', data.message)
+                context.commit('setCurrentAlertVisibility', true) 
+                context.commit('setCurrentAlertVariant', data.variant)
+            })
+        },
+
         prefillQuestionaire(context, data) {
             Object.keys(context.state.current_submission.article7questionnaire).forEach((element, index) => {
                 context.commit('updateQuestionaireField', { value: context.state.current_submission.article7questionnaire[element], field: element })
@@ -82,7 +163,11 @@ const store = new Vuex.Store({
 
         removeSubmission(context, submissionUrl) {
           deleteSubmission(submissionUrl).then((response) => {
-            console.log(response)
+            context.dispatch('getCurrentSubmissions')
+            context.dispatch('setAlert', {message:'Submission deleted', variant:'success'})
+          }).catch( error => {
+            context.dispatch('getCurrentSubmissions')
+            context.dispatch('setAlert', {message:'Failed to delete submission', variant:'danger'})
           })
         },
 
@@ -237,6 +322,36 @@ const store = new Vuex.Store({
     },
 
     mutations: {
+
+        // dashboard
+
+        setDashboardParties(state,data) {
+            state.dashboard.parties = data
+        },
+        setDashboardObligations(state,data) {
+            state.dashboard.obligations = data
+        },
+        setDashboardPeriods(state,data) {
+            state.dashboard.periods = data
+        },
+        setDashboardSubmissions(state,data) {
+            state.dashboard.submissions = data
+        },
+
+
+        // alerts
+
+        setCurrentAlertMessage(state, message) {
+            state.currentAlert.message = message
+        },
+
+        setCurrentAlertVisibility(state, showState) {
+            state.currentAlert.show = showState
+        },
+
+        setCurrentAlertVariant(state, variant) {
+            state.currentAlert.variant = variant
+        },
 
         // initial data
 

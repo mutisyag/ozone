@@ -1,5 +1,6 @@
 <template>
   <div class="app">
+    <Alerts></Alerts>  
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <!-- <b-link class="navbar-brand" to="#"> -->
@@ -36,6 +37,7 @@
 
 <script>
 import nav from '@/_nav'
+import Alerts from './Alerts'
 import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
 import Header from './Header'
 
@@ -53,7 +55,8 @@ export default {
     SidebarToggler,
     SidebarHeader,
     SidebarNav,
-    SidebarMinimizer
+    SidebarMinimizer,
+    Alerts
   },
   data () {
     return {

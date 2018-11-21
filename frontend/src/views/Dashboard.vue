@@ -133,16 +133,12 @@
 
 <script>
 
-import {getSubmissions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api';
 
 export default {
   name: 'Dashboard',
   data () {
     return {
-    	submissions: null,
-      periods: null,
-      obligations: null,
-      parties: null,
+
       current: {
         obligation: null,
         reporting_period: null,
@@ -180,37 +176,10 @@ export default {
 
   created(){
    document.querySelector('body').classList.remove('aside-menu-lg-show')
-
-   this.getCurrentSubmissions()
-
-   getParties().then( response => {
-    let parties_temp = [];
-      for (let country of response.data) {
-        parties_temp.push({ value: country.id, text: country.name})
-      }
-      this.parties = JSON.parse(JSON.stringify(parties_temp))
-    })
-
-    getPeriods().then( response => {
-      let periods_temp = [];
-      for(let period of response.data) {
-        let start = period.start_date.split('-')[0]
-        let end = period.end_date.split('-')[0]
-        let periodDisplay = ''
-        start === end ?  periodDisplay += start : periodDisplay += start + '-' + end
-        periods_temp.push({value: period.id, text:`${period.name} (${periodDisplay})`})
-      }
-      this.periods = JSON.parse(JSON.stringify(periods_temp)) 
-    })
-
-    getObligations().then( response => {
-      let obligations_temp = [];
-      for(let obligation of response.data) {
-        obligations_temp.push({value: obligation.id, text: obligation.name})
-      }
-      this.obligations = JSON.parse(JSON.stringify(obligations_temp)) 
-    })
-
+   this.$store.dispatch('getDashboardParties')
+   this.$store.dispatch('getDashboardPeriods')
+   this.$store.dispatch('getDashboardObligations')
+   this.$store.dispatch('getCurrentSubmissions')
   },
 
 
@@ -263,6 +232,19 @@ export default {
       }
     },
 
+    periods(){
+      return this.$store.state.dashboard.periods
+    },
+    parties(){
+      return this.$store.state.dashboard.parties
+    },
+    obligations(){
+      return this.$store.state.dashboard.obligations
+    },
+    submissions(){
+      return this.$store.state.dashboard.submissions
+    },
+
     basicDataReady(){
       if(this.periods 
         && this.obligations 
@@ -274,12 +256,12 @@ export default {
 
   methods: {
     addSubmission() {
-      createSubmission(this.current).then( (response) => { console.log(response);this.getCurrentSubmissions()} )
+      this.$store.dispatch('addSubmission', this.current)
     },
 
 
     removeSubmission(url) {
-      this.$store.dispatch('removeSubmission', url).then( response => this.getCurrentSubmissions())
+      this.$store.dispatch('removeSubmission', url)
     },
 
     onFiltered (filteredItems) {
@@ -288,13 +270,6 @@ export default {
       this.table.currentPage = 1
     },
 
-    getCurrentSubmissions(){
-      
-      getSubmissions().then( response => {
-        this.submissions = response.data
-      })
-
-    },
 
     getSumissionInfo(submission){
       let submissionInfo = {
