@@ -187,7 +187,7 @@ class PartySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Party
-        fields = ('id', 'name', 'abbr', 'subregion')
+        fields = ('id', 'name', 'abbr', 'subregion', 'parent_party')
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
