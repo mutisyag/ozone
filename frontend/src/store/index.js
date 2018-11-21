@@ -2,17 +2,17 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import {fetch,getSubstances, getExportBlends, getSubmission, getCustomBlends,deleteSubmission,getSubmissions, getPeriods, getObligations, createSubmission, getParties} from '@/api/api.js'
+import { fetch, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
 
 import dummyTransition from '@/assets/dummyTransition.js'
 
 Vue.use(Vuex)
 
 function intersect(a, b) {
-  var setA = new Set(a);
-  var setB = new Set(b);
-  var intersection = new Set([...setA].filter(x => setB.has(x)));
-  return Array.from(intersection);
+    var setA = new Set(a);
+    var setB = new Set(b);
+    var intersection = new Set([...setA].filter(x => setB.has(x)));
+    return Array.from(intersection);
 }
 
 const store = new Vuex.Store({
@@ -23,7 +23,7 @@ const store = new Vuex.Store({
             obligations: null,
             parties: null,
         },
-        currentAlert:{
+        currentAlert: {
             message: null,
             show: false,
             variant: null,
@@ -51,95 +51,101 @@ const store = new Vuex.Store({
 
 
     getters: {
-      // ...
-      getValidationForCurrentTab: (state) => (tab) => {
-        return state.form.tabs[tab].form_fields.map( field => field.validation.selected 
-            ?
-            {validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected}
-            : 
-            null)
-      },
+        // ...
+        getValidationForCurrentTab: (state) => (tab) => {
+            return state.form.tabs[tab].form_fields.map(field => field.validation.selected ?
+                { validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected } :
+                null)
+        },
 
 
-      getDuplicateSubmission: (state) => (data) => {
-        return state.dashboard.submissions.filter( 
-            (sub) => {
-                return sub.obligation === data.obligation 
-                && sub.party === data.party 
-                && sub.reporting_period === data.reporting_period
-            })
-      },
+        getDuplicateSubmission: (state) => (data) => {
+            return state.dashboard.submissions.filter(
+                (sub) => {
+                    return sub.obligation === data.obligation &&
+                        sub.party === data.party &&
+                        sub.reporting_period === data.reporting_period
+                })
+        },
+
+        getPeriodYear: (state) => (periodId) => {
+            return state.dashboard.periods.find( (period) => { return period.value === periodId}).end_date
+        },
 
         transitionState: (state) => {
-          const currentState = state.permissions.form
-          const availableTransitions = state.available_transitions || []
+            const currentState = state.permissions.form
+            const availableTransitions = state.available_transitions || []
 
-          let tstate = null
-          if(intersect(currentState, ['edit', 'save']).length)
-              tstate = false
-          else 
-              tstate = true
+            let tstate = null
+            if (intersect(currentState, ['edit', 'save']).length)
+                tstate = false
+            else
+                tstate = true
 
-          if(!availableTransitions.includes('submit')){
-            tstate = true
-          }
+            if (!availableTransitions.includes('submit')) {
+                tstate = true
+            }
 
-          return tstate
+            return tstate
         },
     },
 
     actions: {
 
-        addSubmission(context,data){
-            let duplicate = context.getters.getDuplicateSubmission(data)
-            if(duplicate.length) {
-                context.dispatch('setAlert', {message:'This submission already exists', variant:'danger'})
+        addSubmission(context, data) {
+            const duplicate = context.getters.getDuplicateSubmission(data)
+            const submissionYear = new Date(context.getters.getPeriodYear(data.reporting_period))
+            if (duplicate.length) {
+                context.dispatch('setAlert', { message: 'This submission already exists', variant: 'danger' })
+            } else if(submissionYear > new Date()) {
+                context.dispatch('setAlert', { message: 'You can\'t report for this period yet', variant: 'danger' })
             } else {
-                createSubmission(data).then( (response) => { 
+                createSubmission(data).then((response) => {
                     context.dispatch('getCurrentSubmissions')
-                    context.dispatch('setAlert', {message:'Submission Created', variant:'success'})
-                }).catch( (error) => {
-                    context.dispatch('setAlert', {message:'Failed to create submission', variant:'danger'})
+                    context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
+                }).catch((error) => {
+                    context.dispatch('setAlert', { message: 'Failed to create submission', variant: 'danger' })
                 })
             }
         },
 
-        getCurrentSubmissions(context){
-          getSubmissions().then( response => {
-            context.commit('setDashboardSubmissions', response.data)
-          })
+        getCurrentSubmissions(context) {
+            getSubmissions().then(response => {
+                context.commit('setDashboardSubmissions', response.data)
+            })
         },
 
         getDashboardParties(context) {
-           getParties().then( response => {
-            let parties_temp = [];
-              for (let country of response.data) {
-                parties_temp.push({ value: country.id, text: country.name})
-              }
-              context.commit('setDashboardParties', parties_temp)
+            getParties().then(response => {
+                let parties_temp = [];
+                for (let country of response.data) {
+                    parties_temp.push({ value: country.id, text: country.name })
+                }
+                context.commit('setDashboardParties', parties_temp)
             })
         },
         getDashboardPeriods(context) {
-            getPeriods().then( response => {
-              let periods_temp = [];
-              for(let period of response.data) {
-                let start = period.start_date.split('-')[0]
-                let end = period.end_date.split('-')[0]
-                let periodDisplay = ''
-                start === end ?  periodDisplay += start : periodDisplay += start + '-' + end
-                periods_temp.push({value: period.id, text:`${period.name} (${periodDisplay})`})
-              }
-              context.commit('setDashboardPeriods', periods_temp)
+            getPeriods().then(response => {
+                let periods_temp = [];
+                let sortedPeriods = response.data.slice().sort((a, b) => { return (a.is_year && (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))) })
+                for (let period of sortedPeriods) {
+                    let start = period.start_date.split('-')[0]
+                    let end = period.end_date.split('-')[0]
+                    let periodDisplay = ''
+                    start === end ? periodDisplay += start : periodDisplay += start + '-' + end
+                    periods_temp.push({ value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date})
+                }
+                context.commit('setDashboardPeriods', periods_temp)
             })
         },
 
         getDashboardObligations(context) {
-            getObligations().then( response => {
-              let obligations_temp = [];
-              for(let obligation of response.data) {
-                obligations_temp.push({value: obligation.id, text: obligation.name})
-              }
-              context.commit('setDashboardObligations', obligations_temp)
+            getObligations().then(response => {
+                let obligations_temp = [];
+                for (let obligation of response.data) {
+                    obligations_temp.push({ value: obligation.id, text: obligation.name })
+                }
+                context.commit('setDashboardObligations', obligations_temp)
             })
         },
 
@@ -147,7 +153,7 @@ const store = new Vuex.Store({
 
 
         resetAlert(context) {
-            return new Promise((resolve, reject) => { 
+            return new Promise((resolve, reject) => {
                 context.commit('setCurrentAlertMessage', null)
                 context.commit('setCurrentAlertVisibility', false)
                 context.commit('setCurrentAlertVariant', null)
@@ -155,10 +161,10 @@ const store = new Vuex.Store({
             });
         },
 
-        setAlert(context,data){
+        setAlert(context, data) {
             context.dispatch('resetAlert').then(r => {
                 context.commit('setCurrentAlertMessage', data.message)
-                context.commit('setCurrentAlertVisibility', true) 
+                context.commit('setCurrentAlertVisibility', true)
                 context.commit('setCurrentAlertVariant', data.variant)
             })
         },
@@ -170,20 +176,20 @@ const store = new Vuex.Store({
         },
 
 
-        doSubmissionTransition(context, data){   
-            callTransition(data.submission, data.transition).then( (response) => {
+        doSubmissionTransition(context, data) {
+            callTransition(data.submission, data.transition).then((response) => {
                 console.log(response.data)
             })
         },
 
         removeSubmission(context, submissionUrl) {
-          deleteSubmission(submissionUrl).then((response) => {
-            context.dispatch('getCurrentSubmissions')
-            context.dispatch('setAlert', {message:'Submission deleted', variant:'success'})
-          }).catch( error => {
-            context.dispatch('getCurrentSubmissions')
-            context.dispatch('setAlert', {message:'Failed to delete submission', variant:'danger'})
-          })
+            deleteSubmission(submissionUrl).then((response) => {
+                context.dispatch('getCurrentSubmissions')
+                context.dispatch('setAlert', { message: 'Submission deleted', variant: 'success' })
+            }).catch(error => {
+                context.dispatch('getCurrentSubmissions')
+                context.dispatch('setAlert', { message: 'Failed to delete submission', variant: 'danger' })
+            })
         },
 
 
@@ -195,19 +201,19 @@ const store = new Vuex.Store({
 
 
 
-        getSubmissionData(context, data){
-          return new Promise((resolve, reject) => {
-            getSubmission(data).then( (response) => {
-              context.commit('updateSubmissionData', response.data)
-              context.commit('updateAvailableTransitions', response.data.available_transitions)
-              if(context.state.current_submission.article7questionnaire){
-                context.dispatch('prefillQuestionaire')
-              }
-              context.commit('updateFormPermissions', dummyTransition)
-              resolve()
-            })
+        getSubmissionData(context, data) {
+            return new Promise((resolve, reject) => {
+                getSubmission(data).then((response) => {
+                    context.commit('updateSubmissionData', response.data)
+                    context.commit('updateAvailableTransitions', response.data.available_transitions)
+                    if (context.state.current_submission.article7questionnaire) {
+                        context.dispatch('prefillQuestionaire')
+                    }
+                    context.commit('updateFormPermissions', dummyTransition)
+                    resolve()
+                })
 
-          });
+            });
 
         },
 
@@ -329,10 +335,10 @@ const store = new Vuex.Store({
         },
 
         removeDataFromTab(context, data) {
-          return new Promise((resolve, reject) => {
-            context.commit('resetTab',data) 
-            resolve()
-          });
+            return new Promise((resolve, reject) => {
+                context.commit('resetTab', data)
+                resolve()
+            });
         }
     },
 
@@ -340,16 +346,16 @@ const store = new Vuex.Store({
 
         // dashboard
 
-        setDashboardParties(state,data) {
+        setDashboardParties(state, data) {
             state.dashboard.parties = data
         },
-        setDashboardObligations(state,data) {
+        setDashboardObligations(state, data) {
             state.dashboard.obligations = data
         },
-        setDashboardPeriods(state,data) {
+        setDashboardPeriods(state, data) {
             state.dashboard.periods = data
         },
-        setDashboardSubmissions(state,data) {
+        setDashboardSubmissions(state, data) {
             state.dashboard.submissions = data
         },
 
@@ -370,12 +376,12 @@ const store = new Vuex.Store({
 
         // initial data
 
-        updateAvailableTransitions(state,data){
+        updateAvailableTransitions(state, data) {
             state.available_transitions = data
         },
 
-        updateSubmissionData(state,data) {
-          state.current_submission = data
+        updateSubmissionData(state, data) {
+            state.current_submission = data
         },
 
         updateCountries(state, data) {
@@ -406,7 +412,7 @@ const store = new Vuex.Store({
 
         // questionaire
         updateQuestionaireField(state, data) {
-           let currentField = store.state.form.tabs.questionaire_questions.form_fields.find( (field) => {return field.name === data.field}) 
+            let currentField = store.state.form.tabs.questionaire_questions.form_fields.find((field) => { return field.name === data.field })
             currentField && (currentField.selected = data.value)
         },
 
@@ -420,7 +426,7 @@ const store = new Vuex.Store({
         },
 
         addCreateBlendToBlendList(state, data) {
-          store.state.initialData.blends.push(data)
+            store.state.initialData.blends.push(data)
         },
 
         setTabStatus(state, data) {
@@ -450,7 +456,7 @@ const store = new Vuex.Store({
         // removal
 
         resetTab(state, tab) {
-          state.form.tabs[tab].form_fields = []
+            state.form.tabs[tab].form_fields = []
         },
 
         removeField(state, data) {
