@@ -118,7 +118,7 @@ const routerOptions = {
   linkActiveClass: 'open active',
   mode:'history',
   scrollBehavior: (to, from, savedPosition) => ({ y: 0 }),
-  base: '/',
+  base: '/reporting',
 }
 
 const router = new Router(routerOptions);
