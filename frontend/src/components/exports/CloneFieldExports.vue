@@ -59,9 +59,16 @@ export default {
       for(let country of this.selected_countries.selected) {
         let fieldExists = false
         for(let existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
-              if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
-                fieldExists = true
-                break;
+              if(current_field.substance.selected){
+                if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
+                  fieldExists = true
+                  break;
+                }
+              } else if(current_field.blend.selected) {
+                if(existing_field.blend.selected === current_field.blend.selected  && existing_field[currentTypeOfCountryField].selected === country) {
+                  fieldExists = true
+                  break;
+                }
               }
         }
         // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
