@@ -72,6 +72,7 @@ const store = new Vuex.Store({
             return state.dashboard.periods.find( (period) => { return period.value === periodId}).end_date
         },
 
+
         transitionState: (state) => {
             const currentState = state.permissions.form
             const availableTransitions = state.available_transitions || []
@@ -117,10 +118,11 @@ const store = new Vuex.Store({
 
         getDashboardParties(context) {
             getParties().then(response => {
-                let parties_temp = [];
-                for (let country of response.data) {
-                    parties_temp.push({ value: country.id, text: country.name })
-                }
+                const parties_temp = response.data
+                                        .filter( country => country.id === country.parent_party )
+                                        .map( country => {
+                                            return { value: country.id, text: country.name}                 
+                                        })
                 context.commit('setDashboardParties', parties_temp)
             })
         },
@@ -148,8 +150,6 @@ const store = new Vuex.Store({
                 context.commit('setDashboardObligations', obligations_temp)
             })
         },
-
-
 
 
         resetAlert(context) {
