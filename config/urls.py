@@ -12,7 +12,7 @@ urlpatterns = [
     # User management
 
     # Your stuff: custom urls includes go here
-    path('', serve, kwargs={'path': 'index.html'}),
+    re_path(r'^reporting/.*', serve, kwargs={'path': 'index.html'}),
     re_path(
         r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
         RedirectView.as_view(url='/static/%(path)s', permanent=False)
