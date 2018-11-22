@@ -51,6 +51,7 @@ export default {
       let current_field = JSON.parse(JSON.stringify(this.field))
       let typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
       let currentTypeOfCountryField = ''
+      let willNotAdd = []
 
       for(let type of typeOfCountryFields){
         if(current_field.hasOwnProperty(type)) currentTypeOfCountryField =  type 
@@ -62,11 +63,13 @@ export default {
               if(current_field.substance.selected){
                 if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
                   fieldExists = true
+                  willNotAdd.push(country)
                   break;
                 }
               } else if(current_field.blend.selected) {
                 if(existing_field.blend.selected === current_field.blend.selected  && existing_field[currentTypeOfCountryField].selected === country) {
                   fieldExists = true
+                  willNotAdd.push(country)
                   break;
                 }
               }
@@ -82,6 +85,8 @@ export default {
                  blendList: [current_field.blend.selected], 
                  prefillData: null
                 })
+        } else {
+              this.$store.dispatch('setAlert', { message:  `The fields for the folllowing countries: ${willNotAdd} were not added because they already exist`, variant: 'danger' })
         }
 
       }

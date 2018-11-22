@@ -28,7 +28,7 @@
              @dismissed="resetCurrentAlert"
              @dismiss-count-down="countDownChanged">
 
-             <pre v-html="$store.state.currentAlert.message"></pre>
+             <div v-html="$store.state.currentAlert.message"></div>
       <b-progress :variant="$store.state.currentAlert.variant"
                   :max="dismissSecs"
                   :value="dismissCountDown"
@@ -47,7 +47,7 @@ export default {
 
   data () {
     return {
-      dismissSecs: 5,
+      dismissSecs: 500,
       dismissCountDown: 0,
       showDismissibleAlert: false
     }
