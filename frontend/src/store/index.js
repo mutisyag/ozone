@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import { fetch, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
+import { fetch, callTransition, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
 
 import dummyTransition from '@/assets/dummyTransition.js'
 
@@ -54,9 +54,11 @@ const store = new Vuex.Store({
     getters: {
         // ...
         getValidationForCurrentTab: (state) => (tab) => {
-            return state.form.tabs[tab].form_fields.map(field => field.validation.selected ?
-                { validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected } :
-                null)
+            if(['edited',false].includes(state.form.tabs[tab].status)){
+                return state.form.tabs[tab].form_fields.map(field => field.validation.selected ?
+                    { validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected } :
+                    null)
+            }
         },
 
 
