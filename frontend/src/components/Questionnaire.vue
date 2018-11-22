@@ -1,5 +1,5 @@
 <template>
-  <div v-if="info && tabs">
+  <div v-if="info">
 
     <small>
        {{info.intro}}
@@ -11,7 +11,7 @@
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <div class="field-wrapper">
             <label>{{field.label}}</label>
-            <fieldGenerator :disabled="$store.getters.transitionState" :tab="tabs" :field="field"></fieldGenerator>
+            <fieldGenerator :fieldInfo="{index:field.name, tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field"></fieldGenerator>
           </div>
         </div>
       </b-card>
@@ -30,13 +30,13 @@ export default {
 
   props: {
     info: Object,
-    tabs: Object,
   },
 
 
   created(){
     // this.tabs.push('asd')
   },
+
 
   components: {fieldGenerator},
 
@@ -46,8 +46,6 @@ export default {
     }
   },
 
-  methods: {
-  },
 
 
 }

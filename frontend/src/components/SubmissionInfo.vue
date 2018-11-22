@@ -28,7 +28,7 @@
               <label><b>{{field.label}}</b></label>
             </b-col>
             <b-col>
-              <fieldGenerator :disabled="$store.getters.transitionState" :field.sync="field"></fieldGenerator>
+              <fieldGenerator :fieldInfo="{index:info.form_fields.indexOf(field), tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field"></fieldGenerator>
             </b-col>
           </b-row>
        

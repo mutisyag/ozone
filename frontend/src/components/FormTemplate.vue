@@ -47,11 +47,11 @@
               </span>
 
               <span v-else>
-                <fieldGenerator :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'substance'">
                   {{tab_data.display.substances[row[order].selected]}}
                   <div class="table-btn-group">
-                    <b-btn variant="info" @click="createModalData(row)">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
                       Edit
                     </b-btn>
                     <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
@@ -91,7 +91,7 @@
 
 
               <span v-else>
-                <fieldGenerator :disabled="transitionState" v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'blend'">
                   <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">
                     {{tab_data.display.blends[row[order].selected].name}} 
@@ -99,7 +99,7 @@
                   </span>
 
                   <div class="table-btn-group">
-                    <b-btn variant="info" @click="createModalData(row)">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
                       Edit
                     </b-btn>
                     <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
@@ -164,29 +164,29 @@
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
        <div v-if="modal_data" slot="modal-title">
-          <span v-if="modal_data.substance.selected">
-            {{tab_data.display.substances[modal_data.substance.selected]}}
+          <span v-if="modal_data.field.substance.selected">
+            {{tab_data.display.substances[modal_data.field.substance.selected]}}
 
           </span>
           <span v-else>
-            {{tab_data.display.blends[modal_data.blend.selected].name}}
+            {{tab_data.display.blends[modal_data.field.blend.selected].name}}
           </span>
        </div>
        <div v-if="modal_data">
-         <b-row v-if="modal_data.substance.selected">
+         <b-row v-if="modal_data.field.substance.selected">
            <b-col>
               <h6>Change substance</h6>
            </b-col>
            <b-col>
-              <multiselect class="mb-2" trackBy="value" label="text" placeholder="Select substance" v-model="modal_data.substance.selected" :options="tab_data.substances"></multiselect>
+              <multiselect class="mb-2" @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})" trackBy="value" label="text" placeholder="Select substance" :value="modal_data.field.substance.selected" :options="tab_data.substances"></multiselect>
            </b-col>
          </b-row>
           <div v-for="order in this.tab_info.modal_order">
             <b-row>
               <b-col>{{labels[order]}}</b-col>
               <b-col>
-                  <fieldGenerator :disabled="transitionState" v-if="modal_data[order].type != 'multiselect'" :field="modal_data[order]"></fieldGenerator>
-                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries" v-model="modal_data[order].selected" :options="tab_data.countryOptions"></multiselect>
+                  <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}" :disabled="transitionState" v-if="modal_data.field[order].type != 'multiselect'" :field="modal_data.field[order]"></fieldGenerator>
+                  <multiselect v-else :clear-on-select="true" :hide-selected="true" :close-on-select="true" trackBy="value" label="text" placeholder="Countries"  @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})" :value="modal_data.field[order].selected" :options="tab_data.countryOptions"></multiselect>
               </b-col>
             </b-row>
             <hr>
@@ -196,11 +196,11 @@
               <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}</b></b-col>
               <b-col>
                     {{labels['quantity']}}
-                    <fieldGenerator :disabled="transitionState" :field="modal_data[`quantity_${order}`]"></fieldGenerator>
+                    <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}" :disabled="transitionState" :field="modal_data.field[`quantity_${order}`]"></fieldGenerator>
               </b-col>
               <b-col>
                   {{labels['decision']}}
-                    <fieldGenerator :disabled="transitionState" :field="modal_data[`decision_${order}`]"></fieldGenerator>
+                    <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}" :disabled="transitionState" :field="modal_data.field[`decision_${order}`]"></fieldGenerator>
               </b-col>
             </b-row>
             <hr>
@@ -210,7 +210,7 @@
                 <h6>{{labels[comment_field]}}</h6>
              </b-col>
              <b-col lg="9">
-                <textarea class="form-control"  v-model="modal_data[comment_field].selected"></textarea>
+                <textarea class="form-control"  v-model="modal_data.field[comment_field].selected"></textarea>
              </b-col>
           </b-row>
        </div>
@@ -282,6 +282,11 @@ export default {
   },
 
   methods: {
+
+     updateFormField(value, fieldInfo){
+      this.$store.commit('updateFormField', {value: value, fieldInfo: fieldInfo})
+    },
+
     intersect(a, b) {
       var setA = new Set(a);
       var setB = new Set(b);
@@ -359,8 +364,8 @@ export default {
       }
     },
 
-    createModalData(field) {
-      this.modal_data = field
+    createModalData(field,index) {
+      this.modal_data = {field:field, index:index}
       this.$refs.edit_modal.show()
     },
 

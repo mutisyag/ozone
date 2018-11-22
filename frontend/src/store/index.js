@@ -16,6 +16,7 @@ function intersect(a, b) {
 }
 
 const store = new Vuex.Store({
+    // strict: true,
     state: {
         dashboard: {
             submissions: null,
@@ -356,7 +357,16 @@ const store = new Vuex.Store({
     },
 
     mutations: {
-
+            // data - {value:value, fieldInfo:{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}}
+        updateFormField(state,data){
+            let path;
+            data.fieldInfo.index === data.fieldInfo.field 
+            ?
+            state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
+            :
+            state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value 
+        },
+    
         // dashboard
 
         setDashboardParties(state, data) {
@@ -425,7 +435,7 @@ const store = new Vuex.Store({
 
         // questionaire
         updateQuestionaireField(state, data) {
-            let currentField = store.state.form.tabs.questionaire_questions.form_fields.find((field) => { return field.name === data.field })
+            let currentField = store.state.form.tabs.questionaire_questions.form_fields[data.field]
             currentField && (currentField.selected = data.value)
         },
 

@@ -46,7 +46,7 @@
           </b-tab>
 
           <b-tab title="Questionaire" active>
-            <intro tabId="1" :tabs="display_tabs" :info="$store.state.form.tabs.questionaire_questions"></intro>
+            <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
          
 
@@ -191,7 +191,7 @@
 </template>
 
 <script>
-import PartyInfo from "./PartyInfo.vue";
+import Questionnaire from "./Questionnaire.vue";
 import FormTemplate from "./FormTemplate.vue";
 import EmissionsTemplate from "./EmissionsTemplate.vue";
 import SubmissionInfo from "./SubmissionInfo.vue";
@@ -204,7 +204,7 @@ export default {
   name: 'TabsManager',
 
   components: {
-    intro: PartyInfo,
+    intro: Questionnaire,
     formtemplate: FormTemplate,
     emissionstemplate: EmissionsTemplate,
     subinfo: SubmissionInfo,
@@ -221,7 +221,18 @@ export default {
   created() {
   },
 
-
+  computed: {
+     display_tabs() {
+      return {
+        has_exports: this.$store.state.form.tabs.questionaire_questions.form_fields.has_exports.selected,
+        has_imports: this.$store.state.form.tabs.questionaire_questions.form_fields.has_imports.selected,
+        has_destroyed: this.$store.state.form.tabs.questionaire_questions.form_fields.has_destroyed.selected,
+        has_nonparty: this.$store.state.form.tabs.questionaire_questions.form_fields.has_nonparty.selected,
+        has_produced: this.$store.state.form.tabs.questionaire_questions.form_fields.has_produced.selected,
+        has_emissions: this.$store.state.form.tabs.questionaire_questions.form_fields.has_emissions.selected,
+      }
+    },
+  },
 
  
   methods: {
@@ -253,14 +264,6 @@ export default {
     return {
       tabIndex: 0,
       modal_data: null,
-      display_tabs: {
-        has_exports: false,
-        has_imports: false,
-        has_destroyed: false,
-        has_nonparty: false,
-        has_produced: false,
-        has_emissions: false,
-      },
       titles: [
       {title:'Submission Info'},
       {title: 'Questionaire'},

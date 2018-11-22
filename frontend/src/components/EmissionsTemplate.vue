@@ -44,7 +44,7 @@
               </span>
 
 
-              <fieldGenerator v-else :field="row[order]"></fieldGenerator>
+              <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" v-else :field="row[order]"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
 	            <i class="fa fa-close fa-lg " @click="remove_field(tab_info.form_fields, row)"></i>
@@ -70,7 +70,6 @@
 
 import fieldGenerator from "./fieldGenerator"
 import CloneFieldExports from './exports/CloneFieldExports.vue' 
-import Multiselect from 'vue-multiselect'
 
 export default {
   props: {
@@ -87,7 +86,6 @@ export default {
 
   components: {
     fieldGenerator: fieldGenerator, 
-    Multiselect, 
     clonefield: CloneFieldExports 
   },
 
@@ -108,7 +106,7 @@ export default {
     },
 
     addField(){
-      this.$store.dispatch('prefillEmissionRow')
+      this.$store.dispatch('prefillEmissionsRow')
     },
 
     expandedStatus(status) {

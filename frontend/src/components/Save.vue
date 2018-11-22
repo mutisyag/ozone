@@ -168,7 +168,7 @@ export default {
       this.errorMessage = null
       this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
-      for(let questionnaire_field of this.$store.state.form.tabs.questionaire_questions.form_fields) {
+      for(let questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
         if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
             this.submitData(questionnaire_field.name)
         } else if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length){
@@ -182,7 +182,7 @@ export default {
     submitQuestionaireData(field) {
        const current_tab = Object.values(this.$store.state.form.tabs).find( (value) => { return value.name === field} )
        let save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-       current_tab.form_fields.forEach( form_field => {
+       Object.values(current_tab.form_fields).forEach( form_field => {
         save_obj[form_field.name]  = form_field.selected
        })
 

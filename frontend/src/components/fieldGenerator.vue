@@ -1,12 +1,12 @@
 <template>
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email'">
-        <input :disabled="disabled" class="form-control"  :min="field.type === 'number' ? 0: false" :step="field.type === 'number' ? 'any' : false"  v-model="field.selected" :type="field.type" @blur="field.type === 'number' ? preventTwoDots(field.selected, field) : false"></input>
+        <input @change="updateFormField" :disabled="disabled" class="form-control"  :min="field.type === 'number' ? 0: false" :step="field.type === 'number' ? 'any' : false"  :value="field.selected" :type="field.type" @blur="field.type === 'number' ? preventTwoDots(field.selected, field) : false"></input>
     </div>
-    <b-form-radio-group :disabled="disabled" v-else-if="field.type === 'radio'" v-model="field.selected" @change="selectTabs($event,field)" :created="selectTabs(field.selected, field)" :options="field.options"></b-form-radio-group>
-    <b-form-checkbox-group :disabled="disabled" v-else-if="field.type === 'checkbox'" v-model="field.selected" :options="field.options"></b-form-checkbox-group>
-    <b-form-select :disabled="disabled" v-else-if="field.type === 'select'" v-model="field.selected" :options="field.options"></b-form-select>
-    <textarea class="form-control" v-else-if="field.type === 'textarea'" v-model="field.selected"></textarea>
+    <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
+    <!-- <b-form-checkbox-group @change="updateFormField"  :disabled="disabled" v-else-if="field.type === 'checkbox'" :checked="field.selected" :options="field.options"></b-form-checkbox-group> -->
+    <b-form-select @change="updateFormField"  :disabled="disabled" v-else-if="field.type === 'select'" :value="field.selected" :options="field.options"></b-form-select>
+    <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'" :value="field.selected"></textarea>
   </div>
 </template>
 
@@ -16,24 +16,28 @@ export default {
   name: 'fieldGenerator',
   props: {
     field: Object, 
-    tab: Object, 
     disabled: false, 
+    fieldInfo: Object,
   },
 
-  created(){
-
-  },
+  
+  // mounted(){
+    // if(this.tab) {
+      // this.$emit('updateTabState', {tab: this.fieldInfo.field, value: this.field.selected})
+    // }
+  // },
 
   methods: {
-    selectTabs(event, field) {
-      if(this.tab) {
-        if(event === true) {
-          this.tab[field.name] = true
-        } else {
-          this.tab[field.name] = false
-        }
-      }
+
+    updateFormField({ type, target }){
+      this.$store.commit('updateFormField', {value: target.value, fieldInfo: this.fieldInfo})
     },
+
+    updateFormFieldWithTabs(event){
+      this.$store.commit('updateFormField', {value: event, fieldInfo: this.fieldInfo})
+    },
+
+
     preventTwoDots(value, field) {
       if(isNaN(parseFloat(value)))
         field.selected = null
