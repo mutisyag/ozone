@@ -254,6 +254,7 @@ const store = new Vuex.Store({
             let substancesDisplay = {}
             getSubstances().then((response) => {
                 for (let group of response.data) {
+                    group.substances.sort( (a,b) => {return a.sort_order - b.sort_order})
                     for (let substance of group.substances) {
                         tempSubstances.push({ value: substance.id, text: substance.name, group: group })
                         substancesDisplay[substance.id] = substance.name
