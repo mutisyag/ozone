@@ -72,6 +72,9 @@ const store = new Vuex.Store({
             return state.dashboard.periods.find( (period) => { return period.value === periodId}).end_date
         },
 
+        checkIfBlendAlreadyEists: (state) => (blendName) => {
+            return state.initialData.blends.find( (blend) => { return blend.blend_id === blendName})
+        },
 
         transitionState: (state) => {
             const currentState = state.permissions.form

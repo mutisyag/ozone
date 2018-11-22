@@ -20,7 +20,7 @@
        <div v-if="new_blend">
           <h5>Composition</h5>
           <b-input-group prepend="Blend name">
-            <b-form-input type="text" v-model="new_blend.text"></b-form-input>
+            <b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
             <b-input-group-append>
               <b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
             </b-input-group-append>
@@ -39,7 +39,7 @@
 
       <hr>
       <b-btn v-if="selected_blends.selected" @click="addSubstance('selected')" variant="success">Add selected blends</b-btn>
-      <b-btn v-if="new_blend" @click="addSubstance('custom')" variant="success">Add custom blend</b-btn>
+      <b-btn v-if="new_blend" :disabled="!blendIsValid" @click="addSubstance('custom')" variant="success">Add custom blend</b-btn>
 
 
       <!--   <h3>Add substances</h3>
@@ -81,6 +81,10 @@ export default {
 
     display(){
       return this.$store.state.initialData.display
+    },
+
+    blendIsValid(){
+      return !this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text) && this.new_blend.composition.every((substance) => {return substance.name && substance.percent})
     },
   },
 
@@ -131,7 +135,13 @@ export default {
       }
     },
 
+    alertIfBlendExists(){
+      console.log('here')
+      if(this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) { 
+          this.$store.dispatch('setAlert', { message:  `A blend with the name ${this.new_blend.text} already exists!`, variant: 'danger' })
+      }
 
+    },
 
     addNewBlend(){
       this.selected_blends.selected = null
@@ -208,6 +218,8 @@ export default {
                    prefillData: null
                   })
 
+          }).catch((error) => {
+                this.$store.dispatch('setAlert', { message:  error.response.data, variant: 'danger' })
           })
 
           console.log(this.new_blend)

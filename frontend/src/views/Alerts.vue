@@ -28,7 +28,7 @@
              @dismissed="resetCurrentAlert"
              @dismiss-count-down="countDownChanged">
 
-             <div v-html="$store.state.currentAlert.message"></div>
+             <pre v-html="$store.state.currentAlert.message"></pre>
       <b-progress :variant="$store.state.currentAlert.variant"
                   :max="dismissSecs"
                   :value="dismissCountDown"
