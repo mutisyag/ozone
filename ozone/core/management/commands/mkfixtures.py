@@ -137,7 +137,9 @@ class Command(BaseCommand):
                 # Some not very nice assumptions made here
                 obj = data[idx-1]
                 getattr(self, model + "_postprocess")(obj['fields'], row)
-        return data
+
+        # Hack alert: Remove rows having no fields
+        return list(filter(lambda obj: len(obj['fields']) > 0, data))
 
     def region_map(self, f, row):
         f['name'] = row['RegionName']
@@ -204,8 +206,7 @@ class Command(BaseCommand):
         if annex and annex != '-':
             f['annex'] = self.lookup_id('annex', 'annex_id', annex)
             f['group'] = self.lookup_id('group', 'group_id', annex+row['Grp'])
-        # TODO: sort order
-        # f['sort_order'] = row['AnxGrpSort']
+        f['sort_order'] = row['AnxGrpSort']
         f['odp'] = row['SubstODP']
         f['gwp'] = row['SubstGWP']
         f['max_odp'] = row['MaxODP']
@@ -223,6 +224,11 @@ class Command(BaseCommand):
         f['bromines'] = row['Bromines'] or ""
 
         # TODO: Not mapped: r_code, mp_control, main_usage
+
+    def substance_postprocess(self, f, row):
+        if row['SubstID'] == 999:
+            # Remove "Other substances"
+            f.clear()
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']

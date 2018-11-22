@@ -19,6 +19,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 100
     },
     "model": "core.substance",
@@ -44,6 +45,7 @@
       "number_of_isomers": 1,
       "odp": 0.8,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 101
     },
     "model": "core.substance",
@@ -69,6 +71,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 400,
       "substance_id": 102
     },
     "model": "core.substance",
@@ -94,6 +97,7 @@
       "number_of_isomers": 1,
       "odp": 0.6,
       "remark": "",
+      "sort_order": 500,
       "substance_id": 103
     },
     "model": "core.substance",
@@ -119,6 +123,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 200,
       "substance_id": 104
     },
     "model": "core.substance",
@@ -144,6 +149,7 @@
       "number_of_isomers": 1,
       "odp": 3,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 105
     },
     "model": "core.substance",
@@ -169,6 +175,7 @@
       "number_of_isomers": 1,
       "odp": 10,
       "remark": "",
+      "sort_order": 200,
       "substance_id": 106
     },
     "model": "core.substance",
@@ -194,6 +201,7 @@
       "number_of_isomers": 1,
       "odp": 6,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 107
     },
     "model": "core.substance",
@@ -219,6 +227,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 200,
       "substance_id": 108
     },
     "model": "core.substance",
@@ -244,6 +253,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 109
     },
     "model": "core.substance",
@@ -269,6 +279,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 110
     },
     "model": "core.substance",
@@ -294,6 +305,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 400,
       "substance_id": 111
     },
     "model": "core.substance",
@@ -319,6 +331,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 500,
       "substance_id": 112
     },
     "model": "core.substance",
@@ -344,6 +357,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 600,
       "substance_id": 113
     },
     "model": "core.substance",
@@ -369,6 +383,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 700,
       "substance_id": 114
     },
     "model": "core.substance",
@@ -394,6 +409,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 800,
       "substance_id": 115
     },
     "model": "core.substance",
@@ -419,6 +435,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 900,
       "substance_id": 116
     },
     "model": "core.substance",
@@ -444,6 +461,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 1000,
       "substance_id": 117
     },
     "model": "core.substance",
@@ -469,6 +487,7 @@
       "number_of_isomers": 1,
       "odp": 1.1,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 118
     },
     "model": "core.substance",
@@ -494,6 +513,7 @@
       "number_of_isomers": 1,
       "odp": 0.1,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 119
     },
     "model": "core.substance",
@@ -519,6 +539,7 @@
       "number_of_isomers": 2,
       "odp": 0.04,
       "remark": "",
+      "sort_order": 400,
       "substance_id": 120
     },
     "model": "core.substance",
@@ -544,6 +565,7 @@
       "number_of_isomers": 3,
       "odp": 0.08,
       "remark": "",
+      "sort_order": 500,
       "substance_id": 121
     },
     "model": "core.substance",
@@ -569,6 +591,7 @@
       "number_of_isomers": 3,
       "odp": 0.06,
       "remark": "",
+      "sort_order": 600,
       "substance_id": 122
     },
     "model": "core.substance",
@@ -594,6 +617,7 @@
       "number_of_isomers": null,
       "odp": 0.02,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 700,
       "substance_id": 123
     },
     "model": "core.substance",
@@ -619,6 +643,7 @@
       "number_of_isomers": 2,
       "odp": 0.04,
       "remark": "",
+      "sort_order": 800,
       "substance_id": 124
     },
     "model": "core.substance",
@@ -644,6 +669,7 @@
       "number_of_isomers": null,
       "odp": 0.022,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 900,
       "substance_id": 125
     },
     "model": "core.substance",
@@ -669,6 +695,7 @@
       "number_of_isomers": 3,
       "odp": 0.05,
       "remark": "",
+      "sort_order": 1000,
       "substance_id": 126
     },
     "model": "core.substance",
@@ -694,6 +721,7 @@
       "number_of_isomers": 4,
       "odp": 0.05,
       "remark": "",
+      "sort_order": 1100,
       "substance_id": 127
     },
     "model": "core.substance",
@@ -719,6 +747,7 @@
       "number_of_isomers": 3,
       "odp": 0.06,
       "remark": "",
+      "sort_order": 1200,
       "substance_id": 128
     },
     "model": "core.substance",
@@ -744,6 +773,7 @@
       "number_of_isomers": 3,
       "odp": 0.07,
       "remark": "",
+      "sort_order": 1300,
       "substance_id": 129
     },
     "model": "core.substance",
@@ -769,6 +799,7 @@
       "number_of_isomers": null,
       "odp": 0.11,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 1400,
       "substance_id": 130
     },
     "model": "core.substance",
@@ -794,6 +825,7 @@
       "number_of_isomers": 3,
       "odp": 0.07,
       "remark": "",
+      "sort_order": 1500,
       "substance_id": 131
     },
     "model": "core.substance",
@@ -819,6 +851,7 @@
       "number_of_isomers": null,
       "odp": 0.065,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 1600,
       "substance_id": 132
     },
     "model": "core.substance",
@@ -844,6 +877,7 @@
       "number_of_isomers": 2,
       "odp": 0.005,
       "remark": "",
+      "sort_order": 1700,
       "substance_id": 133
     },
     "model": "core.substance",
@@ -869,6 +903,7 @@
       "number_of_isomers": 1,
       "odp": 0.04,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 100,
       "substance_id": 134
     },
     "model": "core.substance",
@@ -894,6 +929,7 @@
       "number_of_isomers": 1,
       "odp": 0.055,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 200,
       "substance_id": 135
     },
     "model": "core.substance",
@@ -919,6 +955,7 @@
       "number_of_isomers": 5,
       "odp": 0.07,
       "remark": "",
+      "sort_order": 1800,
       "substance_id": 136
     },
     "model": "core.substance",
@@ -944,6 +981,7 @@
       "number_of_isomers": 9,
       "odp": 0.09,
       "remark": "",
+      "sort_order": 1900,
       "substance_id": 137
     },
     "model": "core.substance",
@@ -969,6 +1007,7 @@
       "number_of_isomers": 12,
       "odp": 0.08,
       "remark": "",
+      "sort_order": 2000,
       "substance_id": 138
     },
     "model": "core.substance",
@@ -994,6 +1033,7 @@
       "number_of_isomers": 12,
       "odp": 0.09,
       "remark": "",
+      "sort_order": 2100,
       "substance_id": 139
     },
     "model": "core.substance",
@@ -1019,6 +1059,7 @@
       "number_of_isomers": 9,
       "odp": 0.07,
       "remark": "",
+      "sort_order": 2200,
       "substance_id": 140
     },
     "model": "core.substance",
@@ -1044,6 +1085,7 @@
       "number_of_isomers": null,
       "odp": 0.025,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 2300,
       "substance_id": 141
     },
     "model": "core.substance",
@@ -1069,6 +1111,7 @@
       "number_of_isomers": null,
       "odp": 0.033,
       "remark": "** Identifies the most commercially viable substances with ODP values listed against them to be used for the purposes of the Protocol.",
+      "sort_order": 2400,
       "substance_id": 142
     },
     "model": "core.substance",
@@ -1094,6 +1137,7 @@
       "number_of_isomers": 5,
       "odp": 0.1,
       "remark": "",
+      "sort_order": 2500,
       "substance_id": 143
     },
     "model": "core.substance",
@@ -1119,6 +1163,7 @@
       "number_of_isomers": 9,
       "odp": 0.09,
       "remark": "",
+      "sort_order": 2600,
       "substance_id": 144
     },
     "model": "core.substance",
@@ -1144,6 +1189,7 @@
       "number_of_isomers": 16,
       "odp": 0.1,
       "remark": "",
+      "sort_order": 2700,
       "substance_id": 145
     },
     "model": "core.substance",
@@ -1169,6 +1215,7 @@
       "number_of_isomers": 18,
       "odp": 0.23,
       "remark": "",
+      "sort_order": 2800,
       "substance_id": 146
     },
     "model": "core.substance",
@@ -1194,6 +1241,7 @@
       "number_of_isomers": 16,
       "odp": 0.28,
       "remark": "",
+      "sort_order": 2900,
       "substance_id": 147
     },
     "model": "core.substance",
@@ -1219,6 +1267,7 @@
       "number_of_isomers": 9,
       "odp": 0.52,
       "remark": "",
+      "sort_order": 3000,
       "substance_id": 148
     },
     "model": "core.substance",
@@ -1244,6 +1293,7 @@
       "number_of_isomers": 12,
       "odp": 0.09,
       "remark": "",
+      "sort_order": 3100,
       "substance_id": 149
     },
     "model": "core.substance",
@@ -1269,6 +1319,7 @@
       "number_of_isomers": 18,
       "odp": 0.13,
       "remark": "",
+      "sort_order": 3200,
       "substance_id": 150
     },
     "model": "core.substance",
@@ -1294,6 +1345,7 @@
       "number_of_isomers": 18,
       "odp": 0.12,
       "remark": "",
+      "sort_order": 3300,
       "substance_id": 151
     },
     "model": "core.substance",
@@ -1319,6 +1371,7 @@
       "number_of_isomers": 12,
       "odp": 0.14,
       "remark": "",
+      "sort_order": 3400,
       "substance_id": 152
     },
     "model": "core.substance",
@@ -1344,6 +1397,7 @@
       "number_of_isomers": 12,
       "odp": 0.01,
       "remark": "",
+      "sort_order": 3500,
       "substance_id": 153
     },
     "model": "core.substance",
@@ -1369,6 +1423,7 @@
       "number_of_isomers": 16,
       "odp": 0.04,
       "remark": "",
+      "sort_order": 3600,
       "substance_id": 154
     },
     "model": "core.substance",
@@ -1394,6 +1449,7 @@
       "number_of_isomers": 12,
       "odp": 0.03,
       "remark": "",
+      "sort_order": 3700,
       "substance_id": 155
     },
     "model": "core.substance",
@@ -1419,6 +1475,7 @@
       "number_of_isomers": 9,
       "odp": 0.02,
       "remark": "",
+      "sort_order": 3800,
       "substance_id": 156
     },
     "model": "core.substance",
@@ -1444,6 +1501,7 @@
       "number_of_isomers": 9,
       "odp": 0.02,
       "remark": "",
+      "sort_order": 3900,
       "substance_id": 157
     },
     "model": "core.substance",
@@ -1469,6 +1527,7 @@
       "number_of_isomers": 5,
       "odp": 0.03,
       "remark": "",
+      "sort_order": 4000,
       "substance_id": 158
     },
     "model": "core.substance",
@@ -1494,6 +1553,7 @@
       "number_of_isomers": 1,
       "odp": 0.02,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 159
     },
     "model": "core.substance",
@@ -1519,6 +1579,7 @@
       "number_of_isomers": 4,
       "odp": 1.5,
       "remark": "",
+      "sort_order": 900,
       "substance_id": 160
     },
     "model": "core.substance",
@@ -1544,6 +1605,7 @@
       "number_of_isomers": 3,
       "odp": 1.6,
       "remark": "",
+      "sort_order": 1000,
       "substance_id": 161
     },
     "model": "core.substance",
@@ -1569,6 +1631,7 @@
       "number_of_isomers": 3,
       "odp": 1.1,
       "remark": "",
+      "sort_order": 800,
       "substance_id": 162
     },
     "model": "core.substance",
@@ -1594,6 +1657,7 @@
       "number_of_isomers": 3,
       "odp": 1.1,
       "remark": "",
+      "sort_order": 1200,
       "substance_id": 163
     },
     "model": "core.substance",
@@ -1619,6 +1683,7 @@
       "number_of_isomers": 3,
       "odp": 1.7,
       "remark": "",
+      "sort_order": 1100,
       "substance_id": 164
     },
     "model": "core.substance",
@@ -1644,6 +1709,7 @@
       "number_of_isomers": 2,
       "odp": 0.1,
       "remark": "",
+      "sort_order": 1300,
       "substance_id": 165
     },
     "model": "core.substance",
@@ -1669,6 +1735,7 @@
       "number_of_isomers": 3,
       "odp": 1.8,
       "remark": "",
+      "sort_order": 500,
       "substance_id": 166
     },
     "model": "core.substance",
@@ -1694,6 +1761,7 @@
       "number_of_isomers": 3,
       "odp": 1.6,
       "remark": "",
+      "sort_order": 600,
       "substance_id": 167
     },
     "model": "core.substance",
@@ -1719,6 +1787,7 @@
       "number_of_isomers": 2,
       "odp": 1.2,
       "remark": "",
+      "sort_order": 700,
       "substance_id": 168
     },
     "model": "core.substance",
@@ -1744,6 +1813,7 @@
       "number_of_isomers": 2,
       "odp": 0.8,
       "remark": "",
+      "sort_order": 400,
       "substance_id": 169
     },
     "model": "core.substance",
@@ -1769,6 +1839,7 @@
       "number_of_isomers": 16,
       "odp": 2.1,
       "remark": "",
+      "sort_order": 2100,
       "substance_id": 170
     },
     "model": "core.substance",
@@ -1794,6 +1865,7 @@
       "number_of_isomers": 18,
       "odp": 5.6,
       "remark": "",
+      "sort_order": 2200,
       "substance_id": 171
     },
     "model": "core.substance",
@@ -1819,6 +1891,7 @@
       "number_of_isomers": 16,
       "odp": 7.5,
       "remark": "",
+      "sort_order": 2300,
       "substance_id": 172
     },
     "model": "core.substance",
@@ -1844,6 +1917,7 @@
       "number_of_isomers": 8,
       "odp": 1.4,
       "remark": "",
+      "sort_order": 2400,
       "substance_id": 173
     },
     "model": "core.substance",
@@ -1869,6 +1943,7 @@
       "number_of_isomers": 9,
       "odp": 1.9,
       "remark": "",
+      "sort_order": 2000,
       "substance_id": 174
     },
     "model": "core.substance",
@@ -1894,6 +1969,7 @@
       "number_of_isomers": 18,
       "odp": 3.1,
       "remark": "",
+      "sort_order": 2600,
       "substance_id": 175
     },
     "model": "core.substance",
@@ -1919,6 +1995,7 @@
       "number_of_isomers": 18,
       "odp": 2.5,
       "remark": "",
+      "sort_order": 2700,
       "substance_id": 176
     },
     "model": "core.substance",
@@ -1944,6 +2021,7 @@
       "number_of_isomers": 12,
       "odp": 4.4,
       "remark": "",
+      "sort_order": 2800,
       "substance_id": 177
     },
     "model": "core.substance",
@@ -1969,6 +2047,7 @@
       "number_of_isomers": 12,
       "odp": 1.9,
       "remark": "",
+      "sort_order": 2500,
       "substance_id": 178
     },
     "model": "core.substance",
@@ -1994,6 +2073,7 @@
       "number_of_isomers": 16,
       "odp": 1,
       "remark": "",
+      "sort_order": 3000,
       "substance_id": 179
     },
     "model": "core.substance",
@@ -2019,6 +2099,7 @@
       "number_of_isomers": 12,
       "odp": 0.8,
       "remark": "",
+      "sort_order": 3100,
       "substance_id": 180
     },
     "model": "core.substance",
@@ -2044,6 +2125,7 @@
       "number_of_isomers": 12,
       "odp": 0.3,
       "remark": "",
+      "sort_order": 2900,
       "substance_id": 181
     },
     "model": "core.substance",
@@ -2069,6 +2151,7 @@
       "number_of_isomers": 9,
       "odp": 0.8,
       "remark": "",
+      "sort_order": 3300,
       "substance_id": 182
     },
     "model": "core.substance",
@@ -2094,6 +2177,7 @@
       "number_of_isomers": 9,
       "odp": 0.4,
       "remark": "",
+      "sort_order": 3200,
       "substance_id": 183
     },
     "model": "core.substance",
@@ -2119,6 +2203,7 @@
       "number_of_isomers": 5,
       "odp": 0.7,
       "remark": "",
+      "sort_order": 3400,
       "substance_id": 184
     },
     "model": "core.substance",
@@ -2144,6 +2229,7 @@
       "number_of_isomers": 9,
       "odp": 1.9,
       "remark": "",
+      "sort_order": 1500,
       "substance_id": 185
     },
     "model": "core.substance",
@@ -2169,6 +2255,7 @@
       "number_of_isomers": 12,
       "odp": 1.8,
       "remark": "",
+      "sort_order": 1600,
       "substance_id": 186
     },
     "model": "core.substance",
@@ -2194,6 +2281,7 @@
       "number_of_isomers": 12,
       "odp": 2.2,
       "remark": "",
+      "sort_order": 1700,
       "substance_id": 187
     },
     "model": "core.substance",
@@ -2219,6 +2307,7 @@
       "number_of_isomers": 9,
       "odp": 2,
       "remark": "",
+      "sort_order": 1800,
       "substance_id": 188
     },
     "model": "core.substance",
@@ -2244,6 +2333,7 @@
       "number_of_isomers": 5,
       "odp": 3.3,
       "remark": "",
+      "sort_order": 1900,
       "substance_id": 189
     },
     "model": "core.substance",
@@ -2269,6 +2359,7 @@
       "number_of_isomers": 5,
       "odp": 1.5,
       "remark": "",
+      "sort_order": 1400,
       "substance_id": 190
     },
     "model": "core.substance",
@@ -2294,6 +2385,7 @@
       "number_of_isomers": 1,
       "odp": 0.73,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 191
     },
     "model": "core.substance",
@@ -2319,6 +2411,7 @@
       "number_of_isomers": 1,
       "odp": 1,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 192
     },
     "model": "core.substance",
@@ -2344,6 +2437,7 @@
       "number_of_isomers": 1,
       "odp": 0.74,
       "remark": "Default",
+      "sort_order": 200,
       "substance_id": 193
     },
     "model": "core.substance",
@@ -2369,6 +2463,7 @@
       "number_of_isomers": 1,
       "odp": 0.6,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 194
     },
     "model": "core.substance",
@@ -2394,6 +2489,7 @@
       "number_of_isomers": 1,
       "odp": 0.12,
       "remark": "BCM",
+      "sort_order": 100,
       "substance_id": 195
     },
     "model": "core.substance",
@@ -2419,6 +2515,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1300,
       "substance_id": 1250
     },
     "model": "core.substance",
@@ -2444,6 +2541,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 100,
       "substance_id": 1340
     },
     "model": "core.substance",
@@ -2469,6 +2567,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 200,
       "substance_id": 1341
     },
     "model": "core.substance",
@@ -2494,6 +2593,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 300,
       "substance_id": 1430
     },
     "model": "core.substance",
@@ -2519,6 +2619,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1400,
       "substance_id": 1431
     },
     "model": "core.substance",
@@ -2544,6 +2645,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1600,
       "substance_id": 1520
     },
     "model": "core.substance",
@@ -2569,6 +2671,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1700,
       "substance_id": 1521
     },
     "model": "core.substance",
@@ -2594,6 +2697,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 600,
       "substance_id": 2275
     },
     "model": "core.substance",
@@ -2619,6 +2723,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 2000,
       "substance_id": 2300
     },
     "model": "core.substance",
@@ -2644,6 +2749,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 700,
       "substance_id": 2363
     },
     "model": "core.substance",
@@ -2669,6 +2775,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 800,
       "substance_id": 2365
     },
     "model": "core.substance",
@@ -2694,6 +2801,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 900,
       "substance_id": 2366
     },
     "model": "core.substance",
@@ -2719,6 +2827,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1000,
       "substance_id": 2453
     },
     "model": "core.substance",
@@ -2744,6 +2853,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 400,
       "substance_id": 2456
     },
     "model": "core.substance",
@@ -2769,6 +2879,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1200,
       "substance_id": 3200
     },
     "model": "core.substance",
@@ -2794,6 +2905,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 500,
       "substance_id": 3659
     },
     "model": "core.substance",
@@ -2819,6 +2931,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1500,
       "substance_id": 4100
     },
     "model": "core.substance",
@@ -2844,6 +2957,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
+      "sort_order": 1100,
       "substance_id": 4310
     },
     "model": "core.substance",
