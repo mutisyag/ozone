@@ -5,7 +5,7 @@
     "fields": {
       "name": "Article 7",
       "description": "Data forms 1-6",
-      "is_continuous": true
+      "has_reporting_periods": true
     }
   },
   {
@@ -14,7 +14,7 @@
     "fields": {
       "name": "Essential and Critical uses (RAF)",
       "description": "",
-      "is_continuous": true
+      "has_reporting_periods": true
     }
   },
   {
@@ -23,7 +23,7 @@
     "fields": {
       "name": "HAT Imports",
       "description": "Data form 7",
-      "is_continuous": true
+      "has_reporting_periods": true
     }
   },
   {
@@ -32,7 +32,7 @@
     "fields": {
       "name": "HAT Production",
       "description": "Data form 8",
-      "is_continuous": true
+      "has_reporting_periods": true
     }
   },
   {
@@ -41,7 +41,7 @@
     "fields": {
       "name": "Other",
       "description": "Letters and narrative reports",
-      "is_continuous": true
+      "has_reporting_periods": true
     }
   }
 ]
