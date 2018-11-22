@@ -213,7 +213,7 @@ class BlendComponentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BlendComponent
-        fields = ('substance', 'substance_name', 'percentage')
+        fields = ('substance', 'substance_name', 'component_name', 'percentage')
 
 
 class BlendSerializer(serializers.ModelSerializer):

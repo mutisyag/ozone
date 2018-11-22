@@ -2,6 +2,8 @@
   {
     "fields": {
       "blend_id": 10,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.53,
       "substance": 36
     },
@@ -11,6 +13,8 @@
   {
     "fields": {
       "blend_id": 10,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.13,
       "substance": 104
     },
@@ -20,6 +24,8 @@
   {
     "fields": {
       "blend_id": 10,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.34,
       "substance": 26
     },
@@ -29,6 +35,8 @@
   {
     "fields": {
       "blend_id": 11,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.61,
       "substance": 36
     },
@@ -38,6 +46,8 @@
   {
     "fields": {
       "blend_id": 11,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.11,
       "substance": 104
     },
@@ -47,6 +57,8 @@
   {
     "fields": {
       "blend_id": 11,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.28,
       "substance": 26
     },
@@ -56,6 +68,8 @@
   {
     "fields": {
       "blend_id": 12,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.33,
       "substance": 36
     },
@@ -65,6 +79,8 @@
   {
     "fields": {
       "blend_id": 12,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.15,
       "substance": 104
     },
@@ -74,6 +90,8 @@
   {
     "fields": {
       "blend_id": 12,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.52,
       "substance": 26
     },
@@ -83,6 +101,8 @@
   {
     "fields": {
       "blend_id": 13,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.6,
       "substance": 98
     },
@@ -92,6 +112,8 @@
   {
     "fields": {
       "blend_id": 13,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.02,
       "substance": null
     },
@@ -101,6 +123,8 @@
   {
     "fields": {
       "blend_id": 13,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.38,
       "substance": 36
     },
@@ -110,6 +134,8 @@
   {
     "fields": {
       "blend_id": 14,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.38,
       "substance": 98
     },
@@ -119,6 +145,8 @@
   {
     "fields": {
       "blend_id": 14,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.02,
       "substance": null
     },
@@ -128,6 +156,8 @@
   {
     "fields": {
       "blend_id": 14,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
     },
@@ -137,6 +167,8 @@
   {
     "fields": {
       "blend_id": 15,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.05,
       "substance": null
     },
@@ -146,6 +178,8 @@
   {
     "fields": {
       "blend_id": 15,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.75,
       "substance": 36
     },
@@ -155,6 +189,8 @@
   {
     "fields": {
       "blend_id": 15,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.2,
       "substance": null
     },
@@ -164,6 +200,8 @@
   {
     "fields": {
       "blend_id": 16,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.05,
       "substance": null
     },
@@ -173,6 +211,8 @@
   {
     "fields": {
       "blend_id": 16,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.56,
       "substance": 36
     },
@@ -182,6 +222,8 @@
   {
     "fields": {
       "blend_id": 16,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.39,
       "substance": null
     },
@@ -191,6 +233,8 @@
   {
     "fields": {
       "blend_id": 17,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.44,
       "substance": 98
     },
@@ -200,6 +244,8 @@
   {
     "fields": {
       "blend_id": 17,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.52,
       "substance": 102
     },
@@ -209,6 +255,8 @@
   {
     "fields": {
       "blend_id": 17,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.04,
       "substance": 100
     },
@@ -218,6 +266,8 @@
   {
     "fields": {
       "blend_id": 19,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.55,
       "substance": 36
     },
@@ -227,6 +277,8 @@
   {
     "fields": {
       "blend_id": 19,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.04,
       "substance": null
     },
@@ -236,6 +288,8 @@
   {
     "fields": {
       "blend_id": 19,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.41,
       "substance": 33
     },
@@ -245,6 +299,8 @@
   {
     "fields": {
       "blend_id": 20,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.2,
       "substance": 112
     },
@@ -254,6 +310,8 @@
   {
     "fields": {
       "blend_id": 20,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.4,
       "substance": 98
     },
@@ -263,6 +321,8 @@
   {
     "fields": {
       "blend_id": 20,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.4,
       "substance": 100
     },
@@ -272,6 +332,8 @@
   {
     "fields": {
       "blend_id": 21,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.1,
       "substance": 112
     },
@@ -281,6 +343,8 @@
   {
     "fields": {
       "blend_id": 21,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.7,
       "substance": 98
     },
@@ -290,6 +354,8 @@
   {
     "fields": {
       "blend_id": 21,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.2,
       "substance": 100
     },
@@ -299,6 +365,8 @@
   {
     "fields": {
       "blend_id": 22,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.23,
       "substance": 112
     },
@@ -308,6 +376,8 @@
   {
     "fields": {
       "blend_id": 22,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.25,
       "substance": 98
     },
@@ -317,6 +387,8 @@
   {
     "fields": {
       "blend_id": 22,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.52,
       "substance": 100
     },
@@ -326,6 +398,8 @@
   {
     "fields": {
       "blend_id": 23,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.15,
       "substance": 112
     },
@@ -335,6 +409,8 @@
   {
     "fields": {
       "blend_id": 23,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.15,
       "substance": 98
     },
@@ -344,6 +420,8 @@
   {
     "fields": {
       "blend_id": 23,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.7,
       "substance": 100
     },
@@ -353,6 +431,8 @@
   {
     "fields": {
       "blend_id": 24,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.25,
       "substance": 112
     },
@@ -362,6 +442,8 @@
   {
     "fields": {
       "blend_id": 24,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.15,
       "substance": 98
     },
@@ -371,6 +453,8 @@
   {
     "fields": {
       "blend_id": 24,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.6,
       "substance": 100
     },
@@ -380,6 +464,8 @@
   {
     "fields": {
       "blend_id": 25,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.3,
       "substance": 112
     },
@@ -389,6 +475,8 @@
   {
     "fields": {
       "blend_id": 25,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.3,
       "substance": 98
     },
@@ -398,6 +486,8 @@
   {
     "fields": {
       "blend_id": 25,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.4,
       "substance": 100
     },
@@ -407,6 +497,8 @@
   {
     "fields": {
       "blend_id": 26,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.025,
       "substance": 112
     },
@@ -416,6 +508,8 @@
   {
     "fields": {
       "blend_id": 26,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.025,
       "substance": 98
     },
@@ -425,6 +519,8 @@
   {
     "fields": {
       "blend_id": 26,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.95,
       "substance": 100
     },
@@ -434,6 +530,8 @@
   {
     "fields": {
       "blend_id": 27,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.07,
       "substance": 98
     },
@@ -443,6 +541,8 @@
   {
     "fields": {
       "blend_id": 27,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.46,
       "substance": 102
     },
@@ -452,6 +552,8 @@
   {
     "fields": {
       "blend_id": 27,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.47,
       "substance": 36
     },
@@ -461,6 +563,8 @@
   {
     "fields": {
       "blend_id": 28,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
     },
@@ -470,6 +574,8 @@
   {
     "fields": {
       "blend_id": 28,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.25,
       "substance": 26
     },
@@ -479,6 +585,8 @@
   {
     "fields": {
       "blend_id": 28,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.15,
       "substance": 33
     },
@@ -488,6 +596,8 @@
   {
     "fields": {
       "blend_id": 29,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.65,
       "substance": 36
     },
@@ -497,6 +607,8 @@
   {
     "fields": {
       "blend_id": 29,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.25,
       "substance": 26
     },
@@ -506,6 +618,8 @@
   {
     "fields": {
       "blend_id": 29,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.1,
       "substance": 33
     },
@@ -515,6 +629,8 @@
   {
     "fields": {
       "blend_id": 30,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.5,
       "substance": 112
     },
@@ -524,6 +640,8 @@
   {
     "fields": {
       "blend_id": 30,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.5,
       "substance": 98
     },
@@ -533,6 +651,8 @@
   {
     "fields": {
       "blend_id": 31,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.45,
       "substance": 112
     },
@@ -542,6 +662,8 @@
   {
     "fields": {
       "blend_id": 31,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.55,
       "substance": 98
     },
@@ -551,6 +673,8 @@
   {
     "fields": {
       "blend_id": 32,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.015,
       "substance": null
     },
@@ -560,6 +684,8 @@
   {
     "fields": {
       "blend_id": 32,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.875,
       "substance": 36
     },
@@ -569,6 +695,8 @@
   {
     "fields": {
       "blend_id": 32,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.11,
       "substance": 104
     },
@@ -578,6 +706,8 @@
   {
     "fields": {
       "blend_id": 33,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.03,
       "substance": null
     },
@@ -587,6 +717,8 @@
   {
     "fields": {
       "blend_id": 33,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.94,
       "substance": 36
     },
@@ -596,6 +728,8 @@
   {
     "fields": {
       "blend_id": 33,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.03,
       "substance": 104
     },
@@ -605,6 +739,8 @@
   {
     "fields": {
       "blend_id": 34,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.7,
       "substance": 36
     },
@@ -614,6 +750,8 @@
   {
     "fields": {
       "blend_id": 34,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.05,
       "substance": null
     },
@@ -623,6 +761,8 @@
   {
     "fields": {
       "blend_id": 34,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.25,
       "substance": 33
     },
@@ -632,6 +772,8 @@
   {
     "fields": {
       "blend_id": 35,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.09,
       "substance": null
     },
@@ -641,6 +783,8 @@
   {
     "fields": {
       "blend_id": 35,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.88,
       "substance": 100
     },
@@ -650,6 +794,8 @@
   {
     "fields": {
       "blend_id": 35,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.03,
       "substance": null
     },
@@ -659,6 +805,8 @@
   {
     "fields": {
       "blend_id": 36,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.51,
       "substance": 36
     },
@@ -668,6 +816,8 @@
   {
     "fields": {
       "blend_id": 36,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.285,
       "substance": 26
     },
@@ -677,6 +827,8 @@
   {
     "fields": {
       "blend_id": 36,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.04,
       "substance": null
     },
@@ -686,6 +838,8 @@
   {
     "fields": {
       "blend_id": 36,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.165,
       "substance": 33
     },
@@ -695,6 +849,8 @@
   {
     "fields": {
       "blend_id": 37,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.5,
       "substance": 36
     },
@@ -704,6 +860,8 @@
   {
     "fields": {
       "blend_id": 37,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.39,
       "substance": 26
     },
@@ -713,6 +871,8 @@
   {
     "fields": {
       "blend_id": 37,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.015,
       "substance": null
     },
@@ -722,6 +882,8 @@
   {
     "fields": {
       "blend_id": 37,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.095,
       "substance": 33
     },
@@ -731,6 +893,8 @@
   {
     "fields": {
       "blend_id": 38,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.82,
       "substance": 36
     },
@@ -740,6 +904,8 @@
   {
     "fields": {
       "blend_id": 38,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.18,
       "substance": 104
     },
@@ -749,6 +915,8 @@
   {
     "fields": {
       "blend_id": 39,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.25,
       "substance": 36
     },
@@ -758,6 +926,8 @@
   {
     "fields": {
       "blend_id": 39,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.75,
       "substance": 104
     },
@@ -767,6 +937,8 @@
   {
     "fields": {
       "blend_id": 40,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.59,
       "substance": 100
     },
@@ -776,6 +948,8 @@
   {
     "fields": {
       "blend_id": 40,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.395,
       "substance": 26
     },
@@ -785,6 +959,8 @@
   {
     "fields": {
       "blend_id": 40,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.015,
       "substance": null
     },
@@ -794,6 +970,8 @@
   {
     "fields": {
       "blend_id": 41,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.466,
       "substance": 98
     },
@@ -803,6 +981,8 @@
   {
     "fields": {
       "blend_id": 41,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.5,
       "substance": 100
     },
@@ -812,6 +992,8 @@
   {
     "fields": {
       "blend_id": 41,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.034,
       "substance": null
     },
@@ -821,6 +1003,8 @@
   {
     "fields": {
       "blend_id": 42,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.79,
       "substance": 98
     },
@@ -830,6 +1014,8 @@
   {
     "fields": {
       "blend_id": 42,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.183,
       "substance": 100
     },
@@ -839,6 +1025,8 @@
   {
     "fields": {
       "blend_id": 42,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.027,
       "substance": null
     },
@@ -848,6 +1036,8 @@
   {
     "fields": {
       "blend_id": 43,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.195,
       "substance": 98
     },
@@ -857,6 +1047,8 @@
   {
     "fields": {
       "blend_id": 43,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.788,
       "substance": 100
     },
@@ -866,6 +1058,8 @@
   {
     "fields": {
       "blend_id": 43,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.017,
       "substance": null
     },
@@ -875,6 +1069,8 @@
   {
     "fields": {
       "blend_id": 44,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.015,
       "substance": null
     },
@@ -884,6 +1080,8 @@
   {
     "fields": {
       "blend_id": 44,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.96,
       "substance": 36
     },
@@ -893,6 +1091,8 @@
   {
     "fields": {
       "blend_id": 44,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.025,
       "substance": 104
     },
@@ -902,6 +1102,8 @@
   {
     "fields": {
       "blend_id": 45,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.77,
       "substance": 98
     },
@@ -911,6 +1113,8 @@
   {
     "fields": {
       "blend_id": 45,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.19,
       "substance": 100
     },
@@ -920,6 +1124,8 @@
   {
     "fields": {
       "blend_id": 45,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.04,
       "substance": null
     },
@@ -929,6 +1135,8 @@
   {
     "fields": {
       "blend_id": 46,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.485,
       "substance": 98
     },
@@ -938,6 +1146,8 @@
   {
     "fields": {
       "blend_id": 46,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.48,
       "substance": 100
     },
@@ -947,6 +1157,8 @@
   {
     "fields": {
       "blend_id": 46,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.035,
       "substance": null
     },
@@ -956,6 +1168,8 @@
   {
     "fields": {
       "blend_id": 47,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.88,
       "substance": 100
     },
@@ -965,6 +1179,8 @@
   {
     "fields": {
       "blend_id": 47,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.12,
       "substance": 33
     },
@@ -974,6 +1190,8 @@
   {
     "fields": {
       "blend_id": 48,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.58,
       "substance": 98
     },
@@ -983,6 +1201,8 @@
   {
     "fields": {
       "blend_id": 48,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.42,
       "substance": 100
     },
@@ -992,6 +1212,8 @@
   {
     "fields": {
       "blend_id": 49,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.85,
       "substance": 98
     },
@@ -1001,6 +1223,8 @@
   {
     "fields": {
       "blend_id": 49,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.15,
       "substance": 100
     },
@@ -1010,6 +1234,8 @@
   {
     "fields": {
       "blend_id": 50,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.851,
       "substance": 98
     },
@@ -1019,6 +1245,8 @@
   {
     "fields": {
       "blend_id": 50,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.115,
       "substance": 100
     },
@@ -1028,6 +1256,8 @@
   {
     "fields": {
       "blend_id": 50,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.034,
       "substance": null
     },
@@ -1037,6 +1267,8 @@
   {
     "fields": {
       "blend_id": 51,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.55,
       "substance": 98
     },
@@ -1046,6 +1278,8 @@
   {
     "fields": {
       "blend_id": 51,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.42,
       "substance": 100
     },
@@ -1055,6 +1289,8 @@
   {
     "fields": {
       "blend_id": 51,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.03,
       "substance": null
     },
@@ -1064,6 +1300,8 @@
   {
     "fields": {
       "blend_id": 52,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.82,
       "substance": 98
     },
@@ -1073,6 +1311,8 @@
   {
     "fields": {
       "blend_id": 52,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.15,
       "substance": 100
     },
@@ -1082,6 +1322,8 @@
   {
     "fields": {
       "blend_id": 52,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.03,
       "substance": null
     },
@@ -1091,6 +1333,8 @@
   {
     "fields": {
       "blend_id": 53,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.651,
       "substance": 98
     },
@@ -1100,6 +1344,8 @@
   {
     "fields": {
       "blend_id": 53,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.315,
       "substance": 100
     },
@@ -1109,6 +1355,8 @@
   {
     "fields": {
       "blend_id": 53,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.034,
       "substance": null
     },
@@ -1118,6 +1366,8 @@
   {
     "fields": {
       "blend_id": 54,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.58,
       "substance": 98
     },
@@ -1127,6 +1377,8 @@
   {
     "fields": {
       "blend_id": 54,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.393,
       "substance": 100
     },
@@ -1136,6 +1388,8 @@
   {
     "fields": {
       "blend_id": 54,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.027,
       "substance": null
     },
@@ -1145,6 +1399,8 @@
   {
     "fields": {
       "blend_id": 55,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.525,
       "substance": 100
     },
@@ -1154,6 +1410,8 @@
   {
     "fields": {
       "blend_id": 55,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.475,
       "substance": 105
     },
@@ -1163,6 +1421,8 @@
   {
     "fields": {
       "blend_id": 56,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.505,
       "substance": 98
     },
@@ -1172,6 +1432,8 @@
   {
     "fields": {
       "blend_id": 56,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.47,
       "substance": 100
     },
@@ -1181,6 +1443,8 @@
   {
     "fields": {
       "blend_id": 56,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.009,
       "substance": null
     },
@@ -1190,6 +1454,8 @@
   {
     "fields": {
       "blend_id": 56,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.01,
       "substance": null
     },
@@ -1199,6 +1465,8 @@
   {
     "fields": {
       "blend_id": 56,
+      "cnumber": "601",
+      "component_name": "HC-601a",
       "percentage": 0.006,
       "substance": null
     },
@@ -1208,6 +1476,8 @@
   {
     "fields": {
       "blend_id": 57,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.185,
       "substance": 112
     },
@@ -1217,6 +1487,8 @@
   {
     "fields": {
       "blend_id": 57,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.695,
       "substance": 100
     },
@@ -1226,6 +1498,8 @@
   {
     "fields": {
       "blend_id": 57,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.12,
       "substance": 105
     },
@@ -1235,6 +1509,8 @@
   {
     "fields": {
       "blend_id": 58,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.051,
       "substance": 98
     },
@@ -1244,6 +1520,8 @@
   {
     "fields": {
       "blend_id": 58,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.93,
       "substance": 100
     },
@@ -1253,6 +1531,8 @@
   {
     "fields": {
       "blend_id": 58,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.013,
       "substance": null
     },
@@ -1262,6 +1542,8 @@
   {
     "fields": {
       "blend_id": 58,
+      "cnumber": "601",
+      "component_name": "HC-601a",
       "percentage": 0.006,
       "substance": null
     },
@@ -1271,6 +1553,8 @@
   {
     "fields": {
       "blend_id": 59,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.15,
       "substance": 112
     },
@@ -1280,6 +1564,8 @@
   {
     "fields": {
       "blend_id": 59,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.25,
       "substance": 98
     },
@@ -1289,6 +1575,8 @@
   {
     "fields": {
       "blend_id": 59,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.1,
       "substance": 102
     },
@@ -1298,6 +1586,8 @@
   {
     "fields": {
       "blend_id": 59,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.5,
       "substance": 100
     },
@@ -1307,6 +1597,8 @@
   {
     "fields": {
       "blend_id": 60,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.775,
       "substance": 98
     },
@@ -1316,6 +1608,8 @@
   {
     "fields": {
       "blend_id": 60,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.2,
       "substance": 102
     },
@@ -1325,6 +1619,8 @@
   {
     "fields": {
       "blend_id": 60,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.006,
       "substance": null
     },
@@ -1334,6 +1630,8 @@
   {
     "fields": {
       "blend_id": 60,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.019,
       "substance": null
     },
@@ -1343,6 +1641,8 @@
   {
     "fields": {
       "blend_id": 61,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.6,
       "substance": null
     },
@@ -1352,6 +1652,8 @@
   {
     "fields": {
       "blend_id": 61,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.1,
       "substance": 104
     },
@@ -1361,6 +1663,8 @@
   {
     "fields": {
       "blend_id": 61,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.3,
       "substance": null
     },
@@ -1370,6 +1674,8 @@
   {
     "fields": {
       "blend_id": 62,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.76,
       "substance": 104
     },
@@ -1379,6 +1685,8 @@
   {
     "fields": {
       "blend_id": 62,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.24,
       "substance": null
     },
@@ -1388,6 +1696,8 @@
   {
     "fields": {
       "blend_id": 63,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.71,
       "substance": null
     },
@@ -1397,6 +1707,8 @@
   {
     "fields": {
       "blend_id": 63,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.29,
       "substance": 104
     },
@@ -1406,6 +1718,8 @@
   {
     "fields": {
       "blend_id": 64,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.8,
       "substance": null
     },
@@ -1415,6 +1729,8 @@
   {
     "fields": {
       "blend_id": 64,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.2,
       "substance": null
     },
@@ -1424,6 +1740,8 @@
   {
     "fields": {
       "blend_id": 65,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.3,
       "substance": null
     },
@@ -1433,6 +1751,8 @@
   {
     "fields": {
       "blend_id": 65,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.7,
       "substance": null
     },
@@ -1442,6 +1762,8 @@
   {
     "fields": {
       "blend_id": 66,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.05,
       "substance": null
     },
@@ -1451,6 +1773,8 @@
   {
     "fields": {
       "blend_id": 66,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.95,
       "substance": null
     },
@@ -1460,6 +1784,8 @@
   {
     "fields": {
       "blend_id": 67,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.25,
       "substance": null
     },
@@ -1469,6 +1795,8 @@
   {
     "fields": {
       "blend_id": 67,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.75,
       "substance": null
     },
@@ -1478,6 +1806,8 @@
   {
     "fields": {
       "blend_id": 68,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.632,
       "substance": 98
     },
@@ -1487,6 +1817,8 @@
   {
     "fields": {
       "blend_id": 68,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.18,
       "substance": 102
     },
@@ -1496,6 +1828,8 @@
   {
     "fields": {
       "blend_id": 68,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.16,
       "substance": 100
     },
@@ -1505,6 +1839,8 @@
   {
     "fields": {
       "blend_id": 68,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.028,
       "substance": null
     },
@@ -1514,6 +1850,8 @@
   {
     "fields": {
       "blend_id": 69,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.8,
       "substance": null
     },
@@ -1523,6 +1861,8 @@
   {
     "fields": {
       "blend_id": 69,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.2,
       "substance": 104
     },
@@ -1532,6 +1872,8 @@
   {
     "fields": {
       "blend_id": 70,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.56,
       "substance": null
     },
@@ -1541,6 +1883,8 @@
   {
     "fields": {
       "blend_id": 70,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.44,
       "substance": null
     },
@@ -1550,6 +1894,8 @@
   {
     "fields": {
       "blend_id": 71,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.52,
       "substance": null
     },
@@ -1559,6 +1905,8 @@
   {
     "fields": {
       "blend_id": 71,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.48,
       "substance": null
     },
@@ -1568,6 +1916,8 @@
   {
     "fields": {
       "blend_id": 72,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.195,
       "substance": 98
     },
@@ -1577,6 +1927,8 @@
   {
     "fields": {
       "blend_id": 72,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.785,
       "substance": 100
     },
@@ -1586,6 +1938,8 @@
   {
     "fields": {
       "blend_id": 72,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.014,
       "substance": null
     },
@@ -1595,6 +1949,8 @@
   {
     "fields": {
       "blend_id": 72,
+      "cnumber": "601",
+      "component_name": "HC-601",
       "percentage": 0.006,
       "substance": null
     },
@@ -1604,6 +1960,8 @@
   {
     "fields": {
       "blend_id": 73,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.085,
       "substance": 112
     },
@@ -1613,6 +1971,8 @@
   {
     "fields": {
       "blend_id": 73,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.45,
       "substance": 98
     },
@@ -1622,6 +1982,8 @@
   {
     "fields": {
       "blend_id": 73,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.442,
       "substance": 100
     },
@@ -1631,6 +1993,8 @@
   {
     "fields": {
       "blend_id": 73,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.017,
       "substance": null
     },
@@ -1640,6 +2004,8 @@
   {
     "fields": {
       "blend_id": 73,
+      "cnumber": "601",
+      "component_name": "HC-601a",
       "percentage": 0.006,
       "substance": null
     },
@@ -1649,6 +2015,8 @@
   {
     "fields": {
       "blend_id": 74,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.5,
       "substance": 112
     },
@@ -1658,6 +2026,8 @@
   {
     "fields": {
       "blend_id": 74,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.47,
       "substance": 98
     },
@@ -1667,6 +2037,8 @@
   {
     "fields": {
       "blend_id": 74,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.03,
       "substance": null
     },
@@ -1676,6 +2048,8 @@
   {
     "fields": {
       "blend_id": 75,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.006,
       "substance": null
     },
@@ -1685,6 +2059,8 @@
   {
     "fields": {
       "blend_id": 75,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.016,
       "substance": 100
     },
@@ -1694,6 +2070,8 @@
   {
     "fields": {
       "blend_id": 75,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.978,
       "substance": 104
     },
@@ -1703,6 +2081,8 @@
   {
     "fields": {
       "blend_id": 76,
+      "cnumber": "170",
+      "component_name": "HC-170",
       "percentage": 0.031,
       "substance": null
     },
@@ -1712,6 +2092,8 @@
   {
     "fields": {
       "blend_id": 76,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.548,
       "substance": null
     },
@@ -1721,6 +2103,8 @@
   {
     "fields": {
       "blend_id": 76,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.06,
       "substance": null
     },
@@ -1730,6 +2114,8 @@
   {
     "fields": {
       "blend_id": 76,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.361,
       "substance": null
     },
@@ -1739,6 +2125,8 @@
   {
     "fields": {
       "blend_id": 77,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.31,
       "substance": 112
     },
@@ -1748,6 +2136,8 @@
   {
     "fields": {
       "blend_id": 77,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.31,
       "substance": 98
     },
@@ -1757,6 +2147,8 @@
   {
     "fields": {
       "blend_id": 77,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.3,
       "substance": 100
     },
@@ -1766,6 +2158,8 @@
   {
     "fields": {
       "blend_id": 77,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.03,
       "substance": 104
     },
@@ -1775,6 +2169,8 @@
   {
     "fields": {
       "blend_id": 77,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.05,
       "substance": 105
     },
@@ -1784,6 +2180,8 @@
   {
     "fields": {
       "blend_id": 78,
+      "cnumber": "1270",
+      "component_name": "HO-1270",
       "percentage": 0.55,
       "substance": null
     },
@@ -1793,6 +2191,8 @@
   {
     "fields": {
       "blend_id": 78,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.4,
       "substance": null
     },
@@ -1802,6 +2202,8 @@
   {
     "fields": {
       "blend_id": 78,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.05,
       "substance": null
     },
@@ -1811,6 +2213,8 @@
   {
     "fields": {
       "blend_id": 79,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.12,
       "substance": 112
     },
@@ -1820,6 +2224,8 @@
   {
     "fields": {
       "blend_id": 79,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.05,
       "substance": 104
     },
@@ -1829,6 +2235,8 @@
   {
     "fields": {
       "blend_id": 79,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.83,
       "substance": null
     },
@@ -1838,6 +2246,8 @@
   {
     "fields": {
       "blend_id": 80,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.415,
       "substance": 112
     },
@@ -1847,6 +2257,8 @@
   {
     "fields": {
       "blend_id": 80,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.485,
       "substance": null
     },
@@ -1856,6 +2268,8 @@
   {
     "fields": {
       "blend_id": 80,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.1,
       "substance": 104
     },
@@ -1865,6 +2279,8 @@
   {
     "fields": {
       "blend_id": 81,
+      "cnumber": "744",
+      "component_name": "R-744",
       "percentage": 0.06,
       "substance": null
     },
@@ -1874,6 +2290,8 @@
   {
     "fields": {
       "blend_id": 81,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.09,
       "substance": 100
     },
@@ -1883,6 +2301,8 @@
   {
     "fields": {
       "blend_id": 81,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.85,
       "substance": null
     },
@@ -1892,6 +2312,8 @@
   {
     "fields": {
       "blend_id": 82,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.68,
       "substance": 112
     },
@@ -1901,6 +2323,8 @@
   {
     "fields": {
       "blend_id": 82,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.29,
       "substance": null
     },
@@ -1910,6 +2334,8 @@
   {
     "fields": {
       "blend_id": 82,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.03,
       "substance": null
     },
@@ -1919,6 +2345,8 @@
   {
     "fields": {
       "blend_id": 83,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.68,
       "substance": 112
     },
@@ -1928,6 +2356,8 @@
   {
     "fields": {
       "blend_id": 83,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.035,
       "substance": 98
     },
@@ -1937,6 +2367,8 @@
   {
     "fields": {
       "blend_id": 83,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.285,
       "substance": null
     },
@@ -1946,6 +2378,8 @@
   {
     "fields": {
       "blend_id": 84,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.68,
       "substance": 112
     },
@@ -1955,6 +2389,8 @@
   {
     "fields": {
       "blend_id": 84,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.08,
       "substance": 98
     },
@@ -1964,6 +2400,8 @@
   {
     "fields": {
       "blend_id": 84,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.24,
       "substance": null
     },
@@ -1973,6 +2411,8 @@
   {
     "fields": {
       "blend_id": 85,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.26,
       "substance": 112
     },
@@ -1982,6 +2422,8 @@
   {
     "fields": {
       "blend_id": 85,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.26,
       "substance": 98
     },
@@ -1991,6 +2433,8 @@
   {
     "fields": {
       "blend_id": 85,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.2,
       "substance": null
     },
@@ -2000,6 +2444,8 @@
   {
     "fields": {
       "blend_id": 85,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.21,
       "substance": 100
     },
@@ -2009,6 +2455,8 @@
   {
     "fields": {
       "blend_id": 85,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.07,
       "substance": null
     },
@@ -2018,6 +2466,8 @@
   {
     "fields": {
       "blend_id": 86,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.243,
       "substance": 112
     },
@@ -2027,6 +2477,8 @@
   {
     "fields": {
       "blend_id": 86,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.247,
       "substance": 98
     },
@@ -2036,6 +2488,8 @@
   {
     "fields": {
       "blend_id": 86,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.253,
       "substance": null
     },
@@ -2045,6 +2499,8 @@
   {
     "fields": {
       "blend_id": 86,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.257,
       "substance": 100
     },
@@ -2054,6 +2510,8 @@
   {
     "fields": {
       "blend_id": 87,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.252,
       "substance": 112
     },
@@ -2063,6 +2521,8 @@
   {
     "fields": {
       "blend_id": 87,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.243,
       "substance": 98
     },
@@ -2072,6 +2532,8 @@
   {
     "fields": {
       "blend_id": 87,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.232,
       "substance": null
     },
@@ -2081,6 +2543,8 @@
   {
     "fields": {
       "blend_id": 87,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.273,
       "substance": 100
     },
@@ -2090,6 +2554,8 @@
   {
     "fields": {
       "blend_id": 88,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.2,
       "substance": 112
     },
@@ -2099,6 +2565,8 @@
   {
     "fields": {
       "blend_id": 88,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.2,
       "substance": 98
     },
@@ -2108,6 +2576,8 @@
   {
     "fields": {
       "blend_id": 88,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.31,
       "substance": null
     },
@@ -2117,6 +2587,8 @@
   {
     "fields": {
       "blend_id": 88,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.29,
       "substance": 100
     },
@@ -2126,6 +2598,8 @@
   {
     "fields": {
       "blend_id": 89,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.58,
       "substance": null
     },
@@ -2135,6 +2609,8 @@
   {
     "fields": {
       "blend_id": 89,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.42,
       "substance": 100
     },
@@ -2144,6 +2620,8 @@
   {
     "fields": {
       "blend_id": 90,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.898,
       "substance": null
     },
@@ -2153,6 +2631,8 @@
   {
     "fields": {
       "blend_id": 90,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.102,
       "substance": 100
     },
@@ -2162,6 +2642,8 @@
   {
     "fields": {
       "blend_id": 91,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.888,
       "substance": null
     },
@@ -2171,6 +2653,8 @@
   {
     "fields": {
       "blend_id": 91,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.112,
       "substance": 100
     },
@@ -2180,6 +2664,8 @@
   {
     "fields": {
       "blend_id": 92,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.3,
       "substance": null
     },
@@ -2189,6 +2675,8 @@
   {
     "fields": {
       "blend_id": 92,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.11,
       "substance": 112
     },
@@ -2198,6 +2686,8 @@
   {
     "fields": {
       "blend_id": 92,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.59,
       "substance": 98
     },
@@ -2207,6 +2697,8 @@
   {
     "fields": {
       "blend_id": 93,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.67,
       "substance": 112
     },
@@ -2216,6 +2708,8 @@
   {
     "fields": {
       "blend_id": 93,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.07,
       "substance": 98
     },
@@ -2225,6 +2719,8 @@
   {
     "fields": {
       "blend_id": 93,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.26,
       "substance": null
     },
@@ -2234,6 +2730,8 @@
   {
     "fields": {
       "blend_id": 94,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.125,
       "substance": 112
     },
@@ -2243,6 +2741,8 @@
   {
     "fields": {
       "blend_id": 94,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.61,
       "substance": 98
     },
@@ -2252,6 +2752,8 @@
   {
     "fields": {
       "blend_id": 94,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.265,
       "substance": null
     },
@@ -2261,6 +2763,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.2,
       "substance": 112
     },
@@ -2270,6 +2774,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.2,
       "substance": 98
     },
@@ -2279,6 +2785,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.538,
       "substance": 100
     },
@@ -2288,6 +2796,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.05,
       "substance": 105
     },
@@ -2297,6 +2807,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "600",
+      "component_name": "HC-600",
       "percentage": 0.006,
       "substance": null
     },
@@ -2306,6 +2818,8 @@
   {
     "fields": {
       "blend_id": 95,
+      "cnumber": "601",
+      "component_name": "HC-601a",
       "percentage": 0.006,
       "substance": null
     },
@@ -2315,6 +2829,8 @@
   {
     "fields": {
       "blend_id": 96,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.35,
       "substance": 112
     },
@@ -2324,6 +2840,8 @@
   {
     "fields": {
       "blend_id": 96,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.65,
       "substance": null
     },
@@ -2333,6 +2851,8 @@
   {
     "fields": {
       "blend_id": 97,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.689,
       "substance": 112
     },
@@ -2342,6 +2862,8 @@
   {
     "fields": {
       "blend_id": 97,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.311,
       "substance": null
     },
@@ -2351,6 +2873,8 @@
   {
     "fields": {
       "blend_id": 98,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.215,
       "substance": 112
     },
@@ -2360,6 +2884,8 @@
   {
     "fields": {
       "blend_id": 98,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.785,
       "substance": null
     },
@@ -2369,6 +2895,8 @@
   {
     "fields": {
       "blend_id": 99,
+      "cnumber": "744",
+      "component_name": "R-744",
       "percentage": 0.03,
       "substance": null
     },
@@ -2378,6 +2906,8 @@
   {
     "fields": {
       "blend_id": 99,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.215,
       "substance": 112
     },
@@ -2387,6 +2917,8 @@
   {
     "fields": {
       "blend_id": 99,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.755,
       "substance": null
     },
@@ -2396,6 +2928,8 @@
   {
     "fields": {
       "blend_id": 100,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.06,
       "substance": 112
     },
@@ -2405,6 +2939,8 @@
   {
     "fields": {
       "blend_id": 100,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.45,
       "substance": 100
     },
@@ -2414,6 +2950,8 @@
   {
     "fields": {
       "blend_id": 100,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.49,
       "substance": null
     },
@@ -2423,6 +2961,8 @@
   {
     "fields": {
       "blend_id": 101,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.18,
       "substance": 112
     },
@@ -2432,6 +2972,8 @@
   {
     "fields": {
       "blend_id": 101,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.7,
       "substance": null
     },
@@ -2441,6 +2983,8 @@
   {
     "fields": {
       "blend_id": 101,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.12,
       "substance": 104
     },
@@ -2450,6 +2994,8 @@
   {
     "fields": {
       "blend_id": 102,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.205,
       "substance": 112
     },
@@ -2459,6 +3005,8 @@
   {
     "fields": {
       "blend_id": 102,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.04,
       "substance": 98
     },
@@ -2468,6 +3016,8 @@
   {
     "fields": {
       "blend_id": 102,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.614,
       "substance": 100
     },
@@ -2477,6 +3027,8 @@
   {
     "fields": {
       "blend_id": 102,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.135,
       "substance": 105
     },
@@ -2486,6 +3038,8 @@
   {
     "fields": {
       "blend_id": 102,
+      "cnumber": "236",
+      "component_name": "HFC-236fa",
       "percentage": 0.006,
       "substance": 109
     },
@@ -2495,6 +3049,8 @@
   {
     "fields": {
       "blend_id": 103,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.68,
       "substance": 112
     },
@@ -2504,6 +3060,8 @@
   {
     "fields": {
       "blend_id": 103,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.26,
       "substance": null
     },
@@ -2513,6 +3071,8 @@
   {
     "fields": {
       "blend_id": 103,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.06,
       "substance": null
     },
@@ -2522,6 +3082,8 @@
   {
     "fields": {
       "blend_id": 104,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.21,
       "substance": 112
     },
@@ -2531,6 +3093,8 @@
   {
     "fields": {
       "blend_id": 104,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.69,
       "substance": null
     },
@@ -2540,6 +3104,8 @@
   {
     "fields": {
       "blend_id": 104,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.1,
       "substance": null
     },
@@ -2549,6 +3115,8 @@
   {
     "fields": {
       "blend_id": 105,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.12,
       "substance": 112
     },
@@ -2558,6 +3126,8 @@
   {
     "fields": {
       "blend_id": 105,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.52,
       "substance": 98
     },
@@ -2567,6 +3137,8 @@
   {
     "fields": {
       "blend_id": 105,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.14,
       "substance": 100
     },
@@ -2576,6 +3148,8 @@
   {
     "fields": {
       "blend_id": 105,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.22,
       "substance": null
     },
@@ -2585,6 +3159,8 @@
   {
     "fields": {
       "blend_id": 106,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.28,
       "substance": 112
     },
@@ -2594,6 +3170,8 @@
   {
     "fields": {
       "blend_id": 106,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.25,
       "substance": 98
     },
@@ -2603,6 +3181,8 @@
   {
     "fields": {
       "blend_id": 106,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.2,
       "substance": 100
     },
@@ -2612,6 +3192,8 @@
   {
     "fields": {
       "blend_id": 106,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.27,
       "substance": null
     },
@@ -2621,6 +3203,8 @@
   {
     "fields": {
       "blend_id": 107,
+      "cnumber": "12",
+      "component_name": "CFC-12",
       "percentage": 0.738,
       "substance": 5
     },
@@ -2630,6 +3214,8 @@
   {
     "fields": {
       "blend_id": 107,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.262,
       "substance": 104
     },
@@ -2639,6 +3225,8 @@
   {
     "fields": {
       "blend_id": 108,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.75,
       "substance": 36
     },
@@ -2648,6 +3236,8 @@
   {
     "fields": {
       "blend_id": 108,
+      "cnumber": "12",
+      "component_name": "CFC-12",
       "percentage": 0.25,
       "substance": 5
     },
@@ -2657,6 +3247,8 @@
   {
     "fields": {
       "blend_id": 109,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.488,
       "substance": 36
     },
@@ -2666,6 +3258,8 @@
   {
     "fields": {
       "blend_id": 109,
+      "cnumber": "115",
+      "component_name": "CFC-115",
       "percentage": 0.512,
       "substance": 4
     },
@@ -2675,6 +3269,8 @@
   {
     "fields": {
       "blend_id": 110,
+      "cnumber": "23",
+      "component_name": "HFC-23",
       "percentage": 0.401,
       "substance": 106
     },
@@ -2684,6 +3280,8 @@
   {
     "fields": {
       "blend_id": 110,
+      "cnumber": "13",
+      "component_name": "CFC-13",
       "percentage": 0.599,
       "substance": 11
     },
@@ -2693,6 +3291,8 @@
   {
     "fields": {
       "blend_id": 111,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.482,
       "substance": 112
     },
@@ -2702,6 +3302,8 @@
   {
     "fields": {
       "blend_id": 111,
+      "cnumber": "115",
+      "component_name": "CFC-115",
       "percentage": 0.518,
       "substance": 4
     },
@@ -2711,6 +3313,8 @@
   {
     "fields": {
       "blend_id": 114,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.5,
       "substance": 98
     },
@@ -2720,6 +3324,8 @@
   {
     "fields": {
       "blend_id": 114,
+      "cnumber": "143",
+      "component_name": "HFC-143a",
       "percentage": 0.5,
       "substance": 102
     },
@@ -2729,6 +3335,8 @@
   {
     "fields": {
       "blend_id": 115,
+      "cnumber": "23",
+      "component_name": "HFC-23",
       "percentage": 0.39,
       "substance": 106
     },
@@ -2738,6 +3346,8 @@
   {
     "fields": {
       "blend_id": 115,
+      "cnumber": "116",
+      "component_name": "PFC-116",
       "percentage": 0.61,
       "substance": null
     },
@@ -2747,6 +3357,8 @@
   {
     "fields": {
       "blend_id": 116,
+      "cnumber": "23",
+      "component_name": "HFC-23",
       "percentage": 0.46,
       "substance": 106
     },
@@ -2756,6 +3368,8 @@
   {
     "fields": {
       "blend_id": 116,
+      "cnumber": "116",
+      "component_name": "PFC-116",
       "percentage": 0.54,
       "substance": null
     },
@@ -2765,6 +3379,8 @@
   {
     "fields": {
       "blend_id": 118,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.44,
       "substance": 36
     },
@@ -2774,6 +3390,8 @@
   {
     "fields": {
       "blend_id": 118,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.56,
       "substance": null
     },
@@ -2783,6 +3401,8 @@
   {
     "fields": {
       "blend_id": 119,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.88,
       "substance": null
     },
@@ -2792,6 +3412,8 @@
   {
     "fields": {
       "blend_id": 119,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.12,
       "substance": null
     },
@@ -2801,6 +3423,8 @@
   {
     "fields": {
       "blend_id": 120,
+      "cnumber": "290",
+      "component_name": "HC-290",
       "percentage": 0.95,
       "substance": null
     },
@@ -2810,6 +3434,8 @@
   {
     "fields": {
       "blend_id": 120,
+      "cnumber": "E170",
+      "component_name": "HC-E170",
       "percentage": 0.05,
       "substance": null
     },
@@ -2819,6 +3445,8 @@
   {
     "fields": {
       "blend_id": 121,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.05,
       "substance": 100
     },
@@ -2828,6 +3456,8 @@
   {
     "fields": {
       "blend_id": 121,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.95,
       "substance": 104
     },
@@ -2837,6 +3467,8 @@
   {
     "fields": {
       "blend_id": 122,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.56,
       "substance": null
     },
@@ -2846,6 +3478,8 @@
   {
     "fields": {
       "blend_id": 122,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.44,
       "substance": 100
     },
@@ -2855,6 +3489,8 @@
   {
     "fields": {
       "blend_id": 123,
+      "cnumber": "1234",
+      "component_name": "HFO-1234yf",
       "percentage": 0.585,
       "substance": null
     },
@@ -2864,6 +3500,8 @@
   {
     "fields": {
       "blend_id": 123,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.415,
       "substance": 100
     },
@@ -2873,6 +3511,8 @@
   {
     "fields": {
       "blend_id": 124,
+      "cnumber": "1336",
+      "component_name": "HFO-1336mzz(Z)",
       "percentage": 0.747,
       "substance": null
     },
@@ -2882,6 +3522,8 @@
   {
     "fields": {
       "blend_id": 124,
+      "cnumber": "1130",
+      "component_name": "HCO-1130(E)",
       "percentage": 0.253,
       "substance": null
     },
@@ -2891,6 +3533,8 @@
   {
     "fields": {
       "blend_id": 125,
+      "cnumber": "1234",
+      "component_name": "HFO-1234ze(E)",
       "percentage": 0.88,
       "substance": null
     },
@@ -2900,6 +3544,8 @@
   {
     "fields": {
       "blend_id": 125,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.12,
       "substance": 105
     },
@@ -2909,6 +3555,8 @@
   {
     "fields": {
       "blend_id": 18,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.45,
       "substance": 36
     },
@@ -2918,6 +3566,8 @@
   {
     "fields": {
       "blend_id": 18,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.06,
       "substance": 33
     },
@@ -2927,6 +3577,8 @@
   {
     "fields": {
       "blend_id": 18,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.07,
       "substance": 104
     },
@@ -2936,6 +3588,8 @@
   {
     "fields": {
       "blend_id": 18,
+      "cnumber": "318",
+      "component_name": "PFC-C318",
       "percentage": 0.43,
       "substance": null
     },
@@ -2945,6 +3599,8 @@
   {
     "fields": {
       "blend_id": 4,
+      "cnumber": "125",
+      "component_name": "HFC-125",
       "percentage": 0.45,
       "substance": 98
     },
@@ -2954,6 +3610,8 @@
   {
     "fields": {
       "blend_id": 4,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.55,
       "substance": 36
     },
@@ -2963,6 +3621,8 @@
   {
     "fields": {
       "blend_id": 5,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
     },
@@ -2972,6 +3632,8 @@
   {
     "fields": {
       "blend_id": 5,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.4,
       "substance": 33
     },
@@ -2981,6 +3643,8 @@
   {
     "fields": {
       "blend_id": 1,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.5,
       "substance": 36
     },
@@ -2990,6 +3654,8 @@
   {
     "fields": {
       "blend_id": 1,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.47,
       "substance": 26
     },
@@ -2999,6 +3665,8 @@
   {
     "fields": {
       "blend_id": 1,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.03,
       "substance": null
     },
@@ -3008,6 +3676,8 @@
   {
     "fields": {
       "blend_id": 2,
+      "cnumber": "23",
+      "component_name": "HFC-23",
       "percentage": 0.02,
       "substance": 106
     },
@@ -3017,6 +3687,8 @@
   {
     "fields": {
       "blend_id": 2,
+      "cnumber": "32",
+      "component_name": "HFC-32",
       "percentage": 0.28,
       "substance": 112
     },
@@ -3026,6 +3698,8 @@
   {
     "fields": {
       "blend_id": 2,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.7,
       "substance": 26
     },
@@ -3035,6 +3709,8 @@
   {
     "fields": {
       "blend_id": 3,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.19,
       "substance": 33
     },
@@ -3044,6 +3720,8 @@
   {
     "fields": {
       "blend_id": 3,
+      "cnumber": "134",
+      "component_name": "HFC-134a",
       "percentage": 0.79,
       "substance": 100
     },
@@ -3053,6 +3731,8 @@
   {
     "fields": {
       "blend_id": 3,
+      "cnumber": "",
+      "component_name": "Lubricant",
       "percentage": 0.02,
       "substance": null
     },
@@ -3062,6 +3742,8 @@
   {
     "fields": {
       "blend_id": 6,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.65,
       "substance": 36
     },
@@ -3071,6 +3753,8 @@
   {
     "fields": {
       "blend_id": 6,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.31,
       "substance": 33
     },
@@ -3080,6 +3764,8 @@
   {
     "fields": {
       "blend_id": 6,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.04,
       "substance": null
     },
@@ -3089,6 +3775,8 @@
   {
     "fields": {
       "blend_id": 7,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.41,
       "substance": 36
     },
@@ -3098,6 +3786,8 @@
   {
     "fields": {
       "blend_id": 7,
+      "cnumber": "142",
+      "component_name": "HCFC-142b",
       "percentage": 0.15,
       "substance": 33
     },
@@ -3107,6 +3797,8 @@
   {
     "fields": {
       "blend_id": 7,
+      "cnumber": "227",
+      "component_name": "HFC-227ea",
       "percentage": 0.4,
       "substance": 105
     },
@@ -3116,6 +3808,8 @@
   {
     "fields": {
       "blend_id": 7,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.04,
       "substance": null
     },
@@ -3125,6 +3819,8 @@
   {
     "fields": {
       "blend_id": 8,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.9,
       "substance": 36
     },
@@ -3134,6 +3830,8 @@
   {
     "fields": {
       "blend_id": 8,
+      "cnumber": "152",
+      "component_name": "HFC-152a",
       "percentage": 0.05,
       "substance": 104
     },
@@ -3143,6 +3841,8 @@
   {
     "fields": {
       "blend_id": 8,
+      "cnumber": "23",
+      "component_name": "HFC-23",
       "percentage": 0.05,
       "substance": 106
     },
@@ -3152,6 +3852,8 @@
   {
     "fields": {
       "blend_id": 9,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.82,
       "substance": 36
     },
@@ -3161,6 +3863,8 @@
   {
     "fields": {
       "blend_id": 9,
+      "cnumber": "123",
+      "component_name": "HCFC-123",
       "percentage": 0.0475,
       "substance": 24
     },
@@ -3170,6 +3874,8 @@
   {
     "fields": {
       "blend_id": 9,
+      "cnumber": "124",
+      "component_name": "HCFC-124",
       "percentage": 0.095,
       "substance": 26
     },
@@ -3179,6 +3885,8 @@
   {
     "fields": {
       "blend_id": 9,
+      "cnumber": "600",
+      "component_name": "HC-600a",
       "percentage": 0.0375,
       "substance": null
     },
@@ -3188,6 +3896,8 @@
   {
     "fields": {
       "blend_id": 112,
+      "cnumber": "12",
+      "component_name": "CFC-12",
       "percentage": 0.78,
       "substance": 5
     },
@@ -3197,6 +3907,8 @@
   {
     "fields": {
       "blend_id": 112,
+      "cnumber": "31",
+      "component_name": "HCFC-31",
       "percentage": 0.22,
       "substance": 60
     },
@@ -3206,6 +3918,8 @@
   {
     "fields": {
       "blend_id": 113,
+      "cnumber": "114",
+      "component_name": "CFC-114",
       "percentage": 0.45,
       "substance": 3
     },
@@ -3215,6 +3929,8 @@
   {
     "fields": {
       "blend_id": 113,
+      "cnumber": "31",
+      "component_name": "HCFC-31",
       "percentage": 0.55,
       "substance": 60
     },
@@ -3224,6 +3940,8 @@
   {
     "fields": {
       "blend_id": 117,
+      "cnumber": "22",
+      "component_name": "HCFC-22",
       "percentage": 0.46,
       "substance": 36
     },
@@ -3233,6 +3951,8 @@
   {
     "fields": {
       "blend_id": 117,
+      "cnumber": "218",
+      "component_name": "PFC-218",
       "percentage": 0.54,
       "substance": null
     },

@@ -239,10 +239,9 @@ class Command(BaseCommand):
 
     def blendcomponent_map(self, f, row):
         f['blend_id'] = self.lookup_id('blend', 'blend_id', row['Blend'])
-        # TODO: Component and CNumber
-        # f['component_name'] = row['Component']
+        f['component_name'] = row['Component'] or ""
         f['percentage'] = row['Percentage']
-        # f['cnumber'] = row['CNumber']
+        f['cnumber'] = row['CNumber'] or ""
         f['substance'] = self.lookup_id('substance', 'substance_id', row['SubstID'])
 
     def reportingperiod_map(self, f, row):
