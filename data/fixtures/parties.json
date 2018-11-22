@@ -6323,55 +6323,5 @@
     },
     "model": "core.party",
     "pk": 253
-  },
-  {
-    "fields": {
-      "abbr": "ZZA",
-      "name": "All Countries",
-      "parent_party": null,
-      "ratification_date_beijing_amendment": null,
-      "ratification_date_copenhagen_amendment": null,
-      "ratification_date_kigali_amendment": null,
-      "ratification_date_london_amendment": null,
-      "ratification_date_montreal_amendment": null,
-      "ratification_date_vienna_convention": null,
-      "ratification_type_beijing_amendment": "",
-      "ratification_type_copenhagen_amendment": "",
-      "ratification_type_kigali_amendment": "",
-      "ratification_type_london_amendment": "",
-      "ratification_type_montreal_protocol": "",
-      "ratification_type_vienna_convention": "",
-      "remark": "",
-      "signed_montreal_protocol": null,
-      "signed_vienna_convention": null,
-      "subregion": 17
-    },
-    "model": "core.party",
-    "pk": 254
-  },
-  {
-    "fields": {
-      "abbr": "ZZB",
-      "name": "Several Countries",
-      "parent_party": null,
-      "ratification_date_beijing_amendment": null,
-      "ratification_date_copenhagen_amendment": null,
-      "ratification_date_kigali_amendment": null,
-      "ratification_date_london_amendment": null,
-      "ratification_date_montreal_amendment": null,
-      "ratification_date_vienna_convention": null,
-      "ratification_type_beijing_amendment": "",
-      "ratification_type_copenhagen_amendment": "",
-      "ratification_type_kigali_amendment": "",
-      "ratification_type_london_amendment": "",
-      "ratification_type_montreal_protocol": "",
-      "ratification_type_vienna_convention": "",
-      "remark": "",
-      "signed_montreal_protocol": null,
-      "signed_vienna_convention": null,
-      "subregion": 17
-    },
-    "model": "core.party",
-    "pk": 255
   }
 ]

@@ -138,8 +138,8 @@ class Command(BaseCommand):
                 obj = data[idx-1]
                 getattr(self, model + "_postprocess")(obj['fields'], row)
 
-        # Hack alert: Remove rows having no fields
-        return list(filter(lambda obj: len(obj['fields']) > 0, data))
+        # Hack alert: Remove rows having a pseudo-field called "_deleted"
+        return list(filter(lambda obj: obj['fields'].get('_deleted') is not True, data))
 
     def region_map(self, f, row):
         f['name'] = row['RegionName']
@@ -197,6 +197,9 @@ class Command(BaseCommand):
     def party_postprocess(self, f, row):
         # set parent party by looking up in the same data
         f['parent_party'] = self.lookup_id('party', 'abbr', row['MainCntryID'])
+        if row['CntryID'][:2] == 'ZZ':
+            # Remove "All countries" and "Some countries"
+            f['_deleted'] = True
 
     def substance_map(self, f, row):
         f['substance_id'] = row['SubstID']
@@ -228,7 +231,7 @@ class Command(BaseCommand):
     def substance_postprocess(self, f, row):
         if row['SubstID'] == 999:
             # Remove "Other substances"
-            f.clear()
+            f['_deleted'] = True
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
