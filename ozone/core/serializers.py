@@ -193,7 +193,7 @@ class PartySerializer(serializers.ModelSerializer):
 class SubstanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Substance
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'description', 'sort_order')
 
 
 class GroupSerializer(serializers.ModelSerializer):
