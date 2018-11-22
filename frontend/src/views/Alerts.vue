@@ -47,7 +47,7 @@ export default {
 
   data () {
     return {
-      dismissSecs: 500,
+      dismissSecs: 5,
       dismissCountDown: 0,
       showDismissibleAlert: false
     }
