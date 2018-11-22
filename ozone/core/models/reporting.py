@@ -6,8 +6,8 @@ from django.core.exceptions import ValidationError
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
-
 from model_utils import FieldTracker
+from simple_history.models import HistoricalRecords
 
 from .legal import ReportingPeriod
 from .party import Party
@@ -177,6 +177,8 @@ class Submission(models.Model):
 
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
+
+    history = HistoricalRecords()
 
     @property
     def workflow_class(self):

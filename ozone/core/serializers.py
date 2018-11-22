@@ -516,6 +516,31 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
 
 
+class SubmissionHistorySerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    date = serializers.SerializerMethodField()
+    current_state = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Submission
+        fields = (
+            'user', 'date', 'current_state',
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+        )
+
+    def get_date(self, obj):
+        return obj.history_date.strftime('%Y-%m-%d')
+
+    def get_current_state(self, obj):
+        # Unfortunately I can't find a way to avoid using the protected field
+        return obj._current_state
+
+    def get_user(self, obj):
+        if obj.history_user:
+            return obj.history_user.username
+        return None
+
+
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
     token = serializers.SerializerMethodField()
     expires = serializers.SerializerMethodField()

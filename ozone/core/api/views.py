@@ -49,6 +49,7 @@ from ..serializers import (
     GroupSerializer,
     BlendSerializer,
     CreateBlendSerializer,
+    SubmissionHistorySerializer,
 )
 
 
@@ -206,6 +207,14 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['get'])
+    def history(self, request, pk=None):
+        historical_records = Submission.objects.get(pk=pk).history.all()
+        serializer = SubmissionHistorySerializer(
+            historical_records, many=True
+        )
+        return Response(serializer.data)
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):

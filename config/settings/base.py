@@ -98,6 +98,7 @@ THIRD_PARTY_APPS = [
     'import_export',
     'guardian',
     'django_filters',
+    'simple_history',
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here
@@ -167,6 +168,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'simple_history.middleware.HistoryRequestMiddleware',
 ]
 
 # STATIC
