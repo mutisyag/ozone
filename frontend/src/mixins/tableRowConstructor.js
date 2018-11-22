@@ -437,7 +437,7 @@ export default {
                   },
                   trade_party: {
                      type: 'multiselect',
-                     selected: null,
+                     selected: country || null,
                   },
                   get validation() {
                      let errors = []
