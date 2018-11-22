@@ -56,7 +56,7 @@ const store = new Vuex.Store({
         getValidationForCurrentTab: (state) => (tab) => {
             if(['edited',false].includes(state.form.tabs[tab].status)){
                 return state.form.tabs[tab].form_fields.map(field => field.validation.selected ?
-                    { validation: field.validation.selected, substance: field.substance.selected, blend: field.blend.selected } :
+                    { validation: field.validation.selected, substance: field.substance.selected, blend: field.blend ? field.blend.selected : null } :
                     null)
             }
         },

@@ -158,7 +158,6 @@ export default {
           }
         }
       }
-      
       this.startSubmitting()
       
     },
@@ -213,6 +212,8 @@ export default {
               }).catch((error) => {
               current_tab.status = false
               console.log(error.response)
+              this.invalidTabs.push(field)
+              this.$store.dispatch('setAlert', { message:  `Save failed for ${this.invalidTabs}`, variant: 'danger' })
             })
 
        } else if (this.$store.state.newTabs.indexOf(field) !== -1 && current_tab.form_fields.length) {
@@ -236,12 +237,14 @@ export default {
               current_tab.status = true
               }).catch((error) => {
               current_tab.status = false
-              console.log(error.response)
+              this.invalidTabs.push(field)
+              this.$store.dispatch('setAlert', { message:  `Save failed for ${this.invalidTabs}`, variant: 'danger' })
             })
 
           this.$store.commit('tabHasBeenSaved', field)
 
        }
+
     },
   }
 }
