@@ -123,9 +123,7 @@ export default {
     },
 
     prefill(tab, data) {
-
       if(tab.name != 'has_emissions'){
-
         if(data) {
           for(let item of data) {
             // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData

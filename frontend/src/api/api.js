@@ -129,7 +129,7 @@ function getSubmission(url) {
 
 
 function callTransition(url, transition) {
-  return post(`${url}call_transition/`, {transition: transition})
+  return post(`${url}call-transition/`, {transition: transition})
 }
 
 
