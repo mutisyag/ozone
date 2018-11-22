@@ -35,7 +35,10 @@ class Obligation(models.Model):
 
     description = models.CharField(max_length=256, blank=True)
 
-    is_continuous = models.BooleanField(default=True)
+    # Some obligations require immediate reporting each time an event happens,
+    # instead of periodical reporting. This should get special treatment both
+    # in backend and frontend.
+    has_reporting_periods = models.BooleanField(default=True)
 
     def __str__(self):
         return self.name
