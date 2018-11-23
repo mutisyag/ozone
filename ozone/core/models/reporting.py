@@ -38,6 +38,11 @@ class Obligation(models.Model):
     # in backend and frontend.
     has_reporting_periods = models.BooleanField(default=True)
 
+    # The type of form used to submit data. This will possibly get more complicated
+    # in the future (e.g. when different forms will be necessary for the same obligation
+    # but different reporting periods due to changes in the methodology
+    form_type = models.CharField(max_length=64)
+
     def __str__(self):
         return self.name
 

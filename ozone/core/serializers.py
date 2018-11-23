@@ -270,7 +270,7 @@ class ReportingPeriodSerializer(serializers.ModelSerializer):
 class ObligationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obligation
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'form_type')
 
 
 class UserSerializer(serializers.ModelSerializer):

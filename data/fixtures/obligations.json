@@ -5,6 +5,7 @@
     "fields": {
       "name": "Article 7",
       "description": "Data forms 1-6",
+      "form_type": "art7",
       "has_reporting_periods": true
     }
   },
@@ -13,7 +14,8 @@
     "pk": 2,
     "fields": {
       "name": "Essential and Critical uses (RAF)",
-      "description": "",
+      "description": "Reporting account format",
+      "form_type": "essencrit",
       "has_reporting_periods": true
     }
   },
@@ -23,6 +25,7 @@
     "fields": {
       "name": "HAT Imports",
       "description": "Data form 7",
+      "form_type": "hatimp",
       "has_reporting_periods": true
     }
   },
@@ -32,6 +35,7 @@
     "fields": {
       "name": "HAT Production",
       "description": "Data form 8",
+      "form_type": "hatprod",
       "has_reporting_periods": true
     }
   },
@@ -41,6 +45,7 @@
     "fields": {
       "name": "Other",
       "description": "Letters and narrative reports",
+      "form_type": "letter",
       "has_reporting_periods": true
     }
   }
