@@ -15,14 +15,17 @@
     </div>
     <b-button-group class="actions">
       <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="submitSubmission" variant="success">
+      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="success">
         Submit
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="recallSubmission"  variant="warning">
+      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="warning">
         Recall
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('process')"  variant="primary">
+      <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="primary">
         Process
+      </b-btn>
+      <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="primary">
+        Reinstate
       </b-btn>
     </b-button-group>
   </div>
@@ -251,14 +254,6 @@ export default {
           this.$router.push({ name: 'Dashboard' });
         })
       }
-    },
-
-    submitSubmission(){
-      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'submit'})
-    },
-    
-    recallSubmission(){
-      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'recall'})
     },
 
   },
