@@ -62,15 +62,15 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         if self.unique_with is None:
             data_dictionary = {
                 entry.get(field): entry
-                for field in self.substance_blend_fields
                 for entry in validated_data
+                for field in self.substance_blend_fields
                 if entry.get(field, None) is not None
             }
         else:
             data_dictionary = {
                 (entry.get(field), entry.get(self.unique_with)): entry
-                for field in self.substance_blend_fields
                 for entry in validated_data
+                for field in self.substance_blend_fields
                 if entry.get(field, None) is not None
             }
         return data_dictionary
