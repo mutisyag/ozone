@@ -1,7 +1,5 @@
 import enum
 
-from datetime import datetime
-
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
@@ -365,10 +363,8 @@ class Submission(models.Model):
         """
         Checks whether the current submission can be cloned
         """
-        current_date = datetime.now().date()
         current_submissions = Submission.objects.filter(
-            reporting_period__start_date__lte=current_date,
-            reporting_period__end_date__gte=current_date,
+            reporting_period=ReportingPeriod.current_period(),
             obligation=self.obligation
         )
         if self in current_submissions:
