@@ -117,7 +117,12 @@
                         class="btn btn-primary"
                         :to="{ name: 'Form', query: {submission: row.item.details.url}} "
                       >
-                      Edit
+                      <span v-if="row.item.details.data_changes_allowed">
+                        Edit
+                      </span>
+                      <span v-else>
+                        View
+                      </span>
                     </router-link>
 
                     <b-btn
