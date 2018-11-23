@@ -104,6 +104,10 @@ function createBlend(blend){
   return post('blends/', blend)
 }
 
+function cloneSubmission(url){
+  return post(`${url}clone/`)
+}
+
 function getCustomBlends(){
   return fetch('blends/')
 }
@@ -156,5 +160,6 @@ export {
  getCustomBlends,
  getSubmissionsVersions,
  callTransition,
- deleteSubmission
+ deleteSubmission,
+ cloneSubmission
 };

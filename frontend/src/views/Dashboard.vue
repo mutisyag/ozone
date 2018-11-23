@@ -115,6 +115,13 @@
                       >
                       Delete
                     </b-btn>
+
+                    <b-btn
+                        variant="primary"
+                        @click="clone(row.item.details.url)"
+                      >
+                      Clone
+                    </b-btn>
                   </template>
               </b-table>
 
@@ -132,7 +139,7 @@
 </template>
 
 <script>
-
+import {cloneSubmission} from '@/api/api'
 
 export default {
   name: 'Dashboard',
@@ -259,6 +266,14 @@ export default {
       this.$store.dispatch('addSubmission', this.current)
     },
 
+
+    clone(url){
+      cloneSubmission(url).then(response => {
+        console.log(resposne.data)
+      }).catch(error => {
+        console.log(error)
+      })
+    },
 
     removeSubmission(url) {
       const r = confirm("Deleting the submission is ireversible. Are you sure ?");
