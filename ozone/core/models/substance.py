@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .meeting import ExemptionTypes, Treaty
+from .party import Party
 
 __all__ = [
     'Annex',
@@ -158,6 +159,17 @@ class Blend(models.Model):
 
     blend_id = models.CharField(max_length=64, unique=True)
 
+    # Custom blends will always be associated with (and only available for)
+    # the Party by which they have been created (in case they've been created
+    # by Secretariat using the reporting interface, they will be associated
+    # with the Party to which the Submission belongs).
+    party = models.ForeignKey(
+        Party,
+        related_name='custom_blends',
+        null=True,
+        on_delete=models.PROTECT
+    )
+
     # This is a plain-text description of the composition; see `BlendComponent`
     # model for a relational one
     composition = models.CharField(max_length=256, blank=True)
@@ -180,9 +192,11 @@ class Blend(models.Model):
 
     main_usage = models.CharField(max_length=256, blank=True)
 
-    custom = models.BooleanField(default=False)
-
     remark = models.CharField(max_length=256, blank=True)
+
+    @property
+    def custom(self):
+        return self.party is not None
 
     def __str__(self):
         return self.blend_id

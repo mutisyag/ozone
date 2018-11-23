@@ -221,7 +221,7 @@ class BlendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blend
-        fields = ('id', 'blend_id', 'type', 'custom', 'components')
+        fields = ('id', 'blend_id', 'custom', 'party', 'type', 'components')
 
 
 class CreateBlendSerializer(serializers.ModelSerializer):
@@ -229,11 +229,11 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blend
-        exclude = ('custom',)
+        fields = '__all__'
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
-        blend = Blend.objects.create(custom=True, **validated_data)
+        blend = Blend.objects.create(**validated_data)
         for component_data in components_data:
             BlendComponent.objects.create(blend=blend, **component_data)
         return blend
