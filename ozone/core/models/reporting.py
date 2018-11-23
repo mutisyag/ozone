@@ -259,12 +259,18 @@ class Submission(models.Model):
     def available_transitions(self):
         """
         List of transitions that can be performed from current state.
-        No pre-transition checks are taken into account at this point.
 
         """
-        return [
-            transition.name for transition in self.workflow.state.transitions()
-        ]
+
+        transitions = []
+        wf = self.workflow
+        for transition in wf .state.transitions():
+            if hasattr(wf, 'check_' + transition.name):
+                if getattr(wf, 'check_' + transition.name)():
+                    transitions.append(transition.name)
+            else:
+                transitions.append(transition.name)
+        return transitions
 
     @property
     def available_states(self):
