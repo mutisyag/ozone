@@ -288,13 +288,20 @@ const store = new Vuex.Store({
 
             if (substancesHere) {
                 for (let substance of data.substanceList) {
-                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, substance, data.groupName, data.country, null, data.prefillData)
+                    if(!data.prefill){
+                        context.commit('incrementOrderingId',{tabName:data.currentSectionName})
+                    }
+                    let ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
+                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, substance, data.groupName, data.country, null, data.prefillData, ordering_id)
                     context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
                 }
             } else if (blendsHere) {
                 for (let blend of data.blendList) {
-                    console.log(blend)
-                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, null, data.groupName, data.country, blend, data.prefillData)
+                    if(!data.prefill) {
+                        context.commit('incrementOrderingId',{tabName:data.currentSectionName})
+                    }
+                    let ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
+                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, null, data.groupName, data.country, blend, data.prefillData, ordering_id)
                     context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
                 }
             }
@@ -373,7 +380,18 @@ const store = new Vuex.Store({
             :
             state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value 
         },
+
+
+        incrementOrderingId(state,data){
+            state.form.tabs[data.tabName].ordering_id += 1 
+        },
     
+
+        setTabOrderingId(state,data){
+            console.log(data.tabName)
+            state.form.tabs[data.tabName].ordering_id = data.ordering_id 
+        },
+
         // dashboard
 
         setDashboardParties(state, data) {
