@@ -18,7 +18,7 @@
       <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="submitSubmission" variant="success">
         Submit
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('recall')"  variant="warning">
+      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="recallSubmission"  variant="warning">
         Recall
       </b-btn>
       <b-btn v-if="$store.state.available_transitions.includes('process')"  variant="primary">
@@ -256,7 +256,10 @@ export default {
     submitSubmission(){
       this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'submit'})
     },
-
+    
+    recallSubmission(){
+      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'recall'})
+    },
 
   },
 

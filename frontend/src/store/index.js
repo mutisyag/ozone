@@ -194,7 +194,7 @@ const store = new Vuex.Store({
 
         doSubmissionTransition(context, data) {
             callTransition(data.submission, data.transition).then((response) => {
-                console.log(response.data)
+                context.dispatch('getSubmissionData', data.submission)
             })
         },
 
