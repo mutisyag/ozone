@@ -15,16 +15,16 @@
     </div>
     <b-button-group class="actions">
       <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="success">
+      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="outline-success">
         Submit
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="warning">
+      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
         Recall
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="primary">
+      <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="outline-primary">
         Process
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="primary">
+      <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="outline-primary">
         Reinstate
       </b-btn>
     </b-button-group>
@@ -179,13 +179,22 @@
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
         <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn v-if="$store.state.available_transitions.includes('submit')"  @click="submitSubmission" variant="success">
-          Submit
+        <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="outline-success">
+            Submit
+          </b-btn>
+          <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
+            Recall
+          </b-btn>
+          <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="outline-primary">
+            Process
+          </b-btn>
+          <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="outline-primary">
+            Reinstate
         </b-btn>
-        <b-btn variant="info">
+        <b-btn variant="outline-info">
           Versions
         </b-btn>
-        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="danger">
+        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
           Delete Submission
         </b-btn>
       </b-button-group>

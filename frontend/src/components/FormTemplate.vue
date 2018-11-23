@@ -41,7 +41,7 @@
               </span>
 
               <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-exclamation fa-lg"></i>
                 <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
 
               </span>
@@ -85,7 +85,7 @@
               </span>
 
               <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-close fa-lg "></i>
+                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-exclamation fa-lg"></i>
                 <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
               </span>
 
