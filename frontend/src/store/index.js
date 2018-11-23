@@ -150,7 +150,7 @@ const store = new Vuex.Store({
                     let end = period.end_date.split('-')[0]
                     let periodDisplay = ''
                     start === end ? periodDisplay += start : periodDisplay += start + '-' + end
-                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date}
+                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date, start_date: period.start_date}
                })
                 
                 context.commit('setDashboardPeriods', sortedPeriods)

@@ -66,18 +66,29 @@
                 </b-col>
               </b-row>
               <b-row>
-                <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Filter by period" class="mb-0">
+                <b-col md="4" class="my-1">
+                  <b-form-group horizontal label="Period from:" class="mb-0">
                     <b-input-group>
-                      <b-form-select v-model="table.filters.period" :options="sortOptionsPeriod">
+                      <b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
                       </b-form-select>
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.period" @click="table.filters.period = ''">Clear</b-btn>
+                        <b-btn :disabled="!table.filters.period_start" @click="table.filters.period_start = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
                   </b-form-group>
                 </b-col>
-                <b-col md="6" class="my-1">
+                <b-col md="4" class="my-1">
+                  <b-form-group horizontal label="Period to:" class="mb-0">
+                    <b-input-group>
+                      <b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
+                      </b-form-select>
+                      <b-input-group-append>
+                        <b-btn :disabled="!table.filters.period_end" @click="table.filters.period_end = ''">Clear</b-btn>
+                      </b-input-group-append>
+                    </b-input-group>
+                  </b-form-group>
+                </b-col>
+                <b-col md="4" class="my-1">
                   <b-form-group horizontal label="Filter by obligation" class="mb-0">
                     <b-input-group>
                       <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
@@ -170,7 +181,8 @@ export default {
           sortDirection: 'asc',
           filters: {
             search: null,
-            period: null,
+            period_start: null,
+            period_end: null,
             obligation: null,
             party: null,
             isCurrent: null,
@@ -196,7 +208,9 @@ export default {
       console.log(this.submissions)
       this.submissions.forEach( (element, index) => {
         if(
-          (this.table.filters.period ? this.getSumissionInfo(element).period() === this.table.filters.period : true)
+          (this.table.filters.period_start ? this.getSumissionInfo(element).period_start() >= this.table.filters.period_start : true)
+          &&
+          (this.table.filters.period_end ? this.getSumissionInfo(element).period_end() <= this.table.filters.period_end : true)
           &&
           (this.table.filters.obligation ? this.getSumissionInfo(element).obligation() === this.table.filters.obligation : true)
           && 
@@ -217,9 +231,15 @@ export default {
       return tableFields
     },
 
-    sortOptionsPeriod () {
-      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).period() ))]
+    sortOptionsPeriodFrom () {
+      return [...new Set(this.periods.map(f => f.start_date.split('-')[0] ))]
     },
+
+
+    sortOptionsPeriodTo () {
+      return [...new Set(this.periods.map(f => f.end_date.split('-')[0] ))]
+    },
+
 
     sortOptionsObligation () {
       return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).obligation() ))]
@@ -299,7 +319,13 @@ export default {
         },
         party: () => {
           return this.parties.find(a => { return a.value === submission.party}).text
-        }
+        },
+        period_start: () => {
+          return this.periods.find(a => {return a.value === submission.reporting_period}).start_date.split('-')[0]
+        },
+        period_end: () => {
+          return this.periods.find(a => {return a.value === submission.reporting_period}).end_date.split('-')[0]
+        },
       }
       return submissionInfo
     },
