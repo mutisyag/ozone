@@ -170,6 +170,7 @@ export default {
             { key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc', 'class': 'text-center'},
             { key: 'version', label: 'Version', sortable: true, sortDirection: 'desc' , 'class': 'text-center'},
             { key: 'current_state', label: 'State', sortable: true, 'class': 'text-center'},
+            { key: 'last_updated', label: 'Last modified', sortable: true, 'class': 'text-center'},
             { key: 'actions', label: 'Actions', 'class': 'text-center' },
           ],
           currentPage: 1,
@@ -223,7 +224,9 @@ export default {
            reporting_party: this.getSumissionInfo(element).party(),
            current_state: element.current_state,
            version: element.version,
-           details: element})
+           last_updated: element.updated_at,
+           details: element,
+         })
         }
       
       });
