@@ -22,7 +22,7 @@
 
 
 
-            <b-btn v-if="basicDataReady" variant="primary" @click="addSubmission">Create submission</b-btn>
+            <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create submission</b-btn>
           </div>
 
         </b-card>
@@ -293,7 +293,9 @@ export default {
     clone(url){
       cloneSubmission(url).then(response => {
         console.log(resposne.data)
+        this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
       }).catch(error => {
+        this.$store.dispatch('setAlert', { message: 'Unable to clone submission', variant: 'danger' })
         console.log(error)
       })
     },
