@@ -133,6 +133,10 @@
                 </b-col>
               </b-row>
               <b-table show-empty
+                       outlined
+                       bordered
+                       hover
+                       head-variant="light"
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
@@ -146,8 +150,9 @@
                        ref="table"
               >
                 <template slot="actions" slot-scope="row">
+                  <b-button-group>
                     <router-link
-                        class="btn btn-primary"
+                        class="btn btn-outline-primary"
                         :to="{ name: 'Form', query: {submission: row.item.details.url}} "
                       >
                       <span v-if="row.item.details.data_changes_allowed">
@@ -158,19 +163,20 @@
                       </span>
                     </router-link>
 
-                    <b-btn
-                        variant="danger"
-                        @click="removeSubmission(row.item.details.url)"
-                      >
-                      Delete
-                    </b-btn>
 
                     <b-btn
-                        variant="primary"
+                        variant="outline-primary"
                         @click="clone(row.item.details.url)"
                       >
                       Clone
                     </b-btn>
+                    <b-btn
+                        variant="outline-danger"
+                        @click="removeSubmission(row.item.details.url)"
+                      >
+                      Delete
+                    </b-btn>
+                  </b-button-group>
                   </template>
               </b-table>
 
@@ -194,7 +200,6 @@ export default {
   name: 'Dashboard',
   data () {
     return {
-
       current: {
         obligation: null,
         reporting_period: null,
