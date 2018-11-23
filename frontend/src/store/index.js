@@ -161,7 +161,7 @@ const store = new Vuex.Store({
             getObligations().then(response => {
                 let obligations_temp = [];
                 for (let obligation of response.data) {
-                    obligations_temp.push({ value: obligation.id, text: obligation.name })
+                    obligations_temp.push({ value: obligation.id, text: obligation.name, form_type: obligation.form_type})
                 }
                 context.commit('setDashboardObligations', obligations_temp)
             })

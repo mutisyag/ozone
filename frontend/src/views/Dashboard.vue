@@ -37,7 +37,7 @@
               <b-col class="mb-3" v-if="submission.current_state === 'data_entry'" v-for="submission in submissions">           
                   <router-link
                         class="btn btn-light submission-continue"
-                        :to="{ name: 'Form', query: {submission: submission.url}} "
+                        :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}} "
                       >
                   <div class="detail-header">
                          Submission details:
@@ -143,7 +143,7 @@
                   <b-button-group>
                     <router-link
                         class="btn btn-outline-primary"
-                        :to="{ name: 'Form', query: {submission: row.item.details.url}} "
+                        :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
                       >
                       <span v-if="row.item.details.data_changes_allowed">
                         Edit
@@ -346,6 +346,9 @@ export default {
       this.table.currentPage = 1
     },
 
+    getFormName(obligation) {
+      return this.obligations.find( o => o.value === obligation).form_type
+    },
 
     getSumissionInfo(submission){
       let submissionInfo = {

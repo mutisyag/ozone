@@ -8,7 +8,7 @@ const Base = () => import('@/views/Base')
 const Dashboard = () => import('@/views/Dashboard')
 const Form = () => import('@/views/Form')
 
-
+const FormNotFound = () => import('@/views/FormNotFound')
 
 // Views - Components
 const Forms = () => import('@/views/base/Forms')
@@ -44,10 +44,34 @@ const  routes = [
           component: Login
         },
         {
-          path: 'dashboard/form',
-          name: 'Form',
+          path: '/submission/art7',
+          name: 'art7',
           meta:{requiresAuth : true},
           component: Form
+        },
+        {
+          path: '/submission/essencrit',
+          name: 'essencrit',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: '/submission/hatimp',
+          name: 'hatimp',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: '/submission/hatprod',
+          name: 'hatprod',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: '/submission/letter',
+          name: 'letter',
+          meta:{requiresAuth : true},
+          component: FormNotFound
         },
         {
           path: 'users',
