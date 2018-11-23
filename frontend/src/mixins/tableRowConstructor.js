@@ -103,12 +103,13 @@ export default {
           return returnObj
         },
 
-        getInnerFields(section, substance, group, country, blend, prefillData) {
+        getInnerFields(section, substance, group, country, blend, prefillData, ordering_id) {
           let self = this
 
           let countryFieldName = this.getCountryField(section)
 
           let baseInnerFields = {
+            ordering_id: {selected: ordering_id || 0},
             substance: {
               type: 'select',
               selected: substance || null,
@@ -245,6 +246,7 @@ export default {
               break;
             case 'has_produced':
               baseInnerFields = {
+                  ordering_id: {selected: ordering_id || 0},
                   remarks_party: {
                      type: 'textarea',
                      selected: '',
@@ -357,6 +359,7 @@ export default {
                break;
             case 'has_destroyed':
             baseInnerFields = {
+                  ordering_id: {selected: ordering_id || 0},
                   substance: {
                      type: 'select',
                      selected: substance || null,
@@ -399,6 +402,7 @@ export default {
             break;
             case 'has_nonparty':
                baseInnerFields = {
+                  ordering_id: {selected: ordering_id || 0},
                   remarks_party: {
                      type: 'textarea',
                      selected: '',

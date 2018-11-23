@@ -122,9 +122,11 @@ export default {
     },
 
     prefill(tab, data) {
+      const ordering_id = Math.max(...data.map(row => row.ordering_id))
+      const sortedData = data.slice().sort((a,b) => {return a.ordering_id - b.ordering_id})
+
       if(tab.name != 'has_emissions'){
-        if(data) {
-          for(let item of data) {
+          for(let item of sortedData) {
             // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
             this.$store.dispatch('createSubstance',{
              substanceList: item.substance ? [item.substance] : null,
@@ -135,15 +137,16 @@ export default {
              prefillData: item
             })
           }
-        }
       } else {
-          data.forEach( el => this.$store.dispatch('prefillEmissionsRow', el))
+          sortedData.forEach( el => this.$store.dispatch('prefillEmissionsRow', el))
          }
           this.$nextTick(() => {
             setTimeout(() => {
                 this.$store.commit('setTabStatus',{tab: tab.name, value:true})
             })
           })
+      this.$store.commit('setTabOrderingId', {tabName: tab.name, ordering_id: ordering_id})        
+
     },
 
    

@@ -54,6 +54,7 @@ var form = {
             form_fields: intro_fields
         },
         has_exports: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -156,6 +157,7 @@ var form = {
         },
 
         has_imports: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -255,6 +257,7 @@ var form = {
             footnotes: ['[1] Tonne = Metric ton.'],
         },
         has_produced: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -352,6 +355,7 @@ var form = {
             ],
         },
         has_destroyed: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -411,6 +415,7 @@ var form = {
             ],
         },
         has_nonparty: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -526,6 +531,7 @@ var form = {
         },
 
         has_emissions: {
+            ordering_id: 0,
             status: null,
             saving: false,
             intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
