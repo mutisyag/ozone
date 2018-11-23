@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0013_auto_20181122_1738'),
+        ('core', '0014_adding_ordering_id_field'),
     ]
 
     operations = [
