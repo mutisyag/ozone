@@ -171,6 +171,10 @@ class BaseReport(models.Model):
     remarks_party = models.CharField(max_length=512, blank=True)
     remarks_os = models.CharField(max_length=512, blank=True)
 
+    # This allows the interface to keep the data entries in their original
+    # order, as given by the user.
+    ordering_id = models.IntegerField(default=0)
+
     class Meta:
         abstract = True
 
