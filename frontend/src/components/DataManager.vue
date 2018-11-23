@@ -99,7 +99,6 @@ export default {
     prePrefill() {
         const form = this.$store.state.form,
               prefill_data = this.$store.state.current_submission
-        console.log('here', form, prefill_data)
         Object.keys(form.tabs).forEach( (tab) => {
           if(this.fields_to_get[tab]){
             fetch(prefill_data[this.fields_to_get[tab]]).then( response => {

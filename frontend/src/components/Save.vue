@@ -209,6 +209,7 @@ export default {
         update(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               current_tab.status = true
+              this.$store.commit('tabHasBeenSaved', field)
               }).catch((error) => {
               current_tab.status = false
               console.log(error.response)
@@ -235,13 +236,13 @@ export default {
         post(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               current_tab.status = true
+              this.$store.commit('tabHasBeenSaved', field)
               }).catch((error) => {
               current_tab.status = false
               this.invalidTabs.push(field)
               this.$store.dispatch('setAlert', { message:  `Save failed for ${this.invalidTabs}`, variant: 'danger' })
             })
 
-          this.$store.commit('tabHasBeenSaved', field)
 
        }
 
