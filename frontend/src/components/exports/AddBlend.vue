@@ -12,7 +12,7 @@
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
           <h5>Composition of <b>{{display.blends[blend].name}}</b></h5>
           <b-row v-for="substance in display.blends[blend].components">
-            <b-col>{{substance.substance_name}}</b-col>
+            <b-col>{{substance.component_name}}</b-col>
             <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
         </div>
@@ -29,7 +29,7 @@
               <b-input-group-prepend>
                 <b-btn  style="z-index:initial;"  variant="danger" @click="removeSubstanceFromBlend(substance)">X</b-btn>
               </b-input-group-prepend>
-              <multiselect label="text" trackBy="value" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
+              <multiselect label="text"  @tag="addTag($event,substance)" :taggable="true" trackBy="value" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
               <b-input-group-append>
                 <b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
               </b-input-group-append>
@@ -73,7 +73,7 @@ export default {
   
   computed: {
     substances(){
-      return this.$store.state.initialData.substances
+      return JSON.parse(JSON.stringify(this.$store.state.initialData.substances))
     },
     blends(){
       return this.$store.state.initialData.blends
@@ -127,6 +127,16 @@ export default {
   },
 
   methods: {
+
+    addTag (newTag, substance) {
+      console.log(newTag,substance)
+        const tag = {
+          text: newTag,
+          value: newTag
+        }
+        this.substances.push(tag)
+        substance.name = newTag
+    },
 
     prepareSubstances(){
       this.selected_substance.options = []

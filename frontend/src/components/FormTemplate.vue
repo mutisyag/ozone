@@ -129,7 +129,7 @@
             <td colspan="2">
               <div>
                 <b-row>
-                  <b-col>{{substance.substance_name}}</b-col>
+                  <b-col>{{substance.component_name}}</b-col>
                   <b-col><b>{{substance.percentage * 100}}%</b></b-col>
                 </b-row>
               </div>
