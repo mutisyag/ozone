@@ -76,60 +76,50 @@
               </b-row> 
             </template>
             <b-container fluid>
-              <b-row>
-                <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Search" class="mb-0">
-                    <b-input-group>
+              <b-row class="mt-2">
+                <b-col>
+                    <b-input-group prepend="Search">
                       <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
+                        <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
-                  </b-form-group>
                 </b-col>
-                <b-col md="6" class="my-1">
-                  <b-form-group horizontal label="Filter by party" class="mb-0">
-                    <b-input-group>
+                <b-col>
+                    <b-input-group prepend="Filter by party">
                       <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.party" @click="table.filters.party = ''">Clear</b-btn>
+                        <b-btn variant="primary" :disabled="!table.filters.party" @click="table.filters.party = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
-                  </b-form-group>
                 </b-col>
               </b-row>
-              <b-row>
-                <b-col md="4" class="my-1">
-                  <b-form-group horizontal label="Period from:" class="mb-0">
-                    <b-input-group>
+              <b-row class="mt-2 mb-2">
+                <b-col>
+                    <b-input-group prepend="Period from:">
                       <b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
                       </b-form-select>
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.period_start" @click="table.filters.period_start = ''">Clear</b-btn>
+                        <b-btn variant="primary" :disabled="!table.filters.period_start" @click="table.filters.period_start = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
-                  </b-form-group>
                 </b-col>
-                <b-col md="4" class="my-1">
-                  <b-form-group horizontal label="Period to:" class="mb-0">
-                    <b-input-group>
+                <b-col>
+                    <b-input-group prepend="Period to:">
                       <b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
                       </b-form-select>
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.period_end" @click="table.filters.period_end = ''">Clear</b-btn>
+                        <b-btn variant="primary" :disabled="!table.filters.period_end" @click="table.filters.period_end = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
-                  </b-form-group>
                 </b-col>
-                <b-col md="4" class="my-1">
-                  <b-form-group horizontal label="Filter by obligation" class="mb-0">
-                    <b-input-group>
+                <b-col>
+                    <b-input-group prepend="Filter by obligation">
                       <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
                       <b-input-group-append>
-                        <b-btn :disabled="!table.filters.obligation" @click="table.filters.obligation = ''">Clear</b-btn>
+                        <b-btn variant="primary" :disabled="!table.filters.obligation" @click="table.filters.obligation = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
-                  </b-form-group>
                 </b-col>
               </b-row>
               <b-table show-empty
