@@ -265,9 +265,10 @@ class Submission(models.Model):
         """
 
         transitions = []
-        for transition in self.workflow.state.transitions():
-            if hasattr(self.workflow, 'check_' + transition.name):
-                if getattr(self.workflow, 'check_' + transition.name)():
+        wf = self.workflow
+        for transition in wf .state.transitions():
+            if hasattr(wf, 'check_' + transition.name):
+                if getattr(wf, 'check_' + transition.name)():
                     transitions.append(transition.name)
             else:
                 transitions.append(transition.name)
