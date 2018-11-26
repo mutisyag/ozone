@@ -217,7 +217,6 @@
        <div v-if="modal_data" slot="modal-title">
           <span v-if="modal_data.field.substance.selected">
             {{tab_data.display.substances[modal_data.field.substance.selected]}}
-
           </span>
           <span v-else>
             {{tab_data.display.blends[modal_data.field.blend.selected].name}}
