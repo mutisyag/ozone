@@ -363,8 +363,8 @@ var form = {
             name: 'has_destroyed',
             subtitle: 'in metric tonnes (not ODP tonnes)',
             description: 'Annexes A, B, C and E substances',
-            fields_order: [ "substance","blend" ,"quantity_destroyed", "remarks_party","remarks_os",'validation'],
-            modal_order: [ "substance","blend" ,"quantity_destroyed"],
+            fields_order: [ "substance","quantity_destroyed", "remarks_party","remarks_os",'validation'],
+            modal_order: ["quantity_destroyed"],
             isInvalid: false,
             form_fields: [],
             section_subheaders: [{
@@ -428,7 +428,7 @@ var form = {
 
             fields_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
             
-            modal_order: [ "substance","blend" ,"trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'validation'],
+            modal_order: ["trade_party", "quantity_import_new","quantity_import_recovered",'quantity_export_new', 'quantity_export_recovered', 'validation'],
             // used for identification when adding labels
             form_fields: [],
             section_subheaders: [

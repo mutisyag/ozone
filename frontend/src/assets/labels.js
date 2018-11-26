@@ -91,13 +91,13 @@ let labels = {
     has_nonparty: {
         "remarks_party": "Remarks (Secretariat)",
         "remarks_os": "Remarks (Party)",
-    "quantity_import_new": null,
-    "quantity_import_recovered": null,
-    "quantity_export_new": null,
-    "quantity_export_recovered": null,
-    "substance": null,
-    "blend": null,
-    "trade_party": null
+    "quantity_import_new": "Quantity of imports from non-parties (new)",
+    "quantity_import_recovered": "Quantity of imports from non-parties (recovered)",
+    "quantity_export_new": "Quantity of exports to non-parties (new)",
+    "quantity_export_recovered": "Quantity of exports to non-parties (recovered)",
+    "substance": "Substance",
+    "blend": "Blend",
+    "trade_party": "Exporting party for quantities reported as imports OR Country of destination of exports"
 },
 has_emissions: {
       facility_name: 'Facility name or identifier',
