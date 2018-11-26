@@ -281,6 +281,13 @@ class BaseUses(models.Model):
         max_length=256, blank=True
     )
 
+    quantity_other_uses = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    decision_other_uses = models.CharField(
+        max_length=256, blank=True
+    )
+
     class Meta:
         abstract = True
 
@@ -360,6 +367,7 @@ class Article7Export(
         'quantity_total_new',
         'quantity_total_recovered',
         'quantity_feedstock',
+        'quantity_other_uses',
     ]
 
     # FieldTracker does not work on abstract models
@@ -397,6 +405,7 @@ class Article7Import(
         'quantity_total_new',
         'quantity_total_recovered',
         'quantity_feedstock',
+        'quantity_other_uses',
     ]
 
     # FieldTracker does not work on abstract models
@@ -426,6 +435,9 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    quantity_for_destruction = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # "Production for supply to Article 5 countries in accordance
