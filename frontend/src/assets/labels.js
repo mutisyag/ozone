@@ -23,7 +23,7 @@ let labels = {
         quantity_other_uses: 'Other/Unspecified',
         decision_other_uses: 'Other/Unspecified',
         decision: "Decision",
-        quantity: "Quantity in metric tonnes",
+        quantity: "Quantity",
         remarks_os: 'Remarks (Secretariat)',
         remarks_party: 'Remarks (Party)',
     },
@@ -51,7 +51,7 @@ let labels = {
         quantity_other_uses: 'Other/Unspecified',
         decision_other_uses: 'Other/Unspecified',
         decision: "Decision",
-        quantity: "Quantity in metric tonnes",
+        quantity: "Quantity",
         remarks_os: 'Remarks (Secretariat)',
         remarks_party: 'Remarks (Party)',
 
@@ -79,7 +79,7 @@ let labels = {
         substance: 'Substances',
         quantity_exempted: 'Production for exempted essential, critical or other uses within your country',
         decision: "Decision",
-        quantity: "Quantity in metric tonnes",
+        quantity: "Quantity",
     },
     has_destroyed: {
         "remarks_party": "Remarks (Secretariat)",

@@ -243,14 +243,16 @@
           </div>
           <div>
             <b-row v-if="fieldsDecisionQuantity" v-for="order in fieldsDecisionQuantity">
-              <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}</b></b-col>
+              <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}:</b></b-col>
               <b-col>
-                    {{labels['quantity']}}
-                    <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}" :disabled="transitionState" :field="modal_data.field[`quantity_${order}`]"></fieldGenerator>
+                <b-input-group :prepend="labels['quantity']">
+                  <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}" :disabled="transitionState" :field="modal_data.field[`quantity_${order}`]"></fieldGenerator>
+                </b-input-group>
               </b-col>
               <b-col>
-                  {{labels['decision']}}
-                    <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}" :disabled="transitionState" :field="modal_data.field[`decision_${order}`]"></fieldGenerator>
+                <b-input-group :prepend="labels['decision']">
+                  <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}" :disabled="transitionState" :field="modal_data.field[`decision_${order}`]"></fieldGenerator>
+                </b-input-group>
               </b-col>
             </b-row>
             <hr>
