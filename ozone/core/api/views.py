@@ -188,14 +188,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        response = submission.check_cloning()
-        if response[0]:
+        try:
             clone = submission.clone()
             return Response({'id': clone.id})
-        else:
+        except ValidationError as e:
             return Response(
-                status=status.HTTP_400_BAD_REQUEST,
-                data=response[1]
+                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                data=e.messages
             )
 
     @action(detail=True, methods=['post'], url_path='call-transition')
