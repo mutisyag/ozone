@@ -209,7 +209,11 @@ export default {
         update(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
               this.showDismissibleAlertSave = true
               current_tab.status = true
-              this.$store.commit('tabHasBeenSaved', field)
+              if(current_tab_data.length){
+                this.$store.commit('tabHasBeenSaved', field)
+              } else {
+                this.$store.commit('updateNewTabs', field)
+              }
               }).catch((error) => {
               current_tab.status = false
               console.log(error.response)

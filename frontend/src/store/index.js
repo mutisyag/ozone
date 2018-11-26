@@ -318,6 +318,9 @@ const store = new Vuex.Store({
                 id: {
                     selected: null,
                 },
+                ordering_id: {
+                    selected: 0,
+                },
                 facility_name: {
                     type: 'text',
                     selected: '',
@@ -362,6 +365,7 @@ const store = new Vuex.Store({
             }
             if (data) {
                 Object.keys(data).forEach((element, index) => {
+                    console.log(element)
                     row[element].selected = data[element]
                 });
             }
@@ -504,7 +508,7 @@ const store = new Vuex.Store({
         },
 
         tabHasBeenSaved(state, tab) {
-            state.newTabs.splice(state.newTabs.indexOf(tab), 1)
+            state.newTabs = state.newTabs.filter( currentTab => currentTab !== tab)
         },
 
         // removal
