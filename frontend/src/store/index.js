@@ -246,16 +246,16 @@ const store = new Vuex.Store({
 
 
         getCountries(context) {
-            let countryOptions = []
             let countryDisplay = {}
             getParties().then(response => {
-                for (let country of response.data) {
-                    countryOptions.push({ value: country.id, text: country.name })
-                    countryDisplay[country.id] = country.name
-                }
+                let countryOptions  = response.data.filter((p)=>{
+                    countryDisplay[p.id] = p.name
+                    return p.id != context.state.current_submission.party
+                }).map((country) => {
+                    return { value: country.id, text: country.name }
+                })
                 context.commit('updateCountries', countryOptions)
                 context.commit('updateCountriesDisplay', countryDisplay)
-
             })
         },
 
