@@ -385,14 +385,21 @@ class Submission(models.Model):
         return (True, "")
 
     def clone(self):
-        clone = Submission.objects.create(
-            party=self.party,
-            reporting_period=self.reporting_period,
-            obligation=self.obligation,
-            cloned_from=self,
-            created_by=self.created_by,
-            last_edited_by=self.last_edited_by
-        )
+        is_cloneable, msg = self.check_cloning()
+        if is_cloneable:
+            try:
+                clone = Submission.objects.create(
+                    party=self.party,
+                    reporting_period=self.reporting_period,
+                    obligation=self.obligation,
+                    cloned_from=self,
+                    created_by=self.created_by,
+                    last_edited_by=self.last_edited_by
+                )
+            except ValidationError as e:
+                raise e
+        else:
+            raise ValidationError(msg)
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
