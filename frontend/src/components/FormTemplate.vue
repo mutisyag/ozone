@@ -14,7 +14,7 @@
             </th>
           </tr>
           <tr class="subheader">
-            <th v-for="subheader in tab_info.section_subheaders">
+            <th :colspan="subheader.colspan" v-for="subheader in tab_info.section_subheaders">
             <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
               <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
             </div>  
@@ -25,8 +25,59 @@
           </tr>
         </thead>
        <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
-         <tr>
-           <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
+         
+
+          <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'" class="subheader">
+            <th v-for="subheader in tab_info.special_headers.section_subheaders">
+          
+
+              <small><b><div style="text-align: center" v-html="subheader.label"></div></b></small>
+            
+            </th>
+          </tr>
+
+         <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'">
+           <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.special_fields_order">
+
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
+                {{row[order].selected}}
+              <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
+                <hr>
+                Quantity of new {{labels['quantity_quarantine_pre_shipment']}} exported to be used for QPS applications
+                <hr>
+                <span>
+                  <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
+                </span>
+              </div>
+              </span>
+
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+
+              </span>
+
+              <span v-else>
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'substance'">
+                  {{tab_data.display.substances[row[order].selected]}}
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
+                </span>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row"></clonefield>
+                <span v-else>
+                   {{tab_data.display.countries[row[order].selected]}}
+                </span>
+              </span>
+           </td>
+         </tr>
+
+         <tr v-else>
+           <td :colspan="row[order].colspan" :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
 
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
                 {{row[order].selected}}
@@ -79,7 +130,7 @@
 
         <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-else class="form-fields">
          <tr>
-           <td  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
+           <td :colspan="row[order].colspan"  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
                 {{row[order].selected}}
               </span>

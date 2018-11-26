@@ -270,14 +270,14 @@ var form = {
             comments: '',
 
             fields_order: ['substance','blend','quantity_total_produced','quantity_feedstock','quantity_exempted','decision_exempted','quantity_article_5', 'validation'],
-            
+            special_fields_order: ['substance', 'quantity_total_produced','quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted','decision_exempted','quantity_article_5', 'validation'],
             hidden_fields_order: ['quantity_essential_uses','decision_essential_uses','quantity_critical_uses','decision_critical_uses','quantity_high_ambient_temperature','decision_high_ambient_temperature','quantity_process_agent_uses','decision_process_agent_uses','quantity_laboratory_analytical_uses','decision_laboratory_analytical_uses','quantity_quarantine_pre_shipment','decision_quarantine_pre_shipment','quantity_other','decision_other'],
             modal_order:  ['quantity_total_produced','quantity_feedstock','quantity_article_5'],
 
 
             section_subheaders: [
                 {
-                    label: "1",
+                    label: "",
                     name: 'substances',
                     sort: 1,
                     type: 'string',
@@ -292,6 +292,7 @@ var form = {
                     label: "3",
                     name: 'quantity_feedstock',
                     sort: 1,
+                    colspan: 2,
                     type: 'number',
                 },
                 {
@@ -327,6 +328,7 @@ var form = {
                 },
                 {
                     label: "Production for feedstock uses within your country",
+                    colspan: 2,
                 },
                 {
                     label: "Production for exempted essential, critical or other uses within your country*",
@@ -340,6 +342,30 @@ var form = {
                     label: "Status"
                 }
             ],
+
+
+            special_headers: {
+
+            section_subheaders: [
+                {
+                    label: "",
+                    name: 'substances',
+                },
+                {
+                    label: "2 <br> Captured for all uses",
+                    name: 'quantity_total_produced',
+                },
+                {
+                    label: "(3a) <br> Captured for feedstock uses within your country",
+                    name: 'quantity_feedstock',
+                },
+                {
+                    label: "(3b) <br> Captured for destruction***",
+                    name: 'quantity_for_destruction',
+                },
+            ],
+            },
+
             comments: [{
                     name: 'comments_party',
                     selected: '',

@@ -326,6 +326,11 @@ export default {
                   quantity_feedstock: {
                      type: 'number',
                      selected: null,
+                     colspan: 2,
+                  },
+                  quantity_for_destruction: {
+                    type: 'number',
+                    selected: null,
                   },
                   quantity_article_5: {
                      type: 'text',
