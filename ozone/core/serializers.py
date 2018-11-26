@@ -472,7 +472,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7emissions_url', 'article7emissions',
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
-            'data_changes_allowed', 'is_current'
+            'data_changes_allowed', 'is_current',
         )
 
         read_only_fields = (
@@ -483,7 +483,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Submission
-        fields = ('party', 'reporting_period', 'obligation',)
+        fields = ('id', 'party', 'reporting_period', 'obligation',)
 
     def create(self, validated_data):
         if 'created_by' not in validated_data:
