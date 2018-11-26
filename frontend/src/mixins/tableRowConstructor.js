@@ -149,7 +149,7 @@ export default {
             },
             decision_essential_uses: {
               type: 'text',
-              selected: 'sss',
+              selected: '',
             },
             quantity_critical_uses: {
               type: 'number',
@@ -281,11 +281,11 @@ export default {
                   },
                   quantity_essential_uses: {
                      type: 'number',
-                     selected: 5,
+                     selected: null,
                   }, 
                   decision_essential_uses: {
                      type: 'text',
-                     selected: 'sss',
+                     selected: '',
                   },
                   quantity_high_ambient_temperature: {
                      type: 'number',

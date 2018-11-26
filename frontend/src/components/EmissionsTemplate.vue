@@ -47,7 +47,7 @@
               <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" v-else :field="row[order]"></fieldGenerator>
             </td>
 	         <td class="row-controls visible">
-	            <i class="fa fa-exclamation fa-lg" @click="remove_field(tab_info.form_fields, row)"></i>
+	            <i class="fa fa-times fa-lg" @click="remove_field(tab_info.form_fields, row)"></i>
 	         </td>
           </tr>
 
