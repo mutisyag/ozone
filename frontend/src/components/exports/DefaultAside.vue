@@ -1,7 +1,7 @@
 <template>
   <div>  
     <AsideToggler class="d-none d-lg-block" />
-    <b-tabs>
+    <b-tabs v-model="tabIndex">
       <b-tab>
         <template slot="title">
           Substances
@@ -40,12 +40,35 @@ export default {
     Validation
   },
 
+  data() {
+    return {
+      tabIndex: 0
+    }
+  },
+
   props: {
     hovered: null,
     tabName: String,
+    parentTabIndex: Number,
   },
-  created(){
-  }
+
+  watch: {
+    parentTabIndex: {
+      handler(new_val){
+        if(new_val != this.tabIndex){
+          console.log(new_val)
+          this.tabIndex = new_val
+        }
+      },
+    },
+    tabIndex: {
+      handler(new_val){
+        if(new_val != this.parentTabIndex){
+          this.$emit("update:parentTabIndex", new_val)
+        }
+      },
+    }
+  },
  
 }
 </script>

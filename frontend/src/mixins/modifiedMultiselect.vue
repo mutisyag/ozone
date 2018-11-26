@@ -20,7 +20,6 @@ export default {
   computed: {
     completeValue: {
       get () {
-        console.log(this.value)
         return this.$attrs['multiple']
           ? this.value ? this.value.map(value => this.findOption(value)) : null
           : this.findOption(this.value)

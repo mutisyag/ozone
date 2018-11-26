@@ -40,8 +40,8 @@
               </div>
               </span>
 
-              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-exclamation fa-lg"></i>
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
                 <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
 
               </span>
@@ -84,8 +84,8 @@
                 {{row[order].selected}}
               </span>
 
-              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-exclamation fa-lg"></i>
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red;  cursor: pointer" class="fa fa-exclamation fa-lg"></i>
                 <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
               </span>
 
@@ -159,7 +159,7 @@
     </div>
 
     <AppAside v-if="!transitionState" fixed>
-      <DefaultAside :hovered="hovered" :tabName="tabName"> </DefaultAside>
+      <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"> </DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
@@ -258,6 +258,7 @@ export default {
       modal_comments: null,
       labels: null,
       hovered: null,
+      sidebarTabIndex: 0,
     }
   },
 
@@ -286,6 +287,14 @@ export default {
      updateFormField(value, fieldInfo){
       this.$store.commit('updateFormField', {value: value, fieldInfo: fieldInfo})
     },
+
+
+    openValidation(){
+      const body = document.querySelector('body')
+      this.sidebarTabIndex = 2   
+      body.classList.add('aside-menu-lg-show')
+    },
+
 
     intersect(a, b) {
       var setA = new Set(a);
@@ -583,6 +592,16 @@ td[rowspan="2"] {
     border-right: 1px solid #c8ced3;
     border-bottom: 3px solid #c8ced3;
 
+}
+
+.validation-wrapper {
+    display: block;
+    font-size: 1rem;
+}
+
+.validation-wrapper:hover .fa-exclamation{
+  font-weight: bold;
+  color: black!important;
 }
 
 </style>
