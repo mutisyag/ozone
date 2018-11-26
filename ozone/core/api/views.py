@@ -158,7 +158,7 @@ class BlendViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         if instance.custom is False:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
-        self.perform_update(instance)
+        return super().update(request, *args, **kwargs)
 
 
 class UserViewSet(viewsets.ModelViewSet):

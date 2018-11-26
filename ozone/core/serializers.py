@@ -244,17 +244,21 @@ class CreateBlendSerializer(serializers.ModelSerializer):
         components_data = validated_data.pop('components')
         blend = super().update(instance, validated_data)
 
-        # Delete all components that do not correspond to the substance data
-        qs = BlendComponent.objects.filter(blend=instance)
-        qs.exclude(
-            substance__pk__in=[c.get('substance').pk for c in components_data]
-        ).delete()
+        # Delete all components that do not correspond to the new data
+        component_keys = [
+            (c.get('substance', None), c.get('component_name', None))
+            for c in components_data
+        ]
+        for c in BlendComponent.objects.filter(blend=instance):
+            if (c.substance, c.component_name) not in component_keys:
+                c.delete()
 
         # And create/update the new ones
         for component_data in components_data:
             BlendComponent.objects.update_or_create(
                 blend=instance,
                 substance=component_data.get('substance'),
+                component_name=component_data.get('component_name'),
                 defaults={'percentage': component_data.get('percentage')}
             )
 
