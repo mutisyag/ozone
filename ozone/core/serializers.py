@@ -312,6 +312,10 @@ class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7DestructionSerializer(serializers.ModelSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
     class Meta:
         list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
@@ -324,6 +328,10 @@ class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7ProductionSerializer(serializers.ModelSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
     class Meta:
         list_serializer_class = Article7ProductionListSerializer
         model = Article7Production
@@ -336,6 +344,9 @@ class Article7ExportListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7ExportSerializer(BaseBlendCompositionSerializer):
+    group = serializers.CharField(source='substance.group.group_id', default='',
+                                  read_only=True)
+
     class Meta:
         list_serializer_class = Article7ExportListSerializer
         model = Article7Export
@@ -348,6 +359,10 @@ class Article7ImportListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7ImportSerializer(BaseBlendCompositionSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
     class Meta:
         list_serializer_class = Article7ImportListSerializer
         model = Article7Import
@@ -360,6 +375,10 @@ class Article7NonPartyTradeListSerializer(BaseBulkUpdateSerializer):
 
 
 class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
     class Meta:
         list_serializer_class = Article7NonPartyTradeListSerializer
         model = Article7NonPartyTrade
