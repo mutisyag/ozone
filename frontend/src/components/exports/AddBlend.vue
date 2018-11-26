@@ -209,7 +209,11 @@ export default {
           this.submit_blend.components = []
           this.submit_blend.party = this.$store.state.current_submission.party
           for(let substance of this.new_blend.composition) {
-            this.submit_blend.components.push({substance: substance.name, percentage: substance.percent/100})
+            if(typeof(substance.name) === 'string'){
+              this.submit_blend.components.push({component_name: substance.name, substance: null, percentage: substance.percent/100})
+            } else {
+              this.submit_blend.components.push({component_name: null, substance: substance.name, percentage: substance.percent/100})
+            }
           }
           console.log(this.submit_blend)
           createBlend(this.submit_blend).then(response =>  {
