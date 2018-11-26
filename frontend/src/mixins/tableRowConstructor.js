@@ -135,12 +135,12 @@ export default {
               selected: null,
             },
             get quantity_exempted() {
-                let fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses','quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other']
+                let fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses','quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other_uses']
                  return self.quantityCalculator(fields, this, section)
             },
 
             get decision_exempted() {
-                let fields =  ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses','decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other']
+                let fields =  ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses','decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other_uses']
                 return self.decisionGenerator(fields, this, section)
             },
             quantity_essential_uses: {
@@ -191,11 +191,11 @@ export default {
               type: 'text',
               selected: '',
             },
-            quantity_other: {
+            quantity_other_uses: {
               type: 'number',
               selected: null,
             },
-            decision_other: {
+            decision_other_uses: {
               type: 'text',
               selected: '',
             },
