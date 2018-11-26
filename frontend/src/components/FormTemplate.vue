@@ -43,7 +43,7 @@
                 {{row[order].selected}}
               <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
                 <hr>
-                Quantity of new {{labels['quantity_quarantine_pre_shipment']}} exported to be used for QPS applications
+                Quantity of new {{tab_data.display.substances[row[order].selected]}} exported to be used for QPS applications
                 <hr>
                 <span>
                   <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
@@ -60,7 +60,6 @@
               <span v-else>
                 <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'substance'">
-                  {{tab_data.display.substances[row[order].selected]}}
                   <div class="table-btn-group">
                     <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
                       Edit
@@ -83,10 +82,10 @@
                 {{row[order].selected}}
               <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
                 <hr>
-                Quantity of new {{labels['quantity_quarantine_pre_shipment']}} exported to be used for QPS applications
+                Quantity of new {{tab_data.display.substances[row.substance.selected]}} exported to be used for QPS applications
                 <hr>
                 <span>
-                  <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
+                   <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" :field="row.quantity_quarantine_pre_shipment"></fieldGenerator>
                 </span>
               </div>
               </span>
