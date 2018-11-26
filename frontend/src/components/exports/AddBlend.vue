@@ -207,6 +207,7 @@ export default {
           
           this.submit_blend.blend_id = this.new_blend.text
           this.submit_blend.components = []
+          this.submit_blend.party = this.$store.state.current_submission.party
           for(let substance of this.new_blend.composition) {
             this.submit_blend.components.push({substance: substance.name, percentage: substance.percent/100})
           }
