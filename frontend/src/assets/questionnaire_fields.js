@@ -31,7 +31,7 @@ export const intro_fields = {
 		label: '1.4. Did your country destroy any ODSs in the reporting year?',
 		type: 'radio',
 		name: 'has_destroyed',
-		selected: false,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info: 'If No, ignore data form 4 and go to question 1.5. If Yes, please complete data form 4. Please read Instruction IV of the document carefully before filling in the form.'
 	},		
@@ -39,7 +39,7 @@ export const intro_fields = {
 		label: '1.5. Did your country import from or export or re-export to non-Parties in the reporting year?',
 		type: 'radio',
 		name: 'has_nonparty',
-		selected: false,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info: 'If No, ignore data form 5. If Yes, please complete data form 5. Please read Instruction V of the document carefully, and, particularly, the definition of non-Parties before filling in the form.'
 	},
@@ -47,7 +47,7 @@ export const intro_fields = {
 		label: '1.6. Did your country generate the substance HFC23 in the reporting year from any facility that produces (manufactures) Annex C Group I or Annex F substances?',
 		type: 'radio',
 		name: 'has_emissions',
-		selected: false,
+		selected: true,
 		options: [{text: 'Yes', value: true},{text: 'No', value: false}],
 		info: 'If No, ignore data form 5. If Yes, please complete data form 5. Please read Instruction V of the document carefully, and, particularly, the definition of non-Parties before filling in the form.'
 	},		
