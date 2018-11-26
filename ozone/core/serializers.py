@@ -221,7 +221,7 @@ class BlendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blend
-        fields = ('id', 'blend_id', 'type', 'custom', 'components')
+        fields = ('id', 'blend_id', 'custom', 'party', 'type', 'components')
 
 
 class CreateBlendSerializer(serializers.ModelSerializer):
@@ -229,11 +229,11 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blend
-        exclude = ('custom',)
+        fields = '__all__'
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
-        blend = Blend.objects.create(custom=True, **validated_data)
+        blend = Blend.objects.create(**validated_data)
         for component_data in components_data:
             BlendComponent.objects.create(blend=blend, **component_data)
         return blend
@@ -244,17 +244,21 @@ class CreateBlendSerializer(serializers.ModelSerializer):
         components_data = validated_data.pop('components')
         blend = super().update(instance, validated_data)
 
-        # Delete all components that do not correspond to the substance data
-        qs = BlendComponent.objects.filter(blend=instance)
-        qs.exclude(
-            substance__pk__in=[c.get('substance').pk for c in components_data]
-        ).delete()
+        # Delete all components that do not correspond to the new data
+        component_keys = [
+            (c.get('substance', None), c.get('component_name', None))
+            for c in components_data
+        ]
+        for c in BlendComponent.objects.filter(blend=instance):
+            if (c.substance, c.component_name) not in component_keys:
+                c.delete()
 
         # And create/update the new ones
         for component_data in components_data:
             BlendComponent.objects.update_or_create(
                 blend=instance,
                 substance=component_data.get('substance'),
+                component_name=component_data.get('component_name'),
                 defaults={'percentage': component_data.get('percentage')}
             )
 
@@ -384,7 +388,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
-    party = serializers.StringRelatedField(many=False, read_only=True)
+    party = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     reporting_period = serializers.StringRelatedField(
         many=False, read_only=True
     )
