@@ -100,20 +100,26 @@ const store = new Vuex.Store({
     actions: {
 
         addSubmission(context, data) {
-            const duplicate = context.getters.getDuplicateSubmission(data)
-            const submissionYear = new Date(context.getters.getPeriodYear(data.reporting_period))
-            if (duplicate.length) {
-                context.dispatch('setAlert', { message: 'Another submission already exists in Data Entry stage.', variant: 'danger' })
-            } else if(submissionYear > new Date()) {
-                context.dispatch('setAlert', { message: 'You can\'t report for this period yet', variant: 'danger' })
-            } else {
-                createSubmission(data).then((response) => {
-                    context.dispatch('getCurrentSubmissions')
-                    context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
-                }).catch((error) => {
-                    context.dispatch('setAlert', { message: 'Failed to create submission', variant: 'danger' })
-                })
-            }
+
+            return new Promise((resolve, reject) => {
+                const duplicate = context.getters.getDuplicateSubmission(data)
+                const submissionYear = new Date(context.getters.getPeriodYear(data.reporting_period))
+                if (duplicate.length) {
+                    context.dispatch('setAlert', { message: 'Another submission already exists in Data Entry stage.', variant: 'danger' })
+                } else if(submissionYear > new Date()) {
+                    context.dispatch('setAlert', { message: 'You can\'t report for this period yet', variant: 'danger' })
+                } else {
+                    createSubmission(data).then((response) => {
+                        context.dispatch('getCurrentSubmissions')
+                        context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
+                        resolve(response.data)
+                    }).catch((error) => {
+                        context.dispatch('setAlert', { message: 'Failed to create submission', variant: 'danger' })
+                        reject(error.response)
+                    })
+                }
+            });
+
         },
 
         getCurrentSubmissions(context) {

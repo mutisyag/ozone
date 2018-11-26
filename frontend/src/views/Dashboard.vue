@@ -319,7 +319,10 @@ export default {
 
   methods: {
     addSubmission() {
-      this.$store.dispatch('addSubmission', this.current)
+      this.$store.dispatch('addSubmission', this.current).then(r => {
+        // will send the user to new route here
+        console.log(r)
+      })
     },
 
 
