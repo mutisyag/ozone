@@ -3,7 +3,7 @@
     <div class="container">
       <div style="position: relative">
           <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" trackBy="value" placeholder="Countries" v-model="selected_countries.selected" :options="countryOptions"></multiselect>
-          <b-btn @click="addSubstance" v-if="selected_countries.selected">Add</b-btn>
+          <b-btn @click="addSubstance" v-if="selected_countries.selected.length">Add</b-btn>
       </div>
     </div>
   </div>
@@ -39,7 +39,7 @@ export default {
     return {
       field: null,
       selected_countries: {
-        selected: null,
+        selected: [],
       },
     }
   },
@@ -94,7 +94,7 @@ export default {
     },
 
     resetData() {
-      this.selected_countries.selected = null
+      this.selected_countries.selected = []
     },
 
     removeSpecialChars(str) {
