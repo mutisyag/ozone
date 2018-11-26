@@ -144,9 +144,9 @@
               <span v-else>
                 <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'blend'">
-                  <span style="cursor:pointer;" @click="row[order].expand = !row[order].expand">
+                  <span style="cursor:pointer;" v-b-tooltip.hover = "'Click to expand/collapse blend'" @click="row[order].expand = !row[order].expand">
                     {{tab_data.display.blends[row[order].selected].name}} 
-                    <i :class="`fa fa-caret-square-o-${expandedStatus(row[order].expand)}`"></i>
+                    <i :class="`fa fa-caret-${expandedStatus(row[order].expand)}`"></i>
                   </span>
 
                   <div class="table-btn-group">
@@ -388,7 +388,7 @@ export default {
       if(status) 
         return 'down'
       else 
-        return 'up'
+        return 'right'
     },
 
     getSpanType(field_type) {
