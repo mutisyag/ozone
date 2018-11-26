@@ -188,10 +188,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         if submission.check_cloning():
-            submission.clone()
-            return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            clone = submission.clone()
+            return Response({'id': clone.id})
 
     @action(detail=True, methods=['post'], url_path='call-transition')
     def call_transition(self, request, pk=None):

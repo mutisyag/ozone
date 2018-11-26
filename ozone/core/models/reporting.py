@@ -374,20 +374,28 @@ class Submission(models.Model):
         """
         Checks whether the current submission can be cloned
         """
-        current_submissions = Submission.objects.filter(
-            reporting_period=ReportingPeriod.current_period(),
-            obligation=self.obligation
-        )
-        if self in current_submissions:
-            return True
-        elif (
-            self.current_state == "finalized"
-            and self.flag_valid is True
-            and self.flag_superseded is False
+        if self.reporting_period.start_date > ReportingPeriod.current_period().end_date:
+            raise ValidationError(
+                _(
+                    "You can't clone a submission from a following period"
+                )
+            )
+
+        if self not in Submission.objects.filter(
+            reporting_period=ReportingPeriod.current_period()
         ):
-            return True
-        else:
-            return False
+            if not (
+                self.current_state == "finalized"
+                and self.flag_valid is True
+                and self.flag_superseded is False
+            ):
+                raise ValidationError(
+                    _(
+                        "You can't clone a submission from a previous period if "
+                        "it's not a final version (finalized, valid, not superseded."
+                    )
+                )
+        return True
 
     def clone(self):
         clone = Submission.objects.create(
@@ -421,6 +429,8 @@ class Submission(models.Model):
                 attributes = model_to_dict(instance, exclude=exclude)
                 attributes['submission_id'] = clone.pk
                 instance.__class__.objects.create(**attributes)
+
+        return clone
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
