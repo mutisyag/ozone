@@ -121,7 +121,7 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     serializer_class = PartySerializer
 
 
-class GetNonPartiesViewSet(generics.ListAPIView):
+class GetNonPartiesViewSet(ReadOnlyMixin, generics.ListAPIView):
     serializer_class = PartySerializer
 
     def get_queryset(self):
@@ -130,12 +130,12 @@ class GetNonPartiesViewSet(generics.ListAPIView):
         )
 
 
-class ReportingPeriodViewSet(viewsets.ModelViewSet):
+class ReportingPeriodViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = ReportingPeriod.objects.all()
     serializer_class = ReportingPeriodSerializer
 
 
-class ObligationViewSet(viewsets.ModelViewSet):
+class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Obligation.objects.all()
     serializer_class = ObligationSerializer
 
@@ -162,7 +162,7 @@ class BlendViewSet(viewsets.ModelViewSet):
         return super().update(request, *args, **kwargs)
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
