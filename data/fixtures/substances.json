@@ -2712,7 +2712,7 @@
       "description": "Trifluoromethane (Fluoroform)",
       "fluorines": "F3",
       "formula": "CHF3",
-      "group": 10,
+      "group": 11,
       "gwp": 14800,
       "gwp2": null,
       "gwp_error_plus_minus": null,
