@@ -242,15 +242,15 @@
             <hr>
           </div>
           <div>
-            <b-row v-if="fieldsDecisionQuantity" v-for="order in fieldsDecisionQuantity">
-              <b-col lg="12" class="mb-2"><b> {{labels[`decision_${order}`]}}:</b></b-col>
-              <b-col>
-                <b-input-group :prepend="labels['quantity']">
+            <b-row class="mb-3" v-if="fieldsDecisionQuantity" v-for="order in fieldsDecisionQuantity">
+              <b-col lg="4" class="mb-2"><b> {{labels[`decision_${order}`]}}:</b></b-col>
+              <b-col lg="4">
+                <b-input-group class="modal-group" :prepend="labels['quantity']">
                   <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}" :disabled="transitionState" :field="modal_data.field[`quantity_${order}`]"></fieldGenerator>
                 </b-input-group>
               </b-col>
-              <b-col>
-                <b-input-group :prepend="labels['decision']">
+              <b-col lg="4">
+                <b-input-group class="modal-group" :prepend="labels['decision']">
                   <fieldGenerator :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}" :disabled="transitionState" :field="modal_data.field[`decision_${order}`]"></fieldGenerator>
                 </b-input-group>
               </b-col>
