@@ -47,7 +47,7 @@ const  routes = [
           path: '/submission/art7',
           name: 'art7',
           meta:{requiresAuth : true},
-          component: Form
+          component: Form,
         },
         {
           path: '/submission/essencrit',
@@ -150,9 +150,7 @@ const router = new Router(routerOptions);
 
 
 router.beforeEach((to, from, next) => {
-  console.log('to',to)
   if (to.meta.requiresAuth) {
-    console.log(window)
     const authToken = window.$cookies.get('authToken');
     
     if (!authToken) {

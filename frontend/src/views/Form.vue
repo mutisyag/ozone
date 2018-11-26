@@ -16,6 +16,12 @@ export default {
     return {}
   },
 
+
+  beforeRouteLeave (to, from, next) {
+    this.$destroy()
+    next()
+  },
+
   methods: {
   }
 }

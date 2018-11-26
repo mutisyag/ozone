@@ -29,6 +29,7 @@ const store = new Vuex.Store({
             show: false,
             variant: null,
         },
+        baseForm: form,
         current_submission: null,
         available_transitions: null,
         permissions: {
@@ -37,7 +38,7 @@ const store = new Vuex.Store({
             actions: null,
         },
         newTabs: [],
-        form: form,
+        form: null,
         initialData: {
             countryOptions: null,
             substances: null,
@@ -219,10 +220,16 @@ const store = new Vuex.Store({
         },
 
 
-        getInitialData(context) {
-            context.dispatch('getCountries')
-            context.dispatch('getSubstances')
-            context.dispatch('getCustomBlends')
+        getInitialData(context, data) {
+            context.commit('getEmptyForm')
+            return new Promise((resolve, reject) => {
+                context.dispatch('getSubmissionData',data).then(r => {
+                    context.dispatch('getCountries')
+                    context.dispatch('getSubstances')
+                    context.dispatch('getCustomBlends')
+                    resolve()
+                })
+            });
         },
 
 
@@ -389,6 +396,11 @@ const store = new Vuex.Store({
             state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
             :
             state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value 
+        },
+
+
+        getEmptyForm(state){
+            state.form = JSON.parse(JSON.stringify(state.baseForm))
         },
 
 
