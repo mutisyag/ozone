@@ -437,34 +437,6 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     class Meta:
         db_table = 'reporting_article_seven_production'
 
-    def clean(self):
-        if self.quantity_article_5:
-            if not self.substance.group.name == 'Annex C Group I':
-                raise ValidationError(
-                    {
-                        'quantity_article_5': [_(
-                            'If Quantity article 5 field has an amount, '
-                            'then Substance must by only from Annex C Group I.'
-                        )]
-                    }
-                )
-        if self.quantity_quarantine_pre_shipment:
-            if not self.substance.group.name == 'Annex E Group I':
-                raise ValidationError(
-                    {
-                        'quantity_quarantine_pre_shipment': [_(
-                            'If Quantity quarantine pre shipment field has'
-                            'an amount then Substance must be'
-                            'only Annex E Group I (i.e. Methyl Bromide).'
-                        )]
-                    }
-                )
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
-
 
 class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
     """
