@@ -731,6 +731,11 @@ button img.icon {
     display: flex;
     align-items: center;
   }
+
+  .tab-title {
+    max-width: 35%;
+  }
+
   &.custom {
         // position: absolute;
     // top: 43px;

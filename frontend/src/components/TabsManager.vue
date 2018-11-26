@@ -274,14 +274,27 @@ export default {
       titles: [
       {title:'Submission Info'},
       {title: 'Questionaire'},
-      {title:'<b>Data on Imports</b>'},
-      {title:'<b>Data on exports</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>', tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'},
-      {title:'<b> Data on production </b>'},
-      {title:'<b> Data on Destruction </b>'},
-      {title:'<b> Data on Non-party </b>'},
-      {title:'<b> Data on Emissions </b>'},
+      {title:'<b>DATA ON IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>'},
+      {title:'<b>DATA ON EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
+       tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'
+      },
+      {title:'<b> DATA ON PRODUCTION </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>'},
+      {title:'<b> DATA ON QUANTITY OF SUBSTANCES DESTROYED </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>'},
+      {title:'<b> DATA ON IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
+       tooltip: '* See definition of “non parties” in Instruction V.'
+      },
+      {title:'<b> DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES </b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>'},
+      {title: 'Attachments'},
       ],
-      subtitles: ['', 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.','', 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide']
+      subtitles: ['',
+       'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
+       'Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs', 
+       'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide', 
+       'Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
+       'Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
+       'Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties ',
+       'Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances ',
+       ]
     }
   },
 
