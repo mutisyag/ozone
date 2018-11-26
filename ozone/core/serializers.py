@@ -388,7 +388,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     This also needs to nested-serialize all data related to the specific
     submission.
     """
-    party = serializers.StringRelatedField(many=False, read_only=True)
+    party = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
     reporting_period = serializers.StringRelatedField(
         many=False, read_only=True
     )
