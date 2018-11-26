@@ -212,7 +212,7 @@ export default {
             if(typeof(substance.name) === 'string'){
               this.submit_blend.components.push({component_name: substance.name, substance: null, percentage: substance.percent/100})
             } else {
-              this.submit_blend.components.push({component_name: null, substance: substance.name, percentage: substance.percent/100})
+              this.submit_blend.components.push({component_name: "", substance: substance.name, percentage: substance.percent/100})
             }
           }
           console.log(this.submit_blend)
