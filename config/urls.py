@@ -12,13 +12,22 @@ urlpatterns = [
     # User management
 
     # Your stuff: custom urls includes go here
-    re_path(r'^reporting/.*', serve, kwargs={'path': 'index.html'}),
+    path(
+        "",
+        RedirectView.as_view(url='/reporting', permanent=False)
+    ),
     re_path(
-        r'^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$',
+        r"^reporting/.*",
+        serve,
+        kwargs={'path': 'index.html'}
+    ),
+    re_path(
+        r"^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$",
         RedirectView.as_view(url='/static/%(path)s', permanent=False)
     ),
-    path("api/",
-         include("ozone.core.api.urls", namespace="core"),
+    path(
+        "api/",
+        include("ozone.core.api.urls",namespace="core")
     ),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
@@ -49,4 +58,3 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
-
