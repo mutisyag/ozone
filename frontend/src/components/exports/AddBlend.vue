@@ -29,7 +29,7 @@
               <b-input-group-prepend>
                 <b-btn  style="z-index:initial;"  variant="danger" @click="removeSubstanceFromBlend(substance)">X</b-btn>
               </b-input-group-prepend>
-              <multiselect label="text"  @tag="addTag($event,substance)" :taggable="true" trackBy="value" placeholder="Substance" v-model="substance.name" :options="substances"></multiselect>
+              <multiselect label="text"  @tag="addTag($event,substance)" :taggable="true" trackBy="value" placeholder="Select a controlled substance or enter a new one." v-model="substance.name" :options="substances"></multiselect>
               <b-input-group-append>
                 <b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
               </b-input-group-append>
