@@ -76,11 +76,10 @@ export default {
         }
         // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
         if(!fieldExists) {
-          
            this.$store.dispatch('createSubstance',{
                  substanceList: [current_field.substance.selected],
                  currentSectionName: this.tabName, 
-                 groupName: current_field.group, 
+                 groupName: current_field.group.selected, 
                  country: country, 
                  blendList: [current_field.blend.selected], 
                  prefillData: null
