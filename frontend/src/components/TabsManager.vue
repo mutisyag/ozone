@@ -149,7 +149,7 @@
             <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"   tabName="has_emissions"></emissionstemplate>
           </b-tab>
            <b-tab title="Attachments">
-            <attachments :info="$store.state.form.tabs.attachments" tabId="8"></attachments>
+            <attachments tabId="8"></attachments>
           </b-tab>
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->

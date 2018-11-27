@@ -661,27 +661,7 @@ var form = {
                 },
             ],
         },
-        attachments: [{
-                name: 'Test',
-                url: 'https://www.google.com',
-                id: 1,
-            },
-            {
-                name: 'Test 1',
-                url: 'https://www.google.com',
-                id: 2,
-            },
-            {
-                name: 'Test 2',
-                url: 'https://www.google.com',
-                id: 3,
-            },
-            {
-                name: 'Test 3',
-                url: 'https://www.google.com',
-                id: 4,
-            },
-        ],
+        attachments: [],
     },
 }
 export default form

@@ -384,7 +384,28 @@ const store = new Vuex.Store({
                 context.commit('resetTab', data)
                 resolve()
             });
-        }
+        },
+
+        uploadFormAttachments({ commit, state }, uploadedFiles) {
+            //upload to the server       
+            //mocking server response
+            const mockResponseAttachments = uploadedFiles.map(file => {
+                return {
+                    id: Math.floor(Math.random() * 100000),
+                    name: file.name,
+                    url: 'https://www.google.com',
+                    size: `${file.size} bytes`,
+                    dateUploaded: new Date(),
+                    description: `DESCRIPTION ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name}`
+                }
+            });
+            commit('setFormAttachments', [...state.form.tabs.attachments, ...mockResponseAttachments]);
+        },
+
+        saveFormAttachments({ commit, state }, payload) {                  
+            alert('attachments saved');
+            console.log(state.form.tabs.attachments);
+        },
     },
 
     mutations: {
@@ -531,7 +552,22 @@ const store = new Vuex.Store({
 
         removeField(state, data) {
             state.form.tabs[data.tab].form_fields.splice(data.index, 1)
-        }
+        },
+
+        setFormAttachments(state, attachments) {
+            state.form.tabs.attachments = attachments;
+        },
+
+        updateFormAttachment(state, attachment) {            
+            const updatedAttachments = [];
+            state.form.tabs.attachments.forEach(attach => {
+                attach.id === attachment.id ? updatedAttachments.push(attachment) : updatedAttachments.push(attach)
+            });
+            state.form.tabs.attachments = updatedAttachments;
+        },
+        deleteFormAttachment(state, attachment) {           
+            state.form.tabs.attachments = state.form.tabs.attachments.filter(attach => attach.id !== attachment.id);
+        },        
     }
 })
 
