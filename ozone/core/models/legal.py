@@ -47,15 +47,6 @@ class ReportingPeriod(models.Model):
     def __str__(self):
         return self.name
 
-    @classmethod
-    def current_period(cls):
-        current_date = datetime.now()
-        return (
-            cls.objects.filter(end_date__lt=current_date)
-            .order_by('-end_date')
-            .first()
-        )
-
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
             raise ValidationError(
