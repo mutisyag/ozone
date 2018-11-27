@@ -78,6 +78,23 @@ export default {
           return returnObj
         },
 
+        doSum(sumItems){
+          return sumItems.reduce((sum,item) => {
+            return this.valueConverter(item) + sum
+          })
+        },
+
+
+        valueConverter(item) {
+          if(item === null || item === undefined || isNaN(parseFloat(item))) {
+            return 0
+          } else {
+            return parseFloat(item)
+          }
+        },
+
+
+
         decisionGenerator(fields, parent, section){
           let decisions = []
           let returnObj = {
@@ -209,9 +226,16 @@ export default {
             },
             get validation() {
               let errors = []
-              if(!this.quantity_total_new.selected){
-                errors.push('eroare1')
+              console.log(self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]))
+              if(self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0){
+                errors.push('Total quantity imported for all uses is required')
               }
+
+
+              if(self.valueConverter(this.quantity_exempted.selected) > self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+                errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
+              }
+
 
               let returnObj = {
                 type: 'nonInput',
