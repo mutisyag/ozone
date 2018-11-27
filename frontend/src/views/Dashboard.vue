@@ -328,7 +328,7 @@ export default {
 
     clone(url){
       cloneSubmission(url).then(response => {
-        console.log(resposne.data)
+        this.$store.dispatch('getCurrentSubmissions')
         this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
       }).catch(error => {
         this.$store.dispatch('setAlert', { message: 'Unable to clone submission', variant: 'danger' })
