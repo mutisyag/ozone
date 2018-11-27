@@ -191,7 +191,7 @@
           <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="outline-primary">
             Reinstate
         </b-btn>
-        <b-btn variant="outline-info">
+        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           Versions
         </b-btn>
         <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
@@ -199,6 +199,10 @@
         </b-btn>
       </b-button-group>
     </Footer>
+
+    <b-modal size="lg" ref="history_modal" id="history_modal">
+        <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
+    </b-modal>
   </div>
 </template>
 
@@ -211,6 +215,7 @@ import Attachments from "./Attachments.vue";
 import {getInstructions, getUsers} from '@/api/api.js'
 import {Footer} from '@coreui/vue'
 import Save from './Save'
+import SubmissionHistory from './SubmissionHistory.vue'
 export default {
 
   name: 'TabsManager',
@@ -222,7 +227,8 @@ export default {
     subinfo: SubmissionInfo,
     attachments: Attachments,
     Footer,
-    Save
+    Save,
+    SubmissionHistory
   },
 
   props: {

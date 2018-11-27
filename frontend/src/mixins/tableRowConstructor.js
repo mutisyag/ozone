@@ -226,7 +226,6 @@ export default {
             },
             get validation() {
               let errors = []
-              console.log(self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]))
               if(self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0){
                 errors.push('Total quantity imported for all uses is required')
               }

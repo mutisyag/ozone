@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import { fetch, callTransition, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
+import { fetch, getSubmissionHistory, callTransition, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
 
 import dummyTransition from '@/assets/dummyTransition.js'
 
@@ -31,6 +31,7 @@ const store = new Vuex.Store({
         },
         baseForm: form,
         current_submission: null,
+        currentSubmissionHistory: null,
         available_transitions: null,
         permissions: {
             dashboard: null,
@@ -243,11 +244,21 @@ const store = new Vuex.Store({
                         context.dispatch('prefillQuestionaire')
                     }
                     context.commit('updateFormPermissions', dummyTransition)
+                    context.dispatch('getCurrentSubmissionHistory', data)
                     resolve()
                 })
 
             });
 
+        },
+
+
+        getCurrentSubmissionHistory(context, data) {
+            getSubmissionHistory(data).then((response) => {
+                context.commit('setSubmissionHistory', response.data)
+            }).catch((error) => {
+                context.dispatch('setAlert', { message: error.response.data, variant: 'danger' })
+            })
         },
 
 
@@ -398,6 +409,10 @@ const store = new Vuex.Store({
             state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value 
         },
 
+
+        setSubmissionHistory(state,data){
+            state.currentSubmissionHistory = data
+        },
 
         getEmptyForm(state){
             state.form = JSON.parse(JSON.stringify(state.baseForm))
