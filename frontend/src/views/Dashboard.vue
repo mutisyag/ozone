@@ -185,6 +185,7 @@
 
 <script>
 import {cloneSubmission} from '@/api/api'
+import errorHandling from '@/mixins/errorHandling'
 
 export default {
   name: 'Dashboard',
@@ -331,7 +332,8 @@ export default {
         this.$store.dispatch('getCurrentSubmissions')
         this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
       }).catch(error => {
-        this.$store.dispatch('setAlert', { message: 'Unable to clone submission', variant: 'danger' })
+        console.log(error.response.data)
+        this.$store.dispatch('setAlert', { message: errorHandling.handleError(error.response.data), variant: 'danger' })
         console.log(error)
       })
     },
