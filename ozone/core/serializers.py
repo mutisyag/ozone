@@ -243,6 +243,8 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 
         validated_mapping = {}
         for c in components_data:
+            # Substance, if present always takes precedence over component_name,
+            # as we may want to change the component_name for a specific subst
             if c.get('substance', None) is not None:
                 validated_mapping[c.get('substance')] = c
             elif c.get('component_name', "") != "":
