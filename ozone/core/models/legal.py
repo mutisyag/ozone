@@ -28,6 +28,13 @@ class ReportingPeriod(models.Model):
     # logic on the `name` field
     is_year = models.BooleanField(default=True)
 
+    # Indicates whether reporting can be performed for this reporting period.
+    # Will be False for baseline years.
+    is_reporting_allowed = models.BooleanField(default=True)
+
+    # Indicates whether reporting is open/ongoing for this reporting period.
+    is_reporting_open = models.BooleanField(default=False)
+
     # this is always required, and can be in the future
     start_date = models.DateField()
 
