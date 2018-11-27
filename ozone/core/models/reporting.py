@@ -360,24 +360,13 @@ class Submission(models.Model):
         """
         Checks whether the current submission can be cloned
         """
-        if self.reporting_period.start_date > ReportingPeriod.current_period().end_date:
-            return (
-                False,
-                "You can't clone a submission from a following period."
-            )
 
-        if self not in Submission.objects.filter(
-            reporting_period=ReportingPeriod.current_period()
-        ):
-            if not (
-                self.current_state == "finalized"
-                and self.flag_valid is True
-                and self.flag_superseded is False
-            ):
+        if not self.reporting_period.is_reporting_open:
+            if self.flag_superseded:
                 return (
                     False,
                     "You can't clone a submission from a previous period if "
-                    "it's not a final version (finalized, valid, not superseded)."
+                    "it's superseded."
                 )
 
         return (True, "")
@@ -451,6 +440,10 @@ class Submission(models.Model):
         super().delete(*args, **kwargs)
 
     def clean(self):
+        if not self.reporting_period.is_reporting_allowed:
+            raise ValidationError(
+                _("Reporting cannot be performed for this reporting period.")
+            )
         if self.non_exempted_fields_modified() and not self.data_changes_allowed:
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")

@@ -28,6 +28,13 @@ class ReportingPeriod(models.Model):
     # logic on the `name` field
     is_year = models.BooleanField(default=True)
 
+    # Indicates whether reporting can be performed for this reporting period.
+    # Will be False for baseline years.
+    is_reporting_allowed = models.BooleanField(default=True)
+
+    # Indicates whether reporting is open/ongoing for this reporting period.
+    is_reporting_open = models.BooleanField(default=False)
+
     # this is always required, and can be in the future
     start_date = models.DateField()
 
@@ -39,15 +46,6 @@ class ReportingPeriod(models.Model):
 
     def __str__(self):
         return self.name
-
-    @classmethod
-    def current_period(cls):
-        current_date = datetime.now()
-        return (
-            cls.objects.filter(end_date__lt=current_date)
-            .order_by('-end_date')
-            .first()
-        )
 
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
