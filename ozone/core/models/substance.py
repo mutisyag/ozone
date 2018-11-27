@@ -1,7 +1,9 @@
 import enum
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from .meeting import ExemptionTypes, Treaty
 from .party import Party
@@ -212,7 +214,11 @@ class BlendComponent(models.Model):
     )
 
     substance = models.ForeignKey(
-        Substance, null=True, related_name='blends', on_delete=models.PROTECT
+        Substance,
+        null=True,
+        blank=True,
+        related_name='blends',
+        on_delete=models.PROTECT
     )
 
     percentage = models.FloatField(
@@ -220,10 +226,33 @@ class BlendComponent(models.Model):
     )
 
     component_name = models.CharField(max_length=256, blank=True)
+
     cnumber = models.CharField(max_length=256, blank=True)
 
     def __str__(self):
-        return f'Blend {self.blend.blend_id} - substance {self.substance.name}'
+        return f'Blend {self.blend.blend_id} - component {self.component_name}'
+
+    def clean(self):
+        if not self.component_name and not self.substance:
+            raise ValidationError(
+                {
+                    'component_name': [_(
+                        'Substance or component name must be set!'
+                    )],
+                    'substance': [_(
+                        'Substance or component name must be set!'
+                    )]
+                }
+            )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        if not self.component_name:
+            # If a component name is not given, set it to substance.name.
+            # This avoids creating a property returning one of the two, which
+            # would cause problems with DRF's serializers
+            self.component_name = self.substance.name
+        return super().save(*args, **kwargs)
 
     class Meta:
         ordering = ('blend', 'substance')

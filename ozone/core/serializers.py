@@ -207,13 +207,9 @@ class GroupSerializer(serializers.ModelSerializer):
 
 
 class BlendComponentSerializer(serializers.ModelSerializer):
-    substance_name = serializers.StringRelatedField(
-        source='substance', many=False, read_only=True
-    )
-
     class Meta:
         model = BlendComponent
-        fields = ('substance', 'substance_name', 'component_name', 'percentage')
+        fields = ('substance', 'component_name', 'percentage')
 
 
 class BlendSerializer(serializers.ModelSerializer):
@@ -241,26 +237,38 @@ class CreateBlendSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         # TODO: a blend update also needs to trigger a recalculation of
         # derived substance fields in data reports.
+
         components_data = validated_data.pop('components')
         blend = super().update(instance, validated_data)
 
-        # Delete all components that do not correspond to the new data
-        component_keys = [
-            (c.get('substance', None), c.get('component_name', None))
-            for c in components_data
-        ]
-        for c in BlendComponent.objects.filter(blend=instance):
-            if (c.substance, c.component_name) not in component_keys:
-                c.delete()
+        validated_mapping = {}
+        for c in components_data:
+            if c.get('substance', None) is not None:
+                validated_mapping[c.get('substance')] = c
+            elif c.get('component_name', "") != "":
+                validated_mapping[c.get('component_name')] = c
 
-        # And create/update the new ones
-        for component_data in components_data:
-            BlendComponent.objects.update_or_create(
-                blend=instance,
-                substance=component_data.get('substance'),
-                component_name=component_data.get('component_name'),
-                defaults={'percentage': component_data.get('percentage')}
-            )
+        # Delete all components that do not correspond to the new data
+        # and update the modified ones
+        for c in BlendComponent.objects.filter(blend=instance):
+            if c.substance not in validated_mapping.keys():
+                if c.component_name not in validated_mapping.keys():
+                    c.delete()
+                else:
+                    # No substance, but component name in validated_data
+                    component_data = validated_mapping.pop(c.component_name)
+                    c.percentage=component_data.get('percentage')
+                    c.save()
+            else:
+                # Substance in validated_data
+                component_data = validated_mapping.pop(c.substance)
+                c.component_name=component_data.get('component_name', "")
+                c.percentage=component_data.get('percentage')
+                c.save()
+
+        # And now create the new ones
+        for key, component in validated_mapping.items():
+            BlendComponent.objects.create(blend=instance, **component)
 
         return blend
 
