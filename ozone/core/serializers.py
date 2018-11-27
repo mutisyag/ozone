@@ -278,7 +278,10 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 class ReportingPeriodSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportingPeriod
-        fields = ('id', 'name', 'start_date', 'end_date', 'is_year')
+        fields = (
+            'id', 'name', 'start_date', 'end_date',
+            'is_reporting_allowed', 'is_reporting_open', 'is_year'
+        )
 
 
 class ObligationSerializer(serializers.ModelSerializer):
