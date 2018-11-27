@@ -376,6 +376,7 @@ class Article7Export(
     destination_party = models.ForeignKey(
         Party,
         null=True,
+        blank=True,
         related_name='article7exports_to',
         on_delete=models.PROTECT
     )
@@ -414,6 +415,7 @@ class Article7Import(
     source_party = models.ForeignKey(
         Party,
         null=True,
+        blank=True,
         related_name='article7imports_from',
         on_delete=models.PROTECT
     )
@@ -488,7 +490,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         'quantity_export_recovered',
     ]
 
-    trade_party = models.ForeignKey(Party, null=True, on_delete=models.PROTECT)
+    trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
 
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
