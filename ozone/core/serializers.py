@@ -243,6 +243,8 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 
         validated_mapping = {}
         for c in components_data:
+            # Substance, if present always takes precedence over component_name,
+            # as we may want to change the component_name for a specific subst
             if c.get('substance', None) is not None:
                 validated_mapping[c.get('substance')] = c
             elif c.get('component_name', "") != "":
@@ -276,7 +278,10 @@ class CreateBlendSerializer(serializers.ModelSerializer):
 class ReportingPeriodSerializer(serializers.ModelSerializer):
     class Meta:
         model = ReportingPeriod
-        fields = ('id', 'name', 'start_date', 'end_date', 'is_year')
+        fields = (
+            'id', 'name', 'start_date', 'end_date',
+            'is_reporting_allowed', 'is_reporting_open', 'is_year'
+        )
 
 
 class ObligationSerializer(serializers.ModelSerializer):
@@ -327,7 +332,7 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
     class Meta:
         list_serializer_class = Article7DestructionListSerializer
         model = Article7Destruction
-        exclude = ('submission',)
+        exclude = ('submission', 'blend_item',)
 
 
 class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
@@ -358,7 +363,7 @@ class Article7ExportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         list_serializer_class = Article7ExportListSerializer
         model = Article7Export
-        exclude = ('submission',)
+        exclude = ('submission', 'blend_item',)
 
 
 class Article7ImportListSerializer(BaseBulkUpdateSerializer):
@@ -374,7 +379,7 @@ class Article7ImportSerializer(BaseBlendCompositionSerializer):
     class Meta:
         list_serializer_class = Article7ImportListSerializer
         model = Article7Import
-        exclude = ('submission',)
+        exclude = ('submission', 'blend_item',)
 
 
 class Article7NonPartyTradeListSerializer(BaseBulkUpdateSerializer):
@@ -390,7 +395,7 @@ class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
     class Meta:
         list_serializer_class = Article7NonPartyTradeListSerializer
         model = Article7NonPartyTrade
-        exclude = ('submission',)
+        exclude = ('submission', 'blend_item',)
 
 
 class Article7EmissionListSerializer(BaseBulkUpdateSerializer):

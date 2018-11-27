@@ -2,6 +2,7 @@
 
 Table of contents
 
+* [Installing the application](doc/install.md)
 * [User roles](doc/roles.md)
 * [Workflow](doc/workflow.md)
 * [User stories](doc/stories.md)

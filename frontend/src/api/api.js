@@ -132,6 +132,11 @@ function getSubmission(url) {
 }
 
 
+function getSubmissionHistory(url) {
+  return api.get(`${url}history/`)
+}
+
+
 function callTransition(url, transition) {
   return post(`${url}call-transition/`, {transition: transition})
 }
@@ -161,5 +166,6 @@ export {
  getSubmissionsVersions,
  callTransition,
  deleteSubmission,
- cloneSubmission
+ cloneSubmission,
+ getSubmissionHistory
 };

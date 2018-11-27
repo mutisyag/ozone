@@ -3,6 +3,8 @@
     "fields": {
       "description": "1986",
       "end_date": "1986-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1986",
       "start_date": "1986-01-01"
@@ -14,6 +16,8 @@
     "fields": {
       "description": "1989",
       "end_date": "1989-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1989",
       "start_date": "1989-01-01"
@@ -25,6 +29,8 @@
     "fields": {
       "description": "1990",
       "end_date": "1990-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1990",
       "start_date": "1990-01-01"
@@ -36,6 +42,8 @@
     "fields": {
       "description": "1991",
       "end_date": "1991-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1991",
       "start_date": "1991-01-01"
@@ -47,6 +55,8 @@
     "fields": {
       "description": "1992",
       "end_date": "1992-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1992",
       "start_date": "1992-01-01"
@@ -58,6 +68,8 @@
     "fields": {
       "description": "1993",
       "end_date": "1993-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1993",
       "start_date": "1993-01-01"
@@ -69,6 +81,8 @@
     "fields": {
       "description": "1994",
       "end_date": "1994-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1994",
       "start_date": "1994-01-01"
@@ -80,6 +94,8 @@
     "fields": {
       "description": "1995",
       "end_date": "1995-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1995",
       "start_date": "1995-01-01"
@@ -91,6 +107,8 @@
     "fields": {
       "description": "1996",
       "end_date": "1996-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1996",
       "start_date": "1996-01-01"
@@ -102,6 +120,8 @@
     "fields": {
       "description": "1997",
       "end_date": "1997-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1997",
       "start_date": "1997-01-01"
@@ -113,6 +133,8 @@
     "fields": {
       "description": "1998",
       "end_date": "1998-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1998",
       "start_date": "1998-01-01"
@@ -124,6 +146,8 @@
     "fields": {
       "description": "1999",
       "end_date": "1999-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "1999",
       "start_date": "1999-01-01"
@@ -135,6 +159,8 @@
     "fields": {
       "description": "2000",
       "end_date": "2000-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2000",
       "start_date": "2000-01-01"
@@ -146,6 +172,8 @@
     "fields": {
       "description": "2001",
       "end_date": "2001-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2001",
       "start_date": "2001-01-01"
@@ -157,6 +185,8 @@
     "fields": {
       "description": "2002",
       "end_date": "2002-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2002",
       "start_date": "2002-01-01"
@@ -168,6 +198,8 @@
     "fields": {
       "description": "2003",
       "end_date": "2003-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2003",
       "start_date": "2003-01-01"
@@ -179,6 +211,8 @@
     "fields": {
       "description": "2004",
       "end_date": "2004-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2004",
       "start_date": "2004-01-01"
@@ -190,6 +224,8 @@
     "fields": {
       "description": "2005",
       "end_date": "2005-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2005",
       "start_date": "2005-01-01"
@@ -201,6 +237,8 @@
     "fields": {
       "description": "2006",
       "end_date": "2006-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2006",
       "start_date": "2006-01-01"
@@ -212,6 +250,8 @@
     "fields": {
       "description": "2007",
       "end_date": "2007-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2007",
       "start_date": "2007-01-01"
@@ -223,6 +263,8 @@
     "fields": {
       "description": "2008",
       "end_date": "2008-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2008",
       "start_date": "2008-01-01"
@@ -234,6 +276,8 @@
     "fields": {
       "description": "2009",
       "end_date": "2009-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2009",
       "start_date": "2009-01-01"
@@ -245,6 +289,8 @@
     "fields": {
       "description": "2010",
       "end_date": "2010-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2010",
       "start_date": "2010-01-01"
@@ -256,6 +302,8 @@
     "fields": {
       "description": "2011",
       "end_date": "2011-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2011",
       "start_date": "2011-01-01"
@@ -267,6 +315,8 @@
     "fields": {
       "description": "2012",
       "end_date": "2012-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2012",
       "start_date": "2012-01-01"
@@ -278,6 +328,8 @@
     "fields": {
       "description": "2013",
       "end_date": "2013-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2013",
       "start_date": "2013-01-01"
@@ -289,6 +341,8 @@
     "fields": {
       "description": "2014",
       "end_date": "2014-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2014",
       "start_date": "2014-01-01"
@@ -300,6 +354,8 @@
     "fields": {
       "description": "2015",
       "end_date": "2015-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2015",
       "start_date": "2015-01-01"
@@ -311,6 +367,8 @@
     "fields": {
       "description": "2016",
       "end_date": "2016-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2016",
       "start_date": "2016-01-01"
@@ -322,6 +380,8 @@
     "fields": {
       "description": "2017",
       "end_date": "2017-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": true,
       "is_year": true,
       "name": "2017",
       "start_date": "2017-01-01"
@@ -333,6 +393,8 @@
     "fields": {
       "description": "2018",
       "end_date": "2018-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": true,
       "is_year": true,
       "name": "2018",
       "start_date": "2018-01-01"
@@ -344,6 +406,8 @@
     "fields": {
       "description": "2019",
       "end_date": "2019-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2019",
       "start_date": "2019-01-01"
@@ -355,6 +419,8 @@
     "fields": {
       "description": "2020",
       "end_date": "2020-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2020",
       "start_date": "2020-01-01"
@@ -366,6 +432,8 @@
     "fields": {
       "description": "2021",
       "end_date": "2021-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2021",
       "start_date": "2021-01-01"
@@ -377,6 +445,8 @@
     "fields": {
       "description": "2022",
       "end_date": "2022-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2022",
       "start_date": "2022-01-01"
@@ -388,6 +458,8 @@
     "fields": {
       "description": "2023",
       "end_date": "2023-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2023",
       "start_date": "2023-01-01"
@@ -399,6 +471,8 @@
     "fields": {
       "description": "2024",
       "end_date": "2024-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2024",
       "start_date": "2024-01-01"
@@ -410,6 +484,8 @@
     "fields": {
       "description": "2025",
       "end_date": "2025-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2025",
       "start_date": "2025-01-01"
@@ -421,6 +497,8 @@
     "fields": {
       "description": "2026",
       "end_date": "2026-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2026",
       "start_date": "2026-01-01"
@@ -432,6 +510,8 @@
     "fields": {
       "description": "2027",
       "end_date": "2027-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2027",
       "start_date": "2027-01-01"
@@ -443,6 +523,8 @@
     "fields": {
       "description": "2028",
       "end_date": "2028-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2028",
       "start_date": "2028-01-01"
@@ -454,6 +536,8 @@
     "fields": {
       "description": "2029",
       "end_date": "2029-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2029",
       "start_date": "2029-01-01"
@@ -465,6 +549,8 @@
     "fields": {
       "description": "2030",
       "end_date": "2030-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2030",
       "start_date": "2030-01-01"
@@ -476,6 +562,8 @@
     "fields": {
       "description": "2031",
       "end_date": "2031-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2031",
       "start_date": "2031-01-01"
@@ -487,6 +575,8 @@
     "fields": {
       "description": "2032",
       "end_date": "2032-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2032",
       "start_date": "2032-01-01"
@@ -498,6 +588,8 @@
     "fields": {
       "description": "2033",
       "end_date": "2033-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2033",
       "start_date": "2033-01-01"
@@ -509,6 +601,8 @@
     "fields": {
       "description": "2034",
       "end_date": "2034-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2034",
       "start_date": "2034-01-01"
@@ -520,6 +614,8 @@
     "fields": {
       "description": "2035",
       "end_date": "2035-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2035",
       "start_date": "2035-01-01"
@@ -531,6 +627,8 @@
     "fields": {
       "description": "2036",
       "end_date": "2036-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2036",
       "start_date": "2036-01-01"
@@ -542,6 +640,8 @@
     "fields": {
       "description": "2037",
       "end_date": "2037-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2037",
       "start_date": "2037-01-01"
@@ -553,6 +653,8 @@
     "fields": {
       "description": "2038",
       "end_date": "2038-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2038",
       "start_date": "2038-01-01"
@@ -564,6 +666,8 @@
     "fields": {
       "description": "2039",
       "end_date": "2039-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2039",
       "start_date": "2039-01-01"
@@ -575,6 +679,8 @@
     "fields": {
       "description": "2040",
       "end_date": "2040-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": true,
       "name": "2040",
       "start_date": "2040-01-01"
@@ -586,6 +692,8 @@
     "fields": {
       "description": "Article 5 Base Years",
       "end_date": "2000-12-31",
+      "is_reporting_allowed": false,
+      "is_reporting_open": false,
       "is_year": false,
       "name": "BaseA5",
       "start_date": "1995-01-01"
@@ -597,6 +705,8 @@
     "fields": {
       "description": "Non-Article 5 Base Years",
       "end_date": "1991-12-31",
+      "is_reporting_allowed": false,
+      "is_reporting_open": false,
       "is_year": false,
       "name": "BaseNA5",
       "start_date": "1986-01-01"
@@ -608,6 +718,8 @@
     "fields": {
       "description": "Control Period Jul 1999 to Jun 2000",
       "end_date": "2000-06-30",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": false,
       "name": "C1999",
       "start_date": "1999-07-01"
@@ -619,6 +731,8 @@
     "fields": {
       "description": "Control Period Jul 2000 to Jun 2001",
       "end_date": "2001-06-30",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": false,
       "name": "C2000",
       "start_date": "2000-07-01"
@@ -630,6 +744,8 @@
     "fields": {
       "description": "Control Period Jul 2001 to Dec 2002",
       "end_date": "2002-12-31",
+      "is_reporting_allowed": true,
+      "is_reporting_open": false,
       "is_year": false,
       "name": "C2001",
       "start_date": "2001-07-01"

@@ -253,3 +253,5 @@ class Command(BaseCommand):
         f['end_date'] = row['EndDate'].date()
         f['description'] = row['PeriodDescr']
         f['is_year'] = f['name'][0].isdigit()
+        f['is_reporting_allowed'] = f['name'][0] == 'C' or f['name'].isdigit()
+        f['is_reporting_open'] = f['is_year'] and f['name'] in ('2017', '2018')
