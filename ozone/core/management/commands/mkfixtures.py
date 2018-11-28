@@ -30,6 +30,10 @@ class Command(BaseCommand):
             'sheet': 'Cntry',
             'fixture': 'parties.json',
         },
+        'partyhistory': {
+            'fixture': 'partieshistory.json',
+            'sheet': 'CntryYr',
+        },
         'region': {
             'sheet': 'Regions',
             'fixture': 'regions.json',
@@ -206,6 +210,47 @@ class Command(BaseCommand):
             # Remove "All countries" and "Some countries"
             f['_deleted'] = True
 
+    def partyhistory_map(self, f, row):
+        if row['CntryID'] == 'HOLV':
+            f['party'] = self.lookup_id('party', 'abbr', 'VA')
+            f['_deleted'] = True
+        else:
+            f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
+        f['reporting_period'] = self.lookup_id('reportingperiod', 'name', row['PeriodID'])
+        f['population'] = row['Population'] if row['Population'] else 0
+        art5_group2 = ["BH", "IN", "IR", "IQ", "KW", "OM", "PK", "QA", "SA", "AE"]
+        non_art5_group2 = ["BY", "KZ", "RU", "TJ", "UZ"]
+        period_datetime = datetime.strptime(self.FIXTURES['reportingperiod'][f['reporting_period']-1]['fields']['end_date'], "%Y-%m-%d")
+        if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
+            if row['Article5'] == '1':
+                f['party_type'] = 'Article 5'
+            else:
+                f['party_type'] = 'Non Article 5'
+        else:
+            if row['Article5'] == '1':
+                if row['CntryID'] in art5_group2:
+                    f['party_type'] = 'Article 5 Group 2'
+                else:
+                    f['party_type'] = 'Article 5 Group 1'
+            else:
+                if row['CntryID'] in non_art5_group2:
+                    f['party_type'] = 'Non Article 5 Group 2'
+                else:
+                    f['party_type'] = 'Non Article 5 Group 1'
+
+        hat_parties = [
+            "DZ", "BH", "BJ", "BF", "CF", "TD", "CI", "DJ", "EG", "ER", "GM",
+            "GH", "GN", "GW", "IR", "IQ", "JO", "KW", "LY", "ML", "MR", "NE",
+            "NG", "OM", "PK", "QA", "SA", "SN", "SD", "SY", "TG", "TN", "TM", "AE"
+        ]
+        if row['CntryID'] in hat_parties:
+            f['is_high_ambient_temperature'] = True
+        else:
+            f['is_high_ambient_temperature'] = False
+        f['is_eu_member'] = True if row['EurUnion'] == '1' else False
+        f['is_ceit'] = True if row['CEIT'] == '1' else False
+        f['remark'] = row['Remark'] if row['Remark'] else ""
+
     def substance_map(self, f, row):
         f['substance_id'] = row['SubstID']
         f['name'] = row['SubstName']
@@ -267,9 +312,9 @@ class Command(BaseCommand):
                 "fields": {
                   "description": "",
                   "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
-                  "is_reporting_allowed": json.dumps(False),
-                  "is_reporting_open": json.dumps(False),
-                  "is_year": json.dumps(True),
+                  "is_reporting_allowed": False,
+                  "is_reporting_open": False,
+                  "is_year": True,
                   "name": "1987",
                   "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
                 },
@@ -280,9 +325,9 @@ class Command(BaseCommand):
                 "fields": {
                   "description": "",
                   "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
-                  "is_reporting_allowed": json.dumps(False),
-                  "is_reporting_open": json.dumps(False),
-                  "is_year": json.dumps(True),
+                  "is_reporting_allowed": False,
+                  "is_reporting_open": False,
+                  "is_year": True,
                   "name": "1988",
                   "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
                 },
