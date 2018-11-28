@@ -138,6 +138,18 @@ class Submission(models.Model):
         on_delete=models.SET_NULL
     )
 
+    # Submission info
+    reporting_officer = models.CharField(max_length=256, blank=True)
+    designation = models.CharField(max_length=256, blank=True)
+    organization = models.CharField(max_length=256, blank=True)
+    postal_code = models.CharField(max_length=64, blank=True)
+    country = models.CharField(max_length=256, blank=True)
+    phone = models.CharField(max_length=128, blank=True)
+    fax = models.CharField(max_length=128, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+
+
     # Persisted workflow class for this submission. We want this to be only set
     # at submission creation, so it will have no setter implementation.
     _workflow_class = models.CharField(
@@ -410,6 +422,35 @@ class Submission(models.Model):
 
         return clone
 
+    def clone_info(self, submission):
+        self.reporting_officer = (
+            self.reporting_officer if self.reporting_officer else submission.reporting_officer
+        )
+        self.designation = (
+            self.designation if self.designation else submission.designation
+        )
+        self.organization = (
+            self.organization if self.organization else submission.organization
+        )
+        self.postal_code = (
+            self.postal_code if self.postal_code else submission.postal_code
+        )
+        self.country = (
+            self.country if self.country else submission.country
+        )
+        self.phone = (
+            self.phone if self.phone else submission.phone
+        )
+        self.fax = (
+            self.fax if self.fax else submission.fax
+        )
+        self.email = (
+            self.email if self.email else submission.email
+        )
+        self.date = (
+            self.date if self.date else submission.date
+        )
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -482,6 +523,18 @@ class Submission(models.Model):
             self._workflow_class = 'default'
             self._current_state = \
                 self.workflow.state.workflow.initial_state.name
+
+        # Prefill "Submission info" with values from the most recent submission
+        # when creating a new submission for the same period and party
+        if not self.pk:
+            submission = (
+                Submission.objects.select_for_update()
+                .filter(party=self.party, obligation=self.obligation)
+                .order_by('-updated_at')
+                .first()
+            )
+            if submission:
+                self.clone_info(submission)
 
         self.clean()
         return super().save(*args, **kwargs)
