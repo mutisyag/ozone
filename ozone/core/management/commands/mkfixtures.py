@@ -207,7 +207,6 @@ class Command(BaseCommand):
         # Skipped fields: SubstNameFr, SubstNameSp
         annex = row['Anx']
         if annex and annex != '-':
-            f['annex'] = self.lookup_id('annex', 'annex_id', annex)
             f['group'] = self.lookup_id('group', 'group_id', annex+row['Grp'])
         f['sort_order'] = row['AnxGrpSort']
         f['odp'] = row['SubstODP']

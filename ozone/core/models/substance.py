@@ -89,15 +89,14 @@ class Substance(models.Model):
     name = models.CharField(max_length=64, unique=True)
     description = models.CharField(max_length=256)
 
-    # In the existing data tables there is a special case:
-    # the 'Other Substances' dummy substance, for which these can be null.
-    # That should be modeled differently, by a nullable foreign key to
-    # `Substance`, instead of making a lot of fields nullable in this model.
-    annex = models.ForeignKey(
-        Annex, related_name='substances', on_delete=models.PROTECT
-    )
+    # Having a null group means that the substance is not controlled.
+    # The annex information is present in the group (`Substance.group.annex`).
     group = models.ForeignKey(
-        Group, related_name='substances', on_delete=models.PROTECT
+        Group,
+        null=True,
+        blank=True,
+        related_name='substances',
+        on_delete=models.PROTECT
     )
 
     # Ozone-depleting potential
