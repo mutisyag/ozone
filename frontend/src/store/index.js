@@ -2,7 +2,21 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import form from '@/assets/form.js'
 import tableRowConstructor from '@/mixins/tableRowConstructor'
-import { fetch, getSubmissionHistory, callTransition, getSubstances, getExportBlends, getSubmission, getCustomBlends, deleteSubmission, getSubmissions, getPeriods, getObligations, createSubmission, getParties } from '@/api/api.js'
+import { 
+    fetch, 
+    getSubmissionHistory, 
+    callTransition, 
+    getSubstances, 
+    getExportBlends, 
+    getSubmission, 
+    getCustomBlends, 
+    deleteSubmission, 
+    getSubmissions, 
+    getPeriods, 
+    getObligations, 
+    createSubmission, 
+    getParties 
+} from '@/api/api.js'
 
 import dummyTransition from '@/assets/dummyTransition.js'
 
@@ -29,7 +43,6 @@ const store = new Vuex.Store({
             show: false,
             variant: null,
         },
-        baseForm: form,
         current_submission: null,
         currentSubmissionHistory: null,
         available_transitions: null,
@@ -73,6 +86,30 @@ const store = new Vuex.Store({
                 })
         },
 
+
+        getSubmissionInfo: (state) => (submission) =>{
+          let submissionInfo = {
+            obligation: () => {
+              return state.dashboard.obligations.find( a => { return a.value === submission.obligation }).text
+            },
+            period: () => {
+              return state.dashboard.periods.find(a => {return a.value === submission.reporting_period}).text
+            },
+            party: () => {
+              return state.dashboard.parties.find(a => { return a.value === submission.party}).text
+            },
+            period_start: () => {
+              return state.dashboard.periods.find(a => {return a.value === submission.reporting_period}).start_date.split('-')[0]
+            },
+            period_end: () => {
+              return state.dashboard.periods.find(a => {return a.value === submission.reporting_period}).end_date.split('-')[0]
+            },
+          }
+          return submissionInfo
+        },
+
+
+
         getPeriodStatus: (state) => (periodId) => {
             return state.dashboard.periods.find( (period) => { return period.value === periodId}).is_reporting_open
         },
@@ -102,7 +139,6 @@ const store = new Vuex.Store({
     actions: {
 
         addSubmission(context, data) {
-
             return new Promise((resolve, reject) => {
                 const duplicate = context.getters.getDuplicateSubmission(data)
                 const isReportingOpen = context.getters.getPeriodStatus(data.reporting_period)
@@ -115,9 +151,11 @@ const store = new Vuex.Store({
                 // } 
                 else {
                     createSubmission(data).then((response) => {
-                        context.dispatch('getCurrentSubmissions')
                         context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
-                        resolve(response.data)
+                        context.dispatch('getCurrentSubmissions').then( r => {
+                            resolve(response.data)
+                        })
+                        
                     }).catch((error) => {
                         context.dispatch('setAlert', { message: 'Failed to create submission', variant: 'danger' })
                         reject(error.response)
@@ -128,24 +166,33 @@ const store = new Vuex.Store({
         },
 
         getCurrentSubmissions(context) {
-            getSubmissions().then(response => {
-                context.commit('setDashboardSubmissions', response.data)
+            return new Promise((resolve, reject) => {
+                getSubmissions().then(response => {
+                    context.commit('setDashboardSubmissions', response.data)
+                    resolve()
+                })
             })
         },
 
-        getDashboardParties(context) {
-            getParties().then(response => {
-                const parties_temp = response.data
+        async getDashboardParties(context) {
+            let response 
+            try {
+                response = await getParties()
+            } catch(e) {
+                console.log(e)
+                return
+            }
+
+            const parties_temp = response.data
                                         .filter( country => country.id === country.parent_party )
                                         .map( country => {
                                             return { value: country.id, text: country.name}                 
                                         })
                 context.commit('setDashboardParties', parties_temp)
-            })
         },
+
         getDashboardPeriods(context) {
             getPeriods().then(response => {
-                let current_date = new Date();
                 let sortedPeriods = response.data
                                     .filter( a => a.is_reporting_allowed )
                                     .sort((a, b) => { 
@@ -160,8 +207,15 @@ const store = new Vuex.Store({
                     let start = period.start_date.split('-')[0]
                     let end = period.end_date.split('-')[0]
                     let periodDisplay = ''
-                    start === end ? periodDisplay += start : periodDisplay += start + '-' + end
-                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date, start_date: period.start_date, is_reporting_open: period.is_reporting_open}
+                    if(start === end) {
+                        if(period.name != start) {
+                            periodDisplay += `(${start})`
+                        }
+                    } else {
+                        periodDisplay += `(${start} - ${end})`
+                    }
+
+                    return { value: period.id, text: `${period.name} ${periodDisplay}`, end_date: period.end_date, start_date: period.start_date, is_reporting_open: period.is_reporting_open}
                })
                 
                 context.commit('setDashboardPeriods', sortedPeriods)
@@ -170,10 +224,7 @@ const store = new Vuex.Store({
 
         getDashboardObligations(context) {
             getObligations().then(response => {
-                let obligations_temp = [];
-                for (let obligation of response.data) {
-                    obligations_temp.push({ value: obligation.id, text: obligation.name, form_type: obligation.form_type})
-                }
+                let obligations_temp = response.data.map( obligation => { return { value: obligation.id, text: obligation.name, form_type: obligation.form_type}})
                 context.commit('setDashboardObligations', obligations_temp)
             })
         },
@@ -439,7 +490,7 @@ const store = new Vuex.Store({
         },
 
         getEmptyForm(state){
-            state.form = JSON.parse(JSON.stringify(state.baseForm))
+            state.form = JSON.parse(JSON.stringify(form))
         },
 
 

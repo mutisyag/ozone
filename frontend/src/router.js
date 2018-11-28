@@ -5,7 +5,7 @@ import App from './App'
 import Dashboard from '@/views/Dashboard'
 
 
-const Form = () => import(/* webpackChunkName: "art7" */ '@/views/Form')
+const DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/DataManager')
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
@@ -20,11 +20,7 @@ const  routes = [
     {
       path: '/',
       name: 'Home',
-      component: Dashboard,
       redirect: '/dashboard'
-      // component: {
-      //   render (c) { return c('router-view') }
-      // },
     },
     {
       path: '/dashboard',
@@ -38,40 +34,51 @@ const  routes = [
       component: Login
     },
     {
-      path: '/submission/art7',
-      name: 'art7',
-      meta:{requiresAuth : true},
-      component: Form
-    },
-    {
-      path: '/submission/essencrit',
-      name: 'essencrit',
-      meta:{requiresAuth : true},
-      component: FormNotFound
-    },
-    {
-      path: '/submission/hatimp',
-      name: 'hatimp',
-      meta:{requiresAuth : true},
-      component: FormNotFound
-    },
-    {
-      path: '/submission/hatprod',
-      name: 'hatprod',
-      meta:{requiresAuth : true},
-      component: FormNotFound
-    },
-    {
-      path: '/submission/letter',
-      name: 'letter',
-      meta:{requiresAuth : true},
-      component: FormNotFound
+      path: '/submission',
+      name: 'Submission',
+      component: {
+        render (c) { return c('router-view') }
+      },
+      children: [
+        {
+          path: 'art7',
+          name: 'art7',
+          meta:{requiresAuth : true},
+          component: DataManager
+        },
+        {
+          path: 'essencrit',
+          name: 'essencrit',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: 'hatimp',
+          name: 'hatimp',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: 'hatprod',
+          name: 'hatprod',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        },
+        {
+          path: 'letter',
+          name: 'letter',
+          meta:{requiresAuth : true},
+          component: FormNotFound
+        }
+      ],
     },
     {
       path: '/pages',
       redirect: '/pages/404',
       name: 'Pages',
- 
+      component: {
+        render (c) { return c('router-view') }
+      },
       children: [
         {
           path: '404',

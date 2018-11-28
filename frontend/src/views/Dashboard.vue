@@ -13,7 +13,6 @@
             </b-input-group>
             
             <b-input-group class="mb-2" prepend="Period">
-              <!-- <b-form-select placeholder="Select period" v-model="current.reporting_period" :options="periods"></b-form-select> -->
                <multiselect trackBy="value" label="text" customTemplateText="<i class='fa fa-clock-o fa-lg'></i>" customTemplate="is_reporting_open" placeholder="" v-model="current.reporting_period" :options="periods">
                </multiselect>
             </b-input-group>
@@ -21,8 +20,6 @@
             <b-input-group class="mb-2" prepend="Party">
                <multiselect trackBy="value" label="text" placeholder="" v-model="current.party" :options="parties"></multiselect>
             </b-input-group>
-
-
 
             <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create submission</b-btn>
           </div>
@@ -45,13 +42,13 @@
                          Submission details:
                   </div>
                   <div>
-                   <i class="fa fa-calendar fa-lg"></i> {{getSumissionInfo(submission).period()}}
+                   <i class="fa fa-calendar fa-lg"></i> {{getSubmissionInfo(submission).period()}}
                   </div>
                   <div>
-                   <i class="fa fa-certificate fa-lg"></i> {{getSumissionInfo(submission).obligation()}}
+                   <i class="fa fa-certificate fa-lg"></i> {{getSubmissionInfo(submission).obligation()}}
                   </div>
                   <div>
-                    <i class="fa fa-globe fa-lg"></i> {{getSumissionInfo(submission).party()}}
+                    <i class="fa fa-globe fa-lg"></i> {{getSubmissionInfo(submission).party()}}
                   </div>
                   <div>
                     <i class="fa fa-archive fa-lg"></i> Version {{submission.version}}
@@ -190,6 +187,7 @@ import {cloneSubmission} from '@/api/api'
 import errorHandling from '@/mixins/errorHandling'
 import Multiselect from '@/mixins/modifiedMultiselect'
 // import Multiselect from "vue-multiselect"
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Dashboard',
@@ -245,28 +243,31 @@ export default {
   },
 
   computed: {
+
+    ...mapGetters(['getSubmissionInfo']),
+
     tableItems(){
       let tableFields = []
-      console.log(this.submissions)
       this.submissions.forEach( (element, index) => {
         if(
-          (this.table.filters.period_start ? this.getSumissionInfo(element).period_start() >= this.table.filters.period_start : true)
+          (this.table.filters.period_start ? this.getSubmissionInfo(element).period_start() >= this.table.filters.period_start : true)
           &&
-          (this.table.filters.period_end ? this.getSumissionInfo(element).period_end() <= this.table.filters.period_end : true)
+          (this.table.filters.period_end ? this.getSubmissionInfo(element).period_end() <= this.table.filters.period_end : true)
           &&
-          (this.table.filters.obligation ? this.getSumissionInfo(element).obligation() === this.table.filters.obligation : true)
+          (this.table.filters.obligation ? this.getSubmissionInfo(element).obligation() === this.table.filters.obligation : true)
           && 
-          (this.table.filters.party ? this.getSumissionInfo(element).party() === this.table.filters.party : true)
+          (this.table.filters.party ? this.getSubmissionInfo(element).party() === this.table.filters.party : true)
           &&
           (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : false || element.is_current ? true : false) )
          ) {
-          tableFields.push({obligation: this.getSumissionInfo(element).obligation(),
-           reporting_period: this.getSumissionInfo(element).period(),
-           reporting_party: this.getSumissionInfo(element).party(),
-           current_state: element.current_state,
-           version: element.version,
-           last_updated: element.updated_at,
-           details: element,
+          tableFields.push({
+            obligation: this.getSubmissionInfo(element).obligation(),
+            reporting_period: this.getSubmissionInfo(element).period(),
+            reporting_party: this.getSubmissionInfo(element).party(),
+            current_state: element.current_state,
+            version: element.version,
+            last_updated: element.updated_at,
+            details: element,
          })
         }
       
@@ -275,22 +276,20 @@ export default {
       return tableFields
     },
 
-    sortOptionsPeriodFrom () {
+    sortOptionsPeriodFrom() {
       return [...new Set(this.periods.map(f => f.start_date.split('-')[0] ))]
     },
 
-
-    sortOptionsPeriodTo () {
+    sortOptionsPeriodTo() {
       return [...new Set(this.periods.map(f => f.end_date.split('-')[0] ))]
     },
 
-
-    sortOptionsObligation () {
-      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).obligation() ))]
+    sortOptionsObligation() {
+      return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).obligation() ))]
     },
     
-    sortOptionsParties () {
-      return [...new Set(this.submissions.map(f => this.getSumissionInfo(f).party() ))]
+    sortOptionsParties() {
+      return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).party() ))]
     },
 
     dataReady(){ 
@@ -328,8 +327,8 @@ export default {
   methods: {
     addSubmission() {
       this.$store.dispatch('addSubmission', this.current).then(r => {
-        // will send the user to new route here
-        console.log(r)
+        const currentSubmission = this.submissions.find(sub => sub.id === r.id)
+        this.$router.push({name: this.getFormName(r.obligation), query: {submission: currentSubmission.url}});
       })
     },
 
@@ -339,7 +338,6 @@ export default {
         this.$store.dispatch('getCurrentSubmissions')
         this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
       }).catch(error => {
-        console.log(error.response.data)
         this.$store.dispatch('setAlert', { message: errorHandling.handleError(error.response.data), variant: 'danger' })
         console.log(error)
       })
@@ -360,27 +358,6 @@ export default {
 
     getFormName(obligation) {
       return this.obligations.find( o => o.value === obligation).form_type
-    },
-
-    getSumissionInfo(submission){
-      let submissionInfo = {
-        obligation: () => {
-          return this.obligations.find( a => { return a.value === submission.obligation }).text
-        },
-        period: () => {
-          return this.periods.find(a => {return a.value === submission.reporting_period}).text
-        },
-        party: () => {
-          return this.parties.find(a => { return a.value === submission.party}).text
-        },
-        period_start: () => {
-          return this.periods.find(a => {return a.value === submission.reporting_period}).start_date.split('-')[0]
-        },
-        period_end: () => {
-          return this.periods.find(a => {return a.value === submission.reporting_period}).end_date.split('-')[0]
-        },
-      }
-      return submissionInfo
     },
 
   },
@@ -422,7 +399,7 @@ watch: {
 
 
 .submission-continue div:not(.detail-header) {
-      background: white;
+    background: white;
     color: #444;
     margin-left: -15px;
     margin-right: -15px;

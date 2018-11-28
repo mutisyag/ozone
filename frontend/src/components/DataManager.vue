@@ -13,7 +13,7 @@
 
 <script>
 import tabsManager from './TabsManager'
-import {fetch,getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
+import {fetch, getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
 
 export default {
   name: 'DataManager',
@@ -21,16 +21,12 @@ export default {
     tabsmanager:tabsManager
   },
 
-
-  props: {
-    submission: String,
-  },
-
   data () {
     return {
       form: this.$store.state.form,
       current_submission: null,
       prefilled: false,
+      submission: this.$route.query.submission,
       fields_to_prefill: {
           'questionaire_questions' : 'article7questionnaire',
           'has_imports' : 'article7imports',
@@ -66,7 +62,7 @@ export default {
 
   computed: {
     initialDataReady(){
-      return  this.$store.state.initialData.countryOptions 
+      return this.$store.state.initialData.countryOptions 
               && this.$store.state.initialData.substances 
               && this.$store.state.initialData.blends 
               && this.$store.state.current_submission 
@@ -97,15 +93,16 @@ export default {
     prePrefill() {
         const form = this.$store.state.form,
               prefill_data = this.$store.state.current_submission
+
+
         Object.keys(form.tabs).forEach( (tab) => {
           if(this.fields_to_get[tab]){
             fetch(prefill_data[this.fields_to_get[tab]]).then( response => {
               if(response.data.length) {
-                console.log(response.data)
                 this.$store.commit('setTabStatus',{tab:tab, value:'saving'})
                 this.$nextTick(() => {
                   setTimeout(() => {
-                    this.prefill(form.tabs[tab], JSON.parse(JSON.stringify(response.data)))
+                    this.prefill(form.tabs[tab], response.data)
                   },100)
                 })
               } else {
