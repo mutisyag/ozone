@@ -9,15 +9,17 @@
 
           <div>           
             <b-input-group class="mb-2" prepend="Obligation">
-              <b-form-select placeholder="Select obligation" v-model="current.obligation" :options="obligations"></b-form-select>
+              <multiselect trackBy="value" label="text" placeholder="" v-model="current.obligation" :options="obligations"></multiselect>
             </b-input-group>
             
             <b-input-group class="mb-2" prepend="Period">
-              <b-form-select placeholder="Select period" v-model="current.reporting_period" :options="periods"></b-form-select>
+              <!-- <b-form-select placeholder="Select period" v-model="current.reporting_period" :options="periods"></b-form-select> -->
+               <multiselect trackBy="value" label="text" customTemplateText="<i class='fa fa-clock-o fa-lg'></i>" customTemplate="is_reporting_open" placeholder="" v-model="current.reporting_period" :options="periods">
+               </multiselect>
             </b-input-group>
 
             <b-input-group class="mb-2" prepend="Party">
-              <b-form-select placeholder="Select period" v-model="current.party" :options="parties"></b-form-select>
+               <multiselect trackBy="value" label="text" placeholder="" v-model="current.party" :options="parties"></multiselect>
             </b-input-group>
 
 
@@ -186,6 +188,8 @@
 <script>
 import {cloneSubmission} from '@/api/api'
 import errorHandling from '@/mixins/errorHandling'
+import Multiselect from '@/mixins/modifiedMultiselect'
+// import Multiselect from "vue-multiselect"
 
 export default {
   name: 'Dashboard',
@@ -236,6 +240,9 @@ export default {
    this.$store.dispatch('getCurrentSubmissions')
   },
 
+  components:{
+    Multiselect
+  },
 
   computed: {
     tableItems(){

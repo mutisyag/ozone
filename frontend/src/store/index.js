@@ -73,8 +73,8 @@ const store = new Vuex.Store({
                 })
         },
 
-        getPeriodYear: (state) => (periodId) => {
-            return state.dashboard.periods.find( (period) => { return period.value === periodId}).end_date
+        getPeriodStatus: (state) => (periodId) => {
+            return state.dashboard.periods.find( (period) => { return period.value === periodId}).is_reporting_open
         },
 
         checkIfBlendAlreadyEists: (state) => (blendName) => {
@@ -105,12 +105,15 @@ const store = new Vuex.Store({
 
             return new Promise((resolve, reject) => {
                 const duplicate = context.getters.getDuplicateSubmission(data)
-                const submissionYear = new Date(context.getters.getPeriodYear(data.reporting_period))
+                const isReportingOpen = context.getters.getPeriodStatus(data.reporting_period)
                 if (duplicate.length) {
                     context.dispatch('setAlert', { message: 'Another submission already exists in Data Entry stage.', variant: 'danger' })
-                } else if(submissionYear > new Date()) {
-                    context.dispatch('setAlert', { message: 'You can\'t report for this period yet', variant: 'danger' })
-                } else {
+                } 
+                // TODO: should this be a thing ?
+                // else if(!isReportingOpen) {
+                //     context.dispatch('setAlert', { message: 'Reporting is not open for the selected period', variant: 'danger' })
+                // } 
+                else {
                     createSubmission(data).then((response) => {
                         context.dispatch('getCurrentSubmissions')
                         context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
@@ -158,7 +161,7 @@ const store = new Vuex.Store({
                     let end = period.end_date.split('-')[0]
                     let periodDisplay = ''
                     start === end ? periodDisplay += start : periodDisplay += start + '-' + end
-                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date, start_date: period.start_date}
+                    return { value: period.id, text: `${period.name} (${periodDisplay})`, end_date: period.end_date, start_date: period.start_date, is_reporting_open: period.is_reporting_open}
                })
                 
                 context.commit('setDashboardPeriods', sortedPeriods)
