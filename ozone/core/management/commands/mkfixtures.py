@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -129,6 +130,10 @@ class Command(BaseCommand):
             getattr(self, model + "_map")(obj['fields'], row)
             data.append(obj)
 
+        idx = sheet.max_row
+        if hasattr(self, model + "_additional_data"):
+            getattr(self, model + "_additional_data")(data, idx)
+
         # if a post process method exists, invoke it
         if hasattr(self, model + "_postprocess"):
             for idx in range(1, sheet.max_row):
@@ -255,3 +260,34 @@ class Command(BaseCommand):
         f['is_year'] = f['name'][0].isdigit()
         f['is_reporting_allowed'] = f['name'][0] == 'C' or f['name'].isdigit()
         f['is_reporting_open'] = f['is_year'] and f['name'] in ('2017', '2018')
+
+    def reportingperiod_additional_data(self, data, idx):
+        objs = [
+            {
+                "fields": {
+                  "description": "",
+                  "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
+                  "is_reporting_allowed": json.dumps(False),
+                  "is_reporting_open": json.dumps(False),
+                  "is_year": json.dumps(True),
+                  "name": "1987",
+                  "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
+                },
+                "model": "core.reportingperiod",
+                "pk": idx
+            },
+            {
+                "fields": {
+                  "description": "",
+                  "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
+                  "is_reporting_allowed": json.dumps(False),
+                  "is_reporting_open": json.dumps(False),
+                  "is_year": json.dumps(True),
+                  "name": "1988",
+                  "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
+                },
+                "model": "core.reportingperiod",
+                "pk": idx+1
+            }
+        ]
+        data += objs
