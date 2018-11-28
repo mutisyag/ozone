@@ -144,7 +144,7 @@ const store = new Vuex.Store({
             getPeriods().then(response => {
                 let current_date = new Date();
                 let sortedPeriods = response.data
-                                    .filter( a => new Date(a.end_date) < current_date)
+                                    .filter( a => a.is_reporting_allowed )
                                     .sort((a, b) => { 
                                         return (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
                                         ?
