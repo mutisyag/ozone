@@ -319,12 +319,11 @@ class Article7Flags(models.Model):
         db_table = 'reporting_article_seven_flags'
 
 
-class Article7Questionnaire(ModifyPreventionMixin, BaseReport):
+class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     """
     Model for a simple Article 7 Questionnaire report row
     """
-    # Overriding submission field; there can be only one questionnaire
-    # per submission
+    # There can be only one questionnaire per submission
     submission = models.OneToOneField(
         Submission,
         related_name='article7questionnaire',
@@ -342,6 +341,9 @@ class Article7Questionnaire(ModifyPreventionMixin, BaseReport):
     has_nonparty = models.BooleanField()
 
     has_emissions = models.BooleanField()
+
+    remarks_party = models.CharField(max_length=512, blank=True)
+    remarks_os = models.CharField(max_length=512, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
