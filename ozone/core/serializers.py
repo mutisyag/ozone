@@ -439,48 +439,30 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         view_name='core:submission-article7-destructions-list',
         lookup_url_kwarg='submission_pk'
     )
-    article7destructions = Article7DestructionSerializer(
-        many=True, read_only=True
-    )
 
     article7productions_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-productions-list',
         lookup_url_kwarg='submission_pk'
-    )
-    article7productions = Article7ProductionSerializer(
-        many=True, read_only=True
     )
 
     article7exports_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-exports-list',
         lookup_url_kwarg='submission_pk'
     )
-    article7exports = Article7ExportSerializer(
-        many=True, read_only=True
-    )
 
     article7imports_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-imports-list',
         lookup_url_kwarg='submission_pk'
-    )
-    article7imports = Article7ImportSerializer(
-        many=True, read_only=True
     )
 
     article7nonpartytrades_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-nonpartytrades-list',
         lookup_url_kwarg='submission_pk'
     )
-    article7nonpartytrades = Article7NonPartyTradeSerializer(
-        many=True, read_only=True
-    )
 
     article7emissions_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-emissions-list',
         lookup_url_kwarg='submission_pk'
-    )
-    article7emissions = Article7EmissionSerializer(
-        many=True, read_only=True
     )
 
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
@@ -493,12 +475,9 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
             'article7questionnaire_url', 'article7questionnaire',
-            'article7destructions_url', 'article7destructions',
-            'article7productions_url', 'article7productions',
-            'article7exports_url', 'article7exports',
-            'article7imports_url', 'article7imports',
-            'article7nonpartytrades_url', 'article7nonpartytrades',
-            'article7emissions_url', 'article7emissions',
+            'article7destructions_url', 'article7productions_url',
+            'article7exports_url', 'article7imports_url',
+            'article7nonpartytrades_url', 'article7emissions_url',
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current',
