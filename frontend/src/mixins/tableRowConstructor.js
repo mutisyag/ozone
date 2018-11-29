@@ -1,8 +1,7 @@
 
 import labels from '@/assets/labels'
-export default {
    
-        getCountryField(currentSection) {
+      const getCountryField = (currentSection) => {
             switch (currentSection) {
                 case 'has_exports':
                     return 'destination_party'
@@ -14,9 +13,9 @@ export default {
                     // statements_def
                     break;
             }
-        },
+        }
 
-        getCountryLabel(currentSection) {
+      const getCountryLabel = (currentSection) => {
             switch (currentSection) {
                 case 'has_exports':
                     return 'Country of Destination of Exports**'
@@ -28,9 +27,9 @@ export default {
                     // statements_def
                     break;
             }
-        },
+        }
 
-        createTooltip(fields, section){
+       const createTooltip = (fields, section) => {
           let tooltip_title = ''
           if(fields) {
             for(let field in fields) {
@@ -39,10 +38,10 @@ export default {
           }
 
           return tooltip_title
-        },
+        }
 
 
-        quantityCalculator(fields, parent, section) {
+      const quantityCalculator = (fields, parent, section) => {
           let count = 0;
           let returnObj = {
             type: 'nonInput',
@@ -71,31 +70,31 @@ export default {
             returnObj.selected = count.toPrecision(3)
           }
 
-          let tooltip = this.createTooltip(forTooltip,section)
+          let tooltip = createTooltip(forTooltip,section)
 
           returnObj.tooltip = tooltip
           
           return returnObj
-        },
+        }
 
-        doSum(sumItems){
+       const doSum = (sumItems) => {
           return sumItems.reduce((sum,item) => {
-            return this.valueConverter(item) + sum
+            return valueConverter(item) + sum
           })
-        },
+        }
 
 
-        valueConverter(item) {
+       const valueConverter = (item) => {
           if(item === null || item === undefined || isNaN(parseFloat(item))) {
             return 0
           } else {
             return parseFloat(item)
           }
-        },
+        }
 
 
 
-        decisionGenerator(fields, parent, section){
+      const decisionGenerator = (fields, parent, section) => {
           let decisions = []
           let returnObj = {
             type: 'nonInput',
@@ -113,17 +112,17 @@ export default {
               }
             }
 
-          let tooltip = this.createTooltip(forTooltip,section)
+          let tooltip = createTooltip(forTooltip,section)
           returnObj.tooltip = tooltip
 
           returnObj.selected = decisions.join(', ')
           return returnObj
-        },
+        }
 
-        getInnerFields(section, substance, group, country, blend, prefillData, ordering_id) {
-          let self = this
+export default {
 
-          let countryFieldName = this.getCountryField(section)
+        getInnerFields({section, substance, group, country, blend, prefillData, ordering_id}) {
+          let countryFieldName = getCountryField(section)
 
           let baseInnerFields = {
             ordering_id: {selected: ordering_id || 0},
@@ -153,12 +152,12 @@ export default {
             },
             get quantity_exempted() {
                 let fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses','quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other_uses']
-                 return self.quantityCalculator(fields, this, section)
+                 return quantityCalculator(fields, this, section)
             },
 
             get decision_exempted() {
                 let fields =  ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses','decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other_uses']
-                return self.decisionGenerator(fields, this, section)
+                return decisionGenerator(fields, this, section)
             },
             quantity_essential_uses: {
               type: 'number',
@@ -226,12 +225,12 @@ export default {
             },
             get validation() {
               let errors = []
-              if(self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0){
+              if(doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0){
                 errors.push('Total quantity imported for all uses is required')
               }
 
 
-              if(self.valueConverter(this.quantity_exempted.selected) > self.doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+              if(valueConverter(this.quantity_exempted.selected) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
                 errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
               }
 
@@ -283,11 +282,11 @@ export default {
                   },
                   get quantity_exempted() {
                      let fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_quarantine_pre_shipment']
-                      return self.quantityCalculator(fields, this, section)
+                      return quantityCalculator(fields, this, section)
                   },                               
                   get decision_exempted() {
                      let fields = ['decision_critical_uses', 'decision_essential_uses', 'decision_high_ambient_temperature', 'decision_laboratory_analytical_uses', 'decision_process_agent_uses', 'decision_quarantine_pre_shipment']
-                      return self.decisionGenerator(fields, this, section)
+                      return decisionGenerator(fields, this, section)
                   },
                   quantity_critical_uses: {
                      type: 'number',

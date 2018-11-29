@@ -24,15 +24,17 @@
             </th>
           </tr>
         </thead>
-       <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-if="row.substance.selected" v-for="(row, row_index) in tab_info.form_fields" class="form-fields">
-         
 
+   
+       <tbody 
+         @mouseover="hovered = tab_info.form_fields.indexOf(row)" 
+         @mouseleave="hovered = false"
+          v-if="row.substance.selected"
+          v-for="(row, row_index) in tab_info.form_fields" 
+          class="form-fields">
           <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'" class="subheader">
             <th v-for="subheader in tab_info.special_headers.section_subheaders">
-          
-
               <small><b><div style="text-align: center" v-html="subheader.label"></div></b></small>
-            
             </th>
           </tr>
 
@@ -93,10 +95,10 @@
               <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
                 <i @click="openValidation" v-if="row[order].selected.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
                 <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
-
               </span>
 
               <span v-else>
+
                 <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
                 <span v-else-if="order === 'substance'">
                   {{tab_data.display.substances[row[order].selected]}}
@@ -111,6 +113,7 @@
                 <span v-else>
                    {{tab_data.display.countries[row[order].selected]}}
                 </span>
+
               </span>
            </td>
          </tr>
@@ -283,7 +286,7 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 export default {
   props: {
     tabName: String,
-    tabId: String,
+    tabId: Number,
     tabIndex: Number,
   },
 
@@ -323,6 +326,8 @@ export default {
           current.shift()
           this.pushUnique(fields, current.join('_'))
         }
+
+        console.log('fields',fields)
         return fields
       } else {
         return false
@@ -469,6 +474,7 @@ export default {
         }
 
       let sortObj = JSON.parse(JSON.stringify(section))
+
       function norm(n) {
         return isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity:Infinity) : -n;
       }

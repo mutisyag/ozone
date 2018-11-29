@@ -33,22 +33,6 @@ var form = {
             title: 'Questionnaire',
             name: 'questionaire_questions',
             isInvalid: false,
-            party: {
-                label: 'Party',
-                name: 'party',
-                selected: 'China',
-                type: 'text',
-                validation: 'required',
-                disabled: true,
-            },
-            reporting_year: {
-                label: 'Reporting Period',
-                name: 'reporting_year',
-                selected: '2016',
-                type: 'text',
-                validation: 'required',
-                disabled: true,
-            },
             description: '',
             // used for identification when adding labels
             form_fields: intro_fields

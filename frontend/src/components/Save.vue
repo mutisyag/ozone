@@ -14,13 +14,7 @@ export default {
 
   data () {
     return {
-        findDuplicates: {},
-        showDismissibleAlert: false,
-        showDismissibleAlertSave: false,
-        current_duplicates: '',
         invalidTabs: [],
-        errorMessage: null,
-        duplicatesFound: [],
         fields_to_save: {
           'questionaire_questions' : 'article7questionnaire_url',
           'has_imports' : 'article7imports_url',
@@ -32,107 +26,107 @@ export default {
         },
         form_fields: {
           'has_exports' : {
-              "remarks_party": "",
-              "remarks_os": "",
-              "quantity_total_new": null,
-              "quantity_total_recovered": null,
-              "quantity_feedstock": null,
-              "quantity_critical_uses": null,
-              "decision_critical_uses": "",
-              "quantity_essential_uses": null,
-              "decision_essential_uses": "",
-              "quantity_high_ambient_temperature": null,
-              "decision_high_ambient_temperature": "",
-              "quantity_laboratory_analytical_uses": null,
-              "decision_laboratory_analytical_uses": "",
-              "quantity_process_agent_uses": null,
-              "decision_process_agent_uses": "",
-              "quantity_quarantine_pre_shipment": null,
-              "decision_quarantine_pre_shipment": "",
-              "destination_party": null,
-              "substance": null,
-              "blend": null,
-              "decision": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'quantity_total_new': null,
+              'quantity_total_recovered': null,
+              'quantity_feedstock': null,
+              'quantity_critical_uses': null,
+              'decision_critical_uses': '',
+              'quantity_essential_uses': null,
+              'decision_essential_uses': '',
+              'quantity_high_ambient_temperature': null,
+              'decision_high_ambient_temperature': '',
+              'quantity_laboratory_analytical_uses': null,
+              'decision_laboratory_analytical_uses': '',
+              'quantity_process_agent_uses': null,
+              'decision_process_agent_uses': '',
+              'quantity_quarantine_pre_shipment': null,
+              'decision_quarantine_pre_shipment': '',
+              'destination_party': null,
+              'substance': null,
+              'blend': null,
+              'decision': null
             },
           'has_imports' : {
-              "remarks_party": "",
-              "remarks_os": "",
-              "quantity_total_new": null,
-              "quantity_total_recovered": null,
-              "quantity_feedstock": null,
-              "quantity_critical_uses": null,
-              "decision_critical_uses": "",
-              "quantity_essential_uses": null,
-              "decision_essential_uses": "",
-              "quantity_high_ambient_temperature": null,
-              "decision_high_ambient_temperature": "",
-              "quantity_laboratory_analytical_uses": null,
-              "decision_laboratory_analytical_uses": "",
-              "quantity_process_agent_uses": null,
-              "decision_process_agent_uses": "",
-              "quantity_quarantine_pre_shipment": null,
-              "decision_quarantine_pre_shipment": "",
-              "source_party": null,
-              "substance": null,
-              "blend": null,
-              "decision": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'quantity_total_new': null,
+              'quantity_total_recovered': null,
+              'quantity_feedstock': null,
+              'quantity_critical_uses': null,
+              'decision_critical_uses': '',
+              'quantity_essential_uses': null,
+              'decision_essential_uses': '',
+              'quantity_high_ambient_temperature': null,
+              'decision_high_ambient_temperature': '',
+              'quantity_laboratory_analytical_uses': null,
+              'decision_laboratory_analytical_uses': '',
+              'quantity_process_agent_uses': null,
+              'decision_process_agent_uses': '',
+              'quantity_quarantine_pre_shipment': null,
+              'decision_quarantine_pre_shipment': '',
+              'source_party': null,
+              'substance': null,
+              'blend': null,
+              'decision': null
             },
           'has_produced' : {
-              "remarks_party": "",
-              "remarks_os": "",
-              "quantity_critical_uses": null,
-              "decision_critical_uses": "",
-              "quantity_essential_uses": null,
-              "decision_essential_uses": "",
-              "quantity_high_ambient_temperature": null,
-              "decision_high_ambient_temperature": "",
-              "quantity_laboratory_analytical_uses": null,
-              "decision_laboratory_analytical_uses": "",
-              "quantity_process_agent_uses": null,
-              "decision_process_agent_uses": "",
-              "quantity_quarantine_pre_shipment": null,
-              "decision_quarantine_pre_shipment": "",
-              "quantity_total_produced": null,
-              "quantity_feedstock": null,
-              "quantity_article_5": null,
-              "substance": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'quantity_critical_uses': null,
+              'decision_critical_uses': '',
+              'quantity_essential_uses': null,
+              'decision_essential_uses': '',
+              'quantity_high_ambient_temperature': null,
+              'decision_high_ambient_temperature': '',
+              'quantity_laboratory_analytical_uses': null,
+              'decision_laboratory_analytical_uses': '',
+              'quantity_process_agent_uses': null,
+              'decision_process_agent_uses': '',
+              'quantity_quarantine_pre_shipment': null,
+              'decision_quarantine_pre_shipment': '',
+              'quantity_total_produced': null,
+              'quantity_feedstock': null,
+              'quantity_article_5': null,
+              'substance': null
           },
           'has_destroyed' : {
-              "remarks_party": "",
-              "remarks_os": "",
-              "quantity_destroyed": null,
-              "substance": null,
-              "blend": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'quantity_destroyed': null,
+              'substance': null,
+              'blend': null
           },
           'has_nonparty' : {
-              "remarks_party": "",
-              "remarks_os": "",
-              "quantity_import_new": null,
-              "quantity_import_recovered": null,
-              "quantity_export_new": null,
-              "quantity_export_recovered": null,
-              "substance": null,
-              "blend": null,
-              "trade_party": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'quantity_import_new': null,
+              'quantity_import_recovered': null,
+              'quantity_export_new': null,
+              'quantity_export_recovered': null,
+              'substance': null,
+              'blend': null,
+              'trade_party': null
           },
           'questionaire_questions': {
-              "remarks_party": "",
-              "remarks_os": "",
-              "has_imports": false,
-              "has_exports": false,
-              "has_produced": false,
-              "has_destroyed": false,
-              "has_nonparty": false,
-              "has_emissions": false
+              'remarks_party': '',
+              'remarks_os': '',
+              'has_imports': false,
+              'has_exports': false,
+              'has_produced': false,
+              'has_destroyed': false,
+              'has_nonparty': false,
+              'has_emissions': false
           },
           'has_emissions' :{
-              "remarks_party": "",
-              "remarks_os": "",
-              "facility_name": "",
-              "quantity_generated": null,
-              "quantity_feedstock": null,
-              "quantity_destroyed": null,
-              "quantity_emitted": null
+              'remarks_party': '',
+              'remarks_os': '',
+              'facility_name': '',
+              'quantity_generated': null,
+              'quantity_feedstock': null,
+              'quantity_destroyed': null,
+              'quantity_emitted': null
           }
         },
     }
@@ -144,28 +138,23 @@ export default {
       }
     },
 
-
-
     validation(){
       this.invalidTabs = []
-      let tabsToValidate = ['has_imports','has_exports','has_produced','has_destroyed','has_nonparty','has_emissions',]
+      let tabsToValidate = ['has_imports','has_exports','has_produced','has_destroyed','has_nonparty','has_emissions']
       for(let tab of tabsToValidate){
         for(let field of this.$store.state.form.tabs[tab].form_fields){
           if(field.validation.selected.length){
             this.invalidTabs.push(this.$store.state.form.tabs[tab].name)
-            this.$store.state.form.tabs[tab].status = false
+            this.$store.commit('setTabStatus', {tab: tab, value: false})
             break;
           }
         }
       }
       this.startSubmitting()
-      
     },
 
 
   	startSubmitting(){
-      this.errorMessage = null
-      this.current_duplicates = null
       this.submitQuestionaireData('questionaire_questions')
       for(let questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
         if(questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
@@ -192,7 +181,7 @@ export default {
     },  
 
     submitData(field) {
-       const current_tab = Object.values(this.$store.state.form.tabs).find( (value) => { return value.name === field} )
+       const current_tab = this.$store.state.form.tabs[field]
        if(this.$store.state.newTabs.indexOf(field) === -1){
        current_tab.status = 'saving'
        let current_tab_data = []
@@ -207,7 +196,6 @@ export default {
          })
 
         update(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
-              this.showDismissibleAlertSave = true
               current_tab.status = true
               if(current_tab_data.length){
                 this.$store.commit('tabHasBeenSaved', field)
@@ -238,7 +226,6 @@ export default {
          })
 
         post(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then( (response) => {
-              this.showDismissibleAlertSave = true
               current_tab.status = true
               this.$store.commit('tabHasBeenSaved', field)
               }).catch((error) => {

@@ -236,8 +236,6 @@ export default {
           }).catch((error) => {
                 this.$store.dispatch('setAlert', { message:  error.response.data, variant: 'danger' })
           })
-
-          console.log(this.new_blend)
       }
 
       this.resetData()

@@ -11,7 +11,6 @@
          <i style='margin-left: 5px' class="fa fa-info-circle fa-lg"></i>
       </div>
       <div v-else v-html="titles[tabIndex].title"></div>
-
     </div>
     <b-button-group class="actions">
       <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
@@ -29,16 +28,15 @@
       </b-btn>
     </b-button-group>
   </div>
+  
   <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
     <div v-if="modal_data" v-html="modal_data"></div>
   </b-modal>
+
   <b-container style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
-      <b-form>
-
         <b-tabs v-model="tabIndex" card>
-
-
+        
           <b-tab title="Submission Info">
              <template slot="title">
               <div class="tab-title">
@@ -52,88 +50,22 @@
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
          
-
-          <b-tab :title-link-class="$store.state.form.tabs.has_imports.status ? {} : null"  :disabled="!display_tabs[$store.state.form.tabs.has_imports.name]">
+          <b-tab v-for="tab in tabs" :title-link-class="$store.state.form.tabs[tab].status ? {} : null"  :disabled="!display_tabs[$store.state.form.tabs[tab].name]">
              <template slot="title">
               <div class="tab-title">
-                {{$store.state.form.tabs.has_imports.title}}
-                <div v-if="$store.state.form.tabs.has_imports.status === 'saving'" class="spinner">
+                {{$store.state.form.tabs[tab].title}}
+                <div v-if="$store.state.form.tabs[tab].status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="$store.state.form.tabs.has_imports.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_imports.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_imports.status === 'edited'" class="fa fa-edit fa-lg"></i>
-              
-              </div>
-
-             </template>
-            <formtemplate tabId="2" ref="has_imports" :tabIndex="tabIndex" tabName="has_imports"></formtemplate>
-          </b-tab>
-
-          <b-tab :title-link-class="$store.state.form.tabs.has_exports.status ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_exports.name]">
-            <template slot="title">
-               <div class="tab-title">
-                {{$store.state.form.tabs.has_exports.title}}
-                <div v-if="$store.state.form.tabs.has_exports.status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.has_exports.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_exports.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_exports.status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab].status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab].status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab].status === 'edited'" class="fa fa-edit fa-lg"></i>
               </div>
              </template>
-            <formtemplate ref="has_exports" tabId="3" :tabIndex="tabIndex"  tabName="has_exports"></formtemplate>
+            <formtemplate :tabId="tabs.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab"></formtemplate>
           </b-tab>
 
-
-         <b-tab :title-link-class="$store.state.form.tabs.has_produced.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_produced.name]">
-             <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs.has_produced.title}}
-                <div v-if="$store.state.form.tabs.has_produced.status === 'saving'" class="spinner">
-                   <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.has_produced.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_produced.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_produced.status === 'edited'" class="fa fa-edit fa-lg"></i>
-              
-              </div>
-             </template>
-            <formtemplate tabId="4"  ref="has_produced"  :tabIndex="tabIndex"   tabName="has_produced"></formtemplate>
-          </b-tab>
-
-          <b-tab :title-link-class="$store.state.form.tabs.has_destroyed.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_destroyed.name]">
-            <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs.has_destroyed.title}}
-                <div v-if="$store.state.form.tabs.has_destroyed.status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.has_destroyed.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_destroyed.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_destroyed.status === 'edited'" class="fa fa-edit fa-lg"></i>
-              
-              </div>
-             </template>
-            <formtemplate tabId="5" :tabIndex="tabIndex" ref="has_destroyed"  tabName="has_destroyed"></formtemplate>
-          </b-tab>
-
-          <b-tab :title-link-class="$store.state.form.tabs.has_nonparty.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_nonparty.name]">
-            <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs.has_nonparty.title}}
-                <div v-if="$store.state.form.tabs.has_nonparty.status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.has_nonparty.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_nonparty.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_nonparty.status === 'edited'" class="fa fa-edit fa-lg"></i>
-              
-              </div>
-             </template>
-            <formtemplate tabId="6" ref="has_nonparty"  :tabIndex="tabIndex"   tabName="has_nonparty"></formtemplate>
-          </b-tab>
-           <b-tab :title-link-class="$store.state.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
+          <b-tab :title-link-class="$store.state.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
             <template slot="title">
               <div class="tab-title">
                 {{$store.state.form.tabs.has_emissions.title}}
@@ -148,6 +80,8 @@
              </template>
             <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"   tabName="has_emissions"></emissionstemplate>
           </b-tab>
+
+
            <b-tab title="Attachments">
             <attachments tabId="8"></attachments>
           </b-tab>
@@ -171,9 +105,6 @@
               <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
             </div>
         </div>
-
-
-      </b-form>
     </b-card>
     </b-container>
     <Footer>
@@ -241,13 +172,14 @@ export default {
 
   computed: {
      display_tabs() {
+      const questionaire_tab = this.$store.state.form.tabs.questionaire_questions.form_fields
       return {
-        has_exports: this.$store.state.form.tabs.questionaire_questions.form_fields.has_exports.selected,
-        has_imports: this.$store.state.form.tabs.questionaire_questions.form_fields.has_imports.selected,
-        has_destroyed: this.$store.state.form.tabs.questionaire_questions.form_fields.has_destroyed.selected,
-        has_nonparty: this.$store.state.form.tabs.questionaire_questions.form_fields.has_nonparty.selected,
-        has_produced: this.$store.state.form.tabs.questionaire_questions.form_fields.has_produced.selected,
-        has_emissions: this.$store.state.form.tabs.questionaire_questions.form_fields.has_emissions.selected,
+        has_exports: questionaire_tab.has_exports.selected,
+        has_imports: questionaire_tab.has_imports.selected,
+        has_destroyed: questionaire_tab.has_destroyed.selected,
+        has_nonparty: questionaire_tab.has_nonparty.selected,
+        has_produced: questionaire_tab.has_produced.selected,
+        has_emissions: questionaire_tab.has_emissions.selected,
       }
     },
   },
@@ -277,6 +209,7 @@ export default {
     return {
       tabIndex: 0,
       modal_data: null,
+      tabs: ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty'],
       titles: [
       {title:'Submission Info'},
       {title: 'Questionaire'},

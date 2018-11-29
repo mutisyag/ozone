@@ -102,7 +102,7 @@ export default {
                 this.$store.commit('setTabStatus',{tab:tab, value:'saving'})
                 this.$nextTick(() => {
                   setTimeout(() => {
-                    this.prefill(form.tabs[tab], response.data)
+                    this.prefill(form.tabs[tab].name, response.data)
                   },100)
                 })
               } else {
@@ -116,31 +116,31 @@ export default {
         this.prefilled = true
     },
 
-    prefill(tab, data) {
+    prefill(tabName, data) {
       const ordering_id = Math.max(...data.map(row => row.ordering_id))
-      const sortedData = data.slice().sort((a,b) => {return a.ordering_id - b.ordering_id})
+      const sortedData = data.sort((a,b) => {return a.ordering_id - b.ordering_id})
 
-      if(tab.name != 'has_emissions'){
-          for(let item of sortedData) {
+      if(tabName != 'has_emissions'){
+          sortedData.forEach( item => {
             // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
             this.$store.dispatch('createSubstance',{
              substanceList: item.substance ? [item.substance] : null,
-             currentSectionName: tab.name, 
+             currentSectionName: tabName, 
              groupName: null, 
              country: null, 
              blendList: item.blend ? [item.blend] : null, 
              prefillData: item
             })
-          }
+          })
       } else {
           sortedData.forEach( el => this.$store.dispatch('prefillEmissionsRow', el))
-         }
-          this.$nextTick(() => {
-            setTimeout(() => {
-                this.$store.commit('setTabStatus',{tab: tab.name, value:true})
-            })
-          })
-      this.$store.commit('setTabOrderingId', {tabName: tab.name, ordering_id: ordering_id})        
+      }
+      this.$nextTick(() => {
+        setTimeout(() => {
+            this.$store.commit('setTabStatus',{tab: tabName, value:true})
+        })
+      })
+      this.$store.commit('setTabOrderingId', {tabName: tabName, ordering_id: ordering_id})        
 
     },
 

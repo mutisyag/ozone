@@ -360,28 +360,47 @@ const store = new Vuex.Store({
 
 
         createSubstance(context, data) {
-            let iterator = data.substanceList
-            let substancesHere = (data.substanceList && data.substanceList.length) ? data.substanceList.some((el) => { return el !== null }) : false
-            let blendsHere = (data.blendList && data.blendList.length) ? data.blendList.some((el) => { return el !== null }) : false
-
+            let substancesHere = data.substanceList && data.substanceList.some((el) => { return el !== null })
+            let blendsHere = data.blendList && data.blendList.some((el) => { return el !== null })
             if (substancesHere) {
-                for (let substance of data.substanceList) {
+                data.substanceList.forEach( substance => {
+                    let ordering_id = 0
                     if(!data.prefill){
                         context.commit('incrementOrderingId',{tabName:data.currentSectionName})
+                        ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
                     }
-                    let ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
-                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, substance, data.groupName, data.country, null, data.prefillData, ordering_id)
-                    context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
-                }
+                    
+                    // section, substance, group, country, blend, prefillData, ordering_id
+                    let inner_fields = tableRowConstructor.getInnerFields({
+                                                                section: data.currentSectionName, 
+                                                                substance, 
+                                                                group: data.groupName, 
+                                                                country: data.country, 
+                                                                blend: null, 
+                                                                prefillData: data.prefillData, 
+                                                                ordering_id
+                                                            })
+                    context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })                    
+                })
             } else if (blendsHere) {
-                for (let blend of data.blendList) {
+                data.blendList.forEach( blend => {
+                    let ordering_id = 0
                     if(!data.prefill) {
                         context.commit('incrementOrderingId',{tabName:data.currentSectionName})
+                        ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
                     }
-                    let ordering_id = context.state.form.tabs[data.currentSectionName].ordering_id
-                    let inner_fields = tableRowConstructor.getInnerFields(data.currentSectionName, null, data.groupName, data.country, blend, data.prefillData, ordering_id)
+                    let inner_fields = tableRowConstructor.getInnerFields({
+                                                                section: data.currentSectionName, 
+                                                                substance: null, 
+                                                                group: data.groupName, 
+                                                                country: data.country, 
+                                                                blend, 
+                                                                prefillData: data.prefillData, 
+                                                                ordering_id
+                                                            })
                     context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
-                }
+                })
+                
             }
         },
 
@@ -437,7 +456,6 @@ const store = new Vuex.Store({
             }
             if (data) {
                 Object.keys(data).forEach((element, index) => {
-                    console.log(element)
                     row[element].selected = data[element]
                 });
             }
@@ -477,6 +495,7 @@ const store = new Vuex.Store({
             // data - {value:value, fieldInfo:{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}}
         updateFormField(state,data){
             let path;
+            console.log(data.value)
             data.fieldInfo.index === data.fieldInfo.field 
             ?
             state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
