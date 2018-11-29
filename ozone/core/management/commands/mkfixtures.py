@@ -341,11 +341,10 @@ class Command(BaseCommand):
         f['start_date'] = row['StartDate'].date()
         f['end_date'] = row['EndDate'].date()
         f['description'] = row['PeriodDescr']
-        f['is_year'] = f['name'][0].isdigit()
         f['is_reporting_allowed'] = f['name'][0] == 'C' or (
             f['name'].isdigit() and int(f['name']) <= 2018
         )
-        f['is_reporting_open'] = f['is_year'] and f['name'] in ('2017', '2018')
+        f['is_reporting_open'] = f['name'] in ('2017', '2018')
 
     def reportingperiod_additional_data(self, data, idx):
         objs = [
@@ -355,7 +354,6 @@ class Command(BaseCommand):
                   "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
                   "is_reporting_allowed": False,
                   "is_reporting_open": False,
-                  "is_year": True,
                   "name": "1987",
                   "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
                 },
@@ -368,7 +366,6 @@ class Command(BaseCommand):
                   "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
                   "is_reporting_allowed": False,
                   "is_reporting_open": False,
-                  "is_year": True,
                   "name": "1988",
                   "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
                 },
