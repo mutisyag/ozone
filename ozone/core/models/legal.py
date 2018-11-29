@@ -24,9 +24,6 @@ class ReportingPeriod(models.Model):
     # This will usually be '2017', '2018' etc; most periods (but not all!)
     # are mapped to calendar years
     name = models.CharField(max_length=64, unique=True)
-    # indicates a "normal" (yearly) reporting period, to avoid need of extra
-    # logic on the `name` field
-    is_year = models.BooleanField(default=True)
 
     # Indicates whether reporting can be performed for this reporting period.
     # Will be False for baseline years.
