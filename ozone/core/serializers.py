@@ -481,6 +481,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current',
+            'flag_provisional', 'flag_valid', 'flag_superseded',
             'reporting_officer', 'designation', 'organization',
             'postal_code', 'country', 'phone', 'fax', 'email', 'date',
         )
