@@ -84,7 +84,8 @@ class Command(BaseCommand):
         # preload existing fixtures for dependent models
         for model in self.MODELS.keys():
             try:
-                filename = os.path.join(self.OUTPUT_DIR, self.MODELS[model]['fixture'])
+                filename = os.path.join(
+                    self.OUTPUT_DIR, self.MODELS[model]['fixture'])
                 with open(filename, 'r', encoding='utf-8') as f:
                     self.FIXTURES[model] = json.load(f)
             except FileNotFoundError:
@@ -92,7 +93,8 @@ class Command(BaseCommand):
 
         for model in options['models']:
             data = self.parse_model(wb, model)
-            filename = os.path.join(self.OUTPUT_DIR, self.MODELS[model]['fixture'])
+            filename = os.path.join(
+                self.OUTPUT_DIR, self.MODELS[model]['fixture'])
             with open(filename, 'w', encoding="utf-8") as outfile:
                 json.dump(
                     data, outfile,
@@ -109,7 +111,8 @@ class Command(BaseCommand):
         return values
 
     def lookup_id(self, model, field, key, data=None):
-        # This method used to be pretty until UNK SubRegion appeared several times
+        # This method used to be pretty until UNK SubRegion appeared several
+        # times
         if not key:
             return None
         if not data:
@@ -127,11 +130,12 @@ class Command(BaseCommand):
         # reinitialize current model in FIXTURES
         data = self.FIXTURES[model] = []
         if not self.MODELS.get(model) or not self.MODELS[model].get('sheet'):
-            raise CommandError('Import for model "%s" is not implemented' % model)
+            raise CommandError(
+                'Import for model "%s" is not implemented' % model)
         sheet = workbook[self.MODELS[model]['sheet']]
 
         for idx in range(1, sheet.max_row):
-            row = self.row2dict(sheet, sheet[idx+1])
+            row = self.row2dict(sheet, sheet[idx + 1])
             model_class = 'core.' + (self.MODELS[model].get('model') or model)
             obj = {
                 'pk': idx + (self.MODELS[model].get('min_id') or 0),
@@ -149,9 +153,9 @@ class Command(BaseCommand):
         if hasattr(self, model + "_postprocess"):
             for idx in range(1, sheet.max_row):
                 # This could be cached
-                row = self.row2dict(sheet, sheet[idx+1])
+                row = self.row2dict(sheet, sheet[idx + 1])
                 # Some not very nice assumptions made here
-                obj = data[idx-1]
+                obj = data[idx - 1]
                 getattr(self, model + "_postprocess")(obj['fields'], row)
 
         # Hack alert: Remove rows having a pseudo-field called "_deleted"
@@ -180,18 +184,27 @@ class Command(BaseCommand):
         if isinstance(subregion, list):
             # UNK subregion is not unique, so lookup_id will return a list
             region = self.lookup_id('region', 'abbr', row['RegionID'])
-            subregion = self.lookup_id('subregion', 'region', region, subregion)
+            subregion = self.lookup_id(
+                'subregion', 'region', region, subregion)
         f['subregion'] = subregion
 
-        f['signed_vienna_convention'] = row['SignVC'].date() if row['SignVC'] else None
-        f['signed_montreal_protocol'] = row['SignMP'].date() if row['SignMP'] else None
+        f['signed_vienna_convention'] = row['SignVC'].date() if row[
+                                                           'SignVC'] else None
+        f['signed_montreal_protocol'] = row['SignMP'].date() if row[
+                                                           'SignMP'] else None
 
-        f['ratification_date_vienna_convention'] = row['RD_VC'].date() if row['RD_VC'] else None
-        f['ratification_date_montreal_amendment'] = row['RD_MP'].date() if row['RD_MP'] else None
-        f['ratification_date_london_amendment'] = row['RD_LA'].date() if row['RD_LA'] else None
-        f['ratification_date_copenhagen_amendment'] = row['RD_CA'].date() if row['RD_CA'] else None
-        f['ratification_date_beijing_amendment'] = row['RD_MA'].date() if row['RD_MA'] else None
-        f['ratification_date_kigali_amendment'] = row['RD_KA'].date() if row['RD_KA'] else None
+        f['ratification_date_vienna_convention'] = row[
+            'RD_VC'].date() if row['RD_VC'] else None
+        f['ratification_date_montreal_amendment'] = row[
+            'RD_MP'].date() if row['RD_MP'] else None
+        f['ratification_date_london_amendment'] = row[
+            'RD_LA'].date() if row['RD_LA'] else None
+        f['ratification_date_copenhagen_amendment'] = row[
+            'RD_CA'].date() if row['RD_CA'] else None
+        f['ratification_date_beijing_amendment'] = row[
+            'RD_MA'].date() if row['RD_MA'] else None
+        f['ratification_date_kigali_amendment'] = row[
+            'RD_KA'].date() if row['RD_KA'] else None
 
         ratif_types_map = {
             'Ac': RatificationTypes.ACCESSION.value,
@@ -201,12 +214,18 @@ class Command(BaseCommand):
             'Sc': RatificationTypes.SUCCESSION.value,
             # TODO: What about RatificationTypes.SIGNING ??
         }
-        f['ratification_type_vienna_convention'] = ratif_types_map.get(row['RT_VC'], "")
-        f['ratification_type_montreal_protocol'] = ratif_types_map.get(row['RT_MP'], "")
-        f['ratification_type_london_amendment'] = ratif_types_map.get(row['RT_LA'], "")
-        f['ratification_type_copenhagen_amendment'] = ratif_types_map.get(row['RT_CA'], "")
-        f['ratification_type_beijing_amendment'] = ratif_types_map.get(row['RT_BA'], "")
-        f['ratification_type_kigali_amendment'] = ratif_types_map.get(row['RT_KA'], "")
+        f['ratification_type_vienna_convention'] = ratif_types_map.get(row[
+                                                                       'RT_VC'], "")
+        f['ratification_type_montreal_protocol'] = ratif_types_map.get(row[
+                                                                       'RT_MP'], "")
+        f['ratification_type_london_amendment'] = ratif_types_map.get(row[
+                                                                      'RT_LA'], "")
+        f['ratification_type_copenhagen_amendment'] = ratif_types_map.get(row[
+                                                                          'RT_CA'], "")
+        f['ratification_type_beijing_amendment'] = ratif_types_map.get(row[
+                                                                       'RT_BA'], "")
+        f['ratification_type_kigali_amendment'] = ratif_types_map.get(row[
+                                                                      'RT_KA'], "")
 
         f['remark'] = row['Remark'] or ""
 
@@ -223,11 +242,14 @@ class Command(BaseCommand):
             f['_deleted'] = True
         else:
             f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
-        f['reporting_period'] = self.lookup_id('reportingperiod', 'name', row['PeriodID'])
+        f['reporting_period'] = self.lookup_id(
+            'reportingperiod', 'name', row['PeriodID'])
         f['population'] = row['Population'] if row['Population'] else 0
-        art5_group2 = ["BH", "IN", "IR", "IQ", "KW", "OM", "PK", "QA", "SA", "AE"]
+        art5_group2 = ["BH", "IN", "IR", "IQ",
+            "KW", "OM", "PK", "QA", "SA", "AE"]
         non_art5_group2 = ["BY", "KZ", "RU", "TJ", "UZ"]
-        period_datetime = datetime.strptime(self.FIXTURES['reportingperiod'][f['reporting_period']-1]['fields']['end_date'], "%Y-%m-%d")
+        period_datetime = datetime.strptime(self.FIXTURES['reportingperiod'][
+                                            f['reporting_period'] - 1]['fields']['end_date'], "%Y-%m-%d")
         if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
             if row['Article5'] == '1':
                 f['party_type'] = 'Article 5'
@@ -264,7 +286,8 @@ class Command(BaseCommand):
         # Skipped fields: SubstNameFr, SubstNameSp
         annex = row['Anx']
         if annex and annex != '-':
-            f['group'] = self.lookup_id('group', 'group_id', annex+row['Grp'])
+            f['group'] = self.lookup_id(
+                'group', 'group_id', annex + row['Grp'])
         f['sort_order'] = row['AnxGrpSort'] or 9999
         f['odp'] = row['SubstODP']
         f['gwp'] = row['SubstGWP']
@@ -309,7 +332,8 @@ class Command(BaseCommand):
         f['cnumber'] = row['CNumber'] or ""
         substance = self.lookup_id('substance', 'substance_id', row['SubstID'])
         if not substance:
-            substance = self.lookup_id('substance_edw', 'name', row['Component'])
+            substance = self.lookup_id(
+                'substance_edw', 'name', row['Component'])
         f['substance'] = substance
 
     def reportingperiod_map(self, f, row):
@@ -318,7 +342,9 @@ class Command(BaseCommand):
         f['end_date'] = row['EndDate'].date()
         f['description'] = row['PeriodDescr']
         f['is_year'] = f['name'][0].isdigit()
-        f['is_reporting_allowed'] = f['name'][0] == 'C' or f['name'].isdigit()
+        f['is_reporting_allowed'] = f['name'][0] == 'C' or (
+            f['name'].isdigit() and int(f['name']) <= 2018
+        )
         f['is_reporting_open'] = f['is_year'] and f['name'] in ('2017', '2018')
 
     def reportingperiod_additional_data(self, data, idx):
@@ -347,7 +373,7 @@ class Command(BaseCommand):
                   "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
                 },
                 "model": "core.reportingperiod",
-                "pk": idx+1
+                "pk": idx + 1
             }
         ]
         data += objs

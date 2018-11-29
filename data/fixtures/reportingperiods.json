@@ -406,7 +406,7 @@
     "fields": {
       "description": "2019",
       "end_date": "2019-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2019",
@@ -419,7 +419,7 @@
     "fields": {
       "description": "2020",
       "end_date": "2020-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2020",
@@ -432,7 +432,7 @@
     "fields": {
       "description": "2021",
       "end_date": "2021-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2021",
@@ -445,7 +445,7 @@
     "fields": {
       "description": "2022",
       "end_date": "2022-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2022",
@@ -458,7 +458,7 @@
     "fields": {
       "description": "2023",
       "end_date": "2023-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2023",
@@ -471,7 +471,7 @@
     "fields": {
       "description": "2024",
       "end_date": "2024-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2024",
@@ -484,7 +484,7 @@
     "fields": {
       "description": "2025",
       "end_date": "2025-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2025",
@@ -497,7 +497,7 @@
     "fields": {
       "description": "2026",
       "end_date": "2026-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2026",
@@ -510,7 +510,7 @@
     "fields": {
       "description": "2027",
       "end_date": "2027-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2027",
@@ -523,7 +523,7 @@
     "fields": {
       "description": "2028",
       "end_date": "2028-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2028",
@@ -536,7 +536,7 @@
     "fields": {
       "description": "2029",
       "end_date": "2029-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2029",
@@ -549,7 +549,7 @@
     "fields": {
       "description": "2030",
       "end_date": "2030-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2030",
@@ -562,7 +562,7 @@
     "fields": {
       "description": "2031",
       "end_date": "2031-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2031",
@@ -575,7 +575,7 @@
     "fields": {
       "description": "2032",
       "end_date": "2032-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2032",
@@ -588,7 +588,7 @@
     "fields": {
       "description": "2033",
       "end_date": "2033-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2033",
@@ -601,7 +601,7 @@
     "fields": {
       "description": "2034",
       "end_date": "2034-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2034",
@@ -614,7 +614,7 @@
     "fields": {
       "description": "2035",
       "end_date": "2035-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2035",
@@ -627,7 +627,7 @@
     "fields": {
       "description": "2036",
       "end_date": "2036-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2036",
@@ -640,7 +640,7 @@
     "fields": {
       "description": "2037",
       "end_date": "2037-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2037",
@@ -653,7 +653,7 @@
     "fields": {
       "description": "2038",
       "end_date": "2038-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2038",
@@ -666,7 +666,7 @@
     "fields": {
       "description": "2039",
       "end_date": "2039-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2039",
@@ -679,7 +679,7 @@
     "fields": {
       "description": "2040",
       "end_date": "2040-12-31",
-      "is_reporting_allowed": true,
+      "is_reporting_allowed": false,
       "is_reporting_open": false,
       "is_year": true,
       "name": "2040",
