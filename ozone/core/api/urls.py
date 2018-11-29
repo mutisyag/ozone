@@ -116,7 +116,7 @@ nested_routers = [
 router.register(r"group-substances", views.GroupViewSet)
 
 # Blends
-router.register(r"blends", views.BlendViewSet)
+router.register(r"blends", views.BlendViewSet, base_name="blends")
 
 # Authentication
 auth_tokens = routers.SimpleRouter()
