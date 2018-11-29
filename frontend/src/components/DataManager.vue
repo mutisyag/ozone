@@ -1,7 +1,7 @@
 <template>
   <div>
-    <tabsmanager 
-    v-if="initialDataReady" 
+    <tabsmanager
+    v-if="initialDataReady"
     :submission="submission"
     >
     </tabsmanager>
@@ -12,140 +12,136 @@
 </template>
 
 <script>
-import tabsManager from './TabsManager'
-import {fetch, getSubstances, getExportBlends, getParties, getSubmission, getCustomBlends} from '@/api/api.js'
+import tabsManager from './TabsManager.vue'
+import {
+  fetch,
+} from '@/api/api.js'
 
 export default {
   name: 'DataManager',
   components: {
-    tabsmanager:tabsManager
+    tabsmanager: tabsManager,
   },
 
-  data () {
+  data() {
     return {
       form: this.$store.state.form,
       current_submission: null,
       prefilled: false,
       submission: this.$route.query.submission,
       fields_to_prefill: {
-          'questionaire_questions' : 'article7questionnaire',
-          'has_imports' : 'article7imports',
-          'has_exports' : 'article7exports',
-          'has_produced' : 'article7productions',
-          'has_destroyed' : 'article7destructions',
-          'has_nonparty' : 'article7nonpartytrades',
-          'has_emissions' : 'article7emissions',
+        questionaire_questions: 'article7questionnaire',
+        has_imports: 'article7imports',
+        has_exports: 'article7exports',
+        has_produced: 'article7productions',
+        has_destroyed: 'article7destructions',
+        has_nonparty: 'article7nonpartytrades',
+        has_emissions: 'article7emissions',
       },
       fields_to_get: {
-          // 'questionaire_questions' : 'article7questionnaire_url',
-          'has_imports' : 'article7imports_url',
-          'has_exports' : 'article7exports_url',
-          'has_produced' : 'article7productions_url',
-          'has_destroyed' : 'article7destructions_url',
-          'has_nonparty' : 'article7nonpartytrades_url',
-          'has_emissions' : 'article7emissions_url',
+        // 'questionaire_questions' : 'article7questionnaire_url',
+        has_imports: 'article7imports_url',
+        has_exports: 'article7exports_url',
+        has_produced: 'article7productions_url',
+        has_destroyed: 'article7destructions_url',
+        has_nonparty: 'article7nonpartytrades_url',
+        has_emissions: 'article7emissions_url',
       },
     }
   },
 
-
   created() {
-    if(!this.submission) {
-      this.$router.push({ name: 'Dashboard' });
-    } else {    
-      window.addEventListener('beforeunload',  this.alertUnsavedData)
-      this.$store.dispatch('getInitialData', this.submission).then( (response) => {
+    if (!this.submission) {
+      this.$router.push({ name: 'Dashboard' })
+    } else {
+      window.addEventListener('beforeunload', this.alertUnsavedData)
+      this.$store.dispatch('getInitialData', this.submission).then(() => {
         this.prePrefill()
       })
     }
   },
 
   computed: {
-    initialDataReady(){
-      return this.$store.state.initialData.countryOptions 
-              && this.$store.state.initialData.substances 
-              && this.$store.state.initialData.blends 
-              && this.$store.state.current_submission 
-              && this.$store.state.initialData.display.substances 
-              && this.$store.state.initialData.display.blends 
+    initialDataReady() {
+      return this.$store.state.initialData.countryOptions
+              && this.$store.state.initialData.substances
+              && this.$store.state.initialData.blends
+              && this.$store.state.current_submission
+              && this.$store.state.initialData.display.substances
+              && this.$store.state.initialData.display.blends
               && this.$store.state.initialData.display.countries
               && this.prefilled
-    }
+    },
   },
 
   methods: {
 
-    alertUnsavedData(e){
-      let tabsWithData = []
-      Object.values(this.$store.state.form.tabs).forEach( (tab,index) => {
-        [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title) 
+    alertUnsavedData(e) {
+      const tabsWithData = []
+      Object.values(this.$store.state.form.tabs).forEach((tab) => {
+        if ([false, 'edited'].includes(tab.status)) {
+          tabsWithData.push(tab.title)
+        }
       })
-      if(tabsWithData.length){
+      if (tabsWithData.length) {
         // Cancel the event as stated by the standard.
-        e.preventDefault();
+        e.preventDefault()
         // Chrome requires returnValue to be set.
-        e.returnValue = '';
+        e.returnValue = ''
         console.log(tabsWithData)
       }
-
     },
 
     prePrefill() {
-        const form = this.$store.state.form,
-              prefill_data = this.$store.state.current_submission
+      const { form } = this.$store.state.form
+      const prefill_data = this.$store.state.current_submission
 
-
-        Object.keys(form.tabs).forEach( (tab) => {
-          if(this.fields_to_get[tab]){
-            fetch(prefill_data[this.fields_to_get[tab]]).then( response => {
-              if(response.data.length) {
-                this.$store.commit('setTabStatus',{tab:tab, value:'saving'})
-                this.$nextTick(() => {
-                  setTimeout(() => {
-                    this.prefill(form.tabs[tab].name, response.data)
-                  },100)
-                })
-              } else {
-                this.$store.commit('updateNewTabs', tab)
-              }
-            }).catch( error => {
-              console.log(error)
-            })
-          }
-        })
-        this.prefilled = true
+      Object.keys(form.tabs).forEach((tab) => {
+        if (this.fields_to_get[tab]) {
+          fetch(prefill_data[this.fields_to_get[tab]]).then((response) => {
+            if (response.data.length) {
+              this.$store.commit('setTabStatus', { tab, value: 'saving' })
+              this.$nextTick(() => {
+                setTimeout(() => {
+                  this.prefill(form.tabs[tab].name, response.data)
+                }, 100)
+              })
+            } else {
+              this.$store.commit('updateNewTabs', tab)
+            }
+          }).catch((error) => {
+            console.log(error)
+          })
+        }
+      })
+      this.prefilled = true
     },
 
     prefill(tabName, data) {
       const ordering_id = Math.max(...data.map(row => row.ordering_id))
-      const sortedData = data.sort((a,b) => {return a.ordering_id - b.ordering_id})
+      const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
 
-      if(tabName != 'has_emissions'){
-          sortedData.forEach( item => {
-            // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-            this.$store.dispatch('createSubstance',{
-             substanceList: item.substance ? [item.substance] : null,
-             currentSectionName: tabName, 
-             groupName: null, 
-             country: null, 
-             blendList: item.blend ? [item.blend] : null, 
-             prefillData: item
-            })
+      if (tabName !== 'has_emissions') {
+        sortedData.forEach((item) => {
+          this.$store.dispatch('createSubstance', {
+            substanceList: item.substance ? [item.substance] : null,
+            currentSectionName: tabName,
+            groupName: null,
+            country: null,
+            blendList: item.blend ? [item.blend] : null,
+            prefillData: item,
           })
+        })
       } else {
-          sortedData.forEach( el => this.$store.dispatch('prefillEmissionsRow', el))
+        sortedData.forEach(el => this.$store.dispatch('prefillEmissionsRow', el))
       }
       this.$nextTick(() => {
         setTimeout(() => {
-            this.$store.commit('setTabStatus',{tab: tabName, value:true})
+          this.$store.commit('setTabStatus', { tab: tabName, value: true })
         })
       })
-      this.$store.commit('setTabOrderingId', {tabName: tabName, ordering_id: ordering_id})        
-
+      this.$store.commit('setTabOrderingId', { tabName, ordering_id })
     },
-
-   
-
   },
 }
 </script>

@@ -92,7 +92,7 @@ const store = new Vuex.Store({
             obligation: () => {
               return state.dashboard.obligations.find( a => { return a.value === submission.obligation }).text
             },
-            period: () => {
+              period: () => {
               return state.dashboard.periods.find(a => {return a.value === submission.reporting_period}).text
             },
             party: () => {
