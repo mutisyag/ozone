@@ -49,6 +49,22 @@ export default {
   },
 
 
+    beforeRouteLeave (to, from, next) {
+      // called before the route that renders this component is confirmed.
+      // does NOT have access to `this` component instance,
+      // because it has not been created yet when this guard is called!
+      if(this.alertUnsavedData()){
+          const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+          if (answer) {
+            next()
+          } else {
+            next(false)
+          }
+      } else {
+        next()
+      }
+    },
+
   created() {
     if(!this.submission) {
       this.$router.push({ name: 'Dashboard' });
@@ -75,18 +91,24 @@ export default {
 
   methods: {
 
+
     alertUnsavedData(e){
       let tabsWithData = []
       Object.values(this.$store.state.form.tabs).forEach( (tab,index) => {
         [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title) 
       })
-      if(tabsWithData.length){
+
+      if(tabsWithData.length && e){
         // Cancel the event as stated by the standard.
         e.preventDefault();
         // Chrome requires returnValue to be set.
         e.returnValue = '';
         console.log(tabsWithData)
+      } else if (tabsWithData.length) {
+        return tabsWithData.length
       }
+
+
 
     },
 
