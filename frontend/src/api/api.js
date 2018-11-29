@@ -6,17 +6,21 @@ const logRequests = process.env.NODE_ENV === 'development';
 const BACKEND_HOST = 'localhost';
 const BACKEND_PORT = 8000;
 
-let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
+
+
+// let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
+
+let apiURL = `${window.location.origin}/api`
+
+// let isTestSession = true
+if(process.env.NODE_ENV === 'development') {
+ apiURL = `http://localhost:8000/api`;
+}
 
 const api = axios.create({
   baseURL: apiURL,
   withCredentials: true,
 });
-
-let isTestSession = true
-if(isTestSession) {
- apiURL = `http://localhost:8080`;
-}
 
 api.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 api.defaults.xsrfCookieName = "csrftoken";
