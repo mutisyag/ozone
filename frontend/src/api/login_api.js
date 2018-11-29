@@ -1,5 +1,5 @@
 import {
-  post, api, getCookie, remove,
+  post, api, getCookie, remove
 } from './api'
 
 const removeLoginToken = () => new Promise((resolve, reject) => {
@@ -30,5 +30,5 @@ const getLoginToken = (username, password) => new Promise((resolve, reject) => {
 
 export {
   removeLoginToken,
-  getLoginToken,
+  getLoginToken
 }

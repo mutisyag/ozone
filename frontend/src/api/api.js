@@ -16,7 +16,7 @@ if (process.env.NODE_ENV === 'development') {
 
 const api = axios.create({
   baseURL: apiURL,
-  withCredentials: true,
+  withCredentials: true
 })
 
 api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
@@ -133,5 +133,5 @@ export {
   callTransition,
   deleteSubmission,
   cloneSubmission,
-  getSubmissionHistory,
+  getSubmissionHistory
 }
