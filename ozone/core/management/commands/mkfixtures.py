@@ -61,6 +61,12 @@ class Command(BaseCommand):
             'fixture': 'reportingperiods.json',
             'sheet': 'Period',
         },
+        'substance_edw': {
+            'model': 'substance',
+            'min_id': 120,
+            'fixture': 'substances_edw.json',
+            'sheet': 'SubstEDW',
+        },
     }
 
     OUTPUT_DIR = settings.FIXTURE_DIRS[0]
@@ -126,9 +132,10 @@ class Command(BaseCommand):
 
         for idx in range(1, sheet.max_row):
             row = self.row2dict(sheet, sheet[idx+1])
+            model_class = 'core.' + (self.MODELS[model].get('model') or model)
             obj = {
-                'pk': idx,
-                'model': 'core.' + model,
+                'pk': idx + (self.MODELS[model].get('min_id') or 0),
+                'model': model_class,
                 'fields': {},
             }
             getattr(self, model + "_map")(obj['fields'], row)
@@ -258,12 +265,12 @@ class Command(BaseCommand):
         annex = row['Anx']
         if annex and annex != '-':
             f['group'] = self.lookup_id('group', 'group_id', annex+row['Grp'])
-        f['sort_order'] = row['AnxGrpSort']
+        f['sort_order'] = row['AnxGrpSort'] or 9999
         f['odp'] = row['SubstODP']
         f['gwp'] = row['SubstGWP']
-        f['max_odp'] = row['MaxODP']
-        f['min_odp'] = row['MinODP']
-        f['description'] = row['SubstDescr']
+        f['max_odp'] = row['MaxODP'] or 0
+        f['min_odp'] = row['MinODP'] or 0
+        f['description'] = row['SubstDescr'] or row['SubstName']
         f['formula'] = row['SubstFormula'] or ""
         f['number_of_isomers'] = row['Number of Isomers']
         f['gwp2'] = row['GWP']
@@ -282,6 +289,12 @@ class Command(BaseCommand):
             # Remove "Other substances"
             f['_deleted'] = True
 
+    def substance_edw_map(self, f, row):
+        f['r_code'] = row['RCode']
+        f['mp_control'] = row['MPControl'] or ""
+        f['main_usage'] = row['MainUsage'] or ""
+        return self.substance_map(f, row)
+
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
         f['composition'] = row['Composition']
@@ -294,7 +307,10 @@ class Command(BaseCommand):
         f['component_name'] = row['Component'] or ""
         f['percentage'] = row['Percentage']
         f['cnumber'] = row['CNumber'] or ""
-        f['substance'] = self.lookup_id('substance', 'substance_id', row['SubstID'])
+        substance = self.lookup_id('substance', 'substance_id', row['SubstID'])
+        if not substance:
+            substance = self.lookup_id('substance_edw', 'name', row['Component'])
+        f['substance'] = substance
 
     def reportingperiod_map(self, f, row):
         f['name'] = row['PeriodID']
