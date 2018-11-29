@@ -18,6 +18,7 @@ class Command(BaseCommand):
                 'languages',
                 'obligations',
                 'reportingperiods',
+                'partieshistory',
                 )
 
     def handle(self, *args, **options):

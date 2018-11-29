@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -28,6 +29,10 @@ class Command(BaseCommand):
         'party': {
             'sheet': 'Cntry',
             'fixture': 'parties.json',
+        },
+        'partyhistory': {
+            'fixture': 'partieshistory.json',
+            'sheet': 'CntryYr',
         },
         'region': {
             'sheet': 'Regions',
@@ -129,6 +134,10 @@ class Command(BaseCommand):
             getattr(self, model + "_map")(obj['fields'], row)
             data.append(obj)
 
+        idx = sheet.max_row
+        if hasattr(self, model + "_additional_data"):
+            getattr(self, model + "_additional_data")(data, idx)
+
         # if a post process method exists, invoke it
         if hasattr(self, model + "_postprocess"):
             for idx in range(1, sheet.max_row):
@@ -201,6 +210,47 @@ class Command(BaseCommand):
             # Remove "All countries" and "Some countries"
             f['_deleted'] = True
 
+    def partyhistory_map(self, f, row):
+        if row['CntryID'] == 'HOLV':
+            f['party'] = self.lookup_id('party', 'abbr', 'VA')
+            f['_deleted'] = True
+        else:
+            f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
+        f['reporting_period'] = self.lookup_id('reportingperiod', 'name', row['PeriodID'])
+        f['population'] = row['Population'] if row['Population'] else 0
+        art5_group2 = ["BH", "IN", "IR", "IQ", "KW", "OM", "PK", "QA", "SA", "AE"]
+        non_art5_group2 = ["BY", "KZ", "RU", "TJ", "UZ"]
+        period_datetime = datetime.strptime(self.FIXTURES['reportingperiod'][f['reporting_period']-1]['fields']['end_date'], "%Y-%m-%d")
+        if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
+            if row['Article5'] == '1':
+                f['party_type'] = 'Article 5'
+            else:
+                f['party_type'] = 'Non Article 5'
+        else:
+            if row['Article5'] == '1':
+                if row['CntryID'] in art5_group2:
+                    f['party_type'] = 'Article 5 Group 2'
+                else:
+                    f['party_type'] = 'Article 5 Group 1'
+            else:
+                if row['CntryID'] in non_art5_group2:
+                    f['party_type'] = 'Non Article 5 Group 2'
+                else:
+                    f['party_type'] = 'Non Article 5 Group 1'
+
+        hat_parties = [
+            "DZ", "BH", "BJ", "BF", "CF", "TD", "CI", "DJ", "EG", "ER", "GM",
+            "GH", "GN", "GW", "IR", "IQ", "JO", "KW", "LY", "ML", "MR", "NE",
+            "NG", "OM", "PK", "QA", "SA", "SN", "SD", "SY", "TG", "TN", "TM", "AE"
+        ]
+        if row['CntryID'] in hat_parties:
+            f['is_high_ambient_temperature'] = True
+        else:
+            f['is_high_ambient_temperature'] = False
+        f['is_eu_member'] = True if row['EurUnion'] == '1' else False
+        f['is_ceit'] = True if row['CEIT'] == '1' else False
+        f['remark'] = row['Remark'] if row['Remark'] else ""
+
     def substance_map(self, f, row):
         f['substance_id'] = row['SubstID']
         f['name'] = row['SubstName']
@@ -254,3 +304,34 @@ class Command(BaseCommand):
         f['is_year'] = f['name'][0].isdigit()
         f['is_reporting_allowed'] = f['name'][0] == 'C' or f['name'].isdigit()
         f['is_reporting_open'] = f['is_year'] and f['name'] in ('2017', '2018')
+
+    def reportingperiod_additional_data(self, data, idx):
+        objs = [
+            {
+                "fields": {
+                  "description": "",
+                  "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
+                  "is_reporting_allowed": False,
+                  "is_reporting_open": False,
+                  "is_year": True,
+                  "name": "1987",
+                  "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
+                },
+                "model": "core.reportingperiod",
+                "pk": idx
+            },
+            {
+                "fields": {
+                  "description": "",
+                  "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
+                  "is_reporting_allowed": False,
+                  "is_reporting_open": False,
+                  "is_year": True,
+                  "name": "1988",
+                  "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
+                },
+                "model": "core.reportingperiod",
+                "pk": idx+1
+            }
+        ]
+        data += objs

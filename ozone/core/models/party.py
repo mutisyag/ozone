@@ -31,6 +31,8 @@ class PartyTypes(enum.Enum):
     A5G1 = 'Article 5 Group 1'
     A5G2 = 'Article 5 Group 2'
     NA5 = 'Non Article 5'
+    NA5G1 = "Non Article 5 Group 1"
+    NA5G2 = "Non Article 5 Group 2"
 
 
 class Region(models.Model):
