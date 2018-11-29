@@ -498,29 +498,30 @@ class Submission(models.Model):
 
     @transaction.atomic
     def save(self, *args, **kwargs):
-        # Auto-increment submission version if saving for a
-        # party-obligation-reporting_period combo which already has submissions.
-        # select_for_update() is used to lock the rows and ensure proper
-        # concurrency.
-        if not self.pk:
+        # Several actions need to be performed on first save
+        if not self.pk or kwargs.get('force_insert', False):
+            # Auto-increment submission version if saving for a
+            # party-obligation-period combo which already has submissions.
+            # select_for_update() is used to lock the rows and ensure proper
+            # concurrency.
             submissions = Submission.objects.select_for_update().filter(
                 party=self.party,
-                reporting_period=self.reporting_period,
                 obligation=self.obligation
             )
-            if any([s.data_changes_allowed for s in submissions]):
+            current_submissions = submissions.filter(
+                reporting_period=self.reporting_period
+            )
+            if any([s.data_changes_allowed for s in current_submissions]):
                 raise ValidationError(
                     _(
                         "There is already a submission in Data Entry for "
                         "this party/period/obligation combination"
                     )
                 )
-            if submissions:
-                self.version = submissions.latest('version').version + 1
+            if current_submissions:
+                self.version = current_submissions.latest('version').version + 1
 
-        # TODO: this is not such a nice verification of first save
-        # On first save we need to instantiate the submission's workflow
-        if not self.pk or kwargs.get('force_insert', False):
+            # On first save we need to instantiate the submission's workflow
             # TODO: get the proper workflow based on obligation and context
             # (e.g. fast-tracked secretariat submissions).
             # For now we will naively instantiate all submissions with
@@ -529,17 +530,12 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow.state.workflow.initial_state.name
 
-        # Prefill "Submission info" with values from the most recent submission
-        # when creating a new submission for the same period and party
-        if not self.pk:
-            submission = (
-                Submission.objects.select_for_update()
-                .filter(party=self.party, obligation=self.obligation)
-                .order_by('-updated_at')
-                .first()
-            )
-            if submission:
-                self.clone_info(submission)
+            # Prefill "Submission info" with values from the most recent
+            # submission when creating a new submission for the same obligation
+            # and party.
+            latest_submission = submissions.order_by('-updated_at').first()
+            if latest_submission:
+                self.clone_info(latest_submission)
 
         self.clean()
         return super().save(*args, **kwargs)
