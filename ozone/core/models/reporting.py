@@ -423,8 +423,13 @@ class Submission(models.Model):
         return clone
 
     def clone_info(self, submission):
+        """
+        Clones submission info for current submission from Submission instance
+        given as parameter.
+        """
         self.reporting_officer = (
-            self.reporting_officer if self.reporting_officer else submission.reporting_officer
+            self.reporting_officer if self.reporting_officer
+            else submission.reporting_officer
         )
         self.designation = (
             self.designation if self.designation else submission.designation
