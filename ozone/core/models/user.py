@@ -17,5 +17,8 @@ class User(GuardianUserMixin, AbstractUser):
 
     is_secretariat = models.BooleanField(default=False)
 
+    # Both Party and Secretariat users can be read-only
+    is_read_only = models.BooleanField(default=True)
+
     class Meta:
         verbose_name = 'user'

@@ -1,11 +1,13 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
 from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
@@ -27,7 +29,7 @@ from ..models import (
     Group,
     Blend,
 )
-
+from ..permissions import IsSecretariatOrSameParty
 from ..serializers import (
     RegionSerializer,
     SubregionSerializer,
@@ -176,6 +178,18 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     filter_backends = (filters.DjangoFilterBackend,)
     filter_fields = ('obligation', 'party', 'reporting_period',)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+
+    def get_queryset(self):
+        user = self.request.user
+        if not user.is_authenticated or user.is_anonymous:
+            return Submission.objects.none()
+        elif user.is_secretariat:
+            # Secretariat user
+            return Submission.objects.all()
+        else:
+            # Party user
+            return Submission.objects.filter(party=user.party)
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
@@ -189,6 +203,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             context={"request": request},
         )
         return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        if request.user.is_secretariat is False:
+            party = Party.objects.get(pk=request.data.get('party', None))
+            if party != request.user.party:
+                return Response(status=status.HTTP_403_FORBIDDEN)
+        super().create(request, *args, **kwargs)
 
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
