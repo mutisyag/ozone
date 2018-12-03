@@ -11,7 +11,7 @@
 
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
           <h5>Composition of <b>{{display.blends[blend].name}}</b></h5>
-          <b-row v-for="substance in display.blends[blend].components">
+          <b-row v-for="(substance, substance_index) in display.blends[blend].components" :key="substance_index">
             <b-col>{{substance.component_name}}</b-col>
             <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
@@ -25,7 +25,7 @@
               <b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
             </b-input-group-append>
           </b-input-group>
-          <b-input-group class="mb-2 mt-2" v-for="substance in new_blend.composition">
+          <b-input-group class="mb-2 mt-2" v-for="(substance, substance_index) in new_blend.composition" :key="substance_index">
               <b-input-group-prepend>
                 <b-btn  style="z-index:initial;"  variant="danger" @click="removeSubstanceFromBlend(substance)">X</b-btn>
               </b-input-group-prepend>

@@ -557,7 +557,6 @@ export default {
       return toShow
     },
 
-
     expandDecisions(field){
       let toShow = '';
       for(let item of field.fields) {
