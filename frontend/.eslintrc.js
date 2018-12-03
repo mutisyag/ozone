@@ -22,7 +22,9 @@ module.exports = {
     'max-len': 'off',
     'no-unused-expressions': 'off',  
     'arrow-parens': 'off',
-    'no-alert': 'off',       
+    'no-alert': 'off',
+    'consistent-return': 'off',
+    'radix': 'off',
   },
   parserOptions: {
     parser: 'babel-eslint',

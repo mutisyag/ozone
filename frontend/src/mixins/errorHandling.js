@@ -1,5 +1,5 @@
 export default {
-	handleError(errorData){
-		return errorData.join('\n')
-	}
+  handleError(errorData) {
+    return errorData.join('\n')
+  }
 }

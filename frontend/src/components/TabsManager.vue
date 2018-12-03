@@ -50,7 +50,7 @@
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
          
-          <b-tab v-for="tab in tabs" :title-link-class="$store.state.form.tabs[tab].status ? {} : null"  :disabled="!display_tabs[$store.state.form.tabs[tab].name]">
+          <b-tab v-for="tab in tabs" :title-link-class="$store.state.form.tabs[tab].status ? {} : null"  :key="tab" :disabled="!display_tabs[$store.state.form.tabs[tab].name]">
              <template slot="title">
               <div class="tab-title">
                 {{$store.state.form.tabs[tab].title}}
