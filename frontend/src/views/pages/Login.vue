@@ -31,20 +31,20 @@
 </template>
 
 <script>
-import authMixin from '@/mixins/auth';
+import authMixin from '@/mixins/auth'
 
 export default {
-  name: 'Login',
-  
-  mixins: [ authMixin ],
+	name: 'Login',
 
-  data() {
-    return {
-      form: {
-        username: '',
-        password: '',
-      },
-    };
-  }
+	mixins: [authMixin],
+
+	data() {
+		return {
+			form: {
+				username: '',
+				password: ''
+			}
+		}
+	}
 }
 </script>

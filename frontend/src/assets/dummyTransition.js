@@ -1,3 +1,3 @@
-let dummyTransition = ['edit']
+const dummyTransition = ['edit']
 
 export default dummyTransition

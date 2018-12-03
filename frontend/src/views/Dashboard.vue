@@ -7,11 +7,11 @@
             <strong>Create new submission </strong>
           </div>
 
-          <div>           
+          <div>
             <b-input-group class="mb-2" prepend="Obligation">
               <multiselect trackBy="value" label="text" placeholder="" v-model="current.obligation" :options="obligations"></multiselect>
             </b-input-group>
-            
+
             <b-input-group class="mb-2" prepend="Period">
                <multiselect trackBy="value" label="text" customTemplateText="<i class='fa fa-clock-o fa-lg'></i>" customTemplate="is_reporting_open" placeholder="" v-model="current.reporting_period" :options="periods">
                </multiselect>
@@ -33,7 +33,7 @@
               <strong>Continue working on your submissions </strong>
             </div>
             <b-row class="open-submissions-list">
-              <b-col class="mb-3" v-if="submission.current_state === 'data_entry'" v-for="submission in submissions">           
+              <b-col class="mb-3" v-if="submission.current_state === 'data_entry'" :key="submission.url" v-for="submission in submissions">
                   <router-link
                         class="btn btn-light submission-continue"
                         :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}} "
@@ -58,8 +58,8 @@
             </b-row>
           </b-card>
         </b-col>
-     </b-row>
-
+    </b-row>
+    <b-row>
       <b-col sm="12">
           <b-card no-body v-if="dataReady">
             <template slot="header">
@@ -72,7 +72,7 @@
                   </b-form-group>
               </b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
-              </b-row> 
+              </b-row>
             </template>
             <b-container fluid>
               <b-row class="mt-2">
@@ -152,7 +152,6 @@
                       </span>
                     </router-link>
 
-
                     <b-btn
                         variant="outline-primary"
                         @click="clone(row.item.details.url)"
@@ -175,7 +174,7 @@
                 </b-col>
               </b-row>
 
-            </b-container fluid>
+            </b-container>
           </b-card>
       </b-col>
     </b-row>
@@ -183,195 +182,201 @@
 </template>
 
 <script>
-import {cloneSubmission} from '@/api/api'
+import { cloneSubmission } from '@/api/api'
 import errorHandling from '@/mixins/errorHandling'
 import Multiselect from '@/mixins/modifiedMultiselect'
 // import Multiselect from "vue-multiselect"
 import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Dashboard',
-  data () {
-    return {
-      current: {
-        obligation: null,
-        reporting_period: null,
-        party: null,
-      },
+	name: 'Dashboard',
+	data() {
+		return {
+			current: {
+				obligation: null,
+				reporting_period: null,
+				party: null
+			},
 
-      table: {
-          fields: [
-            { key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc', 'class': 'text-center' },
-            { key: 'reporting_period', label: 'Reporting period', sortable: true, 'class': 'text-center' },
-            { key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc', 'class': 'text-center'},
-            { key: 'version', label: 'Version', sortable: true, sortDirection: 'desc' , 'class': 'text-center'},
-            { key: 'current_state', label: 'State', sortable: true, 'class': 'text-center'},
-            { key: 'last_updated', label: 'Last modified', sortable: true, 'class': 'text-center'},
-            { key: 'actions', label: 'Actions', 'class': 'text-center' },
-          ],
-          currentPage: 1,
-          perPage: 10,
-          totalRows: 5,
-          pageOptions: [ 5, 25, 100 ],
-          sortBy: null,
-          sortDesc: false,
-          sortDirection: 'asc',
-          filters: {
-            search: null,
-            period_start: null,
-            period_end: null,
-            obligation: null,
-            party: null,
-            isCurrent: null,
-          },
-          modalInfo: { title: '', content: '' }
-        }
-      
-    }
-  },
+			table: {
+				fields: [
+					{
+						key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc', class: 'text-center'
+					},
+					{
+						key: 'reporting_period', label: 'Reporting period', sortable: true, class: 'text-center'
+					},
+					{
+						key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc', class: 'text-center'
+					},
+					{
+						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc', class: 'text-center'
+					},
+					{
+						key: 'current_state', label: 'State', sortable: true, class: 'text-center'
+					},
+					{
+						key: 'last_updated', label: 'Last modified', sortable: true, class: 'text-center'
+					},
+					{ key: 'actions', label: 'Actions', class: 'text-center' }
+				],
+				currentPage: 1,
+				perPage: 10,
+				totalRows: 5,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				},
+				modalInfo: { title: '', content: '' }
+			}
 
-  created(){
-   document.querySelector('body').classList.remove('aside-menu-lg-show')
-   this.$store.dispatch('getDashboardParties')
-   this.$store.dispatch('getDashboardPeriods')
-   this.$store.dispatch('getDashboardObligations')
-   this.$store.dispatch('getCurrentSubmissions')
-  },
+		}
+	},
 
-  components:{
-    Multiselect
-  },
+	created() {
+		document.querySelector('body').classList.remove('aside-menu-lg-show')
+		this.$store.dispatch('getDashboardParties')
+		this.$store.dispatch('getDashboardPeriods')
+		this.$store.dispatch('getDashboardObligations')
+		this.$store.dispatch('getCurrentSubmissions')
+	},
 
-  computed: {
+	components: {
+		Multiselect
+	},
 
-    ...mapGetters(['getSubmissionInfo']),
+	computed: {
 
-    tableItems(){
-      let tableFields = []
-      this.submissions.forEach( (element, index) => {
-        if(
-          (this.table.filters.period_start ? this.getSubmissionInfo(element).period_start() >= this.table.filters.period_start : true)
-          &&
-          (this.table.filters.period_end ? this.getSubmissionInfo(element).period_end() <= this.table.filters.period_end : true)
-          &&
-          (this.table.filters.obligation ? this.getSubmissionInfo(element).obligation() === this.table.filters.obligation : true)
-          && 
-          (this.table.filters.party ? this.getSubmissionInfo(element).party() === this.table.filters.party : true)
-          &&
-          (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : false || element.is_current ? true : false) )
-         ) {
-          tableFields.push({
-            obligation: this.getSubmissionInfo(element).obligation(),
-            reporting_period: this.getSubmissionInfo(element).period(),
-            reporting_party: this.getSubmissionInfo(element).party(),
-            current_state: element.current_state,
-            version: element.version,
-            last_updated: element.updated_at,
-            details: element,
-         })
-        }
-      
-      });
-      this.table.totalRows = tableFields.length
-      return tableFields
-    },
+		...mapGetters(['getSubmissionInfo']),
 
-    sortOptionsPeriodFrom() {
-      return [...new Set(this.periods.map(f => f.start_date.split('-')[0] ))]
-    },
+		tableItems() {
+			const tableFields = []
+			this.submissions.forEach((element) => {
+				if (
+					(this.table.filters.period_start ? this.getSubmissionInfo(element).period_start() >= this.table.filters.period_start : true)
+          && (this.table.filters.period_end ? this.getSubmissionInfo(element).period_end() <= this.table.filters.period_end : true)
+          && (this.table.filters.obligation ? this.getSubmissionInfo(element).obligation() === this.table.filters.obligation : true)
+          && (this.table.filters.party ? this.getSubmissionInfo(element).party() === this.table.filters.party : true)
+          && (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : !!(false || element.is_current)))
+				) {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						reporting_party: this.getSubmissionInfo(element).party(),
+						current_state: element.current_state,
+						version: element.version,
+						last_updated: element.updated_at,
+						details: element
+					})
+				}
+			})
+			this.table.totalRows = tableFields.length
+			return tableFields
+		},
 
-    sortOptionsPeriodTo() {
-      return [...new Set(this.periods.map(f => f.end_date.split('-')[0] ))]
-    },
+		sortOptionsPeriodFrom() {
+			return [...new Set(this.periods.map(f => f.start_date.split('-')[0]))]
+		},
 
-    sortOptionsObligation() {
-      return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).obligation() ))]
-    },
-    
-    sortOptionsParties() {
-      return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).party() ))]
-    },
+		sortOptionsPeriodTo() {
+			return [...new Set(this.periods.map(f => f.end_date.split('-')[0]))]
+		},
 
-    dataReady(){ 
-      if(this.submissions 
-        && this.periods 
-        && this.obligations 
-        && this.parties 
+		sortOptionsObligation() {
+			return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).obligation()))]
+		},
+
+		sortOptionsParties() {
+			return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).party()))]
+		},
+
+		dataReady() {
+			if (this.submissions
+        && this.periods
+        && this.obligations
+        && this.parties
         && this.submissions.length) {
-        return true
-      }
-    },
+				return true
+			}
+			return false
+		},
 
-    periods(){
-      return this.$store.state.dashboard.periods
-    },
-    parties(){
-      return this.$store.state.dashboard.parties
-    },
-    obligations(){
-      return this.$store.state.dashboard.obligations
-    },
-    submissions(){
-      return this.$store.state.dashboard.submissions
-    },
+		periods() {
+			return this.$store.state.dashboard.periods
+		},
+		parties() {
+			return this.$store.state.dashboard.parties
+		},
+		obligations() {
+			return this.$store.state.dashboard.obligations
+		},
+		submissions() {
+			return this.$store.state.dashboard.submissions
+		},
 
-    basicDataReady(){
-      if(this.periods 
-        && this.obligations 
-        && this.parties){
-          return true
-      }
-    }
-  },
+		basicDataReady() {
+			if (this.periods
+        && this.obligations
+        && this.parties) {
+				return true
+			}
+			return false
+		}
+	},
 
-  methods: {
-    addSubmission() {
-      this.$store.dispatch('addSubmission', this.current).then(r => {
-        const currentSubmission = this.submissions.find(sub => sub.id === r.id)
-        this.$router.push({name: this.getFormName(r.obligation), query: {submission: currentSubmission.url}});
-      })
-    },
+	methods: {
+		addSubmission() {
+			this.$store.dispatch('addSubmission', this.current).then(r => {
+				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
+				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+			})
+		},
 
+		clone(url) {
+			cloneSubmission(url).then(() => {
+				this.$store.dispatch('getCurrentSubmissions')
+				this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
+			}).catch(error => {
+				this.$store.dispatch('setAlert', { message: errorHandling.handleError(error.response.data), variant: 'danger' })
+				console.log(error)
+			})
+		},
 
-    clone(url){
-      cloneSubmission(url).then(response => {
-        this.$store.dispatch('getCurrentSubmissions')
-        this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
-      }).catch(error => {
-        this.$store.dispatch('setAlert', { message: errorHandling.handleError(error.response.data), variant: 'danger' })
-        console.log(error)
-      })
-    },
+		removeSubmission(url) {
+			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
+			if (r === true) {
+				this.$store.dispatch('removeSubmission', url)
+			}
+		},
 
-    removeSubmission(url) {
-      const r = confirm("Deleting the submission is ireversible. Are you sure ?");
-      if (r == true) {
-        this.$store.dispatch('removeSubmission', url)
-      }
-    },
+		onFiltered(filteredItems) {
+			// Trigger pagination to update the number of buttons/pages due to filtering
+			this.table.totalRows = filteredItems.length
+			this.table.currentPage = 1
+		},
 
-    onFiltered (filteredItems) {
-      // Trigger pagination to update the number of buttons/pages due to filtering
-      this.table.totalRows = filteredItems.length
-      this.table.currentPage = 1
-    },
+		getFormName(obligation) {
+			return this.obligations.find(o => o.value === obligation).form_type
+		}
 
-    getFormName(obligation) {
-      return this.obligations.find( o => o.value === obligation).form_type
-    },
+	},
 
-  },
-
-
-
-watch: {
-    'table.filters': {
-        handler: function () {
-              this.$refs.table.refresh()
-        },
-        deep: true
-    }
-},
+	watch: {
+		'table.filters': {
+			handler() {
+				this.$refs.table.refresh()
+			},
+			deep: true
+		}
+	}
 }
 </script>
 
@@ -389,14 +394,13 @@ watch: {
 }
 
 .submission-continue {
-  border: 1px solid #eee; 
-  box-shadow: 1px 1px 3px #eee; 
-  text-align: left; 
+  border: 1px solid #eee;
+  box-shadow: 1px 1px 3px #eee;
+  text-align: left;
   display: block;
   padding: .5rem;
   margin: .5rem;
 }
-
 
 .submission-continue div:not(.detail-header) {
     background: white;

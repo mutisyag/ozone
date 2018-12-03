@@ -5,7 +5,7 @@
        {{info.intro}}
     </small>
     <!-- <h2>{{info.title}}</h2> -->
-            
+
     <form class="form-sections">
       <b-card>
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
@@ -15,38 +15,34 @@
           </div>
         </div>
       </b-card>
-    </form> 
+    </form>
 
     </div>
 </template>
 
 <script>
 
-import fieldGenerator from "./fieldGenerator";
+import fieldGenerator from './fieldGenerator'
 
 export default {
 
-  name: 'Tab1',
+	name: 'Tab1',
 
-  props: {
-    info: Object,
-  },
+	props: {
+		info: Object
+	},
 
+	created() {
+		// this.tabs.push('asd')
+	},
 
-  created(){
-    // this.tabs.push('asd')
-  },
+	components: { fieldGenerator },
 
+	data() {
+		return {
 
-  components: {fieldGenerator},
-
-  data () {
-    return {
-
-    }
-  },
-
-
+		}
+	}
 
 }
 </script>

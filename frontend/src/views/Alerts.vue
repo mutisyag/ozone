@@ -1,28 +1,28 @@
 <template>
-<!--       <b-alert 
-      		 :variant="currentAlert.variant"
-             dismissible
-             style="position: fixed;
-                top: 0;
-                z-index: 10000;
-                width: 100%;
-                left: 0;
-                right: 0;"
-             :show="showCurrentAlert"
-             @dismissed="dismissAlert"
-             >
-             <div v-html="currentAlert.message"></div>
-      </b-alert> -->
- 
-       <b-alert 
-       		style="	
-       			position: fixed;
-			    z-index: 10000;
-			    left: 50%;
-			    transform: translateX(-50%);
-			    width: 50%;
-			    top: 1rem;"
-         	:show="dismissCountDown"
+<!--       <b-alert
+				:variant="currentAlert.variant"
+					dismissible
+					style="position: fixed;
+						top: 0;
+						z-index: 10000;
+						width: 100%;
+						left: 0;
+						right: 0;"
+					:show="showCurrentAlert"
+					@dismissed="dismissAlert"
+					>
+					<div v-html="currentAlert.message"></div>
+	</b-alert> -->
+
+		<b-alert
+			style="
+				position: fixed;
+			z-index: 10000;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 50%;
+			top: 1rem;"
+			:show="dismissCountDown"
              dismissible
              :variant="$store.state.currentAlert.variant"
              @dismissed="resetCurrentAlert"
@@ -41,46 +41,43 @@
 <script>
 export default {
 
+	name: 'Alerts',
 
+	data() {
+		return {
+			dismissSecs: 5,
+			dismissCountDown: 0,
+			showDismissibleAlert: false
+		}
+	},
 
-  name: 'Alerts',
+	methods: {
+		countDownChanged(dismissCountDown) {
+			this.dismissCountDown = dismissCountDown
+			if (dismissCountDown === 0) {
+				this.$store.dispatch('resetAlert')
+			}
+		},
+		showAlert() {
+			this.dismissCountDown = this.dismissSecs
+		},
+		resetCurrentAlert() {
+			this.$store.dispatch('resetAlert')
+			this.dismissCountDown = 0
+		}
+	},
 
-  data () {
-    return {
-      dismissSecs: 5,
-      dismissCountDown: 0,
-      showDismissibleAlert: false
-    }
-  },
-
-   methods: {
-	    countDownChanged (dismissCountDown) {
-	      this.dismissCountDown = dismissCountDown
-	      if(dismissCountDown === 0){
-	    	this.$store.dispatch('resetAlert')
-	      }
-	    },
-	    showAlert () {
-	      this.dismissCountDown = this.dismissSecs
-	    },
-	    resetCurrentAlert() {
-	    	this.$store.dispatch('resetAlert')
-	    	this.dismissCountDown=0
-	    },
-  	},
-
-
-  	watch: {
-  		'$store.state.currentAlert.show': {
-  			handler(newVal) {
-  				if(newVal){
-  					this.showAlert()
-  				} else {
-  					this.countDownChanged(0)
-  				}
-  			},
-  		}
-  	}
+	watch: {
+		'$store.state.currentAlert.show': {
+			handler(newVal) {
+				if (newVal) {
+					this.showAlert()
+				} else {
+					this.countDownChanged(0)
+				}
+			}
+		}
+	}
 }
 </script>
 

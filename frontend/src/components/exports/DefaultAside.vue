@@ -1,5 +1,5 @@
 <template>
-  <div>  
+  <div>
     <AsideToggler class="d-none d-lg-block" />
     <b-tabs v-model="tabIndex">
       <b-tab>
@@ -26,49 +26,49 @@
 
 <script>
 
-import Add from './Add';
-import {AsideToggler} from '@coreui/vue'
+import { AsideToggler } from '@coreui/vue'
+import Add from './Add'
 import AddBlend from './AddBlend'
 import Validation from './Validation'
 
 export default {
-  name: 'DefaultAside',
-  components: {
-    add: Add,
-    AddBlend,
-    AsideToggler,
-    Validation
-  },
+	name: 'DefaultAside',
+	components: {
+		add: Add,
+		AddBlend,
+		AsideToggler,
+		Validation
+	},
 
-  data() {
-    return {
-      tabIndex: 0
-    }
-  },
+	data() {
+		return {
+			tabIndex: 0
+		}
+	},
 
-  props: {
-    hovered: null,
-    tabName: String,
-    parentTabIndex: Number,
-  },
+	props: {
+		hovered: null,
+		tabName: String,
+		parentTabIndex: Number
+	},
 
-  watch: {
-    parentTabIndex: {
-      handler(new_val){
-        if(new_val != this.tabIndex){
-          console.log(new_val)
-          this.tabIndex = new_val
-        }
-      },
-    },
-    tabIndex: {
-      handler(new_val){
-        if(new_val != this.parentTabIndex){
-          this.$emit("update:parentTabIndex", new_val)
-        }
-      },
-    }
-  },
- 
+	watch: {
+		parentTabIndex: {
+			handler(new_val) {
+				if (new_val !== this.tabIndex) {
+					console.log(new_val)
+					this.tabIndex = new_val
+				}
+			}
+		},
+		tabIndex: {
+			handler(new_val) {
+				if (new_val !== this.parentTabIndex) {
+					this.$emit('update:parentTabIndex', new_val)
+				}
+			}
+		}
+	}
+
 }
 </script>

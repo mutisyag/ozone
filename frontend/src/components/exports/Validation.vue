@@ -1,3 +1,4 @@
+/* eslint-disable no-tabs */
 <template>
 	<div v-if="section && tabName" class="validation-tab">
 		<div v-for="(field, field_index) in section" :key="field_index">
@@ -13,18 +14,18 @@ export default {
 
 	props: {
 		tabName: String,
-		hovered: null,
+		hovered: null
 	},
 
-	computed:{
-		section(){ return this.$store.getters.getValidationForCurrentTab(this.tabName) },
-		display(){ return this.$store.state.initialData.display}
+	computed: {
+		section() { return this.$store.getters.getValidationForCurrentTab(this.tabName) },
+		display() { return this.$store.state.initialData.display }
 	},
 
-  data () {
-    return {
-    }
-  }
+	data() {
+		return {
+		}
+	}
 }
 </script>
 

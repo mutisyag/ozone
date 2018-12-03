@@ -2,12 +2,10 @@
   <div>
     <div class="container">
 
-     
         <div class="mt-2 mb-2" style="display: flex;">
           <multiselect trackBy="value"  :clear-on-select="false" :hide-selected="true" :close-on-select="false" :multiple="true" label="text" v-model="selected_blends.selected" @input="new_blend = null" placeholder="Select predefined blend" :options="selected_blends.options"></multiselect>
           <div class="add-blend-wrapper"><b>/</b> <b-btn style="margin-left: .5rem" variant="primary" @click="addNewBlend">Add new blend</b-btn></div>
         </div>
-
 
         <div :key="blend.name" v-if="selected_blends.selected" v-for="blend in selected_blends.selected">
           <h5>Composition of <b>{{display.blends[blend].name}}</b></h5>
@@ -16,7 +14,7 @@
             <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
           </b-row>
         </div>
-      
+
        <div v-if="new_blend">
           <h5>Composition</h5>
           <b-input-group prepend="Blend name">
@@ -41,7 +39,6 @@
       <b-btn v-if="selected_blends.selected" @click="addSubstance('selected')" variant="success">Add selected blends</b-btn>
       <b-btn v-if="new_blend" :disabled="!blendIsValid" @click="addSubstance('custom')" variant="success">Add custom blend</b-btn>
 
-
       <!--   <h3>Add substances</h3>
 
         <h5>Filter Groups</h5>
@@ -57,215 +54,206 @@
 
 <script>
 
-import {createBlend} from '@/api/api'
+import { createBlend } from '@/api/api'
 import Multiselect from '@/mixins/modifiedMultiselect'
-
-
 
 export default {
 
-  props: {
-    // blends: null,
-    // countryOptions: null,
-    // display: null,
-    tabName: String,
-  },
-  
-  computed: {
-    substances(){
-      return JSON.parse(JSON.stringify(this.$store.state.initialData.substances))
-    },
-    blends(){
-      return this.$store.state.initialData.blends
-    },
+	props: {
+		// blends: null,
+		// countryOptions: null,
+		// display: null,
+		tabName: String
+	},
 
-    display(){
-      return this.$store.state.initialData.display
-    },
+	computed: {
+		substances() {
+			return JSON.parse(JSON.stringify(this.$store.state.initialData.substances))
+		},
+		blends() {
+			return this.$store.state.initialData.blends
+		},
 
-    blendIsValid(){
-      return !this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text) && this.new_blend.composition.every((substance) => {return substance.name && substance.percent})
-    },
-  },
+		display() {
+			return this.$store.state.initialData.display
+		},
 
-  components: {
-    Multiselect 
-  },
+		blendIsValid() {
+			return !this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text) && this.new_blend.composition.every((substance) => substance.name && substance.percent)
+		}
+	},
 
-  mounted(){
-    this.prepareBlends()
-  },
+	components: {
+		Multiselect
+	},
 
-  data() {
-    return {
-      selected_countries: {
-        selected: null,
-        options: this.countryOptions,
-      },
+	mounted() {
+		this.prepareBlends()
+	},
 
-      new_blend: null,
+	data() {
+		return {
+			selected_countries: {
+				selected: null,
+				options: this.countryOptions
+			},
 
-      submit_blend: {
-        components: null,
-        blend_id: null,
-        type: "Zeotrope"
-      },
+			new_blend: null,
 
-      selected_substance: {
-        selected: null,
-        group: null,
-        options: [],
-      },
+			submit_blend: {
+				components: null,
+				blend_id: null,
+				type: 'Zeotrope'
+			},
 
-      selected_blends: {
-        selected: null,
-        options: [],
-        substance_options: [],
-      },
+			selected_substance: {
+				selected: null,
+				group: null,
+				options: []
+			},
 
-    }
-  },
+			selected_blends: {
+				selected: null,
+				options: [],
+				substance_options: []
+			}
 
-  methods: {
+		}
+	},
 
-    addTag (newTag, substance) {
-      console.log(newTag,substance)
-        const tag = {
-          text: newTag,
-          value: newTag
-        }
-        this.substances.push(tag)
-        substance.name = newTag
-    },
+	methods: {
 
-    prepareSubstances(){
-      this.selected_substance.options = []
-      for(let substance of this.substances) {
-            this.selected_substance.options.push({value: substance.id, text: substance.name, group: substance.group})
-      }
-    },
+		addTag(newTag, substance) {
+			console.log(newTag, substance)
+			const tag = {
+				text: newTag,
+				value: newTag
+			}
+			this.substances.push(tag)
+			substance.name = newTag
+		},
 
-    alertIfBlendExists(){
-      console.log('here')
-      if(this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) { 
-          this.$store.dispatch('setAlert', { message:  `A blend with the name ${this.new_blend.text} already exists!`, variant: 'danger' })
-      }
+		prepareSubstances() {
+			this.selected_substance.options = this.substances.map(substance => ({
+				value: substance.id,
+				text: substance.name,
+				group: substance.group
+			}))
+		},
 
-    },
+		alertIfBlendExists() {
+			console.log('here')
+			if (this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) {
+				this.$store.dispatch('setAlert', { message: `A blend with the name ${this.new_blend.text} already exists!`, variant: 'danger' })
+			}
+		},
 
-    addNewBlend(){
-      this.selected_blends.selected = null
-      this.new_blend = {
-        "text": null,
-        "value": null,
-        "composition": [
-          {
-            "name": null,
-            "percent": null,
-          },
-          {
-            "name": null,
-            "percent": null,
-          },
-          {
-            "name": null,
-            "percent": null
-          },
-        ]
-      }
-    },
+		addNewBlend() {
+			this.selected_blends.selected = null
+			this.new_blend = {
+				text: null,
+				value: null,
+				composition: [
+					{
+						name: null,
+						percent: null
+					},
+					{
+						name: null,
+						percent: null
+					},
+					{
+						name: null,
+						percent: null
+					}
+				]
+			}
+		},
 
-    removeSubstanceFromBlend(substance) {
-      this.new_blend.composition.splice(this.new_blend.composition.indexOf(substance), 1)
-    },
+		removeSubstanceFromBlend(substance) {
+			this.new_blend.composition.splice(this.new_blend.composition.indexOf(substance), 1)
+		},
 
-    addSubstanceToBlend(){
-      this.new_blend.composition.push({name:null, percent: null})
-    },
+		addSubstanceToBlend() {
+			this.new_blend.composition.push({ name: null, percent: null })
+		},
 
-    prepareBlends(){
-        for(let blend of this.blends) {
-          this.selected_blends.options.push({text: blend.blend_id, value: blend.id})
-        }
-      this.prepareSubstances()
-    },
+		prepareBlends() {
+			this.blends.forEach(blend => {
+				this.selected_blends.options.push({ text: blend.blend_id, value: blend.id })
+			})
+			this.prepareSubstances()
+		},
 
+		addSubstance(type) {
+			if (type === 'selected') {
+				this.$store.dispatch('createSubstance', {
+					substanceList: null,
+					currentSectionName: this.tabName,
+					groupName: null,
+					country: null,
+					blendList: this.selected_blends.selected,
+					prefillData: null
+				})
+			} else {
+				this.submit_blend.blend_id = this.new_blend.text
+				this.submit_blend.components = []
+				this.submit_blend.party = this.$store.state.current_submission.party
+				this.new_blend.composition.forEach(substance => {
+					if (typeof (substance.name) === 'string') {
+						this.submit_blend.components.push({ component_name: substance.name, substance: null, percentage: substance.percent / 100 })
+					} else {
+						this.submit_blend.components.push({ component_name: '', substance: substance.name, percentage: substance.percent / 100 })
+					}
+				})
+				console.log(this.submit_blend)
+				createBlend(this.submit_blend).then(response => {
+					console.log(response)
+					this.new_blend.value = response.data.id
 
+					this.$store.commit('addCreateBlendToBlendList', response.data)
 
-    addSubstance(type) {
-      if(type === 'selected') {
-      this.$store.dispatch('createSubstance',{
-         substanceList: null,
-         currentSectionName: this.tabName, 
-         groupName: null, 
-         country: null, 
-         blendList: this.selected_blends.selected, 
-         prefillData: null
-        })
+					this.display.blends[response.data.id] = { name: response.data.blend_id, components: response.data.components }
 
-      } else {
-          
-          this.submit_blend.blend_id = this.new_blend.text
-          this.submit_blend.components = []
-          this.submit_blend.party = this.$store.state.current_submission.party
-          for(let substance of this.new_blend.composition) {
-            if(typeof(substance.name) === 'string'){
-              this.submit_blend.components.push({component_name: substance.name, substance: null, percentage: substance.percent/100})
-            } else {
-              this.submit_blend.components.push({component_name: "", substance: substance.name, percentage: substance.percent/100})
-            }
-          }
-          console.log(this.submit_blend)
-          createBlend(this.submit_blend).then(response =>  {
-            console.log(response)
-            this.new_blend.value = response.data.id
+					this.$store.dispatch('createSubstance', {
+						substanceList: null,
+						currentSectionName: this.tabName,
+						groupName: null,
+						country: null,
+						blendList: [this.new_blend.value],
+						prefillData: null
+					})
+				}).catch((error) => {
+					this.$store.dispatch('setAlert', { message: error.response.data, variant: 'danger' })
+				})
+			}
 
-            this.$store.commit('addCreateBlendToBlendList', response.data)
-            
-            this.display.blends[response.data.id] = {name: response.data.blend_id, components: response.data.components}
+			this.resetData()
+		},
 
-             this.$store.dispatch('createSubstance',{
-                   substanceList: null,
-                   currentSectionName: this.tabName, 
-                   groupName: null, 
-                   country: null, 
-                   blendList: [this.new_blend.value], 
-                   prefillData: null
-                  })
+		resetData() {
+			this.selected_countries.selected = null
 
-          }).catch((error) => {
-                this.$store.dispatch('setAlert', { message:  error.response.data, variant: 'danger' })
-          })
-      }
+			this.group_field = {
+				label: 'Blend',
+				name: 'blend',
+				expand: false,
+				substance: null
+			}
+		},
 
-      this.resetData()
-    },
+		removeSpecialChars(str) {
+			return str.replace(/[^a-zA-Z0-9]+/g, '')
+		}
+	},
 
-
-    resetData() {
-
-      this.selected_countries.selected = null
-
-      this.group_field = {
-        label: 'Blend',
-        name: 'blend',
-        expand: false,
-        substance: null,
-      }
-    },
-
-    removeSpecialChars(str) {
-      return str.replace(/[^a-zA-Z0-9]+/g, "");
-    },
-  },
-
-  watch: {
-    blends: {
-      handler: function(old_val, new_val) {
-        this.prepareBlends()
-      }
-    }
-  },
+	watch: {
+		blends: {
+			handler() {
+				this.prepareBlends()
+			}
+		}
+	}
 
 }
 </script>
@@ -273,8 +261,8 @@ export default {
 <style lang="css" scoped>
 
 .add-blend-wrapper {
-  white-space: nowrap; 
-  margin-left: .5rem; 
+  white-space: nowrap;
+  margin-left: .5rem;
   display: flex;
   justify-content: center;
   align-items: center;
