@@ -1,12 +1,12 @@
 import enum
 
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from .meeting import ExemptionTypes, Treaty
 from .party import Party
+from ozone.core.exceptions import CustomValidationError
 
 __all__ = [
     'Annex',
@@ -235,15 +235,8 @@ class BlendComponent(models.Model):
 
     def clean(self):
         if not self.component_name and not self.substance:
-            raise ValidationError(
-                {
-                    'component_name': [_(
-                        'Substance or component name must be set!'
-                    )],
-                    'substance': [_(
-                        'Substance or component name must be set!'
-                    )]
-                }
+            raise CustomValidationError(
+                _("Substance or component name must be set.")
             )
 
     def save(self, *args, **kwargs):

@@ -1,6 +1,5 @@
 import datetime
 
-from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
@@ -12,6 +11,7 @@ from .party import Party, PartyRatification
 from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
+from ozone.core.exceptions import CustomValidationError
 
 __all__ = [
     'Article7Flags',
@@ -36,8 +36,8 @@ class ModifyPreventionMixin:
 
     def clean(self):
         if not self.submission.data_changes_allowed:
-            raise ValidationError(
-                _("Submitted submissions cannot be modified.")
+            raise CustomValidationError(
+                "Submitted submissions cannot be modified."
             )
         super().clean()
 
@@ -75,32 +75,18 @@ class BlendCompositionMixin:
         this class.
         """
         if self.substance is None and self.blend is None:
-            raise ValidationError(
-                {
-                    'substance': [_(
-                        'Data should refer to one substance or one blend'
-                    )],
-                    'blend': [_(
-                        'Data should refer to one substance or one blend'
-                    )]
-                }
+            raise CustomValidationError(
+                _("Data should refer to one substance or one blend")
             )
         if self.substance is not None and self.blend is not None:
-            raise ValidationError(
-                {
-                    'substance': [_(
-                        'Data should not refer to both a substance and a blend'
-                    )],
-                    'blend': [_(
-                        'Data should not refer to both a substance and a blend'
-                    )]
-                }
+            raise CustomValidationError(
+                _("Data should not refer to both a substance and a blend")
             )
 
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
-            raise ValidationError(
-                _('Substance rows derived from blends cannot be changed!')
+            raise CustomValidationError(
+                _("Substance rows derived from blends cannot be changed!")
             )
 
         super().clean()
@@ -546,12 +532,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             or self.quantity_export_new
             or self.quantity_export_recovered
         ):
-            raise ValidationError(
-                {
-                    'quantity_fields': [_(
-                        'At least one quantity field should be non-null!'
-                    )]
-                }
+            raise CustomValidationError(
+                _("At least one quantity field should be non-null.")
             )
 
         # If it's a blend we skip the validation because we will check every
@@ -559,13 +541,11 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         if not self.blend:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:
-                raise ValidationError(
-                    {
-                        'trade_party': [_(
-                            'You need to select a non-party, according to the'
-                            'selected substance.'
-                        )]
-                    }
+                raise CustomValidationError(
+                    _(
+                        "You need to select a non-party, according to the "
+                        "selected substance."
+                    )
                 )
 
         super().clean()

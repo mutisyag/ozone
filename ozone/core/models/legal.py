@@ -1,9 +1,7 @@
-from datetime import datetime
-
-from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ozone.core.exceptions import CustomValidationError
 
 __all__ = [
     'ReportingPeriod'
@@ -46,12 +44,8 @@ class ReportingPeriod(models.Model):
 
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
-            raise ValidationError(
-                {
-                    'end_date': [
-                        _('End date has to be temporally after start date.')
-                    ]
-                }
+            raise CustomValidationError(
+                _('End date has to be temporally after start date.')
             )
 
     def save(self, *args, **kwargs):

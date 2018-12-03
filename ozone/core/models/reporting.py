@@ -1,7 +1,6 @@
 import enum
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
@@ -13,6 +12,12 @@ from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
+from ozone.core.exceptions import (
+    CustomValidationError,
+    StateDoesNotExist,
+    TransitionDoesNotExist,
+    TransitionNotAvailable
+)
 
 __all__ = [
     'Obligation',
@@ -56,15 +61,6 @@ class Submission(models.Model):
         """
         WEBFORM = 'Web form'
         EMAIL = 'Email'
-
-    class StateDoesNotExist(Exception):
-        pass
-
-    class TransitionDoesNotExist(Exception):
-        pass
-
-    class TransitionNotAvailable(Exception):
-        pass
 
     # This keeps a mapping between the DB-persisted workflow and
     # its actual implementation class.
@@ -222,7 +218,7 @@ class Submission(models.Model):
         """
         workflow = self.workflow
         if value not in workflow.state.workflow.states:
-            raise self.StateDoesNotExist(
+            raise StateDoesNotExist(
                 f'No state named {value} in current workflow'
             )
 
@@ -232,14 +228,14 @@ class Submission(models.Model):
                 transition_name = t.name
                 break
         if transition_name is None:
-            raise self.TransitionNotAvailable(
+            raise TransitionNotAvailable(
                 f'No transition to reach {value} from current state'
             )
 
         transition = getattr(workflow, transition_name)
 
         if not transition.is_available():
-            raise self.TransitionNotAvailable('Transition checks not satisfied')
+            raise TransitionNotAvailable('Transition checks not satisfied')
 
         # Call the transition; this should work (bar exceptions in pre-post
         # transition hooks)
@@ -322,14 +318,14 @@ class Submission(models.Model):
 
         # This is a `TransitionList` and supports the `in` operator
         if trans_name not in workflow.state.workflow.transitions:
-            raise self.TransitionDoesNotExist(
+            raise TransitionDoesNotExist(
                 f'Transition {trans_name} does not exist in this workflow'
             )
 
         # This is a list of `Transition`s and doesn't support the `in` operator
         # without explicitly referencing `name`
         if trans_name not in [t.name for t in workflow.state.transitions()]:
-            raise self.TransitionNotAvailable(
+            raise TransitionNotAvailable(
                 f'Transition {trans_name} does not start from current state'
             )
 
@@ -337,7 +333,7 @@ class Submission(models.Model):
         transition = getattr(workflow, trans_name)
 
         if not transition.is_available():
-            raise self.TransitionNotAvailable('Transition checks not satisfied')
+            raise TransitionNotAvailable('Transition checks not satisfied')
 
         # Call the transition; this should work (bar exceptions in pre-post
         # transition hooks)
@@ -400,7 +396,7 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by
             )
         else:
-            raise ValidationError(msg)
+            raise CustomValidationError(msg)
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
@@ -477,7 +473,7 @@ class Submission(models.Model):
 
     def delete(self, *args, **kwargs):
         if not self.data_changes_allowed:
-            raise RuntimeError(
+            raise CustomValidationError(
                 _("Submitted submissions cannot be deleted.")
             )
         # We need to delete all related data entries before being able to
@@ -492,12 +488,12 @@ class Submission(models.Model):
 
     def clean(self):
         if not self.reporting_period.is_reporting_allowed:
-            raise ValidationError(
-                _("Reporting cannot be performed for this reporting period.")
+            raise CustomValidationError(
+                "Reporting cannot be performed for this reporting period."
             )
         if self.non_exempted_fields_modified() and not self.data_changes_allowed:
-            raise ValidationError(
-                _("Submitted submissions cannot be modified.")
+            raise CustomValidationError(
+                "Submitted submissions cannot be modified."
             )
         super().clean()
 
@@ -517,11 +513,9 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period
             )
             if any([s.data_changes_allowed for s in current_submissions]):
-                raise ValidationError(
-                    _(
-                        "There is already a submission in Data Entry for "
-                        "this party/period/obligation combination"
-                    )
+                raise CustomValidationError(
+                    "There is already a submission in Data Entry for "
+                    "this party/period/obligation combination."
                 )
             if current_submissions:
                 self.version = current_submissions.latest('version').version + 1

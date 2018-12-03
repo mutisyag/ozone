@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 from django.db.models import F
 from django_filters import rest_framework as filters
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 
+from ozone.core.exceptions import InvalidRequest, MethodNotAllowed
 from ozone.core.serializers import AuthTokenByValueSerializer
 
 from ..models import (
@@ -66,18 +67,6 @@ class ReadOnlyMixin:
 
     def _allowed_methods(self):
         return ['GET', 'OPTIONS']
-
-
-class ValidationErrorMixin:
-
-    def create(self, request, *args, **kwargs):
-        try:
-            return super().create(request, *args, **kwargs)
-        except ValidationError as e:
-            return Response(
-                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                data=e.messages
-            )
 
 
 class BulkCreateUpdateMixin:
@@ -217,8 +206,11 @@ class BlendViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
+        # TODO Move validation on Blend model
         if instance.custom is False:
-            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            raise MethodNotAllowed(
+                "Non custom blends cannot be modified."
+            )
         return super().update(request, *args, **kwargs)
 
 
@@ -253,14 +245,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        try:
-            clone = submission.clone()
-            return Response({'id': clone.id})
-        except ValidationError as e:
-            return Response(
-                status=status.HTTP_422_UNPROCESSABLE_ENTITY,
-                data=e.messages
-            )
+        clone = submission.clone()
+        return Response({'id': clone.id})
 
     @action(detail=True, methods=['post'], url_path='call-transition')
     def call_transition(self, request, pk=None):
@@ -274,7 +260,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             )
             return Response(serializer.data)
         else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            raise InvalidRequest(
+                _("Invalid request: request body should contain 'transition' key.")
+            )
 
     @action(detail=True, methods=['get'])
     def history(self, request, pk=None):
@@ -303,9 +291,7 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7DestructionViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7DestructionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7DestructionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -320,9 +306,7 @@ class Article7DestructionViewSet(
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ProductionViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7ProductionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7ProductionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -336,9 +320,7 @@ class Article7ProductionViewSet(
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ExportViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7ExportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7ExportSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -352,9 +334,7 @@ class Article7ExportViewSet(
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ImportViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7ImportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7ImportSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -368,9 +348,7 @@ class Article7ImportViewSet(
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -384,9 +362,7 @@ class Article7NonPartyTradeViewSet(
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7EmissionViewSet(
-    ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
-):
+class Article7EmissionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     serializer_class = Article7EmissionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
