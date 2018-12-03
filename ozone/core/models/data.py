@@ -7,8 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
+from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import ReportingPeriod, Submission
+from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
