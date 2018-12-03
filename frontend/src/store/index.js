@@ -92,8 +92,12 @@ const store = new Vuex.Store({
             obligation: () => {
               return state.dashboard.obligations.find( a => { return a.value === submission.obligation }).text
             },
-              period: () => {
-              return state.dashboard.periods.find(a => {return a.value === submission.reporting_period}).text
+            period: () => {
+            // TODO: find a better way to do this
+              const period = state.dashboard.periods.find(a => {return a.value === submission.reporting_period})
+              if(period && period.hasOwnProperty('text')) {
+                return period.text
+              }
             },
             party: () => {
               return state.dashboard.parties.find(a => { return a.value === submission.party}).text
