@@ -51,9 +51,6 @@ export default {
   },
 
   beforeRouteLeave(to, from, next) {
-    // called before the route that renders this component is confirmed.
-    // does NOT have access to `this` component instance,
-    // because it has not been created yet when this guard is called!
     if (this.alertUnsavedData()) {
       const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
       if (answer) {

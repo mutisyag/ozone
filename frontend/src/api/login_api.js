@@ -24,10 +24,6 @@ const getLoginToken = (username, password) => new Promise((resolve, reject) => {
     })
 })
 
-// export function fetchUserProfile() {
-//   return fetch(`workspace-profile/`);
-// }
-
 export {
   removeLoginToken,
   getLoginToken

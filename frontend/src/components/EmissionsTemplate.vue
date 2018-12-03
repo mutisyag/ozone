@@ -4,7 +4,7 @@
       <table class="table submission-table">
         <thead>
           <tr class="first-header">
-            <th v-for="header in tab_info.section_headers" :colspan="header.colspan">
+            <th v-for="(header, header_index) in tab_info.section_headers" :colspan="header.colspan" :key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>  <i class="fa fa-info-circle fa-lg"></i>
               </div>
@@ -21,7 +21,7 @@
 
           </tr>
           <tr class="subheader">
-            <th v-for="subheader in tab_info.section_subheaders">
+            <th v-for="(subheader, subheader_index) in tab_info.section_subheaders" :key="subheader_index">
             <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
               <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
             </div>  
@@ -32,8 +32,8 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(row,row_index) in tab_info.form_fields" class="form-fields">
-            <td v-for="(order, order_index) in tab_info.fields_order">
+          <tr v-for="(row,row_index) in tab_info.form_fields" class="form-fields" :key="row_index">
+            <td v-for="(order, order_index) in tab_info.fields_order" :key="order_index">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'&& order !== 'validation'">
                 {{row[order].selected}}
               </span>
@@ -54,13 +54,13 @@
         </tbody>
       </table>
     </div>
-    <div v-for="comment in tab_info.comments" class="comments-input">
+    <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
       <label>{{comment.label}}</label>
       <textarea class="form-control" v-model="comment.selected"></textarea>
     </div>
     <hr>
     <div class="footnotes">
-      <p v-for="footnote in tab_info.footnotes"><small>{{footnote}}</small></p>
+      <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index"><small>{{footnote}}</small></p>
     </div>
 
   </div>
@@ -224,9 +224,6 @@ export default {
 
   td {
     text-align: center!important;
-  }
-
-  .small.but_big {
   }
 
   tr.small td {

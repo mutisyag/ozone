@@ -4,7 +4,7 @@
       <table class="table submission-table">
         <thead>
           <tr class="first-header">
-            <th v-for="header in tab_info.section_headers" :colspan="header.colspan">
+            <th v-for="(header, header_index) in tab_info.section_headers" :colspan="header.colspan" :key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>  <i class="fa fa-info-circle fa-lg"></i>
               </div>
@@ -14,7 +14,7 @@
             </th>
           </tr>
           <tr class="subheader">
-            <th :colspan="subheader.colspan" v-for="subheader in tab_info.section_subheaders">
+            <th :colspan="subheader.colspan" v-for="(subheader, subheader_index) in tab_info.section_subheaders" :key="subheader_index">
             <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
               <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
             </div>  
@@ -31,16 +31,20 @@
          @mouseleave="hovered = false"
           v-if="row.substance.selected"
           v-for="(row, row_index) in tab_info.form_fields" 
+          :key="row_index"
           class="form-fields">
           <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'" class="subheader">
-            <th v-for="subheader in tab_info.special_headers.section_subheaders">
+            <th v-for="(subheader, subheader_index) in tab_info.special_headers.section_subheaders" :key="subheader_index">
               <small><b><div style="text-align: center" v-html="subheader.label"></div></b></small>
             </th>
           </tr>
 
          <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'">
-           <td :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.special_fields_order">
-
+           <td 
+           :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false"
+            v-if="order != 'blend'"
+            v-for="(order, order_index) in tab_info.special_fields_order"
+            :key="order_index">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
                 {{row[order].selected}}
               <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
@@ -78,8 +82,11 @@
          </tr>
 
          <tr v-else>
-           <td :colspan="row[order].colspan" :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order">
-
+           <td 
+            :colspan="row[order].colspan"
+            :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false"
+            v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order"
+            :key="order_index">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
                 {{row[order].selected}}
               <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
@@ -121,7 +128,7 @@
         <tr v-if="doCommentsRow(row)">
            <td class="comment-row" :colspan="tab_info.fields_order.length - 2"> 
               <b-row>
-                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                <b-col v-for="field in ['remarks_os','remarks_party']" :key="field" lg="6">
                   <div>{{labels[field]}}</div>
                   <textarea class="form-control" v-model="row[field].selected"></textarea>
                 </b-col>
@@ -132,7 +139,12 @@
 
         <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-else class="form-fields">
          <tr>
-           <td :colspan="row[order].colspan"  :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" v-if="order != 'substance'" v-for="(order, order_index) in tab_info.fields_order">
+           <td 
+           :colspan="row[order].colspan"  
+           :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false" 
+           v-if="order != 'substance'" 
+           v-for="(order, order_index) in tab_info.fields_order"
+           :key="order_index">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
                 {{row[order].selected}}
               </span>
@@ -170,7 +182,7 @@
         <tr v-if="doCommentsRow(row)">
            <td class="comment-row" :colspan="tab_info.fields_order.length - 1"> 
               <b-row>
-                <b-col v-for="field in ['remarks_os','remarks_party']" lg="6">
+                <b-col v-for="field in ['remarks_os','remarks_party']" :key="field" lg="6">
                   <div><b>{{labels[field]}}</b></div>
                   <textarea class="form-control" v-model="row[field].selected"></textarea>
                 </b-col>
@@ -178,7 +190,7 @@
            </td>
          </tr>
 
-          <tr v-for="substance in tab_data.display.blends[row.blend.selected].components" class="small" v-if="row.blend.expand">
+          <tr v-for="(substance, substance_index) in tab_data.display.blends[row.blend.selected].components" :key="substance_index" class="small" v-if="row.blend.expand">
             <td colspan="2">
               <div>
                 <b-row>
@@ -188,7 +200,10 @@
               </div>
             </td>
             
-             <td v-if="!['substance','blend','validation','trade_party','destination_party', 'source_party','decision_exempted'].includes(order)" v-for="(order, order_index) in tab_info.fields_order">
+             <td 
+             v-if="!['substance','blend','validation','trade_party','destination_party', 'source_party','decision_exempted'].includes(order)" 
+             v-for="(order, order_index) in tab_info.fields_order"
+             :key="order_index">
               <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
                 {{splitBlend(row[order].selected,substance.percentage)}}
               </span>
@@ -202,13 +217,13 @@
 
       </table>
     </div>
-    <div v-for="comment in tab_info.comments" class="comments-input">
+    <div v-for="(comment, comment_index) in tab_info.comments" :key="comment_index" class="comments-input">
       <label>{{comment.label}}</label>
       <textarea class="form-control" v-model="comment.selected"></textarea>
     </div>
     <hr>
     <div class="footnotes">
-      <p v-for="footnote in tab_info.footnotes"><small>{{footnote}}</small></p>
+      <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index"><small>{{footnote}}</small></p>
     </div>
 
     <AppAside v-if="!transitionState" fixed>
@@ -233,7 +248,7 @@
               <multiselect class="mb-2" @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})" trackBy="value" label="text" placeholder="Select substance" :value="modal_data.field.substance.selected" :options="tab_data.substances"></multiselect>
            </b-col>
          </b-row>
-          <div v-for="order in this.tab_info.modal_order">
+          <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
             <b-row>
               <b-col>{{labels[order]}}</b-col>
               <b-col>
@@ -244,7 +259,7 @@
             <hr>
           </div>
           <div>
-            <b-row class="mb-3" v-if="fieldsDecisionQuantity" v-for="order in fieldsDecisionQuantity">
+            <b-row class="mb-3" v-if="fieldsDecisionQuantity" v-for="(order,order_index) in fieldsDecisionQuantity" :key="order_index">
               <b-col lg="4" class="mb-2"><b> {{labels[`decision_${order}`]}}:</b></b-col>
               <b-col lg="4">
                 <b-input-group class="modal-group" :prepend="labels['quantity']">
@@ -259,7 +274,7 @@
             </b-row>
             <hr>
           </div>
-          <b-row class="mt-3" v-for="comment_field in ['remarks_os','remarks_party']">
+          <b-row class="mt-3" v-for="comment_field in ['remarks_os','remarks_party']" :key="comment_field">
              <b-col lg="3">
                 <h6>{{labels[comment_field]}}</h6>
              </b-col>
@@ -579,9 +594,6 @@ export default {
 
   td {
     text-align: center!important;
-  }
-
-  .small.but_big {
   }
 
   tr.small td {

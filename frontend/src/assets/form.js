@@ -250,8 +250,6 @@ const form = {
       isInvalid: false,
       description: 'Annexes A, B, C and E substances',
       form_fields: [],
-      comments: '',
-
       fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
       special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
       hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
@@ -432,7 +430,7 @@ const form = {
       description: 'Annexes A, B, C and E substances',
       isInvalid: false,
 
-      fields_order: ['substance', 'blend' , 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
+      fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
 
       modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
       // used for identification when adding labels
