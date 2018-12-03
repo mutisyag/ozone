@@ -34,6 +34,7 @@ module.exports = {
     'guard-for-in': 'off',
     'vue/no-use-v-if-with-v-for': 'off',
     'vue/no-side-effects-in-computed-properties': 'off',
+    'object-curly-newline': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint',

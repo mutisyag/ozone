@@ -84,82 +84,74 @@ export default {
               && this.$store.state.initialData.display.blends
               && this.$store.state.initialData.display.countries
               && this.prefilled
-		}
-	},
+    }
+  },
 
-	methods: {
+  methods: {
 
-		alertUnsavedData(e) {
-			const tabsWithData = []
-			Object.values(this.$store.state.form.tabs).forEach((tab) => {
-				[false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)
-			})
+    alertUnsavedData(e) {
+      const tabsWithData = []
+      Object.values(this.$store.state.form.tabs).forEach((tab) => {
+        [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)
+      })
 
-			if (tabsWithData.length && e) {
-				// Cancel the event as stated by the standard.
-				e.preventDefault()
-				// Chrome requires returnValue to be set.
-				e.returnValue = ''
-				console.log(tabsWithData)
-			} else if (tabsWithData.length) {
-				return tabsWithData.length
-			}
-			return null
-		},
+      if (tabsWithData.length && e) {
+        // Cancel the event as stated by the standard.
+        e.preventDefault()
+        // Chrome requires returnValue to be set.
+        e.returnValue = ''
+        console.log(tabsWithData)
+      } else if (tabsWithData.length) {
+        return tabsWithData.length
+      }
+      return null
+    },
 
-		prePrefill() {
-			const { form } = this.$store.state.form
+    prePrefill() {
+      const form = this.$store.state.form
 
-			const prefill_data = this.$store.state.current_submission
-			Object.keys(form.tabs).forEach((tab) => {
-				if (this.fields_to_get[tab]) {
-					fetch(prefill_data[this.fields_to_get[tab]]).then(response => {
-						if (response.data.length) {
-							this.$store.commit('setTabStatus', { tab, value: 'saving' })
-							this.$nextTick(() => {
-								setTimeout(() => {
-									this.prefill(form.tabs[tab].name, response.data)
-								}, 100)
-							})
-						} else {
-							this.$store.commit('updateNewTabs', tab)
-						}
-					}).catch(error => {
-						console.log(error)
-					})
-				}
-			})
-			this.prefilled = true
-		},
+      const prefill_data = this.$store.state.current_submission
+      Object.keys(form.tabs).forEach((tab) => {
+        if (this.fields_to_get[tab]) {
+          fetch(prefill_data[this.fields_to_get[tab]]).then(response => {
+            if (response.data.length) {
+              this.$store.commit('setTabStatus', { tab: tab, value: 'saving' })
+              this.prefill(form.tabs[tab].name, response.data)
+            } else {
+              this.$store.commit('updateNewTabs', tab)
+            }
+          }).catch(error => {
+            console.log(error)
+          })
+        }
+      })
+      this.prefilled = true
+    },
 
-		prefill(tabName, data) {
-			const ordering_id = Math.max(...data.map(row => row.ordering_id))
-			const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
+    prefill(tabName, data) {
+      const ordering_id = Math.max(...data.map(row => row.ordering_id))
+      const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
 
-			if (tabName !== 'has_emissions') {
-				sortedData.forEach(item => {
-					// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-					this.$store.dispatch('createSubstance', {
-						substanceList: item.substance ? [item.substance] : null,
-						currentSectionName: tabName,
-						groupName: null,
-						country: null,
-						blendList: item.blend ? [item.blend] : null,
-						prefillData: item
-					})
-				})
-			} else {
-				sortedData.forEach(el => this.$store.dispatch('prefillEmissionsRow', el))
-			}
-			this.$nextTick(() => {
-				setTimeout(() => {
-					this.$store.commit('setTabStatus', { tab: tabName, value: true })
-				})
-			})
-			this.$store.commit('setTabOrderingId', { tabName, ordering_id })
-		}
+      if (tabName !== 'has_emissions') {
+        sortedData.forEach(item => {
+          // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+          this.$store.dispatch('createSubstance', {
+            substanceList: item.substance ? [item.substance] : null,
+            currentSectionName: tabName,
+            groupName: null,
+            country: null,
+            blendList: item.blend ? [item.blend] : null,
+            prefillData: item
+          })
+        })
+      } else {
+        sortedData.forEach(el => this.$store.dispatch('prefillEmissionsRow', el))
+      }
+      this.$store.commit('setTabStatus', { tab: tabName, value: true })
+      this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+    }
 
-	}
+  }
 }
 </script>
 
