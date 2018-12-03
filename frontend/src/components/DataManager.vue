@@ -111,15 +111,14 @@ export default {
     },
 
     prePrefill() {
-      const { form } = this.$store.state.form
+      const form = this.$store.state.form
 
       const prefill_data = this.$store.state.current_submission
-
       Object.keys(form.tabs).forEach((tab) => {
         if (this.fields_to_get[tab]) {
           fetch(prefill_data[this.fields_to_get[tab]]).then(response => {
             if (response.data.length) {
-              this.$store.commit('setTabStatus', { tab, value: 'saving' })
+              this.$store.commit('setTabStatus', { tab: tab, value: 'saving' })
               this.$nextTick(() => {
                 setTimeout(() => {
                   this.prefill(form.tabs[tab].name, response.data)
