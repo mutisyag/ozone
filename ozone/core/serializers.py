@@ -220,7 +220,10 @@ class BlendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Blend
-        fields = ('id', 'blend_id', 'custom', 'party', 'type', 'components')
+        fields = (
+            'id', 'blend_id', 'custom', 'party', 'type',
+            'other_names', 'composition', 'components',
+        )
 
 
 class CreateBlendSerializer(serializers.ModelSerializer):
