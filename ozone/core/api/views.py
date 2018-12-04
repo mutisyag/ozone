@@ -204,13 +204,6 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
-    def create(self, request, *args, **kwargs):
-        if request.user.is_secretariat is False:
-            party = Party.objects.get(pk=request.data.get('party', None))
-            if party != request.user.party:
-                return Response(status=status.HTTP_403_FORBIDDEN)
-        super().create(request, *args, **kwargs)
-
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
