@@ -19,6 +19,7 @@
 
     <b-table show-empty
               outlined
+              v-if="getTabInputFields && getTabDecisionQuantityFields"
               bordered
               @input="tableLoaded"
               hover
@@ -34,26 +35,71 @@
               :filter="table.filters.search"
               ref="table"
     >
-      <template :slot="getCountrySlot" slot-scope="row">
+
+     <template :slot="getCountrySlot" slot-scope="cell">
           <clonefield 
-          v-on:removeThisField="remove_field(tab_info.form_fields, row.item.originalObj)"
-          v-if="!row.item[getCountrySlot]"
+          v-on:removeThisField="remove_field(tab_info.form_fields, cell.item.originalObj)"
+          v-if="!cell.item[getCountrySlot]"
           :tabName="tabName" 
-          :current_field="row.item.originalObj">
+          :current_field="cell.item.originalObj">
           </clonefield>
           <div v-else>
-            {{row.item[getCountrySlot]}}
+            {{cell.item[getCountrySlot]}}
           </div>
       </template>
-      <template v-for="field in getTabInputFields" :slot="field" slot-scope="row">
+
+    <template  
+      v-for="inputField in getTabInputFields" 
+      :slot="inputField" 
+      slot-scope="cell">
           <fieldGenerator 
-          :key="field"
-          :fieldInfo="{index:row.item.index,tabName: tabName, field:field}" 
+          :key="`${cell.item.index}_${inputField}_${tabName}`"
+          :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}" 
           :disabled="transitionState"  
-          :field="row.item.originalObj[field]">
+          :field="cell.item.originalObj[inputField]">
           </fieldGenerator>
-        
+    </template>
+
+    <template  
+      slot="validation" 
+      slot-scope="cell">
+        <span class="validation-wrapper">
+          <i @click="openValidation" v-if="cell.item.validation.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+          <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+        </span>
       </template>
+
+      <template 
+      v-for="tooltipField in getTabDecisionQuantityFields"
+      :slot="tooltipField"
+      slot-scope="cell"
+      >
+             <span 
+              v-b-tooltip.hover = "cell.item.originalObj[tooltipField].tooltip ? true : false" 
+              :title="cell.item.originalObj[tooltipField].tooltip" 
+              :key="tooltipField">
+                {{cell.item[tooltipField]}}
+
+              <div 
+              style="margin-left: -4rem; margin-top: 2rem" 
+              class="special-field" 
+              v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted'">
+                <hr>
+                Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+                <hr>
+                <span>
+                   <fieldGenerator 
+                    :key="tooltipField"
+                    :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}" 
+                    :disabled="transitionState"  
+                    :field="cell.item.originalObj[tooltipField]">
+                   </fieldGenerator>
+                </span>
+              </div>
+              </span>
+
+      </template>
+
 
     </b-table>
 
@@ -177,16 +223,21 @@ export default {
   },
 
   created(){
+    this.tab_info = this.$store.state.form.tabs[this.tabName]
     this.labels = labels[this.tab_info.name]
-  },
+},
+
+    // tab_info(){ return this.$store.state.form.tabs[this.tabName]},
+
+
 
   data () {
     return {
-      // tab_info: null,
+      tab_info: null,
       // tab_data: null,
       table: {
           currentPage: 1,
-          perPage: 10,
+          perPage: 500,
           totalRows: 5,
           pageOptions: [ 5, 25, 100 ],
           sortBy: null,
@@ -242,9 +293,13 @@ export default {
   computed: {
     
     getCountrySlot(){
-     return this.intersect(['source_party', 'trade_party', 'destination_party'], this.$store.state.form.tabs[this.tabName].fields_order)[0]
+     return this.intersect(['source_party', 'trade_party', 'destination_party'], this.tab_info.fields_order)[0]
     },
 
+
+    getTabDecisionQuantityFields(){
+     return this.intersect(['decision_exempted','quantity_exempted'], this.tab_info.fields_order)
+    },
 
     getTabInputFields(){
       return this.intersect(inputFields, this.tab_info.fields_order)
@@ -324,7 +379,6 @@ export default {
       })
       return tableHeaders
     },
-    tab_info(){ return this.$store.state.form.tabs[this.tabName]},
     tab_data(){ return this.$store.state.initialData},
 
     fieldsDecisionQuantity(){
@@ -522,10 +576,13 @@ export default {
   watch: {
      'tab_info.form_fields': {
          handler(before,after){
-          if(parseInt(this.tabId) === this.tabIndex)
+          if(parseInt(this.tabId) === this.tabIndex){
+            console.log('refreshed')
+				    this.$refs.table.refresh()
             if(this.tab_info.status != 'edited'){
               this.$store.commit('setTabStatus',{tab: this.tabName, value: 'edited'})
             }
+          }
          },
          deep: true
       }

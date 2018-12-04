@@ -85,7 +85,7 @@ const form = {
 			},
 			{
 				label: 'Decision / type of use**** or Remark <br> 7',
-				name: 'decision'
+				name: 'decision_exempted'
 			},
 			{
 				label: '8',
@@ -200,7 +200,7 @@ const form = {
 			},
 			{
 				label: 'Decision / type of use**** or Remark <br> 7',
-				name: 'decision'
+				name: 'decision_exempted'
 			},
 			{
 				label: '7',
