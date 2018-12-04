@@ -38,6 +38,7 @@
 
      <template :slot="getCountrySlot" slot-scope="cell">
           <clonefield 
+          :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
           v-on:removeThisField="remove_field(tab_info.form_fields, cell.item.originalObj)"
           v-if="!cell.item[getCountrySlot]"
           :tabName="tabName" 
@@ -223,21 +224,16 @@ export default {
   },
 
   created(){
-    this.tab_info = this.$store.state.form.tabs[this.tabName]
     this.labels = labels[this.tab_info.name]
-},
-
-    // tab_info(){ return this.$store.state.form.tabs[this.tabName]},
-
-
+  },
 
   data () {
     return {
-      tab_info: null,
+      // tab_info: null,
       // tab_data: null,
       table: {
           currentPage: 1,
-          perPage: 500,
+          perPage: 200,
           totalRows: 5,
           pageOptions: [ 5, 25, 100 ],
           sortBy: null,
@@ -379,6 +375,7 @@ export default {
       })
       return tableHeaders
     },
+    tab_info(){ return this.$store.state.form.tabs[this.tabName]},
     tab_data(){ return this.$store.state.initialData},
 
     fieldsDecisionQuantity(){
@@ -576,13 +573,10 @@ export default {
   watch: {
      'tab_info.form_fields': {
          handler(before,after){
-          if(parseInt(this.tabId) === this.tabIndex){
-            console.log('refreshed')
-				    this.$refs.table.refresh()
+          if(parseInt(this.tabId) === this.tabIndex)
             if(this.tab_info.status != 'edited'){
               this.$store.commit('setTabStatus',{tab: this.tabName, value: 'edited'})
             }
-          }
          },
          deep: true
       }

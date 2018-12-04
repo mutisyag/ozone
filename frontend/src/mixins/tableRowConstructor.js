@@ -160,19 +160,19 @@ export default {
 			},
 			quantity_laboratory_analytical_uses: {
 				type: 'number',
-				selected: 5
+				selected:null
 			},
 			decision_laboratory_analytical_uses: {
 				type: 'text',
-				selected: 'fsafsafas'
+				selected: ''
 			},
 			quantity_quarantine_pre_shipment: {
 				type: 'number',
-				selected: 5
+				selected: null
 			},
 			decision_quarantine_pre_shipment: {
 				type: 'text',
-				selected: 'uyffuyf'
+				selected: ''
 			},
 			quantity_other_uses: {
 				type: 'number',
