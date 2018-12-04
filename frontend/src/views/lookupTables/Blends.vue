@@ -157,8 +157,7 @@ export default {
 			}
 			blends.forEach(blend => {
 				const blendIsVisible = !this.table.filters.selectedComponentsNames.length
-										|| this.table.filters.selectedComponentsNames
-											.every(selectedComponentName => blend.components.map(component => component.component_name).includes(selectedComponentName))
+						|| this.table.filters.selectedComponentsNames.every(selectedComponentName => blend.components.map(component => component.component_name).includes(selectedComponentName))
 				if (blendIsVisible) {
 					visibleBlendsComputed.push(blend)
 				}
