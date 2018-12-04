@@ -3,27 +3,41 @@ from rest_framework.permissions import BasePermission, SAFE_METHODS
 from .models import Party, Submission
 
 
+def is_secretariat_or_admin(request):
+    return request.user.is_secretariat or request.user.is_superuser
+
+
 class IsSecretariatOrSameParty(BasePermission):
+
     @staticmethod
     def has_same_party(request, view):
         """
         Allows us to verify that the user making the request is not trying to
         create an object for a Party he does not belong to.
 
-        Needed because `get_object_permission` only works for already-existing
-        objects, so does not apply to object creation.
+        Needed on:
+        - create: because `get_object_permission` only works for
+          already-existing objects, so does not apply to object creation.
+        - update: to verify that party is not changed to something the user
+          cannot create objects for
 
         This is only to be used for Submission and data reporting models!
         """
-        if request.method == 'POST' and request.user.is_secretariat is False:
+        if request.method not in SAFE_METHODS and \
+                not is_secretariat_or_admin(request):
             # Get the party either directly (for Submission objects),
             # or from the referenced submission
-            if view.queryset.model == Submission:
+            if hasattr(view, 'queryset') and view.queryset:
+                queryset = view.queryset
+            else:
+                queryset = view.get_queryset()
+
+            if queryset.model == Submission:
                 party = Party.objects.get(pk=request.data.get('party', None))
             else:
                 party = Submission.objects.get(
-                    pk=request.data.get('submission', None)
-                    ).party
+                    pk=view.kwargs.get('submission_pk', None)
+                ).party
             if party != request.user.party:
                 return False
 
@@ -43,7 +57,7 @@ class IsSecretariatOrSameParty(BasePermission):
                 return False
 
         # At this point request is write, user is write
-        if request.user.is_secretariat:
+        if is_secretariat_or_admin(request):
             return True
 
         # It's a Party write user and a write request - calling has_same_party
@@ -58,9 +72,11 @@ class IsSecretariatOrSameParty(BasePermission):
         Only applicable to submissions or objects related to a submission
         (i.e. data reports)
         """
+        if is_secretariat_or_admin(request):
+            return True
+
         if isinstance(obj, Submission):
             object_party = obj.party
         else:
             object_party = obj.submission.party
-
-        return request.user.is_secretariat or request.user.party == object_party
+        return request.user.party == object_party

@@ -7,7 +7,8 @@ from rest_framework import viewsets, mixins, status, generics
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.filters import BaseFilterBackend
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
 from ozone.core.serializers import AuthTokenByValueSerializer
@@ -108,23 +109,44 @@ class BulkCreateUpdateMixin:
             return self.get_queryset()
 
 
+class IsOwnerFilterBackend(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if not request.user.is_authenticated or request.user.is_anonymous:
+            return queryset.none()
+        elif request.user.is_secretariat or request.user.is_superuser:
+            # Secretariat user
+            return queryset
+        else:
+            # Party user
+            if queryset and queryset.model == Submission:
+                return queryset.filter(party=request.user.party)
+            elif queryset:
+                return queryset.filter(submission__party=request.user.party)
+            else:
+                return queryset
+
+
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Region.objects.all()
     serializer_class = RegionSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Subregion.objects.all()
     serializer_class = SubregionSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all().prefetch_related('subregion')
     serializer_class = PartySerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class GetNonPartiesViewSet(ReadOnlyMixin, generics.ListAPIView):
     serializer_class = PartySerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Article7NonPartyTrade.get_non_parties(
@@ -135,19 +157,24 @@ class GetNonPartiesViewSet(ReadOnlyMixin, generics.ListAPIView):
 class ReportingPeriodViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = ReportingPeriod.objects.all()
     serializer_class = ReportingPeriodSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Obligation.objects.all()
     serializer_class = ObligationSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class BlendViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated,)
+
     def get_queryset(self):
         queryset = Blend.objects.all().prefetch_related(
             'components', 'components__substance'
@@ -172,24 +199,17 @@ class BlendViewSet(viewsets.ModelViewSet):
 class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
-    filter_backends = (filters.DjangoFilterBackend,)
+    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend,)
     filter_fields = ('obligation', 'party', 'reporting_period',)
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
 
     def get_queryset(self):
-        user = self.request.user
-        if not user.is_authenticated or user.is_anonymous:
-            return Submission.objects.none()
-        elif user.is_secretariat:
-            # Secretariat user
-            return Submission.objects.all()
-        else:
-            # Party user
-            return Submission.objects.filter(party=user.party)
+        return Submission.objects.all()
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
@@ -240,6 +260,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+
     def get_queryset(self):
         return Article7Questionnaire.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -258,6 +281,8 @@ class Article7DestructionViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7DestructionSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7Destruction.objects.filter(
@@ -273,6 +298,8 @@ class Article7ProductionViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7ProductionSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7Production.objects.filter(
@@ -287,6 +314,8 @@ class Article7ExportViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7ExportSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7Export.objects.filter(
@@ -301,6 +330,8 @@ class Article7ImportViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7ImportSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7Import.objects.filter(
@@ -315,6 +346,8 @@ class Article7NonPartyTradeViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7NonPartyTradeSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7NonPartyTrade.objects.filter(
@@ -329,6 +362,8 @@ class Article7EmissionViewSet(
     ValidationErrorMixin, BulkCreateUpdateMixin, viewsets.ModelViewSet
 ):
     serializer_class = Article7EmissionSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
         return Article7Emission.objects.filter(
@@ -347,6 +382,7 @@ class AuthTokenViewSet(mixins.ListModelMixin,
     lookup_field = 'key'
     lookup_url_kwarg = 'token'
     serializer_class = AuthTokenByValueSerializer
+    permission_classes = (AllowAny, )
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
