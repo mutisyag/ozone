@@ -139,7 +139,7 @@
 <script>
 import { Footer } from '@coreui/vue'
 import Questionnaire from './Questionnaire.vue'
-import FormTemplate from './FormTemplateNew.vue'
+import FormTemplate from './FormTemplate.vue'
 import EmissionsTemplate from './EmissionsTemplate.vue'
 import SubmissionInfo from './SubmissionInfo.vue'
 import Attachments from './Attachments.vue'
