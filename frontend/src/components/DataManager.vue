@@ -51,23 +51,29 @@ export default {
 	},
 
 	beforeRouteLeave(to, from, next) {
-		if (this.alertUnsavedData()) {
-			const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
-			if (answer) {
-				next()
-			} else {
-				next(false)
-			}
-		} else {
-			next()
-		}
+    if(process.env.NODE_ENV == 'development') {
+      if (this.alertUnsavedData()) {
+      const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+          if (answer) {
+            next()
+          } else {
+            next(false)
+          }
+      } else {
+        next()
+      }
+    } else {
+      next()
+    }
 	},
 
 	created() {
 		if (!this.submission) {
 			this.$router.push({ name: 'Dashboard' })
 		} else {
-			window.addEventListener('beforeunload', this.alertUnsavedData)
+      if(process.env.NODE_ENV !== 'development'){
+        window.addEventListener('beforeunload', this.alertUnsavedData)
+      }
 			this.$store.dispatch('getInitialData', this.submission).then(() => {
 				this.prePrefill()
 			})
