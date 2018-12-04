@@ -209,7 +209,7 @@ class BlendViewSet(viewsets.ModelViewSet):
         # TODO Move validation on Blend model
         if instance.custom is False:
             raise MethodNotAllowed(
-                "Non custom blends cannot be modified."
+                _("Non custom blends cannot be modified.")
             )
         return super().update(request, *args, **kwargs)
 

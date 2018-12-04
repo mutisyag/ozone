@@ -219,7 +219,7 @@ class Submission(models.Model):
         workflow = self.workflow
         if value not in workflow.state.workflow.states:
             raise StateDoesNotExist(
-                f'No state named {value} in current workflow'
+                _(f'No state named {value} in current workflow')
             )
 
         transition_name = None
@@ -229,13 +229,15 @@ class Submission(models.Model):
                 break
         if transition_name is None:
             raise TransitionNotAvailable(
-                f'No transition to reach {value} from current state'
+                _(f'No transition to reach {value} from current state')
             )
 
         transition = getattr(workflow, transition_name)
 
         if not transition.is_available():
-            raise TransitionNotAvailable('Transition checks not satisfied')
+            raise TransitionNotAvailable(
+                _('Transition checks not satisfied')
+            )
 
         # Call the transition; this should work (bar exceptions in pre-post
         # transition hooks)
@@ -319,21 +321,23 @@ class Submission(models.Model):
         # This is a `TransitionList` and supports the `in` operator
         if trans_name not in workflow.state.workflow.transitions:
             raise TransitionDoesNotExist(
-                f'Transition {trans_name} does not exist in this workflow'
+                _(f'Transition {trans_name} does not exist in this workflow')
             )
 
         # This is a list of `Transition`s and doesn't support the `in` operator
         # without explicitly referencing `name`
         if trans_name not in [t.name for t in workflow.state.transitions()]:
             raise TransitionNotAvailable(
-                f'Transition {trans_name} does not start from current state'
+                _(f'Transition {trans_name} does not start from current state')
             )
 
         # Transition names are available as attributes on the workflow object
         transition = getattr(workflow, trans_name)
 
         if not transition.is_available():
-            raise TransitionNotAvailable('Transition checks not satisfied')
+            raise TransitionNotAvailable(
+                _('Transition checks not satisfied')
+            )
 
         # Call the transition; this should work (bar exceptions in pre-post
         # transition hooks)
@@ -378,8 +382,10 @@ class Submission(models.Model):
             if self.flag_superseded:
                 return (
                     False,
-                    "You can't clone a submission from a previous period if "
-                    "it's superseded."
+                    _(
+                        "You can't clone a submission from a previous period if"
+                        " it's superseded."
+                    )
                 )
 
         return (True, "")
@@ -489,11 +495,11 @@ class Submission(models.Model):
     def clean(self):
         if not self.reporting_period.is_reporting_allowed:
             raise CustomValidationError(
-                "Reporting cannot be performed for this reporting period."
+                _("Reporting cannot be performed for this reporting period.")
             )
         if self.non_exempted_fields_modified() and not self.data_changes_allowed:
             raise CustomValidationError(
-                "Submitted submissions cannot be modified."
+                _("Submitted submissions cannot be modified.")
             )
         super().clean()
 
@@ -514,8 +520,10 @@ class Submission(models.Model):
             )
             if any([s.data_changes_allowed for s in current_submissions]):
                 raise CustomValidationError(
-                    "There is already a submission in Data Entry for "
-                    "this party/period/obligation combination."
+                    _(
+                        "There is already a submission in Data Entry for "
+                        "this party/period/obligation combination."
+                    )
                 )
             if current_submissions:
                 self.version = current_submissions.latest('version').version + 1
