@@ -48,7 +48,7 @@ const form = {
 			isInvalid: false,
 			section_subheaders: [{
 				label: '1',
-				name: 'substances',
+				name: 'substance',
 				sort: 1,
 				type: 'string'
 			},
@@ -85,7 +85,7 @@ const form = {
 			},
 			{
 				label: 'Decision / type of use**** or Remark <br> 7',
-				name: 'decision'
+				name: 'decision_exempted'
 			},
 			{
 				label: '8',
@@ -163,7 +163,7 @@ const form = {
 			description: 'Annexes A, B, C and E substances',
 			section_subheaders: [{
 				label: '1',
-				name: 'substances',
+				name: 'substance',
 				sort: 1,
 				type: 'string'
 			},
@@ -200,7 +200,7 @@ const form = {
 			},
 			{
 				label: 'Decision / type of use**** or Remark <br> 7',
-				name: 'decision'
+				name: 'decision_exempted'
 			},
 			{
 				label: '7',
@@ -258,7 +258,7 @@ const form = {
 			section_subheaders: [
 				{
 					label: '',
-					name: 'substances',
+					name: 'substance',
 					sort: 1,
 					type: 'string'
 				},
@@ -374,7 +374,7 @@ const form = {
 			form_fields: [],
 			section_subheaders: [{
 				label: '1',
-				name: 'substances',
+				name: 'substance',
 				sort: 1,
 				type: 'string'
 			},
@@ -438,7 +438,7 @@ const form = {
 			section_subheaders: [
 				{
 					label: '1',
-					name: 'substances',
+					name: 'substance',
 					sort: 1,
 					type: 'string'
 				},

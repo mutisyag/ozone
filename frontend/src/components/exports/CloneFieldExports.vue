@@ -57,7 +57,7 @@ export default {
 
 			this.selected_countries.selected.forEach(country => {
 				let fieldExists = false
-				for (const existing_field in this.$store.state.form.tabs[this.tabName].form_fields) {
+				for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
 					if (current_field.substance.selected) {
 						if (existing_field.substance.selected === current_field.substance.selected && existing_field[currentTypeOfCountryField].selected === country) {
 							fieldExists = true
