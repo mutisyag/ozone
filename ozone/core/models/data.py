@@ -530,7 +530,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
 
         # Get all the Parties that had ratified the control treaty at that date
         current_ratifications = PartyRatification.objects.filter(
-            date__lte=max_date, treaty=substance.group.control_treaty
+            entry_into_force_date__lte=max_date,
+            treaty=substance.group.control_treaty
         )
         signing_party_ids = set(current_ratifications.values('party__id'))
 
