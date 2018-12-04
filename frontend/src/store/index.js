@@ -27,10 +27,6 @@ const intersect = (a, b) => {
 	return Array.from(intersection)
 }
 
-const removeSpecialChars = (str) => {
-  return str.replace(/[^a-zA-Z0-9]+/g, '')
-}
-
 const store = new Vuex.Store({
 	// strict: true,
 	state: {
