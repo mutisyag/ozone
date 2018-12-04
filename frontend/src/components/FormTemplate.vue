@@ -1,8 +1,7 @@
 <template>
   <div v-if="tab_info">
     <div class="form-sections">
-
-      <table ref="tableHeader" class="table submission-table header-only">
+      <table class="table submission-table">
         <thead>
           <tr class="first-header">
             <th v-for="(header, header_index) in tab_info.section_headers" :colspan="header.colspan" :key="header_index">
@@ -14,71 +13,206 @@
               </div>
             </th>
           </tr>
+          <tr class="subheader">
+            <th :colspan="subheader.colspan" v-for="(subheader, subheader_index) in tab_info.section_subheaders" :key="subheader_index">
+            <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
+              <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
+            </div>
+            <div v-else>
+              <span v-html="subheader.label"></span>
+            </div>
+            </th>
+          </tr>
         </thead>
+
+       <tbody
+         @mouseover="hovered = tab_info.form_fields.indexOf(row)"
+         @mouseleave="hovered = false"
+          v-if="row.substance.selected"
+          v-for="(row, row_index) in tab_info.form_fields"
+          :key="row_index"
+          class="form-fields">
+          <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'" class="subheader">
+            <th v-for="(subheader, subheader_index) in tab_info.special_headers.section_subheaders" :key="subheader_index">
+              <small><b><div style="text-align: center" v-html="subheader.label"></div></b></small>
+            </th>
+          </tr>
+
+         <tr v-if="tabName ==='has_produced' && row.group.selected === 'FII'">
+           <td
+           :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false"
+            v-if="order != 'blend'"
+            v-for="(order, order_index) in tab_info.special_fields_order"
+            :key="order_index">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
+                {{row[order].selected}}
+              <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
+                <hr>
+                Quantity of new {{tab_data.display.substances[row[order].selected]}} exported to be used for QPS applications
+                <hr>
+                <span>
+                  <input class="form-control" type="number" v-model="row.quantity_quarantine_pre_shipment.selected">
+                </span>
+              </div>
+              </span>
+
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+
+              </span>
+
+              <span v-else>
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'substance'">
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
+                </span>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row"></clonefield>
+                <span v-else>
+                   {{tab_data.display.countries[row[order].selected]}}
+                </span>
+              </span>
+           </td>
+         </tr>
+
+         <tr v-else>
+           <td
+            :colspan="row[order].colspan"
+            :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false"
+            v-if="order != 'blend'" v-for="(order, order_index) in tab_info.fields_order"
+            :key="order_index">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order != 'validation'">
+                {{row[order].selected}}
+              <div style="margin-left: -4rem; margin-top: 2rem" class="special-field" v-if="row.group.selected === 'EI' && (row.quantity_quarantine_pre_shipment ? row.quantity_quarantine_pre_shipment.selected : false) && order === 'decision_exempted'">
+                <hr>
+                Quantity of new {{tab_data.display.substances[row.substance.selected]}} exported to be used for QPS applications
+                <hr>
+                <span>
+                   <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" :field="row.quantity_quarantine_pre_shipment"></fieldGenerator>
+                </span>
+              </div>
+              </span>
+
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+              </span>
+
+              <span v-else>
+
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'substance' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'substance'">
+                  {{tab_data.display.substances[row[order].selected]}}
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
+                </span>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.substance.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row"></clonefield>
+                <span v-else>
+                   {{tab_data.display.countries[row[order].selected]}}
+                </span>
+
+              </span>
+           </td>
+         </tr>
+
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 2">
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" :key="field" lg="6">
+                  <div>{{labels[field]}}</div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
+       </tbody>
+
+        <tbody @mouseover="hovered = tab_info.form_fields.indexOf(row)" @mouseleave="hovered = false" v-else class="form-fields">
+         <tr>
+           <td
+           :colspan="row[order].colspan"
+           :rowspan="(['substance','blend'].includes(order) && doCommentsRow(row)) ? 2 : false"
+           v-if="order != 'substance'"
+           v-for="(order, order_index) in tab_info.fields_order"
+           :key="order_index">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput' && order !== 'validation'">
+                {{row[order].selected}}
+              </span>
+
+              <span class="validation-wrapper" v-else-if="row[order].type === 'nonInput' && order === 'validation'">
+                <i @click="openValidation" v-if="row[order].selected.length" style="color: red;  cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+              </span>
+
+              <span v-else>
+                <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" :disabled="transitionState" v-if="order != 'blend' && row[order].type != 'multiselect'" :field="row[order]"></fieldGenerator>
+                <span v-else-if="order === 'blend'">
+                  <span style="cursor:pointer;" v-b-tooltip.hover = "'Click to expand/collapse blend'" @click="row[order].expand = !row[order].expand">
+                    {{tab_data.display.blends[row[order].selected].name}}
+                    <i :class="`fa fa-caret-${expandedStatus(row[order].expand)}`"></i>
+                  </span>
+
+                  <div class="table-btn-group">
+                    <b-btn variant="info" @click="createModalData(row,tab_info.form_fields.indexOf(row))">
+                      Edit
+                    </b-btn>
+                    <b-btn variant="outline-danger" @click="remove_field(tab_info.form_fields, row)" class="table-btn">Delete</b-btn>
+                  </div>
+                </span>
+                <clonefield :key="`${tab_info.name}_${row_index}_${order_index}_${row.blend.selected}`" v-on:removeThisField="remove_field(tab_info.form_fields, row)" v-else-if="row[order].type === 'multiselect' && !row[order].selected" :tabName="tabName" :current_field="row" :section="tab_info"></clonefield>
+                <span v-else>
+                  {{tab_data.display.countries[row[order].selected]}}
+                </span>
+              </span>
+           </td>
+         </tr>
+
+        <tr v-if="doCommentsRow(row)">
+           <td class="comment-row" :colspan="tab_info.fields_order.length - 1">
+              <b-row>
+                <b-col v-for="field in ['remarks_os','remarks_party']" :key="field" lg="6">
+                  <div><b>{{labels[field]}}</b></div>
+                  <textarea class="form-control" v-model="row[field].selected"></textarea>
+                </b-col>
+              </b-row>
+           </td>
+         </tr>
+
+          <tr v-for="(substance, substance_index) in tab_data.display.blends[row.blend.selected].components" :key="substance_index" class="small" v-if="row.blend.expand">
+            <td colspan="2">
+              <div>
+                <b-row>
+                  <b-col>{{substance.component_name}}</b-col>
+                  <b-col><b>{{substance.percentage * 100}}%</b></b-col>
+                </b-row>
+              </div>
+            </td>
+
+             <td
+             v-if="!['substance','blend','validation','trade_party','destination_party', 'source_party','decision_exempted'].includes(order)"
+             v-for="(order, order_index) in tab_info.fields_order"
+             :key="order_index">
+              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'">
+                {{splitBlend(row[order].selected,substance.percentage)}}
+              </span>
+              <span v-else>
+                {{splitBlend(row[order].selected,substance.percentage)}}
+              </span>
+           </td>
+          </tr>
+
+       </tbody>
+
       </table>
-
-    <b-table show-empty
-              outlined
-              bordered
-              @input="tableLoaded"
-              hover
-              head-variant="light"
-              stacked="md"
-              :items="tableItems"
-              :fields="tableFields"
-              :current-page="table.currentPage"
-              :per-page="table.perPage"
-              :sort-by.sync="table.sortBy"
-              :sort-desc.sync="table.sortDesc"
-              :sort-direction="table.sortDirection"
-              :filter="table.filters.search"
-              ref="table"
-    >
-      <template :slot="getCountrySlot" slot-scope="row">
-          <clonefield 
-          v-on:removeThisField="remove_field(tab_info.form_fields, row.item.originalObj)"
-          v-if="!row.item[getCountrySlot]"
-          :tabName="tabName" 
-          :current_field="row.item.originalObj">
-          </clonefield>
-          <div v-else>
-            {{row.item[getCountrySlot]}}
-          </div>
-      </template>
-      <template v-for="field in getTabInputFields" :slot="field" slot-scope="row">
-          <fieldGenerator 
-          :key="field"
-          :fieldInfo="{index:row.item.index,tabName: tabName, field:field}" 
-          :disabled="transitionState"  
-          :field="row.item.originalObj[field]">
-          </fieldGenerator>
-        
-      </template>
-
-    </b-table>
-
-
-
-
-    <b-table show-empty
-              outlined
-              bordered
-              hover
-              head-variant="light"
-              stacked="md"
-              :items="tableItemsBlends"
-              :fields="tableFieldsBlends"
-              :current-page="tableBlends.currentPage"
-              :per-page="tableBlends.perPage"
-              :sort-by.sync="tableBlends.sortBy"
-              :sort-desc.sync="tableBlends.sortDesc"
-              :sort-direction="tableBlends.sortDirection"
-              :filter="tableBlends.filters.search"
-              ref="tableBlends"
-    >
-
-    </b-table>
-
     </div>
     <div v-for="(comment, comment_index) in tab_info.comments" :key="comment_index" class="comments-input">
       <label>{{comment.label}}</label>
@@ -154,382 +288,272 @@
 <script>
 
 import labels from '@/assets/labels'
-import inputFields from '@/assets/inputFields'
-import fieldGenerator from "./fieldGenerator"
-import CloneFieldExports from './exports/CloneFieldExports.vue' 
-import {Aside as AppAside} from '@coreui/vue'
+import fieldGenerator from './fieldGenerator'
+import CloneFieldExports from './exports/CloneFieldExports.vue'
+import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from './exports/DefaultAside'
 import Multiselect from '@/mixins/modifiedMultiselect'
 
 const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
 export default {
-  props: {
-    tabName: String,
-    tabId: Number,
-    tabIndex: Number,
-  },
+	props: {
+		tabName: String,
+		tabId: Number,
+		tabIndex: Number
+	},
 
-  components: {
-    fieldGenerator: fieldGenerator, 
-    AppAside, DefaultAside, Multiselect, 
-    clonefield: CloneFieldExports 
-  },
+	created() {
+		this.tab_info = this.$store.state.form.tabs[this.tabName]
+		this.tab_data = this.$store.state.initialData
+		this.labels = labels[this.tab_info.name]
+	},
 
-  created(){
-    this.labels = labels[this.tab_info.name]
-  },
+	components: {
+		fieldGenerator,
+		AppAside,
+		DefaultAside,
+		Multiselect,
+		clonefield: CloneFieldExports
+	},
 
-  data () {
-    return {
-      // tab_info: null,
-      // tab_data: null,
-      table: {
-          currentPage: 1,
-          perPage: 10,
-          totalRows: 5,
-          pageOptions: [ 5, 25, 100 ],
-          sortBy: null,
-          sortDesc: false,
-          sortDirection: 'asc',
-          filters: {
-            search: null,
-            period_start: null,
-            period_end: null,
-            obligation: null,
-            party: null,
-            isCurrent: null,
-          },
-          modalInfo: { title: '', content: '' }
-      },
+	data() {
+		return {
+			tab_info: null,
+			tab_data: null,
+			modal_data: null,
+			current_field: null,
+			modal_comments: null,
+			labels: null,
+			hovered: null,
+			sidebarTabIndex: 0
+		}
+	},
 
-      tableBlends: {
-          currentPage: 1,
-          perPage: 10,
-          totalRows: 5,
-          pageOptions: [ 5, 25, 100 ],
-          sortBy: null,
-          sortDesc: false,
-          sortDirection: 'asc',
-          filters: {
-            search: null,
-            period_start: null,
-            period_end: null,
-            obligation: null,
-            party: null,
-            isCurrent: null,
-          },
-          modalInfo: { title: '', content: '' }
-      },
+	computed: {
+		fieldsDecisionQuantity() {
+			if (this.tab_info.hidden_fields_order) {
+				const fields = []
 
-      modal_data: null,
-      current_field: null,
-      modal_comments: null,
-      labels: null,
-      hovered: null,
-      sidebarTabIndex: 0,
+				for (const field of this.tab_info.hidden_fields_order) {
+					const current = field.split('_')
+					current.shift()
+					this.pushUnique(fields, current.join('_'))
+				}
 
-      typeOfDisplayObj: {
-        substance: 'substances',
-        blend: 'blends',
-        trade_party: 'countries',
-        source_party: 'countries',
-        destination_party: 'countries',
-      },
-    }
-  },
+				console.log('fields', fields)
+				return fields
+			}
+			return false
+		},
+		transitionState() {
+			return this.$store.getters.transitionState
+		}
+	},
 
-  computed: {
-    
-    getCountrySlot(){
-     return this.intersect(['source_party', 'trade_party', 'destination_party'], this.$store.state.form.tabs[this.tabName].fields_order)[0]
-    },
+	methods: {
 
+		updateFormField(value, fieldInfo) {
+			this.$store.commit('updateFormField', { value, fieldInfo })
+		},
 
-    getTabInputFields(){
-      return this.intersect(inputFields, this.tab_info.fields_order)
-    },
+		openValidation() {
+			const body = document.querySelector('body')
+			this.sidebarTabIndex = 2
+			body.classList.add('aside-menu-lg-show')
+		},
 
-    tableItems(){
-    let tableFields = []
-      this.tab_info.form_fields.forEach( (element, index) => {
-          let tableRow = {}
-          Object.keys(element).forEach(key =>{
-            if(element.substance.selected) {
-              tableRow[key] = this.typeOfDisplayObj[key] 
-              ? 
-              this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected] 
-              : 
-              tableRow[key] = element[key].selected
-            }
-          })
-          if(Object.keys(tableRow).length){
-            tableRow.originalObj = element
-            tableRow.index = this.tab_info.form_fields.indexOf(element)
-            tableFields.push(tableRow)
-          }
-      });
-      this.table.totalRows = tableFields.length
-      return tableFields
-    },
+		intersect(a, b) {
+			const setA = new Set(a)
+			const setB = new Set(b)
+			const intersection = new Set([...setA].filter(x => setB.has(x)))
+			return Array.from(intersection)
+		},
+		doCommentsRow(row) {
+			const fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
+			const intersection = this.intersect(['remarks_os', 'remarks_party'], fieldsToShow)
+			if (intersection.length === 0 && (row.remarks_os.selected || row.remarks_party.selected)) {
+				return true
+			}
+			return false
+		},
 
-   tableItemsBlends(){
-    let tableFields = []
-      this.tab_info.form_fields.forEach( (element, index) => {
-          let tableRow = {}
-          Object.keys(element).forEach(key =>{
-            if(element.blend.selected) {
-              if(this.typeOfDisplayObj[key]) {
-                if(this.typeOfDisplayObj[key] === 'blends') {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected].name                  
-                } else {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected]
-                }
-              } else {
-                tableRow[key] = element[key].selected
-              }
-              
+		pushUnique(array, item) {
+			if (array.indexOf(item) === -1) {
+				array.push(item)
+			}
+		},
 
-            }
-          })
-          if(Object.keys(tableRow).length){
-            tableFields.push(tableRow)
-          }
-      });
-      this.table.totalRows = tableFields.length
-      return tableFields
-    },
-    // { key: 'substance', label: 'Substance', sortable: true, sortDirection: 'desc', 'class': 'text-center' },
+		remove_field(parent, field) {
+			this.$store.commit('removeField', { tab: this.tabName, index: parent.indexOf(field) })
+		},
 
-    tableFields(){
-      const self = this
-      let tableHeaders = []
-      const options = {sortable: true, sortDirection: 'desc', 'class': 'text-center'}
-      this.tab_info.section_subheaders.forEach( (element, index) =>{
-        tableHeaders.push({key: element.name, label: element.label, ...options})
-      })
-      return tableHeaders
-    },
+		getDecisions(field) {
+			const decisions = []
+			for (const item of field.fields) {
+				const filtered = item.fields
+					.filter(inner_field => inner_field.name.split('_')[0] === 'decision' && inner_field.selected)
+					.map(field2 => field2.selected)
+				decisions.push(filtered)
+			}
+			return decisions.filter(x => x[x.length - 1]).join(', ')
+		},
 
-    tableFieldsBlends(){
-      const self = this
-      let tableHeaders = []
-      const options = {sortable: true, sortDirection: 'desc', 'class': 'text-center'}
-      this.tab_info.section_subheaders.forEach( (element, index) =>{
-        if(element.name === 'substance'){
-          tableHeaders.push({key: 'blend', label: element.label, ...options})
-        } else {
-          tableHeaders.push({key: element.name, label: element.label, ...options})
-        }
-      })
-      return tableHeaders
-    },
-    tab_info(){ return this.$store.state.form.tabs[this.tabName]},
-    tab_data(){ return this.$store.state.initialData},
+		expandedStatus(status) {
+			if (status) { return 'down' }
+			return 'right'
+		},
 
-    fieldsDecisionQuantity(){
-      if(this.tab_info.hidden_fields_order){
-        let fields = []
+		getSpanType(field_type) {
+			if (field_type === 'multiple_fields') {
+				return 2
+			}
+		},
 
-        for(let field of this.tab_info.hidden_fields_order) {
-          let current = field.split('_')
-          current.shift()
-          this.pushUnique(fields, current.join('_'))
-        }
+		getSubheaderSpanType(field_name) {
+			if (field_name === 'substances' || field_name === 'quantity_exempted') { return 2 }
+		},
 
-        console.log('fields',fields)
-        return fields
-      } else {
-        return false
-      }
-    },
-    transitionState(){
-      return this.$store.getters.transitionState
-    },
-  },
+		// isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
 
-  methods: {
+		splitBlend(value, percent) {
+			percent *= 100
+			if (value && value !== 0 && percent) {
+				const count = (parseFloat(value) * parseFloat(percent)) / 100
+				if (count === 0) {
+					return ''
+				}
+				if (count < 0) {
+					return count.toPrecision(3)
+				} if (count > 999) {
+					return parseInt(count)
+				}
+				return count.toPrecision(3)
+			}
+			return ''
+		},
 
-     updateFormField(value, fieldInfo){
-      this.$store.commit('updateFormField', {value: value, fieldInfo: fieldInfo})
-    },
+		createModalData(field, index) {
+			this.modal_data = { field, index }
+			this.$refs.edit_modal.show()
+		},
 
+		setSortDirection(value) {
+			if (value === 1) {
+				return 'fa fa-caret-down fa-lg'
+			}
+			return 'fa fa-caret-up fa-lg'
+		},
 
-    openValidation(){
-      const body = document.querySelector('body')
-      this.sidebarTabIndex = 2   
-      body.classList.add('aside-menu-lg-show')
-    },
+		sortTable(value, section, subheader, type) {
+			const self = this
+			const sortType = subheader.sort
 
-    tableLoaded() {
-        if (!this.$refs.table) {
-            return;
-        }
+			const stringSortType = {
+				'-1': 'z',
+				1: 'a'
+			}
 
-        let headers = this.$refs.table.$el.querySelectorAll('thead tr');
-        if (headers.length > 1) {
-            return;//nothing to do, header row already created
-        }
+			for (const field of section) {
+				if (value === 'substances') {
+					field.index = field.substance.selected.text
+				} else {
+					field.index = ''
+					for (const inner_field of field.substance.inner_fields) {
+						if (['destination_party', 'source_party', 'trade_party'].includes(value)) {
+							if (inner_field.name === value) {
+								field.index = inner_field.selected || stringSortType[sortType]
+							}
+						} else if (inner_field.name === value) {
+							field.index = inner_field.selected
+						}
+					}
+				}
+			}
 
-        if(!this.$refs.tableHeader) {
-          return
-        }
-        let topHeader = this.$refs.tableHeader.querySelector('tr')
+			const sortObj = JSON.parse(JSON.stringify(section))
 
+			sortObj.sort((a, b) => {
+				if (type === 'number') {
+					return (norm(a.index, sortType) - norm(b.index, sortType)) * sortType
+				}
+				const x = self.removeSpecialChars(a.index).toUpperCase()
+				const y = self.removeSpecialChars(b.index).toUpperCase()
+				console.log(x, y)
+				if (sortType === 1) {
+					if (x > y) { return 1 }
+					return -1
+				}
+				if (x < y) { return 1 }
+				return -1
+			})
 
-        headers[0].parentNode.insertBefore(topHeader, headers[0]);
-    },
+			subheader.sort = -subheader.sort
+			this.$set(this.tabName, 'form_fields', sortObj)
+		},
 
-    intersect(a, b) {
-      var setA = new Set(a);
-      var setB = new Set(b);
-      var intersection = new Set([...setA].filter(x => setB.has(x)));
-      return Array.from(intersection);
-    },
+		removeSpecialChars(str) {
+			return str.replace(/[^a-zA-Z0-9]+/g, '')
+		},
 
-    doCommentsRow(row) {
-      let fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
-      let intersection = this.intersect(['remarks_os','remarks_party'], fieldsToShow)
-      if(intersection.length === 0 && (row.remarks_os.selected || row.remarks_party.selected)) {
-        return true
-      } else {
-        return false
-      }
-    },
+		countDecisions(field) {
+			let count = 0
+			for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
+						count += parseFloat(subItem.selected)
+					}
+				}
+			}
+			if (count === 0) {
+				field.total = ''
+			} else if (count < 0) {
+				field.total = count.toPrecision(3)
+			} else if (count > 999) {
+				field.total = parseInt(count)
+			} else {
+				field.total = count.toPrecision(3)
+			}
+		},
 
-    pushUnique(array, item) {
-      if (array.indexOf(item) === -1) {
-        array.push(item);
-      }
-    },
- 
-    remove_field(parent, field) {
-      this.$store.commit('removeField', {tab: this.tabName, index: parent.indexOf(field)})
-    },
+		expandQuantity(field) {
+			let toShow = ''
+			for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
+						toShow += `${item.label}: ${subItem.selected}\n`
+					}
+				}
+			}
+			return toShow
+		},
 
+		expandDecisions(field) {
+			let toShow = ''
+			for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'decision' && subItem.selected) {
+						toShow += `${item.label}: ${subItem.selected}\n`
+					}
+				}
+			}
+			return toShow
+		}
 
-    getDecisions(field){
-      let decisions = []
-      for(let item of field.fields) {
-        let filtered = item.fields
-                        .filter(inner_field => inner_field.name.split('_')[0] === 'decision' && inner_field.selected)
-                        .map(field => field.selected) 
-        decisions.push(filtered)
-      }
-      return decisions.filter( x => x[x.length - 1]).join(', ')
-    },
+	},
 
-    expandedStatus(status) {
-      if(status) 
-        return 'down'
-      else 
-        return 'right'
-    },
-
-    getSpanType(field_type) {
-      if(field_type === 'multiple_fields'){
-        return 2
-      }
-    }, 
-
-    getSubheaderSpanType(field_name){
-      if(field_name === 'substances' || field_name ==='quantity_exempted')
-        return 2
-    },
-
-    // isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
-
-    splitBlend(value, percent) {
-      percent = percent * 100
-      if(value && value != 0 && percent) {
-        let count = (parseFloat(value) * parseFloat(percent))/100
-        if(count === 0) {
-          return ''
-        }
-        else if(count < 0) {
-          return count.toPrecision(3)
-        } else if(count > 999) {
-          return parseInt(count)
-        } else {
-          return count.toPrecision(3)
-        }
-      } else {
-        return ''
-      }
-    },
-
-    createModalData(field,index) {
-      this.modal_data = {field:field, index:index}
-      this.$refs.edit_modal.show()
-    },
-
-    setSortDirection(value) {
-      if(value === 1) {
-        return 'fa fa-caret-down fa-lg'
-      } else {
-        return 'fa fa-caret-up fa-lg'
-      }
-    },
-
-    countDecisions(field) {
-      let count = 0;
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
-            count += parseFloat(subItem.selected)
-          }
-        }
-      }
-      if(count === 0) {
-        field.total = ''
-      }
-      else if(count < 0) {
-        field.total = count.toPrecision(3)
-      } else if(count > 999) {
-        field.total = parseInt(count)
-      } else {
-        field.total = count.toPrecision(3)
-      }
-    },
-
-    expandQuantity(field){
-      let toShow = '';
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
-            toShow += item.label + ': ' + subItem.selected + '\n' 
-          }
-        }
-      }
-      return toShow
-    },
-
-    expandDecisions(field){
-      let toShow = '';
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'decision' && subItem.selected) {
-            toShow += item.label + ': ' + subItem.selected + '\n' 
-          }
-        }
-      }
-      return toShow
-    },
-
-
-  },
-
-  watch: {
-     'tab_info.form_fields': {
-         handler(before,after){
-          if(parseInt(this.tabId) === this.tabIndex)
-            if(this.tab_info.status != 'edited'){
-              this.$store.commit('setTabStatus',{tab: this.tabName, value: 'edited'})
-            }
-         },
-         deep: true
-      }
-    }
+	watch: {
+		'tab_info.form_fields': {
+			handler() {
+				if (parseInt(this.tabId) === this.tabIndex) {
+					if (this.tab_info.status !== 'edited') {
+						this.$store.commit('setTabStatus', { tab: this.tabName, value: 'edited' })
+					}
+				}
+			},
+			deep: true
+		}
+	}
 }
 </script>
 
@@ -616,8 +640,5 @@ td[rowspan="2"] {
   font-weight: bold;
   color: black!important;
 }
-.header-only {
-  margin-bottom: 0;
-  border-bottom: none;
-}
+
 </style>
