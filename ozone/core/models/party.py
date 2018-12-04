@@ -253,7 +253,9 @@ class PartyRatification(models.Model):
         blank=True
     )
 
-    date = models.DateField()
+    ratification_date = models.DateField()
+
+    entry_into_force_date = models.DateField()
 
 
 class Language(models.Model):
