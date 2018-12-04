@@ -46,8 +46,8 @@ class IsSecretariatOrSameParty(BasePermission):
         if request.user.is_secretariat:
             return True
 
-        # It's a Party write user and a write request - we return True and
-        # let has_object_permission or the view's create() handle this
+        # It's a Party write user and a write request - calling has_same_party
+        # to make sure user is not trying to create an obj for different party
         return self.has_same_party(request, view)
 
     def has_object_permission(self, request, view, obj):
