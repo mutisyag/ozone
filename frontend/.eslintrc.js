@@ -32,6 +32,7 @@ module.exports = {
     'no-restricted-globals': 'off',
     'no-nested-ternary': 'off',
     'guard-for-in': 'off',
+    'dot-notation': 'off',
     'vue/no-use-v-if-with-v-for': 'off',
     'vue/no-side-effects-in-computed-properties': 'off',
   },

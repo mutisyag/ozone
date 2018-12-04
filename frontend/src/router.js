@@ -10,6 +10,10 @@ const Page500 = () => import(/* webpackChunkName: "500" */ '@/views/pages/Page50
 const Login = () => import(/* webpackChunkName: "login" */ '@/views/pages/Login')
 const Register = () => import(/* webpackChunkName: "register" */ '@/views/pages/Register')
 
+const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
+const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
+const LookupTablesParties = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Parties')
+
 Vue.use(Router)
 
 const routes = [
@@ -90,6 +94,31 @@ const routes = [
 				path: 'register',
 				name: 'Register',
 				component: Register
+			}
+		]
+	},
+	{
+		path: '/lookup-tables',
+		redirect: '/pages/404',
+		name: 'Lookup tables',
+		component: {
+			render(c) { return c('router-view') }
+		},
+		children: [
+			{
+				path: 'controlled-substances',
+				name: 'Controlled Substances',
+				component: LookupTablesControlledSubstances
+			},
+			{
+				path: 'blends',
+				name: 'Blends',
+				component: LookupTablesBlends
+			},
+			{
+				path: 'parties',
+				name: 'Parties',
+				component: LookupTablesParties
 			}
 		]
 	}

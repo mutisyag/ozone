@@ -312,6 +312,7 @@ const store = new Vuex.Store({
 			const blendsDisplay = {}
 			getCustomBlends().then((response) => {
 				response.data.forEach(blend => {
+					blend.components.sort((component1, component2) => component2.percentage - component1.percentage)
 					blendsDisplay[blend.id] = { name: blend.blend_id, components: blend.components }
 				})
 				context.commit('updateBlends', response.data)

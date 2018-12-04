@@ -7,7 +7,16 @@ export default {
 
 		{
 			name: 'Lookup tables',
-			url: '/dashboard'
+			children: [{
+				name: 'Controlled substances',
+				url: '/lookup-tables/controlled-substances'
+			}, {
+				name: 'Blends',
+				url: '/lookup-tables/blends'
+			}, {
+				name: 'Parties',
+				url: '/lookup-tables/parties'
+			}]
 		}
 		// {
 		//   title: true,

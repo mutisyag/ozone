@@ -108,7 +108,7 @@ export default {
 		},
 
 		prePrefill() {
-			const { form } = this.$store.state.form
+			const { form } = this.$store.state
 
 			const prefill_data = this.$store.state.current_submission
 			Object.keys(form.tabs).forEach((tab) => {
