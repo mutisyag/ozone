@@ -12,7 +12,7 @@ from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
-from ozone.core.exceptions import (
+from ..exceptions import (
     CustomValidationError,
     StateDoesNotExist,
     TransitionDoesNotExist,

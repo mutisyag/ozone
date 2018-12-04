@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from ozone.core.exceptions import CustomValidationError
+from ..exceptions import CustomValidationError
 
 __all__ = [
     'ReportingPeriod'

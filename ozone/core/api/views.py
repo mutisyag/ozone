@@ -12,8 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 
-from ozone.core.exceptions import InvalidRequest, MethodNotAllowed
-from ozone.core.serializers import AuthTokenByValueSerializer
+from ..exceptions import InvalidRequest, MethodNotAllowed
 
 from ..models import (
     Region,
@@ -34,6 +33,7 @@ from ..models import (
 )
 from ..permissions import IsSecretariatOrSameParty
 from ..serializers import (
+    AuthTokenByValueSerializer,
     RegionSerializer,
     SubregionSerializer,
     PartySerializer,

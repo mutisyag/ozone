@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from .meeting import ExemptionTypes, Treaty
 from .party import Party
-from ozone.core.exceptions import CustomValidationError
+from ..exceptions import CustomValidationError
 
 __all__ = [
     'Annex',

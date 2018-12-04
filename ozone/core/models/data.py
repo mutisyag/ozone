@@ -11,7 +11,7 @@ from .party import Party, PartyRatification
 from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
-from ozone.core.exceptions import CustomValidationError
+from ..exceptions import CustomValidationError
 
 __all__ = [
     'Article7Flags',
