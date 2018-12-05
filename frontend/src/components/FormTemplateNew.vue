@@ -34,17 +34,120 @@
               :sort-desc.sync="table.sortDesc"
               :sort-direction="table.sortDirection"
               :filter="table.filters.search"
-              ref="table"
-    >
+              ref="table">
 
-    <template slot="substance" slot-scope="cell">
+          <template slot="substance" slot-scope="cell">
+            <div class="table-btn-group">
+                <b-btn variant="info" @click="createModalData(cell.item.originalObj, cell.item.index)">
+                  Edit
+                </b-btn>
+                <b-btn variant="outline-danger" @click="remove_field(cell.item.index, cell.item)" class="table-btn">Delete</b-btn>
+            </div>
+            {{cell.item.substance}}
+          </template>
+
+          <template :slot="getCountrySlot" slot-scope="cell">
+                <clonefield 
+                :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+                v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
+                v-if="!cell.item[getCountrySlot]"
+                :tabName="tabName" 
+                :current_field="cell.item.originalObj">
+                </clonefield>
+                <div v-else>
+                  {{cell.item[getCountrySlot]}}
+                </div>
+            </template>
+
+          <template  
+            v-for="inputField in getTabInputFields" 
+            :slot="inputField" 
+            slot-scope="cell">
+                <fieldGenerator 
+                :key="`${cell.item.index}_${inputField}_${tabName}`"
+                :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}" 
+                :disabled="transitionState"  
+                :field="cell.item.originalObj[inputField]">
+                </fieldGenerator>
+          </template>
+
+          <template  
+            slot="validation" 
+            slot-scope="cell">
+              <span class="validation-wrapper">
+                <i @click="openValidation" v-if="cell.item.validation.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
+                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
+              </span>
+            </template>
+
+            <template 
+            v-for="tooltipField in getTabDecisionQuantityFields"
+            :slot="tooltipField"
+            slot-scope="cell"
+            >
+                  <span 
+                    v-b-tooltip.hover = "cell.item.originalObj[tooltipField].tooltip ? true : false" 
+                    :title="cell.item.originalObj[tooltipField].tooltip" 
+                    :key="tooltipField">
+                      {{cell.item[tooltipField]}}
+
+                    <div 
+                    style="margin-left: -4rem; margin-top: 2rem" 
+                    class="special-field" 
+                    v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted'">
+                      <hr>
+                      Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+                      <hr>
+                      <span>
+                        <fieldGenerator 
+                          :key="tooltipField"
+                          :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}" 
+                          :disabled="transitionState"  
+                          :field="cell.item.originalObj[tooltipField]">
+                        </fieldGenerator>
+                      </span>
+                    </div>
+                    </span>
+
+            </template>
+
+
+    </b-table>
+
+
+
+
+    <b-table show-empty
+              outlined
+              bordered
+              hover
+              head-variant="light"
+              class="submission-table"
+              @input="tableLoadedBlends"
+              stacked="md"
+              :items="tableItemsBlends"
+              :fields="tableFieldsBlends"
+              :current-page="tableBlends.currentPage"
+              :per-page="tableBlends.perPage"
+              :sort-by.sync="tableBlends.sortBy"
+              :sort-desc.sync="tableBlends.sortDesc"
+              :sort-direction="tableBlends.sortDirection"
+              :filter="tableBlends.filters.search"
+              ref="tableBlends">
+
+
+
+    <template slot="blend" slot-scope="cell">
       <div class="table-btn-group">
           <b-btn variant="info" @click="createModalData(cell.item.originalObj, cell.item.index)">
             Edit
           </b-btn>
           <b-btn variant="outline-danger" @click="remove_field(cell.item.index, cell.item)" class="table-btn">Delete</b-btn>
       </div>
-      {{cell.item.substance}}
+      <span style="cursor:pointer;" v-b-tooltip.hover = "'Click to expand/collapse blend'" @click.stop="cell.toggleDetails">
+      <i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
+      {{cell.item.blend}}
+      </span>
     </template>
 
      <template :slot="getCountrySlot" slot-scope="cell">
@@ -91,49 +194,39 @@
               :title="cell.item.originalObj[tooltipField].tooltip" 
               :key="tooltipField">
                 {{cell.item[tooltipField]}}
-
-              <div 
-              style="margin-left: -4rem; margin-top: 2rem" 
-              class="special-field" 
-              v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted'">
-                <hr>
-                Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
-                <hr>
-                <span>
-                   <fieldGenerator 
-                    :key="tooltipField"
-                    :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}" 
-                    :disabled="transitionState"  
-                    :field="cell.item.originalObj[tooltipField]">
-                   </fieldGenerator>
-                </span>
-              </div>
               </span>
 
       </template>
 
+      <template slot="row-details" slot-scope="row">
+        <thead>
+        <tr>
+              <th class="small" v-for="(header, header_index) in tab_info.blend_substance_headers" :colspan="header.colspan" :key="header_index">
+                {{labels[header]}}
+              </th>
+          </tr>
+        </thead>
+        <tbody>
 
-    </b-table>
-
-
-
-
-    <b-table show-empty
-              outlined
-              bordered
-              hover
-              head-variant="light"
-              stacked="md"
-              :items="tableItemsBlends"
-              :fields="tableFieldsBlends"
-              :current-page="tableBlends.currentPage"
-              :per-page="tableBlends.perPage"
-              :sort-by.sync="tableBlends.sortBy"
-              :sort-desc.sync="tableBlends.sortDesc"
-              :sort-direction="tableBlends.sortDirection"
-              :filter="tableBlends.filters.search"
-              ref="tableBlends"
-    >
+         <tr 
+         class="small" 
+         v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
+         :key="substance_index">
+            <td>
+              {{substance.component_name}}  
+            </td>
+            <td>
+              <b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
+            </td>
+             <td
+             v-for="(order, order_index) in tab_info.blend_substance_headers"
+             :key="order_index"
+             v-if="row.item[order]">
+                {{splitBlend(row.item[order], substance.percentage)}}
+            </td>
+          </tr>
+        </tbody>
+      </template>
 
     </b-table>
 
@@ -264,7 +357,7 @@ export default {
       tableBlends: {
           currentPage: 1,
           perPage: 10,
-          totalRows: 5,
+          totalRows: 200,
           pageOptions: [ 5, 25, 100 ],
           sortBy: null,
           sortDesc: false,
@@ -339,26 +432,37 @@ export default {
     let tableFields = []
       this.tab_info.form_fields.forEach( (element, index) => {
           let tableRow = {}
+          // let tableRowBlendSubstance = {}
+
           Object.keys(element).forEach(key =>{
             if(element.blend.selected) {
               if(this.typeOfDisplayObj[key]) {
                 if(this.typeOfDisplayObj[key] === 'blends') {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected].name                  
+                  tableRow[key] = this.tab_data.display[this.typeOfDisplayObj[key]][element[key].selected].name 
                 } else {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected]
+                  tableRow[key] = this.tab_data.display[this.typeOfDisplayObj[key]][element[key].selected]
                 }
               } else {
                 tableRow[key] = element[key].selected
               }
-              
-
+  
             }
           })
-          if(Object.keys(tableRow).length){
+       if(Object.keys(tableRow).length){
+            tableRow.originalObj = element
+            tableRow._showDetails = true
+            tableRow.index = this.tab_info.form_fields.indexOf(element)
             tableFields.push(tableRow)
+            // console.log(tableRowBlendSubstance) 
+            // this.tab_data.display['blends'][element.blend.selected].components.forEach( substance => {
+            //   tableRowBlendSubstance = JSON.parse(JSON.stringify(tableRow))
+            //   tableRowBlendSubstance.blend = substance.component_name
+            //   tableRowBlendSubstance.isBlendComponent = true
+            //   tableFields.push(tableRowBlendSubstance)
+            // })
           }
       });
-      this.table.totalRows = tableFields.length
+      this.tableBlends.totalRows = tableFields.length
       return tableFields
     },
     // { key: 'substance', label: 'Substance', sortable: true, sortDirection: 'desc', 'class': 'text-center' },
@@ -366,7 +470,7 @@ export default {
     tableFields(){
       const self = this
       let tableHeaders = []
-      const options = {sortable: true, sortDirection: 'desc', 'class': 'text-center'}
+      const options = {sortable: true, 'class': 'text-center'}
       this.tab_info.section_subheaders.forEach( (element, index) =>{
         tableHeaders.push({key: element.name, label: element.label, ...options})
       })
@@ -427,6 +531,7 @@ export default {
         if (!this.$refs.table) {
             return;
         }
+        
 
         let headers = this.$refs.table.$el.querySelectorAll('thead tr');
         if (headers.length > 1) {
@@ -439,6 +544,27 @@ export default {
         let topHeader = this.$refs.tableHeader.querySelector('tr')
 
 
+        headers[0].parentNode.insertBefore(topHeader.cloneNode(true), headers[0]);
+    },
+
+    tableLoadedBlends() {
+        if (!this.$refs.tableBlends) {
+            return;
+        }
+   
+
+        let headers = this.$refs.tableBlends.$el.querySelectorAll('thead tr');
+        if (headers.length > 1) {
+            return;//nothing to do, header row already created
+        }
+
+        if(!this.$refs.tableHeader) {
+          return
+        }
+        let topHeader = this.$refs.tableHeader.querySelector('tr')
+        
+        topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+        
         headers[0].parentNode.insertBefore(topHeader, headers[0]);
     },
 
@@ -605,7 +731,6 @@ export default {
   }
 
   tr.small td {
-    border: 1px solid #444!important;
     border-collapse: collapse;
     padding:5px 0;
   }
