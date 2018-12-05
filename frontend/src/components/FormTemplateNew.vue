@@ -37,11 +37,11 @@
     >
 
      <template :slot="getCountrySlot" slot-scope="cell">
-          <clonefield 
+          <clonefield
           :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
           v-on:removeThisField="remove_field(tab_info.form_fields, cell.item.originalObj)"
           v-if="!cell.item[getCountrySlot]"
-          :tabName="tabName" 
+          :tabName="tabName"
           :current_field="cell.item.originalObj">
           </clonefield>
           <div v-else>
@@ -49,20 +49,20 @@
           </div>
       </template>
 
-    <template  
-      v-for="inputField in getTabInputFields" 
-      :slot="inputField" 
+    <template
+      v-for="inputField in getTabInputFields"
+      :slot="inputField"
       slot-scope="cell">
-          <fieldGenerator 
+          <fieldGenerator
           :key="`${cell.item.index}_${inputField}_${tabName}`"
-          :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}" 
-          :disabled="transitionState"  
+          :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+          :disabled="transitionState"
           :field="cell.item.originalObj[inputField]">
           </fieldGenerator>
     </template>
 
-    <template  
-      slot="validation" 
+    <template
+      slot="validation"
       slot-scope="cell">
         <span class="validation-wrapper">
           <i @click="openValidation" v-if="cell.item.validation.length" style="color: red; cursor: pointer" class="fa fa-exclamation fa-lg"></i>
@@ -70,29 +70,29 @@
         </span>
       </template>
 
-      <template 
+      <template
       v-for="tooltipField in getTabDecisionQuantityFields"
       :slot="tooltipField"
       slot-scope="cell"
       >
-             <span 
-              v-b-tooltip.hover = "cell.item.originalObj[tooltipField].tooltip ? true : false" 
-              :title="cell.item.originalObj[tooltipField].tooltip" 
+             <span
+              v-b-tooltip.hover = "cell.item.originalObj[tooltipField].tooltip ? true : false"
+              :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField">
                 {{cell.item[tooltipField]}}
 
-              <div 
-              style="margin-left: -4rem; margin-top: 2rem" 
-              class="special-field" 
+              <div
+              style="margin-left: -4rem; margin-top: 2rem"
+              class="special-field"
               v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted'">
                 <hr>
                 Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
                 <hr>
                 <span>
-                   <fieldGenerator 
+                   <fieldGenerator
                     :key="tooltipField"
-                    :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}" 
-                    :disabled="transitionState"  
+                    :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}"
+                    :disabled="transitionState"
                     :field="cell.item.originalObj[tooltipField]">
                    </fieldGenerator>
                 </span>
@@ -101,11 +101,7 @@
 
       </template>
 
-
     </b-table>
-
-
-
 
     <b-table show-empty
               outlined
@@ -202,183 +198,182 @@
 
 import labels from '@/assets/labels'
 import inputFields from '@/assets/inputFields'
-import fieldGenerator from "./fieldGenerator"
-import CloneFieldExports from './exports/CloneFieldExports.vue' 
-import {Aside as AppAside} from '@coreui/vue'
+import fieldGenerator from './fieldGenerator'
+import CloneFieldExports from './exports/CloneFieldExports.vue'
+import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from './exports/DefaultAside'
 import Multiselect from '@/mixins/modifiedMultiselect'
 
 const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
 export default {
-  props: {
-    tabName: String,
-    tabId: Number,
-    tabIndex: Number,
-  },
+	props: {
+		tabName: String,
+		tabId: Number,
+		tabIndex: Number
+	},
 
-  components: {
-    fieldGenerator: fieldGenerator, 
-    AppAside, DefaultAside, Multiselect, 
-    clonefield: CloneFieldExports 
-  },
+	components: {
+		fieldGenerator,
+		AppAside,
+DefaultAside,
+Multiselect,
+		clonefield: CloneFieldExports
+	},
 
-  created(){
-    this.labels = labels[this.tab_info.name]
-  },
+	created() {
+		this.labels = labels[this.tab_info.name]
+	},
 
-  data () {
-    return {
-      // tab_info: null,
-      // tab_data: null,
-      table: {
-          currentPage: 1,
-          perPage: 200,
-          totalRows: 5,
-          pageOptions: [ 5, 25, 100 ],
-          sortBy: null,
-          sortDesc: false,
-          sortDirection: 'asc',
-          filters: {
-            search: null,
-            period_start: null,
-            period_end: null,
-            obligation: null,
-            party: null,
-            isCurrent: null,
-          },
-          modalInfo: { title: '', content: '' }
-      },
+	data() {
+		return {
+			// tab_info: null,
+			// tab_data: null,
+			table: {
+				currentPage: 1,
+				perPage: 200,
+				totalRows: 5,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				},
+				modalInfo: { title: '', content: '' }
+			},
 
-      tableBlends: {
-          currentPage: 1,
-          perPage: 10,
-          totalRows: 5,
-          pageOptions: [ 5, 25, 100 ],
-          sortBy: null,
-          sortDesc: false,
-          sortDirection: 'asc',
-          filters: {
-            search: null,
-            period_start: null,
-            period_end: null,
-            obligation: null,
-            party: null,
-            isCurrent: null,
-          },
-          modalInfo: { title: '', content: '' }
-      },
+			tableBlends: {
+				currentPage: 1,
+				perPage: 10,
+				totalRows: 5,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				},
+				modalInfo: { title: '', content: '' }
+			},
 
-      modal_data: null,
-      current_field: null,
-      modal_comments: null,
-      labels: null,
-      hovered: null,
-      sidebarTabIndex: 0,
+			modal_data: null,
+			current_field: null,
+			modal_comments: null,
+			labels: null,
+			hovered: null,
+			sidebarTabIndex: 0,
 
-      typeOfDisplayObj: {
-        substance: 'substances',
-        blend: 'blends',
-        trade_party: 'countries',
-        source_party: 'countries',
-        destination_party: 'countries',
-      },
-    }
-  },
+			typeOfDisplayObj: {
+				substance: 'substances',
+				blend: 'blends',
+				trade_party: 'countries',
+				source_party: 'countries',
+				destination_party: 'countries'
+			}
+		}
+	},
 
-  computed: {
-    
-    getCountrySlot(){
-     return this.intersect(['source_party', 'trade_party', 'destination_party'], this.tab_info.fields_order)[0]
-    },
+	computed: {
 
+		getCountrySlot() {
+			return this.intersect(['source_party', 'trade_party', 'destination_party'], this.tab_info.fields_order)[0]
+		},
 
-    getTabDecisionQuantityFields(){
-     return this.intersect(['decision_exempted','quantity_exempted'], this.tab_info.fields_order)
-    },
+		getTabDecisionQuantityFields() {
+			return this.intersect(['decision_exempted', 'quantity_exempted'], this.tab_info.fields_order)
+		},
 
-    getTabInputFields(){
-      return this.intersect(inputFields, this.tab_info.fields_order)
-    },
+		getTabInputFields() {
+			return this.intersect(inputFields, this.tab_info.fields_order)
+		},
 
-    tableItems(){
-    let tableFields = []
-      this.tab_info.form_fields.forEach( (element, index) => {
-          let tableRow = {}
-          Object.keys(element).forEach(key =>{
-            if(element.substance.selected) {
-              tableRow[key] = this.typeOfDisplayObj[key] 
-              ? 
-              this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected] 
-              : 
-              tableRow[key] = element[key].selected
-            }
-          })
-          if(Object.keys(tableRow).length){
-            tableRow.originalObj = element
-            tableRow.index = this.tab_info.form_fields.indexOf(element)
-            tableFields.push(tableRow)
-          }
-      });
+		tableItems() {
+			const tableFields = []
+			this.tab_info.form_fields.forEach((element, index) => {
+				const tableRow = {}
+				Object.keys(element).forEach(key => {
+					if (element.substance.selected) {
+						tableRow[key] = this.typeOfDisplayObj[key]
+							?
+							this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected]
+							:
+							tableRow[key] = element[key].selected
+					}
+				})
+				if (Object.keys(tableRow).length) {
+					tableRow.originalObj = element
+					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableFields.push(tableRow)
+				}
+			})
       this.table.totalRows = tableFields.length
-      return tableFields
-    },
+			return tableFields
+		},
 
-   tableItemsBlends(){
-    let tableFields = []
-      this.tab_info.form_fields.forEach( (element, index) => {
-          let tableRow = {}
-          Object.keys(element).forEach(key =>{
-            if(element.blend.selected) {
-              if(this.typeOfDisplayObj[key]) {
-                if(this.typeOfDisplayObj[key] === 'blends') {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected].name                  
-                } else {
-                  tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected]
-                }
-              } else {
-                tableRow[key] = element[key].selected
-              }
-              
-
-            }
-          })
-          if(Object.keys(tableRow).length){
-            tableFields.push(tableRow)
-          }
-      });
+		tableItemsBlends() {
+			const tableFields = []
+			this.tab_info.form_fields.forEach((element, index) => {
+				const tableRow = {}
+				Object.keys(element).forEach(key => {
+					if (element.blend.selected) {
+						if (this.typeOfDisplayObj[key]) {
+							if (this.typeOfDisplayObj[key] === 'blends') {
+								tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected].name
+							} else {
+								tableRow[key] = this.$store.state.initialData.display[this.typeOfDisplayObj[key]][element[key].selected]
+							}
+						} else {
+							tableRow[key] = element[key].selected
+						}
+					}
+				})
+				if (Object.keys(tableRow).length) {
+					tableFields.push(tableRow)
+				}
+			})
       this.table.totalRows = tableFields.length
-      return tableFields
-    },
-    // { key: 'substance', label: 'Substance', sortable: true, sortDirection: 'desc', 'class': 'text-center' },
+			return tableFields
+		},
+		// { key: 'substance', label: 'Substance', sortable: true, sortDirection: 'desc', 'class': 'text-center' },
 
-    tableFields(){
-      const self = this
-      let tableHeaders = []
-      const options = {sortable: true, sortDirection: 'desc', 'class': 'text-center'}
-      this.tab_info.section_subheaders.forEach( (element, index) =>{
-        tableHeaders.push({key: element.name, label: element.label, ...options})
-      })
-      return tableHeaders
-    },
+		tableFields() {
+			const self = this
+			const tableHeaders = []
+			const options = { sortable: true, sortDirection: 'desc', class: 'text-center' }
+			this.tab_info.section_subheaders.forEach((element, index) => {
+				tableHeaders.push({ key: element.name, label: element.label, ...options })
+			})
+			return tableHeaders
+		},
 
-    tableFieldsBlends(){
-      const self = this
-      let tableHeaders = []
-      const options = {sortable: true, sortDirection: 'desc', 'class': 'text-center'}
-      this.tab_info.section_subheaders.forEach( (element, index) =>{
-        if(element.name === 'substance'){
-          tableHeaders.push({key: 'blend', label: element.label, ...options})
-        } else {
-          tableHeaders.push({key: element.name, label: element.label, ...options})
-        }
-      })
-      return tableHeaders
-    },
-    tab_info(){ return this.$store.state.form.tabs[this.tabName]},
-    tab_data(){ return this.$store.state.initialData},
+		tableFieldsBlends() {
+			const self = this
+			const tableHeaders = []
+			const options = { sortable: true, sortDirection: 'desc', class: 'text-center' }
+			this.tab_info.section_subheaders.forEach((element, index) => {
+				if (element.name === 'substance') {
+					tableHeaders.push({ key: 'blend', label: element.label, ...options })
+				} else {
+					tableHeaders.push({ key: element.name, label: element.label, ...options })
+				}
+			})
+			return tableHeaders
+		},
+		tab_info() { return this.$store.state.form.tabs[this.tabName] },
+		tab_data() { return this.$store.state.initialData },
 
-    fieldsDecisionQuantity(){
+		fieldsDecisionQuantity(){
       if(this.tab_info.hidden_fields_order){
         let fields = []
 
@@ -390,114 +385,109 @@ export default {
 
         console.log('fields',fields)
         return fields
-      } else {
+      } 
         return false
-      }
+      
     },
-    transitionState(){
-      return this.$store.getters.transitionState
-    },
-  },
+		transitionState() {
+			return this.$store.getters.transitionState
+		}
+	},
 
-  methods: {
+	methods: {
 
-     updateFormField(value, fieldInfo){
-      this.$store.commit('updateFormField', {value: value, fieldInfo: fieldInfo})
-    },
+		updateFormField(value, fieldInfo) {
+			this.$store.commit('updateFormField', { value, fieldInfo })
+		},
 
+		openValidation() {
+			const body = document.querySelector('body')
+			this.sidebarTabIndex = 2
+			body.classList.add('aside-menu-lg-show')
+		},
 
-    openValidation(){
-      const body = document.querySelector('body')
-      this.sidebarTabIndex = 2   
-      body.classList.add('aside-menu-lg-show')
-    },
-
-    tableLoaded() {
-        if (!this.$refs.table) {
-            return;
+		tableLoaded() {
+			if (!this.$refs.table) {
+				return
         }
 
-        let headers = this.$refs.table.$el.querySelectorAll('thead tr');
+			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
         if (headers.length > 1) {
-            return;//nothing to do, header row already created
+				return//nothing to do, header row already created
         }
 
-        if(!this.$refs.tableHeader) {
-          return
-        }
-        let topHeader = this.$refs.tableHeader.querySelector('tr')
+			if (!this.$refs.tableHeader) {
+				return
+			}
+			const topHeader = this.$refs.tableHeader.querySelector('tr')
 
-
-        headers[0].parentNode.insertBefore(topHeader, headers[0]);
+			headers[0].parentNode.insertBefore(topHeader, headers[0])
     },
 
-    intersect(a, b) {
-      var setA = new Set(a);
-      var setB = new Set(b);
-      var intersection = new Set([...setA].filter(x => setB.has(x)));
-      return Array.from(intersection);
+		intersect(a, b) {
+			let setA = new Set(a)
+      var setB = new Set(b)
+      var intersection = new Set([...setA].filter(x => setB.has(x)))
+      return Array.from(intersection)
     },
 
-    doCommentsRow(row) {
+		doCommentsRow(row) {
       let fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
       let intersection = this.intersect(['remarks_os','remarks_party'], fieldsToShow)
       if(intersection.length === 0 && (row.remarks_os.selected || row.remarks_party.selected)) {
         return true
-      } else {
+      } 
         return false
+      
+    },
+
+		pushUnique(array, item) {
+			if (array.indexOf(item) === -1) {
+				array.push(item)
       }
-    },
+		},
 
-    pushUnique(array, item) {
-      if (array.indexOf(item) === -1) {
-        array.push(item);
-      }
-    },
- 
-    remove_field(parent, field) {
-      this.$store.commit('removeField', {tab: this.tabName, index: parent.indexOf(field)})
-    },
+		remove_field(parent, field) {
+			this.$store.commit('removeField', { tab: this.tabName, index: parent.indexOf(field) })
+		},
 
+		getDecisions(field) {
+			const decisions = []
+			for (const item of field.fields) {
+				const filtered = item.fields
+					.filter(inner_field => inner_field.name.split('_')[0] === 'decision' && inner_field.selected)
+					.map(field => field.selected)
+				decisions.push(filtered)
+			}
+			return decisions.filter(x => x[x.length - 1]).join(', ')
+		},
 
-    getDecisions(field){
-      let decisions = []
-      for(let item of field.fields) {
-        let filtered = item.fields
-                        .filter(inner_field => inner_field.name.split('_')[0] === 'decision' && inner_field.selected)
-                        .map(field => field.selected) 
-        decisions.push(filtered)
-      }
-      return decisions.filter( x => x[x.length - 1]).join(', ')
-    },
-
-    expandedStatus(status) {
+		expandedStatus(status) {
       if(status) 
         return 'down'
-      else 
-        return 'right'
+      return 'right'
     },
 
-    getSpanType(field_type) {
-      if(field_type === 'multiple_fields'){
-        return 2
-      }
-    }, 
+		getSpanType(field_type) {
+			if (field_type === 'multiple_fields') {
+				return 2
+			}
+		},
 
-    getSubheaderSpanType(field_name){
-      if(field_name === 'substances' || field_name ==='quantity_exempted')
-        return 2
-    },
+		getSubheaderSpanType(field_name) {
+			if (field_name === 'substances' || field_name === 'quantity_exempted') {return 2}
+		},
 
-    // isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
+		// isNumber(n) { return /^-?[\d.]+(?:e-?\d+)?$/.test(n); },
 
-    splitBlend(value, percent) {
+		splitBlend(value, percent) {
       percent = percent * 100
       if(value && value != 0 && percent) {
         let count = (parseFloat(value) * parseFloat(percent))/100
         if(count === 0) {
           return ''
         }
-        else if(count < 0) {
+        if(count < 0) {
           return count.toPrecision(3)
         } else if(count > 999) {
           return parseInt(count)
@@ -509,78 +499,75 @@ export default {
       }
     },
 
-    createModalData(field,index) {
-      this.modal_data = {field:field, index:index}
-      this.$refs.edit_modal.show()
-    },
+		createModalData(field, index) {
+			this.modal_data = { field, index }
+			this.$refs.edit_modal.show()
+		},
 
-    setSortDirection(value) {
+		setSortDirection(value) {
       if(value === 1) {
         return 'fa fa-caret-down fa-lg'
-      } else {
+      } 
         return 'fa fa-caret-up fa-lg'
-      }
+      
     },
 
-    countDecisions(field) {
-      let count = 0;
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
-            count += parseFloat(subItem.selected)
-          }
-        }
-      }
-      if(count === 0) {
-        field.total = ''
-      }
-      else if(count < 0) {
-        field.total = count.toPrecision(3)
-      } else if(count > 999) {
-        field.total = parseInt(count)
-      } else {
-        field.total = count.toPrecision(3)
-      }
-    },
+		countDecisions(field) {
+			let count = 0
+      for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
+						count += parseFloat(subItem.selected)
+					}
+				}
+			}
+			if (count === 0) {
+				field.total = ''
+			} else if (count < 0) {
+				field.total = count.toPrecision(3)
+			} else if (count > 999) {
+				field.total = parseInt(count)
+			} else {
+				field.total = count.toPrecision(3)
+			}
+		},
 
-    expandQuantity(field){
-      let toShow = '';
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
-            toShow += item.label + ': ' + subItem.selected + '\n' 
-          }
-        }
-      }
-      return toShow
-    },
+		expandQuantity(field) {
+			let toShow = ''
+      for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'quantity' && subItem.selected) {
+						toShow += `${item.label  }: ${  subItem.selected  }\n`
+					}
+				}
+			}
+			return toShow
+		},
 
-    expandDecisions(field){
-      let toShow = '';
-      for(let item of field.fields) {
-        for(let subItem of item.fields) {
-          if(subItem.name.split('_')[0] === 'decision' && subItem.selected) {
-            toShow += item.label + ': ' + subItem.selected + '\n' 
-          }
-        }
-      }
-      return toShow
-    },
+		expandDecisions(field) {
+			let toShow = ''
+      for (const item of field.fields) {
+				for (const subItem of item.fields) {
+					if (subItem.name.split('_')[0] === 'decision' && subItem.selected) {
+						toShow += `${item.label  }: ${  subItem.selected  }\n`
+					}
+				}
+			}
+			return toShow
+		}
 
+	},
 
-  },
-
-  watch: {
-     'tab_info.form_fields': {
-         handler(before,after){
-          if(parseInt(this.tabId) === this.tabIndex)
-            if(this.tab_info.status != 'edited'){
+	watch: {
+		'tab_info.form_fields': {
+			handler(before, after) {
+				if (parseInt(this.tabId) === this.tabIndex) {if(this.tab_info.status != 'edited'){
               this.$store.commit('setTabStatus',{tab: this.tabName, value: 'edited'})
-            }
-         },
-         deep: true
-      }
-    }
+            }}
+			},
+			deep: true
+		}
+	}
 }
 </script>
 

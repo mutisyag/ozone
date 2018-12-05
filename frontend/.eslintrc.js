@@ -32,10 +32,11 @@ module.exports = {
     'no-restricted-globals': 'off',
     'no-nested-ternary': 'off',
     'guard-for-in': 'off',
-    'dot-notation': 'off',
+	'dot-notation': 'off',
+	'no-underscore-dangle': 'off',
+	'object-curly-newline': 'off',
     'vue/no-use-v-if-with-v-for': 'off',
-    'vue/no-side-effects-in-computed-properties': 'off',
-    'object-curly-newline': 'off'
+    'vue/no-side-effects-in-computed-properties': 'off'
   },
   parserOptions: {
     parser: 'babel-eslint',

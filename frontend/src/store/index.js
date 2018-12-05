@@ -52,7 +52,9 @@ const store = new Vuex.Store({
 		newTabs: [],
 		form: null,
 		initialData: {
+			parties: null,
 			countryOptions: null,
+			groupSubstances: null,
 			substances: null,
 			blends: null,
 			display: {
@@ -279,6 +281,12 @@ const store = new Vuex.Store({
 			})
 		},
 
+		getParties(context) {
+			getParties().then(response => {
+				context.commit('updateParties', response.data)
+			})
+		},
+
 		getCountries(context) {
 			const countryDisplay = {}
 			getParties().then(response => {
@@ -303,6 +311,7 @@ const store = new Vuex.Store({
 					})
 				})
 
+				context.commit('updateGroupSubstances', response.data)
 				context.commit('updateSubstances', tempSubstances)
 				context.commit('updateSubstancesDisplay', substancesDisplay)
 			})
@@ -513,12 +522,20 @@ const store = new Vuex.Store({
 			state.current_submission = data
 		},
 
+		updateParties(state, data) {
+			state.initialData.parties = data
+		},
+
 		updateCountries(state, data) {
 			state.initialData.countryOptions = data
 		},
 
 		updateCountriesDisplay(state, data) {
 			state.initialData.display.countries = data
+		},
+
+		updateGroupSubstances(state, data) {
+			state.initialData.groupSubstances = data
 		},
 
 		updateSubstances(state, data) {
@@ -535,6 +552,10 @@ const store = new Vuex.Store({
 
 		updateBlendsDisplay(state, data) {
 			state.initialData.display.blends = data
+		},
+
+		setBlendComponentRowVariant(state, data) {
+			data.component._rowVariant = data.value
 		},
 
 		// questionaire

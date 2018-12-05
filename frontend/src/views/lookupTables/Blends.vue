@@ -16,6 +16,13 @@
 				<b-col>
                     <b-input-group>
 						<multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" trackBy="value" placeholder="Components" v-model="table.filters.selectedComponentsNames" :options="searchComponentOptions"></multiselect>
+						<b-input-group-append>
+							<b-btn variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
+								Sort
+								<i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
+								<i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
+							</b-btn>
+						</b-input-group-append>
 					</b-input-group>
                 </b-col>
 				<b-col>
@@ -46,26 +53,23 @@
 				</template>
                 <template slot="components" slot-scope="row">
 					<b-table show-empty
-                       outlined
-                       bordered
-                       hover
-                       head-variant="light"
-                       stacked="md"
-                       :items="row.item.components"
-                       :fields="tableComponents.fields"
-                       :current-page="tableComponents.currentPage"
-                       :per-page="tableComponents.perPage"
-                       :sort-by.sync="tableComponents.sortBy"
-                       :sort-desc.sync="tableComponents.sortDesc"
-                       :sort-direction="tableComponents.sortDirection"
-                       ref="table">
-						<template slot="index" slot-scope="data">
-							{{data.index + 1}}.
-						</template>
-						<template slot="component_name" slot-scope="data">
-							<div :class="{'border border-primary': table.filters.selectedComponentsNames.includes(data.item.component_name)}">{{data.item.component_name}}</div>
-						</template>
-					</b-table>
+						outlined
+						bordered
+						hover
+						head-variant="light"
+						stacked="md"
+						:items="row.item.components"
+						:fields="tableComponents.fields"
+						:current-page="tableComponents.currentPage"
+						:per-page="tableComponents.perPage"
+						ref="table">
+							<template slot="index" slot-scope="data">
+								{{data.index + 1}}.
+							</template>
+							<template slot="component_name" slot-scope="data">
+								<div>{{data.item.component_name}}</div>
+							</template>
+						</b-table>
                 </template>
               </b-table>
 
@@ -82,6 +86,15 @@
 
 <script>
 import Multiselect from '@/mixins/modifiedMultiselect'
+
+const blendsCompareByComponentPercent = (blend1, blend2, componentName, isDescending) => {
+	const { percentage: componentPercentageInBlend1 } = blend1.components.find(component => component.component_name === componentName)
+	const { percentage: componentPercentageInBlend2 } = blend2.components.find(component => component.component_name === componentName)
+	if (isDescending) {
+		return componentPercentageInBlend2 - componentPercentageInBlend1
+	}
+	return componentPercentageInBlend1 - componentPercentageInBlend2
+}
 
 export default {
 	components: {
@@ -101,7 +114,7 @@ export default {
 				}
 				],
 				currentPage: 1,
-				perPage: 50,
+				perPage: Infinity,
 				totalRows: 50,
 				pageOptions: [
 					{ value: 10, text: '10' },
@@ -111,7 +124,8 @@ export default {
 				],
 				filters: {
 					search: null,
-					selectedComponentsNames: []
+					selectedComponentsNames: [],
+					isComponentsSortDirectionDesc: null
 				}
 			},
 			tableComponents: {
@@ -150,18 +164,32 @@ export default {
 			return Object.values(componentsAll)
 		},
 		visibleBlends() {
-			const visibleBlendsComputed = []
+			let visibleBlendsComputed = []
 			const { blends } = this.$store.state.initialData
+			const { selectedComponentsNames } = this.table.filters
 			if (!blends) {
 				return visibleBlendsComputed
 			}
 			blends.forEach(blend => {
-				const blendIsVisible = !this.table.filters.selectedComponentsNames.length
-						|| this.table.filters.selectedComponentsNames.every(selectedComponentName => blend.components.map(component => component.component_name).includes(selectedComponentName))
+				const blendIsVisible = !selectedComponentsNames.length
+						|| selectedComponentsNames.every(selectedComponentName => blend.components.map(component => {
+							if (selectedComponentsNames.includes(component.component_name)) {
+								this.$store.commit('setBlendComponentRowVariant', { component, value: 'success' })
+							} else if (component._rowVariant) {
+								this.$store.commit('setBlendComponentRowVariant', { component })
+							}
+							return component.component_name
+						}).includes(selectedComponentName))
+
 				if (blendIsVisible) {
 					visibleBlendsComputed.push(blend)
 				}
 			})
+
+			if (this.table.filters.isComponentsSortDirectionDesc !== null && this.table.filters.selectedComponentsNames.length) {
+				visibleBlendsComputed = visibleBlendsComputed.sort((blend1, blend2) => blendsCompareByComponentPercent(blend1, blend2, this.table.filters.selectedComponentsNames[0], this.table.filters.isComponentsSortDirectionDesc))
+			}
+
 			return visibleBlendsComputed
 		}
 	},
@@ -169,6 +197,12 @@ export default {
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
+			if (!this.table.filters.selectedComponentsNames.length) {
+				this.table.filters.isComponentsSortDirectionDesc = null
+			}
+		},
+		toggleIsComponentsSortDirectionDesc() {
+			this.table.filters.isComponentsSortDirectionDesc = !this.table.filters.isComponentsSortDirectionDesc
 		}
 	},
 	created() {
