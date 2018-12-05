@@ -7,14 +7,13 @@
 <script>
 export default {
 
+	props: { data: null },
 
-  props: {data: null},
+	data() {
+		return {
 
-  data () {
-    return {
-
-    }
-  }
+		}
+	}
 }
 </script>
 

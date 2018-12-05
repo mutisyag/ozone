@@ -1,2 +1,2 @@
-let newTabs = []
+const newTabs = []
 export default newTabs

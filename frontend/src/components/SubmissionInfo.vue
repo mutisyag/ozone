@@ -18,7 +18,7 @@
        {{info.intro}}
     </small>
     <!-- <h2>{{info.title}}</h2> -->
-            
+
     <form class="form-sections">
       <b-card>
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
@@ -30,43 +30,41 @@
               <fieldGenerator :fieldInfo="{index:info.form_fields.indexOf(field), tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field"></fieldGenerator>
             </b-col>
           </b-row>
-       
+
         </div>
       </b-card>
-    </form> 
+    </form>
 
     </div>
 </template>
 
 <script>
 
-import fieldGenerator from "./fieldGenerator";
+import fieldGenerator from './fieldGenerator'
 
 export default {
 
-  name: 'Tab1',
+	name: 'Tab1',
 
-  props: {
-    info: Object,
-    tabs: Object,
-  },
+	props: {
+		info: Object,
+		tabs: Object
+	},
 
+	created() {
+		// this.tabs.push('asd')
+	},
 
-  created(){
-    // this.tabs.push('asd')
-  },
+	components: { fieldGenerator },
 
-  components: {fieldGenerator},
+	data() {
+		return {
 
-  data () {
-    return {
+		}
+	},
 
-    }
-  },
-
-  methods: {
-  },
-
+	methods: {
+	}
 
 }
 </script>

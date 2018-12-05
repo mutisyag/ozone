@@ -16,130 +16,129 @@
 
 import Multiselect from '@/mixins/modifiedMultiselect'
 
-
 export default {
 
-  props: {
-    tabName: String,
-  },
+	props: {
+		tabName: String
+	},
 
-  components: {
-    Multiselect 
-  },
+	components: {
+		Multiselect
+	},
 
-  computed: {
-    substances(){
-      return this.$store.state.initialData.substances
-    },
-  },  
+	computed: {
+		substances() {
+			return this.$store.state.initialData.substances
+		}
+	},
 
-  mounted(){
-    this.prepareGroups()
-  },
+	mounted() {
+		this.prepareGroups()
+	},
 
-  data() {
-    return {
+	data() {
+		return {
 
-      substancesOptions: [],
+			substancesOptions: [],
 
-      selected_substance: {
-        selected: null,
-        group: null,
-        options: [],
-      },
+			selected_substance: {
+				selected: null,
+				group: null,
+				options: []
+			},
 
-      selected_groups: {
-        selected: [],
-        options: [],
-      },
+			selected_groups: {
+				selected: [],
+				options: []
+			},
 
-      group_field: {
-        label: '',
-        name: '',
-        substance: null,
-      },
-    }
-  },
+			group_field: {
+				label: '',
+				name: '',
+				substance: null
+			}
+		}
+	},
 
-  created(){
-  },
+	created() {
+	},
 
-  methods: {
+	methods: {
 
-    prepareSubstances(){
-      this.selected_substance.options = []
-        for(let substance of this.substances){
-          if(this.selected_groups.selected.includes(substance.group.group_id)) {
-            this.selected_substance.options.push({text: substance.text, value: substance.value})
-          }
-        }
-    },
+		prepareSubstances() {
+			this.selected_substance.options = []
+			this.substances.forEach(substance => {
+				if (this.selected_groups.selected.includes(substance.group.group_id)) {
+					this.selected_substance.options.push({ text: substance.text, value: substance.value })
+				}
+			})
+		},
 
-    pushUnique(array, item) {
-      if (array.indexOf(item) === -1) {
-        array.push(item);
-      }
-    },
+		pushUnique(array, item) {
+			if (array.indexOf(item) === -1) {
+				array.push(item)
+			}
+		},
 
-    prepareGroups(){
-      const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), []);
-      let currentGroups = []
-      for(let substance of this.substances) {
-        currentGroups.push(substance.group.group_id)
-        if(indexOfAll(currentGroups, substance.group.group_id).length <= 1){
-          this.selected_groups.options.push({text:substance.group.group_id, value: substance.group.group_id})
-        }
-      }
-      this.prepareSubstances()
-    },
+		prepareGroups() {
+			const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
+			const currentGroups = []
+			this.substances.forEach(substance => {
+				currentGroups.push(substance.group.group_id)
+				if (indexOfAll(currentGroups, substance.group.group_id).length <= 1) {
+					this.selected_groups.options.push({ text: substance.group.group_id, value: substance.group.group_id })
+				}
+			})
+			this.prepareSubstances()
+		},
 
-    updateGroup(selected_substance){
-       for(let substance of this.substances) {
-          if(selected_substance.includes(substance.value)) {
-            this.group_field.label = substance.group.group_id
-            this.group_field.name = substance.group.group_id
-          }
-      }
-    },
+		updateGroup(selected_substance) {
+			this.substances.forEach(substance => {
+				if (selected_substance.includes(substance.value)) {
+					this.group_field.label = substance.group.group_id
+					this.group_field.name = substance.group.group_id
+				}
+			})
+		},
 
-    addSubstance() {
-      this.updateGroup(this.selected_substance.selected)
-      console.log('group-field',this.group_field)
+		addSubstance() {
+			this.updateGroup(this.selected_substance.selected)
+			console.log('group-field', this.group_field)
 
-     this.$store.dispatch('createSubstance',{
-         substanceList: this.selected_substance.selected,
-         currentSectionName: this.tabName, 
-         groupName: this.group_field.name,  
-         country: null, 
-         blendList: null, 
-         prefillData: null
-        })
+			this.$store.dispatch('createSubstance', {
+				substanceList: this.selected_substance.selected,
+				currentSectionName: this.tabName,
+				groupName: this.group_field.name,
+				country: null,
+				blendList: null,
+				prefillData: null
+			})
 
-      this.resetData()
-    },
+			this.resetData()
+		},
 
-    resetData() {
-      this.selected_substance.selected = null
-      this.selected_groups.selected = []
-      this.group_field = {
-        label: '',
-        name: '',
-        substance: null,
-      }
-    },
+		resetData() {
+			this.selected_substance.selected = null
+			this.selected_groups.selected = []
+			this.group_field = {
+				label: '',
+				name: '',
+				substance: null
+			}
+		},
 
-    removeSpecialChars(str) {
-      return str.replace(/[^a-zA-Z0-9]+/g, "");
-    },
-  },
+		removeSpecialChars(str) {
+			return str.replace(/[^a-zA-Z0-9]+/g, '')
+		}
+	},
 
-  watch: {
-    substances: {
-      handler: function(old_val, new_val) {
-        this.prepareGroups()
-      }
-    }
-  },
+	watch: {
+		substances: {
+			handler() {
+				this.prepareGroups()
+			}
+		}
+	}
 
 }
 </script>

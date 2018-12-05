@@ -7,8 +7,9 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
+from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import ReportingPeriod, Submission
+from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
@@ -529,7 +530,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
 
         # Get all the Parties that had ratified the control treaty at that date
         current_ratifications = PartyRatification.objects.filter(
-            date__lte=max_date, treaty=substance.group.control_treaty
+            entry_into_force_date__lte=max_date,
+            treaty=substance.group.control_treaty
         )
         signing_party_ids = set(current_ratifications.values('party__id'))
 

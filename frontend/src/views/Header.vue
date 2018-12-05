@@ -42,17 +42,16 @@
 
 <script>
 
-import authMixin from '@/mixins/auth';
+import authMixin from '@/mixins/auth'
 
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
+
 export default {
-  name: 'DefaultHeaderDropdownAccnt',
-  components: {
-    AppHeaderDropdown
-  },
-  mixins: [authMixin],
-  data: () => {
-    return { itemsCount: 42 }
-  }
+	name: 'DefaultHeaderDropdownAccnt',
+	components: {
+		AppHeaderDropdown
+	},
+	mixins: [authMixin],
+	data: () => ({ itemsCount: 42 })
 }
 </script>

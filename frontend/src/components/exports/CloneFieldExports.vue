@@ -15,93 +15,97 @@ import Multiselect from '@/mixins/modifiedMultiselect'
 
 export default {
 
-  props: {
-    tabName: String,
-    current_field: Object,
-  },
+	props: {
+		tabName: String,
+		current_field: Object
+	},
 
-  components: {
-    Multiselect 
-  },
+	components: {
+		Multiselect
+	},
 
+	created() {
+		this.field = JSON.parse(JSON.stringify(this.current_field))
+	},
 
-  created(){
-    this.field = JSON.parse(JSON.stringify(this.current_field))
-  },
+	computed: {
+		countryOptions() {
+			return this.$store.state.initialData.countryOptions
+		}
+	},
 
-  computed: {
-    countryOptions(){
-      return this.$store.state.initialData.countryOptions
-    },
-  },  
+	data() {
+		return {
+			field: null,
+			selected_countries: {
+				selected: []
+			}
+		}
+	},
 
-  data() {
-    return {
-      field: null,
-      selected_countries: {
-        selected: [],
-      },
-    }
-  },
+	methods: {
 
+		addSubstance() {
+			const current_field = JSON.parse(JSON.stringify(this.field))
+			const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
+			let currentTypeOfCountryField = ''
+			const willNotAdd = []
 
-  methods: {
+			typeOfCountryFields.forEach(type => {
+				if (current_field.hasOwnProperty(type)) currentTypeOfCountryField = type
+			})
 
-    addSubstance() {
-      let current_field = JSON.parse(JSON.stringify(this.field))
-      let typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
-      let currentTypeOfCountryField = ''
-      let willNotAdd = []
+			this.selected_countries.selected.forEach(country => {
+				let fieldExists = false
+				for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
+					if (current_field.substance.selected) {
+						if (existing_field.substance.selected === current_field.substance.selected && existing_field[currentTypeOfCountryField].selected === country) {
+							fieldExists = true
+							willNotAdd.push(country)
+							break
+						}
+					} else if (current_field.blend.selected) {
+						if (existing_field.blend.selected === current_field.blend.selected && existing_field[currentTypeOfCountryField].selected === country) {
+							fieldExists = true
+							willNotAdd.push(country)
+							break
+						}
+					}
+				}
+				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+				if (!fieldExists) {
+					this.$store.dispatch('createSubstance', {
+						substanceList: [current_field.substance.selected],
+						currentSectionName: this.tabName,
+						groupName: current_field.group.selected,
+						country,
+						blendList: [current_field.blend.selected],
+						prefillData: null
+					})
+				} else {
+					this.$store.dispatch('setAlert', { message: `The fields for the folllowing countries: ${willNotAdd} were not added because they already exist`, variant: 'danger' })
+				}
+			})
 
-      for(let type of typeOfCountryFields){
-        if(current_field.hasOwnProperty(type)) currentTypeOfCountryField =  type 
-      }
+			this.$emit('removeThisField')
+			this.resetData()
+		},
 
-      for(let country of this.selected_countries.selected) {
-        let fieldExists = false
-        for(let existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
-              if(current_field.substance.selected){
-                if(existing_field.substance.selected === current_field.substance.selected  && existing_field[currentTypeOfCountryField].selected === country) {
-                  fieldExists = true
-                  willNotAdd.push(country)
-                  break;
-                }
-              } else if(current_field.blend.selected) {
-                if(existing_field.blend.selected === current_field.blend.selected  && existing_field[currentTypeOfCountryField].selected === country) {
-                  fieldExists = true
-                  willNotAdd.push(country)
-                  break;
-                }
-              }
-        }
-        // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-        if(!fieldExists) {
-           this.$store.dispatch('createSubstance',{
-                 substanceList: [current_field.substance.selected],
-                 currentSectionName: this.tabName, 
-                 groupName: current_field.group.selected, 
-                 country: country, 
-                 blendList: [current_field.blend.selected], 
-                 prefillData: null
-                })
-        } else {
-              this.$store.dispatch('setAlert', { message:  `The fields for the folllowing countries: ${willNotAdd} were not added because they already exist`, variant: 'danger' })
-        }
+		resetData() {
+			this.selected_countries.selected = []
+		},
 
-      }
-      this.$emit('removeThisField')
-      this.resetData()
-    },
-
-    resetData() {
-      this.selected_countries.selected = []
-    },
-
-    removeSpecialChars(str) {
-      return str.replace(/[^a-zA-Z0-9]+/g, "");
-    },
-  },
-
+		removeSpecialChars(str) {
+			return str.replace(/[^a-zA-Z0-9]+/g, '')
+		}
+	},
+	watch:{		
+		'current_field': {
+			handler() {
+				this.field = JSON.parse(JSON.stringify(this.current_field))
+			},
+		}
+	}
 }
 </script>
 

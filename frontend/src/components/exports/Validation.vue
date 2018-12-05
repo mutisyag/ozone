@@ -1,7 +1,8 @@
+/* eslint-disable no-tabs */
 <template>
 	<div v-if="section && tabName" class="validation-tab">
-		<div v-for="field in section">
-			<div :class="{hovered: (section.indexOf(field)) === hovered }" class="validation-item" v-for="error in field.validation">
+		<div v-for="(field, field_index) in section" :key="field_index">
+			<div :class="{hovered: (section.indexOf(field)) === hovered }" class="validation-item" v-for="(error,error_index) in field.validation" :key="error_index">
 				{{display.substances[field.substance]}}{{display.blends[field.blend] ? display.blends[field.blend].name : null }} - <span style="color: red">{{error}}</span>
 			</div>
 		</div>
@@ -13,18 +14,18 @@ export default {
 
 	props: {
 		tabName: String,
-		hovered: null,
+		hovered: null
 	},
 
-	computed:{
-		section(){ return this.$store.getters.getValidationForCurrentTab(this.tabName) },
-		display(){ return this.$store.state.initialData.display}
+	computed: {
+		section() { return this.$store.getters.getValidationForCurrentTab(this.tabName) },
+		display() { return this.$store.state.initialData.display }
 	},
 
-  data () {
-    return {
-    }
-  }
+	data() {
+		return {
+		}
+	}
 }
 </script>
 

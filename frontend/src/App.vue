@@ -2,8 +2,8 @@
   <div class="app">
     <div class="api-action-display" v-if="isLoading">
       <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-    </div>  
-    <Alerts></Alerts>  
+    </div>
+    <Alerts></Alerts>
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <!-- <b-link class="navbar-brand" to="#"> -->
@@ -42,74 +42,73 @@
 
 import nav from '@/_nav'
 import Alerts from '@/views/Alerts'
-import { Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Aside as AppAside, Footer as TheFooter, Breadcrumb } from '@coreui/vue'
+import {
+	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Breadcrumb
+} from '@coreui/vue'
 import Header from '@/views/Header'
-import Router from './router'
-import {api} from '@/api/api';
+import { api } from '@/api/api'
+
 export default {
-  name: 'app',
-  components: {
-    AppHeader,
-    AppSidebar,
-    AppAside,
-    TheFooter,
-    Breadcrumb,
-    Header,
-    SidebarForm,
-    SidebarFooter,
-    SidebarToggler,
-    SidebarHeader,
-    SidebarNav,
-    SidebarMinimizer,
-    Alerts,
-    routerview: Router
-  },
+	name: 'app',
+	components: {
+		AppHeader,
+		AppSidebar,
+		Breadcrumb,
+		Header,
+		SidebarForm,
+		SidebarFooter,
+		SidebarToggler,
+		SidebarHeader,
+		SidebarNav,
+		SidebarMinimizer,
+		Alerts
+	},
 
-  data() {
-    return {
-      refCount: 0,
-      isLoading: false,
-      nav: nav.items
+	data() {
+		return {
+			refCount: 0,
+			isLoading: false,
+			nav: nav.items
 
-    }
-  },
+		}
+	},
 
-  computed: {
-  name () {
-      return this.$route.name
-    },
-    list () {
-      return this.$route.matched.filter((route) => route.name || route.meta.label )
-    }
-  },
-  methods: {
-    setLoading(isLoading) {
-      if (isLoading) {
-        this.refCount++;
-        this.isLoading = true;
-      } else if (this.refCount > 0) {
-        this.refCount--;
-        this.isLoading = (this.refCount > 0);
-      }
-    }
-  },
-  created(){
-    api.interceptors.request.use((config) => {
-      this.setLoading(true);
-      return config;
-    }, (error) => {
-      this.setLoading(false);
-      return Promise.reject(error);
-    });
+	computed: {
+		name() {
+			return this.$route.name
+		},
+		list() {
+			return this.$route.matched.filter((route) => route.name || route.meta.label)
+		}
+	},
+	methods: {
+		setLoading(isLoading) {
+			if (isLoading) {
+				this.refCount += 1
+				this.isLoading = true
+			} else if (this.refCount > 0) {
+				this.refCount -= 1
+				this.isLoading = (this.refCount > 0)
+			}
+		}
+	},
+	created() {
+		api.interceptors.request.use((config) => {
+			this.setLoading(true)
+			return config
+		}, (error) => {
+			this.setLoading(false)
+			return Promise.reject(error)
+		})
 
-    api.interceptors.response.use((response) => {
-      this.setLoading(false);
-      return response;
-    }, (error) => {
-      this.setLoading(false);
-      return Promise.reject(error);
-    });
-  }
+		api.interceptors.response.use((response) => {
+			this.setLoading(false)
+			return response
+		}, (error) => {
+			this.setLoading(false)
+			return Promise.reject(error)
+		})
+	}
 
 }
 </script>
@@ -129,9 +128,6 @@ export default {
   @import '~bootstrap-vue/dist/bootstrap-vue.css';
   // Import Main styles for this application
   @import 'assets/scss/style';
-
-
-
 
   .lds-ellipsis {
   display: inline-block;
@@ -191,7 +187,6 @@ export default {
     transform: translate(19px, 0);
   }
 }
-
 
 .api-action-display {
   position: fixed;
