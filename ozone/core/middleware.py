@@ -16,7 +16,10 @@ class ExceptionMiddleware(object):
             exception_dict = exception.to_dict()
         else:
             status = 500
-            exception_dict = {'error_message': 'Unexpected Error!'}
+            exception_dict = {
+                'error_message': 'Unexpected Error!',
+                'fields': []
+            }
 
         traceback.print_exc()
         return JsonResponse(exception_dict, status=status)

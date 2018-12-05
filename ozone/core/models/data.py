@@ -76,11 +76,13 @@ class BlendCompositionMixin:
         """
         if self.substance is None and self.blend is None:
             raise CustomValidationError(
-                _("Data should refer to one substance or one blend")
+                _("Data should refer to one substance or one blend"),
+                ["substance", "blend"]
             )
         if self.substance is not None and self.blend is not None:
             raise CustomValidationError(
-                _("Data should not refer to both a substance and a blend")
+                _("Data should not refer to both a substance and a blend"),
+                ["substance", "blend"]
             )
 
         # Also, no changes are allowed on blend_item != null objects
@@ -533,7 +535,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             or self.quantity_export_recovered
         ):
             raise CustomValidationError(
-                _("At least one quantity field should be non-null.")
+                _("At least one quantity field should be non-null."),
+                ["quantity_fields"]
             )
 
         # If it's a blend we skip the validation because we will check every
@@ -545,7 +548,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
                     _(
                         "You need to select a non-party, according to the "
                         "selected substance."
-                    )
+                    ),
+                    ["trade_party"]
                 )
 
         super().clean()

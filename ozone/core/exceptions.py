@@ -2,13 +2,21 @@
 class BaseCustomException(Exception):
     status_code = None
     error_message = None
+    fields = None
 
-    def __init__(self, error_message):
+    def __init__(self, error_message, field=None):
         Exception.__init__(self)
         self.error_message = error_message
+        if field is None:
+            self.field = []
+        else:
+            self.field = field
 
     def to_dict(self):
-        return {'error_message': self.error_message}
+        return {
+            'error_message': self.error_message,
+            'fields': self.field
+        }
 
 
 class CustomValidationError(BaseCustomException):

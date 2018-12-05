@@ -236,7 +236,8 @@ class BlendComponent(models.Model):
     def clean(self):
         if not self.component_name and not self.substance:
             raise CustomValidationError(
-                _("Substance or component name must be set.")
+                _("Substance or component name must be set."),
+                ["component_name", "substance"]
             )
 
     def save(self, *args, **kwargs):
