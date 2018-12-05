@@ -25,6 +25,7 @@
               hover
               head-variant="light"
               stacked="md"
+              class="submission-table"
               :items="tableItems"
               :fields="tableFields"
               :current-page="table.currentPage"
@@ -36,10 +37,20 @@
               ref="table"
     >
 
+    <template slot="substance" slot-scope="cell">
+      <div class="table-btn-group">
+          <b-btn variant="info" @click="createModalData(cell.item.originalObj, cell.item.index)">
+            Edit
+          </b-btn>
+          <b-btn variant="outline-danger" @click="remove_field(cell.item.index, cell.item)" class="table-btn">Delete</b-btn>
+      </div>
+      {{cell.item.substance}}
+    </template>
+
      <template :slot="getCountrySlot" slot-scope="cell">
           <clonefield 
           :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-          v-on:removeThisField="remove_field(tab_info.form_fields, cell.item.originalObj)"
+          v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
           v-if="!cell.item[getCountrySlot]"
           :tabName="tabName" 
           :current_field="cell.item.originalObj">
@@ -454,8 +465,8 @@ export default {
       }
     },
  
-    remove_field(parent, field) {
-      this.$store.commit('removeField', {tab: this.tabName, index: parent.indexOf(field)})
+    remove_field(index, field) {
+      this.$store.commit('removeField', {tab: this.tabName, index: index})
     },
 
 

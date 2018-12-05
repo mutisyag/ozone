@@ -601,11 +601,11 @@
 
 
 
-.submission-table tbody:hover  td{
+.submission-table tr:hover  td{
   background: #eee;
 }
 
-.submission-table tbody:hover .table-btn-group {
+.submission-table tr:hover .table-btn-group {
     display: flex;
 }
 
