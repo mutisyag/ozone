@@ -118,6 +118,8 @@ const form = {
 			}
 			],
 
+			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
+
 			fields_order: ['substance', 'blend', 'destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
 			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
@@ -161,6 +163,7 @@ const form = {
 			],
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
+			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
 			section_subheaders: [{
 				label: '1',
 				name: 'substance',
@@ -169,7 +172,7 @@ const form = {
 			},
 			{
 				label: '2',
-				name: 'destination_party',
+				name: 'source_party',
 				sort: 1,
 				type: 'string',
 				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
@@ -254,6 +257,7 @@ const form = {
 			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
 			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
+			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 
 			section_subheaders: [
 				{
@@ -276,14 +280,14 @@ const form = {
 					type: 'number'
 				},
 				{
-					label: '4 <br> Quantity',
-					name: 'quantity_feedstock',
+					label: 'Quantity <br> 5',
+					name: 'quantity_exempted',
 					sort: 1,
-					type: 'number'
+					type: 'string'
 				},
 				{
 					label: 'Decision / type of use <br> 5',
-					name: 'quantity_exempted',
+					name: 'decision_exempted',
 					sort: 1,
 					type: 'string'
 				},
@@ -308,7 +312,6 @@ const form = {
 				},
 				{
 					label: 'Production for feedstock uses within your country',
-					colspan: 2
 				},
 				{
 					label: 'Production for exempted essential, critical or other uses within your country*',
@@ -433,7 +436,9 @@ const form = {
 			fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
 
 			modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
-			// used for identification when adding labels
+			
+			blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
+			
 			form_fields: [],
 			section_subheaders: [
 				{

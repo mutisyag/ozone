@@ -98,8 +98,14 @@ export default {
 		removeSpecialChars(str) {
 			return str.replace(/[^a-zA-Z0-9]+/g, '')
 		}
+	},
+	watch:{		
+		'current_field': {
+			handler() {
+				this.field = JSON.parse(JSON.stringify(this.current_field))
+			},
+		}
 	}
-
 }
 </script>
 

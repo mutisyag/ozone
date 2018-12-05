@@ -3,6 +3,7 @@ const labels = {
 		substance: 'Substances',
 		blend: 'Blend',
 		group: 'Group',
+		percent: 'Percentage',
 		source_party: 'Exporting party for quantities reported as imports',
 		quantity_total_new: 'Total Quantity Imported for All Uses (new)',
 		quantity_total_recovered: 'Total Quantity Imported for All Uses (recovered and reclaimed)',
@@ -30,12 +31,14 @@ const labels = {
 	has_exports: {
 		substance: 'Substances',
 		blend: 'Blend',
+		percent: 'Percentage',
 		group: 'Group',
 		destination_party: 'Country of Destination of Exports',
 		quantity_total_new: 'Total Quantity Imported for All Uses (new)',
 		quantity_total_recovered: 'Total Quantity Imported for All Uses (recovered and reclaimed)',
 		quantity_feedstock: 'Quantity of New Substances Imported as Feedstock',
-		quantity_exempted: 'Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses',
+		quantity_exempted: 'Quantity of new substance Exported for exempted essential, critical, high-ambient-temperature or other uses',
+		decision_exempted: 'Decision',
 		quantity_essential_uses: 'Essential use, other than L&A',
 		decision_essential_uses: 'Essential use, other than L&A',
 		quantity_critical_uses: 'Critical use',
@@ -59,6 +62,7 @@ const labels = {
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)',
+		percent: 'Percentage',
 		quantity_critical_uses: 'Critical use',
 		decision_critical_uses: 'Critical use',
 		quantity_essential_uses: 'Essential use, other than L&A',
@@ -84,6 +88,7 @@ const labels = {
 	has_destroyed: {
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)',
+		percent: 'Percentage',
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
 		blend: 'blend'
@@ -91,6 +96,7 @@ const labels = {
 	has_nonparty: {
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)',
+		percent: 'Percentage',
 		quantity_import_new: 'Quantity of imports from non-parties (new)',
 		quantity_import_recovered: 'Quantity of imports from non-parties (recovered)',
 		quantity_export_new: 'Quantity of exports to non-parties (new)',
