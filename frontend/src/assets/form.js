@@ -311,7 +311,7 @@ const form = {
 					label: 'Total production for all uses'
 				},
 				{
-					label: 'Production for feedstock uses within your country',
+					label: 'Production for feedstock uses within your country'
 				},
 				{
 					label: 'Production for exempted essential, critical or other uses within your country*',
@@ -328,22 +328,68 @@ const form = {
 
 			special_headers: {
 
+				section_headers: [
+					{
+						label: 'Substances'
+					},
+					{
+						label: 'Total production for all uses'
+					},
+					{
+						label: 'Production for feedstock uses within your country',
+						colspan: 2
+					},
+					{
+						label: 'Production for exempted essential, critical or other uses within your country*',
+						colspan: 2,
+						tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
+					},
+					{
+						label: 'Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5'
+					},
+					{
+						label: 'Status'
+					}
+				],
+
 				section_subheaders: [
 					{
-						label: '',
+						label: '1',
 						name: 'substances'
 					},
 					{
-						label: '2 <br> Captured for all uses',
+						label: '2.Captured for all uses',
 						name: 'quantity_total_produced'
 					},
 					{
-						label: '(3a) <br> Captured for feedstock uses within your country',
+						label: '3a.Captured for feedstock uses within your country',
 						name: 'quantity_feedstock'
 					},
 					{
-						label: '(3b) <br> Captured for destruction***',
+						label: '3b.Captured for destruction***',
 						name: 'quantity_for_destruction'
+					},
+					{
+						label: 'Quantity <br> 5',
+						name: 'quantity_exempted',
+						sort: 1,
+						type: 'string'
+					},
+					{
+						label: 'Decision / type of use <br> 5',
+						name: 'decision_exempted',
+						sort: 1,
+						type: 'string'
+					},
+					{
+						label: '6',
+						name: 'quantity_article_5',
+						sort: 1,
+						type: 'number'
+					},
+					{
+						label: '7',
+						name: 'validation'
 					}
 				]
 			},
@@ -434,11 +480,8 @@ const form = {
 			isInvalid: false,
 
 			fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
-
 			modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
-			
 			blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
-			
 			form_fields: [],
 			section_subheaders: [
 				{

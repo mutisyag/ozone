@@ -160,7 +160,7 @@ export default {
 			},
 			quantity_laboratory_analytical_uses: {
 				type: 'number',
-				selected:null
+				selected: null
 			},
 			decision_laboratory_analytical_uses: {
 				type: 'text',
