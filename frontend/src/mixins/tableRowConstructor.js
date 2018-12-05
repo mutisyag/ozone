@@ -318,7 +318,7 @@ export default {
 					selected: null
 				},
 				quantity_article_5: {
-					type: 'text',
+					type: 'number',
 					selected: null
 				},
 				substance: {

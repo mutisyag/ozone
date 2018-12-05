@@ -103,9 +103,9 @@ const getInstructions = () => {
 
 const deleteSubmission = (url) => remove(url)
 
-const getSubmission = (url) => api.get(url)
+const getSubmission = (url) => fetch(url)
 
-const getSubmissionHistory = (url) => api.get(`${url}history/`)
+const getSubmissionHistory = (url) => fetch(`${url}history/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 

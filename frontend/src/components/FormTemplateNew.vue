@@ -90,20 +90,19 @@
                     :title="cell.item.originalObj[tooltipField].tooltip" 
                     :key="tooltipField">
                       {{cell.item[tooltipField]}}
-
                     <div 
                     style="margin-left: -4rem; margin-top: 2rem" 
                     class="special-field" 
-                    v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted'">
+                    v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment">
                       <hr>
                       Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
                       <hr>
                       <span>
                         <fieldGenerator 
                           :key="tooltipField"
-                          :fieldInfo="{index:cell.item.index,tabName: tabName, field:tooltipField}" 
+                          :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}" 
                           :disabled="transitionState"  
-                          :field="cell.item.originalObj[tooltipField]">
+                          :field="cell.item.originalObj.quantity_quarantine_pre_shipment">
                         </fieldGenerator>
                       </span>
                     </div>
@@ -118,6 +117,7 @@
 
 
     <b-table show-empty
+              v-if="tabName != 'has_destroyed'"
               outlined
               bordered
               hover
@@ -200,10 +200,13 @@
 
       <template slot="row-details" slot-scope="row">
         <thead>
-        <tr>
-              <th class="small" v-for="(header, header_index) in tab_info.blend_substance_headers" :colspan="header.colspan" :key="header_index">
-                {{labels[header]}}
-              </th>
+          <tr>
+            <th 
+            class="small" v-for="(header, header_index) in tab_info.blend_substance_headers" 
+            :colspan="header.colspan" 
+            :key="header_index">
+              {{labels[header]}}
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -219,10 +222,12 @@
               <b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
             </td>
              <td
-             v-for="(order, order_index) in tab_info.blend_substance_headers"
+             v-for="(order, order_index) in blendSubstanceHeaders"
              :key="order_index"
-             v-if="row.item[order]">
+             >
+             <!-- <span v-if="row.item[order]"> -->
                 {{splitBlend(row.item[order], substance.percentage)}}
+             <!-- </span> -->
             </td>
           </tr>
         </tbody>
@@ -405,6 +410,10 @@ export default {
       return this.intersect(inputFields, this.tab_info.fields_order)
     },
 
+    blendSubstanceHeaders(){
+      return this.tab_info.blend_substance_headers.filter( header => { return !['substance', 'percent'].includes(header)})
+    },
+
     tableItems(){
     let tableFields = []
       this.tab_info.form_fields.forEach( (element, index) => {
@@ -543,8 +552,9 @@ export default {
         }
         let topHeader = this.$refs.tableHeader.querySelector('tr')
 
+        let isCurrentTabNOTDestruction = this.tabName === 'has_destroyed' ? false : true
 
-        headers[0].parentNode.insertBefore(topHeader.cloneNode(true), headers[0]);
+        headers[0].parentNode.insertBefore(topHeader.cloneNode(isCurrentTabNOTDestruction), headers[0]);
     },
 
     tableLoadedBlends() {
