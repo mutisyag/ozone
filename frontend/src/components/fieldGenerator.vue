@@ -50,8 +50,14 @@ export default {
 			this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
 		}
 
+	},
+	watch:{		
+		'field.selected': {
+			handler() {
+				this.currentTyping = this.field.selected
+			},
+		}
 	}
-
 }
 
 </script>
