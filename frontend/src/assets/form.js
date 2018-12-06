@@ -31,6 +31,7 @@ const form = {
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
 			name: 'questionaire_questions',
+			status: null,
 			isInvalid: false,
 			description: '',
 			// used for identification when adding labels

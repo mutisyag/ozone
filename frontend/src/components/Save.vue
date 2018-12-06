@@ -159,6 +159,20 @@ export default {
 
 		startSubmitting() {
 			this.submitQuestionaireData('questionaire_questions')
+		},
+
+		submitQuestionaireData(field) {
+			this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: 'saving' })
+
+			const current_tab = Object.values(this.$store.state.form.tabs).find((value) => value.name === field)
+			const save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+			Object.values(current_tab.form_fields).forEach(form_field => {
+				save_obj[form_field.name] = form_field.selected
+			})
+
+			post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then(() => {
+			this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: true })
+
 			for (const questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
 				if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
 					this.submitData(questionnaire_field.name)
@@ -168,17 +182,12 @@ export default {
 					})
 				}
 			}
-		},
 
-		submitQuestionaireData(field) {
-			const current_tab = Object.values(this.$store.state.form.tabs).find((value) => value.name === field)
-			const save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
-			Object.values(current_tab.form_fields).forEach(form_field => {
-				save_obj[form_field.name] = form_field.selected
-			})
-
-			post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then(() => {
 			}).catch((error) => {
+				this.$store.dispatch('setAlert', 
+				{ message: "Please complete the questionnaire before saivng",
+				 variant: 'danger' })		
+				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
 				console.log(error)
 			})
 		},

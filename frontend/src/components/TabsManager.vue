@@ -47,6 +47,17 @@
           </b-tab>
 
           <b-tab title="Questionaire" active>
+            <template slot="title">
+              <div class="tab-title">
+                {{$store.state.form.tabs.questionaire_questions.title}}
+                <div v-if="$store.state.form.tabs.questionaire_questions.status === 'saving'" class="spinner">
+                  <div class="loader"></div>
+                </div>
+                <i v-if="$store.state.form.tabs.questionaire_questions.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs.questionaire_questions.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs.questionaire_questions.status === 'edited'" class="fa fa-edit fa-lg"></i>
+              </div>
+             </template>
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
 
