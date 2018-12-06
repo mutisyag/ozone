@@ -14,7 +14,11 @@
     </div>
     <b-button-group class="actions">
       <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-      <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="outline-success">
+      <b-btn  
+        v-if="$store.state.available_transitions.includes('submit')" 
+       @click="checkBeforeSubmitting" 
+       variant="outline-success"
+       >
         Submit
       </b-btn>
       <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
@@ -120,7 +124,11 @@
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
         <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn  v-if="$store.state.available_transitions.includes('submit')"  @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'submit'})" variant="outline-success">
+        <b-btn  
+          v-if="$store.state.available_transitions.includes('submit')"  
+          @click="checkBeforeSubmitting" 
+          variant="outline-success"
+          >
             Submit
           </b-btn>
           <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
@@ -200,8 +208,20 @@ export default {
 			getInstructions().then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
-			})
-		},
+      })
+    },
+      
+    checkBeforeSubmitting() {
+      let fields = Object.keys(this.$store.state.form.tabs)
+      .filter(tab =>  !['questionaire_questions', 'sub_info','attachments'].includes(tab) )
+      .map(tab => {return this.$store.state.form.tabs[tab].form_fields})
+      .filter( arr => arr.length)
+      if(!fields.length) {
+        this.$store.dispatch('setAlert', { message: "You cannot submit and empty form",variant: 'danger' })		       
+        return
+      }
+      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'submit'})
+    },
 
 		removeSubmission() {
 			const r = confirm('Deleting the submission is ireversible. Are you sure ?')

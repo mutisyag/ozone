@@ -152,7 +152,6 @@
   .table-responsive-vertical > .table > tbody > tr > td {
     background-color: #fff;
     display: block;
-    vertical-align: middle;
     text-align: right;
   }
   .table-responsive-vertical > .table > tbody > tr > td[data-title]:before {
@@ -584,8 +583,9 @@
 }
 
 .table > thead > tr.first-header > th {
-  font-weight: bold;
-  color: black;
+  font-weight: 400;
+  font-size: .7rem;
+  color: #444;
 }
 
 .table tr {
@@ -613,11 +613,6 @@
   position: relative;
 }
 
-.comments-section {
-  // position: absolute;
-  // right: 0;
-  // top:0;
-}
 
 .table-btn-group {
   display: none;

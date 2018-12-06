@@ -678,7 +678,7 @@ const form = {
 			},
 			{
 				label: 'Status',
-				name: 'validation'		
+				name: 'validation'
 			}
 			],
 			comments: [{
