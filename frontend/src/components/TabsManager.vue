@@ -39,7 +39,7 @@
 
   <b-container style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
-        <b-tabs v-model="tabIndex" card>
+		<b-tabs v-model="tabIndex" card>
 
           <b-tab title="Submission Info">
              <template slot="title">
@@ -188,7 +188,6 @@ export default {
 
 	created() {
 		this.labels = labels.general
-		console.log('zzxczxc', this.$store.state.form)
 	},
 
 	computed: {
@@ -243,12 +242,19 @@ export default {
 	},
 
 	data() {
+		const tabsImportant = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty']
+		const tabIndexesForAssideMenuDisplay = tabsImportant.reduce((accumulator, currentValue, currentIndex) => {
+			accumulator.push(currentIndex + 2)
+			return accumulator
+		}, [])
+
 		return {
 			tabIndex: 0,
 			modal_data: null,
 			labels: null,
 			saveForSubmit: false,
-			tabs: ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty'],
+			tabs: tabsImportant,
+			tabIndexesForAssideMenuDisplay,
 			titles: [
 				{ title: 'Submission Info' },
 				{ title: 'Questionaire' },
@@ -282,7 +288,7 @@ export default {
 		tabIndex: {
 			handler(new_val) {
 				const body = document.querySelector('body')
-				if ([2, 3, 4, 5, 6].includes(new_val) && !this.$store.getters.allowedChanges) {
+				if (this.tabIndexesForAssideMenuDisplay.includes(new_val) && !this.$store.getters.allowedChanges) {
 					body.classList.add('aside-menu-lg-show')
 				} else {
 					body.classList.remove('aside-menu-lg-show')
