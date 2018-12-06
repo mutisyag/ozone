@@ -151,11 +151,7 @@ class Command(BaseCommand):
 
         # if a post process method exists, invoke it
         if hasattr(self, model + "_postprocess"):
-            for idx in range(1, sheet.max_row):
-                # This could be cached
-                row = self.row2dict(sheet, sheet[idx + 1])
-                # Some not very nice assumptions made here
-                obj = data[idx - 1]
+            for obj in data:
                 getattr(self, model + "_postprocess")(obj['fields'], row)
 
         # Hack alert: Remove rows having a pseudo-field called "_deleted"
@@ -175,6 +171,10 @@ class Command(BaseCommand):
 
     def party_map(self, f, row):
         f['abbr'] = row['CntryID']
+        if row['CntryID'][:2] == 'ZZ':
+            # Remove "All countries" and "Some countries"
+            f['_deleted'] = True
+            return
         f['name'] = row['CntryName']
         # Skipped fields: CntryNameFr, CntryNameSp, PrgApprDate, CntryID_org,
         # CntryName20, MDG_CntryCode, ISO_Alpha3Code, www_country_id
@@ -239,13 +239,13 @@ class Command(BaseCommand):
         )
 
         f['remark'] = row['Remark'] or ""
+        # This will be replaced in party_postprocess
+        f['parent_party'] = row['MainCntryID']
 
     def party_postprocess(self, f, row):
         # set parent party by looking up in the same data
-        f['parent_party'] = self.lookup_id('party', 'abbr', row['MainCntryID'])
-        if row['CntryID'][:2] == 'ZZ':
-            # Remove "All countries" and "Some countries"
-            f['_deleted'] = True
+        if 'parent_party' in f:
+            f['parent_party'] = self.lookup_id('party', 'abbr', f['parent_party'])
 
     def partyhistory_map(self, f, row):
         if row['CntryID'] == 'HOLV':
@@ -295,13 +295,18 @@ class Command(BaseCommand):
         f['remark'] = row['Remark'] if row['Remark'] else ""
 
     def substance_map(self, f, row):
+        if row['SubstID'] == 999:
+            # Remove "Other substances"
+            f['_deleted'] = True
         f['substance_id'] = row['SubstID']
         f['name'] = row['SubstName']
         # Skipped fields: SubstNameFr, SubstNameSp
         annex = row['Anx']
         if annex and annex != '-':
-            f['group'] = self.lookup_id(
-                'group', 'group_id', annex + row['Grp'])
+            group = annex + row['Grp']
+            if f['name'] == 'HFC-23':
+                group = 'FII'
+            f['group'] = self.lookup_id('group', 'group_id', group)
         f['sort_order'] = row['AnxGrpSort'] or 9999
         f['odp'] = row['SubstODP']
         f['gwp'] = row['SubstGWP']
@@ -320,11 +325,6 @@ class Command(BaseCommand):
         f['bromines'] = row['Bromines'] or ""
 
         # TODO: Not mapped: r_code, mp_control, main_usage
-
-    def substance_postprocess(self, f, row):
-        if row['SubstID'] == 999:
-            # Remove "Other substances"
-            f['_deleted'] = True
 
     def substance_edw_map(self, f, row):
         f['r_code'] = row['RCode']
