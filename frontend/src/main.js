@@ -5,6 +5,10 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
+import Toasted from 'vue-toasted';
+
+Vue.use(Toasted)
+
 
 Vue.use(VueCookies)
 

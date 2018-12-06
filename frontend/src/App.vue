@@ -3,7 +3,6 @@
     <div class="api-action-display" v-if="isLoading">
       <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     </div>
-    <Alerts></Alerts>
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <!-- <b-link class="navbar-brand" to="#"> -->
@@ -41,7 +40,6 @@
 <script>
 
 import nav from '@/_nav'
-import Alerts from '@/views/Alerts'
 import {
 	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Breadcrumb
 } from '@coreui/vue'
@@ -60,8 +58,7 @@ export default {
 		SidebarToggler,
 		SidebarHeader,
 		SidebarNav,
-		SidebarMinimizer,
-		Alerts
+		SidebarMinimizer
 	},
 
 	data() {
@@ -90,6 +87,17 @@ export default {
 				this.refCount -= 1
 				this.isLoading = (this.refCount > 0)
 			}
+		},
+		doAlert() {
+			const options = {
+				position: 'bottom-left',
+				duration: 3000
+			}
+			if (this.$store.state.currentAlert.variant === 'success') {
+				this.$toasted.success(this.$store.state.currentAlert.message, options)
+			} else {
+				this.$toasted.error(this.$store.state.currentAlert.message, options)
+			}
 		}
 	},
 	created() {
@@ -98,6 +106,9 @@ export default {
 			return config
 		}, (error) => {
 			this.setLoading(false)
+			this.$store.dispatch('setAlert',
+				{ message: error,
+					variant: 'danger' })
 			return Promise.reject(error)
 		})
 
@@ -106,8 +117,18 @@ export default {
 			return response
 		}, (error) => {
 			this.setLoading(false)
+			this.$store.dispatch('setAlert',
+				{ message: error,
+					variant: 'danger' })
 			return Promise.reject(error)
 		})
+	},
+	watch: {
+		'$store.state.currentAlert.show': {
+			handler() {
+				this.doAlert()
+			}
+		}
 	}
 
 }

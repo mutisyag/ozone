@@ -196,6 +196,7 @@ const store = new Vuex.Store({
 				context.commit('setCurrentAlertVisibility', true)
 				context.commit('setCurrentAlertVariant', data.variant)
 			})
+			
 		},
 
 		prefillQuestionaire(context) {
