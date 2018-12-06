@@ -189,9 +189,9 @@ class Command(BaseCommand):
         f['subregion'] = subregion
 
         f['signed_vienna_convention'] = row['SignVC'].date() if row[
-                                                           'SignVC'] else None
+            'SignVC'] else None
         f['signed_montreal_protocol'] = row['SignMP'].date() if row[
-                                                           'SignMP'] else None
+            'SignMP'] else None
 
         f['ratification_date_vienna_convention'] = row[
             'RD_VC'].date() if row['RD_VC'] else None
@@ -238,25 +238,28 @@ class Command(BaseCommand):
 
     def partyhistory_map(self, f, row):
         if row['CntryID'] == 'HOLV':
-            f['party'] = self.lookup_id('party', 'abbr', 'VA')
+            # f['party'] = self.lookup_id('party', 'abbr', 'VA')
             f['_deleted'] = True
+            return
         else:
             f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
         f['reporting_period'] = self.lookup_id(
             'reportingperiod', 'name', row['PeriodID'])
         f['population'] = row['Population'] if row['Population'] else 0
         art5_group2 = ["BH", "IN", "IR", "IQ",
-            "KW", "OM", "PK", "QA", "SA", "AE"]
+                       "KW", "OM", "PK", "QA", "SA", "AE"]
         non_art5_group2 = ["BY", "KZ", "RU", "TJ", "UZ"]
-        period_datetime = datetime.strptime(self.FIXTURES['reportingperiod'][
-                                            f['reporting_period'] - 1]['fields']['end_date'], "%Y-%m-%d")
+        period_datetime = datetime.strptime(
+            self.FIXTURES['reportingperiod'][
+                f['reporting_period'] - 1]['fields']['end_date'], "%Y-%m-%d"
+        )
         if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
-            if row['Article5'] == '1':
+            if row['Article5']:
                 f['party_type'] = 'Article 5'
             else:
                 f['party_type'] = 'Non Article 5'
         else:
-            if row['Article5'] == '1':
+            if row['Article5']:
                 if row['CntryID'] in art5_group2:
                     f['party_type'] = 'Article 5 Group 2'
                 else:
@@ -276,8 +279,8 @@ class Command(BaseCommand):
             f['is_high_ambient_temperature'] = True
         else:
             f['is_high_ambient_temperature'] = False
-        f['is_eu_member'] = True if row['EurUnion'] == '1' else False
-        f['is_ceit'] = True if row['CEIT'] == '1' else False
+        f['is_eu_member'] = row['EurUnion']
+        f['is_ceit'] = row['CEIT']
         f['remark'] = row['Remark'] if row['Remark'] else ""
 
     def substance_map(self, f, row):
@@ -350,24 +353,24 @@ class Command(BaseCommand):
         objs = [
             {
                 "fields": {
-                  "description": "",
-                  "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
-                  "is_reporting_allowed": False,
-                  "is_reporting_open": False,
-                  "name": "1987",
-                  "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
+                    "description": "",
+                    "end_date": datetime.strptime("1987-12-31", "%Y-%m-%d").date(),
+                    "is_reporting_allowed": False,
+                    "is_reporting_open": False,
+                    "name": "1987",
+                    "start_date": datetime.strptime("1987-01-01", "%Y-%m-%d").date()
                 },
                 "model": "core.reportingperiod",
                 "pk": idx
             },
             {
                 "fields": {
-                  "description": "",
-                  "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
-                  "is_reporting_allowed": False,
-                  "is_reporting_open": False,
-                  "name": "1988",
-                  "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
+                    "description": "",
+                    "end_date": datetime.strptime("1988-12-31", "%Y-%m-%d").date(),
+                    "is_reporting_allowed": False,
+                    "is_reporting_open": False,
+                    "name": "1988",
+                    "start_date": datetime.strptime("1988-01-01", "%Y-%m-%d").date()
                 },
                 "model": "core.reportingperiod",
                 "pk": idx + 1
