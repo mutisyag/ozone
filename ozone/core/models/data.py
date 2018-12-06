@@ -74,6 +74,17 @@ class BlendCompositionMixin:
         This is called explicitly from the save() method, also overridden in
         this class.
         """
+        if self.substance is None and self.blend is None:
+            raise CustomValidationError(
+                {
+                    'substance': [_(
+                        'Data should refer to one substance or one blend'
+                    )],
+                    'blend': [_(
+                        'Data should refer to one substance or one blend'
+                    )]
+                }
+            )
         if self.substance is not None and self.blend is not None:
             raise CustomValidationError(
                 {
@@ -544,14 +555,14 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             )
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
-        if not self.blend:
+        if not self.blend and self.substance:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:
                 raise CustomValidationError(
                     {
                         'trade_party': [_(
                             "You need to select a non-party, according to the "
-                            "selected substances."
+                            "selected substance."
                         )]
                     }
                 )
