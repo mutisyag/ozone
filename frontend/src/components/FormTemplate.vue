@@ -21,6 +21,26 @@
         </thead>
       </table>
 
+      <table v-if="tabName !== 'has_destroyed'" ref="tableHeaderBlends" class="table submission-table header-only">
+        <thead>
+          <tr class="first-header">
+            <th
+              v-for="(header, header_index) in tab_info.section_headers"
+              :colspan="header.colspan"
+              :key="header_index"
+            >
+              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+                <span v-html="header.label"></span>
+                <i class="fa fa-info-circle fa-lg"></i>
+              </div>
+              <div v-else>
+                <span v-html="header.label"></span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+      </table>
+
       <b-table
         show-empty
         outlined
@@ -725,11 +745,8 @@ export default {
 				return
 			}
 			const topHeader = this.$refs.tableHeader.querySelector('tr')
-			const isCurrentTabNOTDestruction = this.tabName !== 'has_destroyed'
-			console.log(isCurrentTabNOTDestruction, this.tabName)
 			headers[0].parentNode.insertBefore(
-				topHeader.cloneNode(isCurrentTabNOTDestruction),
-				headers[0]
+				topHeader, headers[0]
 			)
 		},
 
@@ -749,10 +766,10 @@ export default {
 					this.hovered = false
 				})
 
-			if (!this.$refs.tableHeader) {
+			if (!this.$refs.tableHeaderBlends) {
 				return
 			}
-			const topHeader = this.$refs.tableHeader.querySelector('tr')
+			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
 			topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
 			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},
