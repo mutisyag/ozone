@@ -12,6 +12,11 @@ export default {
 
 	name: 'Save',
 
+	props: {
+		submit: Boolean,
+		submission: String
+	},
+
 	data() {
 		return {
 			invalidTabs: [],
@@ -149,10 +154,10 @@ export default {
 					}
 				}
 			}
-			if(this.invalidTabs.length) {
-				this.$store.dispatch('setAlert', 
-				{ message: `Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`,
-				 variant: 'danger' })			
+			if (this.invalidTabs.length) {
+				this.$store.dispatch('setAlert',
+					{ message: `Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`,
+						variant: 'danger' })
 			}
 			this.startSubmitting()
 		},
@@ -171,22 +176,25 @@ export default {
 			})
 
 			post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then(() => {
-			this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: true })
+				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: true })
 
-			for (const questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
-				if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
-					this.submitData(questionnaire_field.name)
-				} else if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length) {
-					this.$store.dispatch('removeDataFromTab', questionnaire_field.name).then(() => {
+				for (const questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
+					if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
 						this.submitData(questionnaire_field.name)
-					})
+					} else if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length) {
+						this.$store.dispatch('removeDataFromTab', questionnaire_field.name).then(() => {
+							this.submitData(questionnaire_field.name)
+						})
+					}
+					// if (this.submit && !this.invalidTabs.length) {
+					// 	this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
+					// 	this.$emit('update:submit', false)
+					// }
 				}
-			}
-
 			}).catch((error) => {
-				this.$store.dispatch('setAlert', 
-				{ message: "Please complete the questionnaire before saivng",
-				 variant: 'danger' })		
+				this.$store.dispatch('setAlert',
+					{ message: 'Please complete the questionnaire before saivng',
+						variant: 'danger' })
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
 				console.log(error)
 			})
@@ -243,6 +251,15 @@ export default {
 					this.invalidTabs.push(field)
 					this.$store.dispatch('setAlert', { message: `Save failed for ${this.invalidTabs}`, variant: 'danger' })
 				})
+			}
+		}
+	},
+	watch: {
+		submit: {
+			handler(val) {
+				if (val) {
+					this.validation()
+				}
 			}
 		}
 	}

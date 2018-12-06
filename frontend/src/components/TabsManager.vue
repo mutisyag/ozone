@@ -13,7 +13,7 @@
       <div v-else v-html="titles[tabIndex].title"></div>
     </div>
     <b-button-group class="actions">
-      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <Save :submit.sync="saveForSubmit"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
       <b-btn  
         v-if="$store.state.available_transitions.includes('submit')" 
        @click="checkBeforeSubmitting" 
@@ -220,8 +220,8 @@ export default {
         this.$store.dispatch('setAlert', { message: "You cannot submit and empty form",variant: 'danger' })		       
         return
       }
-      this.$store.dispatch('doSubmissionTransition', {submission:this.submission, transition:'submit'})
-    },
+        this.saveForSubmit = true
+      },
 
 		removeSubmission() {
 			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
@@ -237,7 +237,8 @@ export default {
 	data() {
 		return {
 			tabIndex: 0,
-			modal_data: null,
+      modal_data: null,
+      saveForSubmit: false,
 			tabs: ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty'],
 			titles: [
 				{ title: 'Submission Info' },

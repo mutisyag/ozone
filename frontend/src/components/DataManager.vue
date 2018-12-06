@@ -5,9 +5,6 @@
     :submission="submission"
     >
     </tabsmanager>
-    <div v-else class="spinner">
-      <div class="loader"></div>
-    </div>
   </div>
 </template>
 
@@ -160,43 +157,3 @@ export default {
 	}
 }
 </script>
-
-<style lang="css" scoped>
-
-.spinner {
-    z-index: 1;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-   border-top: 16px solid blue;
-   border-right: 16px solid green;
-   border-bottom: 16px solid red;
-   border-left: 16px solid pink;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-}
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-</style>

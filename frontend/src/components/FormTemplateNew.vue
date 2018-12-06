@@ -96,9 +96,9 @@
               v-b-tooltip.hover
               title="Click here to see the validation problems"
             ></i>
-            <i 
-              v-else 
-              style="color: green;" 
+            <i
+              v-else
+              style="color: green;"
               class="fa fa-check-square-o fa-lg"
               ></i>
           </span>
@@ -194,13 +194,13 @@
                       :field="row.item.originalObj[specialField.name]"
                     ></fieldGenerator>
                     <span v-if="specialField.name === 'substances'">{{row.item.substance}}</span>
-                    
+
                     <span
                       v-if="['quantity_exempted','decision_exempted'].includes(specialField.name)"
                       v-b-tooltip.hover="row.item.originalObj[specialField.name].tooltip ? true : false"
                       :title="row.item.originalObj[specialField.name].tooltip"
                     >{{row.item[specialField.name]}}</span>
-                    
+
                     <span v-if="specialField.name === 'validation'" class="validation-wrapper">
                       <i
                         @click="openValidation"
@@ -458,386 +458,380 @@
 
 <script>
 
-import labels from "@/assets/labels";
-import inputFields from "@/assets/inputFields";
-import fieldGenerator from "./fieldGenerator";
-import CloneFieldExports from "./exports/CloneFieldExports.vue";
-import { Aside as AppAside } from "@coreui/vue";
-import DefaultAside from "./exports/DefaultAside";
-import Multiselect from "@/mixins/modifiedMultiselect";
+import labels from '@/assets/labels'
+import inputFields from '@/assets/inputFields'
+import fieldGenerator from './fieldGenerator'
+import CloneFieldExports from './exports/CloneFieldExports.vue'
+import { Aside as AppAside } from '@coreui/vue'
+import DefaultAside from './exports/DefaultAside'
+import Multiselect from '@/mixins/modifiedMultiselect'
 
-const norm = (n, sortType) =>
-  isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n;
+const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
 export default {
-  props: {
-    tabName: String,
-    tabId: Number,
-    tabIndex: Number
-  },
+	props: {
+		tabName: String,
+		tabId: Number,
+		tabIndex: Number
+	},
 
-  components: {
-    fieldGenerator: fieldGenerator,
-    AppAside,
-    DefaultAside,
-    Multiselect,
-    clonefield: CloneFieldExports
-  },
+	components: {
+		fieldGenerator,
+		AppAside,
+		DefaultAside,
+		Multiselect,
+		clonefield: CloneFieldExports
+	},
 
-  created() {
-    this.labels = labels[this.tab_info.name];
-  },
+	created() {
+		this.labels = labels[this.tab_info.name]
+	},
 
-  data() {
-    return {
-      table: {
-        currentPage: 1,
-        perPage: 200,
-        totalRows: 5,
-        pageOptions: [5, 25, 100],
-        sortBy: null,
-        sortDesc: false,
-        sortDirection: "asc",
-        filters: {
-          search: null,
-          period_start: null,
-          period_end: null,
-          obligation: null,
-          party: null,
-          isCurrent: null
-        },
-        modalInfo: { title: "", content: "" }
-      },
+	data() {
+		return {
+			table: {
+				currentPage: 1,
+				perPage: 200,
+				totalRows: 5,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				},
+				modalInfo: { title: '', content: '' }
+			},
 
-      tableBlends: {
-        currentPage: 1,
-        perPage: 10,
-        totalRows: 200,
-        pageOptions: [5, 25, 100],
-        sortBy: null,
-        sortDesc: false,
-        sortDirection: "asc",
-        filters: {
-          search: null,
-          period_start: null,
-          period_end: null,
-          obligation: null,
-          party: null,
-          isCurrent: null
-        },
-        modalInfo: { title: "", content: "" }
-      },
+			tableBlends: {
+				currentPage: 1,
+				perPage: 10,
+				totalRows: 200,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				},
+				modalInfo: { title: '', content: '' }
+			},
 
-      modal_data: null,
-      current_field: null,
-      modal_comments: null,
-      labels: null,
-      hovered: null,
-      sidebarTabIndex: 0,
+			modal_data: null,
+			current_field: null,
+			modal_comments: null,
+			labels: null,
+			hovered: null,
+			sidebarTabIndex: 0,
 
-      typeOfDisplayObj: {
-        substance: "substances",
-        blend: "blends",
-        trade_party: "countries",
-        source_party: "countries",
-        destination_party: "countries"
-      }
-    };
-  },
+			typeOfDisplayObj: {
+				substance: 'substances',
+				blend: 'blends',
+				trade_party: 'countries',
+				source_party: 'countries',
+				destination_party: 'countries'
+			}
+		}
+	},
 
-  computed: {
-    getCountrySlot() {
-      return this.intersect(
-        ["source_party", "trade_party", "destination_party"],
-        this.tab_info.fields_order
-      )[0];
-    },
+	computed: {
+		getCountrySlot() {
+			return this.intersect(
+				['source_party', 'trade_party', 'destination_party'],
+				this.tab_info.fields_order
+			)[0]
+		},
 
-    getTabDecisionQuantityFields() {
-      return this.intersect(
-        ["decision_exempted", "quantity_exempted"],
-        this.tab_info.fields_order
-      );
-    },
+		getTabDecisionQuantityFields() {
+			return this.intersect(
+				['decision_exempted', 'quantity_exempted'],
+				this.tab_info.fields_order
+			)
+		},
 
-    getTabInputFields() {
-      return this.intersect(inputFields, this.tab_info.fields_order);
-    },
+		getTabInputFields() {
+			return this.intersect(inputFields, this.tab_info.fields_order)
+		},
 
-    blendSubstanceHeaders() {
-      return this.tab_info.blend_substance_headers.filter(header => {
-        return !["substance", "percent"].includes(header);
-      });
-    },
+		blendSubstanceHeaders() {
+			return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
+		},
 
-    tableItems() {
-      let tableFields = [];
-      this.tab_info.form_fields.forEach((element, index) => {
-        let tableRow = {};
-        Object.keys(element).forEach(key => {
-          if (element.substance.selected) {
-            tableRow[key] = this.typeOfDisplayObj[key]
-              ? this.$store.state.initialData.display[
-                  this.typeOfDisplayObj[key]
-                ][element[key].selected]
-              : (tableRow[key] = element[key].selected);
-          }
-        });
-        if (Object.keys(tableRow).length) {
-          tableRow.originalObj = element;
-          tableRow.index = this.tab_info.form_fields.indexOf(element);
-          if (tableRow.group === "FII" && this.tabName === "has_produced") {
-            tableRow._showDetails = true;
-          }
-          tableFields.push(tableRow);
-        }
-      });
-      this.table.totalRows = tableFields.length;
-      return tableFields;
-    },
+		tableItems() {
+			const tableFields = []
+			this.tab_info.form_fields.forEach((element, index) => {
+				const tableRow = {}
+				Object.keys(element).forEach(key => {
+					if (element.substance.selected) {
+						tableRow[key] = this.typeOfDisplayObj[key]
+							? this.$store.state.initialData.display[
+								this.typeOfDisplayObj[key]
+							][element[key].selected]
+							: (tableRow[key] = element[key].selected)
+					}
+				})
+				if (Object.keys(tableRow).length) {
+					tableRow.originalObj = element
+					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					if (tableRow.group === 'FII' && this.tabName === 'has_produced') {
+						tableRow._showDetails = true
+					}
+					tableFields.push(tableRow)
+				}
+			})
+			this.table.totalRows = tableFields.length
+			return tableFields
+		},
 
-    tableItemsBlends() {
-      let tableFields = [];
-      this.tab_info.form_fields.forEach((element, index) => {
-        let tableRow = {};
-        Object.keys(element).forEach(key => {
-          if (element.blend.selected) {
-            if (this.typeOfDisplayObj[key]) {
-              if (this.typeOfDisplayObj[key] === "blends") {
-                tableRow[key] = this.tab_data.display[
-                  this.typeOfDisplayObj[key]
-                ][element[key].selected].name;
-              } else {
-                tableRow[key] = this.tab_data.display[
-                  this.typeOfDisplayObj[key]
-                ][element[key].selected];
-              }
-            } else {
-              tableRow[key] = element[key].selected;
-            }
-          }
-        });
-        if (Object.keys(tableRow).length) {
-          tableRow.originalObj = element;
-          tableRow._showDetails = false;
-          tableRow.index = this.tab_info.form_fields.indexOf(element);
-          tableFields.push(tableRow);
-        }
-      });
-      this.tableBlends.totalRows = tableFields.length;
-      return tableFields;
-    },
+		tableItemsBlends() {
+			const tableFields = []
+			this.tab_info.form_fields.forEach((element, index) => {
+				const tableRow = {}
+				Object.keys(element).forEach(key => {
+					if (element.blend.selected) {
+						if (this.typeOfDisplayObj[key]) {
+							if (this.typeOfDisplayObj[key] === 'blends') {
+								tableRow[key] = this.tab_data.display[
+									this.typeOfDisplayObj[key]
+								][element[key].selected].name
+							} else {
+								tableRow[key] = this.tab_data.display[
+									this.typeOfDisplayObj[key]
+								][element[key].selected]
+							}
+						} else {
+							tableRow[key] = element[key].selected
+						}
+					}
+				})
+				if (Object.keys(tableRow).length) {
+					tableRow.originalObj = element
+					tableRow._showDetails = false
+					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableFields.push(tableRow)
+				}
+			})
+			this.tableBlends.totalRows = tableFields.length
+			return tableFields
+		},
 
-    tableFields() {
-      const self = this;
-      let tableHeaders = [];
-      const options = { sortable: true, class: "text-center" };
-      this.tab_info.section_subheaders.forEach((element, index) => {
-        tableHeaders.push({
-          key: element.name,
-          label: element.label,
-          ...options
-        });
-      });
-      return tableHeaders;
-    },
+		tableFields() {
+			const tableHeaders = []
+			const options = { sortable: true, class: 'text-center' }
+			this.tab_info.section_subheaders.forEach((element) => {
+				tableHeaders.push({
+					key: element.name,
+					label: element.label,
+					...options
+				})
+			})
+			return tableHeaders
+		},
 
-    tableFieldsBlends() {
-      const self = this;
-      let tableHeaders = [];
-      const options = {
-        sortable: true,
-        sortDirection: "desc",
-        class: "text-center"
-      };
-      this.tab_info.section_subheaders.forEach((element, index) => {
-        if (element.name === "substance") {
-          tableHeaders.push({ key: "blend", label: element.label, ...options });
-        } else {
-          tableHeaders.push({
-            key: element.name,
-            label: element.label,
-            ...options
-          });
-        }
-      });
-      return tableHeaders;
-    },
-    tab_info() {
-      return this.$store.state.form.tabs[this.tabName];
-    },
-    tab_data() {
-      return this.$store.state.initialData;
-    },
+		tableFieldsBlends() {
+			const self = this
+			const tableHeaders = []
+			const options = {
+				sortable: true,
+				sortDirection: 'desc',
+				class: 'text-center'
+			}
+			this.tab_info.section_subheaders.forEach((element, index) => {
+				if (element.name === 'substance') {
+					tableHeaders.push({ key: 'blend', label: element.label, ...options })
+				} else {
+					tableHeaders.push({
+						key: element.name,
+						label: element.label,
+						...options
+					})
+				}
+			})
+			return tableHeaders
+		},
+		tab_info() {
+			return this.$store.state.form.tabs[this.tabName]
+		},
+		tab_data() {
+			return this.$store.state.initialData
+		},
 
-    fieldsDecisionQuantity() {
-      if (this.tab_info.hidden_fields_order) {
-        let fields = [];
+		fieldsDecisionQuantity() {
+			if (this.tab_info.hidden_fields_order) {
+				const fields = []
 
-        for (let field of this.tab_info.hidden_fields_order) {
-          let current = field.split("_");
-          current.shift();
-          this.pushUnique(fields, current.join("_"));
-        }
+				for (const field of this.tab_info.hidden_fields_order) {
+					const current = field.split('_')
+					current.shift()
+					this.pushUnique(fields, current.join('_'))
+				}
 
-        console.log("fields", fields);
-        return fields;
-      } else {
-        return false;
-      }
-    },
-    transitionState() {
-      return this.$store.getters.transitionState;
-    }
-  },
+				console.log('fields', fields)
+				return fields
+			}
+			return false
+		},
+		transitionState() {
+			return this.$store.getters.transitionState
+		}
+	},
 
-  methods: {
-    updateFormField(value, fieldInfo) {
-      this.$store.commit("updateFormField", {
-        value: value,
-        fieldInfo: fieldInfo
-      })
-    },
-    
-    expandedStatus(status) {
-      if (status) return "down";
-      else return "right";
-    },
-    rowHovered(item, index, event) {
-      this.hovered = item.index;
-    },
+	methods: {
+		updateFormField(value, fieldInfo) {
+			this.$store.commit('updateFormField', {
+				value,
+				fieldInfo
+			})
+		},
 
-    openValidation() {
-      const body = document.querySelector("body");
-      this.sidebarTabIndex = 2;
-      body.classList.add("aside-menu-lg-show");
-    },
+		expandedStatus(status) {
+			if (status) return 'down'
+			return 'right'
+		},
+		rowHovered(item, index, event) {
+			this.hovered = item.index
+		},
 
-    tableLoaded() {
-      if (!this.$refs.table) {
-        return;
-      }
+		openValidation() {
+			const body = document.querySelector('body')
+			this.sidebarTabIndex = 2
+			body.classList.add('aside-menu-lg-show')
+		},
 
-      let headers = this.$refs.table.$el.querySelectorAll("thead tr");
-      if (headers.length > 1) {
-        return; //nothing to do, header row already created
-      }
+		tableLoaded() {
+			if (!this.$refs.table) {
+				return
+			}
 
-      this.$refs.table.$el
-        .querySelector("tbody")
-        .addEventListener("mouseleave", e => {
-          this.hovered = false;
-        });
+			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
+			if (headers.length > 1) {
+				return // nothing to do, header row already created
+			}
 
-      if (!this.$refs.tableHeader) {
-        return;
-      }
-      let topHeader = this.$refs.tableHeader.querySelector("tr");
-      let isCurrentTabNOTDestruction =
-        this.tabName === "has_destroyed" ? false : true;
-      console.log(isCurrentTabNOTDestruction, this.tabName);
-      headers[0].parentNode.insertBefore(
-        topHeader.cloneNode(isCurrentTabNOTDestruction),
-        headers[0]
-      );
-    },
+			this.$refs.table.$el
+				.querySelector('tbody')
+				.addEventListener('mouseleave', e => {
+					this.hovered = false
+				})
 
-    tableLoadedBlends() {
-      if (!this.$refs.tableBlends) {
-        return;
-      }
+			if (!this.$refs.tableHeader) {
+				return
+			}
+			const topHeader = this.$refs.tableHeader.querySelector('tr')
+			const isCurrentTabNOTDestruction = this.tabName !== 'has_destroyed'
+      console.log(isCurrentTabNOTDestruction, this.tabName)
+			headers[0].parentNode.insertBefore(
+				topHeader.cloneNode(isCurrentTabNOTDestruction),
+				headers[0]
+			)
+		},
 
-      let headers = this.$refs.tableBlends.$el.querySelectorAll("thead tr");
-      if (headers.length > 1) {
-        return; //nothing to do, header row already created
-      }
+		tableLoadedBlends() {
+			if (!this.$refs.tableBlends) {
+				return
+			}
 
-      this.$refs.tableBlends.$el
-        .querySelector("tbody")
-        .addEventListener("mouseleave", e => {
-          this.hovered = false;
-        });
+			const headers = this.$refs.tableBlends.$el.querySelectorAll('thead tr')
+			if (headers.length > 1) {
+				return // nothing to do, header row already created
+			}
 
-      if (!this.$refs.tableHeader) {
-        return;
-      }
-      let topHeader = this.$refs.tableHeader.querySelector("tr");
-      topHeader.querySelector("th:first-of-type span").innerHTML = "Blends";
-      headers[0].parentNode.insertBefore(topHeader, headers[0]);
-    },
+			this.$refs.tableBlends.$el
+				.querySelector('tbody')
+				.addEventListener('mouseleave', e => {
+					this.hovered = false
+				})
 
-    intersect(a, b) {
-      var setA = new Set(a);
-      var setB = new Set(b);
-      var intersection = new Set([...setA].filter(x => setB.has(x)));
-      return Array.from(intersection);
-    },
+			if (!this.$refs.tableHeader) {
+				return
+			}
+			const topHeader = this.$refs.tableHeader.querySelector('tr')
+			topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+			headers[0].parentNode.insertBefore(topHeader, headers[0])
+		},
 
-    doCommentsRow(row) {
-      let fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order));
-      let intersection = this.intersect(
-        ["remarks_os", "remarks_party"],
-        fieldsToShow
-      );
-      if (
-        intersection.length === 0 &&
-        (row.remarks_os.selected || row.remarks_party.selected)
-      ) {
-        return true;
-      } else {
-        return false;
-      }
-    },
+		intersect(a, b) {
+			const setA = new Set(a)
+			const setB = new Set(b)
+			const intersection = new Set([...setA].filter(x => setB.has(x)))
+			return Array.from(intersection)
+		},
 
-    pushUnique(array, item) {
-      if (array.indexOf(item) === -1) {
-        array.push(item);
-      }
-    },
+		doCommentsRow(row) {
+			const fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
+			const intersection = this.intersect(
+				['remarks_os', 'remarks_party'],
+				fieldsToShow
+			)
+			if (
+				intersection.length === 0
+        && (row.remarks_os.selected || row.remarks_party.selected)
+			) {
+				return true
+			}
+			return false
+		},
 
-    remove_field(index, field) {
-      this.$store.commit("removeField", { tab: this.tabName, index: index });
-    },
+		pushUnique(array, item) {
+			if (array.indexOf(item) === -1) {
+				array.push(item)
+			}
+		},
 
-    splitBlend(value, percent) {
+		remove_field(index, field) {
+			this.$store.commit('removeField', { tab: this.tabName, index })
+		},
+
+		splitBlend(value, percent) {
       percent = percent * 100;
       if (value && value != 0 && percent) {
         let count = (parseFloat(value) * parseFloat(percent)) / 100;
         if (count === 0) {
           return "";
-        } else if (count < 0) {
+        } if (count < 0) {
           return count.toPrecision(3);
-        } else if (count > 999) {
+        } if (count > 999) {
           return parseInt(count);
-        } else {
+        } 
           return count.toPrecision(3);
-        }
+        
       } else {
         return "";
       }
     },
 
-    createModalData(field, index) {
-      this.modal_data = { field: field, index: index };
-      this.$refs.edit_modal.show();
-    },
+		createModalData(field, index) {
+			this.modal_data = { field, index }
+			this.$refs.edit_modal.show()
+		}
 
-  },
+	},
 
-  watch: {
-    "tab_info.form_fields": {
-      handler(before, after) {
-        if (parseInt(this.tabId) === this.tabIndex)
-          if (this.tab_info.status != "edited") {
-            this.$store.commit("setTabStatus", {
-              tab: this.tabName,
-              value: "edited"
-            });
-          }
-      },
-      deep: true
-    }
-  }
+	watch: {
+		'tab_info.form_fields': {
+			handler(before, after) {
+				if (parseInt(this.tabId) === this.tabIndex) {
+					if (this.tab_info.status != 'edited') {
+						this.$store.commit('setTabStatus', {
+							tab: this.tabName,
+							value: 'edited'
+						})
+					}
+				}
+			},
+			deep: true
+		}
+	}
 }
 
 </script>

@@ -23,9 +23,8 @@
         ref="table"
       >
 
-
         <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-          <div 
+          <div
             v-if="inputField === 'facility_name'"
             class="table-btn-group"
             :key="`${cell.item.index}_${inputField}_${tabName}_button`"
@@ -62,8 +61,6 @@
 
       </b-table>
 
-
-
     </div>
     <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
       <label>{{comment.label}}</label>
@@ -80,7 +77,7 @@
 <script>
 
 import fieldGenerator from './fieldGenerator'
-import inputFields from "@/assets/inputFields";
+import inputFields from '@/assets/inputFields'
 
 const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
@@ -93,97 +90,97 @@ export default {
 
 	components: {
 		fieldGenerator
-  },
-  
-  created(){
-    console.log(this.tabName)
-  },
+	},
+
+	created() {
+		console.log(this.tabName)
+	},
 
 	data() {
 		return {
 			modal_data: null,
-      modal_comments: null,
-      table: {
-        currentPage: 1,
-        perPage: 200,
-        totalRows: 5,
-        pageOptions: [5, 25, 100],
-        sortBy: null,
-        sortDesc: false,
-        sortDirection: "asc",
-        filters: {
-          search: null,
-          period_start: null,
-          period_end: null,
-          obligation: null,
-          party: null,
-          isCurrent: null
-        }
-      },
+			modal_comments: null,
+			table: {
+				currentPage: 1,
+				perPage: 200,
+				totalRows: 5,
+				pageOptions: [5, 25, 100],
+				sortBy: null,
+				sortDesc: false,
+				sortDirection: 'asc',
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					isCurrent: null
+				}
+			}
 		}
-  },
-  
-  computed: {
-     tableItems() {
-      let tableFields = [];
-      console.log(this.tab_info)
-      this.tab_info.form_fields.forEach((element, index) => {
-        let tableRow = {}
-        Object.keys(element).forEach(key => {
-          console.log(key)
-          tableRow[key] = element[key].selected
-        })
-        if (Object.keys(tableRow).length) {
-          tableRow.originalObj = element;
-          tableRow.index = this.tab_info.form_fields.indexOf(element);
-          tableFields.push(tableRow);
-        }
-      })
-      console.log(tableFields)
-      this.table.totalRows = tableFields.length;
-      return tableFields;
-    },
-    tableFields() {
-      const self = this;
-      let tableHeaders = [];
-      const options = { sortable: true, class: "text-center" };
-      this.tab_info.section_headers.forEach((element, index) => {
-        tableHeaders.push({
-          key: element.name,
-          label: element.label,
-          ...options
-        });
-      });
-      return tableHeaders;
-    },
-    tab_info() {
-      return this.$store.state.form.tabs[this.tabName];
-    },
-    tab_data() {
-      return this.$store.state.initialData;
-    },
-    getTabInputFields() {
-      return this.intersect(inputFields, this.tab_info.fields_order);
-    },
-    transitionState() {
-      return this.$store.getters.transitionState;
-    }
-  },
+	},
+
+	computed: {
+		tableItems() {
+			const tableFields = []
+			console.log(this.tab_info)
+			this.tab_info.form_fields.forEach((element, index) => {
+				const tableRow = {}
+				Object.keys(element).forEach(key => {
+					console.log(key)
+					tableRow[key] = element[key].selected
+				})
+				if (Object.keys(tableRow).length) {
+					tableRow.originalObj = element
+					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableFields.push(tableRow)
+				}
+			})
+			console.log(tableFields)
+			this.table.totalRows = tableFields.length
+			return tableFields
+		},
+		tableFields() {
+			const self = this
+			const tableHeaders = []
+			const options = { sortable: true, class: 'text-center' }
+			this.tab_info.section_headers.forEach((element, index) => {
+				tableHeaders.push({
+					key: element.name,
+					label: element.label,
+					...options
+				})
+			})
+			return tableHeaders
+		},
+		tab_info() {
+			return this.$store.state.form.tabs[this.tabName]
+		},
+		tab_data() {
+			return this.$store.state.initialData
+		},
+		getTabInputFields() {
+			return this.intersect(inputFields, this.tab_info.fields_order)
+		},
+		transitionState() {
+			return this.$store.getters.transitionState
+		}
+	},
 
 	methods: {
 		remove_field(index) {
-			this.$store.commit('removeField', { tab: this.tabName, index: index})
-    },
-    
-    intersect(a, b) {
-        var setA = new Set(a);
-        var setB = new Set(b);
-        var intersection = new Set([...setA].filter(x => setB.has(x)));
-        return Array.from(intersection);
-      },
+			this.$store.commit('removeField', { tab: this.tabName, index })
+		},
+
+		intersect(a, b) {
+			const setA = new Set(a)
+			const setB = new Set(b)
+			const intersection = new Set([...setA].filter(x => setB.has(x)))
+			return Array.from(intersection)
+		},
 		addField() {
 			this.$store.dispatch('prefillEmissionsRow')
-		},
+		}
 	},
 
 	watch: {
