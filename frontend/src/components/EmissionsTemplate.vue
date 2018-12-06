@@ -25,7 +25,11 @@
 
 
         <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-          <div v-if="inputField === 'facility_name'" class="table-btn-group">
+          <div 
+            v-if="inputField === 'facility_name'"
+            class="table-btn-group"
+            :key="`${cell.item.index}_${inputField}_${tabName}_button`"
+            >
             <b-btn
               variant="outline-danger"
               @click="remove_field(cell.item.index)"
@@ -49,6 +53,8 @@
               v-if="cell.item.validation.length"
               style="color: red; cursor: pointer"
               class="fa fa-exclamation fa-lg"
+              v-b-tooltip.hover
+              title="Click here to see the validation problems"
             ></i>
             <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
           </span>

@@ -93,8 +93,14 @@
               v-if="cell.item.validation.length"
               style="color: red; cursor: pointer"
               class="fa fa-exclamation fa-lg"
+              v-b-tooltip.hover
+              title="Click here to see the validation problems"
             ></i>
-            <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+            <i 
+              v-else 
+              style="color: green;" 
+              class="fa fa-check-square-o fa-lg"
+              ></i>
           </span>
         </template>
 
@@ -201,6 +207,8 @@
                         v-if="row.item.validation.length"
                         style="color: red; cursor: pointer"
                         class="fa fa-exclamation fa-lg"
+                        v-b-tooltip.hover
+                        title="Click here to see the validation problems"
                       ></i>
                       <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
                     </span>
@@ -281,6 +289,8 @@
               v-if="cell.item.validation.length"
               style="color: red; cursor: pointer"
               class="fa fa-exclamation fa-lg"
+              v-b-tooltip.hover
+              title="Click here to see the validation problems"
             ></i>
             <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
           </span>
