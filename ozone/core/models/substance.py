@@ -157,6 +157,8 @@ class Blend(models.Model):
     class BlendTypes(enum.Enum):
         ZEOTROPE = 'Zeotrope'
         AZEOTROPE = 'Azeotrope'
+        MeBr = 'Methyl bromide'
+        OTHER = 'Other'
 
     blend_id = models.CharField(max_length=64, unique=True)
 

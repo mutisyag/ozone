@@ -8,6 +8,7 @@ from django.conf import settings
 from openpyxl import load_workbook
 
 from ozone.core.models.utils import RatificationTypes
+from ozone.core.models.substance import Blend
 
 
 class Command(BaseCommand):
@@ -138,14 +139,14 @@ class Command(BaseCommand):
             row = self.row2dict(sheet, sheet[idx + 1])
             model_class = 'core.' + (self.MODELS[model].get('model') or model)
             obj = {
-                'pk': idx + (self.MODELS[model].get('min_id') or 0),
+                'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
                 'model': model_class,
                 'fields': {},
             }
             getattr(self, model + "_map")(obj['fields'], row)
             data.append(obj)
 
-        idx = sheet.max_row
+        idx = len(data)
         if hasattr(self, model + "_additional_data"):
             getattr(self, model + "_additional_data")(data, idx)
 
@@ -153,7 +154,6 @@ class Command(BaseCommand):
         if hasattr(self, model + "_postprocess"):
             for obj in data:
                 getattr(self, model + "_postprocess")(obj['fields'], row)
-
         # Hack alert: Remove rows having a pseudo-field called "_deleted"
         return list(filter(lambda obj: obj['fields'].get('_deleted') is not True, data))
 
@@ -334,6 +334,15 @@ class Command(BaseCommand):
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
+        if f['blend_id'].startswith('R-4'):
+            f['type'] = Blend.BlendTypes.ZEOTROPE.value
+        elif f['blend_id'].startswith('R-5'):
+            f['type'] = Blend.BlendTypes.AZEOTROPE.value
+        elif f['blend_id'].startswith('Methyl bromide'):
+            f['type'] = Blend.BlendTypes.MeBr.value
+        else:
+            f['type'] = Blend.BlendTypes.OTHER.value
+
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""
         f['remark'] = row['Remark'] or ""
