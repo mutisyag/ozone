@@ -54,6 +54,10 @@ if settings.DEBUG:
         ),
         path("500/", default_views.server_error),
     ]
+    # This allows browsable API authentication
+    urlpatterns += [
+        path('api-auth/', include('rest_framework.urls')),
+    ]
     if "debug_toolbar" in settings.INSTALLED_APPS:
         import debug_toolbar
 

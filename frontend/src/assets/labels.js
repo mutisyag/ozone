@@ -113,7 +113,16 @@ const labels = {
 		quantity_emitted: 'Amount of Emissions',
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)'
-	}
+	},
+	general: {
+		recall: 'Recall',
+		process: 'Process',
+		finalize: 'Finalize',
+		submit: 'Submit',
+		unrecall_to_submitted: 'Unrecall to submitted',
+		unrecall_to_processing: 'Unrecall to processing',
+		unrecall_to_finalized: 'Unrecall to finalized'
+	},
 
 }
 

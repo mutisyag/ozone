@@ -21,15 +21,15 @@
        >
         Submit
       </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
-        Recall
-      </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="outline-primary">
-        Process
-      </b-btn>
-      <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="outline-primary">
-        Reinstate
-      </b-btn>
+			<b-btn
+				variant="outline-primary"
+				v-for="transition in availableTransitions"
+				:key="transition"
+				@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})"
+			>
+				{{labels[transition]}}
+			</b-btn>
+
     </b-button-group>
   </div>
 
@@ -131,15 +131,14 @@
           >
             Submit
           </b-btn>
-          <b-btn v-if="$store.state.available_transitions.includes('recall')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'recall'})"  variant="outline-warning">
-            Recall
-          </b-btn>
-          <b-btn v-if="$store.state.available_transitions.includes('process')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'process'})"  variant="outline-primary">
-            Process
-          </b-btn>
-          <b-btn v-if="$store.state.available_transitions.includes('reinstate')" @click="$store.dispatch('doSubmissionTransition', {submission:submission, transition:'reinstate'})"  variant="outline-primary">
-            Reinstate
-        </b-btn>
+					<b-btn
+						variant="outline-primary"
+						v-for="transition in availableTransitions"
+						:key="transition"
+						@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})"
+					>
+						{{labels[transition]}}
+					</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           Versions
         </b-btn>
@@ -165,6 +164,7 @@ import Attachments from './Attachments.vue'
 import { getInstructions } from '@/api/api.js'
 import Save from './Save'
 import SubmissionHistory from './SubmissionHistory.vue'
+import labels from '@/assets/labels'
 
 export default {
 
@@ -187,9 +187,15 @@ export default {
 	},
 
 	created() {
+		this.labels = labels.general
 	},
 
 	computed: {
+
+		availableTransitions() {
+			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
+		},
+
 		display_tabs() {
 			const questionaire_tab = this.$store.state.form.tabs.questionaire_questions.form_fields
 			return {
@@ -239,6 +245,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
+			labels: null,
 			saveForSubmit: false,
 			tabs: ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty'],
 			titles: [
