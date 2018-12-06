@@ -1,57 +1,63 @@
 <template>
   <div v-if="tab_info">
     <div class="form-sections">
-      <table class="table submission-table">
-        <thead>
-          <tr class="first-header">
-            <th v-for="(header, header_index) in tab_info.section_headers" :colspan="header.colspan" :key="header_index">
-              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-                <span v-html="header.label"></span>  <i class="fa fa-info-circle fa-lg"></i>
-              </div>
-              <div v-else>
-                 <span v-html="header.label"></span>
-              </div>
-            </th>
-            <i style="
-              font-size: 2rem;
-              position: absolute;
-              cursor: pointer;
-              left: 17px;
-              margin-top: 1.5rem;" class="fa fa-plus-circle fa-lg" @click="addField"> </i>
 
-          </tr>
-          <tr class="subheader">
-            <th v-for="(subheader, subheader_index) in tab_info.section_subheaders" :key="subheader_index">
-            <div style="cursor:pointer" v-if="subheader.sort" @click="sortTable(subheader.name, tab_info.form_fields, subheader, subheader.type)">
-              <span v-html="subheader.label"></span> <i v-if="subheader.sort" :class="setSortDirection(subheader.sort)"></i>
-            </div>
-            <div v-else>
-              <span v-html="subheader.label"></span>
-            </div>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row,row_index) in tab_info.form_fields" class="form-fields" :key="row_index">
-            <td v-for="(order, order_index) in tab_info.fields_order" :key="order_index">
-              <span v-b-tooltip.hover = "row[order].tooltip ? true : false" :title="row[order].tooltip" v-if="row[order].type === 'nonInput'&& order !== 'validation'">
-                {{row[order].selected}}
-              </span>
+      <b-btn variant="success" @click="addField">Add facility</b-btn>
+      <b-table
+        show-empty
+        outlined
+        v-if="getTabInputFields"
+        bordered
+        hover
+        head-variant="light"
+        stacked="md"
+        class="submission-table"
+        :items="tableItems"
+        :fields="tableFields"
+        :current-page="table.currentPage"
+        :per-page="table.perPage"
+        :sort-by.sync="table.sortBy"
+        :sort-desc.sync="table.sortDesc"
+        :sort-direction="table.sortDirection"
+        :filter="table.filters.search"
+        ref="table"
+      >
 
-              <span v-else-if="row[order].type === 'nonInput' && order === 'validation'">
-                <i v-if="row[order].selected.length" style="color: red;" class="fa fa-exclamation fa-lg"></i>
-                <i v-else style="color: green;" class="fa fa-check-square-o fa-lg "></i>
-              </span>
 
-              <fieldGenerator :fieldInfo="{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}" v-else :field="row[order]"></fieldGenerator>
-            </td>
-          <td class="row-controls visible">
-            <i class="fa fa-times fa-lg" @click="remove_field(tab_info.form_fields, row)"></i>
-          </td>
-        </tr>
+        <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <div v-if="inputField === 'facility_name'" class="table-btn-group">
+            <b-btn
+              variant="outline-danger"
+              @click="remove_field(cell.item.index)"
+              class="table-btn"
+            >Delete</b-btn>
+          </div>
+          <fieldGenerator
+            :key="`${cell.item.index}_${inputField}_${tabName}`"
+            :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+            :disabled="transitionState"
+            :field="cell.item.originalObj[inputField]"
+          ></fieldGenerator>
+        </template>
 
-        </tbody>
-      </table>
+        <template
+          slot="validation"
+          slot-scope="cell"
+        >
+          <span class="validation-wrapper">
+            <i
+              v-if="cell.item.validation.length"
+              style="color: red; cursor: pointer"
+              class="fa fa-exclamation fa-lg"
+            ></i>
+            <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+          </span>
+        </template>
+
+      </b-table>
+
+
+
     </div>
     <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
       <label>{{comment.label}}</label>
@@ -68,6 +74,7 @@
 <script>
 
 import fieldGenerator from './fieldGenerator'
+import inputFields from "@/assets/inputFields";
 
 const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
@@ -78,101 +85,99 @@ export default {
 		tabIndex: Number
 	},
 
-	created() {
-		console.log(this.tabName)
-		this.tab_info = this.$store.state.form.tabs[this.tabName]
-		this.tab_data = this.$store.state.initialData
-	},
-
 	components: {
 		fieldGenerator
-	},
+  },
+  
+  created(){
+    console.log(this.tabName)
+  },
 
 	data() {
 		return {
-			tab_info: null,
-			tab_data: null,
 			modal_data: null,
-			current_field: null,
-			modal_comments: null
+      modal_comments: null,
+      table: {
+        currentPage: 1,
+        perPage: 200,
+        totalRows: 5,
+        pageOptions: [5, 25, 100],
+        sortBy: null,
+        sortDesc: false,
+        sortDirection: "asc",
+        filters: {
+          search: null,
+          period_start: null,
+          period_end: null,
+          obligation: null,
+          party: null,
+          isCurrent: null
+        }
+      },
 		}
-	},
+  },
+  
+  computed: {
+     tableItems() {
+      let tableFields = [];
+      console.log(this.tab_info)
+      this.tab_info.form_fields.forEach((element, index) => {
+        let tableRow = {}
+        Object.keys(element).forEach(key => {
+          console.log(key)
+          tableRow[key] = element[key].selected
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = element;
+          tableRow.index = this.tab_info.form_fields.indexOf(element);
+          tableFields.push(tableRow);
+        }
+      })
+      console.log(tableFields)
+      this.table.totalRows = tableFields.length;
+      return tableFields;
+    },
+    tableFields() {
+      const self = this;
+      let tableHeaders = [];
+      const options = { sortable: true, class: "text-center" };
+      this.tab_info.section_headers.forEach((element, index) => {
+        tableHeaders.push({
+          key: element.name,
+          label: element.label,
+          ...options
+        });
+      });
+      return tableHeaders;
+    },
+    tab_info() {
+      return this.$store.state.form.tabs[this.tabName];
+    },
+    tab_data() {
+      return this.$store.state.initialData;
+    },
+    getTabInputFields() {
+      return this.intersect(inputFields, this.tab_info.fields_order);
+    },
+    transitionState() {
+      return this.$store.getters.transitionState;
+    }
+  },
 
 	methods: {
-		remove_field(field) {
-			this.$store.commit('removeField', { tab: this.tabName, index: this.tab_info.form_fields.indexOf(field) })
-		},
-
+		remove_field(index) {
+			this.$store.commit('removeField', { tab: this.tabName, index: index})
+    },
+    
+    intersect(a, b) {
+        var setA = new Set(a);
+        var setB = new Set(b);
+        var intersection = new Set([...setA].filter(x => setB.has(x)));
+        return Array.from(intersection);
+      },
 		addField() {
 			this.$store.dispatch('prefillEmissionsRow')
 		},
-
-		expandedStatus(status) {
-			if (status) { return 'down' }
-			return 'left'
-		},
-
-		getSubheaderSpanType(field_name) {
-			if (field_name === 'substances' || field_name === 'quantity_exempted') { return 2 }
-		},
-
-		setSortDirection(value) {
-			if (value === 1) {
-				return 'fa fa-caret-down fa-lg'
-			}
-			return 'fa fa-caret-up fa-lg'
-		},
-
-		sortTable(value, section, subheader, type) {
-			const self = this
-			const sortType = subheader.sort
-
-			const stringSortType = {
-				'-1': 'z',
-				1: 'a'
-			}
-
-			for (const field of section) {
-				if (value === 'substances') {
-					field.index = field.substance.selected.text
-				} else {
-					field.index = ''
-					for (const inner_field of field.substance.inner_fields) {
-						if (['destination_party', 'source_party', 'trade_party'].includes(value)) {
-							if (inner_field.name === value) {
-								field.index = inner_field.selected || stringSortType[sortType]
-							}
-						} else if (inner_field.name === value) {
-							field.index = inner_field.selected
-						}
-					}
-				}
-			}
-
-			const sortObj = JSON.parse(JSON.stringify(section))
-			sortObj.sort((a, b) => {
-				if (type === 'number') {
-					return (norm(a.index, sortType) - norm(b.index, sortType)) * sortType
-				}
-				const x = self.removeSpecialChars(a.index).toUpperCase()
-				const y = self.removeSpecialChars(b.index).toUpperCase()
-				console.log(x, y)
-				if (sortType === 1) {
-					if (x > y) { return 1 }
-					return -1
-				}
-				if (x < y) { return 1 }
-				return -1
-			})
-
-			subheader.sort = -subheader.sort
-			this.$set(this.structure, 'form_fields', sortObj)
-		},
-
-		removeSpecialChars(str) {
-			return str.replace(/[^a-zA-Z0-9]+/g, '')
-		}
-
 	},
 
 	watch: {

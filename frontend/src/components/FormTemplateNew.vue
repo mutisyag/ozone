@@ -480,8 +480,6 @@ export default {
 
   data() {
     return {
-      // tab_info: null,
-      // tab_data: null,
       table: {
         currentPage: 1,
         perPage: 200,

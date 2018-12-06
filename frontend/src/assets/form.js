@@ -645,31 +645,39 @@ const form = {
 			],
 
 			section_headers: [{
-				label: 'Facility name or identifier'
+				label: 'Facility name or identifier',
+				name: 'facility_name'
 			},
 			{
 				label: 'Amount [Generated]* <br> (tonnes)',
+				name: 'quantity_generated',
 				tooltip: 'Amount [Generated] refers to amount that is captured, whether for destruction in another facility, feedstock or any other use. '
 			},
 			{
 				label: 'Amount Used for Feedstock** <br> (tonnes)',
+				name: 'quantity_feedstock',
 				tooltip: 'Amount converted to other substances shall be treated as feedstock uses.'
 			},
 			{
 				label: 'Amount Destroyed*** <br> (tonnes)',
+				name: 'quantity_destroyed',
 				tooltip: 'Amount Destroyed  refers to “Amount destroyed in the facility, with or without prior capture”'
 			},
 			{
-				label: 'Amount of Emissions <br> (tonnes)'
+				label: 'Amount of Emissions <br> (tonnes)',
+				name: 'quantity_emitted'
 			},
 			{
-				label: 'Remarks (party)'
+				label: 'Remarks (party)',
+				name: 'remarks_party'
 			},
 			{
-				label: 'Remarks (Secretariat)'
+				label: 'Remarks (Secretariat)',
+				name: 'remarks_os'
 			},
 			{
-				label: 'Status'
+				label: 'Status',
+				name: 'validation'			
 			}
 			],
 			comments: [{

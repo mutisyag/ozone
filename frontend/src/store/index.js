@@ -570,7 +570,7 @@ const store = new Vuex.Store({
 		},
 
 		addEmissionsRow(state, data) {
-			form.tabs.has_emissions.form_fields.push(data)
+			state.form.tabs.has_emissions.form_fields.push(data)
 		},
 
 		addCreateBlendToBlendList(state, data) {

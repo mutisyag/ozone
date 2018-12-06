@@ -12,6 +12,11 @@ const inputFields = [
 	'quantity_import_new',
 	'quantity_import_recovered',
 	'quantity_export_new',
-	'quantity_export_recovered'
+	'quantity_export_recovered',
+	'facility_name',
+	'quantity_generated',
+	'quantity_feedstock',
+	'quantity_destroyed',
+	'quantity_emitted'
 ]
 export default inputFields
