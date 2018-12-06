@@ -41,7 +41,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-			title: 'Data on exports',
+			title: 'Exports',
 			name: 'has_exports',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
@@ -146,7 +146,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-			title: 'Data on imports',
+			title: 'Imports',
 			name: 'has_imports',
 			comments: [{
 				name: 'comments_party',
@@ -247,7 +247,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-			title: 'Data on production',
+			title: 'Production',
 			name: 'has_produced',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			isInvalid: false,
@@ -413,7 +413,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-			title: 'Data on destruction',
+			title: 'Destruction',
 			name: 'has_destroyed',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
@@ -473,7 +473,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-			title: 'Data on nonparty',
+			title: 'Nonparty',
 			name: 'has_nonparty',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
@@ -586,7 +586,7 @@ const form = {
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
-			title: 'Data on emissions',
+			title: 'Emissions',
 			name: 'has_emissions',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
@@ -677,7 +677,7 @@ const form = {
 			},
 			{
 				label: 'Status',
-				name: 'validation'			
+				name: 'validation'		
 			}
 			],
 			comments: [{

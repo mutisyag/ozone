@@ -211,18 +211,18 @@ export default {
 			titles: [
 				{ title: 'Submission Info' },
 				{ title: 'Questionaire' },
-				{ title: '<b>DATA ON IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>' },
+				{ title: '<b>IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>' },
 				{
-					title: '<b>DATA ON EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
+					title: '<b>EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
 					tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'
 				},
-				{ title: '<b> DATA ON PRODUCTION </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
-				{ title: '<b> DATA ON QUANTITY OF SUBSTANCES DESTROYED </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
+				{ title: '<b>PRODUCTION </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
+				{ title: '<b>QUANTITY OF SUBSTANCES DESTROYED </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
 				{
-					title: '<b> DATA ON IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
+					title: '<b>IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
 					tooltip: '* See definition of “non parties” in Instruction V.'
 				},
-				{ title: '<b> DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES </b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>' },
+				{ title: '<b>EMISSIONS</b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>' },
 				{ title: 'Attachments' }
 			],
 			subtitles: ['',
