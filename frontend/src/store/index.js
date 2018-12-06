@@ -206,7 +206,11 @@ const store = new Vuex.Store({
 
 		doSubmissionTransition(context, data) {
 			callTransition(data.submission, data.transition).then(() => {
-				context.dispatch('getSubmissionData', data.submission)
+				if(data.source === 'dashboard'){
+					context.dispatch('getCurrentSubmissions')
+				} else {
+					context.dispatch('getSubmissionData', data.submission)
+				}
 				context.dispatch('setAlert', { message: 'Submission state updated', variant: 'success' })
 			}).catch(error => {
 				context.dispatch('setAlert', { message: 'Unable to change the state of this submission', variant: 'danger' })

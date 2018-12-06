@@ -119,9 +119,9 @@ const labels = {
 		process: 'Process',
 		finalize: 'Finalize',
 		submit: 'Submit',
-		unrecall_to_submitted: 'Unrecall to submitted',
-		unrecall_to_processing: 'Unrecall to processing',
-		unrecall_to_finalized: 'Unrecall to finalized'
+		unrecall_to_submitted: 'Reinstate',
+		unrecall_to_processing: 'Reinstate',
+		unrecall_to_finalized: 'Reinstate'
 	},
 
 }

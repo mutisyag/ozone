@@ -158,6 +158,16 @@
                       >
                       Clone
                     </b-btn>
+
+                    <b-btn
+                      variant="outline-primary"
+                      v-for="transition in row.item.details.available_transitions"
+                      :key="transition"
+                      @click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})"
+                    >
+                      {{labels[transition]}}
+                    </b-btn>
+
                     <b-btn
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
@@ -187,6 +197,7 @@ import errorHandling from '@/mixins/errorHandling'
 import Multiselect from '@/mixins/modifiedMultiselect'
 // import Multiselect from "vue-multiselect"
 import { mapGetters } from 'vuex'
+import labels from '@/assets/labels'
 
 export default {
 	name: 'Dashboard',
@@ -197,7 +208,7 @@ export default {
 				reporting_period: null,
 				party: null
 			},
-
+			labels: labels.general,
 			table: {
 				fields: [
 					{
