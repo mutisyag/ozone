@@ -98,7 +98,7 @@ export default {
 					{ value: 100, text: '100' },
 					{ value: Infinity, text: 'All' }
 				],
-				searchInColumnsOptions: [fields[1], fields[2]],
+				searchInColumnsOptions: [fields[1], fields[2], fields[3]],
 				filters: {
 					search: null,
 					selectedSearchInColumnOption: fields[1].key,
