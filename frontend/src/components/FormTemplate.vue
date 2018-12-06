@@ -21,6 +21,26 @@
         </thead>
       </table>
 
+      <table v-if="tabName !== 'has_destroyed'" ref="tableHeaderBlends" class="table submission-table header-only">
+        <thead>
+          <tr class="first-header">
+            <th
+              v-for="(header, header_index) in tab_info.section_headers"
+              :colspan="header.colspan"
+              :key="header_index"
+            >
+              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+                <span v-html="header.label"></span>
+                <i class="fa fa-info-circle fa-lg"></i>
+              </div>
+              <div v-else>
+                <span v-html="header.label"></span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+      </table>
+
       <b-table
         show-empty
         outlined
@@ -414,6 +434,7 @@
             v-if="fieldsDecisionQuantity"
             v-for="(order,order_index) in fieldsDecisionQuantity"
             :key="order_index"
+            v-show="anotherSpecialCase(order, modal_data)"
           >
             <b-col lg="4" class="mb-2">
               <b>{{labels[`decision_${order}`]}}:</b>
@@ -684,11 +705,28 @@ export default {
 	},
 
 	methods: {
+		anotherSpecialCase(order, modal_data) {
+			if (modal_data.field.group.selected !== 'EI' && order === 'quarantine_pre_shipment') {
+				return false
+			}
+			return true
+		},
+
 		updateFormField(value, fieldInfo) {
 			this.$store.commit('updateFormField', {
 				value,
 				fieldInfo
 			})
+			if (fieldInfo.field === 'substance') {
+				this.$store.commit('updateFormField', {
+					value: this.getGroupBySubstance(value),
+					fieldInfo: { index: fieldInfo.index, tabName: fieldInfo.tabName, field: 'group' }
+				})
+			}
+		},
+
+		getGroupBySubstance(value) {
+			return this.tab_data.substances.find(g => value === g.value).group.group_id
 		},
 
 		expandedStatus(status) {
@@ -725,11 +763,8 @@ export default {
 				return
 			}
 			const topHeader = this.$refs.tableHeader.querySelector('tr')
-			const isCurrentTabNOTDestruction = this.tabName !== 'has_destroyed'
-			console.log(isCurrentTabNOTDestruction, this.tabName)
 			headers[0].parentNode.insertBefore(
-				topHeader.cloneNode(isCurrentTabNOTDestruction),
-				headers[0]
+				topHeader, headers[0]
 			)
 		},
 
@@ -749,10 +784,10 @@ export default {
 					this.hovered = false
 				})
 
-			if (!this.$refs.tableHeader) {
+			if (!this.$refs.tableHeaderBlends) {
 				return
 			}
-			const topHeader = this.$refs.tableHeader.querySelector('tr')
+			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
 			topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
 			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},

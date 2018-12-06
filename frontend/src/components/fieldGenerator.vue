@@ -51,11 +51,11 @@ export default {
 		}
 
 	},
-	watch:{		
+	watch: {
 		'field.selected': {
 			handler() {
 				this.currentTyping = this.field.selected
-			},
+			}
 		}
 	}
 }

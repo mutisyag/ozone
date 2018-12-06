@@ -4,7 +4,8 @@
       "blend_id": "D136",
       "composition": "R-22/124/600a (50/47/3)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 1
@@ -14,7 +15,8 @@
       "blend_id": "Daikin Blend",
       "composition": "R-23/32/124 (2/28/70)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 2
@@ -24,7 +26,8 @@
       "blend_id": "Free Zone",
       "composition": "R-142b/134a/Lubricant (19/79/2)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 3
@@ -34,7 +37,8 @@
       "blend_id": "FX20",
       "composition": "R-125/22 (45/55)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 4
@@ -44,7 +48,8 @@
       "blend_id": "FX55",
       "composition": "R-22/142b (60/40)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 5
@@ -54,7 +59,8 @@
       "blend_id": "GHG-HP",
       "composition": "R-22/142b/600a (65/31/4)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 6
@@ -64,7 +70,8 @@
       "blend_id": "GHG-X5",
       "composition": "R-22/142b/227ea/600a (41/15/40/4)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 7
@@ -74,7 +81,8 @@
       "blend_id": "NARM-502",
       "composition": "R-22/152a/23 (90/5/5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 8
@@ -84,7 +92,8 @@
       "blend_id": "NASF-S-III",
       "composition": "R-22/123/124/600a (82/4.75/9.5/3.75)",
       "other_names": "",
-      "remark": "A halon alternative"
+      "remark": "A halon alternative",
+      "type": "Other"
     },
     "model": "core.blend",
     "pk": 9
@@ -94,7 +103,8 @@
       "blend_id": "R-401A",
       "composition": "R-22/152a/124 (53,0/13,0/34,0)",
       "other_names": "MP 39",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 10
@@ -104,7 +114,8 @@
       "blend_id": "R-401B",
       "composition": "R-22/152a/124 (61,0/11,0/28,0)",
       "other_names": "MP 66",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 11
@@ -114,7 +125,8 @@
       "blend_id": "R-401C",
       "composition": "R-22/152a/124 (33,0/15,0/52,0)",
       "other_names": "MP 52",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 12
@@ -124,7 +136,8 @@
       "blend_id": "R-402A",
       "composition": "R-125/290/22 (60,0/2,0/38,0)",
       "other_names": "HP 80",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 13
@@ -134,7 +147,8 @@
       "blend_id": "R-402B",
       "composition": "R-125/290/22 (38,0/2,0/60,0)",
       "other_names": "HP 81",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 14
@@ -144,7 +158,8 @@
       "blend_id": "R-403A",
       "composition": "R-290/22/218 (5,0/75,0/20,0)",
       "other_names": "69S",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 15
@@ -154,7 +169,8 @@
       "blend_id": "R-403B",
       "composition": "R-290/22/218 (5,0/56,0/39,0)",
       "other_names": "69L",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 16
@@ -164,7 +180,8 @@
       "blend_id": "R-404A",
       "composition": "R-125/143a/134a (44,0/52,0/4,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 17
@@ -174,7 +191,8 @@
       "blend_id": "R-405A",
       "composition": "R-22/142b/152a/C318 (45/6/7/43)",
       "other_names": "G2015",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 18
@@ -184,7 +202,8 @@
       "blend_id": "R-406A",
       "composition": "R-22/600a/142b (55,0/4,0/41,0)",
       "other_names": "GHG 12",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 19
@@ -194,7 +213,8 @@
       "blend_id": "R-407A",
       "composition": "R-32/125/134a (20,0/40,0/40,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 20
@@ -204,7 +224,8 @@
       "blend_id": "R-407B",
       "composition": "R-32/125/134a (10,0/70,0/20,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 21
@@ -214,7 +235,8 @@
       "blend_id": "R-407C",
       "composition": "R-32/125/134a (23,0/25,0/52,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 22
@@ -224,7 +246,8 @@
       "blend_id": "R-407D",
       "composition": "R-32/125/134a (15,0/15,0/70,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 23
@@ -234,7 +257,8 @@
       "blend_id": "R-407E",
       "composition": "R-32/125/134a (25,0/15,0/60,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 24
@@ -244,7 +268,8 @@
       "blend_id": "R-407F",
       "composition": "R-32/125/134a (30,0/30,0/40,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 25
@@ -254,7 +279,8 @@
       "blend_id": "R-407G",
       "composition": "R-32/125/134a (2,5/2,5/95,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 26
@@ -264,7 +290,8 @@
       "blend_id": "R-408A",
       "composition": "R-125/143a/22 (7,0/46,0/47,0)",
       "other_names": "FX10",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 27
@@ -274,7 +301,8 @@
       "blend_id": "R-409A",
       "composition": "R-22/124/142b (60,0/25,0/15,0)",
       "other_names": "FX56",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 28
@@ -284,7 +312,8 @@
       "blend_id": "R-409B",
       "composition": "R-22/124/142b (65,0/25,0/10,0)",
       "other_names": "FX 57",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 29
@@ -294,7 +323,8 @@
       "blend_id": "R-410A",
       "composition": "R-32/125 (50,0/50,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 30
@@ -304,7 +334,8 @@
       "blend_id": "R-410B",
       "composition": "R-32/125 (45,0/55,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 31
@@ -314,7 +345,8 @@
       "blend_id": "R-411A",
       "composition": "R-1270/22/152a (1,5/87,5/11,0)",
       "other_names": "G2018A",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 32
@@ -324,7 +356,8 @@
       "blend_id": "R-411B",
       "composition": "R-1270/22/152a (3,0/94,0/3,0)",
       "other_names": "G2018B",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 33
@@ -334,7 +367,8 @@
       "blend_id": "R-412A",
       "composition": "R-22/218/142b (70,0/5,0/25,0)",
       "other_names": "TP5R",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 34
@@ -344,7 +378,8 @@
       "blend_id": "R-413A",
       "composition": "R-218/134a/600a (9,0/88,0/3,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 35
@@ -354,7 +389,8 @@
       "blend_id": "R-414A",
       "composition": "R-22/124/600a/142b (51,0/28,5/4,0/16,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 36
@@ -364,7 +400,8 @@
       "blend_id": "R-414B",
       "composition": "R-22/124/600a/142b (50,0/39,0/1,5/9,5)",
       "other_names": "Hotshot",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 37
@@ -374,7 +411,8 @@
       "blend_id": "R-415A",
       "composition": "R-22/152a (82,0/18,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 38
@@ -384,7 +422,8 @@
       "blend_id": "R-415B",
       "composition": "R-22/152a (25,0/75,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 39
@@ -394,7 +433,8 @@
       "blend_id": "R-416A",
       "composition": "R-134a/124/600 (59,0/39,5/1,5)",
       "other_names": "FRIGC",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 40
@@ -404,7 +444,8 @@
       "blend_id": "R-417A",
       "composition": "R-125/134a/600 (46,6/50,0/3,4)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 41
@@ -414,7 +455,8 @@
       "blend_id": "R-417B",
       "composition": "R-125/134a/600 (79,0/18,3/2,7)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 42
@@ -424,7 +466,8 @@
       "blend_id": "R-417C",
       "composition": "R-125/134a/600 (19,5/78,8/1,7)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 43
@@ -434,7 +477,8 @@
       "blend_id": "R-418A",
       "composition": "R-290/22/152a (1,5/96,0/2,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 44
@@ -444,7 +488,8 @@
       "blend_id": "R-419A",
       "composition": "R-125/134a/E170 (77,0/19,0/4,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 45
@@ -454,7 +499,8 @@
       "blend_id": "R-419B",
       "composition": "R-125/134a/E170 (48,5/48,0/3,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 46
@@ -464,7 +510,8 @@
       "blend_id": "R-420A",
       "composition": "R-134a/142b (88,0/12,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 47
@@ -474,7 +521,8 @@
       "blend_id": "R-421A",
       "composition": "R-125/134a (58,0/42,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 48
@@ -484,7 +532,8 @@
       "blend_id": "R-421B",
       "composition": "R-125/134a (85,0/15,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 49
@@ -494,7 +543,8 @@
       "blend_id": "R-422A",
       "composition": "R-125/134a/600a (85,1/11,5/3,4)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 50
@@ -504,7 +554,8 @@
       "blend_id": "R-422B",
       "composition": "R-125/134a/600a (55,0/42,0/3,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 51
@@ -514,7 +565,8 @@
       "blend_id": "R-422C",
       "composition": "R-125/134a/600a (82,0/15,0/3,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 52
@@ -524,7 +576,8 @@
       "blend_id": "R-422D",
       "composition": "R-125/134a/600a (65,1/31,5/3,4)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 53
@@ -534,7 +587,8 @@
       "blend_id": "R-422E",
       "composition": "R-125/134a/600a (58,0/39,3/2,7)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 54
@@ -544,7 +598,8 @@
       "blend_id": "R-423A",
       "composition": "R-134a/227ea (52,5/47,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 55
@@ -554,7 +609,8 @@
       "blend_id": "R-424A",
       "composition": "R-125/134a/600a/600/601a (50,5/47,0/0,9/1,0/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 56
@@ -564,7 +620,8 @@
       "blend_id": "R-425A",
       "composition": "R-32/134a/227ea (18,5/69,5/12)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 57
@@ -574,7 +631,8 @@
       "blend_id": "R-426A",
       "composition": "R-125/134a/600/601a (5,1/93,0/1,3/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 58
@@ -584,7 +642,8 @@
       "blend_id": "R-427A",
       "composition": "R-32/125/143a/134a (15,0/25,0/10,0/50,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 59
@@ -594,7 +653,8 @@
       "blend_id": "R-428A",
       "composition": "R-125/143a/290/600a (77,5/20,0/0,6/1,9)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 60
@@ -604,7 +664,8 @@
       "blend_id": "R-429A",
       "composition": "R-E170/152a/600a (60,0/10,0/30,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 61
@@ -614,7 +675,8 @@
       "blend_id": "R-430A",
       "composition": "R-152a/600a (76,0/24,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 62
@@ -624,7 +686,8 @@
       "blend_id": "R-431A",
       "composition": "R-290/152a (71,0/29,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 63
@@ -634,7 +697,8 @@
       "blend_id": "R-432A",
       "composition": "R-1270/E170 (80,0/20,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 64
@@ -644,7 +708,8 @@
       "blend_id": "R-433A",
       "composition": "R-1270/290 (30,0/70,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 65
@@ -654,7 +719,8 @@
       "blend_id": "R-433B",
       "composition": "R-1270/290 (5,0/95,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 66
@@ -664,7 +730,8 @@
       "blend_id": "R-433C",
       "composition": "R-1270/290 (25,0/75,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 67
@@ -674,7 +741,8 @@
       "blend_id": "R-434A",
       "composition": "R-125/143a/134a/600a (63,2/18,0/16,0/2,8)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 68
@@ -684,7 +752,8 @@
       "blend_id": "R-435A",
       "composition": "R-E170/152a (80,0/20,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 69
@@ -694,7 +763,8 @@
       "blend_id": "R-436A",
       "composition": "R-290/600a (56,0/44,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 70
@@ -704,7 +774,8 @@
       "blend_id": "R-436B",
       "composition": "R-290/600a (52,0/48,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 71
@@ -714,7 +785,8 @@
       "blend_id": "R-437A",
       "composition": "R-125/134a/600/601 (19,5/78,5/1,4/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 72
@@ -724,7 +796,8 @@
       "blend_id": "R-438A",
       "composition": "R-32/125/134a/600/601a (8,5/45,0/44,2/1,7/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 73
@@ -734,7 +807,8 @@
       "blend_id": "R-439A",
       "composition": "R-32/125/600a (50,0/47,0/3,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 74
@@ -744,7 +818,8 @@
       "blend_id": "R-440A",
       "composition": "R-290/134a/152a (0,6/1,6/97,8)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 75
@@ -754,7 +829,8 @@
       "blend_id": "R-441A",
       "composition": "R-170/290/600a/600 (3,1/54,8/6,0/36,1)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 76
@@ -764,7 +840,8 @@
       "blend_id": "R-442A",
       "composition": "R-32/125/134a/152a/227ea (31,0/31,0/30,0/3,0/5,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 77
@@ -774,7 +851,8 @@
       "blend_id": "R-443A",
       "composition": "R-1270/290/600a (55,0/40,0/5,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 78
@@ -784,7 +862,8 @@
       "blend_id": "R-444A",
       "composition": "R-32/152a/1234ze(E) (12,0/5,0/83,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 79
@@ -794,7 +873,8 @@
       "blend_id": "R-444B",
       "composition": "R-32/1234ze(E)/152a (41,5/48,5/10)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 80
@@ -804,7 +884,8 @@
       "blend_id": "R-445A",
       "composition": "R-744/134a/1234ze(E) (6,0/9,0/85,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 81
@@ -814,7 +895,8 @@
       "blend_id": "R-446A",
       "composition": "R-32/1234ze(E)/600 (68,0/29,0/3,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 82
@@ -824,7 +906,8 @@
       "blend_id": "R-447A",
       "composition": "R-32/125/1234ze(E) (68,0/3,5/28,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 83
@@ -834,7 +917,8 @@
       "blend_id": "R-447B",
       "composition": "R-32/125/1234ze(E) (68,0/8,0/24,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 84
@@ -844,7 +928,8 @@
       "blend_id": "R-448A",
       "composition": "R-32/125/1234yf/134a/1234ze(E) (26,0/26,0/20,0/21,0/7,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 85
@@ -854,7 +939,8 @@
       "blend_id": "R-449A",
       "composition": "R-32/125/1234yf/134a (24,3/24,7/25,3/25,7)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 86
@@ -864,7 +950,8 @@
       "blend_id": "R-449B",
       "composition": "R-32/125/1234yf/134a (25,2/24,3/23,2/27,3)",
       "other_names": "Arkema",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 87
@@ -874,7 +961,8 @@
       "blend_id": "R-449C",
       "composition": "R-32/125/1234yf/134a (20,0/20,0/31,0/29,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 88
@@ -884,7 +972,8 @@
       "blend_id": "R-450A",
       "composition": "R-1234ze(E)/134a (58/42)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 89
@@ -894,7 +983,8 @@
       "blend_id": "R-451A",
       "composition": "R-1234yf/134a (89,8/10,2)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 90
@@ -904,7 +994,8 @@
       "blend_id": "R-451B",
       "composition": "R-1234yf/134a (88,8/11,2)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 91
@@ -914,7 +1005,8 @@
       "blend_id": "R-452A",
       "composition": "R-1234yf/32/125 (30/11/59)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 92
@@ -924,7 +1016,8 @@
       "blend_id": "R-452B",
       "composition": "R-32/125/1234yf (67,0/7,0/26,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 93
@@ -934,7 +1027,8 @@
       "blend_id": "R-452C",
       "composition": "R-32/125/1234yf (12,5/61,0/26,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 94
@@ -944,7 +1038,8 @@
       "blend_id": "R-453A",
       "composition": "R-32/125/134a/227ea/600/601a (20,0/20,0/53,8/5,0/0,6/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 95
@@ -954,7 +1049,8 @@
       "blend_id": "R-454A",
       "composition": "R-32/1234yf (35,0/65,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 96
@@ -964,7 +1060,8 @@
       "blend_id": "R-454B",
       "composition": "R-32/1234yf (68,9/31,1)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 97
@@ -974,7 +1071,8 @@
       "blend_id": "R-454C",
       "composition": "R-32/1234yf (21,5/78,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 98
@@ -984,7 +1082,8 @@
       "blend_id": "R-455A",
       "composition": "R-744/32/1234yf (3,0/21,5/75,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 99
@@ -994,7 +1093,8 @@
       "blend_id": "R-456A",
       "composition": "R-32/134a/1234ze(E) (6,0/45,0/49,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 100
@@ -1004,7 +1104,8 @@
       "blend_id": "R-457A",
       "composition": "R-32/1234yf/152a (18,0/70,0/12,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 101
@@ -1014,7 +1115,8 @@
       "blend_id": "R-458A",
       "composition": "R-32/125/134a/227ea/236fa (20,5/4,0/61,4/13,5/0,6)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 102
@@ -1024,7 +1126,8 @@
       "blend_id": "R-459A",
       "composition": "R-32/1234yf/1234ze(E) (68,0/26,0/6,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 103
@@ -1034,7 +1137,8 @@
       "blend_id": "R-459B",
       "composition": "R-32/1234yf/1234ze(E) (21,0/69,0/10,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 104
@@ -1044,7 +1148,8 @@
       "blend_id": "R-460A",
       "composition": "R-32/125/134a/1234ze(E) (12,0/52,0/14,0/22,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 105
@@ -1054,7 +1159,8 @@
       "blend_id": "R-460B",
       "composition": "R-32/125/134a/1234ze(E) (28,0/25,0/20,0/27,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Zeotrope"
     },
     "model": "core.blend",
     "pk": 106
@@ -1064,7 +1170,8 @@
       "blend_id": "R-500",
       "composition": "R-12/152a (73,8/26,2)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 107
@@ -1074,7 +1181,8 @@
       "blend_id": "R-501",
       "composition": "R-22/12 (75,0/25,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 108
@@ -1084,7 +1192,8 @@
       "blend_id": "R-502",
       "composition": "R-22/115 (48,8/51,2)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 109
@@ -1094,7 +1203,8 @@
       "blend_id": "R-503",
       "composition": "R-23/13 (40,1/59,9)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 110
@@ -1104,7 +1214,8 @@
       "blend_id": "R-504",
       "composition": "R-32/115 (48,2/51,8)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 111
@@ -1114,7 +1225,8 @@
       "blend_id": "R-505",
       "composition": "R-12/31 (78/22)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 112
@@ -1124,7 +1236,8 @@
       "blend_id": "R-506",
       "composition": "R-114/31 (45/55)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 113
@@ -1134,7 +1247,8 @@
       "blend_id": "R-507A",
       "composition": "R-125/143a (50,0/50,0)",
       "other_names": "AZ50",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 114
@@ -1144,7 +1258,8 @@
       "blend_id": "R-508A",
       "composition": "R-23/116 (39,0/61,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 115
@@ -1154,7 +1269,8 @@
       "blend_id": "R-508B",
       "composition": "R-23/116 (46,0/54,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 116
@@ -1164,7 +1280,8 @@
       "blend_id": "R-509",
       "composition": "R-22/218 (46,0/54,0)",
       "other_names": "TP5R2",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 117
@@ -1174,7 +1291,8 @@
       "blend_id": "R-509A",
       "composition": "R-22/218 (44,0/56,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 118
@@ -1184,7 +1302,8 @@
       "blend_id": "R-510A",
       "composition": "R-E170/600a (88,0/12,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 119
@@ -1194,7 +1313,8 @@
       "blend_id": "R-511A",
       "composition": "R-290/E170 (95,0/5,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 120
@@ -1204,7 +1324,8 @@
       "blend_id": "R-512A",
       "composition": "R-134a/152a (5,0/95,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 121
@@ -1214,7 +1335,8 @@
       "blend_id": "R-513A",
       "composition": "R-1234yf/134a (56/44)",
       "other_names": "XP10 / DR11",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 122
@@ -1224,7 +1346,8 @@
       "blend_id": "R-513B",
       "composition": "R-1234yf/134a (58,5/41,5)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 123
@@ -1234,7 +1357,8 @@
       "blend_id": "R-514A",
       "composition": "R-1336mzz(Z)/1130(E) (74,7/25,3)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 124
@@ -1244,7 +1368,8 @@
       "blend_id": "R-515A",
       "composition": "R-1234ze(E)/227ea (88,0/12,0)",
       "other_names": "",
-      "remark": ""
+      "remark": "",
+      "type": "Azeotrope"
     },
     "model": "core.blend",
     "pk": 125
