@@ -281,7 +281,7 @@ export default {
 		tabIndex: {
 			handler(new_val) {
 				const body = document.querySelector('body')
-				if ([2, 3, 4, 5, 6].includes(new_val) && !this.$store.getters.transitionState) {
+				if ([2, 3, 4, 5, 6].includes(new_val) && !this.$store.getters.allowedChanges) {
 					body.classList.add('aside-menu-lg-show')
 				} else {
 					body.classList.remove('aside-menu-lg-show')

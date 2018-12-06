@@ -76,7 +76,7 @@
           <fieldGenerator
             :key="`${cell.item.index}_${inputField}_${tabName}`"
             :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-            :disabled="transitionState"
+            :disabled="allowedChanges"
             :field="cell.item.originalObj[inputField]"
             v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
           ></fieldGenerator>
@@ -128,7 +128,7 @@
                 <fieldGenerator
                   :key="tooltipField"
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-                  :disabled="transitionState"
+                  :disabled="allowedChanges"
                   :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
                 ></fieldGenerator>
               </span>
@@ -190,7 +190,7 @@
                       v-if="!['substance','decision_exempted','quantity_exempted','validation'].includes(specialField.name)"
                       :key="`${row.item.index}_${specialField.name}_${tabName}`"
                       :fieldInfo="{index:row.item.index,tabName: tabName, field:specialField.name}"
-                      :disabled="transitionState"
+                      :disabled="allowedChanges"
                       :field="row.item.originalObj[specialField.name]"
                     ></fieldGenerator>
                     <span v-if="specialField.name === 'substances'">{{row.item.substance}}</span>
@@ -277,7 +277,7 @@
           <fieldGenerator
             :key="`${cell.item.index}_${inputField}_${tabName}`"
             :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-            :disabled="transitionState"
+            :disabled="allowedChanges"
             :field="cell.item.originalObj[inputField]"
           ></fieldGenerator>
         </template>
@@ -354,7 +354,7 @@
       </p>
     </div>
 
-    <AppAside v-if="!transitionState" fixed>
+    <AppAside v-if="!allowedChanges" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -388,7 +388,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="transitionState"
+                :disabled="allowedChanges"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
@@ -422,7 +422,7 @@
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-                  :disabled="transitionState"
+                  :disabled="allowedChanges"
                   :field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -431,7 +431,7 @@
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="transitionState"
+                  :disabled="allowedChanges"
                   :field="modal_data.field[`decision_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -678,8 +678,8 @@ export default {
 			}
 			return false
 		},
-		transitionState() {
-			return this.$store.getters.transitionState
+		allowedChanges() {
+			return this.$store.getters.allowedChanges
 		}
 	},
 

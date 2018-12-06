@@ -102,19 +102,8 @@ const store = new Vuex.Store({
 
 		checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName),
 
-		transitionState: (state) => {
-			const currentState = state.permissions.form
-			const availableTransitions = state.available_transitions || []
-
-			let tstate = null
-			if (intersect(currentState, ['edit', 'save']).length) tstate = false
-			else tstate = true
-
-			if (!availableTransitions.includes('submit')) {
-				tstate = true
-			}
-
-			return tstate
+		allowedChanges: (state) => {
+			return !state.current_submission.data_changes_allowed
 		}
 	},
 
@@ -266,7 +255,6 @@ const store = new Vuex.Store({
 					if (context.state.current_submission.article7questionnaire) {
 						context.dispatch('prefillQuestionaire')
 					}
-					context.commit('updateFormPermissions', dummyTransition)
 					context.dispatch('getCurrentSubmissionHistory', data)
 					resolve()
 				})
@@ -585,9 +573,7 @@ const store = new Vuex.Store({
 		updateDashboardPermissions(state, permission) {
 			state.permissions.dashboard = permission
 		},
-		updateFormPermissions(state, permission) {
-			state.permissions.form = permission
-		},
+	
 		updateActionsPermissions(state, permission) {
 			state.permissions.actions = permission
 		},
