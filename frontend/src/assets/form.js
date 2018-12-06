@@ -3,8 +3,11 @@ import { intro_fields, reporting_party } from './questionnaire_fields.js'
 const form = {
 	tabs: {
 		sub_info: {
+			name: 'form_intro',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
-			title: 'Questionnaire',
+			title: 'Submission Info',
+			titleHtml: 'Submission Info',
+			detailsHtml: '',
 			isInvalid: false,
 			party: {
 				label: 'Party',
@@ -23,14 +26,14 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			// used for identification when adding labels
-			name: 'form_intro',
 			form_fields: reporting_party
 		},
 		questionaire_questions: {
+			name: 'questionaire_questions',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
-			name: 'questionaire_questions',
+			titleHtml: 'Questionnaire',
+			detailsHtml: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			status: null,
 			isInvalid: false,
 			description: '',
@@ -38,12 +41,15 @@ const form = {
 			form_fields: intro_fields
 		},
 		has_exports: {
+			name: 'has_exports',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Exports',
-			name: 'has_exports',
+			titleHtml: '<b>EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
+			tooltipForTitleHtml: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.',
+			detailsHtml: 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
@@ -141,14 +147,15 @@ const form = {
 			],
 			footnotes: ['[1] Tonne = Metric ton.']
 		},
-
 		has_imports: {
+			name: 'has_imports',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Imports',
-			name: 'has_imports',
+			titleHtml: '<b>IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
+			detailsHtml: 'Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
 			comments: [{
 				name: 'comments_party',
 				selected: '',
@@ -244,12 +251,14 @@ const form = {
 			footnotes: ['[1] Tonne = Metric ton.']
 		},
 		has_produced: {
+			name: 'has_produced',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Production',
-			name: 'has_produced',
+			titleHtml: '<b>PRODUCTION </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>',
+			detailsHtml: 'Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			isInvalid: false,
 			description: 'Annexes A, B, C and E substances',
@@ -410,12 +419,14 @@ const form = {
 			]
 		},
 		has_destroyed: {
+			name: 'has_destroyed',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Destruction',
-			name: 'has_destroyed',
+			titleHtml: '<b>QUANTITY OF SUBSTANCES DESTROYED </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>',
+			detailsHtml: 'Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			fields_order: ['substance', 'quantity_destroyed', 'remarks_party', 'remarks_os', 'validation'],
@@ -470,16 +481,18 @@ const form = {
 			]
 		},
 		has_nonparty: {
+			name: 'has_nonparty',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Nonparty',
-			name: 'has_nonparty',
+			titleHtml: '<b>IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
+			tooltipForTitleHtml: '* See definition of “non parties” in Instruction V.',
+			detailsHtml: 'Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties ',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
-
 			fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
 			modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
@@ -581,14 +594,15 @@ const form = {
 			}
 			]
 		},
-
 		has_emissions: {
+			name: 'has_emissions',
 			ordering_id: 0,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
 			title: 'Emissions',
-			name: 'has_emissions',
+			titleHtml: '<b>EMISSIONS</b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>',
+			detailsHtml: 'Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances ',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
@@ -695,7 +709,12 @@ const form = {
 			}
 			]
 		},
-		attachments: []
+		attachments: {
+			name: 'attachments',
+			title: 'Attachments',
+			titleHtml: 'Attachments',
+			detailsHtml: ''
+		}
 	}
 }
 export default form

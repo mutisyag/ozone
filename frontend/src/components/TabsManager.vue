@@ -3,14 +3,14 @@
   <div class="breadcrumb custom">
     <small style="width: 30%;">
       <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="subtitles[tabIndex]"></div>
+      <div v-html="detailsHtmlAll[tabIndex]"></div>
     </small>
     <div class="tab-title">
-      <div  v-if='titles[tabIndex].tooltip' v-b-tooltip :title="titles[tabIndex].tooltip" >
-        <span v-html="titles[tabIndex].title"></span>
+      <div  v-if='titlesAndTooltipsHtml[tabIndex].tooltipHtml' v-b-tooltip :title="titlesAndTooltipsHtml[tabIndex].tooltipHtml" >
+        <span v-html="titlesAndTooltipsHtml[tabIndex].titleHtml"></span>
          <i style='margin-left: 5px' class="fa fa-info-circle fa-lg"></i>
       </div>
-      <div v-else v-html="titles[tabIndex].title"></div>
+      <div v-else v-html="titlesAndTooltipsHtml[tabIndex].titleHtml"></div>
     </div>
     <b-button-group class="actions">
       <Save :submit.sync="saveForSubmit"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
@@ -65,19 +65,19 @@
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
 
-          <b-tab v-for="tab in tabs" :title-link-class="$store.state.form.tabs[tab].status ? {} : null"  :key="tab" :disabled="!display_tabs[$store.state.form.tabs[tab].name]">
+          <b-tab v-for="tab in tabsWithAssideMenu" :title-link-class="$store.state.form.tabs[tab.id].status ? {} : null"  :key="tab.id" :disabled="!display_tabs[$store.state.form.tabs[tab.id].name]">
              <template slot="title">
               <div class="tab-title">
-                {{$store.state.form.tabs[tab].title}}
-                <div v-if="$store.state.form.tabs[tab].status === 'saving'" class="spinner">
+                {{$store.state.form.tabs[tab.id].title}}
+                <div v-if="$store.state.form.tabs[tab.id].status === 'saving'" class="spinner">
                   <div class="loader"></div>
                 </div>
-                <i v-if="$store.state.form.tabs[tab].status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs[tab].status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs[tab].status === 'edited'" class="fa fa-edit fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab.id].status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab.id].status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+                <i v-if="$store.state.form.tabs[tab.id].status === 'edited'" class="fa fa-edit fa-lg"></i>
               </div>
              </template>
-            <formtemplate :tabId="tabs.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab"></formtemplate>
+            <formtemplate :tabId="tabsWithAssideMenu.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab.id"></formtemplate>
           </b-tab>
 
           <b-tab :title-link-class="$store.state.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
@@ -238,13 +238,52 @@ export default {
 				})
 			}
 		}
-
 	},
 
 	data() {
-		const tabsImportant = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty']
-		const tabIndexesForAssideMenuDisplay = tabsImportant.reduce((accumulator, currentValue, currentIndex) => {
+		const tabsDisplay = [{
+			id: 'sub_info',
+			hasAssideMenu: false
+		}, {
+			id: 'questionaire_questions',
+			hasAssideMenu: false
+		}, {
+			id: 'has_imports',
+			hasAssideMenu: true
+		}, {
+			id: 'has_exports',
+			hasAssideMenu: true
+		}, {
+			id: 'has_produced',
+			hasAssideMenu: true
+		}, {
+			id: 'has_destroyed',
+			hasAssideMenu: true
+		}, {
+			id: 'has_nonparty',
+			hasAssideMenu: true
+		}, {
+			id: 'has_emissions',
+			hasAssideMenu: false
+		}, {
+			id: 'attachments',
+			hasAssideMenu: false
+		}]
+		const tabsWithAssideMenu = tabsDisplay.filter(tabDisplay => tabDisplay.hasAssideMenu)
+		const tabIndexesForAssideMenuDisplay = tabsWithAssideMenu.reduce((accumulator, currentValue, currentIndex) => {
 			accumulator.push(currentIndex + 2)
+			return accumulator
+		}, [])
+
+		const titlesAndTooltipsHtml = tabsDisplay.reduce((accumulator, currentValue) => {
+			const { titleHtml, tooltipHtml } = this.$store.state.form.tabs[currentValue.id]
+			accumulator.push({ titleHtml, tooltipHtml })
+			return accumulator
+		}, [])
+
+		const detailsHtmlAll = tabsDisplay.reduce((accumulator, currentValue) => {
+			const { detailsHtml } = this.$store.state.form.tabs[currentValue.id]
+			accumulator.push(detailsHtml)
 			return accumulator
 		}, [])
 
@@ -253,34 +292,10 @@ export default {
 			modal_data: null,
 			labels: null,
 			saveForSubmit: false,
-			tabs: tabsImportant,
+			tabsWithAssideMenu,
 			tabIndexesForAssideMenuDisplay,
-			titles: [
-				{ title: 'Submission Info' },
-				{ title: 'Questionaire' },
-				{ title: '<b>IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>' },
-				{
-					title: '<b>EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
-					tooltip: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'
-				},
-				{ title: '<b>PRODUCTION </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
-				{ title: '<b>QUANTITY OF SUBSTANCES DESTROYED </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances  </small>' },
-				{
-					title: '<b>IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
-					tooltip: '* See definition of “non parties” in Instruction V.'
-				},
-				{ title: '<b>EMISSIONS</b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>' },
-				{ title: 'Attachments' }
-			],
-			subtitles: ['',
-				'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
-				'Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
-				'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
-				'Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
-				'Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
-				'Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties ',
-				'Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances '
-			]
+			titlesAndTooltipsHtml,
+			detailsHtmlAll
 		}
 	},
 
