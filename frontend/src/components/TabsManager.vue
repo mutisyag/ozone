@@ -157,7 +157,7 @@
 <script>
 import { Footer } from '@coreui/vue'
 import Questionnaire from './Questionnaire.vue'
-import FormTemplate from './FormTemplateNew.vue'
+import FormTemplate from './FormTemplate.vue'
 import EmissionsTemplate from './EmissionsTemplate.vue'
 import SubmissionInfo from './SubmissionInfo.vue'
 import Attachments from './Attachments.vue'
@@ -281,7 +281,7 @@ export default {
 		tabIndex: {
 			handler(new_val) {
 				const body = document.querySelector('body')
-				if ([2, 3, 4, 5, 6].includes(new_val) && !this.$store.getters.transitionState) {
+				if ([2, 3, 4, 5, 6].includes(new_val) && !this.$store.getters.allowedChanges) {
 					body.classList.add('aside-menu-lg-show')
 				} else {
 					body.classList.remove('aside-menu-lg-show')
