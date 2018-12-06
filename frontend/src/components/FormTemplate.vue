@@ -434,6 +434,7 @@
             v-if="fieldsDecisionQuantity"
             v-for="(order,order_index) in fieldsDecisionQuantity"
             :key="order_index"
+            v-show="anotherSpecialCase(order, modal_data)"
           >
             <b-col lg="4" class="mb-2">
               <b>{{labels[`decision_${order}`]}}:</b>
@@ -704,11 +705,28 @@ export default {
 	},
 
 	methods: {
+		anotherSpecialCase(order, modal_data) {
+			if (modal_data.field.group.selected !== 'EI' && order === 'quarantine_pre_shipment') {
+				return false
+			}
+			return true
+		},
+
 		updateFormField(value, fieldInfo) {
 			this.$store.commit('updateFormField', {
 				value,
 				fieldInfo
 			})
+			if (fieldInfo.field === 'substance') {
+				this.$store.commit('updateFormField', {
+					value: this.getGroupBySubstance(value),
+					fieldInfo: { index: fieldInfo.index, tabName: fieldInfo.tabName, field: 'group' }
+				})
+			}
+		},
+
+		getGroupBySubstance(value) {
+			return this.tab_data.substances.find(g => value === g.value).group.group_id
 		},
 
 		expandedStatus(status) {
