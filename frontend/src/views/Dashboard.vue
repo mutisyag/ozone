@@ -171,6 +171,7 @@
                     <b-btn
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
+                        v-if="row.item.details.data_changes_allowed"
                       >
                       Delete
                     </b-btn>
