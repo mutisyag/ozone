@@ -137,7 +137,6 @@ export default {
 				array.push(item)
 			}
 		},
-
 		validation() {
 			this.invalidTabs = []
 			const tabsToValidate = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
@@ -149,6 +148,11 @@ export default {
 						break
 					}
 				}
+			}
+			if(this.invalidTabs.length) {
+				this.$store.dispatch('setAlert', 
+				{ message: `Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`,
+				 variant: 'danger' })			
 			}
 			this.startSubmitting()
 		},
