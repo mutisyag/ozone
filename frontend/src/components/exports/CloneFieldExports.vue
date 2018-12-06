@@ -83,7 +83,14 @@ export default {
 						prefillData: null
 					})
 				} else {
-					this.$store.dispatch('setAlert', { message: `The fields for the folllowing countries: ${willNotAdd} were not added because they already exist`, variant: 'danger' })
+					const willNotAddCountryNames = []
+					willNotAdd.forEach(countryId => {
+						const { text } = this.countryOptions.find(countryDisplay => countryDisplay.value === countryId)
+						if (text) {
+							willNotAddCountryNames.push(text)
+						}
+					})
+					this.$store.dispatch('setAlert', { message: `The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`, variant: 'danger' })
 				}
 			})
 
@@ -99,11 +106,11 @@ export default {
 			return str.replace(/[^a-zA-Z0-9]+/g, '')
 		}
 	},
-	watch:{		
-		'current_field': {
+	watch: {
+		current_field: {
 			handler() {
 				this.field = JSON.parse(JSON.stringify(this.current_field))
-			},
+			}
 		}
 	}
 }

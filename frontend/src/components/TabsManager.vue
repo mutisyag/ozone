@@ -216,8 +216,8 @@ export default {
 				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
-      console.log('here',fields)
-      if (!fields.length) {
+			console.log('here', fields)
+			if (!fields.length) {
 				this.$store.dispatch('setAlert', { message: 'You cannot submit and empty form', variant: 'danger' })
 				return
 			}
