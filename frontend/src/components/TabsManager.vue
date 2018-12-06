@@ -188,6 +188,7 @@ export default {
 
 	created() {
 		this.labels = labels.general
+		console.log('zzxczxc', this.$store.state.form)
 	},
 
 	computed: {

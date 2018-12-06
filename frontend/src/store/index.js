@@ -16,16 +16,7 @@ import {
 	getParties
 } from '@/api/api.js'
 
-import dummyTransition from '@/assets/dummyTransition.js'
-
 Vue.use(Vuex)
-
-const intersect = (a, b) => {
-	const setA = new Set(a)
-	const setB = new Set(b)
-	const intersection = new Set([...setA].filter(x => setB.has(x)))
-	return Array.from(intersection)
-}
 
 const store = new Vuex.Store({
 	// strict: true,
@@ -102,9 +93,7 @@ const store = new Vuex.Store({
 
 		checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName),
 
-		allowedChanges: (state) => {
-			return !state.current_submission.data_changes_allowed
-		}
+		allowedChanges: (state) => (state.current_submission ? !state.current_submission.data_changes_allowed : false)
 	},
 
 	actions: {
@@ -573,7 +562,7 @@ const store = new Vuex.Store({
 		updateDashboardPermissions(state, permission) {
 			state.permissions.dashboard = permission
 		},
-	
+
 		updateActionsPermissions(state, permission) {
 			state.permissions.actions = permission
 		},
