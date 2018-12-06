@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -34,6 +34,10 @@ class Command(BaseCommand):
         'partyhistory': {
             'fixture': 'partieshistory.json',
             'sheet': 'CntryYr',
+        },
+        'partyratification': {
+            'fixture': 'partiesratification.json',
+            'sheet': 'Cntry',
         },
         'region': {
             'sheet': 'Regions',
@@ -143,38 +147,55 @@ class Command(BaseCommand):
                 'model': model_class,
                 'fields': {},
             }
-            getattr(self, model + "_map")(obj['fields'], row)
-            data.append(obj)
+            fields = getattr(self, model + "_map")(obj['fields'], row)
+            if isinstance(fields, dict):
+                obj['fields'] = fields
+                data.append(obj)
+            elif isinstance(fields, list):
+                # multiple objects returned
+                for idx, f in enumerate(fields):
+                    data.append({
+                        'pk': obj['pk'] + idx,
+                        'model': obj['model'],
+                        'fields': f,
+                    })
+                pass
+            else:
+                # Probably None was returned, don't add to list
+                continue
 
-        idx = len(data)
         if hasattr(self, model + "_additional_data"):
-            getattr(self, model + "_additional_data")(data, idx)
+            data += getattr(self, model + "_additional_data")(len(data))
 
         # if a post process method exists, invoke it
         if hasattr(self, model + "_postprocess"):
             for obj in data:
-                getattr(self, model + "_postprocess")(obj['fields'], row)
+                getattr(self, model + "_postprocess")(obj['fields'])
         # Hack alert: Remove rows having a pseudo-field called "_deleted"
-        return list(filter(lambda obj: obj['fields'].get('_deleted') is not True, data))
+        # return list(filter(lambda obj: obj['fields'].get('_deleted') is not
+        # True, data))
+        return data
 
     def region_map(self, f, row):
         f['name'] = row['RegionName']
         f['abbr'] = row['RegionID']
         f['remark'] = row['Remark'] or ''
         # unused: RegionNameFr, RegionNameSp
+        return f
 
     def subregion_map(self, f, row):
         f['name'] = row['SubRegionName']
         f['abbr'] = row['SubRegionID']
         f['region'] = self.lookup_id('region', 'abbr', row['RegionID'])
         f['remark'] = row['Remark'] or ''
+        return f
 
     def party_map(self, f, row):
         f['abbr'] = row['CntryID']
         if row['CntryID'][:2] == 'ZZ':
             # Remove "All countries" and "Some countries"
-            f['_deleted'] = True
-            return
+            # f['_deleted'] = True
+            return None
         f['name'] = row['CntryName']
         # Skipped fields: CntryNameFr, CntryNameSp, PrgApprDate, CntryID_org,
         # CntryName20, MDG_CntryCode, ISO_Alpha3Code, www_country_id
@@ -241,17 +262,19 @@ class Command(BaseCommand):
         f['remark'] = row['Remark'] or ""
         # This will be replaced in party_postprocess
         f['parent_party'] = row['MainCntryID']
+        return f
 
-    def party_postprocess(self, f, row):
+    def party_postprocess(self, f):
         # set parent party by looking up in the same data
         if 'parent_party' in f:
-            f['parent_party'] = self.lookup_id('party', 'abbr', f['parent_party'])
+            f['parent_party'] = self.lookup_id(
+                'party', 'abbr', f['parent_party'])
 
     def partyhistory_map(self, f, row):
         if row['CntryID'] == 'HOLV':
             # f['party'] = self.lookup_id('party', 'abbr', 'VA')
-            f['_deleted'] = True
-            return
+            # f['_deleted'] = True
+            return None
         else:
             f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
         f['reporting_period'] = self.lookup_id(
@@ -293,11 +316,50 @@ class Command(BaseCommand):
         f['is_eu_member'] = row['EurUnion']
         f['is_ceit'] = row['CEIT']
         f['remark'] = row['Remark'] if row['Remark'] else ""
+        return f
+
+    def partyratification_map(self, f, row):
+        if row['CntryID'][:2] == 'ZZ' or row['CntryID'] != row['MainCntryID']:
+            # Remove "All countries" and "Some countries"
+            return None
+        ratif_types_map = {
+            'Ac': RatificationTypes.ACCESSION.value,
+            'Ap': RatificationTypes.APPROVAL.value,
+            'At': RatificationTypes.ACCEPTANCE.value,
+            'R': RatificationTypes.RATIFICATION.value,
+            'Sc': RatificationTypes.SUCCESSION.value,
+            # TODO: What about RatificationTypes.SIGNING ??
+        }
+        objs = []
+        party = self.lookup_id('party', 'abbr', row['CntryID'])
+        treaties = ['VC', 'MP', 'LA', 'CA', 'MA', 'BA', 'KA']
+        for treaty_id in treaties:
+            if row['RD_' + treaty_id]:
+                treaty = next(filter(
+                    lambda x: x['fields']['treaty_id'] == treaty_id, self.FIXTURES['treaty']
+                ))
+                treaty_entry_into_force = datetime.strptime(
+                    treaty['fields']['entry_into_force_date'], "%Y-%m-%d"
+                ).date()
+                ratification_date = row['RD_' + treaty_id].date()
+                entry_into_force_date = treaty_entry_into_force
+                if (ratification_date > treaty_entry_into_force):
+                    entry_into_force_date = ratification_date + timedelta(days=30)
+                objs.append({
+                    'party': party,
+                    'treaty': self.lookup_id('treaty', 'treaty_id', treaty_id),
+                    'ratification_type': ratif_types_map.get(row['RT_' + treaty_id], ""),
+                    'ratification_date': ratification_date,
+                    'entry_into_force_date': entry_into_force_date,
+                })
+        return objs
 
     def substance_map(self, f, row):
         if row['SubstID'] == 999:
             # Remove "Other substances"
-            f['_deleted'] = True
+            # f['_deleted'] = True
+            return None
+
         f['substance_id'] = row['SubstID']
         f['name'] = row['SubstName']
         # Skipped fields: SubstNameFr, SubstNameSp
@@ -325,6 +387,7 @@ class Command(BaseCommand):
         f['bromines'] = row['Bromines'] or ""
 
         # TODO: Not mapped: r_code, mp_control, main_usage
+        return f
 
     def substance_edw_map(self, f, row):
         f['r_code'] = row['RCode']
@@ -347,6 +410,7 @@ class Command(BaseCommand):
         f['other_names'] = row['OtherNames'] or ""
         f['remark'] = row['Remark'] or ""
         # TODO: Not mapped: main_usage, odp, hcfc, gwp, hfc, mp_control, type
+        return f
 
     def blendcomponent_map(self, f, row):
         f['blend_id'] = self.lookup_id('blend', 'blend_id', row['Blend'])
@@ -358,6 +422,7 @@ class Command(BaseCommand):
             substance = self.lookup_id(
                 'substance_edw', 'name', row['Component'])
         f['substance'] = substance
+        return f
 
     def reportingperiod_map(self, f, row):
         f['name'] = row['PeriodID']
@@ -368,8 +433,9 @@ class Command(BaseCommand):
             f['name'].isdigit() and int(f['name']) <= 2018
         )
         f['is_reporting_open'] = f['name'] in ('2017', '2018')
+        return f
 
-    def reportingperiod_additional_data(self, data, idx):
+    def reportingperiod_additional_data(self, idx):
         objs = [
             {
                 "fields": {
@@ -396,4 +462,4 @@ class Command(BaseCommand):
                 "pk": idx + 1
             }
         ]
-        data += objs
+        return objs
