@@ -74,15 +74,16 @@ class BlendCompositionMixin:
         This is called explicitly from the save() method, also overridden in
         this class.
         """
-        if self.substance is None and self.blend is None:
-            raise CustomValidationError(
-                _("Data should refer to one substance or one blend"),
-                ["substance", "blend"]
-            )
         if self.substance is not None and self.blend is not None:
             raise CustomValidationError(
-                _("Data should not refer to both a substance and a blend"),
-                ["substance", "blend"]
+                {
+                    'substance': [_(
+                        'Data should not refer to both a substance and a blend'
+                    )],
+                    'blend': [_(
+                        'Data should not refer to both a substance and a blend'
+                    )]
+                }
             )
 
         # Also, no changes are allowed on blend_item != null objects
@@ -535,21 +536,24 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             or self.quantity_export_recovered
         ):
             raise CustomValidationError(
-                _("At least one quantity field should be non-null."),
-                ["quantity_fields"]
+                {
+                    'quantity_fields': [_(
+                        "At least one quantity field should be non-null."
+                    )]
+                }
             )
-
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
         if not self.blend:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:
                 raise CustomValidationError(
-                    _(
-                        "You need to select a non-party, according to the "
-                        "selected substance."
-                    ),
-                    ["trade_party"]
+                    {
+                        'trade_party': [_(
+                            "You need to select a non-party, according to the "
+                            "selected substances."
+                        )]
+                    }
                 )
 
         super().clean()

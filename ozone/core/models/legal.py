@@ -45,8 +45,11 @@ class ReportingPeriod(models.Model):
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
             raise CustomValidationError(
-                _('End date has to be temporally after start date.'),
-                ["end_date"]
+                {
+                    'end_date': [_(
+                        "End date has to be temporally after start date."
+                    )]
+                }
             )
 
     def save(self, *args, **kwargs):
