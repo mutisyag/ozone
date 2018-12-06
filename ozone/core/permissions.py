@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from .models import Party, Submission
@@ -32,13 +34,20 @@ class IsSecretariatOrSameParty(BasePermission):
             else:
                 queryset = view.get_queryset()
 
-            if queryset.model == Submission:
-                party = Party.objects.get(pk=request.data.get('party', None))
-            else:
-                party = Submission.objects.get(
-                    pk=view.kwargs.get('submission_pk', None)
-                ).party
-            if party != request.user.party:
+            try:
+                if queryset.model == Submission:
+                    party = Party.objects.get(
+                        pk=request.data.get('party', None)
+                    )
+                else:
+                    party = Submission.objects.get(
+                        pk=view.kwargs.get('submission_pk', None)
+                    ).party
+                if party != request.user.party:
+                    return False
+            except ObjectDoesNotExist:
+                # Could not find a party matching the request data, so simply
+                # return a sage default
                 return False
 
         return True
