@@ -466,8 +466,6 @@ import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from './exports/DefaultAside'
 import Multiselect from '@/mixins/modifiedMultiselect'
 
-const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
-
 export default {
 	props: {
 		tabName: String,
@@ -569,7 +567,7 @@ export default {
 
 		tableItems() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element, index) => {
+			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
 					if (element.substance.selected) {
@@ -595,7 +593,7 @@ export default {
 
 		tableItemsBlends() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element, index) => {
+			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
 					if (element.blend.selected) {
@@ -639,14 +637,13 @@ export default {
 		},
 
 		tableFieldsBlends() {
-			const self = this
 			const tableHeaders = []
 			const options = {
 				sortable: true,
 				sortDirection: 'desc',
 				class: 'text-center'
 			}
-			this.tab_info.section_subheaders.forEach((element, index) => {
+			this.tab_info.section_subheaders.forEach((element) => {
 				if (element.name === 'substance') {
 					tableHeaders.push({ key: 'blend', label: element.label, ...options })
 				} else {
@@ -698,7 +695,7 @@ export default {
 			if (status) return 'down'
 			return 'right'
 		},
-		rowHovered(item, index, event) {
+		rowHovered(item) {
 			this.hovered = item.index
 		},
 
@@ -720,7 +717,7 @@ export default {
 
 			this.$refs.table.$el
 				.querySelector('tbody')
-				.addEventListener('mouseleave', e => {
+				.addEventListener('mouseleave', () => {
 					this.hovered = false
 				})
 
@@ -729,7 +726,7 @@ export default {
 			}
 			const topHeader = this.$refs.tableHeader.querySelector('tr')
 			const isCurrentTabNOTDestruction = this.tabName !== 'has_destroyed'
-      console.log(isCurrentTabNOTDestruction, this.tabName)
+			console.log(isCurrentTabNOTDestruction, this.tabName)
 			headers[0].parentNode.insertBefore(
 				topHeader.cloneNode(isCurrentTabNOTDestruction),
 				headers[0]
@@ -748,7 +745,7 @@ export default {
 
 			this.$refs.tableBlends.$el
 				.querySelector('tbody')
-				.addEventListener('mouseleave', e => {
+				.addEventListener('mouseleave', () => {
 					this.hovered = false
 				})
 
@@ -788,27 +785,25 @@ export default {
 			}
 		},
 
-		remove_field(index, field) {
+		remove_field(index) {
 			this.$store.commit('removeField', { tab: this.tabName, index })
 		},
 
 		splitBlend(value, percent) {
-      percent = percent * 100;
-      if (value && value != 0 && percent) {
-        let count = (parseFloat(value) * parseFloat(percent)) / 100;
-        if (count === 0) {
-          return "";
-        } if (count < 0) {
-          return count.toPrecision(3);
-        } if (count > 999) {
-          return parseInt(count);
-        } 
-          return count.toPrecision(3);
-        
-      } else {
-        return "";
-      }
-    },
+			percent *= 100
+			if (value && value !== 0 && percent) {
+				const count = (parseFloat(value) * parseFloat(percent)) / 100
+				if (count === 0) {
+					return ''
+				} if (count < 0) {
+					return count.toPrecision(3)
+				} if (count > 999) {
+					return parseInt(count)
+				}
+				return count.toPrecision(3)
+			}
+			return ''
+		},
 
 		createModalData(field, index) {
 			this.modal_data = { field, index }
@@ -819,9 +814,9 @@ export default {
 
 	watch: {
 		'tab_info.form_fields': {
-			handler(before, after) {
+			handler() {
 				if (parseInt(this.tabId) === this.tabIndex) {
-					if (this.tab_info.status != 'edited') {
+					if (this.tab_info.status !== 'edited') {
 						this.$store.commit('setTabStatus', {
 							tab: this.tabName,
 							value: 'edited'
