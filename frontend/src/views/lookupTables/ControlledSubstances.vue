@@ -6,10 +6,13 @@
 			<b-row>
 				<b-col>Controlled substances</b-col>
 				<b-col>
-                    <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
+                    <b-input-group>
+						<b-input-group-prepend>
+							<b-form-select :options="table.searchInColumnsOptions" value-field="key" text-field="label"  v-model="table.filters.selectedSearchInColumnOption" />
+						</b-input-group-prepend>
+						<b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+						<b-input-group-append>
+							<b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
                       </b-input-group-append>
                     </b-input-group>
                 </b-col>
@@ -36,7 +39,7 @@
 						:fields="table.fields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
-						:filter="table.filters.search"
+						:filter="filterCallback"
 						:sort-by.sync="table.sortBy"
 						:sort-desc.sync="table.sortDesc"
 						@filtered="onFiltered"
@@ -59,32 +62,31 @@
 <script>
 const uuidv1 = require('uuid/v1')
 
+const fields = [{
+	key: 'index', label: ''
+}, {
+	key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
+}, {
+	key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
+}, {
+	key: 'name', label: 'Name', sortable: true, class: 'text-center'
+}, {
+	key: 'odp', label: 'ODP', sortable: true, class: 'text-center'
+}, {
+	key: 'formula', label: 'Formula', sortable: true, class: 'text-center'
+}, {
+	key: 'number_of_isomers', label: 'Number of Isomers', sortable: true, class: 'text-center'
+}, {
+	key: 'min_odp', label: 'MinODP', sortable: true, class: 'text-center'
+}, {
+	key: 'max_odp', label: 'MaxODP', sortable: true, class: 'text-center'
+}]
+
 export default {
 	data() {
 		return {
 			table: {
-				fields: [{
-					key: 'index', label: ''
-				}, {
-					key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
-				}, {
-					key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
-				}, {
-					key: 'name', label: 'Name', sortable: true, class: 'text-center'
-				}, {
-					key: 'odp', label: 'ODP', sortable: true, class: 'text-center'
-				}, {
-					key: 'formula', label: 'Formula', sortable: true, class: 'text-center'
-				}, {
-					key: 'number_of_isomers', label: 'Number of Isomers', sortable: true, class: 'text-center'
-				}, {
-					key: 'min_odp', label: 'MinODP', sortable: true, class: 'text-center'
-				}, {
-					key: 'max_odp', label: 'MaxODP', sortable: true, class: 'text-center'
-				}, {
-					key: 'sort_order', label: 'Sort Order For Testing', sortable: true, class: 'text-center'
-				}
-				],
+				fields,
 				currentPage: 1,
 				perPage: Infinity,
 				totalRows: 50,
@@ -96,8 +98,10 @@ export default {
 					{ value: 100, text: '100' },
 					{ value: Infinity, text: 'All' }
 				],
+				searchInColumnsOptions: [fields[1], fields[2]],
 				filters: {
 					search: null,
+					selectedSearchInColumnOption: fields[1].key,
 					sortDefaultOrderToken: uuidv1()
 				}
 			}
@@ -138,6 +142,13 @@ export default {
 			this.table.sortBy = 'group_id'
 			this.table.sortDesc = false
 			this.table.filters.sortDefaultOrderToken = uuidv1()
+		},
+		filterCallback(substance) {
+			const { selectedSearchInColumnOption } = this.table.filters
+			if (!this.table.filters.search) {
+				return true
+			}
+			return `${substance[selectedSearchInColumnOption]}`.toLowerCase().includes(this.table.filters.search.toLowerCase())
 		}
 	},
 	created() {
