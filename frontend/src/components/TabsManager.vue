@@ -14,9 +14,9 @@
     </div>
     <b-button-group class="actions">
       <Save :submit.sync="saveForSubmit"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-      <b-btn  
-        v-if="$store.state.available_transitions.includes('submit')" 
-       @click="checkBeforeSubmitting" 
+      <b-btn
+        v-if="$store.state.available_transitions.includes('submit')"
+       @click="checkBeforeSubmitting"
        variant="outline-success"
        >
         Submit
@@ -124,9 +124,9 @@
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
         <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn  
-          v-if="$store.state.available_transitions.includes('submit')"  
-          @click="checkBeforeSubmitting" 
+        <b-btn
+          v-if="$store.state.available_transitions.includes('submit')"
+          @click="checkBeforeSubmitting"
           variant="outline-success"
           >
             Submit
@@ -208,20 +208,21 @@ export default {
 			getInstructions().then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
-      })
-    },
-      
-    checkBeforeSubmitting() {
-      let fields = Object.keys(this.$store.state.form.tabs)
-      .filter(tab =>  !['questionaire_questions', 'sub_info','attachments'].includes(tab) )
-      .map(tab => {return this.$store.state.form.tabs[tab].form_fields})
-      .filter( arr => arr.length)
-      if(!fields.length) {
-        this.$store.dispatch('setAlert', { message: "You cannot submit and empty form",variant: 'danger' })		       
-        return
-      }
-        this.saveForSubmit = true
-      },
+			})
+		},
+
+		checkBeforeSubmitting() {
+			const fields = Object.keys(this.$store.state.form.tabs)
+				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
+				.map(tab => this.$store.state.form.tabs[tab].form_fields)
+				.filter(arr => arr.length)
+      console.log('here',fields)
+      if (!fields.length) {
+				this.$store.dispatch('setAlert', { message: 'You cannot submit and empty form', variant: 'danger' })
+				return
+			}
+			this.saveForSubmit = true
+		},
 
 		removeSubmission() {
 			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
@@ -237,8 +238,8 @@ export default {
 	data() {
 		return {
 			tabIndex: 0,
-      modal_data: null,
-      saveForSubmit: false,
+			modal_data: null,
+			saveForSubmit: false,
 			tabs: ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty'],
 			titles: [
 				{ title: 'Submission Info' },

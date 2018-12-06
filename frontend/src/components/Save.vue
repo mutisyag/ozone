@@ -186,10 +186,13 @@ export default {
 							this.submitData(questionnaire_field.name)
 						})
 					}
-					// if (this.submit && !this.invalidTabs.length) {
-					// 	this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
-					// 	this.$emit('update:submit', false)
-					// }
+					console.log('submitvalue', this.submit)
+					if (this.submit && !this.invalidTabs.length) {
+						this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
+						this.$emit('update:submit', false)
+					} else {
+						this.$emit('update:submit', false)
+					}
 				}
 			}).catch((error) => {
 				this.$store.dispatch('setAlert',
@@ -257,6 +260,7 @@ export default {
 	watch: {
 		submit: {
 			handler(val) {
+				console.log('savingwithsubmit', val)
 				if (val) {
 					this.validation()
 				}
