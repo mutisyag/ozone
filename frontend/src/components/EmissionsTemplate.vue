@@ -76,10 +76,8 @@
 
 <script>
 
-import fieldGenerator from './fieldGenerator'
+import fieldGenerator from './form-components/fieldGenerator'
 import inputFields from '@/assets/inputFields'
-
-const norm = (n, sortType) => (isNaN(parseInt(n, 10)) ? (sortType === -1 ? -Infinity : Infinity) : -n)
 
 export default {
 	props: {

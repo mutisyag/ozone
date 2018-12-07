@@ -40,7 +40,7 @@
 
 <script>
 
-import fieldGenerator from './fieldGenerator'
+import fieldGenerator from './form-components/fieldGenerator'
 
 export default {
 

@@ -481,10 +481,10 @@
 
 import labels from '@/assets/labels'
 import inputFields from '@/assets/inputFields'
-import fieldGenerator from './fieldGenerator'
-import CloneFieldExports from './exports/CloneFieldExports.vue'
+import fieldGenerator from './form-components/fieldGenerator'
+import CloneField from './form-components/CloneField.vue'
 import { Aside as AppAside } from '@coreui/vue'
-import DefaultAside from './exports/DefaultAside'
+import DefaultAside from './form-components/DefaultAside'
 import Multiselect from '@/mixins/modifiedMultiselect'
 
 export default {
@@ -499,7 +499,7 @@ export default {
 		AppAside,
 		DefaultAside,
 		Multiselect,
-		clonefield: CloneFieldExports
+		clonefield: CloneField
 	},
 
 	created() {
