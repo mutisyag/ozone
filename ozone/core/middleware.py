@@ -22,6 +22,9 @@ class ExceptionMiddleware(object):
                 }
                 for message in exception.messages:
                     exception_dict[NON_FIELD_ERRORS].append(message)
+        elif hasattr(exception, "status_code"):
+            status = exception.status_code
+            exception_dict = exception.to_dict()
         else:
             status = 500
             exception_dict = {
