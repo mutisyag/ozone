@@ -304,6 +304,11 @@ class Submission(models.Model):
             return False
         return True
 
+    @property
+    def is_cloneable(self):
+        is_cloneable, message = self.check_cloning()
+        return is_cloneable
+
     def call_transition(self, trans_name):
         """
         Interface for calling a specific transition name on the workflow.

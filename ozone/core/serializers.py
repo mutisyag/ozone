@@ -515,7 +515,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7nonpartytrades_url', 'article7emissions_url',
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
-            'data_changes_allowed', 'is_current',
+            'data_changes_allowed', 'is_current', 'is_cloneable',
             'flag_provisional', 'flag_valid', 'flag_superseded',
             'reporting_officer', 'designation', 'organization',
             'postal_code', 'country', 'phone', 'fax', 'email', 'date',
@@ -561,6 +561,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_at', 'updated_at', 'created_by', 'last_edited_by',
                 'version', 'current_state', 'previous_state',
                 'available_transitions', 'data_changes_allowed', 'is_current',
+                'is_cloneable',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
