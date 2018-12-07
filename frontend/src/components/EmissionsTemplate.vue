@@ -122,7 +122,7 @@ export default {
 		tableItems() {
 			const tableFields = []
 			console.log(this.tab_info)
-			this.tab_info.form_fields.forEach((element, index) => {
+			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
 					console.log(key)
@@ -139,10 +139,9 @@ export default {
 			return tableFields
 		},
 		tableFields() {
-			const self = this
 			const tableHeaders = []
 			const options = { sortable: true, class: 'text-center' }
-			this.tab_info.section_headers.forEach((element, index) => {
+			this.tab_info.section_headers.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
 					label: element.label,
