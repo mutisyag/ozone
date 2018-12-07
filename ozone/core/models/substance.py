@@ -256,10 +256,10 @@ class BlendComponent(models.Model):
             raise ValidationError(
                 {
                     'component_name': [_(
-                        'Substance or component name must be set!'
+                        "Substance or component name must be set."
                     )],
                     'substance': [_(
-                        'Substance or component name must be set!'
+                        "Substance or component name must be set."
                     )]
                 }
             )

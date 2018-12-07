@@ -100,7 +100,7 @@ class BlendCompositionMixin:
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
             raise ValidationError(
-                _('Substance rows derived from blends cannot be changed!')
+                _("Substance rows derived from blends cannot be changed!")
             )
 
         super().clean()
@@ -549,21 +549,20 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             raise ValidationError(
                 {
                     'quantity_fields': [_(
-                        'At least one quantity field should be non-null!'
+                        "At least one quantity field should be non-null."
                     )]
                 }
             )
-
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
-        if not self.blend:
+        if not self.blend and self.substance:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:
                 raise ValidationError(
                     {
                         'trade_party': [_(
-                            'You need to select a non-party, according to the'
-                            'selected substance.'
+                            "You need to select a non-party, according to the "
+                            "selected substance."
                         )]
                     }
                 )
