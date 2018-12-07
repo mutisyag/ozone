@@ -15,6 +15,15 @@ import {
 	createSubmission,
 	getParties
 } from '@/api/api.js'
+import Toasted from 'toastedjs'
+import 'toastedjs/src/sass/toast.scss'
+const options = {
+		position: 'bottom-left',
+		duration: 4000,
+		theme: 'bulma',
+	}
+let toasted = new Toasted(options)
+
 
 Vue.use(Vuex)
 
@@ -191,12 +200,11 @@ const store = new Vuex.Store({
 		},
 
 		setAlert(context, data) {
-			context.dispatch('resetAlert').then(() => {
-				context.commit('setCurrentAlertMessage', data.message)
-				context.commit('setCurrentAlertVisibility', true)
-				context.commit('setCurrentAlertVariant', data.variant)
-			})
-			
+			let toastedOptions= {
+				danger: 'error',
+				success: 'success'
+			}
+			toasted.show(data.message, {type:toastedOptions[data.variant]})
 		},
 
 		prefillQuestionaire(context) {

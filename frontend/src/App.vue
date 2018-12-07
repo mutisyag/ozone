@@ -87,17 +87,6 @@ export default {
 				this.refCount -= 1
 				this.isLoading = (this.refCount > 0)
 			}
-		},
-		doAlert() {
-			const options = {
-				position: 'bottom-left',
-				duration: 3000
-			}
-			if (this.$store.state.currentAlert.variant === 'success') {
-				this.$toasted.success(this.$store.state.currentAlert.message, options)
-			} else {
-				this.$toasted.error(this.$store.state.currentAlert.message, options)
-			}
 		}
 	},
 	created() {
@@ -122,15 +111,7 @@ export default {
 					variant: 'danger' })
 			return Promise.reject(error)
 		})
-	},
-	watch: {
-		'$store.state.currentAlert.show': {
-			handler() {
-				this.doAlert()
-			}
-		}
 	}
-
 }
 </script>
 
