@@ -513,14 +513,14 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         db_table = 'reporting_article_seven_non_party_trade'
 
     @staticmethod
-    def get_non_parties(substance_pk, reporting_period_pk=None):
+    def get_non_parties(group_pk, reporting_period_pk=None):
         """
-        Returns qs of Parties for which the substance identified by substance_pk
-        is not a controlled substance (i.e. Party had not ratified the Treaty
-        that defines the Substance as controlled at the date on which the
-        given reporting period started).
+        Returns qs of Parties for which the group identified by group_pk
+        is not a controlled group of substances (i.e. Party had not ratified
+        the Treaty that defines the Group as controlled at the date on which
+        the given reporting period started).
         """
-        substance = Substance.objects.get(pk=substance_pk)
+        group = Group.objects.get(pk=group_pk)
         if not reporting_period_pk:
             max_date = datetime.date.today()
         else:
@@ -531,9 +531,11 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         # Get all the Parties that had ratified the control treaty at that date
         current_ratifications = PartyRatification.objects.filter(
             entry_into_force_date__lte=max_date,
-            treaty=substance.group.control_treaty
+            treaty=group.control_treaty
         )
-        signing_party_ids = set(current_ratifications.values_list('party__id', flat=True))
+        signing_party_ids = set(
+            current_ratifications.values_list('party__id', flat=True)
+        )
 
         return Party.objects.exclude(id__in=signing_party_ids)
 
