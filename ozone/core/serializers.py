@@ -254,14 +254,14 @@ class BlendSerializer(serializers.ModelSerializer):
             'id', 'blend_id', 'custom', 'is_qps', 'party', 'type',
             'other_names', 'composition', 'components',
         )
+        read_only_fields = ('custom', 'is_qps',)
 
 
-class CreateBlendSerializer(serializers.ModelSerializer):
+class CreateBlendSerializer(BlendSerializer):
     components = BlendComponentSerializer(many=True)
 
-    class Meta:
-        model = Blend
-        fields = '__all__'
+    class Meta(BlendSerializer.Meta):
+        pass
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
