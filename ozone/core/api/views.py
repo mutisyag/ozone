@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db.models import F
 from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
@@ -35,6 +36,7 @@ from ..serializers import (
     RegionSerializer,
     SubregionSerializer,
     PartySerializer,
+    PartyRatificationSerializer,
     ReportingPeriodSerializer,
     ObligationSerializer,
     UserSerializer,
@@ -61,11 +63,13 @@ User = get_user_model()
 
 class ReadOnlyMixin:
     """Does what it says on the tin"""
+
     def _allowed_methods(self):
         return ['GET', 'OPTIONS']
 
 
 class ValidationErrorMixin:
+
     def create(self, request, *args, **kwargs):
         try:
             return super().create(request, *args, **kwargs)
@@ -92,6 +96,7 @@ class BulkCreateUpdateMixin:
 
     This needs to be used by a `ModelViewSet` to properly work.
     """
+
     def get_serializer(self, *args, **kwargs):
         if isinstance(kwargs.get('data', {}), list):
             kwargs['many'] = True
@@ -110,6 +115,7 @@ class BulkCreateUpdateMixin:
 
 
 class IsOwnerFilterBackend(BaseFilterBackend):
+
     def filter_queryset(self, request, queryset, view):
         if not request.user.is_authenticated or request.user.is_anonymous:
             return queryset.none()
@@ -142,6 +148,19 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all().prefetch_related('subregion')
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
+
+
+class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
+    serializer_class = PartyRatificationSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        queryset = Party.objects.filter(
+            id=F('parent_party_id')
+        ).prefetch_related('subregion').prefetch_related('ratifications')
+        if self.kwargs.get('party_id'):
+            queryset = queryset.filter(id=self.kwargs['party_id'])
+        return queryset
 
 
 class GetNonPartiesViewSet(ReadOnlyMixin, generics.ListAPIView):
@@ -181,7 +200,8 @@ class BlendViewSet(viewsets.ModelViewSet):
         )
         party = self.request.query_params.get('party', None)
         if party is not None:
-            queryset = queryset.filter(party=party) | queryset.filter(party=None)
+            queryset = queryset.filter(
+                party=party) | queryset.filter(party=None)
         return queryset
 
     def get_serializer_class(self):

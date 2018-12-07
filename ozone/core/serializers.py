@@ -8,6 +8,7 @@ from .models import (
     Region,
     Subregion,
     Party,
+    PartyRatification,
     ReportingPeriod,
     Obligation,
     Substance,
@@ -15,6 +16,7 @@ from .models import (
     BlendComponent,
     Blend,
     Submission,
+    Treaty,
     Article7Questionnaire,
     Article7Destruction,
     Article7Production,
@@ -182,12 +184,39 @@ class SubregionSerializer(serializers.ModelSerializer):
         fields = ('name', 'abbr', 'region')
 
 
+class TreatySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Treaty
+        fields = ('treaty_id', 'name')
+
+
+class RatificationSerializer(serializers.ModelSerializer):
+    treaty = TreatySerializer(
+        many=False, read_only=True
+    )
+
+    class Meta:
+        model = PartyRatification
+        fields = ('treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
+
+
 class PartySerializer(serializers.ModelSerializer):
     subregion = serializers.StringRelatedField(many=False)
 
     class Meta:
         model = Party
         fields = ('id', 'name', 'abbr', 'subregion', 'parent_party')
+
+
+class PartyRatificationSerializer(serializers.ModelSerializer):
+    subregion = serializers.StringRelatedField(many=False)
+    ratifications = RatificationSerializer(
+        many=True, read_only=True
+    )
+
+    class Meta:
+        model = Party
+        fields = ('id', 'name', 'abbr', 'subregion', 'ratifications')
 
 
 class SubstanceSerializer(serializers.ModelSerializer):

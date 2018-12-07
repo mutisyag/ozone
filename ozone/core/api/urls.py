@@ -137,5 +137,10 @@ urlpatterns = (
             views.GetNonPartiesViewSet.as_view(),
             name='get_non_parties',
         ),
+        re_path(
+            '^get-party-ratifications/(?P<party_id>[0-9]+|)',
+            views.PartyRatificationViewSet.as_view(),
+            name='get_ratifications',
+        ),
     ]
 )
