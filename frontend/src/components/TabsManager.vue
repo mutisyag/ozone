@@ -14,21 +14,19 @@
     </div>
     <b-button-group class="actions">
       <Save :submit.sync="saveForSubmit"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-      <b-btn
-        v-if="$store.state.available_transitions.includes('submit')"
-       @click="checkBeforeSubmitting"
-       variant="outline-success"
-       >
-        Submit
-      </b-btn>
-			<b-btn
-				variant="outline-primary"
-				v-for="transition in availableTransitions"
-				:key="transition"
-				@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})"
-			>
-				{{labels[transition]}}
-			</b-btn>
+		<b-btn
+			v-if="$store.state.available_transitions.includes('submit')"
+			@click="checkBeforeSubmitting"
+			variant="outline-success">
+			Submit
+		</b-btn>
+		<b-btn
+			variant="outline-primary"
+			v-for="transition in availableTransitions"
+			:key="transition"
+			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+			{{labels[transition]}}
+		</b-btn>
 
     </b-button-group>
   </div>
@@ -52,46 +50,21 @@
 
           <b-tab title="Questionaire" active>
             <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs.questionaire_questions.title}}
-                <div v-if="$store.state.form.tabs.questionaire_questions.status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.questionaire_questions.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.questionaire_questions.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.questionaire_questions.status === 'edited'" class="fa fa-edit fa-lg"></i>
-              </div>
+				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
              </template>
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
 
           <b-tab v-for="tab in tabsWithAssideMenu" :title-link-class="$store.state.form.tabs[tab.id].status ? {} : null"  :key="tab.id" :disabled="!display_tabs[$store.state.form.tabs[tab.id].name]">
              <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs[tab.id].title}}
-                <div v-if="$store.state.form.tabs[tab.id].status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs[tab.id].status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs[tab.id].status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs[tab.id].status === 'edited'" class="fa fa-edit fa-lg"></i>
-              </div>
+				<tab-title-with-loader :tab="$store.state.form.tabs[tab.id]" />
              </template>
             <formtemplate :tabId="tabsWithAssideMenu.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab.id"></formtemplate>
           </b-tab>
 
           <b-tab :title-link-class="$store.state.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
             <template slot="title">
-              <div class="tab-title">
-                {{$store.state.form.tabs.has_emissions.title}}
-                <div v-if="$store.state.form.tabs.has_emissions.status === 'saving'" class="spinner">
-                  <div class="loader"></div>
-                </div>
-                <i v-if="$store.state.form.tabs.has_emissions.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_emissions.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-                <i v-if="$store.state.form.tabs.has_emissions.status === 'edited'" class="fa fa-edit fa-lg"></i>
-
-              </div>
+				<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
              </template>
             <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"   tabName="has_emissions"></emissionstemplate>
           </b-tab>
@@ -165,6 +138,7 @@ import { getInstructions } from '@/api/api.js'
 import Save from './Save'
 import SubmissionHistory from './SubmissionHistory.vue'
 import labels from '@/assets/labels'
+import TabTitleWithLoader from './TabTitleWithLoader'
 
 export default {
 
@@ -178,7 +152,8 @@ export default {
 		attachments: Attachments,
 		Footer,
 		Save,
-		SubmissionHistory
+		SubmissionHistory,
+		TabTitleWithLoader
 	},
 
 	props: {
@@ -223,7 +198,7 @@ export default {
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {
-			console.log('here', fields)
+				console.log('here', fields)
 				this.$store.dispatch('setAlert', { message: 'You cannot submit and empty form', variant: 'danger' })
 				return
 			}
