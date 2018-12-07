@@ -209,56 +209,6 @@ class Command(BaseCommand):
                 'subregion', 'region', region, subregion)
         f['subregion'] = subregion
 
-        f['signed_vienna_convention'] = row['SignVC'].date() if row[
-            'SignVC'] else None
-        f['signed_montreal_protocol'] = row['SignMP'].date() if row[
-            'SignMP'] else None
-
-        f['ratification_date_vienna_convention'] = row[
-            'RD_VC'].date() if row['RD_VC'] else None
-        f['ratification_date_montreal_protocol'] = row[
-            'RD_MP'].date() if row['RD_MP'] else None
-        f['ratification_date_london_amendment'] = row[
-            'RD_LA'].date() if row['RD_LA'] else None
-        f['ratification_date_copenhagen_amendment'] = row[
-            'RD_CA'].date() if row['RD_CA'] else None
-        f['ratification_date_montreal_amendment'] = row[
-            'RD_MA'].date() if row['RD_MA'] else None
-        f['ratification_date_beijing_amendment'] = row[
-            'RD_BA'].date() if row['RD_BA'] else None
-        f['ratification_date_kigali_amendment'] = row[
-            'RD_KA'].date() if row['RD_KA'] else None
-
-        ratif_types_map = {
-            'Ac': RatificationTypes.ACCESSION.value,
-            'Ap': RatificationTypes.APPROVAL.value,
-            'At': RatificationTypes.ACCEPTANCE.value,
-            'R': RatificationTypes.RATIFICATION.value,
-            'Sc': RatificationTypes.SUCCESSION.value,
-            # TODO: What about RatificationTypes.SIGNING ??
-        }
-        f['ratification_type_vienna_convention'] = ratif_types_map.get(
-            row['RT_VC'], ""
-        )
-        f['ratification_type_montreal_protocol'] = ratif_types_map.get(
-            row['RT_MP'], ""
-        )
-        f['ratification_type_london_amendment'] = ratif_types_map.get(
-            row['RT_LA'], ""
-        )
-        f['ratification_type_copenhagen_amendment'] = ratif_types_map.get(
-            row['RT_CA'], ""
-        )
-        f['ratification_type_montreal_amendment'] = ratif_types_map.get(
-            row['RT_MA'], ""
-        )
-        f['ratification_type_beijing_amendment'] = ratif_types_map.get(
-            row['RT_BA'], ""
-        )
-        f['ratification_type_kigali_amendment'] = ratif_types_map.get(
-            row['RT_KA'], ""
-        )
-
         f['remark'] = row['Remark'] or ""
         # This will be replaced in party_postprocess
         f['parent_party'] = row['MainCntryID']
