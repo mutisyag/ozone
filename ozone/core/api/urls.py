@@ -133,7 +133,7 @@ urlpatterns = (
     + [url for router in nested_routers for url in router.urls]
     + [
         re_path(
-            '^get-non-parties/(?P<substance_pk>[0-9]+)',
+            '^get-non-parties/',
             views.GetNonPartiesViewSet.as_view(),
             name='get_non_parties',
         ),

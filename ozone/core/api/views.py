@@ -1,16 +1,16 @@
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.models import F
-from django.utils.translation import gettext_lazy as _
 from django_filters import rest_framework as filters
 
-from rest_framework import viewsets, mixins, status, generics
+from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
 from rest_framework.filters import BaseFilterBackend
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 
 from ozone.core.serializers import AuthTokenByValueSerializer
 
@@ -163,14 +163,18 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
         return queryset
 
 
-class GetNonPartiesViewSet(ReadOnlyMixin, generics.ListAPIView):
-    serializer_class = PartySerializer
+class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer, )
 
-    def get_queryset(self):
-        return Article7NonPartyTrade.get_non_parties(
-            self.kwargs["substance_pk"]
-        )
+    def get(self, request):
+        groups = Group.objects.all()
+        all_non_parties = {}
+        for group in groups:
+            queryset = Article7NonPartyTrade.get_non_parties(group.pk)
+            non_parties_per_group = {key.id:True for key in queryset.all()}
+            all_non_parties[group.group_id] = non_parties_per_group
+        return Response(all_non_parties)
 
 
 class ReportingPeriodViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
