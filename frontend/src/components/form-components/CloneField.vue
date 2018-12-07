@@ -30,6 +30,11 @@ export default {
 
 	computed: {
 		countryOptions() {
+			if (this.tabName === 'has_nonparty') {
+				const currentCountries = this.$store.state.initialData.countryOptions.filter(country => this.$store.state.initialData.nonParties[this.current_field.group.selected][country.value])
+				console.log(currentCountries)
+				return currentCountries
+			}
 			return this.$store.state.initialData.countryOptions
 		}
 	},

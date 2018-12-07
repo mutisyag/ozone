@@ -109,6 +109,8 @@ const getSubmissionHistory = (url) => fetch(`${url}history/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
+const getNonParties = () => fetch('get-non-parties/')
+
 export {
 	apiURL,
 	api,
@@ -133,5 +135,6 @@ export {
 	callTransition,
 	deleteSubmission,
 	cloneSubmission,
-	getSubmissionHistory
+	getSubmissionHistory,
+	getNonParties
 }

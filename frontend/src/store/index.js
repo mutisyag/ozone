@@ -13,7 +13,8 @@ import {
 	getPeriods,
 	getObligations,
 	createSubmission,
-	getParties
+	getParties,
+	getNonParties
 } from '@/api/api.js'
 import Toasted from 'toastedjs'
 import 'toastedjs/src/sass/toast.scss'
@@ -57,6 +58,7 @@ const store = new Vuex.Store({
 			groupSubstances: null,
 			substances: null,
 			blends: null,
+			nonParties: null,
 			display: {
 				substances: null,
 				blends: null,
@@ -190,15 +192,6 @@ const store = new Vuex.Store({
 			})
 		},
 
-		resetAlert(context) {
-			return new Promise((resolve) => {
-				context.commit('setCurrentAlertMessage', null)
-				context.commit('setCurrentAlertVisibility', false)
-				context.commit('setCurrentAlertVariant', null)
-				resolve()
-			})
-		},
-
 		setAlert(context, data) {
 			let toastedOptions= {
 				danger: 'error',
@@ -244,6 +237,7 @@ const store = new Vuex.Store({
 					context.dispatch('getCountries')
 					context.dispatch('getSubstances')
 					context.dispatch('getCustomBlends')
+					context.dispatch('getNonParties')
 					resolve()
 				})
 			})
@@ -319,6 +313,13 @@ const store = new Vuex.Store({
 			})
 		},
 
+
+		getNonParties(context){
+			getNonParties().then((response) => {
+				context.commit('updateNonParties', response.data)
+			})
+		},
+		
 		createSubstance(context, data) {
 			const substancesHere = data.substanceList && data.substanceList.some((el) => el !== null)
 			const blendsHere = data.blendList && data.blendList.some((el) => el !== null)
@@ -530,6 +531,10 @@ const store = new Vuex.Store({
 
 		updateSubstances(state, data) {
 			state.initialData.substances = data
+		},
+
+		updateNonParties(state,data) {
+			state.initialData.nonParties = data
 		},
 
 		updateSubstancesDisplay(state, data) {
