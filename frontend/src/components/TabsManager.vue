@@ -50,21 +50,21 @@
 
           <b-tab title="Questionaire" active>
             <template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
              </template>
             <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
           </b-tab>
 
-          <b-tab v-for="tab in tabsWithAssideMenu" :title-link-class="$store.state.form.tabs[tab.id].status ? {} : null"  :key="tab.id" :disabled="!display_tabs[$store.state.form.tabs[tab.id].name]">
+          <b-tab v-for="tab in tabsWithAssideMenu" :key="tab.id" :disabled="!display_tabs[$store.state.form.tabs[tab.id].name]">
              <template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs[tab.id]" />
+							<tab-title-with-loader :tab="$store.state.form.tabs[tab.id]" />
              </template>
             <formtemplate :tabId="tabsWithAssideMenu.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab.id"></formtemplate>
           </b-tab>
 
-          <b-tab :title-link-class="$store.state.form.tabs.has_emissions.title ? {} : null" :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
+          <b-tab :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
             <template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+							<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
              </template>
             <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"   tabName="has_emissions"></emissionstemplate>
           </b-tab>
@@ -299,43 +299,4 @@ export default {
   margin-left: 0;
 }
 
-.tab-title {
-  display: flex;
-}
-
-.tab-title i {
-  margin-left: 5px;
-}
-
-.spinner {
-    z-index: 1;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 5px;
-}
-
-.loader {
-  border: 3px solid #f3f3f3;
-  border-radius: 50%;
-   border-top: 3px solid blue;
-   border-right: 3px solid green;
-   border-bottom: 3px solid red;
-   border-left: 3px solid pink;
-  width: 15px;
-  height: 15px;
-  -webkit-animation: spin 2s linear infinite; /* Safari */
-  animation: spin 2s linear infinite;
-}
-
-/* Safari */
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
 </style>
