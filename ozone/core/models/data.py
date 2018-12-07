@@ -533,7 +533,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             entry_into_force_date__lte=max_date,
             treaty=substance.group.control_treaty
         )
-        signing_party_ids = set(current_ratifications.values('party__id'))
+        signing_party_ids = set(current_ratifications.values_list('party__id', flat=True))
 
         return Party.objects.exclude(id__in=signing_party_ids)
 
