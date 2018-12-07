@@ -33,6 +33,7 @@
 						stripped
 						bordered
 						hover
+						class="width-70-percent"
 						head-variant="light"
 						stacked="md"
 						:items="substances"
@@ -60,30 +61,31 @@
 </template>
 
 <script>
-const uuidv1 = require('uuid/v1')
-
-const fields = [{
-	key: 'index', label: ''
-}, {
-	key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
-}, {
-	key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
-}, {
-	key: 'name', label: 'Name', sortable: true, class: 'text-center'
-}, {
-	key: 'odp', label: 'ODP', sortable: true, class: 'text-center'
-}, {
-	key: 'formula', label: 'Formula', sortable: true, class: 'text-center'
-}, {
-	key: 'number_of_isomers', label: 'Number of Isomers', sortable: true, class: 'text-center'
-}, {
-	key: 'min_odp', label: 'MinODP', sortable: true, class: 'text-center'
-}, {
-	key: 'max_odp', label: 'MaxODP', sortable: true, class: 'text-center'
-}]
+import './styles.css'
+import uuidv1 from 'uuid/v1'
 
 export default {
 	data() {
+		const fields = [{
+			key: 'index', label: '', class: 'width-40'
+		}, {
+			key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
+		}, {
+			key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
+		}, {
+			key: 'name', label: 'Name', sortable: true, class: 'text-center'
+		}, {
+			key: 'odp', label: 'ODP', sortable: true, class: 'text-center'
+		}, {
+			key: 'formula', label: 'Formula', sortable: true, class: 'text-center'
+		}, {
+			key: 'number_of_isomers', label: 'Number of Isomers', sortable: true, class: 'text-center'
+		}, {
+			key: 'min_odp', label: 'MinODP', sortable: true, class: 'text-center'
+		}, {
+			key: 'max_odp', label: 'MaxODP', sortable: true, class: 'text-center'
+		}]
+
 		return {
 			table: {
 				fields,

@@ -4,7 +4,7 @@
 	<b-card>
 		<template slot="header">
 			<b-row>
-				<b-col>Controlled substances</b-col>
+				<b-col>Parties</b-col>
 				<b-col>
                     <b-input-group prepend="Search">
                       <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
@@ -25,6 +25,7 @@
 						stripped
 						bordered
 						hover
+						class="width-70-percent"
 						head-variant="light"
 						stacked="md"
 						:items="parties"
@@ -51,14 +52,15 @@
 </template>
 
 <script>
-const uuidv1 = require('uuid/v1')
+import './styles.css'
+import uuidv1 from 'uuid/v1'
 
 export default {
 	data() {
 		return {
 			table: {
 				fields: [{
-					key: 'index', label: ''
+					key: 'index', label: '', class: 'width-40'
 				}, {
 					key: 'name', label: 'Name', sortable: true, class: 'text-center'
 				}, {
@@ -85,13 +87,13 @@ export default {
 	},
 	computed: {
 		parties() {
-			let partiesVisible = []
-			const { parties } = this.$store.state.initialData
-			if (!parties) {
-				return partiesVisible
+			const { partyRatifications } = this.$store.state.initialData
+			if (!partyRatifications) {
+				console.log(this.$store.state.initialData)
+				return []
 			}
-			partiesVisible = parties.filter(party => party.id === party.parent_party)
-			return partiesVisible
+			console.log(partyRatifications)
+			return partyRatifications
 		}
 	},
 	methods: {
@@ -101,7 +103,7 @@ export default {
 		}
 	},
 	created() {
-		this.$store.dispatch('getParties')
+		this.$store.dispatch('getPartyRatifications')
 	}
 }
 </script>

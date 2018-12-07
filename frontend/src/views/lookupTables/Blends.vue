@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-center responsive">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
@@ -36,7 +36,8 @@
                        outlined
                        bordered
                        hover
-                       head-variant="light"
+						class="width-50-percent"
+						head-variant="light"
                        stacked="md"
                        :items="visibleBlends"
                        :fields="table.fields"
@@ -51,11 +52,17 @@
 				<template slot="index" slot-scope="data">
 					{{data.index + 1}}.
 				</template>
+				<template slot="other_names" slot-scope="data">
+					<span v-if="data.item.other_names">{{data.item.other_names}}</span>
+					<span v-else><i class="fa fa-ellipsis-h" aria-hidden="true"></i></span>
+				</template>
+
                 <template slot="components" slot-scope="row">
 					<b-table show-empty
 						outlined
 						bordered
 						hover
+						small
 						head-variant="light"
 						stacked="md"
 						:items="row.item.components"
@@ -85,6 +92,7 @@
 </template>
 
 <script>
+import './styles.css'
 import Multiselect from '@/mixins/modifiedMultiselect'
 
 const blendsCompareByComponentPercent = (blend1, blend2, componentName, isDescending) => {
@@ -104,11 +112,11 @@ export default {
 		return {
 			table: {
 				fields: [{
-					key: 'index', label: ''
+					key: 'index', label: '', class: 'width-40'
 				}, {
-					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center'
+					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center width-200'
 				}, {
-					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center'
+					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center width-200'
 				}, {
 					key: 'components', label: 'Components', class: 'text-center'
 				}
@@ -131,7 +139,7 @@ export default {
 			tableComponents: {
 				fields: [
 					{
-						key: 'index', label: ''
+						key: 'index', label: '', class: 'width-40'
 					}, {
 						key: 'component_name', label: 'Name', class: 'text-center'
 					}, {
@@ -173,10 +181,9 @@ export default {
 			blends.forEach(blend => {
 				const blendIsVisible = !selectedComponentsNames.length
 						|| selectedComponentsNames.every(selectedComponentName => blend.components.map(component => {
+							this.$store.commit('setBlendComponentRowVariant', { component })
 							if (selectedComponentsNames.includes(component.component_name)) {
 								this.$store.commit('setBlendComponentRowVariant', { component, value: 'success' })
-							} else if (component._rowVariant) {
-								this.$store.commit('setBlendComponentRowVariant', { component })
 							}
 							return component.component_name
 						}).includes(selectedComponentName))

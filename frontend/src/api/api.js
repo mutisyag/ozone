@@ -67,6 +67,8 @@ const getUsers = () => fetch('users/')
 
 const getParties = () => fetch('parties/')
 
+const getPartyRatifications = () => fetch('get-party-ratifications/')
+
 const getExportBlends = () => {
 	if (isTestSession) {
 		console.log('getting blends')
@@ -124,6 +126,7 @@ export {
 	getInstructions,
 	getUsers,
 	getParties,
+	getPartyRatifications,
 	getSubmissions,
 	getPeriods,
 	getObligations,
