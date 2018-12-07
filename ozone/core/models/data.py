@@ -1,5 +1,6 @@
 import datetime
 
+from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
@@ -11,7 +12,6 @@ from .party import Party, PartyRatification
 from .reporting import Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
-from ..exceptions import CustomValidationError
 
 __all__ = [
     'Article7Flags',
@@ -36,7 +36,7 @@ class ModifyPreventionMixin:
 
     def clean(self):
         if not self.submission.data_changes_allowed:
-            raise CustomValidationError(
+            raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
         super().clean()
@@ -75,7 +75,7 @@ class BlendCompositionMixin:
         this class.
         """
         if self.substance is None and self.blend is None:
-            raise CustomValidationError(
+            raise ValidationError(
                 {
                     'substance': [_(
                         'Data should refer to one substance or one blend'
@@ -86,7 +86,7 @@ class BlendCompositionMixin:
                 }
             )
         if self.substance is not None and self.blend is not None:
-            raise CustomValidationError(
+            raise ValidationError(
                 {
                     'substance': [_(
                         'Data should not refer to both a substance and a blend'
@@ -99,7 +99,7 @@ class BlendCompositionMixin:
 
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
-            raise CustomValidationError(
+            raise ValidationError(
                 _("Substance rows derived from blends cannot be changed!")
             )
 
@@ -546,7 +546,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             or self.quantity_export_new
             or self.quantity_export_recovered
         ):
-            raise CustomValidationError(
+            raise ValidationError(
                 {
                     'quantity_fields': [_(
                         "At least one quantity field should be non-null."
@@ -558,7 +558,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         if not self.blend and self.substance:
             non_parties = self.get_non_parties(self.substance.id)
             if self.trade_party not in non_parties:
-                raise CustomValidationError(
+                raise ValidationError(
                     {
                         'trade_party': [_(
                             "You need to select a non-party, according to the "

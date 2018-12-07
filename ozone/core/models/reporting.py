@@ -1,6 +1,7 @@
 import enum
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
@@ -13,7 +14,7 @@ from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
 from ..exceptions import (
-    CustomValidationError,
+    MethodNotAllowed,
     StateDoesNotExist,
     TransitionDoesNotExist,
     TransitionNotAvailable
@@ -402,7 +403,7 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by
             )
         else:
-            raise CustomValidationError(msg)
+            raise ValidationError(msg)
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
@@ -479,7 +480,7 @@ class Submission(models.Model):
 
     def delete(self, *args, **kwargs):
         if not self.data_changes_allowed:
-            raise CustomValidationError(
+            raise MethodNotAllowed(
                 _("Submitted submissions cannot be deleted.")
             )
         # We need to delete all related data entries before being able to
@@ -494,11 +495,11 @@ class Submission(models.Model):
 
     def clean(self):
         if not self.reporting_period.is_reporting_allowed:
-            raise CustomValidationError(
+            raise ValidationError(
                 _("Reporting cannot be performed for this reporting period.")
             )
         if self.non_exempted_fields_modified() and not self.data_changes_allowed:
-            raise CustomValidationError(
+            raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
         super().clean()
@@ -519,7 +520,7 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period
             )
             if any([s.data_changes_allowed for s in current_submissions]):
-                raise CustomValidationError(
+                raise ValidationError(
                     _(
                         "There is already a submission in Data Entry for "
                         "this party/period/obligation combination."

@@ -12,11 +12,8 @@ class ExceptionMiddleware(object):
         return response
 
     def process_exception(self, request, exception):
-        if hasattr(exception, "status_code"):
-            status = exception.status_code
-            exception_dict = exception.to_dict()
-        elif isinstance(exception, ValidationError):
-            status = 400
+        if isinstance(exception, ValidationError):
+            status = 422
             if hasattr(exception, 'error_dict'):
                 exception_dict = exception.message_dict
             else:

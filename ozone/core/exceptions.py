@@ -27,10 +27,6 @@ class BaseCustomException(Exception):
         return self.error_dict
 
 
-class CustomValidationError(BaseCustomException):
-    status_code = 422
-
-
 class InvalidRequest(BaseCustomException):
     status_code = 400
 
