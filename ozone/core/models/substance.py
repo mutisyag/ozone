@@ -141,6 +141,15 @@ class Substance(models.Model):
 
     sort_order = models.IntegerField(null=True)
 
+    @property
+    def is_qps(self):
+        """
+        Indicates whether this substance can be used for QPS
+        """
+        if self.group:
+            return self.group.annex.annex_id == 'E'
+        return False
+
     def __str__(self):
         return self.name
 
@@ -200,6 +209,15 @@ class Blend(models.Model):
     @property
     def custom(self):
         return self.party is not None
+
+    @property
+    def is_qps(self):
+        return any(
+            [
+                c.substance.is_qps
+                for c in self.components.all() if c.substance
+            ]
+        )
 
     def __str__(self):
         return self.blend_id

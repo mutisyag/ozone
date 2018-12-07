@@ -225,6 +225,7 @@ class SubstanceSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'sort_order',
             'odp', 'formula', 'number_of_isomers', 'min_odp', 'max_odp',
+            'is_qps',
         )
 
 
@@ -250,7 +251,7 @@ class BlendSerializer(serializers.ModelSerializer):
     class Meta:
         model = Blend
         fields = (
-            'id', 'blend_id', 'custom', 'party', 'type',
+            'id', 'blend_id', 'custom', 'is_qps', 'party', 'type',
             'other_names', 'composition', 'components',
         )
 
