@@ -1,3 +1,6 @@
+from collections import OrderedDict
+from copy import deepcopy
+
 from django.contrib.auth import get_user_model
 from django.db.models import F
 from django_filters import rest_framework as filters
@@ -29,6 +32,7 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     Group,
+    Substance,
     Blend,
 )
 from ..permissions import IsSecretariatOrSameParty
@@ -53,6 +57,7 @@ from ..serializers import (
     Article7NonPartyTradeSerializer,
     Article7EmissionSerializer,
     GroupSerializer,
+    SubstanceSerializer,
     BlendSerializer,
     CreateBlendSerializer,
     SubmissionHistorySerializer,
@@ -184,6 +189,32 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticated,)
+
+    def list(self, request, *args, **kwargs):
+        serializer = GroupSerializer(
+            self.filter_queryset(self.get_queryset()),
+            many=True,
+            context={"request": request},
+        )
+
+        data = deepcopy(serializer.data)
+        data.append(
+            OrderedDict(
+                [
+                    ('group_id', 'uncontrolled'),
+                    (
+                        'substances',
+                        SubstanceSerializer(
+                            Substance.objects.filter(group__isnull=True),
+                            many=True,
+                            read_only=True,
+                            context={"request": request}
+                        ).data
+                    )
+                ]
+            )
+        )
+        return Response(data)
 
 
 class BlendViewSet(viewsets.ModelViewSet):
