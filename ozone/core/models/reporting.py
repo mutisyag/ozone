@@ -379,6 +379,7 @@ class Submission(models.Model):
         Checks whether the current submission can be cloned
         """
 
+        # Only non-superseded "past" submissions can be cloned
         if not self.reporting_period.is_reporting_open:
             if self.flag_superseded:
                 return (
@@ -388,6 +389,12 @@ class Submission(models.Model):
                         " it's superseded."
                     )
                 )
+        # All non-data-entry submissions for open rep. periods can be cloned
+        if self.data_changes_allowed:
+            return (
+                False,
+                _("Submission in Data Entry cannot be cloned.")
+            )
 
         return (True, "")
 
