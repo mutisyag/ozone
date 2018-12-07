@@ -172,7 +172,9 @@ class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
         all_non_parties = {}
         for group in groups:
             queryset = Article7NonPartyTrade.get_non_parties(group.pk)
-            non_parties_per_group = {key.id:True for key in queryset.all()}
+            non_parties_per_group = {
+                id: True for id in queryset.values_list('id', flat=True)
+            }
             all_non_parties[group.group_id] = non_parties_per_group
         return Response(all_non_parties)
 
