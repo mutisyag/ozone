@@ -115,6 +115,7 @@ const labels = {
 		remarks_os: 'Remarks (Party)'
 	},
 	general: {
+		__all__: '',
 		recall: 'Recall',
 		process: 'Process',
 		finalize: 'Finalize',
@@ -122,7 +123,7 @@ const labels = {
 		unrecall_to_submitted: 'Reinstate',
 		unrecall_to_processing: 'Reinstate',
 		unrecall_to_finalized: 'Reinstate'
-	},
+	}
 
 }
 

@@ -153,10 +153,8 @@
                     </router-link>
 
                     <b-btn
-                        v-if="row.item.details.is_cloneable"
                         variant="outline-primary"
-                        @click="clone(row.item.details.url)"
-                      >
+                        @click="clone(row.item.details.url)"                      >
                       Clone
                     </b-btn>
 

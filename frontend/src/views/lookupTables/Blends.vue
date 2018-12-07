@@ -15,9 +15,20 @@
                 </b-col>
 				<b-col>
                     <b-input-group>
-						<multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" trackBy="value" placeholder="Components" v-model="table.filters.selectedComponentsNames" :options="searchComponentOptions"></multiselect>
+						<multiselect
+							:max-height="250"
+							style="max-width:290px; max-height:50px;"
+							:multiple="true"
+							:clear-on-select="false"
+							:hide-selected="true"
+							:close-on-select="false"
+							label="text"
+							trackBy="value"
+							placeholder="Components"
+							v-model="table.filters.selectedComponentsNames"
+							:options="searchComponentOptions"> </multiselect>
 						<b-input-group-append>
-							<b-btn variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
+							<b-btn  variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
 								Sort
 								<i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
 								<i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
