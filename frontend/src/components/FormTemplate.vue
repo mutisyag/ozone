@@ -706,10 +706,19 @@ export default {
 
 	methods: {
 		anotherSpecialCase(order, modal_data) {
-			if (modal_data.field.group.selected !== 'EI' && order === 'quarantine_pre_shipment') {
-				return false
+			if (order !== 'quarantine_pre_shipment') {
+				return true
 			}
-			return true
+			if (modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
+				if (this.tab_data.substances.find(s => s.value === modal_data.field.substance.selected).is_qps) {
+					return true
+				}
+			}
+			if (modal_data.field.blend.selected) {
+				if (this.tab_data.blends.find(s => s.id === modal_data.field.blend.selected).is_qps) {
+					return true
+				}
+			}
 		},
 
 		updateFormField(value, fieldInfo) {

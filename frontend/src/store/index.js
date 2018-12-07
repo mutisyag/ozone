@@ -290,7 +290,7 @@ const store = new Vuex.Store({
 				response.data.forEach(group => {
 					group.substances.sort((a, b) => a.sort_order - b.sort_order)
 					group.substances.forEach(substance => {
-						tempSubstances.push({ value: substance.id, text: substance.name, group })
+						tempSubstances.push({ value: substance.id, text: substance.name, group, is_qps: substance.is_qps })
 						substancesDisplay[substance.id] = substance.name
 					})
 				})
@@ -306,7 +306,7 @@ const store = new Vuex.Store({
 			getCustomBlends().then((response) => {
 				response.data.forEach(blend => {
 					blend.components.sort((component1, component2) => component2.percentage - component1.percentage)
-					blendsDisplay[blend.id] = { name: blend.blend_id, components: blend.components }
+					blendsDisplay[blend.id] = { name: blend.blend_id, components: blend.components, is_qps: blend.is_qps }
 				})
 				context.commit('updateBlends', response.data)
 				context.commit('updateBlendsDisplay', blendsDisplay)
