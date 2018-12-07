@@ -93,7 +93,10 @@ export default {
 							willNotAddCountryNames.push(text)
 						}
 					})
-					this.$store.dispatch('setAlert', { message: `The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`, variant: 'danger' })
+					this.$store.dispatch('setAlert', {
+						message: { __all__: [`The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`] },
+						variant: 'danger'
+					})
 				}
 			})
 

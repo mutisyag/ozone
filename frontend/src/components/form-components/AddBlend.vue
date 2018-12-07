@@ -144,7 +144,10 @@ export default {
 		alertIfBlendExists() {
 			console.log('here')
 			if (this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) {
-				this.$store.dispatch('setAlert', { message: `A blend with the name ${this.new_blend.text} already exists!`, variant: 'danger' })
+				this.$store.dispatch('setAlert', {
+					message: { __all__: [`A blend with the name ${this.new_blend.text} already exists!`] },
+					variant: 'danger'
+				})
 			}
 		},
 
@@ -224,7 +227,9 @@ export default {
 						prefillData: null
 					})
 				}).catch((error) => {
-					this.$store.dispatch('setAlert', { message: error.response.data, variant: 'danger' })
+					this.$store.dispatch('setAlert', {
+						message: { ...error.response.data },
+						variant: 'danger' })
 				})
 			}
 

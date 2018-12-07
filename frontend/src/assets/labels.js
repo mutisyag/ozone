@@ -124,7 +124,6 @@ const labels = {
 		unrecall_to_processing: 'Reinstate',
 		unrecall_to_finalized: 'Reinstate'
 	}
-
 }
 
 export default labels

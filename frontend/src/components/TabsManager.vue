@@ -198,7 +198,10 @@ export default {
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {
-				this.$store.dispatch('setAlert', { message: 'You cannot submit and empty form', variant: 'danger' })
+				this.$store.dispatch('setAlert', {
+					message: { __all__: ['You cannot submit and empty form'] },
+					variant: 'danger'
+				})
 				return
 			}
 			this.saveForSubmit = true

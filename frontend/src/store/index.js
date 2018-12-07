@@ -17,8 +17,13 @@ import {
 	getNonParties,
 	getPartyRatifications
 } from '@/api/api.js'
-import Toasted from 'toastedjs'
 import 'toastedjs/src/sass/toast.scss'
+import {
+	getLevel2PropertyValue
+} from '@/shared/utils.js'
+import labels from '@/assets/labels.js'
+
+import Toasted from 'toastedjs'
 
 const options = {
 	position: 'bottom-left',
@@ -65,7 +70,8 @@ const store = new Vuex.Store({
 				blends: null,
 				countries: null
 			}
-		}
+		},
+		alertData: []
 	},
 
 	getters: {
@@ -114,19 +120,28 @@ const store = new Vuex.Store({
 			return new Promise((resolve, reject) => {
 				const duplicate = context.getters.getDuplicateSubmission(data)
 				if (duplicate.length) {
-					context.dispatch('setAlert', { message: 'Another submission already exists in Data Entry stage.', variant: 'danger' })
+					context.dispatch('setAlert', {
+						message: { __all__: ['Another submission already exists in Data Entry stage.'] },
+						variant: 'danger'
+					})
 					// TODO: should this be a thing ?
 					// else if(!isReportingOpen) {
 					//     context.dispatch('setAlert', { message: 'Reporting is not open for the selected period', variant: 'danger' })
 					// }
 				} else {
 					createSubmission(data).then((response) => {
-						context.dispatch('setAlert', { message: 'Submission Created', variant: 'success' })
+						context.dispatch('setAlert', {
+							message: { __all__: ['Submission Created'] },
+							variant: 'success'
+						})
 						context.dispatch('getCurrentSubmissions').then(() => {
 							resolve(response.data)
 						})
 					}).catch((error) => {
-						context.dispatch('setAlert', { message: 'Failed to create submission', variant: 'danger' })
+						context.dispatch('setAlert', {
+							message: { __all__: ['Failed to create submission'] },
+							variant: 'danger'
+						})
 						reject(error.response)
 					})
 				}
@@ -194,11 +209,14 @@ const store = new Vuex.Store({
 		},
 
 		setAlert(context, data) {
-			const toastedOptions = {
-				danger: 'error',
-				success: 'success'
-			}
-			toasted.show(data.message, { type: toastedOptions[data.variant] })
+			Object.keys(data.message).forEach(key => {
+				const labelValue = getLevel2PropertyValue(labels, key)
+				const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${data.message[key].join('<br>')}`
+				context.commit('addAlertData', {
+					displayMessage,
+					variant: data.variant
+				})
+			})
 		},
 
 		prefillQuestionaire(context) {
@@ -214,9 +232,15 @@ const store = new Vuex.Store({
 				} else {
 					context.dispatch('getSubmissionData', data.submission)
 				}
-				context.dispatch('setAlert', { message: 'Submission state updated', variant: 'success' })
+				context.dispatch('setAlert', {
+					message: { __all__: ['Submission state updated'] },
+					variant: 'success'
+				})
 			}).catch(error => {
-				context.dispatch('setAlert', { message: 'Unable to change the state of this submission', variant: 'danger' })
+				context.dispatch('setAlert', {
+					message: { __all__: ['Unable to change the state of this submission'] },
+					variant: 'danger'
+				})
 				console.log(error)
 			})
 		},
@@ -224,10 +248,16 @@ const store = new Vuex.Store({
 		removeSubmission(context, submissionUrl) {
 			deleteSubmission(submissionUrl).then(() => {
 				context.dispatch('getCurrentSubmissions')
-				context.dispatch('setAlert', { message: 'Submission deleted', variant: 'success' })
+				context.dispatch('setAlert', {
+					message: { __all__: ['Submission deleted'] },
+					variant: 'success'
+				})
 			}).catch(() => {
 				context.dispatch('getCurrentSubmissions')
-				context.dispatch('setAlert', { message: 'Failed to delete submission', variant: 'danger' })
+				context.dispatch('setAlert', {
+					message: { __all__: ['Failed to delete submission'] },
+					variant: 'danger'
+				})
 			})
 		},
 
@@ -262,7 +292,10 @@ const store = new Vuex.Store({
 			getSubmissionHistory(data).then((response) => {
 				context.commit('setSubmissionHistory', response.data)
 			}).catch((error) => {
-				context.dispatch('setAlert', { message: error.response.data, variant: 'danger' })
+				context.dispatch('setAlert', {
+					message: { ...error.response.data },
+					variant: 'danger'
+				})
 			})
 		},
 
@@ -551,6 +584,23 @@ const store = new Vuex.Store({
 
 		setBlendComponentRowVariant(state, data) {
 			data.component._rowVariant = data.value
+		},
+
+		addAlertData(state, data) {
+			const toastedOptions = {
+				danger: 'error',
+				success: 'success'
+			}
+			const now = new Date()
+			state.alertData = state.alertData.filter(x => x.expires > now)
+			const existingDisplayMessage = state.alertData.find(x => x.displayMessage === data.displayMessage)
+			if (!existingDisplayMessage) {
+				state.alertData.push({
+					...data,
+					expires: new Date((new Date()).getTime() + 5000)
+				})
+				toasted.show(data.displayMessage, { type: toastedOptions[data.variant] })
+			}
 		},
 
 		// questionaire

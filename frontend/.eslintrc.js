@@ -35,6 +35,7 @@ module.exports = {
 	'dot-notation': 'off',
 	'no-underscore-dangle': 'off',
 	'object-curly-newline': 'off',
+	'import/prefer-default-export': 'off',
     'vue/no-use-v-if-with-v-for': 'off',
     'vue/no-side-effects-in-computed-properties': 'off'
   },

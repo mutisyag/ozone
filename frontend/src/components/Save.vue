@@ -155,9 +155,10 @@ export default {
 				}
 			}
 			if (this.invalidTabs.length) {
-				this.$store.dispatch('setAlert',
-					{ message: `Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`,
-						variant: 'danger' })
+				this.$store.dispatch('setAlert', {
+					message: { __all__: [`Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
+					variant: 'danger'
+				})
 			}
 			this.startSubmitting()
 		},
@@ -195,9 +196,10 @@ export default {
 					}
 				}
 			}).catch((error) => {
-				this.$store.dispatch('setAlert',
-					{ message: 'Please complete the questionnaire before saivng',
-						variant: 'danger' })
+				this.$store.dispatch('setAlert', {
+					message: { __all__: ['Please complete the questionnaire before saivng'] },
+					variant: 'danger'
+				})
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
 				console.log(error)
 			})
@@ -229,7 +231,9 @@ export default {
 					current_tab.status = false
 					console.log(error.response)
 					this.invalidTabs.push(field)
-					this.$store.dispatch('setAlert', { message: `Save failed for ${this.invalidTabs}`, variant: 'danger' })
+					this.$store.dispatch('setAlert', {
+						message: { __all__: [`Save failed for ${this.invalidTabs}`] },
+						variant: 'danger' })
 				})
 			} else if (this.$store.state.newTabs.indexOf(field) !== -1 && current_tab.form_fields.length) {
 				current_tab.status = 'saving'
@@ -252,7 +256,10 @@ export default {
 				}).catch(() => {
 					current_tab.status = false
 					this.invalidTabs.push(field)
-					this.$store.dispatch('setAlert', { message: `Save failed for ${this.invalidTabs}`, variant: 'danger' })
+					this.$store.dispatch('setAlert', {
+						message: { __all__: [`Save failed for ${this.invalidTabs}`] },
+						variant: 'danger'
+					})
 				})
 			}
 		}

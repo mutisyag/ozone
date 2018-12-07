@@ -193,7 +193,6 @@
 
 <script>
 import { cloneSubmission } from '@/api/api'
-import errorHandling from '@/mixins/errorHandling'
 import Multiselect from '@/mixins/modifiedMultiselect'
 // import Multiselect from "vue-multiselect"
 import { mapGetters } from 'vuex'
@@ -354,9 +353,14 @@ export default {
 		clone(url) {
 			cloneSubmission(url).then(() => {
 				this.$store.dispatch('getCurrentSubmissions')
-				this.$store.dispatch('setAlert', { message: 'Submission cloned', variant: 'success' })
+				this.$store.dispatch('setAlert', {
+					message: { __all__: ['Submission cloned'] },
+					variant: 'success'
+				})
 			}).catch(error => {
-				this.$store.dispatch('setAlert', { message: errorHandling.handleError(error.response.data), variant: 'danger' })
+				this.$store.dispatch('setAlert', {
+					message: { ...error.response.data },
+					variant: 'danger' })
 				console.log(error)
 			})
 		},
