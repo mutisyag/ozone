@@ -96,7 +96,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert',
-				{ message: error,
+				{ message: error.response.data,
 					variant: 'danger' })
 			return Promise.reject(error)
 		})
@@ -107,7 +107,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert',
-				{ message: error,
+				{ message: error.response.data,
 					variant: 'danger' })
 			return Promise.reject(error)
 		})
