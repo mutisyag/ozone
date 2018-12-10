@@ -108,11 +108,12 @@ class Command(BaseCommand):
                 )
                 print('Done with %s' % filename)
 
-    def row2dict(self, sheet, row):
+    def row2dict(self, sheet, row, index):
         header = [cell.value for cell in sheet[1]]
         values = {}
         for key, cell in zip(header, row):
             values[key] = cell.value
+        values['_index'] = index
         return values
 
     def lookup_id(self, model, field, key, data=None):
@@ -140,7 +141,7 @@ class Command(BaseCommand):
         sheet = workbook[self.MODELS[model]['sheet']]
 
         for idx in range(1, sheet.max_row):
-            row = self.row2dict(sheet, sheet[idx + 1])
+            row = self.row2dict(sheet, sheet[idx + 1], idx)
             model_class = 'core.' + (self.MODELS[model].get('model') or model)
             obj = {
                 'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
@@ -349,12 +350,16 @@ class Command(BaseCommand):
         f['blend_id'] = row['Blend']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
+            f['sort_order'] = 100 + row['_index']
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
+            f['sort_order'] = 200 + row['_index']
         elif f['blend_id'].startswith('Methyl bromide'):
             f['type'] = Blend.BlendTypes.MeBr.value
+            f['sort_order'] = 400 + row['_index']
         else:
             f['type'] = Blend.BlendTypes.OTHER.value
+            f['sort_order'] = 300 + row['_index']
 
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""

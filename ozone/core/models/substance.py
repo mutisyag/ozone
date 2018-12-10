@@ -206,6 +206,8 @@ class Blend(models.Model):
 
     remark = models.CharField(max_length=256, blank=True)
 
+    sort_order = models.IntegerField(null=True, default=0)
+
     @property
     def custom(self):
         return self.party is not None

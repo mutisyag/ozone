@@ -252,7 +252,7 @@ class BlendSerializer(serializers.ModelSerializer):
         model = Blend
         fields = (
             'id', 'blend_id', 'custom', 'is_qps', 'party', 'type',
-            'other_names', 'composition', 'components',
+            'other_names', 'composition', 'components', 'sort_order',
         )
         read_only_fields = ('custom', 'is_qps',)
 
