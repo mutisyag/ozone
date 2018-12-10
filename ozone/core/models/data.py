@@ -3,6 +3,7 @@ import datetime
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
@@ -537,7 +538,9 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             current_ratifications.values_list('party__id', flat=True)
         )
 
-        return Party.objects.exclude(id__in=signing_party_ids)
+        return Party.objects.exclude(
+            Q(id__in=signing_party_ids) | Q(parent_party__id__in=signing_party_ids)
+        )
 
     def clean(self):
         if not (
