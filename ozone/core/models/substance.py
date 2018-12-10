@@ -141,6 +141,8 @@ class Substance(models.Model):
 
     sort_order = models.IntegerField(null=True)
 
+    is_contained_in_polyols = models.BooleanField()
+
     @property
     def is_qps(self):
         """

@@ -225,7 +225,7 @@ class SubstanceSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'name', 'description', 'sort_order',
             'odp', 'formula', 'number_of_isomers', 'min_odp', 'max_odp',
-            'is_qps',
+            'is_qps', 'is_contained_in_polyols',
         )
 
 

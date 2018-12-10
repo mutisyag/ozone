@@ -16,7 +16,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.13,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 2
@@ -49,7 +49,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.11,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 5
@@ -82,7 +82,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.15,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 8
@@ -104,7 +104,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.6,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 10
@@ -137,7 +137,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.38,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 13
@@ -236,7 +236,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.44,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 22
@@ -247,7 +247,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.52,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 23
@@ -258,7 +258,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.04,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 24
@@ -302,7 +302,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 28
@@ -313,7 +313,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.4,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 29
@@ -324,7 +324,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.4,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 30
@@ -335,7 +335,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.1,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 31
@@ -346,7 +346,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.7,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 32
@@ -357,7 +357,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.2,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 33
@@ -368,7 +368,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.23,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 34
@@ -379,7 +379,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 35
@@ -390,7 +390,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.52,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 36
@@ -401,7 +401,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.15,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 37
@@ -412,7 +412,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.15,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 38
@@ -423,7 +423,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.7,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 39
@@ -434,7 +434,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.25,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 40
@@ -445,7 +445,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.15,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 41
@@ -456,7 +456,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.6,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 42
@@ -467,7 +467,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.3,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 43
@@ -478,7 +478,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.3,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 44
@@ -489,7 +489,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.4,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 45
@@ -500,7 +500,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.025,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 46
@@ -511,7 +511,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.025,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 47
@@ -522,7 +522,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.95,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 48
@@ -533,7 +533,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.07,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 49
@@ -544,7 +544,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.46,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 50
@@ -632,7 +632,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.5,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 58
@@ -643,7 +643,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.5,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 59
@@ -654,7 +654,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.45,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 60
@@ -665,7 +665,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.55,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 61
@@ -698,7 +698,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.11,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 64
@@ -731,7 +731,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.03,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 67
@@ -786,7 +786,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.88,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 72
@@ -907,7 +907,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.18,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 83
@@ -929,7 +929,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.75,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 85
@@ -940,7 +940,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.59,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 86
@@ -973,7 +973,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.466,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 89
@@ -984,7 +984,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.5,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 90
@@ -1006,7 +1006,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.79,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 92
@@ -1017,7 +1017,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.183,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 93
@@ -1039,7 +1039,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.195,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 95
@@ -1050,7 +1050,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.788,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 96
@@ -1094,7 +1094,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.025,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 100
@@ -1105,7 +1105,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.77,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 101
@@ -1116,7 +1116,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.19,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 102
@@ -1138,7 +1138,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.485,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 104
@@ -1149,7 +1149,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.48,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 105
@@ -1171,7 +1171,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.88,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 107
@@ -1193,7 +1193,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.58,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 109
@@ -1204,7 +1204,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 110
@@ -1215,7 +1215,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.85,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 111
@@ -1226,7 +1226,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.15,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 112
@@ -1237,7 +1237,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.851,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 113
@@ -1248,7 +1248,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.115,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 114
@@ -1270,7 +1270,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.55,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 116
@@ -1281,7 +1281,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 117
@@ -1303,7 +1303,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.82,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 119
@@ -1314,7 +1314,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.15,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 120
@@ -1336,7 +1336,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.651,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 122
@@ -1347,7 +1347,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.315,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 123
@@ -1369,7 +1369,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.58,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 125
@@ -1380,7 +1380,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.393,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 126
@@ -1402,7 +1402,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.525,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 128
@@ -1413,7 +1413,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.475,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 129
@@ -1424,7 +1424,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.505,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 130
@@ -1435,7 +1435,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.47,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 131
@@ -1479,7 +1479,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.185,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 135
@@ -1490,7 +1490,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.695,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 136
@@ -1501,7 +1501,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.12,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 137
@@ -1512,7 +1512,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.051,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 138
@@ -1523,7 +1523,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.93,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 139
@@ -1556,7 +1556,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.15,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 142
@@ -1567,7 +1567,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 143
@@ -1578,7 +1578,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.1,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 144
@@ -1589,7 +1589,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.5,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 145
@@ -1600,7 +1600,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.775,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 146
@@ -1611,7 +1611,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.2,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 147
@@ -1655,7 +1655,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.1,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 151
@@ -1677,7 +1677,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.76,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 153
@@ -1710,7 +1710,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.29,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 156
@@ -1809,7 +1809,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.632,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 165
@@ -1820,7 +1820,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.18,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 166
@@ -1831,7 +1831,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.16,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 167
@@ -1864,7 +1864,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.2,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 170
@@ -1919,7 +1919,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.195,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 175
@@ -1930,7 +1930,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.785,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 176
@@ -1963,7 +1963,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.085,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 179
@@ -1974,7 +1974,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.45,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 180
@@ -1985,7 +1985,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.442,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 181
@@ -2018,7 +2018,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.5,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 184
@@ -2029,7 +2029,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.47,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 185
@@ -2062,7 +2062,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.016,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 188
@@ -2073,7 +2073,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.978,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 189
@@ -2128,7 +2128,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.31,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 194
@@ -2139,7 +2139,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.31,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 195
@@ -2150,7 +2150,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.3,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 196
@@ -2161,7 +2161,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.03,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 197
@@ -2172,7 +2172,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.05,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 198
@@ -2216,7 +2216,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.12,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 202
@@ -2227,7 +2227,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.05,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 203
@@ -2249,7 +2249,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.415,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 205
@@ -2271,7 +2271,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.1,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 207
@@ -2293,7 +2293,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.09,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 209
@@ -2315,7 +2315,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 211
@@ -2348,7 +2348,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 214
@@ -2359,7 +2359,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.035,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 215
@@ -2381,7 +2381,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 217
@@ -2392,7 +2392,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.08,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 218
@@ -2414,7 +2414,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.26,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 220
@@ -2425,7 +2425,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.26,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 221
@@ -2447,7 +2447,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.21,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 223
@@ -2469,7 +2469,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.243,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 225
@@ -2480,7 +2480,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.247,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 226
@@ -2502,7 +2502,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.257,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 228
@@ -2513,7 +2513,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.252,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 229
@@ -2524,7 +2524,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.243,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 230
@@ -2546,7 +2546,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.273,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 232
@@ -2557,7 +2557,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 233
@@ -2568,7 +2568,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.2,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 234
@@ -2590,7 +2590,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.29,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 236
@@ -2612,7 +2612,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 238
@@ -2634,7 +2634,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.102,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 240
@@ -2656,7 +2656,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.112,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 242
@@ -2678,7 +2678,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.11,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 244
@@ -2689,7 +2689,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.59,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 245
@@ -2700,7 +2700,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.67,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 246
@@ -2711,7 +2711,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.07,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 247
@@ -2733,7 +2733,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.125,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 249
@@ -2744,7 +2744,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.61,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 250
@@ -2766,7 +2766,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 252
@@ -2777,7 +2777,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.2,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 253
@@ -2788,7 +2788,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.538,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 254
@@ -2799,7 +2799,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.05,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 255
@@ -2832,7 +2832,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.35,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 258
@@ -2854,7 +2854,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.689,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 260
@@ -2876,7 +2876,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.215,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 262
@@ -2909,7 +2909,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.215,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 265
@@ -2931,7 +2931,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.06,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 267
@@ -2942,7 +2942,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.45,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 268
@@ -2964,7 +2964,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.18,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 270
@@ -2986,7 +2986,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.12,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 272
@@ -2997,7 +2997,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.205,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 273
@@ -3008,7 +3008,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.04,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 274
@@ -3019,7 +3019,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.614,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 275
@@ -3030,7 +3030,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.135,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 276
@@ -3041,7 +3041,7 @@
       "cnumber": "236",
       "component_name": "HFC-236fa",
       "percentage": 0.006,
-      "substance": 109
+      "substance": 108
     },
     "model": "core.blendcomponent",
     "pk": 277
@@ -3052,7 +3052,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 278
@@ -3085,7 +3085,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.21,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 281
@@ -3118,7 +3118,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.12,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 284
@@ -3129,7 +3129,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.52,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 285
@@ -3140,7 +3140,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.14,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 286
@@ -3162,7 +3162,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.28,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 288
@@ -3173,7 +3173,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 289
@@ -3184,7 +3184,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.2,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 290
@@ -3217,7 +3217,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.262,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 293
@@ -3272,7 +3272,7 @@
       "cnumber": "23",
       "component_name": "HFC-23",
       "percentage": 0.401,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 298
@@ -3294,7 +3294,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.482,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 300
@@ -3316,7 +3316,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.5,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 302
@@ -3327,7 +3327,7 @@
       "cnumber": "143",
       "component_name": "HFC-143a",
       "percentage": 0.5,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 303
@@ -3338,7 +3338,7 @@
       "cnumber": "23",
       "component_name": "HFC-23",
       "percentage": 0.39,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 304
@@ -3360,7 +3360,7 @@
       "cnumber": "23",
       "component_name": "HFC-23",
       "percentage": 0.46,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 306
@@ -3448,7 +3448,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.05,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 314
@@ -3459,7 +3459,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.95,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 315
@@ -3481,7 +3481,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.44,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 317
@@ -3503,7 +3503,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.415,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 319
@@ -3547,7 +3547,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.12,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 323
@@ -3580,7 +3580,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.07,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 326
@@ -3602,7 +3602,7 @@
       "cnumber": "125",
       "component_name": "HFC-125",
       "percentage": 0.45,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 328
@@ -3679,7 +3679,7 @@
       "cnumber": "23",
       "component_name": "HFC-23",
       "percentage": 0.02,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 335
@@ -3690,7 +3690,7 @@
       "cnumber": "32",
       "component_name": "HFC-32",
       "percentage": 0.28,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 336
@@ -3723,7 +3723,7 @@
       "cnumber": "134",
       "component_name": "HFC-134a",
       "percentage": 0.79,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 339
@@ -3800,7 +3800,7 @@
       "cnumber": "227",
       "component_name": "HFC-227ea",
       "percentage": 0.4,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 346
@@ -3833,7 +3833,7 @@
       "cnumber": "152",
       "component_name": "HFC-152a",
       "percentage": 0.05,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 349
@@ -3844,7 +3844,7 @@
       "cnumber": "23",
       "component_name": "HFC-23",
       "percentage": 0.05,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 350

@@ -336,6 +336,7 @@ class Command(BaseCommand):
         f['fluorines'] = row['Fluorines'] or ""
         f['chlorines'] = row['Chlorines'] or ""
         f['bromines'] = row['Bromines'] or ""
+        f['is_contained_in_polyols'] = f['name'] in ['CFC-11', 'HCFC-141B']
 
         # TODO: Not mapped: r_code, mp_control, main_usage
         return f

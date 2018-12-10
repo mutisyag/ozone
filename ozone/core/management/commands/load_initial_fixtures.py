@@ -20,6 +20,7 @@ class Command(BaseCommand):
                 'obligations',
                 'reportingperiods',
                 'partieshistory',
+                'partiesratification',
                 )
 
     def handle(self, *args, **options):
