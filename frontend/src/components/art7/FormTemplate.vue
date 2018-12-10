@@ -479,13 +479,13 @@
 
 <script>
 
-import labels from '@/assets/labels'
-import inputFields from '@/assets/inputFields'
-import fieldGenerator from './form-components/fieldGenerator'
-import CloneField from './form-components/CloneField.vue'
+import labels from '@/components/art7/dataDefinitions/labels'
+import inputFields from '@/components/art7/dataDefinitions/inputFields'
+import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import CloneField from '@/components/common/form-components/CloneField.vue'
 import { Aside as AppAside } from '@coreui/vue'
-import DefaultAside from './form-components/DefaultAside'
-import Multiselect from '@/mixins/modifiedMultiselect'
+import DefaultAside from '@/components/common/form-components/DefaultAside'
+import Multiselect from '@/components/common/modifiedMultiselect'
 
 export default {
 	props: {

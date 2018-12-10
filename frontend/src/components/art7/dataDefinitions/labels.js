@@ -57,7 +57,6 @@ const labels = {
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
 		remarks_party: 'Remarks (Party)'
-
 	},
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',

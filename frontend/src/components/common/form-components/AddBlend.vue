@@ -54,8 +54,8 @@
 
 <script>
 
-import { createBlend } from '@/api/api'
-import Multiselect from '@/mixins/modifiedMultiselect'
+import { createBlend } from '@/components/common/services/api'
+import Multiselect from '@/components/common/modifiedMultiselect'
 
 export default {
 

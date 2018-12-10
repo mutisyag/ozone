@@ -43,8 +43,8 @@ import nav from '@/_nav'
 import {
 	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Breadcrumb
 } from '@coreui/vue'
-import Header from '@/views/Header'
-import { api } from '@/api/api'
+import Header from '@/components/common/Header'
+import { api } from '@/components/common/services/api'
 
 export default {
 	name: 'app',

@@ -1,6 +1,17 @@
 import { intro_fields, reporting_party } from './questionnaire_fields.js'
 
 const form = {
+	formDetails: {
+		dataNeeded: [
+			'initialData.countryOptions',
+			 'initialData.substances', 
+			 'initialData.blends', 
+			 'current_submission', 
+			 'initialData.display.substances', 
+			 'initialData.display.blends', 
+			 'initialData.display.countries'
+			],
+	},
 	tabs: {
 		sub_info: {
 			name: 'form_intro',
@@ -29,6 +40,7 @@ const form = {
 			form_fields: reporting_party
 		},
 		questionaire_questions: {
+			endpoint_url: 'article7questionnaire_url',
 			name: 'questionaire_questions',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
@@ -37,12 +49,23 @@ const form = {
 			status: null,
 			isInvalid: false,
 			description: '',
-			// used for identification when adding labels
-			form_fields: intro_fields
+			form_fields: intro_fields,			
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				has_imports: false,
+				has_exports: false,
+				has_produced: false,
+				has_destroyed: false,
+				has_nonparty: false,
+				has_emissions: false
+			}
 		},
 		has_exports: {
+			endpoint_url: 'article7exports_url',
 			name: 'has_exports',
 			ordering_id: 0,
+			validate: true,
 			status: null,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
@@ -145,12 +168,37 @@ const form = {
 				label: 'Secretariat Comments'
 			}
 			],
-			footnotes: ['[1] Tonne = Metric ton.']
+			footnotes: ['[1] Tonne = Metric ton.'],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				quantity_total_new: null,
+				quantity_total_recovered: null,
+				quantity_feedstock: null,
+				quantity_critical_uses: null,
+				decision_critical_uses: '',
+				quantity_essential_uses: null,
+				decision_essential_uses: '',
+				quantity_high_ambient_temperature: null,
+				decision_high_ambient_temperature: '',
+				quantity_laboratory_analytical_uses: null,
+				decision_laboratory_analytical_uses: '',
+				quantity_process_agent_uses: null,
+				decision_process_agent_uses: '',
+				quantity_quarantine_pre_shipment: null,
+				decision_quarantine_pre_shipment: '',
+				destination_party: null,
+				substance: null,
+				blend: null,
+				decision: null
+			}
 		},
 		has_imports: {
+			endpoint_url: 'article7imports_url',
 			name: 'has_imports',
 			ordering_id: 0,
 			status: null,
+			validate: true,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Imports',
@@ -248,12 +296,37 @@ const form = {
 			modal_order: ['source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 			isInvalid: false,
-			footnotes: ['[1] Tonne = Metric ton.']
+			footnotes: ['[1] Tonne = Metric ton.'],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				quantity_total_new: null,
+				quantity_total_recovered: null,
+				quantity_feedstock: null,
+				quantity_critical_uses: null,
+				decision_critical_uses: '',
+				quantity_essential_uses: null,
+				decision_essential_uses: '',
+				quantity_high_ambient_temperature: null,
+				decision_high_ambient_temperature: '',
+				quantity_laboratory_analytical_uses: null,
+				decision_laboratory_analytical_uses: '',
+				quantity_process_agent_uses: null,
+				decision_process_agent_uses: '',
+				quantity_quarantine_pre_shipment: null,
+				decision_quarantine_pre_shipment: '',
+				source_party: null,
+				substance: null,
+				blend: null,
+				decision: null
+			}
 		},
 		has_produced: {
+			endpoint_url: 'article7productions_url',
 			name: 'has_produced',
 			ordering_id: 0,
 			status: null,
+			validate: true,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Production',
@@ -416,12 +489,34 @@ const form = {
 				type: 'textarea',
 				label: 'Secretariat Comments'
 			}
-			]
+			],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				quantity_critical_uses: null,
+				decision_critical_uses: '',
+				quantity_essential_uses: null,
+				decision_essential_uses: '',
+				quantity_high_ambient_temperature: null,
+				decision_high_ambient_temperature: '',
+				quantity_laboratory_analytical_uses: null,
+				decision_laboratory_analytical_uses: '',
+				quantity_process_agent_uses: null,
+				decision_process_agent_uses: '',
+				quantity_quarantine_pre_shipment: null,
+				decision_quarantine_pre_shipment: '',
+				quantity_total_produced: null,
+				quantity_feedstock: null,
+				quantity_article_5: null,
+				substance: null
+			},
 		},
 		has_destroyed: {
+			endpoint_url: 'article7destructions_url',
 			name: 'has_destroyed',
 			ordering_id: 0,
 			status: null,
+			validate: true,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Destruction',
@@ -478,12 +573,21 @@ const form = {
 			{
 				label: 'Status'
 			}
-			]
+			],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				quantity_destroyed: null,
+				substance: null,
+				blend: null
+			},
 		},
 		has_nonparty: {
+			endpoint_url: 'article7nonpartytrades_url',
 			name: 'has_nonparty',
 			ordering_id: 0,
 			status: null,
+			validate: true,
 			saving: false,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Nonparty',
@@ -592,12 +696,25 @@ const form = {
 				type: 'textarea',
 				label: 'Secretariat Comments'
 			}
-			]
+			],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				quantity_import_new: null,
+				quantity_import_recovered: null,
+				quantity_export_new: null,
+				quantity_export_recovered: null,
+				substance: null,
+				blend: null,
+				trade_party: null
+			},
 		},
 		has_emissions: {
+			endpoint_url: 'article7emissions_url',
 			name: 'has_emissions',
 			ordering_id: 0,
 			status: null,
+			validate: true,
 			saving: false,
 			intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
 			title: 'Emissions',
@@ -707,7 +824,16 @@ const form = {
 				type: 'textarea',
 				label: 'Secretariat Comments'
 			}
-			]
+			],
+			default_properties: {
+				remarks_party: '',
+				remarks_os: '',
+				facility_name: '',
+				quantity_generated: null,
+				quantity_feedstock: null,
+				quantity_destroyed: null,
+				quantity_emitted: null
+			}
 		},
 		attachments: {
 			name: 'attachments',

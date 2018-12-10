@@ -6,7 +6,7 @@
 
 <script>
 
-import { post, update } from '@/api/api'
+import { post, update } from '@/components/common/services/api'
 
 export default {
 
@@ -19,121 +19,7 @@ export default {
 
 	data() {
 		return {
-			invalidTabs: [],
-			fields_to_save: {
-				questionaire_questions: 'article7questionnaire_url',
-				has_imports: 'article7imports_url',
-				has_exports: 'article7exports_url',
-				has_produced: 'article7productions_url',
-				has_destroyed: 'article7destructions_url',
-				has_nonparty: 'article7nonpartytrades_url',
-				has_emissions: 'article7emissions_url'
-			},
-			form_fields: {
-				has_exports: {
-					remarks_party: '',
-					remarks_os: '',
-					quantity_total_new: null,
-					quantity_total_recovered: null,
-					quantity_feedstock: null,
-					quantity_critical_uses: null,
-					decision_critical_uses: '',
-					quantity_essential_uses: null,
-					decision_essential_uses: '',
-					quantity_high_ambient_temperature: null,
-					decision_high_ambient_temperature: '',
-					quantity_laboratory_analytical_uses: null,
-					decision_laboratory_analytical_uses: '',
-					quantity_process_agent_uses: null,
-					decision_process_agent_uses: '',
-					quantity_quarantine_pre_shipment: null,
-					decision_quarantine_pre_shipment: '',
-					destination_party: null,
-					substance: null,
-					blend: null,
-					decision: null
-				},
-				has_imports: {
-					remarks_party: '',
-					remarks_os: '',
-					quantity_total_new: null,
-					quantity_total_recovered: null,
-					quantity_feedstock: null,
-					quantity_critical_uses: null,
-					decision_critical_uses: '',
-					quantity_essential_uses: null,
-					decision_essential_uses: '',
-					quantity_high_ambient_temperature: null,
-					decision_high_ambient_temperature: '',
-					quantity_laboratory_analytical_uses: null,
-					decision_laboratory_analytical_uses: '',
-					quantity_process_agent_uses: null,
-					decision_process_agent_uses: '',
-					quantity_quarantine_pre_shipment: null,
-					decision_quarantine_pre_shipment: '',
-					source_party: null,
-					substance: null,
-					blend: null,
-					decision: null
-				},
-				has_produced: {
-					remarks_party: '',
-					remarks_os: '',
-					quantity_critical_uses: null,
-					decision_critical_uses: '',
-					quantity_essential_uses: null,
-					decision_essential_uses: '',
-					quantity_high_ambient_temperature: null,
-					decision_high_ambient_temperature: '',
-					quantity_laboratory_analytical_uses: null,
-					decision_laboratory_analytical_uses: '',
-					quantity_process_agent_uses: null,
-					decision_process_agent_uses: '',
-					quantity_quarantine_pre_shipment: null,
-					decision_quarantine_pre_shipment: '',
-					quantity_total_produced: null,
-					quantity_feedstock: null,
-					quantity_article_5: null,
-					substance: null
-				},
-				has_destroyed: {
-					remarks_party: '',
-					remarks_os: '',
-					quantity_destroyed: null,
-					substance: null,
-					blend: null
-				},
-				has_nonparty: {
-					remarks_party: '',
-					remarks_os: '',
-					quantity_import_new: null,
-					quantity_import_recovered: null,
-					quantity_export_new: null,
-					quantity_export_recovered: null,
-					substance: null,
-					blend: null,
-					trade_party: null
-				},
-				questionaire_questions: {
-					remarks_party: '',
-					remarks_os: '',
-					has_imports: false,
-					has_exports: false,
-					has_produced: false,
-					has_destroyed: false,
-					has_nonparty: false,
-					has_emissions: false
-				},
-				has_emissions: {
-					remarks_party: '',
-					remarks_os: '',
-					facility_name: '',
-					quantity_generated: null,
-					quantity_feedstock: null,
-					quantity_destroyed: null,
-					quantity_emitted: null
-				}
-			}
+			invalidTabs: []
 		}
 	},
 	methods: {
@@ -144,7 +30,7 @@ export default {
 		},
 		validation() {
 			this.invalidTabs = []
-			const tabsToValidate = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
+			const tabsToValidate = Object.values(this.$store.state.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
 			for (const tab of tabsToValidate) {
 				for (const field of this.$store.state.form.tabs[tab].form_fields) {
 					if (field.validation.selected.length) {
@@ -169,14 +55,13 @@ export default {
 
 		submitQuestionaireData(field) {
 			this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: 'saving' })
-
 			const current_tab = Object.values(this.$store.state.form.tabs).find((value) => value.name === field)
-			const save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+			const save_obj = JSON.parse(JSON.stringify(current_tab.default_properties))
 			Object.values(current_tab.form_fields).forEach(form_field => {
 				save_obj[form_field.name] = form_field.selected
 			})
 
-			post(this.$store.state.current_submission[this.fields_to_save[field]], save_obj).then(() => {
+			post(this.$store.state.current_submission[current_tab.endpoint_url], save_obj).then(() => {
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: true })
 
 				for (const questionnaire_field of Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields)) {
@@ -211,7 +96,7 @@ export default {
 				current_tab.status = 'saving'
 				const current_tab_data = []
 				current_tab.form_fields.forEach(form_field => {
-					const save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+					const save_obj = JSON.parse(JSON.stringify(current_tab.default_properties))
 
 					for (const field2 in form_field) {
 						save_obj[field2] = form_field[field2].selected
@@ -220,7 +105,7 @@ export default {
 					current_tab_data.push(save_obj)
 				})
 
-				update(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then(() => {
+				update(this.$store.state.current_submission[current_tab.endpoint_url], current_tab_data).then(() => {
 					current_tab.status = true
 					if (current_tab_data.length) {
 						this.$store.commit('tabHasBeenSaved', field)
@@ -241,7 +126,7 @@ export default {
 				const current_tab_data = []
 
 				current_tab.form_fields.forEach(form_field => {
-					const save_obj = JSON.parse(JSON.stringify(this.form_fields[field]))
+					const save_obj = JSON.parse(JSON.stringify(current_tab.default_properties))
 
 					for (const field2 in form_field) {
 						save_obj[field2] = form_field[field2].selected
@@ -250,7 +135,7 @@ export default {
 					current_tab_data.push(save_obj)
 				})
 
-				post(this.$store.state.current_submission[this.fields_to_save[field]], current_tab_data).then(() => {
+				post(this.$store.state.current_submission[current_tab.endpoint_url], current_tab_data).then(() => {
 					current_tab.status = true
 					this.$store.commit('tabHasBeenSaved', field)
 				}).catch(() => {

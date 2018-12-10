@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import authMixin from '@/mixins/auth'
+import authMixin from '@/components/common/mixins/auth'
 
 export default {
 	name: 'Login',

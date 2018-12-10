@@ -129,16 +129,16 @@
 
 <script>
 import { Footer } from '@coreui/vue'
-import Questionnaire from './Questionnaire.vue'
-import FormTemplate from './FormTemplate.vue'
-import EmissionsTemplate from './EmissionsTemplate.vue'
-import SubmissionInfo from './SubmissionInfo.vue'
-import Attachments from './Attachments.vue'
-import { getInstructions } from '@/api/api.js'
-import Save from './Save'
-import SubmissionHistory from './SubmissionHistory.vue'
-import labels from '@/assets/labels'
-import TabTitleWithLoader from './TabTitleWithLoader'
+import Questionnaire from '@/components/art7/Questionnaire.vue'
+import FormTemplate from '@/components/art7/FormTemplate.vue'
+import EmissionsTemplate from '@/components/art7/EmissionsTemplate.vue'
+import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
+import Attachments from '@/components/common/Attachments.vue'
+import { getInstructions } from '@/components/common/services/api'
+import Save from '@/components/common/save'
+import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
+import labels from '@/components/art7/dataDefinitions/labels'
+import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 
 export default {
 

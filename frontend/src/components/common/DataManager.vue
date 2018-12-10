@@ -9,10 +9,10 @@
 </template>
 
 <script>
-import tabsManager from './TabsManager'
+import tabsManager from '@/components/art7/TabsManager'
 import {
 	fetch
-} from '@/api/api.js'
+} from '@/components/common/services/api.js'
 
 export default {
 	name: 'DataManager',
@@ -22,33 +22,14 @@ export default {
 
 	data() {
 		return {
-			form: this.$store.state.form,
-			current_submission: null,
-			prefilled: false,
+			currentFormName: this.$route.name,
 			submission: this.$route.query.submission,
-			fields_to_prefill: {
-				questionaire_questions: 'article7questionnaire',
-				has_imports: 'article7imports',
-				has_exports: 'article7exports',
-				has_produced: 'article7productions',
-				has_destroyed: 'article7destructions',
-				has_nonparty: 'article7nonpartytrades',
-				has_emissions: 'article7emissions'
-			},
-			fields_to_get: {
-				// 'questionaire_questions' : 'article7questionnaire_url',
-				has_imports: 'article7imports_url',
-				has_exports: 'article7exports_url',
-				has_produced: 'article7productions_url',
-				has_destroyed: 'article7destructions_url',
-				has_nonparty: 'article7nonpartytrades_url',
-				has_emissions: 'article7emissions_url'
-			}
+			prefilled: false
 		}
 	},
 
 	beforeRouteLeave(to, from, next) {
-		if (process.env.NODE_ENV === 'development') {
+		if (process.env.NODE_ENV !== 'development') {
 			if (this.alertUnsavedData()) {
 				const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
 				if (answer) {
@@ -71,7 +52,7 @@ export default {
 			if (process.env.NODE_ENV !== 'development') {
 				window.addEventListener('beforeunload', this.alertUnsavedData)
 			}
-			this.$store.dispatch('getInitialData', this.submission).then(() => {
+			this.$store.dispatch('getInitialData', { submission: this.submission, formName: this.currentFormName }).then(() => {
 				this.prePrefill()
 			})
 		}
@@ -79,22 +60,28 @@ export default {
 
 	computed: {
 		initialDataReady() {
-			return this.$store.state.initialData.countryOptions
-              && this.$store.state.initialData.substances
-              && this.$store.state.initialData.blends
-              && this.$store.state.current_submission
-              && this.$store.state.initialData.display.substances
-              && this.$store.state.initialData.display.blends
-              && this.$store.state.initialData.display.countries
-              && this.prefilled
+			if (!this.form) {
+				return false
+			}
+			for (const path of this.form.formDetails.dataNeeded) {
+				const propNames = path.split('.')
+				const propValue = propNames.reduce((prop, propName) => prop[propName], this.$store.state)
+				if (!propValue) return false
+			}
+			return this.prefilled
+		},
+
+		form() {
+			return this.$store.state.form
 		}
+
 	},
 
 	methods: {
 
 		alertUnsavedData(e) {
 			const tabsWithData = []
-			Object.values(this.$store.state.form.tabs).forEach((tab) => {
+			Object.values(this.form.tabs).forEach((tab) => {
 				[false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)
 			})
 
@@ -103,7 +90,6 @@ export default {
 				e.preventDefault()
 				// Chrome requires returnValue to be set.
 				e.returnValue = ''
-				console.log(tabsWithData)
 			} else if (tabsWithData.length) {
 				return tabsWithData.length
 			}
@@ -115,8 +101,8 @@ export default {
 
 			const prefill_data = this.$store.state.current_submission
 			Object.keys(form.tabs).forEach((tab) => {
-				if (this.fields_to_get[tab]) {
-					fetch(prefill_data[this.fields_to_get[tab]]).then(response => {
+				if (form.tabs[tab].endpoint_url && tab !== 'questionaire_questions') {
+					fetch(prefill_data[form.tabs[tab].endpoint_url]).then(response => {
 						if (response.data.length) {
 							this.$store.commit('setTabStatus', { tab, value: 'saving' })
 							this.prefill(form.tabs[tab].name, response.data)
@@ -135,9 +121,9 @@ export default {
 			const ordering_id = Math.max(...data.map(row => row.ordering_id))
 			const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
 
-			if (tabName !== 'has_emissions') {
-				sortedData.forEach(item => {
-					// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+			sortedData.forEach(item => {
+				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+				if (item.substance || item.blend) {
 					this.$store.dispatch('createSubstance', {
 						substanceList: item.substance ? [item.substance] : null,
 						currentSectionName: tabName,
@@ -146,10 +132,14 @@ export default {
 						blendList: item.blend ? [item.blend] : null,
 						prefillData: item
 					})
-				})
-			} else {
-				sortedData.forEach(el => this.$store.dispatch('prefillEmissionsRow', el))
-			}
+				} else {
+					this.$store.dispatch('createRow', {
+						currentSectionName: tabName,
+						prefillData: item
+					})
+				}
+			})
+
 			this.$store.commit('setTabStatus', { tab: tabName, value: true })
 			this.$store.commit('setTabOrderingId', { tabName, ordering_id })
 		}

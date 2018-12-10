@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import form from '@/assets/form.js'
-import tableRowConstructor from '@/mixins/tableRowConstructor'
+import art7 from '@/components/art7/dataDefinitions/art7Form'
+import tableRowConstructorArt7 from '@/components/art7/services/tableRowConstructorService'
+
 import {
 	getSubmissionHistory,
 	callTransition,
@@ -16,12 +17,13 @@ import {
 	getParties,
 	getNonParties,
 	getPartyRatifications
-} from '@/api/api.js'
+} from '@/components/common/services/api'
 import 'toastedjs/src/sass/toast.scss'
 import {
 	getLevel2PropertyValue
-} from '@/shared/utils.js'
-import labels from '@/assets/labels.js'
+} from '@/components/common/services/utilsService.js'
+import labels from '@/components/art7/dataDefinitions/labels'
+
 
 import Toasted from 'toastedjs'
 
@@ -56,6 +58,7 @@ const store = new Vuex.Store({
 			form: null,
 			actions: null
 		},
+		tableRowConstructor: null,
 		newTabs: [],
 		form: null,
 		initialData: {
@@ -261,10 +264,10 @@ const store = new Vuex.Store({
 			})
 		},
 
-		getInitialData(context, data) {
-			context.commit('getEmptyForm')
+		getInitialData(context, {submission, formName}) {
+			context.commit('setForm', formName)
 			return new Promise((resolve) => {
-				context.dispatch('getSubmissionData', data).then(() => {
+				context.dispatch('getSubmissionData', submission).then(() => {
 					context.dispatch('getCountries')
 					context.dispatch('getSubstances')
 					context.dispatch('getCustomBlends')
@@ -365,7 +368,7 @@ const store = new Vuex.Store({
 					}
 
 					// section, substance, group, country, blend, prefillData, ordering_id
-					const inner_fields = tableRowConstructor.getInnerFields({
+					const inner_fields = context.state.tableRowConstructor.getInnerFields({
 						section: data.currentSectionName,
 						substance,
 						group: data.groupName,
@@ -374,7 +377,7 @@ const store = new Vuex.Store({
 						prefillData: data.prefillData,
 						ordering_id
 					})
-					context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
+					context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
 				})
 			} else if (blendsHere) {
 				data.blendList.forEach(blend => {
@@ -383,7 +386,7 @@ const store = new Vuex.Store({
 						context.commit('incrementOrderingId', { tabName: data.currentSectionName });
 						({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
 					}
-					const inner_fields = tableRowConstructor.getInnerFields({
+					const inner_fields = context.state.tableRowConstructor.getInnerFields({
 						section: data.currentSectionName,
 						substance: null,
 						group: data.groupName,
@@ -392,67 +395,25 @@ const store = new Vuex.Store({
 						prefillData: data.prefillData,
 						ordering_id
 					})
-					context.commit('addSubstance', { sectionName: data.currentSectionName, row: inner_fields })
+					context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
 				})
 			}
 		},
 
-		prefillEmissionsRow(context, data) {
-			const row = {
-				id: {
-					selected: null
-				},
-				ordering_id: {
-					selected: 0
-				},
-				facility_name: {
-					type: 'text',
-					selected: ''
-				},
-				quantity_generated: {
-					type: 'number',
-					selected: ''
-				},
-				quantity_feedstock: {
-					type: 'number',
-					selected: ''
-				},
-				quantity_destroyed: {
-					type: 'number',
-					selected: ''
-				},
-				quantity_emitted: {
-					type: 'number',
-					selected: ''
-				},
-				remarks_party: {
-					type: 'textarea',
-					selected: ''
-				},
-				remarks_os: {
-					type: 'textarea',
-					selected: ''
-				},
-				get validation() {
-					const errors = []
-					if (!this.facility_name.selected) {
-						errors.push('eroare1')
-					}
-
-					const returnObj = {
-						type: 'nonInput',
-						selected: errors
-					}
-
-					return returnObj
-				}
+		createRow(context, {currentSectionName, prefillData}) {
+			let ordering_id = 0
+			if (!prefillData) {
+				context.commit('incrementOrderingId', { tabName: currentSectionName })
+				ordering_id  = context.state.form.tabs[currentSectionName].ordering_id
 			}
-			if (data) {
-				Object.keys(data).forEach((element) => {
-					row[element].selected = data[element]
-				})
-			}
-			context.commit('addEmissionsRow', row)
+
+			const row = context.state.tableRowConstructor.getSimpleTabFields({
+				currentSectionName,
+				prefillData,
+				ordering_id: ordering_id
+			})
+			console.log('adding row', row)
+			context.commit('addRow', {sectionName: currentSectionName, row})
 		},
 
 		removeDataFromTab(context, data) {
@@ -483,7 +444,6 @@ const store = new Vuex.Store({
 	},
 
 	mutations: {
-		// data - {value:value, fieldInfo:{index:tab_info.form_fields.indexOf(row),tabName: tabName, field:order}}
 		updateFormField(state, data) {
 			console.log(data.value)
 			data.fieldInfo.index === data.fieldInfo.field
@@ -495,8 +455,19 @@ const store = new Vuex.Store({
 			state.currentSubmissionHistory = data
 		},
 
-		getEmptyForm(state) {
-			state.form = JSON.parse(JSON.stringify(form))
+		setForm(state,data) {
+			let currentFormStructure = null
+			let tableRowConstructor = null
+			switch (data) {
+				case 'art7':
+					currentFormStructure = art7
+					tableRowConstructor = tableRowConstructorArt7
+					break;
+				default:
+					break;
+			}
+			state.form = JSON.parse(JSON.stringify(currentFormStructure))
+			state.tableRowConstructor = tableRowConstructor
 		},
 
 		incrementOrderingId(state, data) {
@@ -609,13 +580,9 @@ const store = new Vuex.Store({
 			currentField && (currentField.selected = data.value)
 		},
 
-		// addsubstance
-		addSubstance(state, data) {
-			state.form.tabs[data.sectionName].form_fields.push(data.row)
-		},
-
-		addEmissionsRow(state, data) {
-			state.form.tabs.has_emissions.form_fields.push(data)
+		// addRow
+		addRow(state, {sectionName, row}) {
+			state.form.tabs[sectionName].form_fields.push(row)
 		},
 
 		addCreateBlendToBlendList(state, data) {

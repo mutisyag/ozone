@@ -22,7 +22,7 @@
 
 <script>
 
-import fieldGenerator from './form-components/fieldGenerator'
+import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 
 export default {
 

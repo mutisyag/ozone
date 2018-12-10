@@ -1,5 +1,4 @@
-
-import labels from '@/assets/labels'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -85,6 +84,71 @@ const decisionGenerator = (fields, parent, section) => {
 }
 
 export default {
+	getSimpleTabFields({
+		currentSectionName, prefillData, ordering_id
+	}){
+		switch (currentSectionName) {
+			case 'has_emissions':
+				const row = {
+					id:{
+						selected: null,
+					},
+					ordering_id: {
+						selected: ordering_id || 0
+					},
+					facility_name: {
+						type: 'text',
+						selected: ''
+					},
+					quantity_generated: {
+						type: 'number',
+						selected: ''
+					},
+					quantity_feedstock: {
+						type: 'number',
+						selected: ''
+					},
+					quantity_destroyed: {
+						type: 'number',
+						selected: ''
+					},
+					quantity_emitted: {
+						type: 'number',
+						selected: ''
+					},
+					remarks_party: {
+						type: 'textarea',
+						selected: ''
+					},
+					remarks_os: {
+						type: 'textarea',
+						selected: ''
+					},
+					get validation() {
+						const errors = []
+						if (!this.facility_name.selected) {
+							errors.push('eroare1')
+						}
+
+						const returnObj = {
+							type: 'nonInput',
+							selected: errors
+						}
+
+						return returnObj
+					}
+				}
+				if (prefillData) {
+					console.log(prefillData)
+					Object.keys(prefillData).forEach((element) => {
+						row[element].selected = prefillData[element]
+					})
+				}
+				return row
+			default:
+				break;
+		}
+	},
 
 	getInnerFields({
 		section, substance, group, country, blend, prefillData, ordering_id

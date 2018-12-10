@@ -14,7 +14,7 @@
 
 <script>
 
-import Multiselect from '@/mixins/modifiedMultiselect'
+import Multiselect from '@/components/common/modifiedMultiselect'
 
 export default {
 

@@ -31,6 +31,7 @@ export default {
 			isSaveDisabled: true
 		}
 	},
+
 	methods: {
 		...mapActions(['uploadFormAttachments', 'saveFormAttachments']),
 		...mapMutations(['updateFormAttachment', 'deleteFormAttachment']),

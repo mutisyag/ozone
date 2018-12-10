@@ -104,7 +104,7 @@
 
 <script>
 import './styles.css'
-import Multiselect from '@/mixins/modifiedMultiselect'
+import Multiselect from '@/components/common/modifiedMultiselect'
 
 const blendsCompareByComponentPercent = (blend1, blend2, componentName, isDescending) => {
 	const { percentage: componentPercentageInBlend1 } = blend1.components.find(component => component.component_name === componentName)

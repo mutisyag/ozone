@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/views/Dashboard'
 
-const DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/DataManager')
+const DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/common/DataManager')
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')

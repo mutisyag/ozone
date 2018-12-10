@@ -11,7 +11,7 @@
 <script>
 
 // import Multiselect from 'vue-multiselect'
-import Multiselect from '@/mixins/modifiedMultiselect'
+import Multiselect from '@/components/common/modifiedMultiselect'
 
 export default {
 

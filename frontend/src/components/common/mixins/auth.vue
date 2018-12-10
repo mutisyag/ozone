@@ -1,5 +1,5 @@
 <script>
-import { getLoginToken, removeLoginToken } from '@/api/login_api.js'
+import { getLoginToken, removeLoginToken } from '@/components/common/services/login_api'
 
 export default {
 

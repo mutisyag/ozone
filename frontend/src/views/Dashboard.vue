@@ -192,11 +192,11 @@
 </template>
 
 <script>
-import { cloneSubmission } from '@/api/api'
-import Multiselect from '@/mixins/modifiedMultiselect'
+import { cloneSubmission } from '@/components/common/services/api'
+import Multiselect from '@/components/common/modifiedMultiselect'
 // import Multiselect from "vue-multiselect"
 import { mapGetters } from 'vuex'
-import labels from '@/assets/labels'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	name: 'Dashboard',

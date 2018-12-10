@@ -76,8 +76,8 @@
 
 <script>
 
-import fieldGenerator from './form-components/fieldGenerator'
-import inputFields from '@/assets/inputFields'
+import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import inputFields from '@/components/art7/dataDefinitions/inputFields'
 
 export default {
 	props: {
@@ -176,7 +176,7 @@ export default {
 			return Array.from(intersection)
 		},
 		addField() {
-			this.$store.dispatch('prefillEmissionsRow')
+			this.$store.dispatch('createRow', { prefillData: null, currentSectionName: this.tabName })
 		}
 	},
 

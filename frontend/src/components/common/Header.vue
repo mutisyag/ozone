@@ -42,7 +42,7 @@
 
 <script>
 
-import authMixin from '@/mixins/auth'
+import authMixin from '@/components/common/mixins/auth'
 
 import { HeaderDropdown as AppHeaderDropdown } from '@coreui/vue'
 
