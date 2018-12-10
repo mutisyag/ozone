@@ -1,0 +1,20 @@
+language: python
+
+python:
+  - 3.6
+
+services: postgresql
+
+
+before_install:
+  - export DJANGO_SETTINGS_MODULE=config.settings.test
+  - source .envrc.travis
+
+install:
+  - pip install -r requirements/local.txt
+
+before_script:
+  - psql -c "CREATE DATABASE travisci;" -U postgres
+
+script:
+  - python manage.py test
