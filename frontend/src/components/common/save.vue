@@ -45,10 +45,6 @@ export default {
 					variant: 'danger'
 				})
 			}
-			this.startSubmitting()
-		},
-
-		startSubmitting() {
 			this.submitQuestionaireData('questionaire_questions')
 		},
 

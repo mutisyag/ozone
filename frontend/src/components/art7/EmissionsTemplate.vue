@@ -3,6 +3,17 @@
     <div class="form-sections">
 
       <b-btn variant="success" @click="addField">Add facility</b-btn>
+      
+      <div class="table-filters mb-2">
+          <b-input-group prepend="Search substances, countries, values">
+              <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+              <b-input-group-append>
+                <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
+              </b-input-group-append>
+          </b-input-group>
+          <b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
+      </div>
+      
       <b-table
         show-empty
         outlined
