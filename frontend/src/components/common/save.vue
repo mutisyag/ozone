@@ -13,7 +13,6 @@ export default {
 	name: 'Save',
 
 	props: {
-		submit: Boolean,
 		submission: String
 	},
 
@@ -71,13 +70,6 @@ export default {
 						this.$store.dispatch('removeDataFromTab', questionnaire_field.name).then(() => {
 							this.submitData(questionnaire_field.name)
 						})
-					}
-					console.log('submitvalue', this.submit)
-					if (this.submit && !this.invalidTabs.length) {
-						this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
-						this.$emit('update:submit', false)
-					} else {
-						this.$emit('update:submit', false)
 					}
 				}
 			}).catch((error) => {

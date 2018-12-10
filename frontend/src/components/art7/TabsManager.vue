@@ -13,7 +13,7 @@
       <div v-else v-html="titlesAndTooltipsHtml[tabIndex].titleHtml"></div>
     </div>
     <b-button-group class="actions">
-      <Save :submit.sync="saveForSubmit"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
 		<b-btn
 			v-if="$store.state.available_transitions.includes('submit')"
 			@click="checkBeforeSubmitting"
@@ -204,7 +204,16 @@ export default {
 				})
 				return
 			}
-			this.saveForSubmit = true
+
+			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
+			if (unsavedTabs.length) {
+				this.$store.dispatch('setAlert', {
+					message: { __all__: ['Please save before submitting'] },
+					variant: 'danger'
+				})
+				return
+			}
+			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
 		},
 
 		removeSubmission() {
@@ -268,7 +277,6 @@ export default {
 			tabIndex: 0,
 			modal_data: null,
 			labels: null,
-			saveForSubmit: false,
 			tabsWithAssideMenu,
 			tabIndexesForAssideMenuDisplay,
 			titlesAndTooltipsHtml,
