@@ -417,19 +417,22 @@ class Submission(models.Model):
         relation with submission and this way we avoid nasty verifications
         """
         exclude = [
-            'id', 'submission_id', '_state', '_deferred_fields', '_tracker', 'save'
+            'id', 'submission_id', '_state', '_deferred_fields', '_tracker',
+            'save',
         ]
         if (
             hasattr(self, "article7questionnaire")
             and self.article7questionnaire is not None
         ):
-            attributes = model_to_dict(self.article7questionnaire, exclude=exclude)
+            attributes = model_to_dict(
+                self.article7questionnaire, exclude=exclude
+            )
             attributes['submission_id'] = clone.pk
             self.article7questionnaire.__class__.objects.create(**attributes)
 
         for related_data in self.RELATED_DATA:
             for instance in getattr(self, related_data).all():
-                if hasattr(instance, 'blend_item') and instance.blend_item is not None:
+                if hasattr(instance, 'blend_item') and instance.blend_item:
                     continue
                 attributes = model_to_dict(instance, exclude=exclude)
                 attributes['submission_id'] = clone.pk
