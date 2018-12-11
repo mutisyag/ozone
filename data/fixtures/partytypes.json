@@ -1,0 +1,50 @@
+[
+  {
+    "fields": {
+      "abbr": "A5",
+      "name": "Article 5"
+    },
+    "model": "core.partytype",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "abbr": "A5G1",
+      "name": "Article 5 Group 1"
+    },
+    "model": "core.partytype",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "abbr": "A5G2",
+      "name": "Article 5 Group 2"
+    },
+    "model": "core.partytype",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "abbr": "NA5",
+      "name": "Non Article 5"
+    },
+    "model": "core.partytype",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "abbr": "NA5G1",
+      "name": "Non Article 5 Group 1"
+    },
+    "model": "core.partytype",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "abbr": "NA5G2",
+      "name": "Non Article 5 Group 2"
+    },
+    "model": "core.partytype",
+    "pk": 6
+  }
+]

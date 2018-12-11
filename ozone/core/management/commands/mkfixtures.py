@@ -27,6 +27,9 @@ class Command(BaseCommand):
         'meeting': {
             'fixture': 'meetings.json',
         },
+        'partytype': {
+            'fixture': 'partytypes.json'
+        },
         'party': {
             'sheet': 'Cntry',
             'fixture': 'parties.json',
@@ -240,20 +243,36 @@ class Command(BaseCommand):
         )
         if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
             if row['Article5']:
-                f['party_type'] = 'Article 5'
+                f['party_type'] = self.lookup_id(
+                    'partytype', 'name', 'Article 5'
+                )
+                f['is_article5'] = True
             else:
-                f['party_type'] = 'Non Article 5'
+                f['party_type'] = self.lookup_id(
+                    'partytype', 'name', 'Non Article 5'
+                )
+                f['is_article5'] = False
         else:
             if row['Article5']:
                 if row['CntryID'] in art5_group2:
-                    f['party_type'] = 'Article 5 Group 2'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Article 5 Group 2'
+                    )
                 else:
-                    f['party_type'] = 'Article 5 Group 1'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Article 5 Group 1'
+                    )
+                f['is_article5'] = True
             else:
                 if row['CntryID'] in non_art5_group2:
-                    f['party_type'] = 'Non Article 5 Group 2'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Non Article 5 Group 2'
+                    )
                 else:
-                    f['party_type'] = 'Non Article 5 Group 1'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Non Article 5 Group 1'
+                    )
+                f['is_article5'] = False
 
         hat_parties = [
             "DZ", "BH", "BJ", "BF", "CF", "TD", "CI", "DJ", "EG", "ER", "GM",

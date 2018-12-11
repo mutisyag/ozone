@@ -16,23 +16,27 @@ __all__ = [
     'PartyHistory',
     'Language',
     'PartyRatification',
-    'PartyTypes',
+    'PartyType',
     'Language',
 ]
 
 
-@enum.unique
-class PartyTypes(enum.Enum):
+class PartyType(models.Model):
     """
     Party classification.
-    """
+
+    Using a model instead of an enum allows for more flexibility.
 
     A5 = 'Article 5'
     A5G1 = 'Article 5 Group 1'
     A5G2 = 'Article 5 Group 2'
     NA5 = 'Non Article 5'
-    NA5G1 = "Non Article 5 Group 1"
-    NA5G2 = "Non Article 5 Group 2"
+    NA5G1 = 'Non Article 5 Group 1'
+    NA5G2 = 'Non Article 5 Group 2'
+    """
+
+    abbr = models.CharField(max_length=32, unique=True)
+    name = models.CharField(max_length=256, unique=True)
 
 
 class Region(models.Model):
@@ -137,16 +141,20 @@ class PartyHistory(models.Model):
     # This will still require form choices to be generated based on the same
     # start year.
     reporting_period = models.ForeignKey(
-        ReportingPeriod, related_name='parties_history', on_delete=models.PROTECT
+        ReportingPeriod,
+        related_name='party_histories',
+        on_delete=models.PROTECT
+    )
+
+    party_type = models.ForeignKey(
+        PartyType,
+        related_name='party_histories',
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
     )
 
     population = models.FloatField(validators=[MinValueValidator(0.0)])
-
-    party_type = models.CharField(
-        max_length=40,
-        choices=((s.value, s.name) for s in PartyTypes),
-        blank=True
-    )
 
     is_high_ambient_temperature = models.BooleanField()
 
@@ -155,6 +163,8 @@ class PartyHistory(models.Model):
 
     # Reflects Country Economy In Transition for that specific year
     is_ceit = models.BooleanField()
+
+    is_article5 = models.BooleanField()
 
     # Remarks
     remark = models.CharField(max_length=256, blank=True)
