@@ -518,6 +518,17 @@ const store = new Vuex.Store({
 		},
 
 		updatePartyRatifications(state, data) {
+			data = data.map(party => {
+				party.vienna_convention = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'VC')
+				party.montreal_protocol = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MP')
+				party.london_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'LA')
+				party.copenhagen_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'CA')
+				party.montreal_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MA')
+				party.beijing_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'BA')
+				party.kigali_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'KA')
+				// is_eu_member, is_high_ambient_temperature and is_a5
+				return party
+			})
 			state.initialData.partyRatifications = data
 		},
 
