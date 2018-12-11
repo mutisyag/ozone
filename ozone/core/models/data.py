@@ -15,6 +15,7 @@ from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
 __all__ = [
+    'ModifyPreventionMixin',
     'Article7Flags',
     'Article7Questionnaire',
     'Article7Export',
