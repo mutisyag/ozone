@@ -24,6 +24,7 @@ from ..models import (
     ReportingPeriod,
     Obligation,
     Submission,
+    SubmissionInfo,
     Article7Questionnaire,
     Article7Destruction,
     Article7Production,
@@ -61,6 +62,7 @@ from ..serializers import (
     BlendSerializer,
     CreateBlendSerializer,
     SubmissionHistorySerializer,
+    SubmissionInfoSerializer,
 )
 
 
@@ -303,6 +305,17 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         )
         return Response(serializer.data)
 
+
+class SubmissionInfoViewSet(viewsets.ModelViewSet):
+    serializer_class = SubmissionInfoSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def get_queryset(self):
+        return SubmissionInfo.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
