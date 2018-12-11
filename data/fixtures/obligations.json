@@ -23,25 +23,15 @@
     "model": "core.obligation",
     "pk": 3,
     "fields": {
-      "name": "HAT Imports",
-      "description": "Data form 7",
-      "form_type": "hatimp",
+      "name": "HAT Imports and Production",
+      "description": "Data forms 7 and 8",
+      "form_type": "hat",
       "has_reporting_periods": true
     }
   },
   {
     "model": "core.obligation",
     "pk": 4,
-    "fields": {
-      "name": "HAT Production",
-      "description": "Data form 8",
-      "form_type": "hatprod",
-      "has_reporting_periods": true
-    }
-  },
-  {
-    "model": "core.obligation",
-    "pk": 5,
     "fields": {
       "name": "Other",
       "description": "Letters and narrative reports",
