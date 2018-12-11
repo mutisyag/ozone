@@ -42,11 +42,8 @@
       </table>
 
       <div class="table-filters mb-2">
-          <b-input-group prepend="Search substances, countries, values">
-              <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-              <b-input-group-append>
-                <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-              </b-input-group-append>
+          <b-input-group prepend="Search">
+              <b-form-input v-model="table.filters.search"/>
           </b-input-group>
           <b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
       </div>
@@ -250,11 +247,8 @@
       </b-table>
 
       <div class="table-filters mb-2">
-          <b-input-group prepend="Search substances, countries, values">
-              <b-form-input v-model="tableBlends.filters.search" placeholder="Type to Search" />
-              <b-input-group-append>
-                <b-btn variant="primary" :disabled="!tableBlends.filters.search" @click="tableBlends.filters.search = ''">Clear</b-btn>
-              </b-input-group-append>
+          <b-input-group prepend="Search">
+              <b-form-input v-model="tableBlends.filters.search"/>
           </b-input-group>
           <b-btn style="margin-left: 1rem" variant="primary" @click="tableBlends.sortBy = null">Sort default</b-btn>
       </div>
@@ -457,7 +451,7 @@
             v-show="anotherSpecialCase(order, modal_data)"
           >
             <b-col lg="4" class="mb-2">
-              <b>{{labels[`decision_${order}`]}}:</b>
+              <span>{{labels[`decision_${order}`]}}:</span>
             </b-col>
             <b-col lg="4">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
@@ -492,6 +486,12 @@
             <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
           </b-col>
         </b-row>
+      </div>
+      <div slot="modal-footer">
+          <div class="modal-footer-info">
+            The values are saved as you type
+          </div>
+          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close modal</b-btn>
       </div>
     </b-modal>
   </div>
@@ -979,5 +979,9 @@ export default {
   .header-only {
     margin-bottom: 0;
     border-bottom: none;
+  }
+  .modal-footer-info {
+    position: absolute;
+    left: 1rem;
   }
 </style>

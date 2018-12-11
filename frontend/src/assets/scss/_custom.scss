@@ -847,4 +847,6 @@ input[type=number] {
 
 .table-filters {
   display: flex;
+  max-width: 40%;
+  min-width: 450px;
 }
