@@ -305,16 +305,9 @@ class Command(BaseCommand):
         treaties = ['VC', 'MP', 'LA', 'CA', 'MA', 'BA', 'KA']
         for treaty_id in treaties:
             if row['RD_' + treaty_id]:
-                treaty = next(filter(
-                    lambda x: x['fields']['treaty_id'] == treaty_id, self.FIXTURES['treaty']
-                ))
-                treaty_entry_into_force = datetime.strptime(
-                    treaty['fields']['entry_into_force_date'], "%Y-%m-%d"
-                ).date()
                 ratification_date = row['RD_' + treaty_id].date()
-                entry_into_force_date = treaty_entry_into_force
-                if (ratification_date > treaty_entry_into_force):
-                    entry_into_force_date = ratification_date + timedelta(days=30)
+                ratification_date = row['RD_' + treaty_id].date()
+                entry_into_force_date = row['EIF_' + treaty_id].date()
                 objs.append({
                     'party': party,
                     'treaty': self.lookup_id('treaty', 'treaty_id', treaty_id),

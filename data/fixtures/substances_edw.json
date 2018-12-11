@@ -474,5 +474,33 @@
     },
     "model": "core.substance",
     "pk": 137
+  },
+  {
+    "fields": {
+      "bromines": "",
+      "carbons": "",
+      "chlorines": "",
+      "description": "Trichloronitromethane (nitrochloroform)",
+      "fluorines": "",
+      "formula": "CCl3NO2",
+      "gwp": 0,
+      "gwp2": null,
+      "gwp_error_plus_minus": null,
+      "hydrogens": "",
+      "is_contained_in_polyols": false,
+      "main_usage": "",
+      "max_odp": 0,
+      "min_odp": 0,
+      "mp_control": "",
+      "name": "Chloropicrin",
+      "number_of_isomers": null,
+      "odp": 0,
+      "r_code": null,
+      "remark": "",
+      "sort_order": 9999,
+      "substance_id": 5170
+    },
+    "model": "core.substance",
+    "pk": 138
   }
 ]
