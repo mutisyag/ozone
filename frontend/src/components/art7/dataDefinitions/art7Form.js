@@ -4,13 +4,13 @@ const form = {
 	formDetails: {
 		dataNeeded: [
 			'initialData.countryOptions',
-			 'initialData.substances', 
-			 'initialData.blends', 
-			 'current_submission', 
-			 'initialData.display.substances', 
-			 'initialData.display.blends', 
-			 'initialData.display.countries'
-			],
+			'initialData.substances',
+			'initialData.blends',
+			'current_submission',
+			'initialData.display.substances',
+			'initialData.display.blends',
+			'initialData.display.countries'
+		]
 	},
 	tabs: {
 		sub_info: {
@@ -49,7 +49,7 @@ const form = {
 			status: null,
 			isInvalid: false,
 			description: '',
-			form_fields: intro_fields,			
+			form_fields: intro_fields,
 			default_properties: {
 				remarks_party: '',
 				remarks_os: '',
@@ -509,7 +509,7 @@ const form = {
 				quantity_feedstock: null,
 				quantity_article_5: null,
 				substance: null
-			},
+			}
 		},
 		has_destroyed: {
 			endpoint_url: 'article7destructions_url',
@@ -580,7 +580,7 @@ const form = {
 				quantity_destroyed: null,
 				substance: null,
 				blend: null
-			},
+			}
 		},
 		has_nonparty: {
 			endpoint_url: 'article7nonpartytrades_url',
@@ -707,7 +707,7 @@ const form = {
 				substance: null,
 				blend: null,
 				trade_party: null
-			},
+			}
 		},
 		has_emissions: {
 			endpoint_url: 'article7emissions_url',
