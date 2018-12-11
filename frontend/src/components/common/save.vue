@@ -83,7 +83,7 @@ export default {
 			const current_tab = this.$store.state.form.tabs[field]
 			if (this.$store.state.newTabs.indexOf(field) === -1) {
 				current_tab.status = 'saving'
-				const current_tab_data = []
+				let current_tab_data = []
 				current_tab.form_fields.forEach(form_field => {
 					const save_obj = JSON.parse(JSON.stringify(current_tab.default_properties))
 
@@ -93,8 +93,10 @@ export default {
 
 					current_tab_data.push(save_obj)
 				})
-
-				update(this.$store.state.current_submission[current_tab.endpoint_url], current_tab_data).then(() => {
+				if (current_tab.name === 'sub_info') {
+					current_tab_data = current_tab_data[0]
+				}
+				update(`${this.$store.state.current_submission[current_tab.endpoint_url]}${current_tab.endpoint_additional_url ? current_tab.endpoint_additional_url : ''}`, current_tab_data).then(() => {
 					current_tab.status = true
 					if (current_tab_data.length) {
 						this.$store.commit('tabHasBeenSaved', field)
@@ -135,16 +137,6 @@ export default {
 						variant: 'danger'
 					})
 				})
-			}
-		}
-	},
-	watch: {
-		submit: {
-			handler(val) {
-				console.log('savingwithsubmit', val)
-				if (val) {
-					this.validation()
-				}
 			}
 		}
 	}
