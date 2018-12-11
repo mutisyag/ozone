@@ -23,8 +23,6 @@ import {
 	getLevel2PropertyValue
 } from '@/components/common/services/utilsService.js'
 import labels from '@/components/art7/dataDefinitions/labels'
-
-
 import Toasted from 'toastedjs'
 
 const options = {
@@ -264,7 +262,7 @@ const store = new Vuex.Store({
 			})
 		},
 
-		getInitialData(context, {submission, formName}) {
+		getInitialData(context, { submission, formName }) {
 			context.commit('setForm', formName)
 			return new Promise((resolve) => {
 				context.dispatch('getSubmissionData', submission).then(() => {
@@ -400,17 +398,17 @@ const store = new Vuex.Store({
 			}
 		},
 
-		createRow(context, {currentSectionName, prefillData}) {
+		createRow(context, { currentSectionName, prefillData }) {
 			let ordering_id = 0
 			if (!prefillData) {
-				context.commit('incrementOrderingId', { tabName: currentSectionName })
-				ordering_id  = context.state.form.tabs[currentSectionName].ordering_id
+				context.commit('incrementOrderingId', { tabName: currentSectionName });
+				({ ordering_id } = context.state.form.tabs[currentSectionName])
 			}
 
 			const row = context.state.tableRowConstructor.getSimpleTabFields({
 				currentSectionName,
 				prefillData,
-				ordering_id: ordering_id
+				ordering_id
 			})
 			if (context.state.form.tabs[currentSectionName].hasOwnProperty('endpoint_additional_url') && row.id.selected) {
 				context.commit('setAdditionalUrl', {tab: currentSectionName, id: row.id.selected})
@@ -457,16 +455,16 @@ const store = new Vuex.Store({
 			state.currentSubmissionHistory = data
 		},
 
-		setForm(state,data) {
+		setForm(state, data) {
 			let currentFormStructure = null
 			let tableRowConstructor = null
 			switch (data) {
-				case 'art7':
-					currentFormStructure = art7
-					tableRowConstructor = tableRowConstructorArt7
-					break;
-				default:
-					break;
+			case 'art7':
+				currentFormStructure = art7
+				tableRowConstructor = tableRowConstructorArt7
+				break
+			default:
+				break
 			}
 			state.form = JSON.parse(JSON.stringify(currentFormStructure))
 			state.tableRowConstructor = tableRowConstructor

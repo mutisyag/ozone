@@ -194,7 +194,6 @@ export default {
 				})
 			}
 			return row
-
 		default:
 			break
 		}

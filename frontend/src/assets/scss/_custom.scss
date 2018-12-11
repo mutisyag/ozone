@@ -850,3 +850,7 @@ input[type=number] {
   max-width: 40%;
   min-width: 450px;
 }
+
+body:not(.aside-menu-lg-show) .form-wrapper {
+  margin-right: 2rem;
+}

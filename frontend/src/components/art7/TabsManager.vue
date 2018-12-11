@@ -35,7 +35,7 @@
     <div v-if="modal_data" v-html="modal_data"></div>
   </b-modal>
 
-  <b-container style="position: relative">
+  <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
@@ -93,7 +93,7 @@
             </div>
         </div>
     </b-card>
-    </b-container>
+    </div>
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
         <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
