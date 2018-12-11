@@ -15,7 +15,7 @@ const form = {
 	tabs: {
 		sub_info: {
 			name: 'sub_info',
-			endpoint_url: 'sub_info',
+			endpoint_url: 'sub_info_url',
 			fields_order: ['reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Submission Info',

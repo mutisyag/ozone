@@ -148,6 +148,9 @@ export default {
 			return row
 		case 'sub_info':
 			row = {
+				id: {
+					selected: null
+				},
 				reporting_officer: {
 					type: 'text',
 					selected: ''
@@ -186,7 +189,6 @@ export default {
 				}
 			}
 			if (prefillData) {
-				console.log(prefillData)
 				Object.keys(prefillData).forEach((element) => {
 					row[element].selected = prefillData[element]
 				})
