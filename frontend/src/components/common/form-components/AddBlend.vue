@@ -1,110 +1,110 @@
 <template>
-  <div>
-    <div class="container">
-      <div>
-        <h5 class="mt-2">Select predefined blend</h5>
-        <multiselect
-          :clear-on-select="false"
-          :hide-selected="true"
-          trackBy="value"
-          label="text"
-          :close-on-select="false"
-          :multiple="true"
-          @input="new_blend = null; selected_blends.selected = []"
-          v-model="selected_blends.filter"
-          placeholder="Filter by type"
-          :options="selected_blends.filters"
-        ></multiselect>
-        <div class="mt-2 mb-2" style="display: flex;">
-          <multiselect
-            trackBy="value"
-            :clear-on-select="false"
-            :hide-selected="true"
-            :close-on-select="false"
-            :multiple="true"
-            label="text"
-            v-model="selected_blends.selected"
-            @input="new_blend = null"
-            placeholder="Select blend"
-            :options="filteredBlends"
-          ></multiselect>
-        </div>
-      </div>
+	<div>
+		<div class="container">
+			<div>
+				<h5 class="mt-2">Select predefined blend</h5>
+				<multiselect
+					:clear-on-select="false"
+					:hide-selected="true"
+					trackBy="value"
+					label="text"
+					:close-on-select="false"
+					:multiple="true"
+					@input="new_blend = null; selected_blends.selected = []"
+					v-model="selected_blends.filter"
+					placeholder="Filter by type"
+					:options="selected_blends.filters"
+				></multiselect>
+				<div class="mt-2 mb-2" style="display: flex;">
+					<multiselect
+						trackBy="value"
+						:clear-on-select="false"
+						:hide-selected="true"
+						:close-on-select="false"
+						:multiple="true"
+						label="text"
+						v-model="selected_blends.selected"
+						@input="new_blend = null"
+						placeholder="Select blend"
+						:options="filteredBlends"
+					></multiselect>
+				</div>
+			</div>
 
-      <div
-        :key="blend.name"
-        v-if="selected_blends.selected"
-        v-for="blend in selected_blends.selected"
-      >
-        <h5>Composition of
-          <b>{{display.blends[blend].name}}</b>
-        </h5>
-        <b-row
-          v-for="(substance, substance_index) in display.blends[blend].components"
-          :key="substance_index"
-        >
-          <b-col>{{substance.component_name}}</b-col>
-          <b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
-        </b-row>
-      </div>
+			<div
+				:key="blend.name"
+				v-if="selected_blends.selected"
+				v-for="blend in selected_blends.selected"
+			>
+				<h5>Composition of
+					<b>{{display.blends[blend].name}}</b>
+				</h5>
+				<b-row
+					v-for="(substance, substance_index) in display.blends[blend].components"
+					:key="substance_index"
+				>
+					<b-col>{{substance.component_name}}</b-col>
+					<b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
+				</b-row>
+			</div>
 			<br>
-      <b-btn
-        v-if="selected_blends.selected.length"
-        @click="addSubstance('selected')"
-        variant="success"
-      >Add selected blends</b-btn>
-      <hr>
+			<b-btn
+				v-if="selected_blends.selected.length"
+				@click="addSubstance('selected')"
+				variant="success"
+			>Add selected blends</b-btn>
+			<hr>
 
-      <div v-if="!new_blend">
-        <h5>Create a new blend</h5>
-        <b-btn variant="primary" @click="addNewBlend">Add new blend</b-btn>
-      </div>
+			<div v-if="!new_blend">
+				<h5>Create a new blend</h5>
+				<b-btn variant="primary" @click="addNewBlend">Add new blend</b-btn>
+			</div>
 
-      <div v-if="new_blend">
-        <h5>Composition</h5>
-        <b-input-group prepend="Blend name">
-          <b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
-          <b-input-group-append>
-            <b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
-          </b-input-group-append>
-        </b-input-group>
-        <b-input-group
-          class="mb-2 mt-2"
-          v-for="(substance, substance_index) in new_blend.composition"
-          :key="substance_index"
-        >
-          <b-input-group-prepend>
-            <b-btn
-              style="z-index:initial;"
-              variant="danger"
-              @click="removeSubstanceFromBlend(substance)"
-            >X</b-btn>
-          </b-input-group-prepend>
-          <multiselect
-            label="text"
-            @tag="addTag($event,substance)"
-            :taggable="true"
-            trackBy="value"
-            placeholder="Select a controlled substance or enter a new one."
-            v-model="substance.name"
-            :options="substances"
-          ></multiselect>
-          <b-input-group-append>
-            <b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
-          </b-input-group-append>
-        </b-input-group>
-        <small>Note: If a non standard blend not listed in section 11 of the data reporting instructions and guidelines is to be reported, please indicate the percentage by weight of each constituent controlled substance of the mixture being reported in the “comments” box above.</small>
-      </div>
+			<div v-if="new_blend">
+				<h5>Composition</h5>
+				<b-input-group prepend="Blend name">
+					<b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
+					<b-input-group-append>
+						<b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
+					</b-input-group-append>
+				</b-input-group>
+				<b-input-group
+					class="mb-2 mt-2"
+					v-for="(substance, substance_index) in new_blend.composition"
+					:key="substance_index"
+				>
+					<b-input-group-prepend>
+						<b-btn
+							style="z-index:initial;"
+							variant="danger"
+							@click="removeSubstanceFromBlend(substance)"
+						>X</b-btn>
+					</b-input-group-prepend>
+					<multiselect
+						label="text"
+						@tag="addTag($event,substance)"
+						:taggable="true"
+						trackBy="value"
+						placeholder="Select a controlled substance or enter a new one."
+						v-model="substance.name"
+						:options="substances"
+					></multiselect>
+					<b-input-group-append>
+						<b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
+					</b-input-group-append>
+				</b-input-group>
+				<small>Note: If a non standard blend not listed in section 11 of the data reporting instructions and guidelines is to be reported, please indicate the percentage by weight of each constituent controlled substance of the mixture being reported in the “comments” box above.</small>
+			</div>
 
-      <hr>
-      <b-btn
-        v-if="new_blend"
-        :disabled="!blendIsValid"
-        @click="addSubstance('custom')"
-        variant="success"
-      >Add custom blend</b-btn>
-    </div>
-  </div>
+			<hr>
+			<b-btn
+				v-if="new_blend"
+				:disabled="!blendIsValid"
+				@click="addSubstance('custom')"
+				variant="success"
+			>Add custom blend</b-btn>
+		</div>
+	</div>
 </template>
 
 <script>
