@@ -133,6 +133,7 @@ export default {
 						prefillData: item
 					})
 				} else {
+					console.log('create', tabName)
 					this.$store.dispatch('createRow', {
 						currentSectionName: tabName,
 						prefillData: item

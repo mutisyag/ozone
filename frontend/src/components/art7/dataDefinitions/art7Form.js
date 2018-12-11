@@ -15,6 +15,7 @@ const form = {
 	tabs: {
 		sub_info: {
 			name: 'form_intro',
+			endpoint_url: 'sub_info',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Submission Info',
 			titleHtml: 'Submission Info',
@@ -37,7 +38,7 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			form_fields: reporting_party
+			form_fields: [],
 		},
 		questionaire_questions: {
 			endpoint_url: 'article7questionnaire_url',

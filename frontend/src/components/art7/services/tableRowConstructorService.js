@@ -87,9 +87,10 @@ export default {
 	getSimpleTabFields({
 		currentSectionName, prefillData, ordering_id
 	}){
+		let row;
 		switch (currentSectionName) {
 			case 'has_emissions':
-				const row = {
+			 	row = {
 					id:{
 						selected: null,
 					},
@@ -145,6 +146,53 @@ export default {
 					})
 				}
 				return row
+			case 'sub_info':
+				row = {
+					reporting_officer: {
+						type: 'text',
+						selected: ''
+					},
+					designation: {
+						type: 'text',
+						selected: ''
+					},
+					organization: {
+						type: 'text',
+						selected: ''
+					},
+					postal_code: {
+						type: 'text',
+						selected: ''
+					},
+					country: {
+						type: 'text',
+						selected: ''
+					},
+					phone: {
+						type: 'text',
+						selected: ''
+					},
+					fax: {
+						type: 'text',
+						selected: ''
+					},
+					email: {
+						type: 'email',
+						selected: ''
+					},
+					date: {
+						type: 'date',
+						selected: '',
+					}
+				}
+				if (prefillData) {
+					console.log(prefillData)
+					Object.keys(prefillData).forEach((element) => {
+						row[element].selected = prefillData[element]
+					})
+				}
+				return row
+			
 			default:
 				break;
 		}

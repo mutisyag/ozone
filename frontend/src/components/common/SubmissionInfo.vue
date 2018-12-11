@@ -18,7 +18,7 @@
        {{info.intro}}
     </small>
     <!-- <h2>{{info.title}}</h2> -->
-
+      {{info.form_fields}}
     <form class="form-sections">
       <b-card>
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
