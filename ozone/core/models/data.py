@@ -586,15 +586,31 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
     facility_name = models.CharField(max_length=256)
 
+    # Total amount generated
     quantity_generated = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+    # Amount generated and captured for all uses
+    quantity_captured_all_uses = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    # Amount generated and captured for feedstock use in your country
+    quantity_captured_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    # Amount generated and captured for destruction
+    quantity_captured_for_destruction = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+    # Amount used for feedstock without prior capture
     quantity_feedstock = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+    # Amount destroyed without prior capture
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+    # Amount of generated emissions
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
