@@ -13,7 +13,7 @@ urlpatterns = [
     # Cannot add this in the api.urls because of
     # https://github.com/encode/django-rest-framework/issues/4984
     # XXX Change me after upgrade to a version that has this fix.
-    url(r'^api/docs/', include_docs_urls(title='OSR API', public=False)),
+    url(r'^api/docs/', include_docs_urls(title='ORS API', public=False)),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
