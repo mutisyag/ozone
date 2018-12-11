@@ -5,23 +5,25 @@ from django.core.management import call_command
 class Command(BaseCommand):
     help = "Load initial data"
 
-    FIXTURES = ('regions',
-                'subregions',
-                'parties',
-                'meetings',
-                'treaties',
-                'annexes',
-                'groups',
-                'substances',
-                'substances_edw',
-                'blends',
-                'blend_components',
-                'languages',
-                'obligations',
-                'reportingperiods',
-                'partieshistory',
-                'partiesratification',
-                )
+    FIXTURES = (
+        'regions',
+        'subregions',
+        'parties',
+        'meetings',
+        'treaties',
+        'annexes',
+        'groups',
+        'substances',
+        'substances_edw',
+        'blends',
+        'blend_components',
+        'languages',
+        'obligations',
+        'reportingperiods',
+        'partytypes',
+        'partieshistory',
+        'partiesratification',
+    )
 
     def handle(self, *args, **options):
         for fixture in Command.FIXTURES:
