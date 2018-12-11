@@ -68,6 +68,7 @@ export default {
 						})
 					}
 				}
+				this.submitData('sub_info')
 			}).catch((error) => {
 				this.$store.dispatch('setAlert', {
 					message: { __all__: ['Please complete the questionnaire before saivng'] },

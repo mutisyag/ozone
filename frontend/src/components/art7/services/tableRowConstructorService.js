@@ -86,115 +86,115 @@ const decisionGenerator = (fields, parent, section) => {
 export default {
 	getSimpleTabFields({
 		currentSectionName, prefillData, ordering_id
-	}){
-		let row;
+	}) {
+		let row
 		switch (currentSectionName) {
-			case 'has_emissions':
-			 	row = {
-					id:{
-						selected: null,
-					},
-					ordering_id: {
-						selected: ordering_id || 0
-					},
-					facility_name: {
-						type: 'text',
-						selected: ''
-					},
-					quantity_generated: {
-						type: 'number',
-						selected: ''
-					},
-					quantity_feedstock: {
-						type: 'number',
-						selected: ''
-					},
-					quantity_destroyed: {
-						type: 'number',
-						selected: ''
-					},
-					quantity_emitted: {
-						type: 'number',
-						selected: ''
-					},
-					remarks_party: {
-						type: 'textarea',
-						selected: ''
-					},
-					remarks_os: {
-						type: 'textarea',
-						selected: ''
-					},
-					get validation() {
-						const errors = []
-						if (!this.facility_name.selected) {
-							errors.push('eroare1')
-						}
-
-						const returnObj = {
-							type: 'nonInput',
-							selected: errors
-						}
-
-						return returnObj
+		case 'has_emissions':
+			row = {
+				id: {
+					selected: null
+				},
+				ordering_id: {
+					selected: ordering_id || 0
+				},
+				facility_name: {
+					type: 'text',
+					selected: ''
+				},
+				quantity_generated: {
+					type: 'number',
+					selected: ''
+				},
+				quantity_feedstock: {
+					type: 'number',
+					selected: ''
+				},
+				quantity_destroyed: {
+					type: 'number',
+					selected: ''
+				},
+				quantity_emitted: {
+					type: 'number',
+					selected: ''
+				},
+				remarks_party: {
+					type: 'textarea',
+					selected: ''
+				},
+				remarks_os: {
+					type: 'textarea',
+					selected: ''
+				},
+				get validation() {
+					const errors = []
+					if (!this.facility_name.selected) {
+						errors.push('eroare1')
 					}
-				}
-				if (prefillData) {
-					console.log(prefillData)
-					Object.keys(prefillData).forEach((element) => {
-						row[element].selected = prefillData[element]
-					})
-				}
-				return row
-			case 'sub_info':
-				row = {
-					reporting_officer: {
-						type: 'text',
-						selected: ''
-					},
-					designation: {
-						type: 'text',
-						selected: ''
-					},
-					organization: {
-						type: 'text',
-						selected: ''
-					},
-					postal_code: {
-						type: 'text',
-						selected: ''
-					},
-					country: {
-						type: 'text',
-						selected: ''
-					},
-					phone: {
-						type: 'text',
-						selected: ''
-					},
-					fax: {
-						type: 'text',
-						selected: ''
-					},
-					email: {
-						type: 'email',
-						selected: ''
-					},
-					date: {
-						type: 'date',
-						selected: '',
+
+					const returnObj = {
+						type: 'nonInput',
+						selected: errors
 					}
+
+					return returnObj
 				}
-				if (prefillData) {
-					console.log(prefillData)
-					Object.keys(prefillData).forEach((element) => {
-						row[element].selected = prefillData[element]
-					})
+			}
+			if (prefillData) {
+				console.log(prefillData)
+				Object.keys(prefillData).forEach((element) => {
+					row[element].selected = prefillData[element]
+				})
+			}
+			return row
+		case 'sub_info':
+			row = {
+				reporting_officer: {
+					type: 'text',
+					selected: ''
+				},
+				designation: {
+					type: 'text',
+					selected: ''
+				},
+				organization: {
+					type: 'text',
+					selected: ''
+				},
+				postal_code: {
+					type: 'text',
+					selected: ''
+				},
+				country: {
+					type: 'text',
+					selected: ''
+				},
+				phone: {
+					type: 'text',
+					selected: ''
+				},
+				fax: {
+					type: 'text',
+					selected: ''
+				},
+				email: {
+					type: 'email',
+					selected: ''
+				},
+				date: {
+					type: 'date',
+					selected: ''
 				}
-				return row
-			
-			default:
-				break;
+			}
+			if (prefillData) {
+				console.log(prefillData)
+				Object.keys(prefillData).forEach((element) => {
+					row[element].selected = prefillData[element]
+				})
+			}
+			return row
+
+		default:
+			break
 		}
 	},
 

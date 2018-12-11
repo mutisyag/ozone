@@ -120,7 +120,6 @@ export default {
 		prefill(tabName, data) {
 			const ordering_id = Math.max(...data.map(row => row.ordering_id))
 			const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
-
 			sortedData.forEach(item => {
 				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
 				if (item.substance || item.blend) {
