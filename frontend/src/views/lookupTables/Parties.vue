@@ -4,20 +4,11 @@
 	<b-card>
 		<template slot="header">
 			<b-row>
-				<b-col>Parties</b-col>
-				<b-col>
+				<b-col cols="4">
                     <b-input-group prepend="Search">
                       <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
-				<b-col>
-					<b-input-group horizontal prepend="Per page">
-						<b-form-select :options="table.pageOptions" v-model="table.perPage" />
-					</b-input-group>
-				</b-col>
 			</b-row>
 		</template>
 		<b-table show-empty
@@ -25,7 +16,6 @@
 						stripped
 						bordered
 						hover
-						class="width-70-percent"
 						head-variant="light"
 						stacked="md"
 						:items="parties"
@@ -36,16 +26,16 @@
 						:sort-by.sync="table.sortBy"
 						@filtered="onFiltered"
 						ref="table">
-				<template slot="index" slot-scope="data">
-					{{data.index + 1}}.
+				<template slot="is_eu_member" slot-scope="data">
+					<CheckedImage :item="data.item.is_eu_member"/>
+				</template>
+				<template slot="is_a5" slot-scope="data">
+					<CheckedImage :item="data.item.is_a5"/>
+				</template>
+				<template slot="is_high_ambient_temperature" slot-scope="data">
+					<CheckedImage :item="data.item.is_high_ambient_temperature"/>
 				</template>
               </b-table>
-              <b-row>
-                <b-col md="6" class="my-1">
-                  <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
-                </b-col>
-              </b-row>
-
           </b-card>
 		</b-container>
   </div>
@@ -54,30 +44,73 @@
 <script>
 import './styles.css'
 import uuidv1 from 'uuid/v1'
+import CheckedImage from '@/components/common/CheckedImage'
 
 export default {
+	components: {
+		CheckedImage
+	},
 	data() {
+		const sortableAndTextCenter = {
+			sortable: true,
+			class: 'text-center'
+		}
+		const sortableAndTextCenterAndRatificationDateFormatter = {
+			...sortableAndTextCenter,
+			formatter: (value) => (value ? `${value.ratification_date} \n ${value.ratification_type}` : '-')
+		}
+
 		return {
 			table: {
 				fields: [{
-					key: 'index', label: '', class: 'width-40'
+					key: 'name',
+					label: 'Name',
+					...sortableAndTextCenter
 				}, {
-					key: 'name', label: 'Name', sortable: true, class: 'text-center'
+					key: 'is_eu_member',
+					label: 'EU Member',
+					...sortableAndTextCenter
 				}, {
-					key: 'abbr', label: 'Abbr', sortable: true, class: 'text-center'
+					key: 'is_a5',
+					label: 'Article 5 party',
+					...sortableAndTextCenter
 				}, {
-					key: 'subregion', label: 'Subregion', sortable: true, class: 'text-center'
+					key: 'is_high_ambient_temperature',
+					label: 'HAT',
+					...sortableAndTextCenter
+				}, {
+					key: 'vienna_convention',
+					label: 'Vienna Convention',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'montreal_protocol',
+					label: 'Montreal Protocol',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'london_amendment',
+					label: 'London Amendment',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'copenhagen_amendment',
+					label: 'Copenhagen Amendment',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'montreal_amendment',
+					label: 'Montreal Amendment',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'beijing_amendment',
+					label: 'Beijing Amendment',
+					...sortableAndTextCenterAndRatificationDateFormatter
+				}, {
+					key: 'kigali_amendment',
+					label: 'Kigali Amendment',
+					...sortableAndTextCenterAndRatificationDateFormatter
 				}],
 				currentPage: 1,
 				perPage: Infinity,
 				totalRows: 50,
 				sortBy: null,
-				pageOptions: [
-					{ value: 10, text: '10' },
-					{ value: 50, text: '50' },
-					{ value: 100, text: '100' },
-					{ value: Infinity, text: 'All' }
-				],
 				filters: {
 					search: null,
 					sortDefaultOrderToken: uuidv1()
@@ -89,10 +122,8 @@ export default {
 		parties() {
 			const { partyRatifications } = this.$store.state.initialData
 			if (!partyRatifications) {
-				console.log(this.$store.state.initialData)
 				return []
 			}
-			console.log(partyRatifications)
 			return partyRatifications
 		}
 	},

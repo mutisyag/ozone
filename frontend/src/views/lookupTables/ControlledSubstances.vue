@@ -4,16 +4,12 @@
 	<b-card>
 		<template slot="header">
 			<b-row>
-				<b-col>Controlled substances</b-col>
 				<b-col>
                     <b-input-group>
 						<b-input-group-prepend>
 							<b-form-select :options="table.searchInColumnsOptions" value-field="key" text-field="label"  v-model="table.filters.selectedSearchInColumnOption" />
 						</b-input-group-prepend>
 						<b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-						<b-input-group-append>
-							<b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
 				<b-col>
@@ -21,11 +17,6 @@
                       <b-btn variant="primary" :disabled="!table.sortBy" @click="changeSortDefaultOrderToken">Sort default</b-btn>
                     </b-input-group>
                 </b-col>
-				<b-col>
-					<b-input-group horizontal prepend="Per page">
-						<b-form-select :options="table.pageOptions" v-model="table.perPage" />
-					</b-input-group>
-				</b-col>
 			</b-row>
 		</template>
 		<b-table show-empty
@@ -45,9 +36,6 @@
 						:sort-desc.sync="table.sortDesc"
 						@filtered="onFiltered"
 						ref="table">
-				<template slot="index" slot-scope="data">
-					{{data.index + 1}}.
-				</template>
               </b-table>
               <b-row>
                 <b-col md="6" class="my-1">
@@ -67,8 +55,6 @@ import uuidv1 from 'uuid/v1'
 export default {
 	data() {
 		const fields = [{
-			key: 'index', label: '', class: 'width-40'
-		}, {
 			key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
 		}, {
 			key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
@@ -94,12 +80,6 @@ export default {
 				totalRows: 50,
 				sortBy: 'group_id',
 				sortDesc: false,
-				pageOptions: [
-					{ value: 10, text: '10' },
-					{ value: 50, text: '50' },
-					{ value: 100, text: '100' },
-					{ value: Infinity, text: 'All' }
-				],
 				searchInColumnsOptions: [fields[1], fields[2], fields[3]],
 				filters: {
 					search: null,

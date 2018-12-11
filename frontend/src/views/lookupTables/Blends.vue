@@ -4,13 +4,9 @@
 	<b-card>
 		<template slot="header">
 			<b-row>
-				<b-col>Blends</b-col>
 				<b-col>
                     <b-input-group prepend="Search">
                       <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
 				<b-col>
@@ -60,12 +56,9 @@
                        :filter="table.filters.search"
                        @filtered="onFiltered"
                        ref="table">
-				<template slot="index" slot-scope="data">
-					{{data.index + 1}}.
-				</template>
 				<template slot="other_names" slot-scope="data">
 					<span v-if="data.item.other_names">{{data.item.other_names}}</span>
-					<span v-else><i class="fa fa-ellipsis-h" aria-hidden="true"></i></span>
+					<span v-else>-</span>
 				</template>
 
                 <template slot="components" slot-scope="row">
@@ -81,9 +74,6 @@
 						:current-page="tableComponents.currentPage"
 						:per-page="tableComponents.perPage"
 						ref="table">
-							<template slot="index" slot-scope="data">
-								{{data.index + 1}}.
-							</template>
 							<template slot="component_name" slot-scope="data">
 								<div>{{data.item.component_name}}</div>
 							</template>
@@ -123,8 +113,6 @@ export default {
 		return {
 			table: {
 				fields: [{
-					key: 'index', label: '', class: 'width-40'
-				}, {
 					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center width-200'
 				}, {
 					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center width-200'
