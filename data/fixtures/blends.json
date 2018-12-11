@@ -89,8 +89,8 @@
       "composition": "MeBr/ClPic (67/33)",
       "other_names": "Methyl bromide (67%) with chloropicrin (33%)",
       "remark": "Methyl bromide (67%) with chloropicrin (33%)",
-      "sort_order": 3008,
-      "type": "Other"
+      "sort_order": 4008,
+      "type": "Methyl bromide"
     },
     "model": "core.blend",
     "pk": 8
@@ -101,8 +101,8 @@
       "composition": "MeBr/ClPic (98/2)",
       "other_names": "Methyl bromide (98%) with chloropicrin (2%)",
       "remark": "Methyl bromide (98%) with chloropicrin (2%)",
-      "sort_order": 3009,
-      "type": "Other"
+      "sort_order": 4009,
+      "type": "Methyl bromide"
     },
     "model": "core.blend",
     "pk": 9

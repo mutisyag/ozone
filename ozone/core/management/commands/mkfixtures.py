@@ -367,7 +367,7 @@ class Command(BaseCommand):
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
             f['sort_order'] = 2000 + row['_index']
-        elif f['blend_id'].startswith('Methyl bromide'):
+        elif f['blend_id'].startswith('MeBr'):
             f['type'] = Blend.BlendTypes.MeBr.value
             f['sort_order'] = 4000 + row['_index']
         else:
