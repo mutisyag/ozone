@@ -226,6 +226,9 @@ export default {
 						blendList: [this.new_blend.value],
 						prefillData: null
 					})
+					this.$store.dispatch('setAlert', {
+						message: { __all__: ['Blend created'] },
+						variant: 'success' })
 				}).catch((error) => {
 					this.$store.dispatch('setAlert', {
 						message: { ...error.response.data },
@@ -245,6 +248,7 @@ export default {
 				expand: false,
 				substance: null
 			}
+			this.addNewBlend()
 		},
 
 		removeSpecialChars(str) {
