@@ -40,7 +40,7 @@ class Command(BaseCommand):
         parser.add_argument('--recreate', action="store_true", default=False,
                             help="Re-create if submission already exists.")
         parser.add_argument('--purge', action="store_true", default=False,
-                            help="Purge all entries that where imported")
+                            help="Purge all entries that were imported")
 
     def process_entry(self, *args, **kwargs):
         try:
