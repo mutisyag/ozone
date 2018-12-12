@@ -17,17 +17,15 @@
     <small>
        {{info.intro}}
     </small>
-    <!-- <h2>{{info.title}}</h2> -->
-
     <form class="form-sections">
       <b-card>
-        <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
-          <b-row class="field-wrapper">
+        <div class="form-fields" v-for="(field, field_index) in info.form_fields" :key="field_index">
+          <b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
             <b-col lg='3'>
-              <label><b>{{field.label}}</b></label>
+              <label>{{labels[order]}}</label>
             </b-col>
             <b-col>
-              <fieldGenerator :fieldInfo="{index:info.form_fields.indexOf(field), tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field"></fieldGenerator>
+              <fieldGenerator :fieldInfo="{index:info.form_fields.indexOf(field), tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="field[order]"></fieldGenerator>
             </b-col>
           </b-row>
 
@@ -41,6 +39,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
 
@@ -52,14 +51,14 @@ export default {
 	},
 
 	created() {
-		// this.tabs.push('asd')
+		this.labels = labels.general
 	},
 
 	components: { fieldGenerator },
 
 	data() {
 		return {
-
+			labels: null
 		}
 	},
 
