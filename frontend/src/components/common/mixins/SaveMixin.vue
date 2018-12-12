@@ -51,14 +51,16 @@ export default {
 			}
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: [`Save failed for ${this.invalidTabs.join(', ')} because of validation problems. Please check the data in the forms marked with <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
+					message: { __all__: [`Save failed  because of validation problems. Please check the ${this.invalidTabs.join(', ')} <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
 					variant: 'danger'
 				})
+			} else {
+				this.prepareDataForSave()
 			}
-			this.prepareDataForSave()
 		},
 
 		submitData(tab, url) {
+			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			let current_tab_data
 			const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 
@@ -76,9 +78,7 @@ export default {
 				current_tab_data = {}
 				Object.keys(save_obj).forEach(key => { current_tab_data[key] = tab.form_fields[key].selected })
 			}
-			console.log(this.newTabs, tab.name)
 			if (this.newTabs.includes(tab.name)) {
-				this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 				post(url, current_tab_data).then(() => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
 					if (tab.form_fields.length) {
@@ -89,7 +89,6 @@ export default {
 				}).catch((error) => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
 					console.log(error.response)
-					this.invalidTabs.push(tab.name)
 					this.$store.dispatch('setAlert', {
 						message: { __all__: [`Save failed for ${this.invalidTabs}`] },
 						variant: 'danger' })
@@ -98,10 +97,13 @@ export default {
 			if (!this.newTabs.includes(tab.name)) {
 				update(url, current_tab_data).then(() => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
-					this.$store.commit('tabHasBeenSaved', tab.name)
+					if (Array.isArray(tab.form_fields)) {
+						if (!tab.form_fields.length) {
+							this.$store.commit('updateNewTabs', tab.name)
+						}
+					}
 				}).catch(() => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
-					this.invalidTabs.push(tab.name)
 					this.$store.dispatch('setAlert', {
 						message: { __all__: [`Save failed for ${this.invalidTabs}`] },
 						variant: 'danger'

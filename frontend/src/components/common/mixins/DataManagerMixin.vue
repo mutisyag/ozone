@@ -94,6 +94,7 @@ export default {
 							this.$store.commit('setTabStatus', { tab, value: 'saving' })
 							this.prefill(form.tabs[tab].name, response.data)
 						} else {
+							console.log('updatingnewtab', tab)
 							this.$store.commit('updateNewTabs', tab)
 						}
 					}).catch(error => {

@@ -401,9 +401,6 @@ const store = new Vuex.Store({
 				prefillData,
 				ordering_id
 			})
-			if (context.state.form.tabs[currentSectionName].hasOwnProperty('endpoint_additional_url') && row.id.selected) {
-				context.commit('setAdditionalUrl', { tab: currentSectionName, id: row.id.selected })
-			}
 			context.commit('addRow', { sectionName: currentSectionName, row })
 		},
 
@@ -591,10 +588,6 @@ const store = new Vuex.Store({
 			state.form.tabs[sectionName].form_fields.push(row)
 		},
 
-		setAdditionalUrl(state, { tab, id }) {
-			state.form.tabs[tab].endpoint_additional_url = `${id}/`
-		},
-
 		addCreateBlendToBlendList(state, data) {
 			state.initialData.blends.push(data)
 		},
@@ -614,7 +607,7 @@ const store = new Vuex.Store({
 
 		// form state
 		updateNewTabs(state, tab) {
-			state.newTabs.push(tab)
+			if (tab != 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
 		},
 
 		tabHasBeenSaved(state, tab) {

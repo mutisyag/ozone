@@ -7,14 +7,19 @@ export default {
 		prepareDataForSave() {
 			const justSave = []
 			const removeDataAndSave = []
+			const doNotSave = []
 			const questionaireValid = Object.values(this.form.tabs.questionaire_questions.form_fields).filter(question => question.selected === null)
-			console.log(questionaireValid)
 			Object.values(this.form.tabs.questionaire_questions.form_fields).forEach(questionnaire_field => {
 				if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
 					justSave.push(questionnaire_field.name)
 				}
 				if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length) {
 					removeDataAndSave.push(questionnaire_field.name)
+				}
+				if (!questionnaire_field.selected
+						&& !this.$store.state.form.tabs[questionnaire_field.name].form_fields.length 
+						&& this.newTabs.includes(questionnaire_field.name)) {
+					doNotSave.push(questionnaire_field.name)
 				}
 			})
 			if (questionaireValid.length) {
@@ -25,14 +30,16 @@ export default {
 			} else {
 				Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
 					const url = this.$store.state.current_submission[tab.endpoint_url]
-					if (justSave.includes(tab.name)) {
-						this.submitData(tab, url)
-					} else if (removeDataAndSave.includes(tab.name)) {
-						this.$store.dispatch('removeDataFromTab', tab.name).then(() => {
+					if (!doNotSave.includes(tab.name)) {
+						if (justSave.includes(tab.name)) {
 							this.submitData(tab, url)
-						})
-					} else {
-						this.submitData(tab, url)
+						} else if (removeDataAndSave.includes(tab.name)) {
+							this.$store.dispatch('removeDataFromTab', tab.name).then(() => {
+								this.submitData(tab, url)
+							})
+						} else {
+							this.submitData(tab, url)
+						}
 					}
 				})
 			}
