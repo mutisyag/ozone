@@ -10,6 +10,7 @@
 2. Customize the Docker environment files:
 
        cp docker/demo.env.example docker/demo.env
+       cp docker/smtp.env.example docker/smtp.env
        cp docker/postgres.env.example docker/postgres.env
    
    Depending on the installation mode, create the docker-compose.override.yml file:

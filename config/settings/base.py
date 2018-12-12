@@ -3,6 +3,7 @@ Base settings to build other settings files upon.
 """
 
 import os
+import socket
 import datetime
 import environ
 from pathlib import Path
@@ -265,6 +266,16 @@ FIXTURE_DIRS = (
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
 EMAIL_BACKEND = env('DJANGO_EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST = 'smtp'
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-port
+EMAIL_PORT = 25
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host-user
+EMAIL_HOST_USER = 'user'
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host-password
+EMAIL_HOST_PASSWORD = 'pwd'
+# https://docs.djangoproject.com/en/2.1/ref/settings/#default-from-email
+DEFAULT_FROM_EMAIL = 'no-reply@%s' % socket.gethostname()
 
 # ADMIN
 # ------------------------------------------------------------------------------
