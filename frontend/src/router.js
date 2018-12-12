@@ -53,14 +53,8 @@ const routes = [
 				component: FormNotFound
 			},
 			{
-				path: 'hatimp',
-				name: 'hatimp',
-				meta: { requiresAuth: true },
-				component: FormNotFound
-			},
-			{
-				path: 'hatprod',
-				name: 'hatprod',
+				path: 'hat',
+				name: 'hat',
 				meta: { requiresAuth: true },
 				component: FormNotFound
 			},

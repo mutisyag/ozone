@@ -363,16 +363,16 @@ class Command(BaseCommand):
         f['blend_id'] = row['Blend']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
-            f['sort_order'] = 100 + row['_index']
+            f['sort_order'] = 1000 + row['_index']
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
-            f['sort_order'] = 200 + row['_index']
-        elif f['blend_id'].startswith('Methyl bromide'):
+            f['sort_order'] = 2000 + row['_index']
+        elif f['blend_id'].startswith('MeBr'):
             f['type'] = Blend.BlendTypes.MeBr.value
-            f['sort_order'] = 400 + row['_index']
+            f['sort_order'] = 4000 + row['_index']
         else:
             f['type'] = Blend.BlendTypes.OTHER.value
-            f['sort_order'] = 300 + row['_index']
+            f['sort_order'] = 3000 + row['_index']
 
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""
