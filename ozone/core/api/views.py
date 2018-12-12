@@ -152,7 +152,9 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
     def get_queryset(self):
         queryset = Party.objects.filter(
             id=F('parent_party_id')
-        ).prefetch_related('subregion').prefetch_related('ratifications')
+        ).prefetch_related(
+            'subregion', 'ratifications', 'ratifications__treaty'
+        )
         if self.kwargs.get('party_id'):
             queryset = queryset.filter(id=self.kwargs['party_id'])
         return queryset
@@ -315,6 +317,7 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
     serializer_class = Article7QuestionnaireSerializer
