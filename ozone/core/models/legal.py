@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -40,6 +42,14 @@ class ReportingPeriod(models.Model):
 
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_current_period(cls):
+        today = datetime.now().date()
+        return cls.objects.filter(
+            start_date__lte=today,
+            end_date__gte=today,
+        ).first()
 
     def clean(self):
         if self.end_date and self.start_date > self.end_date:

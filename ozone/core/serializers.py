@@ -217,10 +217,24 @@ class PartyRatificationSerializer(serializers.ModelSerializer):
     ratifications = RatificationSerializer(
         many=True, read_only=True
     )
+    flags = serializers.SerializerMethodField()
+
+    def get_flags(self, obj):
+        current_history_entry = obj.history.get(
+            reporting_period=ReportingPeriod.get_current_period()
+        )
+        return {
+            field: getattr(current_history_entry, field)
+            for field in (
+                'is_eu_member', 'is_high_ambient_temperature', 'is_article5'
+            )
+        }
 
     class Meta:
         model = Party
-        fields = ('id', 'name', 'abbr', 'subregion', 'ratifications')
+        fields = (
+            'id', 'name', 'abbr', 'subregion', 'ratifications', 'flags',
+        )
 
 
 class SubstanceSerializer(serializers.ModelSerializer):
