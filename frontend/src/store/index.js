@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import art7 from '@/components/art7/dataDefinitions/art7Form'
+import art7Form from '@/components/art7/dataDefinitions/art7Form'
 import tableRowConstructorArt7 from '@/components/art7/services/tableRowConstructorService'
+import letterForm from '@/components/letter/dataDefinitions/letterForm'
+import tableRowConstructorLetter from '@/components/letter/services/tableRowConstructorService'
 
 import {
 	getSubmissionHistory,
@@ -448,8 +450,12 @@ const store = new Vuex.Store({
 			let tableRowConstructor = null
 			switch (data) {
 			case 'art7':
-				currentFormStructure = art7
+				currentFormStructure = art7Form
 				tableRowConstructor = tableRowConstructorArt7
+				break
+			case 'letter':
+				currentFormStructure = letterForm
+				tableRowConstructor = tableRowConstructorLetter
 				break
 			default:
 				break

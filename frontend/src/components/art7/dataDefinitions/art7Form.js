@@ -3,6 +3,7 @@ import { sub_info } from '@/components/common/dataDefinitions/sub_info'
 
 const form = {
 	formDetails: {
+		tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments'],
 		dataNeeded: [
 			'initialData.countryOptions',
 			'initialData.substances',
@@ -16,6 +17,7 @@ const form = {
 	tabs: {
 		sub_info: {
 			name: 'sub_info',
+			hasAssideMenu: false,
 			endpoint_url: 'sub_info_url',
 			endpoint_additional_url: '',
 			fields_order: ['reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
@@ -56,8 +58,9 @@ const form = {
 			}
 		},
 		questionaire_questions: {
-			endpoint_url: 'article7questionnaire_url',
 			name: 'questionaire_questions',
+			hasAssideMenu: false,
+			endpoint_url: 'article7questionnaire_url',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
 			titleHtml: 'Questionnaire',
@@ -76,8 +79,9 @@ const form = {
 			}
 		},
 		has_exports: {
-			endpoint_url: 'article7exports_url',
 			name: 'has_exports',
+			hasAssideMenu: true,
+			endpoint_url: 'article7exports_url',
 			ordering_id: 0,
 			validate: true,
 			status: null,
@@ -208,8 +212,9 @@ const form = {
 			}
 		},
 		has_imports: {
-			endpoint_url: 'article7imports_url',
 			name: 'has_imports',
+			hasAssideMenu: true,
+			endpoint_url: 'article7imports_url',
 			ordering_id: 0,
 			status: null,
 			validate: true,
@@ -336,8 +341,9 @@ const form = {
 			}
 		},
 		has_produced: {
-			endpoint_url: 'article7productions_url',
 			name: 'has_produced',
+			hasAssideMenu: true,
+			endpoint_url: 'article7productions_url',
 			ordering_id: 0,
 			status: null,
 			validate: true,
@@ -526,8 +532,9 @@ const form = {
 			}
 		},
 		has_destroyed: {
-			endpoint_url: 'article7destructions_url',
 			name: 'has_destroyed',
+			hasAssideMenu: true,
+			endpoint_url: 'article7destructions_url',
 			ordering_id: 0,
 			status: null,
 			validate: true,
@@ -597,8 +604,9 @@ const form = {
 			}
 		},
 		has_nonparty: {
-			endpoint_url: 'article7nonpartytrades_url',
 			name: 'has_nonparty',
+			hasAssideMenu: true,
+			endpoint_url: 'article7nonpartytrades_url',
 			ordering_id: 0,
 			status: null,
 			validate: true,
@@ -724,8 +732,9 @@ const form = {
 			}
 		},
 		has_emissions: {
-			endpoint_url: 'article7emissions_url',
 			name: 'has_emissions',
+			hasAssideMenu: false,
+			endpoint_url: 'article7emissions_url',
 			ordering_id: 0,
 			status: null,
 			validate: true,
@@ -851,6 +860,7 @@ const form = {
 		},
 		attachments: {
 			name: 'attachments',
+			hasAssideMenu: false,
 			title: 'Attachments',
 			titleHtml: 'Attachments',
 			detailsHtml: ''

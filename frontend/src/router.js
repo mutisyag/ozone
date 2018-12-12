@@ -62,7 +62,7 @@ const routes = [
 				path: 'letter',
 				name: 'letter',
 				meta: { requiresAuth: true },
-				component: FormNotFound
+				component: DataManager
 			}
 		]
 	},

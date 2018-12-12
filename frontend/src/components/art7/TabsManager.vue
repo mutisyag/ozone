@@ -3,14 +3,14 @@
   <div class="breadcrumb custom">
     <small style="width: 30%;">
       <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="detailsHtmlAll[tabIndex]"></div>
+      <div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
-      <div  v-if='titlesAndTooltipsHtml[tabIndex].tooltipHtml' v-b-tooltip :title="titlesAndTooltipsHtml[tabIndex].tooltipHtml" >
-        <span v-html="titlesAndTooltipsHtml[tabIndex].titleHtml"></span>
+      <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
+        <span v-html="selectedTab.titleHtml"></span>
          <i style='margin-left: 5px' class="fa fa-info-circle fa-lg"></i>
       </div>
-      <div v-else v-html="titlesAndTooltipsHtml[tabIndex].titleHtml"></div>
+      <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
     <b-button-group class="actions">
       <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
@@ -45,28 +45,28 @@
                 Submission Info
               </div>
              </template>
-            <subinfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0"></subinfo>
+            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
           <b-tab title="Questionaire" active>
-            <template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-             </template>
-            <intro tabId="1" :info="$store.state.form.tabs.questionaire_questions"></intro>
+			<template slot="title">
+				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+			</template>
+            <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
           </b-tab>
 
-          <b-tab v-for="tab in tabsWithAssideMenu" :key="tab.id" :disabled="!display_tabs[$store.state.form.tabs[tab.id].name]">
+          <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
              <template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs[tab.id]" />
+				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
              </template>
-            <formtemplate :tabId="tabsWithAssideMenu.indexOf(tab) + 2" :ref="tab" :tabIndex="tabIndex" :tabName="tab.id"></formtemplate>
+            <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId) + 2" :tabIndex="tabIndex" :tabName="tabId" />
           </b-tab>
 
-          <b-tab :disabled="!display_tabs[$store.state.form.tabs.has_emissions.name]">
-            <template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
-             </template>
-            <emissionstemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"   tabName="has_emissions"></emissionstemplate>
+          <b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
+			<template slot="title">
+				<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+			</template>
+            <EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
           </b-tab>
 
            <b-tab title="Attachments">
@@ -100,18 +100,16 @@
         <b-btn
           v-if="$store.state.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
-          variant="outline-success"
-          >
+          variant="outline-success">
             Submit
-          </b-btn>
-					<b-btn
-						variant="outline-primary"
-						v-for="transition in availableTransitions"
-						:key="transition"
-						@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})"
-					>
-						{{labels[transition]}}
-					</b-btn>
+        </b-btn>
+		<b-btn
+			variant="outline-primary"
+			v-for="transition in availableTransitions"
+			:key="transition"
+			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+			{{labels[transition]}}
+		</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           Versions
         </b-btn>
@@ -141,37 +139,26 @@ import labels from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 
 export default {
-
-	name: 'TabsManager',
-
 	components: {
-		intro: Questionnaire,
-		formtemplate: FormTemplate,
-		emissionstemplate: EmissionsTemplate,
-		subinfo: SubmissionInfo,
+		Questionnaire,
+		FormTemplate,
+		EmissionsTemplate,
+		SubmissionInfo,
 		attachments: Attachments,
 		Footer,
 		Save,
 		SubmissionHistory,
 		TabTitleWithLoader
 	},
-
 	props: {
 		data: null,
 		submission: String
 	},
-
-	created() {
-		this.labels = labels.general
-	},
-
 	computed: {
-
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
 		},
-
-		display_tabs() {
+		selectedDisplayTabs() {
 			const questionaire_tab = this.$store.state.form.tabs.questionaire_questions.form_fields
 			return {
 				has_exports: questionaire_tab.has_exports.selected,
@@ -181,9 +168,23 @@ export default {
 				has_produced: questionaire_tab.has_produced.selected,
 				has_emissions: questionaire_tab.has_emissions.selected
 			}
+		},
+		selectedTab() {
+			const { form } = this.$store.state
+			const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
+			const body = document.querySelector('body')
+			if (tab.hasAssideMenu && !this.$store.getters.allowedChanges) {
+				body.classList.add('aside-menu-lg-show')
+			} else {
+				body.classList.remove('aside-menu-lg-show')
+			}
+			return tab
+		},
+		tabsIdsWithAssideMenu() {
+			const { form } = this.$store.state
+			return form.formDetails.tabsDisplay.filter(tabId => form.tabs[tabId].hasAssideMenu)
 		}
 	},
-
 	methods: {
 		createModalData() {
 			getInstructions().then((response) => {
@@ -191,7 +192,6 @@ export default {
 				this.$refs.instructions_modal.show()
 			})
 		},
-
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
 				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
@@ -215,7 +215,6 @@ export default {
 			}
 			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
 		},
-
 		removeSubmission() {
 			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
 			if (r === true) {
@@ -225,75 +224,11 @@ export default {
 			}
 		}
 	},
-
 	data() {
-		const tabsDisplay = [{
-			id: 'sub_info',
-			hasAssideMenu: false
-		}, {
-			id: 'questionaire_questions',
-			hasAssideMenu: false
-		}, {
-			id: 'has_imports',
-			hasAssideMenu: true
-		}, {
-			id: 'has_exports',
-			hasAssideMenu: true
-		}, {
-			id: 'has_produced',
-			hasAssideMenu: true
-		}, {
-			id: 'has_destroyed',
-			hasAssideMenu: true
-		}, {
-			id: 'has_nonparty',
-			hasAssideMenu: true
-		}, {
-			id: 'has_emissions',
-			hasAssideMenu: false
-		}, {
-			id: 'attachments',
-			hasAssideMenu: false
-		}]
-		const tabsWithAssideMenu = tabsDisplay.filter(tabDisplay => tabDisplay.hasAssideMenu)
-		const tabIndexesForAssideMenuDisplay = tabsWithAssideMenu.reduce((accumulator, currentValue, currentIndex) => {
-			accumulator.push(currentIndex + 2)
-			return accumulator
-		}, [])
-
-		const titlesAndTooltipsHtml = tabsDisplay.reduce((accumulator, currentValue) => {
-			const { titleHtml, tooltipHtml } = this.$store.state.form.tabs[currentValue.id]
-			accumulator.push({ titleHtml, tooltipHtml })
-			return accumulator
-		}, [])
-
-		const detailsHtmlAll = tabsDisplay.reduce((accumulator, currentValue) => {
-			const { detailsHtml } = this.$store.state.form.tabs[currentValue.id]
-			accumulator.push(detailsHtml)
-			return accumulator
-		}, [])
-
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: null,
-			tabsWithAssideMenu,
-			tabIndexesForAssideMenuDisplay,
-			titlesAndTooltipsHtml,
-			detailsHtmlAll
-		}
-	},
-
-	watch: {
-		tabIndex: {
-			handler(new_val) {
-				const body = document.querySelector('body')
-				if (this.tabIndexesForAssideMenuDisplay.includes(new_val) && !this.$store.getters.allowedChanges) {
-					body.classList.add('aside-menu-lg-show')
-				} else {
-					body.classList.remove('aside-menu-lg-show')
-				}
-			}
+			labels: labels.general
 		}
 	}
 }
@@ -309,5 +244,4 @@ export default {
 .legend .spinner {
   margin-left: 0;
 }
-
 </style>
