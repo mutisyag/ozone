@@ -335,6 +335,18 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
             submission=self.kwargs['submission_pk']
         )
 
+    def put(self, request, *args, **kwargs):
+        article7questionnaire = Submission.objects.get(
+            pk=self.kwargs['submission_pk']
+        ).article7questionnaire
+        serializer = Article7QuestionnaireSerializer(
+            article7questionnaire, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
