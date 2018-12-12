@@ -335,23 +335,6 @@ class Article7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        submission = Submission.objects.get(
-            pk=validated_data.pop('submission_id')
-        )
-
-        questionnaire, created = Article7Questionnaire.objects.update_or_create(
-            submission=submission,
-            defaults=validated_data
-        )
-        return questionnaire
-
-    class Meta:
-        model = Article7Questionnaire
-        exclude = ('submission',)
-
-
 class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
