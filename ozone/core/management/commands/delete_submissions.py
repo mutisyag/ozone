@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = __doc__
 
+    def add_arguments(self, parser):
+        parser.add_argument('--confirm', action='store_true', default=False,
+                            help="Use to really delete all submissions, otherwise just dry-run")
+
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
         stream.setFormatter(logging.Formatter(
@@ -24,13 +28,24 @@ class Command(BaseCommand):
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
 
+        if not options['confirm']:
+            logger.info(
+                "Run with --confirm to really delete %s submissions.", Submission.objects.count())
+
         def force_allow_delete(self):
             return True
 
         for s in Submission.objects.all():
-            logger.info("Deleting submission %s", s.id)
+            if options['confirm']:
+                logger.info("Deleting submission %s", s.id)
+            else:
+                logger.debug("Found submission %s", s.id)
             for related_data in s.RELATED_DATA:
                 for instance in getattr(s, related_data).all():
-                    instance.delete()
+                    if options['confirm']:
+                        instance.delete()
+                    else:
+                        logger.debug("Found related data: s", instance)
             s.__class__.data_changes_allowed = force_allow_delete
-            s.delete()
+            if options['confirm']:
+                s.delete()
