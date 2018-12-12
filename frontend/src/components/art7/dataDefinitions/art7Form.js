@@ -14,7 +14,10 @@ const form = {
 	},
 	tabs: {
 		sub_info: {
-			name: 'form_intro',
+			name: 'sub_info',
+			endpoint_url: 'sub_info_url',
+			endpoint_additional_url: '',
+			fields_order: ['reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Submission Info',
 			titleHtml: 'Submission Info',
@@ -37,7 +40,18 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			form_fields: reporting_party
+			form_fields: [],
+			default_properties: {
+				reporting_officer: null,
+				designation: null,
+				organization:null,
+				postal_code: null,
+				country: null,
+				phone: null,
+				fax: null,
+				email: null,
+				date: null
+			}
 		},
 		questionaire_questions: {
 			endpoint_url: 'article7questionnaire_url',

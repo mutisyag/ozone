@@ -5,8 +5,15 @@ from django.contrib import admin
 from django.contrib.staticfiles.views import serve
 from django.views import defaults as default_views
 from django.views.generic import RedirectView
+from django.conf.urls import url
+from rest_framework.documentation import include_docs_urls
+
 
 urlpatterns = [
+    # Cannot add this in the api.urls because of
+    # https://github.com/encode/django-rest-framework/issues/4984
+    # XXX Change me after upgrade to a version that has this fix.
+    url(r'^api/docs/', include_docs_urls(title='ORS API', public=False)),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # User management

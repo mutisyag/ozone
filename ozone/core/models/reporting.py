@@ -23,6 +23,7 @@ from ..exceptions import (
 __all__ = [
     'Obligation',
     'Submission',
+    'SubmissionInfo',
 ]
 
 
@@ -48,6 +49,25 @@ class Obligation(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class SubmissionInfo(models.Model):
+    """
+    Model for storing submission info.
+    """
+
+    reporting_officer = models.CharField(max_length=256, blank=True)
+    designation = models.CharField(max_length=256, blank=True)
+    organization = models.CharField(max_length=256, blank=True)
+    postal_code = models.CharField(max_length=64, blank=True)
+    country = models.CharField(max_length=256, blank=True)
+    phone = models.CharField(max_length=128, blank=True)
+    fax = models.CharField(max_length=128, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.submission} - Info'
 
 
 class Submission(models.Model):
@@ -135,17 +155,13 @@ class Submission(models.Model):
         on_delete=models.SET_NULL
     )
 
-    # Submission info
-    reporting_officer = models.CharField(max_length=256, blank=True)
-    designation = models.CharField(max_length=256, blank=True)
-    organization = models.CharField(max_length=256, blank=True)
-    postal_code = models.CharField(max_length=64, blank=True)
-    country = models.CharField(max_length=256, blank=True)
-    phone = models.CharField(max_length=128, blank=True)
-    fax = models.CharField(max_length=128, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-
+    info = models.OneToOneField(
+        SubmissionInfo,
+        related_name='submission',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
 
     # Persisted workflow class for this submission. We want this to be only set
     # at submission creation, so it will have no setter implementation.
@@ -440,40 +456,6 @@ class Submission(models.Model):
 
         return clone
 
-    def clone_info(self, submission):
-        """
-        Clones submission info for current submission from Submission instance
-        given as parameter.
-        """
-        self.reporting_officer = (
-            self.reporting_officer if self.reporting_officer
-            else submission.reporting_officer
-        )
-        self.designation = (
-            self.designation if self.designation else submission.designation
-        )
-        self.organization = (
-            self.organization if self.organization else submission.organization
-        )
-        self.postal_code = (
-            self.postal_code if self.postal_code else submission.postal_code
-        )
-        self.country = (
-            self.country if self.country else submission.country
-        )
-        self.phone = (
-            self.phone if self.phone else submission.phone
-        )
-        self.fax = (
-            self.fax if self.fax else submission.fax
-        )
-        self.email = (
-            self.email if self.email else submission.email
-        )
-        self.date = (
-            self.date if self.date else submission.date
-        )
-
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -552,8 +534,21 @@ class Submission(models.Model):
             # submission when creating a new submission for the same obligation
             # and party.
             latest_submission = submissions.order_by('-updated_at').first()
-            if latest_submission:
-                self.clone_info(latest_submission)
+            if latest_submission and latest_submission.info:
+                latest_info = latest_submission.info
+                self.info = SubmissionInfo.objects.create(
+                    reporting_officer=latest_info.reporting_officer,
+                    designation=latest_info.designation,
+                    organization=latest_info.organization,
+                    postal_code=latest_info.postal_code,
+                    country=latest_info.country,
+                    phone=latest_info.phone,
+                    fax=latest_info.fax,
+                    email=latest_info.email,
+                    date=latest_info.date
+                )
+            else:
+                self.info = SubmissionInfo.objects.create()
 
         self.clean()
         return super().save(*args, **kwargs)

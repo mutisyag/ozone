@@ -27,6 +27,9 @@ class Command(BaseCommand):
         'meeting': {
             'fixture': 'meetings.json',
         },
+        'partytype': {
+            'fixture': 'partytypes.json'
+        },
         'party': {
             'sheet': 'Cntry',
             'fixture': 'parties.json',
@@ -240,20 +243,36 @@ class Command(BaseCommand):
         )
         if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
             if row['Article5']:
-                f['party_type'] = 'Article 5'
+                f['party_type'] = self.lookup_id(
+                    'partytype', 'name', 'Article 5'
+                )
+                f['is_article5'] = True
             else:
-                f['party_type'] = 'Non Article 5'
+                f['party_type'] = self.lookup_id(
+                    'partytype', 'name', 'Non Article 5'
+                )
+                f['is_article5'] = False
         else:
             if row['Article5']:
                 if row['CntryID'] in art5_group2:
-                    f['party_type'] = 'Article 5 Group 2'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Article 5 Group 2'
+                    )
                 else:
-                    f['party_type'] = 'Article 5 Group 1'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Article 5 Group 1'
+                    )
+                f['is_article5'] = True
             else:
                 if row['CntryID'] in non_art5_group2:
-                    f['party_type'] = 'Non Article 5 Group 2'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Non Article 5 Group 2'
+                    )
                 else:
-                    f['party_type'] = 'Non Article 5 Group 1'
+                    f['party_type'] = self.lookup_id(
+                        'partytype', 'name', 'Non Article 5 Group 1'
+                    )
+                f['is_article5'] = False
 
         hat_parties = [
             "DZ", "BH", "BJ", "BF", "CF", "TD", "CI", "DJ", "EG", "ER", "GM",
@@ -286,16 +305,9 @@ class Command(BaseCommand):
         treaties = ['VC', 'MP', 'LA', 'CA', 'MA', 'BA', 'KA']
         for treaty_id in treaties:
             if row['RD_' + treaty_id]:
-                treaty = next(filter(
-                    lambda x: x['fields']['treaty_id'] == treaty_id, self.FIXTURES['treaty']
-                ))
-                treaty_entry_into_force = datetime.strptime(
-                    treaty['fields']['entry_into_force_date'], "%Y-%m-%d"
-                ).date()
                 ratification_date = row['RD_' + treaty_id].date()
-                entry_into_force_date = treaty_entry_into_force
-                if (ratification_date > treaty_entry_into_force):
-                    entry_into_force_date = ratification_date + timedelta(days=30)
+                ratification_date = row['RD_' + treaty_id].date()
+                entry_into_force_date = row['EIF_' + treaty_id].date()
                 objs.append({
                     'party': party,
                     'treaty': self.lookup_id('treaty', 'treaty_id', treaty_id),
@@ -351,16 +363,16 @@ class Command(BaseCommand):
         f['blend_id'] = row['Blend']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
-            f['sort_order'] = 100 + row['_index']
+            f['sort_order'] = 1000 + row['_index']
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
-            f['sort_order'] = 200 + row['_index']
-        elif f['blend_id'].startswith('Methyl bromide'):
+            f['sort_order'] = 2000 + row['_index']
+        elif f['blend_id'].startswith('MeBr'):
             f['type'] = Blend.BlendTypes.MeBr.value
-            f['sort_order'] = 400 + row['_index']
+            f['sort_order'] = 4000 + row['_index']
         else:
             f['type'] = Blend.BlendTypes.OTHER.value
-            f['sort_order'] = 300 + row['_index']
+            f['sort_order'] = 3000 + row['_index']
 
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""

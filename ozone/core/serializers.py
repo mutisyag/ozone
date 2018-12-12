@@ -16,6 +16,7 @@ from .models import (
     BlendComponent,
     Blend,
     Submission,
+    SubmissionInfo,
     Treaty,
     Article7Questionnaire,
     Article7Destruction,
@@ -335,23 +336,6 @@ class Article7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class CreateArticle7QuestionnaireSerializer(serializers.ModelSerializer):
-    def create(self, validated_data):
-        submission = Submission.objects.get(
-            pk=validated_data.pop('submission_id')
-        )
-
-        questionnaire, created = Article7Questionnaire.objects.update_or_create(
-            submission=submission,
-            defaults=validated_data
-        )
-        return questionnaire
-
-    class Meta:
-        model = Article7Questionnaire
-        exclude = ('submission',)
-
-
 class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
@@ -448,6 +432,12 @@ class Article7EmissionSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
+class SubmissionInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubmissionInfo
+        fields = '__all__'
+
+
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
@@ -501,6 +491,14 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         lookup_url_kwarg='submission_pk'
     )
 
+    sub_info_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-info-list',
+        lookup_url_kwarg='submission_pk',
+    )
+    sub_info = SubmissionInfoSerializer(
+        many=False, read_only=True, source='info'
+    )
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
@@ -514,12 +512,11 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7destructions_url', 'article7productions_url',
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
+            'sub_info_url', 'sub_info',
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current', 'is_cloneable',
             'flag_provisional', 'flag_valid', 'flag_superseded',
-            'reporting_officer', 'designation', 'organization',
-            'postal_code', 'country', 'phone', 'fax', 'email', 'date',
         )
 
         read_only_fields = (
@@ -532,8 +529,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
         model = Submission
         fields = (
             'id', 'party', 'reporting_period', 'obligation',
-            'reporting_officer', 'designation', 'organization',
-            'postal_code', 'country', 'phone', 'fax', 'email', 'date',
         )
 
     def create(self, validated_data):

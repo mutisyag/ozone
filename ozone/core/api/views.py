@@ -24,6 +24,7 @@ from ..models import (
     ReportingPeriod,
     Obligation,
     Submission,
+    SubmissionInfo,
     Article7Questionnaire,
     Article7Destruction,
     Article7Production,
@@ -49,7 +50,6 @@ from ..serializers import (
     ListSubmissionSerializer,
     CreateSubmissionSerializer,
     Article7QuestionnaireSerializer,
-    CreateArticle7QuestionnaireSerializer,
     Article7DestructionSerializer,
     Article7ProductionSerializer,
     Article7ExportSerializer,
@@ -61,6 +61,7 @@ from ..serializers import (
     BlendSerializer,
     CreateBlendSerializer,
     SubmissionHistorySerializer,
+    SubmissionInfoSerializer,
 )
 
 
@@ -304,7 +305,19 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
+class SubmissionInfoViewSet(viewsets.ModelViewSet):
+    serializer_class = SubmissionInfoSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def get_queryset(self):
+        return SubmissionInfo.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
+    serializer_class = Article7QuestionnaireSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -312,11 +325,6 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         return Article7Questionnaire.objects.filter(
             submission=self.kwargs['submission_pk']
         )
-
-    def get_serializer_class(self):
-        if self.request.method == "POST":
-            return CreateArticle7QuestionnaireSerializer
-        return Article7QuestionnaireSerializer
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
