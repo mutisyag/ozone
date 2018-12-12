@@ -92,6 +92,10 @@ class Command(BaseCommand):
         ).all()
 
         for user in to_create.values():
+            if user['is_secretariat']:
+                # Secretariat users, don't need to have a party set.
+                continue
+
             if user['party'] is not None:
                 user['party'] = Party.objects.get(abbr=user['party'].upper())
             elif user["party"] is None and options['party']:
