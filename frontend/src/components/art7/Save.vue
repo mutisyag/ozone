@@ -93,9 +93,7 @@ export default {
 
 					current_tab_data.push(save_obj)
 				})
-				if (current_tab.name === 'sub_info') {
-					current_tab_data = current_tab_data[0]
-				}
+				if (current_tab.name === 'sub_info') { current_tab_data = current_tab_data[0] }
 				update(`${this.$store.state.current_submission[current_tab.endpoint_url]}${current_tab.endpoint_additional_url ? current_tab.endpoint_additional_url : ''}`, current_tab_data).then(() => {
 					current_tab.status = true
 					if (current_tab_data.length) {

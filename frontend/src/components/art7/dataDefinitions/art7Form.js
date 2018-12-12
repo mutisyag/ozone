@@ -1,4 +1,4 @@
-import { intro_fields, reporting_party } from './questionnaire_fields.js'
+import { intro_fields } from './questionnaire_fields.js'
 
 const form = {
 	formDetails: {
@@ -44,7 +44,7 @@ const form = {
 			default_properties: {
 				reporting_officer: null,
 				designation: null,
-				organization:null,
+				organization: null,
 				postal_code: null,
 				country: null,
 				phone: null,

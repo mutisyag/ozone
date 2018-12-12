@@ -411,9 +411,9 @@ const store = new Vuex.Store({
 				ordering_id
 			})
 			if (context.state.form.tabs[currentSectionName].hasOwnProperty('endpoint_additional_url') && row.id.selected) {
-				context.commit('setAdditionalUrl', {tab: currentSectionName, id: row.id.selected})
+				context.commit('setAdditionalUrl', { tab: currentSectionName, id: row.id.selected })
 			}
-			context.commit('addRow', {sectionName: currentSectionName, row})
+			context.commit('addRow', { sectionName: currentSectionName, row })
 		},
 
 		removeDataFromTab(context, data) {
