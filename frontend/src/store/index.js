@@ -27,7 +27,7 @@ import Toasted from 'toastedjs'
 
 const options = {
 	position: 'bottom-left',
-	duration: 4000,
+	duration: 10000,
 	theme: 'bulma'
 }
 const toasted = new Toasted(options)
