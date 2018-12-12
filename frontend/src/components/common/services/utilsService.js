@@ -11,6 +11,9 @@ const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	return undefined
 }
 
+const isObject = (value) => value && typeof value === 'object' && value.constructor === Object
+
 export {
-	getLevel2PropertyValue
+	getLevel2PropertyValue,
+	isObject
 }

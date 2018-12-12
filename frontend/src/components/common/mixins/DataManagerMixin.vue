@@ -1,24 +1,11 @@
-<template>
-  <div>
-    <tabsmanager
-    v-if="initialDataReady"
-    :submission="submission"
-    >
-    </tabsmanager>
-  </div>
-</template>
-
 <script>
-import tabsManager from '@/components/art7/TabsManager'
 import {
 	fetch
 } from '@/components/common/services/api.js'
+import { isObject } from '@/components/common/services/utilsService'
 
 export default {
 	name: 'DataManager',
-	components: {
-		tabsmanager: tabsManager
-	},
 
 	data() {
 		return {
@@ -101,7 +88,7 @@ export default {
 
 			const prefill_data = this.$store.state.current_submission
 			Object.keys(form.tabs).forEach((tab) => {
-				if (form.tabs[tab].endpoint_url && tab !== 'questionaire_questions') {
+				if (form.tabs[tab].endpoint_url) {
 					fetch(prefill_data[form.tabs[tab].endpoint_url]).then(response => {
 						if (response.data.length) {
 							this.$store.commit('setTabStatus', { tab, value: 'saving' })
@@ -116,31 +103,35 @@ export default {
 			})
 			this.prefilled = true
 		},
-
 		prefill(tabName, data) {
-			const ordering_id = Math.max(...data.map(row => row.ordering_id))
-			const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
-			sortedData.forEach(item => {
-				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-				if (item.substance || item.blend) {
-					this.$store.dispatch('createSubstance', {
-						substanceList: item.substance ? [item.substance] : null,
-						currentSectionName: tabName,
-						groupName: null,
-						country: null,
-						blendList: item.blend ? [item.blend] : null,
-						prefillData: item
-					})
-				} else {
-					this.$store.dispatch('createRow', {
-						currentSectionName: tabName,
-						prefillData: item
-					})
-				}
-			})
-
+			let ordering_id = 0
+			if (Array.isArray(this.form.tabs[tabName].form_fields)) {
+				ordering_id = Math.max(...data.map(row => row.ordering_id))
+				const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
+				sortedData.forEach(item => {
+					if (item.substance || item.blend) {
+						this.$store.dispatch('createSubstance', {
+							substanceList: item.substance ? [item.substance] : null,
+							currentSectionName: tabName,
+							groupName: null,
+							country: null,
+							blendList: item.blend ? [item.blend] : null,
+							prefillData: item
+						})
+					} else {
+						this.$store.dispatch('createRow', {
+							currentSectionName: tabName,
+							prefillData: item
+						})
+					}
+				})
+				this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+			}
+			if (isObject(this.form.tabs[tabName].form_fields)) {
+				const [prefillData] = data
+				this.$store.commit('prefillTab', { tabName, data: prefillData })
+			}
 			this.$store.commit('setTabStatus', { tab: tabName, value: true })
-			this.$store.commit('setTabOrderingId', { tabName, ordering_id })
 		}
 
 	}
