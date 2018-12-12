@@ -198,7 +198,10 @@ class RatificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PartyRatification
-        fields = ('treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
+        fields = (
+            'treaty', 'ratification_type', 'ratification_date',
+            'entry_into_force_date'
+        )
 
 
 class PartySerializer(serializers.ModelSerializer):
