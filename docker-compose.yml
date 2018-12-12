@@ -11,6 +11,12 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
+  smtp:
+    image: "catatnight/postfix"
+    env_file:
+      - ./docker/smtp.env
+    restart: always
+
   tusd:
     image: tusproject/tusd:latest
     env_file:
