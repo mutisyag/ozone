@@ -41,6 +41,8 @@ class Command(BaseCommand):
                             help="Re-create if submission already exists.")
         parser.add_argument('--purge', action="store_true", default=False,
                             help="Purge all entries that were imported")
+        parser.add_argument('-l', '--limit', type=int, default=None,
+                            help="Limit the number of row to import.")
 
     def process_entry(self, *args, **kwargs):
         try:
@@ -105,18 +107,12 @@ class Command(BaseCommand):
     def _process_entry(self, party, period, values, recreate=False, purge=False):
         is_processed = (party.abbr, period.name) in self.current_submission
         if purge:
-            Submission.objects.filter(
-                party=party,
-                reporting_period=period,
-            ).delete()
+            self.delete_instance(party, period)
             return True
 
         if is_processed:
             if recreate:
-                Submission.objects.filter(
-                    party=party,
-                    reporting_period=period,
-                ).delete()
+                self.delete_instance(party, period)
             else:
                 logger.info("Submission %s/%s already imported, skipping.",
                             party.abbr, period.name)
@@ -136,6 +132,19 @@ class Command(BaseCommand):
         submission.call_transition("finalize")
         return True
 
+    def delete_instance(self, party, period):
+        s = Submission.objects.filter(
+            party=party,
+            reporting_period=period,
+        ).get()
+        logger.info("Deleting submission %s", s.id)
+        for related_data in s.RELATED_DATA:
+            for instance in getattr(s, related_data).all():
+                logger.debug("Deleting related data: s", instance)
+                instance.delete()
+        s.__class__.data_changes_allowed = True
+        s.delete()
+
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
         stream.setFormatter(logging.Formatter(
@@ -151,8 +160,12 @@ class Command(BaseCommand):
         headers = values[0]
 
         success_count = 0
+        values = values[1:]
 
-        for row in values[1:]:
+        if options['limit']:
+            values = values[:options['limit']]
+
+        for row in values:
             row = dict(zip(headers, row))
             logger.debug("Importing row %s", row)
 
@@ -169,4 +182,4 @@ class Command(BaseCommand):
                                                 row_values,
                                                 options["recreate"],
                                                 options["purge"])
-        logger.info("Success on %s out of %s", success_count, len(values) - 1)
+        logger.info("Success on %s out of %s", success_count, len(values))
