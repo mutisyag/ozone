@@ -45,3 +45,7 @@ class TransitionDoesNotExist(BaseCustomException):
 
 class TransitionNotAvailable(BaseCustomException):
     status_code = 412
+
+
+class Forbidden(BaseCustomException):
+    status_code = 403
