@@ -1,9 +1,7 @@
-import { sub_info } from '@/components/common/dataDefinitions/sub_info'
-
 const form = {
 	formDetails: {
-		tabsDisplay: ['sub_info', 'attachments'],
-		dataNeeded: []
+		dataNeeded: [
+		]
 	},
 	tabs: {
 		sub_info: {
@@ -34,10 +32,9 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			form_fields: sub_info,
+			form_fields: [],
 			default_properties: {
 				reporting_officer: null,
-				id: null,
 				designation: null,
 				organization: null,
 				postal_code: null,

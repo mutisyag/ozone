@@ -276,14 +276,14 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['post'])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
-        clone = submission.clone()
+        clone = submission.clone(request.user)
         return Response({'id': clone.id})
 
     @action(detail=True, methods=['post'], url_path='call-transition')
     def call_transition(self, request, pk=None):
         if request.data.get('transition'):
             submission = Submission.objects.get(pk=pk)
-            submission.call_transition(request.data['transition'])
+            submission.call_transition(request.data['transition'], request.user)
             serializer = SubmissionSerializer(
                 submission,
                 many=False,

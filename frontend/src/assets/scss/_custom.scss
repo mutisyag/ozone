@@ -847,10 +847,38 @@ input[type=number] {
 
 .table-filters {
   display: flex;
-  max-width: 40%;
-  min-width: 450px;
+	input {
+  	max-width: 40%;
+  	min-width: 400px;
+	}
 }
 
 body:not(.aside-menu-lg-show) .form-wrapper {
   margin-right: 2rem;
+}
+
+.form-wrapper h4 {
+	margin-bottom: 0;
+}
+.table-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.table-title i {
+	cursor: pointer;
+}
+.table-wrapper {
+	padding:1rem;
+	box-shadow: 1px 1px 3px #aaa;
+	margin-bottom: 1rem;
+}
+.table-wrapper table {
+	margin-bottom: 0;
+}
+
+.submission-table {
+	td:empty {
+		display: none!important;
+	}
 }

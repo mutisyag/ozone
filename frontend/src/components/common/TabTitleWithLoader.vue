@@ -1,5 +1,6 @@
 <template>
 <div class="tab-title">
+	<span class="formNumber" v-if="tab.formNumber">({{tab.formNumber}})</span>
 	{{tab.title}}
 	<div v-if="tab.status === 'saving'" class="spinner">
 		<div class="loader"></div>
@@ -27,7 +28,9 @@ export default {
     align-items: center;
     margin-left: 5px;
 }
-
+.formNumber {
+	margin-right: .3rem;
+}
 .loader {
   border: 3px solid #f3f3f3;
   border-radius: 50%;

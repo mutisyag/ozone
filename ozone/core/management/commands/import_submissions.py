@@ -1,5 +1,7 @@
 """Import Submission from Excel file.
 """
+import os
+import pickle
 import logging
 
 from django.core.management.base import BaseCommand
@@ -14,16 +16,21 @@ from ozone.core.models import ReportingPeriod
 from ozone.core.models import Article7Questionnaire
 
 logger = logging.getLogger(__name__)
+CACHE_LOC = "/var/tmp/legacy_submission.cache"
 
 
 class Command(BaseCommand):
     help = "Import Submission from Excel file"
+    sheets = (
+        "Overall",
+        "Import"
+    )
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
 
         # Create as the first admin we find.
-        self.admin_id = User.objects.filter(is_superuser=True)[0].id
+        self.admin = User.objects.filter(is_superuser=True)[0]
 
         # Load all values in memory for faster lookups.
         self.current_submission = set(Submission.objects.filter(obligation_id=1).values_list(
@@ -41,12 +48,18 @@ class Command(BaseCommand):
                             help="Re-create if submission already exists.")
         parser.add_argument('--purge', action="store_true", default=False,
                             help="Purge all entries that were imported")
+        parser.add_argument('-l', '--limit', type=int, default=None,
+                            help="Limit the number of row to import.")
+        parser.add_argument('-C', '--use-cache', action="store_true", default=False,
+                            help="Load the data from the cache (if available) instead "
+                                 "of the xls")
 
     def process_entry(self, *args, **kwargs):
         try:
             return self._process_entry(*args, **kwargs)
         except Exception as e:
-            logger.error("Error %s while saving: %s", e, args[:2])
+            logger.error("Error %s while saving: %s", e, args[:2],
+                         exc_info=True)
             return False
 
     def data_from_overall(self, row, party, period):
@@ -66,8 +79,8 @@ class Command(BaseCommand):
                 "submitted_via": self.method,
                 "remarks_party": row["Remark"] or "",
                 "remarks_secretariat": row["SubmissionType"] or "",
-                "created_by_id": self.admin_id,
-                "last_edited_by_id": self.admin_id,
+                "created_by_id": self.admin.id,
+                "last_edited_by_id": self.admin.id,
                 "obligation_id": 1,
                 "party_id": party.id,
                 "reporting_period_id": period.id,
@@ -105,18 +118,12 @@ class Command(BaseCommand):
     def _process_entry(self, party, period, values, recreate=False, purge=False):
         is_processed = (party.abbr, period.name) in self.current_submission
         if purge:
-            Submission.objects.filter(
-                party=party,
-                reporting_period=period,
-            ).delete()
+            self.delete_instance(party, period)
             return True
 
         if is_processed:
             if recreate:
-                Submission.objects.filter(
-                    party=party,
-                    reporting_period=period,
-                ).delete()
+                self.delete_instance(party, period)
             else:
                 logger.info("Submission %s/%s already imported, skipping.",
                             party.abbr, period.name)
@@ -131,10 +138,39 @@ class Command(BaseCommand):
             submission=submission,
             **values["art7"],
         )
-        submission.call_transition("submit")
-        submission.call_transition("process")
-        submission.call_transition("finalize")
+        submission._current_state = "finalized"
+        submission.save()
+        for obj in submission.history.all():
+            obj.history_user = self.admin
+            obj.save()
         return True
+
+    def delete_instance(self, party, period):
+        s = Submission.objects.filter(
+            party=party,
+            reporting_period=period,
+        ).get()
+        logger.info("Deleting submission %s", s.id)
+        for related_data in s.RELATED_DATA:
+            for instance in getattr(s, related_data).all():
+                logger.debug("Deleting related data: s", instance)
+                instance.delete()
+        s.__class__.data_changes_allowed = True
+        s.delete()
+
+    def load_workbook(self, filename, use_cache=False):
+        if use_cache:
+            try:
+                with open(CACHE_LOC, "rb") as cachef:
+                    return pickle.load(cachef)
+            except:
+                pass
+
+        wb = load_workbook(filename=filename)
+        result = {sheet.title: list(sheet.values) for sheet in wb}
+        with open(CACHE_LOC, "wb") as cachef:
+            pickle.dump(result, cachef)
+        return result
 
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
@@ -146,13 +182,18 @@ class Command(BaseCommand):
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
 
-        wb = load_workbook(filename=options['file'])
-        values = list(wb["Overall"].values)
+        all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
+
+        values = all_values["Overall"]
         headers = values[0]
 
         success_count = 0
+        values = values[1:]
 
-        for row in values[1:]:
+        if options['limit']:
+            values = values[:options['limit']]
+
+        for row in values:
             row = dict(zip(headers, row))
             logger.debug("Importing row %s", row)
 
@@ -169,4 +210,4 @@ class Command(BaseCommand):
                                                 row_values,
                                                 options["recreate"],
                                                 options["purge"])
-        logger.info("Success on %s out of %s", success_count, len(values) - 1)
+        logger.info("Success on %s out of %s", success_count, len(values))

@@ -30,6 +30,7 @@ class DefaultArticle7WorkflowStateDescription(xworkflows.Workflow):
 
 
 class DefaultArticle7Workflow(BaseWorkflow):
+
     """
     Implements custom transition logic for the default article 7 workflow.
     No states are truly final in this workflow.
@@ -39,25 +40,67 @@ class DefaultArticle7Workflow(BaseWorkflow):
 
     state = DefaultArticle7WorkflowStateDescription()
 
+    @xworkflows.transition_check('submit')
+    def check_submit(self):
+        """
+        Ensure that we only allow submitting submissions for there roles:
+        * Party-write user from Party to which the submission refers to,
+          only if the submission was started by the Party
+        * Secretariat-write user, only if the submission was started by Secretariat
+
+        This is also available for `recall` and `unrecall_to_*`
+        """
+        return (
+            not self.user.is_read_only
+            and self.is_secretariat_or_same_party_owner(self.model_instance)
+        )
+
+    @xworkflows.transition_check('process')
+    def check_process(self):
+        return not self.user.is_read_only and self.user.is_secretariat
+
+    @xworkflows.transition_check('recall')
+    def check_recall(self):
+        return (
+            not self.user.is_read_only
+            and self.is_secretariat_or_same_party_owner(self.model_instance)
+        )
+
     @xworkflows.transition_check('unrecall_to_submitted')
     def check_unrecall_to_submitted(self):
         """
         Ensure that we only allow un-recalling submissions back to their
         initial state.
         """
-        return self.model_instance.previous_state == 'submitted'
+        return (
+            not self.user.is_read_only
+            and self.is_secretariat_or_same_party_owner(self.model_instance)
+            and self.model_instance.previous_state == 'submitted'
+        )
 
     @xworkflows.transition_check('unrecall_to_processing')
     def check_unrecall_to_processing(self):
-        return self.model_instance.previous_state == 'processing'
+        return (
+            not self.user.is_read_only
+            and self.is_secretariat_or_same_party_owner(self.model_instance)
+            and self.model_instance.previous_state == 'processing'
+        )
 
     @xworkflows.transition_check('unrecall_to_finalized')
     def check_unrecall_to_finalized(self):
-        return self.model_instance.previous_state == 'finalized'
+        return (
+            not self.user.is_read_only
+            and self.is_secretariat_or_same_party_owner(self.model_instance)
+            and self.model_instance.previous_state == 'finalized'
+        )
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
-        return self.model_instance.flag_valid is not None
+        return (
+            not self.user.is_read_only
+            and self.user.is_secretariat
+            and self.model_instance.flag_valid is not None
+        )
 
     @xworkflows.transition('submit')
     def submit(self):

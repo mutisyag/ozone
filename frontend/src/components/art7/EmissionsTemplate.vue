@@ -2,73 +2,80 @@
   <div v-if="tab_info">
     <div class="form-sections">
 
-      <b-btn variant="success" @click="addField">Add facility</b-btn>
-      <div class="table-filters mb-2">
-          <b-input-group prepend="Search substances, countries, values">
-              <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-              <b-input-group-append>
-                <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-              </b-input-group-append>
-          </b-input-group>
-          <b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
-      </div>
-      <b-table
-        show-empty
-        outlined
-        v-if="getTabInputFields"
-        bordered
-        hover
-        head-variant="light"
-        stacked="md"
-        class="submission-table"
-        :items="tableItems"
-        :fields="tableFields"
-        :current-page="table.currentPage"
-        :per-page="table.perPage"
-        :sort-by.sync="table.sortBy"
-        :sort-desc.sync="table.sortDesc"
-        :sort-direction="table.sortDirection"
-        :filter="table.filters.search"
-        ref="table"
-      >
+			<div class="table-wrapper">
 
-        <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-          <div
-            v-if="inputField === 'facility_name'"
-            class="table-btn-group"
-            :key="`${cell.item.index}_${inputField}_${tabName}_button`"
-            >
-            <b-btn
-              variant="outline-danger"
-              @click="remove_field(cell.item.index)"
-              class="table-btn"
-            >Delete</b-btn>
-          </div>
-          <fieldGenerator
-            :key="`${cell.item.index}_${inputField}_${tabName}`"
-            :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-            :disabled="transitionState"
-            :field="cell.item.originalObj[inputField]"
-          ></fieldGenerator>
-        </template>
+				<div class="table-title">
+					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
+					<span>
+						<i style="margin-right: .5rem" @click="addField" class="fa fa-plus-square fa-lg"></i>
+						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
+					</span>
+				</div>
+				<hr>
 
-        <template
-          slot="validation"
-          slot-scope="cell"
-        >
-          <span class="validation-wrapper">
-            <i
-              v-if="cell.item.validation.length"
-              style="color: red; cursor: pointer"
-              class="fa fa-exclamation fa-lg"
-              v-b-tooltip.hover
-              title="Click here to see the validation problems"
-            ></i>
-            <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
-          </span>
-        </template>
+				<div v-show="table.tableFilters" class="table-filters mb-2">
+						<b-input-group prepend="Search">
+								<b-form-input v-model="table.filters.search"/>
+						</b-input-group>
+				</div>
+				<b-table
+					show-empty
+					outlined
+					v-if="getTabInputFields"
+					bordered
+					hover
+					head-variant="light"
+					stacked="md"
+					class="submission-table"
+					:items="tableItems"
+					:fields="tableFields"
+					:current-page="table.currentPage"
+					:per-page="table.perPage"
+					:sort-by.sync="table.sortBy"
+					:sort-desc.sync="table.sortDesc"
+					:sort-direction="table.sortDirection"
+					:filter="table.filters.search"
+					ref="table"
+				>
 
-      </b-table>
+					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+						<div
+							v-if="inputField === 'facility_name'"
+							class="table-btn-group"
+							:key="`${cell.item.index}_${inputField}_${tabName}_button`"
+							>
+							<b-btn
+								variant="outline-danger"
+								@click="remove_field(cell.item.index)"
+								class="table-btn"
+							>Delete</b-btn>
+						</div>
+						<fieldGenerator
+							:key="`${cell.item.index}_${inputField}_${tabName}`"
+							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+							:disabled="transitionState"
+							:field="cell.item.originalObj[inputField]"
+						></fieldGenerator>
+					</template>
+
+					<template
+						slot="validation"
+						slot-scope="cell"
+					>
+						<span class="validation-wrapper">
+							<i
+								v-if="cell.item.validation.length"
+								style="color: red; cursor: pointer"
+								class="fa fa-exclamation fa-lg"
+								v-b-tooltip.hover
+								title="Click here to see the validation problems"
+							></i>
+							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+						</span>
+					</template>
+
+				</b-table>
+			</div>
 
     </div>
     <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
@@ -111,6 +118,7 @@ export default {
 				currentPage: 1,
 				perPage: 200,
 				totalRows: 5,
+				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				sortBy: null,
 				sortDesc: false,

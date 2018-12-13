@@ -14,10 +14,10 @@ from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
 from ..exceptions import (
+    Forbidden,
     MethodNotAllowed,
-    StateDoesNotExist,
     TransitionDoesNotExist,
-    TransitionNotAvailable
+    TransitionNotAvailable,
 )
 
 __all__ = [
@@ -208,12 +208,14 @@ class Submission(models.Model):
         """Just a getter so we can access the class"""
         return self._workflow_class
 
-    @property
-    def workflow(self):
+    def workflow(self, user=None):
         """
         Creates workflow instance and set last *persisted* state on it
         """
-        wf = self.WORKFLOW_MAP[self._workflow_class](model_instance=self)
+        wf = self.WORKFLOW_MAP[self._workflow_class](
+            model_instance=self,
+            user=user
+        )
         state = self.tracker.previous('_current_state') \
             if self.tracker.has_changed('_current_state') \
             else self.current_state
@@ -223,48 +225,6 @@ class Submission(models.Model):
     @property
     def current_state(self):
         return self._current_state
-
-    @current_state.setter
-    def current_state(self, value):
-        """
-        Changing current_state also changes previous_state as a side effect.
-        All state changes trigger an automatic save().
-
-        Changing the state is done by calling the appropriate transition
-        (if available) on the related workflow-enabled object (self.workflow).
-
-        """
-        workflow = self.workflow
-        if value not in workflow.state.workflow.states:
-            raise StateDoesNotExist(
-                _(f'No state named {value} in current workflow')
-            )
-
-        transition_name = None
-        for t in workflow.state.transitions():
-            if value == t.target.name:
-                transition_name = t.name
-                break
-        if transition_name is None:
-            raise TransitionNotAvailable(
-                _(f'No transition to reach {value} from current state')
-            )
-
-        transition = getattr(workflow, transition_name)
-
-        if not transition.is_available():
-            raise TransitionNotAvailable(
-                _('Transition checks not satisfied')
-            )
-
-        # Call the transition; this should work (bar exceptions in pre-post
-        # transition hooks)
-        transition()
-
-        # If everything went OK, persist the result and the transition.
-        self._previous_state = self._current_state
-        self._current_state = workflow.state.name
-        self.save()
 
     @property
     def previous_state(self):
@@ -279,24 +239,7 @@ class Submission(models.Model):
         """
         Check whether data changes are allowed in current state.
         """
-        return self.workflow.data_changes_allowed
-
-    @property
-    def available_transitions(self):
-        """
-        List of transitions that can be performed from current state.
-
-        """
-
-        transitions = []
-        wf = self.workflow
-        for transition in wf .state.transitions():
-            if hasattr(wf, 'check_' + transition.name):
-                if getattr(wf, 'check_' + transition.name)():
-                    transitions.append(transition.name)
-            else:
-                transitions.append(transition.name)
-        return transitions
+        return self.workflow().data_changes_allowed
 
     @property
     def available_states(self):
@@ -305,27 +248,42 @@ class Submission(models.Model):
         No pre-transition checks are taken into account at this point.
 
         """
-        return [t.target.name for t in self.workflow.state.transitions()]
+        return [t.target.name for t in self.workflow().state.transitions()]
 
     @property
     def editable_states(self):
-        return self.workflow.editable_data_states
+        return self.workflow().editable_data_states
 
     @property
     def is_current(self):
         if (
             self.flag_superseded
-            or self.current_state == self.workflow.state.workflow.initial_state.name
+            or self.current_state == self.workflow().state.workflow.initial_state.name
         ):
             return False
         return True
 
-    @property
-    def is_cloneable(self):
-        is_cloneable, message = self.check_cloning()
+    def is_cloneable(self, user):
+        is_cloneable, message = self.check_cloning(user)
         return is_cloneable
 
-    def call_transition(self, trans_name):
+    def available_transitions(self, user):
+        """
+        List of transitions that can be performed from current state.
+
+        """
+
+        transitions = []
+        wf = self.workflow(user)
+        for transition in wf .state.transitions():
+            if hasattr(wf, 'check_' + transition.name):
+                if getattr(wf, 'check_' + transition.name)():
+                    transitions.append(transition.name)
+            else:
+                transitions.append(transition.name)
+        return transitions
+
+    def call_transition(self, trans_name, user):
         """
         Interface for calling a specific transition name on the workflow.
 
@@ -334,7 +292,7 @@ class Submission(models.Model):
 
         """
         # Call this now so we don't recreate the self.workflow object ad nauseam
-        workflow = self.workflow
+        workflow = self.workflow(user)
 
         # This is a `TransitionList` and supports the `in` operator
         if trans_name not in workflow.state.workflow.transitions:
@@ -354,7 +312,10 @@ class Submission(models.Model):
 
         if not transition.is_available():
             raise TransitionNotAvailable(
-                _('Transition checks not satisfied')
+                _(
+                    "Transition checks not satisfied or "
+                    "you may not have the necessary permissions"
+                )
             )
 
         # Call the transition; this should work (bar exceptions in pre-post
@@ -391,32 +352,48 @@ class Submission(models.Model):
                 return True
         return False
 
-    def check_cloning(self):
+    def check_cloning(self, user):
         """
-        Checks whether the current submission can be cloned
+        Checks whether the current submission can be cloned and the current user
+        has the necessary permissions.
         """
+
+        if (
+            user.is_read_only or
+            not (user.is_secretariat or self.party == user.party)
+        ):
+            return (
+                False,
+                Forbidden(
+                    _("You do not have permission to perform this action.")
+                )
+            )
 
         # Only non-superseded "past" submissions can be cloned
         if not self.reporting_period.is_reporting_open:
             if self.flag_superseded:
                 return (
                     False,
-                    _(
-                        "You can't clone a submission from a previous period if"
-                        " it's superseded."
+                    ValidationError(
+                        _(
+                            "You can't clone a submission from a previous "
+                            "period if it's superseded."
+                        )
                     )
                 )
         # All non-data-entry submissions for open rep. periods can be cloned
         if self.data_changes_allowed:
             return (
                 False,
-                _("Submission in Data Entry cannot be cloned.")
+                ValidationError(
+                    _("Submission in Data Entry cannot be cloned.")
+                )
             )
 
-        return (True, "")
+        return (True, None)
 
-    def clone(self):
-        is_cloneable, msg = self.check_cloning()
+    def clone(self, user):
+        is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
             clone = Submission.objects.create(
                 party=self.party,
@@ -427,7 +404,7 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by
             )
         else:
-            raise ValidationError(msg)
+            raise e
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
@@ -529,7 +506,7 @@ class Submission(models.Model):
             # the default article 7 workflow.
             self._workflow_class = 'default'
             self._current_state = \
-                self.workflow.state.workflow.initial_state.name
+                self.workflow().state.workflow.initial_state.name
 
             # Prefill "Submission info" with values from the most recent
             # submission when creating a new submission for the same obligation
