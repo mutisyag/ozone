@@ -49,23 +49,23 @@
           </b-tab>
 
           <b-tab title="Questionaire" active>
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-			</template>
+						<template slot="title">
+							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+						</template>
             <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
           </b-tab>
 
           <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
              <template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+							<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
              </template>
             <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId) + 2" :tabIndex="tabIndex" :tabName="tabId" />
           </b-tab>
 
           <b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
-			</template>
+						<template slot="title">
+							<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+						</template>
             <EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
           </b-tab>
 

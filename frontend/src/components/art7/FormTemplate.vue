@@ -41,210 +41,217 @@
         </thead>
       </table>
 
-      <div class="table-filters mb-2">
-          <b-input-group prepend="Search">
-              <b-form-input v-model="table.filters.search"/>
-          </b-input-group>
-          <b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
-      </div>
+			<div class="table-wrapper">
 
-      <b-table
-        show-empty
-        outlined
-        v-if="getTabInputFields && getTabDecisionQuantityFields"
-        bordered
-        @input="tableLoaded"
-        @row-hovered="rowHovered"
-        hover
-        head-variant="light"
-        stacked="md"
-        class="submission-table"
-        :items="tableItems"
-        :fields="tableFields"
-        :current-page="table.currentPage"
-        :per-page="table.perPage"
-        :sort-by.sync="table.sortBy"
-        :sort-desc.sync="table.sortDesc"
-        :sort-direction="table.sortDirection"
-        :filter="table.filters.search"
-        ref="table"
-      >
-        <template
-          slot="substance"
-          slot-scope="cell"
-          v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
-        >
-          <div class="table-btn-group">
-            <b-btn
-              variant="info"
-              @click="createModalData(cell.item.originalObj, cell.item.index)"
-            >Edit</b-btn>
-            <b-btn
-              variant="outline-danger"
-              @click="remove_field(cell.item.index, cell.item)"
-              class="table-btn"
-            >Delete</b-btn>
-          </div>
-          {{cell.item.substance}}
-        </template>
+				<div class="table-title">
+					
+				</div>
 
-        <template :slot="getCountrySlot" slot-scope="cell">
-          <clonefield
-            :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-            v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
-            v-if="!cell.item[getCountrySlot]"
-            :tabName="tabName"
-            :current_field="cell.item.originalObj"
-          ></clonefield>
-          <div v-else>{{cell.item[getCountrySlot]}}</div>
-        </template>
+				<div v-show="table.tableFilters" class="table-filters mb-2">
+						<b-input-group prepend="Search">
+								<b-form-input v-model="table.filters.search"/>
+						</b-input-group>
+						<b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
+				</div>
 
-        <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-          <fieldGenerator
-            :key="`${cell.item.index}_${inputField}_${tabName}`"
-            :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-            :disabled="allowedChanges"
-            :field="cell.item.originalObj[inputField]"
-            v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
-          ></fieldGenerator>
-        </template>
+				<b-table
+					show-empty
+					outlined
+					v-if="getTabInputFields && getTabDecisionQuantityFields"
+					bordered
+					@input="tableLoaded"
+					@row-hovered="rowHovered"
+					hover
+					head-variant="light"
+					stacked="md"
+					class="submission-table"
+					:items="tableItems"
+					:fields="tableFields"
+					:current-page="table.currentPage"
+					:per-page="table.perPage"
+					:sort-by.sync="table.sortBy"
+					:sort-desc.sync="table.sortDesc"
+					:sort-direction="table.sortDirection"
+					:filter="table.filters.search"
+					ref="table"
+				>
+					<template
+						slot="substance"
+						slot-scope="cell"
+						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
+					>
+						<div class="table-btn-group">
+							<b-btn
+								variant="info"
+								@click="createModalData(cell.item.originalObj, cell.item.index)"
+							>Edit</b-btn>
+							<b-btn
+								variant="outline-danger"
+								@click="remove_field(cell.item.index, cell.item)"
+								class="table-btn"
+							>Delete</b-btn>
+						</div>
+						{{cell.item.substance}}
+					</template>
 
-        <template
-          slot="validation"
-          slot-scope="cell"
-          v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
-        >
-          <span class="validation-wrapper">
-            <i
-              @click="openValidation"
-              v-if="cell.item.validation.length"
-              style="color: red; cursor: pointer"
-              class="fa fa-exclamation fa-lg"
-              v-b-tooltip.hover
-              title="Click here to see the validation problems"
-            ></i>
-            <i
-              v-else
-              style="color: green;"
-              class="fa fa-check-square-o fa-lg"
-              ></i>
-          </span>
-        </template>
+					<template :slot="getCountrySlot" slot-scope="cell">
+						<clonefield
+							:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+							v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
+							v-if="!cell.item[getCountrySlot]"
+							:tabName="tabName"
+							:current_field="cell.item.originalObj"
+						></clonefield>
+						<div v-else>{{cell.item[getCountrySlot]}}</div>
+					</template>
 
-        <template
-          v-for="tooltipField in getTabDecisionQuantityFields"
-          :slot="tooltipField"
-          slot-scope="cell"
-          v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
-        >
-          <span
-            v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
-            :title="cell.item.originalObj[tooltipField].tooltip"
-            :key="tooltipField"
-          >
-            {{cell.item[tooltipField]}}
-            <div
-              style="margin-left: -4rem; margin-top: 2rem"
-              class="special-field"
-              v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
-            >
-              <hr>
-              Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
-              <hr>
-              <span>
-                <fieldGenerator
-                  :key="tooltipField"
-                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-                  :disabled="allowedChanges"
-                  :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
-                ></fieldGenerator>
-              </span>
-            </div>
-          </span>
-        </template>
+					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+						<fieldGenerator
+							:key="`${cell.item.index}_${inputField}_${tabName}`"
+							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+							:disabled="allowedChanges"
+							:field="cell.item.originalObj[inputField]"
+							v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
+						></fieldGenerator>
+					</template>
 
-        <template
-          v-if="tabName ==='has_produced' && row.item.group === 'FII'"
-          slot="row-details"
-          slot-scope="row"
-        >
-            <div class="table-btn-group">
-              <b-btn
-                variant="info"
-                @click="createModalData(row.item.originalObj, row.item.index)"
-              >Edit</b-btn>
-              <b-btn
-                variant="outline-danger"
-                @click="remove_field(row.item.index, row.item)"
-                class="table-btn"
-              >Delete</b-btn>
-            </div>
-            <table>
-              <tr>
-                <th
-                  :colspan="subheader.colspan"
-                  v-for="(subheader, subheader_index) in tab_info.special_headers.section_headers"
-                  :key="subheader_index"
-                >
-                  <small>
-                    <b>
-                      <div style="text-align: center" v-html="subheader.label"></div>
-                    </b>
-                  </small>
-                </th>
-              </tr>
+					<template
+						slot="validation"
+						slot-scope="cell"
+						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
+					>
+						<span class="validation-wrapper">
+							<i
+								@click="openValidation"
+								v-if="cell.item.validation.length"
+								style="color: red; cursor: pointer"
+								class="fa fa-exclamation fa-lg"
+								v-b-tooltip.hover
+								title="Click here to see the validation problems"
+							></i>
+							<i
+								v-else
+								style="color: green;"
+								class="fa fa-check-square-o fa-lg"
+								></i>
+						</span>
+					</template>
 
-              <tr class="subheader">
-                <th
-                  v-for="(subheader, subheader_index) in tab_info.special_headers.section_subheaders"
-                  :key="subheader_index"
-                >
-                  <small>
-                    <b>
-                      <div style="text-align: center" v-html="subheader.label"></div>
-                    </b>
-                  </small>
-                </th>
-              </tr>
+					<template
+						v-for="tooltipField in getTabDecisionQuantityFields"
+						:slot="tooltipField"
+						slot-scope="cell"
+						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
+					>
+						<span
+							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
+							:title="cell.item.originalObj[tooltipField].tooltip"
+							:key="tooltipField"
+						>
+							{{cell.item[tooltipField]}}
+							<div
+								style="margin-left: -4rem; margin-top: 2rem"
+								class="special-field"
+								v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+							>
+								<hr>
+								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+								<hr>
+								<span>
+									<fieldGenerator
+										:key="tooltipField"
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
+										:disabled="allowedChanges"
+										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
+									></fieldGenerator>
+								</span>
+							</div>
+						</span>
+					</template>
 
-              <tbody>
-                <tr>
-                  <td
-                    v-for="specialField in tab_info.special_headers.section_subheaders"
-                    :key="specialField.name"
-                  >
-                    <fieldGenerator
-                      v-if="!['substance','decision_exempted','quantity_exempted','validation'].includes(specialField.name)"
-                      :key="`${row.item.index}_${specialField.name}_${tabName}`"
-                      :fieldInfo="{index:row.item.index,tabName: tabName, field:specialField.name}"
-                      :disabled="allowedChanges"
-                      :field="row.item.originalObj[specialField.name]"
-                    ></fieldGenerator>
-                    <span v-if="specialField.name === 'substances'">{{row.item.substance}}</span>
+					<template
+						v-if="tabName ==='has_produced' && row.item.group === 'FII'"
+						slot="row-details"
+						slot-scope="row"
+					>
+							<div class="table-btn-group">
+								<b-btn
+									variant="info"
+									@click="createModalData(row.item.originalObj, row.item.index)"
+								>Edit</b-btn>
+								<b-btn
+									variant="outline-danger"
+									@click="remove_field(row.item.index, row.item)"
+									class="table-btn"
+								>Delete</b-btn>
+							</div>
+							<table>
+								<tr>
+									<th
+										:colspan="subheader.colspan"
+										v-for="(subheader, subheader_index) in tab_info.special_headers.section_headers"
+										:key="subheader_index"
+									>
+										<small>
+											<b>
+												<div style="text-align: center" v-html="subheader.label"></div>
+											</b>
+										</small>
+									</th>
+								</tr>
 
-                    <span
-                      v-if="['quantity_exempted','decision_exempted'].includes(specialField.name)"
-                      v-b-tooltip.hover="row.item.originalObj[specialField.name].tooltip ? true : false"
-                      :title="row.item.originalObj[specialField.name].tooltip"
-                    >{{row.item[specialField.name]}}</span>
+								<tr class="subheader">
+									<th
+										v-for="(subheader, subheader_index) in tab_info.special_headers.section_subheaders"
+										:key="subheader_index"
+									>
+										<small>
+											<b>
+												<div style="text-align: center" v-html="subheader.label"></div>
+											</b>
+										</small>
+									</th>
+								</tr>
 
-                    <span v-if="specialField.name === 'validation'" class="validation-wrapper">
-                      <i
-                        @click="openValidation"
-                        v-if="row.item.validation.length"
-                        style="color: red; cursor: pointer"
-                        class="fa fa-exclamation fa-lg"
-                        v-b-tooltip.hover
-                        title="Click here to see the validation problems"
-                      ></i>
-                      <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
-                    </span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-        </template>
-      </b-table>
+								<tbody>
+									<tr>
+										<td
+											v-for="specialField in tab_info.special_headers.section_subheaders"
+											:key="specialField.name"
+										>
+											<fieldGenerator
+												v-if="!['substance','decision_exempted','quantity_exempted','validation'].includes(specialField.name)"
+												:key="`${row.item.index}_${specialField.name}_${tabName}`"
+												:fieldInfo="{index:row.item.index,tabName: tabName, field:specialField.name}"
+												:disabled="allowedChanges"
+												:field="row.item.originalObj[specialField.name]"
+											></fieldGenerator>
+											<span v-if="specialField.name === 'substances'">{{row.item.substance}}</span>
+
+											<span
+												v-if="['quantity_exempted','decision_exempted'].includes(specialField.name)"
+												v-b-tooltip.hover="row.item.originalObj[specialField.name].tooltip ? true : false"
+												:title="row.item.originalObj[specialField.name].tooltip"
+											>{{row.item[specialField.name]}}</span>
+
+											<span v-if="specialField.name === 'validation'" class="validation-wrapper">
+												<i
+													@click="openValidation"
+													v-if="row.item.validation.length"
+													style="color: red; cursor: pointer"
+													class="fa fa-exclamation fa-lg"
+													v-b-tooltip.hover
+													title="Click here to see the validation problems"
+												></i>
+												<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+											</span>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+					</template>
+				</b-table>
+			</div>
 
       <div class="table-filters mb-2">
           <b-input-group prepend="Search">
