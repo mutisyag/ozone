@@ -44,14 +44,15 @@
 			<div class="table-wrapper">
 
 				<div class="table-title">
-					
+					<h4> {{tab_info.formNumber}}.1 Substances</h4>
+					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
+				<hr>
 
 				<div v-show="table.tableFilters" class="table-filters mb-2">
 						<b-input-group prepend="Search">
 								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
-						<b-btn style="margin-left: 1rem" variant="primary" @click="table.sortBy = null">Sort default</b-btn>
 				</div>
 
 				<b-table
@@ -253,132 +254,142 @@
 				</b-table>
 			</div>
 
-      <div class="table-filters mb-2">
-          <b-input-group prepend="Search">
-              <b-form-input v-model="tableBlends.filters.search"/>
-          </b-input-group>
-          <b-btn style="margin-left: 1rem" variant="primary" @click="tableBlends.sortBy = null">Sort default</b-btn>
-      </div>
+			<div
+				v-if="tabName != 'has_destroyed'"
+				class="table-wrapper">
 
-      <b-table
-        show-empty
-        v-if="tabName != 'has_destroyed'"
-        outlined
-        bordered
-        hover
-        head-variant="light"
-        class="submission-table"
-        @input="tableLoadedBlends"
-        @row-hovered="rowHovered"
-        stacked="md"
-        :items="tableItemsBlends"
-        :fields="tableFieldsBlends"
-        :current-page="tableBlends.currentPage"
-        :per-page="tableBlends.perPage"
-        :sort-by.sync="tableBlends.sortBy"
-        :sort-desc.sync="tableBlends.sortDesc"
-        :sort-direction="tableBlends.sortDirection"
-        :filter="tableBlends.filters.search"
-        ref="tableBlends"
-      >
-        <template slot="blend" slot-scope="cell">
-          <div class="table-btn-group">
-            <b-btn
-              variant="info"
-              @click="createModalData(cell.item.originalObj, cell.item.index)"
-            >Edit</b-btn>
-            <b-btn
-              variant="outline-danger"
-              @click="remove_field(cell.item.index, cell.item)"
-              class="table-btn"
-            >Delete</b-btn>
-          </div>
-          <span
-            style="cursor:pointer;"
-            v-b-tooltip.hover="'Click to expand/collapse blend'"
-            @click.stop="cell.toggleDetails"
-          >
-            <i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
-            {{cell.item.blend}}
-          </span>
-        </template>
+				<div class="table-title">
+					<h4> {{tab_info.formNumber}}.2 Blends</h4>
+					<i @click="tableBlends.tableFilters = !tableBlends.tableFilters" class="fa fa-filter fa-lg"></i>
+				</div>
+				<hr>
 
-        <template :slot="getCountrySlot" slot-scope="cell">
-          <clonefield
-            :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-            v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
-            v-if="!cell.item[getCountrySlot]"
-            :tabName="tabName"
-            :current_field="cell.item.originalObj"
-          ></clonefield>
-          <div v-else>{{cell.item[getCountrySlot]}}</div>
-        </template>
+				<div class="table-filters mb-2">
+						<b-input-group prepend="Search">
+								<b-form-input v-model="tableBlends.filters.search"/>
+						</b-input-group>
+				</div>
 
-        <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-          <fieldGenerator
-            :key="`${cell.item.index}_${inputField}_${tabName}`"
-            :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-            :disabled="allowedChanges"
-            :field="cell.item.originalObj[inputField]"
-          ></fieldGenerator>
-        </template>
+				<b-table
+					show-empty
+					v-if="tabName != 'has_destroyed'"
+					outlined
+					bordered
+					hover
+					head-variant="light"
+					class="submission-table"
+					@input="tableLoadedBlends"
+					@row-hovered="rowHovered"
+					stacked="md"
+					:items="tableItemsBlends"
+					:fields="tableFieldsBlends"
+					:current-page="tableBlends.currentPage"
+					:per-page="tableBlends.perPage"
+					:sort-by.sync="tableBlends.sortBy"
+					:sort-desc.sync="tableBlends.sortDesc"
+					:sort-direction="tableBlends.sortDirection"
+					:filter="tableBlends.filters.search"
+					ref="tableBlends"
+				>
+					<template slot="blend" slot-scope="cell">
+						<div class="table-btn-group">
+							<b-btn
+								variant="info"
+								@click="createModalData(cell.item.originalObj, cell.item.index)"
+							>Edit</b-btn>
+							<b-btn
+								variant="outline-danger"
+								@click="remove_field(cell.item.index, cell.item)"
+								class="table-btn"
+							>Delete</b-btn>
+						</div>
+						<span
+							style="cursor:pointer;"
+							v-b-tooltip.hover="'Click to expand/collapse blend'"
+							@click.stop="cell.toggleDetails"
+						>
+							<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
+							{{cell.item.blend}}
+						</span>
+					</template>
 
-        <template slot="validation" slot-scope="cell">
-          <span class="validation-wrapper">
-            <i
-              @click="openValidation"
-              v-if="cell.item.validation.length"
-              style="color: red; cursor: pointer"
-              class="fa fa-exclamation fa-lg"
-              v-b-tooltip.hover
-              title="Click here to see the validation problems"
-            ></i>
-            <i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
-          </span>
-        </template>
+					<template :slot="getCountrySlot" slot-scope="cell">
+						<clonefield
+							:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+							v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
+							v-if="!cell.item[getCountrySlot]"
+							:tabName="tabName"
+							:current_field="cell.item.originalObj"
+						></clonefield>
+						<div v-else>{{cell.item[getCountrySlot]}}</div>
+					</template>
 
-        <template
-          v-for="tooltipField in getTabDecisionQuantityFields"
-          :slot="tooltipField"
-          slot-scope="cell"
-        >
-          <span
-            v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
-            :title="cell.item.originalObj[tooltipField].tooltip"
-            :key="tooltipField"
-          >{{cell.item[tooltipField]}}</span>
-        </template>
+					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+						<fieldGenerator
+							:key="`${cell.item.index}_${inputField}_${tabName}`"
+							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+							:disabled="allowedChanges"
+							:field="cell.item.originalObj[inputField]"
+						></fieldGenerator>
+					</template>
 
-        <template slot="row-details" slot-scope="row">
-          <thead>
-            <tr>
-              <th
-                class="small"
-                v-for="(header, header_index) in tab_info.blend_substance_headers"
-                :colspan="header.colspan"
-                :key="header_index"
-              >{{labels[header]}}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              class="small"
-              v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
-              :key="substance_index"
-            >
-              <td>{{substance.component_name}}</td>
-              <td>
-                <b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
-              </td>
-              <td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
-                <!-- <span v-if="row.item[order]"> -->
-                {{splitBlend(row.item[order], substance.percentage)}}
-                <!-- </span> -->
-              </td>
-            </tr>
-          </tbody>
-        </template>
-      </b-table>
+					<template slot="validation" slot-scope="cell">
+						<span class="validation-wrapper">
+							<i
+								@click="openValidation"
+								v-if="cell.item.validation.length"
+								style="color: red; cursor: pointer"
+								class="fa fa-exclamation fa-lg"
+								v-b-tooltip.hover
+								title="Click here to see the validation problems"
+							></i>
+							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+						</span>
+					</template>
+
+					<template
+						v-for="tooltipField in getTabDecisionQuantityFields"
+						:slot="tooltipField"
+						slot-scope="cell"
+					>
+						<span
+							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
+							:title="cell.item.originalObj[tooltipField].tooltip"
+							:key="tooltipField"
+						>{{cell.item[tooltipField]}}</span>
+					</template>
+
+					<template slot="row-details" slot-scope="row">
+						<thead>
+							<tr>
+								<th
+									class="small"
+									v-for="(header, header_index) in tab_info.blend_substance_headers"
+									:colspan="header.colspan"
+									:key="header_index"
+								>{{labels[header]}}</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								class="small"
+								v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
+								:key="substance_index"
+							>
+								<td>{{substance.component_name}}</td>
+								<td>
+									<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
+								</td>
+								<td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
+									<!-- <span v-if="row.item[order]"> -->
+									{{splitBlend(row.item[order], substance.percentage)}}
+									<!-- </span> -->
+								</td>
+							</tr>
+						</tbody>
+					</template>
+				</b-table>
+			</div>
     </div>
     <div
       v-for="(comment, comment_index) in tab_info.comments"
@@ -538,6 +549,7 @@ export default {
 			table: {
 				currentPage: 1,
 				perPage: 200,
+				tableFilters: false,
 				totalRows: 5,
 				pageOptions: [5, 25, 100],
 				sortBy: null,
@@ -558,6 +570,7 @@ export default {
 				currentPage: 1,
 				perPage: 10,
 				totalRows: 200,
+				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				sortBy: null,
 				sortDesc: false,
