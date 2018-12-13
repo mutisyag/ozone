@@ -520,7 +520,9 @@ const store = new Vuex.Store({
 				party.montreal_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MA')
 				party.beijing_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'BA')
 				party.kigali_amendment = party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'KA')
-				// is_eu_member, is_high_ambient_temperature and is_a5
+				party.is_eu_member = party.flags.is_eu_member
+				party.is_article5 = party.flags.is_article5
+				party.is_high_ambient_temperature = party.flags.is_high_ambient_temperature
 				return party
 			})
 			state.initialData.partyRatifications = data
@@ -613,7 +615,7 @@ const store = new Vuex.Store({
 
 		// form state
 		updateNewTabs(state, tab) {
-			if (tab != 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
+			if (tab !== 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
 		},
 
 		tabHasBeenSaved(state, tab) {
