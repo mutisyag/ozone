@@ -27,7 +27,7 @@ import Toasted from 'toastedjs'
 
 const options = {
 	position: 'bottom-left',
-	duration: 4000,
+	duration: 10000,
 	theme: 'bulma'
 }
 const toasted = new Toasted(options)
@@ -220,12 +220,6 @@ const store = new Vuex.Store({
 			})
 		},
 
-		prefillQuestionaire(context) {
-			Object.keys(context.state.current_submission.article7questionnaire).forEach((element) => {
-				context.commit('updateQuestionaireField', { value: context.state.current_submission.article7questionnaire[element], field: element })
-			})
-		},
-
 		doSubmissionTransition(context, data) {
 			callTransition(data.submission, data.transition).then(() => {
 				if (data.source === 'dashboard') {
@@ -280,9 +274,6 @@ const store = new Vuex.Store({
 				getSubmission(data).then((response) => {
 					context.commit('updateSubmissionData', response.data)
 					context.commit('updateAvailableTransitions', response.data.available_transitions)
-					if (context.state.current_submission.article7questionnaire) {
-						context.dispatch('prefillQuestionaire')
-					}
 					context.dispatch('getCurrentSubmissionHistory', data)
 					resolve()
 				})
@@ -410,9 +401,6 @@ const store = new Vuex.Store({
 				prefillData,
 				ordering_id
 			})
-			if (context.state.form.tabs[currentSectionName].hasOwnProperty('endpoint_additional_url') && row.id.selected) {
-				context.commit('setAdditionalUrl', { tab: currentSectionName, id: row.id.selected })
-			}
 			context.commit('addRow', { sectionName: currentSectionName, row })
 		},
 
@@ -591,13 +579,13 @@ const store = new Vuex.Store({
 			currentField && (currentField.selected = data.value)
 		},
 
+		prefillTab(state, { tabName, data }) {
+			console.log('prefilling tab', tabName, data)
+			Object.keys(state.form.tabs[tabName].form_fields).forEach(field => { state.form.tabs[tabName].form_fields[field].selected = data[field] })
+		},
 		// addRow
 		addRow(state, { sectionName, row }) {
 			state.form.tabs[sectionName].form_fields.push(row)
-		},
-
-		setAdditionalUrl(state, { tab, id }) {
-			state.form.tabs[tab].endpoint_additional_url = `${id}/`
 		},
 
 		addCreateBlendToBlendList(state, data) {
@@ -619,7 +607,7 @@ const store = new Vuex.Store({
 
 		// form state
 		updateNewTabs(state, tab) {
-			state.newTabs.push(tab)
+			if (tab != 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
 		},
 
 		tabHasBeenSaved(state, tab) {

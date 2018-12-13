@@ -310,6 +310,14 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
 
+    def put(self, request, *args, **kwargs):
+        info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
+        serializer = SubmissionInfoSerializer(info, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_queryset(self):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
@@ -325,6 +333,18 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         return Article7Questionnaire.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+    def put(self, request, *args, **kwargs):
+        article7questionnaire = Submission.objects.get(
+            pk=self.kwargs['submission_pk']
+        ).article7questionnaire
+        serializer = Article7QuestionnaireSerializer(
+            article7questionnaire, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
