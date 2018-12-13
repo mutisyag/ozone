@@ -45,7 +45,7 @@
                 Submission Info
               </div>
              </template>
-            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" tabId="0" />
+			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
            <b-tab title="Attachments">

@@ -3,7 +3,9 @@ import { sub_info } from '@/components/common/dataDefinitions/sub_info'
 const form = {
 	formDetails: {
 		tabsDisplay: ['sub_info', 'attachments'],
-		dataNeeded: []
+		dataNeeded: [
+			'initialData.countryOptions'
+		]
 	},
 	tabs: {
 		sub_info: {
@@ -37,6 +39,7 @@ const form = {
 			form_fields: sub_info,
 			default_properties: {
 				reporting_officer: null,
+				id: null,
 				designation: null,
 				organization: null,
 				postal_code: null,
