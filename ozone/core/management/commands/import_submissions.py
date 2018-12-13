@@ -140,6 +140,9 @@ class Command(BaseCommand):
         )
         submission._current_state = "finalized"
         submission.save()
+        for obj in submission.history.all():
+            obj.history_user = self.admin
+            obj.save()
         return True
 
     def delete_instance(self, party, period):
