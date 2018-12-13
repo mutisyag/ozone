@@ -1,5 +1,4 @@
 import datetime
-import enum
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -107,6 +106,10 @@ class Party(models.Model):
     )
 
     remark = models.CharField(max_length=512, blank=True)
+
+    @classmethod
+    def get_main_parties(cls):
+        return cls.objects.filter(id=models.F('parent_party_id'))
 
     def __str__(self):
         return self.name
