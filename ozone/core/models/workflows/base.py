@@ -1,7 +1,5 @@
 import xworkflows
 
-from django.db import models
-
 
 class BaseStateDescription(xworkflows.Workflow):
     """
