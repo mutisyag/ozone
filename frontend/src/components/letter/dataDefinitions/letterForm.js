@@ -1,11 +1,14 @@
+import { sub_info } from '@/components/common/dataDefinitions/sub_info'
+
 const form = {
 	formDetails: {
-		dataNeeded: [
-		]
+		tabsDisplay: ['sub_info', 'attachments'],
+		dataNeeded: []
 	},
 	tabs: {
 		sub_info: {
 			name: 'sub_info',
+			hasAssideMenu: false,
 			endpoint_url: 'sub_info_url',
 			endpoint_additional_url: '',
 			fields_order: ['reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
@@ -31,9 +34,10 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			form_fields: [],
+			form_fields: sub_info,
 			default_properties: {
 				reporting_officer: null,
+				id: null,
 				designation: null,
 				organization: null,
 				postal_code: null,
@@ -46,9 +50,13 @@ const form = {
 		},
 		attachments: {
 			name: 'attachments',
+			hasAssideMenu: false,
 			title: 'Attachments',
 			titleHtml: 'Attachments',
-			detailsHtml: ''
+			detailsHtml: '',
+			form_fields: {
+				attachments: []
+			}
 		}
 	}
 }

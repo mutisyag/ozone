@@ -863,7 +863,10 @@ const form = {
 			hasAssideMenu: false,
 			title: 'Attachments',
 			titleHtml: 'Attachments',
-			detailsHtml: ''
+			detailsHtml: '',
+			form_fields: {
+				attachments: []
+			}
 		}
 	}
 }

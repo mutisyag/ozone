@@ -7,7 +7,7 @@
 			</b-input-group-append>
 		</b-input-group>
 		<b-list-group>
-				<b-list-group-item style="font-size: 1.5rem" v-for="attachment in $store.state.form.tabs.attachments" :key="attachment.id">
+				<b-list-group-item style="font-size: 1.5rem" v-for="attachment in $store.state.form.tabs[tab.name].form_fields.attachments" :key="attachment.id">
 					<b-button variant="danger" class="pull-right" @click="deleteAttachment($event, attachment)">
 						<i class="fa fa-times" aria-hidden="true"></i> Delete
 					</b-button>
@@ -25,42 +25,56 @@
 import { mapActions, mapMutations } from 'vuex'
 
 export default {
+	props: {
+		tab: Object
+	},
 	data() {
 		return {
 			selectedFiles: [],
 			isSaveDisabled: true
 		}
 	},
-
 	methods: {
-		...mapActions(['uploadFormAttachments', 'saveFormAttachments']),
-		...mapMutations(['updateFormAttachment', 'deleteFormAttachment']),
+		...mapActions(['uploadFormAttachments']),
+		...mapMutations(['addTabAttachment', 'updateTabAttachment', 'deleteTabAttachment']),
 		deleteAttachment(e, attachment) {
-			this.deleteFormAttachment({
-				...attachment,
-				description: e
+			this.deleteTabAttachment({
+				tabName: this.tab.name,
+				attachment
 			})
 			this.isSaveDisabled = false
 		},
 		onDescriptionChange(e, attachment) {
-			this.updateFormAttachment({
-				...attachment,
-				description: e
+			this.updateTabAttachment({
+				tabName: this.tab.name,
+				attachment: {
+					...attachment,
+					description: e
+				}
 			})
 			this.isSaveDisabled = false
 		},
 		async onSelectedFilesChanged() {
 			if (this.selectedFiles.length) {
-				await this.uploadFormAttachments(this.selectedFiles.filter(file => file.type
-																																						&& !file.name.endsWith('.exe')
-																																						&& !file.name.endsWith('.js')
-																																						&& !file.name.endsWith('.php')))
+				const uploadFilesResponse = await this.uploadFormAttachments(
+					this.selectedFiles.filter(file => file.type
+														&& !file.name.endsWith('.exe')
+														&& !file.name.endsWith('.js')
+														&& !file.name.endsWith('.php'))
+				)
+				uploadFilesResponse.forEach(attachment => {
+					this.addTabAttachment({
+						tabName: this.tab.name,
+						attachment
+					})
+				})
+
 				this.$refs.fileinput.reset()
 				this.isSaveDisabled = false
 			}
 		},
 		saveAttachments() {
-			this.saveFormAttachments()
+			console.log(`saveAttachments ${this.tab.name}`, this.$store.state.form.tabs[this.tab.name].form_fields.attachments)
 		}
 	}
 }

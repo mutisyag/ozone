@@ -16,7 +16,6 @@ export default {
 	props: {
 		tab: Object
 	}
-
 }
 </script>
 <style>

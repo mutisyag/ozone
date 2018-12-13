@@ -69,9 +69,12 @@
             <EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
           </b-tab>
 
-           <b-tab title="Attachments">
-            <attachments tabId="8"></attachments>
-          </b-tab>
+           <b-tab>
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+				</template>
+				<Attachments :tab="$store.state.form.tabs.attachments"/>
+			</b-tab>
         </b-tabs>
         <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
 
@@ -144,7 +147,7 @@ export default {
 		FormTemplate,
 		EmissionsTemplate,
 		SubmissionInfo,
-		attachments: Attachments,
+		Attachments,
 		Footer,
 		Save,
 		SubmissionHistory,
@@ -182,7 +185,7 @@ export default {
 		},
 		tabsIdsWithAssideMenu() {
 			const { form } = this.$store.state
-			return form.formDetails.tabsDisplay.filter(tabId => form.tabs[tabId].hasAssideMenu)
+			return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
 		}
 	},
 	methods: {
