@@ -516,6 +516,8 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=False, read_only=True, source='info'
     )
 
+    available_transitions = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
@@ -539,6 +541,10 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = (
             'created_by', 'last_edited_by',
         )
+
+    def get_available_transitions(self, obj):
+        user = self.context['request'].user
+        return obj.available_transitions(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
@@ -565,6 +571,7 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 class ListSubmissionSerializer(CreateSubmissionSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d')
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
+    available_transitions = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -578,6 +585,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
+
+    def get_available_transitions(self, obj):
+        user = self.context['request'].user
+        return obj.available_transitions(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):

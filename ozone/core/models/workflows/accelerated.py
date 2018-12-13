@@ -34,6 +34,18 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
 
     state = AcceleratedArticle7WorkflowStateDescription()
 
+    @xworkflows.transition_check('finalize')
+    def check_finalize(self):
+        return not self.user.is_read_only and self.user.is_secretariat
+
+    @xworkflows.transition_check('recall')
+    def check_recall(self):
+        return not self.user.is_read_only and self.user.is_secretariat
+
+    @xworkflows.transition_check('unrecall')
+    def check_unrecall(self):
+        return not self.user.is_read_only and self.user.is_secretariat
+
     @xworkflows.transition('finalize')
     def finalize(self):
         self.model_instance.make_current()

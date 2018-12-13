@@ -137,9 +137,8 @@ class Command(BaseCommand):
             submission=submission,
             **values["art7"],
         )
-        submission.call_transition("submit")
-        submission.call_transition("process")
-        submission.call_transition("finalize")
+        submission._current_state = "finalized"
+        submission.save()
         return True
 
     def delete_instance(self, party, period):

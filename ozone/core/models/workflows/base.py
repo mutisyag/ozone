@@ -22,10 +22,11 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
 
     state = BaseStateDescription()
 
-    def __init__(self, model_instance):
+    def __init__(self, model_instance, user):
         # We need this to add a back-reference to the
         # `Submission` model instance using this object.
         self.model_instance = model_instance
+        self.user = user
         super().__init__()
 
     @property
@@ -35,3 +36,10 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
     @property
     def data_changes_allowed(self):
         return self.state in self.editable_data_states
+
+    def is_secretariat_or_same_party_owner(self, submission):
+        owner = submission.created_by
+        return (
+            (self.user.is_secretariat and owner.is_secretariat)
+            or (self.user.party == owner.party)
+        )
