@@ -4,6 +4,9 @@ export default {
 	title: 'Attachments',
 	titleHtml: 'Attachments',
 	detailsHtml: '',
+	default_properties: {
+		attachments: []
+	},
 	form_fields: {
 		attachments: []
 	}
