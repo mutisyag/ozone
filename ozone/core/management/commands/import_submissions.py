@@ -23,7 +23,7 @@ class Command(BaseCommand):
         super().__init__(stdout=None, stderr=None, no_color=False)
 
         # Create as the first admin we find.
-        self.admin = User.objects.filter(is_superuser=True)[0]
+        self.admin_id = User.objects.filter(is_superuser=True)[0].id
 
         # Load all values in memory for faster lookups.
         self.current_submission = set(Submission.objects.filter(obligation_id=1).values_list(
@@ -66,8 +66,8 @@ class Command(BaseCommand):
                 "submitted_via": self.method,
                 "remarks_party": row["Remark"] or "",
                 "remarks_secretariat": row["SubmissionType"] or "",
-                "created_by_id": self.admin.id,
-                "last_edited_by_id": self.admin.id,
+                "created_by_id": self.admin_id,
+                "last_edited_by_id": self.admin_id,
                 "obligation_id": 1,
                 "party_id": party.id,
                 "reporting_period_id": period.id,
@@ -131,9 +131,8 @@ class Command(BaseCommand):
             submission=submission,
             **values["art7"],
         )
-        submission.call_transition("submit", self.admin)
-        submission.call_transition("process", self.admin)
-        submission.call_transition("finalize", self.admin)
+        submission._current_state = "finalized"
+        submission.save()
         return True
 
     def handle(self, *args, **options):
