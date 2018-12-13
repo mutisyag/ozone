@@ -19,13 +19,13 @@
     </small>
     <form class="form-sections">
       <b-card>
-        <div class="form-fields" v-for="(field, field_index) in info.form_fields" :key="field_index">
+        <div class="form-fields">
           <b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
             <b-col lg='3'>
               <label>{{labels[order]}}</label>
             </b-col>
             <b-col>
-              <fieldGenerator :fieldInfo="{index:info.form_fields.indexOf(field), tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="field[order]"></fieldGenerator>
+              <fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
             </b-col>
           </b-row>
 

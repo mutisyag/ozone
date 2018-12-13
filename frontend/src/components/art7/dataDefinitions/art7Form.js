@@ -1,4 +1,5 @@
-import { intro_fields } from './questionnaire_fields.js'
+import { intro_fields } from './questionnaire_fields'
+import { sub_info } from '@/components/common/dataDefinitions/sub_info'
 
 const form = {
 	formDetails: {
@@ -42,9 +43,10 @@ const form = {
 				disabled: true
 			},
 			description: '',
-			form_fields: [],
+			form_fields: sub_info,
 			default_properties: {
 				reporting_officer: null,
+				id: null,
 				designation: null,
 				organization: null,
 				postal_code: null,
@@ -68,8 +70,6 @@ const form = {
 			description: '',
 			form_fields: intro_fields,
 			default_properties: {
-				remarks_party: '',
-				remarks_os: '',
 				has_imports: false,
 				has_exports: false,
 				has_produced: false,

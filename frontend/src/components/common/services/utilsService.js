@@ -11,6 +11,24 @@ const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	return undefined
 }
 
+const isObject = (value) => value && typeof value === 'object' && value.constructor === Object
+
+const	pushUnique = (array, item) => {
+	if (array.indexOf(item) === -1) {
+		array.push(item)
+	}
+}
+
+const intersect = (a, b) => {
+	const setA = new Set(a)
+	const setB = new Set(b)
+	const intersection = new Set([...setA].filter(x => setB.has(x)))
+	return Array.from(intersection)
+}
+
 export {
-	getLevel2PropertyValue
+	getLevel2PropertyValue,
+	isObject,
+	pushUnique,
+	intersect
 }

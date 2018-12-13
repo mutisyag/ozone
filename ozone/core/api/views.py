@@ -2,7 +2,6 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
-from django.db.models import F
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -150,9 +149,9 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        queryset = Party.objects.filter(
-            id=F('parent_party_id')
-        ).prefetch_related('subregion').prefetch_related('ratifications')
+        queryset = Party.get_main_parties().prefetch_related(
+            'subregion', 'ratifications', 'ratifications__treaty'
+        )
         if self.kwargs.get('party_id'):
             queryset = queryset.filter(id=self.kwargs['party_id'])
         return queryset
@@ -311,10 +310,19 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
 
+    def put(self, request, *args, **kwargs):
+        info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
+        serializer = SubmissionInfoSerializer(info, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get_queryset(self):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
     serializer_class = Article7QuestionnaireSerializer
@@ -325,6 +333,18 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         return Article7Questionnaire.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+    def put(self, request, *args, **kwargs):
+        article7questionnaire = Submission.objects.get(
+            pk=self.kwargs['submission_pk']
+        ).article7questionnaire
+        serializer = Article7QuestionnaireSerializer(
+            article7questionnaire, data=request.data
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])

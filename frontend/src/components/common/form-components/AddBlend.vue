@@ -237,6 +237,8 @@ export default {
 		},
 
 		prepareBlends() {
+			this.selected_blends.filters = []
+			this.selected_blends.options = []
 			this.blends.forEach(blend => {
 				this.selected_blends.options.push({ text: blend.blend_id, value: blend.id, type: blend.type, sort_order: blend.sort_order })
 				this.pushUnique(this.selected_blends.filters, blend.type)
@@ -297,6 +299,8 @@ export default {
 			this.new_blend = null
 			this.selected_blends.filter = []
 			this.selected_blends.selected = []
+			this.selected_blends.options = []
+			this.prepareBlends()
 		}
 
 	},
