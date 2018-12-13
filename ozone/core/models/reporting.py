@@ -82,6 +82,7 @@ class Submission(models.Model):
         """
         WEBFORM = 'Web form'
         EMAIL = 'Email'
+        LEGACY = "Legacy"
 
     # This keeps a mapping between the DB-persisted workflow and
     # its actual implementation class.
