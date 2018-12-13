@@ -517,6 +517,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     )
 
     available_transitions = serializers.SerializerMethodField()
+    is_cloneable = serializers.SerializerMethodField()
 
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
@@ -546,6 +547,10 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         user = self.context['request'].user
         return obj.available_transitions(user)
 
+    def get_is_cloneable(self, obj):
+        user = self.context['request'].user
+        return obj.is_cloneable(user)
+
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -572,6 +577,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d')
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     available_transitions = serializers.SerializerMethodField()
+    is_cloneable = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -589,6 +595,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_available_transitions(self, obj):
         user = self.context['request'].user
         return obj.available_transitions(user)
+
+    def get_is_cloneable(self, obj):
+        user = self.context['request'].user
+        return obj.is_cloneable(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):

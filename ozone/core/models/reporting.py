@@ -14,10 +14,10 @@ from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
 from ..exceptions import (
+    Forbidden,
     MethodNotAllowed,
-    StateDoesNotExist,
     TransitionDoesNotExist,
-    TransitionNotAvailable
+    TransitionNotAvailable,
 )
 
 __all__ = [
@@ -263,9 +263,8 @@ class Submission(models.Model):
             return False
         return True
 
-    @property
-    def is_cloneable(self):
-        is_cloneable, message = self.check_cloning()
+    def is_cloneable(self, user):
+        is_cloneable, message = self.check_cloning(user)
         return is_cloneable
 
     def available_transitions(self, user):
@@ -353,32 +352,48 @@ class Submission(models.Model):
                 return True
         return False
 
-    def check_cloning(self):
+    def check_cloning(self, user):
         """
-        Checks whether the current submission can be cloned
+        Checks whether the current submission can be cloned and the current user
+        has the necessary permissions.
         """
+
+        if (
+            user.is_read_only or
+            not (user.is_secretariat or self.party == user.party)
+        ):
+            return (
+                False,
+                Forbidden(
+                    _("You do not have permission to perform this action.")
+                )
+            )
 
         # Only non-superseded "past" submissions can be cloned
         if not self.reporting_period.is_reporting_open:
             if self.flag_superseded:
                 return (
                     False,
-                    _(
-                        "You can't clone a submission from a previous period if"
-                        " it's superseded."
+                    ValidationError(
+                        _(
+                            "You can't clone a submission from a previous "
+                            "period if it's superseded."
+                        )
                     )
                 )
         # All non-data-entry submissions for open rep. periods can be cloned
         if self.data_changes_allowed:
             return (
                 False,
-                _("Submission in Data Entry cannot be cloned.")
+                ValidationError(
+                    _("Submission in Data Entry cannot be cloned.")
+                )
             )
 
-        return (True, "")
+        return (True, None)
 
-    def clone(self):
-        is_cloneable, msg = self.check_cloning()
+    def clone(self, user):
+        is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
             clone = Submission.objects.create(
                 party=self.party,
@@ -389,7 +404,7 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by
             )
         else:
-            raise ValidationError(msg)
+            raise e
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
