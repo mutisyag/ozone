@@ -30,7 +30,7 @@ class Command(BaseCommand):
         super().__init__(stdout=None, stderr=None, no_color=False)
 
         # Create as the first admin we find.
-        self.admin_id = User.objects.filter(is_superuser=True)[0].id
+        self.admin = User.objects.filter(is_superuser=True)[0]
 
         # Load all values in memory for faster lookups.
         self.current_submission = set(Submission.objects.filter(obligation_id=1).values_list(
@@ -58,7 +58,8 @@ class Command(BaseCommand):
         try:
             return self._process_entry(*args, **kwargs)
         except Exception as e:
-            logger.error("Error %s while saving: %s", e, args[:2])
+            logger.error("Error %s while saving: %s", e, args[:2],
+                         exc_info=True)
             return False
 
     def data_from_overall(self, row, party, period):
@@ -78,8 +79,8 @@ class Command(BaseCommand):
                 "submitted_via": self.method,
                 "remarks_party": row["Remark"] or "",
                 "remarks_secretariat": row["SubmissionType"] or "",
-                "created_by_id": self.admin_id,
-                "last_edited_by_id": self.admin_id,
+                "created_by_id": self.admin.id,
+                "last_edited_by_id": self.admin.id,
                 "obligation_id": 1,
                 "party_id": party.id,
                 "reporting_period_id": period.id,
