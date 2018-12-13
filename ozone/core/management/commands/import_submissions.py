@@ -1,8 +1,8 @@
 """Import Submission from Excel file.
 """
-import os
 import pickle
 import logging
+import collections
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -62,13 +62,16 @@ class Command(BaseCommand):
                          exc_info=True)
             return False
 
-    def data_from_overall(self, row, party, period):
+    def get_data(self, row, party, period):
+        # There should only be one entry in the overall sheet.
+        overall = row["Overall"][0]
+
         return {
             "submission": {
                 "schema_version": "legacy",
                 "filled_by_secretariat": False,
-                "created_at": row["DateCreate"],
-                "updated_at": row["DateUpdate"],
+                "created_at": overall["DateCreate"],
+                "updated_at": overall["DateUpdate"],
                 "version": 1,
                 "_workflow_class": "default",
                 "_current_state": "finalized",
@@ -77,8 +80,8 @@ class Command(BaseCommand):
                 "flag_valid": True,
                 "flag_superseded": False,
                 "submitted_via": self.method,
-                "remarks_party": row["Remark"] or "",
-                "remarks_secretariat": row["SubmissionType"] or "",
+                "remarks_party": overall["Remark"] or "",
+                "remarks_secretariat": overall["SubmissionType"] or "",
                 "created_by_id": self.admin.id,
                 "last_edited_by_id": self.admin.id,
                 "obligation_id": 1,
@@ -96,16 +99,16 @@ class Command(BaseCommand):
                 "phone": "",
                 "fax": "",
                 "email": "",
-                "date": row["DateReported"],
+                "date": overall["DateReported"],
             },
             "art7": {
                 "remarks_party": "",
                 "remarks_os": "",
-                "has_imports": row["Imported"],
-                "has_exports": row["Exported"],
-                "has_produced": row["Produced"],
-                "has_destroyed": row["Destroyed"],
-                "has_nonparty": row["NonPartyTrade"],
+                "has_imports": overall["Imported"],
+                "has_exports": overall["Exported"],
+                "has_produced": overall["Produced"],
+                "has_destroyed": overall["Destroyed"],
+                "has_nonparty": overall["NonPartyTrade"],
                 "has_emissions": False,
                 # "submission_id": "",
             },
@@ -166,11 +169,34 @@ class Command(BaseCommand):
             except:
                 pass
 
+        # Store result in a format like
+        # {
+        #     ("RO", 2019): {
+        #         "Overall": [row],
+        #         "Import": [import1, import2,...]
+        #         ...
+        #     }
+        #     ...
+        # }
+        def get_new():
+            return collections.defaultdict(list)
+
+        results = collections.defaultdict(get_new)
+
         wb = load_workbook(filename=filename)
-        result = {sheet.title: list(sheet.values) for sheet in wb}
+        for sheet in wb:
+            values = list(sheet.values)
+            headers = values[0]
+
+            for row in values[1:]:
+                row = dict(zip(headers, row))
+                pk = row["CntryID"], row["PeriodID"]
+                results[pk][sheet.title].append(row)
+
+        results = list(results.items())
         with open(CACHE_LOC, "wb") as cachef:
-            pickle.dump(result, cachef)
-        return result
+            pickle.dump(results, cachef)
+        return results
 
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
@@ -184,30 +210,25 @@ class Command(BaseCommand):
 
         all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
 
-        values = all_values["Overall"]
-        headers = values[0]
-
         success_count = 0
-        values = values[1:]
 
         if options['limit']:
-            values = values[:options['limit']]
+            all_values = all_values[:options['limit']]
 
-        for row in values:
-            row = dict(zip(headers, row))
-            logger.debug("Importing row %s", row)
+        for pk, values_dict in all_values:
+            logger.debug("Importing row %s", values_dict)
 
             try:
-                party = self.parties[row["CntryID"]]
-                period = self.periods[row["PeriodID"]]
+                party = self.parties[pk[0]]
+                period = self.periods[pk[1]]
             except KeyError as e:
-                logger.critical("Unable to find matching %s: %s", e, row)
+                logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
 
-            row_values = self.data_from_overall(row, party, period)
+            row_values = self.get_data(values_dict, party, period)
             success_count += self.process_entry(party,
                                                 period,
                                                 row_values,
                                                 options["recreate"],
                                                 options["purge"])
-        logger.info("Success on %s out of %s", success_count, len(values))
+        logger.info("Success on %s out of %s", success_count, len(all_values))
