@@ -300,6 +300,7 @@ export default {
 			this.selected_blends.filter = []
 			this.selected_blends.selected = []
 			this.selected_blends.options = []
+			this.prepareBlends()
 		}
 
 	},
