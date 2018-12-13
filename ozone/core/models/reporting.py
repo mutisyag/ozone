@@ -226,48 +226,6 @@ class Submission(models.Model):
     def current_state(self):
         return self._current_state
 
-    @current_state.setter
-    def current_state(self, value):
-        """
-        Changing current_state also changes previous_state as a side effect.
-        All state changes trigger an automatic save().
-
-        Changing the state is done by calling the appropriate transition
-        (if available) on the related workflow-enabled object (self.workflow).
-
-        """
-        workflow = self.workflow
-        if value not in workflow.state.workflow.states:
-            raise StateDoesNotExist(
-                _(f'No state named {value} in current workflow')
-            )
-
-        transition_name = None
-        for t in workflow.state.transitions():
-            if value == t.target.name:
-                transition_name = t.name
-                break
-        if transition_name is None:
-            raise TransitionNotAvailable(
-                _(f'No transition to reach {value} from current state')
-            )
-
-        transition = getattr(workflow, transition_name)
-
-        if not transition.is_available():
-            raise TransitionNotAvailable(
-                _('Transition checks not satisfied')
-            )
-
-        # Call the transition; this should work (bar exceptions in pre-post
-        # transition hooks)
-        transition()
-
-        # If everything went OK, persist the result and the transition.
-        self._previous_state = self._current_state
-        self._current_state = workflow.state.name
-        self.save()
-
     @property
     def previous_state(self):
         """
