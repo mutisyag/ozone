@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Dashboard from '@/views/Dashboard'
 
 const DataManagerArt7 = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
+const DataManagerLetter = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
@@ -62,7 +63,7 @@ const routes = [
 				path: 'letter',
 				name: 'letter',
 				meta: { requiresAuth: true },
-				component: DataManager
+				component: DataManagerLetter
 			}
 		]
 	},

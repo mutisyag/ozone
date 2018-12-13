@@ -29,8 +29,8 @@
 				<template slot="is_eu_member" slot-scope="data">
 					<CheckedImage :item="data.item.is_eu_member"/>
 				</template>
-				<template slot="is_a5" slot-scope="data">
-					<CheckedImage :item="data.item.is_a5"/>
+				<template slot="is_article5" slot-scope="data">
+					<CheckedImage :item="data.item.is_article5"/>
 				</template>
 				<template slot="is_high_ambient_temperature" slot-scope="data">
 					<CheckedImage :item="data.item.is_high_ambient_temperature"/>
@@ -71,7 +71,7 @@ export default {
 					label: 'EU Member',
 					...sortableAndTextCenter
 				}, {
-					key: 'is_a5',
+					key: 'is_article5',
 					label: 'Article 5 party',
 					...sortableAndTextCenter
 				}, {
