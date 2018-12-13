@@ -59,7 +59,7 @@
              <template slot="title">
 							<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
              </template>
-            <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId) + 2" :tabIndex="tabIndex" :tabName="tabId" />
+            <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
           </b-tab>
 
           <b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">

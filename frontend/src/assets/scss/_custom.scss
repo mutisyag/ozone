@@ -876,3 +876,9 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 .table-wrapper table {
 	margin-bottom: 0;
 }
+
+.submission-table {
+	td:empty {
+		display: none!important;
+	}
+}
