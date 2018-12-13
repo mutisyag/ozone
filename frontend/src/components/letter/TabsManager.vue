@@ -119,7 +119,7 @@ import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 export default {
 	components: {
 		SubmissionInfo,
-		attachments: Attachments,
+		Attachments,
 		Footer,
 		Save,
 		SubmissionHistory,
