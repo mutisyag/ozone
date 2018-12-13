@@ -1,5 +1,7 @@
 """Import Submission from Excel file.
 """
+import os
+import pickle
 import logging
 
 from django.core.management.base import BaseCommand
@@ -14,10 +16,15 @@ from ozone.core.models import ReportingPeriod
 from ozone.core.models import Article7Questionnaire
 
 logger = logging.getLogger(__name__)
+CACHE_LOC = "/var/tmp/legacy_submission.cache"
 
 
 class Command(BaseCommand):
     help = "Import Submission from Excel file"
+    sheets = (
+        "Overall",
+        "Import"
+    )
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
@@ -43,6 +50,9 @@ class Command(BaseCommand):
                             help="Purge all entries that were imported")
         parser.add_argument('-l', '--limit', type=int, default=None,
                             help="Limit the number of row to import.")
+        parser.add_argument('-C', '--use-cache', action="store_true", default=False,
+                            help="Load the data from the cache (if available) instead "
+                                 "of the xls")
 
     def process_entry(self, *args, **kwargs):
         try:
@@ -145,6 +155,20 @@ class Command(BaseCommand):
         s.__class__.data_changes_allowed = True
         s.delete()
 
+    def load_workbook(self, filename, use_cache=False):
+        if use_cache:
+            try:
+                with open(CACHE_LOC, "rb") as cachef:
+                    return pickle.load(cachef)
+            except:
+                pass
+
+        wb = load_workbook(filename=filename)
+        result = {sheet.title: list(sheet.values) for sheet in wb}
+        with open(CACHE_LOC, "wb") as cachef:
+            pickle.dump(result, cachef)
+        return result
+
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
         stream.setFormatter(logging.Formatter(
@@ -155,8 +179,9 @@ class Command(BaseCommand):
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
 
-        wb = load_workbook(filename=options['file'])
-        values = list(wb["Overall"].values)
+        all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
+
+        values = all_values["Overall"]
         headers = values[0]
 
         success_count = 0
