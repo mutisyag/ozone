@@ -208,12 +208,14 @@ class Submission(models.Model):
         """Just a getter so we can access the class"""
         return self._workflow_class
 
-    @property
-    def workflow(self):
+    def workflow(self, user=None):
         """
         Creates workflow instance and set last *persisted* state on it
         """
-        wf = self.WORKFLOW_MAP[self._workflow_class](model_instance=self)
+        wf = self.WORKFLOW_MAP[self._workflow_class](
+            model_instance=self,
+            user=user
+        )
         state = self.tracker.previous('_current_state') \
             if self.tracker.has_changed('_current_state') \
             else self.current_state
@@ -279,24 +281,7 @@ class Submission(models.Model):
         """
         Check whether data changes are allowed in current state.
         """
-        return self.workflow.data_changes_allowed
-
-    @property
-    def available_transitions(self):
-        """
-        List of transitions that can be performed from current state.
-
-        """
-
-        transitions = []
-        wf = self.workflow
-        for transition in wf .state.transitions():
-            if hasattr(wf, 'check_' + transition.name):
-                if getattr(wf, 'check_' + transition.name)():
-                    transitions.append(transition.name)
-            else:
-                transitions.append(transition.name)
-        return transitions
+        return self.workflow().data_changes_allowed
 
     @property
     def available_states(self):
@@ -305,17 +290,17 @@ class Submission(models.Model):
         No pre-transition checks are taken into account at this point.
 
         """
-        return [t.target.name for t in self.workflow.state.transitions()]
+        return [t.target.name for t in self.workflow().state.transitions()]
 
     @property
     def editable_states(self):
-        return self.workflow.editable_data_states
+        return self.workflow().editable_data_states
 
     @property
     def is_current(self):
         if (
             self.flag_superseded
-            or self.current_state == self.workflow.state.workflow.initial_state.name
+            or self.current_state == self.workflow().state.workflow.initial_state.name
         ):
             return False
         return True
@@ -325,7 +310,23 @@ class Submission(models.Model):
         is_cloneable, message = self.check_cloning()
         return is_cloneable
 
-    def call_transition(self, trans_name):
+    def available_transitions(self, user):
+        """
+        List of transitions that can be performed from current state.
+
+        """
+
+        transitions = []
+        wf = self.workflow(user)
+        for transition in wf .state.transitions():
+            if hasattr(wf, 'check_' + transition.name):
+                if getattr(wf, 'check_' + transition.name)():
+                    transitions.append(transition.name)
+            else:
+                transitions.append(transition.name)
+        return transitions
+
+    def call_transition(self, trans_name, user):
         """
         Interface for calling a specific transition name on the workflow.
 
@@ -334,7 +335,7 @@ class Submission(models.Model):
 
         """
         # Call this now so we don't recreate the self.workflow object ad nauseam
-        workflow = self.workflow
+        workflow = self.workflow(user)
 
         # This is a `TransitionList` and supports the `in` operator
         if trans_name not in workflow.state.workflow.transitions:
@@ -354,7 +355,10 @@ class Submission(models.Model):
 
         if not transition.is_available():
             raise TransitionNotAvailable(
-                _('Transition checks not satisfied')
+                _(
+                    "Transition checks not satisfied or "
+                    "you may not have the necessary permissions"
+                )
             )
 
         # Call the transition; this should work (bar exceptions in pre-post
@@ -529,7 +533,7 @@ class Submission(models.Model):
             # the default article 7 workflow.
             self._workflow_class = 'default'
             self._current_state = \
-                self.workflow.state.workflow.initial_state.name
+                self.workflow().state.workflow.initial_state.name
 
             # Prefill "Submission info" with values from the most recent
             # submission when creating a new submission for the same obligation
