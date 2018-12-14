@@ -38,6 +38,14 @@ class Command(BaseCommand):
         # "ImpPolyol",
     )
 
+    data_to_check = (
+        "imports",
+        "exports",
+        # "produced",
+        # "destroyed",
+        # "nonparty",
+    )
+
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
 
@@ -192,7 +200,8 @@ class Command(BaseCommand):
                 try:
                     destination_party_id = self.parties[destination_party].id
                 except KeyError as e:
-                    logger.error("Export unknown source party %s: %s/%s", e, party.abbr, period.name)
+                    logger.error("Export unknown source party %s: %s/%s", e, party.abbr,
+                                 period.name)
                     destination_party_id = None
 
             try:
@@ -292,6 +301,21 @@ class Command(BaseCommand):
             "exports": self.get_exports(row, party, period),
         }
 
+    def check_consistency(self, data, party, period):
+        is_ok = True
+        for data_type in self.data_to_check:
+            # Check can be done in a single operation, but we want
+            # to be verbose to log the inconsistency.
+            if data[data_type] and not data["art7"]["has_" + data_type]:
+                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set",
+                               party.abbr, period.name, data_type)
+                is_ok = False
+            elif not data[data_type] and data["art7"]["has_" + data_type]:
+                logger.warning("Inconsistency for %s/%s/%s: does not have data, but flag set",
+                               party.abbr, period.name, data_type)
+                is_ok = False
+        return is_ok
+
     @transaction.atomic
     def _process_entry(self, party, period, values, recreate=False, purge=False):
         is_processed = (party.abbr, period.name) in self.current_submission
@@ -330,7 +354,7 @@ class Command(BaseCommand):
             obj.history_user = self.admin
             obj.save()
         logger.info("Submission %s/%s imported with imports=%s exports=%s",
-                     party.abbr, period.name, len(values["imports"]), len(values["exports"]))
+                    party.abbr, period.name, len(values["imports"]), len(values["exports"]))
         return True
 
     def delete_instance(self, party, period):
@@ -412,11 +436,12 @@ class Command(BaseCommand):
                 logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
 
-            row_values = self.get_data(values_dict, party, period)
+            data = self.get_data(values_dict, party, period)
+            self.check_consistency(data, party, period)
             if not options["dry_run"]:
                 success_count += self.process_entry(party,
                                                     period,
-                                                    row_values,
+                                                    data,
                                                     options["recreate"],
                                                     options["purge"])
         logger.info("Success on %s out of %s", success_count, len(all_values))
