@@ -34,7 +34,7 @@ class Command(BaseCommand):
         "ImpProcAgent",
         "ImpQuarAppl",
         # "ImpLabUse",
-        # "ImpPolyol",
+        "ImpPolyol",
     )
 
     data_to_check = (
@@ -137,6 +137,7 @@ class Command(BaseCommand):
                 "quantity_laboratory_analytical_uses": None,
                 "quantity_process_agent_uses": import_row["ImpProcAgent"],
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
+                "quantity_polyols": import_row["ImpPolyol"],
                 "quantity_other_uses": None,
                 "decision_critical_uses": "",
                 "decision_essential_uses": "",
@@ -226,6 +227,7 @@ class Command(BaseCommand):
                 "quantity_laboratory_analytical_uses": None,
                 "quantity_process_agent_uses": exports_row["ExpProcAgent"],
                 "quantity_quarantine_pre_shipment": exports_row["ExpQuarAppl"],
+                "quantity_polyols": exports_row["ExpPolyol"],
                 "quantity_other_uses": None,
                 "decision_critical_uses": "",
                 "decision_essential_uses": "",
@@ -356,8 +358,11 @@ class Command(BaseCommand):
         for obj in submission.history.all():
             obj.history_user = self.admin
             obj.save()
-        logger.info("Submission %s/%s imported with imports=%s exports=%s",
-                    party.abbr, period.name, len(values["imports"]), len(values["exports"]))
+
+        log_data = ", ".join("%s=%s" % (_data_type, len(values[_data_type]))
+                                        for _data_type in self.data_to_check)
+        logger.info("Submission %s/%s imported with %s",
+                    party.abbr, period.name, log_data)
         return True
 
     def delete_instance(self, party, period):
