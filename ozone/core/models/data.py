@@ -159,6 +159,20 @@ class BlendCompositionMixin:
                 self.__class__.objects.create(**attributes)
 
 
+class PolyolsMixin:
+    def clean(self):
+        if (not self.substance or not self.substance.is_contained_in_polyols) \
+                and self.quantity_polyols:
+            raise ValidationError(
+                _("Cannot report polyols quantity if substance not in polyols!")
+            )
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+
 class BaseReport(models.Model):
     """
     This will be used as a base for all reporting models, except Article7Flags.
@@ -234,6 +248,10 @@ class BaseImportExportReport(models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     quantity_feedstock = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    quantity_polyols = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -353,8 +371,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
 
 
 class Article7Export(
-    ModifyPreventionMixin, BaseBlendCompositionReport, BaseImportExportReport,
-    BaseUses
+    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
+    BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on exports.
@@ -363,6 +381,7 @@ class Article7Export(
     """
 
     # Quantity fields needed for blend-to-substance breakdown
+    # quantity_polyols is intentionally not included.
     QUANTITY_FIELDS = [
         'quantity_critical_uses',
         'quantity_essential_uses',
@@ -392,8 +411,8 @@ class Article7Export(
 
 
 class Article7Import(
-    ModifyPreventionMixin, BaseBlendCompositionReport, BaseImportExportReport,
-    BaseUses
+    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
+    BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on imports.
@@ -402,6 +421,7 @@ class Article7Import(
     """
 
     # Quantity fields needed for blend-to-substance breakdown
+    # quantity_polyols is intentionally not included.
     QUANTITY_FIELDS = [
         'quantity_critical_uses',
         'quantity_essential_uses',
