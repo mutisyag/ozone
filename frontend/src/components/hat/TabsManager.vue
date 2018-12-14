@@ -45,38 +45,23 @@
                 Submission Info
               </div>
              </template>
-            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
-          <b-tab title="Questionaire" active>
+		<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
 			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-			</template>
-            <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
-          </b-tab>
-
-          <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
-             <template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-             </template>
-            <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-          </b-tab>
+			</template>
+			<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+		</b-tab>
 
-          <b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
-						<template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
-						</template>
-            <EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+           <b-tab title="Attachments">
+			<template slot="title">
+				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+			</template>
+            <attachments :tab="$store.state.form.tabs.attachments"></attachments>
           </b-tab>
-
-           <b-tab>
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
-				</template>
-				<Attachments :tab="$store.state.form.tabs.attachments"/>
-			</b-tab>
         </b-tabs>
-        <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
 
         <div class="legend">
             <b>Legend:</b>
@@ -130,28 +115,24 @@
 
 <script>
 import { Footer } from '@coreui/vue'
-import Questionnaire from '@/components/art7/Questionnaire.vue'
-import FormTemplate from '@/components/art7/FormTemplate.vue'
-import EmissionsTemplate from '@/components/art7/EmissionsTemplate.vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
 import Attachments from '@/components/common/Attachments.vue'
 import { getInstructions } from '@/components/common/services/api'
-import Save from '@/components/art7/Save'
+import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import labels from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
+import FormTemplate from '@/components/art7/FormTemplate.vue'
 
 export default {
 	components: {
-		Questionnaire,
-		FormTemplate,
-		EmissionsTemplate,
 		SubmissionInfo,
 		Attachments,
 		Footer,
 		Save,
 		SubmissionHistory,
-		TabTitleWithLoader
+		TabTitleWithLoader,
+		FormTemplate
 	},
 	props: {
 		data: null,
@@ -160,17 +141,6 @@ export default {
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
-		},
-		selectedDisplayTabs() {
-			const questionaire_tab = this.$store.state.form.tabs.questionaire_questions.form_fields
-			return {
-				has_exports: questionaire_tab.has_exports.selected,
-				has_imports: questionaire_tab.has_imports.selected,
-				has_destroyed: questionaire_tab.has_destroyed.selected,
-				has_nonparty: questionaire_tab.has_nonparty.selected,
-				has_produced: questionaire_tab.has_produced.selected,
-				has_emissions: questionaire_tab.has_emissions.selected
-			}
 		},
 		selectedTab() {
 			const { form } = this.$store.state
@@ -185,6 +155,7 @@ export default {
 		},
 		tabsIdsWithAssideMenu() {
 			const { form } = this.$store.state
+			console.log(' tabsIdsWithAssideMenu', form)
 			return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
 		}
 	},
