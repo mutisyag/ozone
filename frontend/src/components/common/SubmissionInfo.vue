@@ -28,7 +28,6 @@
               <fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
             </b-col>
           </b-row>
-
         </div>
       </b-card>
     </form>
