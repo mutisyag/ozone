@@ -1,6 +1,7 @@
 """Import Submission from Excel file.
 """
 import pickle
+import decimal
 import logging
 import collections
 
@@ -95,14 +96,14 @@ class Command(BaseCommand):
 
         # Double check the data from old import sheet with the
         # data from the new import sheet.
-        double_check_new = collections.defaultdict(float)
-        double_check_old = collections.defaultdict(float)
+        double_check_new = collections.defaultdict(decimal.Decimal)
+        double_check_old = collections.defaultdict(decimal.Decimal)
 
         for import_row in row["ImportNew"]:
 
             for imp_type in self.import_types:
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
-                double_check_new[pk] += import_row[imp_type] or 0
+                double_check_new[pk] += decimal.Decimal(import_row[imp_type] or 0)
 
             # Get the source party, if not present then add it as NULL
             # the data on the source party will be in the remarks.
@@ -156,7 +157,7 @@ class Command(BaseCommand):
         for import_row in row["Import"]:
             for imp_type in self.import_types:
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
-                double_check_old[pk] += import_row[imp_type] or 0
+                double_check_old[pk] += decimal.Decimal(import_row[imp_type] or 0)
 
         self.double_check(double_check_old, double_check_new)
 
