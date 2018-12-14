@@ -87,16 +87,17 @@ class Command(BaseCommand):
                                  "of the xls")
         parser.add_argument("--dry-run", action="store_true", default=False,
                             help="Only parse the data, but do not insert it.")
+        parser.add_argument("-S", "--single", help="Only process this single entry.")
 
-    def process_entry(self, *args, **kwargs):
+    def process_entry(self, party, period, values, recreate=False, purge=False):
         """Process the parsed data and insert it into the DB.
 
         Only a wrapper, see _process_entry.
         """
         try:
-            return self._process_entry(*args, **kwargs)
+            return self._process_entry(party, period, values, recreate=recreate, purge=purge)
         except Exception as e:
-            logger.error("Error %s while saving: %s", e, args[:2],
+            logger.error("Error %s while saving: %s/%s", e, party.abbr, period.name,
                          exc_info=True)
             return False
 
@@ -575,7 +576,7 @@ class Command(BaseCommand):
             party=party,
             reporting_period=period,
         ).get()
-        logger.info("Deleting submission %s", s.id)
+        logger.info("Deleting submission %s/%s", party.abbr, period.name)
         for related_data in s.RELATED_DATA:
             for instance in getattr(s, related_data).all():
                 logger.debug("Deleting related data: %s", instance)
@@ -641,6 +642,7 @@ class Command(BaseCommand):
             logger.setLevel(logging.DEBUG)
 
         self.precision = options["precision"]
+        single = options["single"]
 
         try:
             # Create as the first admin we find.
@@ -663,6 +665,9 @@ class Command(BaseCommand):
             except KeyError as e:
                 logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
+
+            if single and single != "%s/%s" % (party.abbr, period.name):
+                continue
 
             data = self.get_data(values_dict, party, period)
             self.check_consistency(data, party, period)
