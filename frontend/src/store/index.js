@@ -89,8 +89,8 @@ const store = new Vuex.Store({
 
 		getDuplicateSubmission: (state) => (data) => state.dashboard.submissions.filter(
 			(sub) => sub.obligation === data.obligation
-                        && sub.party === data.party
-                        && sub.reporting_period === data.reporting_period
+				&& sub.party === data.party
+				&& sub.reporting_period === data.reporting_period
 		),
 
 		getSubmissionInfo: (state) => (submission) => {
@@ -412,8 +412,7 @@ const store = new Vuex.Store({
 				resolve()
 			})
 		},
-
-		uploadFormAttachments({ commit, state }, uploadedFiles) {
+		uploadFormAttachments(context, uploadedFiles) {
 			// upload to the server
 			// mocking server response
 			const mockResponseAttachments = uploadedFiles.map(file => ({
@@ -422,14 +421,9 @@ const store = new Vuex.Store({
 				url: 'https://www.google.com',
 				size: `${file.size} bytes`,
 				dateUploaded: new Date(),
-				description: `DESCRIPTION ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name} ${file.name}`
+				description: `DESCRIPTION ${file.name}`
 			}))
-			commit('setFormAttachments', [...state.form.tabs.attachments, ...mockResponseAttachments])
-		},
-
-		saveFormAttachments({ state }) {
-			alert('attachments saved')
-			console.log(state.form.tabs.attachments)
+			return mockResponseAttachments
 		}
 	},
 
@@ -623,28 +617,28 @@ const store = new Vuex.Store({
 		},
 
 		// removal
-
 		resetTab(state, tab) {
 			state.form.tabs[tab].form_fields = []
 		},
-
 		removeField(state, data) {
 			state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 		},
 
-		setFormAttachments(state, attachments) {
-			state.form.tabs.attachments = attachments
+		setTabAttachments(state, { tabName, attachments }) {
+			state.form.tabs[tabName].form_fields.attachments = attachments
 		},
-
-		updateFormAttachment(state, attachment) {
+		addTabAttachment(state, { tabName, attachment }) {
+			state.form.tabs[tabName].form_fields.attachments.push(attachment)
+		},
+		updateTabAttachment(state, { tabName, attachment }) {
 			const updatedAttachments = []
-			state.form.tabs.attachments.forEach(attach => {
+			state.form.tabs[tabName].form_fields.attachments.forEach(attach => {
 				attach.id === attachment.id ? updatedAttachments.push(attachment) : updatedAttachments.push(attach)
 			})
-			state.form.tabs.attachments = updatedAttachments
+			state.form.tabs[tabName].form_fields.attachments = updatedAttachments
 		},
-		deleteFormAttachment(state, attachment) {
-			state.form.tabs.attachments = state.form.tabs.attachments.filter(attach => attach.id !== attachment.id)
+		deleteTabAttachment(state, { tabName, attachment }) {
+			state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attach => attach.id !== attachment.id)
 		}
 	}
 })
