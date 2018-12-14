@@ -40,12 +40,17 @@ class Command(BaseCommand):
         "ImpPolyol",
     )
 
+    nonparty_types = (
+        "NPTImp",
+        "NPTExp",
+    )
+
     data_to_check = (
         "imports",
         "exports",
         "produced",
         "destroyed",
-        # "nonparty",
+        "nonparty",
     )
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
@@ -178,11 +183,87 @@ class Command(BaseCommand):
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
                 double_check_old[pk] += decimal.Decimal(import_row[imp_type] or 0)
 
-        self.double_check(double_check_old, double_check_new)
+        self.double_check(double_check_old, double_check_new, "Import")
 
         return imports
 
-    def double_check(self, old, new):
+    def get_nonparty(self, row, party, period):
+        """Parses the "nonparty" data for the submission identified by
+        the party/period combination.
+
+        The same data data is duplicated in legacy Excel file. One
+        version has the source_party information, and the other one
+        only has the total for each submission. Because the source
+        party information was introduced at a later time, and made
+        optional.
+
+        Double check that the data matches in both sheets and log
+        warning if not.
+
+        Returns a list of nonparty trade substances.
+        """
+        nonparty = []
+
+        # Double check the data from old import sheet with the
+        # data from the new import sheet.
+        double_check_new = collections.defaultdict(decimal.Decimal)
+        double_check_old = collections.defaultdict(decimal.Decimal)
+
+        for nonparty_row in row["NonPartyTradeNew"]:
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpNew"] or 0)
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpRecov"] or 0)
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpNew"] or 0)
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpRecov"] or 0)
+
+            # Get the source party, if not present then add it as NULL
+            # the data on the source party will be in the remarks.
+            trade_party = nonparty_row["SrcDestCntryID"].upper()
+            if trade_party in ("ZZB", "UNK"):
+                trade_party_id = None
+            else:
+                try:
+                    trade_party_id = self.parties[trade_party].id
+                except KeyError as e:
+                    logger.error("NonPartyTrade new unknown trade party %s: %s/%s", e, party.abbr,
+                                 period.name)
+                    trade_party_id = None
+
+            try:
+                substance_id = self.substances[nonparty_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            nonparty.append({
+                "remarks_party": nonparty_row["Remark"] or "",
+                "substance_id": substance_id,
+                "trade_party_id": trade_party_id,
+                # "remarks_os": "",
+                "quantity_import_new": nonparty_row["NPTImpNew"],
+                "quantity_import_recovered": nonparty_row["NPTImpRecov"],
+                "quantity_export_new": nonparty_row["NPTExpNew"],
+                "quantity_export_recovered": nonparty_row["NPTExpRecov"],
+                # "blend_id": "",
+                # "blend_item_id": "",
+                # "submission_id": "", # Autofilled
+                # "ordering_id": "",
+            })
+
+        # Cross-Reference with the other sheet, for a double check of data
+        # consistency. Only use the NonPartyTradeNew sheet for now.
+        for nonparty_row in row["NonPartyTrade"]:
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
+            double_check_old[pk] += decimal.Decimal(nonparty_row["Import"] or 0)
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
+            double_check_old[pk] += decimal.Decimal(nonparty_row["Export"] or 0)
+
+        self.double_check(double_check_old, double_check_new, "NonPartyTrade")
+
+        return nonparty
+
+    def double_check(self, old, new, tag):
         """Compare the data from the 'Import' sheet with the data from
         the 'ImportNew' sheet. Log any inconsistencies.
         """
@@ -196,20 +277,20 @@ class Command(BaseCommand):
             try:
                 old_value = old[key]
             except KeyError:
-                logger.warning("Import inconsistency found for %s, present in old but not in new.",
-                               key)
+                logger.warning("%s inconsistency found for %s, present in old but not in new.",
+                               tag, key)
                 continue
 
             try:
                 new_value = new[key]
             except KeyError:
-                logger.warning("Import inconsistency found for %s, present in new but not in old.",
-                               key)
+                logger.warning("%s inconsistency found for %s, present in new but not in old.",
+                               tag, key)
                 continue
 
             if abs(new_value - old_value) >= (0.1 ** self.precision):
-                logger.warning("Import inconsistency found for %s, values differ old=%s new=%s",
-                               key, old_value, new_value)
+                logger.warning("%s inconsistency found for %s, values differ old=%s new=%s",
+                               tag, key, old_value, new_value)
                 continue
 
     def get_exports(self, row, party, period):
@@ -406,6 +487,7 @@ class Command(BaseCommand):
             "exports": self.get_exports(row, party, period),
             "produced": self.get_produced(row, party, period),
             "destroyed": self.get_destroyed(row, party, period),
+            "nonparty": self.get_nonparty(row, party, period),
         }
 
     def check_consistency(self, data, party, period):
@@ -463,11 +545,14 @@ class Command(BaseCommand):
         for export_values in values["exports"]:
             Article7Export.objects.create(submission=submission, **export_values)
 
-        for produce_values in values["produce"]:
+        for produce_values in values["produced"]:
             Article7Production.objects.create(submission=submission, **produce_values)
 
         for destroyed_values in values["destroyed"]:
             Article7Destruction.objects.create(submission=submission, **destroyed_values)
+
+        for nonparty_values in values["nonparty"]:
+            Article7NonPartyTrade.objects.create(submission=submission, **nonparty_values)
 
         # Extra tidy
         submission._current_state = "finalized"
