@@ -47,7 +47,7 @@
     "fields": {
       "abbr": "AI",
       "name": "Anguilla",
-      "parent_party": 80,
+      "parent_party": 79,
       "remark": "",
       "subregion": 17
     },
@@ -80,7 +80,7 @@
     "fields": {
       "abbr": "AN",
       "name": "Netherlands Antilles",
-      "parent_party": 169,
+      "parent_party": 168,
       "remark": "",
       "subregion": 17
     },
@@ -124,7 +124,7 @@
     "fields": {
       "abbr": "AS",
       "name": "American Samoa",
-      "parent_party": 237,
+      "parent_party": 235,
       "remark": "",
       "subregion": 17
     },
@@ -157,7 +157,7 @@
     "fields": {
       "abbr": "AW",
       "name": "Aruba",
-      "parent_party": 169,
+      "parent_party": 168,
       "remark": "",
       "subregion": 17
     },
@@ -168,7 +168,7 @@
     "fields": {
       "abbr": "AX",
       "name": "Åland Islands",
-      "parent_party": 73,
+      "parent_party": 72,
       "remark": "",
       "subregion": 17
     },
@@ -289,7 +289,7 @@
     "fields": {
       "abbr": "BL",
       "name": "Saint Barthélemy",
-      "parent_party": 78,
+      "parent_party": 77,
       "remark": "",
       "subregion": 17
     },
@@ -300,7 +300,7 @@
     "fields": {
       "abbr": "BM",
       "name": "Bermuda",
-      "parent_party": 80,
+      "parent_party": 79,
       "remark": "",
       "subregion": 17
     },
@@ -333,7 +333,7 @@
     "fields": {
       "abbr": "BQ",
       "name": "Bonaire, Sint Eustatius and Saba",
-      "parent_party": 169,
+      "parent_party": 168,
       "remark": "",
       "subregion": 17
     },
@@ -377,7 +377,7 @@
     "fields": {
       "abbr": "BV",
       "name": "Bouvet Island",
-      "parent_party": 170,
+      "parent_party": 169,
       "remark": "",
       "subregion": 17
     },
@@ -586,7 +586,7 @@
     "fields": {
       "abbr": "CW",
       "name": "Curaçao",
-      "parent_party": 169,
+      "parent_party": 168,
       "remark": "",
       "subregion": 17
     },
@@ -628,124 +628,113 @@
   },
   {
     "fields": {
-      "abbr": "CZS",
-      "name": "Czechoslovakia",
-      "parent_party": null,
+      "abbr": "DE",
+      "name": "Germany",
+      "parent_party": 58,
       "remark": "",
-      "subregion": 15
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 58
   },
   {
     "fields": {
-      "abbr": "DE",
-      "name": "Germany",
+      "abbr": "DJ",
+      "name": "Djibouti",
       "parent_party": 59,
       "remark": "",
-      "subregion": 18
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 59
   },
   {
     "fields": {
-      "abbr": "DJ",
-      "name": "Djibouti",
+      "abbr": "DK",
+      "name": "Denmark",
       "parent_party": 60,
       "remark": "",
-      "subregion": 2
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 60
   },
   {
     "fields": {
-      "abbr": "DK",
-      "name": "Denmark",
+      "abbr": "DM",
+      "name": "Dominica",
       "parent_party": 61,
       "remark": "",
-      "subregion": 18
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 61
   },
   {
     "fields": {
-      "abbr": "DM",
-      "name": "Dominica",
+      "abbr": "DO",
+      "name": "Dominican Republic",
       "parent_party": 62,
       "remark": "",
-      "subregion": 9
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 62
   },
   {
     "fields": {
-      "abbr": "DO",
-      "name": "Dominican Republic",
+      "abbr": "DZ",
+      "name": "Algeria",
       "parent_party": 63,
       "remark": "",
-      "subregion": 10
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 63
   },
   {
     "fields": {
-      "abbr": "DZ",
-      "name": "Algeria",
+      "abbr": "EC",
+      "name": "Ecuador",
       "parent_party": 64,
       "remark": "",
-      "subregion": 2
+      "subregion": 11
     },
     "model": "core.party",
     "pk": 64
   },
   {
     "fields": {
-      "abbr": "EC",
-      "name": "Ecuador",
+      "abbr": "ECE",
+      "name": "European Union",
       "parent_party": 65,
       "remark": "",
-      "subregion": 11
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 65
   },
   {
     "fields": {
-      "abbr": "ECE",
-      "name": "European Union",
+      "abbr": "EE",
+      "name": "Estonia",
       "parent_party": 66,
-      "remark": "Code should be EU",
-      "subregion": 18
+      "remark": "",
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 66
   },
   {
     "fields": {
-      "abbr": "EE",
-      "name": "Estonia",
-      "parent_party": 67,
-      "remark": "",
-      "subregion": 15
-    },
-    "model": "core.party",
-    "pk": 67
-  },
-  {
-    "fields": {
       "abbr": "EG",
       "name": "Egypt",
-      "parent_party": 68,
+      "parent_party": 67,
       "remark": "",
       "subregion": 1
     },
     "model": "core.party",
-    "pk": 68
+    "pk": 67
   },
   {
     "fields": {
@@ -756,156 +745,167 @@
       "subregion": 17
     },
     "model": "core.party",
-    "pk": 69
+    "pk": 68
   },
   {
     "fields": {
       "abbr": "ER",
       "name": "Eritrea",
-      "parent_party": 70,
+      "parent_party": 69,
       "remark": "",
       "subregion": 1
+    },
+    "model": "core.party",
+    "pk": 69
+  },
+  {
+    "fields": {
+      "abbr": "ES",
+      "name": "Spain",
+      "parent_party": 70,
+      "remark": "",
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 70
   },
   {
     "fields": {
-      "abbr": "ES",
-      "name": "Spain",
+      "abbr": "ET",
+      "name": "Ethiopia",
       "parent_party": 71,
       "remark": "",
-      "subregion": 18
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 71
   },
   {
     "fields": {
-      "abbr": "ET",
-      "name": "Ethiopia",
+      "abbr": "FI",
+      "name": "Finland",
       "parent_party": 72,
       "remark": "",
-      "subregion": 1
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 72
   },
   {
     "fields": {
-      "abbr": "FI",
-      "name": "Finland",
+      "abbr": "FJ",
+      "name": "Fiji",
       "parent_party": 73,
       "remark": "",
-      "subregion": 18
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 73
   },
   {
     "fields": {
-      "abbr": "FJ",
-      "name": "Fiji",
-      "parent_party": 74,
-      "remark": "",
-      "subregion": 12
+      "abbr": "FK",
+      "name": "Falkland Islands (Malvinas)",
+      "parent_party": 79,
+      "remark": "South Pacific",
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 74
   },
   {
     "fields": {
-      "abbr": "FK",
-      "name": "Falkland Islands (Malvinas)",
-      "parent_party": 80,
+      "abbr": "FM",
+      "name": "Micronesia (Federated States of)",
+      "parent_party": 75,
       "remark": "",
-      "subregion": 17
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 75
   },
   {
     "fields": {
-      "abbr": "FM",
-      "name": "Micronesia (Federated States of)",
-      "parent_party": 76,
+      "abbr": "FO",
+      "name": "Faroe Islands",
+      "parent_party": 60,
       "remark": "",
-      "subregion": 12
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 76
   },
   {
     "fields": {
-      "abbr": "FO",
-      "name": "Faroe Islands",
-      "parent_party": 61,
+      "abbr": "FR",
+      "name": "France",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 17
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 77
   },
   {
     "fields": {
-      "abbr": "FR",
-      "name": "France",
+      "abbr": "GA",
+      "name": "Gabon",
       "parent_party": 78,
       "remark": "",
-      "subregion": 18
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 78
   },
   {
     "fields": {
-      "abbr": "GA",
-      "name": "Gabon",
+      "abbr": "GB",
+      "name": "United Kingdom of Great Britain and Northern Ireland",
       "parent_party": 79,
       "remark": "",
-      "subregion": 2
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 79
   },
   {
     "fields": {
-      "abbr": "GB",
-      "name": "United Kingdom of Great Britain and Northern Ireland",
+      "abbr": "GD",
+      "name": "Grenada",
       "parent_party": 80,
       "remark": "",
-      "subregion": 18
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 80
   },
   {
     "fields": {
-      "abbr": "GD",
-      "name": "Grenada",
+      "abbr": "GE",
+      "name": "Georgia",
       "parent_party": 81,
       "remark": "",
-      "subregion": 9
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 81
   },
   {
     "fields": {
-      "abbr": "GE",
-      "name": "Georgia",
-      "parent_party": 82,
+      "abbr": "GF",
+      "name": "French Guiana",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 7
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 82
   },
   {
     "fields": {
-      "abbr": "GF",
-      "name": "French Guiana",
-      "parent_party": 78,
+      "abbr": "GG",
+      "name": "Guernsey",
+      "parent_party": 79,
       "remark": "",
       "subregion": 17
     },
@@ -914,31 +914,31 @@
   },
   {
     "fields": {
-      "abbr": "GG",
-      "name": "Guernsey",
-      "parent_party": 80,
+      "abbr": "GH",
+      "name": "Ghana",
+      "parent_party": 84,
       "remark": "",
-      "subregion": 17
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 84
   },
   {
     "fields": {
-      "abbr": "GH",
-      "name": "Ghana",
-      "parent_party": 85,
+      "abbr": "GI",
+      "name": "Gibraltar",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 1
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 85
   },
   {
     "fields": {
-      "abbr": "GI",
-      "name": "Gibraltar",
-      "parent_party": 80,
+      "abbr": "GL",
+      "name": "Greenland",
+      "parent_party": 60,
       "remark": "",
       "subregion": 17
     },
@@ -947,124 +947,113 @@
   },
   {
     "fields": {
-      "abbr": "GL",
-      "name": "Greenland",
-      "parent_party": 61,
+      "abbr": "GM",
+      "name": "Gambia",
+      "parent_party": 87,
       "remark": "",
-      "subregion": 17
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 87
   },
   {
     "fields": {
-      "abbr": "GM",
-      "name": "Gambia",
+      "abbr": "GN",
+      "name": "Guinea",
       "parent_party": 88,
       "remark": "",
-      "subregion": 1
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 88
   },
   {
     "fields": {
-      "abbr": "GN",
-      "name": "Guinea",
-      "parent_party": 89,
+      "abbr": "GP",
+      "name": "Guadeloupe",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 2
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 89
   },
   {
     "fields": {
-      "abbr": "GP",
-      "name": "Guadeloupe",
-      "parent_party": 78,
+      "abbr": "GQ",
+      "name": "Equatorial Guinea",
+      "parent_party": 90,
       "remark": "",
-      "subregion": 17
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 90
   },
   {
     "fields": {
-      "abbr": "GQ",
-      "name": "Equatorial Guinea",
+      "abbr": "GR",
+      "name": "Greece",
       "parent_party": 91,
       "remark": "",
-      "subregion": 2
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 91
   },
   {
     "fields": {
-      "abbr": "GR",
-      "name": "Greece",
-      "parent_party": 92,
+      "abbr": "GS",
+      "name": "South Georgia and the South Sandwich Islands",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 18
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 92
   },
   {
     "fields": {
-      "abbr": "GS",
-      "name": "South Georgia and the South Sandwich Islands",
-      "parent_party": 80,
+      "abbr": "GT",
+      "name": "Guatemala",
+      "parent_party": 93,
       "remark": "",
-      "subregion": 17
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 93
   },
   {
     "fields": {
-      "abbr": "GT",
-      "name": "Guatemala",
-      "parent_party": 94,
+      "abbr": "GU",
+      "name": "Guam",
+      "parent_party": 235,
       "remark": "",
-      "subregion": 10
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 94
   },
   {
     "fields": {
-      "abbr": "GU",
-      "name": "Guam",
-      "parent_party": 237,
+      "abbr": "GW",
+      "name": "Guinea Bissau",
+      "parent_party": 95,
       "remark": "",
-      "subregion": 17
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 95
   },
   {
     "fields": {
-      "abbr": "GW",
-      "name": "Guinea Bissau",
-      "parent_party": 96,
-      "remark": "",
-      "subregion": 2
-    },
-    "model": "core.party",
-    "pk": 96
-  },
-  {
-    "fields": {
       "abbr": "GY",
       "name": "Guyana",
-      "parent_party": 97,
+      "parent_party": 96,
       "remark": "",
       "subregion": 9
     },
     "model": "core.party",
-    "pk": 97
+    "pk": 96
   },
   {
     "fields": {
@@ -1075,7 +1064,7 @@
       "subregion": 4
     },
     "model": "core.party",
-    "pk": 98
+    "pk": 97
   },
   {
     "fields": {
@@ -1086,67 +1075,78 @@
       "subregion": 17
     },
     "model": "core.party",
-    "pk": 99
+    "pk": 98
   },
   {
     "fields": {
       "abbr": "HN",
       "name": "Honduras",
-      "parent_party": 100,
+      "parent_party": 99,
       "remark": "",
       "subregion": 10
+    },
+    "model": "core.party",
+    "pk": 99
+  },
+  {
+    "fields": {
+      "abbr": "HR",
+      "name": "Croatia",
+      "parent_party": 100,
+      "remark": "Hrvatska",
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 100
   },
   {
     "fields": {
-      "abbr": "HR",
-      "name": "Croatia",
+      "abbr": "HT",
+      "name": "Haiti",
       "parent_party": 101,
-      "remark": "Hrvatska",
-      "subregion": 7
+      "remark": "",
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 101
   },
   {
     "fields": {
-      "abbr": "HT",
-      "name": "Haiti",
+      "abbr": "HU",
+      "name": "Hungary",
       "parent_party": 102,
       "remark": "",
-      "subregion": 10
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 102
   },
   {
     "fields": {
-      "abbr": "HU",
-      "name": "Hungary",
+      "abbr": "ID",
+      "name": "Indonesia",
       "parent_party": 103,
       "remark": "",
-      "subregion": 15
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 103
   },
   {
     "fields": {
-      "abbr": "ID",
-      "name": "Indonesia",
+      "abbr": "IE",
+      "name": "Ireland",
       "parent_party": 104,
       "remark": "",
-      "subregion": 3
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 104
   },
   {
     "fields": {
-      "abbr": "IE",
-      "name": "Ireland",
+      "abbr": "IL",
+      "name": "Israel",
       "parent_party": 105,
       "remark": "",
       "subregion": 18
@@ -1156,74 +1156,74 @@
   },
   {
     "fields": {
-      "abbr": "IL",
-      "name": "Israel",
-      "parent_party": 106,
+      "abbr": "IM",
+      "name": "Isle of Man",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 18
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 106
   },
   {
     "fields": {
-      "abbr": "IM",
-      "name": "Isle of Man",
-      "parent_party": 80,
+      "abbr": "IN",
+      "name": "India",
+      "parent_party": 107,
       "remark": "",
-      "subregion": 17
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 107
   },
   {
     "fields": {
-      "abbr": "IN",
-      "name": "India",
-      "parent_party": 108,
+      "abbr": "IO",
+      "name": "British Indian Ocean Territory",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 4
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 108
   },
   {
     "fields": {
-      "abbr": "IO",
-      "name": "British Indian Ocean Territory",
-      "parent_party": 80,
+      "abbr": "IQ",
+      "name": "Iraq",
+      "parent_party": 109,
       "remark": "",
-      "subregion": 17
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 109
   },
   {
     "fields": {
-      "abbr": "IQ",
-      "name": "Iraq",
+      "abbr": "IR",
+      "name": "Iran (Islamic Republic of)",
       "parent_party": 110,
       "remark": "",
-      "subregion": 5
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 110
   },
   {
     "fields": {
-      "abbr": "IR",
-      "name": "Iran (Islamic Republic of)",
+      "abbr": "IS",
+      "name": "Iceland",
       "parent_party": 111,
       "remark": "",
-      "subregion": 4
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 111
   },
   {
     "fields": {
-      "abbr": "IS",
-      "name": "Iceland",
+      "abbr": "IT",
+      "name": "Italy",
       "parent_party": 112,
       "remark": "",
       "subregion": 18
@@ -1233,129 +1233,129 @@
   },
   {
     "fields": {
-      "abbr": "IT",
-      "name": "Italy",
-      "parent_party": 113,
+      "abbr": "JE",
+      "name": "Jersey",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 18
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 113
   },
   {
     "fields": {
-      "abbr": "JE",
-      "name": "Jersey",
-      "parent_party": 80,
+      "abbr": "JM",
+      "name": "Jamaica",
+      "parent_party": 114,
       "remark": "",
-      "subregion": 17
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 114
   },
   {
     "fields": {
-      "abbr": "JM",
-      "name": "Jamaica",
+      "abbr": "JO",
+      "name": "Jordan",
       "parent_party": 115,
       "remark": "",
-      "subregion": 9
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 115
   },
   {
     "fields": {
-      "abbr": "JO",
-      "name": "Jordan",
+      "abbr": "JP",
+      "name": "Japan",
       "parent_party": 116,
       "remark": "",
-      "subregion": 5
+      "subregion": 14
     },
     "model": "core.party",
     "pk": 116
   },
   {
     "fields": {
-      "abbr": "JP",
-      "name": "Japan",
+      "abbr": "KE",
+      "name": "Kenya",
       "parent_party": 117,
       "remark": "",
-      "subregion": 14
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 117
   },
   {
     "fields": {
-      "abbr": "KE",
-      "name": "Kenya",
+      "abbr": "KG",
+      "name": "Kyrgyzstan",
       "parent_party": 118,
       "remark": "",
-      "subregion": 1
+      "subregion": 6
     },
     "model": "core.party",
     "pk": 118
   },
   {
     "fields": {
-      "abbr": "KG",
-      "name": "Kyrgyzstan",
+      "abbr": "KH",
+      "name": "Cambodia",
       "parent_party": 119,
       "remark": "",
-      "subregion": 6
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 119
   },
   {
     "fields": {
-      "abbr": "KH",
-      "name": "Cambodia",
+      "abbr": "KI",
+      "name": "Kiribati",
       "parent_party": 120,
       "remark": "",
-      "subregion": 3
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 120
   },
   {
     "fields": {
-      "abbr": "KI",
-      "name": "Kiribati",
+      "abbr": "KM",
+      "name": "Comoros",
       "parent_party": 121,
       "remark": "",
-      "subregion": 12
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 121
   },
   {
     "fields": {
-      "abbr": "KM",
-      "name": "Comoros",
+      "abbr": "KN",
+      "name": "Saint Kitts and Nevis",
       "parent_party": 122,
       "remark": "",
-      "subregion": 2
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 122
   },
   {
     "fields": {
-      "abbr": "KN",
-      "name": "Saint Kitts and Nevis",
+      "abbr": "KP",
+      "name": "Democratic People's Republic of Korea",
       "parent_party": 123,
       "remark": "",
-      "subregion": 9
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 123
   },
   {
     "fields": {
-      "abbr": "KP",
-      "name": "Democratic People's Republic of Korea",
+      "abbr": "KR",
+      "name": "Republic of Korea",
       "parent_party": 124,
       "remark": "",
       "subregion": 4
@@ -1365,107 +1365,107 @@
   },
   {
     "fields": {
-      "abbr": "KR",
-      "name": "Republic of Korea",
+      "abbr": "KW",
+      "name": "Kuwait",
       "parent_party": 125,
       "remark": "",
-      "subregion": 4
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 125
   },
   {
     "fields": {
-      "abbr": "KW",
-      "name": "Kuwait",
-      "parent_party": 126,
+      "abbr": "KY",
+      "name": "Cayman Islands",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 5
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 126
   },
   {
     "fields": {
-      "abbr": "KY",
-      "name": "Cayman Islands",
-      "parent_party": 80,
+      "abbr": "KZ",
+      "name": "Kazakhstan",
+      "parent_party": 127,
       "remark": "",
-      "subregion": 17
+      "subregion": 6
     },
     "model": "core.party",
     "pk": 127
   },
   {
     "fields": {
-      "abbr": "KZ",
-      "name": "Kazakhstan",
+      "abbr": "LA",
+      "name": "Lao People's Democratic Republic",
       "parent_party": 128,
       "remark": "",
-      "subregion": 6
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 128
   },
   {
     "fields": {
-      "abbr": "LA",
-      "name": "Lao People's Democratic Republic",
+      "abbr": "LB",
+      "name": "Lebanon",
       "parent_party": 129,
       "remark": "",
-      "subregion": 3
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 129
   },
   {
     "fields": {
-      "abbr": "LB",
-      "name": "Lebanon",
+      "abbr": "LC",
+      "name": "Saint Lucia",
       "parent_party": 130,
       "remark": "",
-      "subregion": 5
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 130
   },
   {
     "fields": {
-      "abbr": "LC",
-      "name": "Saint Lucia",
+      "abbr": "LI",
+      "name": "Liechtenstein",
       "parent_party": 131,
       "remark": "",
-      "subregion": 9
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 131
   },
   {
     "fields": {
-      "abbr": "LI",
-      "name": "Liechtenstein",
+      "abbr": "LK",
+      "name": "Sri Lanka",
       "parent_party": 132,
       "remark": "",
-      "subregion": 18
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 132
   },
   {
     "fields": {
-      "abbr": "LK",
-      "name": "Sri Lanka",
+      "abbr": "LR",
+      "name": "Liberia",
       "parent_party": 133,
       "remark": "",
-      "subregion": 4
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 133
   },
   {
     "fields": {
-      "abbr": "LR",
-      "name": "Liberia",
+      "abbr": "LS",
+      "name": "Lesotho",
       "parent_party": 134,
       "remark": "",
       "subregion": 1
@@ -1475,85 +1475,85 @@
   },
   {
     "fields": {
-      "abbr": "LS",
-      "name": "Lesotho",
+      "abbr": "LT",
+      "name": "Lithuania",
       "parent_party": 135,
       "remark": "",
-      "subregion": 1
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 135
   },
   {
     "fields": {
-      "abbr": "LT",
-      "name": "Lithuania",
+      "abbr": "LU",
+      "name": "Luxembourg",
       "parent_party": 136,
       "remark": "",
-      "subregion": 15
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 136
   },
   {
     "fields": {
-      "abbr": "LU",
-      "name": "Luxembourg",
+      "abbr": "LV",
+      "name": "Latvia",
       "parent_party": 137,
       "remark": "",
-      "subregion": 18
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 137
   },
   {
     "fields": {
-      "abbr": "LV",
-      "name": "Latvia",
+      "abbr": "LY",
+      "name": "Libya",
       "parent_party": 138,
       "remark": "",
-      "subregion": 15
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 138
   },
   {
     "fields": {
-      "abbr": "LY",
-      "name": "Libya",
+      "abbr": "MA",
+      "name": "Morocco",
       "parent_party": 139,
       "remark": "",
-      "subregion": 1
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 139
   },
   {
     "fields": {
-      "abbr": "MA",
-      "name": "Morocco",
+      "abbr": "MC",
+      "name": "Monaco",
       "parent_party": 140,
       "remark": "",
-      "subregion": 2
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 140
   },
   {
     "fields": {
-      "abbr": "MC",
-      "name": "Monaco",
+      "abbr": "MD",
+      "name": "Republic of Moldova",
       "parent_party": 141,
       "remark": "",
-      "subregion": 18
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 141
   },
   {
     "fields": {
-      "abbr": "MD",
-      "name": "Republic of Moldova",
+      "abbr": "ME",
+      "name": "Montenegro",
       "parent_party": 142,
       "remark": "",
       "subregion": 7
@@ -1563,91 +1563,80 @@
   },
   {
     "fields": {
-      "abbr": "ME",
-      "name": "Montenegro",
-      "parent_party": 143,
-      "remark": "",
-      "subregion": 7
+      "abbr": "MF",
+      "name": "Saint Martin",
+      "parent_party": 77,
+      "remark": "French part/partie française",
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 143
   },
   {
     "fields": {
-      "abbr": "MF",
-      "name": "Saint Martin",
-      "parent_party": 78,
-      "remark": "French part/partie française",
-      "subregion": 17
+      "abbr": "MG",
+      "name": "Madagascar",
+      "parent_party": 144,
+      "remark": "",
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 144
   },
   {
     "fields": {
-      "abbr": "MG",
-      "name": "Madagascar",
+      "abbr": "MH",
+      "name": "Marshall Islands",
       "parent_party": 145,
       "remark": "",
-      "subregion": 2
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 145
   },
   {
     "fields": {
-      "abbr": "MH",
-      "name": "Marshall Islands",
+      "abbr": "MK",
+      "name": "The former Yugoslav Republic of Macedonia",
       "parent_party": 146,
       "remark": "",
-      "subregion": 12
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 146
   },
   {
     "fields": {
-      "abbr": "MK",
-      "name": "The former Yugoslav Republic of Macedonia",
+      "abbr": "ML",
+      "name": "Mali",
       "parent_party": 147,
       "remark": "",
-      "subregion": 7
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 147
   },
   {
     "fields": {
-      "abbr": "ML",
-      "name": "Mali",
+      "abbr": "MM",
+      "name": "Myanmar",
       "parent_party": 148,
       "remark": "",
-      "subregion": 2
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 148
   },
   {
     "fields": {
-      "abbr": "MM",
-      "name": "Myanmar",
-      "parent_party": 149,
-      "remark": "",
-      "subregion": 3
-    },
-    "model": "core.party",
-    "pk": 149
-  },
-  {
-    "fields": {
       "abbr": "MN",
       "name": "Mongolia",
-      "parent_party": 150,
+      "parent_party": 149,
       "remark": "",
       "subregion": 4
     },
     "model": "core.party",
-    "pk": 150
+    "pk": 149
   },
   {
     "fields": {
@@ -1658,13 +1647,24 @@
       "subregion": 17
     },
     "model": "core.party",
-    "pk": 151
+    "pk": 150
   },
   {
     "fields": {
       "abbr": "MP",
       "name": "Northern Mariana Islands",
-      "parent_party": 237,
+      "parent_party": 235,
+      "remark": "",
+      "subregion": 17
+    },
+    "model": "core.party",
+    "pk": 151
+  },
+  {
+    "fields": {
+      "abbr": "MQ",
+      "name": "Martinique",
+      "parent_party": 77,
       "remark": "",
       "subregion": 17
     },
@@ -1673,107 +1673,107 @@
   },
   {
     "fields": {
-      "abbr": "MQ",
-      "name": "Martinique",
-      "parent_party": 78,
+      "abbr": "MR",
+      "name": "Mauritania",
+      "parent_party": 153,
       "remark": "",
-      "subregion": 17
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 153
   },
   {
     "fields": {
-      "abbr": "MR",
-      "name": "Mauritania",
-      "parent_party": 154,
+      "abbr": "MS",
+      "name": "Montserrat",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 2
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 154
   },
   {
     "fields": {
-      "abbr": "MS",
-      "name": "Montserrat",
-      "parent_party": 80,
+      "abbr": "MT",
+      "name": "Malta",
+      "parent_party": 155,
       "remark": "",
-      "subregion": 17
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 155
   },
   {
     "fields": {
-      "abbr": "MT",
-      "name": "Malta",
+      "abbr": "MU",
+      "name": "Mauritius",
       "parent_party": 156,
       "remark": "",
-      "subregion": 18
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 156
   },
   {
     "fields": {
-      "abbr": "MU",
-      "name": "Mauritius",
+      "abbr": "MV",
+      "name": "Maldives",
       "parent_party": 157,
       "remark": "",
-      "subregion": 1
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 157
   },
   {
     "fields": {
-      "abbr": "MV",
-      "name": "Maldives",
+      "abbr": "MW",
+      "name": "Malawi",
       "parent_party": 158,
       "remark": "",
-      "subregion": 4
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 158
   },
   {
     "fields": {
-      "abbr": "MW",
-      "name": "Malawi",
+      "abbr": "MX",
+      "name": "Mexico",
       "parent_party": 159,
       "remark": "",
-      "subregion": 1
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 159
   },
   {
     "fields": {
-      "abbr": "MX",
-      "name": "Mexico",
+      "abbr": "MY",
+      "name": "Malaysia",
       "parent_party": 160,
       "remark": "",
-      "subregion": 10
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 160
   },
   {
     "fields": {
-      "abbr": "MY",
-      "name": "Malaysia",
+      "abbr": "MZ",
+      "name": "Mozambique",
       "parent_party": 161,
       "remark": "",
-      "subregion": 3
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 161
   },
   {
     "fields": {
-      "abbr": "MZ",
-      "name": "Mozambique",
+      "abbr": "NA",
+      "name": "Namibia",
       "parent_party": 162,
       "remark": "",
       "subregion": 1
@@ -1783,36 +1783,25 @@
   },
   {
     "fields": {
-      "abbr": "NA",
-      "name": "Namibia",
-      "parent_party": 163,
-      "remark": "",
-      "subregion": 1
+      "abbr": "NC",
+      "name": "New Caledonia",
+      "parent_party": 77,
+      "remark": "Nouméa / Noumea",
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 163
   },
   {
     "fields": {
-      "abbr": "NC",
-      "name": "New Caledonia",
-      "parent_party": 78,
-      "remark": "",
-      "subregion": 17
-    },
-    "model": "core.party",
-    "pk": 164
-  },
-  {
-    "fields": {
       "abbr": "NE",
       "name": "Niger",
-      "parent_party": 165,
+      "parent_party": 164,
       "remark": "",
       "subregion": 2
     },
     "model": "core.party",
-    "pk": 165
+    "pk": 164
   },
   {
     "fields": {
@@ -1823,34 +1812,45 @@
       "subregion": 17
     },
     "model": "core.party",
-    "pk": 166
+    "pk": 165
   },
   {
     "fields": {
       "abbr": "NG",
       "name": "Nigeria",
-      "parent_party": 167,
+      "parent_party": 166,
       "remark": "",
       "subregion": 1
+    },
+    "model": "core.party",
+    "pk": 166
+  },
+  {
+    "fields": {
+      "abbr": "NI",
+      "name": "Nicaragua",
+      "parent_party": 167,
+      "remark": "",
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 167
   },
   {
     "fields": {
-      "abbr": "NI",
-      "name": "Nicaragua",
+      "abbr": "NL",
+      "name": "Netherlands",
       "parent_party": 168,
       "remark": "",
-      "subregion": 10
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 168
   },
   {
     "fields": {
-      "abbr": "NL",
-      "name": "Netherlands",
+      "abbr": "NO",
+      "name": "Norway",
       "parent_party": 169,
       "remark": "",
       "subregion": 18
@@ -1860,30 +1860,30 @@
   },
   {
     "fields": {
-      "abbr": "NO",
-      "name": "Norway",
+      "abbr": "NP",
+      "name": "Nepal",
       "parent_party": 170,
       "remark": "",
-      "subregion": 18
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 170
   },
   {
     "fields": {
-      "abbr": "NP",
-      "name": "Nepal",
+      "abbr": "NR",
+      "name": "Nauru",
       "parent_party": 171,
       "remark": "",
-      "subregion": 4
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 171
   },
   {
     "fields": {
-      "abbr": "NR",
-      "name": "Nauru",
+      "abbr": "NU",
+      "name": "Niue",
       "parent_party": 172,
       "remark": "",
       "subregion": 12
@@ -1893,119 +1893,119 @@
   },
   {
     "fields": {
-      "abbr": "NU",
-      "name": "Niue",
+      "abbr": "NZ",
+      "name": "New Zealand",
       "parent_party": 173,
       "remark": "",
-      "subregion": 12
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 173
   },
   {
     "fields": {
-      "abbr": "NZ",
-      "name": "New Zealand",
+      "abbr": "OM",
+      "name": "Oman",
       "parent_party": 174,
       "remark": "",
-      "subregion": 18
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 174
   },
   {
     "fields": {
-      "abbr": "OM",
-      "name": "Oman",
+      "abbr": "PA",
+      "name": "Panama",
       "parent_party": 175,
       "remark": "",
-      "subregion": 5
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 175
   },
   {
     "fields": {
-      "abbr": "PA",
-      "name": "Panama",
+      "abbr": "PE",
+      "name": "Peru",
       "parent_party": 176,
       "remark": "",
-      "subregion": 10
+      "subregion": 11
     },
     "model": "core.party",
     "pk": 176
   },
   {
     "fields": {
-      "abbr": "PE",
-      "name": "Peru",
-      "parent_party": 177,
-      "remark": "",
-      "subregion": 11
+      "abbr": "PF",
+      "name": "French Polynesia",
+      "parent_party": 77,
+      "remark": "Includes Austral Islands , Gambier Islands, Marquesas Islands , Society Archipelago , Tahiti, Tuamotu Islands",
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 177
   },
   {
     "fields": {
-      "abbr": "PF",
-      "name": "French Polynesia",
-      "parent_party": 78,
-      "remark": "Includes Austral Islands , Gambier Islands, Marquesas Islands , Society Archipelago , Tahiti, Tuamotu Islands",
-      "subregion": 17
+      "abbr": "PG",
+      "name": "Papua New Guinea",
+      "parent_party": 178,
+      "remark": "",
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 178
   },
   {
     "fields": {
-      "abbr": "PG",
-      "name": "Papua New Guinea",
+      "abbr": "PH",
+      "name": "Philippines",
       "parent_party": 179,
       "remark": "",
-      "subregion": 12
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 179
   },
   {
     "fields": {
-      "abbr": "PH",
-      "name": "Philippines",
+      "abbr": "PK",
+      "name": "Pakistan",
       "parent_party": 180,
       "remark": "",
-      "subregion": 3
+      "subregion": 4
     },
     "model": "core.party",
     "pk": 180
   },
   {
     "fields": {
-      "abbr": "PK",
-      "name": "Pakistan",
+      "abbr": "PL",
+      "name": "Poland",
       "parent_party": 181,
       "remark": "",
-      "subregion": 4
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 181
   },
   {
     "fields": {
-      "abbr": "PL",
-      "name": "Poland",
-      "parent_party": 182,
+      "abbr": "PM",
+      "name": "Saint Pierre and Miquelon",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 15
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 182
   },
   {
     "fields": {
-      "abbr": "PM",
-      "name": "Saint Pierre and Miquelon",
-      "parent_party": 78,
+      "abbr": "PN",
+      "name": "Pitcairn",
+      "parent_party": 79,
       "remark": "",
       "subregion": 17
     },
@@ -2014,25 +2014,14 @@
   },
   {
     "fields": {
-      "abbr": "PN",
-      "name": "Pitcairn",
-      "parent_party": 80,
-      "remark": "",
-      "subregion": 17
-    },
-    "model": "core.party",
-    "pk": 184
-  },
-  {
-    "fields": {
       "abbr": "PR",
       "name": "Puerto Rico",
-      "parent_party": 237,
+      "parent_party": 235,
       "remark": "",
       "subregion": 16
     },
     "model": "core.party",
-    "pk": 185
+    "pk": 184
   },
   {
     "fields": {
@@ -2043,78 +2032,89 @@
       "subregion": 5
     },
     "model": "core.party",
-    "pk": 186
+    "pk": 185
   },
   {
     "fields": {
       "abbr": "PT",
       "name": "Portugal",
-      "parent_party": 187,
+      "parent_party": 186,
       "remark": "",
       "subregion": 18
+    },
+    "model": "core.party",
+    "pk": 186
+  },
+  {
+    "fields": {
+      "abbr": "PW",
+      "name": "Palau",
+      "parent_party": 187,
+      "remark": "",
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 187
   },
   {
     "fields": {
-      "abbr": "PW",
-      "name": "Palau",
+      "abbr": "PY",
+      "name": "Paraguay",
       "parent_party": 188,
       "remark": "",
-      "subregion": 12
+      "subregion": 11
     },
     "model": "core.party",
     "pk": 188
   },
   {
     "fields": {
-      "abbr": "PY",
-      "name": "Paraguay",
+      "abbr": "QA",
+      "name": "Qatar",
       "parent_party": 189,
       "remark": "",
-      "subregion": 11
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 189
   },
   {
     "fields": {
-      "abbr": "QA",
-      "name": "Qatar",
-      "parent_party": 190,
+      "abbr": "RE",
+      "name": "Réunion",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 5
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 190
   },
   {
     "fields": {
-      "abbr": "RE",
-      "name": "Réunion",
-      "parent_party": 78,
+      "abbr": "RO",
+      "name": "Romania",
+      "parent_party": 191,
       "remark": "",
-      "subregion": 17
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 191
   },
   {
     "fields": {
-      "abbr": "RO",
-      "name": "Romania",
+      "abbr": "RS",
+      "name": "Serbia",
       "parent_party": 192,
       "remark": "",
-      "subregion": 15
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 192
   },
   {
     "fields": {
-      "abbr": "RS",
-      "name": "Serbia",
+      "abbr": "RU",
+      "name": "Russian Federation",
       "parent_party": 193,
       "remark": "",
       "subregion": 7
@@ -2124,52 +2124,52 @@
   },
   {
     "fields": {
-      "abbr": "RU",
-      "name": "Russian Federation",
+      "abbr": "RW",
+      "name": "Rwanda",
       "parent_party": 194,
       "remark": "",
-      "subregion": 7
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 194
   },
   {
     "fields": {
-      "abbr": "RW",
-      "name": "Rwanda",
+      "abbr": "SA",
+      "name": "Saudi Arabia",
       "parent_party": 195,
       "remark": "",
-      "subregion": 1
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 195
   },
   {
     "fields": {
-      "abbr": "SA",
-      "name": "Saudi Arabia",
+      "abbr": "SB",
+      "name": "Solomon Islands",
       "parent_party": 196,
       "remark": "",
-      "subregion": 5
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 196
   },
   {
     "fields": {
-      "abbr": "SB",
-      "name": "Solomon Islands",
+      "abbr": "SC",
+      "name": "Seychelles",
       "parent_party": 197,
       "remark": "",
-      "subregion": 12
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 197
   },
   {
     "fields": {
-      "abbr": "SC",
-      "name": "Seychelles",
+      "abbr": "SD",
+      "name": "Sudan",
       "parent_party": 198,
       "remark": "",
       "subregion": 1
@@ -2179,355 +2179,344 @@
   },
   {
     "fields": {
-      "abbr": "SD",
-      "name": "Sudan",
+      "abbr": "SE",
+      "name": "Sweden",
       "parent_party": 199,
       "remark": "",
-      "subregion": 1
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 199
   },
   {
     "fields": {
-      "abbr": "SE",
-      "name": "Sweden",
+      "abbr": "SG",
+      "name": "Singapore",
       "parent_party": 200,
       "remark": "",
-      "subregion": 18
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 200
   },
   {
     "fields": {
-      "abbr": "SG",
-      "name": "Singapore",
-      "parent_party": 201,
+      "abbr": "SH",
+      "name": "Saint Helena, Ascension and Tristan da Cunha",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 3
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 201
   },
   {
     "fields": {
-      "abbr": "SH",
-      "name": "Saint Helena, Ascension and Tristan da Cunha",
-      "parent_party": 80,
+      "abbr": "SI",
+      "name": "Slovenia",
+      "parent_party": 202,
       "remark": "",
-      "subregion": 17
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 202
   },
   {
     "fields": {
-      "abbr": "SI",
-      "name": "Slovenia",
-      "parent_party": 203,
+      "abbr": "SJ",
+      "name": "Svalbard and Jan Mayen",
+      "parent_party": 169,
       "remark": "",
-      "subregion": 15
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 203
   },
   {
     "fields": {
-      "abbr": "SJ",
-      "name": "Svalbard and Jan Mayen",
-      "parent_party": 170,
+      "abbr": "SK",
+      "name": "Slovakia",
+      "parent_party": 204,
       "remark": "",
-      "subregion": 17
+      "subregion": 15
     },
     "model": "core.party",
     "pk": 204
   },
   {
     "fields": {
-      "abbr": "SK",
-      "name": "Slovakia",
+      "abbr": "SL",
+      "name": "Sierra Leone",
       "parent_party": 205,
       "remark": "",
-      "subregion": 15
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 205
   },
   {
     "fields": {
-      "abbr": "SL",
-      "name": "Sierra Leone",
+      "abbr": "SM",
+      "name": "San Marino",
       "parent_party": 206,
       "remark": "",
-      "subregion": 1
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 206
   },
   {
     "fields": {
-      "abbr": "SM",
-      "name": "San Marino",
+      "abbr": "SN",
+      "name": "Senegal",
       "parent_party": 207,
       "remark": "",
-      "subregion": 18
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 207
   },
   {
     "fields": {
-      "abbr": "SN",
-      "name": "Senegal",
+      "abbr": "SO",
+      "name": "Somalia",
       "parent_party": 208,
       "remark": "",
-      "subregion": 2
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 208
   },
   {
     "fields": {
-      "abbr": "SO",
-      "name": "Somalia",
+      "abbr": "SR",
+      "name": "Suriname",
       "parent_party": 209,
       "remark": "",
-      "subregion": 1
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 209
   },
   {
     "fields": {
-      "abbr": "SR",
-      "name": "Suriname",
+      "abbr": "SS",
+      "name": "South Sudan",
       "parent_party": 210,
       "remark": "",
-      "subregion": 9
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 210
   },
   {
     "fields": {
-      "abbr": "SS",
-      "name": "South Sudan",
+      "abbr": "ST",
+      "name": "Sao Tome and Principe",
       "parent_party": 211,
       "remark": "",
-      "subregion": 1
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 211
   },
   {
     "fields": {
-      "abbr": "ST",
-      "name": "Sao Tome and Principe",
+      "abbr": "SV",
+      "name": "El Salvador",
       "parent_party": 212,
       "remark": "",
-      "subregion": 2
+      "subregion": 10
     },
     "model": "core.party",
     "pk": 212
   },
   {
     "fields": {
-      "abbr": "SV",
-      "name": "El Salvador",
-      "parent_party": 213,
-      "remark": "",
-      "subregion": 10
+      "abbr": "SX",
+      "name": "Sint Maarten",
+      "parent_party": 168,
+      "remark": "Dutch part/partie néerlandaise",
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 213
   },
   {
     "fields": {
-      "abbr": "SX",
-      "name": "Sint Maarten",
-      "parent_party": 169,
-      "remark": "Dutch part/partie néerlandaise",
-      "subregion": 17
+      "abbr": "SY",
+      "name": "Syrian Arab Republic",
+      "parent_party": 214,
+      "remark": "",
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 214
   },
   {
     "fields": {
-      "abbr": "SY",
-      "name": "Syrian Arab Republic",
+      "abbr": "SZ",
+      "name": "Eswatini (the Kingdom of)",
       "parent_party": 215,
       "remark": "",
-      "subregion": 5
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 215
   },
   {
     "fields": {
-      "abbr": "SZ",
-      "name": "Eswatini (the Kingdom of)",
-      "parent_party": 216,
+      "abbr": "TC",
+      "name": "Turks and Caicos Islands",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 1
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 216
   },
   {
     "fields": {
-      "abbr": "TC",
-      "name": "Turks and Caicos Islands",
-      "parent_party": 80,
+      "abbr": "TD",
+      "name": "Chad",
+      "parent_party": 217,
       "remark": "",
-      "subregion": 17
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 217
   },
   {
     "fields": {
-      "abbr": "TD",
-      "name": "Chad",
-      "parent_party": 218,
+      "abbr": "TF",
+      "name": "French Southern Territories",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 2
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 218
   },
   {
     "fields": {
-      "abbr": "TF",
-      "name": "French Southern Territories",
-      "parent_party": 78,
+      "abbr": "TG",
+      "name": "Togo",
+      "parent_party": 219,
       "remark": "",
-      "subregion": 17
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 219
   },
   {
     "fields": {
-      "abbr": "TG",
-      "name": "Togo",
+      "abbr": "TH",
+      "name": "Thailand",
       "parent_party": 220,
       "remark": "",
-      "subregion": 2
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 220
   },
   {
     "fields": {
-      "abbr": "TH",
-      "name": "Thailand",
+      "abbr": "TJ",
+      "name": "Tajikistan",
       "parent_party": 221,
       "remark": "",
-      "subregion": 3
+      "subregion": 6
     },
     "model": "core.party",
     "pk": 221
   },
   {
     "fields": {
-      "abbr": "TJ",
-      "name": "Tajikistan",
-      "parent_party": 222,
+      "abbr": "TK",
+      "name": "Tokelau",
+      "parent_party": 173,
       "remark": "",
-      "subregion": 6
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 222
   },
   {
     "fields": {
-      "abbr": "TK",
-      "name": "Tokelau",
-      "parent_party": 174,
+      "abbr": "TL",
+      "name": "Timor-Leste",
+      "parent_party": 223,
       "remark": "",
-      "subregion": 17
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 223
   },
   {
     "fields": {
-      "abbr": "TL",
-      "name": "Timor-Leste",
+      "abbr": "TM",
+      "name": "Turkmenistan",
       "parent_party": 224,
       "remark": "",
-      "subregion": 3
+      "subregion": 6
     },
     "model": "core.party",
     "pk": 224
   },
   {
     "fields": {
-      "abbr": "TM",
-      "name": "Turkmenistan",
+      "abbr": "TN",
+      "name": "Tunisia",
       "parent_party": 225,
       "remark": "",
-      "subregion": 6
+      "subregion": 2
     },
     "model": "core.party",
     "pk": 225
   },
   {
     "fields": {
-      "abbr": "TN",
-      "name": "Tunisia",
+      "abbr": "TO",
+      "name": "Tonga",
       "parent_party": 226,
       "remark": "",
-      "subregion": 2
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 226
   },
   {
     "fields": {
-      "abbr": "TO",
-      "name": "Tonga",
+      "abbr": "TR",
+      "name": "Turkey",
       "parent_party": 227,
-      "remark": "",
-      "subregion": 12
+      "remark": "Turkey, participates fully in both WEOG and Asian Group, but for electoral purposes is considered a member of WEOG only.",
+      "subregion": 8
     },
     "model": "core.party",
     "pk": 227
   },
   {
     "fields": {
-      "abbr": "TR",
-      "name": "Turkey",
+      "abbr": "TT",
+      "name": "Trinidad and Tobago",
       "parent_party": 228,
-      "remark": "Turkey, participates fully in both WEOG and Asian Group, but for electoral purposes is considered a member of WEOG only.",
-      "subregion": 8
+      "remark": "",
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 228
   },
   {
     "fields": {
-      "abbr": "TT",
-      "name": "Trinidad and Tobago",
-      "parent_party": 229,
-      "remark": "",
-      "subregion": 9
-    },
-    "model": "core.party",
-    "pk": 229
-  },
-  {
-    "fields": {
       "abbr": "TV",
       "name": "Tuvalu",
-      "parent_party": 230,
+      "parent_party": 229,
       "remark": "",
       "subregion": 12
     },
     "model": "core.party",
-    "pk": 230
+    "pk": 229
   },
   {
     "fields": {
@@ -2538,166 +2527,177 @@
       "subregion": 4
     },
     "model": "core.party",
-    "pk": 231
+    "pk": 230
   },
   {
     "fields": {
       "abbr": "TZ",
       "name": "United Republic of Tanzania",
-      "parent_party": 232,
+      "parent_party": 231,
       "remark": "",
       "subregion": 1
+    },
+    "model": "core.party",
+    "pk": 231
+  },
+  {
+    "fields": {
+      "abbr": "UA",
+      "name": "Ukraine",
+      "parent_party": 232,
+      "remark": "",
+      "subregion": 7
     },
     "model": "core.party",
     "pk": 232
   },
   {
     "fields": {
-      "abbr": "UA",
-      "name": "Ukraine",
+      "abbr": "UG",
+      "name": "Uganda",
       "parent_party": 233,
       "remark": "",
-      "subregion": 7
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 233
   },
   {
     "fields": {
-      "abbr": "UG",
-      "name": "Uganda",
-      "parent_party": 234,
+      "abbr": "UM",
+      "name": "United States Minor Outlying Islands",
+      "parent_party": 235,
       "remark": "",
-      "subregion": 1
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 234
   },
   {
     "fields": {
-      "abbr": "UM",
-      "name": "United States Minor Outlying Islands",
-      "parent_party": 237,
+      "abbr": "US",
+      "name": "United States of America",
+      "parent_party": 235,
       "remark": "",
-      "subregion": 17
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 235
   },
   {
     "fields": {
-      "abbr": "UNK",
-      "name": "Unspecified",
-      "parent_party": null,
+      "abbr": "UY",
+      "name": "Uruguay",
+      "parent_party": 236,
       "remark": "",
-      "subregion": 17
+      "subregion": 11
     },
     "model": "core.party",
     "pk": 236
   },
   {
     "fields": {
-      "abbr": "US",
-      "name": "United States of America",
+      "abbr": "UZ",
+      "name": "Uzbekistan",
       "parent_party": 237,
       "remark": "",
-      "subregion": 18
+      "subregion": 6
     },
     "model": "core.party",
     "pk": 237
   },
   {
     "fields": {
-      "abbr": "UY",
-      "name": "Uruguay",
+      "abbr": "VA",
+      "name": "Holy See",
       "parent_party": 238,
-      "remark": "",
-      "subregion": 11
+      "remark": "Vatican City",
+      "subregion": 18
     },
     "model": "core.party",
     "pk": 238
   },
   {
     "fields": {
-      "abbr": "UZ",
-      "name": "Uzbekistan",
+      "abbr": "VC",
+      "name": "Saint Vincent and the Grenadines",
       "parent_party": 239,
       "remark": "",
-      "subregion": 6
+      "subregion": 9
     },
     "model": "core.party",
     "pk": 239
   },
   {
     "fields": {
-      "abbr": "VA",
-      "name": "Holy See",
+      "abbr": "VE",
+      "name": "Venezuela (Bolivarian Republic of)",
       "parent_party": 240,
-      "remark": "Vatican City",
-      "subregion": 18
+      "remark": "",
+      "subregion": 11
     },
     "model": "core.party",
     "pk": 240
   },
   {
     "fields": {
-      "abbr": "VC",
-      "name": "Saint Vincent and the Grenadines",
-      "parent_party": 241,
+      "abbr": "VG",
+      "name": "Virgin Islands, British",
+      "parent_party": 79,
       "remark": "",
-      "subregion": 9
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 241
   },
   {
     "fields": {
-      "abbr": "VE",
-      "name": "Venezuela (Bolivarian Republic of)",
-      "parent_party": 242,
+      "abbr": "VI",
+      "name": "Virgin Islands, USA",
+      "parent_party": 235,
       "remark": "",
-      "subregion": 11
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 242
   },
   {
     "fields": {
-      "abbr": "VG",
-      "name": "Virgin Islands, British",
-      "parent_party": 80,
+      "abbr": "VN",
+      "name": "Viet Nam",
+      "parent_party": 243,
       "remark": "",
-      "subregion": 17
+      "subregion": 3
     },
     "model": "core.party",
     "pk": 243
   },
   {
     "fields": {
-      "abbr": "VI",
-      "name": "Virgin Islands, USA",
-      "parent_party": 237,
+      "abbr": "VU",
+      "name": "Vanuatu",
+      "parent_party": 244,
       "remark": "",
-      "subregion": 17
+      "subregion": 12
     },
     "model": "core.party",
     "pk": 244
   },
   {
     "fields": {
-      "abbr": "VN",
-      "name": "Viet Nam",
-      "parent_party": 245,
+      "abbr": "WF",
+      "name": "Wallis and Futuna",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 3
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 245
   },
   {
     "fields": {
-      "abbr": "VU",
-      "name": "Vanuatu",
+      "abbr": "WS",
+      "name": "Samoa",
       "parent_party": 246,
       "remark": "",
       "subregion": 12
@@ -2707,79 +2707,57 @@
   },
   {
     "fields": {
-      "abbr": "WF",
-      "name": "Wallis and Futuna",
-      "parent_party": 78,
+      "abbr": "YE",
+      "name": "Yemen",
+      "parent_party": 247,
       "remark": "",
-      "subregion": 17
+      "subregion": 5
     },
     "model": "core.party",
     "pk": 247
   },
   {
     "fields": {
-      "abbr": "WS",
-      "name": "Samoa",
-      "parent_party": 248,
+      "abbr": "YT",
+      "name": "Mayotte",
+      "parent_party": 77,
       "remark": "",
-      "subregion": 12
+      "subregion": 17
     },
     "model": "core.party",
     "pk": 248
   },
   {
     "fields": {
-      "abbr": "YE",
-      "name": "Yemen",
+      "abbr": "ZA",
+      "name": "South Africa",
       "parent_party": 249,
       "remark": "",
-      "subregion": 5
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 249
   },
   {
     "fields": {
-      "abbr": "YT",
-      "name": "Mayotte",
-      "parent_party": 78,
+      "abbr": "ZM",
+      "name": "Zambia",
+      "parent_party": 250,
       "remark": "",
-      "subregion": 17
+      "subregion": 1
     },
     "model": "core.party",
     "pk": 250
   },
   {
     "fields": {
-      "abbr": "ZA",
-      "name": "South Africa",
+      "abbr": "ZW",
+      "name": "Zimbabwe",
       "parent_party": 251,
       "remark": "",
       "subregion": 1
     },
     "model": "core.party",
     "pk": 251
-  },
-  {
-    "fields": {
-      "abbr": "ZM",
-      "name": "Zambia",
-      "parent_party": 252,
-      "remark": "",
-      "subregion": 1
-    },
-    "model": "core.party",
-    "pk": 252
-  },
-  {
-    "fields": {
-      "abbr": "ZW",
-      "name": "Zimbabwe",
-      "parent_party": 253,
-      "remark": "",
-      "subregion": 1
-    },
-    "model": "core.party",
-    "pk": 253
   }
 ]

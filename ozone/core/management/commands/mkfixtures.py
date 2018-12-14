@@ -76,6 +76,10 @@ class Command(BaseCommand):
             'sheet': 'SubstEDW',
         },
     }
+    EXCLUDED = (
+        'UNK',
+        'CZS',
+    )
 
     OUTPUT_DIR = settings.FIXTURE_DIRS[0]
     FIXTURES = {}
@@ -169,7 +173,7 @@ class Command(BaseCommand):
                 continue
 
         if hasattr(self, model + "_additional_data"):
-            data += getattr(self, model + "_additional_data")(len(data))
+            data += getattr(self, model + "_additional_data")(len(data) + 1)
 
         # if a post process method exists, invoke it
         if hasattr(self, model + "_postprocess"):
@@ -196,7 +200,7 @@ class Command(BaseCommand):
 
     def party_map(self, f, row):
         f['abbr'] = row['CntryID']
-        if row['CntryID'][:2] == 'ZZ':
+        if row['CntryID'][:2] == 'ZZ' or row['CntryID'].upper() in self.EXCLUDED:
             # Remove "All countries" and "Some countries"
             # f['_deleted'] = True
             return None
@@ -225,7 +229,7 @@ class Command(BaseCommand):
                 'party', 'abbr', f['parent_party'])
 
     def partyhistory_map(self, f, row):
-        if row['CntryID'] == 'HOLV':
+        if row['CntryID'] == 'HOLV' or row['CntryID'].upper() in self.EXCLUDED:
             # f['party'] = self.lookup_id('party', 'abbr', 'VA')
             # f['_deleted'] = True
             return None
@@ -289,7 +293,8 @@ class Command(BaseCommand):
         return f
 
     def partyratification_map(self, f, row):
-        if row['CntryID'][:2] == 'ZZ' or row['CntryID'] != row['MainCntryID']:
+        if row['CntryID'][:2] == 'ZZ' or row['CntryID'] != row['MainCntryID'] \
+                or row['CntryID'].upper() in self.EXCLUDED:
             # Remove "All countries" and "Some countries"
             return None
         ratif_types_map = {
