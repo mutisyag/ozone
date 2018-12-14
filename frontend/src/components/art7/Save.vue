@@ -17,7 +17,7 @@ export default {
 					removeDataAndSave.push(questionnaire_field.name)
 				}
 				if (!questionnaire_field.selected
-						&& !this.$store.state.form.tabs[questionnaire_field.name].form_fields.length 
+						&& !this.$store.state.form.tabs[questionnaire_field.name].form_fields.length
 						&& this.newTabs.includes(questionnaire_field.name)) {
 					doNotSave.push(questionnaire_field.name)
 				}
