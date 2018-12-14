@@ -21,8 +21,6 @@ from ozone.core.models import Article7Questionnaire
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
 
-DIFF_PRECISION = 0.1 ** 5
-
 
 class Command(BaseCommand):
     help = "Import Submission from Excel file"
@@ -64,6 +62,7 @@ class Command(BaseCommand):
                            for _substance in Substance.objects.all()}
 
         self.method = Submission.SubmissionMethods.LEGACY
+        self.precision = 10
 
     def add_arguments(self, parser):
         parser.add_argument('file',
@@ -74,6 +73,9 @@ class Command(BaseCommand):
                             help="Purge all entries that were imported")
         parser.add_argument('-l', '--limit', type=int, default=None,
                             help="Limit the number of row to import.")
+        parser.add_argument('-p', '--precision', type=int, default=10,
+                            help="Number of digits after after the period to "
+                                 "check for consistency.")
         parser.add_argument('-C', '--use-cache', action="store_true", default=False,
                             help="Load the data from the cache (if available) instead "
                                  "of the xls")
@@ -182,7 +184,7 @@ class Command(BaseCommand):
                                key)
                 continue
 
-            if abs(new_value - old_value) >= DIFF_PRECISION:
+            if abs(new_value - old_value) >= (0.1 ** self.precision):
                 logger.warning("Import inconsistency found for %s, values differ old=%s new=%s",
                                key, old_value, new_value)
                 continue
@@ -419,13 +421,13 @@ class Command(BaseCommand):
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
 
+        self.precision = options["precision"]
+
         all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
-
-        success_count = 0
-
         if options['limit']:
             all_values = all_values[:options['limit']]
 
+        success_count = 0
         for pk, values_dict in all_values:
             logger.debug("Importing row %s", values_dict)
 
