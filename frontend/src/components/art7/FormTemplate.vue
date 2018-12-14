@@ -260,7 +260,7 @@
 				</div>
 				<hr>
 
-				<div class="table-filters mb-2">
+				<div v-show="table.tableFilters" class="table-filters mb-2">
 						<b-input-group prepend="Search">
 								<b-form-input v-model="tableBlends.filters.search"/>
 						</b-input-group>
