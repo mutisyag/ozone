@@ -15,5 +15,6 @@ export default {
 	phone: 'Phone',
 	fax: 'Fax',
 	email: 'E-mail',
-	date: 'Date'
+	date: 'Date',
+	subject: 'Subject'
 }

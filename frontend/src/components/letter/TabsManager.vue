@@ -45,14 +45,6 @@
                 Submission Info
               </div>
              </template>
-			<b-row>
-				<b-col lg='3'>
-					<label>Subject</label>
-				</b-col>
-				<b-col>
-					<b-form-select v-model="subjectSelected" :options="subjectOptions" class="mb-3" />
-				</b-col>
-			</b-row>
 			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
@@ -141,15 +133,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: labels.general,
-			subjectOptions: [
-				{ value: null, text: 'Please select some item' },
-				{ value: 'a', text: 'This is First option' },
-				{ value: 'b', text: 'Default Selected Option' },
-				{ value: 'c', text: 'This is another option' },
-				{ value: 'd', text: 'This one is disabled', disabled: true }
-			],
-			subjectSelected: null
+			labels: labels.general
 		}
 	},
 	computed: {
