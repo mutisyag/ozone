@@ -17,6 +17,7 @@ const form = {
 	},
 	tabs: {
 		sub_info: tab_sub_info,
+		attachments: tab_attachments,
 		questionaire_questions: {
 			name: 'questionaire_questions',
 			hasAssideMenu: false,
@@ -823,8 +824,7 @@ const form = {
 				quantity_destroyed: null,
 				quantity_emitted: null
 			}
-		},
-		attachments: tab_attachments
+		}
 	}
 }
 export default form

@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/views/Dashboard'
 
-const DataManagerArt7 = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
-const DataManagerLetter = () => import(/* webpackChunkName: "art7" */ '@/components/letter/DataManager')
+const Art7DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
+const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/components/letter/DataManager')
+const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/hat/DataManager')
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
@@ -45,7 +46,7 @@ const routes = [
 				path: 'art7',
 				name: 'art7',
 				meta: { requiresAuth: true },
-				component: DataManagerArt7
+				component: Art7DataManager
 			},
 			{
 				path: 'essencrit',
@@ -57,13 +58,13 @@ const routes = [
 				path: 'hat',
 				name: 'hat',
 				meta: { requiresAuth: true },
-				component: FormNotFound
+				component: HatDataManager
 			},
 			{
 				path: 'letter',
 				name: 'letter',
 				meta: { requiresAuth: true },
-				component: DataManagerLetter
+				component: LetterDataManager
 			}
 		]
 	},
