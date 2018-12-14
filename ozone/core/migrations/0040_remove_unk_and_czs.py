@@ -13,6 +13,9 @@ def remove_unk_and_czs(apps, schema_editor):
 
 
 def refresh_fixtures(apps, schema_editor):
+    if not apps.get_model('core', 'Party').objects.count():
+        # Nothing to refresh.
+        return
     call_command('loaddata', 'parties')
     call_command('loaddata', 'partieshistory')
     call_command('loaddata', 'partiesratification')
