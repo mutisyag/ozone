@@ -19,7 +19,7 @@ before_script:
   - psql -c "CREATE DATABASE travisci;" -U postgres
 
 script:
-  - coverage run --omit='*/tests/*' --omit='*/migrations/*'  --source='ozone' manage.py test --keepdb
+  - coverage run --omit='*/tests/*,*/migrations/*'  --source='ozone' manage.py test --keepdb
 
 after_success:
   - pip install python-coveralls
