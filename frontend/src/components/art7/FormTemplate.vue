@@ -68,11 +68,7 @@
 					class="submission-table"
 					:items="tableItems"
 					:fields="tableFields"
-					:current-page="table.currentPage"
-					:per-page="table.perPage"
-					:sort-by.sync="table.sortBy"
-					:sort-desc.sync="table.sortDesc"
-					:sort-direction="table.sortDirection"
+					:empty-text="table.emptyText"
 					:filter="table.filters.search"
 					ref="table"
 				>
@@ -283,11 +279,7 @@
 					stacked="md"
 					:items="tableItemsBlends"
 					:fields="tableFieldsBlends"
-					:current-page="tableBlends.currentPage"
-					:per-page="tableBlends.perPage"
-					:sort-by.sync="tableBlends.sortBy"
-					:sort-desc.sync="tableBlends.sortDesc"
-					:sort-direction="tableBlends.sortDirection"
+					:empty-text="tableBlends.emptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends"
 				>
@@ -400,11 +392,6 @@
       <textarea class="form-control" v-model="comment.selected"></textarea>
     </div>
     <hr>
-    <div class="footnotes">
-      <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index">
-        <small>{{footnote}}</small>
-      </p>
-    </div>
 
     <AppAside v-if="!allowedChanges" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>

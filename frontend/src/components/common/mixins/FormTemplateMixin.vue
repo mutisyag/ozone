@@ -28,14 +28,9 @@ export default {
 	data() {
 		return {
 			table: {
-				currentPage: 1,
-				perPage: 200,
+				emptyText: 'Please use the form on the right sidebar to add substances',
 				tableFilters: false,
-				totalRows: 5,
 				pageOptions: [5, 25, 100],
-				sortBy: null,
-				sortDesc: false,
-				sortDirection: 'asc',
 				filters: {
 					search: null,
 					period_start: null,
@@ -47,14 +42,9 @@ export default {
 			},
 
 			tableBlends: {
-				currentPage: 1,
-				perPage: 10,
-				totalRows: 200,
+				emptyText: 'Please use the form on the right sidebar to add blends',
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
-				sortBy: null,
-				sortDesc: false,
-				sortDirection: 'asc',
 				filters: {
 					search: null,
 					period_start: null,
@@ -102,7 +92,6 @@ export default {
 					tableFields.push(tableRow)
 				}
 			})
-			this.table.totalRows = tableFields.length
 			return tableFields
 		},
 
@@ -134,13 +123,12 @@ export default {
 					tableFields.push(tableRow)
 				}
 			})
-			this.tableBlends.totalRows = tableFields.length
 			return tableFields
 		},
 
 		tableFields() {
 			const tableHeaders = []
-			const options = { sortable: true, class: 'text-center' }
+			const options = { class: 'text-center' }
 			this.tab_info.section_subheaders.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
@@ -153,11 +141,7 @@ export default {
 
 		tableFieldsBlends() {
 			const tableHeaders = []
-			const options = {
-				sortable: true,
-				sortDirection: 'desc',
-				class: 'text-center'
-			}
+			const options = { class: 'text-center' }
 			this.tab_info.section_subheaders.forEach((element) => {
 				if (element.name === 'substance') {
 					tableHeaders.push({ key: 'blend', label: element.label, ...options })
