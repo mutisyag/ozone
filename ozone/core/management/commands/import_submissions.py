@@ -84,6 +84,10 @@ class Command(BaseCommand):
                             help="Only parse the data, but do not insert it.")
 
     def process_entry(self, *args, **kwargs):
+        """Process the parsed data and insert it into the DB.
+
+        Only a wrapper, see _process_entry.
+        """
         try:
             return self._process_entry(*args, **kwargs)
         except Exception as e:
@@ -92,6 +96,20 @@ class Command(BaseCommand):
             return False
 
     def get_imports(self, row, party, period):
+        """Parses the import data for the submission identified by
+        the party/period combination.
+
+        The same data data is duplicated in legacy Excel file. One
+        version has the source_party information, and the other one
+        only has the total for each submission. Because the source
+        party information was introduced at a later time, and made
+        optional.
+
+        Double check that the data matches in both sheets and log
+        warning if not.
+
+        Return a list of imports.
+        """
         imports = []
 
         # Double check the data from old import sheet with the
@@ -165,6 +183,9 @@ class Command(BaseCommand):
         return imports
 
     def double_check(self, old, new):
+        """Compare the data from the 'Import' sheet with the data from
+        the 'ImportNew' sheet. Log any inconsistencies.
+        """
         # Iterate here instead of doing a simple check, so we print out
         # the errors with more details AND to the equals check up to a
         # certain precision because of the floating point operations.
@@ -192,6 +213,11 @@ class Command(BaseCommand):
                 continue
 
     def get_exports(self, row, party, period):
+        """Parses the export data for the submission identified by
+        the party/period combination.
+
+        Returns a list of exports.
+        """
         exports = []
 
         for exports_row in row["Export"]:
@@ -246,6 +272,9 @@ class Command(BaseCommand):
         return exports
 
     def get_data(self, row, party, period):
+        """Structure and parse the raw data from the Excel file
+        so it matches our models.
+        """
         # There should only be one entry in the overall sheet.
         try:
             overall = row["Overall"][0]
@@ -307,6 +336,14 @@ class Command(BaseCommand):
         }
 
     def check_consistency(self, data, party, period):
+        """Check consistency of the data returned by get_data.
+
+        Checks if the data is present the corresponding `has_*` flag
+        is correctly set and the other way around.
+
+        Log any inconsistencies, and returns True if the data looks
+        to be valid, and False otherwise.
+        """
         is_ok = True
         for data_type in self.data_to_check:
             # Check can be done in a single operation, but we want
@@ -323,6 +360,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def _process_entry(self, party, period, values, recreate=False, purge=False):
+        """Inserts the processed data into the DB."""
         is_processed = (party.abbr, period.name) in self.current_submission
         if purge:
             self.delete_instance(party, period)
@@ -366,6 +404,9 @@ class Command(BaseCommand):
         return True
 
     def delete_instance(self, party, period):
+        """Removes the submission identified by the party and period
+        and any related data.
+        """
         s = Submission.objects.filter(
             party=party,
             reporting_period=period,
@@ -379,6 +420,23 @@ class Command(BaseCommand):
         s.delete()
 
     def load_workbook(self, filename, use_cache=False):
+        """Loads the Excel file, collating the data based on the
+        CntryID and PeriodID.
+
+        If cache is set to True, then the data is loaded from a previously
+        loaded version of the file. Reduces time required while doing a lot
+        of tests.
+
+        Returns a list in the following format:
+        {
+            ("RO", 2019): {
+                "Overall": [{<overall-data>}],
+                "Import": [{<import1>}, {<import2?}, ...]
+                ...
+            }
+            ...
+        }
+        """
         if use_cache:
             try:
                 with open(CACHE_LOC, "rb") as cachef:
@@ -386,15 +444,6 @@ class Command(BaseCommand):
             except:
                 pass
 
-        # Store result in a format like
-        # {
-        #     ("RO", 2019): {
-        #         "Overall": [row],
-        #         "Import": [import1, import2,...]
-        #         ...
-        #     }
-        #     ...
-        # }
         def get_new():
             return collections.defaultdict(list)
 
