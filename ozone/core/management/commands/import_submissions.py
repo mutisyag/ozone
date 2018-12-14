@@ -17,6 +17,9 @@ from ozone.core.models import Article7Import
 from ozone.core.models import Article7Export
 from ozone.core.models import SubmissionInfo
 from ozone.core.models import ReportingPeriod
+from ozone.core.models import Article7Production
+from ozone.core.models import Article7Destruction
+from ozone.core.models import Article7NonPartyTrade
 from ozone.core.models import Article7Questionnaire
 
 logger = logging.getLogger(__name__)
@@ -40,16 +43,13 @@ class Command(BaseCommand):
     data_to_check = (
         "imports",
         "exports",
-        # "produced",
-        # "destroyed",
+        "produced",
+        "destroyed",
         # "nonparty",
     )
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
-
-        # Create as the first admin we find.
-        self.admin = User.objects.filter(is_superuser=True)[0]
 
         # Load all values in memory for faster lookups.
         self.current_submission = set(Submission.objects.filter(obligation_id=1).values_list(
@@ -164,7 +164,7 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                # "blend_id": "", #???
+                # "blend_id": "",
                 # "blend_item_id": "", #???
                 "substance_id": substance_id,
                 # "ordering_id": "",
@@ -262,14 +262,85 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                # "blend_id": "", #???
-                # "blend_item_id": "", #???
+                # "blend_id": "",
+                # "blend_item_id": "",
                 "substance_id": substance_id,
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
             })
 
         return exports
+
+    def get_destroyed(self, row, party, period):
+        """Parses the "destroyed" data for the submission identified by
+        the party/period combination.
+
+        Returns a list of destroyed substances.
+        """
+        destroyed = []
+
+        for destroyed_row in row["Destroyed"]:
+            try:
+                substance_id = self.substances[destroyed_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            destroyed.append({
+                "remarks_party": destroyed_row["Remark"] or "",
+                "substance_id": substance_id,
+                # "remarks_os": "",
+                "quantity_destroyed": destroyed_row["Destroyed"],
+                # "blend_id": "",
+                # "blend_item_id": "",
+                # "submission_id": "", # Auto filled
+                # "ordering_id": "",
+            })
+
+        return destroyed
+
+    def get_produced(self, row, party, period):
+        """Parses the "produced" data for the submission identified by
+        the party/period combination.
+
+        Returns a list of produced substances.
+        """
+        produce = []
+
+        for produce_row in row["Produce"]:
+            try:
+                substance_id = self.substances[produce_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            produce.append({
+                "remarks_party": produce_row["Remark"] or "",
+                "substance_id": substance_id,
+                # "remarks_os": "",
+                "quantity_critical_uses": None,
+                "quantity_essential_uses": None,
+                "quantity_high_ambient_temperature": None,
+                "quantity_laboratory_analytical_uses": None,
+                "quantity_process_agent_uses": produce_row["ProdProcAgent"],
+                "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
+                "quantity_total_produced": produce_row["ProdAllNew"],
+                "quantity_other_uses": None,
+                "quantity_feedstock": produce_row["ProdFeedstock"],
+                "quantity_article_5": produce_row["ProdArt5"],
+                "quantity_for_destruction": None,
+                "decision_critical_uses": "",
+                "decision_essential_uses": "",
+                "decision_high_ambient_temperature": "",
+                "decision_laboratory_analytical_uses": "",
+                "decision_process_agent_uses": "",
+                "decision_quarantine_pre_shipment": "",
+                "decision_other_uses": "",
+                # "submission_id": "", # Auto filled
+                # "ordering_id": "",
+            })
+
+        return produce
 
     def get_data(self, row, party, period):
         """Structure and parse the raw data from the Excel file
@@ -333,6 +404,8 @@ class Command(BaseCommand):
             },
             "imports": self.get_imports(row, party, period),
             "exports": self.get_exports(row, party, period),
+            "produced": self.get_produced(row, party, period),
+            "destroyed": self.get_destroyed(row, party, period),
         }
 
     def check_consistency(self, data, party, period):
@@ -390,6 +463,12 @@ class Command(BaseCommand):
         for export_values in values["exports"]:
             Article7Export.objects.create(submission=submission, **export_values)
 
+        for produce_values in values["produce"]:
+            Article7Production.objects.create(submission=submission, **produce_values)
+
+        for destroyed_values in values["destroyed"]:
+            Article7Destruction.objects.create(submission=submission, **destroyed_values)
+
         # Extra tidy
         submission._current_state = "finalized"
         submission.save()
@@ -398,7 +477,7 @@ class Command(BaseCommand):
             obj.save()
 
         log_data = ", ".join("%s=%s" % (_data_type, len(values[_data_type]))
-                                        for _data_type in self.data_to_check)
+                             for _data_type in self.data_to_check)
         logger.info("Submission %s/%s imported with %s",
                     party.abbr, period.name, log_data)
         return True
@@ -477,6 +556,13 @@ class Command(BaseCommand):
             logger.setLevel(logging.DEBUG)
 
         self.precision = options["precision"]
+
+        try:
+            # Create as the first admin we find.
+            self.admin = User.objects.filter(is_superuser=True)[0]
+        except Exception as e:
+            logger.critical("Unable to find an admin: %s", e)
+            return
 
         all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
         if options['limit']:
