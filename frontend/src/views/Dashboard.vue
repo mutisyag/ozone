@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col sm="6">
+      <b-col sm="5">
         <b-card v-if="basicDataReady">
           <div slot="header">
             <strong>Create new submission </strong>
@@ -27,35 +27,39 @@
         </b-card>
       </b-col>
 
-        <b-col sm="6">
+        <b-col sm="7">
           <b-card v-if="dataReady">
             <div slot="header">
-              <strong>Continue working on your submissions </strong>
+              <strong>My submissions </strong>
             </div>
-            <b-row class="open-submissions-list">
-              <b-col class="mb-3" v-if="submission.current_state === 'data_entry'" :key="submission.url" v-for="submission in submissions">
-                  <router-link
-                        class="btn btn-light submission-continue"
-                        :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}} "
-                      >
-                  <div class="detail-header">
-                         Submission details:
-                  </div>
-                  <div>
-                   <i class="fa fa-calendar fa-lg"></i> {{getSubmissionInfo(submission).period()}}
-                  </div>
-                  <div>
-                   <i class="fa fa-certificate fa-lg"></i> {{getSubmissionInfo(submission).obligation()}}
-                  </div>
-                  <div>
-                    <i class="fa fa-globe fa-lg"></i> {{getSubmissionInfo(submission).party()}}
-                  </div>
-                  <div>
-                    <i class="fa fa-archive fa-lg"></i> Version {{submission.version}}
-                  </div>
-                </router-link>
-              </b-col>
-            </b-row>
+						<table class="table table-striped table-hover classic-header">
+							<thead>
+								<tr>
+									<th><i class="fa fa-certificate fa-lg"></i> Obligation</th>
+									<th><i class="fa fa-calendar fa-lg"></i> Reporting period</th>
+									<th><i class="fa fa-archive fa-lg"></i> Version</th>
+									<th><i class="fa fa-mouse-pointer fa-lg"></i> Actions</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr v-if="submission.current_state === 'data_entry'" :key="submission.url" v-for="submission in submissions">
+									<td>
+                   {{getSubmissionInfo(submission).obligation()}}
+									</td>
+									<td>
+										{{getSubmissionInfo(submission).period()}}
+									</td>
+									<td>
+                     {{submission.version}}
+									</td>
+									<td>
+										<router-link :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}}">
+											Continue
+										</router-link>
+									</td>
+								</tr>
+							</tbody>
+						</table>
           </b-card>
         </b-col>
     </b-row>
@@ -404,27 +408,6 @@ export default {
 .fade-enter,
 .fade-leave-to {
   opacity: 0;
-}
-.submission-continue span {
-  margin-left: .5rem;
-}
-
-.submission-continue {
-  border: 1px solid #eee;
-  box-shadow: 1px 1px 3px #eee;
-  text-align: left;
-  display: block;
-  padding: .5rem;
-  margin: .5rem;
-}
-
-.submission-continue div:not(.detail-header) {
-    background: white;
-    color: #444;
-    margin-left: -15px;
-    margin-right: -15px;
-    padding: .5rem 15px;
-    border: 1px solid #eee;
 }
 
 .detail-header {
