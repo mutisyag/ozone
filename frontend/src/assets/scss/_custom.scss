@@ -904,3 +904,10 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 		height: unset!important;
 	}
 }
+
+.app-header {
+	h3 {
+		flex-grow: 1;
+    text-align: center;
+	}
+}

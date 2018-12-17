@@ -10,11 +10,10 @@
         <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
       <!-- </b-link> -->
       <SidebarToggler class="d-md-down-none" display="lg" />
+
+			<h3>{{$route.meta.title ? $route.meta.title : $route.name}}</h3>
+
       <b-navbar-nav class="ml-auto">
-        <b-nav-item class="d-md-down-none">
-          <i class="icon-bell"></i>
-          <b-badge pill variant="danger">5</b-badge>
-        </b-nav-item>
         <Header/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-lg-none" mobile />-->
