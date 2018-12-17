@@ -131,7 +131,7 @@ class Command(BaseCommand):
 
             if not any(import_row[_npt_type]
                        for _npt_type in ("ImpNew", "ImpRecov")):
-                logger.warning("Import new no quantity specified: %s/%s/%s", party.abbr,
+                logger.warning("ImportNew no quantity specified: %s/%s/%s", party.abbr,
                                period.name, import_row["SubstID"])
 
             # Get the source party, if not present then add it as NULL
@@ -231,7 +231,7 @@ class Command(BaseCommand):
 
             if not any(nonparty_row[_npt_type]
                        for _npt_type in ("NPTImpNew", "NPTImpRecov", "NPTExpNew", "NPTExpRecov")):
-                logger.error("NonPartyTrade new no quantity specified: %s/%s/%s", party.abbr,
+                logger.error("NonPartyTradeNew no quantity specified: %s/%s/%s", party.abbr,
                              period.name, nonparty_row["SubstID"])
                 continue
 
