@@ -1,5 +1,4 @@
 <script>
-import labels from '@/components/art7/dataDefinitions/labels'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { Aside as AppAside } from '@coreui/vue'
@@ -19,10 +18,6 @@ export default {
 		AppAside,
 		DefaultAside,
 		Multiselect
-	},
-
-	created() {
-		this.labels = labels[this.tab_info.name]
 	},
 
 	data() {
@@ -244,7 +239,9 @@ export default {
 				return
 			}
 			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
-			topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+			if (topHeader.querySelector('th:first-of-type span').innerHTML) {
+				topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+			}
 			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},
 

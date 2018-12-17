@@ -503,6 +503,7 @@
 </template>
 
 <script>
+import labels from '@/components/art7/dataDefinitions/labels'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { intersect } from '@/components/common/services/utilsService'
 import CloneField from '@/components/common/form-components/CloneField.vue'
@@ -523,7 +524,9 @@ export default {
 			}
 		}
 	},
-
+	created() {
+		this.labels = labels[this.tab_info.name]
+	},
 	methods: {
 		anotherSpecialCase(order, modal_data) {
 			if (order !== 'quarantine_pre_shipment') {
