@@ -915,3 +915,7 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 .classic-header th {
 	text-align: left!important;
 }
+
+.create-submission .input-group-text {
+	min-width: 90px;
+}
