@@ -94,6 +94,7 @@ const store = new Vuex.Store({
 			(sub) => sub.obligation === data.obligation
 				&& sub.party === data.party
 				&& sub.reporting_period === data.reporting_period
+				&& sub.current_state === 'data_entry'
 		),
 
 		getSubmissionInfo: (state) => (submission) => {
