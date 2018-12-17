@@ -5,6 +5,7 @@ import decimal
 import logging
 import collections
 
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from openpyxl import load_workbook
@@ -565,6 +566,7 @@ class Command(BaseCommand):
             submission=submission,
             **values["art7"],
         )
+        raise_error = None
 
         for import_values in values["imports"]:
             Article7Import.objects.create(submission=submission, **import_values)
@@ -579,7 +581,18 @@ class Command(BaseCommand):
             Article7Destruction.objects.create(submission=submission, **destroyed_values)
 
         for nonparty_values in values["nonparty"]:
-            Article7NonPartyTrade.objects.create(submission=submission, **nonparty_values)
+            try:
+                npt = Article7NonPartyTrade.objects.create(submission=submission,
+                                                           **nonparty_values)
+            except ValidationError as e:
+                s = Substance.objects.get(id=nonparty_values["substance_id"])
+                t = Party.objects.get(id=nonparty_values["trade_party_id"])
+                logger.error("NonPartyTrade %s: %s/%s/%s/%s", e,
+                             party.abbr, period.name, s.substance_id, t.abbr)
+                raise_error = e
+
+        if raise_error:
+            raise raise_error
 
         # Extra tidy
         submission._current_state = "finalized"
