@@ -32,13 +32,13 @@ const form = {
 			form_fields: [],
 			special_fields_order: [],
 			hidden_fields_order: [],
-			modal_order: ['annex_group', 'prop1', 'prop2', 'prop3', 'validation'],
+			modal_order: ['prop1', 'prop2', 'prop3'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			get fields_order() {
 				return this.section_subheaders.map(x => x.name)
 			},
 			get input_fields() {
-				return this.section_subheaders.map(x => x.name)
+				return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',
@@ -136,13 +136,13 @@ const form = {
 			isInvalid: false,
 			description: 'description 11111111111111111111111111',
 			form_fields: [],
-			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
+			modal_order: ['prop1', 'prop2', 'prop3'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			get fields_order() {
 				return this.section_subheaders.map(x => x.name)
 			},
 			get input_fields() {
-				return this.section_subheaders.map(x => x.name)
+				return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',

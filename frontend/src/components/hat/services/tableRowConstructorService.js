@@ -28,9 +28,17 @@ export default {
 				type: 'number',
 				selected: null
 			},
+			remarks_party: {
+				type: 'textarea',
+				selected: ''
+			},
+			remarks_os: {
+				type: 'textarea',
+				selected: ''
+			},
 			get validation() {
 				const errors = []
-				if (!this.prop3.sected) {
+				if (!this.prop3.selected) {
 					errors.push('Prop3 required')
 				}
 

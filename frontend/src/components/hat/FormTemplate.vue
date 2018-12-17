@@ -261,7 +261,7 @@
       <div v-if="modal_data">
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
-            <h6>Change substance</h6>
+            Change substance
           </b-col>
           <b-col>
             <multiselect
@@ -282,53 +282,8 @@
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
                 :disabled="allowedChanges"
-                v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
-              <multiselect
-                v-else
-                :clear-on-select="true"
-                :hide-selected="true"
-                :close-on-select="true"
-                trackBy="value"
-                label="text"
-                placeholder="Countries"
-                @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})"
-                :value="modal_data.field[order].selected"
-                :options="tab_data.countryOptions"
-              ></multiselect>
-            </b-col>
-          </b-row>
-          <hr>
-        </div>
-        <div>
-          <b-row
-            class="mb-3"
-            v-if="fieldsDecisionQuantity"
-            v-for="(order,order_index) in fieldsDecisionQuantity"
-            :key="order_index"
-            v-show="anotherSpecialCase(order, modal_data)"
-          >
-            <b-col lg="4" class="mb-2">
-              <span>{{labels[`decision_${order}`]}}:</span>
-            </b-col>
-            <b-col lg="4">
-              <b-input-group class="modal-group" :prepend="labels['quantity']">
-                <fieldGenerator
-                  :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-                  :disabled="allowedChanges"
-                  :field="modal_data.field[`quantity_${order}`]"
-                ></fieldGenerator>
-              </b-input-group>
-            </b-col>
-            <b-col lg="4">
-              <b-input-group class="modal-group" :prepend="labels['decision']">
-                <fieldGenerator
-                  :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="allowedChanges"
-                  :field="modal_data.field[`decision_${order}`]"
-                ></fieldGenerator>
-              </b-input-group>
             </b-col>
           </b-row>
           <hr>
@@ -339,7 +294,7 @@
           :key="comment_field"
         >
           <b-col lg="3">
-            <h6>{{labels[comment_field]}}</h6>
+            {{labels[comment_field]}}
           </b-col>
           <b-col lg="9">
             <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
@@ -358,6 +313,7 @@
 
 <script>
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
+import labels from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
@@ -371,13 +327,14 @@ export default {
 			}
 		}
 	},
+	created() {
+		this.labels = labels[this.tab_info.name]
+	},
 	methods: {
 	},
 	computed: {
 		getTabInputFields() {
-			const a = this.tab_info.section_subheaders.filter(x => x.isInput).map(x => x.name)
-			console.log(a)
-			return a
+			return this.tab_info.input_fields
 		}
 	}
 }
