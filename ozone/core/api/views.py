@@ -10,6 +10,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
 from rest_framework.filters import BaseFilterBackend
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -251,11 +252,17 @@ class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
+class SubmissionPaginator(PageNumberPagination):
+    page_query_param = 'page'
+    page_size_query_param = "page_size"
+
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
     filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend,)
     filter_fields = ('obligation', 'party', 'reporting_period',)
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    pagination_class = SubmissionPaginator
 
     def get_queryset(self):
         return Submission.objects.all()
@@ -266,8 +273,15 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return SubmissionSerializer
 
     def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ListSubmissionSerializer(page, many=True,
+                                                  context={"request": request})
+            return self.get_paginated_response(serializer.data)
+
         serializer = ListSubmissionSerializer(
-            self.filter_queryset(self.get_queryset()),
+            queryset,
             many=True,
             context={"request": request},
         )
