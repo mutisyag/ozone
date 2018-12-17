@@ -563,6 +563,10 @@ class Command(BaseCommand):
 
         # Extra tidy
         submission._current_state = "finalized"
+        if values["submission"]["created_at"]:
+            submission.created_at = values["submission"]["created_at"]
+        if values["submission"]["updated_at"]:
+            submission.updated_at = values["submission"]["updated_at"]
         submission.save()
         for obj in submission.history.all():
             obj.history_user = self.admin
