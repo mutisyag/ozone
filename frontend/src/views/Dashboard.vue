@@ -35,10 +35,10 @@
 						<table class="table table-striped table-hover classic-header">
 							<thead>
 								<tr>
-									<th><i class="fa fa-certificate fa-lg"></i> Obligation</th>
-									<th><i class="fa fa-calendar fa-lg"></i> Reporting period</th>
-									<th><i class="fa fa-archive fa-lg"></i> Version</th>
-									<th><i class="fa fa-mouse-pointer fa-lg"></i> Actions</th>
+									<th>Obligation</th>
+									<th>Reporting period</th>
+									<th>Version</th>
+									<th>Actions</th>
 								</tr>
 							</thead>
 							<tbody>
