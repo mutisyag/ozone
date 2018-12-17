@@ -2,32 +2,39 @@
 	<div>
 		<div class="container">
 			<div>
-				<h5 class="mt-2">Select predefined blend</h5>
-				<multiselect
-					:clear-on-select="false"
-					:hide-selected="true"
-					trackBy="value"
-					label="text"
-					:close-on-select="false"
-					:multiple="true"
-					@input="new_blend = null; selected_blends.selected = []"
-					v-model="selected_blends.filter"
-					placeholder="Filter by type"
-					:options="selected_blends.filters"
-				></multiselect>
-				<div class="mt-2 mb-2" style="display: flex;">
+				<h5 class="mt-2">Add predefined blends</h5>
+				<small>Filter by blend types in order to select one or more blends. <br> A row for each blend will be added in Table 2. <br>Blends can be deleted using table controls.</small>
+				<b-input-group class="mt-2" prepend="Blend types">
 					<multiselect
-						trackBy="value"
 						:clear-on-select="false"
 						:hide-selected="true"
+						trackBy="value"
+						label="text"
 						:close-on-select="false"
 						:multiple="true"
-						label="text"
-						v-model="selected_blends.selected"
-						@input="new_blend = null"
-						placeholder="Select blend"
-						:options="filteredBlends"
+						@input="new_blend = null; selected_blends.selected = []"
+						v-model="selected_blends.filter"
+						placeholder=""
+						:options="selected_blends.filters"
 					></multiselect>
+				</b-input-group>
+
+				<div class="mt-2 mb-2" style="display: flex;">
+					<b-input-group class="mt-2" prepend="Blends">
+						<multiselect
+							trackBy="value"
+							:clear-on-select="false"
+							:hide-selected="true"
+							:close-on-select="false"
+							:multiple="true"
+							label="text"
+							v-model="selected_blends.selected"
+							@input="new_blend = null"
+							placeholder=""
+							:options="filteredBlends"
+						></multiselect>
+					</b-input-group>
+
 				</div>
 			</div>
 
@@ -47,12 +54,15 @@
 					<b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
 				</b-row>
 			</div>
-			<br>
-			<b-btn
-				v-if="selected_blends.selected.length"
-				@click="addSubstance('selected')"
-				variant="success"
-			>Add selected blends</b-btn>
+			
+			<b-btn-group>
+				<b-btn
+					v-if="selected_blends.selected.length"
+					@click="addSubstance('selected')"
+					variant="success"
+				>Add {{selected_blends.selected.length}} selected blends</b-btn>
+				<b-btn 	v-if="selected_blends.selected.length" variant="danger" @click="resetData">Cancel</b-btn>
+			</b-btn-group>
 			<hr>
 
 			<div v-if="!new_blend">
@@ -97,12 +107,16 @@
 			</div>
 
 			<hr>
-			<b-btn
-				v-if="new_blend"
-				:disabled="!blendIsValid"
-				@click="addSubstance('custom')"
-				variant="success"
-			>Add custom blend</b-btn>
+			<b-btn-group>
+				<b-btn
+					v-if="new_blend"
+					:disabled="!blendIsValid"
+					@click="addSubstance('custom')"
+					variant="success"
+				>Add custom blend</b-btn>
+				<b-btn v-if="new_blend" variant="danger" @click="resetData">Cancel</b-btn>
+			</b-btn-group>
+
 		</div>
 	</div>
 </template>
