@@ -66,16 +66,18 @@
 			<hr>
 
 			<div v-if="!new_blend">
-				<h5>Create a new blend</h5>
+				<h5>Add custom blend</h5>
 				<b-btn variant="primary" @click="addNewBlend">Add new blend</b-btn>
 			</div>
 
 			<div v-if="new_blend">
-				<h5>Composition</h5>
+				<h5>Add custom blend</h5>
+				<small>Note: If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</small>
+				<h5 class="mt-2">Composition</h5>
 				<b-input-group prepend="Blend name">
 					<b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
 					<b-input-group-append>
-						<b-btn variant="default" @click="addSubstanceToBlend">+</b-btn>
+						<b-btn variant="default" @click="addSubstanceToBlend">Add substance</b-btn>
 					</b-input-group-append>
 				</b-input-group>
 				<b-input-group
@@ -95,15 +97,16 @@
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
-						placeholder="Select a controlled substance or enter a new one."
+						placeholder="Controlled or new substance"
 						v-model="substance.name"
 						:options="substances"
 					></multiselect>
 					<b-input-group-append>
-						<b-form-input type="text" placeholder="%" v-model="substance.percent"></b-form-input>
+						<b-input-group append="%">
+							<b-form-input class="ml-2" type="text" placeholder="" v-model="substance.percent"></b-form-input>
+						</b-input-group>
 					</b-input-group-append>
 				</b-input-group>
-				<small>Note: If a non standard blend not listed in section 11 of the data reporting instructions and guidelines is to be reported, please indicate the percentage by weight of each constituent controlled substance of the mixture being reported in the “comments” box above.</small>
 			</div>
 
 			<hr>
@@ -113,7 +116,7 @@
 					:disabled="!blendIsValid"
 					@click="addSubstance('custom')"
 					variant="success"
-				>Add custom blend</b-btn>
+				>Add</b-btn>
 				<b-btn v-if="new_blend" variant="danger" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
 
