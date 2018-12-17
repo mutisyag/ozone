@@ -385,8 +385,8 @@ class Command(BaseCommand):
                 continue
 
             if not destroyed_row["Destroyed"]:
-                logger.warning("Destroyed no quantity specified: %s/%s", party.abbr,
-                               period.name)
+                logger.warning("Destroyed no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, destroyed_row["SubstID"])
 
             destroyed.append({
                 "remarks_party": destroyed_row["Remark"] or "",
@@ -417,8 +417,8 @@ class Command(BaseCommand):
                 continue
 
             if not produce_row["ProdAllNew"]:
-                logger.warning("Produce no quantity specified: %s/%s", party.abbr,
-                               period.name)
+                logger.warning("Produce no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, produce_row["SubstID"])
 
             produce.append({
                 "remarks_party": produce_row["Remark"] or "",
