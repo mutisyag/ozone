@@ -98,7 +98,7 @@ const getSubmissionsVersions = () => fetch('submission-versions/')
 
 const getInstructions = (tabName) => {
 	if (isTestSession) {
-		return fetch(`http://localhost:8000/static/instructions/${tabName}.html/`)
+		return fetch(`http://localhost:8080/instructions/${tabName}.html/`)
 	}
 	return fetch(`${window.location.origin}/instructions/${tabName}.html/`)
 }
