@@ -15,6 +15,7 @@ const removeLoginToken = () => new Promise((resolve, reject) => {
 })
 
 const getLoginToken = (username, password) => new Promise((resolve, reject) => {
+	delete api.defaults.headers.authorization
 	post('/auth-token/', { username, password })
 		.then((response) => {
 			api.defaults.headers.authorization = `token ${response.data.token}`
