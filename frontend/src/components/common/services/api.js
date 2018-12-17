@@ -100,7 +100,7 @@ const getInstructions = (tabName) => {
 	if (isTestSession) {
 		return fetch(`http://localhost:8080/instructions/${tabName}.html/`)
 	}
-	return fetch(`${window.location.origin}/instructions/${tabName}.html/`)
+	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
 }
 
 const deleteSubmission = (url) => remove(url)
