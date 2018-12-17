@@ -496,7 +496,7 @@
           <div class="modal-footer-info">
             The values are saved as you type
           </div>
-          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close modal</b-btn>
+          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
       </div>
     </b-modal>
   </div>

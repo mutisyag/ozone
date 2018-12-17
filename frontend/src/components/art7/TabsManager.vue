@@ -33,6 +33,9 @@
 
   <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
     <div v-if="modal_data" v-html="modal_data"></div>
+		<div slot="modal-footer">
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+		</div>
   </b-modal>
 
   <div class="form-wrapper" style="position: relative">
@@ -105,6 +108,9 @@
 
     <b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
+				<div slot="modal-footer">
+          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+				</div>
     </b-modal>
   </div>
 </template>
