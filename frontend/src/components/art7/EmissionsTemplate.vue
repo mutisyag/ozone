@@ -6,6 +6,11 @@
 
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
+					<div v-show="table.tableFilters" class="table-filters">
+						<b-input-group prepend="Search">
+								<b-form-input v-model="table.filters.search"/>
+						</b-input-group>
+					</div>
 					<span>
 						<i style="margin-right: .5rem" @click="addField" class="fa fa-plus-square fa-lg"></i>
 						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -13,11 +18,6 @@
 				</div>
 				<hr>
 
-				<div v-show="table.tableFilters" class="table-filters mb-2">
-						<b-input-group prepend="Search">
-								<b-form-input v-model="table.filters.search"/>
-						</b-input-group>
-				</div>
 				<b-table
 					show-empty
 					outlined
