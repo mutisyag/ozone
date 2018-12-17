@@ -4,10 +4,10 @@
       <b-col sm="5">
         <b-card v-if="basicDataReady">
           <div slot="header">
-            <strong>Create new submission </strong>
+            <strong>Create submission</strong>
           </div>
-
-          <div>
+					<small>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</small>
+          <div class="create-submission mt-2">
             <b-input-group class="mb-2" prepend="Obligation">
               <multiselect trackBy="value" label="text" placeholder="" v-model="current.obligation" :options="obligations"></multiselect>
             </b-input-group>
@@ -21,7 +21,7 @@
                <multiselect trackBy="value" label="text" placeholder="" v-model="current.party" :options="parties"></multiselect>
             </b-input-group>
 
-            <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create submission</b-btn>
+            <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create</b-btn>
           </div>
 
         </b-card>
