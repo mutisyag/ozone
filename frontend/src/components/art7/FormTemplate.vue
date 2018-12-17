@@ -399,13 +399,13 @@
       <div v-if="modal_data" slot="modal-title">
         <span
           v-if="modal_data.field.substance.selected"
-        >{{tab_data.display.substances[modal_data.field.substance.selected]}}</span>
-        <span v-else>{{tab_data.display.blends[modal_data.field.blend.selected].name}}</span>
+        >Edit {{tab_data.display.substances[modal_data.field.substance.selected]}} substance</span>
+        <span v-else>Edit {{tab_data.display.blends[modal_data.field.blend.selected].name}} blend</span>
       </div>
       <div v-if="modal_data">
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
-            <h6>Change substance</h6>
+            Change substance
           </b-col>
           <b-col>
             <multiselect
@@ -419,7 +419,7 @@
             ></multiselect>
           </b-col>
         </b-row>
-        <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
+        <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
             <b-col>{{labels[order]}}</b-col>
             <b-col>
@@ -443,7 +443,6 @@
               ></multiselect>
             </b-col>
           </b-row>
-          <hr>
         </div>
         <div>
           <b-row
@@ -453,19 +452,20 @@
             :key="order_index"
             v-show="anotherSpecialCase(order, modal_data)"
           >
-            <b-col lg="4" class="mb-2">
-              <span>{{labels[`decision_${order}`]}}:</span>
+            <b-col lg="2" class="mb-2">
+              <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
-            <b-col lg="4">
+            <b-col lg="3">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
+									style="max-width: 50%"
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
                   :disabled="allowedChanges"
                   :field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
             </b-col>
-            <b-col lg="4">
+            <b-col lg="7">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
@@ -475,7 +475,6 @@
               </b-input-group>
             </b-col>
           </b-row>
-          <hr>
         </div>
         <b-row
           class="mt-3"
@@ -483,17 +482,19 @@
           :key="comment_field"
         >
           <b-col lg="3">
-            <h6>{{labels[comment_field]}}</h6>
+            {{labels[comment_field]}}
           </b-col>
           <b-col lg="9">
             <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
           </b-col>
         </b-row>
       </div>
+			<p class="muted mt-3">
+				All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
+				<br>
+				The values are saved in the table, as you type. Close the form using the button below.
+			</p>
       <div slot="modal-footer">
-          <div class="modal-footer-info">
-            The values are saved as you type
-          </div>
           <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
       </div>
     </b-modal>
