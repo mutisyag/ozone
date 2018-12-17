@@ -171,10 +171,19 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
-				this.modal_data = response.data
-				this.$refs.instructions_modal.show()
-			})
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			if (tabName) {
+				getInstructions(tabName).then((response) => {
+					this.modal_data = response.data
+					this.$refs.instructions_modal.show()
+				}).catch(error => {
+					console.log(error)
+					this.$store.dispatch('setAlert', {
+						message: { __all__: ['Can\'t find instructions for current form'] },
+						variant: 'danger'
+					})
+				})
+			}
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
