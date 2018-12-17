@@ -45,10 +45,7 @@ export default {
 		},
 
 		updateFormField(e) {
-			if (this.field.type === 'select') {
-				console.log('this.field', this.field)
-			}
-			if (e === undefined) {
+			if (this.field.type !== 'select') {
 				this.validateInput()
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
 			} else {
