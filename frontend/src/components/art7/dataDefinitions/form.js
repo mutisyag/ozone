@@ -16,7 +16,10 @@ const form = {
 		]
 	},
 	tabs: {
-		sub_info: tab_sub_info,
+		sub_info: {
+			...tab_sub_info,
+			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'
+		},
 		attachments: tab_attachments,
 		questionaire_questions: {
 			name: 'questionaire_questions',
@@ -25,7 +28,7 @@ const form = {
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
 			titleHtml: 'Questionnaire',
-			detailsHtml: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
+			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms',
 			status: null,
 			isInvalid: false,
 			description: '',
@@ -50,9 +53,9 @@ const form = {
 			formNumber: 2,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Exports',
+			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms',
 			titleHtml: '<b>EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
 			tooltipForTitleHtml: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.',
-			detailsHtml: 'Fill in this form only if your country exported or re-exported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
