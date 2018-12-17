@@ -22,23 +22,22 @@ const form = {
 			validate: true,
 			saving: false,
 			formNumber: 1,
-			intro: 'intro 111111111111',
 			title: 'Imports',
 			titleHtml: '<b>Consumption (imports)</b> <br><small>Annex F substances for exempted subsectors, \n in metric tonnes (not ODP or CO2-equivalent tonnes)</small>',
 			detailsHtml: '1. Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
-			subtitle: 'subtitle 11111111111111111111111111',
 			isInvalid: false,
-			description: 'description 11111111111111111111111111',
 			form_fields: [],
 			special_fields_order: [],
 			hidden_fields_order: [],
-			modal_order: ['prop1', 'prop2', 'prop3'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			get fields_order() {
 				return this.section_subheaders.map(x => x.name)
 			},
 			get input_fields() {
 				return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
+			},
+			get modal_order() {
+				return this.input_fields
 			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',
@@ -128,21 +127,20 @@ const form = {
 			validate: true,
 			saving: false,
 			formNumber: 2,
-			intro: 'intro 111111111111',
 			title: 'Production',
 			titleHtml: '<b>PRODUCTION </b> <br><small> Annex F substances for exempted subsectors, <br>in metric tonnes (not ODP or CO2-equivalent tonnes)  </small>',
 			detailsHtml: '1. Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
-			subtitle: 'subtitle 11111111111111111111111111',
 			isInvalid: false,
-			description: 'description 11111111111111111111111111',
 			form_fields: [],
-			modal_order: ['prop1', 'prop2', 'prop3'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			get fields_order() {
 				return this.section_subheaders.map(x => x.name)
 			},
 			get input_fields() {
 				return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
+			},
+			get modal_order() {
+				return this.input_fields
 			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',
