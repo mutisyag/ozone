@@ -257,6 +257,7 @@ export default {
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
 		this.$store.dispatch('getCurrentSubmissions')
+		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
 
 	components: {

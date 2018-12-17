@@ -53,6 +53,7 @@ const store = new Vuex.Store({
 			variant: null
 		},
 		current_submission: null,
+		route: '',
 		currentSubmissionHistory: null,
 		available_transitions: null,
 		permissions: {
@@ -216,7 +217,8 @@ const store = new Vuex.Store({
 		setAlert(context, data) {
 			Object.keys(data.message).forEach(key => {
 				const labelValue = getLevel2PropertyValue(labels, key)
-				const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${data.message[key].join('<br>')}`
+				const message = typeof (data.message[key]) !== 'string' ? data.message[key].join('<br>') : data.message[key]
+				const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${message}`
 				context.commit('addAlertData', {
 					displayMessage,
 					variant: data.variant
@@ -430,6 +432,10 @@ const store = new Vuex.Store({
 	},
 
 	mutations: {
+		updateBreadcrumbs(state, data) {
+			state.route = data.join(' / ')
+		},
+
 		updateFormField(state, data) {
 			console.log(data.value)
 			data.fieldInfo.index === data.fieldInfo.field

@@ -135,6 +135,7 @@ export default {
 	},
 	created() {
 		this.$store.dispatch('getPartyRatifications')
+		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Parties'])
 	}
 }
 </script>

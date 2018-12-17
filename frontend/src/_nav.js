@@ -2,11 +2,13 @@ export default {
 	items: [
 		{
 			name: 'Dashboard',
-			url: '/dashboard'
+			url: '/dashboard',
+			icon: 'icon-calculator'
 		},
 
 		{
 			name: 'Lookup tables',
+			icon: 'icon-list',
 			children: [{
 				name: 'Controlled substances',
 				url: '/lookup-tables/controlled-substances'

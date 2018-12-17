@@ -96,11 +96,11 @@ const getCustomBlends = () => fetch('blends/')
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
-const getInstructions = () => {
+const getInstructions = (tabName) => {
 	if (isTestSession) {
-		return fetch(`${window.location.origin}/test.html`)
+		return fetch(`http://localhost:8080/instructions/${tabName}.html/`)
 	}
-	return null
+	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
 }
 
 const deleteSubmission = (url) => remove(url)

@@ -882,3 +882,32 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 		display: none!important;
 	}
 }
+
+
+.submission-table th {
+	border: 1px solid #aaa!important;;
+}
+
+.aside-menu {
+	> div {
+		    display: flex;
+    flex-direction: column;
+    height: 100%;
+	}
+	.tabs {
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
+	}
+	.tab-content {
+		flex-grow: 1;
+		height: unset!important;
+	}
+}
+
+.app-header {
+	h3 {
+		flex-grow: 1;
+    text-align: center;
+	}
+}

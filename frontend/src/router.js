@@ -45,7 +45,10 @@ const routes = [
 			{
 				path: 'art7',
 				name: 'art7',
-				meta: { requiresAuth: true },
+				meta: {
+					requiresAuth: true,
+					title: 'Article 7'
+				},
 				component: Art7DataManager
 			},
 			{

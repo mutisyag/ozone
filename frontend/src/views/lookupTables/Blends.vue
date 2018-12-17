@@ -213,6 +213,7 @@ export default {
 	},
 	created() {
 		this.$store.dispatch('getCustomBlends')
+		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Blends'])
 	}
 }
 </script>

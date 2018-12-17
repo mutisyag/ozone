@@ -33,6 +33,9 @@
 
   <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
     <div v-if="modal_data" v-html="modal_data"></div>
+		<div slot="modal-footer">
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+		</div>
   </b-modal>
 
   <div class="form-wrapper" style="position: relative">
@@ -76,25 +79,6 @@
 				<Attachments :tab="$store.state.form.tabs.attachments"/>
 			</b-tab>
         </b-tabs>
-        <!-- <formsubmit :country="country" :info="form"></formsubmit> -->
-
-        <div class="legend">
-            <b>Legend:</b>
-            <div>
-              <div class="spinner">
-                <div class="loader"></div>
-              </div> - Form is curently being saved
-            </div>
-            <div>
-              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
-            </div>
-            <div>
-              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server
-            </div>
-            <div>
-              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
-            </div>
-        </div>
     </b-card>
     </div>
     <Footer>
@@ -124,6 +108,9 @@
 
     <b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
+				<div slot="modal-footer">
+          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+				</div>
     </b-modal>
   </div>
 </template>
@@ -157,6 +144,11 @@ export default {
 		data: null,
 		submission: String
 	},
+
+	created() {
+		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.$route.name, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]])
+	},
+
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
@@ -190,10 +182,19 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
-				this.modal_data = response.data
-				this.$refs.instructions_modal.show()
-			})
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			if (tabName) {
+				getInstructions(tabName).then((response) => {
+					this.modal_data = response.data
+					this.$refs.instructions_modal.show()
+				}).catch(error => {
+					console.log(error)
+					this.$store.dispatch('setAlert', {
+						message: { __all__: ['Can\'t find instructions for current form'] },
+						variant: 'danger'
+					})
+				})
+			}
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
@@ -237,14 +238,3 @@ export default {
 }
 
 </script>
-
-<style lang="css" scoped>
-.legend {
-  padding: .2rem 2rem;
-  background: #f0f3f5;
-}
-
-.legend .spinner {
-  margin-left: 0;
-}
-</style>

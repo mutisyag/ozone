@@ -10,11 +10,9 @@
         <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
       <!-- </b-link> -->
       <SidebarToggler class="d-md-down-none" display="lg" />
+
+			<h3>ORS (Ozone online reporting system)</h3>
       <b-navbar-nav class="ml-auto">
-        <b-nav-item class="d-md-down-none">
-          <i class="icon-bell"></i>
-          <b-badge pill variant="danger">5</b-badge>
-        </b-nav-item>
         <Header/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-lg-none" mobile />-->
@@ -28,7 +26,9 @@
         <SidebarMinimizer/>
       </AppSidebar>
       <main class="main">
-        <Breadcrumb :list="list"/>
+				<div class="breadcrumb">
+					{{list}}
+				</div>
         <div class="container-fluid">
           <router-view></router-view>
         </div>
@@ -41,17 +41,17 @@
 
 import nav from '@/_nav'
 import {
-	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Breadcrumb
+	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
+import auth from '@/components/common/mixins/auth'
 
 export default {
 	name: 'app',
 	components: {
 		AppHeader,
 		AppSidebar,
-		Breadcrumb,
 		Header,
 		SidebarForm,
 		SidebarFooter,
@@ -60,6 +60,8 @@ export default {
 		SidebarNav,
 		SidebarMinimizer
 	},
+
+	mixins: [auth],
 
 	data() {
 		return {
@@ -75,7 +77,7 @@ export default {
 			return this.$route.name
 		},
 		list() {
-			return this.$route.matched.filter((route) => route.name || route.meta.label)
+			return this.$store.state.route
 		}
 	},
 	methods: {
@@ -111,6 +113,10 @@ export default {
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
+			if (error.response.status === 401) {
+				this.logout('cookie')
+			}
+
 			return Promise.reject(error)
 		})
 	}

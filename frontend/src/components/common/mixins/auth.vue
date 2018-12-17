@@ -18,12 +18,17 @@ export default {
 				})
 		},
 
-		logout() {
-			removeLoginToken().then(() => {
-				console.log(this.$cookies)
+		logout(cookie) {
+			if (cookie === 'cookie') {
 				this.$cookies.remove('authToken')
 				this.$router.push({ name: 'Login' })
-			})
+			} else {
+				removeLoginToken().then(() => {
+					console.log(this.$cookies)
+					this.$cookies.remove('authToken')
+					this.$router.push({ name: 'Login' })
+				})
+			}
 		}
 	}
 }
