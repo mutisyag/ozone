@@ -218,8 +218,20 @@ class Command(BaseCommand):
             double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpNew"] or 0)
             double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpRecov"] or 0)
 
-            # Get the source party, if not present then add it as NULL
-            # the data on the source party will be in the remarks.
+            try:
+                substance_id = self.substances[nonparty_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            if not any(nonparty_row[_npt_type]
+                       for _npt_type in ("NPTImpNew", "NPTImpRecov", "NPTExpNew", "NPTExpRecov")):
+                logger.error("NonPartyTrade new no quantity specified: %s/%s/%s", party.abbr,
+                             period.name, nonparty_row["SubstID"])
+                continue
+
+            # Get the trade party, if not present then add it as NULL
+            # the data on the trade party will be in the remarks.
             trade_party = nonparty_row["SrcDestCntryID"].upper()
             if trade_party in ("ZZB", "UNK"):
                 trade_party_id = None
@@ -230,12 +242,6 @@ class Command(BaseCommand):
                     logger.error("NonPartyTrade new unknown trade party %s: %s/%s", e, party.abbr,
                                  period.name)
                     trade_party_id = None
-
-            try:
-                substance_id = self.substances[nonparty_row["SubstID"]].id
-            except KeyError as e:
-                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
-                continue
 
             nonparty.append({
                 "remarks_party": nonparty_row["Remark"] or "",
@@ -657,6 +663,9 @@ class Command(BaseCommand):
 
         success_count = 0
         for pk, values_dict in all_values:
+            if single and single != "%s/%s" % pk:
+                continue
+
             logger.debug("Importing row %s", values_dict)
 
             try:
@@ -665,9 +674,6 @@ class Command(BaseCommand):
             except KeyError as e:
                 logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
-
-            if single and single != "%s/%s" % (party.abbr, period.name):
-                continue
 
             data = self.get_data(values_dict, party, period)
             self.check_consistency(data, party, period)
