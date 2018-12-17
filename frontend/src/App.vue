@@ -115,7 +115,7 @@ export default {
 				variant: 'danger'
 			})
 			if (error.response.status === 401) {
-				this.logout()
+				this.logout('cookie')
 			}
 
 			return Promise.reject(error)
