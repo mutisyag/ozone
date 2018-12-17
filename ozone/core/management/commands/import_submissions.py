@@ -5,6 +5,7 @@ import decimal
 import logging
 import collections
 
+from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from openpyxl import load_workbook
@@ -17,6 +18,9 @@ from ozone.core.models import Article7Import
 from ozone.core.models import Article7Export
 from ozone.core.models import SubmissionInfo
 from ozone.core.models import ReportingPeriod
+from ozone.core.models import Article7Production
+from ozone.core.models import Article7Destruction
+from ozone.core.models import Article7NonPartyTrade
 from ozone.core.models import Article7Questionnaire
 
 logger = logging.getLogger(__name__)
@@ -37,19 +41,21 @@ class Command(BaseCommand):
         "ImpPolyol",
     )
 
+    nonparty_types = (
+        "NPTImp",
+        "NPTExp",
+    )
+
     data_to_check = (
         "imports",
         "exports",
-        # "produced",
-        # "destroyed",
-        # "nonparty",
+        "produced",
+        "destroyed",
+        "nonparty",
     )
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
-
-        # Create as the first admin we find.
-        self.admin = User.objects.filter(is_superuser=True)[0]
 
         # Load all values in memory for faster lookups.
         self.current_submission = set(Submission.objects.filter(obligation_id=1).values_list(
@@ -82,16 +88,17 @@ class Command(BaseCommand):
                                  "of the xls")
         parser.add_argument("--dry-run", action="store_true", default=False,
                             help="Only parse the data, but do not insert it.")
+        parser.add_argument("-S", "--single", help="Only process this single entry.")
 
-    def process_entry(self, *args, **kwargs):
+    def process_entry(self, party, period, values, recreate=False, purge=False):
         """Process the parsed data and insert it into the DB.
 
         Only a wrapper, see _process_entry.
         """
         try:
-            return self._process_entry(*args, **kwargs)
+            return self._process_entry(party, period, values, recreate=recreate, purge=purge)
         except Exception as e:
-            logger.error("Error %s while saving: %s", e, args[:2],
+            logger.error("Error %s while saving: %s/%s", e, party.abbr, period.name,
                          exc_info=True)
             return False
 
@@ -122,6 +129,11 @@ class Command(BaseCommand):
             for imp_type in self.import_types:
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
                 double_check_new[pk] += decimal.Decimal(import_row[imp_type] or 0)
+
+            if not any(import_row[_npt_type]
+                       for _npt_type in ("ImpNew", "ImpRecov")):
+                logger.warning("ImportNew no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, import_row["SubstID"])
 
             # Get the source party, if not present then add it as NULL
             # the data on the source party will be in the remarks.
@@ -164,7 +176,7 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                # "blend_id": "", #???
+                # "blend_id": "",
                 # "blend_item_id": "", #???
                 "substance_id": substance_id,
                 # "ordering_id": "",
@@ -178,11 +190,93 @@ class Command(BaseCommand):
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
                 double_check_old[pk] += decimal.Decimal(import_row[imp_type] or 0)
 
-        self.double_check(double_check_old, double_check_new)
+        self.double_check(double_check_old, double_check_new, "Import")
 
         return imports
 
-    def double_check(self, old, new):
+    def get_nonparty(self, row, party, period):
+        """Parses the "nonparty" data for the submission identified by
+        the party/period combination.
+
+        The same data data is duplicated in legacy Excel file. One
+        version has the source_party information, and the other one
+        only has the total for each submission. Because the source
+        party information was introduced at a later time, and made
+        optional.
+
+        Double check that the data matches in both sheets and log
+        warning if not.
+
+        Returns a list of nonparty trade substances.
+        """
+        nonparty = []
+
+        # Double check the data from old import sheet with the
+        # data from the new import sheet.
+        double_check_new = collections.defaultdict(decimal.Decimal)
+        double_check_old = collections.defaultdict(decimal.Decimal)
+
+        for nonparty_row in row["NonPartyTradeNew"]:
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpNew"] or 0)
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpRecov"] or 0)
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpNew"] or 0)
+            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpRecov"] or 0)
+
+            try:
+                substance_id = self.substances[nonparty_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("NonPartyTrade unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            if not any(nonparty_row[_npt_type]
+                       for _npt_type in ("NPTImpNew", "NPTImpRecov", "NPTExpNew", "NPTExpRecov")):
+                logger.error("NonPartyTradeNew no quantity specified: %s/%s/%s", party.abbr,
+                             period.name, nonparty_row["SubstID"])
+                continue
+
+            # Get the trade party, if not present then add it as NULL
+            # the data on the trade party will be in the remarks.
+            trade_party = nonparty_row["SrcDestCntryID"].upper()
+            if trade_party in ("ZZB", "UNK"):
+                trade_party_id = None
+            else:
+                try:
+                    trade_party_id = self.parties[trade_party].id
+                except KeyError as e:
+                    logger.error("NonPartyTrade new unknown trade party %s: %s/%s", e, party.abbr,
+                                 period.name)
+                    trade_party_id = None
+
+            nonparty.append({
+                "remarks_party": nonparty_row["Remark"] or "",
+                "substance_id": substance_id,
+                "trade_party_id": trade_party_id,
+                # "remarks_os": "",
+                "quantity_import_new": nonparty_row["NPTImpNew"],
+                "quantity_import_recovered": nonparty_row["NPTImpRecov"],
+                "quantity_export_new": nonparty_row["NPTExpNew"],
+                "quantity_export_recovered": nonparty_row["NPTExpRecov"],
+                # "blend_id": "",
+                # "blend_item_id": "",
+                # "submission_id": "", # Autofilled
+                # "ordering_id": "",
+            })
+
+        # Cross-Reference with the other sheet, for a double check of data
+        # consistency. Only use the NonPartyTradeNew sheet for now.
+        for nonparty_row in row["NonPartyTrade"]:
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
+            double_check_old[pk] += decimal.Decimal(nonparty_row["Import"] or 0)
+            pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
+            double_check_old[pk] += decimal.Decimal(nonparty_row["Export"] or 0)
+
+        self.double_check(double_check_old, double_check_new, "NonPartyTrade")
+
+        return nonparty
+
+    def double_check(self, old, new, tag):
         """Compare the data from the 'Import' sheet with the data from
         the 'ImportNew' sheet. Log any inconsistencies.
         """
@@ -196,20 +290,20 @@ class Command(BaseCommand):
             try:
                 old_value = old[key]
             except KeyError:
-                logger.warning("Import inconsistency found for %s, present in old but not in new.",
-                               key)
+                logger.warning("%s inconsistency found for %s, present in old but not in new.",
+                               tag, key)
                 continue
 
             try:
                 new_value = new[key]
             except KeyError:
-                logger.warning("Import inconsistency found for %s, present in new but not in old.",
-                               key)
+                logger.warning("%s inconsistency found for %s, present in new but not in old.",
+                               tag, key)
                 continue
 
             if abs(new_value - old_value) >= (0.1 ** self.precision):
-                logger.warning("Import inconsistency found for %s, values differ old=%s new=%s",
-                               key, old_value, new_value)
+                logger.warning("%s inconsistency found for %s, values differ old=%s new=%s",
+                               tag, key, old_value, new_value)
                 continue
 
     def get_exports(self, row, party, period):
@@ -240,6 +334,11 @@ class Command(BaseCommand):
                 logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
 
+            if not any(exports_row[_npt_type]
+                       for _npt_type in ("ExpNew", "ExpRecov")):
+                logger.warning("Export no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, exports_row["SubstID"])
+
             exports.append({
                 "remarks_party": exports_row["Remark"] or "",
                 # "remarks_os": "",
@@ -262,14 +361,93 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                # "blend_id": "", #???
-                # "blend_item_id": "", #???
+                # "blend_id": "",
+                # "blend_item_id": "",
                 "substance_id": substance_id,
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
             })
 
         return exports
+
+    def get_destroyed(self, row, party, period):
+        """Parses the "destroyed" data for the submission identified by
+        the party/period combination.
+
+        Returns a list of destroyed substances.
+        """
+        destroyed = []
+
+        for destroyed_row in row["Destroy"]:
+            try:
+                substance_id = self.substances[destroyed_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Destroyed unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            if not destroyed_row["Destroyed"]:
+                logger.warning("Destroyed no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, destroyed_row["SubstID"])
+
+            destroyed.append({
+                "remarks_party": destroyed_row["Remark"] or "",
+                "substance_id": substance_id,
+                # "remarks_os": "",
+                "quantity_destroyed": destroyed_row["Destroyed"],
+                # "blend_id": "",
+                # "blend_item_id": "",
+                # "submission_id": "", # Auto filled
+                # "ordering_id": "",
+            })
+
+        return destroyed
+
+    def get_produced(self, row, party, period):
+        """Parses the "produced" data for the submission identified by
+        the party/period combination.
+
+        Returns a list of produced substances.
+        """
+        produce = []
+
+        for produce_row in row["Produce"]:
+            try:
+                substance_id = self.substances[produce_row["SubstID"]].id
+            except KeyError as e:
+                logger.error("Produce unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            if not produce_row["ProdAllNew"]:
+                logger.warning("Produce no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, produce_row["SubstID"])
+
+            produce.append({
+                "remarks_party": produce_row["Remark"] or "",
+                "substance_id": substance_id,
+                # "remarks_os": "",
+                "quantity_critical_uses": None,
+                "quantity_essential_uses": None,
+                "quantity_high_ambient_temperature": None,
+                "quantity_laboratory_analytical_uses": None,
+                "quantity_process_agent_uses": produce_row["ProdProcAgent"],
+                "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
+                "quantity_total_produced": produce_row["ProdAllNew"],
+                "quantity_other_uses": None,
+                "quantity_feedstock": produce_row["ProdFeedstock"],
+                "quantity_article_5": produce_row["ProdArt5"],
+                "quantity_for_destruction": None,
+                "decision_critical_uses": "",
+                "decision_essential_uses": "",
+                "decision_high_ambient_temperature": "",
+                "decision_laboratory_analytical_uses": "",
+                "decision_process_agent_uses": "",
+                "decision_quarantine_pre_shipment": "",
+                "decision_other_uses": "",
+                # "submission_id": "", # Auto filled
+                # "ordering_id": "",
+            })
+
+        return produce
 
     def get_data(self, row, party, period):
         """Structure and parse the raw data from the Excel file
@@ -333,6 +511,9 @@ class Command(BaseCommand):
             },
             "imports": self.get_imports(row, party, period),
             "exports": self.get_exports(row, party, period),
+            "produced": self.get_produced(row, party, period),
+            "destroyed": self.get_destroyed(row, party, period),
+            "nonparty": self.get_nonparty(row, party, period),
         }
 
     def check_consistency(self, data, party, period):
@@ -349,8 +530,10 @@ class Command(BaseCommand):
             # Check can be done in a single operation, but we want
             # to be verbose to log the inconsistency.
             if data[data_type] and not data["art7"]["has_" + data_type]:
-                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set",
-                               party.abbr, period.name, data_type)
+                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set "
+                               "(Auto-fixed)", party.abbr, period.name, data_type)
+                # Automatically fix these issues
+                data["art7"]["has_" + data_type] = True
                 is_ok = False
             elif not data[data_type] and data["art7"]["has_" + data_type]:
                 logger.warning("Inconsistency for %s/%s/%s: does not have data, but flag set",
@@ -383,6 +566,7 @@ class Command(BaseCommand):
             submission=submission,
             **values["art7"],
         )
+        raise_error = None
 
         for import_values in values["imports"]:
             Article7Import.objects.create(submission=submission, **import_values)
@@ -390,15 +574,39 @@ class Command(BaseCommand):
         for export_values in values["exports"]:
             Article7Export.objects.create(submission=submission, **export_values)
 
+        for produce_values in values["produced"]:
+            Article7Production.objects.create(submission=submission, **produce_values)
+
+        for destroyed_values in values["destroyed"]:
+            Article7Destruction.objects.create(submission=submission, **destroyed_values)
+
+        for nonparty_values in values["nonparty"]:
+            try:
+                npt = Article7NonPartyTrade.objects.create(submission=submission,
+                                                           **nonparty_values)
+            except ValidationError as e:
+                s = Substance.objects.get(id=nonparty_values["substance_id"])
+                t = Party.objects.get(id=nonparty_values["trade_party_id"])
+                logger.error("NonPartyTrade %s: %s/%s/%s/%s", e,
+                             party.abbr, period.name, s.substance_id, t.abbr)
+                raise_error = e
+
+        if raise_error:
+            raise raise_error
+
         # Extra tidy
         submission._current_state = "finalized"
+        if values["submission"]["created_at"]:
+            submission.created_at = values["submission"]["created_at"]
+        if values["submission"]["updated_at"]:
+            submission.updated_at = values["submission"]["updated_at"]
         submission.save()
         for obj in submission.history.all():
             obj.history_user = self.admin
             obj.save()
 
         log_data = ", ".join("%s=%s" % (_data_type, len(values[_data_type]))
-                                        for _data_type in self.data_to_check)
+                             for _data_type in self.data_to_check)
         logger.info("Submission %s/%s imported with %s",
                     party.abbr, period.name, log_data)
         return True
@@ -411,7 +619,7 @@ class Command(BaseCommand):
             party=party,
             reporting_period=period,
         ).get()
-        logger.info("Deleting submission %s", s.id)
+        logger.info("Deleting submission %s/%s", party.abbr, period.name)
         for related_data in s.RELATED_DATA:
             for instance in getattr(s, related_data).all():
                 logger.debug("Deleting related data: %s", instance)
@@ -477,6 +685,14 @@ class Command(BaseCommand):
             logger.setLevel(logging.DEBUG)
 
         self.precision = options["precision"]
+        single = options["single"]
+
+        try:
+            # Create as the first admin we find.
+            self.admin = User.objects.filter(is_superuser=True)[0]
+        except Exception as e:
+            logger.critical("Unable to find an admin: %s", e)
+            return
 
         all_values = self.load_workbook(options["file"], use_cache=options["use_cache"])
         if options['limit']:
@@ -484,6 +700,9 @@ class Command(BaseCommand):
 
         success_count = 0
         for pk, values_dict in all_values:
+            if single and single != "%s/%s" % pk:
+                continue
+
             logger.debug("Importing row %s", values_dict)
 
             try:
@@ -493,7 +712,7 @@ class Command(BaseCommand):
                 logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
 
-            data = self.get_data(values_dict, party, period)
+            data = dict(self.get_data(values_dict, party, period))
             self.check_consistency(data, party, period)
             if not options["dry_run"]:
                 success_count += self.process_entry(party,
