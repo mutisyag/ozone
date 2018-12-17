@@ -135,6 +135,7 @@ export default {
 	},
 	created() {
 		this.$store.dispatch('getSubstances')
+		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Controlled substances'])
 	}
 }
 </script>

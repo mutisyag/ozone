@@ -11,8 +11,7 @@
       <!-- </b-link> -->
       <SidebarToggler class="d-md-down-none" display="lg" />
 
-			<h3>{{$route.meta.title ? $route.meta.title : $route.name}}</h3>
-
+			<h3>ORS (Ozone online reporting system)</h3>
       <b-navbar-nav class="ml-auto">
         <Header/>
       </b-navbar-nav>
@@ -27,7 +26,9 @@
         <SidebarMinimizer/>
       </AppSidebar>
       <main class="main">
-        <Breadcrumb :list="list"/>
+				<div class="breadcrumb">
+					{{list}}
+				</div>
         <div class="container-fluid">
           <router-view></router-view>
         </div>
@@ -40,7 +41,7 @@
 
 import nav from '@/_nav'
 import {
-	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav, Breadcrumb
+	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
@@ -51,7 +52,6 @@ export default {
 	components: {
 		AppHeader,
 		AppSidebar,
-		Breadcrumb,
 		Header,
 		SidebarForm,
 		SidebarFooter,
@@ -77,7 +77,7 @@ export default {
 			return this.$route.name
 		},
 		list() {
-			return this.$route.matched.filter((route) => route.name || route.meta.label)
+			return this.$store.state.route
 		}
 	},
 	methods: {

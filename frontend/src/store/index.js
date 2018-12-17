@@ -53,6 +53,7 @@ const store = new Vuex.Store({
 			variant: null
 		},
 		current_submission: null,
+		route: '',
 		currentSubmissionHistory: null,
 		available_transitions: null,
 		permissions: {
@@ -431,6 +432,10 @@ const store = new Vuex.Store({
 	},
 
 	mutations: {
+		updateBreadcrumbs(state, data) {
+			state.route = data.join(' / ')
+		},
+
 		updateFormField(state, data) {
 			console.log(data.value)
 			data.fieldInfo.index === data.fieldInfo.field

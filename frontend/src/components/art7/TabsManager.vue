@@ -144,6 +144,11 @@ export default {
 		data: null,
 		submission: String
 	},
+
+	created() {
+		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.$route.name, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]])
+	},
+
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
