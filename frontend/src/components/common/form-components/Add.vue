@@ -10,8 +10,8 @@
 				<multiselect :clear-on-select="false" :hide-selected="true" :close-on-select="false"  label="text" trackBy="value" :multiple="true" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
 			</b-input-group>
 			<b-btn-group>
-      	<b-btn v-if="selected_substance.selected" @click="addSubstance" variant="success">Add {{selected_substance.selected.length}} rows</b-btn>
-				<b-btn v-if="selected_substance.selected" variant="danger" @click="resetData">Cancel</b-btn>			
+				<b-btn v-if="selected_substance.selected" @click="addSubstance" variant="success">Add {{selected_substance.selected.length}} rows</b-btn>
+				<b-btn v-if="selected_substance.selected" variant="danger" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
     </div>
   </div>
