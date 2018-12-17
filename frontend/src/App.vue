@@ -45,6 +45,7 @@ import {
 } from '@coreui/vue'
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
+import auth from '@/components/common/mixins/auth'
 
 export default {
 	name: 'app',
@@ -60,6 +61,8 @@ export default {
 		SidebarNav,
 		SidebarMinimizer
 	},
+
+	mixins: [auth],
 
 	data() {
 		return {
@@ -111,6 +114,11 @@ export default {
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
+			if (error.response.status === 401) {
+				this.logout()
+				this.login()
+			}
+
 			return Promise.reject(error)
 		})
 	}

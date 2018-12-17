@@ -9,6 +9,7 @@ const removeLoginToken = () => new Promise((resolve, reject) => {
 			resolve()
 		})
 		.catch((error) => {
+			delete api.defaults.headers.authorization
 			reject(error)
 		})
 })
