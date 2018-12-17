@@ -590,7 +590,11 @@ const store = new Vuex.Store({
 
 		prefillTab(state, { tabName, data }) {
 			console.log('prefilling tab', tabName, data)
-			Object.keys(state.form.tabs[tabName].form_fields).forEach(field => { state.form.tabs[tabName].form_fields[field].selected = data[field] })
+			Object.keys(state.form.tabs[tabName].form_fields).forEach(field => {
+				if (data[field] !== undefined) {
+					state.form.tabs[tabName].form_fields[field].selected = data[field]
+				}
+			})
 		},
 		// addRow
 		addRow(state, { sectionName, row }) {

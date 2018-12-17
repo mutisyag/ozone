@@ -4,7 +4,10 @@
         <input @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type">
     </div>
     <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
-    <b-form-select @change="updateFormField"  :disabled="disabled" v-else-if="field.type === 'select'" :value="field.selected" :options="field.options"></b-form-select>
+    <b-form-select
+		@change="updateFormField($event)"
+		:disabled="disabled"
+		v-else-if="field.type === 'select'" v-model="currentTyping" :options="field.options"> </b-form-select>
     <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'" :value="field.selected"></textarea>
   </div>
 </template>
@@ -41,9 +44,16 @@ export default {
 			}
 		},
 
-		updateFormField() {
-			this.validateInput()
-			this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
+		updateFormField(e) {
+			if (this.field.type === 'select') {
+				console.log('this.field', this.field)
+			}
+			if (e === undefined) {
+				this.validateInput()
+				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
+			} else {
+				this.$store.commit('updateFormField', { value: e, fieldInfo: this.fieldInfo })
+			}
 		},
 
 		updateFormFieldWithTabs(event) {

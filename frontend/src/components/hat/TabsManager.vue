@@ -120,9 +120,9 @@ import Attachments from '@/components/common/Attachments.vue'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
-import labels from '@/components/art7/dataDefinitions/labels'
+import labels from '@/components/hat/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
-import FormTemplate from '@/components/art7/FormTemplate.vue'
+import FormTemplate from '@/components/hat/FormTemplate.vue'
 
 export default {
 	components: {
