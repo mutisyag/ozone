@@ -129,6 +129,11 @@ class Command(BaseCommand):
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
                 double_check_new[pk] += decimal.Decimal(import_row[imp_type] or 0)
 
+            if not any(import_row[_npt_type]
+                       for _npt_type in ("ImpNew", "ImpRecov")):
+                logger.warning("Import new no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, import_row["SubstID"])
+
             # Get the source party, if not present then add it as NULL
             # the data on the source party will be in the remarks.
             source_party = import_row["OrgCntryID"].upper()
@@ -221,7 +226,7 @@ class Command(BaseCommand):
             try:
                 substance_id = self.substances[nonparty_row["SubstID"]].id
             except KeyError as e:
-                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                logger.error("NonPartyTrade unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
 
             if not any(nonparty_row[_npt_type]
@@ -328,6 +333,11 @@ class Command(BaseCommand):
                 logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
 
+            if not any(exports_row[_npt_type]
+                       for _npt_type in ("ExpNew", "ExpRecov")):
+                logger.warning("Export no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, exports_row["SubstID"])
+
             exports.append({
                 "remarks_party": exports_row["Remark"] or "",
                 # "remarks_os": "",
@@ -367,12 +377,16 @@ class Command(BaseCommand):
         """
         destroyed = []
 
-        for destroyed_row in row["Destroyed"]:
+        for destroyed_row in row["Destroy"]:
             try:
                 substance_id = self.substances[destroyed_row["SubstID"]].id
             except KeyError as e:
-                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                logger.error("Destroyed unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
+
+            if not destroyed_row["Destroyed"]:
+                logger.warning("Destroyed no quantity specified: %s/%s", party.abbr,
+                               period.name)
 
             destroyed.append({
                 "remarks_party": destroyed_row["Remark"] or "",
@@ -399,8 +413,12 @@ class Command(BaseCommand):
             try:
                 substance_id = self.substances[produce_row["SubstID"]].id
             except KeyError as e:
-                logger.error("Export unknown substance %s: %s/%s", e, party.abbr, period.name)
+                logger.error("Produce unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
+
+            if not produce_row["ProdAllNew"]:
+                logger.warning("Produce no quantity specified: %s/%s", party.abbr,
+                               period.name)
 
             produce.append({
                 "remarks_party": produce_row["Remark"] or "",
@@ -679,7 +697,7 @@ class Command(BaseCommand):
                 logger.critical("Unable to find matching %s: %s", e, values_dict)
                 break
 
-            data = self.get_data(values_dict, party, period)
+            data = dict(self.get_data(values_dict, party, period))
             self.check_consistency(data, party, period)
             if not options["dry_run"]:
                 success_count += self.process_entry(party,
