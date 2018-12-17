@@ -77,6 +77,10 @@
 				</b-table>
 			</div>
 
+			<b-btn class="mb-2"  @click="addField">
+				<i style="margin-right: .5rem" class="fa fa-plus-square fa-lg"></i> Add facility
+			</b-btn>
+
     </div>
     <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
       <label>{{comment.label}}</label>
