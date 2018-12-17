@@ -2498,6 +2498,31 @@
   {
     "fields": {
       "bromines": "",
+      "carbons": "",
+      "chlorines": "",
+      "description": "Other Substances",
+      "fluorines": "",
+      "formula": "",
+      "gwp": null,
+      "gwp2": 0,
+      "gwp_error_plus_minus": 0,
+      "hydrogens": "",
+      "is_contained_in_polyols": false,
+      "max_odp": 0,
+      "min_odp": 0,
+      "name": "Other Substances and Mixtures",
+      "number_of_isomers": 0,
+      "odp": 0,
+      "remark": "Used when a non-ODS or non-specific substance is specified",
+      "sort_order": 1,
+      "substance_id": 999
+    },
+    "model": "core.substance",
+    "pk": 97
+  },
+  {
+    "fields": {
+      "bromines": "",
       "carbons": "C2",
       "chlorines": "",
       "description": "Pentafluoroethane",
@@ -2519,7 +2544,7 @@
       "substance_id": 1250
     },
     "model": "core.substance",
-    "pk": 97
+    "pk": 98
   },
   {
     "fields": {
@@ -2545,7 +2570,7 @@
       "substance_id": 1340
     },
     "model": "core.substance",
-    "pk": 98
+    "pk": 99
   },
   {
     "fields": {
@@ -2571,7 +2596,7 @@
       "substance_id": 1341
     },
     "model": "core.substance",
-    "pk": 99
+    "pk": 100
   },
   {
     "fields": {
@@ -2597,7 +2622,7 @@
       "substance_id": 1430
     },
     "model": "core.substance",
-    "pk": 100
+    "pk": 101
   },
   {
     "fields": {
@@ -2623,7 +2648,7 @@
       "substance_id": 1431
     },
     "model": "core.substance",
-    "pk": 101
+    "pk": 102
   },
   {
     "fields": {
@@ -2649,7 +2674,7 @@
       "substance_id": 1520
     },
     "model": "core.substance",
-    "pk": 102
+    "pk": 103
   },
   {
     "fields": {
@@ -2675,7 +2700,7 @@
       "substance_id": 1521
     },
     "model": "core.substance",
-    "pk": 103
+    "pk": 104
   },
   {
     "fields": {
@@ -2701,7 +2726,7 @@
       "substance_id": 2275
     },
     "model": "core.substance",
-    "pk": 104
+    "pk": 105
   },
   {
     "fields": {
@@ -2727,7 +2752,7 @@
       "substance_id": 2300
     },
     "model": "core.substance",
-    "pk": 105
+    "pk": 106
   },
   {
     "fields": {
@@ -2753,7 +2778,7 @@
       "substance_id": 2363
     },
     "model": "core.substance",
-    "pk": 106
+    "pk": 107
   },
   {
     "fields": {
@@ -2779,7 +2804,7 @@
       "substance_id": 2365
     },
     "model": "core.substance",
-    "pk": 107
+    "pk": 108
   },
   {
     "fields": {
@@ -2805,7 +2830,7 @@
       "substance_id": 2366
     },
     "model": "core.substance",
-    "pk": 108
+    "pk": 109
   },
   {
     "fields": {
@@ -2831,7 +2856,7 @@
       "substance_id": 2453
     },
     "model": "core.substance",
-    "pk": 109
+    "pk": 110
   },
   {
     "fields": {
@@ -2857,7 +2882,7 @@
       "substance_id": 2456
     },
     "model": "core.substance",
-    "pk": 110
+    "pk": 111
   },
   {
     "fields": {
@@ -2883,7 +2908,7 @@
       "substance_id": 3200
     },
     "model": "core.substance",
-    "pk": 111
+    "pk": 112
   },
   {
     "fields": {
@@ -2909,7 +2934,7 @@
       "substance_id": 3659
     },
     "model": "core.substance",
-    "pk": 112
+    "pk": 113
   },
   {
     "fields": {
@@ -2935,7 +2960,7 @@
       "substance_id": 4100
     },
     "model": "core.substance",
-    "pk": 113
+    "pk": 114
   },
   {
     "fields": {
@@ -2961,6 +2986,6 @@
       "substance_id": 4310
     },
     "model": "core.substance",
-    "pk": 114
+    "pk": 115
   }
 ]

@@ -323,11 +323,6 @@ class Command(BaseCommand):
         return objs
 
     def substance_map(self, f, row):
-        if row['SubstID'] == 999:
-            # Remove "Other substances"
-            # f['_deleted'] = True
-            return None
-
         f['substance_id'] = row['SubstID']
         f['name'] = row['SubstName']
         # Skipped fields: SubstNameFr, SubstNameSp
