@@ -100,7 +100,6 @@
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
-
 					<template
 						slot="validation"
 						slot-scope="cell">
@@ -177,7 +176,7 @@
 							{{cell.item.blend}}
 						</span>
 					</template>
-					
+
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -375,7 +374,11 @@ export default {
 	methods: {
 	},
 	computed: {
-
+		getTabInputFields() {
+			const a = this.tab_info.section_subheaders.filter(x => x.isInput).map(x => x.name)
+			console.log(a)
+			return a
+		}
 	}
 }
 </script>

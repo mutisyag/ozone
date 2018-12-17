@@ -30,15 +30,19 @@ const form = {
 			isInvalid: false,
 			description: 'description 11111111111111111111111111',
 			form_fields: [],
-			fields_order: ['annex_group', 'substance', 'prop1', 'prop2', 'prop3', 'validation'],
-			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
-			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
+			special_fields_order: [],
+			hidden_fields_order: [],
+			modal_order: ['annex_group', 'prop1', 'prop2', 'prop3', 'validation'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
-
+			get fields_order() {
+				return this.section_subheaders.map(x => x.name)
+			},
+			get input_fields() {
+				return this.section_subheaders.map(x => x.name)
+			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',
-				name: 'annex_group',
+				name: 'group',
 				sort: 1,
 				colspan: 2,
 				type: 'string'
@@ -51,18 +55,15 @@ const form = {
 			}, {
 				label: '(3)<br>New imports for use in multi-split air conditioners',
 				name: 'prop1',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(4)<br>New imports for use in split ducted air conditioners',
 				name: 'prop2',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(5)<br>New imports for use in ducted commercial packaged (self-contained) air conditioners',
 				name: 'prop3',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(6)',
 				name: 'validation'
@@ -81,13 +82,6 @@ const form = {
 				label: 'Status'
 			}
 			],
-
-			special_headers: {
-
-				section_headers: [],
-				section_subheaders: []
-			},
-
 			comments: [{
 				name: 'comments_party',
 				selected: '',
@@ -142,44 +136,38 @@ const form = {
 			isInvalid: false,
 			description: 'description 11111111111111111111111111',
 			form_fields: [],
-			fields_order: ['annex_group', 'substance', 'prop1', 'prop2', 'prop3', 'validation'],
-			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
-
+			get fields_order() {
+				return this.section_subheaders.map(x => x.name)
+			},
+			get input_fields() {
+				return this.section_subheaders.map(x => x.name)
+			},
 			section_subheaders: [{
 				label: '(1)<br>Annex/group',
-				name: 'annex_group',
-				sort: 1,
-				colspan: 2,
-				type: 'string'
+				name: 'group',
+				colspan: 2
 			}, {
 				label: '(2)<br>Substance',
 				name: 'substance',
-				sort: 1,
-				colspan: 2,
-				type: 'string'
+				colspan: 2
 			}, {
 				label: '(3)<br>New production for use in multi-split air conditioners',
 				name: 'prop1',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(4)<br>New production for use in split ducted air conditioners',
 				name: 'prop2',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(5)<br>New production for use in ducted commercial packaged (self-contained) air conditioners',
 				name: 'prop3',
-				sort: 1,
-				type: 'number'
+				isInput: true
 			}, {
 				label: '(6)',
 				name: 'validation'
-			}
-			],
+			}],
 
 			section_headers: [{
 				label: ''
@@ -193,13 +181,6 @@ const form = {
 				label: 'Status'
 			}
 			],
-
-			special_headers: {
-
-				section_headers: [],
-				section_subheaders: []
-			},
-
 			comments: [{
 				name: 'comments_party',
 				selected: '',
