@@ -68,62 +68,42 @@
           <b-card no-body v-if="dataReady">
             <template slot="header">
               <b-row>
-              <b-col>Latest submissions</b-col>
-
-              <b-col>
-                  <b-form-group horizontal label="Per page" class="mb-0">
-                    <b-form-select :options="table.pageOptions" v-model="table.perPage" />
-                  </b-form-group>
-              </b-col>
+              <b-col>All submissions</b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>
-              <b-row class="mt-2">
-                <b-col>
-                    <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
-                      </b-input-group-append>
-                    </b-input-group>
-                </b-col>
-                <b-col>
-                    <b-input-group prepend="Filter by party">
-                      <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.party" @click="table.filters.party = ''">Clear</b-btn>
-                      </b-input-group-append>
-                    </b-input-group>
-                </b-col>
-              </b-row>
               <b-row class="mt-2 mb-2">
                 <b-col>
-                    <b-input-group prepend="Period from:">
+                    <b-input-group prepend="Search">
+                      <b-form-input v-model="table.filters.search"/>
+                    </b-input-group>
+                </b-col>
+                <b-col>
+                    <b-input-group prepend="By party">
+                      <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
+                    </b-input-group>
+                </b-col>
+								<b-col cols="2">
+                    <b-input-group prepend="From">
                       <b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
                       </b-form-select>
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.period_start" @click="table.filters.period_start = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
-                <b-col>
-                    <b-input-group prepend="Period to:">
+                <b-col cols="2">
+                    <b-input-group prepend="To">
                       <b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
                       </b-form-select>
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.period_end" @click="table.filters.period_end = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
-                <b-col>
-                    <b-input-group prepend="Filter by obligation">
+                <b-col cols="3">
+                    <b-input-group prepend="By obligation">
                       <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-                      <b-input-group-append>
-                        <b-btn variant="primary" :disabled="!table.filters.obligation" @click="table.filters.obligation = ''">Clear</b-btn>
-                      </b-input-group-append>
                     </b-input-group>
                 </b-col>
+								<b-col cols="1">
+									<b-btn @click="clearFilters">Clear</b-btn>
+								</b-col>
               </b-row>
               <b-table show-empty
                        outlined
@@ -183,9 +163,14 @@
               </b-table>
 
               <b-row>
-                <b-col md="6" class="my-1">
+                <b-col md="9" class="my-1">
                   <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
                 </b-col>
+								<b-col md="3">
+                  <b-input-group horizontal prepend="Per page" class="mb-0">
+                    <b-form-select :options="table.pageOptions" v-model="table.perPage" />
+                  </b-input-group>
+								</b-col>
               </b-row>
 
             </b-container>
@@ -215,24 +200,24 @@ export default {
 			table: {
 				fields: [
 					{
-						key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc'
 					},
 					{
-						key: 'reporting_period', label: 'Reporting period', sortable: true, class: 'text-center'
+						key: 'reporting_period', label: 'Reporting period', sortable: true
 					},
 					{
-						key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc'
 					},
 					{
-						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc'
 					},
 					{
-						key: 'current_state', label: 'State', sortable: true, class: 'text-center'
+						key: 'current_state', label: 'State', sortable: true
 					},
 					{
-						key: 'last_updated', label: 'Last modified', sortable: true, class: 'text-center'
+						key: 'last_updated', label: 'Last modified', sortable: true
 					},
-					{ key: 'actions', label: 'Actions', class: 'text-center' }
+					{ key: 'actions', label: 'Actions' }
 				],
 				currentPage: 1,
 				perPage: 10,
@@ -354,7 +339,11 @@ export default {
 				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
 			})
 		},
-
+		clearFilters() {
+			Object.keys(this.table.filters).forEach(key => {
+				this.table.filters[key] = null
+			})
+		},
 		clone(url) {
 			cloneSubmission(url).then(() => {
 				this.$store.dispatch('getCurrentSubmissions')
