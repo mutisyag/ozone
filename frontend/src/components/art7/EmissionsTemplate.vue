@@ -1,13 +1,31 @@
 <template>
   <div v-if="tab_info">
     <div class="form-sections">
+      <table ref="tableHeader" class="table submission-table header-only">
+        <thead>
+          <tr class="first-header">
+            <th
+              v-for="(header, header_index) in tab_info.section_headers"
+              :colspan="header.colspan"
+              :key="header_index"
+            >
+              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+                <span v-html="header.label"></span>
+                <i class="fa fa-info-circle fa-lg"></i>
+              </div>
+              <div v-else>
+                <span v-html="header.label"></span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+      </table>
 
 			<div class="table-wrapper">
-
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
 					<div v-show="table.tableFilters" class="table-filters">
-						<b-input-group prepend="Search">
+						<b-input-group prepend="Search all columns">
 								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
 					</div>
@@ -28,11 +46,13 @@
 					stacked="md"
 					class="submission-table"
 					:items="tableItems"
+					@row-hovered="rowHovered"
 					:fields="tableFields"
 					:current-page="table.currentPage"
 					:per-page="table.perPage"
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
+					@input="tableLoaded"
 					:sort-direction="table.sortDirection"
 					:filter="table.filters.search"
 					ref="table"
@@ -65,6 +85,7 @@
 						<span class="validation-wrapper">
 							<i
 								v-if="cell.item.validation.length"
+								@click="openValidation"
 								style="color: red; cursor: pointer"
 								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
@@ -90,7 +111,9 @@
     <div class="footnotes">
       <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index"><small>{{footnote}}</small></p>
     </div>
-
+    <AppAside v-if="hasInvalidFields" fixed>
+      <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
+    </AppAside>
   </div>
 </template>
 
@@ -98,6 +121,8 @@
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
+import DefaultAside from '@/components/common/form-components/DefaultAside'
+import { Aside as AppAside } from '@coreui/vue'
 
 export default {
 	props: {
@@ -107,7 +132,9 @@ export default {
 	},
 
 	components: {
-		fieldGenerator
+		fieldGenerator,
+		AppAside,
+		DefaultAside
 	},
 
 	created() {
@@ -118,6 +145,8 @@ export default {
 		return {
 			modal_data: null,
 			modal_comments: null,
+			hovered: null,
+			sidebarTabIndex: 0,
 			table: {
 				currentPage: 1,
 				perPage: 200,
@@ -142,11 +171,9 @@ export default {
 	computed: {
 		tableItems() {
 			const tableFields = []
-			console.log(this.tab_info)
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					console.log(key)
 					tableRow[key] = element[key].selected
 				})
 				if (Object.keys(tableRow).length) {
@@ -155,14 +182,13 @@ export default {
 					tableFields.push(tableRow)
 				}
 			})
-			console.log(tableFields)
 			this.table.totalRows = tableFields.length
 			return tableFields
 		},
 		tableFields() {
 			const tableHeaders = []
 			const options = { sortable: true, class: 'text-center' }
-			this.tab_info.section_headers.forEach((element) => {
+			this.tab_info.section_subheaders.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
 					label: element.label,
@@ -173,6 +199,9 @@ export default {
 		},
 		tab_info() {
 			return this.$store.state.form.tabs[this.tabName]
+		},
+		hasInvalidFields() {
+			return this.tab_info.form_fields.some(field => field.validation.selected.length)
 		},
 		tab_data() {
 			return this.$store.state.initialData
@@ -188,6 +217,31 @@ export default {
 	methods: {
 		remove_field(index) {
 			this.$store.commit('removeField', { tab: this.tabName, index })
+		},
+		rowHovered(item) {
+			this.hovered = item.index
+		},
+		openValidation() {
+			const body = document.querySelector('body')
+			body.classList.add('aside-menu-lg-show')
+		},
+		tableLoaded() {
+			if (!this.$refs.table) {
+				return
+			}
+
+			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
+			if (headers.length > 1) {
+				return // nothing to do, header row already created
+			}
+
+			if (!this.$refs.tableHeader) {
+				return
+			}
+			const topHeader = this.$refs.tableHeader.querySelector('tr')
+			headers[0].parentNode.insertBefore(
+				topHeader, headers[0]
+			)
 		},
 
 		intersect(a, b) {

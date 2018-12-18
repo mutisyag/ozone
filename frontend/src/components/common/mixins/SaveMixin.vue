@@ -62,11 +62,11 @@ export default {
 		submitData(tab, url) {
 			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			let current_tab_data
-			const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 
 			if (Array.isArray(tab.form_fields)) {
 				current_tab_data = []
 				tab.form_fields.forEach(form_field => {
+					const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 					for (const row in form_field) {
 						save_obj[row] = form_field[row].selected
 					}
@@ -75,6 +75,7 @@ export default {
 			}
 
 			if (isObject(tab.form_fields)) {
+				const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 				current_tab_data = {}
 				Object.keys(save_obj).forEach(key => { current_tab_data[key] = tab.form_fields[key].selected })
 			}

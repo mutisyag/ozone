@@ -1,14 +1,14 @@
 <template>
   <div>
     <AsideToggler class="d-none d-lg-block" />
-    <b-tabs v-model="tabIndex">
-      <b-tab>
+		<b-tabs v-model="tabIndex">
+      <b-tab v-if="hasSubstances">
         <template slot="title">
           Substances
         </template>
           <add :tabName="tabName"></add>
       </b-tab>
-      <b-tab v-if="tabName !== 'has_destroyed'">
+      <b-tab v-if="hasBlends">
         <template slot="title">
           Blends
         </template>
@@ -60,6 +60,15 @@ export default {
 	data() {
 		return {
 			tabIndex: 0
+		}
+	},
+
+	computed: {
+		hasSubstances() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
+		},
+		hasBlends() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
 		}
 	},
 

@@ -17,6 +17,9 @@ const inputFields = [
 	'quantity_generated',
 	'quantity_feedstock',
 	'quantity_destroyed',
-	'quantity_emitted'
+	'quantity_emitted',
+	'quantity_captured_all_uses',
+	'quantity_captured_feedstock',
+	'quantity_captured_for_destruction'
 ]
 export default inputFields
