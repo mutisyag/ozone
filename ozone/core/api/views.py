@@ -9,7 +9,7 @@ from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
-from rest_framework.filters import BaseFilterBackend, OrderingFilter
+from rest_framework.filters import BaseFilterBackend, OrderingFilter, SearchFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -257,10 +257,25 @@ class SubmissionPaginator(PageNumberPagination):
     page_size_query_param = "page_size"
 
 
+class SubmissionViewFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    obligation = filters.NumberFilter("obligation", help_text="Filter by Obligation ID")
+    reporting_period = filters.NumberFilter("reporting_period",
+                                            help_text="Filter by Reporting Period ID")
+    from_period = filters.DateFilter("reporting_period__start_date", 'gte',
+                                     help_text="Only get results for reporting periods that start "
+                                               "at a later date than this.")
+    to_period = filters.DateFilter("reporting_period__end_date", 'lte',
+                                   help_text="Only get results for reporting periods that end "
+                                             "at a earlier date than this.")
+
+
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all().prefetch_related("reporting_period", "created_by")
-    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter)
-    filter_fields = ('obligation', 'party', 'reporting_period',)
+    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter,
+                       SearchFilter,)
+    filterset_class = SubmissionViewFilterSet
+    search_fields = ('party__name', 'obligation__name',)
     ordering_fields = ('obligation', 'party', 'reporting_period', 'version', 'current_state',
                        'updated_at',)
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
