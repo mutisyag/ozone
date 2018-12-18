@@ -8,7 +8,7 @@
 		@change="updateFormField($event)"
 		:disabled="disabled"
 		v-else-if="field.type === 'select'" v-model="currentTyping" :options="field.options"> </b-form-select>
-    <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'" :value="field.selected"></textarea>
+    <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
   </div>
 </template>
 

@@ -21,7 +21,7 @@
         </thead>
       </table>
 
-      <table v-if="tabName !== 'has_destroyed'" ref="tableHeaderBlends" class="table submission-table header-only">
+      <table v-if="hasBlends" ref="tableHeaderBlends" class="table submission-table header-only">
         <thead>
           <tr class="first-header">
             <th
@@ -250,7 +250,7 @@
 			</div>
 
 			<div
-				v-if="tabName != 'has_destroyed'"
+				v-if="hasBlends"
 				class="table-wrapper">
 
 				<div class="table-title">
@@ -266,7 +266,7 @@
 
 				<b-table
 					show-empty
-					v-if="tabName != 'has_destroyed'"
+					v-if="hasBlends"
 					outlined
 					bordered
 					hover
@@ -561,6 +561,13 @@ export default {
 				['source_party', 'trade_party', 'destination_party'],
 				this.tab_info.fields_order
 			)[0]
+		},
+
+		hasSubstances() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
+		},
+		hasBlends() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
 		},
 
 		getTabDecisionQuantityFields() {
