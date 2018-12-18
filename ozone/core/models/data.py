@@ -516,7 +516,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         'quantity_export_recovered',
     ]
 
-    trade_party = models.ForeignKey(Party, on_delete=models.PROTECT)
+    trade_party = models.ForeignKey(Party, blank=True, null=True, on_delete=models.PROTECT)
 
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -579,8 +579,8 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
             )
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
-        if not self.blend and self.substance:
-            non_parties = self.get_non_parties(self.substance.id)
+        if not self.blend and self.substance and self.trade_party:
+            non_parties = self.get_non_parties(self.substance.group_id)
             if self.trade_party not in non_parties:
                 raise ValidationError(
                     {
