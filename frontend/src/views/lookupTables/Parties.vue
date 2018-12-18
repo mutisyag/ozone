@@ -1,5 +1,5 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
@@ -81,7 +81,7 @@ export default {
 				fields: [{
 					key: 'name',
 					label: 'Name',
-					class: 'text-left',
+					class: 'text-left width-200',
 					sortable: true
 				}, {
 					key: 'is_eu_member',

@@ -182,8 +182,7 @@
 
 <script>
 import { cloneSubmission } from '@/components/common/services/api'
-import Multiselect from '@/components/common/modifiedMultiselect'
-// import Multiselect from "vue-multiselect"
+import Multiselect from '@/components/common/ModifiedMultiselect'
 import { mapGetters } from 'vuex'
 import labels from '@/components/art7/dataDefinitions/labels'
 
