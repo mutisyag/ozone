@@ -514,6 +514,7 @@ const form = {
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			fields_order: ['substance', 'quantity_destroyed', 'remarks_party', 'remarks_os', 'validation'],
+			blend_substance_headers: ['substance', 'percent', 'quantity_destroyed'],
 			modal_order: ['quantity_destroyed'],
 			isInvalid: false,
 			form_fields: [],

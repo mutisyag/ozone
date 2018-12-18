@@ -344,11 +344,6 @@ export default {
 					type: 'text',
 					selected: ''
 				},
-				blend: {
-					type: 'select',
-					selected: blend || null,
-					expand: false
-				},
 				quantity_essential_uses: {
 					type: 'number',
 					selected: null
@@ -437,6 +432,11 @@ export default {
 				substance: {
 					type: 'select',
 					selected: substance || null
+				},
+				blend: {
+					type: 'select',
+					selected: blend || null,
+					expand: false
 				},
 				quantity_destroyed: {
 					type: 'number',
