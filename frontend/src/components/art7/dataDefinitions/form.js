@@ -1,10 +1,11 @@
 import { intro_fields } from './questionnaire_fields'
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
+import flags from '@/components/common/dataDefinitions/flags'
 
 const form = {
 	formDetails: {
-		tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments'],
+		tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments', 'flags'],
 		dataNeeded: [
 			'initialData.countryOptions',
 			'initialData.substances',
@@ -834,6 +835,34 @@ const form = {
 				quantity_feedstock: null,
 				quantity_destroyed: null,
 				quantity_emitted: null
+			}
+		},
+		flags: {
+			name: 'flags',
+			hasAssideMenu: false,
+			endpoint_url: 'article7_flags',
+			status: null,
+			title: 'Flags',
+			titleHtml: '<b>Flags</b>',
+			tooltipHtml: '',
+			detailsHtml: 'Flags',
+			form_fields: flags,
+			default_properties: {
+				superseded: null,
+				provisional: null,
+				checked_blanks: null,
+				has_blanks: null,
+				confirmed_blanks: null,
+				has_reported_a1: null,
+				has_reported_a2: null,
+				has_reported_b1: null,
+				has_reported_b2: null,
+				has_reported_b3: null,
+				has_reported_c1: null,
+				has_reported_c2: null,
+				has_reported_c3: null,
+				has_reported_e: null,
+				has_reported_f: null
 			}
 		}
 	}
