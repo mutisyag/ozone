@@ -9,7 +9,7 @@ from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
-from rest_framework.filters import BaseFilterBackend
+from rest_framework.filters import BaseFilterBackend, OrderingFilter
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -259,8 +259,10 @@ class SubmissionPaginator(PageNumberPagination):
 
 class SubmissionViewSet(viewsets.ModelViewSet):
     queryset = Submission.objects.all()
-    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend,)
+    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter)
     filter_fields = ('obligation', 'party', 'reporting_period',)
+    ordering_fields = ('obligation', 'party', 'reporting_period', 'version', 'current_state',
+                       'updated_at',)
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     pagination_class = SubmissionPaginator
 
