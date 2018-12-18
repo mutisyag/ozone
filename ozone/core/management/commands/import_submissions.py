@@ -529,10 +529,8 @@ class Command(BaseCommand):
             # Check can be done in a single operation, but we want
             # to be verbose to log the inconsistency.
             if data[data_type] and not data["art7"]["has_" + data_type]:
-                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set "
-                               "(Auto-fixed)", party.abbr, period.name, data_type)
-                # Automatically fix these issues
-                data["art7"]["has_" + data_type] = True
+                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set",
+                               party.abbr, period.name, data_type)
                 is_ok = False
             elif not data[data_type] and data["art7"]["has_" + data_type]:
                 logger.warning("Inconsistency for %s/%s/%s: does not have data, but flag set",
