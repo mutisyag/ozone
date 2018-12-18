@@ -58,7 +58,7 @@ const valueConverter = (item) => {
 	return parseFloat(item)
 }
 
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + sum)
+const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + parseFloat(sum))
 
 const decisionGenerator = (fields, parent, section) => {
 	const decisions = []
@@ -105,6 +105,18 @@ export default {
 					type: 'number',
 					selected: ''
 				},
+				quantity_captured_all_uses: {
+					type: 'number',
+					selected: ''
+				},
+				quantity_captured_feedstock: {
+					type: 'number',
+					selected: ''
+				},
+				quantity_captured_for_destruction: {
+					type: 'number',
+					selected: ''
+				},
 				quantity_feedstock: {
 					type: 'number',
 					selected: ''
@@ -128,7 +140,15 @@ export default {
 				get validation() {
 					const errors = []
 					if (!this.facility_name.selected) {
-						errors.push('eroare1')
+						errors.push('Please complete the "Facility name or identifier (1)" field')
+					}
+
+					if (!this.quantity_emitted.selected) {
+						errors.push('Please complete the "Amount of generated emissions (6)" field')
+					}
+
+					if (valueConverter(this.quantity_generated.selected) < doSum([this.quantity_captured_all_uses.selected, this.quantity_captured_feedstock.selected, this.quantity_captured_for_destruction.selected, this.quantity_feedstock.selected, this.quantity_destroyed.selected])) {
+						errors.push('Total amount generated must be higher than the sum of "Ammount generated and captured", "Amount used for feedstock without prior capture", "Amount destroyed without prior capture"')
 					}
 
 					const returnObj = {
@@ -324,11 +344,6 @@ export default {
 					type: 'text',
 					selected: ''
 				},
-				blend: {
-					type: 'select',
-					selected: blend || null,
-					expand: false
-				},
 				quantity_essential_uses: {
 					type: 'number',
 					selected: null
@@ -417,6 +432,11 @@ export default {
 				substance: {
 					type: 'select',
 					selected: substance || null
+				},
+				blend: {
+					type: 'select',
+					selected: blend || null,
+					expand: false
 				},
 				quantity_destroyed: {
 					type: 'number',

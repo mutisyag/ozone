@@ -2,8 +2,21 @@
 <template>
 	<div v-if="section && tabName" class="validation-tab">
 		<div v-for="(field, field_index) in section" :key="field_index">
-			<div :class="{hovered: (section.indexOf(field)) === hovered }" class="validation-item" v-for="(error,error_index) in field.validation" :key="error_index">
-				{{display.substances[field.substance]}}{{display.blends[field.blend] ? display.blends[field.blend].name : null }} - <span style="color: red">{{error}}</span>
+			<div
+				:class="{hovered: (section.indexOf(field)) === hovered }"
+				class="validation-item"
+				v-for="(error,error_index) in field.validation"
+				:key="error_index">
+				<span v-if="display.substances[field.substance]">
+					{{display.substances[field.substance]}}
+				</span>
+				<span v-if="display.blends[field.blend]">
+					{{display.blends[field.blend].name}}
+				</span>
+				<span v-if="field.facility_name">
+					{{field.facility_name}}
+				</span>
+				- <span style="color: red">{{error}}</span>
 			</div>
 		</div>
 	</div>

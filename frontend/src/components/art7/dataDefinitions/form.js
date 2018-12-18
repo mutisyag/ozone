@@ -514,6 +514,7 @@ const form = {
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			fields_order: ['substance', 'quantity_destroyed', 'remarks_party', 'remarks_os', 'validation'],
+			blend_substance_headers: ['substance', 'percent', 'quantity_destroyed'],
 			modal_order: ['quantity_destroyed'],
 			isInvalid: false,
 			form_fields: [],
@@ -709,62 +710,60 @@ const form = {
 			validate: true,
 			saving: false,
 			formNumber: 6,
-			intro: '1. Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured)  Annex C Group I or Annex F substances ',
 			title: 'Emissions',
-			titleHtml: '<b>EMISSIONS</b> <br> <small> in tonnes[1] (not ODP or GWP tonnes)</small>',
+			titleHtml: '<b>DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES</b>',
+			tooltipHtml: 'In metric tons, not ODP or CO2-equivalent tonnes.\nInformation in columns 2 to 5 is excluded from the reporting requirements under Article 7 of the Protocol and is provided on a voluntary basis',
 			detailsHtml: 'Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances ',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
 			// used for identification when adding labels
 			form_fields: [],
-
-			fields_order: ['facility_name', 'quantity_generated', 'quantity_feedstock', 'quantity_destroyed', 'quantity_emitted', 'remarks_party', 'remarks_os', 'validation'],
-
+			get fields_order() {
+				return this.section_subheaders.map(x => x.name)
+			},
 			section_subheaders: [{
 				label: '1',
-				name: 'facility_name',
-				sort: 1,
-				type: 'string'
+				name: 'facility_name'
 			},
 			{
 				label: '2',
-				name: 'quantity_generated',
-				sort: 1,
-				type: 'number'
+				name: 'quantity_generated'
 			},
 			{
-				label: '3',
-				name: 'quantity_feedstock',
-				sort: 1,
-				type: 'number'
+				label: '(3a) For all uses',
+				name: 'quantity_captured_all_uses'
+			},
+			{
+				label: '(3b) For feedstock use in your country',
+				name: 'quantity_captured_feedstock'
+			},
+			{
+				label: '(3c) For Destruction',
+				name: 'quantity_captured_for_destruction'
 			},
 			{
 				label: '4',
-				name: 'quantity_destroyed',
-				sort: 1,
-				type: 'number'
+				name: 'quantity_feedstock'
 			},
 			{
 				label: '5',
-				name: 'quantity_emitted',
-				sort: 1,
-				type: 'number'
+				name: 'quantity_destroyed'
 			},
 			{
 				label: '6',
-				name: 'remarks_party',
-				sort: 1,
-				type: 'string'
+				name: 'quantity_emitted'
 			},
 			{
 				label: '7',
-				name: 'remarks_os',
-				sort: 1,
-				type: 'string'
+				name: 'remarks_party'
 			},
 			{
 				label: '8',
+				name: 'remarks_os'
+			},
+			{
+				label: '9',
 				name: 'validation'
 			}
 			],
@@ -774,22 +773,27 @@ const form = {
 				name: 'facility_name'
 			},
 			{
-				label: 'Amount [Generated]* <br> (tonnes)',
+				label: 'Total amount generated',
 				name: 'quantity_generated',
-				tooltip: 'Amount [Generated] refers to amount that is captured, whether for destruction in another facility, feedstock or any other use. '
+				tooltip: 'Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3'
 			},
 			{
-				label: 'Amount Used for Feedstock** <br> (tonnes)',
+				label: '(3) Amout generated and captured',
+				tooltip: 'Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3',
+				colspan: 3
+			},
+			{
+				label: 'Amount used for feedstock without prior capture',
 				name: 'quantity_feedstock',
-				tooltip: 'Amount converted to other substances shall be treated as feedstock uses.'
+				tooltip: 'Amount converted to other substances in the facility. The sum of these amounts is not to be reported under data form 3'
 			},
 			{
-				label: 'Amount Destroyed*** <br> (tonnes)',
+				label: 'Amount destroyed without prior capture',
 				name: 'quantity_destroyed',
-				tooltip: 'Amount Destroyed  refers to “Amount destroyed in the facility, with or without prior capture”'
+				tooltip: 'Amount destroyed in the facility'
 			},
 			{
-				label: 'Amount of Emissions <br> (tonnes)',
+				label: 'Amount of generated emissions',
 				name: 'quantity_emitted'
 			},
 			{
@@ -821,8 +825,12 @@ const form = {
 			default_properties: {
 				remarks_party: '',
 				remarks_os: '',
+				ordering_id: null,
 				facility_name: '',
 				quantity_generated: null,
+				quantity_captured_all_uses: null,
+				quantity_captured_feedstock: null,
+				quantity_captured_for_destruction: null,
 				quantity_feedstock: null,
 				quantity_destroyed: null,
 				quantity_emitted: null
