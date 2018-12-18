@@ -136,3 +136,43 @@ class ClonePermissionsTests(TestCase):
             **headers
         )
         self.assertEqual(resp.status_code, 403)
+
+    def test_clone_secretariat_another_party(self):
+        """
+        Testing `clone` action using a party reporter user for a submission from
+        a different party, created by a secretariat user.
+        Expected result: 403 Forbidden.
+        """
+
+        party = PartyFactory(subregion=self.subregion)
+        secretariat_user = SecretariatUserFactory(
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        submission = SubmissionFactory(
+            party=party,
+            created_by=secretariat_user,
+            last_edited_by=secretariat_user,
+        )
+        submission._current_state = 'submitted'
+        submission.save()
+
+        another_party = PartyFactory(
+            abbr='AP',
+            name='Another Party',
+            subregion=self.subregion
+        )
+        reporter = ReporterUserFactory(
+            party=another_party,
+            username='reporter_same_party',
+            email='reporter_same_party@example.com',
+            password=self.hash_alg.encode(password='qwe123qwe',
+                                          salt='123salt123')
+        )
+        headers = self.get_authorization_header(reporter.username, 'qwe123qwe')
+        resp = self.client.post(
+            reverse("core:submission-clone",
+                    kwargs={'pk': submission.pk}),
+            {"party": party.pk},
+            **headers
+        )
+        self.assertEqual(resp.status_code, 403)
