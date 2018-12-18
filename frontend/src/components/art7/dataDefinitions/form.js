@@ -847,6 +847,9 @@ const form = {
 			tooltipHtml: '',
 			detailsHtml: 'Flags',
 			form_fields: flags,
+			get fields_order() {
+				return Object.keys(this.form_fields).filter(key => this.form_fields[key].selected != null).map(key => key)
+			},
 			default_properties: {
 				superseded: null,
 				provisional: null,

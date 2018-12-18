@@ -16,5 +16,22 @@ export default {
 	fax: 'Fax',
 	email: 'E-mail',
 	date: 'Date',
-	subject: 'Subject'
+	subject: 'Subject',
+	flags: {
+		superseded: 'Superseded',
+		provisional: 'Provisional',
+		checked_blanks: 'Checked blanks',
+		has_blanks: 'Has blanks',
+		confirmed_blanks: 'Confirmed blanks',
+		has_reported_a1: 'Annex group A1',
+		has_reported_a2: 'Annex group A2',
+		has_reported_b1: 'Annex group B1',
+		has_reported_b2: 'Annex group B2',
+		has_reported_b3: 'Annex group B3',
+		has_reported_c1: 'Annex group C1',
+		has_reported_c2: 'Annex group C2',
+		has_reported_c3: 'Annex group C3',
+		has_reported_e: 'Annex group E',
+		has_reported_f: 'Annex group F'
+	}
 }
