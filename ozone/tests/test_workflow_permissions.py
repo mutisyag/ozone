@@ -296,15 +296,11 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 403)
 
-    def test_unrecall_secretariat_owner(self):
+    def test_unrecall_to_submitted_secretariat_owner(self):
         """
         Testing `unrecall_to_submitted` using a secretariat user for a submission
         created by the same secretariat user.
         Expected result: 200.
-
-        Note: For all the tests related to `unrecall` transition, we will use
-        `unrecall_to_submitted` transition because the tests for `unrecall_to_processing`
-        and `unrecall_to_finalized` will be almost identical.
         """
 
         submission = self.create_submission(
@@ -321,7 +317,49 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
 
-    def test_unrecall_secretariat_not_owner(self):
+    def test_unrecall_to_processing_secretariat_owner(self):
+        """
+        Testing `unrecall_to_processing` using a secretariat user for a submission
+        created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='recalled',
+            previous_state='processing'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_processing'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'processing')
+
+    def test_unrecall_to_finalized_secretariat_owner(self):
+        """
+        Testing `unrecall_to_finalized` using a secretariat user for a submission
+        created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='recalled',
+            previous_state='finalized'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_finalized'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'finalized')
+
+    def test_unrecall_to_submitted_secretariat_not_owner(self):
         """
         Testing `unrecall_to_submitted` using a secretariat user for a submission
         created by a party reporter.
@@ -341,7 +379,47 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 412)
 
-    def test_unrecall_same_party(self):
+    def test_unrecall_to_processing_secretariat_not_owner(self):
+        """
+        Testing `unrecall_to_processing` using a secretariat user for a submission
+        created by a party reporter.
+        Expected result: 412 Precondition Failed.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='processing'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_processing'
+        )
+        self.assertEqual(resp.status_code, 412)
+
+    def test_unrecall_to_finalized_secretariat_not_owner(self):
+        """
+        Testing `unrecall_to_finalized` using a secretariat user for a submission
+        created by a party reporter.
+        Expected result: 412 Precondition Failed.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='finalized'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_finalized'
+        )
+        self.assertEqual(resp.status_code, 412)
+
+    def test_unrecall_to_submitted_same_party(self):
         """
         Testing `unrecall_to_submitted` transition using a party reporter user
         for a submission created by another user from the same party.
@@ -362,7 +440,49 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
 
-    def test_unrecall_another_party(self):
+    def test_unrecall_to_processing_same_party(self):
+        """
+        Testing `unrecall_to_processing` transition using a party reporter user
+        for a submission created by another user from the same party.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='processing'
+        )
+        resp = self.call_transition(
+            user=self.reporter_same_party,
+            submission=submission,
+            transition='unrecall_to_processing'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'processing')
+
+    def test_unrecall_to_finalized_same_party(self):
+        """
+        Testing `unrecall_to_finalized` transition using a party reporter user
+        for a submission created by another user from the same party.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='finalized'
+        )
+        resp = self.call_transition(
+            user=self.reporter_same_party,
+            submission=submission,
+            transition='unrecall_to_finalized'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'finalized')
+
+    def test_unrecall_to_submitted_another_party(self):
         """
         Testing `unrecall_to_submitted` transition using a party reporter user
         for a submission created by another user from another party.
@@ -379,6 +499,46 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             user=self.reporter_another_party,
             submission=submission,
             transition='unrecall_to_submitted'
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_unrecall_to_processing_another_party(self):
+        """
+        Testing `unrecall_to_processing` transition using a party reporter user
+        for a submission created by another user from another party.
+        Expected result: 403 Forbidden.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='processing'
+        )
+        resp = self.call_transition(
+            user=self.reporter_another_party,
+            submission=submission,
+            transition='unrecall_to_processing'
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_unrecall_to_finalized_another_party(self):
+        """
+        Testing `unrecall_to_finalized` transition using a party reporter user
+        for a submission created by another user from another party.
+        Expected result: 403 Forbidden.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='recalled',
+            previous_state='finalized'
+        )
+        resp = self.call_transition(
+            user=self.reporter_another_party,
+            submission=submission,
+            transition='unrecall_to_finalized'
         )
         self.assertEqual(resp.status_code, 403)
 
