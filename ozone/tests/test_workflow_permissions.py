@@ -172,7 +172,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 403)
 
-    def test_process_non_ro_secretariat(self):
+    def test_process_write_secretariat(self):
         """
         Testing `process` transition using a secretariat user with write permissions.
         Expected result: 200.
@@ -410,7 +410,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 403)
 
-    def test_finalize_non_ro_secretariat(self):
+    def test_finalize_write_secretariat(self):
         """
         Testing `process` transition using a secretariat user with write permissions.
         Expected result: 200.
@@ -459,7 +459,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         super().setUp()
         self.workflow_class = 'accelerated'
 
-    def test_finalize_non_ro_secretariat(self):
+    def test_finalize_write_secretariat(self):
         """
         Testing `finalize` transition using a secretariat user with write permissions.
         Expected result: 200.
@@ -499,7 +499,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 403)
 
-    def test_recall_non_ro_secretariat(self):
+    def test_recall_write_secretariat(self):
         """
         Testing `recall` transition using a secretariat user with write permissions.
         Expected result: 200.
@@ -539,7 +539,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         )
         self.assertEqual(resp.status_code, 403)
 
-    def test_unrecall_non_ro_secretariat(self):
+    def test_unrecall_write_secretariat(self):
         """
         Testing `unrecall` transition using a secretariat user with write permissions.
         Expected result: 200.
