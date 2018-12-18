@@ -140,7 +140,7 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Party.objects.all().prefetch_related('subregion')
+    queryset = Party.objects.all().prefetch_related('subregion', 'subregion__region')
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
@@ -258,7 +258,7 @@ class SubmissionPaginator(PageNumberPagination):
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
-    queryset = Submission.objects.all()
+    queryset = Submission.objects.all().prefetch_related("reporting_period", "created_by")
     filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter)
     filter_fields = ('obligation', 'party', 'reporting_period',)
     ordering_fields = ('obligation', 'party', 'reporting_period', 'version', 'current_state',
@@ -267,7 +267,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     pagination_class = SubmissionPaginator
 
     def get_queryset(self):
-        return Submission.objects.all()
+        return Submission.objects.all().prefetch_related("reporting_period", "created_by")
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
