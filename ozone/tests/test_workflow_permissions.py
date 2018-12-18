@@ -4,10 +4,14 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from .factories import (
+    AnotherPartyFactory,
     PartyFactory,
     RegionFactory,
     ReporterUserFactory,
+    ReporterUserSamePartyFactory,
+    ReporterUserAnotherPartyFactory,
     SecretariatUserFactory,
+    SecretariatUserROFactory,
     SubmissionFactory,
     SubregionFactory,
 )
@@ -21,15 +25,31 @@ class BaseWorkflowPermissionsTests(TestCase):
     def setUp(self):
         super().setUp()
         self.workflow_class = 'base'
-        self.hash_alg = Argon2PasswordHasher()
-        self.secretariat_user = SecretariatUserFactory(
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
-        self.reporter = ReporterUserFactory(
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
+
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
+        self.party = PartyFactory(subregion=self.subregion)
+        self.another_party = AnotherPartyFactory(subregion=self.subregion)
+
+        hash_alg = Argon2PasswordHasher()
+        self.secretariat_user = SecretariatUserFactory(
+            password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.secretariat_user_ro = SecretariatUserROFactory(
+            password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter = ReporterUserFactory(
+            party=self.party,
+            password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_same_party = ReporterUserSamePartyFactory(
+            party=self.party,
+            password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            party=self.another_party,
+            password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
 
     def get_authorization_header(self, username, password):
         resp = self.client.post(reverse("core:auth-token-list"), {
@@ -85,10 +105,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='data_entry'
         )
         resp = self.call_transition(
@@ -107,12 +126,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         member but he is not the owner of the submission.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='data_entry',
         )
         resp = self.call_transition(
@@ -129,23 +145,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='data_entry'
         )
-
-        reporter_same_party = ReporterUserFactory(
-            party=party,
-            username='reporter_same_party',
-            email='reporter_same_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_same_party,
+            user=self.reporter_same_party,
             submission=submission,
             transition='submit'
         )
@@ -159,28 +165,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='data_entry'
         )
-
-        another_party = PartyFactory(
-            abbr='AP',
-            name='Another Party',
-            subregion=self.subregion
-        )
-        reporter_another_party = ReporterUserFactory(
-            party=another_party,
-            username='reporter_another_party',
-            email='reporter_another_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_another_party,
+            user=self.reporter_another_party,
             submission=submission,
             transition='submit'
         )
@@ -192,10 +183,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='submitted'
         )
         resp = self.call_transition(
@@ -213,20 +203,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        secretariat_user_ro = SecretariatUserFactory(
-            username='secretariat_user_ro',
-            email='secretariat_user_ro@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
-            is_read_only=True
-        )
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='submitted',
         )
         resp = self.call_transition(
-            user=secretariat_user_ro,
+            user=self.secretariat_user_ro,
             submission=submission,
             transition='process'
         )
@@ -242,10 +225,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         a submission from the `submitted` state.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='submitted',
         )
         resp = self.call_transition(
@@ -263,12 +245,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 412.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='submitted'
         )
         resp = self.call_transition(
@@ -285,23 +264,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='submitted'
         )
-
-        reporter_same_party = ReporterUserFactory(
-            party=party,
-            username='reporter_same_party',
-            email='reporter_same_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_same_party,
+            user=self.reporter_same_party,
             submission=submission,
             transition='recall'
         )
@@ -315,28 +284,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='submitted'
         )
-
-        another_party = PartyFactory(
-            abbr='AP',
-            name='Another Party',
-            subregion=self.subregion
-        )
-        reporter_another_party = ReporterUserFactory(
-            party=another_party,
-            username='reporter_another_party',
-            email='reporter_another_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_another_party,
+            user=self.reporter_another_party,
             submission=submission,
             transition='recall',
         )
@@ -353,10 +307,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         and `unrecall_to_finalized` will be almost identical.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='recalled',
             previous_state='submitted'
         )
@@ -375,12 +328,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 412 Precondition Failed.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='recalled',
             previous_state='submitted'
         )
@@ -398,25 +348,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='recalled',
             previous_state='submitted'
         )
-
-        reporter_same_party = ReporterUserFactory(
-            party=party,
-            username='reporter_same_party',
-            email='reporter_same_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe',
-                                          salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_same_party,
+            user=self.reporter_same_party,
             submission=submission,
             transition='unrecall_to_submitted'
         )
@@ -430,29 +369,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        self.reporter.party = party
-        self.reporter.save()
         submission = self.create_submission(
             owner=self.reporter,
-            party=party,
+            party=self.party,
             current_state='recalled',
             previous_state='submitted'
         )
-
-        another_party = PartyFactory(
-            abbr='AP',
-            name='Another Party',
-            subregion=self.subregion
-        )
-        reporter_another_party = ReporterUserFactory(
-            party=another_party,
-            username='reporter_another_party',
-            email='reporter_another_party@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
-        )
         resp = self.call_transition(
-            user=reporter_another_party,
+            user=self.reporter_another_party,
             submission=submission,
             transition='unrecall_to_submitted'
         )
@@ -464,10 +388,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='processing',
             flag_valid=True
         )
@@ -486,21 +409,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        secretariat_user_ro = SecretariatUserFactory(
-            username='secretariat_user_ro',
-            email='secretariat_user_ro@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
-            is_read_only=True
-        )
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='processing',
             flag_valid=True
         )
         resp = self.call_transition(
-            user=secretariat_user_ro,
+            user=self.secretariat_user_ro,
             submission=submission,
             transition='finalize'
         )
@@ -519,10 +435,9 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='data_entry'
         )
         resp = self.call_transition(
@@ -540,20 +455,13 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        secretariat_user_ro = SecretariatUserFactory(
-            username='secretariat_user_ro',
-            email='secretariat_user_ro@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
-            is_read_only=True
-        )
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='data_entry'
         )
         resp = self.call_transition(
-            user=secretariat_user_ro,
+            user=self.secretariat_user_ro,
             submission=submission,
             transition='finalized'
         )
@@ -565,10 +473,9 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='finalized'
         )
         resp = self.call_transition(
@@ -586,20 +493,13 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        secretariat_user_ro = SecretariatUserFactory(
-            username='secretariat_user_ro',
-            email='secretariat_user_ro@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
-            is_read_only=True
-        )
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='finalized'
         )
         resp = self.call_transition(
-            user=secretariat_user_ro,
+            user=self.secretariat_user_ro,
             submission=submission,
             transition='recall'
         )
@@ -611,10 +511,9 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 200.
         """
 
-        party = PartyFactory(subregion=self.subregion)
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='recalled'
         )
         resp = self.call_transition(
@@ -632,20 +531,13 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         Expected result: 403 Forbidden.
         """
 
-        party = PartyFactory(subregion=self.subregion)
-        secretariat_user_ro = SecretariatUserFactory(
-            username='secretariat_user_ro',
-            email='secretariat_user_ro@example.com',
-            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
-            is_read_only=True
-        )
         submission = self.create_submission(
             owner=self.secretariat_user,
-            party=party,
+            party=self.party,
             current_state='recalled'
         )
         resp = self.call_transition(
-            user=secretariat_user_ro,
+            user=self.secretariat_user_ro,
             submission=submission,
             transition='unrecall'
         )

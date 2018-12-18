@@ -42,6 +42,15 @@ class PartyFactory(DjangoModelFactory):
         model = Party
 
 
+class AnotherPartyFactory(DjangoModelFactory):
+    abbr = 'AP'
+    name = 'Another Party'
+    subregion = SubFactory(SubregionFactory)
+
+    class Meta:
+        model = Party
+
+
 class SecretariatUserFactory(DjangoModelFactory):
     is_secretariat = True
     is_read_only = False
@@ -52,11 +61,41 @@ class SecretariatUserFactory(DjangoModelFactory):
         model = User
 
 
+class SecretariatUserROFactory(DjangoModelFactory):
+    is_secretariat = True
+    is_read_only = True
+    username = 'secretariat_ro'
+    email = 'secretariat_ro@example.com'
+
+    class Meta:
+        model = User
+
+
 class ReporterUserFactory(DjangoModelFactory):
     is_secretariat = False
     is_read_only = False
     username = 'reporter'
     email = 'reporter@example.com'
+
+    class Meta:
+        model = User
+
+
+class ReporterUserSamePartyFactory(DjangoModelFactory):
+    is_secretariat = False
+    is_read_only = False
+    username = 'reporter_same_party'
+    email = 'reporter_same_party@example.com'
+
+    class Meta:
+        model = User
+
+
+class ReporterUserAnotherPartyFactory(DjangoModelFactory):
+    is_secretariat = False
+    is_read_only = False
+    username = 'reporter_another_party'
+    email = 'reporter_another_party@example.com'
 
     class Meta:
         model = User
