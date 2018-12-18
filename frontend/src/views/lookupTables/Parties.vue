@@ -5,7 +5,7 @@
 		<template slot="header">
 			<b-row>
 				<b-col cols="4">
-                    <b-input-group prepend="Search">
+                    <b-input-group prepend="Name">
                       <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
                     </b-input-group>
                 </b-col>
@@ -13,7 +13,7 @@
 		</template>
 		<b-table show-empty
 						outlined
-						stripped
+						striped
 						bordered
 						hover
 						head-variant="light"
@@ -22,7 +22,7 @@
 						:fields="table.fields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
-						:filter="table.filters.search"
+						:filter="filterCallback"
 						:sort-by.sync="table.sortBy"
 						@filtered="onFiltered"
 						ref="table">
@@ -34,6 +34,27 @@
 				</template>
 				<template slot="is_high_ambient_temperature" slot-scope="data">
 					<CheckedImage :item="data.item.is_high_ambient_temperature"/>
+				</template>
+				<template slot="vienna_convention" slot-scope="data">
+					<div v-html="data.item.vienna_convention"></div>
+				</template>
+				<template slot="montreal_protocol" slot-scope="data">
+					<div v-html="data.item.montreal_protocol"></div>
+				</template>
+				<template slot="london_amendment" slot-scope="data">
+					<div v-html="data.item.london_amendment"></div>
+				</template>
+				<template slot="copenhagen_amendment" slot-scope="data">
+					<div v-html="data.item.copenhagen_amendment"></div>
+				</template>
+				<template slot="montreal_amendment" slot-scope="data">
+					<div v-html="data.item.montreal_amendment"></div>
+				</template>
+				<template slot="beijing_amendment" slot-scope="data">
+					<div v-html="data.item.beijing_amendment"></div>
+				</template>
+				<template slot="kigali_amendment" slot-scope="data">
+					<div v-html="data.item.kigali_amendment"></div>
 				</template>
               </b-table>
           </b-card>
@@ -55,17 +76,14 @@ export default {
 			sortable: true,
 			class: 'text-center'
 		}
-		const sortableAndTextCenterAndRatificationDateFormatter = {
-			...sortableAndTextCenter,
-			formatter: (value) => (value ? `${value.ratification_date} \n ${value.ratification_type}` : '-')
-		}
 
 		return {
 			table: {
 				fields: [{
 					key: 'name',
 					label: 'Name',
-					...sortableAndTextCenter
+					class: 'text-left',
+					sortable: true
 				}, {
 					key: 'is_eu_member',
 					label: 'EU Member',
@@ -81,31 +99,31 @@ export default {
 				}, {
 					key: 'vienna_convention',
 					label: 'Vienna Convention',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'montreal_protocol',
 					label: 'Montreal Protocol',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'london_amendment',
 					label: 'London Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'copenhagen_amendment',
 					label: 'Copenhagen Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'montreal_amendment',
 					label: 'Montreal Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'beijing_amendment',
 					label: 'Beijing Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'kigali_amendment',
 					label: 'Kigali Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}],
 				currentPage: 1,
 				perPage: Infinity,
@@ -131,6 +149,12 @@ export default {
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
+		},
+		filterCallback(party) {
+			if (!this.table.filters.search) {
+				return true
+			}
+			return party.name && party.name.toLowerCase().includes(this.table.filters.search.toLowerCase())
 		}
 	},
 	created() {
