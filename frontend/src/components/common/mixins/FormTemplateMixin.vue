@@ -123,7 +123,7 @@ export default {
 
 		tableFields() {
 			const tableHeaders = []
-			const options = { class: 'text-center' }
+			const options = {}
 			this.tab_info.section_subheaders.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
@@ -136,7 +136,7 @@ export default {
 
 		tableFieldsBlends() {
 			const tableHeaders = []
-			const options = { class: 'text-center' }
+			const options = {}
 			this.tab_info.section_subheaders.forEach((element) => {
 				if (element.name === 'substance') {
 					tableHeaders.push({ key: 'blend', label: element.label, ...options })
