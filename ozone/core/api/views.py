@@ -253,6 +253,7 @@ class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class SubmissionPaginator(PageNumberPagination):
+    page_size = 10
     page_query_param = 'page'
     page_size_query_param = "page_size"
 
@@ -275,7 +276,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter,
                        SearchFilter,)
     filterset_class = SubmissionViewFilterSet
-    search_fields = ('party__name', 'obligation__name',)
+    search_fields = ('party__name', 'obligation__name', "reporting_period__name",)
     ordering_fields = ('obligation', 'party', 'reporting_period', 'version', 'current_state',
                        'updated_at',)
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
