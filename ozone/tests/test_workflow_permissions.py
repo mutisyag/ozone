@@ -40,13 +40,20 @@ class BaseWorkflowPermissionsTests(TestCase):
             'HTTP_AUTHORIZATION': 'Token ' + resp.data['token'],
         }
 
-    def call_transition(
+    def call_transition(self, user, submission, transition):
+        headers = self.get_authorization_header(user.username, 'qwe123qwe')
+        return self.client.post(
+            reverse("core:submission-call-transition",
+                    kwargs={'pk': submission.pk}),
+            {"transition": transition, "party": submission.party.pk},
+            **headers
+        )
+
+    def create_submission(
             self,
             owner,
-            user,
             party,
             current_state,
-            transition,
             previous_state=None,
             flag_valid=None
     ):
@@ -62,14 +69,7 @@ class BaseWorkflowPermissionsTests(TestCase):
         submission._current_state = current_state
         submission.flag_valid = flag_valid
         submission.save()
-
-        headers = self.get_authorization_header(user.username, 'qwe123qwe')
-        return self.client.post(
-            reverse("core:submission-call-transition",
-                    kwargs={'pk': submission.pk}),
-            {"transition": transition, "party": party.pk},
-            **headers
-        )
+        return submission
 
 
 class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
@@ -86,11 +86,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
-            current_state='data_entry',
+            current_state='data_entry'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='submit'
         )
         self.assertEqual(resp.status_code, 200)
@@ -107,11 +110,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.reporter,
-            user=self.secretariat_user,
             party=party,
             current_state='data_entry',
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='submit'
         )
         self.assertEqual(resp.status_code, 412)
@@ -126,6 +132,12 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='data_entry'
+        )
+
         reporter_same_party = ReporterUserFactory(
             party=party,
             username='reporter_same_party',
@@ -133,11 +145,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_same_party,
-            party=party,
-            current_state='data_entry',
-            transition='submit',
+            submission=submission,
+            transition='submit'
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
@@ -152,6 +162,12 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='data_entry'
+        )
+
         another_party = PartyFactory(
             abbr='AP',
             name='Another Party',
@@ -164,10 +180,8 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_another_party,
-            party=party,
-            current_state='data_entry',
+            submission=submission,
             transition='submit'
         )
         self.assertEqual(resp.status_code, 403)
@@ -179,11 +193,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
-            current_state='submitted',
+            current_state='submitted'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='process'
         )
         self.assertEqual(resp.status_code, 200)
@@ -203,11 +220,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
             is_read_only=True
         )
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=secretariat_user_ro,
             party=party,
             current_state='submitted',
+        )
+        resp = self.call_transition(
+            user=secretariat_user_ro,
+            submission=submission,
             transition='process'
         )
         self.assertEqual(resp.status_code, 403)
@@ -223,11 +243,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
             current_state='submitted',
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='recall'
         )
         self.assertEqual(resp.status_code, 200)
@@ -243,11 +266,14 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.reporter,
-            user=self.secretariat_user,
             party=party,
-            current_state='submitted',
+            current_state='submitted'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='recall'
         )
         self.assertEqual(resp.status_code, 412)
@@ -262,6 +288,12 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='submitted'
+        )
+
         reporter_same_party = ReporterUserFactory(
             party=party,
             username='reporter_same_party',
@@ -269,11 +301,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_same_party,
-            party=party,
-            current_state='submitted',
-            transition='recall',
+            submission=submission,
+            transition='recall'
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'recalled')
@@ -288,6 +318,12 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='submitted'
+        )
+
         another_party = PartyFactory(
             abbr='AP',
             name='Another Party',
@@ -300,10 +336,8 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_another_party,
-            party=party,
-            current_state='submitted',
+            submission=submission,
             transition='recall',
         )
         self.assertEqual(resp.status_code, 403)
@@ -320,13 +354,16 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
             current_state='recalled',
-            transition='unrecall_to_submitted',
             previous_state='submitted'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_submitted'
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
@@ -341,13 +378,16 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.reporter,
-            user=self.secretariat_user,
             party=party,
             current_state='recalled',
-            transition='unrecall_to_submitted',
             previous_state='submitted'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='unrecall_to_submitted'
         )
         self.assertEqual(resp.status_code, 412)
 
@@ -361,6 +401,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='recalled',
+            previous_state='submitted'
+        )
+
         reporter_same_party = ReporterUserFactory(
             party=party,
             username='reporter_same_party',
@@ -369,12 +416,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
                                           salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_same_party,
-            party=party,
-            current_state='recalled',
-            transition='unrecall_to_submitted',
-            previous_state='submitted'
+            submission=submission,
+            transition='unrecall_to_submitted'
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
@@ -389,6 +433,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         party = PartyFactory(subregion=self.subregion)
         self.reporter.party = party
         self.reporter.save()
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=party,
+            current_state='recalled',
+            previous_state='submitted'
+        )
+
         another_party = PartyFactory(
             abbr='AP',
             name='Another Party',
@@ -401,12 +452,9 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         resp = self.call_transition(
-            owner=self.reporter,
             user=reporter_another_party,
-            party=party,
-            current_state='recalled',
-            transition='unrecall_to_submitted',
-            previous_state='submitted'
+            submission=submission,
+            transition='unrecall_to_submitted'
         )
         self.assertEqual(resp.status_code, 403)
 
@@ -417,13 +465,16 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
             current_state='processing',
-            transition='finalize',
             flag_valid=True
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
+            transition='finalize'
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'finalized')
@@ -442,13 +493,16 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
             is_read_only=True
         )
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=secretariat_user_ro,
             party=party,
             current_state='processing',
-            transition='finalize',
             flag_valid=True
+        )
+        resp = self.call_transition(
+            user=secretariat_user_ro,
+            submission=submission,
+            transition='finalize'
         )
         self.assertEqual(resp.status_code, 403)
 
@@ -466,11 +520,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
-            current_state='data_entry',
+            current_state='data_entry'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='finalize'
         )
         self.assertEqual(resp.status_code, 200)
@@ -490,11 +547,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
             is_read_only=True
         )
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=secretariat_user_ro,
             party=party,
-            current_state='data_entry',
+            current_state='data_entry'
+        )
+        resp = self.call_transition(
+            user=secretariat_user_ro,
+            submission=submission,
             transition='finalized'
         )
         self.assertEqual(resp.status_code, 403)
@@ -506,11 +566,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
-            current_state='finalized',
+            current_state='finalized'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='recall'
         )
         self.assertEqual(resp.status_code, 200)
@@ -530,11 +593,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
             is_read_only=True
         )
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=secretariat_user_ro,
             party=party,
-            current_state='finalized',
+            current_state='finalized'
+        )
+        resp = self.call_transition(
+            user=secretariat_user_ro,
+            submission=submission,
             transition='recall'
         )
         self.assertEqual(resp.status_code, 403)
@@ -546,11 +612,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
         """
 
         party = PartyFactory(subregion=self.subregion)
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=self.secretariat_user,
             party=party,
-            current_state='recalled',
+            current_state='recalled'
+        )
+        resp = self.call_transition(
+            user=self.secretariat_user,
+            submission=submission,
             transition='unrecall'
         )
         self.assertEqual(resp.status_code, 200)
@@ -570,11 +639,14 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123'),
             is_read_only=True
         )
-        resp = self.call_transition(
+        submission = self.create_submission(
             owner=self.secretariat_user,
-            user=secretariat_user_ro,
             party=party,
-            current_state='recalled',
+            current_state='recalled'
+        )
+        resp = self.call_transition(
+            user=secretariat_user_ro,
+            submission=submission,
             transition='unrecall'
         )
         self.assertEqual(resp.status_code, 403)
