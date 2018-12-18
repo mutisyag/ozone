@@ -924,3 +924,7 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 .first-header th {
 	text-align: center!important;
 }
+
+.sidebar-minimized .sidebar .nav-dropdown-items .nav-item .nav-link {
+	padding-left: 5px;
+}
