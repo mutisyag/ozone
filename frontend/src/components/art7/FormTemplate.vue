@@ -403,6 +403,11 @@
         <span v-else>Edit {{tab_data.display.blends[modal_data.field.blend.selected].name}} blend</span>
       </div>
       <div v-if="modal_data">
+				<p class="muted">
+					All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
+					<br>
+					<b>The values are saved automatically in the table, as you type.</b> 
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             Change substance
@@ -489,11 +494,6 @@
           </b-col>
         </b-row>
       </div>
-			<p class="muted mt-3">
-				All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
-				<br>
-				The values are saved in the table, as you type. Close the form using the button below.
-			</p>
       <div slot="modal-footer">
           <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
       </div>
