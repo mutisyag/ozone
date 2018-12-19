@@ -28,7 +28,7 @@
       </b-col>
 
         <b-col sm="8">
-          <b-card v-if="dataReady">
+          <b-card v-if="basicDataReady">
             <div slot="header">
               <strong>My submissions </strong>
             </div>
@@ -73,7 +73,7 @@
     </b-row>
     <b-row>
       <b-col sm="12">
-          <b-card no-body v-if="dataReady">
+          <b-card no-body v-if="basicDataReady">
             <template slot="header">
               <b-row>
               <b-col><b>All submissions</b></b-col>
