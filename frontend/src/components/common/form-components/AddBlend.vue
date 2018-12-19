@@ -73,8 +73,7 @@
 			<div v-if="new_blend">
 				<h5>Add custom blend</h5>
 				<small>If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</small>
-				<h5 class="mt-2">Composition</h5>
-				<b-input-group prepend="Blend name">
+				<b-input-group class="mt-2" prepend="Blend name">
 					<b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
 					<b-input-group-append>
 						<b-btn @click="addSubstanceToBlend">Add substance</b-btn>
