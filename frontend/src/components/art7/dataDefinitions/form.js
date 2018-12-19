@@ -830,7 +830,7 @@ const form = {
 		flags: {
 			name: 'flags',
 			hasAssideMenu: false,
-			endpoint_url: 'article7_flags',
+			endpoint_url: 'submission_flags_url',
 			status: null,
 			title: 'Flags',
 			titleHtml: '<b>Flags</b>',
@@ -838,24 +838,25 @@ const form = {
 			detailsHtml: 'Flags',
 			form_fields: flags,
 			get fields_order() {
-				return Object.keys(this.form_fields).filter(key => this.form_fields[key].selected != null).map(key => key)
+				return Object.keys(this.form_fields)
 			},
 			default_properties: {
-				superseded: null,
-				provisional: null,
-				checked_blanks: null,
-				has_blanks: null,
-				confirmed_blanks: null,
-				has_reported_a1: null,
-				has_reported_a2: null,
-				has_reported_b1: null,
-				has_reported_b2: null,
-				has_reported_b3: null,
-				has_reported_c1: null,
-				has_reported_c2: null,
-				has_reported_c3: null,
-				has_reported_e: null,
-				has_reported_f: null
+				flag_provisional: false,
+				flag_valid: null,
+				flag_superseded: false,
+				flag_checked_blanks: false,
+				flag_has_blanks: false,
+				flag_confirmed_blanks: false,
+				flag_has_reported_a1: false,
+				flag_has_reported_a2: false,
+				flag_has_reported_b1: false,
+				flag_has_reported_b2: false,
+				flag_has_reported_b3: false,
+				flag_has_reported_c1: false,
+				flag_has_reported_c2: false,
+				flag_has_reported_c3: false,
+				flag_has_reported_e: false,
+				flag_has_reported_f: false
 			}
 		}
 	}

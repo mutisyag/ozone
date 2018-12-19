@@ -1,77 +1,82 @@
 export default {
-	superseded: {
+	flag_provisional: {
 		selected: true,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	provisional: {
+	flag_valid: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	checked_blanks: {
+	flag_superseded: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_blanks: {
+	flag_checked_blanks: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	confirmed_blanks: {
+	flag_has_blanks: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_a1: {
+	flag_confirmed_blanks: {
 		selected: true,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_a2: {
+	flag_has_reported_a1: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_b1: {
+	flag_has_reported_a2: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_b2: {
+	flag_has_reported_b1: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_b3: {
+	flag_has_reported_b2: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_c1: {
+	flag_has_reported_b3: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_c2: {
+	flag_has_reported_c1: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_c3: {
+	flag_has_reported_c2: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_e: {
+	flag_has_reported_c3: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
 	},
-	has_reported_f: {
+	flag_has_reported_e: {
 		selected: false,
-		type: 'checkbox'
-
+		type: 'checkbox',
+		disabled: false
+	},
+	flag_has_reported_f: {
+		selected: false,
+		type: 'checkbox',
+		disabled: false
 	}
 }

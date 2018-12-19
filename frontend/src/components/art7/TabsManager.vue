@@ -33,7 +33,7 @@
                 Submission Info
               </div>
              </template>
-            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+            <SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
           <b-tab title="Questionaire">
@@ -62,12 +62,6 @@
 						<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
 					</template>
 					<Attachments :tab="$store.state.form.tabs.attachments"/>
-				</b-tab>
-				<b-tab>
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.flags" />
-					</template>
-					<Flags :tab="$store.state.form.tabs.flags"/>
 				</b-tab>
       </b-tabs>
     </b-card>
@@ -118,7 +112,6 @@ import Save from '@/components/art7/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import labels from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
-import Flags from '@/components/common/Flags'
 
 export default {
 	components: {
@@ -130,8 +123,7 @@ export default {
 		Footer,
 		Save,
 		SubmissionHistory,
-		TabTitleWithLoader,
-		Flags
+		TabTitleWithLoader
 	},
 	props: {
 		data: null,
