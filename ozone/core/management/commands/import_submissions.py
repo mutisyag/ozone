@@ -459,12 +459,21 @@ class Command(BaseCommand):
             logger.warning("Overall sheet missing for: %s", row)
             return
 
+        # Data is missing these fields, but all submissions seems to have at least one.
+        # Fallback for each in order of preference.
+        date_reported = overall["DateReported"] or overall["DateCreate"] or overall["DateUpdate"]
+        created_at = overall["DateCreate"] or overall["DateReported"] or overall["DateUpdate"]
+        updated_at = overall["DateUpdate"] or overall["DateCreate"] or overall["DateReported"]
+
+        if not created_at or not updated_at or not date_reported:
+            logger.warning("No date available %s/%s", party.abbr, period.name)
+
         return {
             "submission": {
                 "schema_version": "legacy",
                 "filled_by_secretariat": False,
-                "created_at": overall["DateCreate"],
-                "updated_at": overall["DateUpdate"],
+                "created_at": created_at,
+                "updated_at": updated_at,
                 "version": 1,
                 "_workflow_class": "default",
                 "_current_state": "finalized",
@@ -492,7 +501,7 @@ class Command(BaseCommand):
                 "phone": "",
                 "fax": "",
                 "email": "",
-                "date": overall["DateReported"],
+                "date": date_reported,
             },
             "art7": {
                 "remarks_party": "",
@@ -581,11 +590,16 @@ class Command(BaseCommand):
 
         # Extra tidy
         submission._current_state = "finalized"
-        if values["submission"]["created_at"]:
-            submission.created_at = values["submission"]["created_at"]
-        if values["submission"]["updated_at"]:
-            submission.updated_at = values["submission"]["updated_at"]
         submission.save()
+
+        if values["submission"]["created_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                created_at=values["submission"]["created_at"]
+            )
+        if values["submission"]["updated_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                updated_at=values["submission"]["updated_at"]
+            )
         for obj in submission.history.all():
             obj.history_user = self.admin
             obj.save()
