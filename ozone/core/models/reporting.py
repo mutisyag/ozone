@@ -377,6 +377,18 @@ class Submission(models.Model):
 
         return flags_list
 
+    def check_flags(self, user):
+        """
+        Returns False if user has changed flags he was not allowed to change
+        in the current state; True otherwise.
+        """
+        modified_flags = [
+            field_name for field_name in self.tracker.changed().keys()
+            if field_name.startswith('flag_') and
+            field_name not in self.get_changeable_flags(user)
+        ]
+        return len(modified_flags) > 0
+
     @staticmethod
     def get_exempted_fields():
         """
