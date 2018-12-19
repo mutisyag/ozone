@@ -196,7 +196,7 @@ const store = new Vuex.Store({
 					},
 					sorting: {
 						sortDesc: true,
-						sortBy: 'last_updated'
+						sortBy: 'updated_at'
 					}
 
 				}).then(response => {

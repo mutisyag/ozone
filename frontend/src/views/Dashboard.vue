@@ -213,7 +213,7 @@ export default {
 						key: 'current_state', label: 'State', sortable: true
 					},
 					{
-						key: 'last_updated', label: 'Last modified', sortable: true
+						key: 'updated_at', label: 'Last modified', sortable: true
 					},
 					{ key: 'actions', label: 'Actions' }
 				],
@@ -318,7 +318,7 @@ export default {
                         party: this.getSubmissionInfo(element).party(),
                         current_state: element.current_state,
                         version: element.version,
-                        last_updated: element.updated_at,
+                        updated_at: element.updated_at,
                         details: element
                     })
                 })
