@@ -232,9 +232,8 @@ class Command(BaseCommand):
 
             if not any(nonparty_row[_npt_type]
                        for _npt_type in ("NPTImpNew", "NPTImpRecov", "NPTExpNew", "NPTExpRecov")):
-                logger.error("NonPartyTradeNew no quantity specified: %s/%s/%s", party.abbr,
-                             period.name, nonparty_row["SubstID"])
-                continue
+                logger.warning("NonPartyTradeNew no quantity specified: %s/%s/%s", party.abbr,
+                               period.name, nonparty_row["SubstID"])
 
             # Get the trade party, if not present then add it as NULL
             # the data on the trade party will be in the remarks.
@@ -530,10 +529,8 @@ class Command(BaseCommand):
             # Check can be done in a single operation, but we want
             # to be verbose to log the inconsistency.
             if data[data_type] and not data["art7"]["has_" + data_type]:
-                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set "
-                               "(Auto-fixed)", party.abbr, period.name, data_type)
-                # Automatically fix these issues
-                data["art7"]["has_" + data_type] = True
+                logger.warning("Inconsistency for %s/%s/%s: has data, but flag is not set",
+                               party.abbr, period.name, data_type)
                 is_ok = False
             elif not data[data_type] and data["art7"]["has_" + data_type]:
                 logger.warning("Inconsistency for %s/%s/%s: does not have data, but flag set",
@@ -558,41 +555,29 @@ class Command(BaseCommand):
                 return False
 
         submission = Submission.objects.create(**values["submission"])
-        submission_info = SubmissionInfo.objects.create(
-            submission=submission,
-            **values["submission_info"],
-        )
-        art7 = Article7Questionnaire.objects.create(
-            submission=submission,
-            **values["art7"],
-        )
-        raise_error = None
 
-        for import_values in values["imports"]:
-            Article7Import.objects.create(submission=submission, **import_values)
-
-        for export_values in values["exports"]:
-            Article7Export.objects.create(submission=submission, **export_values)
-
-        for produce_values in values["produced"]:
-            Article7Production.objects.create(submission=submission, **produce_values)
-
-        for destroyed_values in values["destroyed"]:
-            Article7Destruction.objects.create(submission=submission, **destroyed_values)
-
-        for nonparty_values in values["nonparty"]:
-            try:
-                npt = Article7NonPartyTrade.objects.create(submission=submission,
-                                                           **nonparty_values)
-            except ValidationError as e:
-                s = Substance.objects.get(id=nonparty_values["substance_id"])
-                t = Party.objects.get(id=nonparty_values["trade_party_id"])
-                logger.error("NonPartyTrade %s: %s/%s/%s/%s", e,
-                             party.abbr, period.name, s.substance_id, t.abbr)
-                raise_error = e
-
-        if raise_error:
-            raise raise_error
+        # Use bulk create to bypass any model level validation.
+        # This will mean that some entries will be in impossible states but
+        # we prefer preserving the legacy data as pristine as possible.
+        for key, klass in (
+            ("submission_info", SubmissionInfo),
+            ("art7", Article7Questionnaire),
+            ("imports", Article7Import),
+            ("exports", Article7Export),
+            ("produced", Article7Production),
+            ("destroyed", Article7Destruction),
+            ("nonparty", Article7NonPartyTrade),
+        ):
+            table_values = values[key]
+            if isinstance(table_values, list):
+                klass.objects.bulk_create([
+                    klass(submission=submission, **_instance)
+                    for _instance in table_values
+                ])
+            else:
+                klass.objects.bulk_create([
+                    klass(submission=submission, **table_values)
+                ])
 
         # Extra tidy
         submission._current_state = "finalized"

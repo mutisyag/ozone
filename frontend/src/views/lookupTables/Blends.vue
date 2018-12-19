@@ -1,19 +1,18 @@
 <template>
-  <div class="app flex-row align-items-center responsive">
+  <div class="app flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col>
-                    <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+                    <b-input-group prepend="Name / Other Names">
+                      <b-form-input v-model="table.filters.searchName" />
                     </b-input-group>
                 </b-col>
 				<b-col>
                     <b-input-group>
 						<multiselect
 							:max-height="250"
-							style="max-width:290px; max-height:50px;"
 							:multiple="true"
 							:clear-on-select="false"
 							:hide-selected="true"
@@ -32,33 +31,27 @@
 						</b-input-group-append>
 					</b-input-group>
                 </b-col>
-				<b-col>
-					<b-input-group horizontal prepend="Per page">
-						<b-form-select :options="table.pageOptions" v-model="table.perPage" />
-					</b-input-group>
-				</b-col>
 			</b-row>
 		</template>
-		<b-table show-empty
-                       outlined
-                       bordered
-                       hover
-						class="width-50-percent"
-						head-variant="light"
-                       stacked="md"
-                       :items="visibleBlends"
-                       :fields="table.fields"
-                       :current-page="table.currentPage"
-                       :per-page="table.perPage"
-                       :sort-by.sync="table.sortBy"
-                       :sort-desc.sync="table.sortDesc"
-                       :sort-direction="table.sortDirection"
-                       :filter="table.filters.search"
-                       @filtered="onFiltered"
-                       ref="table">
+		<b-table 	show-empty
+					outlined
+					bordered
+					hover
+					head-variant="light"
+					stacked="md"
+					:items="visibleBlends"
+					:fields="table.fields"
+					:current-page="table.currentPage"
+					:per-page="table.perPage"
+					:sort-by.sync="table.sortBy"
+					:sort-desc.sync="table.sortDesc"
+					:sort-direction="table.sortDirection"
+					:filter="filterCallback"
+					@filtered="onFiltered"
+					ref="table">
 				<template slot="other_names" slot-scope="data">
 					<span v-if="data.item.other_names">{{data.item.other_names}}</span>
-					<span v-else>-</span>
+					<span v-else><i class="fa fa-ellipsis-h"></i></span>
 				</template>
 
                 <template slot="components" slot-scope="row">
@@ -80,13 +73,6 @@
 						</b-table>
                 </template>
               </b-table>
-
-              <b-row>
-                <b-col md="6" class="my-1">
-                  <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
-                </b-col>
-              </b-row>
-
           </b-card>
 		</b-container>
   </div>
@@ -94,7 +80,7 @@
 
 <script>
 import './styles.css'
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 
 const blendsCompareByComponentPercent = (blend1, blend2, componentName, isDescending) => {
 	const { percentage: componentPercentageInBlend1 } = blend1.components.find(component => component.component_name === componentName)
@@ -113,40 +99,30 @@ export default {
 		return {
 			table: {
 				fields: [{
-					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center width-200'
+					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center'
 				}, {
-					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center width-200'
+					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center'
 				}, {
 					key: 'components', label: 'Components', class: 'text-center'
 				}
 				],
 				currentPage: 1,
 				perPage: Infinity,
-				totalRows: 50,
-				pageOptions: [
-					{ value: 10, text: '10' },
-					{ value: 50, text: '50' },
-					{ value: 100, text: '100' },
-					{ value: Infinity, text: 'All' }
-				],
 				filters: {
-					search: null,
+					searchName: null,
 					selectedComponentsNames: [],
-					isComponentsSortDirectionDesc: null
+					isComponentsSortDirectionDesc: true
 				}
 			},
 			tableComponents: {
-				fields: [
-					{
-						key: 'index', label: '', class: 'width-40'
-					}, {
-						key: 'component_name', label: 'Name', class: 'text-center'
-					}, {
-						key: 'percentage',
-						label: 'Percentage',
-						class: 'text-center',
-						formatter: (value) => `${(value * 100).toFixed(2)}%`
-					}
+				fields: [{
+					key: 'component_name', label: 'Name', class: 'text-center'
+				}, {
+					key: 'percentage',
+					label: 'Percentage',
+					class: 'text-center',
+					formatter: (value) => `${(value * 100).toFixed(2)}%`
+				}
 				],
 				currentPage: 1,
 				perPage: Infinity
@@ -178,9 +154,11 @@ export default {
 				return visibleBlendsComputed
 			}
 			blends.forEach(blend => {
+				blend.components.forEach(component => {
+					this.$store.commit('setBlendComponentRowVariant', { component })
+				})
 				const blendIsVisible = !selectedComponentsNames.length
 						|| selectedComponentsNames.every(selectedComponentName => blend.components.map(component => {
-							this.$store.commit('setBlendComponentRowVariant', { component })
 							if (selectedComponentsNames.includes(component.component_name)) {
 								this.$store.commit('setBlendComponentRowVariant', { component, value: 'success' })
 							}
@@ -192,7 +170,7 @@ export default {
 				}
 			})
 
-			if (this.table.filters.isComponentsSortDirectionDesc !== null && this.table.filters.selectedComponentsNames.length) {
+			if (this.table.filters.selectedComponentsNames.length) {
 				visibleBlendsComputed = visibleBlendsComputed.sort((blend1, blend2) => blendsCompareByComponentPercent(blend1, blend2, this.table.filters.selectedComponentsNames[0], this.table.filters.isComponentsSortDirectionDesc))
 			}
 
@@ -203,9 +181,16 @@ export default {
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
-			if (!this.table.filters.selectedComponentsNames.length) {
-				this.table.filters.isComponentsSortDirectionDesc = null
+			this.table.filters.isComponentsSortDirectionDesc = true
+		},
+		filterCallback(blend) {
+			const { searchName } = this.table.filters
+			if (!searchName) {
+				return true
 			}
+			return blend.blend_id && (
+				blend.blend_id.toLowerCase().includes(searchName.toLowerCase())
+				|| (blend.other_names && blend.other_names.toLowerCase().includes(searchName.toLowerCase())))
 		},
 		toggleIsComponentsSortDirectionDesc() {
 			this.table.filters.isComponentsSortDirectionDesc = !this.table.filters.isComponentsSortDirectionDesc

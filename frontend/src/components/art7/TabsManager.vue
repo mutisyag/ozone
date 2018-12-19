@@ -13,21 +13,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
     <b-button-group class="actions">
-      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			v-if="$store.state.available_transitions.includes('submit')"
-			@click="checkBeforeSubmitting"
-			variant="outline-success">
-			Submit
-		</b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
-		</b-btn>
-
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -40,15 +26,22 @@
 
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
-			<b-tabs v-model="tabIndex" card>
-				<b-tab title="Submission Info">
+		<b-tabs v-model="tabIndex" card>
+          <b-tab title="Submission Info" active>
+             <template slot="title">
+              <div class="tab-title">
+                Submission Info
+              </div>
+             </template>
+            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+          </b-tab>
+
+          <b-tab title="Questionaire">
 						<template slot="title">
-						<div class="tab-title">
-							Submission Info
-						</div>
+							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
 						</template>
-					<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-				</b-tab>
+            <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+          </b-tab>
 
 				<b-tab title="Questionaire" active>
 					<template slot="title">
@@ -153,7 +146,7 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.$route.name, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]])
+		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
 	},
 
 	computed: {

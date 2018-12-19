@@ -10,7 +10,7 @@ export default {
 	reporting_officer: 'Name of reporting officer',
 	designation: 'Designation',
 	organization: 'Organization',
-	postal_code: 'Postal Adddress',
+	postal_code: 'Postal adddress',
 	country: 'Country',
 	phone: 'Phone',
 	fax: 'Fax',
@@ -33,5 +33,7 @@ export default {
 		has_reported_c3: 'Annex group C3',
 		has_reported_e: 'Annex group E',
 		has_reported_f: 'Annex group F'
-	}
+	},
+	art7: 'Article 7',
+	hat: 'HAT'
 }

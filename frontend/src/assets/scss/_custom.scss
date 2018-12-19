@@ -849,6 +849,7 @@ input[type=number] {
 
 .table-filters {
   display: flex;
+	margin-right: 10px;
 	input {
   	max-width: 40%;
   	min-width: 400px;
@@ -861,11 +862,13 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 .form-wrapper h4 {
 	margin-bottom: 0;
+	flex-grow: 1;
 }
 .table-title {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	min-height: 35px;
 }
 .table-title i {
 	cursor: pointer;
@@ -887,7 +890,8 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 
 .submission-table th {
-	border: 1px solid #aaa!important;;
+	border: 1px solid #aaa!important;
+	text-align: center!important;
 }
 
 .aside-menu {
@@ -927,4 +931,29 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 .sidebar-minimized .sidebar .nav-dropdown-items .nav-item .nav-link {
 	padding-left: 5px;
+}
+
+
+.input-group  {
+	flex-wrap: nowrap;
+}
+.submission-table { 
+	.multiselect__tags {
+			min-height: unset;
+			font-size: 12px;
+			padding: 5px 65px 0 12px;
+	}
+	.multiselect__select {
+		height: 35px;
+		padding: 2px 6px;
+	}
+}
+
+.submission-table th {
+	  color: #000000;
+    background-color: #fafafa!important;
+}
+
+body {
+	background: #eee;
 }

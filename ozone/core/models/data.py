@@ -493,7 +493,7 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
     ]
 
     quantity_destroyed = models.FloatField(
-        validators=[MinValueValidator(0.0)]
+        validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
     class Meta:

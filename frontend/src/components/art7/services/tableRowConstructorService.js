@@ -58,7 +58,7 @@ const valueConverter = (item) => {
 	return parseFloat(item)
 }
 
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + parseFloat(sum))
+const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
 
 const decisionGenerator = (fields, parent, section) => {
 	const decisions = []
@@ -277,6 +277,7 @@ export default {
 			},
 			get validation() {
 				const errors = []
+				console.log('in validation', this.quantity_total_new.selected, this.quantity_total_recovered.selected)
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
 					errors.push('Total quantity imported for all uses is required')
 				}
@@ -387,6 +388,14 @@ export default {
 				quantity_total_produced: {
 					type: 'number',
 					selected: null
+				},
+				quantity_other_uses: {
+					type: 'number',
+					selected: null
+				},
+				decision_other_uses: {
+					type: 'text',
+					selected: ''
 				},
 				quantity_feedstock: {
 					type: 'number',

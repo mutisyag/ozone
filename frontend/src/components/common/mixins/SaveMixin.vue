@@ -82,10 +82,15 @@ export default {
 			if (this.newTabs.includes(tab.name)) {
 				post(url, current_tab_data).then(() => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
-					if (tab.form_fields.length) {
+					if (isObject(tab.form_fields)) {
 						this.$store.commit('tabHasBeenSaved', tab.name)
-					} else {
-						this.$store.commit('updateNewTabs', tab.name)
+					}
+					if (Array.isArray(tab.form_fields)) {
+						if (tab.form_fields.length) {
+							this.$store.commit('tabHasBeenSaved', tab.name)
+						} else {
+							this.$store.commit('updateNewTabs', tab.name)
+						}
 					}
 				}).catch((error) => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })

@@ -1,19 +1,19 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col cols="4">
-                    <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+                    <b-input-group prepend="Name">
+                      <b-form-input v-model="table.filters.searchName" />
                     </b-input-group>
                 </b-col>
 			</b-row>
 		</template>
 		<b-table show-empty
 						outlined
-						stripped
+						striped
 						bordered
 						hover
 						head-variant="light"
@@ -22,7 +22,7 @@
 						:fields="table.fields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
-						:filter="table.filters.search"
+						:filter="filterCallback"
 						:sort-by.sync="table.sortBy"
 						@filtered="onFiltered"
 						ref="table">
@@ -35,6 +35,27 @@
 				<template slot="is_high_ambient_temperature" slot-scope="data">
 					<CheckedImage :item="data.item.is_high_ambient_temperature"/>
 				</template>
+				<template slot="vienna_convention" slot-scope="data">
+					<div v-html="data.item.vienna_convention"></div>
+				</template>
+				<template slot="montreal_protocol" slot-scope="data">
+					<div v-html="data.item.montreal_protocol"></div>
+				</template>
+				<template slot="london_amendment" slot-scope="data">
+					<div v-html="data.item.london_amendment"></div>
+				</template>
+				<template slot="copenhagen_amendment" slot-scope="data">
+					<div v-html="data.item.copenhagen_amendment"></div>
+				</template>
+				<template slot="montreal_amendment" slot-scope="data">
+					<div v-html="data.item.montreal_amendment"></div>
+				</template>
+				<template slot="beijing_amendment" slot-scope="data">
+					<div v-html="data.item.beijing_amendment"></div>
+				</template>
+				<template slot="kigali_amendment" slot-scope="data">
+					<div v-html="data.item.kigali_amendment"></div>
+				</template>
               </b-table>
           </b-card>
 		</b-container>
@@ -43,7 +64,6 @@
 
 <script>
 import './styles.css'
-import uuidv1 from 'uuid/v1'
 import CheckedImage from '@/components/common/CheckedImage'
 
 export default {
@@ -55,17 +75,14 @@ export default {
 			sortable: true,
 			class: 'text-center'
 		}
-		const sortableAndTextCenterAndRatificationDateFormatter = {
-			...sortableAndTextCenter,
-			formatter: (value) => (value ? `${value.ratification_date} \n ${value.ratification_type}` : '-')
-		}
 
 		return {
 			table: {
 				fields: [{
 					key: 'name',
 					label: 'Name',
-					...sortableAndTextCenter
+					class: 'text-left width-200',
+					sortable: true
 				}, {
 					key: 'is_eu_member',
 					label: 'EU Member',
@@ -81,39 +98,38 @@ export default {
 				}, {
 					key: 'vienna_convention',
 					label: 'Vienna Convention',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'montreal_protocol',
 					label: 'Montreal Protocol',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'london_amendment',
 					label: 'London Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'copenhagen_amendment',
 					label: 'Copenhagen Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'montreal_amendment',
 					label: 'Montreal Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'beijing_amendment',
 					label: 'Beijing Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}, {
 					key: 'kigali_amendment',
 					label: 'Kigali Amendment',
-					...sortableAndTextCenterAndRatificationDateFormatter
+					...sortableAndTextCenter
 				}],
 				currentPage: 1,
 				perPage: Infinity,
 				totalRows: 50,
 				sortBy: null,
 				filters: {
-					search: null,
-					sortDefaultOrderToken: uuidv1()
+					searchName: null
 				}
 			}
 		}
@@ -131,6 +147,12 @@ export default {
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
+		},
+		filterCallback(party) {
+			if (!this.table.filters.searchName) {
+				return true
+			}
+			return party.name && party.name.toLowerCase().includes(this.table.filters.searchName.toLowerCase())
 		}
 	},
 	created() {

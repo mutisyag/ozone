@@ -117,19 +117,16 @@
 						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
 					>
 						<span class="validation-wrapper">
-							<i
+							<b-badge
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
 								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i
-								v-else
-								style="color: green;"
-								class="fa fa-check-square-o fa-lg"
-								></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
@@ -231,15 +228,16 @@
 											>{{row.item[specialField.name]}}</span>
 
 											<span v-if="specialField.name === 'validation'" class="validation-wrapper">
-												<i
+												<b-badge
+													pill
+													style="cursor:pointer"
+													variant="danger"
 													@click="openValidation"
 													v-if="row.item.validation.length"
-													style="color: red; cursor: pointer"
-													class="fa fa-exclamation fa-lg"
 													v-b-tooltip.hover
 													title="Click here to see the validation problems"
-												></i>
-												<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+												>invalid</b-badge>
+												<b-badge v-else pill variant="success">valid</b-badge>
 											</span>
 										</td>
 									</tr>
@@ -325,15 +323,16 @@
 
 					<template slot="validation" slot-scope="cell">
 						<span class="validation-wrapper">
-							<i
+							<b-badge
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
 								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
@@ -381,14 +380,19 @@
 				</b-table>
 			</div>
     </div>
-    <div
-      v-for="(comment, comment_index) in tab_info.comments"
-      :key="comment_index"
-      class="comments-input"
-    >
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+    <div class="table-wrapper">
+			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
+			<hr>
+			<div
+				v-for="(comment, comment_index) in tab_info.comments"
+				:key="comment_index"
+				class="comments-input"
+			>
+				<label>{{labels[comment.name]}}</label>
+				<textarea class="form-control" v-model="comment.selected"></textarea>
+			</div>
+		</div>
+
     <hr>
 
     <AppAside v-if="!allowedChanges" fixed>
@@ -403,6 +407,11 @@
         <span v-else>Edit {{tab_data.display.blends[modal_data.field.blend.selected].name}} blend</span>
       </div>
       <div v-if="modal_data">
+				<p class="muted">
+					All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
+					<br>
+					<b>The values are saved automatically in the table, as you type.</b>
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             Change substance
@@ -489,11 +498,6 @@
           </b-col>
         </b-row>
       </div>
-			<p class="muted mt-3">
-				All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
-				<br>
-				The values are saved in the table, as you type. Close the form using the button below.
-			</p>
       <div slot="modal-footer">
           <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
       </div>
@@ -531,12 +535,12 @@ export default {
 			if (order !== 'quarantine_pre_shipment') {
 				return true
 			}
-			if (modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
+			if (modal_data.field.substance && modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
 				if (this.tab_data.substances.find(s => s.value === modal_data.field.substance.selected).is_qps) {
 					return true
 				}
 			}
-			if (modal_data.field.blend.selected) {
+			if (modal_data.field.blend && modal_data.field.blend.selected) {
 				if (this.tab_data.blends.find(s => s.id === modal_data.field.blend.selected).is_qps) {
 					return true
 				}
@@ -571,6 +575,13 @@ export default {
 		},
 		hasBlends() {
 			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+		},
+
+		tableCounter() {
+			const counter = []
+			if (this.hasSubstances) counter.push(1)
+			if (this.hasBlends) counter.push(1)
+			return counter.length
 		},
 
 		getTabDecisionQuantityFields() {

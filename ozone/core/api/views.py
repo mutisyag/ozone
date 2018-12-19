@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
+from django.db.models import F, Q
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -9,7 +10,8 @@ from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
-from rest_framework.filters import BaseFilterBackend
+from rest_framework.filters import BaseFilterBackend, OrderingFilter, SearchFilter
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -62,7 +64,6 @@ from ..serializers import (
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
 )
-
 
 User = get_user_model()
 
@@ -118,9 +119,9 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             return queryset
         else:
             # Party user
-            if queryset and queryset.model == Submission:
+            if queryset is not None and queryset.model == Submission:
                 return queryset.filter(party=request.user.party)
-            elif queryset:
+            elif queryset is not None:
                 return queryset.filter(submission__party=request.user.party)
             else:
                 return queryset
@@ -159,7 +160,7 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
 
 class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
-    renderer_classes = (JSONRenderer, )
+    renderer_classes = (JSONRenderer,)
 
     def get(self, request):
         groups = Group.objects.all()
@@ -251,14 +252,75 @@ class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
 
+class SubmissionPaginator(PageNumberPagination):
+    page_size = 10
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class SubmissionViewFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    obligation = filters.NumberFilter("obligation", help_text="Filter by Obligation ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    is_current = filters.BooleanFilter(
+        method="filter_current", help_text="If set to true only show latest versions."
+    )
+    from_period = filters.DateFilter(
+        "reporting_period__start_date",
+        "gte",
+        help_text="Only get results for reporting periods that start "
+        "at a later date than this.",
+    )
+    to_period = filters.DateFilter(
+        "reporting_period__end_date",
+        "lte",
+        help_text="Only get results for reporting periods that end "
+        "at a earlier date than this.",
+    )
+    current_state = filters.CharFilter(
+        "_current_state", help_text="Filter by the submission state."
+    )
+
+    def filter_current(self, queryset, name, value):
+        if value:
+            return queryset.filter(
+                Q(flag_superseded=True) | Q(_current_state="data_entry")
+            )
+        else:
+            return queryset.exclude(
+                Q(flag_superseded=True) | Q(_current_state="data_entry")
+            )
+
+
 class SubmissionViewSet(viewsets.ModelViewSet):
-    queryset = Submission.objects.all().prefetch_related("reporting_period", "created_by")
-    filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend,)
-    filter_fields = ('obligation', 'party', 'reporting_period',)
-    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    queryset = Submission.objects.all().prefetch_related(
+        "reporting_period", "created_by", "party"
+    )
+    filter_backends = (
+        IsOwnerFilterBackend,
+        filters.DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    )
+    filterset_class = SubmissionViewFilterSet
+    search_fields = ("party__name", "obligation__name", "reporting_period__name")
+    ordering_fields = {
+        "obligation": "obligation",
+        "party": "party",
+        "reporting_period": "reporting_period",
+        "version": "version",
+        "_current_state": "current_state",
+        "updated_at": "updated_at",
+    }
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty)
+    pagination_class = SubmissionPaginator
 
     def get_queryset(self):
-        return Submission.objects.all().prefetch_related("reporting_period", "created_by")
+        return Submission.objects.all().prefetch_related(
+            "reporting_period", "created_by", "party"
+        )
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
@@ -266,28 +328,32 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return SubmissionSerializer
 
     def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ListSubmissionSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+
         serializer = ListSubmissionSerializer(
-            self.filter_queryset(self.get_queryset()),
-            many=True,
-            context={"request": request},
+            queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
 
-    @action(detail=True, methods=['post'])
+    @action(detail=True, methods=["post"])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         clone = submission.clone(request.user)
-        return Response({'id': clone.id})
+        return Response({"id": clone.id})
 
-    @action(detail=True, methods=['post'], url_path='call-transition')
+    @action(detail=True, methods=["post"], url_path="call-transition")
     def call_transition(self, request, pk=None):
-        if request.data.get('transition'):
+        if request.data.get("transition"):
             submission = Submission.objects.get(pk=pk)
-            submission.call_transition(request.data['transition'], request.user)
+            submission.call_transition(request.data["transition"], request.user)
             serializer = SubmissionSerializer(
-                submission,
-                many=False,
-                context={"request": request}
+                submission, many=False, context={"request": request}
             )
             return Response(serializer.data)
         else:
@@ -295,12 +361,10 @@ class SubmissionViewSet(viewsets.ModelViewSet):
                 _("Invalid request: request body should contain 'transition' key.")
             )
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
         historical_records = Submission.objects.get(pk=pk).history.all()
-        serializer = SubmissionHistorySerializer(
-            historical_records, many=True
-        )
+        serializer = SubmissionHistorySerializer(historical_records, many=True)
         return Response(serializer.data)
 
 
@@ -439,11 +503,10 @@ class AuthTokenViewSet(mixins.ListModelMixin,
                        mixins.CreateModelMixin,
                        mixins.DestroyModelMixin,
                        viewsets.GenericViewSet):
-
     lookup_field = 'key'
     lookup_url_kwarg = 'token'
     serializer_class = AuthTokenByValueSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:

@@ -30,7 +30,6 @@
 						</b-input-group>
 					</div>
 					<span>
-						<i style="margin-right: .5rem" @click="addField" class="fa fa-plus-square fa-lg"></i>
 						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
 					</span>
 				</div>
@@ -83,34 +82,36 @@
 						slot-scope="cell"
 					>
 						<span class="validation-wrapper">
-							<i
-								v-if="cell.item.validation.length"
+							<b-badge 
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
+								v-if="cell.item.validation.length"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
 				</b-table>
 			</div>
 
-			<b-btn class="mb-2"  @click="addField">
-				<i style="margin-right: .5rem" class="fa fa-plus-square fa-lg"></i> Add facility
+			<b-btn class="mb-2" variant="primary"  @click="addField">
+				Add facility
 			</b-btn>
 
     </div>
-    <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+		<div class="table-wapper">
+			<h4> {{tab_info.formNumber}}.2 Comments</h4>
+			<hr>
+			<div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
+				<label>{{labels[comment.name]}}</label>
+				<textarea class="form-control" v-model="comment.selected"></textarea>
+			</div>
+		</div>
     <hr>
-    <div class="footnotes">
-      <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index"><small>{{footnote}}</small></p>
-    </div>
     <AppAside v-if="hasInvalidFields" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
@@ -123,6 +124,7 @@ import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -138,7 +140,7 @@ export default {
 	},
 
 	created() {
-		console.log(this.tabName)
+		this.labels = labels[this.tab_info.name]
 	},
 
 	data() {

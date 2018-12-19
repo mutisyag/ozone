@@ -38,7 +38,7 @@ export default {
 								this.submitData(tab, url)
 							})
 						} else {
-							this.submitData(tab, url)
+							url && this.submitData(tab, url)
 						}
 					}
 				})

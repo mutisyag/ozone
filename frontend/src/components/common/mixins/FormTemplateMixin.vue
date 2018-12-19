@@ -3,7 +3,7 @@ import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 import { intersect } from '@/components/common/services/utilsService'
 
 export default {
@@ -123,7 +123,7 @@ export default {
 
 		tableFields() {
 			const tableHeaders = []
-			const options = { class: 'text-center' }
+			const options = {}
 			this.tab_info.section_subheaders.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
@@ -136,7 +136,7 @@ export default {
 
 		tableFieldsBlends() {
 			const tableHeaders = []
-			const options = { class: 'text-center' }
+			const options = {}
 			this.tab_info.section_subheaders.forEach((element) => {
 				if (element.name === 'substance') {
 					tableHeaders.push({ key: 'blend', label: element.label, ...options })

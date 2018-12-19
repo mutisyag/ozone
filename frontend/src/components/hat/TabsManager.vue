@@ -39,7 +39,7 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
-          <b-tab title="Submission Info">
+          <b-tab title="Submission Info" active>
              <template slot="title">
               <div class="tab-title">
                 Submission Info
@@ -138,9 +138,11 @@ export default {
 		data: null,
 		submission: String
 	},
+
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.$route.name, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]])
+		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
 	},
+
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
