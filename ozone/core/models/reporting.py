@@ -377,17 +377,21 @@ class Submission(models.Model):
 
         return flags_list
 
-    def check_flags(self, user):
+    def check_flags(self, user, flag_names_list):
         """
-        Returns False if user has changed flags he was not allowed to change
-        in the current state; True otherwise.
+        Raise error if user has changed flags he was not allowed to change
+        in the current state; return True otherwise.
         """
-        modified_flags = [
-            field_name for field_name in self.tracker.changed().keys()
+        wrongly_modified_flags = [
+            field_name for field_name in flag_names_list
             if field_name.startswith('flag_') and
             field_name not in self.get_changeable_flags(user)
         ]
-        return len(modified_flags) > 0
+        if len(wrongly_modified_flags) > 0:
+            raise ValidationError({
+                field: [_('User is not allowed to change this flag')]
+            })
+        return True
 
     @staticmethod
     def get_exempted_fields():
@@ -479,7 +483,7 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by
             )
         else:
-            raise e
+             raise e
 
         """
         We treat Article7Questionnaire separately because it has a one-to-one
