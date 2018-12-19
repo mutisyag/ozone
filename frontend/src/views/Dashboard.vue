@@ -244,20 +244,28 @@ export default {
 
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
+				if (this.tableOptions.filters.period_end !== null &&
+						f.start_date > this.tableOptions.filters.period_end) {
+					return null
+				}
 			    return {
 					text: f.start_date.split('-')[0],
 					value: f.start_date
 			    }
-            })
+            }).filter(f => f !== null)
 		},
 
 		sortOptionsPeriodTo() {
 			return this.periods.map(f => {
+				if (this.tableOptions.filters.period_start !== null &&
+						f.end_date < this.tableOptions.filters.period_start) {
+					return null
+				}
 			    return {
 					text: f.start_date.split('-')[0],
 					value: f.end_date
 			    }
-            })
+            }).filter(f => f !== null)
 		},
 
 		sortOptionsObligation() {
