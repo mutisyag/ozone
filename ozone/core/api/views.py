@@ -119,9 +119,9 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             return queryset
         else:
             # Party user
-            if queryset and queryset.model == Submission:
+            if queryset is not None and queryset.model == Submission:
                 return queryset.filter(party=request.user.party)
-            elif queryset:
+            elif queryset is not None:
                 return queryset.filter(submission__party=request.user.party)
             else:
                 return queryset
@@ -272,7 +272,8 @@ class SubmissionViewFilterSet(filters.FilterSet):
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
-    queryset = Submission.objects.all().prefetch_related("reporting_period", "created_by")
+    queryset = Submission.objects.all().prefetch_related("reporting_period", "created_by",
+                                                         "party")
     filter_backends = (IsOwnerFilterBackend, filters.DjangoFilterBackend, OrderingFilter,
                        SearchFilter,)
     filterset_class = SubmissionViewFilterSet
@@ -283,7 +284,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     pagination_class = SubmissionPaginator
 
     def get_queryset(self):
-        return Submission.objects.all().prefetch_related("reporting_period", "created_by")
+        return Submission.objects.all().prefetch_related("reporting_period", "created_by",
+                                                         "party")
 
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
