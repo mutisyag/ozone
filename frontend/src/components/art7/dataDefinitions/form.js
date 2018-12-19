@@ -27,7 +27,7 @@ const form = {
 			endpoint_url: 'article7questionnaire_url',
 			intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 			title: 'Questionnaire',
-			titleHtml: 'Questionnaire',
+			titleHtml: '<b>Questionnaire</b>',
 			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms',
 			status: null,
 			isInvalid: false,
