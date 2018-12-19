@@ -32,7 +32,7 @@
 					</b-card>
 				</b-col>
 
-				<b-col>
+				<b-col v-if="flags_info">
 					<h5>Flags</h5>
 					<b-card>
 						<b-row v-for="order in flags_info.fields_order" :key="order">

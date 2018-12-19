@@ -667,7 +667,7 @@ const store = new Vuex.Store({
 
 		// permissions
 		setFlagsPermissions(state, data) {
-			Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+			state.form.tabs.flags && Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
 				if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
 			})
 		},
