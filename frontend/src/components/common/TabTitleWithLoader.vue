@@ -19,8 +19,8 @@ export default {
 	}
 }
 </script>
-<style>
 
+<style>
 .spinner {
     z-index: 1;
     display: inline-flex;

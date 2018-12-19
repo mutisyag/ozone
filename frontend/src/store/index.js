@@ -1,43 +1,12 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import art7Form from '@/components/art7/dataDefinitions/form'
-import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
-import letterForm from '@/components/letter/dataDefinitions/form'
-import letterTableRowConstructor from '@/components/letter/services/tableRowConstructorService'
-import hatForm from '@/components/hat/dataDefinitions/form'
-import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
-
-import {
-	getSubmissionHistory,
-	callTransition,
-	getSubstances,
-	getSubmission,
-	getCustomBlends,
-	deleteSubmission,
-	getSubmissions,
-	getPeriods,
-	getObligations,
-	createSubmission,
-	getParties,
-	getNonParties,
-	getPartyRatifications
-} from '@/components/common/services/api'
-import 'toastedjs/src/sass/toast.scss'
-import {
-	getLevel2PropertyValue
-} from '@/components/common/services/utilsService.js'
-import labels from '@/components/art7/dataDefinitions/labels'
-import Toasted from 'toastedjs'
-
-const options = {
-	position: 'bottom-left',
-	duration: 10000,
-	theme: 'bulma'
-}
-const toasted = new Toasted(options)
+import getters from './getters'
+import mutations from './mutations'
+import actions from './actions'
 
 Vue.use(Vuex)
 
+<<<<<<< HEAD
 const store = new Vuex.Store({
 	// strict: true,
 	state: {
@@ -82,13 +51,43 @@ const store = new Vuex.Store({
 		},
 		tableRowConstructor: null,
 		newTabs: [],
+=======
+const state = {
+	dashboard: {
+		submissions: null,
+		periods: null,
+		obligations: null,
+		parties: null
+	},
+	currentAlert: {
+		message: null,
+		show: false,
+		variant: null
+	},
+	current_submission: null,
+	route: '',
+	currentSubmissionHistory: null,
+	available_transitions: null,
+	permissions: {
+		dashboard: null,
+>>>>>>> #345 Include Unit Tests in project Mocha + Chai + unit test utilsService.js, SubmissionInfo.vue and store + refactoring store: split files getters, mutations and actions to allow unit testing
 		form: null,
-		initialData: {
-			countryOptions: null,
-			groupSubstances: null,
+		actions: null
+	},
+	tableRowConstructor: null,
+	newTabs: [],
+	form: null,
+	initialData: {
+		countryOptions: null,
+		groupSubstances: null,
+		substances: null,
+		partyRatifications: null,
+		blends: null,
+		nonParties: null,
+		display: {
 			substances: null,
-			partyRatifications: null,
 			blends: null,
+<<<<<<< HEAD
 			nonParties: null,
 			display: {
 				substances: null,
@@ -472,9 +471,15 @@ const store = new Vuex.Store({
 				description: `DESCRIPTION ${file.name}`
 			}))
 			return mockResponseAttachments
+=======
+			countries: null
+>>>>>>> #345 Include Unit Tests in project Mocha + Chai + unit test utilsService.js, SubmissionInfo.vue and store + refactoring store: split files getters, mutations and actions to allow unit testing
 		}
 	},
+	alertData: []
+}
 
+<<<<<<< HEAD
 	mutations: {
 		updateBreadcrumbs(state, data) {
 			state.route = data.join(' / ')
@@ -714,6 +719,13 @@ const store = new Vuex.Store({
 			state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attach => attach.id !== attachment.id)
 		}
 	}
+=======
+const store = new Vuex.Store({
+	state,
+	getters,
+	mutations,
+	actions
+>>>>>>> #345 Include Unit Tests in project Mocha + Chai + unit test utilsService.js, SubmissionInfo.vue and store + refactoring store: split files getters, mutations and actions to allow unit testing
 })
 
 export default store

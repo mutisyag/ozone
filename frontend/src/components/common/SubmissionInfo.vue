@@ -62,7 +62,6 @@
 			</b-row>
 
     </form>
-
     </div>
 </template>
 
@@ -72,9 +71,6 @@ import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
-
-	name: 'Tab1',
-
 	props: {
 		info: Object,
 		flags_info: Object
@@ -97,7 +93,3 @@ export default {
 
 }
 </script>
-
-<style lang="css" scoped>
-
-</style>
