@@ -471,6 +471,18 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
             'flag_has_reported_c2', 'flag_has_reported_c3',
             'flag_has_reported_e', 'flag_has_reported_f',
         )
+        
+    def update(self, instance, validated_data):
+        """
+        Not really kosher to perform validations here, but we need to
+        pass the user to the validation method in the model.
+        Cannot override the serializer's validate() method either since it
+        does not have access to the object instance.
+        """
+        # User should always be on the request due to our permission classes
+        user =  self.context['request'].user
+        instance.check_flags(user, validated_data.keys())
+        return super().update(instance, validated_data)
 
 
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
