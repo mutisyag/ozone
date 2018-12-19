@@ -91,7 +91,7 @@ const getSubmissions = (tableOptions) => {
 		params.to_period = tableOptions.filters.period_end
 		params.is_current = tableOptions.filters.isCurrent ? undefined : false
 	}
-	if (tableOptions.sorting) {
+	if (tableOptions.sorting && tableOptions.sorting.sortBy) {
 		params.ordering = (tableOptions.sorting.sortDesc ? "-" : "") + tableOptions.sorting.sortBy
 	}
 
