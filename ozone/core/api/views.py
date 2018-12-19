@@ -64,7 +64,6 @@ from ..serializers import (
     SubmissionInfoSerializer,
 )
 
-
 User = get_user_model()
 
 
@@ -160,7 +159,7 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
 
 class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
-    renderer_classes = (JSONRenderer, )
+    renderer_classes = (JSONRenderer,)
 
     def get(self, request):
         groups = Group.objects.all()
@@ -278,8 +277,14 @@ class SubmissionViewSet(viewsets.ModelViewSet):
                        SearchFilter,)
     filterset_class = SubmissionViewFilterSet
     search_fields = ('party__name', 'obligation__name', "reporting_period__name",)
-    ordering_fields = ('obligation', 'party', 'reporting_period', 'version', 'current_state',
-                       'updated_at',)
+    ordering_fields = {
+        'obligation': 'obligation',
+        'party': 'party',
+        'reporting_period': 'reporting_period',
+        'version': 'version',
+        '_current_state': 'current_state',
+        'updated_at': 'updated_at',
+    }
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     pagination_class = SubmissionPaginator
 
@@ -473,11 +478,10 @@ class AuthTokenViewSet(mixins.ListModelMixin,
                        mixins.CreateModelMixin,
                        mixins.DestroyModelMixin,
                        viewsets.GenericViewSet):
-
     lookup_field = 'key'
     lookup_url_kwarg = 'token'
     serializer_class = AuthTokenByValueSerializer
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
