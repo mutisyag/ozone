@@ -2,6 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
+from django.db.models import F, Q
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -262,6 +263,8 @@ class SubmissionViewFilterSet(filters.FilterSet):
     obligation = filters.NumberFilter("obligation", help_text="Filter by Obligation ID")
     reporting_period = filters.NumberFilter("reporting_period",
                                             help_text="Filter by Reporting Period ID")
+    is_current = filters.BooleanFilter(method="filter_current",
+                                       help_text="If set to true only show latest versions.")
     from_period = filters.DateFilter("reporting_period__start_date", 'gte',
                                      help_text="Only get results for reporting periods that start "
                                                "at a later date than this.")
@@ -270,6 +273,12 @@ class SubmissionViewFilterSet(filters.FilterSet):
                                              "at a earlier date than this.")
     current_state = filters.CharFilter("_current_state",
                                        help_text="Filter by the submission state.")
+
+    def filter_current(self, queryset, name, value):
+        if value:
+            return queryset.filter(Q(flag_superseded=True) | Q(_current_state='data_entry'))
+        else:
+            return queryset.exclude(Q(flag_superseded=True) | Q(_current_state='data_entry'))
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
