@@ -82,15 +82,16 @@
 						slot-scope="cell"
 					>
 						<span class="validation-wrapper">
-							<i
-								v-if="cell.item.validation.length"
+							<b-badge 
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
+								v-if="cell.item.validation.length"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 

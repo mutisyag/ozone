@@ -117,19 +117,16 @@
 						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
 					>
 						<span class="validation-wrapper">
-							<i
+							<b-badge
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
 								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i
-								v-else
-								style="color: green;"
-								class="fa fa-check-square-o fa-lg"
-								></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
@@ -231,15 +228,16 @@
 											>{{row.item[specialField.name]}}</span>
 
 											<span v-if="specialField.name === 'validation'" class="validation-wrapper">
-												<i
+												<b-badge
+													pill
+													style="cursor:pointer"
+													variant="danger"
 													@click="openValidation"
 													v-if="row.item.validation.length"
-													style="color: red; cursor: pointer"
-													class="fa fa-exclamation fa-lg"
 													v-b-tooltip.hover
 													title="Click here to see the validation problems"
-												></i>
-												<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+												>invalid</b-badge>
+												<b-badge v-else pill variant="success">valid</b-badge>
 											</span>
 										</td>
 									</tr>
@@ -325,15 +323,16 @@
 
 					<template slot="validation" slot-scope="cell">
 						<span class="validation-wrapper">
-							<i
+							<b-badge
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
 								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
