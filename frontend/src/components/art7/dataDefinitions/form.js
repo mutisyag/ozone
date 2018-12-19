@@ -55,7 +55,7 @@ const form = {
 			title: 'Exports',
 			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms',
 			titleHtml: '<b>EXPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
-			tooltipForTitleHtml: '* Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.',
+			tooltipForTitleHtml: 'Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
@@ -380,7 +380,7 @@ const form = {
 					label: 'Production for feedstock uses within your country'
 				},
 				{
-					label: 'Production for exempted essential, critical or other uses within your country*',
+					label: 'Production for exempted essential, critical or other uses within your country',
 					colspan: 2,
 					tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 				},
@@ -577,8 +577,8 @@ const form = {
 			formNumber: 5,
 			intro: '1. Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide',
 			title: 'Nonparty',
-			titleHtml: '<b>IMPORTS FROM AND/OR EXPORTS TO NON PARTIES* </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
-			tooltipForTitleHtml: '* See definition of “non parties” in Instruction V.',
+			titleHtml: '<b>IMPORTS FROM AND/OR EXPORTS TO NON PARTIES </b> <br><small> in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C and E substances  </small>',
+			tooltipForTitleHtml: 'See definition of “non parties” in Instruction V.',
 			detailsHtml: 'Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties ',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
@@ -650,14 +650,14 @@ const form = {
 					label: 'Exporting party for quantities reported as imports <br> <b>OR</b> <br> Country of destination of exports'
 				},
 				{
-					label: 'Quantity of imports from non-parties*',
+					label: 'Quantity of imports from non-parties',
 					colspan: 2,
-					tooltip: '* See definition of “non parties” in Instruction V.'
+					tooltip: 'See definition of “non parties” in Instruction V.'
 				},
 				{
-					label: 'Quantity of exports to non-parties*',
+					label: 'Quantity of exports to non-parties',
 					colspan: 2,
-					tooltip: '* See definition of “non parties” in Instruction V.'
+					tooltip: 'See definition of “non parties” in Instruction V.'
 				},
 				{
 					label: 'Remarks (party)'
@@ -703,8 +703,8 @@ const form = {
 			saving: false,
 			formNumber: 6,
 			title: 'Emissions',
-			titleHtml: '<b>DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES</b>',
-			tooltipHtml: 'In metric tons, not ODP or CO2-equivalent tonnes.\nInformation in columns 2 to 5 is excluded from the reporting requirements under Article 7 of the Protocol and is provided on a voluntary basis',
+			titleHtml: '<b>DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES</b><br><small>In metric tons, not ODP or CO2-equivalent tonnes.</small>',
+			tooltipHtml: 'Information in columns 2 to 5 is excluded from the reporting requirements under Article 7 of the Protocol and is provided on a voluntary basis',
 			detailsHtml: 'Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances ',
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',

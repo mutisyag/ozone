@@ -30,7 +30,6 @@
 						</b-input-group>
 					</div>
 					<span>
-						<i style="margin-right: .5rem" @click="addField" class="fa fa-plus-square fa-lg"></i>
 						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
 					</span>
 				</div>
@@ -98,8 +97,8 @@
 				</b-table>
 			</div>
 
-			<b-btn class="mb-2"  @click="addField">
-				<i style="margin-right: .5rem" class="fa fa-plus-square fa-lg"></i> Add facility
+			<b-btn class="mb-2" variant="primary"  @click="addField">
+				Add facility
 			</b-btn>
 
     </div>
