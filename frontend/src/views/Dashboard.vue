@@ -278,9 +278,9 @@ export default {
 			}
 			return false
 		},
-        tableOptions() {
-		    return this.$store.state.dashboard.table
-        },
+		tableOptions() {
+			return this.$store.state.dashboard.table
+		},
 		periods() {
 			return this.$store.state.dashboard.periods
 		},
@@ -308,23 +308,23 @@ export default {
 	},
 
 	methods: {
-	    tableItems(ctxt) {
-	        return this.$store.dispatch('getCurrentSubmissions').then((data) => {
-                const tableFields = []
-                this.submissions.forEach((element) => {
-                    tableFields.push({
-                        obligation: this.getSubmissionInfo(element).obligation(),
-                        reporting_period: this.getSubmissionInfo(element).period(),
-                        party: this.getSubmissionInfo(element).party(),
-                        current_state: element.current_state,
-                        version: element.version,
-                        updated_at: element.updated_at,
-                        details: element
-                    })
-                })
-                return tableFields
-            })
-        },
+		tableItems(ctxt) {
+			return this.$store.dispatch('getCurrentSubmissions').then((data) => {
+				const tableFields = []
+				this.submissions.forEach((element) => {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						party: this.getSubmissionInfo(element).party(),
+						current_state: element.current_state,
+						version: element.version,
+						updated_at: element.updated_at,
+						details: element
+					})
+				})
+				return tableFields
+			})
+		},
 
 		addSubmission() {
 			this.$store.dispatch('addSubmission', this.current).then(r => {

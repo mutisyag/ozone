@@ -51,11 +51,11 @@ const store = new Vuex.Store({
 				currentPage: 1,
 				perPage: 10,
 				totalRows: 5,
-			sorting: {
-				sortBy: 'updated_at',
-				sortDesc: true,
-				sortDirection: 'asc',
-			},
+				sorting: {
+					sortBy: 'updated_at',
+					sortDesc: true,
+					sortDirection: 'asc',
+				},
 				filters: {
 					search: null,
 					period_start: null,
