@@ -2,16 +2,16 @@
   <div v-if="tabName">
     <div class="container">
       <h3>Add substances</h3>
-			<small>Filter annex groups in order to select one or more substances. A row for each substance will be added in Table 1. Substances can be deleted using table controls.</small>
+			<small>Filter annex groups in order to select one or more substances. A row for each substance will be added in substances table. Substances can be deleted using table controls.</small>
 			<b-input-group class="mt-2" prepend="Annex groups">
-				<multiselect @input="prepareSubstances" :multiple="true" label="text" trackBy="value" v-model="selected_groups.selected" :options="selected_groups.options"></multiselect>
+				<multiselect placeholder='' @input="prepareSubstances" :multiple="true" label="text" trackBy="value" v-model="selected_groups.selected" :options="selected_groups.options"></multiselect>
 			</b-input-group>
 			<b-input-group class="mb-2 mt-2" prepend="Substances">
-				<multiselect :clear-on-select="false" :hide-selected="true" :close-on-select="false"  label="text" trackBy="value" :multiple="true" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
+				<multiselect placeholder='' :clear-on-select="false" :hide-selected="true" :close-on-select="false"  label="text" trackBy="value" :multiple="true" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
 			</b-input-group>
 			<b-btn-group>
-				<b-btn v-if="selected_substance.selected" @click="addSubstance" variant="success">Add {{selected_substance.selected.length}} rows</b-btn>
-				<b-btn v-if="selected_substance.selected" variant="danger" @click="resetData">Cancel</b-btn>
+				<b-btn v-if="selected_substance.selected" @click="addSubstance" variant="primary">Add {{selected_substance.selected.length}} rows</b-btn>
+				<b-btn v-if="selected_substance.selected" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
     </div>
   </div>

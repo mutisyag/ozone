@@ -3,7 +3,7 @@
 		<div class="container">
 			<div>
 				<h5 class="mt-2">Add predefined blends</h5>
-				<small>Filter by blend types in order to select one or more blends. <br> A row for each blend will be added in Table 2. <br>Blends can be deleted using table controls.</small>
+				<small>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</small>
 				<b-input-group class="mt-2" prepend="Blend types">
 					<multiselect
 						:clear-on-select="false"
@@ -42,10 +42,11 @@
 				:key="blend.name"
 				v-if="selected_blends.selected"
 				v-for="blend in selected_blends.selected"
+				class="small mb-2"
 			>
-				<h5>Composition of
+				<div>Composition of
 					<b>{{display.blends[blend].name}}</b>
-				</h5>
+				</div>
 				<b-row
 					v-for="(substance, substance_index) in display.blends[blend].components"
 					:key="substance_index"
@@ -58,9 +59,9 @@
 				<b-btn
 					v-if="selected_blends.selected.length"
 					@click="addSubstance('selected')"
-					variant="success"
-				>Add {{selected_blends.selected.length}} selected blends</b-btn>
-				<b-btn 	v-if="selected_blends.selected.length" variant="danger" @click="resetData">Cancel</b-btn>
+					variant="primary"
+				>Add {{selected_blends.selected.length}} rows</b-btn>
+				<b-btn 	v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
 			<hr>
 
@@ -71,12 +72,12 @@
 
 			<div v-if="new_blend">
 				<h5>Add custom blend</h5>
-				<small>Note: If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</small>
+				<small>If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</small>
 				<h5 class="mt-2">Composition</h5>
 				<b-input-group prepend="Blend name">
 					<b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
 					<b-input-group-append>
-						<b-btn variant="default" @click="addSubstanceToBlend">Add substance</b-btn>
+						<b-btn @click="addSubstanceToBlend">Add substance</b-btn>
 					</b-input-group-append>
 				</b-input-group>
 				<b-input-group
@@ -114,9 +115,9 @@
 					v-if="new_blend"
 					:disabled="!blendIsValid"
 					@click="addSubstance('custom')"
-					variant="success"
-				>Add</b-btn>
-				<b-btn v-if="new_blend" variant="danger" @click="resetData">Cancel</b-btn>
+					variant="primary"
+				>Add row</b-btn>
+				<b-btn v-if="new_blend" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
 
 		</div>
