@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col sm="5">
+      <b-col sm="4">
         <b-card v-if="basicDataReady">
           <div slot="header">
             <strong>Create submission</strong>
@@ -27,17 +27,19 @@
         </b-card>
       </b-col>
 
-        <b-col sm="7">
+        <b-col sm="8">
           <b-card v-if="dataReady">
             <div slot="header">
               <strong>My submissions </strong>
             </div>
-						<table class="table table-striped table-hover classic-header">
+						<table class="table table-hover classic-header">
 							<thead>
 								<tr>
 									<th>Obligation</th>
-									<th>Reporting period</th>
+									<th>Period</th>
+									<th>Party</th>
 									<th>Version</th>
+									<th>Last modified</th>
 									<th>Actions</th>
 								</tr>
 							</thead>
@@ -50,7 +52,13 @@
 										{{getSubmissionInfo(submission).period()}}
 									</td>
 									<td>
+										{{getSubmissionInfo(submission).party()}}
+									</td>
+									<td>
                      {{submission.version}}
+									</td>
+									<td>
+                     {{submission.updated_at}}
 									</td>
 									<td>
 										<router-link :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}}">
@@ -68,43 +76,31 @@
           <b-card no-body v-if="dataReady">
             <template slot="header">
               <b-row>
-              <b-col>All submissions</b-col>
+              <b-col><b>All submissions</b></b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>
-              <b-row class="mt-2 mb-2">
-                <b-col>
-                    <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search"/>
-                    </b-input-group>
-                </b-col>
-                <b-col>
-                    <b-input-group prepend="By party">
-                      <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
-                    </b-input-group>
-                </b-col>
-								<b-col cols="2">
-                    <b-input-group prepend="From">
-                      <b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
-                      </b-form-select>
-                    </b-input-group>
-                </b-col>
-                <b-col cols="2">
-                    <b-input-group prepend="To">
-                      <b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
-                      </b-form-select>
-                    </b-input-group>
-                </b-col>
-                <b-col cols="3">
-                    <b-input-group prepend="By obligation">
-                      <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-                    </b-input-group>
-                </b-col>
-								<b-col cols="1">
-									<b-btn @click="clearFilters">Clear</b-btn>
-								</b-col>
-              </b-row>
+              <div class="mt-2 mb-2 dashboard-filters">
+								<b-input-group prepend="Search">
+									<b-form-input v-model="table.filters.search"/>
+								</b-input-group>
+								<b-input-group prepend="Obligation">
+									<b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+								</b-input-group>
+								<b-input-group prepend="Party">
+									<b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
+								</b-input-group>
+								<b-input-group style="width: 120px" prepend="From">
+									<b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
+									</b-form-select>
+								</b-input-group>
+								<b-input-group style="width: 120px" prepend="To">
+									<b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
+									</b-form-select>
+								</b-input-group>
+								<b-btn @click="clearFilters">Clear</b-btn>
+              </div>
               <b-table show-empty
                        outlined
                        bordered
@@ -125,7 +121,7 @@
                 <template slot="actions" slot-scope="row">
                   <b-button-group>
                     <router-link
-                        class="btn btn-outline-primary"
+                        class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
                       >
                       <span v-if="row.item.details.data_changes_allowed">
@@ -138,7 +134,9 @@
 
                     <b-btn
                         variant="outline-primary"
-                        @click="clone(row.item.details.url)"                      >
+                        @click="clone(row.item.details.url)"
+												size="sm"
+											>
                       Clone
                     </b-btn>
 
@@ -146,6 +144,7 @@
                       variant="outline-primary"
                       v-for="transition in row.item.details.available_transitions"
                       :key="transition"
+											size="sm"
                       @click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})"
                     >
                       {{labels[transition]}}
@@ -155,6 +154,7 @@
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
                         v-if="row.item.details.data_changes_allowed"
+												size="sm"
                       >
                       Delete
                     </b-btn>
@@ -163,10 +163,10 @@
               </b-table>
 
               <b-row>
-                <b-col md="9" class="my-1">
+                <b-col md="10" class="my-1">
                   <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
                 </b-col>
-								<b-col md="3">
+								<b-col md="2">
                   <b-input-group horizontal prepend="Per page" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="table.perPage" />
                   </b-input-group>
@@ -203,10 +203,10 @@ export default {
 						key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc'
 					},
 					{
-						key: 'reporting_period', label: 'Reporting period', sortable: true
+						key: 'reporting_period', label: 'Period', sortable: true
 					},
 					{
-						key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc'
+						key: 'reporting_party', label: 'Party', sortable: true, sortDirection: 'desc'
 					},
 					{
 						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc'
@@ -401,5 +401,12 @@ export default {
 
 .detail-header {
   margin-bottom: .5rem;
+}
+.dashboard-filters {
+	display: flex;
+}
+.dashboard-filters > div {
+	margin-right: 5px;
+	min-width: 120px;
 }
 </style>
