@@ -54,7 +54,6 @@
 					<b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
 				</b-row>
 			</div>
-			
 			<b-btn-group>
 				<b-btn
 					v-if="selected_blends.selected.length"
@@ -127,7 +126,7 @@
 <script>
 
 import { createBlend } from '@/components/common/services/api'
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
 

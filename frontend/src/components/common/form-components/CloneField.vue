@@ -10,8 +10,7 @@
 </template>
 <script>
 
-// import Multiselect from 'vue-multiselect'
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
 

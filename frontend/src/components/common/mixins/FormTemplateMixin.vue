@@ -3,7 +3,7 @@ import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 import { intersect } from '@/components/common/services/utilsService'
 
 export default {

@@ -19,7 +19,7 @@
 
 <script>
 
-import Multiselect from '@/components/common/modifiedMultiselect'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
 
