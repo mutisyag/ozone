@@ -406,7 +406,7 @@
 				<p class="muted">
 					All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
 					<br>
-					<b>The values are saved automatically in the table, as you type.</b> 
+					<b>The values are saved automatically in the table, as you type.</b>
 				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
