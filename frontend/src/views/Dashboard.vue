@@ -42,7 +42,7 @@
 								</tr>
 							</thead>
 							<tbody>
-								<tr v-if="submission.current_state === 'data_entry'" :key="submission.url" v-for="submission in submissions">
+								<tr :key="submission.url" v-for="submission in mySubmissions">
 									<td>
                    {{getSubmissionInfo(submission).obligation()}}
 									</td>
@@ -229,6 +229,7 @@ export default {
 		this.$store.dispatch('getDashboardParties')
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
+		this.$store.dispatch('getMyCurrentSubmissions')
 		this.$store.dispatch('getCurrentSubmissions')
 		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
@@ -291,6 +292,9 @@ export default {
 		},
 		submissions() {
 			return this.$store.state.dashboard.submissions
+		},
+		mySubmissions() {
+			return this.$store.state.dashboard.mySubmissions
 		},
 
 		basicDataReady() {
