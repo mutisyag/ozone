@@ -112,7 +112,6 @@ import Save from '@/components/art7/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import labels from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
-import Flags from '@/components/common/Flags'
 
 export default {
 	components: {
@@ -124,8 +123,7 @@ export default {
 		Footer,
 		Save,
 		SubmissionHistory,
-		TabTitleWithLoader,
-		Flags
+		TabTitleWithLoader
 	},
 	props: {
 		data: null,

@@ -38,20 +38,23 @@ export default {
 	art7: 'Article 7',
 	hat: 'HAT'
 	flags: {
-		superseded: 'Superseded',
-		provisional: 'Provisional',
-		checked_blanks: 'Checked blanks',
-		has_blanks: 'Has blanks',
-		confirmed_blanks: 'Confirmed blanks',
-		has_reported_a1: 'Annex group A1',
-		has_reported_a2: 'Annex group A2',
-		has_reported_b1: 'Annex group B1',
-		has_reported_b2: 'Annex group B2',
-		has_reported_b3: 'Annex group B3',
-		has_reported_c1: 'Annex group C1',
-		has_reported_c2: 'Annex group C2',
-		has_reported_c3: 'Annex group C3',
-		has_reported_e: 'Annex group E',
-		has_reported_f: 'Annex group F'
-	}
+		flag_superseded: 'Superseded',
+		flag_provisional: 'Provisional',
+		flag_checked_blanks: 'Checked blanks',
+		flag_has_blanks: 'Has blanks',
+		flag_valid: 'Valid',
+		flag_confirmed_blanks: 'Confirmed blanks',
+		flag_has_reported_a1: 'Annex group A1',
+		flag_has_reported_a2: 'Annex group A2',
+		flag_has_reported_b1: 'Annex group B1',
+		flag_has_reported_b2: 'Annex group B2',
+		flag_has_reported_b3: 'Annex group B3',
+		flag_has_reported_c1: 'Annex group C1',
+		flag_has_reported_c2: 'Annex group C2',
+		flag_has_reported_c3: 'Annex group C3',
+		flag_has_reported_e: 'Annex group E',
+		flag_has_reported_f: 'Annex group F'
+	},
+	art7: 'Article 7',
+	hat: 'HAT'
 }

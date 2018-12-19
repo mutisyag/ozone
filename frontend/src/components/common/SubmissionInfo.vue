@@ -32,11 +32,16 @@
 					</b-card>
 				</b-col>
 
+<<<<<<< HEAD
 				<b-col v-if="flags_info">
+=======
+				<b-col>
+>>>>>>> flags: save, prefill, moved to submission info
 					<h5>Flags</h5>
 					<b-card>
 						<b-row v-for="order in flags_info.fields_order" :key="order">
 							<b-col>
+<<<<<<< HEAD
 								<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
 									<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
 										<i class="fa fa-info-circle fa-lg"></i>
@@ -45,6 +50,10 @@
 									<div v-else>
 										{{labels.flags[order]}}
 									</div>
+=======
+								<label :for="order">
+									{{labels.flags[order]}}
+>>>>>>> flags: save, prefill, moved to submission info
 								</label>
 							</b-col>
 							<b-col>
