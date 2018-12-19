@@ -54,7 +54,7 @@ const store = new Vuex.Store({
 				sorting: {
 					sortBy: 'updated_at',
 					sortDesc: true,
-					sortDirection: 'asc',
+					sortDirection: 'asc'
 				},
 				filters: {
 					search: null,
@@ -63,8 +63,8 @@ const store = new Vuex.Store({
 					obligation: null,
 					party: null,
 					isCurrent: null
-				},
-			},
+				}
+			}
 		},
 		currentAlert: {
 			message: null,
@@ -322,6 +322,7 @@ const store = new Vuex.Store({
 			return new Promise((resolve) => {
 				getSubmission(data).then((response) => {
 					context.commit('updateSubmissionData', response.data)
+					context.commit('setFlagsPermissions', response.data.changeable_flags)
 					context.commit('updateAvailableTransitions', response.data.available_transitions)
 					context.dispatch('getCurrentSubmissionHistory', data)
 					resolve()
@@ -665,6 +666,12 @@ const store = new Vuex.Store({
 		},
 
 		// permissions
+		setFlagsPermissions(state, data) {
+			Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+				if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
+			})
+		},
+
 		updateDashboardPermissions(state, permission) {
 			state.permissions.dashboard = permission
 		},
