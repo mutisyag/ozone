@@ -97,7 +97,7 @@ const form = {
 				type: 'number'
 			},
 			{
-				label: 'Decision / type of use**** or Remark <br> 7',
+				label: 'Decision / type of use or Remark <br> 7',
 				name: 'decision_exempted'
 			},
 			{
@@ -141,14 +141,12 @@ const form = {
 			comments: [{
 				name: 'comments_party',
 				selected: '',
-				type: 'textarea',
-				label: 'Party Comments'
+				type: 'textarea'
 			},
 			{
 				name: 'comments_secretariat',
 				selected: '',
-				type: 'textarea',
-				label: 'Secretariat Comments'
+				type: 'textarea'
 			}
 			],
 			footnotes: ['[1] Tonne = Metric ton.'],
@@ -192,14 +190,12 @@ const form = {
 			comments: [{
 				name: 'comments_party',
 				selected: '',
-				type: 'textarea',
-				label: 'Party Comments'
+				type: 'textarea'
 			},
 			{
 				name: 'comments_secretariat',
 				selected: '',
-				type: 'textarea',
-				label: 'Secretariat Comments'
+				type: 'textarea'
 			}
 			],
 			subtitle: 'in metric tonnes (not ODP tonnes)',
@@ -243,11 +239,11 @@ const form = {
 				type: 'number'
 			},
 			{
-				label: 'Decision / type of use**** or Remark <br> 7',
+				label: 'Decision / type of use or Remark <br> 7',
 				name: 'decision_exempted'
 			},
 			{
-				label: '7',
+				label: '8',
 				name: 'validation'
 			}
 			],
@@ -410,7 +406,7 @@ const form = {
 						colspan: 2
 					},
 					{
-						label: 'Production for exempted essential, critical or other uses within your country*',
+						label: 'Production for exempted essential, critical or other uses within your country',
 						colspan: 2,
 						tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 					},
@@ -436,7 +432,7 @@ const form = {
 						name: 'quantity_feedstock'
 					},
 					{
-						label: '3b.Captured for destruction***',
+						label: '3b.Captured for destruction',
 						name: 'quantity_for_destruction'
 					},
 					{
@@ -467,14 +463,12 @@ const form = {
 			comments: [{
 				name: 'comments_party',
 				selected: '',
-				type: 'textarea',
-				label: 'Party Comments'
+				type: 'textarea'
 			},
 			{
 				name: 'comments_secretariat',
 				selected: '',
-				type: 'textarea',
-				label: 'Secretariat Comments'
+				type: 'textarea'
 			}
 			],
 			default_properties: {
@@ -679,14 +673,12 @@ const form = {
 			comments: [{
 				name: 'comments_party',
 				selected: '',
-				type: 'textarea',
-				label: 'Party Comments'
+				type: 'textarea'
 			},
 			{
 				name: 'comments_secretariat',
 				selected: '',
-				type: 'textarea',
-				label: 'Secretariat Comments'
+				type: 'textarea'
 			}
 			],
 			default_properties: {
@@ -812,14 +804,12 @@ const form = {
 			comments: [{
 				name: 'comments_party',
 				selected: '',
-				type: 'textarea',
-				label: 'Party Comments'
+				type: 'textarea'
 			},
 			{
 				name: 'comments_secretariat',
 				selected: '',
-				type: 'textarea',
-				label: 'Secretariat Comments'
+				type: 'textarea'
 			}
 			],
 			default_properties: {

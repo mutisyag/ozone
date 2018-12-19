@@ -388,6 +388,14 @@ export default {
 					type: 'number',
 					selected: null
 				},
+				quantity_other_uses: {
+					type: 'number',
+					selected: null
+				},
+				decision_other_uses: {
+					type: 'text',
+					selected: ''
+				},
 				quantity_feedstock: {
 					type: 'number',
 					selected: null,

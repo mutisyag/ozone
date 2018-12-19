@@ -103,14 +103,15 @@
 			</b-btn>
 
     </div>
-    <div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+		<div class="table-wapper">
+			<h4> {{tab_info.formNumber}}.2 Comments</h4>
+			<hr>
+			<div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
+				<label>{{labels[comment.name]}}</label>
+				<textarea class="form-control" v-model="comment.selected"></textarea>
+			</div>
+		</div>
     <hr>
-    <div class="footnotes">
-      <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index"><small>{{footnote}}</small></p>
-    </div>
     <AppAside v-if="hasInvalidFields" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
@@ -123,6 +124,7 @@ import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -138,7 +140,7 @@ export default {
 	},
 
 	created() {
-		console.log(this.tabName)
+		this.labels = labels[this.tab_info.name]
 	},
 
 	data() {

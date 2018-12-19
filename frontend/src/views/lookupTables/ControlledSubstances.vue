@@ -1,30 +1,36 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col>
-                    <b-input-group>
-						<b-input-group-prepend>
-							<b-form-select :options="table.searchInColumnsOptions" value-field="key" text-field="label"  v-model="table.filters.selectedSearchInColumnOption" />
-						</b-input-group-prepend>
-						<b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+                    <b-input-group prepend="Group">
+                      <b-form-input v-model="table.filters.searchGroup"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
-                    <b-input-group>
-                      <b-btn variant="primary" :disabled="!table.sortBy" @click="changeSortDefaultOrderToken">Sort default</b-btn>
+                    <b-input-group prepend="Name">
+                      <b-form-input v-model="table.filters.searchName"/>
                     </b-input-group>
+                </b-col>
+				<b-col>
+                    <b-input-group prepend="ODP">
+                      <b-form-input v-model="table.filters.searchODP" type="number"/>
+                    </b-input-group>
+                </b-col>
+				<b-col>
+                    <b-input-group-append>
+                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">Clear</b-btn>
+                    </b-input-group-append>
                 </b-col>
 			</b-row>
 		</template>
 		<b-table show-empty
 						outlined
-						stripped
+						striped
 						bordered
 						hover
-						class="width-70-percent"
 						head-variant="light"
 						stacked="md"
 						:items="substances"
@@ -37,20 +43,13 @@
 						@filtered="onFiltered"
 						ref="table">
               </b-table>
-              <b-row>
-                <b-col md="6" class="my-1">
-                  <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
-                </b-col>
-              </b-row>
-
-          </b-card>
+			</b-card>
 		</b-container>
   </div>
 </template>
 
 <script>
 import './styles.css'
-import uuidv1 from 'uuid/v1'
 
 export default {
 	data() {
@@ -80,16 +79,19 @@ export default {
 				totalRows: 50,
 				sortBy: 'group_id',
 				sortDesc: false,
-				searchInColumnsOptions: [fields[1], fields[2], fields[3]],
 				filters: {
-					search: null,
-					selectedSearchInColumnOption: fields[1].key,
-					sortDefaultOrderToken: uuidv1()
+					searchGroup: null,
+					searchName: null,
+					searchODP: null
 				}
 			}
 		}
 	},
 	computed: {
+		isDisabledClearFilters() {
+			const { filters } = this.table
+			return !filters.searchGroup && !filters.searchName && !filters.searchODP
+		},
 		substances() {
 			let substances = []
 			const { groupSubstances } = this.$store.state.initialData
@@ -109,7 +111,7 @@ export default {
 							annex: group_id[0]
 						}))]
 			})
-			if (this.table.filters.sortDefaultOrderToken) {
+			if (this.isDisabledClearFilters) {
 				substances = substances.sort((a, b) => a.sort_order - b.sort_order)
 			}
 			return substances
@@ -120,17 +122,31 @@ export default {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
 		},
-		changeSortDefaultOrderToken() {
-			this.table.sortBy = 'group_id'
-			this.table.sortDesc = false
-			this.table.filters.sortDefaultOrderToken = uuidv1()
-		},
 		filterCallback(substance) {
-			const { selectedSearchInColumnOption } = this.table.filters
-			if (!this.table.filters.search) {
-				return true
+			const { filters } = this.table
+			if (filters.searchGroup) {
+				if (!substance.group_id || !substance.group_id.toLowerCase().includes(filters.searchGroup.toLowerCase())) {
+					return false
+				}
 			}
-			return `${substance[selectedSearchInColumnOption]}`.toLowerCase().includes(this.table.filters.search.toLowerCase())
+			if (filters.searchName) {
+				if (!substance.name || !substance.name.toLowerCase().includes(filters.searchName.toLowerCase())) {
+					return false
+				}
+			}
+			if (filters.searchODP) {
+				if (!substance.odp
+					|| (substance.odp !== parseFloat(filters.searchODP) && !`${substance.odp}`.startsWith(filters.searchODP))) {
+					return false
+				}
+			}
+			return true
+		},
+		clearFilters() {
+			const { filters } = this.table
+			filters.searchGroup = null
+			filters.searchName = null
+			filters.searchODP = null
 		}
 	},
 	created() {

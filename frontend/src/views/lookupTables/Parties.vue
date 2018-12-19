@@ -1,12 +1,12 @@
 <template>
-  <div class="app flex-row align-items-center">
+  <div class="app flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col cols="4">
                     <b-input-group prepend="Name">
-                      <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+                      <b-form-input v-model="table.filters.searchName" />
                     </b-input-group>
                 </b-col>
 			</b-row>
@@ -64,7 +64,6 @@
 
 <script>
 import './styles.css'
-import uuidv1 from 'uuid/v1'
 import CheckedImage from '@/components/common/CheckedImage'
 
 export default {
@@ -82,7 +81,7 @@ export default {
 				fields: [{
 					key: 'name',
 					label: 'Name',
-					class: 'text-left',
+					class: 'text-left width-200',
 					sortable: true
 				}, {
 					key: 'is_eu_member',
@@ -130,8 +129,7 @@ export default {
 				totalRows: 50,
 				sortBy: null,
 				filters: {
-					search: null,
-					sortDefaultOrderToken: uuidv1()
+					searchName: null
 				}
 			}
 		}
@@ -151,10 +149,10 @@ export default {
 			this.table.currentPage = 1
 		},
 		filterCallback(party) {
-			if (!this.table.filters.search) {
+			if (!this.table.filters.searchName) {
 				return true
 			}
-			return party.name && party.name.toLowerCase().includes(this.table.filters.search.toLowerCase())
+			return party.name && party.name.toLowerCase().includes(this.table.filters.searchName.toLowerCase())
 		}
 	},
 	created() {
