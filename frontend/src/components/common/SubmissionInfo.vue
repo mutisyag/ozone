@@ -37,7 +37,7 @@
 					<b-card>
 						<b-row v-for="order in flags_info.fields_order" :key="order">
 							<b-col>
-								<label :for="order">
+								<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
 									<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
 										<i class="fa fa-info-circle fa-lg"></i>
 										{{labels.flags[order]}}
