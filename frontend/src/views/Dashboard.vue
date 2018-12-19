@@ -217,7 +217,7 @@ export default {
 					},
 					{ key: 'actions', label: 'Actions' }
 				],
-                pageOptions: [5, 25, 100],
+                pageOptions: [10, 25, 100],
 				modalInfo: { title: '', content: '' }
 			}
 

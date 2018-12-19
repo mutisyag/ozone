@@ -50,7 +50,7 @@ const store = new Vuex.Store({
 			table: {
 				currentPage: 1,
 				perPage: 10,
-				totalRows: 5,
+				totalRows: null,
 				sorting: {
 					sortBy: 'updated_at',
 					sortDesc: true,
