@@ -42,7 +42,7 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
-          <b-tab title="Submission Info">
+          <b-tab title="Submission Info" active>
              <template slot="title">
               <div class="tab-title">
                 Submission Info
@@ -51,7 +51,7 @@
             <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
-          <b-tab title="Questionaire" active>
+          <b-tab title="Questionaire">
 			<template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
 			</template>

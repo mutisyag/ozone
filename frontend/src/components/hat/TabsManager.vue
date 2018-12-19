@@ -39,7 +39,7 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
-          <b-tab title="Submission Info">
+          <b-tab title="Submission Info" active>
              <template slot="title">
               <div class="tab-title">
                 Submission Info
