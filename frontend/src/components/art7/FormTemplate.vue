@@ -536,12 +536,12 @@ export default {
 			if (order !== 'quarantine_pre_shipment') {
 				return true
 			}
-			if (modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
+			if (modal_data.field.substance && modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
 				if (this.tab_data.substances.find(s => s.value === modal_data.field.substance.selected).is_qps) {
 					return true
 				}
 			}
-			if (modal_data.field.blend.selected) {
+			if (modal_data.field.blend && modal_data.field.blend.selected) {
 				if (this.tab_data.blends.find(s => s.id === modal_data.field.blend.selected).is_qps) {
 					return true
 				}

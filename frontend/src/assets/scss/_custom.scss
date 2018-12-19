@@ -849,6 +849,7 @@ input[type=number] {
 
 .table-filters {
   display: flex;
+	margin-right: 10px;
 	input {
   	max-width: 40%;
   	min-width: 400px;
@@ -861,11 +862,13 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 .form-wrapper h4 {
 	margin-bottom: 0;
+	flex-grow: 1;
 }
 .table-title {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	min-height: 35px;
 }
 .table-title i {
 	cursor: pointer;
@@ -933,4 +936,15 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 .input-group  {
 	flex-wrap: nowrap;
+}
+.submission-table { 
+	.multiselect__tags {
+			min-height: unset;
+			font-size: 12px;
+			padding: 5px 65px 0 12px;
+	}
+	.multiselect__select {
+		height: 35px;
+		padding: 2px 6px;
+	}
 }

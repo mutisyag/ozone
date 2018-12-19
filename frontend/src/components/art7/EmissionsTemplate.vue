@@ -124,6 +124,7 @@ import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
+import labels from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -139,7 +140,7 @@ export default {
 	},
 
 	created() {
-		console.log(this.tabName)
+		this.labels = labels[this.tab_info.name]
 	},
 
 	data() {
