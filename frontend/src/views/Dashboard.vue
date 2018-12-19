@@ -76,7 +76,7 @@
           <b-card no-body v-if="dataReady">
             <template slot="header">
               <b-row>
-              <b-col><b>All submissions</b></b-col>
+              <b-col><b>All submissions ({{table.totalRows}} records)</b></b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
@@ -222,7 +222,7 @@ export default {
 				currentPage: 1,
 				perPage: 10,
 				totalRows: 5,
-				pageOptions: [5, 25, 100],
+				pageOptions: [10, 25, 100],
 				sortBy: null,
 				sortDesc: false,
 				sortDirection: 'asc',
