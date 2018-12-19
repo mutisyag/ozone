@@ -43,13 +43,6 @@
             <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
           </b-tab>
 
-				<b-tab title="Questionaire" active>
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-					</template>
-					<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
-				</b-tab>
-
 				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
 						<template slot="title">
 						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
