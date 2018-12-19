@@ -37,10 +37,10 @@ const checkAuth = () => {
 	}
 }
 
-const fetch = (path) => {
+const fetch = (path, config = null) => {
 	logRequests && console.log(`fetching ${path}...`)
 	checkAuth()
-	return api.get(path)
+	return api.get(path, config)
 }
 
 const post = (path, data) => {
@@ -77,7 +77,20 @@ const getExportBlends = () => {
 	return null
 }
 
-const getSubmissions = () => fetch('submissions/')
+const getSubmissions = (tableOptions) => {
+	return fetch('submissions/', {
+		"params": {
+			page_size: tableOptions.perPage,
+			page: tableOptions.currentPage,
+			search: tableOptions.filters.search,
+			party: tableOptions.filters.party,
+			obligation: tableOptions.filters.obligation,
+			from_period: tableOptions.filters.period_start,
+			to_period: tableOptions.filters.period_end,
+			ordering: (tableOptions.sorting.sortDesc ? "-" : "") + tableOptions.sorting.sortBy
+		}
+	})
+}
 
 const getPeriods = () => fetch('periods/')
 

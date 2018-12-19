@@ -69,36 +69,36 @@
             <template slot="header">
               <b-row>
               <b-col>All submissions</b-col>
-              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="table.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
+              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>
               <b-row class="mt-2 mb-2">
                 <b-col>
                     <b-input-group prepend="Search">
-                      <b-form-input v-model="table.filters.search"/>
+                      <b-form-input v-model="tableOptions.filters.search"/>
                     </b-input-group>
                 </b-col>
                 <b-col>
                     <b-input-group prepend="By party">
-                      <b-form-select v-model="table.filters.party" :options="sortOptionsParties"></b-form-select>
+                      <b-form-select v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
                     </b-input-group>
                 </b-col>
 								<b-col cols="2">
                     <b-input-group prepend="From">
-                      <b-form-select v-model="table.filters.period_start" :options="sortOptionsPeriodFrom">
+                      <b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
                       </b-form-select>
                     </b-input-group>
                 </b-col>
                 <b-col cols="2">
                     <b-input-group prepend="To">
-                      <b-form-select v-model="table.filters.period_end" :options="sortOptionsPeriodTo">
+                      <b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
                       </b-form-select>
                     </b-input-group>
                 </b-col>
                 <b-col cols="3">
                     <b-input-group prepend="By obligation">
-                      <b-form-select v-model="table.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+                      <b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
                     </b-input-group>
                 </b-col>
 								<b-col cols="1">
@@ -113,13 +113,11 @@
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
-                       :current-page="table.currentPage"
-                       :per-page="table.perPage"
-                       :sort-by.sync="table.sortBy"
-                       :sort-desc.sync="table.sortDesc"
-                       :sort-direction="table.sortDirection"
-                       :filter="table.filters.search"
-                       @filtered="onFiltered"
+                       :current-page="tableOptions.currentPage"
+                       :per-page="tableOptions.perPage"
+                       :sort-by.sync="tableOptions.sorting.sortBy"
+                       :sort-desc.sync="tableOptions.sorting.sortDesc"
+                       :sort-direction="tableOptions.sorting.sortDirection"
                        ref="table"
               >
                 <template slot="actions" slot-scope="row">
@@ -164,11 +162,11 @@
 
               <b-row>
                 <b-col md="9" class="my-1">
-                  <b-pagination :total-rows="table.totalRows" :per-page="table.perPage" v-model="table.currentPage" class="my-0" />
+                  <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
 								<b-col md="3">
                   <b-input-group horizontal prepend="Per page" class="mb-0">
-                    <b-form-select :options="table.pageOptions" v-model="table.perPage" />
+                    <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
 								</b-col>
               </b-row>
@@ -206,7 +204,7 @@ export default {
 						key: 'reporting_period', label: 'Reporting period', sortable: true
 					},
 					{
-						key: 'reporting_party', label: 'Reporting party', sortable: true, sortDirection: 'desc'
+						key: 'party', label: 'Reporting party', sortable: true, sortDirection: 'desc'
 					},
 					{
 						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc'
@@ -219,21 +217,7 @@ export default {
 					},
 					{ key: 'actions', label: 'Actions' }
 				],
-				currentPage: 1,
-				perPage: 10,
-				totalRows: 5,
-				pageOptions: [5, 25, 100],
-				sortBy: null,
-				sortDesc: false,
-				sortDirection: 'asc',
-				filters: {
-					search: null,
-					period_start: null,
-					period_end: null,
-					obligation: null,
-					party: null,
-					isCurrent: null
-				},
+                pageOptions: [5, 25, 100],
 				modalInfo: { title: '', content: '' }
 			}
 
@@ -257,45 +241,40 @@ export default {
 
 		...mapGetters(['getSubmissionInfo']),
 
-		tableItems() {
-			const tableFields = []
-			this.submissions.forEach((element) => {
-				if (
-					(this.table.filters.period_start ? this.getSubmissionInfo(element).period_start() >= this.table.filters.period_start : true)
-          && (this.table.filters.period_end ? this.getSubmissionInfo(element).period_end() <= this.table.filters.period_end : true)
-          && (this.table.filters.obligation ? this.getSubmissionInfo(element).obligation() === this.table.filters.obligation : true)
-          && (this.table.filters.party ? this.getSubmissionInfo(element).party() === this.table.filters.party : true)
-          && (this.table.filters.isCurrent ? true : (element.current_state === 'data_entry' ? true : !!(false || element.is_current)))
-				) {
-					tableFields.push({
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						reporting_party: this.getSubmissionInfo(element).party(),
-						current_state: element.current_state,
-						version: element.version,
-						last_updated: element.updated_at,
-						details: element
-					})
-				}
-			})
-			this.table.totalRows = tableFields.length
-			return tableFields
-		},
-
 		sortOptionsPeriodFrom() {
-			return [...new Set(this.periods.map(f => f.start_date.split('-')[0]))]
+			return [...new Set(this.periods.map(f => {
+			    return {
+					text: f.start_date.split('-')[0],
+					value: f.start_date
+			    }
+            }))]
 		},
 
 		sortOptionsPeriodTo() {
-			return [...new Set(this.periods.map(f => f.end_date.split('-')[0]))]
+			return [...new Set(this.periods.map(f => {
+			    return {
+					text: f.start_date.split('-')[0],
+					value: f.end_date
+			    }
+            }))]
 		},
 
 		sortOptionsObligation() {
-			return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).obligation()))]
+			return [...new Set(this.submissions.map(f => f.obligation))].map((obligation_id) => {
+			    return {
+					text: this.obligations.find(a => a.value === obligation_id).text,
+					value: obligation_id
+                }
+            })
 		},
 
 		sortOptionsParties() {
-			return [...new Set(this.submissions.map(f => this.getSubmissionInfo(f).party()))]
+			return [...new Set(this.submissions.map(f => f.party))].map((party_id) => {
+				return {
+					text: this.parties.find(a => a.value === party_id).text,
+					value: party_id
+                }
+            })
 		},
 
 		dataReady() {
@@ -308,7 +287,9 @@ export default {
 			}
 			return false
 		},
-
+        tableOptions() {
+		    return this.$store.state.dashboard.table
+        },
 		periods() {
 			return this.$store.state.dashboard.periods
 		},
@@ -333,6 +314,24 @@ export default {
 	},
 
 	methods: {
+	    tableItems(ctxt) {
+	        return this.$store.dispatch('getCurrentSubmissions').then((data) => {
+                const tableFields = []
+                this.submissions.forEach((element) => {
+                    tableFields.push({
+                        obligation: this.getSubmissionInfo(element).obligation(),
+                        reporting_period: this.getSubmissionInfo(element).period(),
+                        party: this.getSubmissionInfo(element).party(),
+                        current_state: element.current_state,
+                        version: element.version,
+                        last_updated: element.updated_at,
+                        details: element
+                    })
+                })
+                return tableFields
+            })
+        },
+
 		addSubmission() {
 			this.$store.dispatch('addSubmission', this.current).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
@@ -340,8 +339,8 @@ export default {
 			})
 		},
 		clearFilters() {
-			Object.keys(this.table.filters).forEach(key => {
-				this.table.filters[key] = null
+			Object.keys(this.tableOptions.filters).forEach(key => {
+				this.tableOptions.filters[key] = null
 			})
 		},
 		clone(url) {
@@ -366,12 +365,6 @@ export default {
 			}
 		},
 
-		onFiltered(filteredItems) {
-			// Trigger pagination to update the number of buttons/pages due to filtering
-			this.table.totalRows = filteredItems.length
-			this.table.currentPage = 1
-		},
-
 		getFormName(obligation) {
 			return this.obligations.find(o => o.value === obligation).form_type
 		}
@@ -379,8 +372,9 @@ export default {
 	},
 
 	watch: {
-		'table.filters': {
+		'tableOptions.filters': {
 			handler() {
+				this.tableOptions.currentPage = 1
 				this.$refs.table.refresh()
 			},
 			deep: true
