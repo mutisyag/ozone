@@ -4,7 +4,8 @@
         <input @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type">
     </div>
     <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
-    <b-form-select
+    <b-form-checkbox @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
+		<b-form-select
 		@change="updateFormField($event)"
 		:disabled="disabled"
 		v-else-if="field.type === 'select'" v-model="currentTyping" :options="field.options"> </b-form-select>
