@@ -185,9 +185,24 @@ class Submission(models.Model):
         max_length=64, null=True, blank=True, db_column='previous_state'
     )
 
+    # Flags
     flag_provisional = models.BooleanField(default=False)
     flag_valid = models.NullBooleanField(default=None)
     flag_superseded = models.BooleanField(default=False)
+    flag_checked_blanks = models.BooleanField(default=True)
+    flag_has_blanks = models.BooleanField(default=False)
+    flag_confirmed_blanks = models.BooleanField(default=False)
+    flag_has_reported_a1 = models.BooleanField(default=True)
+    flag_has_reported_a2 = models.BooleanField(default=True)
+    flag_has_reported_b1 = models.BooleanField(default=True)
+    flag_has_reported_b2 = models.BooleanField(default=True)
+    flag_has_reported_b3 = models.BooleanField(default=True)
+    flag_has_reported_c1 = models.BooleanField(default=True)
+    flag_has_reported_c2 = models.BooleanField(default=True)
+    flag_has_reported_c3 = models.BooleanField(default=True)
+    flag_has_reported_e = models.BooleanField(default=True)
+    # TODO: why is the default here False? does it have other implications?
+    flag_has_reported_f = models.BooleanField(default=False)
 
     submitted_via = models.CharField(
         max_length=32,
@@ -327,6 +342,41 @@ class Submission(models.Model):
         self._current_state = workflow.state.name
         self.save()
 
+    def get_changeable_flags(self, user):
+        """
+        Returns list of flags that can be changed by the current user in the
+        current state.
+        N.B.: flag_superseded cannot be changed directly by users, it is
+        only changed automatically by the system.
+        """
+        flags_list = []
+        if user.is_secretariat:
+            flags_list.extend([
+                'flag_provisional', 'flag_checked_blanks',
+                'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_has_reported_a1', 'flag_has_reported_a2',
+                'flag_has_reported_b1', 'flag_has_reported_b2',
+                'flag_has_reported_b3', 'flag_has_reported_c1',
+                'flag_has_reported_c2', 'flag_has_reported_c3',
+                'flag_has_reported_e', 'flag_has_reported_f',
+            ])
+            if not self.data_changes_allowed:
+                # valid flag can only be set after submitting
+                flags_list.append('flag_valid')
+        else:
+            # Party user
+            if self.data_changes_allowed:
+                flags_list.extend([
+                    'flag_provisional',
+                    'flag_has_reported_a1', 'flag_has_reported_a2',
+                    'flag_has_reported_b1', 'flag_has_reported_b2',
+                    'flag_has_reported_b3', 'flag_has_reported_c1',
+                    'flag_has_reported_c2', 'flag_has_reported_c3',
+                    'flag_has_reported_e', 'flag_has_reported_f',
+                ])
+
+        return flags_list
+
     @staticmethod
     def get_exempted_fields():
         """
@@ -339,6 +389,19 @@ class Submission(models.Model):
             "flag_provisional",
             "flag_valid",
             "flag_superseded",
+            "flag_checked_blanks",
+            "flag_has_blanks",
+            "flag_confirmed_blanks",
+            "flag_has_reported_a1",
+            "flag_has_reported_a2",
+            "flag_has_reported_b1",
+            "flag_has_reported_b2",
+            "flag_has_reported_b3",
+            "flag_has_reported_c1",
+            "flag_has_reported_c2",
+            "flag_has_reported_c3",
+            "flag_has_reported_e",
+            "flag_has_reported_f",
         ]
 
     def non_exempted_fields_modified(self):

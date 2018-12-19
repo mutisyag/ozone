@@ -455,6 +455,24 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class SubmissionFlagsSerializer(serializers.ModelSerializer):
+    """
+    Specific serializer used to present all submission flags as a nested
+    object, since this is easily usable by the frontend.
+    """
+    class Meta:
+        model = Submission
+        fields = (
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+            'flag_has_reported_a1', 'flag_has_reported_a2',
+            'flag_has_reported_b1', 'flag_has_reported_b2',
+            'flag_has_reported_b3', 'flag_has_reported_c1',
+            'flag_has_reported_c2', 'flag_has_reported_c3',
+            'flag_has_reported_e', 'flag_has_reported_f',
+        )
+
+
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
@@ -516,8 +534,14 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         many=False, read_only=True, source='info'
     )
 
+    submission_flags_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-flags-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
+    changeable_flags = serializers.SerializerMethodField()
 
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
@@ -533,10 +557,12 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
             'sub_info_url', 'sub_info',
+            'submission_flags_url',
             'updated_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current', 'is_cloneable',
-            'flag_provisional', 'flag_valid', 'flag_superseded',
+            'changeable_flags',  'flag_provisional', 'flag_valid',
+            'flag_superseded',
         )
 
         read_only_fields = (
@@ -550,6 +576,10 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     def get_is_cloneable(self, obj):
         user = self.context['request'].user
         return obj.is_cloneable(user)
+
+    def get_changeable_flags(self, obj):
+        user = self.context['request'].user
+        return obj.get_changeable_flags(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
@@ -611,6 +641,12 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
         fields = (
             'user', 'date', 'current_state',
             'flag_provisional', 'flag_valid', 'flag_superseded',
+            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+            'flag_has_reported_a1', 'flag_has_reported_a2',
+            'flag_has_reported_b1', 'flag_has_reported_b2',
+            'flag_has_reported_b3', 'flag_has_reported_c1',
+            'flag_has_reported_c2', 'flag_has_reported_c3',
+            'flag_has_reported_e', 'flag_has_reported_f',
         )
 
     def get_date(self, obj):

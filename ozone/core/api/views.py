@@ -61,6 +61,7 @@ from ..serializers import (
     CreateBlendSerializer,
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
+    SubmissionFlagsSerializer,
 )
 
 
@@ -321,6 +322,26 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
+        )
+
+
+class SubmissionFlagsViewSet(viewsets.ModelViewSet):
+    serializer_class = SubmissionFlagsSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def put(self, request, *args, **kwargs):
+        sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
+        serializer = SubmissionFlagsSerializer(sub, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        return Submission.objects.filter(
+            pk=self.kwargs['submission_pk']
         )
 
 
