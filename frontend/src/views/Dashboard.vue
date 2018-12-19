@@ -242,39 +242,29 @@ export default {
 		...mapGetters(['getSubmissionInfo']),
 
 		sortOptionsPeriodFrom() {
-			return [...new Set(this.periods.map(f => {
+			return this.periods.map(f => {
 			    return {
 					text: f.start_date.split('-')[0],
 					value: f.start_date
 			    }
-            }))]
+            })
 		},
 
 		sortOptionsPeriodTo() {
-			return [...new Set(this.periods.map(f => {
+			return this.periods.map(f => {
 			    return {
 					text: f.start_date.split('-')[0],
 					value: f.end_date
 			    }
-            }))]
+            })
 		},
 
 		sortOptionsObligation() {
-			return [...new Set(this.submissions.map(f => f.obligation))].map((obligation_id) => {
-			    return {
-					text: this.obligations.find(a => a.value === obligation_id).text,
-					value: obligation_id
-                }
-            })
+			return this.obligations
 		},
 
 		sortOptionsParties() {
-			return [...new Set(this.submissions.map(f => f.party))].map((party_id) => {
-				return {
-					text: this.parties.find(a => a.value === party_id).text,
-					value: party_id
-                }
-            })
+			return this.parties
 		},
 
 		dataReady() {
