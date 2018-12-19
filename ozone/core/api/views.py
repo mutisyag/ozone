@@ -268,6 +268,8 @@ class SubmissionViewFilterSet(filters.FilterSet):
     to_period = filters.DateFilter("reporting_period__end_date", 'lte',
                                    help_text="Only get results for reporting periods that end "
                                              "at a earlier date than this.")
+    current_state = filters.CharFilter("_current_state",
+                                       help_text="Filter by the submission state.")
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
