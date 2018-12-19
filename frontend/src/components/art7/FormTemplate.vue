@@ -381,14 +381,19 @@
 				</b-table>
 			</div>
     </div>
-    <div
-      v-for="(comment, comment_index) in tab_info.comments"
-      :key="comment_index"
-      class="comments-input"
-    >
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+    <div class="table-wrapper">
+			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
+			<hr>
+			<div
+				v-for="(comment, comment_index) in tab_info.comments"
+				:key="comment_index"
+				class="comments-input"
+			>
+				<label>{{labels[comment.name]}}</label>
+				<textarea class="form-control" v-model="comment.selected"></textarea>
+			</div>
+		</div>
+
     <hr>
 
     <AppAside v-if="!allowedChanges" fixed>
@@ -571,6 +576,13 @@ export default {
 		},
 		hasBlends() {
 			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+		},
+
+		tableCounter() {
+			const counter = []
+			if (this.hasSubstances) counter.push(1)
+			if (this.hasBlends) counter.push(1)
+			return counter.length
 		},
 
 		getTabDecisionQuantityFields() {
