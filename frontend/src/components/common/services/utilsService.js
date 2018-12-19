@@ -1,5 +1,7 @@
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
-	console.log('getLevel2PropertyValue')
+	if (!obj || !level2PropertyKey) {
+		return undefined
+	}
 	const level1Keys = Object.keys(obj)
 	for (let i = 0; i < level1Keys.length; i += 1) {
 		const level1Key = level1Keys[i]
@@ -11,9 +13,12 @@ const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	return undefined
 }
 
-const isObject = (value) => value && typeof value === 'object' && value.constructor === Object
+const isObject = (value) => !!(value && typeof value === 'object' && value.constructor === Object)
 
-const	pushUnique = (array, item) => {
+const pushUnique = (array, item) => {
+	if (!array) {
+		return
+	}
 	if (array.indexOf(item) === -1) {
 		array.push(item)
 	}

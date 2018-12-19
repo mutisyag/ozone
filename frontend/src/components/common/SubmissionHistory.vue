@@ -38,9 +38,6 @@
 
 <script>
 export default {
-
-	name: 'SubmissionHistory',
-
 	props: {
 		history: Array
 	},

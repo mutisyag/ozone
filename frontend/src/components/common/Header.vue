@@ -7,7 +7,6 @@
 import authMixin from '@/components/common/mixins/auth'
 
 export default {
-	name: 'DefaultHeaderDropdownAccnt',
 	mixins: [authMixin],
 	data: () => ({ itemsCount: 42 })
 }
