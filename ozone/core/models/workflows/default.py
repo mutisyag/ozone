@@ -105,6 +105,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
     @xworkflows.transition('submit')
     def submit(self):
         self.model_instance.make_current()
+        self.model_instance.set_submitted()
 
     @xworkflows.transition('unrecall_to_submitted')
     def unrecall_to_submitted(self):
