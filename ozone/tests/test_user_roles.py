@@ -6,9 +6,14 @@ from ozone.core.models import Article7Emission, Blend, Submission
 
 from .base import BaseTests
 from .factories import (
+    AnotherPartyFactory,
     BlendFactory,
     ObligationFactory,
     PartyFactory,
+    ReporterUserFactory,
+    ReporterUserROFactory,
+    ReporterUserSamePartyFactory,
+    ReporterUserAnotherPartyFactory,
     ReportingPeriodFactory,
     SecretariatUserFactory,
     SecretariatUserROFactory,
@@ -187,12 +192,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
         self.assertEqual(Blend.objects.count(), 0)
 
     def test_access_admin(self):
-        """
-        Test accessing admin area.
-        """
-
-        resp = self.client.get('/admin/')
-        self.assertEqual(resp.status_code, 302)
+        pass
 
 
 class TestSecretariatReadOnlyRole(BaseUserRoleTests):
@@ -338,9 +338,414 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
         self.assertEqual(Blend.objects.count(), 1)
 
     def test_access_admin(self):
+        pass
+
+
+class TestPartyReporterRole(BaseUserRoleTests):
+
+    def setUp(self):
+        super().setUp()
+        self.another_party = AnotherPartyFactory(subregion=self.subregion)
+
+        self.reporter = ReporterUserFactory(
+            party=self.party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_same_party = ReporterUserSamePartyFactory(
+            party=self.party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            party=self.another_party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+
+    def test_view_submission_same_party(self):
         """
-        Test accessing admin area.
+        Test viewing submission created by another user from the same party.
+        """
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id})
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data["id"], submission.id)
+
+    def test_view_submission_another_party(self):
+        """
+        Test viewing submission created by another user from another party.
+        """
+        submission = SubmissionFactory(
+            party=self.another_party,
+            created_by=self.reporter_another_party,
+            last_edited_by=self.reporter_another_party,
+        )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id})
+        )
+        self.assertEqual(resp.status_code, 404)
+
+    def test_edit_submission_same_party(self):
+        """
+        Test editing submission created by another user from the same party.
         """
 
-        resp = self.client.get('/admin/')
-        self.assertEqual(resp.status_code, 302)
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        data = {
+            "id": 1,
+            "remarks_party": "Test",
+            "remarks_os": "Test",
+            "ordering_id": 0,
+            "facility_name": "Test",
+            "quantity_emitted": 1
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.post(
+            reverse("core:submission-article7-emissions-list",
+                    kwargs={'submission_pk': submission.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 201)
+        emission = Article7Emission.objects.get(id=resp.data["id"])
+        self.assertEqual(emission.facility_name, 'Test')
+        self.assertEqual(emission.quantity_emitted, 1)
+
+    def test_edit_submission_another_party(self):
+        """
+        Test editing submission created by another user from another party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.another_party,
+            created_by=self.reporter_another_party,
+            last_edited_by=self.reporter_another_party,
+        )
+        data = {
+            "id": 1,
+            "remarks_party": "Test",
+            "remarks_os": "Test",
+            "ordering_id": 0,
+            "facility_name": "Test",
+            "quantity_emitted": 1
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.post(
+            reverse("core:submission-article7-emissions-list",
+                    kwargs={'submission_pk': submission.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+        self.assertEqual(Article7Emission.objects.count(), 0)
+
+    def test_delete_submission_same_party(self):
+        """
+        Test deleting submission created by another user from the same party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        self.assertEqual(Submission.objects.count(), 1)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.delete(
+            reverse("core:submission-detail", kwargs={'pk': submission.pk}),
+            {"party": submission.party.pk}
+        )
+        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(Submission.objects.count(), 0)
+
+    def test_delete_submission_another_party(self):
+        """
+        Test deleting submission created by another user from another party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.another_party,
+            created_by=self.reporter_another_party,
+            last_edited_by=self.reporter_another_party,
+        )
+        self.assertEqual(Submission.objects.count(), 1)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.delete(
+            reverse("core:submission-detail", kwargs={'pk': submission.pk}),
+            {"party": submission.party.pk}
+        )
+        self.assertEqual(resp.status_code, 403)
+        self.assertEqual(Submission.objects.count(), 1)
+
+    def test_access_admin(self):
+        pass
+
+
+class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
+
+    def setUp(self):
+        super().setUp()
+        self.another_party = AnotherPartyFactory(subregion=self.subregion)
+
+        self.reporter_ro = ReporterUserROFactory(
+            party=self.party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_same_party = ReporterUserSamePartyFactory(
+            party=self.party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+        self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            party=self.another_party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+
+    def test_view_submission_same_party(self):
+        """
+        Test viewing submission created by another user from the same party.
+        """
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id})
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data["id"], submission.id)
+
+    def test_view_submission_another_party(self):
+        """
+        Test viewing submission created by another user from another party.
+        """
+        submission = SubmissionFactory(
+            party=self.another_party,
+            created_by=self.reporter_another_party,
+            last_edited_by=self.reporter_another_party,
+        )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id})
+        )
+        self.assertEqual(resp.status_code, 404)
+
+    def test_create_submission(self):
+        """
+        Test creating submission.
+        """
+
+        period = ReportingPeriodFactory()
+        obligation = ObligationFactory()
+        data = {
+            "party": self.party.id,
+            "reporting_period": period.id,
+            "obligation": obligation.id,
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.post(
+            reverse("core:submission-list"),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_edit_submission_same_party(self):
+        """
+        Test editing submission created by another user from the same party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        data = {
+            "id": 1,
+            "remarks_party": "Test",
+            "remarks_os": "Test",
+            "ordering_id": 0,
+            "facility_name": "Test",
+            "quantity_emitted": 1,
+        }
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.post(
+            reverse("core:submission-article7-emissions-list",
+                    kwargs={'submission_pk': submission.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+        self.assertEqual(Article7Emission.objects.count(), 0)
+
+    def test_delete_submission_same_party(self):
+        """
+        Test deleting submission created by another user from the same party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter_same_party,
+            last_edited_by=self.reporter_same_party,
+        )
+        self.assertEqual(Submission.objects.count(), 1)
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
+        resp = self.client.delete(
+            reverse("core:submission-detail", kwargs={'pk': submission.pk}),
+            {"party": submission.party.pk}
+        )
+        self.assertEqual(resp.status_code, 403)
+        self.assertEqual(Submission.objects.count(), 1)
+
+    def test_access_admin(self):
+        pass
+
+
+class TestPublicUserRole(BaseUserRoleTests):
+
+    def setUp(self):
+        super().setUp()
+        self.reporter = ReporterUserROFactory(
+            party=self.party,
+            password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
+        )
+
+    def test_view_submission_same_party(self):
+        """
+        Test viewing submission using a public user.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter,
+            last_edited_by=self.reporter,
+        )
+
+        resp = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id})
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_create_submission(self):
+        """
+        Test creating submission using a public user.
+        """
+
+        period = ReportingPeriodFactory()
+        obligation = ObligationFactory()
+        data = {
+            "party": self.party.id,
+            "reporting_period": period.id,
+            "obligation": obligation.id,
+        }
+        resp = self.client.post(
+            reverse("core:submission-list"),
+            data
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_edit_submission(self):
+        """
+        Test editing submission using a public user.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter,
+            last_edited_by=self.reporter,
+        )
+        data = {
+            "id": 1,
+            "remarks_party": "Test",
+            "remarks_os": "Test",
+            "ordering_id": 0,
+            "facility_name": "Test",
+            "quantity_emitted": 1
+        }
+        resp = self.client.post(
+            reverse("core:submission-article7-emissions-list",
+                    kwargs={'submission_pk': submission.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_delete_submission(self):
+        """
+        Test deleting submission for a party.
+        """
+
+        submission = SubmissionFactory(
+            party=self.party,
+            created_by=self.reporter,
+            last_edited_by=self.reporter,
+        )
+        self.assertEqual(Submission.objects.count(), 1)
+        resp = self.client.delete(
+            reverse("core:submission-detail", kwargs={'pk': submission.pk})
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_access_admin(self):
+        pass

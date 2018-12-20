@@ -58,6 +58,9 @@ class AnotherPartyFactory(DjangoModelFactory):
 
 class SecretariatUserFactory(DjangoModelFactory):
     is_secretariat = True
+    is_superuser = True
+    is_staff = True
+    is_active = True
     is_read_only = False
     username = 'secretariat'
     email = 'secretariat@example.com'
@@ -68,6 +71,9 @@ class SecretariatUserFactory(DjangoModelFactory):
 
 class SecretariatUserROFactory(DjangoModelFactory):
     is_secretariat = True
+    is_superuser = False
+    is_staff = True
+    is_active = True
     is_read_only = True
     username = 'secretariat_ro'
     email = 'secretariat_ro@example.com'
@@ -78,6 +84,9 @@ class SecretariatUserROFactory(DjangoModelFactory):
 
 class ReporterUserFactory(DjangoModelFactory):
     is_secretariat = False
+    is_superuser = False
+    is_staff = False
+    is_active = True
     is_read_only = False
     username = 'reporter'
     email = 'reporter@example.com'
@@ -86,8 +95,24 @@ class ReporterUserFactory(DjangoModelFactory):
         model = User
 
 
+class ReporterUserROFactory(DjangoModelFactory):
+    is_secretariat = False
+    is_superuser = False
+    is_staff = False
+    is_active = True
+    is_read_only = True
+    username = 'reporter_ro'
+    email = 'reporter_ro@example.com'
+
+    class Meta:
+        model = User
+
+
 class ReporterUserSamePartyFactory(DjangoModelFactory):
     is_secretariat = False
+    is_superuser = False
+    is_staff = False
+    is_active = True
     is_read_only = False
     username = 'reporter_same_party'
     email = 'reporter_same_party@example.com'
