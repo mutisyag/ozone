@@ -16,7 +16,6 @@ from .utils import model_to_dict
 
 __all__ = [
     'ModifyPreventionMixin',
-    'Article7Flags',
     'Article7Questionnaire',
     'Article7Export',
     'Article7Import',
@@ -175,7 +174,7 @@ class PolyolsMixin:
 
 class BaseReport(models.Model):
     """
-    This will be used as a base for all reporting models, except Article7Flags.
+    This will be used as a base for all reporting models.
     """
 
     # We want to avoid deletion of `Submission`s which contain data reports.
@@ -312,32 +311,6 @@ class BaseUses(models.Model):
 
     class Meta:
         abstract = True
-
-
-class Article7Flags(models.Model):
-    """
-    Stores incomplete flags per submission-annex-group.
-
-    Only needs to be instantiated when there is incomplete data.
-    """
-
-    submission = models.ForeignKey(
-        Submission, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-
-    annex = models.ForeignKey(
-        Annex, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-    group = models.ForeignKey(
-        Group, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-
-    # Generally this model will be instantiated only when there is incomplete
-    # data in the submission
-    flag_incomplete = models.BooleanField(default=True)
-
-    class Meta:
-        db_table = 'reporting_article_seven_flags'
 
 
 class Article7Questionnaire(ModifyPreventionMixin, models.Model):
