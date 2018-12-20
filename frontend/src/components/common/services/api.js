@@ -89,7 +89,9 @@ const getSubmissions = (tableOptions) => {
 		params.obligation = tableOptions.filters.obligation
 		params.from_period = tableOptions.filters.period_start
 		params.to_period = tableOptions.filters.period_end
-		params.is_current = tableOptions.filters.isCurrent ? undefined : tableOptions.filters.isCurrent
+		if (tableOptions.filters.showAllVersions !== undefined) {
+			params.is_current = tableOptions.filters.showAllVersions ? undefined : true
+		}
 	}
 	if (tableOptions.sorting && tableOptions.sorting.sortBy) {
 		params.ordering = (tableOptions.sorting.sortDesc ? "-" : "") + tableOptions.sorting.sortBy

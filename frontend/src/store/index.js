@@ -62,7 +62,7 @@ const store = new Vuex.Store({
 					period_end: null,
 					obligation: null,
 					party: null,
-					isCurrent: null
+					showAllVersions: null
 				},
 			},
 		},
