@@ -291,13 +291,9 @@ class SubmissionViewFilterSet(filters.FilterSet):
 
     def filter_current(self, queryset, name, value):
         if value:
-            return queryset.exclude(
-                Q(flag_superseded=True) | Q(_current_state="data_entry")
-            )
+            return queryset.exclude(flag_superseded=True)
         else:
-            return queryset.filter(
-                Q(flag_superseded=True) | Q(_current_state="data_entry")
-            )
+            return queryset.filter(flag_superseded=True)
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
