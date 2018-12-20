@@ -60,67 +60,62 @@ const form = {
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			isInvalid: false,
-			section_subheaders: [{
-				label: '1',
-				name: 'substance',
-				sort: 1,
-				type: 'string'
-			},
-			{
-				label: '2',
-				name: 'destination_party',
-				sort: 1,
-				type: 'string',
-				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
-			},
-			{
-				label: 'New <br> 3',
-				name: 'quantity_total_new',
-				sort: 1,
-				type: 'number'
-			},
-			{
-				label: 'Recovered and Reclaimed <br> 4',
-				name: 'quantity_total_recovered',
-				sort: 1,
-				type: 'number'
-			},
-			{
-				label: '<br> 5',
-				name: 'quantity_feedstock',
-				sort: 1,
-				type: 'number'
-			},
-			{
-				label: 'Quantity <br> 6',
-				name: 'quantity_exempted',
-				sort: 1,
-				type: 'number'
-			},
-			{
-				label: 'Decision / type of use or Remark <br> 7',
-				name: 'decision_exempted'
-			},
-			{
-				label: '8',
-				name: 'validation'
-			}
+			section_subheaders: [
+				{
+					label: '(1) <br> Group',
+					name: 'group'
+				},
+				{
+					label: '(2) <br> Substances',
+					name: 'substance'
+				},
+				{
+					label: '(3) <br> Country of Destination of Exports',
+					name: 'destination_party',
+					tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
+				},
+				{
+					label: '(4) <br> New',
+					name: 'quantity_total_new'
+				},
+				{
+					label: '(5) <br> Recovered and Reclaimed',
+					name: 'quantity_total_recovered'
+				},
+				{
+					label: '(6) <br> Quantity of New Substances Exported as Feedstock',
+					tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).',
+					name: 'quantity_feedstock'
+				},
+				{
+					label: '(7) <br> Quantity',
+					name: 'quantity_exempted'
+				},
+				{
+					label: ' (8) <br> Decision / type of use or Remark',
+					name: 'decision_exempted'
+				},
+				{
+					label: '(9) <br> Status',
+					name: 'validation'
+				}
 			],
 
 			section_headers: [{
-				label: 'Substances'
+				label: ''
 			},
 			{
-				label: 'Country of Destination of Exports',
-				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
+				label: ''
+			},
+			{
+				label: ''
 			},
 			{
 				label: 'Total Quantity Exported for All Uses',
 				colspan: 2
 			},
 			{
-				label: 'Quantity of New Substances Exported as Feedstock',
-				tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).'
+				label: ''
 			},
 			{
 				label: 'Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses',
@@ -128,7 +123,7 @@ const form = {
 				tooltip: 'Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 			},
 			{
-				label: 'Status'
+				label: ''
 			}
 			],
 

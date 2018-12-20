@@ -958,6 +958,9 @@ body {
 	background: #eee;
 }
 
+.table th {
+	background-clip: padding-box;
+}
 .muted {
 	color: #aaa;
 }
