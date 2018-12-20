@@ -43,18 +43,18 @@
             <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
           </b-tab>
 
-				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
+				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
 						<template slot="title">
 						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
 						</template>
-					<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+					<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 				</b-tab>
 
-				<b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
+				<b-tab>
 					<template slot="title">
 						<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
 					</template>
-					<EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+					<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
 				</b-tab>
 
 				<b-tab>
