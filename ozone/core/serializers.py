@@ -570,7 +570,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7nonpartytrades_url', 'article7emissions_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url',
-            'updated_at', 'created_by', 'last_edited_by',
+            'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current', 'is_cloneable',
             'changeable_flags',  'flag_provisional', 'flag_valid',
@@ -626,7 +626,8 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
             ('url',)
             + CreateSubmissionSerializer.Meta.fields
             + (
-                'created_at', 'updated_at', 'created_by', 'last_edited_by',
+                'created_at', 'updated_at', 'submitted_at',
+                'created_by', 'last_edited_by',
                 'version', 'current_state', 'previous_state',
                 'available_transitions', 'data_changes_allowed', 'is_current',
                 'is_cloneable',
