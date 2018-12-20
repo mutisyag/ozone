@@ -27,46 +27,45 @@
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
-
           <b-tab title="Submission Info" active>
              <template slot="title">
               <div class="tab-title">
                 Submission Info
               </div>
              </template>
-            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+            <SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
           <b-tab title="Questionaire">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-			</template>
+						<template slot="title">
+							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+						</template>
             <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
           </b-tab>
 
-          <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
-             <template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-             </template>
-            <FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-          </b-tab>
-
-          <b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
+				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId" :disabled="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]">
 						<template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
 						</template>
-            <EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
-          </b-tab>
+					<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+				</b-tab>
 
-           <b-tab>
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
-				</template>
-				<Attachments :tab="$store.state.form.tabs.attachments"/>
-			</b-tab>
-        </b-tabs>
+				<b-tab :disabled="!selectedDisplayTabs[$store.state.form.tabs.has_emissions.name]">
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+					</template>
+					<EmissionsTemplate tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+				</b-tab>
+
+				<b-tab>
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+					</template>
+					<Attachments :tab="$store.state.form.tabs.attachments"/>
+				</b-tab>
+      </b-tabs>
     </b-card>
-    </div>
+		</div>
     <Footer>
       <b-button-group class="actions mt-2 mb-2">
         <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
@@ -76,13 +75,13 @@
           variant="outline-success">
             Submit
         </b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
-		</b-btn>
+				<b-btn
+					variant="outline-primary"
+					v-for="transition in availableTransitions"
+					:key="transition"
+					@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+					{{labels[transition]}}
+				</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           Versions
         </b-btn>

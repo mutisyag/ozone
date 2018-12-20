@@ -13,20 +13,54 @@
         </b-input-group>
       </b-col>
     </b-row>
-
+		<hr>
     <form class="form-sections">
-      <b-card>
-        <div class="form-fields">
-          <b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
-            <b-col lg='3'>
-              <label>{{labels[order]}}</label>
-            </b-col>
-            <b-col>
-              <fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
-            </b-col>
-          </b-row>
-        </div>
-      </b-card>
+			<b-row>
+				<b-col>
+					<h5>Submission Info</h5>
+					<b-card>
+						<div class="form-fields">
+							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
+								<b-col lg='3'>
+									<label>{{labels[order]}}</label>
+								</b-col>
+								<b-col>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
+								</b-col>
+							</b-row>
+						</div>
+					</b-card>
+				</b-col>
+
+				<b-col v-if="flags_info">
+					<h5>Flags</h5>
+					<b-card>
+						<b-row v-for="order in flags_info.fields_order" :key="order">
+							<b-col>
+								<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+									<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+										<i class="fa fa-info-circle fa-lg"></i>
+										{{labels.flags[order]}}
+									</div>
+									<div v-else>
+										{{labels.flags[order]}}
+									</div>
+								</label>
+							</b-col>
+							<b-col>
+								<fieldGenerator
+									:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+									:disabled="$store.getters.transitionState"
+									:field="flags_info.form_fields[order]"
+									:id="order">
+								</fieldGenerator>
+							</b-col>
+
+						</b-row>
+					</b-card>
+				</b-col>
+			</b-row>
+
     </form>
     </div>
 </template>
@@ -39,7 +73,7 @@ import labels from '@/components/art7/dataDefinitions/labels'
 export default {
 	props: {
 		info: Object,
-		tabs: Object
+		flags_info: Object
 	},
 
 	created() {

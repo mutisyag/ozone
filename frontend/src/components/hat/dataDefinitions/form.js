@@ -1,5 +1,6 @@
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
+import tab_flags from '@/components/common/dataDefinitions/tab_flags'
 
 const form = {
 	formDetails: {
@@ -212,7 +213,8 @@ const form = {
 				quantity_article_5: null,
 				substance: null
 			}
-		}
+		},
+		flags: tab_flags
 	}
 }
 export default form

@@ -111,6 +111,15 @@ submission_info_router.register(
     base_name="submission-submission-info"
 )
 
+submission_flags_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+submission_flags_router.register(
+    "submission-flags",
+    views.SubmissionFlagsViewSet,
+    base_name="submission-submission-flags"
+)
+
 nested_routers = [
     questionnaire_router,
     destructions_router,
@@ -120,6 +129,7 @@ nested_routers = [
     nonpartytrades_router,
     emissions_router,
     submission_info_router,
+    submission_flags_router,
 ]
 
 # Groups

@@ -45,7 +45,7 @@
                 Submission Info
               </div>
              </template>
-			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+			<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
 		<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">

@@ -1,9 +1,28 @@
 const state = {
 	dashboard: {
+		mySubmissions: null,
 		submissions: null,
 		periods: null,
 		obligations: null,
-		parties: null
+		parties: null,
+		table: {
+			currentPage: 1,
+			perPage: 10,
+			totalRows: null,
+			sorting: {
+				sortBy: 'updated_at',
+				sortDesc: true,
+				sortDirection: 'asc'
+			},
+			filters: {
+				search: null,
+				period_start: null,
+				period_end: null,
+				obligation: null,
+				party: null,
+				isCurrent: null
+			}
+		}
 	},
 	currentAlert: {
 		message: null,

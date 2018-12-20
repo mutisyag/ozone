@@ -75,9 +75,12 @@ const mutations = {
 		state.dashboard.periods = data
 	},
 	setDashboardSubmissions(state, data) {
-		state.dashboard.submissions = data
+		state.dashboard.submissions = data.results
+		state.dashboard.table.totalRows = data.count
 	},
-
+	setDashboardMySubmissions(state, data) {
+		state.dashboard.mySubmissions = data.results
+	},
 	// alerts
 
 	setCurrentAlertMessage(state, message) {
@@ -202,6 +205,13 @@ const mutations = {
 	},
 
 	// permissions
+
+	setFlagsPermissions(state, data) {
+		Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+			if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
+		})
+	},
+
 	updateDashboardPermissions(state, permission) {
 		state.permissions.dashboard = permission
 	},
