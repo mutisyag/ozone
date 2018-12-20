@@ -390,6 +390,7 @@ class Submission(models.Model):
         if len(wrongly_modified_flags) > 0:
             raise ValidationError({
                 field: [_('User is not allowed to change this flag')]
+                for field in wrongly_modified_flags
             })
         return True
 
