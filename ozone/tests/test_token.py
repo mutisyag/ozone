@@ -1,11 +1,12 @@
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
+
+from .base import BaseTests
 
 User = get_user_model()
 
 
-class EmailAuthTests(TestCase):
+class EmailAuthTests(BaseTests):
 
     def setUp(self):
         self.user = User.objects.create_user(
@@ -21,7 +22,7 @@ class EmailAuthTests(TestCase):
     def test_get_token(self):
         resp = self.client.post(reverse("core:auth-token-list"), {
             "username": self.user.username,
-            "password": "qwe123qwe",
-        }, format="json")
+            "password": "qwe123qwe"
+        })
         self.assertEqual(resp.status_code, 200)
         self.assertIn('token', resp.data)

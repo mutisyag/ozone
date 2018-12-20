@@ -1,8 +1,8 @@
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
+from .base import BaseTests
 from .factories import (
     AnotherPartyFactory,
     PartyFactory,
@@ -19,7 +19,7 @@ from .factories import (
 User = get_user_model()
 
 
-class ClonePermissionsTests(TestCase):
+class ClonePermissionsTests(BaseTests):
 
     def setUp(self):
         super().setUp()
@@ -46,15 +46,6 @@ class ClonePermissionsTests(TestCase):
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
 
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(reverse("core:auth-token-list"), {
-            "username": username,
-            "password": password,
-        }, format="json")
-        return {
-            'HTTP_AUTHORIZATION': 'Token ' + resp.data['token'],
-        }
-
     def test_clone_secretariat(self):
         """
         Testing `clone` action using a secretariat user.
@@ -68,11 +59,15 @@ class ClonePermissionsTests(TestCase):
         )
         submission._current_state = 'submitted'
         submission.save()
-        headers = self.get_authorization_header(self.secretariat_user.username, 'qwe123qwe')
+
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.secretariat_user.username,
+                password='qwe123qwe'
+            )
+        )
         resp = self.client.post(
-            reverse("core:submission-clone",
-                    kwargs={'pk': submission.pk}),
-            **headers
+            reverse("core:submission-clone",kwargs={'pk': submission.pk})
         )
         self.assertEqual(resp.status_code, 200)
 
@@ -91,12 +86,15 @@ class ClonePermissionsTests(TestCase):
         submission._current_state = 'submitted'
         submission.save()
 
-        headers = self.get_authorization_header(self.reporter_same_party.username, 'qwe123qwe')
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_same_party.username,
+                password='qwe123qwe'
+            )
+        )
         resp = self.client.post(
-            reverse("core:submission-clone",
-                    kwargs={'pk': submission.pk}),
-            {"party": self.party.pk},
-            **headers
+            reverse("core:submission-clone", kwargs={'pk': submission.pk}),
+            {"party": self.party.pk}
         )
         self.assertEqual(resp.status_code, 200)
 
@@ -115,12 +113,16 @@ class ClonePermissionsTests(TestCase):
         submission._current_state = 'submitted'
         submission.save()
 
-        headers = self.get_authorization_header(self.reporter_another_party.username, 'qwe123qwe')
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_another_party.username,
+                password='qwe123qwe'
+            )
+        )
         resp = self.client.post(
             reverse("core:submission-clone",
                     kwargs={'pk': submission.pk}),
-            {"party": self.party.pk},
-            **headers
+            {"party": self.party.pk}
         )
         self.assertEqual(resp.status_code, 403)
 
@@ -139,11 +141,15 @@ class ClonePermissionsTests(TestCase):
         submission._current_state = 'submitted'
         submission.save()
 
-        headers = self.get_authorization_header(self.reporter.username, 'qwe123qwe')
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
         resp = self.client.post(
             reverse("core:submission-clone",
                     kwargs={'pk': submission.pk}),
-            {"party": self.party.pk},
-            **headers
+            {"party": self.party.pk}
         )
         self.assertEqual(resp.status_code, 403)
