@@ -75,9 +75,12 @@ const mutations = {
 		state.dashboard.periods = data
 	},
 	setDashboardSubmissions(state, data) {
-		state.dashboard.submissions = data
+		state.dashboard.submissions = data.results
+		state.dashboard.table.totalRows = data.count
 	},
-
+	setDashboardMySubmissions(state, data) {
+		state.dashboard.mySubmissions = data.results
+	},
 	// alerts
 
 	setCurrentAlertMessage(state, message) {

@@ -55,13 +55,29 @@ const actions = {
 
 	getCurrentSubmissions(context) {
 		return new Promise((resolve) => {
-			getSubmissions().then(response => {
+			getSubmissions(context.state.dashboard.table).then(response => {
 				context.commit('setDashboardSubmissions', response.data)
 				resolve()
 			})
 		})
 	},
+	getMyCurrentSubmissions(context) {
+		return new Promise((resolve) => {
+			getSubmissions({
+				filters: {
+					currentState: 'data_entry'
+				},
+				sorting: {
+					sortDesc: true,
+					sortBy: 'updated_at'
+				}
 
+			}).then(response => {
+				context.commit('setDashboardMySubmissions', response.data)
+				resolve()
+			})
+		})
+	},
 	async getDashboardParties(context) {
 		let response
 		try {
