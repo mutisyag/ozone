@@ -4,12 +4,17 @@ from factory.django import DjangoModelFactory
 from django.contrib.auth import get_user_model
 
 from ozone.core.models import (
+    Annex,
+    Blend,
+    Group,
+    Meeting,
     Obligation,
     Party,
     Region,
     ReportingPeriod,
     Submission,
     Subregion,
+    Treaty,
 )
 
 
@@ -123,3 +128,49 @@ class SubmissionFactory(DjangoModelFactory):
 
     class Meta:
         model = Submission
+
+
+class MeetingFactory(DjangoModelFactory):
+    meeting_id = 'TM'
+    location = "Test"
+    description = "Test"
+
+    class Meta:
+        model = Meeting
+
+
+class TreatyFactory(DjangoModelFactory):
+    treaty_id = 'TT'
+    name = 'Test Treaty'
+    meeting_id = SubFactory(MeetingFactory)
+    date = datetime.strptime('2018-01-01', '%Y-%m-%d')
+    entry_into_force_date = datetime.strptime('2020-01-01', '%Y-%m-%d')
+
+    class Meta:
+        model = Treaty
+
+
+class AnnexFactory(DjangoModelFactory):
+    annex_id = 'TA'
+    name = 'Test Annex'
+
+    class Meta:
+        model = Annex
+
+
+class GroupFactory(DjangoModelFactory):
+    group_id = 'TG'
+    annex = SubFactory(AnnexFactory)
+    name = 'Test Group'
+
+    class Meta:
+        model = Group
+
+
+class BlendFactory(DjangoModelFactory):
+    blend_id = 'TB'
+    type = 'Zeotrope'
+    composition = 'TEST'
+
+    class Meta:
+        model = Blend
