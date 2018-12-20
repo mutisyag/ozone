@@ -80,7 +80,7 @@ const getExportBlends = () => {
 const getSubmissions = (tableOptions) => {
 	const params = {
 		page_size: tableOptions.perPage,
-		page: tableOptions.currentPage,
+		page: tableOptions.currentPage
 	}
 	if (tableOptions.filters) {
 		params.current_state = tableOptions.filters.currentState
@@ -94,10 +94,10 @@ const getSubmissions = (tableOptions) => {
 		}
 	}
 	if (tableOptions.sorting && tableOptions.sorting.sortBy) {
-		params.ordering = (tableOptions.sorting.sortDesc ? "-" : "") + tableOptions.sorting.sortBy
+		params.ordering = (tableOptions.sorting.sortDesc ? '-' : '') + tableOptions.sorting.sortBy
 	}
 
-	return fetch('submissions/', {params})
+	return fetch('submissions/', { params })
 }
 
 const getPeriods = () => fetch('periods/')
