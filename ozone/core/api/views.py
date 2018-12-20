@@ -2,7 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
-from django.db.models import F, Q
+from django.db.models import Q
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -141,7 +141,9 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Party.objects.all().prefetch_related('subregion', 'subregion__region')
+    queryset = Party.objects.all().prefetch_related(
+        'subregion', 'subregion__region'
+    )
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
@@ -261,12 +263,15 @@ class SubmissionPaginator(PageNumberPagination):
 
 class SubmissionViewFilterSet(filters.FilterSet):
     party = filters.NumberFilter("party", help_text="Filter by party ID")
-    obligation = filters.NumberFilter("obligation", help_text="Filter by Obligation ID")
+    obligation = filters.NumberFilter(
+        "obligation", help_text="Filter by Obligation ID"
+    )
     reporting_period = filters.NumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
     is_current = filters.BooleanFilter(
-        method="filter_current", help_text="If set to true only show latest versions."
+        method="filter_current",
+        help_text="If set to true only show latest versions."
     )
     from_period = filters.DateFilter(
         "reporting_period__start_date",
