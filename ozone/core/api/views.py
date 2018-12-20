@@ -311,7 +311,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         SearchFilter,
     )
     filterset_class = SubmissionViewFilterSet
-    search_fields = ("party__name", "obligation__name", "reporting_period__name")
+    search_fields = (
+        "party__name", "obligation__name", "reporting_period__name"
+    )
     ordering_fields = {
         "obligation": "obligation",
         "party": "party",
@@ -525,10 +527,12 @@ class Article7EmissionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class AuthTokenViewSet(mixins.ListModelMixin,
-                       mixins.CreateModelMixin,
-                       mixins.DestroyModelMixin,
-                       viewsets.GenericViewSet):
+class AuthTokenViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
     lookup_field = 'key'
     lookup_url_kwarg = 'token'
     serializer_class = AuthTokenByValueSerializer
@@ -541,8 +545,10 @@ class AuthTokenViewSet(mixins.ListModelMixin,
             return Token.objects.none()
 
     def create(self, request, *args, **kwargs):
-        serializer = AuthTokenSerializer(data=request.data,
-                                         context={'request': request})
+        serializer = AuthTokenSerializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
