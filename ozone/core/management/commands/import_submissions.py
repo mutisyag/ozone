@@ -581,7 +581,6 @@ class Command(BaseCommand):
         for key, klass in (
             ("submission_info", SubmissionInfo),
             ("art7", Article7Questionnaire),
-            # ("art7_flags", Article7Flags),
             ("imports", Article7Import),
             ("exports", Article7Export),
             ("produced", Article7Production),
