@@ -219,7 +219,7 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class BlendViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
 
     def get_queryset(self):
         queryset = Blend.objects.all().prefetch_related(
