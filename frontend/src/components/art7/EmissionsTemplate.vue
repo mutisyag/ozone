@@ -47,12 +47,7 @@
 					:items="tableItems"
 					@row-hovered="rowHovered"
 					:fields="tableFields"
-					:current-page="table.currentPage"
-					:per-page="table.perPage"
-					:sort-by.sync="table.sortBy"
-					:sort-desc.sync="table.sortDesc"
 					@input="tableLoaded"
-					:sort-direction="table.sortDirection"
 					:filter="table.filters.search"
 					ref="table"
 				>
@@ -151,13 +146,8 @@ export default {
 			sidebarTabIndex: 0,
 			table: {
 				currentPage: 1,
-				perPage: 200,
 				totalRows: 5,
 				tableFilters: false,
-				pageOptions: [5, 25, 100],
-				sortBy: null,
-				sortDesc: false,
-				sortDirection: 'asc',
 				filters: {
 					search: null,
 					period_start: null,
@@ -189,7 +179,7 @@ export default {
 		},
 		tableFields() {
 			const tableHeaders = []
-			const options = { sortable: true, class: 'text-center' }
+			const options = { class: 'text-center' }
 			this.tab_info.section_subheaders.forEach((element) => {
 				tableHeaders.push({
 					key: element.name,
