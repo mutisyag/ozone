@@ -259,6 +259,11 @@
         <span v-else>{{tab_data.display.blends[modal_data.field.blend.selected].name}}</span>
       </div>
       <div v-if="modal_data">
+				<p class="muted">
+					All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
+					<br>
+					<b>The values are saved automatically in the table, as you type.</b>
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             Change substance
@@ -302,10 +307,7 @@
         </b-row>
       </div>
       <div slot="modal-footer">
-          <div class="modal-footer-info">
-            The values are saved as you type
-          </div>
-          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close modal</b-btn>
+          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
       </div>
     </b-modal>
   </div>

@@ -17,8 +17,6 @@
     "font-awesome": "^4.7.0",
     "simple-line-icons": "^2.4.1",
     "toastedjs": "^0.0.2",
-    "uuid": "^3.3.2",
-    "vee-validate": "^2.1.0-beta.9",
     "vue": "^2.5.17",
     "vue-cookies": "^1.5.7",
     "vue-multiselect": "^2.1.3",

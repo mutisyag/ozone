@@ -10,11 +10,13 @@ export default {
 	reporting_officer: 'Name of reporting officer',
 	designation: 'Designation',
 	organization: 'Organization',
-	postal_code: 'Postal Adddress',
+	postal_code: 'Postal adddress',
 	country: 'Country',
 	phone: 'Phone',
 	fax: 'Fax',
 	email: 'E-mail',
 	date: 'Date',
-	subject: 'Subject'
+	subject: 'Subject',
+	art7: 'Article 7',
+	hat: 'HAT'
 }

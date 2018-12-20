@@ -42,10 +42,29 @@ const store = new Vuex.Store({
 	// strict: true,
 	state: {
 		dashboard: {
+			mySubmissions: null,
 			submissions: null,
 			periods: null,
 			obligations: null,
-			parties: null
+			parties: null,
+			table: {
+				currentPage: 1,
+				perPage: 10,
+				totalRows: null,
+				sorting: {
+					sortBy: 'updated_at',
+					sortDesc: true,
+					sortDirection: 'asc',
+				},
+				filters: {
+					search: null,
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null,
+					showAllVersions: null
+				},
+			},
 		},
 		currentAlert: {
 			message: null,
@@ -162,8 +181,26 @@ const store = new Vuex.Store({
 
 		getCurrentSubmissions(context) {
 			return new Promise((resolve) => {
-				getSubmissions().then(response => {
+				getSubmissions(context.state.dashboard.table).then(response => {
 					context.commit('setDashboardSubmissions', response.data)
+					resolve()
+				})
+			})
+		},
+
+		getMyCurrentSubmissions(context) {
+			return new Promise((resolve) => {
+				getSubmissions({
+					filters: {
+						currentState: 'data_entry'
+					},
+					sorting: {
+						sortDesc: true,
+						sortBy: 'updated_at'
+					}
+
+				}).then(response => {
+					context.commit('setDashboardMySubmissions', response.data)
 					resolve()
 				})
 			})
@@ -497,7 +534,11 @@ const store = new Vuex.Store({
 			state.dashboard.periods = data
 		},
 		setDashboardSubmissions(state, data) {
-			state.dashboard.submissions = data
+			state.dashboard.submissions = data.results
+			state.dashboard.table.totalRows = data.count
+		},
+		setDashboardMySubmissions(state, data) {
+			state.dashboard.mySubmissions = data.results
 		},
 
 		// alerts

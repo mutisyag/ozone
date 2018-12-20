@@ -1,4 +1,7 @@
+import commonLabels from '@/components/common/dataDefinitions/labels'
+
 const labels = {
+	general: commonLabels,
 	has_imports: {
 		substance: 'Substances',
 		blend: 'Blend',

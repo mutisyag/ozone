@@ -14,9 +14,6 @@
       </b-col>
     </b-row>
 
-    <small>
-       {{info.intro}}
-    </small>
     <form class="form-sections">
       <b-card>
         <div class="form-fields">
