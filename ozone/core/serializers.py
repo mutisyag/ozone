@@ -480,7 +480,7 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
         does not have access to the object instance.
         """
         # User should always be on the request due to our permission classes
-        user =  self.context['request'].user
+        user = self.context['request'].user
         instance.check_flags(user, validated_data.keys())
         return super().update(instance, validated_data)
 

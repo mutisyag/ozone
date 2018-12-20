@@ -404,7 +404,7 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet):
 
     def put(self, request, *args, **kwargs):
         sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
-        serializer = SubmissionFlagsSerializer(sub, data=request.data)
+        serializer = self.get_serializer(sub, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -414,6 +414,11 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet):
         return Submission.objects.filter(
             pk=self.kwargs['submission_pk']
         )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
