@@ -70,21 +70,19 @@ const form = {
 					name: 'substance'
 				},
 				{
-					label: '(3) <br> Country of Destination of Exports',
-					name: 'destination_party',
-					tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
+					label: '(3) <br> Country of destination of exports',
+					name: 'destination_party'
 				},
 				{
 					label: '(4) <br> New',
 					name: 'quantity_total_new'
 				},
 				{
-					label: '(5) <br> Recovered and Reclaimed',
+					label: '(5) <br> Recovered and reclaimed',
 					name: 'quantity_total_recovered'
 				},
 				{
-					label: '(6) <br> Quantity of New Substances Exported as Feedstock',
-					tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).',
+					label: '(6) <br> Quantity of new substances exported as feedstock',
 					name: 'quantity_feedstock'
 				},
 				{
@@ -92,7 +90,7 @@ const form = {
 					name: 'quantity_exempted'
 				},
 				{
-					label: ' (8) <br> Decision / type of use or Remark',
+					label: ' (8) <br> Decision / type of use or remark',
 					name: 'decision_exempted'
 				},
 				{
@@ -108,14 +106,16 @@ const form = {
 				label: ''
 			},
 			{
-				label: ''
+				label: '',
+				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
 			},
 			{
 				label: 'Total Quantity Exported for All Uses',
 				colspan: 2
 			},
 			{
-				label: ''
+				label: '',
+				tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).'
 			},
 			{
 				label: 'Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses',
@@ -198,57 +198,51 @@ const form = {
 			description: 'Annexes A, B, C and E substances',
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
 			section_subheaders: [{
-				label: '1',
+				name: 'group',
+				label: '(1) Group'
+			},
+			{
 				name: 'substance',
-				sort: 1,
-				type: 'string'
+				label: '(2) Substance'
 			},
 			{
-				label: '2',
 				name: 'source_party',
-				sort: 1,
-				type: 'string',
-				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
+				label: '(3) <br> Exporting party for quantities reported as imports'
 			},
 			{
-				label: 'New <br> 3',
-				name: 'quantity_total_new',
-				sort: 1,
-				type: 'number'
+				label: '(4) <br> New',
+				name: 'quantity_total_new'
 			},
 			{
-				label: 'Recovered and Reclaimed <br> 4',
-				name: 'quantity_total_recovered',
-				sort: 1,
-				type: 'number'
+				label: '(5) <br> Recovered and reclaimed',
+				name: 'quantity_total_recovered'
 			},
 			{
-				label: '<br> 5',
 				name: 'quantity_feedstock',
-				sort: 1,
-				type: 'number'
+				label: '(6) <br> Quantity of new substances imported as feedstock'
 			},
 			{
-				label: 'Quantity <br> 6',
-				name: 'quantity_exempted',
-				sort: 1,
-				type: 'number'
+				label: '(7) <br> Quantity',
+				name: 'quantity_exempted'
 			},
 			{
-				label: 'Decision / type of use or Remark <br> 7',
+				label: '(8) <br> Decision / type of use or remark',
 				name: 'decision_exempted'
 			},
 			{
-				label: '8',
+				label: '(9) <br> Status',
 				name: 'validation'
 			}
 			],
 
 			section_headers: [{
-				label: 'Substances'
+				label: ''
 			},
 			{
-				label: 'Exporting party for quantities reported as imports',
+				label: ''
+			},
+			{
+				label: '',
 				tooltip: 'Applicable to all substances, including those contained in mixtures and blends.'
 			},
 			{
@@ -256,7 +250,7 @@ const form = {
 				colspan: 2
 			},
 			{
-				label: 'Quantity of New Substances Imported as Feedstock',
+				label: '',
 				tooltip: 'Do not deduct from total production in column 3 of data form 3 (data on production).'
 			},
 			{
@@ -265,7 +259,7 @@ const form = {
 				tooltip: 'Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 			},
 			{
-				label: 'Status'
+				label: ''
 			}
 			],
 			fields_order: ['substance', 'blend', 'source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
@@ -320,60 +314,53 @@ const form = {
 			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
-
 			section_subheaders: [
 				{
-					label: '',
-					name: 'substance',
-					sort: 1,
-					type: 'string'
+					name: 'group',
+					label: '(1) <br> Group'
 				},
 				{
-					label: '2',
-					name: 'quantity_total_produced',
-					sort: 1,
-					type: 'number'
+					label: '(2) <br> Substance',
+					name: 'substance'
 				},
 				{
-					label: '3',
-					name: 'quantity_feedstock',
-					sort: 1,
-					colspan: 2,
-					type: 'number'
+					label: '(3) <br> Total production for all uses',
+					name: 'quantity_total_produced'
 				},
 				{
-					label: 'Quantity <br> 5',
-					name: 'quantity_exempted',
-					sort: 1,
-					type: 'string'
+					label: '(4) <br> Production for feedstock uses within your country',
+					name: 'quantity_feedstock'
 				},
 				{
-					label: 'Decision / type of use <br> 5',
-					name: 'decision_exempted',
-					sort: 1,
-					type: 'string'
+					label: '(5) <br> Quantity',
+					name: 'quantity_exempted'
 				},
 				{
-					label: '6',
-					name: 'quantity_article_5',
-					sort: 1,
-					type: 'number'
+					label: '(6) <br> Decision / type of use',
+					name: 'decision_exempted'
 				},
 				{
-					label: '7',
+					label: '(7) <br> Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5',
+					name: 'quantity_article_5'
+				},
+				{
+					label: '(8) <br> Status',
 					name: 'validation'
 				}
 			],
 
 			section_headers: [
 				{
-					label: 'Substances'
+					label: ''
 				},
 				{
-					label: 'Total production for all uses'
+					label: ''
 				},
 				{
-					label: 'Production for feedstock uses within your country'
+					label: ''
+				},
+				{
+					label: ''
 				},
 				{
 					label: 'Production for exempted essential, critical or other uses within your country',
@@ -381,10 +368,10 @@ const form = {
 					tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 				},
 				{
-					label: 'Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5'
+					label: ''
 				},
 				{
-					label: 'Status'
+					label: ''
 				}
 			],
 
@@ -392,10 +379,13 @@ const form = {
 
 				section_headers: [
 					{
-						label: 'Substances'
+						label: ''
 					},
 					{
-						label: 'Total production for all uses'
+						label: ''
+					},
+					{
+						label: ''
 					},
 					{
 						label: 'Production for feedstock uses within your country',
@@ -407,50 +397,48 @@ const form = {
 						tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 					},
 					{
-						label: 'Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5'
+						label: ''
 					},
 					{
-						label: 'Status'
+						label: ''
 					}
 				],
 
 				section_subheaders: [
 					{
-						label: '1',
+						name: 'group',
+						label: '(1) <br> Group'
+					},
+					{
+						label: '(2) <br> Substance',
 						name: 'substances'
 					},
 					{
-						label: '2.Captured for all uses',
+						label: '(3) <br> Captured for all uses',
 						name: 'quantity_total_produced'
 					},
 					{
-						label: '3a.Captured for feedstock uses within your country',
+						label: '(4a) <br> Captured for feedstock uses within your country',
 						name: 'quantity_feedstock'
 					},
 					{
-						label: '3b.Captured for destruction',
+						label: '(4b) <br> Captured for destruction',
 						name: 'quantity_for_destruction'
 					},
 					{
-						label: 'Quantity <br> 5',
-						name: 'quantity_exempted',
-						sort: 1,
-						type: 'string'
+						label: '(5) <br> Quantity',
+						name: 'quantity_exempted'
 					},
 					{
-						label: 'Decision / type of use <br> 5',
-						name: 'decision_exempted',
-						sort: 1,
-						type: 'string'
+						label: '(6) <br> Decision / type of use',
+						name: 'decision_exempted'
 					},
 					{
-						label: '6',
-						name: 'quantity_article_5',
-						sort: 1,
-						type: 'number'
+						label: '(7) <br> Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5',
+						name: 'quantity_article_5'
 					},
 					{
-						label: '7',
+						label: '(8) <br> Status',
 						name: 'validation'
 					}
 				]
@@ -509,49 +497,45 @@ const form = {
 			isInvalid: false,
 			form_fields: [],
 			section_subheaders: [{
-				label: '1',
-				name: 'substance',
-				sort: 1,
-				type: 'string'
+				label: '(1) Group',
+				name: 'group'
 			},
 			{
-				label: '2',
-				name: 'quantity_destroyed',
-				sort: 1,
-				type: 'number'
+				label: '(2) Substance',
+				name: 'substance'
 			},
 			{
-				label: '3',
-				name: 'remarks_party',
-				sort: 1,
-				type: 'string'
+				label: '(3) Quantity destroyed',
+				name: 'quantity_destroyed'
 			},
 			{
-				label: '4',
-				name: 'remarks_os',
-				sort: 1,
-				type: 'string'
+				label: '(4) Remarks (party)',
+				name: 'remarks_party'
 			},
 			{
-				label: '5',
+				label: '(5) Remarks (secretariat)',
+				name: 'remarks_os'
+			},
+			{
+				label: '(6) Status',
 				name: 'validation'
 			}
 			],
 
 			section_headers: [{
-				label: 'Substances'
+				label: ''
 			},
 			{
-				label: 'Quantity destroyed'
+				label: ''
 			},
 			{
-				label: 'Remarks (party)'
+				label: ''
 			},
 			{
-				label: 'Remarks (Secretariat)'
+				label: ''
 			},
 			{
-				label: 'Status'
+				label: ''
 			}
 			],
 			default_properties: {
@@ -583,67 +567,57 @@ const form = {
 			modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
 			form_fields: [],
-			section_subheaders: [
-				{
-					label: '1',
-					name: 'substance',
-					sort: 1,
-					type: 'string'
-				},
-				{
-					label: '2',
-					name: 'trade_party',
-					sort: 1,
-					type: 'string'
-				},
-				{
-					label: 'New imports  <br> 3',
-					name: 'quantity_import_new',
-					sort: 1,
-					type: 'number'
-				},
-				{
-					label: 'Recovered and reclaimed imports <br> 4',
-					name: 'quantity_import_recovered',
-					sort: 1,
-					type: 'number'
-				},
-				{
-					label: 'New exports <br> 5',
-					name: 'quantity_export_new',
-					sort: 1,
-					type: 'number'
-				},
-				{
-					label: 'Recovered and reclaimed exports <br> 6',
-					name: 'quantity_export_recovered',
-					sort: 1,
-					type: 'number'
-				},
-				{
-					label: '7',
-					name: 'remarks_party',
-					sort: 1,
-					type: 'string'
-				},
-				{
-					label: '8',
-					name: 'remarks_os',
-					sort: 1,
-					type: 'string'
-				},
-				{
-					label: '9',
-					name: 'validation'
-				}
+			section_subheaders: [{
+				label: '(1) <br> Group',
+				name: 'group'
+			},
+			{
+				label: '(2) <br> Substance',
+				name: 'substance'
+			},
+			{
+				label: '(3) <br> Exporting party for quantities reported as imports <br> <b>OR</b> <br> Country of destination of exports',
+				name: 'trade_party'
+			},
+			{
+				label: '(4) <br> New imports',
+				name: 'quantity_import_new'
+			},
+			{
+				label: '(5) <br> Recovered and reclaimed imports',
+				name: 'quantity_import_recovered'
+			},
+			{
+				label: '(6) <br> New exports',
+				name: 'quantity_export_new'
+			},
+			{
+				label: '(7) <br> Recovered and reclaimed exports',
+				name: 'quantity_export_recovered'
+			},
+			{
+				label: '(8) <br> Remarks (party)',
+				name: 'remarks_party'
+			},
+			{
+				label: '(9) <br> Remarks (Secretariat)',
+				name: 'remarks_os'
+			},
+			{
+				label: 'Status <br> (10)',
+				name: 'validation'
+			}
 			],
 
 			section_headers: [
 				{
-					label: 'Substances'
+					label: ''
 				},
 				{
-					label: 'Exporting party for quantities reported as imports <br> <b>OR</b> <br> Country of destination of exports'
+					label: ''
+				},
+				{
+					label: ''
 				},
 				{
 					label: 'Quantity of imports from non-parties',
@@ -656,13 +630,13 @@ const form = {
 					tooltip: 'See definition of “non parties” in Instruction V.'
 				},
 				{
-					label: 'Remarks (party)'
+					label: ''
 				},
 				{
-					label: 'Remarks (Secretariat)'
+					label: ''
 				},
 				{
-					label: 'Status'
+					label: ''
 				}
 			],
 
@@ -711,58 +685,56 @@ const form = {
 				return this.section_subheaders.map(x => x.name)
 			},
 			section_subheaders: [{
-				label: '1',
+				label: '(1) <br> Facility name or identifier',
 				name: 'facility_name'
 			},
 			{
-				label: '2',
+				label: '(2) <br> Total amount generated',
 				name: 'quantity_generated'
 			},
 			{
-				label: '(3a) For all uses',
+				label: '(3a) <br> For all uses',
 				name: 'quantity_captured_all_uses'
 			},
 			{
-				label: '(3b) For feedstock use in your country',
+				label: '(3b) <br> For feedstock use in your country',
 				name: 'quantity_captured_feedstock'
 			},
 			{
-				label: '(3c) For Destruction',
+				label: '(3c) <br> For Destruction',
 				name: 'quantity_captured_for_destruction'
 			},
 			{
-				label: '4',
+				label: '(4) <br> Amount used for feedstock without prior capture',
 				name: 'quantity_feedstock'
 			},
 			{
-				label: '5',
+				label: '(5) <br> Amount destroyed without prior capture',
 				name: 'quantity_destroyed'
 			},
 			{
-				label: '6',
+				label: '(6) <br> Amount of generated emissions',
 				name: 'quantity_emitted'
 			},
 			{
-				label: '7',
+				label: '(7) <br> Remarks (party)',
 				name: 'remarks_party'
 			},
 			{
-				label: '8',
+				label: '(8) Remarks (secretariat)',
 				name: 'remarks_os'
 			},
 			{
-				label: '9',
+				label: '(9) Status',
 				name: 'validation'
 			}
 			],
 
 			section_headers: [{
-				label: 'Facility name or identifier',
-				name: 'facility_name'
+				label: ''
 			},
 			{
-				label: 'Total amount generated',
-				name: 'quantity_generated',
+				label: '',
 				tooltip: 'Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3'
 			},
 			{
@@ -771,30 +743,24 @@ const form = {
 				colspan: 3
 			},
 			{
-				label: 'Amount used for feedstock without prior capture',
-				name: 'quantity_feedstock',
+				label: '',
 				tooltip: 'Amount converted to other substances in the facility. The sum of these amounts is not to be reported under data form 3'
 			},
 			{
-				label: 'Amount destroyed without prior capture',
-				name: 'quantity_destroyed',
+				label: '',
 				tooltip: 'Amount destroyed in the facility'
 			},
 			{
-				label: 'Amount of generated emissions',
-				name: 'quantity_emitted'
+				label: ''
 			},
 			{
-				label: 'Remarks (party)',
-				name: 'remarks_party'
+				label: ''
 			},
 			{
-				label: 'Remarks (Secretariat)',
-				name: 'remarks_os'
+				label: ''
 			},
 			{
-				label: 'Status',
-				name: 'validation'
+				label: ''
 			}
 			],
 			comments: [{
