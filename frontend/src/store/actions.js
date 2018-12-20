@@ -178,6 +178,7 @@ const actions = {
 		return new Promise((resolve) => {
 			getSubmission(data).then((response) => {
 				context.commit('updateSubmissionData', response.data)
+				context.commit('setFlagsPermissions', response.data.changeable_flags)
 				context.commit('updateAvailableTransitions', response.data.available_transitions)
 				context.dispatch('getCurrentSubmissionHistory', data)
 				resolve()
