@@ -377,15 +377,16 @@ class Submission(models.Model):
 
         return flags_list
 
-    def check_flags(self, user, flag_names_list):
+    def check_flags(self, user, flags):
         """
         Raise error if user has changed flags he was not allowed to change
         in the current state; return True otherwise.
         """
         wrongly_modified_flags = [
-            field_name for field_name in flag_names_list
+            field_name for field_name, value in flags.items()
             if field_name.startswith('flag_') and
-            field_name not in self.get_changeable_flags(user)
+            field_name not in self.get_changeable_flags(user) and
+            getattr(self, field_name) != value
         ]
         if len(wrongly_modified_flags) > 0:
             raise ValidationError({

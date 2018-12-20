@@ -481,7 +481,7 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
         """
         # User should always be on the request due to our permission classes
         user = self.context['request'].user
-        instance.check_flags(user, validated_data.keys())
+        instance.check_flags(user, validated_data)
         return super().update(instance, validated_data)
 
 
