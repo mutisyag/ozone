@@ -139,7 +139,13 @@ export default {
 			const options = {}
 			this.tab_info.section_subheaders.forEach((element) => {
 				if (element.name === 'substance') {
-					tableHeaders.push({ key: 'blend', label: element.label, ...options })
+					tableHeaders.push({ key: 'blend', label: '(2) <br> Blend', ...options })
+				} else if (element.name === 'group') {
+					tableHeaders.push({
+						key: 'type',
+						label: '(1) <br> Type',
+						...options
+					})
 				} else {
 					tableHeaders.push({
 						key: element.name,

@@ -72,6 +72,13 @@
 					ref="table"
 				>
 					<template
+						slot="group"
+						slot-scope="cell"
+						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
+					>
+						{{cell.item.group}}
+					</template>
+					<template
 						slot="substance"
 						slot-scope="cell"
 						v-if="!(tabName ==='has_produced' && cell.item.group === 'FII')"
@@ -213,7 +220,7 @@
 											:key="specialField.name"
 										>
 											<fieldGenerator
-												v-if="!['substance','decision_exempted','quantity_exempted','validation'].includes(specialField.name)"
+												v-if="!['group','substance','decision_exempted','quantity_exempted','validation'].includes(specialField.name)"
 												:key="`${row.item.index}_${specialField.name}_${tabName}`"
 												:fieldInfo="{index:row.item.index,tabName: tabName, field:specialField.name}"
 												:disabled="allowedChanges"
@@ -226,6 +233,11 @@
 												v-b-tooltip.hover="row.item.originalObj[specialField.name].tooltip ? true : false"
 												:title="row.item.originalObj[specialField.name].tooltip"
 											>{{row.item[specialField.name]}}</span>
+											<span
+												v-if="specialField.name === 'group'"
+											>
+												{{row.item.group}}
+											</span>
 
 											<span v-if="specialField.name === 'validation'" class="validation-wrapper">
 												<b-badge
@@ -300,7 +312,9 @@
 							{{cell.item.blend}}
 						</span>
 					</template>
-
+					<template slot="type" slot-scope="cell">
+							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}
+					</template>
 					<template :slot="getCountrySlot" slot-scope="cell">
 						<CloneField
 							:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"

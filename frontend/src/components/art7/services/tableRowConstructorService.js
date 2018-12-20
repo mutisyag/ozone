@@ -188,7 +188,8 @@ export default {
 				expand: false
 			},
 			group: {
-				selected: group
+				selected: group,
+				type: 'nonInput'
 			},
 			quantity_total_new: {
 				type: 'number',
@@ -277,7 +278,6 @@ export default {
 			},
 			get validation() {
 				const errors = []
-				console.log('in validation', this.quantity_total_new.selected, this.quantity_total_recovered.selected)
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
 					errors.push('Total quantity imported for all uses is required')
 				}
@@ -327,7 +327,8 @@ export default {
 					selected: ''
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				get quantity_exempted() {
 					const fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_quarantine_pre_shipment']
@@ -452,7 +453,8 @@ export default {
 					selected: null
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				remarks_party: {
 					type: 'textarea',
@@ -519,7 +521,8 @@ export default {
 					expand: false
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				trade_party: {
 					type: 'multiselect',
