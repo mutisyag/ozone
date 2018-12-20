@@ -624,17 +624,18 @@ class Command(BaseCommand):
         """Removes the submission identified by the party and period
         and any related data.
         """
-        s = Submission.objects.filter(
+        qs = Submission.objects.filter(
             party=party,
             reporting_period=period,
-        ).get()
-        logger.info("Deleting submission %s/%s", party.abbr, period.name)
-        for related_data in s.RELATED_DATA:
-            for instance in getattr(s, related_data).all():
-                logger.debug("Deleting related data: %s", instance)
-                instance.delete()
-        s.__class__.data_changes_allowed = True
-        s.delete()
+        ).all()
+        for s in qs:
+            logger.info("Deleting submission %s/%s", party.abbr, period.name)
+            for related_data in s.RELATED_DATA:
+                for instance in getattr(s, related_data).all():
+                    logger.debug("Deleting related data: %s", instance)
+                    instance.delete()
+            s.__class__.data_changes_allowed = True
+            s.delete()
 
     def load_workbook(self, filename, use_cache=False):
         """Loads the Excel file, collating the data based on the
