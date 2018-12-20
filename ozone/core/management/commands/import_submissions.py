@@ -68,7 +68,7 @@ class Command(BaseCommand):
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
 
-        self.method = Submission.SubmissionMethods.LEGACY
+        self.method = Submission.SubmissionMethods.LEGACY.value
         self.precision = 10
 
     def add_arguments(self, parser):
