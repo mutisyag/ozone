@@ -957,3 +957,7 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 body {
 	background: #eee;
 }
+
+.table th {
+	background-clip: padding-box;
+}
