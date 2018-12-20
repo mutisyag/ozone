@@ -77,7 +77,7 @@
             <template slot="header">
               <b-row>
               <b-col><b>All submissions ({{table.totalRows}} records)</b></b-col>
-              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.isCurrent">Show all versions</b-form-checkbox></b-col>
+              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.showAllVersions">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>
