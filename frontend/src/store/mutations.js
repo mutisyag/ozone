@@ -202,6 +202,13 @@ const mutations = {
 	},
 
 	// permissions
+
+	setFlagsPermissions(state, data) {
+		Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+			if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
+		})
+	},
+
 	updateDashboardPermissions(state, permission) {
 		state.permissions.dashboard = permission
 	},

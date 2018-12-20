@@ -2,7 +2,7 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
-from django.db.models import F, Q
+from django.db.models import Q
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -63,6 +63,7 @@ from ..serializers import (
     CreateBlendSerializer,
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
+    SubmissionFlagsSerializer,
 )
 
 User = get_user_model()
@@ -140,7 +141,9 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Party.objects.all().prefetch_related('subregion', 'subregion__region')
+    queryset = Party.objects.all().prefetch_related(
+        'subregion', 'subregion__region'
+    )
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
@@ -260,12 +263,15 @@ class SubmissionPaginator(PageNumberPagination):
 
 class SubmissionViewFilterSet(filters.FilterSet):
     party = filters.NumberFilter("party", help_text="Filter by party ID")
-    obligation = filters.NumberFilter("obligation", help_text="Filter by Obligation ID")
+    obligation = filters.NumberFilter(
+        "obligation", help_text="Filter by Obligation ID"
+    )
     reporting_period = filters.NumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
     is_current = filters.BooleanFilter(
-        method="filter_current", help_text="If set to true only show latest versions."
+        method="filter_current",
+        help_text="If set to true only show latest versions."
     )
     from_period = filters.DateFilter(
         "reporting_period__start_date",
@@ -301,7 +307,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         SearchFilter,
     )
     filterset_class = SubmissionViewFilterSet
-    search_fields = ("party__name", "obligation__name", "reporting_period__name")
+    search_fields = (
+        "party__name", "obligation__name", "reporting_period__name"
+    )
     ordering_fields = {
         "obligation": "obligation",
         "party": "party",
@@ -382,6 +390,31 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+
+class SubmissionFlagsViewSet(viewsets.ModelViewSet):
+    serializer_class = SubmissionFlagsSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def put(self, request, *args, **kwargs):
+        sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
+        serializer = self.get_serializer(sub, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        return Submission.objects.filter(
+            pk=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
@@ -495,10 +528,12 @@ class Article7EmissionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class AuthTokenViewSet(mixins.ListModelMixin,
-                       mixins.CreateModelMixin,
-                       mixins.DestroyModelMixin,
-                       viewsets.GenericViewSet):
+class AuthTokenViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet
+):
     lookup_field = 'key'
     lookup_url_kwarg = 'token'
     serializer_class = AuthTokenByValueSerializer
@@ -511,8 +546,10 @@ class AuthTokenViewSet(mixins.ListModelMixin,
             return Token.objects.none()
 
     def create(self, request, *args, **kwargs):
-        serializer = AuthTokenSerializer(data=request.data,
-                                         context={'request': request})
+        serializer = AuthTokenSerializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)

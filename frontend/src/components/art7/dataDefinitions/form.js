@@ -1,10 +1,11 @@
 import { intro_fields } from './questionnaire_fields'
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
+import tab_flags from '@/components/common/dataDefinitions/tab_flags'
 
 const form = {
 	formDetails: {
-		tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments'],
+		tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments', 'flags'],
 		dataNeeded: [
 			'initialData.countryOptions',
 			'initialData.substances',
@@ -820,7 +821,8 @@ const form = {
 				quantity_destroyed: null,
 				quantity_emitted: null
 			}
-		}
+		},
+		flags: tab_flags
 	}
 }
 export default form

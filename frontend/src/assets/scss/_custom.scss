@@ -957,7 +957,9 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 body {
 	background: #eee;
 }
-
+.muted {
+	color: #aaa;
+}
 .table th {
 	background-clip: padding-box;
 }
