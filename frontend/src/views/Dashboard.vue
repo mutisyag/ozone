@@ -135,7 +135,7 @@
                         @click="clone(row.item.details.url)"
 												size="sm"
 											>
-                      Clone
+                      Revise
                     </b-btn>
 
                     <b-btn
