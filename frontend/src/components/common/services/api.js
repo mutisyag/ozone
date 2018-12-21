@@ -7,11 +7,13 @@ const logRequests = process.env.NODE_ENV === 'development'
 // let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
 
 let apiURL = `${window.location.origin}/api`
+let apiBase = `${window.location.origin}`
 
 let isTestSession = false
 if (process.env.NODE_ENV === 'development') {
 	isTestSession = true
 	apiURL = 'http://localhost:8000/api'
+	apiBase = 'http://localhost:8000'
 }
 
 const api = axios.create({
@@ -136,6 +138,7 @@ const getNonParties = () => fetch('get-non-parties/')
 
 export {
 	apiURL,
+	apiBase,
 	api,
 	fetch,
 	post,
