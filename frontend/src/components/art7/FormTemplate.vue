@@ -160,9 +160,11 @@
 						slot-scope="cell"
 					>
 						<span
+							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
+							@click="createModalData(cell.item.originalObj, cell.item.index)"
 						>
 							{{cell.item[tooltipField]}}
 							<div
@@ -276,6 +278,7 @@
 						slot-scope="cell"
 					>
 						<span
+							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
@@ -400,6 +403,7 @@
 						slot-scope="cell"
 					>
 						<span
+							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"

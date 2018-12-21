@@ -17,6 +17,7 @@ const createTooltip = (fields, section) => {
 			tooltip_title += `${labels[section][field]}: ${fields[field]}\n`
 		})
 	}
+	tooltip_title += '\n Click to edit'
 	return tooltip_title
 }
 
