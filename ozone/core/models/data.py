@@ -185,8 +185,8 @@ class BaseReport(models.Model):
     )
 
     # Each entry in the Article 7 forms can have remarks
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True)
+    remarks_os = models.CharField(max_length=9999, blank=True)
 
     # This allows the interface to keep the data entries in their original
     # order, as given by the user.
@@ -336,8 +336,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
 
     has_emissions = models.BooleanField()
 
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True)
+    remarks_os = models.CharField(max_length=9999, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
