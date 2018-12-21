@@ -417,10 +417,33 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.substance.selected) {
-						errors.push('eroare1')
+					if (this.quantity_total_produced.selected === null) {
+						errors.push('Column (3) should not be empty (total production for all uses / captured for all uses for FII)')
 					}
 
+					if (this.group.selected && ['A', 'B', 'C', 'a', 'b', 'c'].includes(this.group.selected.split('')[0])) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_article_5.selected])) {
+							errors.push('For annexes A-C, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + Article 5 countries (7)')
+						}
+					}
+
+					if (this.group.selected && ['E', 'e'].includes(this.group.selected.split('')[0])) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected])) {
+							errors.push('For annex E, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + QPS')
+						}
+					}
+
+					if (this.group.selected && ['FI', 'fi'].includes(this.group.selected)) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected])) {
+							errors.push('For annex F, total production (3) should be >= feedstock (4) + exempted, critical, other (5)')
+						}
+					}
+
+					if (this.group.selected && ['FII', 'fii'].includes(this.group.selected)) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_for_destruction.selected, this.quantity_exempted.selected])) {
+							errors.push('For annex F2, total production (3) should be >= feedstock (4a) + destruction (4b) + exempted, critical, other (5)')
+						}
+					}
 					const returnObj = {
 						type: 'nonInput',
 						selected: errors
