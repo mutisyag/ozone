@@ -583,6 +583,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'sub_info_url', 'sub_info',
             'submission_flags_url',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
+            'filled_by_secretariat',
             'current_state', 'previous_state', 'available_transitions',
             'data_changes_allowed', 'is_current', 'is_cloneable',
             'changeable_flags',  'flag_provisional', 'flag_valid',
@@ -639,7 +640,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
             + CreateSubmissionSerializer.Meta.fields
             + (
                 'created_at', 'updated_at', 'submitted_at',
-                'created_by', 'last_edited_by',
+                'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
                 'available_transitions', 'data_changes_allowed', 'is_current',
                 'is_cloneable',
