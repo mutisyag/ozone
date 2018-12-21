@@ -2,7 +2,7 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
+      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton"> <i class="fa fa-info fa-lg"></i></b-btn>
       <div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
@@ -166,7 +166,9 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			const formName = this.$route.name
+			getInstructions(forName, tabName).then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
 			})
