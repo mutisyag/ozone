@@ -84,6 +84,15 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
     """Custom admin site"""
     login_form = OzoneAuthenticationForm
 
+    # Text to put at the end of each page's <title>.
+    site_title = 'ORS'
+
+    # Text to put in each page's <h1>.
+    site_header = 'Ozone Reporting System'
+
+    # Text to put at the top of the admin index page.
+    index_title = 'Administration'
+
     @never_cache
     def login(self, request, extra_context=None):
         response = super(OzoneAdminSite, self).login(request, extra_context=extra_context)
