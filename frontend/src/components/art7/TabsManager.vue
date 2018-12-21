@@ -168,8 +168,9 @@ export default {
 	methods: {
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			const formName = this.$route.name
 			if (tabName) {
-				getInstructions(tabName).then((response) => {
+				getInstructions(formName, tabName).then((response) => {
 					this.modal_data = response.data
 					this.$refs.instructions_modal.show()
 				}).catch(error => {

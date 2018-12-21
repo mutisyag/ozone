@@ -12,7 +12,11 @@ const form = {
 		]
 	},
 	tabs: {
-		sub_info: tab_sub_info,
+		sub_info: {
+			...tab_sub_info,
+			hideInfoButton: true,
+			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'
+		},
 		attachments: tab_attachments,
 		has_imports: {
 			name: 'has_imports',
@@ -24,8 +28,8 @@ const form = {
 			saving: false,
 			formNumber: 1,
 			title: 'Imports',
-			titleHtml: '<b>Consumption (imports)</b> <br><small>Annex F substances for exempted subsectors, \n in metric tonnes (not ODP or CO2-equivalent tonnes)</small>',
-			detailsHtml: '1. Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
+			titleHtml: '<b>Consumption (imports)</b> <br><small>Annex F substances for exempted subsectors, <br> in metric tonnes (not ODP or CO2-equivalent tonnes)</small>',
+			detailsHtml: 'Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
 			isInvalid: false,
 			form_fields: [],
 			special_fields_order: [],
