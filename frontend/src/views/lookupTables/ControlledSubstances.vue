@@ -15,8 +15,8 @@
                     </b-input-group>
                 </b-col>
 				<b-col>
-                    <b-input-group prepend="ODP">
-                      <b-form-input v-model="table.filters.searchODP" type="number"/>
+                    <b-input-group prepend="Formula">
+                      <b-form-input v-model="table.filters.searchFormula"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
@@ -82,7 +82,7 @@ export default {
 				filters: {
 					searchGroup: null,
 					searchName: null,
-					searchODP: null
+					searchFormula: null
 				}
 			}
 		}
@@ -90,7 +90,7 @@ export default {
 	computed: {
 		isDisabledClearFilters() {
 			const { filters } = this.table
-			return !filters.searchGroup && !filters.searchName && !filters.searchODP
+			return !filters.searchGroup && !filters.searchName && !filters.searchFormula
 		},
 		substances() {
 			let substances = []
@@ -134,9 +134,8 @@ export default {
 					return false
 				}
 			}
-			if (filters.searchODP) {
-				if (!substance.odp
-					|| (substance.odp !== parseFloat(filters.searchODP) && !`${substance.odp}`.startsWith(filters.searchODP))) {
+			if (filters.searchFormula) {
+				if (!substance.formula || !substance.formula.toLowerCase().includes(filters.searchFormula.toLowerCase())) {
 					return false
 				}
 			}
@@ -146,7 +145,7 @@ export default {
 			const { filters } = this.table
 			filters.searchGroup = null
 			filters.searchName = null
-			filters.searchODP = null
+			filters.searchFormula = null
 		}
 	},
 	created() {
