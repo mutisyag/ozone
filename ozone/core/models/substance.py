@@ -296,7 +296,7 @@ class ProcessAgentApplication(models.Model):
 
     application = models.CharField(max_length=256)
 
-    remark = models.CharField(max_length=512, blank=True)
+    remark = models.CharField(max_length=9999, blank=True)
 
 
 class UsesType(models.Model):

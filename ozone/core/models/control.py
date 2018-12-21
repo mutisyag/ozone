@@ -89,4 +89,4 @@ class ProcessAgentEmissionLimit(models.Model):
 
     max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
 
-    remark = models.CharField(max_length=512, blank=True)
+    remark = models.CharField(max_length=9999, blank=True)
