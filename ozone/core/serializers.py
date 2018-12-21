@@ -464,7 +464,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_reporting_channel(self, obj):
-        return obj.reporting_channel.name
+        return getattr(obj.reporting_channel, 'name', '')
 
 
 class SubmissionFlagsSerializer(serializers.ModelSerializer):
