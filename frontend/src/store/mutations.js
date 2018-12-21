@@ -21,7 +21,6 @@ const mutations = {
 	},
 
 	updateFormField(state, data) {
-		console.log(data.value)
 		data.fieldInfo.index === data.fieldInfo.field
 			? state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
 			: state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value

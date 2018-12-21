@@ -65,7 +65,7 @@ export default {
 
 			if (Array.isArray(tab.form_fields)) {
 				current_tab_data = []
-				tab.form_fields.forEach(form_field => {
+				this.tab_info.form_fields.forEach(form_field => {
 					const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 					for (const row in form_field) {
 						save_obj[row] = form_field[row].selected
