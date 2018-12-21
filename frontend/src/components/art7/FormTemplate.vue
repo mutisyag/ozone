@@ -534,7 +534,7 @@
             :key="order_index"
             v-show="anotherSpecialCase(order, modal_data)"
           >
-            <b-col lg="2" class="mb-2">
+            <b-col lg="3" class="mb-2">
               <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
             <b-col lg="3">
@@ -547,7 +547,7 @@
                 ></fieldGenerator>
               </b-input-group>
             </b-col>
-            <b-col lg="7">
+            <b-col lg="6">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
