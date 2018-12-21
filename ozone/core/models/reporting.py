@@ -506,7 +506,7 @@ class Submission(models.Model):
                 info=info
             )
         else:
-             raise e
+            raise e
 
         # We treat Article7Questionnaire separately because it has a one-to-one
         # relation with submission and this way we avoid nasty verifications
