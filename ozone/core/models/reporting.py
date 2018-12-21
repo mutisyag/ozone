@@ -611,10 +611,13 @@ class Submission(models.Model):
                     phone=latest_info.phone,
                     fax=latest_info.fax,
                     email=latest_info.email,
-                    date=latest_info.date
+                    date=latest_info.date,
+                    reporting_channel=ReportingChannel.objects.get(name='Web form')
                 )
             else:
-                self.info = SubmissionInfo.objects.create()
+                self.info = SubmissionInfo.objects.create(
+                    reporting_channel=ReportingChannel.objects.get(name='Web form')
+                )
 
         self.clean()
         return super().save(*args, **kwargs)
