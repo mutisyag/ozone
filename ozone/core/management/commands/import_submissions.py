@@ -472,7 +472,6 @@ class Command(BaseCommand):
         return {
             "submission": {
                 "schema_version": "legacy",
-                "filled_by_secretariat": False,
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "version": 1,
