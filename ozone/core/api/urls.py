@@ -25,6 +25,8 @@ class DefaultRouter(routers.DefaultRouter):
 
 router = DefaultRouter()
 
+router.register(r"current-user", views.CurrentUserViewSet)
+
 router.register(r"regions", views.RegionViewSet)
 router.register(r"subregions", views.SubregionViewSet)
 router.register(r"parties", views.PartyViewSet)

@@ -153,6 +153,16 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         return ret
 
 
+class CurrentUserSerializer(serializers.ModelSerializer):
+    """
+    Used to get basic info for current user
+    """
+
+    class Meta:
+        model = User
+        fields = ('username', 'is_secretariat', 'is_read_only', 'party',)
+
+
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
     """
     This will be used as a base for all reporting serializers that accept

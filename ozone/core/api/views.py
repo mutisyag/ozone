@@ -40,6 +40,7 @@ from ..models import (
 )
 from ..permissions import IsSecretariatOrSameParty
 from ..serializers import (
+    CurrentUserSerializer,
     AuthTokenByValueSerializer,
     RegionSerializer,
     SubregionSerializer,
@@ -128,6 +129,15 @@ class IsOwnerFilterBackend(BaseFilterBackend):
                 return queryset.filter(submission__party=request.user.party)
             else:
                 return queryset
+
+
+class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = CurrentUserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(id=self.request.user.pk)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
