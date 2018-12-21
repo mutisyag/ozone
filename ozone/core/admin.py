@@ -1,5 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth import logout as auth_logout
+from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.views.decorators.cache import never_cache
+from rest_framework.authtoken.models import Token
 
 from import_export.admin import (
     ImportExportActionModelAdmin,
@@ -44,6 +50,40 @@ from .resources import (
 )
 
 User = get_user_model()
+
+
+class Singleton(type):
+    def __init__(cls, name, bases, attrs, **kwargs):
+        super().__init__(name, bases, attrs)
+        cls._instance = None
+
+    def __call__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__call__(*args, **kwargs)
+        return cls._instance
+
+
+# For some reason this is instantiated twice, somewhere (!?)
+# Make it singleton.
+
+class OzoneAdminSite(AdminSite, metaclass=Singleton):
+    @never_cache
+    def login(self, request, extra_context=None):
+        response = super(OzoneAdminSite, self).login(request, extra_context=extra_context)
+        if request.user.is_authenticated:
+            # Set authToken cookie, this is also used by the FrontEnd app
+            token, created = Token.objects.get_or_create(user=request.user)
+            if request.GET.get('next'):
+                response = redirect(request.GET.get('next'))
+            response.set_cookie("authToken", token.key)
+        return response
+
+    @never_cache
+    def logout(self, request, extra_context=None):
+        auth_logout(request)
+        response = redirect(reverse("admin:login"))
+        response.delete_cookie("authToken")
+        return response
 
 
 # Meeting-related models

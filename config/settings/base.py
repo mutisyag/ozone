@@ -88,7 +88,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'django.contrib.humanize', # Handy template tags
-    'django.contrib.admin',
+    # 'django.contrib.admin', # Replaced by OzoneAdminConfig
 ]
 THIRD_PARTY_APPS = [
     'crispy_forms',
@@ -104,6 +104,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     # Your stuff: custom apps go here
     'ozone.core.apps.CoreConfig',
+    'ozone.core.apps.OzoneAdminConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
