@@ -166,6 +166,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'core.middleware.TokenAdminAuthMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -246,7 +247,8 @@ TEMPLATES = [
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.TokenAuthentication',
+        # 'rest_framework.authentication.TokenAuthentication',
+        'core.auth.CookieTokenAuthentication'
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PERMISSION_CLASSES': (

@@ -1,6 +1,7 @@
 import traceback
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.http import JsonResponse
+from rest_framework.authtoken.models import Token
 
 
 class ExceptionMiddleware(object):
@@ -33,3 +34,22 @@ class ExceptionMiddleware(object):
 
         traceback.print_exc()
         return JsonResponse(exception_dict, status=status)
+
+
+class TokenAdminAuthMiddleware(object):
+    """Authenticated the user automatically if the authToken cookies is set."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        # See django.contrib.auth.middleware.AuthenticationMiddleware
+        if not hasattr(request, '_cached_user'):
+            try:
+                token = Token.objects.select_related('user').get(key=request.COOKIES['authToken'])
+                if token.user.is_active:
+                    request._cached_user = token.user
+            except (Token.DoesNotExist, KeyError):
+                pass
+        response = self.get_response(request)
+        return response
