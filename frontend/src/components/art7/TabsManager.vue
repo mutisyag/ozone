@@ -153,7 +153,7 @@ export default {
 			const { form } = this.$store.state
 			const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
 			const body = document.querySelector('body')
-			if (tab.hasAssideMenu && !this.$store.getters.allowedChanges && this.selectedDisplayTabs[tab.name] ) {
+			if (tab.hasAssideMenu && !this.$store.getters.allowedChanges && this.selectedDisplayTabs[tab.name]) {
 				body.classList.add('aside-menu-lg-show')
 			} else {
 				body.classList.remove('aside-menu-lg-show')

@@ -77,7 +77,7 @@
 						slot-scope="cell"
 					>
 						<span class="validation-wrapper">
-							<b-badge 
+							<b-badge
 								pill
 								style="cursor:pointer"
 								variant="danger"
