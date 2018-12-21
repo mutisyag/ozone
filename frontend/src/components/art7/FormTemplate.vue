@@ -165,8 +165,10 @@
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
+							v-if="cell.item[tooltipField]"
 						>
 							{{cell.item[tooltipField]}}
+							<i class="fa fa-info-circle fa-lg"></i>
 							<div
 								style="margin-left: -4rem; margin-top: 2rem"
 								class="special-field"
@@ -282,8 +284,11 @@
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
+							@click="createModalData(cell.item.originalObj, cell.item.index)"
+							v-if="cell.item[tooltipField]"
 						>
 							{{cell.item[tooltipField]}}
+							<i class="fa fa-info-circle fa-lg"></i>
 							<div
 								style="margin-left: -4rem; margin-top: 2rem"
 								class="special-field"
@@ -407,7 +412,11 @@
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
-						>{{cell.item[tooltipField]}}</span>
+							@click="createModalData(cell.item.originalObj, cell.item.index)"
+							v-if="cell.item[tooltipField]"
+						>{{cell.item[tooltipField]}}
+							<i class="fa fa-info-circle fa-lg"></i>
+						</span>
 					</template>
 
 					<template slot="row-details" slot-scope="row">
