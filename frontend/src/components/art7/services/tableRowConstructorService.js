@@ -490,8 +490,8 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.substance.selected) {
-						errors.push('eroare1')
+					if (valueConverter(this.quantity_destroyed.selected) === 0) {
+						errors.push('Please complete the "Quantity destroyed (3)" field')
 					}
 
 					const returnObj = {
@@ -554,8 +554,8 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.quantity_export_new.selected) {
-						errors.push('eroare1')
+					if (doSum([this.quantity_import_new.selected, this.quantity_import_recovered.selected, this.quantity_export_new.selected, this.quantity_export_recovered.selected]) <= 0) {
+						errors.push('At least one field from (4), (5), (6), (7) is required')
 					}
 
 					const returnObj = {
