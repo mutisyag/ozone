@@ -383,7 +383,6 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
         reporting_channel_name = request.data.get('reporting_channel')
-        import pdb; pdb.set_trace()
         if reporting_channel_name:
             reporting_channel_id = ReportingChannel.objects.get(
                 name=reporting_channel_name
