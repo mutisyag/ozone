@@ -3,6 +3,7 @@ import enum
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
@@ -131,6 +132,9 @@ class Submission(models.Model):
     # make minor modifications on Party's submissions.
     filled_by_secretariat = models.BooleanField(default=False)
 
+    # Is set only at *the first* transition to Submitted
+    submitted_at = models.DateTimeField(null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
@@ -210,8 +214,8 @@ class Submission(models.Model):
     )
 
     # We want these to be able to be empty in forms
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_secretariat = models.CharField(max_length=512, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True)
+    remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
@@ -628,4 +632,8 @@ class Submission(models.Model):
             version.flag_superseded = True
             version.save()
         self.flag_superseded = False
+        self.save()
+
+    def set_submitted(self):
+        self.submitted_at = timezone.now()
         self.save()

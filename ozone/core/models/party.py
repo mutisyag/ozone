@@ -105,7 +105,7 @@ class Party(models.Model):
         on_delete=models.SET_NULL
     )
 
-    remark = models.CharField(max_length=512, blank=True)
+    remark = models.CharField(max_length=9999, blank=True)
 
     @classmethod
     def get_main_parties(cls):

@@ -89,6 +89,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
+								v-if="!allowedChanges"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -180,6 +181,7 @@
 									@click="createModalData(row.item.originalObj, row.item.index)"
 								>Edit</b-btn>
 								<b-btn
+									v-if="!allowedChanges"
 									variant="outline-danger"
 									@click="remove_field(row.item.index, row.item)"
 									class="table-btn"
@@ -298,6 +300,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
+								v-if="allowedChanges"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -403,7 +406,7 @@
 				class="comments-input"
 			>
 				<label>{{labels[comment.name]}}</label>
-				<textarea class="form-control" v-model="comment.selected"></textarea>
+				<textarea :disabled="$store.getters.allowedChanges" class="form-control" v-model="comment.selected"></textarea>
 			</div>
 		</div>
 
@@ -435,6 +438,7 @@
               class="mb-2"
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
+							:disabled="allowedChanges"
               label="text"
               placeholder="Select substance"
               :value="modal_data.field.substance.selected"
@@ -457,6 +461,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
+								:disabled="allowedChanges"
                 trackBy="value"
                 label="text"
                 placeholder="Countries"
@@ -508,7 +513,10 @@
             {{labels[comment_field]}}
           </b-col>
           <b-col lg="9">
-            <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
+            <textarea
+								:disabled="allowedChanges"
+								class="form-control" v-model="modal_data.field[comment_field].selected">
+						</textarea>
           </b-col>
         </b-row>
       </div>
@@ -541,6 +549,11 @@ export default {
 			}
 		}
 	},
+
+	props: {
+		hasDisabledFields: Boolean
+	},
+
 	created() {
 		this.labels = labels[this.tab_info.name]
 	},
@@ -582,6 +595,10 @@ export default {
 				['source_party', 'trade_party', 'destination_party'],
 				this.tab_info.fields_order
 			)[0]
+		},
+
+		allowedChanges() {
+			return this.$store.getters.allowedChanges || this.hasDisabledFields
 		},
 
 		hasSubstances() {

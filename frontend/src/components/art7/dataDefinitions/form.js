@@ -536,6 +536,9 @@ const form = {
 			},
 			{
 				label: ''
+			},
+			{
+				label: ''
 			}
 			],
 			default_properties: {
@@ -544,7 +547,18 @@ const form = {
 				quantity_destroyed: null,
 				substance: null,
 				blend: null
+			},
+			comments: [{
+				name: 'comments_party',
+				selected: '',
+				type: 'textarea'
+			},
+			{
+				name: 'comments_secretariat',
+				selected: '',
+				type: 'textarea'
 			}
+			]
 		},
 		has_nonparty: {
 			name: 'has_nonparty',

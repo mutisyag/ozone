@@ -148,7 +148,7 @@ export default {
 					}
 
 					if (valueConverter(this.quantity_generated.selected) < doSum([this.quantity_captured_all_uses.selected, this.quantity_captured_feedstock.selected, this.quantity_captured_for_destruction.selected, this.quantity_feedstock.selected, this.quantity_destroyed.selected])) {
-						errors.push('Total amount generated must be higher than the sum of "Ammount generated and captured", "Amount used for feedstock without prior capture", "Amount destroyed without prior capture"')
+						errors.push('Total amount generated must be higher than the sum of "Amount generated and captured", "Amount used for feedstock without prior capture", "Amount destroyed without prior capture"')
 					}
 
 					const returnObj = {

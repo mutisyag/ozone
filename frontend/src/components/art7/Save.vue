@@ -4,6 +4,21 @@ import SaveMixin from '@/components/common/mixins/SaveMixin'
 export default {
 	mixins: [SaveMixin],
 	methods: {
+		alertUnsavedData(tabName, tab, url) {
+			const answer = window.confirm(`You have unsaved data in ${tabName} that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?`)
+			if (answer) {
+				this.$store.dispatch('removeDataFromTab', tabName).then(() => {
+					this.submitData(tab, url)
+				})
+				return true
+			}
+			this.$store.dispatch('setAlert', {
+				message: { __all__: [`Data in ${tabName} was not saved`] },
+				variant: 'danger' })
+			this.$store.commit('setTabStatus', { tab: tabName, value: false })
+			return false
+		},
+
 		prepareDataForSave() {
 			const justSave = []
 			const removeDataAndSave = []
@@ -31,12 +46,12 @@ export default {
 				Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
 					const url = this.$store.state.current_submission[tab.endpoint_url]
 					if (!doNotSave.includes(tab.name)) {
-						if (justSave.includes(tab.name)) {
+						if (removeDataAndSave.includes(tab.name)) {
+							if (!this.alertUnsavedData(tab.name, tab, url)) {
+								return false
+							}
+						} else if (justSave.includes(tab.name)) {
 							this.submitData(tab, url)
-						} else if (removeDataAndSave.includes(tab.name)) {
-							this.$store.dispatch('removeDataFromTab', tab.name).then(() => {
-								this.submitData(tab, url)
-							})
 						} else {
 							url && this.submitData(tab, url)
 						}
