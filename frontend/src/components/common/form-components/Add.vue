@@ -72,8 +72,13 @@ export default {
 
 		prepareSubstances() {
 			this.selected_substance.options = []
+			this.selected_substance.selected = []
 			this.substances.forEach(substance => {
-				if (this.selected_groups.selected.includes(substance.group.group_id)) {
+				if (this.selected_groups.selected.length) {
+					if (this.selected_groups.selected.includes(substance.group.group_id)) {
+						this.selected_substance.options.push({ text: substance.text, value: substance.value })
+					}
+				} else {
 					this.selected_substance.options.push({ text: substance.text, value: substance.value })
 				}
 			})
@@ -123,13 +128,15 @@ export default {
 		},
 
 		resetData() {
-			this.selected_substance.selected = null
+			this.selected_substance.selected = []
+			this.selected_substance.options = []
 			this.selected_groups.selected = []
 			this.group_field = {
 				label: '',
 				name: '',
 				substance: null
 			}
+			this.prepareSubstances()
 		},
 
 		removeSpecialChars(str) {
