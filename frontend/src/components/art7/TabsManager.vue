@@ -93,9 +93,9 @@
 
     <b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
-				<div slot="modal-footer">
+		<div slot="modal-footer">
           <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
-				</div>
+		</div>
     </b-modal>
   </div>
 </template>
