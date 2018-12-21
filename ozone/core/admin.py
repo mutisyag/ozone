@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import AdminSite
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
@@ -63,10 +65,25 @@ class Singleton(type):
         return cls._instance
 
 
+class OzoneAuthenticationForm(AuthenticationForm):
+    """Custom auth form, that allows non-staff users as well."""
+    error_messages = {
+        **AuthenticationForm.error_messages,
+        'invalid_login': (
+            "Please enter the correct %(username)s and password for the "
+            "account. Note that both fields may be case-sensitive."
+        ),
+    }
+    required_css_class = 'required'
+
+
 # For some reason this is instantiated twice, somewhere (!?)
 # Make it singleton.
 
 class OzoneAdminSite(AdminSite, metaclass=Singleton):
+    """Custom admin site"""
+    login_form = OzoneAuthenticationForm
+
     @never_cache
     def login(self, request, extra_context=None):
         response = super(OzoneAdminSite, self).login(request, extra_context=extra_context)
@@ -84,6 +101,21 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
         response = redirect(reverse("admin:login"))
         response.delete_cookie("authToken")
         return response
+
+    @never_cache
+    def index(self, request, extra_context=None):
+        """Override to prevent infinite redirects."""
+        response = super(OzoneAdminSite, self).index(request, extra_context=extra_context)
+        if request.user.is_active and not request.user.is_staff:
+            # This doesn't work on development.
+            return redirect("/")
+        return response
+
+    def has_permission(self, request):
+        """Override, and remove the is_staff condition. Each resource is
+        protected individually, except for the index page.
+        """
+        return request.user.is_active
 
 
 # Meeting-related models
