@@ -31,6 +31,11 @@
 						</b-input-group-append>
 					</b-input-group>
                 </b-col>
+				<b-col>
+                    <b-input-group-append>
+                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">Clear</b-btn>
+                    </b-input-group-append>
+                </b-col>
 			</b-row>
 		</template>
 		<b-table 	show-empty
@@ -130,6 +135,10 @@ export default {
 		}
 	},
 	computed: {
+		isDisabledClearFilters() {
+			const { filters } = this.table
+			return !filters.searchName && !filters.selectedComponentsNames
+		},
 		searchComponentOptions() {
 			const componentsAll = {}
 			const { blends } = this.$store.state.initialData
@@ -194,6 +203,11 @@ export default {
 		},
 		toggleIsComponentsSortDirectionDesc() {
 			this.table.filters.isComponentsSortDirectionDesc = !this.table.filters.isComponentsSortDirectionDesc
+		},
+		clearFilters() {
+			const { filters } = this.table
+			filters.searchName = null
+			filters.selectedComponentsNames = []
 		}
 	},
 	created() {
