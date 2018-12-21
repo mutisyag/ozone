@@ -449,10 +449,22 @@ class Article7EmissionSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class SubmissionInfoSerializer(serializers.ModelSerializer):
+class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = SubmissionInfo
         fields = '__all__'
+
+
+class SubmissionInfoSerializer(serializers.ModelSerializer):
+    reporting_channel = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SubmissionInfo
+        fields = '__all__'
+
+    def get_reporting_channel(self, obj):
+        return obj.reporting_channel.name
 
 
 class SubmissionFlagsSerializer(serializers.ModelSerializer):
