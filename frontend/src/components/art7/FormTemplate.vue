@@ -41,6 +41,26 @@
         </thead>
       </table>
 
+		<table v-if="tabName === 'has_produced'" ref="tableHeaderFII" class="table submission-table header-only">
+        <thead>
+          <tr class="first-header">
+            <th
+              v-for="(header, header_index) in tab_info.special_headers.section_headers"
+              :colspan="header.colspan"
+              :key="header_index"
+            >
+              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+                <span v-html="header.label"></span>
+                <i class="fa fa-info-circle fa-lg"></i>
+              </div>
+              <div v-else>
+                <span v-html="header.label"></span>
+              </div>
+            </th>
+          </tr>
+        </thead>
+      </table>
+
 			<div class="table-wrapper">
 
 				<div class="table-title">
@@ -171,7 +191,7 @@
 				class="table-wrapper">
 
 				<div class="table-title">
-					<h4> {{tab_info.formNumber}}.1.1 Substances Group FII</h4>
+					<h4> {{tab_info.formNumber}}.1.1 Substances - group FII</h4>
 					<div v-show="tableFII.tableFilters" class="table-filters">
 						<b-input-group prepend="Search">
 								<b-form-input v-model="tableFII.filters.search"/>
@@ -185,7 +205,7 @@
 					show-empty
 					outlined
 					bordered
-					@input="tableLoaded"
+					@input="tableLoadedFII"
 					@row-hovered="rowHovered"
 					hover
 					head-variant="light"
@@ -607,6 +627,31 @@ export default {
 					return true
 				}
 			}
+		},
+
+		tableLoadedFII() {
+			if (!this.$refs.tableFII) {
+				return
+			}
+
+			const headers = this.$refs.tableFII.$el.querySelectorAll('thead tr')
+			if (headers.length > 1) {
+				return // nothing to do, header row already created
+			}
+
+			this.$refs.tableFII.$el
+				.querySelector('tbody')
+				.addEventListener('mouseleave', () => {
+					this.hovered = false
+				})
+
+			if (!this.$refs.tableHeaderFII) {
+				return
+			}
+			const topHeader = this.$refs.tableHeaderFII.querySelector('tr')
+			headers[0].parentNode.insertBefore(
+				topHeader, headers[0]
+			)
 		},
 
 		doCommentsRow(row) {

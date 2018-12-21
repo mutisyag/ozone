@@ -310,7 +310,7 @@ const form = {
 			description: 'Annexes A, B, C and E substances',
 			form_fields: [],
 			fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
-			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
+			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'validation'],
 			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
@@ -385,19 +385,18 @@ const form = {
 						label: ''
 					},
 					{
-						label: ''
+						label: '',
+						tooltip: 'HFC-23 generation that is captured, whether for destruction, feedstock or any other use, shall be reported in this form.'
 					},
 					{
-						label: 'Production for feedstock uses within your country',
+						label: '',
+						tooltip: 'Amounts of HFC-23 captured for destruction or feedstock use will not be counted as production as per Article 1.',
 						colspan: 2
 					},
 					{
 						label: 'Production for exempted essential, critical or other uses within your country',
 						colspan: 2,
 						tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
-					},
-					{
-						label: ''
 					},
 					{
 						label: ''
@@ -432,10 +431,6 @@ const form = {
 					{
 						label: '(6) <br> Decision / type of use',
 						name: 'decision_exempted'
-					},
-					{
-						label: '(7) <br> Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5',
-						name: 'quantity_article_5'
 					},
 					{
 						label: '(8) <br> Status',
