@@ -136,9 +136,6 @@ class Submission(models.Model):
     party = models.ForeignKey(
         Party, related_name='submissions', on_delete=models.PROTECT
     )
-    # data might be received through physical mail; also, OS might decide to
-    # make minor modifications on Party's submissions.
-    filled_by_secretariat = models.BooleanField(default=False)
 
     # Is set only at *the first* transition to Submitted
     submitted_at = models.DateTimeField(null=True)
@@ -224,6 +221,10 @@ class Submission(models.Model):
     tracker = FieldTracker()
 
     history = HistoricalRecords()
+
+    @property
+    def filled_by_secretariat(self):
+        return self.created_by.is_secretariat
 
     @property
     def workflow_class(self):
@@ -505,7 +506,7 @@ class Submission(models.Model):
                 info=info
             )
         else:
-             raise e
+            raise e
 
         # We treat Article7Questionnaire separately because it has a one-to-one
         # relation with submission and this way we avoid nasty verifications
