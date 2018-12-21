@@ -411,7 +411,7 @@ const form = {
 					},
 					{
 						label: '(2) <br> Substance',
-						name: 'substances'
+						name: 'substance'
 					},
 					{
 						label: '(3) <br> Captured for all uses',
