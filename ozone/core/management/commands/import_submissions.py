@@ -574,13 +574,16 @@ class Command(BaseCommand):
                             party.abbr, period.name)
                 return False
 
-        submission = Submission.objects.create(**values["submission"])
+        info = SubmissionInfo.objects.create(**values["submission_info"])
+        submission = Submission.objects.create(
+            info=info,
+            **values["submission"]
+        )
 
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
         # we prefer preserving the legacy data as pristine as possible.
         for key, klass in (
-            ("submission_info", SubmissionInfo),
             ("art7", Article7Questionnaire),
             ("imports", Article7Import),
             ("exports", Article7Export),
