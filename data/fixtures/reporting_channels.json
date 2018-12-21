@@ -1,0 +1,42 @@
+[
+  {
+    "fields": {
+      "name": "Web form",
+      "description": ""
+    },
+    "model": "core.reportingchannel",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "name": "Email",
+      "description": ""
+    },
+    "model": "core.reportingchannel",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "name": "Legacy",
+      "description": ""
+    },
+    "model": "core.reportingchannel",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "name": "Paper",
+      "description": ""
+    },
+    "model": "core.reportingchannel",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "name": "API",
+      "description": ""
+    },
+    "model": "core.reportingchannel",
+    "pk": 5
+  }
+]
