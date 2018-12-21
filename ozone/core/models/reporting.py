@@ -25,6 +25,7 @@ __all__ = [
     'Obligation',
     'Submission',
     'SubmissionInfo',
+    'ReportingChannel',
 ]
 
 
@@ -52,6 +53,15 @@ class Obligation(models.Model):
         return self.name
 
 
+class ReportingChannel(models.Model):
+    """
+    Model for storing submission types.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+
 class SubmissionInfo(models.Model):
     """
     Model for storing submission info.
@@ -66,6 +76,13 @@ class SubmissionInfo(models.Model):
     fax = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="info",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return f'{self.submission} - Info'
@@ -75,15 +92,6 @@ class Submission(models.Model):
     """
     One specific data submission (version!)
     """
-
-    @enum.unique
-    class SubmissionMethods(enum.Enum):
-        """
-        Enumeration of submission types
-        """
-        WEBFORM = 'Web form'
-        EMAIL = 'Email'
-        LEGACY = 'Legacy'
 
     # This keeps a mapping between the DB-persisted workflow and
     # its actual implementation class.
@@ -207,11 +215,6 @@ class Submission(models.Model):
     flag_has_reported_e = models.BooleanField(default=True)
     # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(default=False)
-
-    submitted_via = models.CharField(
-        max_length=32,
-        choices=((s.value, s.name) for s in SubmissionMethods)
-    )
 
     # We want these to be able to be empty in forms
     remarks_party = models.CharField(max_length=9999, blank=True)
