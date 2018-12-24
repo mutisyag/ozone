@@ -31,9 +31,22 @@ const intersect = (a, b) => {
 	return Array.from(intersection)
 }
 
+const getPropertyValue = (obj, propertyPath) => {
+	if (!obj || !propertyPath) {
+		return undefined
+	}
+	if (!isObject(obj)) {
+		return undefined
+	}
+	const propNames = propertyPath.split('.')
+	const propValue = propNames.reduce((prop, propName) => prop[propName], obj)
+	return propValue
+}
+
 export {
 	getLevel2PropertyValue,
 	isObject,
 	pushUnique,
-	intersect
+	intersect,
+	getPropertyValue
 }

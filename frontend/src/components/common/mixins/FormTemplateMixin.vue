@@ -69,20 +69,20 @@ export default {
 
 		tableItems() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element) => {
+			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
-				Object.keys(element).forEach(key => {
-					if (element.substance.selected) {
+				Object.keys(form_field).forEach(key => {
+					if (form_field.substance.selected) {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
-							][element[key].selected]
-							: (tableRow[key] = element[key].selected)
+							][form_field[key].selected]
+							: (tableRow[key] = form_field[key].selected)
 					}
 				})
 				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = element
-					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableRow.originalObj = form_field
+					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
 					tableRow._showDetails = true
 					tableFields.push(tableRow)
 				}
@@ -92,29 +92,29 @@ export default {
 
 		tableItemsBlends() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element) => {
+			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
-				Object.keys(element).forEach(key => {
-					if (element.blend.selected) {
+				Object.keys(form_field).forEach(key => {
+					if (form_field.blend.selected) {
 						if (this.typeOfDisplayObj[key]) {
 							if (this.typeOfDisplayObj[key] === 'blends') {
 								tableRow[key] = this.tab_data.display[
 									this.typeOfDisplayObj[key]
-								][element[key].selected].name
+								][form_field[key].selected].name
 							} else {
 								tableRow[key] = this.tab_data.display[
 									this.typeOfDisplayObj[key]
-								][element[key].selected]
+								][form_field[key].selected]
 							}
 						} else {
-							tableRow[key] = element[key].selected
+							tableRow[key] = form_field[key].selected
 						}
 					}
 				})
 				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = element
+					tableRow.originalObj = form_field
 					tableRow._showDetails = false
-					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
 					tableFields.push(tableRow)
 				}
 			})
@@ -124,10 +124,10 @@ export default {
 		tableFields() {
 			const tableHeaders = []
 			const options = {}
-			this.tab_info.section_subheaders.forEach((element) => {
+			this.tab_info.section_subheaders.forEach((form_field) => {
 				tableHeaders.push({
-					key: element.name,
-					label: element.label,
+					key: form_field.name,
+					label: form_field.label,
 					...options
 				})
 			})
@@ -137,10 +137,10 @@ export default {
 		tableFieldsBlends() {
 			const tableHeaders = []
 			const options = {}
-			this.tab_info.section_subheaders.forEach((element) => {
-				if (element.name === 'substance') {
+			this.tab_info.section_subheaders.forEach((form_field) => {
+				if (form_field.name === 'substance') {
 					tableHeaders.push({ key: 'blend', label: '(2) <br> Blend', ...options })
-				} else if (element.name === 'group') {
+				} else if (form_field.name === 'group') {
 					tableHeaders.push({
 						key: 'type',
 						label: '(1) <br> Type',
@@ -148,8 +148,8 @@ export default {
 					})
 				} else {
 					tableHeaders.push({
-						key: element.name,
-						label: element.label,
+						key: form_field.name,
+						label: form_field.label,
 						...options
 					})
 				}

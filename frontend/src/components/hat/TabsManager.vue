@@ -31,9 +31,12 @@
     </b-button-group>
   </div>
 
-  <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
-    <div v-if="modal_data" v-html="modal_data"></div>
-  </b-modal>
+    <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
+		<div v-if="modal_data" v-html="modal_data"></div>
+		<div slot="modal-footer">
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+		</div>
+	</b-modal>
 
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
@@ -107,9 +110,12 @@
       </b-button-group>
     </Footer>
 
-    <b-modal size="lg" ref="history_modal" id="history_modal">
+	<b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
-    </b-modal>
+		<div slot="modal-footer">
+          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+		</div>
+	</b-modal>
   </div>
 </template>
 

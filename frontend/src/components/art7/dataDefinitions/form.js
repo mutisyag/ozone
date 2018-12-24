@@ -1,4 +1,4 @@
-import { intro_fields } from './questionnaire_fields'
+import { questionnaire_fields } from './questionnaire_fields'
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
 import tab_flags from '@/components/common/dataDefinitions/tab_flags'
@@ -33,7 +33,7 @@ const form = {
 			status: null,
 			isInvalid: false,
 			description: '',
-			form_fields: intro_fields,
+			form_fields: questionnaire_fields,
 			default_properties: {
 				has_imports: false,
 				has_exports: false,

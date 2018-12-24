@@ -8,7 +8,8 @@ const form = {
 		dataNeeded: [
 			'initialData.countryOptions',
 			'initialData.substances',
-			'initialData.blends'
+			'initialData.blends',
+			'initialData.display.countries'
 		]
 	},
 	tabs: {
