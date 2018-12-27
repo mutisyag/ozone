@@ -65,24 +65,6 @@
             <attachments :tab="$store.state.form.tabs.attachments"></attachments>
           </b-tab>
         </b-tabs>
-
-        <div class="legend">
-            <b>Legend:</b>
-            <div>
-              <div class="spinner">
-                <div class="loader"></div>
-              </div> - Form is curently being saved
-            </div>
-            <div>
-              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
-            </div>
-            <div>
-              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server
-            </div>
-            <div>
-              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
-            </div>
-        </div>
     </b-card>
     </div>
     <Footer>
