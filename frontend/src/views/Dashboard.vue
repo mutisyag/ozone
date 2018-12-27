@@ -351,7 +351,6 @@ export default {
 				currentPage: this.$store.state.dashboard.table.currentPage,
 				perPage: this.$store.state.dashboard.table.perPage
 			}
-			console.log('tttt',tableOptions)
 			return tableOptions
 		}
 	},
@@ -397,6 +396,7 @@ export default {
 	},
 
 	watch: {
+		// TODO: the watchers trigger each other in the case when user is on page > 1 and selects a filter, causing 2 requests instead of 1
 		'tableOptions.filters': {
 			handler() {
 				if (this.tableOptions.currentPage !== 1) {
