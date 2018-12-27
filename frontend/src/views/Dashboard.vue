@@ -109,7 +109,6 @@
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
-                       :current-page="tableOptions.currentPage"
                        :per-page="tableOptions.perPage"
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
@@ -240,7 +239,25 @@ export default {
 	computed: {
 
 		...mapGetters(['getSubmissionInfo']),
-
+		tableItems() {
+			console.log('computing', this.submissions)
+			const tableFields = []
+			if (this.submissions && this.submissions.length) {
+				this.submissions.forEach((element) => {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						party: this.getSubmissionInfo(element).party(),
+						current_state: element.current_state,
+						version: element.version,
+						updated_at: element.updated_at,
+						details: element
+					})
+				})
+			}
+			console.log('computing', tableFields)
+			return tableFields
+		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
@@ -315,24 +332,6 @@ export default {
 	},
 
 	methods: {
-		tableItems() {
-			return this.$store.dispatch('getCurrentSubmissions').then(() => {
-				const tableFields = []
-				this.submissions.forEach((element) => {
-					tableFields.push({
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						party: this.getSubmissionInfo(element).party(),
-						current_state: element.current_state,
-						version: element.version,
-						updated_at: element.updated_at,
-						details: element
-					})
-				})
-				return tableFields
-			})
-		},
-
 		addSubmission() {
 			this.$store.dispatch('addSubmission', this.current).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
@@ -377,6 +376,12 @@ export default {
 			handler() {
 				this.tableOptions.currentPage = 1
 				this.$refs.table.refresh()
+			},
+			deep: true
+		},
+		tableOptions: {
+			handler() {
+				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
 		}
