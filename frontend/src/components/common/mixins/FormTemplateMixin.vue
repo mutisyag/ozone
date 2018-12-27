@@ -58,7 +58,10 @@ export default {
 	},
 
 	computed: {
-
+		user() {
+			// TODO: for readonly users: emptyText: 'There are no records to show'
+			return null
+		},
 		getTabInputFields() {
 			return intersect(inputFields, this.tab_info.fields_order)
 		},

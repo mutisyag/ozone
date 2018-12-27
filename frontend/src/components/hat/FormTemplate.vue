@@ -71,11 +71,12 @@
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
 					:sort-direction="table.sortDirection"
+					:empty-text="table.emptyText"
 					:filter="table.filters.search"
 					ref="table"
 				>
 					<template
-						slot="substance"
+						slot="group"
 						slot-scope="cell"
 					>
 						<div class="table-btn-group">
@@ -89,7 +90,7 @@
 								class="table-btn"
 							>Delete</b-btn>
 						</div>
-						{{cell.item.substance}}
+						{{cell.item.group}}
 					</template>
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<fieldGenerator
@@ -147,10 +148,11 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
+					:empty-text="table.emptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends"
 				>
-					<template slot="blend" slot-scope="cell">
+					<template slot="type" slot-scope="cell">
 						<div class="table-btn-group">
 							<b-btn
 								variant="info"
@@ -162,6 +164,10 @@
 								class="table-btn"
 							>Delete</b-btn>
 						</div>
+						<span>{{cell.item.type}}</span>
+					</template>
+
+					<template slot="blend" slot-scope="cell">
 						<span
 							style="cursor:pointer;"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
