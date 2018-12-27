@@ -540,10 +540,10 @@
             <b-col lg="3">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
-									style="max-width: 50%"
-                  :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-                  :disabled="allowedChanges"
-                  :field="modal_data.field[`quantity_${order}`]"
+					style="max-width: 50%"
+					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
+					:disabled="allowedChanges"
+					:field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
             </b-col>
