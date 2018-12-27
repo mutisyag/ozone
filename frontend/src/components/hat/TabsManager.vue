@@ -13,13 +13,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
     <b-button-group class="actions">
-      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			v-if="$store.state.available_transitions.includes('submit')"
-			@click="checkBeforeSubmitting"
-			variant="outline-success">
-			Submit
-		</b-btn>
+		<Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
 		<b-btn
 			variant="outline-primary"
 			v-for="transition in availableTransitions"
@@ -27,7 +21,6 @@
 			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
 			{{labels[transition]}}
 		</b-btn>
-
     </b-button-group>
   </div>
 
@@ -67,29 +60,32 @@
         </b-tabs>
     </b-card>
     </div>
-    <Footer>
-      <b-button-group class="actions mt-2 mb-2">
-        <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn
-          v-if="$store.state.available_transitions.includes('submit')"
-          @click="checkBeforeSubmitting"
-          variant="outline-success">
-            Submit
-        </b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
-		</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          Versions
-        </b-btn>
-        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-          Delete Submission
-        </b-btn>
-      </b-button-group>
+    <Footer style="display:inline">
+		<b-button-group class="actions mt-2 mb-2">
+			<Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+		</b-button-group>
+
+		<b-button-group class="pull-right actions mt-2 mb-2">
+			<b-btn
+				v-if="$store.state.available_transitions.includes('submit')"
+				@click="checkBeforeSubmitting"
+				variant="outline-success">
+				Submit
+			</b-btn>
+			<b-btn
+				variant="outline-primary"
+				v-for="transition in availableTransitions"
+				:key="transition"
+				@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+				{{labels[transition]}}
+			</b-btn>
+			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
+				Versions
+			</b-btn>
+			<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
+				Delete Submission
+			</b-btn>
+		</b-button-group>
     </Footer>
 
 	<b-modal size="lg" ref="history_modal" id="history_modal">
