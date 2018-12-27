@@ -136,22 +136,8 @@
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell"
-					>
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 
 					<template
@@ -256,22 +242,8 @@
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell"
-					>
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 
 					<template
@@ -388,18 +360,7 @@
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 
 					<template
@@ -586,12 +547,14 @@ import labels from '@/components/art7/dataDefinitions/labels'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { intersect } from '@/components/common/services/utilsService'
 import CloneField from '@/components/common/form-components/CloneField.vue'
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 
 export default {
 	mixins: [FormTemplateMxin],
 	components: {
-		CloneField
+		CloneField,
+		ValidationLabel
 	},
 	data() {
 		return {

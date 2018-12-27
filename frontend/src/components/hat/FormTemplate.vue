@@ -100,21 +100,8 @@
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
-					<template
-						slot="validation"
-						slot-scope="cell">
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 				</b-table>
 			</div>
@@ -187,21 +174,8 @@
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell">
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 
 					<template slot="row-details" slot-scope="row">
@@ -325,12 +299,14 @@
 </template>
 
 <script>
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import labels from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
 	components: {
+		ValidationLabel
 	},
 	data() {
 		return {

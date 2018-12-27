@@ -72,24 +72,9 @@
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell"
-					>
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
-
 				</b-table>
 			</div>
 
@@ -116,6 +101,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
@@ -131,7 +117,8 @@ export default {
 	components: {
 		fieldGenerator,
 		AppAside,
-		DefaultAside
+		DefaultAside,
+		ValidationLabel
 	},
 
 	created() {
