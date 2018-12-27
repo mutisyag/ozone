@@ -45,15 +45,14 @@
 
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 Substances</h4>
-					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
-				</div>
-				<hr>
-
-				<div v-show="table.tableFilters" class="table-filters mb-2">
+					<div v-show="table.tableFilters" class="table-filters">
 						<b-input-group prepend="Search">
 								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
+					</div>
+					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
+				<hr>
 
 				<b-table
 					show-empty
@@ -122,15 +121,14 @@
 			<div class="table-wrapper">
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.2 Blends</h4>
+					<div v-show="tableBlends.tableFilters" class="table-filters">
+							<b-input-group prepend="Search">
+									<b-form-input v-model="tableBlends.filters.search"/>
+							</b-input-group>
+					</div>
 					<i @click="tableBlends.tableFilters = !tableBlends.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
 				<hr>
-
-				<div class="table-filters mb-2">
-						<b-input-group prepend="Search">
-								<b-form-input v-model="tableBlends.filters.search"/>
-						</b-input-group>
-				</div>
 
 				<b-table
 					show-empty
@@ -183,17 +181,20 @@
 						></fieldGenerator>
 					</template>
 
-					<template slot="validation" slot-scope="cell">
+					<template
+						slot="validation"
+						slot-scope="cell">
 						<span class="validation-wrapper">
-							<i
+							<b-badge
+								pill
+								style="cursor:pointer"
+								variant="danger"
 								@click="openValidation"
 								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
 								v-b-tooltip.hover
 								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
+							>invalid</b-badge>
+							<b-badge v-else pill variant="success">valid</b-badge>
 						</span>
 					</template>
 
