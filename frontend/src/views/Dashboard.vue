@@ -344,6 +344,15 @@ export default {
 				return true
 			}
 			return false
+		},
+		tableOptionsExceptFilters() {
+			const tableOptions = {
+				sorting: this.$store.state.dashboard.table.sorting,
+				currentPage: this.$store.state.dashboard.table.currentPage,
+				perPage: this.$store.state.dashboard.table.perPage
+			}
+			console.log('tttt',tableOptions)
+			return tableOptions
 		}
 	},
 
@@ -390,12 +399,15 @@ export default {
 	watch: {
 		'tableOptions.filters': {
 			handler() {
-				this.tableOptions.currentPage = 1
+				if (this.tableOptions.currentPage !== 1) {
+					this.tableOptions.currentPage = 1
+				}
+				this.$store.dispatch('getCurrentSubmissions')
 				this.$refs.table.refresh()
 			},
 			deep: true
 		},
-		tableOptions: {
+		tableOptionsExceptFilters: {
 			handler() {
 				this.$store.dispatch('getCurrentSubmissions')
 			},
