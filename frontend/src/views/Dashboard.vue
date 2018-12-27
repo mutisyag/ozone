@@ -239,6 +239,25 @@ export default {
 	computed: {
 
 		...mapGetters(['getSubmissionInfo']),
+
+		/* The problem
+
+		Using item provider function as indicated in the documentation (https://bootstrap-vue.js.org/docs/components/table)
+		for async pagination and filtering raises a few problems if the provider function or the function that fetches the data,
+		also used in the provider function is called outside of the internal filter/pagination change watcher,
+		like deleting an entry and trying to update the table after.
+
+		Actually, the async call had some problems even if the calls where within the specified parameters, like perPage fiter.
+
+		The solution
+
+		1.Table items are provided to the table through a computed method that iterates through the list obtained via the async call.
+		2.Filters/pagination are no longer specifically binded to the table. Instead, we use a watcher on tableOptions,
+			doing a call for getting the filtered list of submissions every
+		 	time a option changes in the tableOptions object, like pagination, filtering, perpage etc.
+		3.Because the data is provided via computed, the table data also updates in the interface every time we get a new list of submissions,
+			after doing actions like deleting, cloning or changing the state of a submission. */
+
 		tableItems() {
 			const tableFields = []
 			if (this.submissions && this.submissions.length) {
