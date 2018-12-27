@@ -232,15 +232,22 @@
 				</b-table>
 			</div>
     </div>
-    <div
-      v-for="(comment, comment_index) in tab_info.comments"
-      :key="comment_index"
-      class="comments-input"
-    >
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+
+	<div class="table-wrapper">
+		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
+		<hr>
+		<div
+			v-for="(comment, comment_index) in tab_info.comments"
+			:key="comment_index"
+			class="comments-input"
+		>
+			<label>{{labels[comment.name]}}</label>
+			<textarea :disabled="$store.getters.allowedChanges" class="form-control" v-model="comment.selected"></textarea>
+		</div>
+	</div>
+
     <hr>
+
     <div class="footnotes">
       <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index">
         <small>{{footnote}}</small>
@@ -330,13 +337,28 @@ export default {
 		}
 	},
 	created() {
-		this.labels = labels[this.tab_info.name]
+		this.labels = {
+			...labels.general,
+			...labels[this.tab_info.name]
+		}
 	},
 	methods: {
 	},
 	computed: {
 		getTabInputFields() {
 			return this.tab_info.input_fields
+		},
+		hasSubstances() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
+		},
+		hasBlends() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+		},
+		tableCounter() {
+			const counter = []
+			if (this.hasSubstances) counter.push(1)
+			if (this.hasBlends) counter.push(1)
+			return counter.length
 		}
 	}
 }

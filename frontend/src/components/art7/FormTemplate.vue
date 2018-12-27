@@ -623,7 +623,10 @@ export default {
 	},
 
 	created() {
-		this.labels = labels[this.tab_info.name]
+		this.labels = {
+			...labels.general,
+			...labels[this.tab_info.name]
+		}
 	},
 	methods: {
 		anotherSpecialCase(order, modal_data) {

@@ -1,5 +1,7 @@
 export default {
 	__all__: '',
+	comments_party: 'Party',
+	comments_secretariat: 'Secretariat',
 	recall: 'Recall',
 	process: 'Process',
 	finalize: 'Finalize',

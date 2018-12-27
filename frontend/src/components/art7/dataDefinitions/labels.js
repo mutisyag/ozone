@@ -29,9 +29,7 @@ const labels = {
 		decision: 'Decision',
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
-		remarks_party: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		remarks_party: 'Remarks (Party)'
 	},
 	has_exports: {
 		substance: 'Substances',
@@ -61,9 +59,7 @@ const labels = {
 		decision: 'Decision',
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
-		remarks_party: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		remarks_party: 'Remarks (Party)'
 	},
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -89,9 +85,7 @@ const labels = {
 		substance: 'Substances',
 		quantity_exempted: 'Production for exempted essential, critical or other uses within your country',
 		decision: 'Decision',
-		quantity: 'Quantity',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		quantity: 'Quantity'
 	},
 	has_destroyed: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -99,9 +93,7 @@ const labels = {
 		percent: 'Percentage',
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
-		blend: 'Blend',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		blend: 'Blend'
 	},
 	has_nonparty: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -122,9 +114,7 @@ const labels = {
 		quantity_destroyed: 'Amount destroyed',
 		quantity_emitted: 'Amount of emissions',
 		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		remarks_os: 'Remarks (Party)'
 	}
 }
 
