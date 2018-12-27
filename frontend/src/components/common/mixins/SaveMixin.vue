@@ -1,7 +1,7 @@
 <template>
     <b-btn
 			@click="validation"
-			style="border-top-right-radius: 0;border-bottom-right-radius:0"			
+			style="border-top-right-radius: 0;border-bottom-right-radius:0"
 			variant="primary">
         Save and continue
     </b-btn>
