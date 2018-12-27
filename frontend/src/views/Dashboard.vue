@@ -240,7 +240,6 @@ export default {
 
 		...mapGetters(['getSubmissionInfo']),
 		tableItems() {
-			console.log('computing', this.submissions)
 			const tableFields = []
 			if (this.submissions && this.submissions.length) {
 				this.submissions.forEach((element) => {
@@ -255,7 +254,6 @@ export default {
 					})
 				})
 			}
-			console.log('computing', tableFields)
 			return tableFields
 		},
 		sortOptionsPeriodFrom() {
