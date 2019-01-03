@@ -18,7 +18,7 @@
             </b-input-group>
 
             <b-input-group class="mb-2" prepend="Party">
-               <multiselect trackBy="value" label="text" placeholder="" v-model="current.party" :options="parties"></multiselect>
+               <multiselect trackBy="value" label="text" placeholder="" :disabled="Boolean(currentUser.party)" v-model="current.party" :options="parties"></multiselect>
             </b-input-group>
 
             <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create</b-btn>
@@ -89,7 +89,7 @@
 									<b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
 								</b-input-group>
 								<b-input-group prepend="Party">
-									<b-form-select v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
+									<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
 								</b-input-group>
 								<b-input-group style="width: 120px" prepend="From">
 									<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
@@ -230,7 +230,6 @@ export default {
 		this.$store.dispatch('getDashboardParties')
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
-		this.$store.dispatch('getCurrentSubmissions')
 		this.$store.dispatch('getMyCurrentUser')
 		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
@@ -327,7 +326,9 @@ export default {
 			return this.$store.state.dashboard.table
 		},
 		currentUser() {
-			return this.$store.state.currentUser
+			const current = this.$store.state.currentUser
+			if (current) this.current.party = current.party
+			return current
 		},
 		periods() {
 			return this.$store.state.dashboard.periods
@@ -412,6 +413,7 @@ export default {
 					this.tableOptions.currentPage = 1
 				}
 				this.$store.dispatch('getCurrentSubmissions')
+				if (!this.$refs.table) return
 				this.$refs.table.refresh()
 			},
 			deep: true
