@@ -100,6 +100,10 @@ const mutations = {
 		state.available_transitions = data
 	},
 
+	setCurrentUser(state, data) {
+		[state.currentUser] = data
+	},
+
 	updateSubmissionData(state, data) {
 		state.current_submission = data
 	},

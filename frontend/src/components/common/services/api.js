@@ -67,6 +67,8 @@ const getSubstances = () => fetch('group-substances/')
 
 const getUsers = () => fetch('users/')
 
+const getCurrentUser = () => fetch('current-user/')
+
 const getParties = () => fetch('parties/')
 
 const getPartyRatifications = () => fetch('get-party-ratifications/')
@@ -163,5 +165,6 @@ export {
 	deleteSubmission,
 	cloneSubmission,
 	getSubmissionHistory,
-	getNonParties
+	getNonParties,
+	getCurrentUser
 }

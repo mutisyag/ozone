@@ -1,8 +1,8 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col sm="4">
-        <b-card v-if="basicDataReady">
+      <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="4">
+        <b-card>
           <div slot="header">
             <strong>Create submission</strong>
           </div>
@@ -27,7 +27,7 @@
         </b-card>
       </b-col>
 
-        <b-col sm="8">
+        <b-col>
           <b-card v-if="basicDataReady">
             <div slot="header">
               <strong>My submissions </strong>
@@ -121,7 +121,7 @@
                         class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
                       >
-                      <span v-if="row.item.details.data_changes_allowed">
+                      <span v-if="row.item.details.data_changes_allowed && !currentUser.is_read_only">
                         Edit
                       </span>
                       <span v-else>
@@ -133,6 +133,7 @@
                         variant="outline-primary"
                         @click="clone(row.item.details.url, row.item.details.obligation)"
 												size="sm"
+												:disabled="currentUser.is_read_only"
 											>
                       Revise
                     </b-btn>
@@ -142,6 +143,7 @@
                       v-for="transition in row.item.details.available_transitions"
                       :key="transition"
 											size="sm"
+											:disabled="currentUser.is_read_only"
                       @click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})"
                     >
                       {{labels[transition]}}
@@ -151,6 +153,7 @@
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
                         v-if="row.item.details.data_changes_allowed"
+												:disabled="currentUser.is_read_only"
 												size="sm"
                       >
                       Delete
@@ -228,6 +231,7 @@ export default {
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
 		this.$store.dispatch('getCurrentSubmissions')
+		this.$store.dispatch('getMyCurrentUser')
 		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
 
@@ -311,6 +315,7 @@ export default {
 		dataReady() {
 			if (this.submissions
         && this.periods
+				&& this.currentUser
         && this.obligations
         && this.parties
         && this.submissions.length) {
@@ -320,6 +325,9 @@ export default {
 		},
 		tableOptions() {
 			return this.$store.state.dashboard.table
+		},
+		currentUser() {
+			return this.$store.state.currentUser
 		},
 		periods() {
 			return this.$store.state.dashboard.periods
@@ -340,6 +348,7 @@ export default {
 		basicDataReady() {
 			if (this.periods
         && this.obligations
+				&& this.currentUser
         && this.parties) {
 				return true
 			}

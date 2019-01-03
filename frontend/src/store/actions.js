@@ -11,7 +11,8 @@ import {
 	createSubmission,
 	getParties,
 	getNonParties,
-	getPartyRatifications
+	getPartyRatifications,
+	getCurrentUser
 } from '@/components/common/services/api'
 
 import {
@@ -62,6 +63,13 @@ const actions = {
 			})
 		})
 	},
+
+	getMyCurrentUser(context) {
+		getCurrentUser().then(response => {
+			context.commit('setCurrentUser', response.data)
+		})
+	},
+
 	getMyCurrentSubmissions(context) {
 		return new Promise((resolve) => {
 			getSubmissions({
