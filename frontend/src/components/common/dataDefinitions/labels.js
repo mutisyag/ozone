@@ -1,5 +1,7 @@
 export default {
 	__all__: '',
+	comments_party: 'Party',
+	comments_secretariat: 'Secretariat',
 	recall: 'Recall',
 	process: 'Process',
 	finalize: 'Finalize',
@@ -17,6 +19,10 @@ export default {
 	email: 'E-mail',
 	date: 'Date',
 	subject: 'Subject',
+	art7: 'Article 7',
+	hat: 'HAT',
+	valid: 'valid',
+	invalid: 'invalid',
 	flags: {
 		flag_superseded: 'Superseded',
 		flag_provisional: 'Provisional',
@@ -34,7 +40,5 @@ export default {
 		flag_has_reported_c3: 'Annex group C3',
 		flag_has_reported_e: 'Annex group E',
 		flag_has_reported_f: 'Annex group F'
-	},
-	art7: 'Article 7',
-	hat: 'HAT'
+	}
 }

@@ -109,7 +109,6 @@
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
-                       :current-page="tableOptions.currentPage"
                        :per-page="tableOptions.perPage"
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
@@ -135,7 +134,7 @@
                         @click="clone(row.item.details.url)"
 												size="sm"
 											>
-                      Clone
+                      Revise
                     </b-btn>
 
                     <b-btn
@@ -228,7 +227,6 @@ export default {
 		this.$store.dispatch('getDashboardParties')
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
-		this.$store.dispatch('getMyCurrentSubmissions')
 		this.$store.dispatch('getCurrentSubmissions')
 		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
@@ -241,6 +239,41 @@ export default {
 
 		...mapGetters(['getSubmissionInfo']),
 
+		/* The problem
+
+		Using item provider function as indicated in the documentation (https://bootstrap-vue.js.org/docs/components/table)
+		for async pagination and filtering raises a few problems if the provider function or the function that fetches the data,
+		also used in the provider function is called outside of the internal filter/pagination change watcher,
+		like deleting an entry and trying to update the table after.
+
+		Actually, the async call had some problems even if the calls where within the specified parameters, like perPage fiter.
+
+		The solution
+
+		1.Table items are provided to the table through a computed method that iterates through the list obtained via the async call.
+		2.Filters/pagination are no longer specifically binded to the table. Instead, we use a watcher on tableOptions,
+			doing a call for getting the filtered list of submissions every
+		 	time a option changes in the tableOptions object, like pagination, filtering, perpage etc.
+		3.Because the data is provided via computed, the table data also updates in the interface every time we get a new list of submissions,
+			after doing actions like deleting, cloning or changing the state of a submission. */
+
+		tableItems() {
+			const tableFields = []
+			if (this.submissions && this.submissions.length) {
+				this.submissions.forEach((element) => {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						party: this.getSubmissionInfo(element).party(),
+						current_state: element.current_state,
+						version: element.version,
+						updated_at: element.updated_at,
+						details: element
+					})
+				})
+			}
+			return tableFields
+		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
@@ -311,28 +344,18 @@ export default {
 				return true
 			}
 			return false
+		},
+		tableOptionsExceptFilters() {
+			const tableOptions = {
+				sorting: this.$store.state.dashboard.table.sorting,
+				currentPage: this.$store.state.dashboard.table.currentPage,
+				perPage: this.$store.state.dashboard.table.perPage
+			}
+			return tableOptions
 		}
 	},
 
 	methods: {
-		tableItems() {
-			return this.$store.dispatch('getCurrentSubmissions').then(() => {
-				const tableFields = []
-				this.submissions.forEach((element) => {
-					tableFields.push({
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						party: this.getSubmissionInfo(element).party(),
-						current_state: element.current_state,
-						version: element.version,
-						updated_at: element.updated_at,
-						details: element
-					})
-				})
-				return tableFields
-			})
-		},
-
 		addSubmission() {
 			this.$store.dispatch('addSubmission', this.current).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
@@ -373,10 +396,20 @@ export default {
 	},
 
 	watch: {
+		// TODO: the watchers trigger each other in the case when user is on page > 1 and selects a filter, causing 2 requests instead of 1
 		'tableOptions.filters': {
 			handler() {
-				this.tableOptions.currentPage = 1
+				if (this.tableOptions.currentPage !== 1) {
+					this.tableOptions.currentPage = 1
+				}
+				this.$store.dispatch('getCurrentSubmissions')
 				this.$refs.table.refresh()
+			},
+			deep: true
+		},
+		tableOptionsExceptFilters: {
+			handler() {
+				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
 		}

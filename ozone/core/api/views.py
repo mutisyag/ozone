@@ -36,9 +36,11 @@ from ..models import (
     Group,
     Substance,
     Blend,
+    ReportingChannel,
 )
 from ..permissions import IsSecretariatOrSameParty
 from ..serializers import (
+    CurrentUserSerializer,
     AuthTokenByValueSerializer,
     RegionSerializer,
     SubregionSerializer,
@@ -63,6 +65,7 @@ from ..serializers import (
     CreateBlendSerializer,
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
+    UpdateSubmissionInfoSerializer,
     SubmissionFlagsSerializer,
 )
 
@@ -126,6 +129,15 @@ class IsOwnerFilterBackend(BaseFilterBackend):
                 return queryset.filter(submission__party=request.user.party)
             else:
                 return queryset
+
+
+class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = CurrentUserSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return self.queryset.filter(id=self.request.user.pk)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -380,7 +392,13 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
 
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
-        serializer = SubmissionInfoSerializer(info, data=request.data)
+        reporting_channel_name = request.data.get('reporting_channel')
+        if reporting_channel_name:
+            reporting_channel_id = ReportingChannel.objects.get(
+                name=reporting_channel_name
+            ).pk
+            request.data['reporting_channel'] = reporting_channel_id
+        serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

@@ -57,6 +57,7 @@ const actions = {
 		return new Promise((resolve) => {
 			getSubmissions(context.state.dashboard.table).then(response => {
 				context.commit('setDashboardSubmissions', response.data)
+				context.dispatch('getMyCurrentSubmissions')
 				resolve()
 			})
 		})

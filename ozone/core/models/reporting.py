@@ -25,6 +25,7 @@ __all__ = [
     'Obligation',
     'Submission',
     'SubmissionInfo',
+    'ReportingChannel',
 ]
 
 
@@ -52,6 +53,15 @@ class Obligation(models.Model):
         return self.name
 
 
+class ReportingChannel(models.Model):
+    """
+    Model for storing submission types.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+
 class SubmissionInfo(models.Model):
     """
     Model for storing submission info.
@@ -66,6 +76,13 @@ class SubmissionInfo(models.Model):
     fax = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="info",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
 
     def __str__(self):
         return f'{self.submission} - Info'
@@ -75,15 +92,6 @@ class Submission(models.Model):
     """
     One specific data submission (version!)
     """
-
-    @enum.unique
-    class SubmissionMethods(enum.Enum):
-        """
-        Enumeration of submission types
-        """
-        WEBFORM = 'Web form'
-        EMAIL = 'Email'
-        LEGACY = 'Legacy'
 
     # This keeps a mapping between the DB-persisted workflow and
     # its actual implementation class.
@@ -128,9 +136,6 @@ class Submission(models.Model):
     party = models.ForeignKey(
         Party, related_name='submissions', on_delete=models.PROTECT
     )
-    # data might be received through physical mail; also, OS might decide to
-    # make minor modifications on Party's submissions.
-    filled_by_secretariat = models.BooleanField(default=False)
 
     # Is set only at *the first* transition to Submitted
     submitted_at = models.DateTimeField(null=True)
@@ -208,11 +213,6 @@ class Submission(models.Model):
     # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(default=False)
 
-    submitted_via = models.CharField(
-        max_length=32,
-        choices=((s.value, s.name) for s in SubmissionMethods)
-    )
-
     # We want these to be able to be empty in forms
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
@@ -221,6 +221,10 @@ class Submission(models.Model):
     tracker = FieldTracker()
 
     history = HistoricalRecords()
+
+    @property
+    def filled_by_secretariat(self):
+        return self.created_by.is_secretariat
 
     @property
     def workflow_class(self):
@@ -480,21 +484,32 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
+            info = SubmissionInfo.objects.create(
+                reporting_officer=self.info.reporting_officer,
+                designation=self.info.designation,
+                organization=self.info.organization,
+                postal_code=self.info.postal_code,
+                country=self.info.country,
+                phone=self.info.phone,
+                fax=self.info.fax,
+                email=self.info.email,
+                date=self.info.date,
+                reporting_channel=self.info.reporting_channel
+            )
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
                 obligation=self.obligation,
                 cloned_from=self,
                 created_by=self.created_by,
-                last_edited_by=self.last_edited_by
+                last_edited_by=self.last_edited_by,
+                info=info
             )
         else:
-             raise e
+            raise e
 
-        """
-        We treat Article7Questionnaire separately because it has a one-to-one
-        relation with submission and this way we avoid nasty verifications
-        """
+        # We treat Article7Questionnaire separately because it has a one-to-one
+        # relation with submission and this way we avoid nasty verifications
         exclude = [
             'id', 'submission_id', '_state', '_deferred_fields', '_tracker',
             'save',
@@ -596,22 +611,27 @@ class Submission(models.Model):
             # Prefill "Submission info" with values from the most recent
             # submission when creating a new submission for the same obligation
             # and party.
-            latest_submission = submissions.order_by('-updated_at').first()
-            if latest_submission and latest_submission.info:
-                latest_info = latest_submission.info
-                self.info = SubmissionInfo.objects.create(
-                    reporting_officer=latest_info.reporting_officer,
-                    designation=latest_info.designation,
-                    organization=latest_info.organization,
-                    postal_code=latest_info.postal_code,
-                    country=latest_info.country,
-                    phone=latest_info.phone,
-                    fax=latest_info.fax,
-                    email=latest_info.email,
-                    date=latest_info.date
-                )
-            else:
-                self.info = SubmissionInfo.objects.create()
+            # The prefill will be skipped if it's a clone action.
+            if not self.info:
+                latest_submission = submissions.order_by('-updated_at').first()
+                if latest_submission and latest_submission.info:
+                    latest_info = latest_submission.info
+                    self.info = SubmissionInfo.objects.create(
+                        reporting_officer=latest_info.reporting_officer,
+                        designation=latest_info.designation,
+                        organization=latest_info.organization,
+                        postal_code=latest_info.postal_code,
+                        country=latest_info.country,
+                        phone=latest_info.phone,
+                        fax=latest_info.fax,
+                        email=latest_info.email,
+                        date=latest_info.date,
+                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                    )
+                else:
+                    self.info = SubmissionInfo.objects.create(
+                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                    )
 
         self.clean()
         return super().save(*args, **kwargs)

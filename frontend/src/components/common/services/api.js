@@ -119,9 +119,9 @@ const getCustomBlends = () => fetch('blends/')
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
-const getInstructions = (tabName) => {
+const getInstructions = (formName, tabName) => {
 	if (isTestSession) {
-		return fetch(`http://localhost:8080/instructions/${tabName}.html/`)
+		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 	}
 	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
 }

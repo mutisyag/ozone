@@ -2,7 +2,10 @@
 import {
 	fetch
 } from '@/components/common/services/api.js'
-import { isObject } from '@/components/common/services/utilsService'
+import {
+	isObject,
+	getPropertyValue
+} from '@/components/common/services/utilsService'
 
 export default {
 	name: 'DataManager',
@@ -50,11 +53,31 @@ export default {
 			if (!this.form) {
 				return false
 			}
-			for (const path of this.form.formDetails.dataNeeded) {
-				const propNames = path.split('.')
-				const propValue = propNames.reduce((prop, propName) => prop[propName], this.$store.state)
+			for (const propertyPath of this.form.formDetails.dataNeeded) {
+				const propValue = getPropertyValue(this.$store.state, propertyPath)
 				if (!propValue) return false
 			}
+
+			const { dataNeeded } = this.form.formDetails
+
+			Object.values(this.form.tabs).forEach(tab => {
+				if (isObject(tab.form_fields)) {
+					console.log(tab.form_fields)
+					for (const formFieldPropName in tab.form_fields) {
+						const formField = tab.form_fields[formFieldPropName]
+						if (formField.optionsStatePropertyPath) {
+							for (const propertyPath of dataNeeded) {
+								if (formField.optionsStatePropertyPath === propertyPath) {
+									const propValue = getPropertyValue(this.$store.state, propertyPath)
+									formField.options = propValue
+									break
+								}
+							}
+						}
+					}
+				}
+			})
+
 			return this.prefilled
 		},
 

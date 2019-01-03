@@ -23,6 +23,7 @@ class Command(BaseCommand):
         'partytypes',
         'partieshistory',
         'partiesratification',
+        'reporting_channels',
     )
 
     def handle(self, *args, **options):

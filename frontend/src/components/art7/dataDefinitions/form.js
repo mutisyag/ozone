@@ -1,4 +1,4 @@
-import { intro_fields } from './questionnaire_fields'
+import { questionnaire_fields } from './questionnaire_fields'
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
 import tab_flags from '@/components/common/dataDefinitions/tab_flags'
@@ -33,7 +33,7 @@ const form = {
 			status: null,
 			isInvalid: false,
 			description: '',
-			form_fields: intro_fields,
+			form_fields: questionnaire_fields,
 			default_properties: {
 				has_imports: false,
 				has_exports: false,
@@ -130,7 +130,7 @@ const form = {
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
 
 			fields_order: ['substance', 'blend', 'destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
+			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 
@@ -263,7 +263,7 @@ const form = {
 			}
 			],
 			fields_order: ['substance', 'blend', 'source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
+			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 			isInvalid: false,
@@ -310,8 +310,8 @@ const form = {
 			description: 'Annexes A, B, C and E substances',
 			form_fields: [],
 			fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
-			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
+			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'validation'],
+			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			section_subheaders: [
@@ -385,19 +385,18 @@ const form = {
 						label: ''
 					},
 					{
-						label: ''
+						label: '',
+						tooltip: 'HFC-23 generation that is captured, whether for destruction, feedstock or any other use, shall be reported in this form.'
 					},
 					{
-						label: 'Production for feedstock uses within your country',
+						label: '',
+						tooltip: 'Amounts of HFC-23 captured for destruction or feedstock use will not be counted as production as per Article 1.',
 						colspan: 2
 					},
 					{
 						label: 'Production for exempted essential, critical or other uses within your country',
 						colspan: 2,
 						tooltip: 'Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.'
-					},
-					{
-						label: ''
 					},
 					{
 						label: ''
@@ -411,7 +410,7 @@ const form = {
 					},
 					{
 						label: '(2) <br> Substance',
-						name: 'substances'
+						name: 'substance'
 					},
 					{
 						label: '(3) <br> Captured for all uses',
@@ -432,10 +431,6 @@ const form = {
 					{
 						label: '(6) <br> Decision / type of use',
 						name: 'decision_exempted'
-					},
-					{
-						label: '(7) <br> Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5',
-						name: 'quantity_article_5'
 					},
 					{
 						label: '(8) <br> Status',

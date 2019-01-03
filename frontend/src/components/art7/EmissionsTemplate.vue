@@ -72,24 +72,9 @@
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell"
-					>
-						<span class="validation-wrapper">
-							<b-badge
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
-
 				</b-table>
 			</div>
 
@@ -116,6 +101,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
@@ -131,7 +117,8 @@ export default {
 	components: {
 		fieldGenerator,
 		AppAside,
-		DefaultAside
+		DefaultAside,
+		ValidationLabel
 	},
 
 	created() {
@@ -163,14 +150,14 @@ export default {
 	computed: {
 		tableItems() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element) => {
+			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
-				Object.keys(element).forEach(key => {
-					tableRow[key] = element[key].selected
+				Object.keys(form_field).forEach(key => {
+					tableRow[key] = form_field[key].selected
 				})
 				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = element
-					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableRow.originalObj = form_field
+					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
 					tableFields.push(tableRow)
 				}
 			})
@@ -180,10 +167,10 @@ export default {
 		tableFields() {
 			const tableHeaders = []
 			const options = { class: 'text-center' }
-			this.tab_info.section_subheaders.forEach((element) => {
+			this.tab_info.section_subheaders.forEach((form_field) => {
 				tableHeaders.push({
-					key: element.name,
-					label: element.label,
+					key: form_field.name,
+					label: form_field.label,
 					...options
 				})
 			})

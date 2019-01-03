@@ -154,7 +154,9 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			const formName = this.$route.name
+			getInstructions(formName, tabName).then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
 			})

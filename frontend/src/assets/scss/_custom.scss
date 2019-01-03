@@ -655,7 +655,7 @@ button img.icon {
   }
 
   .navbar-toggler span {
-      display: flex;
+     	display: flex;
       justify-content: center;
       align-items: center;
   }
@@ -725,7 +725,7 @@ button img.icon {
 .breadcrumb {
   margin-bottom:0; 
   > small {
-    display: flex;
+   display: flex;
     align-items: center;
   }
 
@@ -791,7 +791,7 @@ main.main {
     min-height: 30px;
     background: white;
     padding-right: 100px;
-    justify-content: flex-end;
+    //justify-content: flex-end;
 }
 
 input[type=number]::-webkit-inner-spin-button, 
@@ -848,7 +848,7 @@ input[type=number] {
 }
 
 .table-filters {
-  display: flex;
+	  display: flex;
 	margin-right: 10px;
 	input {
   	max-width: 40%;
@@ -962,4 +962,8 @@ body {
 }
 .table th {
 	background-clip: padding-box;
+}
+
+.edit-trigger {
+	cursor: pointer;
 }

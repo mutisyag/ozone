@@ -47,8 +47,10 @@ export default {
 			selected: ''
 		},
 		country: {
-			type: 'text',
-			selected: ''
+			type: 'select',
+			selected: '',
+			optionsStatePropertyPath: 'initialData.countryOptions',
+			options: []
 		},
 		phone: {
 			type: 'text',

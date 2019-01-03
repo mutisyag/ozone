@@ -22,6 +22,8 @@ from ozone.core.models import Article7Production
 from ozone.core.models import Article7Destruction
 from ozone.core.models import Article7NonPartyTrade
 from ozone.core.models import Article7Questionnaire
+from ozone.core.models import ReportingChannel
+
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -68,7 +70,6 @@ class Command(BaseCommand):
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
 
-        self.method = Submission.SubmissionMethods.LEGACY.value
         self.precision = 10
 
     def add_arguments(self, parser):
@@ -471,7 +472,6 @@ class Command(BaseCommand):
         return {
             "submission": {
                 "schema_version": "legacy",
-                "filled_by_secretariat": False,
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "version": 1,
@@ -481,7 +481,6 @@ class Command(BaseCommand):
                 "flag_provisional": False,
                 "flag_valid": True,
                 "flag_superseded": False,
-                "submitted_via": self.method,
                 "remarks_party": overall["Remark"] or "",
                 "remarks_secretariat": overall["SubmissionType"] or "",
                 "created_by_id": self.admin.id,
@@ -515,6 +514,7 @@ class Command(BaseCommand):
                 "fax": "",
                 "email": "",
                 "date": date_reported,
+                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
             },
             "art7": {
                 "remarks_party": "",
@@ -573,13 +573,16 @@ class Command(BaseCommand):
                             party.abbr, period.name)
                 return False
 
-        submission = Submission.objects.create(**values["submission"])
+        info = SubmissionInfo.objects.create(**values["submission_info"])
+        submission = Submission.objects.create(
+            info=info,
+            **values["submission"]
+        )
 
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
         # we prefer preserving the legacy data as pristine as possible.
         for key, klass in (
-            ("submission_info", SubmissionInfo),
             ("art7", Article7Questionnaire),
             ("imports", Article7Import),
             ("exports", Article7Export),

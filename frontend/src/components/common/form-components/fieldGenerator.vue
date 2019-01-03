@@ -5,25 +5,33 @@
     </div>
     <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
-		<b-form-select
+	<multiselect
+		v-else-if="field.type === 'select'"
+		:multiple="false"
+		label="text"
+		trackBy="value"
 		@change="updateFormField($event)"
 		:disabled="disabled"
-		v-else-if="field.type === 'select'" v-model="currentTyping" :options="field.options"> </b-form-select>
+		v-model="currentTyping"
+		:options="field.options" />
     <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
   </div>
 </template>
 
 <script>
+import Multiselect from '@/components/common/ModifiedMultiselect'
+
 export default {
 
-	name: 'fieldGenerator',
 	props: {
 		field: Object,
 		disabled: { type: Boolean, default: () => false },
 		fieldInfo: Object,
 		id: String
 	},
-
+	components: {
+		Multiselect
+	},
 	created() {
 		this.currentTyping = this.field.selected
 	},

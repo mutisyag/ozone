@@ -7,6 +7,7 @@ from ozone.core.models import (
     Obligation,
     Party,
     Region,
+    ReportingChannel,
     ReportingPeriod,
     Submission,
     Subregion,
@@ -115,6 +116,13 @@ class ReportingPeriodFactory(DjangoModelFactory):
 
     class Meta:
         model = ReportingPeriod
+
+
+class ReportingChannelFactory(DjangoModelFactory):
+    name = 'Web form'
+
+    class Meta:
+        model = ReportingChannel
 
 
 class SubmissionFactory(DjangoModelFactory):

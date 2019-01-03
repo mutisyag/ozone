@@ -3,12 +3,14 @@ import {
 	getLevel2PropertyValue,
 	isObject,
 	pushUnique,
-	intersect
+	intersect,
+	getPropertyValue
 } from '@/components/common/services/utilsService'
 
 describe('utilsService', () => {
-	describe('getLevel2PropertyValue', () => {
-		const obj = {
+	let testObj
+	beforeEach(() => {
+		testObj = {
 			level1a: {
 				level2a: 1,
 				level2b: 2,
@@ -19,28 +21,36 @@ describe('utilsService', () => {
 				level2e: 5
 			},
 			level1c: {
-				level2f: 6
-			}
+				level2f: 6,
+				level2g: {
+					level3a: 7,
+					level3b: 8
+				}
+			},
+			level1d: 9
 		}
+	})
+
+	describe('getLevel2PropertyValue', () => {
 		it('for undefined and null', () => {
 			expect(getLevel2PropertyValue(undefined, 'level2a')).to.be.undefined
 			expect(getLevel2PropertyValue(null, 'level2a')).to.be.undefined
-			expect(getLevel2PropertyValue(obj)).to.be.undefined
-			expect(getLevel2PropertyValue(obj, null)).to.be.undefined
+			expect(getLevel2PropertyValue(testObj)).to.be.undefined
+			expect(getLevel2PropertyValue(testObj, null)).to.be.undefined
 		})
 
 		it('not existing level2PropertyKey', () => {
-			expect(getLevel2PropertyValue(obj, 'level2NotExisting')).to.be.undefined
-			expect(getLevel2PropertyValue(obj, 'level1b')).to.be.undefined
+			expect(getLevel2PropertyValue(testObj, 'level2NotExisting')).to.be.undefined
+			expect(getLevel2PropertyValue(testObj, 'level1b')).to.be.undefined
 		})
 
 		it('existing level2PropertyKey', () => {
-			expect(getLevel2PropertyValue(obj, 'level2a')).to.equal(1)
-			expect(getLevel2PropertyValue(obj, 'level2b')).to.equal(2)
-			expect(getLevel2PropertyValue(obj, 'level2c')).to.equal(3)
-			expect(getLevel2PropertyValue(obj, 'level2d')).to.equal(4)
-			expect(getLevel2PropertyValue(obj, 'level2e')).to.equal(5)
-			expect(getLevel2PropertyValue(obj, 'level2f')).to.equal(6)
+			expect(getLevel2PropertyValue(testObj, 'level2a')).to.equal(1)
+			expect(getLevel2PropertyValue(testObj, 'level2b')).to.equal(2)
+			expect(getLevel2PropertyValue(testObj, 'level2c')).to.equal(3)
+			expect(getLevel2PropertyValue(testObj, 'level2d')).to.equal(4)
+			expect(getLevel2PropertyValue(testObj, 'level2e')).to.equal(5)
+			expect(getLevel2PropertyValue(testObj, 'level2f')).to.equal(6)
 		})
 	})
 
@@ -191,6 +201,29 @@ describe('utilsService', () => {
 			expect(intersect(['word1', 'word2', 'word3'], ['word10', 'word2', 'word4'])).to.deep.equal(['word2'])
 			const obj = { x: 4, y: 6 }
 			expect(intersect([obj, 3, 8], [obj, 'word2', 3])).to.deep.equal([obj, 3])
+		})
+	})
+
+	describe('getPropertyValue', () => {
+		it('for undefined, null and non objects', () => {
+			expect(getPropertyValue()).to.be.undefined
+			expect(getPropertyValue(null)).to.be.undefined
+			expect(getPropertyValue(undefined, null)).to.be.undefined
+			expect(getPropertyValue(null, null)).to.be.undefined
+			expect(getPropertyValue(undefined, { prop1: 1 })).to.be.undefined
+			expect(getPropertyValue(null, { prop1: 1 })).to.be.undefined
+			expect(getPropertyValue('prop1', 'text')).to.be.undefined
+			expect(getPropertyValue('prop1', 3)).to.be.undefined
+			expect(getPropertyValue('length', [])).to.be.undefined
+		})
+
+		it('for objects', () => {
+			expect(getPropertyValue(testObj, 'notExistingProp')).to.be.undefined
+			expect(getPropertyValue(testObj, 'level1d')).to.equal(9)
+			expect(getPropertyValue(testObj, 'level1a.level2a')).to.equal(1)
+			expect(getPropertyValue(testObj, 'level1b.level2e')).to.equal(5)
+			expect(getPropertyValue(testObj, 'level1c.level2g.level3b')).to.equal(8)
+			expect(getPropertyValue(testObj, 'level1c.level2g.level3b.')).to.be.undefined
 		})
 	})
 })

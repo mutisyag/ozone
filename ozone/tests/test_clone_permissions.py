@@ -10,6 +10,7 @@ from .factories import (
     ReporterUserFactory,
     ReporterUserSamePartyFactory,
     ReporterUserAnotherPartyFactory,
+    ReportingChannelFactory,
     SecretariatUserFactory,
     SubmissionFactory,
     SubregionFactory,
@@ -45,6 +46,8 @@ class ClonePermissionsTests(TestCase):
             party=self.another_party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
+        ReportingChannelFactory()
+
 
     def get_authorization_header(self, username, password):
         resp = self.client.post(reverse("core:auth-token-list"), {

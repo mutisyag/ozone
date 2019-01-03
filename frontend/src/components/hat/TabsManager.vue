@@ -2,7 +2,7 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
+      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton"> <i class="fa fa-info fa-lg"></i></b-btn>
       <div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
@@ -13,13 +13,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
     <b-button-group class="actions">
-      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			v-if="$store.state.available_transitions.includes('submit')"
-			@click="checkBeforeSubmitting"
-			variant="outline-success">
-			Submit
-		</b-btn>
+		<Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
 		<b-btn
 			variant="outline-primary"
 			v-for="transition in availableTransitions"
@@ -27,13 +21,15 @@
 			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
 			{{labels[transition]}}
 		</b-btn>
-
     </b-button-group>
   </div>
 
-  <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
-    <div v-if="modal_data" v-html="modal_data"></div>
-  </b-modal>
+    <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
+		<div v-if="modal_data" v-html="modal_data"></div>
+		<div slot="modal-footer">
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+		</div>
+	</b-modal>
 
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
@@ -62,54 +58,42 @@
             <attachments :tab="$store.state.form.tabs.attachments"></attachments>
           </b-tab>
         </b-tabs>
-
-        <div class="legend">
-            <b>Legend:</b>
-            <div>
-              <div class="spinner">
-                <div class="loader"></div>
-              </div> - Form is curently being saved
-            </div>
-            <div>
-              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
-            </div>
-            <div>
-              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server
-            </div>
-            <div>
-              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
-            </div>
-        </div>
     </b-card>
     </div>
-    <Footer>
-      <b-button-group class="actions mt-2 mb-2">
-        <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn
-          v-if="$store.state.available_transitions.includes('submit')"
-          @click="checkBeforeSubmitting"
-          variant="outline-success">
-            Submit
-        </b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
-		</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          Versions
-        </b-btn>
-        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-          Delete Submission
-        </b-btn>
-      </b-button-group>
+    <Footer style="display:inline">
+		<b-button-group class="actions mt-2 mb-2">
+			<Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+		</b-button-group>
+
+		<b-button-group class="pull-right actions mt-2 mb-2">
+			<b-btn
+				v-if="$store.state.available_transitions.includes('submit')"
+				@click="checkBeforeSubmitting"
+				variant="outline-success">
+				Submit
+			</b-btn>
+			<b-btn
+				variant="outline-primary"
+				v-for="transition in availableTransitions"
+				:key="transition"
+				@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+				{{labels[transition]}}
+			</b-btn>
+			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
+				Versions
+			</b-btn>
+			<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
+				Delete Submission
+			</b-btn>
+		</b-button-group>
     </Footer>
 
-    <b-modal size="lg" ref="history_modal" id="history_modal">
+	<b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
-    </b-modal>
+		<div slot="modal-footer">
+          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+		</div>
+	</b-modal>
   </div>
 </template>
 
@@ -166,7 +150,9 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			const formName = this.$route.name
+			getInstructions(formName, tabName).then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
 			})
