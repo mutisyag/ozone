@@ -1,3 +1,5 @@
+import uuid
+
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.admin.forms import AdminAuthenticationForm
@@ -238,6 +240,7 @@ class ObligationAdmin(
 class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
+    exclude = ["password"]
 
     def reset_password(self, request, queryset):
         domain_override = request.META.get("HTTP_HOST")
@@ -257,3 +260,13 @@ class UserAdmin(admin.ModelAdmin):
                               level=messages.SUCCESS)
 
     reset_password.short_description = "Reset user password"
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            # Set a random password for the new user
+            # The user will need to set a new password
+            obj.password = str(uuid.uuid4())
+        super(UserAdmin, self).save_model(request, obj, form, change)
+        if not change:
+            # TODO likely better to use a different email template here.
+            self.reset_password(request, [obj])
