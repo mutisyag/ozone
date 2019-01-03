@@ -1,4 +1,5 @@
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import AdminSite
@@ -236,3 +237,23 @@ class ObligationAdmin(
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
+    actions = ["reset_password"]
+
+    def reset_password(self, request, queryset):
+        domain_override = request.META.get("HTTP_HOST")
+        use_https = request.environ.get("wsgi.url_scheme", "https").lower() == "https"
+        users = []
+
+        for user in queryset:
+            form = PasswordResetForm({'email': user.email})
+            form.full_clean()
+            form.save(domain_override=domain_override, use_https=use_https)
+            users.append(user.username)
+        if len(users) > 10:
+            self.message_user(request, "Email sent to %d users for password reset" % len(users),
+                              level=messages.SUCCESS)
+        else:
+            self.message_user(request, "Email set to %s for password reset" % ", ".join(users),
+                              level=messages.SUCCESS)
+
+    reset_password.short_description = "Reset user password"
