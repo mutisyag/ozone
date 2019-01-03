@@ -2,7 +2,6 @@ from collections import OrderedDict
 from copy import deepcopy
 
 from django.contrib.auth import get_user_model
-from django.db.models import Q
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -15,6 +14,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from rest_framework.reverse import reverse
 
 from ..exceptions import InvalidRequest, MethodNotAllowed
 
@@ -361,7 +361,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         clone = submission.clone(request.user)
-        return Response({"id": clone.id})
+        return Response(
+            {"url": reverse('core:submission-detail', request=request, kwargs={'pk': clone.id})}
+        )
 
     @action(detail=True, methods=["post"], url_path="call-transition")
     def call_transition(self, request, pk=None):
