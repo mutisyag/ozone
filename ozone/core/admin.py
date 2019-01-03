@@ -256,7 +256,7 @@ class UserAdmin(admin.ModelAdmin):
             self.message_user(request, "Email sent to %d users for password reset" % len(users),
                               level=messages.SUCCESS)
         else:
-            self.message_user(request, "Email set to %s for password reset" % ", ".join(users),
+            self.message_user(request, "Email sent to %s for password reset" % ", ".join(users),
                               level=messages.SUCCESS)
 
     reset_password.short_description = "Reset user password"
