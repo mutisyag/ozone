@@ -131,7 +131,7 @@
 
                     <b-btn
                         variant="outline-primary"
-                        @click="clone(row.item.details.url)"
+                        @click="clone(row.item.details.url, row.item.details.obligation)"
 												size="sm"
 											>
                       Revise
@@ -367,9 +367,9 @@ export default {
 				this.tableOptions.filters[key] = null
 			})
 		},
-		clone(url) {
-			cloneSubmission(url).then(() => {
-				this.$store.dispatch('getCurrentSubmissions')
+		clone(url, obligation) {
+			cloneSubmission(url).then((response) => {
+				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
 				this.$store.dispatch('setAlert', {
 					message: { __all__: ['Submission cloned'] },
 					variant: 'success'
