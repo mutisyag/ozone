@@ -336,11 +336,11 @@ export default {
 			},
 			get validation() {
 				const errors = []
-				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
+				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
 					errors.push('Total quantity imported for all uses is required')
 				}
 
-				if (valueConverter(this.quantity_exempted.selected) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+				if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
 					errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
 				}
 
