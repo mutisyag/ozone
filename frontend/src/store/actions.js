@@ -239,7 +239,12 @@ const actions = {
 			response.data.forEach(group => {
 				group.substances.sort((a, b) => a.sort_order - b.sort_order)
 				group.substances.forEach(substance => {
-					tempSubstances.push({ value: substance.id, text: substance.name, group, is_qps: substance.is_qps })
+					tempSubstances.push({ value: substance.id,
+						text: substance.name,
+						group,
+						is_qps: substance.is_qps,
+						is_contained_in_polyols: substance.is_contained_in_polyols
+					})
 					substancesDisplay[substance.id] = substance.name
 				})
 			})

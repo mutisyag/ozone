@@ -259,7 +259,7 @@ export default {
 			},
 
 			get decision_exempted() {
-				const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_other_uses']
+				const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_polyols', 'decision_other_uses']
 				return decisionGenerator(fields, this, section)
 			},
 			quantity_essential_uses: {
@@ -315,6 +315,14 @@ export default {
 				selected: null
 			},
 			decision_other_uses: {
+				type: 'text',
+				selected: ''
+			},
+			quantity_polyols: {
+				type: 'number',
+				selected: null
+			},
+			decision_polyols: {
 				type: 'text',
 				selected: ''
 			},

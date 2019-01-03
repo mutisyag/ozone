@@ -5,15 +5,18 @@
     </div>
     <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
-	<multiselect
-		v-else-if="field.type === 'select'"
-		:multiple="false"
-		label="text"
-		trackBy="value"
-		@change="updateFormField($event)"
-		:disabled="disabled"
-		v-model="currentTyping"
-		:options="field.options" />
+		<div
+				v-else-if="field.type === 'select'"
+		>
+			<multiselect
+				:multiple="false"
+				label="text"
+				trackBy="value"
+				@input="updateFormField($event)"
+				:disabled="disabled"
+				v-model="currentTyping"
+				:options="fieldOptions" />
+		</div>
     <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
   </div>
 </template>
@@ -34,11 +37,22 @@ export default {
 	},
 	created() {
 		this.currentTyping = this.field.selected
+		if (this.field.type === 'select') {
+		// Some numbers can arrive here (usually after prefill) as strings.
+		// This issue affects only the select because of the pair (text - value) that needs to match
+			this.currentTyping = Number(this.field.selected) || this.field.selected
+		}
 	},
 
 	data() {
 		return {
 			currentTyping: null
+		}
+	},
+
+	computed: {
+		fieldOptions() {
+			return this.field.options
 		}
 	},
 

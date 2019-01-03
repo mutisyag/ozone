@@ -41,7 +41,7 @@ const getters = {
 
 	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName),
 
-	allowedChanges: (state) => (state.current_submission ? !state.current_submission.data_changes_allowed : false)
+	isReadOnly: (state) => (state.current_submission ? !state.current_submission.data_changes_allowed : false)
 }
 
 export default getters

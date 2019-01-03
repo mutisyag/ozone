@@ -107,7 +107,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="!allowedChanges"
+								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -131,7 +131,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -156,22 +156,41 @@
 							{{cell.item[tooltipField]}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+								Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
 									></fieldGenerator>
 								</span>
 							</div>
+
+							<div
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+								class="special-field"
+								v-if="isPolyols.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+							>
+								<hr>
+								Polyols quantity
+								<hr>
+								<span>
+									<fieldGenerator
+										:key="tooltipField"
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+										:disabled="isReadOnly"
+										:field="cell.item.originalObj.quantity_polyols"
+									></fieldGenerator>
+								</span>
+							</div>
+
 						</span>
 					</template>
 				</b-table>
@@ -224,7 +243,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="!allowedChanges"
+								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -237,7 +256,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -262,19 +281,36 @@
 							{{cell.item[tooltipField]}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} {{qps_word}} to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
+									></fieldGenerator>
+								</span>
+							</div>
+							<div
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+								class="special-field"
+								v-if="isPolyols.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+							>
+								<hr>
+								Quantity of Polyols
+								<hr>
+								<span>
+									<fieldGenerator
+										:key="tooltipField"
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+										:disabled="isReadOnly"
+										:field="cell.item.originalObj.quantity_polyols"
 									></fieldGenerator>
 								</span>
 							</div>
@@ -321,7 +357,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="allowedChanges"
+								v-if="isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -354,7 +390,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -421,13 +457,13 @@
 				class="comments-input"
 			>
 				<label>{{labels[comment.name]}}</label>
-				<textarea :disabled="$store.getters.allowedChanges" class="form-control" v-model="comment.selected"></textarea>
+				<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 			</div>
 		</div>
 
     <hr>
 
-    <AppAside v-if="!allowedChanges" fixed>
+    <AppAside v-if="!isReadOnly" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -453,7 +489,7 @@
               class="mb-2"
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
               label="text"
               placeholder="Select substance"
               :value="modal_data.field.substance.selected"
@@ -467,7 +503,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="allowedChanges"
+                :disabled="isReadOnly"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
@@ -476,7 +512,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-								:disabled="allowedChanges"
+								:disabled="isReadOnly"
                 trackBy="value"
                 label="text"
                 placeholder="Countries"
@@ -503,7 +539,7 @@
                 <fieldGenerator
 					style="max-width: 50%"
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="allowedChanges"
+					:disabled="isReadOnly"
 					:field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -512,7 +548,7 @@
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="allowedChanges"
+                  :disabled="isReadOnly"
                   :field="modal_data.field[`decision_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -529,7 +565,7 @@
           </b-col>
           <b-col lg="9">
             <textarea
-								:disabled="allowedChanges"
+								:disabled="isReadOnly"
 								class="form-control" v-model="modal_data.field[comment_field].selected">
 						</textarea>
           </b-col>
@@ -593,18 +629,23 @@ export default {
 	},
 	methods: {
 		anotherSpecialCase(order, modal_data) {
-			if (order !== 'quarantine_pre_shipment') {
+			// determine what are we dealing with
+			const type = modal_data.field.substance && modal_data.field.substance.selected
+				? 'substance'
+				: modal_data.field.blend && modal_data.field.blend.selected
+					? 'blend'
+					: null
+			// just in case
+			if (!type) return
+			// this may look ugly, but it had to be done
+			if (!['quarantine_pre_shipment', 'polyols'].includes(order)) {
 				return true
 			}
-			if (modal_data.field.substance && modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
-				if (this.tab_data.substances.find(s => s.value === modal_data.field.substance.selected).is_qps) {
-					return true
-				}
+			if (this.isQps.includes(modal_data.field[type].selected) && order === 'quarantine_pre_shipment') {
+				return true
 			}
-			if (modal_data.field.blend && modal_data.field.blend.selected) {
-				if (this.tab_data.blends.find(s => s.id === modal_data.field.blend.selected).is_qps) {
-					return true
-				}
+			if (this.isPolyols.includes(modal_data.field[type].selected) && order === 'polyols') {
+				return true
 			}
 		},
 
@@ -649,6 +690,37 @@ export default {
 		}
 	},
 	computed: {
+		qps_word() {
+			let word = ''
+			switch (this.tab_info.name) {
+			case 'has_exports':
+				word = 'exported'
+				break
+			case 'has_imports':
+				word = 'imported'
+				break
+			case 'has_produced':
+				word = 'produced'
+				break
+			case 'has_destroyed':
+				word = 'destroyed'
+				break
+			case 'has_nonparty':
+				word = 'traded'
+				break
+			default:
+				break
+			}
+			return word
+		},
+		isPolyols() {
+			return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)]
+		},
+		isQps() {
+			return [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)]
+		},
 		tableItems() {
 			const tableFields = []
 			this.tab_info.form_fields.forEach((element) => {
@@ -717,8 +789,8 @@ export default {
 			)[0]
 		},
 
-		allowedChanges() {
-			return this.$store.getters.allowedChanges || this.hasDisabledFields
+		isReadOnly() {
+			return this.$store.getters.isReadOnly || this.hasDisabledFields
 		},
 
 		hasSubstances() {
@@ -752,7 +824,6 @@ export default {
 					this.pushUnique(fields, current.join('_'))
 				}
 
-				console.log('fields', fields)
 				return fields
 			}
 			return false
