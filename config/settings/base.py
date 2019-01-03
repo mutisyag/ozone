@@ -100,6 +100,7 @@ THIRD_PARTY_APPS = [
     'guardian',
     'django_filters',
     'simple_history',
+    'oauth2_provider',
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here
@@ -248,6 +249,7 @@ TEMPLATES = [
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
@@ -295,3 +297,14 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html
+OAUTH2_PROVIDER = {
+    # https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#scopes
+    'SCOPES': {
+        'read': 'Read scope',
+    },
+    # https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#request-approval-prompt
+    # Set to auto instead of "force" to remember if the application was previously
+    # authorized or not.
+    "REQUEST_APPROVAL_PROMPT": 'auto',
+}
