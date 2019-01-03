@@ -107,7 +107,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="!allowedChanges"
+								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -131,7 +131,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -167,7 +167,7 @@
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
 									></fieldGenerator>
 								</span>
@@ -185,7 +185,7 @@
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_polyols"
 									></fieldGenerator>
 								</span>
@@ -243,7 +243,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="!allowedChanges"
+								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -256,7 +256,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -292,7 +292,7 @@
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
 									></fieldGenerator>
 								</span>
@@ -309,7 +309,7 @@
 									<fieldGenerator
 										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-										:disabled="allowedChanges"
+										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_polyols"
 									></fieldGenerator>
 								</span>
@@ -357,7 +357,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="allowedChanges"
+								v-if="isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
@@ -390,7 +390,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -457,13 +457,13 @@
 				class="comments-input"
 			>
 				<label>{{labels[comment.name]}}</label>
-				<textarea :disabled="$store.getters.allowedChanges" class="form-control" v-model="comment.selected"></textarea>
+				<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 			</div>
 		</div>
 
     <hr>
 
-    <AppAside v-if="!allowedChanges" fixed>
+    <AppAside v-if="!isReadOnly" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -489,7 +489,7 @@
               class="mb-2"
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
               label="text"
               placeholder="Select substance"
               :value="modal_data.field.substance.selected"
@@ -503,7 +503,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="allowedChanges"
+                :disabled="isReadOnly"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
@@ -512,7 +512,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-								:disabled="allowedChanges"
+								:disabled="isReadOnly"
                 trackBy="value"
                 label="text"
                 placeholder="Countries"
@@ -539,7 +539,7 @@
                 <fieldGenerator
 					style="max-width: 50%"
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="allowedChanges"
+					:disabled="isReadOnly"
 					:field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -548,7 +548,7 @@
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="allowedChanges"
+                  :disabled="isReadOnly"
                   :field="modal_data.field[`decision_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
@@ -565,7 +565,7 @@
           </b-col>
           <b-col lg="9">
             <textarea
-								:disabled="allowedChanges"
+								:disabled="isReadOnly"
 								class="form-control" v-model="modal_data.field[comment_field].selected">
 						</textarea>
           </b-col>
@@ -766,8 +766,8 @@ export default {
 			)[0]
 		},
 
-		allowedChanges() {
-			return this.$store.getters.allowedChanges || this.hasDisabledFields
+		isReadOnly() {
+			return this.$store.getters.isReadOnly || this.hasDisabledFields
 		},
 
 		hasSubstances() {

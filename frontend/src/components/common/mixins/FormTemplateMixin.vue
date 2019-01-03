@@ -58,10 +58,6 @@ export default {
 	},
 
 	computed: {
-		user() {
-			// TODO: for readonly users: emptyText: 'There are no records to show'
-			return null
-		},
 		getTabInputFields() {
 			return intersect(inputFields, this.tab_info.fields_order)
 		},
@@ -166,8 +162,13 @@ export default {
 			return this.$store.state.initialData
 		},
 
-		allowedChanges() {
-			return this.$store.getters.allowedChanges
+		isReadOnly() {
+			const { isReadOnly } = this.$store.getters
+			if (isReadOnly) {
+				this.table.emptyText = 'There are no records to show'
+				this.tableBlends.emptyText = this.table.emptyText
+			}
+			return isReadOnly
 		}
 	},
 

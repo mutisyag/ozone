@@ -96,7 +96,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -135,7 +135,7 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
-					:empty-text="table.emptyText"
+					:empty-text="tableBlends.emptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends"
 				>
@@ -169,7 +169,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -220,7 +220,7 @@
 			class="comments-input"
 		>
 			<label>{{labels[comment.name]}}</label>
-			<textarea :disabled="$store.getters.allowedChanges" class="form-control" v-model="comment.selected"></textarea>
+			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 		</div>
 	</div>
 
@@ -232,7 +232,7 @@
       </p>
     </div>
 
-    <AppAside v-if="!allowedChanges" fixed>
+    <AppAside v-if="!isReadOnly" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -271,7 +271,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="allowedChanges"
+                :disabled="isReadOnly"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
             </b-col>
