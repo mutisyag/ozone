@@ -156,12 +156,12 @@
 							{{cell.item[tooltipField]}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isQps.includes(cell.item.originalObj.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} exported to be used for QPS applications
+								Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
@@ -174,9 +174,9 @@
 							</div>
 
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isPolyols.includes(cell.item.originalObj.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_polyols"
+								v-if="isPolyols.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
 							>
 								<hr>
 								Polyols quantity
@@ -281,12 +281,12 @@
 							{{cell.item[tooltipField]}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isQps.includes(cell.item.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} {{qps_word}} to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
@@ -298,9 +298,9 @@
 								</span>
 							</div>
 							<div
-								style="margin-left: -4rem; margin-top: 2rem"
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isPolyols.includes(cell.item.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_polyols"
+								v-if="isPolyols.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
 							>
 								<hr>
 								Quantity of Polyols
@@ -690,6 +690,29 @@ export default {
 		}
 	},
 	computed: {
+		qps_word() {
+			let word = ''
+			switch (this.tab_info.name) {
+			case 'has_exports':
+				word = 'exported'
+				break
+			case 'has_imports':
+				word = 'imported'
+				break
+			case 'has_produced':
+				word = 'produced'
+				break
+			case 'has_destroyed':
+				word = 'destroyed'
+				break
+			case 'has_nonparty':
+				word = 'traded'
+				break
+			default:
+				break
+			}
+			return word
+		},
 		isPolyols() {
 			return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
 				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)]
