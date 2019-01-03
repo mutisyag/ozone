@@ -28,6 +28,15 @@
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
+							<b-row>
+								<b-col lg='3'>
+									<label>{{labels.dateOfSubmission}}</label>
+								</b-col>
+								<b-col>
+									<span v-if="$store.state.current_submission.submitted_at">{{$store.state.current_submission.submitted_at}}</span>
+									<i v-else class="fa fa-ellipsis-h"></i>
+								</b-col>
+							</b-row>
 						</div>
 					</b-card>
 				</b-col>

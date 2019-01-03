@@ -18,6 +18,7 @@ export default {
 	fax: 'Fax',
 	email: 'E-mail',
 	date: 'Date',
+	dateOfSubmission: 'Date of submission',
 	subject: 'Subject',
 	art7: 'Article 7',
 	hat: 'HAT',
