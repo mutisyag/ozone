@@ -10,7 +10,7 @@
 		:multiple="false"
 		label="text"
 		trackBy="value"
-		@change="updateFormField($event)"
+		@input="updateFormField($event)"
 		:disabled="disabled"
 		v-model="currentTyping"
 		:options="field.options" />
@@ -55,6 +55,7 @@ export default {
 		},
 
 		updateFormField(e) {
+			console.log('---------', e)
 			if (this.field.type !== 'select') {
 				this.validateInput()
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })

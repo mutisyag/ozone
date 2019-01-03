@@ -15,6 +15,7 @@ export default {
 	postal_code: 'Postal adddress',
 	country: 'Country',
 	phone: 'Phone',
+	reporting_channel: 'Reporting channel',
 	fax: 'Fax',
 	email: 'E-mail',
 	date: 'Date',
