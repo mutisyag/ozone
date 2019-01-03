@@ -11,7 +11,8 @@ import {
 	createSubmission,
 	getParties,
 	getNonParties,
-	getPartyRatifications
+	getPartyRatifications,
+	getCurrentUser
 } from '@/components/common/services/api'
 
 import {
@@ -62,11 +63,22 @@ const actions = {
 			})
 		})
 	},
+
+	getMyCurrentUser(context) {
+		getCurrentUser().then(response => {
+			context.commit('setCurrentUser', response.data)
+			// TODO: WHY IS IT AN ARRAY ?
+			context.commit('setCurrentUserPartyInDashboard', response.data[0].party)
+			context.dispatch('getCurrentSubmissions')
+		})
+	},
+
 	getMyCurrentSubmissions(context) {
 		return new Promise((resolve) => {
 			getSubmissions({
 				filters: {
-					currentState: 'data_entry'
+					currentState: 'data_entry',
+					party: context.state.currentUser.party
 				},
 				sorting: {
 					sortDesc: true,

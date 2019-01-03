@@ -88,7 +88,7 @@ DJANGO_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 'django.contrib.humanize', # Handy template tags
-    'django.contrib.admin',
+    # 'django.contrib.admin', # Replaced by OzoneAdminConfig
 ]
 THIRD_PARTY_APPS = [
     'crispy_forms',
@@ -100,10 +100,12 @@ THIRD_PARTY_APPS = [
     'guardian',
     'django_filters',
     'simple_history',
+    'oauth2_provider',
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here
     'ozone.core.apps.CoreConfig',
+    'ozone.core.apps.OzoneAdminConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
@@ -129,7 +131,7 @@ TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_IN
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = 'core.User'
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-url
-LOGIN_URL = 'account_login'
+LOGIN_URL = 'admin:login'
 
 # PASSWORDS
 # ------------------------------------------------------------------------------
@@ -166,6 +168,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'core.middleware.TokenAdminAuthMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -246,6 +249,7 @@ TEMPLATES = [
 # DRF
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
         'rest_framework.authentication.TokenAuthentication',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
@@ -293,3 +297,14 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secure-proxy-ssl-header
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html
+OAUTH2_PROVIDER = {
+    # https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#scopes
+    'SCOPES': {
+        'read': 'Read scope',
+    },
+    # https://django-oauth-toolkit.readthedocs.io/en/latest/settings.html#request-approval-prompt
+    # Set to auto instead of "force" to remember if the application was previously
+    # authorized or not.
+    "REQUEST_APPROVAL_PROMPT": 'auto',
+}

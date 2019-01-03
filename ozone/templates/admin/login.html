@@ -1,0 +1,25 @@
+{% extends 'admin/login.html' %}
+{% load i18n static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style type="text/css">
+    #content-main {
+      background-color: unset;
+      border: 0;
+    }
+    #login-form legend {
+      color: #000;
+    }
+    #login-form {
+      background-color: #fff;
+      padding: 45px;
+      border: 1px solid #c8ced3;
+      border-radius: .25rem;
+    }
+  </style>
+{% endblock extrastyle %}
+
+{% block branding %}
+  <!-- Nothing -->
+{% endblock branding %}

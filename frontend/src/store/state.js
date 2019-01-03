@@ -1,4 +1,5 @@
 const state = {
+	currentUser: null,
 	dashboard: {
 		mySubmissions: null,
 		submissions: null,
