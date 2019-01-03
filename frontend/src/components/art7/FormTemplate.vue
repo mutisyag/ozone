@@ -158,10 +158,10 @@
 							<div
 								style="margin-left: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.originalObj.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
+								Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} exported to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
@@ -172,6 +172,25 @@
 									></fieldGenerator>
 								</span>
 							</div>
+
+							<div
+								style="margin-left: -4rem; margin-top: 2rem"
+								class="special-field"
+								v-if="isPolyols.includes(cell.item.originalObj.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_polyols"
+							>
+								<hr>
+								Polyols quantity
+								<hr>
+								<span>
+									<fieldGenerator
+										:key="tooltipField"
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+										:disabled="allowedChanges"
+										:field="cell.item.originalObj.quantity_polyols"
+									></fieldGenerator>
+								</span>
+							</div>
+
 						</span>
 					</template>
 				</b-table>
@@ -264,7 +283,7 @@
 							<div
 								style="margin-left: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="cell.item.group === 'EI' && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(cell.item.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_quarantine_pre_shipment"
 							>
 								<hr>
 								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} exported to be used for QPS applications
@@ -275,6 +294,23 @@
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
 										:disabled="allowedChanges"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
+									></fieldGenerator>
+								</span>
+							</div>
+							<div
+								style="margin-left: -4rem; margin-top: 2rem"
+								class="special-field"
+								v-if="isPolyols.includes(cell.item.substance.selected) && tooltipField === 'decision_exempted' && cell.item.quantity_polyols"
+							>
+								<hr>
+								Quantity of Polyols
+								<hr>
+								<span>
+									<fieldGenerator
+										:key="tooltipField"
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+										:disabled="allowedChanges"
+										:field="cell.item.originalObj.quantity_polyols"
 									></fieldGenerator>
 								</span>
 							</div>
@@ -593,18 +629,23 @@ export default {
 	},
 	methods: {
 		anotherSpecialCase(order, modal_data) {
-			if (order !== 'quarantine_pre_shipment') {
+			// determine what are we dealing with
+			const type = modal_data.field.substance && modal_data.field.substance.selected
+				? 'substance'
+				: modal_data.field.blend && modal_data.field.blend.selected
+					? 'blend'
+					: null
+			// just in case
+			if (!type) return
+			// this may look ugly, but it had to be done
+			if (!['quarantine_pre_shipment', 'polyols'].includes(order)) {
 				return true
 			}
-			if (modal_data.field.substance && modal_data.field.substance.selected && modal_data.field.group.selected === 'EI') {
-				if (this.tab_data.substances.find(s => s.value === modal_data.field.substance.selected).is_qps) {
-					return true
-				}
+			if (this.isQps.includes(modal_data.field[type].selected) && order === 'quarantine_pre_shipment') {
+				return true
 			}
-			if (modal_data.field.blend && modal_data.field.blend.selected) {
-				if (this.tab_data.blends.find(s => s.id === modal_data.field.blend.selected).is_qps) {
-					return true
-				}
+			if (this.isPolyols.includes(modal_data.field[type].selected) && order === 'polyols') {
+				return true
 			}
 		},
 
@@ -649,6 +690,14 @@ export default {
 		}
 	},
 	computed: {
+		isPolyols() {
+			return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)]
+		},
+		isQps() {
+			return [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)]
+		},
 		tableItems() {
 			const tableFields = []
 			this.tab_info.form_fields.forEach((element) => {
@@ -752,7 +801,6 @@ export default {
 					this.pushUnique(fields, current.join('_'))
 				}
 
-				console.log('fields', fields)
 				return fields
 			}
 			return false
