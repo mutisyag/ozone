@@ -130,7 +130,7 @@ const form = {
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
 
 			fields_order: ['substance', 'blend', 'destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses', 'quantity_polyols', 'decision_polyols'],
+			hidden_fields_order: ['quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_other_uses', 'decision_other_uses', 'quantity_polyols', 'decision_polyols'],
 			modal_order: ['destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 
@@ -165,6 +165,8 @@ const form = {
 				quantity_quarantine_pre_shipment: null,
 				decision_quarantine_pre_shipment: '',
 				destination_party: null,
+				quantity_polyols: null,
+				decision_polyols: null,
 				substance: null,
 				blend: null,
 				decision: null
@@ -263,7 +265,7 @@ const form = {
 			}
 			],
 			fields_order: ['substance', 'blend', 'source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses', 'quantity_polyols', 'decision_polyols'],
+			hidden_fields_order: ['quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_other_uses', 'decision_other_uses', 'quantity_polyols', 'decision_polyols'],
 			modal_order: ['source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 			isInvalid: false,
@@ -287,6 +289,8 @@ const form = {
 				quantity_quarantine_pre_shipment: null,
 				decision_quarantine_pre_shipment: '',
 				source_party: null,
+				quantity_polyols: null,
+				decision_polyols: null,
 				substance: null,
 				blend: null,
 				decision: null
@@ -311,7 +315,7 @@ const form = {
 			form_fields: [],
 			fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
 			special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'validation'],
-			hidden_fields_order: ['quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_other_uses', 'decision_other_uses'],
+			hidden_fields_order: ['quantity_quarantine_pre_shipment', 'decision_quarantine_pre_shipment', 'quantity_essential_uses', 'decision_essential_uses', 'quantity_critical_uses', 'decision_critical_uses', 'quantity_high_ambient_temperature', 'decision_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'decision_laboratory_analytical_uses', 'quantity_process_agent_uses', 'decision_process_agent_uses', 'quantity_other_uses', 'decision_other_uses'],
 			modal_order: ['quantity_total_produced', 'quantity_feedstock', 'quantity_article_5'],
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'quantity_article_5'],
 			section_subheaders: [
