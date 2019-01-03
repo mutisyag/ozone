@@ -588,4 +588,6 @@ class AuthTokenViewSet(
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         self.perform_destroy(instance)
+        # Also remove any active session.
+        request.session.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
