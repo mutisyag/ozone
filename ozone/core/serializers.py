@@ -507,6 +507,23 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
+class SubmissionRemarksSerializer(serializers.ModelSerializer):
+    """
+    Specific serializer used to present all submission remarks
+    """
+
+    class Meta:
+        model = Submission
+        fields = (
+            "imports_remarks_party", "imports_remarks_secretariat",
+            "exports_remarks_party", "exports_remarks_secretariat",
+            "production_remarks_party", "production_remarks_secretariat",
+            "destruction_remarks_party", "destruction_remarks_secretariat",
+            "nonparty_remarks_party", "nonparty_remarks_secretariat",
+            "emissions_remarks_party", "emissions_remarks_secretariat",
+        )
+
+
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific

@@ -217,6 +217,19 @@ class Submission(models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
+    imports_remarks_party = models.CharField(max_length=9999, blank=True)
+    imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    exports_remarks_party = models.CharField(max_length=9999, blank=True)
+    exports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    production_remarks_party = models.CharField(max_length=9999, blank=True)
+    production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    destruction_remarks_party = models.CharField(max_length=9999, blank=True)
+    destruction_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    nonparty_remarks_party = models.CharField(max_length=9999, blank=True)
+    nonparty_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    emissions_remarks_party = models.CharField(max_length=9999, blank=True)
+    emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -428,6 +441,19 @@ class Submission(models.Model):
             "flag_has_reported_c3",
             "flag_has_reported_e",
             "flag_has_reported_f",
+            # Remarks
+            "imports_remarks_party",
+            "imports_remarks_secretariat",
+            "exports_remarks_party",
+            "exports_remarks_secretariat",
+            "production_remarks_party",
+            "production_remarks_secretariat",
+            "destruction_remarks_party",
+            "destruction_remarks_secretariat",
+            "nonparty_remarks_party",
+            "nonparty_remarks_secretariat",
+            "emissions_remarks_party",
+            "emissions_remarks_secretariat",
         ]
 
     def non_exempted_fields_modified(self):
