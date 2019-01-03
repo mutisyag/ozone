@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/views/Dashboard'
+import {
+	apiBase
+} from '@/components/common/services/api.js'
 
 const Art7DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
 const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/components/letter/DataManager')
@@ -14,10 +17,6 @@ const Register = () => import(/* webpackChunkName: "register" */ '@/views/pages/
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
 const LookupTablesParties = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Parties')
-
-import {
-	apiBase
-} from '@/components/common/services/api.js'
 
 Vue.use(Router)
 
@@ -35,10 +34,10 @@ const routes = [
 	},
 	{
 		path: '/login',
-		beforeEnter(to, from, next) {
+		beforeEnter() {
 			window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.href)}`
 		},
-		name: 'Login',
+		name: 'Login'
 	},
 	{
 		path: '/submission',
