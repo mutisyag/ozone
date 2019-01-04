@@ -17,6 +17,10 @@ User = get_user_model()
 
 
 class BaseRemarksTests(TestCase):
+
+    success_code = 200
+    fail_code = 422
+
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -49,6 +53,17 @@ class BaseRemarksTests(TestCase):
         )
         return submission
 
+    def _check_result(self, result, expect_success):
+        try:
+            verbose = result.json()
+        except:
+            verbose = result.data
+        self.assertEqual(
+            result.status_code,
+            self.success_code if expect_success else self.fail_code,
+            verbose,
+        )
+
 
 class SubmissionRemarksPermissionTests(BaseRemarksTests):
     """Checks editable permission depending on:
@@ -74,7 +89,7 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
             format="json",
             **headers,
         )
-        self.assertEqual(result.status_code == 200, expect_success)
+        self._check_result(result, expect_success)
 
     def test_party_user_party_field_party_reporter(self):
         self._check_remark_update_permission(
@@ -148,7 +163,7 @@ class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
             format="json",
             **headers,
         )
-        self.assertEqual(result.status_code == 200, expect_success)
+        self._check_result(result, expect_success)
 
     def test_modify_party_field_in_data_entry_by_party_user(self):
         self._check_remark_update_permission_state(
