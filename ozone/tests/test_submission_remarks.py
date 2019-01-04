@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
+from ozone.core.models import Submission
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -14,6 +15,8 @@ from .factories import (
 )
 
 User = get_user_model()
+
+REMARK_VALUE = "Some random remark here."
 
 
 class BaseRemarksTests(TestCase):
@@ -53,7 +56,7 @@ class BaseRemarksTests(TestCase):
         )
         return submission
 
-    def _check_result(self, result, expect_success):
+    def _check_result(self, result, expect_success, submission, field):
         try:
             verbose = result.json()
         except:
@@ -63,6 +66,9 @@ class BaseRemarksTests(TestCase):
             self.success_code if expect_success else self.fail_code,
             verbose,
         )
+
+        submission = Submission.objects.get(pk=submission.id)
+        self.assertEqual(getattr(submission, field), REMARK_VALUE if expect_success else '')
 
 
 class SubmissionRemarksPermissionTests(BaseRemarksTests):
@@ -84,12 +90,12 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
                 "core:submission-submission-remarks-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            {field: "Some random remark here."},
+            {field: REMARK_VALUE},
             "application/json",
             format="json",
             **headers,
         )
-        self._check_result(result, expect_success)
+        self._check_result(result, expect_success, submission, field)
 
     def test_party_user_party_field_party_reporter(self):
         self._check_remark_update_permission(
@@ -158,12 +164,12 @@ class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
                 "core:submission-submission-remarks-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            {field: "Some random remark here."},
+            {field: REMARK_VALUE},
             "application/json",
             format="json",
             **headers,
         )
-        self._check_result(result, expect_success)
+        self._check_result(result, expect_success, submission, field)
 
     def test_modify_party_field_in_data_entry_by_party_user(self):
         self._check_remark_update_permission_state(
