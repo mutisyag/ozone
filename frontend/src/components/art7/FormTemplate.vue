@@ -460,7 +460,7 @@
 					<!-- addComment(state, { data, tab, field }) { -->
 				<textarea
 					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
-					:disabled="$store.getters.isReadOnly"
+					:disabled="getCommentFieldPermission(comment_key)"
 					class="form-control"
 					:value="comment.selected">
 				</textarea>
@@ -650,6 +650,17 @@ export default {
 				return true
 			}
 			if (this.isPolyols.includes(modal_data.field[type].selected) && order === 'polyols') {
+				return true
+			}
+		},
+
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				return this.$store.getters.isReadOnly
+			}
+			if(type === 'secretariat') {
 				return true
 			}
 		},
