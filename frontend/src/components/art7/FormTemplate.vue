@@ -131,7 +131,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -390,7 +390,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"							
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -570,7 +570,7 @@
           </b-col>
           <b-col lg="9">
             <textarea
-								:disabled="isReadOnly"
+								:disabled="getCommentFieldPermission(comment_field)"
 								class="form-control" v-model="modal_data.field[comment_field].selected">
 						</textarea>
           </b-col>
@@ -658,10 +658,18 @@ export default {
 			let type = fieldName.split('_')
 			type = type[type.length - 1]
 			if (type === 'party') {
+				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
+					return false
+				}
+				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
+					return true
+				}
 				return this.$store.getters.isReadOnly
 			}
-			if(type === 'secretariat') {
-				return true
+			if (['secretariat', 'os'].includes(type)) {
+				if (!this.$store.state.currentUser.is_secretariat) {
+					return true
+				}
 			}
 		},
 

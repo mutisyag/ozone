@@ -17,7 +17,7 @@
 				v-model="currentTyping"
 				:options="fieldOptions" />
 		</div>
-    <textarea @change="updateFormField"  class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
+    <textarea @change="updateFormField"  :disabled="disabled" class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
   </div>
 </template>
 
@@ -87,7 +87,7 @@ export default {
 			handler() {
 				this.currentTyping = this.field.selected
 			}
-		}
+		},
 	}
 }
 

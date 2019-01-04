@@ -79,6 +79,12 @@ const actions = {
 		})
 	},
 
+	getCurrentUserForm(context) {
+		getCurrentUser().then(response => {
+			context.commit('setCurrentUser', response.data)
+		})
+	},
+
 	getMyCurrentSubmissions(context) {
 		return new Promise((resolve) => {
 			getSubmissions({
@@ -200,6 +206,7 @@ const actions = {
 		context.commit('setForm', formName)
 		return new Promise((resolve) => {
 			context.dispatch('getSubmissionData', submission).then(() => {
+				context.dispatch('getCurrentUserForm')
 				context.dispatch('getCountries')
 				context.dispatch('getSubstances')
 				context.dispatch('getCustomBlends')
