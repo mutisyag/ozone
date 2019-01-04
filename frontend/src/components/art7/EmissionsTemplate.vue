@@ -86,9 +86,19 @@
 		<div class="table-wapper">
 			<h4> {{tab_info.formNumber}}.2 Comments</h4>
 			<hr>
-			<div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
-				<label>{{labels[comment.name]}}</label>
-				<textarea class="form-control" v-model="comment.selected"></textarea>
+			<div
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input"
+			>
+				<label>{{labels[comment_key]}}</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="$store.getters.isReadOnly"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
 			</div>
 		</div>
     <hr>

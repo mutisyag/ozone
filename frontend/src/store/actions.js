@@ -53,6 +53,12 @@ const actions = {
 		})
 	},
 
+	prefillComments(context, data) {
+		Object.keys(context.state.form.tabs)
+			.filter(tab => context.state.form.tabs[tab].comments)
+			.forEach(tab => context.commit('addComment', { data, tab }))
+	},
+
 	getCurrentSubmissions(context) {
 		return new Promise((resolve) => {
 			getSubmissions(context.state.dashboard.table).then(response => {
