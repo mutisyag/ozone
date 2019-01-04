@@ -1,17 +1,13 @@
 const getters = {
-	// ...
-	getValidationForCurrentTab: (state) => (tab) => {
-		if (['edited', false].includes(state.form.tabs[tab].status)) {
-			return state.form.tabs[tab].form_fields.map(field => (field.validation.selected
-				? {
-					validation: field.validation.selected,
-					substance: field.substance ? field.substance.selected : null,
-					blend: field.blend ? field.blend.selected : null,
-					facility_name: field.facility_name ? field.facility_name.selected : null
-				}
-				: null))
+	// TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
+	getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields.map(field => (field.validation.selected
+		? {
+			validation: field.validation.selected,
+			substance: field.substance ? field.substance.selected : null,
+			blend: field.blend ? field.blend.selected : null,
+			facility_name: field.facility_name ? field.facility_name.selected : null
 		}
-	},
+		: null)),
 
 	getDuplicateSubmission: (state) => (data) => state.dashboard.submissions.filter(
 		(sub) => sub.obligation === data.obligation
