@@ -509,19 +509,32 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
 
 class SubmissionRemarksSerializer(serializers.ModelSerializer):
     """
-    Specific serializer used to present all submission remarks
+    Specific serializer used to present all submission remarks,
+    since this is easily usable by the frontend.
     """
 
     class Meta:
         model = Submission
         fields = (
-            "imports_remarks_party", "imports_remarks_secretariat",
-            "exports_remarks_party", "exports_remarks_secretariat",
-            "production_remarks_party", "production_remarks_secretariat",
-            "destruction_remarks_party", "destruction_remarks_secretariat",
-            "nonparty_remarks_party", "nonparty_remarks_secretariat",
-            "emissions_remarks_party", "emissions_remarks_secretariat",
+            'imports_remarks_party', 'imports_remarks_secretariat',
+            'exports_remarks_party', 'exports_remarks_secretariat',
+            'production_remarks_party', 'production_remarks_secretariat',
+            'destruction_remarks_party', 'destruction_remarks_secretariat',
+            'nonparty_remarks_party', 'nonparty_remarks_secretariat',
+            'emissions_remarks_party', 'emissions_remarks_secretariat',
         )
+
+    def update(self, instance, validated_data):
+        """
+        Not really kosher to perform validations here, but we need to
+        pass the user to the validation method in the model.
+        Cannot override the serializer's validate() method either since it
+        does not have access to the object instance.
+        """
+        # User should always be on the request due to our permission classes
+        user = self.context['request'].user
+        instance.check_remarks(user, validated_data)
+        return super().update(instance, validated_data)
 
 
 class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
@@ -589,6 +602,10 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
         view_name='core:submission-submission-flags-list',
         lookup_url_kwarg='submission_pk',
     )
+    submission_remarks = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-remarks-list',
+        lookup_url_kwarg='submission_pk',
+    )
 
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
@@ -608,7 +625,7 @@ class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
             'sub_info_url', 'sub_info',
-            'submission_flags_url',
+            'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'filled_by_secretariat',
             'current_state', 'previous_state', 'available_transitions',

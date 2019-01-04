@@ -416,6 +416,34 @@ class Submission(models.Model):
             })
         return True
 
+    def check_remarks(self, user, remarks):
+        """
+        Raise error if the user has change any remarks he was not allowed to
+        change.
+        """
+
+        wrongly_modified_remarks = []
+
+        for field_name, new_value in remarks.items():
+            if new_value == getattr(self, field_name):
+                # No value changed
+                continue
+
+            if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
+                # Secretariat users cannot modify any of the party fields, if the
+                # submission was filled by a party.
+                wrongly_modified_remarks.append(field_name)
+            elif not user.is_secretariat and field_name.endswith("_secretariat"):
+                # Party users cannot modify any of the secretariat remark fields
+                wrongly_modified_remarks.append(field_name)
+
+        if len(wrongly_modified_remarks) > 0:
+            raise ValidationError({
+                field: [_('User is not allowed to change this remark')]
+                for field in wrongly_modified_remarks
+            })
+        return True
+
     @staticmethod
     def get_exempted_fields():
         """

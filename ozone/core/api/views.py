@@ -67,7 +67,7 @@ from ..serializers import (
     SubmissionInfoSerializer,
     UpdateSubmissionInfoSerializer,
     SubmissionFlagsSerializer,
-)
+    SubmissionRemarksSerializer)
 
 User = get_user_model()
 
@@ -414,6 +414,31 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
 
 class SubmissionFlagsViewSet(viewsets.ModelViewSet):
     serializer_class = SubmissionFlagsSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def put(self, request, *args, **kwargs):
+        sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
+        serializer = self.get_serializer(sub, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        return Submission.objects.filter(
+            pk=self.kwargs['submission_pk']
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
+class SubmissionRemarksViewSet(viewsets.ModelViewSet):
+    serializer_class = SubmissionRemarksSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
