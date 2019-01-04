@@ -407,10 +407,11 @@ class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
     """
 
     def create(self, validated_data):
-        self.check_remarks(
-            bool(validated_data.get("remarks_party")),
-            bool(validated_data.get("remarks_os"))
-        )
+        if not isinstance(validated_data, list):
+            self.check_remarks(
+                bool(validated_data.get("remarks_party")),
+                bool(validated_data.get("remarks_os"))
+            )
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
