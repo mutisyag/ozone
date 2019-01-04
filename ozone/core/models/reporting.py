@@ -469,19 +469,19 @@ class Submission(models.Model):
             "flag_has_reported_c3",
             "flag_has_reported_e",
             "flag_has_reported_f",
-            # Remarks
-            # XXX TODO, clarify this ought to be here.
-            "imports_remarks_party",
+            # Remarks, secretariat remarks can be change
+            # at any time, while the party remarks cannot.
+            # "imports_remarks_party",
             "imports_remarks_secretariat",
-            "exports_remarks_party",
+            # "exports_remarks_party",
             "exports_remarks_secretariat",
-            "production_remarks_party",
+            # "production_remarks_party",
             "production_remarks_secretariat",
-            "destruction_remarks_party",
+            # "destruction_remarks_party",
             "destruction_remarks_secretariat",
-            "nonparty_remarks_party",
+            # "nonparty_remarks_party",
             "nonparty_remarks_secretariat",
-            "emissions_remarks_party",
+            # "emissions_remarks_party",
             "emissions_remarks_secretariat",
         ]
 
