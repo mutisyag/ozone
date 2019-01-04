@@ -470,6 +470,7 @@ class Submission(models.Model):
             "flag_has_reported_e",
             "flag_has_reported_f",
             # Remarks
+            # XXX TODO, clarify this ought to be here.
             "imports_remarks_party",
             "imports_remarks_secretariat",
             "exports_remarks_party",
