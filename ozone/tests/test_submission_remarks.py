@@ -43,18 +43,16 @@ class BaseRemarksTests(TestCase):
         )
         return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
-    def create_submission(self, owner):
+    def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=owner, last_edited_by=owner
+            party=self.party, created_by=owner, last_edited_by=owner, **kwargs
         )
         return submission
 
 
 class SubmissionRemarksPermissionTests(BaseRemarksTests):
     def _check_remark_update_permission(self, user, field, owner, expect_success):
-        user = self.party_user if user == "party" else self.secretariat_user
         field = "imports_remarks_%s" % field
-        owner = self.party_user if owner == "party" else self.secretariat_user
 
         submission = self.create_submission(owner)
         headers = self.get_authorization_header(user.username, "qwe123qwe")
@@ -67,38 +65,91 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
             {field: "Some random remark here."},
             "application/json",
             format="json",
-            **headers
+            **headers,
         )
         self.assertEqual(result.status_code == 200, expect_success)
 
     def test_party_user_party_field_party_reporter(self):
-        self._check_remark_update_permission("party", "party", "party", True),
+        self._check_remark_update_permission(
+            self.party_user, "party", self.party_user, True
+        )
 
     def test_party_user_party_filed_secretariat_reporter(self):
-        self._check_remark_update_permission("party", "party", "secretariat", True),
+        self._check_remark_update_permission(
+            self.party_user, "party", self.secretariat_user, True
+        )
 
     def test_party_user_secretariat_field_party_reporter(self):
-        self._check_remark_update_permission("party", "secretariat", "party", False),
+        self._check_remark_update_permission(
+            self.party_user, "secretariat", self.party_user, False
+        )
 
     def test_party_user_secretariat_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            "party", "secretariat", "secretariat", False
-        ),
+            self.party_user, "secretariat", self.secretariat_user, False
+        )
 
     def test_secretariat_user_party_field_party_reporter(self):
-        self._check_remark_update_permission("secretariat", "party", "party", False),
+        self._check_remark_update_permission(
+            self.secretariat_user, "party", self.party_user, False
+        )
 
     def test_secretariat_user_party_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            "secretariat", "party", "secretariat", True
-        ),
+            self.secretariat_user, "party", self.secretariat_user, True
+        )
 
     def test_secretariat_user_secretariat_field_party_reporter(self):
         self._check_remark_update_permission(
-            "secretariat", "secretariat", "party", True
-        ),
+            self.secretariat_user, "secretariat", self.party_user, True
+        )
 
     def test_secretariat_user_secretariat_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            "secretariat", "secretariat", "secretariat", True
+            self.secretariat_user, "secretariat", self.secretariat_user, True
         )
+
+
+remarks_data = {
+    "imports_remarks_party": "Testing",
+    "imports_remarks_secretariat": "Testing",
+    "exports_remarks_party": "Testing",
+    "exports_remarks_secretariat": "Testing",
+    "production_remarks_party": "Testing",
+    "production_remarks_secretariat": "Testing",
+    "destruction_remarks_party": "Testing",
+    "destruction_remarks_secretariat": "Testing",
+    "nonparty_remarks_party": "Testing",
+    "nonparty_remarks_secretariat": "Testing",
+    "emissions_remarks_party": "Testing",
+    "emissions_remarks_secretariat": "Testing",
+}
+
+
+class SubmissionRetrieveTest(BaseRemarksTests):
+
+    def _check_remark_retrieve_data(self, user, owner):
+        submission = self.create_submission(owner, **remarks_data)
+        headers = self.get_authorization_header(user.username, "qwe123qwe")
+
+        result = self.client.get(
+            reverse(
+                "core:submission-submission-remarks-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.json(), [remarks_data])
+
+    def test_retrieve_as_party_party_reporter(self):
+        self._check_remark_retrieve_data(self.party_user, self.party_user)
+
+    def test_retrieve_as_party_secretariat_reporter(self):
+        self._check_remark_retrieve_data(self.party_user, self.secretariat_user)
+
+    def test_retrieve_as_secretariat_party_reporter(self):
+        self._check_remark_retrieve_data(self.secretariat_user, self.party_user)
+
+    def test_retrieve_as_secretariat_secretariat_reporter(self):
+        self._check_remark_retrieve_data(self.secretariat_user, self.secretariat_user)
