@@ -90,6 +90,9 @@ const mutations = {
 		state.dashboard.submissions = data.results
 		state.dashboard.table.totalRows = data.count
 	},
+	setCurrentUserPartyInDashboard(state, data) {
+		state.dashboard.table.filters.party = data
+	},
 	setDashboardMySubmissions(state, data) {
 		state.dashboard.mySubmissions = data.results
 	},
@@ -111,6 +114,10 @@ const mutations = {
 
 	updateAvailableTransitions(state, data) {
 		state.available_transitions = data
+	},
+
+	setCurrentUser(state, data) {
+		[state.currentUser] = data
 	},
 
 	updateSubmissionData(state, data) {

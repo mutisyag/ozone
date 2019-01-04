@@ -357,7 +357,7 @@
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
 							>Edit</b-btn>
 							<b-btn
-								v-if="isReadOnly"
+								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
