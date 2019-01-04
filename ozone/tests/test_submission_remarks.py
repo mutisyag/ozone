@@ -51,7 +51,14 @@ class BaseRemarksTests(TestCase):
 
 
 class SubmissionRemarksPermissionTests(BaseRemarksTests):
+    """Checks editable permission depending on:
+        - user type who is changing the field
+        - the type of the field (either party or secretariat remark)
+        - user type who reported the submission
+    """
+
     def _check_remark_update_permission(self, user, field, owner, expect_success):
+        # XXX Assume this works correctly for all other fields.
         field = "imports_remarks_%s" % field
 
         submission = self.create_submission(owner)
@@ -110,6 +117,90 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
         )
 
 
+class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
+    """Checks editable permission depending on:
+
+     - workflow state
+     - field type
+    """
+
+    def _check_remark_update_permission_state(
+        self, user, field, owner, previous_state, current_state, expect_success
+    ):
+        # XXX Assume this works correctly for all other fields.
+        field = "imports_remarks_%s" % field
+
+        submission = self.create_submission(owner)
+        submission._previous_state = previous_state
+        submission._current_state = current_state
+        submission.flag_valid = True
+        submission.save()
+
+        headers = self.get_authorization_header(user.username, "qwe123qwe")
+
+        result = self.client.put(
+            reverse(
+                "core:submission-submission-remarks-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            {field: "Some random remark here."},
+            "application/json",
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code == 200, expect_success)
+
+    def test_modify_party_field_in_data_entry_by_party_user(self):
+        self._check_remark_update_permission_state(
+            self.party_user, "party", self.party_user, None, "data_entry", True
+        )
+
+    def test_modify_party_field_in_data_entry_by_secretariat_user(self):
+        self._check_remark_update_permission_state(
+            self.secretariat_user,
+            "party",
+            self.secretariat_user,
+            None,
+            "data_entry",
+            True,
+        )
+
+    def test_modify_party_field_in_submitted_by_party_user(self):
+        self._check_remark_update_permission_state(
+            self.party_user, "party", self.party_user, "data_entry", "submitted", False
+        )
+
+    def test_modify_party_field_in_submitted_by_secretariat_user(self):
+        self._check_remark_update_permission_state(
+            self.secretariat_user,
+            "party",
+            self.party_user,
+            "data_entry",
+            "submitted",
+            False,
+        )
+
+    def test_modify_secretariat_field_in_data_entry_by_secretariat_user(self):
+        self._check_remark_update_permission_state(
+            self.secretariat_user,
+            "secretariat",
+            self.party_user,
+            None,
+            "data_entry",
+            True,
+        )
+
+    def test_modify_secretariat_field_in_submitted_by_secretariat_user(self):
+        self._check_remark_update_permission_state(
+            self.secretariat_user,
+            "secretariat",
+            self.party_user,
+            "data_entry",
+            "submitted",
+            True,
+        )
+
+
 remarks_data = {
     "imports_remarks_party": "Testing",
     "imports_remarks_secretariat": "Testing",
@@ -127,7 +218,6 @@ remarks_data = {
 
 
 class SubmissionRetrieveTest(BaseRemarksTests):
-
     def _check_remark_retrieve_data(self, user, owner):
         submission = self.create_submission(owner, **remarks_data)
         headers = self.get_authorization_header(user.username, "qwe123qwe")
