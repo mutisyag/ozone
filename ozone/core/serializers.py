@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
+from rest_framework.serializers import raise_errors_on_nested_writes
+from rest_framework.utils import model_meta
 
 from .models import (
     Region,
@@ -557,7 +559,40 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.reporting_channel, 'name', '')
 
 
-class SubmissionFlagsSerializer(serializers.ModelSerializer):
+class SaveTheChangesMixIn(object):
+    """MixIn for Model Serializer that changes the behaviour of the updated
+    method, to issue an UPDATE query with only the specified fields.
+
+    Normally DRF triggers a instance.save() on update, which in turn triggers
+    an update of ALL the fields of the model. This is (a) inefficient and (b)
+    causing race conditions.
+
+    Change submitted upstream here: https://github.com/encode/django-rest-framework/pull/6391
+    """
+
+    def update(self, instance, validated_data):
+        # XXX See rest_framework.serializers
+        raise_errors_on_nested_writes('update', self, validated_data)
+        info = model_meta.get_field_info(instance)
+
+        # Simply set each attribute on the instance, and then save it.
+        # Note that unlike `.create()` we don't need to treat many-to-many
+        # relationships as being a special case. During updates we already
+        # have an instance pk for the relationships to be associated with.
+        update_fields = []
+        for attr, value in validated_data.items():
+            if attr in info.relations and info.relations[attr].to_many:
+                field = getattr(instance, attr)
+                field.set(value)
+            else:
+                setattr(instance, attr, value)
+                update_fields.append(attr)
+        instance.save(update_fields=update_fields)
+
+        return instance
+
+
+class SubmissionFlagsSerializer(SaveTheChangesMixIn, serializers.ModelSerializer):
     """
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
@@ -587,7 +622,7 @@ class SubmissionFlagsSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class SubmissionRemarksSerializer(serializers.ModelSerializer):
+class SubmissionRemarksSerializer(SaveTheChangesMixIn, serializers.ModelSerializer):
     """
     Specific serializer used to present all submission remarks,
     since this is easily usable by the frontend.
@@ -617,7 +652,7 @@ class SubmissionRemarksSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data)
 
 
-class SubmissionSerializer(serializers.HyperlinkedModelSerializer):
+class SubmissionSerializer(SaveTheChangesMixIn, serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
     submission.
