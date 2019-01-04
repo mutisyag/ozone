@@ -424,6 +424,7 @@ class Submission(models.Model):
 
         wrongly_modified_remarks = []
 
+        # XXX Logic duplicated in DataCheckRemarksMixInBase.check_remarks
         for field_name, new_value in remarks.items():
             if new_value == getattr(self, field_name):
                 # No value changed

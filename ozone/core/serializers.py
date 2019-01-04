@@ -1,5 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
@@ -91,6 +93,23 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         # Should never get here
         return None
 
+    def update_single(self, existing_entry, entry):
+        """Updates a single entry"""
+        changed = False
+        for field, value in entry.items():
+            if getattr(existing_entry, field, None) != value:
+                setattr(existing_entry, field, value)
+                changed = True
+        return changed
+
+    def create_single(self, data, instance, submission):
+        """Creates a single entry"""
+        obj = instance.create(
+            submission=submission,
+            **data
+        )
+        return obj
+
     def update(self, instance, validated_data):
         """
         Updating data reports in a submission will work as follows:
@@ -132,22 +151,16 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
                 else:
                     # Check if it needs to be updated to avoid database hit
                     entry = data_dictionary.pop(key)
-                    changed = False
-                    for field, value in entry.items():
-                        if getattr(existing_entry, field, None) != value:
-                            setattr(existing_entry, field, value)
-                            changed = True
-                    if changed:
-                        existing_entry.save()
+                    if self.update_single(existing_entry, entry):
                         ret.append(existing_entry)
+
+        for existing_entry in ret:
+            existing_entry.save()
 
         # After all that is done, just create the entries that still need to be
         # created (have not been popped out of data_dictionary)
         for key, data in data_dictionary.items():
-            obj = instance.create(
-                submission=submission,
-                **data
-            )
+            obj = self.create_single(data, instance, submission)
             ret.append(obj)
 
         return ret
@@ -363,12 +376,78 @@ class Article7QuestionnaireSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class Article7DestructionListSerializer(BaseBulkUpdateSerializer):
+class DataCheckRemarksMixInBase(object):
+    """Base class for checking remarks permissions for data entry."""
+
+    def check_remarks(self, remark_party_changed, remark_os_changed):
+        """Check if the party/secretariat remark are being incorrectly changed.
+
+        Raises a ValidationError.
+        """
+        user = self.context['request'].user
+        submission = self.context['submission']
+
+        # XXX Logic duplicated in Submission.check_remarks
+        if not submission.filled_by_secretariat and user.is_secretariat and remark_party_changed:
+            # Secretariat users cannot modify any of the party fields, if the
+            # submission was filled by a party.
+            raise ValidationError({
+                "remarks_party": [_('User is not allowed to change this remark')]
+            })
+        elif not user.is_secretariat and remark_os_changed:
+            # Party users cannot modify any of the secretariat remark fields
+            raise ValidationError({
+                "remarks_os": [_('User is not allowed to change this remark')]
+            })
+
+
+class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
+    """Check create and update permissions on remarks for adding/updating a single
+    data entry.
+    """
+
+    def create(self, validated_data):
+        self.check_remarks(
+            bool(validated_data.get("remarks_party")),
+            bool(validated_data.get("remarks_os"))
+        )
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if not isinstance(validated_data, list):
+            self.check_remarks(
+                "remarks_party" in validated_data and validated_data["remarks_party"] != instance.remarks_party,
+                "remarks_os" in validated_data and validated_data["remarks_os"] != instance.remarks_os
+            )
+        return super().update(instance, validated_data)
+
+
+class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
+    """Check create and update permissions on remarks for adding/updating bulk
+    data entries.
+    """
+
+    def update_single(self, existing_entry, entry):
+        self.check_remarks(
+            "remarks_party" in entry and entry["remarks_party"] != existing_entry.remarks_party,
+            "remarks_os" in entry and entry["remarks_os"] != existing_entry.remarks_os
+        )
+        return super().update_single(existing_entry, entry)
+
+    def create_single(self, data, instance, submission):
+        self.check_remarks(
+            bool(data.get("remarks_party")),
+            bool(data.get("remarks_os"))
+        )
+        return super().create_single(data, instance, submission)
+
+
+class Article7DestructionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
 
 
-class Article7DestructionSerializer(serializers.ModelSerializer):
+class Article7DestructionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -379,12 +458,12 @@ class Article7DestructionSerializer(serializers.ModelSerializer):
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ProductionListSerializer(BaseBulkUpdateSerializer):
+class Article7ProductionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class Article7ProductionSerializer(serializers.ModelSerializer):
+class Article7ProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -395,12 +474,12 @@ class Article7ProductionSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class Article7ExportListSerializer(BaseBulkUpdateSerializer):
+class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'destination_party'
 
 
-class Article7ExportSerializer(BaseBlendCompositionSerializer):
+class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
     group = serializers.CharField(source='substance.group.group_id', default='',
                                   read_only=True)
 
@@ -410,12 +489,12 @@ class Article7ExportSerializer(BaseBlendCompositionSerializer):
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ImportListSerializer(BaseBulkUpdateSerializer):
+class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'source_party'
 
 
-class Article7ImportSerializer(BaseBlendCompositionSerializer):
+class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -426,12 +505,12 @@ class Article7ImportSerializer(BaseBlendCompositionSerializer):
         exclude = ('submission', 'blend_item',)
 
 
-class Article7NonPartyTradeListSerializer(BaseBulkUpdateSerializer):
+class Article7NonPartyTradeListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'trade_party'
 
 
-class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
+class Article7NonPartyTradeSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -442,7 +521,7 @@ class Article7NonPartyTradeSerializer(BaseBlendCompositionSerializer):
         exclude = ('submission', 'blend_item',)
 
 
-class Article7EmissionListSerializer(BaseBulkUpdateSerializer):
+class Article7EmissionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     """
     The list serializer for emissions needs to delete everything
     there was and create all data fresh, as there is no field to filter on.
@@ -452,7 +531,7 @@ class Article7EmissionListSerializer(BaseBulkUpdateSerializer):
     substance_blend_fields = []
 
 
-class Article7EmissionSerializer(serializers.ModelSerializer):
+class Article7EmissionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
     class Meta:
         list_serializer_class = Article7EmissionListSerializer
         model = Article7Emission
