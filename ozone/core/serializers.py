@@ -33,6 +33,7 @@ from .models import (
     HighAmbientTemperatureProduction,
     SubmissionFile,
     UploadToken,
+    HighAmbientTemperatureImport,
 )
 
 User = get_user_model()
@@ -562,6 +563,24 @@ class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializ
         exclude = ('submission',)
 
 
+class HighAmbientTemperatureImportListSerializer(DataCheckRemarksBulkUpdateMixIn,
+                                                 BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', 'blend']
+    unique_with = None
+
+
+class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
+                                             BaseBlendCompositionSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    class Meta:
+        list_serializer_class = HighAmbientTemperatureImportListSerializer
+        model = HighAmbientTemperatureImport
+        exclude = ('submission', 'blend_item',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -625,6 +644,7 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
             'destruction_remarks_party', 'destruction_remarks_secretariat',
             'nonparty_remarks_party', 'nonparty_remarks_secretariat',
             'emissions_remarks_party', 'emissions_remarks_secretariat',
+            'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
             'hat_production_remarks_party', 'hat_production_remarks_secretariat',
         )
 
@@ -715,6 +735,11 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         lookup_url_kwarg='submission_pk'
     )
 
+    hat_imports_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-hat-imports-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     files_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-files-list',
         lookup_url_kwarg='submission_pk'
@@ -755,6 +780,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
             'hat_productions_url',
+            'hat_imports_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',

@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
-from ozone.core.models import HighAmbientTemperatureProduction, Submission
+from ozone.core.models import HighAmbientTemperatureImport, Submission
 
 from .factories import (
     PartyFactory,
@@ -17,11 +17,11 @@ from .factories import (
     SubregionFactory,
     SubstanceFactory,
     AnotherPartyFactory,
-    HighAmbientTemperatureProductionFactory,
+    HighAmbientTemperatureImportFactory,
 )
 
 
-class BaseHATProductionTest(TestCase):
+class BaseHATImportTest(TestCase):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -58,7 +58,7 @@ class BaseHATProductionTest(TestCase):
         return submission
 
 
-HAT_PROD_DATA = {
+HAT_IMPORT_DATA = {
     'quantity_msac': 100,
     'quantity_sdac': 101,
     'quantity_dcpac': 102,
@@ -67,19 +67,19 @@ HAT_PROD_DATA = {
 }
 
 
-class TestHATProduction(BaseHATProductionTest):
+class TestHATImport(BaseHATImportTest):
 
     def test_create(self):
         submission = self.create_submission()
 
         headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
 
-        data = dict(HAT_PROD_DATA)
+        data = dict(HAT_IMPORT_DATA)
         data["substance"] = self.substance.id
 
         result = self.client.post(
             reverse(
-                "core:submission-hat-productions-list",
+                "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
             json.dumps([data]),
@@ -92,16 +92,16 @@ class TestHATProduction(BaseHATProductionTest):
     def test_get(self):
         submission = self.create_submission()
 
-        hat_prod = HighAmbientTemperatureProductionFactory(
+        hat_import = HighAmbientTemperatureImportFactory(
             submission=submission, substance=self.substance,
-            **HAT_PROD_DATA
+            **HAT_IMPORT_DATA
         )
 
         headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
 
         result = self.client.get(
             reverse(
-                "core:submission-hat-productions-list",
+                "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
             format="json",
@@ -109,9 +109,11 @@ class TestHATProduction(BaseHATProductionTest):
         )
         self.assertEqual(result.status_code, 200, result.json())
 
-        expected_data = dict(HAT_PROD_DATA)
+        expected_data = dict(HAT_IMPORT_DATA)
         expected_data["substance"] = self.substance.id
-        expected_data["id"] = hat_prod.id
+        expected_data["blend"] = None
+        expected_data["derived_substance_data"] = []
+        expected_data["id"] = hat_import.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
 
@@ -120,12 +122,12 @@ class TestHATProduction(BaseHATProductionTest):
     def test_update(self):
         submission = self.create_submission()
 
-        hat_prod = HighAmbientTemperatureProductionFactory(
+        hat_import = HighAmbientTemperatureImportFactory(
             submission=submission, substance=self.substance,
-            **HAT_PROD_DATA
+            **HAT_IMPORT_DATA
         )
 
-        data = dict(HAT_PROD_DATA)
+        data = dict(HAT_IMPORT_DATA)
         data["substance"] = self.substance.id
         data["quantity_msac"] = 42
 
@@ -133,7 +135,7 @@ class TestHATProduction(BaseHATProductionTest):
 
         result = self.client.put(
             reverse(
-                "core:submission-hat-productions-list",
+                "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
             json.dumps([data]),
@@ -143,15 +145,15 @@ class TestHATProduction(BaseHATProductionTest):
         )
         self.assertEqual(result.status_code, 200, result.json())
 
-        hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
-        self.assertEqual(hat_prod.quantity_msac, 42)
+        hat_import = HighAmbientTemperatureImport.objects.get(pk=hat_import.id)
+        self.assertEqual(hat_import.quantity_msac, 42)
 
     def test_clone(self):
         submission = self.create_submission()
 
-        hat_prod = HighAmbientTemperatureProductionFactory(
+        hat_import = HighAmbientTemperatureImportFactory(
             submission=submission, substance=self.substance,
-            **HAT_PROD_DATA
+            **HAT_IMPORT_DATA
         )
         submission._current_state = "finalized"
         submission.save()
@@ -169,11 +171,11 @@ class TestHATProduction(BaseHATProductionTest):
         self.assertEqual(result.status_code, 200, result.json())
         new_id = result.json()['url'].split("/")[-2]
 
-        new_hat = Submission.objects.get(pk=new_id).highambienttemperatureproductions.first()
+        new_hat = Submission.objects.get(pk=new_id).highambienttemperatureimports.first()
         self.assertEqual({
             'quantity_msac': new_hat.quantity_msac,
             'quantity_sdac': new_hat.quantity_sdac,
             'quantity_dcpac': new_hat.quantity_dcpac,
             'remarks_os': new_hat.remarks_os,
             'remarks_party': new_hat.remarks_party,
-        }, HAT_PROD_DATA)
+        }, HAT_IMPORT_DATA)

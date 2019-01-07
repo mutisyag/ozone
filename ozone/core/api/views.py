@@ -42,6 +42,7 @@ from ..models import (
     Article7NonPartyTrade,
     Article7Emission,
     HighAmbientTemperatureProduction,
+    HighAmbientTemperatureImport,
     Group,
     Substance,
     Blend,
@@ -69,6 +70,7 @@ from ..serializers import (
     Article7NonPartyTradeSerializer,
     Article7EmissionSerializer,
     HighAmbientTemperatureProductionSerializer,
+    HighAmbientTemperatureImportSerializer,
     GroupSerializer,
     SubstanceSerializer,
     BlendSerializer,
@@ -608,6 +610,22 @@ class Article7EmissionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
         return Article7Emission.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class HighAmbientTemperatureImportViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
+    serializer_class = HighAmbientTemperatureImportSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return HighAmbientTemperatureImport.objects.filter(
+            submission=self.kwargs['submission_pk']
+        ).filter(blend_item__isnull=True)
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])

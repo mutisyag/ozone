@@ -240,6 +240,8 @@ remarks_data = {
     "emissions_remarks_secretariat": "Testing",
     "hat_production_remarks_party": "Testing",
     "hat_production_remarks_secretariat": "Testing",
+    "hat_imports_remarks_party": "Testing",
+    "hat_imports_remarks_secretariat": "Testing",
 }
 
 
