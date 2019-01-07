@@ -1,3 +1,4 @@
+from base64 import b64encode
 from collections import OrderedDict
 from copy import deepcopy
 from pathlib import Path
@@ -867,7 +868,45 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
     serializer_class = UploadTokenSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
 
-    # TODO: do if needed!
+    def create(self, request, submission_pk):
+        """
+        Creates an ``UploadToken`` for the submission.
+        Used by `tusd` uploads server for user/submission correlation.
+        Upload tokens cannot be issued for non-editable submissions
+
+        Returns::
+
+            {
+              'token': <base64 encoded token>
+            }
+
+        """
+        submission = Submission.objects.get(pk=submission_pk)
+
+        if not submission.data_changes_allowed:
+            return Response(
+                {'error': 'Submission state does not allow uploads'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        token = submission.upload_tokens.create(user=request.user)
+        response = {'token': token.token}
+
+        # Include base64 encoded token in development environments
+        if settings.DEBUG:
+            response['token_base64'] = b64encode(token.token.encode())
+
+        return Response(response)
+
+    def list(self, request, submission_pk):
+        """
+        Returns the tokens issued for a given envelope.
+        """
+        queryset = UploadToken.objects.filter(submission=submission_pk)
+        serializer = self.serializer_class(
+            queryset, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
 
 
 class AuthTokenViewSet(
