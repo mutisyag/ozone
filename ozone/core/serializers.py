@@ -623,7 +623,6 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
             'destruction_remarks_party', 'destruction_remarks_secretariat',
             'nonparty_remarks_party', 'nonparty_remarks_secretariat',
             'emissions_remarks_party', 'emissions_remarks_secretariat',
-            'emissions_remarks_party', 'emissions_remarks_secretariat',
             'hat_production_remarks_party', 'hat_production_remarks_secretariat',
         )
 
