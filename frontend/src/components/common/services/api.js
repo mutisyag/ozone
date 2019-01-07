@@ -32,7 +32,7 @@ api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 api.defaults.xsrfCookieName = 'csrftoken'
 
 const uploadFile = (file, filename, fileId, token) => new Promise((resolve, reject) => {
-	const upload = new tus.Upload(file.data,
+	const upload = new tus.Upload(file,
 		{
 			endpoint: filesURL,
 			metadata: {
