@@ -1,5 +1,7 @@
 import enum
+import os
 
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -28,6 +30,8 @@ __all__ = [
     'ReportingChannel',
 ]
 
+SUBMISSION_ROOT_DIR = 'submissions'
+
 
 class Obligation(models.Model):
     """
@@ -44,8 +48,9 @@ class Obligation(models.Model):
     # in backend and frontend.
     has_reporting_periods = models.BooleanField(default=True)
 
-    # The type of form used to submit data. This will possibly get more complicated
-    # in the future (e.g. when different forms will be necessary for the same obligation
+    # The type of form used to submit data.
+    # This will possibly get more complicated in the future
+    # (e.g. when different forms will be necessary for the same obligation
     # but different reporting periods due to changes in the methodology
     form_type = models.CharField(max_length=64)
 
@@ -217,6 +222,7 @@ class Submission(models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
+    # Art7 Remarks
     imports_remarks_party = models.CharField(max_length=9999, blank=True)
     imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
     exports_remarks_party = models.CharField(max_length=9999, blank=True)
@@ -229,7 +235,9 @@ class Submission(models.Model):
     nonparty_remarks_secretariat = models.CharField(max_length=9999, blank=True)
     emissions_remarks_party = models.CharField(max_length=9999, blank=True)
     emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-
+    # HAT Remarks
+    hat_production_remarks_party = models.CharField(max_length=9999, blank=True)
+    hat_production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
     hat_imports_remarks_party = models.CharField(max_length=9999, blank=True)
     hat_imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
@@ -487,6 +495,8 @@ class Submission(models.Model):
             "nonparty_remarks_secretariat",
             # "emissions_remarks_party",
             "emissions_remarks_secretariat",
+            # "hat_production_remarks_party",
+            "hat_production_remarks_secretariat",
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
         ]
@@ -594,6 +604,50 @@ class Submission(models.Model):
                 instance.__class__.objects.create(**attributes)
 
         return clone
+
+    def get_storage_directory(self):
+        """
+        This determines the location at which files related to the submission
+        will be saved.
+        """
+        return os.path.join(
+            SUBMISSION_ROOT_DIR,
+            self.reporting_period.name,
+            self.obligation.name,
+            self.party.abbr,
+            str(self.version)
+        )
+
+    def delete_disk_file(self, file_name):
+        """
+        Used to delete an existing file from disk.
+        """
+        env_file = os.path.join(
+            self.get_storage_directory(),
+            file_name
+        )
+        try:
+            os.remove(env_file)
+        except FileNotFoundError:
+            pass
+
+    @transaction.atomic()
+    def make_current(self):
+        versions = (
+            Submission.objects.select_for_update()
+            .filter(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                obligation=self.obligation,
+            )
+            .exclude(pk=self.pk)
+            .exclude(_current_state__in=self.editable_states)
+        )
+        for version in versions:
+            version.flag_superseded = True
+            version.save()
+        self.flag_superseded = False
+        self.save()
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

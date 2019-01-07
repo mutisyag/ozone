@@ -30,6 +30,9 @@ from .models import (
     Article7Import,
     Article7NonPartyTrade,
     Article7Emission,
+    HighAmbientTemperatureProduction,
+    SubmissionFile,
+    UploadToken,
     HighAmbientTemperatureImport,
 )
 
@@ -543,6 +546,23 @@ class Article7EmissionSerializer(DataCheckRemarksMixIn, serializers.ModelSeriali
         exclude = ('submission',)
 
 
+class HighAmbientTemperatureProductionListSerializer(DataCheckRemarksBulkUpdateMixIn,
+                                                     BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    class Meta:
+        list_serializer_class = HighAmbientTemperatureProductionListSerializer
+        model = HighAmbientTemperatureProduction
+        exclude = ('submission',)
+
+
 class HighAmbientTemperatureImportListSerializer(DataCheckRemarksBulkUpdateMixIn,
                                                  BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
@@ -625,6 +645,7 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
             'nonparty_remarks_party', 'nonparty_remarks_secretariat',
             'emissions_remarks_party', 'emissions_remarks_secretariat',
             'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
+            'hat_production_remarks_party', 'hat_production_remarks_secretariat',
         )
 
     def update(self, instance, validated_data):
@@ -638,6 +659,18 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
         user = self.context['request'].user
         instance.check_remarks(user, validated_data)
         return super().update(instance, validated_data)
+
+
+class SubmissionFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubmissionFile
+        fields = '__all__'
+
+
+class UploadTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadToken
+        fields = '__all__'
 
 
 class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer):
@@ -660,6 +693,10 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     )
     article7questionnaire = Article7QuestionnaireSerializer(
         many=False, read_only=True
+    )
+
+    files = SubmissionFileSerializer(
+        many=True, read_only=True
     )
 
     # We want to add a URL for the destructions list
@@ -693,9 +730,19 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         lookup_url_kwarg='submission_pk'
     )
 
+    hat_productions_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-hat-productions-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
     hat_imports_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-hat-imports-list',
         lookup_url_kwarg='submission_pk',
+    )
+
+    files_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-files-list',
+        lookup_url_kwarg='submission_pk'
     )
 
     sub_info_url = serializers.HyperlinkedIdentityField(
@@ -732,7 +779,9 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'article7destructions_url', 'article7productions_url',
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
+            'hat_productions_url',
             'hat_imports_url',
+            'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',

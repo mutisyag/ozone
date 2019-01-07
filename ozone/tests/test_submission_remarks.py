@@ -78,24 +78,26 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
         - user type who reported the submission
     """
 
-    def _check_remark_update_permission(self, user, field, owner, expect_success):
-        # XXX Assume this works correctly for all other fields.
-        field = "imports_remarks_%s" % field
-
+    def _check_remark_update_permission(self, user, field_type, owner, expect_success):
         submission = self.create_submission(owner)
         headers = self.get_authorization_header(user.username, "qwe123qwe")
 
-        result = self.client.put(
-            reverse(
-                "core:submission-submission-remarks-list",
-                kwargs={"submission_pk": submission.pk},
-            ),
-            {field: REMARK_VALUE},
-            "application/json",
-            format="json",
-            **headers,
-        )
-        self._check_result(result, expect_success, submission, field)
+        for field in remarks_data.keys():
+            if not field.endswith(field_type):
+                continue
+
+            with self.subTest("Test update %s" % field):
+                result = self.client.put(
+                    reverse(
+                        "core:submission-submission-remarks-list",
+                        kwargs={"submission_pk": submission.pk},
+                    ),
+                    {field: REMARK_VALUE},
+                    "application/json",
+                    format="json",
+                    **headers,
+                )
+                self._check_result(result, expect_success, submission, field)
 
     def test_party_user_party_field_party_reporter(self):
         self._check_remark_update_permission(
@@ -146,11 +148,8 @@ class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
     """
 
     def _check_remark_update_permission_state(
-        self, user, field, owner, previous_state, current_state, expect_success
+        self, user, field_type, owner, previous_state, current_state, expect_success
     ):
-        # XXX Assume this works correctly for all other fields.
-        field = "imports_remarks_%s" % field
-
         submission = self.create_submission(owner)
         submission._previous_state = previous_state
         submission._current_state = current_state
@@ -159,17 +158,21 @@ class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
 
         headers = self.get_authorization_header(user.username, "qwe123qwe")
 
-        result = self.client.put(
-            reverse(
-                "core:submission-submission-remarks-list",
-                kwargs={"submission_pk": submission.pk},
-            ),
-            {field: REMARK_VALUE},
-            "application/json",
-            format="json",
-            **headers,
-        )
-        self._check_result(result, expect_success, submission, field)
+        for field in remarks_data.keys():
+            if not field.endswith(field_type):
+                continue
+            with self.subTest("Test update state %s" % field):
+                result = self.client.put(
+                    reverse(
+                        "core:submission-submission-remarks-list",
+                        kwargs={"submission_pk": submission.pk},
+                    ),
+                    {field: REMARK_VALUE},
+                    "application/json",
+                    format="json",
+                    **headers,
+                )
+                self._check_result(result, expect_success, submission, field)
 
     def test_modify_party_field_in_data_entry_by_party_user(self):
         self._check_remark_update_permission_state(
@@ -235,6 +238,8 @@ remarks_data = {
     "nonparty_remarks_secretariat": "Testing",
     "emissions_remarks_party": "Testing",
     "emissions_remarks_secretariat": "Testing",
+    "hat_production_remarks_party": "Testing",
+    "hat_production_remarks_secretariat": "Testing",
 }
 
 
