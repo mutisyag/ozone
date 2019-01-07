@@ -230,6 +230,9 @@ class Submission(models.Model):
     emissions_remarks_party = models.CharField(max_length=9999, blank=True)
     emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
+    hat_imports_remarks_party = models.CharField(max_length=9999, blank=True)
+    hat_imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 

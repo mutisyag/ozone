@@ -104,6 +104,15 @@ emissions_router.register(
     base_name="submission-article7-emissions"
 )
 
+hat_imports_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+hat_imports_router.register(
+    "hat-imports",
+    views.HighAmbientTemperatureImportViewSet,
+    base_name="submission-hat-imports"
+)
+
 submission_info_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )
@@ -139,6 +148,7 @@ nested_routers = [
     imports_router,
     nonpartytrades_router,
     emissions_router,
+    hat_imports_router,
     submission_info_router,
     submission_flags_router,
     submission_remarks_router,
