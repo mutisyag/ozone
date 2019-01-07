@@ -146,12 +146,13 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, { tra
 const getNonParties = () => fetch('get-non-parties/')
 
 const uploadFile = (file, submissionId) => new Promise(async (resolve, reject) => {
-	const token = await fetch(`submission/${submissionId}/token`)
+	const responseToken = await post(`submissions/${submissionId}/token/`)
+	console.log(responseToken.data.token)
 	const upload = new tus.Upload(file,
 		{
 			endpoint: filesURL,
 			metadata: {
-				token,
+				token: responseToken.data.token,
 				filename: file.name
 			},
 			retryDelays: [0, 1000, 3000, 5000],
