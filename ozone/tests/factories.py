@@ -18,6 +18,8 @@ from ozone.core.models import (
     Article7Export,
     Article7Emission,
     Article7NonPartyTrade,
+    HighAmbientTemperatureProduction,
+    HighAmbientTemperatureImport,
 )
 
 
@@ -191,3 +193,13 @@ class EmissionFactory(DjangoModelFactory):
 class NonPartyTradeFactory(DjangoModelFactory):
     class Meta:
         model = Article7NonPartyTrade
+
+
+class HighAmbientTemperatureProductionFactory(DjangoModelFactory):
+    class Meta:
+        model = HighAmbientTemperatureProduction
+
+
+class HighAmbientTemperatureImportFactory(DjangoModelFactory):
+    class Meta:
+        model = HighAmbientTemperatureImport

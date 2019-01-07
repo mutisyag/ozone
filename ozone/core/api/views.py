@@ -1,3 +1,4 @@
+from base64 import b64encode
 from collections import OrderedDict
 from copy import deepcopy
 from pathlib import Path
@@ -40,6 +41,8 @@ from ..models import (
     Article7Import,
     Article7NonPartyTrade,
     Article7Emission,
+    HighAmbientTemperatureProduction,
+    HighAmbientTemperatureImport,
     Group,
     Substance,
     Blend,
@@ -66,6 +69,8 @@ from ..serializers import (
     Article7ImportSerializer,
     Article7NonPartyTradeSerializer,
     Article7EmissionSerializer,
+    HighAmbientTemperatureProductionSerializer,
+    HighAmbientTemperatureImportSerializer,
     GroupSerializer,
     SubstanceSerializer,
     BlendSerializer,
@@ -610,6 +615,37 @@ class Article7EmissionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
+class HighAmbientTemperatureImportViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
+    serializer_class = HighAmbientTemperatureImportSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return HighAmbientTemperatureImport.objects.filter(
+            submission=self.kwargs['submission_pk']
+        ).filter(blend_item__isnull=True)
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class HighAmbientTemperatureProductionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                                              viewsets.ModelViewSet):
+    serializer_class = HighAmbientTemperatureProductionSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return HighAmbientTemperatureProduction.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
 class SubmissionFileViewSet(viewsets.ModelViewSet):
     serializer_class = SubmissionFileSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
@@ -850,7 +886,45 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
     serializer_class = UploadTokenSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
 
-    # TODO: do if needed!
+    def create(self, request, submission_pk):
+        """
+        Creates an ``UploadToken`` for the submission.
+        Used by `tusd` uploads server for user/submission correlation.
+        Upload tokens cannot be issued for non-editable submissions
+
+        Returns::
+
+            {
+              'token': <base64 encoded token>
+            }
+
+        """
+        submission = Submission.objects.get(pk=submission_pk)
+
+        if not submission.data_changes_allowed:
+            return Response(
+                {'error': 'Submission state does not allow uploads'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        token = submission.upload_tokens.create(user=request.user)
+        response = {'token': token.token}
+
+        # Include base64 encoded token in development environments
+        if settings.DEBUG:
+            response['token_base64'] = b64encode(token.token.encode())
+
+        return Response(response)
+
+    def list(self, request, submission_pk):
+        """
+        Returns the tokens issued for a given envelope.
+        """
+        queryset = UploadToken.objects.filter(submission=submission_pk)
+        serializer = self.serializer_class(
+            queryset, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
 
 
 class AuthTokenViewSet(
