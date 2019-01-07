@@ -487,6 +487,8 @@ class Submission(models.Model):
             "nonparty_remarks_secretariat",
             # "emissions_remarks_party",
             "emissions_remarks_secretariat",
+            # "hat_imports_remarks_party",
+            "hat_imports_remarks_secretariat",
         ]
 
     def non_exempted_fields_modified(self):
