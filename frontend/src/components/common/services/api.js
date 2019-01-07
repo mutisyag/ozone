@@ -31,37 +31,6 @@ const api = axios.create({
 api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 api.defaults.xsrfCookieName = 'csrftoken'
 
-const uploadFile = (file, filename, fileId, token) => new Promise((resolve, reject) => {
-	const upload = new tus.Upload(file,
-		{
-			endpoint: filesURL,
-			metadata: {
-				token,
-				filename,
-				fileId
-			},
-			retryDelays: [0, 1000, 3000, 5000],
-			onError: function onError(error) {
-				console.log('Failed because: ', error)
-				reject(error)
-			},
-			onProgress: function onProgress(bytesUploaded, bytesTotal) {
-				file.percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
-				console.log(bytesUploaded, bytesTotal, file.percentage, '%')
-			},
-			onSuccess: function onSuccess() {
-				console.log('Download %s from %s', upload.file.name, upload.url)
-				resolve(
-					{
-						fileName: upload.file.name,
-						uploadUrl: upload.url
-					},
-				)
-			}
-		})
-	upload.start()
-})
-
 const getCookie = (name) => {
 	const cookie = {}
 	document.cookie.split(';').forEach((el) => {
@@ -176,8 +145,38 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, { tra
 
 const getNonParties = () => fetch('get-non-parties/')
 
+const uploadFile = (file, submissionId) => new Promise(async (resolve, reject) => {
+	const token = await fetch(`submission/${submissionId}/token`)
+	const upload = new tus.Upload(file,
+		{
+			endpoint: filesURL,
+			metadata: {
+				token,
+				filename: file.name
+			},
+			retryDelays: [0, 1000, 3000, 5000],
+			onError: function onError(error) {
+				console.log('Failed because: ', error)
+				reject(error)
+			},
+			onProgress: function onProgress(bytesUploaded, bytesTotal) {
+				file.percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
+				console.log(bytesUploaded, bytesTotal, file.percentage, '%')
+			},
+			onSuccess: function onSuccess() {
+				console.log('Download %s from %s', upload.file.name, upload.url)
+				resolve(
+					{
+						fileName: upload.file.name,
+						uploadUrl: upload.url
+					},
+				)
+			}
+		})
+	upload.start()
+})
+
 export {
-	uploadFile,
 	apiURL,
 	apiBase,
 	api,
@@ -205,5 +204,6 @@ export {
 	cloneSubmission,
 	getSubmissionHistory,
 	getNonParties,
-	getCurrentUser
+	getCurrentUser,
+	uploadFile
 }

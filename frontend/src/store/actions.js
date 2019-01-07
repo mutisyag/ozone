@@ -377,7 +377,7 @@ const actions = {
 		})) */
 		uploadedFiles.forEach(file => {
 			console.log(file)
-			const response = uploadFile(file, file.name, file.name, null)
+			const response = uploadFile(file, context.state.current_submission.id)
 			console.log(response)
 		})
 
