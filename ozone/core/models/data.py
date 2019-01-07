@@ -616,15 +616,15 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 class BaseHighAmbientTemperature(models.Model):
 
     # Multi-split air conditioners
-    quantity_msac_produced = models.FloatField(
+    quantity_msac = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Split ducted air conditioners
-    quantity_sdac_produced = models.FloatField(
+    quantity_sdac = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Ducted commercial packaged air conditioners
-    quantity_dcpac_produced = models.FloatField(
+    quantity_dcpac = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -654,9 +654,9 @@ class HighAmbientTemperatureImport(
 
     # Needed because of BaseBlendCompositionReport
     QUANTITY_FIELDS = [
-        'quantity_msac_produced',
-        'quantity_sdac_produced',
-        'quantity_dcpac_produced',
+        'quantity_msac',
+        'quantity_sdac',
+        'quantity_dcpac',
     ]
 
 
