@@ -12,7 +12,8 @@ import {
 	getParties,
 	getNonParties,
 	getPartyRatifications,
-	getCurrentUser
+	getCurrentUser,
+	uploadFile
 } from '@/components/common/services/api'
 
 import {
@@ -366,15 +367,21 @@ const actions = {
 	uploadFormAttachments(context, uploadedFiles) {
 		// upload to the server
 		// mocking server response
-		const mockResponseAttachments = uploadedFiles.map(file => ({
+		/* const mockResponseAttachments = uploadedFiles.map(file => ({
 			id: Math.floor(Math.random() * 100000),
 			name: file.name,
 			url: 'https://www.google.com',
 			size: `${file.size} bytes`,
 			dateUploaded: new Date(),
 			description: `DESCRIPTION ${file.name}`
-		}))
-		return mockResponseAttachments
+		})) */
+		uploadedFiles.forEach(file => {
+			console.log(file)
+			const response = uploadFile(file, context.state.current_submission.id)
+			console.log(response)
+		})
+
+		return []
 	}
 }
 
