@@ -21,7 +21,10 @@ const form = {
 			...tab_sub_info,
 			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'
 		},
-		attachments: tab_attachments,
+		attachments: {
+			...tab_attachments,
+			hideInfoButton: true
+		},
 		questionaire_questions: {
 			name: 'questionaire_questions',
 			hasAssideMenu: false,
