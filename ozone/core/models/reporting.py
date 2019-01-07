@@ -665,6 +665,8 @@ class Submission(models.Model):
             related_qs = getattr(self, related_data).all()
             if related_qs:
                 related_qs.delete()
+        if self.info:
+            self.info.delete()
 
         super().delete(*args, **kwargs)
 
