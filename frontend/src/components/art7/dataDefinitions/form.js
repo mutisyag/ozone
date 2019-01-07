@@ -14,7 +14,22 @@ const form = {
 			'initialData.display.substances',
 			'initialData.display.blends',
 			'initialData.display.countries'
-		]
+		],
+		comments_default_properties: {
+			imports_remarks_party: '',
+			imports_remarks_secretariat: '',
+			exports_remarks_party: '',
+			exports_remarks_secretariat: '',
+			production_remarks_party: '',
+			production_remarks_secretariat: '',
+			destruction_remarks_party: '',
+			destruction_remarks_secretariat: '',
+			nonparty_remarks_party: '',
+			nonparty_remarks_secretariat: '',
+			emissions_remarks_party: '',
+			emissions_remarks_secretariat: ''
+		},
+		comments_endpoint_url: 'submission_remarks'
 	},
 	tabs: {
 		sub_info: {
@@ -134,17 +149,16 @@ const form = {
 			modal_order: ['destination_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock'],
 			form_fields: [],
 
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				exports_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				exports_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
-			}
-			],
 			footnotes: ['[1] Tonne = Metric ton.'],
 			default_properties: {
 				remarks_party: '',
@@ -185,17 +199,16 @@ const form = {
 			title: 'Imports',
 			titleHtml: '<b>IMPORTS</b> <br> <small>Annexes A, B, C and E substances</small> <br> <small>in metric tonnes ( not ODP tonnes)</small>',
 			detailsHtml: 'Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs',
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				imports_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				imports_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
-			}
-			],
 			subtitle: 'in metric tonnes (not ODP tonnes)',
 			description: 'Annexes A, B, C and E substances',
 			blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
@@ -443,17 +456,16 @@ const form = {
 				]
 			},
 
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				production_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				production_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
-			}
-			],
 			default_properties: {
 				remarks_party: '',
 				remarks_os: '',
@@ -547,17 +559,16 @@ const form = {
 				substance: null,
 				blend: null
 			},
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
-			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				destruction_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				destruction_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			}
-			]
 		},
 		has_nonparty: {
 			name: 'has_nonparty',
@@ -653,17 +664,16 @@ const form = {
 				}
 			],
 
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				nonparty_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				nonparty_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
-			}
-			],
 			default_properties: {
 				remarks_party: '',
 				remarks_os: '',
@@ -776,17 +786,16 @@ const form = {
 				label: ''
 			}
 			],
-			comments: [{
-				name: 'comments_party',
-				selected: '',
-				type: 'textarea'
+			comments: {
+				emissions_remarks_party: {
+					selected: '',
+					type: 'textarea'
+				},
+				emissions_remarks_secretariat: {
+					selected: '',
+					type: 'textarea'
+				}
 			},
-			{
-				name: 'comments_secretariat',
-				selected: '',
-				type: 'textarea'
-			}
-			],
 			default_properties: {
 				remarks_party: '',
 				remarks_os: '',

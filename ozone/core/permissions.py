@@ -35,7 +35,7 @@ class IsSecretariatOrSameParty(BasePermission):
                 queryset = view.get_queryset()
 
             try:
-                if queryset.model == Submission:
+                if queryset.model == Submission and 'party' in request.data:
                     party = Party.objects.get(
                         pk=request.data.get('party', None)
                     )

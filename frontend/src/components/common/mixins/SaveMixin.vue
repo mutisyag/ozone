@@ -55,8 +55,32 @@ export default {
 					variant: 'danger'
 				})
 			} else {
+				this.prepareCommentsForSave()
 				this.prepareDataForSave()
 			}
+		},
+
+		prepareCommentsForSave() {
+			if (!this.form.formDetails.comments_default_properties) return
+			const commentsObj = JSON.parse(JSON.stringify(this.form.formDetails.comments_default_properties))
+			Object.keys(this.form.tabs).forEach(tab => {
+				this.form.tabs[tab].comments && Object.keys(this.form.tabs[tab].comments).forEach(comment_field => {
+					commentsObj[comment_field] = this.form.tabs[tab].comments[comment_field].selected
+				})
+			})
+			const url = this.$store.state.current_submission[this.form.formDetails.comments_endpoint_url]
+			this.saveComments(commentsObj, url)
+		},
+
+		saveComments(data, url) {
+			update(url, data).then((r) => {
+				console.log(r)
+			}).catch((e) => {
+				this.$store.dispatch('setAlert', {
+					message: e,
+					variant: 'danger'
+				})
+			})
 		},
 
 		submitData(tab, url) {

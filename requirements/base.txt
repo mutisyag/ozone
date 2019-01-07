@@ -27,3 +27,4 @@ django-simple-history==2.5.1
 djangorestframework==3.8.2  # https://github.com/encode/django-rest-framework
 coreapi==2.3.3  # https://github.com/core-api/python-client
 drf-nested-routers==0.90.2
+drf-extensions==0.4.0 # https://github.com/chibisov/drf-extensions
