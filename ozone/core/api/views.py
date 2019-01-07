@@ -163,7 +163,8 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['submission'] = Submission.objects.get(pk=self.kwargs["submission_pk"])
+        if "submission_pk" in self.kwargs:
+            context['submission'] = Submission.objects.get(pk=self.kwargs["submission_pk"])
         return context
 
 
