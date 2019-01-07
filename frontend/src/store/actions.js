@@ -55,6 +55,12 @@ const actions = {
 		})
 	},
 
+	prefillComments(context, data) {
+		Object.keys(context.state.form.tabs)
+			.filter(tab => context.state.form.tabs[tab].comments)
+			.forEach(tab => context.commit('addComment', { data, tab }))
+	},
+
 	getCurrentSubmissions(context) {
 		return new Promise((resolve) => {
 			getSubmissions(context.state.dashboard.table).then(response => {
@@ -71,6 +77,12 @@ const actions = {
 			// TODO: WHY IS IT AN ARRAY ?
 			context.commit('setCurrentUserPartyInDashboard', response.data[0].party)
 			context.dispatch('getCurrentSubmissions')
+		})
+	},
+
+	getCurrentUserForm(context) {
+		getCurrentUser().then(response => {
+			context.commit('setCurrentUser', response.data)
 		})
 	},
 
@@ -195,6 +207,7 @@ const actions = {
 		context.commit('setForm', formName)
 		return new Promise((resolve) => {
 			context.dispatch('getSubmissionData', submission).then(() => {
+				context.dispatch('getCurrentUserForm')
 				context.dispatch('getCountries')
 				context.dispatch('getSubstances')
 				context.dispatch('getCustomBlends')

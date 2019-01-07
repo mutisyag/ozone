@@ -67,7 +67,7 @@ from ..serializers import (
     SubmissionInfoSerializer,
     UpdateSubmissionInfoSerializer,
     SubmissionFlagsSerializer,
-)
+    SubmissionRemarksSerializer)
 
 User = get_user_model()
 
@@ -129,6 +129,24 @@ class IsOwnerFilterBackend(BaseFilterBackend):
                 return queryset.filter(submission__party=request.user.party)
             else:
                 return queryset
+
+
+class SerializerRequestContextMixIn(object):
+    """Adds the current request to the serializer context."""
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
+
+
+class SerializerDataContextMixIn(SerializerRequestContextMixIn):
+    """Adds the current submission to the serializer context."""
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['submission'] = Submission.objects.get(pk=self.kwargs["submission_pk"])
+        return context
 
 
 class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -338,6 +356,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             "reporting_period", "created_by", "party"
         )
 
+    def update(self, *args, **kwargs):
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        kwargs["partial"] = True
+        return super().update(*args, **kwargs)
+
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateSubmissionSerializer
@@ -412,7 +436,7 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubmissionFlagsViewSet(viewsets.ModelViewSet):
+class SubmissionFlagsViewSet(viewsets.ModelViewSet, SerializerRequestContextMixIn):
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -420,7 +444,9 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet):
 
     def put(self, request, *args, **kwargs):
         sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
-        serializer = self.get_serializer(sub, data=request.data)
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        serializer = self.get_serializer(sub, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -431,10 +457,27 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet):
             pk=self.kwargs['submission_pk']
         )
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['request'] = self.request
-        return context
+
+class SubmissionRemarksViewSet(viewsets.ModelViewSet, SerializerRequestContextMixIn):
+    serializer_class = SubmissionRemarksSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get', 'put']
+
+    def put(self, request, *args, **kwargs):
+        sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        serializer = self.get_serializer(sub, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get_queryset(self):
+        return Submission.objects.filter(
+            pk=self.kwargs['submission_pk']
+        )
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
@@ -463,7 +506,8 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7DestructionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7DestructionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                                 viewsets.ModelViewSet):
     serializer_class = Article7DestructionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -478,7 +522,8 @@ class Article7DestructionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ProductionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7ProductionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                                viewsets.ModelViewSet):
     serializer_class = Article7ProductionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -492,7 +537,8 @@ class Article7ProductionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ExportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7ExportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                            viewsets.ModelViewSet):
     serializer_class = Article7ExportSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -506,7 +552,8 @@ class Article7ExportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ImportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7ImportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                            viewsets.ModelViewSet):
     serializer_class = Article7ImportSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -520,7 +567,8 @@ class Article7ImportViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                                   viewsets.ModelViewSet):
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -534,7 +582,8 @@ class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet)
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7EmissionViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
+class Article7EmissionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                              viewsets.ModelViewSet):
     serializer_class = Article7EmissionSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)

@@ -131,7 +131,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -390,7 +390,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"							
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -452,12 +452,18 @@
 			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
 			<hr>
 			<div
-				v-for="(comment, comment_index) in tab_info.comments"
-				:key="comment_index"
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
 				class="comments-input"
 			>
-				<label>{{labels[comment.name]}}</label>
-				<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
+				<label>{{labels[comment_key]}}</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
 			</div>
 		</div>
 
@@ -523,10 +529,9 @@
             </b-col>
           </b-row>
         </div>
-        <div>
+        <div v-if="fieldsDecisionQuantity">
           <b-row
             class="mb-3"
-            v-if="fieldsDecisionQuantity"
             v-for="(order,order_index) in fieldsDecisionQuantity"
             :key="order_index"
             v-show="anotherSpecialCase(order, modal_data)"
@@ -565,7 +570,7 @@
           </b-col>
           <b-col lg="9">
             <textarea
-								:disabled="isReadOnly"
+								:disabled="getCommentFieldPermission(comment_field)"
 								class="form-control" v-model="modal_data.field[comment_field].selected">
 						</textarea>
           </b-col>
@@ -646,6 +651,25 @@ export default {
 			}
 			if (this.isPolyols.includes(modal_data.field[type].selected) && order === 'polyols') {
 				return true
+			}
+		},
+
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
+					return false
+				}
+				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
+					return true
+				}
+				return this.$store.getters.isReadOnly
+			}
+			if (['secretariat', 'os'].includes(type)) {
+				if (!this.$store.state.currentUser.is_secretariat) {
+					return true
+				}
 			}
 		},
 

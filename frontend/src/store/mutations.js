@@ -20,6 +20,19 @@ const mutations = {
 		state.route = data.join(' / ')
 	},
 
+	addComment(state, { data, tab, field }) {
+		// If there is no field specified, it means that the data comes from server for prefill
+		console.log('comments', data, tab, field)
+		if (!field) {
+			const [commentsData] = data
+			Object.keys(state.form.tabs[tab].comments).forEach(comment => {
+				state.form.tabs[tab].comments[comment].selected = commentsData[comment]
+			})
+		} else {
+			state.form.tabs[tab].comments[field].selected = data
+		}
+	},
+
 	updateFormField(state, data) {
 		data.fieldInfo.index === data.fieldInfo.field
 			? state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value

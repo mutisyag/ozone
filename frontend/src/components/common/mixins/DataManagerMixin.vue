@@ -44,6 +44,7 @@ export default {
 			}
 			this.$store.dispatch('getInitialData', { submission: this.submission, formName: this.currentFormName }).then(() => {
 				this.prePrefill()
+				this.prefillComments()
 			})
 		}
 	},
@@ -126,6 +127,15 @@ export default {
 			})
 			this.prefilled = true
 		},
+
+		prefillComments() {
+			fetch(this.$store.state.current_submission.submission_remarks).then(response => {
+				this.$store.dispatch('prefillComments', response.data)
+			}).catch(error => {
+				console.log(error)
+			})
+		},
+
 		prefill(tabName, data) {
 			let ordering_id = 0
 			if (Array.isArray(this.form.tabs[tabName].form_fields)) {

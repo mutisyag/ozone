@@ -31,7 +31,9 @@ const labels = {
 		decision: 'Decision',
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
-		remarks_party: 'Remarks (Party)'
+		remarks_party: 'Remarks (Party)',
+		imports_remarks_secretariat: 'Remarks (Secretariat)',
+		imports_remarks_party: 'Remarks (Party)'
 	},
 	has_exports: {
 		substance: 'Substances',
@@ -63,7 +65,9 @@ const labels = {
 		decision: 'Decision',
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
-		remarks_party: 'Remarks (Party)'
+		remarks_party: 'Remarks (Party)',
+		exports_remarks_party: 'Remarks (Party)',
+		exports_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -89,7 +93,9 @@ const labels = {
 		substance: 'Substances',
 		quantity_exempted: 'Production for exempted essential, critical or other uses within your country',
 		decision: 'Decision',
-		quantity: 'Quantity'
+		quantity: 'Quantity',
+		production_remarks_party: 'Remarks (Party)',
+		production_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_destroyed: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -97,7 +103,9 @@ const labels = {
 		percent: 'Percentage',
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
-		blend: 'Blend'
+		blend: 'Blend',
+		destruction_remarks_party: 'Remarks (Party)',
+		destruction_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_nonparty: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -109,7 +117,9 @@ const labels = {
 		quantity_export_recovered: 'Quantity of exports to non-parties (recovered)',
 		substance: 'Substance',
 		blend: 'Blend',
-		trade_party: 'Exporting party for quantities reported as imports or country of destination of exports'
+		trade_party: 'Exporting party for quantities reported as imports or country of destination of exports',
+		nonparty_remarks_party: 'Remarks (Party)',
+		nonparty_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_emissions: {
 		facility_name: 'Facility name or identifier',
@@ -118,7 +128,9 @@ const labels = {
 		quantity_destroyed: 'Amount destroyed',
 		quantity_emitted: 'Amount of emissions',
 		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)'
+		remarks_os: 'Remarks (Party)',
+		emissions_remarks_party: 'Remarks (Party)',
+		emissions_remarks_secretariat: 'Remarks (Secretariat)'
 	}
 }
 

@@ -11,6 +11,13 @@ from ozone.core.models import (
     ReportingPeriod,
     Submission,
     Subregion,
+    Substance,
+    Article7Destruction,
+    Article7Production,
+    Article7Import,
+    Article7Export,
+    Article7Emission,
+    Article7NonPartyTrade,
 )
 
 
@@ -131,3 +138,56 @@ class SubmissionFactory(DjangoModelFactory):
 
     class Meta:
         model = Submission
+
+
+class SubstanceFactory(DjangoModelFactory):
+    name = "Chemical X"
+    description = "Don't mix with sugar, spice and everything nice"
+    fluorines = "F"
+    formula = "CH-XXX"
+    group = None
+    gwp = 4750
+    gwp2 = 6800
+    gwp_error_plus_minus = None
+    hydrogens = ""
+    is_contained_in_polyols = False
+    max_odp = 1
+    min_odp = 1
+    number_of_isomers = 1
+    odp = 1
+    remark = "See Professor Utonium accident from 1998"
+    sort_order = 100
+    substance_id = 998
+
+    class Meta:
+        model = Substance
+
+
+class DestructionFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7Destruction
+
+
+class ProductionFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7Production
+
+
+class ImportFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7Import
+
+
+class ExportFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7Export
+
+
+class EmissionFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7Emission
+
+
+class NonPartyTradeFactory(DjangoModelFactory):
+    class Meta:
+        model = Article7NonPartyTrade

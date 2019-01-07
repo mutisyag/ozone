@@ -48,4 +48,6 @@ class Command(BaseCommand):
                         logger.debug("Found related data: s", instance)
             s.__class__.data_changes_allowed = force_allow_delete
             if options['confirm']:
+                if s.info:
+                    s.info.delete()
                 s.delete()

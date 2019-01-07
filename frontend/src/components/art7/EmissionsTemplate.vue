@@ -67,7 +67,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="transitionState"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -86,9 +86,19 @@
 		<div class="table-wapper">
 			<h4> {{tab_info.formNumber}}.2 Comments</h4>
 			<hr>
-			<div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
-				<label>{{labels[comment.name]}}</label>
-				<textarea class="form-control" v-model="comment.selected"></textarea>
+			<div
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input"
+			>
+				<label>{{labels[comment_key]}}</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
 			</div>
 		</div>
     <hr>
@@ -188,14 +198,34 @@ export default {
 		getTabInputFields() {
 			return this.intersect(inputFields, this.tab_info.fields_order)
 		},
-		transitionState() {
-			return this.$store.getters.transitionState
-		}
+
+		isReadOnly() {
+			return this.$store.getters.isReadOnly || this.hasDisabledFields
+		},
+
 	},
 
 	methods: {
 		remove_field(index) {
 			this.$store.commit('removeField', { tab: this.tabName, index })
+		},
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
+					return false
+				}
+				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
+					return true
+				}
+				return this.$store.getters.isReadOnly
+			}
+			if (['secretariat', 'os'].includes(type)) {
+				if (!this.$store.state.currentUser.is_secretariat) {
+					return true
+				}
+			}
 		},
 		rowHovered(item) {
 			this.hovered = item.index

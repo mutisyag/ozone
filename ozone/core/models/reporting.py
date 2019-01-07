@@ -217,6 +217,19 @@ class Submission(models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
+    imports_remarks_party = models.CharField(max_length=9999, blank=True)
+    imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    exports_remarks_party = models.CharField(max_length=9999, blank=True)
+    exports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    production_remarks_party = models.CharField(max_length=9999, blank=True)
+    production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    destruction_remarks_party = models.CharField(max_length=9999, blank=True)
+    destruction_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    nonparty_remarks_party = models.CharField(max_length=9999, blank=True)
+    nonparty_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    emissions_remarks_party = models.CharField(max_length=9999, blank=True)
+    emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -403,6 +416,35 @@ class Submission(models.Model):
             })
         return True
 
+    def check_remarks(self, user, remarks):
+        """
+        Raise error if the user has change any remarks he was not allowed to
+        change.
+        """
+
+        wrongly_modified_remarks = []
+
+        # XXX Logic duplicated in DataCheckRemarksMixInBase.check_remarks
+        for field_name, new_value in remarks.items():
+            if new_value == getattr(self, field_name):
+                # No value changed
+                continue
+
+            if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
+                # Secretariat users cannot modify any of the party fields, if the
+                # submission was filled by a party.
+                wrongly_modified_remarks.append(field_name)
+            elif not user.is_secretariat and field_name.endswith("_secretariat"):
+                # Party users cannot modify any of the secretariat remark fields
+                wrongly_modified_remarks.append(field_name)
+
+        if len(wrongly_modified_remarks) > 0:
+            raise ValidationError({
+                field: [_('User is not allowed to change this remark')]
+                for field in wrongly_modified_remarks
+            })
+        return True
+
     @staticmethod
     def get_exempted_fields():
         """
@@ -428,6 +470,20 @@ class Submission(models.Model):
             "flag_has_reported_c3",
             "flag_has_reported_e",
             "flag_has_reported_f",
+            # Remarks, secretariat remarks can be change
+            # at any time, while the party remarks cannot.
+            # "imports_remarks_party",
+            "imports_remarks_secretariat",
+            # "exports_remarks_party",
+            "exports_remarks_secretariat",
+            # "production_remarks_party",
+            "production_remarks_secretariat",
+            # "destruction_remarks_party",
+            "destruction_remarks_secretariat",
+            # "nonparty_remarks_party",
+            "nonparty_remarks_secretariat",
+            # "emissions_remarks_party",
+            "emissions_remarks_secretariat",
         ]
 
     def non_exempted_fields_modified(self):
@@ -575,9 +631,14 @@ class Submission(models.Model):
         super().clean()
 
     @transaction.atomic
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
         # Several actions need to be performed on first save
-        if not self.pk or kwargs.get('force_insert', False):
+        # No need to check `update_fields`, since this is the first
+        # save. If other fields are change during an update, they
+        # must be added to the `update_fields` list, since we are using
+        # the PartialUpdateMixIn.
+        if not self.pk or force_insert:
             # Auto-increment submission version if saving for a
             # party-obligation-period combo which already has submissions.
             # select_for_update() is used to lock the rows and ensure proper
@@ -634,7 +695,10 @@ class Submission(models.Model):
                     )
 
         self.clean()
-        return super().save(*args, **kwargs)
+        return super().save(
+            force_insert=force_insert, force_update=force_update,
+            using=using, update_fields=update_fields
+        )
 
     @transaction.atomic()
     def make_current(self):
