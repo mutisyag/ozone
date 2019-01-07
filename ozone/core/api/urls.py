@@ -147,7 +147,7 @@ upload_token_router = routers.NestedSimpleRouter(
 upload_token_router.register(
     'token',
     views.UploadTokenViewSet,
-    base_name='envelope-token'
+    base_name='submission-token'
 )
 
 nested_routers = [

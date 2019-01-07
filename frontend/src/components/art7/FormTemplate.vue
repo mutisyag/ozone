@@ -153,7 +153,7 @@
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
 							v-if="cell.item[tooltipField]"
 						>
-							{{cell.item[tooltipField]}}
+							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
@@ -278,7 +278,7 @@
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
 							v-if="cell.item[tooltipField]"
 						>
-							{{cell.item[tooltipField]}}
+							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
 							<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
@@ -390,7 +390,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"							
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -411,7 +411,7 @@
 							:key="tooltipField"
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
 							v-if="cell.item[tooltipField]"
-						>{{cell.item[tooltipField]}}
+						>{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
 						</span>
 					</template>
@@ -633,6 +633,22 @@ export default {
 		}
 	},
 	methods: {
+		formatQuantity(value) {
+			if (!value) return
+			if (typeof (value) === 'string') return value
+			if (typeof (value) === 'number') {
+				if (value === 0) {
+					return ''
+				}
+				if (value < 0) {
+					return value.toPrecision(3)
+				}
+				if (value > 999) {
+					return parseInt(value)
+				}
+				return value.toPrecision(3)
+			}
+		},
 		anotherSpecialCase(order, modal_data) {
 			// determine what are we dealing with
 			const type = modal_data.field.substance && modal_data.field.substance.selected
