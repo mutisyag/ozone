@@ -21,6 +21,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
+from rest_framework.viewsets import GenericViewSet
 
 from ..exceptions import InvalidRequest, MethodNotAllowed
 
@@ -455,7 +456,8 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubmissionFlagsViewSet(viewsets.ModelViewSet, SerializerRequestContextMixIn):
+class SubmissionFlagsViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
+                             GenericViewSet, SerializerRequestContextMixIn):
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
@@ -477,7 +479,8 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet, SerializerRequestContextMixI
         )
 
 
-class SubmissionRemarksViewSet(viewsets.ModelViewSet, SerializerRequestContextMixIn):
+class SubmissionRemarksViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
+                               GenericViewSet, SerializerRequestContextMixIn):
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
