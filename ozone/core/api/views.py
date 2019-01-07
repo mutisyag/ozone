@@ -657,6 +657,7 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
 
 
 class UploadHookViewSet(viewsets.ViewSet):
+    permission_classes = (AllowAny,)
     """
     Handles upload notifications for tusd hooks:
         - ``pre-create``
