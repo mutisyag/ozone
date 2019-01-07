@@ -10,7 +10,8 @@ app_name = "core"
 
 class DefaultRouter(routers.DefaultRouter):
     """
-    Extends `DefaultRouter` class to add a method for extending url routes from another router.
+    Extends `DefaultRouter` class to add a method for extending url routes from
+    another router.
     """
 
     def extend(self, added_router):
@@ -131,6 +132,24 @@ submission_remarks_router.register(
     base_name="submission-submission-remarks"
 )
 
+submission_files_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+submission_files_router.register(
+    "files",
+    views.SubmissionFileViewSet,
+    base_name="submission-files"
+)
+
+upload_token_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+upload_token_router.register(
+    'token',
+    views.UploadTokenViewSet,
+    base_name='envelope-token'
+)
+
 nested_routers = [
     questionnaire_router,
     destructions_router,
@@ -142,6 +161,8 @@ nested_routers = [
     submission_info_router,
     submission_flags_router,
     submission_remarks_router,
+    submission_files_router,
+    upload_token_router,
 ]
 
 # Groups
@@ -149,6 +170,15 @@ router.register(r"group-substances", views.GroupViewSet)
 
 # Blends
 router.register(r"blends", views.BlendViewSet, base_name="blends")
+
+# File uploads
+upload_hooks_router = routers.SimpleRouter()
+upload_hooks_router.register(
+    'uploads',
+    views.UploadHookViewSet,
+    base_name='uploads'
+)
+router.extend(upload_hooks_router)
 
 # Authentication
 auth_tokens = routers.SimpleRouter()
@@ -158,7 +188,6 @@ auth_tokens.register(
     base_name='auth-token'
 )
 router.extend(auth_tokens)
-
 
 urlpatterns = (
     router.urls

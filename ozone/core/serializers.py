@@ -30,6 +30,8 @@ from .models import (
     Article7Import,
     Article7NonPartyTrade,
     Article7Emission,
+    SubmissionFile,
+    UploadToken,
 )
 
 User = get_user_model()
@@ -620,6 +622,18 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
         return super().update(instance, validated_data)
 
 
+class SubmissionFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubmissionFile
+        fields = '__all__'
+
+
+class UploadTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadToken
+        fields = '__all__'
+
+
 class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer):
     """
     This also needs to nested-serialize all data related to the specific
@@ -640,6 +654,10 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     )
     article7questionnaire = Article7QuestionnaireSerializer(
         many=False, read_only=True
+    )
+
+    files = SubmissionFileSerializer(
+        many=True, read_only=True
     )
 
     # We want to add a URL for the destructions list
@@ -670,6 +688,11 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
 
     article7emissions_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-article7-emissions-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
+    files_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-files-list',
         lookup_url_kwarg='submission_pk'
     )
 
@@ -707,6 +730,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'article7destructions_url', 'article7productions_url',
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
+            'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
