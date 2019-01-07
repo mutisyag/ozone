@@ -638,6 +638,9 @@ class Command(BaseCommand):
                     logger.debug("Deleting related data: %s", instance)
                     instance.delete()
             s.__class__.data_changes_allowed = True
+            if s.info:
+                logger.debug("Deleting SubmissionInfo: %s", s.info)
+                s.info.delete()
             s.delete()
 
     def load_workbook(self, filename, use_cache=False):
