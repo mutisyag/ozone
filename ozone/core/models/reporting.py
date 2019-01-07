@@ -222,6 +222,7 @@ class Submission(models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
+    # Art7 Remarks
     imports_remarks_party = models.CharField(max_length=9999, blank=True)
     imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
     exports_remarks_party = models.CharField(max_length=9999, blank=True)
@@ -234,6 +235,9 @@ class Submission(models.Model):
     nonparty_remarks_secretariat = models.CharField(max_length=9999, blank=True)
     emissions_remarks_party = models.CharField(max_length=9999, blank=True)
     emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    # HAT Remarks
+    hat_production_remarks_party = models.CharField(max_length=9999, blank=True)
+    hat_production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
@@ -489,6 +493,8 @@ class Submission(models.Model):
             "nonparty_remarks_secretariat",
             # "emissions_remarks_party",
             "emissions_remarks_secretariat",
+            # "hat_production_remarks_party",
+            "hat_production_remarks_secretariat",
         ]
 
     def non_exempted_fields_modified(self):
