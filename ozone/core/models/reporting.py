@@ -631,9 +631,14 @@ class Submission(models.Model):
         super().clean()
 
     @transaction.atomic
-    def save(self, *args, **kwargs):
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
         # Several actions need to be performed on first save
-        if not self.pk or kwargs.get('force_insert', False):
+        # No need to check `update_fields`, since this is the first
+        # save. If other fields are change during an update, they
+        # must be added to the `update_fields` list, since we are using
+        # the PartialUpdateMixIn.
+        if not self.pk or force_insert:
             # Auto-increment submission version if saving for a
             # party-obligation-period combo which already has submissions.
             # select_for_update() is used to lock the rows and ensure proper
@@ -690,7 +695,10 @@ class Submission(models.Model):
                     )
 
         self.clean()
-        return super().save(*args, **kwargs)
+        return super().save(
+            force_insert=force_insert, force_update=force_update,
+            using=using, update_fields=update_fields
+        )
 
     @transaction.atomic()
     def make_current(self):

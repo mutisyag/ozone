@@ -356,6 +356,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             "reporting_period", "created_by", "party"
         )
 
+    def update(self, *args, **kwargs):
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        kwargs["partial"] = True
+        return super().update(*args, **kwargs)
+
     def get_serializer_class(self):
         if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateSubmissionSerializer
@@ -438,7 +444,9 @@ class SubmissionFlagsViewSet(viewsets.ModelViewSet, SerializerRequestContextMixI
 
     def put(self, request, *args, **kwargs):
         sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
-        serializer = self.get_serializer(sub, data=request.data)
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        serializer = self.get_serializer(sub, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -458,7 +466,9 @@ class SubmissionRemarksViewSet(viewsets.ModelViewSet, SerializerRequestContextMi
 
     def put(self, request, *args, **kwargs):
         sub = Submission.objects.get(pk=self.kwargs['submission_pk'])
-        serializer = self.get_serializer(sub, data=request.data)
+        # Uses PartialUpdateMixIn to prevent race conditions
+        # see https://github.com/encode/django-rest-framework/issues/2648
+        serializer = self.get_serializer(sub, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
