@@ -695,7 +695,7 @@ class UploadHookViewSet(viewsets.ViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            if not token.user.is_authenticated():
+            if not token.user.is_authenticated:
                 log.error(
                     f'UPLOAD denied for "{token.user}": NOT ALLOWED'
                 )
