@@ -481,6 +481,15 @@ class SubmissionFlagsViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
 
 class SubmissionRemarksViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
                                GenericViewSet, SerializerRequestContextMixIn):
+    """
+    list:
+    Get the general remarks for this specific submission. These are in pairs for
+    each data form: remarks that have been added by the reporting party and remarks
+    that have been added by the Ozone Secretariat.
+
+    update:
+    Update the general remarks for this specific submission.
+    """
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSameParty,)
     filter_backends = (IsOwnerFilterBackend,)
