@@ -21,6 +21,8 @@ from .factories import (
     ExportFactory,
     EmissionFactory,
     NonPartyTradeFactory,
+    HighAmbientTemperatureImportFactory,
+    HighAmbientTemperatureProductionFactory,
 )
 
 User = get_user_model()
@@ -235,3 +237,21 @@ class NonPartyTradeDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
     api = "core:submission-article7-nonpartytrades-list"
     api_data = {"quantity_import_new": 42}
     factory_klass = NonPartyTradeFactory
+
+
+class HighAmbientTemperatureImportCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+    api = "core:submission-hat-imports-list"
+
+
+class HighAmbientTemperatureImportCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+    api = "core:submission-hat-imports-list"
+    factory_klass = HighAmbientTemperatureImportFactory
+
+
+class HighAmbientTemperatureProductionCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+    api = "core:submission-hat-productions-list"
+
+
+class HighAmbientTemperatureProductionCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+    api = "core:submission-hat-productions-list"
+    factory_klass = HighAmbientTemperatureProductionFactory
