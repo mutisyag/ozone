@@ -223,23 +223,85 @@ class Submission(models.Model):
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
     # Art7 Remarks
-    imports_remarks_party = models.CharField(max_length=9999, blank=True)
-    imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    exports_remarks_party = models.CharField(max_length=9999, blank=True)
-    exports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    production_remarks_party = models.CharField(max_length=9999, blank=True)
-    production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    destruction_remarks_party = models.CharField(max_length=9999, blank=True)
-    destruction_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    nonparty_remarks_party = models.CharField(max_length=9999, blank=True)
-    nonparty_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    emissions_remarks_party = models.CharField(max_length=9999, blank=True)
-    emissions_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    imports_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "imports"
+    )
+    imports_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "imports"
+    )
+    exports_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "exports"
+    )
+    exports_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "exports"
+    )
+    production_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "production"
+    )
+    production_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "production"
+    )
+    destruction_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "destruction"
+    )
+    destruction_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "destruction"
+    )
+    nonparty_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "nonparty"
+    )
+    nonparty_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "nonparty"
+    )
+    emissions_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting party for "
+                  "emissions"
+    )
+    emissions_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone secretariat for "
+                  "emissions"
+    )
     # HAT Remarks
-    hat_production_remarks_party = models.CharField(max_length=9999, blank=True)
-    hat_production_remarks_secretariat = models.CharField(max_length=9999, blank=True)
-    hat_imports_remarks_party = models.CharField(max_length=9999, blank=True)
-    hat_imports_remarks_secretariat = models.CharField(max_length=9999, blank=True)
+    hat_production_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General HAT obligation remarks added by the reporting party for "
+                  "production"
+    )
+    hat_production_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General HAT obligation remarks added by the ozone secretariat for "
+                  "production"
+    )
+    hat_imports_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General HAT obligation remarks added by the reporting party for imports"
+    )
+    hat_imports_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General HAT obligation remarks added by the ozone secretariat for imports"
+    )
 
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()

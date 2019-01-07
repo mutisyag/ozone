@@ -185,12 +185,16 @@ class BaseReport(models.Model):
     )
 
     # Each entry in the Article 7 forms can have remarks
-    remarks_party = models.CharField(max_length=9999, blank=True)
-    remarks_os = models.CharField(max_length=9999, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True,
+                                     help_text="Remarks added by the reporting party")
+    remarks_os = models.CharField(max_length=9999, blank=True,
+                                  help_text="Remarks added by the ozone secretariat")
 
-    # This allows the interface to keep the data entries in their original
-    # order, as given by the user.
-    ordering_id = models.IntegerField(default=0)
+    ordering_id = models.IntegerField(
+        default=0,
+        help_text="This allows the interface to keep the data entries in their original "
+                  "order, as given by the user."
+    )
 
     class Meta:
         abstract = True
@@ -215,10 +219,12 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
 
     # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
+        Substance, blank=True, null=True, on_delete=models.PROTECT,
+        help_text="Substance ID"
     )
     blend = models.ForeignKey(
-        Blend, blank=True, null=True, on_delete=models.PROTECT
+        Blend, blank=True, null=True, on_delete=models.PROTECT,
+        help_text="Blend ID"
     )
     # When non-null, this is used to signal that this particular
     # substance entry was automatically generated from an entry containing
@@ -615,17 +621,17 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
 class BaseHighAmbientTemperature(models.Model):
 
-    # Multi-split air conditioners
     quantity_msac = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in multi-split air conditioners"
     )
-    # Split ducted air conditioners
     quantity_sdac = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in split ducted air conditioners"
     )
-    # Ducted commercial packaged air conditioners
     quantity_dcpac = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in ducted commercial packaged air conditioners",
     )
 
     class Meta:
