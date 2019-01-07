@@ -37,12 +37,8 @@ const quantityCalculator = (fields, parent, section) => {
 
 	if (count === 0) {
 		returnObj.selected = ''
-	} else if (count < 0) {
-		returnObj.selected = count.toPrecision(3)
-	} else if (count > 999) {
-		returnObj.selected = parseInt(count)
 	} else {
-		returnObj.selected = count.toPrecision(3)
+		returnObj.selected = count
 	}
 
 	const tooltip = createTooltip(forTooltip, section)
