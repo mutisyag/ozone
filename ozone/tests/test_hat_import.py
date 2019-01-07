@@ -109,7 +109,6 @@ class TestHATImport(BaseHATImportTest):
         )
         self.assertEqual(result.status_code, 200, result.json())
 
-        # import pdb; pdb.set_trace()
         expected_data = dict(HAT_IMPORT_DATA)
         expected_data["substance"] = self.substance.id
         expected_data["blend"] = None
