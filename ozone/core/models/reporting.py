@@ -86,32 +86,6 @@ class ReportingChannel(models.Model):
     description = models.CharField(max_length=256, blank=True)
 
 
-class SubmissionInfo(ModifyPreventionMixin, models.Model):
-    """
-    Model for storing submission info.
-    """
-
-    reporting_officer = models.CharField(max_length=256, blank=True)
-    designation = models.CharField(max_length=256, blank=True)
-    organization = models.CharField(max_length=256, blank=True)
-    postal_code = models.CharField(max_length=64, blank=True)
-    country = models.CharField(max_length=256, blank=True)
-    phone = models.CharField(max_length=128, blank=True)
-    fax = models.CharField(max_length=128, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    reporting_channel = models.ForeignKey(
-        ReportingChannel,
-        related_name="info",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT
-    )
-
-    def __str__(self):
-        return f'{self.submission} - Info'
-
-
 class Submission(models.Model):
     """
     One specific data submission (version!)
@@ -187,14 +161,6 @@ class Submission(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL
-    )
-
-    info = models.OneToOneField(
-        SubmissionInfo,
-        related_name='submission',
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE
     )
 
     # Persisted workflow class for this submission. We want this to be only set
@@ -863,3 +829,37 @@ class Submission(models.Model):
     def set_submitted(self):
         self.submitted_at = timezone.now()
         self.save()
+
+
+class SubmissionInfo(ModifyPreventionMixin, models.Model):
+    """
+    Model for storing submission info.
+    """
+
+    submission = models.OneToOneField(
+        Submission,
+        related_name='info',
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE
+    )
+
+    reporting_officer = models.CharField(max_length=256, blank=True)
+    designation = models.CharField(max_length=256, blank=True)
+    organization = models.CharField(max_length=256, blank=True)
+    postal_code = models.CharField(max_length=64, blank=True)
+    country = models.CharField(max_length=256, blank=True)
+    phone = models.CharField(max_length=128, blank=True)
+    fax = models.CharField(max_length=128, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="info",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
+    def __str__(self):
+        return f'{self.submission} - Info'
