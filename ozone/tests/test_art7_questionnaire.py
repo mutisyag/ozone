@@ -132,3 +132,31 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["has_imports"], True)
         self.assertEqual(resp.json()["has_exports"], False)
+
+    def test_put_immutable_state(self):
+        submission = self.create_submission()
+        art7question = Article7QuestionnaireFactory.create(
+            submission=submission,
+
+        )
+        submission._current_state = "finalized"
+        submission.save()
+
+        data = {
+            'has_destroyed': False,
+            'has_emissions': False,
+            'has_exports': False,
+            'has_imports': True,
+            'has_nonparty': False,
+            'has_produced': False,
+        }
+        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
+        resp = self.client.put(
+            reverse("core:submission-article7-questionnaire-detail",
+                    kwargs={"submission_pk": submission.pk, "pk": art7question.pk}),
+            json.dumps(data),
+            "application/json",
+            format="json",
+            **headers,
+        )
+        self.assertEqual(resp.status_code, 422)
