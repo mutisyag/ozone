@@ -823,24 +823,6 @@ class Submission(models.Model):
                 using=using, update_fields=update_fields
             )
 
-    @transaction.atomic()
-    def make_current(self):
-        versions = (
-            Submission.objects.select_for_update()
-            .filter(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                obligation=self.obligation,
-            )
-            .exclude(pk=self.pk)
-            .exclude(_current_state__in=self.editable_states)
-        )
-        for version in versions:
-            version.flag_superseded = True
-            version.save()
-        self.flag_superseded = False
-        self.save()
-
     def set_submitted(self):
         self.submitted_at = timezone.now()
         self.save()
