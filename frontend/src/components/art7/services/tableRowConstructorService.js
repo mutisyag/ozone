@@ -102,31 +102,31 @@ export default {
 				},
 				quantity_generated: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_all_uses: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_for_destruction: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_destroyed: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_emitted: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				remarks_party: {
 					type: 'textarea',
@@ -208,9 +208,8 @@ export default {
 				}
 			}
 			if (prefillData) {
-				console.log(prefillData)
 				Object.keys(prefillData).forEach((element) => {
-					row[element].selected = prefillData[element]
+					row[element].selected = isNumber(prefillData[element]) ? fromExponential(prefillData[element]) : prefillData[element]
 				})
 			}
 			return row
@@ -602,9 +601,9 @@ export default {
 		}
 		if (prefillData) {
 			Object.keys(prefillData).forEach((field) => {
-				console.log('--------', fromExponential(prefillData[field]))
 				baseInnerFields[field]
-					?					baseInnerFields[field].selected = isNumber(prefillData[field]) ? fromExponential(prefillData[field]) : prefillData[field]
+					?	baseInnerFields[field].selected = isNumber(prefillData[field])
+						? fromExponential(prefillData[field]) : prefillData[field]
 					: null
 			})
 		}

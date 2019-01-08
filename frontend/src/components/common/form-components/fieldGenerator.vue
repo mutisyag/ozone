@@ -71,6 +71,12 @@ export default {
 		updateFormField(e) {
 			if (this.field.type !== 'select') {
 				this.validateInput()
+				// empty strings in number field are not accepted in backend, so we need to transform every '' into a null for type === number
+				if (this.currentTyping === '' && this.field.type === 'number') {
+					console.log('here')
+					this.$store.commit('updateFormField', { value: null, fieldInfo: this.fieldInfo })
+					return
+				}
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
 			} else {
 				this.$store.commit('updateFormField', { value: e, fieldInfo: this.fieldInfo })
