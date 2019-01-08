@@ -10,12 +10,11 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import Submission
+from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
 __all__ = [
-    'ModifyPreventionMixin',
     'Article7Questionnaire',
     'Article7Export',
     'Article7Import',
@@ -27,24 +26,6 @@ __all__ = [
     'HighAmbientTemperatureImport',
     'Transfer',
 ]
-
-
-class ModifyPreventionMixin:
-    """
-    Mixin to be used by all data report models to prevent modification of
-    submitted submissions.
-    """
-
-    def clean(self):
-        if not self.submission.data_changes_allowed:
-            raise ValidationError(
-                _("Submitted submissions cannot be modified.")
-            )
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
 
 
 class BlendCompositionMixin:
@@ -638,7 +619,9 @@ class BaseHighAmbientTemperature(models.Model):
         abstract = True
 
 
-class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureProduction(
+    ModifyPreventionMixin, BaseReport, BaseHighAmbientTemperature
+):
     """
     Production under the exemption for high-ambient-temperature parties
     """
@@ -648,7 +631,8 @@ class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
 
 
 class HighAmbientTemperatureImport(
-    BaseBlendCompositionReport, BaseHighAmbientTemperature
+    ModifyPreventionMixin, BaseBlendCompositionReport,
+    BaseHighAmbientTemperature
 ):
     """
     Consumption (imports) under the exemption for high-ambient-temperature
@@ -666,7 +650,7 @@ class HighAmbientTemperatureImport(
     ]
 
 
-class Transfer(BaseReport):
+class Transfer(ModifyPreventionMixin, BaseReport):
     """
     Records amounts of production rights transferred between Parties.
     """

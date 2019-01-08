@@ -24,6 +24,7 @@ from ..exceptions import (
 )
 
 __all__ = [
+    'ModifyPreventionMixin',
     'Obligation',
     'Submission',
     'SubmissionInfo',
@@ -31,6 +32,24 @@ __all__ = [
 ]
 
 SUBMISSION_ROOT_DIR = 'submissions'
+
+
+class ModifyPreventionMixin:
+    """
+    Mixin to be used by models with foreign keys to Submissions which need to
+    prevent changes when the referenced submission is not in Data Entry.
+    """
+
+    def clean(self):
+        if not self.submission.data_changes_allowed:
+            raise ValidationError(
+                _("Submitted submissions cannot be modified.")
+            )
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Obligation(models.Model):
@@ -67,7 +86,7 @@ class ReportingChannel(models.Model):
     description = models.CharField(max_length=256, blank=True)
 
 
-class SubmissionInfo(models.Model):
+class SubmissionInfo(ModifyPreventionMixin, models.Model):
     """
     Model for storing submission info.
     """
