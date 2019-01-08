@@ -1,4 +1,6 @@
 import labels from '@/components/art7/dataDefinitions/labels'
+import fromExponential from 'from-exponential'
+import { isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -355,20 +357,6 @@ export default {
 		}
 
 		switch (section) {
-		case 'has_exports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
-		case 'has_imports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
 		case 'has_produced':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -506,13 +494,7 @@ export default {
 					return returnObj
 				}
 			}
-
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_destroyed':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -555,12 +537,7 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_nonparty':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -619,16 +596,19 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		default:
-			// statements_def
-			return {}
+			break
 		}
+		if (prefillData) {
+			Object.keys(prefillData).forEach((field) => {
+				console.log('--------', fromExponential(prefillData[field]))
+				baseInnerFields[field]
+					?					baseInnerFields[field].selected = isNumber(prefillData[field]) ? fromExponential(prefillData[field]) : prefillData[field]
+					: null
+			})
+		}
+		return baseInnerFields
 	}
 
 }
