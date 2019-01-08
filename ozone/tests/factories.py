@@ -10,6 +10,7 @@ from ozone.core.models import (
     ReportingChannel,
     ReportingPeriod,
     Submission,
+    SubmissionInfo,
     Subregion,
     Substance,
     Article7Questionnaire,
@@ -141,6 +142,11 @@ class SubmissionFactory(DjangoModelFactory):
 
     class Meta:
         model = Submission
+
+
+class SubmissionInfoFactory(DjangoModelFactory):
+    class Meta:
+        model = SubmissionInfo
 
 
 class Article7QuestionnaireFactory(DjangoModelFactory):
