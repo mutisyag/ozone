@@ -95,24 +95,26 @@
 						slot="group"
 						slot-scope="cell"
 					>
-						{{cell.item.group}}
-					</template>
-					<template
-						slot="substance"
-						slot-scope="cell"
-					>
-						<div class="table-btn-group">
+						<div class="group-cell">
+							{{cell.item.group}}
+						</div>
+						<b-btn-group class="row-controls">
 							<b-btn
-								variant="info"
+								variant="outline-info"
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							>Edit</b-btn>
+							><i class="fa fa-pencil-square"></i></b-btn>
 							<b-btn
 								v-if="!isReadOnly"
 								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
-							>Delete</b-btn>
-						</div>
+							><i class="fa fa-times"></i></b-btn>
+						</b-btn-group>
+					</template>
+					<template
+						slot="substance"
+						slot-scope="cell"
+					>
 						{{cell.item.substance}}
 					</template>
 
@@ -230,25 +232,27 @@
 						slot="group"
 						slot-scope="cell"
 					>
-						{{cell.item.group}}
+						<div class="group-cell">
+							{{cell.item.group}}
+						</div>
+						<b-btn-group class="row-controls">
+							<b-btn
+								variant="outline-info"
+								@click="createModalData(cell.item.originalObj, cell.item.index)"
+							><i class="fa fa-pencil-square"></i></b-btn>
+							<b-btn
+								v-if="!isReadOnly"
+								variant="outline-danger"
+								@click="remove_field(cell.item.index, cell.item)"
+								class="table-btn"
+							><i class="fa fa-times"></i></b-btn>
+						</b-btn-group>
 					</template>
 
 					<template
 						slot="substance"
 						slot-scope="cell"
 					>
-						<div class="table-btn-group">
-							<b-btn
-								variant="info"
-								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							>Edit</b-btn>
-							<b-btn
-								v-if="!isReadOnly"
-								variant="outline-danger"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn"
-							>Delete</b-btn>
-						</div>
 						{{cell.item.substance}}
 					</template>
 
@@ -351,18 +355,6 @@
 					ref="tableBlends"
 				>
 					<template slot="blend" slot-scope="cell">
-						<div class="table-btn-group">
-							<b-btn
-								variant="info"
-								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							>Edit</b-btn>
-							<b-btn
-								v-if="!isReadOnly"
-								variant="outline-danger"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn"
-							>Delete</b-btn>
-						</div>
 						<span
 							style="cursor:pointer;"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
@@ -373,7 +365,21 @@
 						</span>
 					</template>
 					<template slot="type" slot-scope="cell">
+						<div class="group-cell">
 							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}
+						</div>
+						<b-btn-group class="row-controls">
+							<b-btn
+								variant="outline-info"
+								@click="createModalData(cell.item.originalObj, cell.item.index)"
+							><i class="fa fa-pencil-square"></i></b-btn>
+							<b-btn
+								v-if="!isReadOnly"
+								variant="outline-danger"
+								@click="remove_field(cell.item.index, cell.item)"
+								class="table-btn"
+							><i class="fa fa-times"></i></b-btn>
+						</b-btn-group>
 					</template>
 					<template :slot="getCountrySlot" slot-scope="cell">
 						<CloneField

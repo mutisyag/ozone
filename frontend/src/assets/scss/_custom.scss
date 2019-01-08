@@ -974,3 +974,23 @@ body {
     border-radius: .25em;
     background: #fafafa;
 }
+
+
+.row-controls {
+	display: none;
+}
+
+.group-cell {
+	min-width: 75px;
+	text-align: center;
+}
+
+.table tr:hover {
+	.row-controls {
+		display: block;
+		white-space: nowrap;
+	}
+	.group-cell {
+		display: none;
+	}
+}
