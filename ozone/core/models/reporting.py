@@ -742,7 +742,7 @@ class Submission(models.Model):
              update_fields=None):
         # Several actions need to be performed on first save
         # No need to check `update_fields`, since this is the first
-        # save. If other fields are change during an update, they
+        # save. If other fields are changed during an update, they
         # must be added to the `update_fields` list, since we are using
         # the PartialUpdateMixIn.
         if not self.pk or force_insert:
@@ -776,42 +776,52 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
-        self.clean()
-        ret = super().save(
-            force_insert=force_insert, force_update=force_update,
-            using=using, update_fields=update_fields
-        )
+            self.clean()
+            ret = super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
+            )
 
-        # Prefill "Submission info" with values from the most recent
-        # submission when creating a new submission for the same obligation
-        # and party.
-        # The prefill will be skipped if it's a clone action.
-        if not hasattr(self, 'info'):
-            latest_submission = submissions.order_by('-updated_at').first()
-            if latest_submission and hasattr(latest_submission, 'info'):
-                latest_info = latest_submission.info
-                SubmissionInfo.objects.create(
-                    submission=self,
-                    reporting_officer=latest_info.reporting_officer,
-                    designation=latest_info.designation,
-                    organization=latest_info.organization,
-                    postal_code=latest_info.postal_code,
-                    country=latest_info.country,
-                    phone=latest_info.phone,
-                    fax=latest_info.fax,
-                    email=latest_info.email,
-                    date=latest_info.date,
-                    reporting_channel=ReportingChannel.objects.get(
-                        name='Web form')
-                )
-            else:
-                SubmissionInfo.objects.create(
-                    submission=self,
-                    reporting_channel=ReportingChannel.objects.get(
-                        name='Web form')
-                )
+            # Prefill "Submission info" with values from the most recent
+            # submission when creating a new submission for the same obligation
+            # and party.
+            # The prefill will be skipped if it's a clone action.
+            if not hasattr(self, 'info'):
+                latest_submission = submissions.order_by('-updated_at').first()
+                if latest_submission and hasattr(latest_submission, 'info'):
+                    latest_info = latest_submission.info
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
+                        reporting_officer=latest_info.reporting_officer,
+                        designation=latest_info.designation,
+                        organization=latest_info.organization,
+                        postal_code=latest_info.postal_code,
+                        country=latest_info.country,
+                        phone=latest_info.phone,
+                        fax=latest_info.fax,
+                        email=latest_info.email,
+                        date=latest_info.date,
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
+                    )
+                else:
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
+                    )
 
-        return ret
+            return ret
+
+        else:
+            # This is not the first save
+            self.clean()
+            return super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
+            )
 
     @transaction.atomic()
     def make_current(self):
