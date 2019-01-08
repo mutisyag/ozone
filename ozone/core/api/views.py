@@ -797,7 +797,7 @@ class UploadHookViewSet(viewsets.ViewSet):
         try:
             token = UploadToken.objects.get(token=tok)
 
-            if not token.user.is_authenticated():
+            if not token.user.is_authenticated:
                 log.error(f'UPLOAD denied for "{token.user}": NOT ALLOWED')
                 return Response(
                     {'error': 'user not authenticated'},
