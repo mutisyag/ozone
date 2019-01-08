@@ -1,4 +1,5 @@
 import json
+from unittest.mock import patch
 
 from django.urls import reverse
 from django.test import TestCase
@@ -59,6 +60,11 @@ class BaseDataRemarksTestsMixIn(object):
         )
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
+        patch("ozone.core.api.permissions.IsSecretariatOrSamePartySubmission.has_permissions",
+              return_value=True).start()
+
+    def tearDown(self):
+        patch.stopall()
 
     def get_authorization_header(self, username, password):
         resp = self.client.post(
