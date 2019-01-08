@@ -308,3 +308,5 @@ OAUTH2_PROVIDER = {
     # authorized or not.
     "REQUEST_APPROVAL_PROMPT": 'auto',
 }
+
+TUSD_UPLOADS_DIR = env('TUSD_UPLOADS_DIR', default='/var/local/tusd_uploads')
