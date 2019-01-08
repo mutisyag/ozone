@@ -6,8 +6,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
-from .reporting import Submission
-from .data import ModifyPreventionMixin
+from .reporting import ModifyPreventionMixin, Submission
+
 
 UPLOAD_TOKEN_LENGTH = 64
 UPLOAD_TOKEN_DURATION = 60 * 60  # 60 minutes
