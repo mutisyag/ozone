@@ -70,9 +70,9 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
 
     def test_get(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create(email="test@example.com")
-        submission.info = subinfo
-        submission.save()
+        subinfo = SubmissionInfoFactory.create(
+            submission=submission, email="test@example.com"
+        )
 
         headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
         resp = self.client.get(
@@ -86,9 +86,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
 
     def test_put(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create()
-        submission.info = subinfo
-        submission.save()
+        subinfo = SubmissionInfoFactory.create(submission=submission)
 
         data = {
             'country': 'Romania',
@@ -118,8 +116,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
     @unittest.skip("Currently failing?!")
     def test_put_immutable_state(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create()
-        submission.info = subinfo
+        subinfo = SubmissionInfoFactory.create(submission=submission)
         submission._current_state = "finalized"
         submission.save()
 
