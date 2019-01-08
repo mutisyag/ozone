@@ -16,6 +16,20 @@ const getters = {
 			&& sub.current_state === 'data_entry'
 	),
 
+	currentCountryIso: (state) => {
+		const { currentUser } = state
+		let currentCountry = null
+		if (!currentUser || !currentUser.party) return
+		if (state.initialData.countryOptions) {
+			currentCountry = state.initialData.countryOptions.filter(c => currentUser.party === c.value)
+		}
+		if (state.dashboard.parties && state.dashboard.parties.length) {
+			currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
+		}
+		if (!currentCountry) return
+		return currentCountry && currentCountry.iso.toLowerCase()
+	},
+
 	getSubmissionInfo: (state) => (submission) => {
 		const submissionInfo = {
 			obligation: () => state.dashboard.obligations.find(a => a.value === submission.obligation).text,

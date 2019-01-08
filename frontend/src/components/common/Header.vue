@@ -1,7 +1,7 @@
 <template>
 	<HeaderDropdown class="mr-3" right>
-    <template slot="header">
-      {{$store.state.currentUser.username}}
+    <template v-if="$store.state.currentUser" slot="header">
+      {{$store.state.currentUser.username}} <span style="font-size: 1.2rem;" v-if="currentCountryIso" :class="`flag-icon flag-icon-${currentCountryIso}`"></span>
     </template>
 		<template slot="dropdown">
 			<b-dropdown-header tag="div" class="text-center"><strong>Account</strong></b-dropdown-header>
@@ -26,6 +26,11 @@ export default {
 	data() {
 		return {
 			apiBase
+		}
+	},
+	computed: {
+		currentCountryIso() {
+			return this.$store.getters.currentCountryIso
 		}
 	}
 }

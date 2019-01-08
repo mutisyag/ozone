@@ -115,7 +115,7 @@ const actions = {
 
 		const parties_temp = response.data
 			.filter(country => country.id === country.parent_party)
-			.map(country => ({ value: country.id, text: country.name }))
+			.map(country => ({ value: country.id, text: country.name, iso: country.abbr }))
 		context.commit('setDashboardParties', parties_temp)
 	},
 
@@ -252,7 +252,7 @@ const actions = {
 			const countryOptions = response.data.filter((p) => {
 				countryDisplay[p.id] = p.name
 				return p.id !== context.state.current_submission.party
-			}).map((country) => ({ value: country.id, text: country.name }))
+			}).map((country) => ({ value: country.id, text: country.name, iso: country.abbr }))
 			context.commit('updateCountries', countryOptions)
 			context.commit('updateCountriesDisplay', countryDisplay)
 		})
