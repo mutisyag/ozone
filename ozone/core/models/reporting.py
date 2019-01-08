@@ -86,7 +86,7 @@ class ReportingChannel(models.Model):
     description = models.CharField(max_length=256, blank=True)
 
 
-class SubmissionInfo(models.Model):
+class SubmissionInfo(ModifyPreventionMixin, models.Model):
     """
     Model for storing submission info.
     """
