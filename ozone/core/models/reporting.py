@@ -610,19 +610,20 @@ class Submission(models.Model):
                 created_by=self.created_by,
                 last_edited_by=self.last_edited_by,
             )
-            SubmissionInfo.objects.create(
-                submission=clone,
-                reporting_officer=self.info.reporting_officer,
-                designation=self.info.designation,
-                organization=self.info.organization,
-                postal_code=self.info.postal_code,
-                country=self.info.country,
-                phone=self.info.phone,
-                fax=self.info.fax,
-                email=self.info.email,
-                date=self.info.date,
-                reporting_channel=self.info.reporting_channel
-            )
+            if hasattr(self, 'info'):
+                SubmissionInfo.objects.create(
+                    submission=clone,
+                    reporting_officer=self.info.reporting_officer,
+                    designation=self.info.designation,
+                    organization=self.info.organization,
+                    postal_code=self.info.postal_code,
+                    country=self.info.country,
+                    phone=self.info.phone,
+                    fax=self.info.fax,
+                    email=self.info.email,
+                    date=self.info.date,
+                    reporting_channel=self.info.reporting_channel
+                )
         else:
             raise e
 
