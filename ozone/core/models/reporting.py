@@ -611,18 +611,22 @@ class Submission(models.Model):
                 last_edited_by=self.last_edited_by,
             )
             if hasattr(self, 'info'):
-                SubmissionInfo.objects.create(
+                # Clone submission might already have some pre-populated
+                # info due to how save() works. These need to be updated.
+                SubmissionInfo.objects.update_or_create(
                     submission=clone,
-                    reporting_officer=self.info.reporting_officer,
-                    designation=self.info.designation,
-                    organization=self.info.organization,
-                    postal_code=self.info.postal_code,
-                    country=self.info.country,
-                    phone=self.info.phone,
-                    fax=self.info.fax,
-                    email=self.info.email,
-                    date=self.info.date,
-                    reporting_channel=self.info.reporting_channel
+                    defaults={
+                        'reporting_officer': self.info.reporting_officer,
+                        'designation': self.info.designation,
+                        'organization': self.info.organization,
+                        'postal_code': self.info.postal_code,
+                        'country': self.info.country,
+                        'phone': self.info.phone,
+                        'fax': self.info.fax,
+                        'email': self.info.email,
+                        'date': self.info.date,
+                        'reporting_channel': self.info.reporting_channel
+                    }
                 )
         else:
             raise e
