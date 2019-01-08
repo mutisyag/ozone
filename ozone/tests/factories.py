@@ -12,6 +12,7 @@ from ozone.core.models import (
     Submission,
     Subregion,
     Substance,
+    Article7Questionnaire,
     Article7Destruction,
     Article7Production,
     Article7Import,
@@ -140,6 +141,18 @@ class SubmissionFactory(DjangoModelFactory):
 
     class Meta:
         model = Submission
+
+
+class Article7QuestionnaireFactory(DjangoModelFactory):
+    has_imports = False
+    has_exports = False
+    has_produced = False
+    has_destroyed = False
+    has_nonparty = False
+    has_emissions = False
+
+    class Meta:
+        model = Article7Questionnaire
 
 
 class SubstanceFactory(DjangoModelFactory):
