@@ -176,6 +176,70 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(len(result.json()['results']), 1)
         self.assertEqual(result.json()['results'][0]["id"], submission.id)
 
+    def test_list_all_versions(self):
+        headers = self.get_authorization_header(
+            self.secretariat_user.username, "qwe123qwe"
+        )
+        submission = self.create_submission()
+        submission._current_state = "finalized"
+        submission.save()
+        new_version = submission.clone(self.secretariat_user)
+        new_version.make_current()
+        new_version.save()
+
+        result = self.client.get(
+            reverse("core:submission-list"),
+            {"ordering": "-updated_at"},
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(len(result.json()['results']), 2)
+        self.assertEqual(result.json()['results'][0]['version'], 2)
+        self.assertEqual(result.json()['results'][1]['version'], 1)
+
+    def test_list_current_only(self):
+        headers = self.get_authorization_header(
+            self.secretariat_user.username, "qwe123qwe"
+        )
+        submission = self.create_submission()
+        submission._current_state = "finalized"
+        submission.save()
+        new_version = submission.clone(self.secretariat_user)
+        new_version.make_current()
+        new_version.save()
+
+        result = self.client.get(
+            reverse("core:submission-list"),
+            {"ordering": "-updated_at", "is_current": True},
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(len(result.json()['results']), 1)
+        self.assertEqual(result.json()['results'][0]['version'], 2)
+
+    def test_list_superseded_only(self):
+        headers = self.get_authorization_header(
+            self.secretariat_user.username, "qwe123qwe"
+        )
+        submission = self.create_submission()
+        submission._current_state = "finalized"
+        submission.save()
+        new_version = submission.clone(self.secretariat_user)
+        new_version.make_current()
+        new_version.save()
+
+        result = self.client.get(
+            reverse("core:submission-list"),
+            {"ordering": "-updated_at", "is_current": False},
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(len(result.json()['results']), 1)
+        self.assertEqual(result.json()['results'][0]['version'], 1)
+
     def test_list_paginated(self):
         headers = self.get_authorization_header(
             self.secretariat_user.username, "qwe123qwe"
