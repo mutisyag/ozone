@@ -203,7 +203,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission._current_state = "finalized"
         submission.save()
-        submission.clone(self.secretariat_user)
+        clone = submission.clone(self.secretariat_user)
+        # This should make the first one superseded
+        clone._current_state = "finalized"
+        clone.save()
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -222,7 +225,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission._current_state = "finalized"
         submission.save()
-        submission.clone(self.secretariat_user)
+        clone = submission.clone(self.secretariat_user)
+        # This should make the first one superseded
+        clone._current_state = "finalized"
+        clone.save()
 
         result = self.client.get(
             reverse("core:submission-list"),
