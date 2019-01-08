@@ -183,9 +183,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission._current_state = "finalized"
         submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.clone(self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -205,9 +203,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission._current_state = "finalized"
         submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.clone(self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -226,9 +222,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission._current_state = "finalized"
         submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.clone(self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
