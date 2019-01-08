@@ -54,7 +54,7 @@ class BaseSubmissionTest(TestCase):
         return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, **kwargs):
-        submission = SubmissionFactory(
+        submission = SubmissionFactory.create(
             party=self.party,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
@@ -227,3 +227,26 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(new_submission.party, submission.party)
         self.assertEqual(new_submission.obligation, submission.obligation)
         self.assertEqual(new_submission.reporting_period, submission.reporting_period)
+
+    def test_history(self):
+        submission = self.create_submission()
+        submission.call_transition("submit", self.secretariat_user)
+        submission.save()
+        for obj in submission.history.all():
+            obj.history_user = self.secretariat_user
+            obj.save()
+
+        headers = self.get_authorization_header(
+            self.secretariat_user.username, "qwe123qwe"
+        )
+        result = self.client.get(
+            reverse("core:submission-history", kwargs={"pk": submission.id}),
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200)
+        submission.refresh_from_db()
+        self.assertEqual(len(result.json()), 5)
+        self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
+        self.assertEqual(result.json()[0]['current_state'], 'submitted')
+
