@@ -258,21 +258,26 @@ const mutations = {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
 
-	setTabAttachments(state, { tabName, attachments }) {
-		state.form.tabs[tabName].form_fields.attachments = attachments
-	},
-	addTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments.push(attachment)
+	addTabAttachments(state, { tabName, attachments }) {
+		if (!attachments) {
+			return
+		}
+		attachments.forEach(attachment => {
+			state.form.tabs[tabName].form_fields.attachments.push(attachment)
+		})
 	},
 	updateTabAttachment(state, { tabName, attachment }) {
 		const updatedAttachments = []
-		state.form.tabs[tabName].form_fields.attachments.forEach(attach => {
-			attach.id === attachment.id ? updatedAttachments.push(attachment) : updatedAttachments.push(attach)
+		state.form.tabs[tabName].form_fields.attachments.forEach(attachOld => {
+			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
 		})
 		state.form.tabs[tabName].form_fields.attachments = updatedAttachments
 	},
 	deleteTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attach => attach.id !== attachment.id)
+		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attachOld => attachOld !== attachment)
+	},
+	deleteAllTabAttachments(state, { tabName }) {
+		state.form.tabs[tabName].form_fields.attachments = []
 	}
 }
 

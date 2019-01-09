@@ -13,7 +13,7 @@ import {
 	getNonParties,
 	getPartyRatifications,
 	getCurrentUser,
-	uploadFile
+	uploadAttachment
 } from '@/components/common/services/api'
 
 import {
@@ -265,7 +265,8 @@ const actions = {
 			response.data.forEach(group => {
 				group.substances.sort((a, b) => a.sort_order - b.sort_order)
 				group.substances.forEach(substance => {
-					tempSubstances.push({ value: substance.id,
+					tempSubstances.push({
+						value: substance.id,
 						text: substance.name,
 						group,
 						is_qps: substance.is_qps,
@@ -364,24 +365,14 @@ const actions = {
 			resolve()
 		})
 	},
-	uploadFormAttachments(context, uploadedFiles) {
-		// upload to the server
-		// mocking server response
-		/* const mockResponseAttachments = uploadedFiles.map(file => ({
-			id: Math.floor(Math.random() * 100000),
-			name: file.name,
-			url: 'https://www.google.com',
-			size: `${file.size} bytes`,
-			dateUploaded: new Date(),
-			description: `DESCRIPTION ${file.name}`
-		})) */
-		uploadedFiles.forEach(file => {
-			console.log(file)
-			const response = uploadFile(file, context.state.current_submission.id)
-			console.log(response)
-		})
-
-		return []
+	async uploadAttachments(context, { attachments, onProgressCallback }) {
+		for (let i = 0; i < attachments.length; i += 1) {
+			const attachment = attachments[i]
+			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
+			attachment.uploadUrl = response.url
+			attachment.percentage = 100
+		}
+		return attachments
 	}
 }
 

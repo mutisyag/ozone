@@ -144,7 +144,6 @@ export default {
 		},
 		tabsIdsWithAssideMenu() {
 			const { form } = this.$store.state
-			console.log(' tabsIdsWithAssideMenu', form)
 			return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
 		}
 	},
