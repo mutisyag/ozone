@@ -828,9 +828,12 @@ class UploadHookViewSet(viewsets.ViewSet):
             log.info(f'file extension: {file_ext}')
             log.info(f'allowed extensions: {settings.ALLOWED_FILE_EXTENSIONS}')
 
-            submission_file, is_new = SubmissionFile.get_or_create(
-                token.submission,
-                file_name
+            submission_file, is_new = SubmissionFile.objects.get_or_create(
+                submission=token.submission,
+                name=file_name,
+                defaults={
+                    'uploader': token.user,
+                }
             )
             if not is_new:
                 # New file with same name uploaded, delete old one to avoid

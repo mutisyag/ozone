@@ -26,6 +26,11 @@ def get_int_env_var(var_name, default=None):
                                    f'must be an integer or integer-convertible string')
 
 
+def split_env_var(var_name, sep=','):
+    var = get_env_var(var_name, '')
+    return [e.strip() for e in var.split(sep)]
+
+
 # ROOT_DIR = ozone/config/settings/base.py - 3 = ozone/
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 APPS_DIR = ROOT_DIR / 'ozone' 
@@ -309,7 +314,9 @@ OAUTH2_PROVIDER = {
     "REQUEST_APPROVAL_PROMPT": 'auto',
 }
 
+# Tusd settings
 TUSD_UPLOADS_DIR = env('TUSD_UPLOADS_DIR', default='/var/local/tusd_uploads')
+ALLOWED_FILE_EXTENSIONS = split_env_var('ALLOWED_FILE_EXTENSIONS')
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
 LOCALE_PATHS = [

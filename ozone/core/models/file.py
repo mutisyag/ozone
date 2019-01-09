@@ -68,9 +68,18 @@ class File(models.Model):
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
-    file = models.FileField(upload_to=get_storage_directory)
+    name = models.CharField(max_length=512)
+    file = models.FileField(
+        upload_to=get_storage_directory, null=True, blank=True
+    )
 
     description = models.CharField(max_length=512, blank=True)
+
+    uploader = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='uploaded_files',
+        on_delete=models.PROTECT
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -79,18 +88,23 @@ class File(models.Model):
     def size(self):
         return self.file.size
 
-    @property
-    def name(self):
-        # If renaming files is needed, a `name` field will be necessary
-        return self.file.name
-
     class Meta:
         abstract = True
 
 
 class SubmissionFile(ModifyPreventionMixin, File):
+    def get_storage_directory(self, filename):
+        return os.path.join(
+            self.submission.get_storage_directory(),
+            os.path.basename(filename)
+        )
+
     submission = models.ForeignKey(
         Submission, related_name='files', on_delete=models.PROTECT
+    )
+
+    file = models.FileField(
+        upload_to=get_storage_directory, null=True, blank=True
     )
 
     def get_storage_directory(self, filename):
