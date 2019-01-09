@@ -1,6 +1,18 @@
 {% extends 'admin/base_site.html' %}
+{% load i18n %}
 {% load static %}
 
 {% block branding %}
-  <!-- Nothing -->
+  <form action="/admin/i18n/setlang/" method="post">
+    {% csrf_token %}
+    <select id="language-selector" name="language" class="form-control" onchange="this.form.submit()">
+      {% for lang in LANGUAGES %}
+        <option value="{{ lang.0 }}"
+          {% ifequal lang.0 request.LANGUAGE_CODE %}
+                selected="yes"
+          {% endifequal %}
+        >{{ lang.01}}</option>
+      {% endfor %}
+    </select>
+  </form>
 {% endblock branding %}
