@@ -60,7 +60,7 @@ TABLE_SUBSTANCES_HEADER = (
 TABLE_SUBSTANCES_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
-    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
     ('SPAN', (1, 0), (1, 1)),
     ('SPAN', (2, 0), (2, 1)),
@@ -75,15 +75,45 @@ TABLE_STYLE = (
 )
 
 
+def to_row_art7import(obj):
+    substance = obj.substance
+
+    _q_pre_ship = obj.quantity_quarantine_pre_shipment
+    q_pre_ship = (
+        p_l(f'Quantity of new {substance.name} '
+            'imported to be used for QPS applications'),
+        p_l(str(_q_pre_ship))
+    ) if _q_pre_ship else ()
+
+    return (
+        substance.group.group_id,
+        p_l(substance.name),
+        p_l(obj.source_party.name),
+        str(obj.quantity_total_new or ''),
+        str(obj.quantity_total_recovered or ''),
+        str(obj.quantity_feedstock or ''),
+        (p_l(str(obj.quantity_essential_uses or '')), ) + q_pre_ship,
+        None  # TODO: decision/type of use or remark
+    )
+
+
+def mk_table_art7import_substances(submission):
+    imports = submission.article7imports.all()
+    return map(to_row_art7import, imports)
+
+
 def export_submission(submission):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(buff, pagesize=PG_SIZE)
 
-    story = [Spacer(1, inch)]
+    story = []
 
+    table_art7import_substances = tuple(mk_table_art7import_substances(submission))
+
+    story.append(Paragraph(_('1.1 Substances'), STYLES['Heading2']))
     table = Table(
-        TABLE_SUBSTANCES_HEADER,
+        TABLE_SUBSTANCES_HEADER + table_art7import_substances,
         style=TABLE_SUBSTANCES_HEADER_STYLE + TABLE_STYLE,
         repeatRows=2
     )
