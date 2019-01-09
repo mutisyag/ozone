@@ -355,6 +355,12 @@ class TestPartyReporterRole(BaseUserRoleTests):
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter.username,
+                password='qwe123qwe'
+            )
+        )
 
     def test_view_submission_same_party(self):
         """
@@ -364,12 +370,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             party=self.party,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
-        )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
         )
         resp = self.client.get(
             reverse("core:submission-detail", kwargs={"pk": submission.id})
@@ -385,12 +385,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             party=self.another_party,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
-        )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
         )
         resp = self.client.get(
             reverse("core:submission-detail", kwargs={"pk": submission.id})
@@ -414,12 +408,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             "facility_name": "Test",
             "quantity_emitted": 1
         }
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.post(
             reverse("core:submission-article7-emissions-list",
                     kwargs={'submission_pk': submission.pk}),
@@ -448,12 +436,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             "facility_name": "Test",
             "quantity_emitted": 1
         }
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.post(
             reverse("core:submission-article7-emissions-list",
                     kwargs={'submission_pk': submission.pk}),
@@ -473,12 +455,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             last_edited_by=self.reporter_same_party,
         )
         self.assertEqual(Submission.objects.count(), 1)
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.delete(
             reverse("core:submission-detail", kwargs={'pk': submission.pk}),
             {"party": submission.party.pk}
@@ -497,12 +473,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
             last_edited_by=self.reporter_another_party,
         )
         self.assertEqual(Submission.objects.count(), 1)
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.delete(
             reverse("core:submission-detail", kwargs={'pk': submission.pk}),
             {"party": submission.party.pk}
@@ -529,6 +499,12 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
+        self.client.credentials(
+            HTTP_AUTHORIZATION='Token ' + self.get_token(
+                username=self.reporter_ro.username,
+                password='qwe123qwe'
+            )
+        )
 
     def test_view_submission_same_party(self):
         """
@@ -538,12 +514,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             party=self.party,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
-        )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
         )
         resp = self.client.get(
             reverse("core:submission-detail", kwargs={"pk": submission.id})
@@ -559,12 +529,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             party=self.another_party,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
-        )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
         )
         resp = self.client.get(
             reverse("core:submission-detail", kwargs={"pk": submission.id})
@@ -583,12 +547,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             "reporting_period": period.id,
             "obligation": obligation.id,
         }
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.post(
             reverse("core:submission-list"),
             data
@@ -613,12 +571,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             "facility_name": "Test",
             "quantity_emitted": 1,
         }
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.post(
             reverse("core:submission-article7-emissions-list",
                     kwargs={'submission_pk': submission.pk}),
@@ -638,12 +590,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             last_edited_by=self.reporter_same_party,
         )
         self.assertEqual(Submission.objects.count(), 1)
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
-        )
         resp = self.client.delete(
             reverse("core:submission-detail", kwargs={'pk': submission.pk}),
             {"party": submission.party.pk}
