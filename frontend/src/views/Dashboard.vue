@@ -30,44 +30,28 @@
         <b-col>
           <b-card v-if="basicDataReady">
             <div slot="header">
-              <strong>My submissions </strong>
+              <strong>Data entry submissions </strong>
             </div>
-						<table class="table table-hover classic-header">
-							<thead>
-								<tr>
-									<th>Obligation</th>
-									<th>Period</th>
-									<th>Party</th>
-									<th>Version</th>
-									<th>Last modified</th>
-									<th>Actions</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr :key="submission.url" v-for="submission in mySubmissions">
-									<td>
-                   {{getSubmissionInfo(submission).obligation()}}
-									</td>
-									<td>
-										{{getSubmissionInfo(submission).period()}}
-									</td>
-									<td>
-										{{getSubmissionInfo(submission).party()}}
-									</td>
-									<td>
-                     {{submission.version}}
-									</td>
-									<td>
-                     {{submission.updated_at}}
-									</td>
-									<td>
-										<router-link :to="{ name: getFormName(submission.obligation), query: {submission: submission.url}}">
-											Continue
-										</router-link>
-									</td>
-								</tr>
-							</tbody>
-						</table>
+            <b-table show-empty
+                       outlined
+                       bordered
+                       hover
+                       head-variant="light"
+                       stacked="md"
+                       :items="dataEntryTableItems"
+                       :fields="dataEntryTable.fields"
+                       :per-page="dataEntryTable.perPage"
+                       ref="dataEntryTable"
+              >
+                <template slot="actions" slot-scope="row">
+									<router-link
+											class="btn btn-outline-primary btn-sm"
+											:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
+										>
+										Continue
+									</router-link>
+                  </template>
+              </b-table>
           </b-card>
         </b-col>
     </b-row>
@@ -218,10 +202,31 @@ export default {
 					},
 					{ key: 'actions', label: 'Actions' }
 				],
-				pageOptions: [10, 25, 100],
-				modalInfo: { title: '', content: '' }
+				pageOptions: [10, 25, 100]
+			},
+			dataEntryTable: {
+				fields: [
+					{
+						key: 'obligation', label: 'Obligation', sortable: true, sortDirection: 'desc'
+					},
+					{
+						key: 'reporting_period', label: 'Period', sortable: true
+					},
+					{
+						key: 'party', label: 'Party', sortable: true, sortDirection: 'desc'
+					},
+					{
+						key: 'version', label: 'Version', sortable: true, sortDirection: 'desc'
+					},
+					{
+						key: 'updated_at', label: 'Last modified', sortable: true
+					},
+					{
+						key: 'actions', label: 'Actions'
+					}
+				],
+				pageOptions: [10, 25, 100]
 			}
-
 		}
 	},
 
@@ -277,6 +282,24 @@ export default {
 			}
 			return tableFields
 		},
+
+		dataEntryTableItems() {
+			const tableFields = []
+			if (this.mySubmissions && this.mySubmissions.length) {
+				this.mySubmissions.forEach((element) => {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						party: this.getSubmissionInfo(element).party(),
+						version: element.version,
+						updated_at: element.updated_at,
+						details: element
+					})
+				})
+			}
+			return tableFields
+		},
+
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
