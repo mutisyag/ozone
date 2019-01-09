@@ -20,6 +20,7 @@ from .factories import (
     SubmissionFactory,
     SubregionFactory,
     RegionFactory,
+    ReportingChannelFactory
 )
 
 User = get_user_model()
@@ -33,6 +34,7 @@ class BaseUserRoleTests(BaseTests):
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory.create(subregion=self.subregion)
+        ReportingChannelFactory()
 
 
 class TestSecretariatEditRole(BaseUserRoleTests):
@@ -408,7 +410,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
         data = {
             "id": 1,
             "remarks_party": "Test",
-            "remarks_os": "Test",
             "ordering_id": 0,
             "facility_name": "Test",
             "quantity_emitted": 1
