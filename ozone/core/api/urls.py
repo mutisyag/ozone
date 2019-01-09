@@ -10,7 +10,8 @@ app_name = "core"
 
 class DefaultRouter(routers.DefaultRouter):
     """
-    Extends `DefaultRouter` class to add a method for extending url routes from another router.
+    Extends `DefaultRouter` class to add a method for extending url routes from
+    another router.
     """
 
     def extend(self, added_router):
@@ -24,6 +25,8 @@ class DefaultRouter(routers.DefaultRouter):
 
 
 router = DefaultRouter()
+
+router.register(r"current-user", views.CurrentUserViewSet, "current_user")
 
 router.register(r"regions", views.RegionViewSet)
 router.register(r"subregions", views.SubregionViewSet)
@@ -102,6 +105,15 @@ emissions_router.register(
     base_name="submission-article7-emissions"
 )
 
+hat_imports_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+hat_imports_router.register(
+    "hat-imports",
+    views.HighAmbientTemperatureImportViewSet,
+    base_name="submission-hat-imports"
+)
+
 submission_info_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )
@@ -109,6 +121,51 @@ submission_info_router.register(
     "submission-info",
     views.SubmissionInfoViewSet,
     base_name="submission-submission-info"
+)
+
+submission_flags_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+submission_flags_router.register(
+    "submission-flags",
+    views.SubmissionFlagsViewSet,
+    base_name="submission-submission-flags"
+)
+
+submission_remarks_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+submission_remarks_router.register(
+    "submission-remarks",
+    views.SubmissionRemarksViewSet,
+    base_name="submission-submission-remarks"
+)
+
+hat_productions_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+hat_productions_router.register(
+    "hat-productions",
+    views.HighAmbientTemperatureProductionViewSet,
+    base_name="submission-hat-productions"
+)
+
+submission_files_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+submission_files_router.register(
+    "files",
+    views.SubmissionFileViewSet,
+    base_name="submission-files"
+)
+
+upload_token_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+upload_token_router.register(
+    'token',
+    views.UploadTokenViewSet,
+    base_name='submission-token'
 )
 
 nested_routers = [
@@ -119,7 +176,13 @@ nested_routers = [
     imports_router,
     nonpartytrades_router,
     emissions_router,
+    hat_imports_router,
+    hat_productions_router,
     submission_info_router,
+    submission_flags_router,
+    submission_remarks_router,
+    submission_files_router,
+    upload_token_router,
 ]
 
 # Groups
@@ -127,6 +190,15 @@ router.register(r"group-substances", views.GroupViewSet)
 
 # Blends
 router.register(r"blends", views.BlendViewSet, base_name="blends")
+
+# File uploads
+upload_hooks_router = routers.SimpleRouter()
+upload_hooks_router.register(
+    'uploads',
+    views.UploadHookViewSet,
+    base_name='uploads'
+)
+router.extend(upload_hooks_router)
 
 # Authentication
 auth_tokens = routers.SimpleRouter()
@@ -136,7 +208,6 @@ auth_tokens.register(
     base_name='auth-token'
 )
 router.extend(auth_tokens)
-
 
 urlpatterns = (
     router.urls

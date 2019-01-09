@@ -1,4 +1,4 @@
-export const intro_fields = {
+export const questionnaire_fields = {
 	has_imports: {
 		label: '1. Did your country import CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, or methyl bromide in the reporting year?',
 		type: 'radio',

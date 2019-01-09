@@ -3,7 +3,7 @@ import {
 } from './api'
 
 const removeLoginToken = () => new Promise((resolve, reject) => {
-	remove(`/auth-token/${getCookie('authToken')}`)
+	remove(`/auth-token/${getCookie('authToken')}/`)
 		.then(() => {
 			delete api.defaults.headers.authorization
 			resolve()

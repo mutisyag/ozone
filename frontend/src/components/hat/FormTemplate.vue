@@ -45,15 +45,14 @@
 
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 Substances</h4>
-					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
-				</div>
-				<hr>
-
-				<div v-show="table.tableFilters" class="table-filters mb-2">
+					<div v-show="table.tableFilters" class="table-filters">
 						<b-input-group prepend="Search">
 								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
+					</div>
+					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
+				<hr>
 
 				<b-table
 					show-empty
@@ -72,11 +71,12 @@
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
 					:sort-direction="table.sortDirection"
+					:empty-text="table.emptyText"
 					:filter="table.filters.search"
 					ref="table"
 				>
 					<template
-						slot="substance"
+						slot="group"
 						slot-scope="cell"
 					>
 						<div class="table-btn-group">
@@ -90,34 +90,18 @@
 								class="table-btn"
 							>Delete</b-btn>
 						</div>
-						{{cell.item.substance}}
+						{{cell.item.group}}
 					</template>
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
-					<template
-						slot="validation"
-						slot-scope="cell">
-						<span class="validation-wrapper">
-							<i
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							></i>
-							<i
-								v-else
-								style="color: green;"
-								class="fa fa-check-square-o fa-lg"
-								></i>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 				</b-table>
 			</div>
@@ -125,15 +109,14 @@
 			<div class="table-wrapper">
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.2 Blends</h4>
+					<div v-show="tableBlends.tableFilters" class="table-filters">
+							<b-input-group prepend="Search">
+									<b-form-input v-model="tableBlends.filters.search"/>
+							</b-input-group>
+					</div>
 					<i @click="tableBlends.tableFilters = !tableBlends.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
 				<hr>
-
-				<div class="table-filters mb-2">
-						<b-input-group prepend="Search">
-								<b-form-input v-model="tableBlends.filters.search"/>
-						</b-input-group>
-				</div>
 
 				<b-table
 					show-empty
@@ -152,10 +135,11 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
+					:empty-text="tableBlends.emptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends"
 				>
-					<template slot="blend" slot-scope="cell">
+					<template slot="type" slot-scope="cell">
 						<div class="table-btn-group">
 							<b-btn
 								variant="info"
@@ -167,6 +151,10 @@
 								class="table-btn"
 							>Delete</b-btn>
 						</div>
+						<span>{{cell.item.type}}</span>
+					</template>
+
+					<template slot="blend" slot-scope="cell">
 						<span
 							style="cursor:pointer;"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
@@ -181,23 +169,13 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="allowedChanges"
+							:disabled="isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<span class="validation-wrapper">
-							<i
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								style="color: red; cursor: pointer"
-								class="fa fa-exclamation fa-lg"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							></i>
-							<i v-else style="color: green;" class="fa fa-check-square-o fa-lg"></i>
-						</span>
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
 
 					<template slot="row-details" slot-scope="row">
@@ -232,22 +210,29 @@
 				</b-table>
 			</div>
     </div>
-    <div
-      v-for="(comment, comment_index) in tab_info.comments"
-      :key="comment_index"
-      class="comments-input"
-    >
-      <label>{{comment.label}}</label>
-      <textarea class="form-control" v-model="comment.selected"></textarea>
-    </div>
+
+	<div class="table-wrapper">
+		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
+		<hr>
+		<div
+			v-for="(comment, comment_index) in tab_info.comments"
+			:key="comment_index"
+			class="comments-input"
+		>
+			<label>{{labels[comment.name]}}</label>
+			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
+		</div>
+	</div>
+
     <hr>
+
     <div class="footnotes">
       <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index">
         <small>{{footnote}}</small>
       </p>
     </div>
 
-    <AppAside v-if="!allowedChanges" fixed>
+    <AppAside v-if="!isReadOnly" fixed>
       <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -286,7 +271,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="allowedChanges"
+                :disabled="isReadOnly"
                 :field="modal_data.field[order]"
               ></fieldGenerator>
             </b-col>
@@ -314,12 +299,14 @@
 </template>
 
 <script>
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import labels from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
 	components: {
+		ValidationLabel
 	},
 	data() {
 		return {
@@ -330,13 +317,28 @@ export default {
 		}
 	},
 	created() {
-		this.labels = labels[this.tab_info.name]
+		this.labels = {
+			...labels.general,
+			...labels[this.tab_info.name]
+		}
 	},
 	methods: {
 	},
 	computed: {
 		getTabInputFields() {
 			return this.tab_info.input_fields
+		},
+		hasSubstances() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
+		},
+		hasBlends() {
+			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+		},
+		tableCounter() {
+			const counter = []
+			if (this.hasSubstances) counter.push(1)
+			if (this.hasBlends) counter.push(1)
+			return counter.length
 		}
 	}
 }

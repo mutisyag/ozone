@@ -1,7 +1,7 @@
-import commonLabels from '@/components/common/dataDefinitions/labels'
+import generalLabels from '@/components/common/dataDefinitions/labels'
 
 const labels = {
-	general: commonLabels,
+	general: generalLabels,
 	has_imports: {
 		substance: 'Substances',
 		blend: 'Blend',
@@ -26,18 +26,22 @@ const labels = {
 		decision_quarantine_pre_shipment: 'Quarantine and pre-shipment applications',
 		quantity_other_uses: 'Other/unspecified',
 		decision_other_uses: 'Other/unspecified',
+		quantity_polyols: 'Polyols',
+		decision_polyols: 'Polyols',
 		decision: 'Decision',
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
 		remarks_party: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		imports_remarks_secretariat: 'Remarks (Secretariat)',
+		imports_remarks_party: 'Remarks (Party)'
 	},
 	has_exports: {
 		substance: 'Substances',
 		blend: 'Blend',
 		percent: 'Percentage',
 		group: 'Group',
+		quantity_polyols: 'Polyols',
+		decision_polyols: 'Polyols',
 		destination_party: 'Country of destination of exports',
 		quantity_total_new: 'Total quantity imported for all uses (new)',
 		quantity_total_recovered: 'Total quantity imported for all uses (recovered and reclaimed)',
@@ -62,8 +66,8 @@ const labels = {
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
 		remarks_party: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		exports_remarks_party: 'Remarks (Party)',
+		exports_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -90,8 +94,8 @@ const labels = {
 		quantity_exempted: 'Production for exempted essential, critical or other uses within your country',
 		decision: 'Decision',
 		quantity: 'Quantity',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		production_remarks_party: 'Remarks (Party)',
+		production_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_destroyed: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -100,8 +104,8 @@ const labels = {
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
 		blend: 'Blend',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		destruction_remarks_party: 'Remarks (Party)',
+		destruction_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_nonparty: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -113,7 +117,9 @@ const labels = {
 		quantity_export_recovered: 'Quantity of exports to non-parties (recovered)',
 		substance: 'Substance',
 		blend: 'Blend',
-		trade_party: 'Exporting party for quantities reported as imports or country of destination of exports'
+		trade_party: 'Exporting party for quantities reported as imports or country of destination of exports',
+		nonparty_remarks_party: 'Remarks (Party)',
+		nonparty_remarks_secretariat: 'Remarks (Secretariat)'
 	},
 	has_emissions: {
 		facility_name: 'Facility name or identifier',
@@ -123,8 +129,8 @@ const labels = {
 		quantity_emitted: 'Amount of emissions',
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)',
-		comments_party: 'Party',
-		comments_secretariat: 'Secretariat'
+		emissions_remarks_party: 'Remarks (Party)',
+		emissions_remarks_secretariat: 'Remarks (Secretariat)'
 	}
 }
 

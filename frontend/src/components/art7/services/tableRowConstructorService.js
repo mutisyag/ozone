@@ -1,4 +1,6 @@
 import labels from '@/components/art7/dataDefinitions/labels'
+import fromExponential from 'from-exponential'
+import { isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -17,6 +19,7 @@ const createTooltip = (fields, section) => {
 			tooltip_title += `${labels[section][field]}: ${fields[field]}\n`
 		})
 	}
+	tooltip_title += '\n Click to edit'
 	return tooltip_title
 }
 
@@ -36,12 +39,8 @@ const quantityCalculator = (fields, parent, section) => {
 
 	if (count === 0) {
 		returnObj.selected = ''
-	} else if (count < 0) {
-		returnObj.selected = count.toPrecision(3)
-	} else if (count > 999) {
-		returnObj.selected = parseInt(count)
 	} else {
-		returnObj.selected = count.toPrecision(3)
+		returnObj.selected = count
 	}
 
 	const tooltip = createTooltip(forTooltip, section)
@@ -103,31 +102,31 @@ export default {
 				},
 				quantity_generated: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_all_uses: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_for_destruction: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_destroyed: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_emitted: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				remarks_party: {
 					type: 'textarea',
@@ -147,10 +146,59 @@ export default {
 						errors.push('Please complete the "Amount of generated emissions (6)" field')
 					}
 
-					if (valueConverter(this.quantity_generated.selected) < doSum([this.quantity_captured_all_uses.selected, this.quantity_captured_feedstock.selected, this.quantity_captured_for_destruction.selected, this.quantity_feedstock.selected, this.quantity_destroyed.selected])) {
-						errors.push('Total amount generated must be higher than the sum of "Ammount generated and captured", "Amount used for feedstock without prior capture", "Amount destroyed without prior capture"')
+					if (valueConverter(this.quantity_generated.selected) < doSum([
+						this.quantity_captured_all_uses.selected,
+						this.quantity_captured_feedstock.selected,
+						this.quantity_captured_for_destruction.selected,
+						this.quantity_feedstock.selected,
+						this.quantity_destroyed.selected
+					])) {
+						errors.push('Total amount generated (2) must be higher than the sum of "Amount generated and captured(3)", "Amount used for feedstock without prior capture(4)", "Amount destroyed without prior capture(5)"')
 					}
 
+					if (valueConverter(this.quantity_captured_all_uses.selected)
+					|| valueConverter(this.quantity_captured_feedstock.selected)
+					|| valueConverter(this.quantity_captured_for_destruction.selected)) {
+						if (valueConverter(this.quantity_captured_all_uses.selected) < doSum([this.quantity_captured_feedstock.selected, this.quantity_captured_for_destruction.selected])) {
+							errors.push('Ammount generated and caputred for all uses (3a) must be greater or equal to (3b) + (3c)')
+						}
+					}
+
+					if (valueConverter(this.quantity_generated.selected)
+					&& valueConverter(this.quantity_captured_all_uses.selected)
+					&& valueConverter(this.quantity_feedstock.selected)
+					&& valueConverter(this.quantity_destroyed.selected)
+					&& valueConverter(this.quantity_emitted.selected)) {
+						if (valueConverter(this.quantity_generated.selected)
+						!== doSum([this.quantity_captured_all_uses.selected,
+							this.quantity_feedstock.selected,
+							this.quantity_destroyed.selected,
+							this.quantity_emitted.selected])
+						) {
+							errors.push('Total amount generated (2) must be equal to its components (3a, 4, 5, 6)')
+						}
+					}
+
+					if (valueConverter(this.quantity_generated.selected)
+					|| valueConverter(this.quantity_captured_all_uses.selected)
+					|| valueConverter(this.quantity_feedstock.selected)
+					|| valueConverter(this.quantity_destroyed.selected)
+					|| valueConverter(this.quantity_emitted.selected)) {
+						if (!(valueConverter(this.quantity_generated.selected)
+						&& valueConverter(this.quantity_captured_all_uses.selected)
+						&& valueConverter(this.quantity_feedstock.selected)
+						&& valueConverter(this.quantity_destroyed.selected)
+						&& valueConverter(this.quantity_emitted.selected))) {
+							if (valueConverter(this.quantity_generated.selected) < doSum([
+								this.quantity_captured_all_uses.selected,
+								this.quantity_feedstock.selected,
+								this.quantity_destroyed.selected,
+								this.quantity_emitted.selected])
+							) {
+								errors.push('Total amount generated (2) must be greater or equal to its components (3a, 4, 5, 6)')
+							}
+						}
+					}
 					const returnObj = {
 						type: 'nonInput',
 						selected: errors
@@ -160,9 +208,8 @@ export default {
 				}
 			}
 			if (prefillData) {
-				console.log(prefillData)
 				Object.keys(prefillData).forEach((element) => {
-					row[element].selected = prefillData[element]
+					row[element].selected = isNumber(prefillData[element]) ? fromExponential(prefillData[element]) : prefillData[element]
 				})
 			}
 			return row
@@ -188,7 +235,8 @@ export default {
 				expand: false
 			},
 			group: {
-				selected: group
+				selected: group,
+				type: 'nonInput'
 			},
 			quantity_total_new: {
 				type: 'number',
@@ -203,12 +251,12 @@ export default {
 				selected: null
 			},
 			get quantity_exempted() {
-				const fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses', 'quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other_uses']
+				const fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses', 'quantity_laboratory_analytical_uses', 'quantity_other_uses']
 				return quantityCalculator(fields, this, section)
 			},
 
 			get decision_exempted() {
-				const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other_uses']
+				const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_polyols', 'decision_other_uses']
 				return decisionGenerator(fields, this, section)
 			},
 			quantity_essential_uses: {
@@ -267,6 +315,14 @@ export default {
 				type: 'text',
 				selected: ''
 			},
+			quantity_polyols: {
+				type: 'number',
+				selected: null
+			},
+			decision_polyols: {
+				type: 'text',
+				selected: ''
+			},
 			remarks_party: {
 				type: 'textarea',
 				selected: ''
@@ -277,12 +333,11 @@ export default {
 			},
 			get validation() {
 				const errors = []
-				console.log('in validation', this.quantity_total_new.selected, this.quantity_total_recovered.selected)
-				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
+				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
 					errors.push('Total quantity imported for all uses is required')
 				}
 
-				if (valueConverter(this.quantity_exempted.selected) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+				if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
 					errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
 				}
 
@@ -301,20 +356,6 @@ export default {
 		}
 
 		switch (section) {
-		case 'has_exports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
-		case 'has_imports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
 		case 'has_produced':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -327,14 +368,15 @@ export default {
 					selected: ''
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				get quantity_exempted() {
-					const fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_quarantine_pre_shipment']
+					const fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_other_uses']
 					return quantityCalculator(fields, this, section)
 				},
 				get decision_exempted() {
-					const fields = ['decision_critical_uses', 'decision_essential_uses', 'decision_high_ambient_temperature', 'decision_laboratory_analytical_uses', 'decision_process_agent_uses', 'decision_quarantine_pre_shipment']
+					const fields = ['decision_critical_uses', 'decision_essential_uses', 'decision_high_ambient_temperature', 'decision_laboratory_analytical_uses', 'decision_process_agent_uses', 'decision_other_uses']
 					return decisionGenerator(fields, this, section)
 				},
 				quantity_critical_uses: {
@@ -416,10 +458,33 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.substance.selected) {
-						errors.push('eroare1')
+					if (this.quantity_total_produced.selected === null) {
+						errors.push('Column (3) should not be empty (total production for all uses / captured for all uses for FII)')
 					}
 
+					if (this.group.selected && ['A', 'B', 'C', 'a', 'b', 'c'].includes(this.group.selected.split('')[0])) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_article_5.selected])) {
+							errors.push('For annexes A-C, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + Article 5 countries (7)')
+						}
+					}
+
+					if (this.group.selected && ['E', 'e'].includes(this.group.selected.split('')[0])) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected])) {
+							errors.push('For annex E, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + QPS')
+						}
+					}
+
+					if (this.group.selected && ['FI', 'fi'].includes(this.group.selected)) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected])) {
+							errors.push('For annex F, total production (3) should be >= feedstock (4) + exempted, critical, other (5)')
+						}
+					}
+
+					if (this.group.selected && ['FII', 'fii'].includes(this.group.selected)) {
+						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_for_destruction.selected, this.quantity_exempted.selected])) {
+							errors.push('For annex F2, total production (3) should be >= feedstock (4a) + destruction (4b) + exempted, critical, other (5)')
+						}
+					}
 					const returnObj = {
 						type: 'nonInput',
 						selected: errors
@@ -428,13 +493,7 @@ export default {
 					return returnObj
 				}
 			}
-
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_destroyed':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -452,7 +511,8 @@ export default {
 					selected: null
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				remarks_party: {
 					type: 'textarea',
@@ -464,8 +524,8 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.substance.selected) {
-						errors.push('eroare1')
+					if (valueConverter(this.quantity_destroyed.selected) === 0) {
+						errors.push('Please complete the "Quantity destroyed (3)" field')
 					}
 
 					const returnObj = {
@@ -476,12 +536,7 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_nonparty':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -519,7 +574,8 @@ export default {
 					expand: false
 				},
 				group: {
-					selected: group
+					selected: group,
+					type: 'nonInput'
 				},
 				trade_party: {
 					type: 'multiselect',
@@ -527,8 +583,8 @@ export default {
 				},
 				get validation() {
 					const errors = []
-					if (!this.quantity_export_new.selected) {
-						errors.push('eroare1')
+					if (doSum([this.quantity_import_new.selected, this.quantity_import_recovered.selected, this.quantity_export_new.selected, this.quantity_export_recovered.selected]) <= 0) {
+						errors.push('At least one field from (4), (5), (6), (7) is required')
 					}
 
 					const returnObj = {
@@ -539,16 +595,19 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		default:
-			// statements_def
-			return {}
+			break
 		}
+		if (prefillData) {
+			Object.keys(prefillData).forEach((field) => {
+				baseInnerFields[field]
+					?	baseInnerFields[field].selected = isNumber(prefillData[field])
+						? fromExponential(prefillData[field]) : prefillData[field]
+					: null
+			})
+		}
+		return baseInnerFields
 	}
 
 }

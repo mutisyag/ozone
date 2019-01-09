@@ -14,3 +14,4 @@ Table of contents
 * Article 7 data forms
 * Non-article 7 data forms
 * [System requirements](doc/system.md)
+* [OAuth provider](doc/oauth.md)

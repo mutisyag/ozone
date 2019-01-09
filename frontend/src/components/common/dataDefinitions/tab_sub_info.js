@@ -3,7 +3,7 @@ export default {
 	hasAssideMenu: false,
 	endpoint_url: 'sub_info_url',
 	endpoint_additional_url: '',
-	fields_order: ['reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
+	fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_code', 'country', 'phone', 'fax', 'email', 'date'],
 	intro: 'Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.',
 	title: 'Submission Info',
 	titleHtml: '<b>Submission Info</b>',
@@ -30,6 +30,17 @@ export default {
 		id: {
 			selected: null
 		},
+		reporting_channel: {
+			type: 'select',
+			options: [
+				{ text: 'Web form', value: 'Web form' },
+				{ text: 'Email', value: 'Email' },
+				{ text: 'Legacy', value: 'Legacy' },
+				{ text: 'Paper', value: 'Paper' },
+				{ text: 'API', value: 'API' }
+			],
+			selected: 'Web form'
+		},
 		reporting_officer: {
 			type: 'text',
 			selected: ''
@@ -47,8 +58,10 @@ export default {
 			selected: ''
 		},
 		country: {
-			type: 'text',
-			selected: ''
+			type: 'select',
+			selected: '',
+			optionsStatePropertyPath: 'initialData.countryOptions',
+			options: []
 		},
 		phone: {
 			type: 'text',
@@ -77,6 +90,7 @@ export default {
 		phone: null,
 		fax: null,
 		email: null,
-		date: null
+		date: null,
+		reporting_channel: null
 	}
 }

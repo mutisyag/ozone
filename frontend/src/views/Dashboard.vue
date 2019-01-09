@@ -1,8 +1,8 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col sm="4">
-        <b-card v-if="basicDataReady">
+      <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="4">
+        <b-card>
           <div slot="header">
             <strong>Create submission</strong>
           </div>
@@ -18,7 +18,7 @@
             </b-input-group>
 
             <b-input-group class="mb-2" prepend="Party">
-               <multiselect trackBy="value" label="text" placeholder="" v-model="current.party" :options="parties"></multiselect>
+               <multiselect trackBy="value" label="text" placeholder="" :disabled="Boolean(currentUser.party)" v-model="current.party" :options="parties"></multiselect>
             </b-input-group>
 
             <b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission">Create</b-btn>
@@ -27,7 +27,7 @@
         </b-card>
       </b-col>
 
-        <b-col sm="8">
+        <b-col>
           <b-card v-if="basicDataReady">
             <div slot="header">
               <strong>My submissions </strong>
@@ -76,7 +76,7 @@
           <b-card no-body v-if="basicDataReady">
             <template slot="header">
               <b-row>
-              <b-col><b>All submissions ({{table.totalRows}} records)</b></b-col>
+              <b-col><b>All submissions ({{tableOptions.totalRows}} records)</b></b-col>
               <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.showAllVersions">Show all versions</b-form-checkbox></b-col>
               </b-row>
             </template>
@@ -89,7 +89,7 @@
 									<b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
 								</b-input-group>
 								<b-input-group prepend="Party">
-									<b-form-select v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
+									<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
 								</b-input-group>
 								<b-input-group style="width: 120px" prepend="From">
 									<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
@@ -109,7 +109,6 @@
                        stacked="md"
                        :items="tableItems"
                        :fields="table.fields"
-                       :current-page="tableOptions.currentPage"
                        :per-page="tableOptions.perPage"
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
@@ -122,7 +121,7 @@
                         class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
                       >
-                      <span v-if="row.item.details.data_changes_allowed">
+                      <span v-if="row.item.details.data_changes_allowed && !currentUser.is_read_only">
                         Edit
                       </span>
                       <span v-else>
@@ -132,10 +131,11 @@
 
                     <b-btn
                         variant="outline-primary"
-                        @click="clone(row.item.details.url)"
+                        @click="clone(row.item.details.url, row.item.details.obligation)"
 												size="sm"
+												:disabled="currentUser.is_read_only"
 											>
-                      Clone
+                      Revise
                     </b-btn>
 
                     <b-btn
@@ -143,6 +143,7 @@
                       v-for="transition in row.item.details.available_transitions"
                       :key="transition"
 											size="sm"
+											:disabled="currentUser.is_read_only"
                       @click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})"
                     >
                       {{labels[transition]}}
@@ -152,6 +153,7 @@
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
                         v-if="row.item.details.data_changes_allowed"
+												:disabled="currentUser.is_read_only"
 												size="sm"
                       >
                       Delete
@@ -228,8 +230,7 @@ export default {
 		this.$store.dispatch('getDashboardParties')
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
-		this.$store.dispatch('getMyCurrentSubmissions')
-		this.$store.dispatch('getCurrentSubmissions')
+		this.$store.dispatch('getMyCurrentUser')
 		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
 	},
 
@@ -241,6 +242,41 @@ export default {
 
 		...mapGetters(['getSubmissionInfo']),
 
+		/* The problem
+
+		Using item provider function as indicated in the documentation (https://bootstrap-vue.js.org/docs/components/table)
+		for async pagination and filtering raises a few problems if the provider function or the function that fetches the data,
+		also used in the provider function is called outside of the internal filter/pagination change watcher,
+		like deleting an entry and trying to update the table after.
+
+		Actually, the async call had some problems even if the calls where within the specified parameters, like perPage fiter.
+
+		The solution
+
+		1.Table items are provided to the table through a computed method that iterates through the list obtained via the async call.
+		2.Filters/pagination are no longer specifically binded to the table. Instead, we use a watcher on tableOptions,
+			doing a call for getting the filtered list of submissions every
+		 	time a option changes in the tableOptions object, like pagination, filtering, perpage etc.
+		3.Because the data is provided via computed, the table data also updates in the interface every time we get a new list of submissions,
+			after doing actions like deleting, cloning or changing the state of a submission. */
+
+		tableItems() {
+			const tableFields = []
+			if (this.submissions && this.submissions.length) {
+				this.submissions.forEach((element) => {
+					tableFields.push({
+						obligation: this.getSubmissionInfo(element).obligation(),
+						reporting_period: this.getSubmissionInfo(element).period(),
+						party: this.getSubmissionInfo(element).party(),
+						current_state: element.current_state,
+						version: element.version,
+						updated_at: element.updated_at,
+						details: element
+					})
+				})
+			}
+			return tableFields
+		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
@@ -278,6 +314,7 @@ export default {
 		dataReady() {
 			if (this.submissions
         && this.periods
+				&& this.currentUser
         && this.obligations
         && this.parties
         && this.submissions.length) {
@@ -287,6 +324,11 @@ export default {
 		},
 		tableOptions() {
 			return this.$store.state.dashboard.table
+		},
+		currentUser() {
+			const current = this.$store.state.currentUser
+			if (current) this.current.party = current.party
+			return current
 		},
 		periods() {
 			return this.$store.state.dashboard.periods
@@ -307,32 +349,23 @@ export default {
 		basicDataReady() {
 			if (this.periods
         && this.obligations
+				&& this.currentUser
         && this.parties) {
 				return true
 			}
 			return false
+		},
+		tableOptionsExceptFilters() {
+			const tableOptions = {
+				sorting: this.$store.state.dashboard.table.sorting,
+				currentPage: this.$store.state.dashboard.table.currentPage,
+				perPage: this.$store.state.dashboard.table.perPage
+			}
+			return tableOptions
 		}
 	},
 
 	methods: {
-		tableItems() {
-			return this.$store.dispatch('getCurrentSubmissions').then(() => {
-				const tableFields = []
-				this.submissions.forEach((element) => {
-					tableFields.push({
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						party: this.getSubmissionInfo(element).party(),
-						current_state: element.current_state,
-						version: element.version,
-						updated_at: element.updated_at,
-						details: element
-					})
-				})
-				return tableFields
-			})
-		},
-
 		addSubmission() {
 			this.$store.dispatch('addSubmission', this.current).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
@@ -344,9 +377,9 @@ export default {
 				this.tableOptions.filters[key] = null
 			})
 		},
-		clone(url) {
-			cloneSubmission(url).then(() => {
-				this.$store.dispatch('getCurrentSubmissions')
+		clone(url, obligation) {
+			cloneSubmission(url).then((response) => {
+				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
 				this.$store.dispatch('setAlert', {
 					message: { __all__: ['Submission cloned'] },
 					variant: 'success'
@@ -373,10 +406,21 @@ export default {
 	},
 
 	watch: {
+		// TODO: the watchers trigger each other in the case when user is on page > 1 and selects a filter, causing 2 requests instead of 1
 		'tableOptions.filters': {
 			handler() {
-				this.tableOptions.currentPage = 1
+				if (this.tableOptions.currentPage !== 1) {
+					this.tableOptions.currentPage = 1
+				}
+				this.$store.dispatch('getCurrentSubmissions')
+				if (!this.$refs.table) return
 				this.$refs.table.refresh()
+			},
+			deep: true
+		},
+		tableOptionsExceptFilters: {
+			handler() {
+				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
 		}

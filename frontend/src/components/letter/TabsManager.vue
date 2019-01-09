@@ -144,7 +144,7 @@ export default {
 			const { form } = this.$store.state
 			const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
 			const body = document.querySelector('body')
-			if (tab.hasAssideMenu && !this.$store.getters.allowedChanges) {
+			if (tab.hasAssideMenu && !this.$store.getters.isReadOnly) {
 				body.classList.add('aside-menu-lg-show')
 			} else {
 				body.classList.remove('aside-menu-lg-show')
@@ -154,7 +154,9 @@ export default {
 	},
 	methods: {
 		createModalData() {
-			getInstructions().then((response) => {
+			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+			const formName = this.$route.name
+			getInstructions(formName, tabName).then((response) => {
 				this.modal_data = response.data
 				this.$refs.instructions_modal.show()
 			})

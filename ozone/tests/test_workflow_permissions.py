@@ -10,6 +10,7 @@ from .factories import (
     ReporterUserFactory,
     ReporterUserSamePartyFactory,
     ReporterUserAnotherPartyFactory,
+    ReportingChannelFactory,
     SecretariatUserFactory,
     SecretariatUserROFactory,
     SubmissionFactory,
@@ -50,6 +51,7 @@ class BaseWorkflowPermissionsTests(BaseTests):
             party=self.another_party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
+        ReportingChannelFactory()
 
     def call_transition(self, submission, transition):
         return self.client.post(

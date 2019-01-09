@@ -1,26 +1,30 @@
-language: python
-
-python:
-  - 3.6
-
-services: postgresql
-
-addons:
-  postgresql: "9.4"
-
-before_install:
-  - export DJANGO_SETTINGS_MODULE=config.settings.test
-  - source .envrc.travis
-
-install:
-  - pip install -r requirements/local.txt
-
-before_script:
-  - psql -c "CREATE DATABASE travisci;" -U postgres
-
-script:
-  - coverage run --omit='*/tests/*,*/migrations/*'  --source='ozone' manage.py test --keepdb
-
-after_success:
-  - pip install python-coveralls
-  - coveralls
+matrix:
+  include:
+    - language: python
+      python:
+       - 3.6
+      services: postgresql
+      addons:
+        postgresql: "9.4"
+      before_install:
+        - export DJANGO_SETTINGS_MODULE=config.settings.test
+        - source .envrc.travis
+      install:
+        - pip install -r requirements/local.txt
+      before_script:
+        - psql -c "CREATE DATABASE travisci;" -U postgres
+      script:
+        - coverage run --omit='*/tests/*,*/migrations/*'  --source='ozone' manage.py test --keepdb
+      after_success:
+        - pip install python-coveralls
+        - coveralls
+    - language: node_js
+      services:
+      addons:
+      node_js:
+        - node
+      install:
+        - cd frontend && yarn install
+      before_script:
+      script:
+        - npm run testNoWatch

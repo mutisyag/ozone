@@ -1,5 +1,7 @@
 export default {
 	__all__: '',
+	comments_party: 'Party',
+	comments_secretariat: 'Secretariat',
 	recall: 'Recall',
 	process: 'Process',
 	finalize: 'Finalize',
@@ -13,10 +15,32 @@ export default {
 	postal_code: 'Postal adddress',
 	country: 'Country',
 	phone: 'Phone',
+	reporting_channel: 'Reporting channel',
 	fax: 'Fax',
 	email: 'E-mail',
 	date: 'Date',
+	dateOfSubmission: 'Date of submission',
 	subject: 'Subject',
 	art7: 'Article 7',
-	hat: 'HAT'
+	hat: 'HAT',
+	valid: 'valid',
+	invalid: 'invalid',
+	flags: {
+		flag_superseded: 'Superseded',
+		flag_provisional: 'Provisional',
+		flag_checked_blanks: 'Checked blanks',
+		flag_has_blanks: 'Has blanks',
+		flag_valid: 'Valid',
+		flag_confirmed_blanks: 'Confirmed blanks',
+		flag_has_reported_a1: 'Annex group A1',
+		flag_has_reported_a2: 'Annex group A2',
+		flag_has_reported_b1: 'Annex group B1',
+		flag_has_reported_b2: 'Annex group B2',
+		flag_has_reported_b3: 'Annex group B3',
+		flag_has_reported_c1: 'Annex group C1',
+		flag_has_reported_c2: 'Annex group C2',
+		flag_has_reported_c3: 'Annex group C3',
+		flag_has_reported_e: 'Annex group E',
+		flag_has_reported_f: 'Annex group F'
+	}
 }

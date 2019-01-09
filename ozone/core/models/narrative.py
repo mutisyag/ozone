@@ -22,4 +22,4 @@ class ProcessAgentContainTechnology(models.Model):
         Party, on_delete=models.PROTECT
     )
 
-    contain_technology = models.CharField(max_length=512)
+    contain_technology = models.CharField(max_length=9999)

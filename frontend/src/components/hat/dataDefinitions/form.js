@@ -1,5 +1,6 @@
 import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
 import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
+import tab_flags from '@/components/common/dataDefinitions/tab_flags'
 
 const form = {
 	formDetails: {
@@ -7,12 +8,20 @@ const form = {
 		dataNeeded: [
 			'initialData.countryOptions',
 			'initialData.substances',
-			'initialData.blends'
+			'initialData.blends',
+			'initialData.display.countries'
 		]
 	},
 	tabs: {
-		sub_info: tab_sub_info,
-		attachments: tab_attachments,
+		sub_info: {
+			...tab_sub_info,
+			hideInfoButton: true,
+			detailsHtml: 'Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'
+		},
+		attachments: {
+			...tab_attachments,
+			hideInfoButton: true
+		},
 		has_imports: {
 			name: 'has_imports',
 			hasAssideMenu: true,
@@ -23,8 +32,8 @@ const form = {
 			saving: false,
 			formNumber: 1,
 			title: 'Imports',
-			titleHtml: '<b>Consumption (imports)</b> <br><small>Annex F substances for exempted subsectors, \n in metric tonnes (not ODP or CO2-equivalent tonnes)</small>',
-			detailsHtml: '1. Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
+			titleHtml: '<b>Consumption (imports)</b> <br><small>Annex F substances for exempted subsectors, <br> in metric tonnes (not ODP or CO2-equivalent tonnes)</small>',
+			detailsHtml: 'Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2',
 			isInvalid: false,
 			form_fields: [],
 			special_fields_order: [],
@@ -64,7 +73,7 @@ const form = {
 				name: 'prop3',
 				isInput: true
 			}, {
-				label: '(6)',
+				label: '(6)<br>Status',
 				name: 'validation'
 			}
 			],
@@ -74,11 +83,11 @@ const form = {
 			}, {
 				label: ''
 			}, {
-				label: 'Quantity of new substances imported for approved subsectors to which the high-ambient-temperature exemption applies*',
+				label: 'Quantity of new substances imported for approved subsectors to which the high-ambient-temperature exemption applies',
 				colspan: 3,
 				tooltip: 'Only bulk gases for servicing of exempted equipment should be reported here, not gases imported inside pre-charged equipment.'
 			}, {
-				label: 'Status'
+				label: ''
 			}
 			],
 			comments: [{
@@ -163,7 +172,7 @@ const form = {
 				name: 'prop3',
 				isInput: true
 			}, {
-				label: '(6)',
+				label: '(6)<br>Status',
 				name: 'validation'
 			}],
 
@@ -172,11 +181,11 @@ const form = {
 			}, {
 				label: ''
 			}, {
-				label: 'Quantity of new substances produced for approved subsectors to which the high-ambient-temperature exemption applies (production should be for use within the producing country*',
+				label: 'Quantity of new substances produced for approved subsectors to which the high-ambient-temperature exemption applies (production should be for use within the producing country)',
 				colspan: 3,
 				tooltip: 'For each substance produced for use in subsectors that may be approved after the assessments under paragraphs 32 and 33 of decision XXVIII/2, please specify the approved subsector. Should the column space be insufficient, further information can be provided in the “comments” box above.'
 			}, {
-				label: 'Status'
+				label: ''
 			}
 			],
 			comments: [{
@@ -212,7 +221,8 @@ const form = {
 				quantity_article_5: null,
 				substance: null
 			}
-		}
+		},
+		flags: tab_flags
 	}
 }
 export default form

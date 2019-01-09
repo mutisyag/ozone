@@ -10,13 +10,11 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import Submission
+from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
 __all__ = [
-    'ModifyPreventionMixin',
-    'Article7Flags',
     'Article7Questionnaire',
     'Article7Export',
     'Article7Import',
@@ -28,24 +26,6 @@ __all__ = [
     'HighAmbientTemperatureImport',
     'Transfer',
 ]
-
-
-class ModifyPreventionMixin:
-    """
-    Mixin to be used by all data report models to prevent modification of
-    submitted submissions.
-    """
-
-    def clean(self):
-        if not self.submission.data_changes_allowed:
-            raise ValidationError(
-                _("Submitted submissions cannot be modified.")
-            )
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
 
 
 class BlendCompositionMixin:
@@ -175,7 +155,7 @@ class PolyolsMixin:
 
 class BaseReport(models.Model):
     """
-    This will be used as a base for all reporting models, except Article7Flags.
+    This will be used as a base for all reporting models.
     """
 
     # We want to avoid deletion of `Submission`s which contain data reports.
@@ -186,12 +166,16 @@ class BaseReport(models.Model):
     )
 
     # Each entry in the Article 7 forms can have remarks
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True,
+                                     help_text="Remarks added by the reporting party")
+    remarks_os = models.CharField(max_length=9999, blank=True,
+                                  help_text="Remarks added by the ozone secretariat")
 
-    # This allows the interface to keep the data entries in their original
-    # order, as given by the user.
-    ordering_id = models.IntegerField(default=0)
+    ordering_id = models.IntegerField(
+        default=0,
+        help_text="This allows the interface to keep the data entries in their original "
+                  "order, as given by the user."
+    )
 
     class Meta:
         abstract = True
@@ -216,10 +200,12 @@ class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
 
     # `blank=True` is needed for full_clean() calls performed by save()
     substance = models.ForeignKey(
-        Substance, blank=True, null=True, on_delete=models.PROTECT
+        Substance, blank=True, null=True, on_delete=models.PROTECT,
+        help_text="Substance ID"
     )
     blend = models.ForeignKey(
-        Blend, blank=True, null=True, on_delete=models.PROTECT
+        Blend, blank=True, null=True, on_delete=models.PROTECT,
+        help_text="Blend ID"
     )
     # When non-null, this is used to signal that this particular
     # substance entry was automatically generated from an entry containing
@@ -314,32 +300,6 @@ class BaseUses(models.Model):
         abstract = True
 
 
-class Article7Flags(models.Model):
-    """
-    Stores incomplete flags per submission-annex-group.
-
-    Only needs to be instantiated when there is incomplete data.
-    """
-
-    submission = models.ForeignKey(
-        Submission, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-
-    annex = models.ForeignKey(
-        Annex, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-    group = models.ForeignKey(
-        Group, related_name='incomplete_flags', on_delete=models.PROTECT
-    )
-
-    # Generally this model will be instantiated only when there is incomplete
-    # data in the submission
-    flag_incomplete = models.BooleanField(default=True)
-
-    class Meta:
-        db_table = 'reporting_article_seven_flags'
-
-
 class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     """
     Model for a simple Article 7 Questionnaire report row
@@ -363,8 +323,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
 
     has_emissions = models.BooleanField()
 
-    remarks_party = models.CharField(max_length=512, blank=True)
-    remarks_os = models.CharField(max_length=512, blank=True)
+    remarks_party = models.CharField(max_length=9999, blank=True)
+    remarks_os = models.CharField(max_length=9999, blank=True)
 
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
@@ -642,24 +602,26 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
 class BaseHighAmbientTemperature(models.Model):
 
-    # Multi-split air conditioners
-    quantity_msac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+    quantity_msac = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in multi-split air conditioners"
     )
-    # Split ducted air conditioners
-    quantity_sdac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+    quantity_sdac = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in split ducted air conditioners"
     )
-    # Ducted commercial packaged air conditioners
-    quantity_dcpac_produced = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
+    quantity_dcpac = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True,
+        help_text="Used in ducted commercial packaged air conditioners",
     )
 
     class Meta:
         abstract = True
 
 
-class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureProduction(
+    ModifyPreventionMixin, BaseReport, BaseHighAmbientTemperature
+):
     """
     Production under the exemption for high-ambient-temperature parties
     """
@@ -669,7 +631,8 @@ class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
 
 
 class HighAmbientTemperatureImport(
-    BaseBlendCompositionReport, BaseHighAmbientTemperature
+    ModifyPreventionMixin, BaseBlendCompositionReport,
+    BaseHighAmbientTemperature
 ):
     """
     Consumption (imports) under the exemption for high-ambient-temperature
@@ -681,13 +644,13 @@ class HighAmbientTemperatureImport(
 
     # Needed because of BaseBlendCompositionReport
     QUANTITY_FIELDS = [
-        'quantity_msac_produced',
-        'quantity_sdac_produced',
-        'quantity_dcpac_produced',
+        'quantity_msac',
+        'quantity_sdac',
+        'quantity_dcpac',
     ]
 
 
-class Transfer(BaseReport):
+class Transfer(ModifyPreventionMixin, BaseReport):
     """
     Records amounts of production rights transferred between Parties.
     """

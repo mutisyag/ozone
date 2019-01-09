@@ -1,4 +1,5 @@
 import axios from 'axios'
+import tus from 'tus-js-client'
 
 const logRequests = process.env.NODE_ENV === 'development'
 
@@ -7,11 +8,19 @@ const logRequests = process.env.NODE_ENV === 'development'
 // let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
 
 let apiURL = `${window.location.origin}/api`
+let apiBase = `${window.location.origin}`
+
+const TUSD_HOST = 'localhost'
+const TUSD_PORT = 1080
+const _tusd_host = process.env.TUSD_HOST || TUSD_HOST
+const _tusd_port = (process.env.TUSD_PORT && Number(process.env.TUSD_PORT)) || TUSD_PORT
+const filesURL = `http://${_tusd_host}:${_tusd_port}/files/`
 
 let isTestSession = false
 if (process.env.NODE_ENV === 'development') {
 	isTestSession = true
 	apiURL = 'http://localhost:8000/api'
+	apiBase = 'http://localhost:8000'
 }
 
 const api = axios.create({
@@ -65,6 +74,8 @@ const getSubstances = () => fetch('group-substances/')
 
 const getUsers = () => fetch('users/')
 
+const getCurrentUser = () => fetch('current-user/')
+
 const getParties = () => fetch('parties/')
 
 const getPartyRatifications = () => fetch('get-party-ratifications/')
@@ -80,7 +91,7 @@ const getExportBlends = () => {
 const getSubmissions = (tableOptions) => {
 	const params = {
 		page_size: tableOptions.perPage,
-		page: tableOptions.currentPage,
+		page: tableOptions.currentPage
 	}
 	if (tableOptions.filters) {
 		params.current_state = tableOptions.filters.currentState
@@ -94,10 +105,10 @@ const getSubmissions = (tableOptions) => {
 		}
 	}
 	if (tableOptions.sorting && tableOptions.sorting.sortBy) {
-		params.ordering = (tableOptions.sorting.sortDesc ? "-" : "") + tableOptions.sorting.sortBy
+		params.ordering = (tableOptions.sorting.sortDesc ? '-' : '') + tableOptions.sorting.sortBy
 	}
 
-	return fetch('submissions/', {params})
+	return fetch('submissions/', { params })
 }
 
 const getPeriods = () => fetch('periods/')
@@ -117,9 +128,9 @@ const getCustomBlends = () => fetch('blends/')
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
-const getInstructions = (tabName) => {
+const getInstructions = (formName, tabName) => {
 	if (isTestSession) {
-		return fetch(`http://localhost:8080/instructions/${tabName}.html/`)
+		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 	}
 	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
 }
@@ -134,8 +145,41 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, { tra
 
 const getNonParties = () => fetch('get-non-parties/')
 
+const uploadFile = (file, submissionId) => new Promise(async (resolve, reject) => {
+	const responseToken = await post(`submissions/${submissionId}/token/`)
+	console.log(responseToken.data.token)
+	const upload = new tus.Upload(file,
+		{
+			endpoint: filesURL,
+			metadata: {
+				token: responseToken.data.token,
+				filename: file.name
+			},
+			retryDelays: [0, 1000, 3000, 5000],
+			onError: function onError(error) {
+				console.log('Failed because: ', error)
+				reject(error)
+			},
+			onProgress: function onProgress(bytesUploaded, bytesTotal) {
+				file.percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
+				console.log(bytesUploaded, bytesTotal, file.percentage, '%')
+			},
+			onSuccess: function onSuccess() {
+				console.log('Download %s from %s', upload.file.name, upload.url)
+				resolve(
+					{
+						fileName: upload.file.name,
+						uploadUrl: upload.url
+					},
+				)
+			}
+		})
+	upload.start()
+})
+
 export {
 	apiURL,
+	apiBase,
 	api,
 	fetch,
 	post,
@@ -160,5 +204,7 @@ export {
 	deleteSubmission,
 	cloneSubmission,
 	getSubmissionHistory,
-	getNonParties
+	getNonParties,
+	getCurrentUser,
+	uploadFile
 }

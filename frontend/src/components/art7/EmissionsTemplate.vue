@@ -47,12 +47,7 @@
 					:items="tableItems"
 					@row-hovered="rowHovered"
 					:fields="tableFields"
-					:current-page="table.currentPage"
-					:per-page="table.perPage"
-					:sort-by.sync="table.sortBy"
-					:sort-desc.sync="table.sortDesc"
 					@input="tableLoaded"
-					:sort-direction="table.sortDirection"
 					:filter="table.filters.search"
 					ref="table"
 				>
@@ -72,29 +67,14 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="transitionState"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
 
-					<template
-						slot="validation"
-						slot-scope="cell"
-					>
-						<span class="validation-wrapper">
-							<b-badge 
-								pill
-								style="cursor:pointer"
-								variant="danger"
-								@click="openValidation"
-								v-if="cell.item.validation.length"
-								v-b-tooltip.hover
-								title="Click here to see the validation problems"
-							>invalid</b-badge>
-							<b-badge v-else pill variant="success">valid</b-badge>
-						</span>
+					<template slot="validation" slot-scope="cell">
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
 					</template>
-
 				</b-table>
 			</div>
 
@@ -106,9 +86,19 @@
 		<div class="table-wapper">
 			<h4> {{tab_info.formNumber}}.2 Comments</h4>
 			<hr>
-			<div v-for="(comment,comment_index) in tab_info.comments" class="comments-input" :key="comment_index">
-				<label>{{labels[comment.name]}}</label>
-				<textarea class="form-control" v-model="comment.selected"></textarea>
+			<div
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input"
+			>
+				<label>{{labels[comment_key]}}</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
 			</div>
 		</div>
     <hr>
@@ -121,6 +111,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
+import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
@@ -136,7 +127,8 @@ export default {
 	components: {
 		fieldGenerator,
 		AppAside,
-		DefaultAside
+		DefaultAside,
+		ValidationLabel
 	},
 
 	created() {
@@ -151,13 +143,8 @@ export default {
 			sidebarTabIndex: 0,
 			table: {
 				currentPage: 1,
-				perPage: 200,
 				totalRows: 5,
 				tableFilters: false,
-				pageOptions: [5, 25, 100],
-				sortBy: null,
-				sortDesc: false,
-				sortDirection: 'asc',
 				filters: {
 					search: null,
 					period_start: null,
@@ -173,14 +160,14 @@ export default {
 	computed: {
 		tableItems() {
 			const tableFields = []
-			this.tab_info.form_fields.forEach((element) => {
+			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
-				Object.keys(element).forEach(key => {
-					tableRow[key] = element[key].selected
+				Object.keys(form_field).forEach(key => {
+					tableRow[key] = form_field[key].selected
 				})
 				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = element
-					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					tableRow.originalObj = form_field
+					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
 					tableFields.push(tableRow)
 				}
 			})
@@ -189,11 +176,11 @@ export default {
 		},
 		tableFields() {
 			const tableHeaders = []
-			const options = { sortable: true, class: 'text-center' }
-			this.tab_info.section_subheaders.forEach((element) => {
+			const options = { class: 'text-center' }
+			this.tab_info.section_subheaders.forEach((form_field) => {
 				tableHeaders.push({
-					key: element.name,
-					label: element.label,
+					key: form_field.name,
+					label: form_field.label,
 					...options
 				})
 			})
@@ -211,14 +198,34 @@ export default {
 		getTabInputFields() {
 			return this.intersect(inputFields, this.tab_info.fields_order)
 		},
-		transitionState() {
-			return this.$store.getters.transitionState
-		}
+
+		isReadOnly() {
+			return this.$store.getters.isReadOnly || this.hasDisabledFields
+		},
+
 	},
 
 	methods: {
 		remove_field(index) {
 			this.$store.commit('removeField', { tab: this.tabName, index })
+		},
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
+					return false
+				}
+				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
+					return true
+				}
+				return this.$store.getters.isReadOnly
+			}
+			if (['secretariat', 'os'].includes(type)) {
+				if (!this.$store.state.currentUser.is_secretariat) {
+					return true
+				}
+			}
 		},
 		rowHovered(item) {
 			this.hovered = item.index

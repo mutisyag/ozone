@@ -5,7 +5,8 @@ const form = {
 	formDetails: {
 		tabsDisplay: ['sub_info', 'attachments'],
 		dataNeeded: [
-			'initialData.countryOptions'
+			'initialData.countryOptions',
+			'initialData.display.countries'
 		]
 	},
 	tabs: {

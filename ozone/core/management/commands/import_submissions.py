@@ -22,6 +22,8 @@ from ozone.core.models import Article7Production
 from ozone.core.models import Article7Destruction
 from ozone.core.models import Article7NonPartyTrade
 from ozone.core.models import Article7Questionnaire
+from ozone.core.models import ReportingChannel
+
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -68,7 +70,6 @@ class Command(BaseCommand):
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
 
-        self.method = Submission.SubmissionMethods.LEGACY.value
         self.precision = 10
 
     def add_arguments(self, parser):
@@ -471,7 +472,6 @@ class Command(BaseCommand):
         return {
             "submission": {
                 "schema_version": "legacy",
-                "filled_by_secretariat": False,
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "version": 1,
@@ -481,7 +481,6 @@ class Command(BaseCommand):
                 "flag_provisional": False,
                 "flag_valid": True,
                 "flag_superseded": False,
-                "submitted_via": self.method,
                 "remarks_party": overall["Remark"] or "",
                 "remarks_secretariat": overall["SubmissionType"] or "",
                 "created_by_id": self.admin.id,
@@ -491,6 +490,19 @@ class Command(BaseCommand):
                 "reporting_period_id": period.id,
                 "cloned_from_id": None,
                 # "info_id": "",
+                "flag_checked_blanks": bool(overall["Checked_Blanks"]),
+                "flag_has_blanks": bool(overall["Blanks"]),
+                "flag_confirmed_blanks": bool(overall["Confirm_Blanks"]),
+                "flag_has_reported_a1": overall["AI_ComplRep"],
+                "flag_has_reported_a2": overall["AII_ComplRep"],
+                "flag_has_reported_b1": overall["BI_ComplRep"],
+                "flag_has_reported_b2": overall["BII_ComplRep"],
+                "flag_has_reported_b3": overall["BIII_ComplRep"],
+                "flag_has_reported_c1": overall["CI_ComplRep"],
+                "flag_has_reported_c2": overall["CII_ComplRep"],
+                "flag_has_reported_c3": overall["CIII_ComplRep"],
+                "flag_has_reported_e": overall["EI_ComplRep"],
+                "flag_has_reported_f": overall["F_ComplRep"],
             },
             "submission_info": {
                 "reporting_officer": "",
@@ -502,6 +514,7 @@ class Command(BaseCommand):
                 "fax": "",
                 "email": "",
                 "date": date_reported,
+                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
             },
             "art7": {
                 "remarks_party": "",
@@ -513,9 +526,6 @@ class Command(BaseCommand):
                 "has_nonparty": overall["NonPartyTrade"],
                 "has_emissions": False,
                 # "submission_id": "",
-            },
-            "art7_flags": {
-                # TODO
             },
             "imports": self.get_imports(row, party, period),
             "exports": self.get_exports(row, party, period),
@@ -563,13 +573,16 @@ class Command(BaseCommand):
                             party.abbr, period.name)
                 return False
 
-        submission = Submission.objects.create(**values["submission"])
+        info = SubmissionInfo.objects.create(**values["submission_info"])
+        submission = Submission.objects.create(
+            info=info,
+            **values["submission"]
+        )
 
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
         # we prefer preserving the legacy data as pristine as possible.
         for key, klass in (
-            ("submission_info", SubmissionInfo),
             ("art7", Article7Questionnaire),
             ("imports", Article7Import),
             ("exports", Article7Export),
@@ -614,17 +627,21 @@ class Command(BaseCommand):
         """Removes the submission identified by the party and period
         and any related data.
         """
-        s = Submission.objects.filter(
+        qs = Submission.objects.filter(
             party=party,
             reporting_period=period,
-        ).get()
-        logger.info("Deleting submission %s/%s", party.abbr, period.name)
-        for related_data in s.RELATED_DATA:
-            for instance in getattr(s, related_data).all():
-                logger.debug("Deleting related data: %s", instance)
-                instance.delete()
-        s.__class__.data_changes_allowed = True
-        s.delete()
+        ).all()
+        for s in qs:
+            logger.info("Deleting submission %s/%s", party.abbr, period.name)
+            for related_data in s.RELATED_DATA:
+                for instance in getattr(s, related_data).all():
+                    logger.debug("Deleting related data: %s", instance)
+                    instance.delete()
+            s.__class__.data_changes_allowed = True
+            if s.info:
+                logger.debug("Deleting SubmissionInfo: %s", s.info)
+                s.info.delete()
+            s.delete()
 
     def load_workbook(self, filename, use_cache=False):
         """Loads the Excel file, collating the data based on the

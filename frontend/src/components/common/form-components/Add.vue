@@ -10,7 +10,7 @@
 				<multiselect placeholder='' :clear-on-select="false" :hide-selected="true" :close-on-select="false"  label="text" trackBy="value" :multiple="true" v-model="selected_substance.selected" @change="updateGroup($event)" :options="selected_substance.options"></multiselect>
 			</b-input-group>
 			<b-btn-group>
-				<b-btn v-if="selected_substance.selected" @click="addSubstance" variant="primary">Add {{selected_substance.selected.length}} rows</b-btn>
+				<b-btn v-if="selected_substance.selected" :disabled="!selected_substance.selected.length" @click="addSubstance" variant="primary">Add {{selected_substance.selected.length ? selected_substance.selected.length : ''}} rows</b-btn>
 				<b-btn v-if="selected_substance.selected" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
     </div>
@@ -72,8 +72,13 @@ export default {
 
 		prepareSubstances() {
 			this.selected_substance.options = []
+			this.selected_substance.selected = []
 			this.substances.forEach(substance => {
-				if (this.selected_groups.selected.includes(substance.group.group_id)) {
+				if (this.selected_groups.selected.length) {
+					if (this.selected_groups.selected.includes(substance.group.group_id)) {
+						this.selected_substance.options.push({ text: substance.text, value: substance.value })
+					}
+				} else {
 					this.selected_substance.options.push({ text: substance.text, value: substance.value })
 				}
 			})
@@ -123,13 +128,15 @@ export default {
 		},
 
 		resetData() {
-			this.selected_substance.selected = null
+			this.selected_substance.selected = []
+			this.selected_substance.options = []
 			this.selected_groups.selected = []
 			this.group_field = {
 				label: '',
 				name: '',
 				substance: null
 			}
+			this.prepareSubstances()
 		},
 
 		removeSpecialChars(str) {

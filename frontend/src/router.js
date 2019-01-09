@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Dashboard from '@/views/Dashboard'
+import {
+	apiBase
+} from '@/components/common/services/api.js'
 
 const Art7DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
 const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/components/letter/DataManager')
@@ -9,7 +12,6 @@ const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/Fo
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
 const Page500 = () => import(/* webpackChunkName: "500" */ '@/views/pages/Page500')
-const Login = () => import(/* webpackChunkName: "login" */ '@/views/pages/Login')
 const Register = () => import(/* webpackChunkName: "register" */ '@/views/pages/Register')
 
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
@@ -32,8 +34,10 @@ const routes = [
 	},
 	{
 		path: '/login',
-		name: 'Login',
-		component: Login
+		beforeEnter() {
+			window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.href)}`
+		},
+		name: 'Login'
 	},
 	{
 		path: '/submission',
