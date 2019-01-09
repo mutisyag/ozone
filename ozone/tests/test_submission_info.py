@@ -70,14 +70,19 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
 
     def test_get(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create(email="test@example.com")
-        submission.info = subinfo
-        submission.save()
+        submission.info.email = "test@example.com"
+        submission.info.save()
 
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
+        headers = self.get_authorization_header(
+            self.secretariat_user, password="qwe123qwe"
+        )
         resp = self.client.get(
-            reverse("core:submission-submission-info-detail",
-                    kwargs={"submission_pk": submission.pk, "pk": subinfo.pk}),
+            reverse(
+                "core:submission-submission-info-detail",
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission.info.pk
+                }
+            ),
             format="json",
             **headers,
         )
@@ -86,9 +91,6 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
 
     def test_put(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create()
-        submission.info = subinfo
-        submission.save()
 
         data = {
             'country': 'Romania',
@@ -103,10 +105,16 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'reporting_officer': ''
         }
 
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
+        headers = self.get_authorization_header(
+            self.secretariat_user, password="qwe123qwe"
+        )
         resp = self.client.put(
-            reverse("core:submission-submission-info-detail",
-                    kwargs={"submission_pk": submission.pk, "pk": subinfo.pk}),
+            reverse(
+                "core:submission-submission-info-detail",
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission.info.pk
+                }
+            ),
             json.dumps(data),
             "application/json",
             format="json",
@@ -118,8 +126,6 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
     @unittest.skip("Currently failing?!")
     def test_put_immutable_state(self):
         submission = self.create_submission()
-        subinfo = SubmissionInfoFactory.create()
-        submission.info = subinfo
         submission._current_state = "finalized"
         submission.save()
 
@@ -135,10 +141,16 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'reporting_channel': '',
             'reporting_officer': ''
         }
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
+        headers = self.get_authorization_header(
+            self.secretariat_user, password="qwe123qwe"
+        )
         resp = self.client.put(
-            reverse("core:submission-submission-info-detail",
-                    kwargs={"submission_pk": submission.pk, "pk": subinfo.pk}),
+            reverse(
+                "core:submission-submission-info-detail",
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission.info.pk
+                }
+            ),
             json.dumps(data),
             "application/json",
             format="json",

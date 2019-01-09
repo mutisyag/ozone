@@ -83,7 +83,7 @@ const decisionGenerator = (fields, parent, section) => {
 }
 
 export default {
-	getSimpleTabFields({
+	nonSubstanceRows({
 		currentSectionName, prefillData, ordering_id
 	}) {
 		let row
@@ -218,7 +218,7 @@ export default {
 		}
 	},
 
-	getInnerFields({
+	substanceRows({
 		section, substance, group, country, blend, prefillData, ordering_id
 	}) {
 		const countryFieldName = getCountryField(section)

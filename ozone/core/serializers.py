@@ -585,7 +585,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionInfo
-        fields = '__all__'
+        exclude = ('submission',)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -593,7 +593,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionInfo
-        fields = '__all__'
+        exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
         return getattr(obj.reporting_channel, 'name', '')

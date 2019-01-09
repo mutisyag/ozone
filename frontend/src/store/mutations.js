@@ -226,7 +226,9 @@ const mutations = {
 	// permissions
 
 	setFlagsPermissions(state, data) {
-		Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+		// some forms either might not have flags or the flags will be implemented on a latter date
+		// the "state.form.tabs.flags &&" verification prvents hard failure for those forms
+		state.form.tabs.flags && Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
 			if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
 		})
 	},
