@@ -311,7 +311,7 @@ const actions = {
 				}
 
 				// section, substance, group, country, blend, prefillData, ordering_id
-				const inner_fields = context.state.tableRowConstructor.getInnerFields({
+				const inner_fields = context.state.tableRowConstructor.substanceRows({
 					section: data.currentSectionName,
 					substance,
 					group: data.groupName,
@@ -329,7 +329,7 @@ const actions = {
 					context.commit('incrementOrderingId', { tabName: data.currentSectionName });
 					({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
 				}
-				const inner_fields = context.state.tableRowConstructor.getInnerFields({
+				const inner_fields = context.state.tableRowConstructor.substanceRows({
 					section: data.currentSectionName,
 					substance: null,
 					group: data.groupName,
@@ -350,7 +350,7 @@ const actions = {
 			({ ordering_id } = context.state.form.tabs[currentSectionName])
 		}
 
-		const row = context.state.tableRowConstructor.getSimpleTabFields({
+		const row = context.state.tableRowConstructor.nonSubstanceRows({
 			currentSectionName,
 			prefillData,
 			ordering_id

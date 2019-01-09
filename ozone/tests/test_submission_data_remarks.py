@@ -60,6 +60,7 @@ class BaseDataRemarksTestsMixIn(object):
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
 
+
     def get_authorization_header(self, username, password):
         resp = self.client.post(
             reverse("core:auth-token-list"),

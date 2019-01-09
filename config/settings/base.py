@@ -317,3 +317,8 @@ OAUTH2_PROVIDER = {
 # Tusd settings
 TUSD_UPLOADS_DIR = env('TUSD_UPLOADS_DIR', default='/var/local/tusd_uploads')
 ALLOWED_FILE_EXTENSIONS = split_env_var('ALLOWED_FILE_EXTENSIONS')
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
+LOCALE_PATHS = [
+    ROOT_DIR / 'translations' / 'backend',
+]
