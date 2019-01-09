@@ -96,8 +96,9 @@ const actions = {
 				sorting: {
 					sortDesc: true,
 					sortBy: 'updated_at'
-				}
-
+				},
+				perPage: null,
+				currentPage: null
 			}).then(response => {
 				context.commit('setDashboardMySubmissions', response.data)
 				resolve()

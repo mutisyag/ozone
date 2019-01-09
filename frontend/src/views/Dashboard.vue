@@ -30,28 +30,64 @@
         <b-col>
           <b-card v-if="basicDataReady">
             <div slot="header">
-              <strong>Data entry submissions </strong>
-            </div>
-            <b-table show-empty
+              <strong>Data entry submissions ({{dataEntryTable.totalRows}} records)</strong>
+						</div>
+							<div class="mt-2 mb-2">
+								<div class="filter-group mb-2">
+									<b-input-group prepend="Search">
+										<b-form-input v-model="dataEntryTable.search"/>
+									</b-input-group>
+									<b-input-group prepend="Obligation">
+										<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+									</b-input-group>
+								</div>
+								<div class="filter-group">
+									<b-input-group prepend="Party">
+										<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
+									</b-input-group>
+									<b-input-group style="width: 120px" prepend="From">
+										<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
+										</b-form-select>
+									</b-input-group>
+									<b-input-group style="width: 120px" prepend="To">
+										<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
+										</b-form-select>
+									</b-input-group>
+									<b-btn @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)">Clear</b-btn>
+								</div>
+							</div>
+							<b-table show-empty
                        outlined
                        bordered
                        hover
-                       head-variant="light"
-                       stacked="md"
-                       :items="dataEntryTableItems"
+												head-variant="light"
+												stacked="md"
+												:filter="dataEntryTable.search"
+												:items="dataEntryTableItems"
                        :fields="dataEntryTable.fields"
                        :per-page="dataEntryTable.perPage"
                        ref="dataEntryTable"
-              >
-                <template slot="actions" slot-scope="row">
-									<router-link
-											class="btn btn-outline-primary btn-sm"
-											:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
-										>
-										Continue
-									</router-link>
+											@filtered="onFiltered"
+								>
+									<template slot="actions" slot-scope="row">
+										<router-link
+												class="btn btn-outline-primary btn-sm"
+												:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}} "
+											>
+											Continue
+										</router-link>
                   </template>
               </b-table>
+							<b-row>
+                <b-col md="8" class="my-1">
+                  <b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
+                </b-col>
+								<b-col md="4">
+                  <b-input-group horizontal prepend="Per page" class="mb-0">
+                    <b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage" />
+                  </b-input-group>
+								</b-col>
+              </b-row>
           </b-card>
         </b-col>
     </b-row>
@@ -147,10 +183,10 @@
               </b-table>
 
               <b-row>
-                <b-col md="10" class="my-1">
+                <b-col md="8" class="my-1">
                   <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
-								<b-col md="2">
+								<b-col md="4">
                   <b-input-group horizontal prepend="Per page" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
@@ -225,6 +261,21 @@ export default {
 						key: 'actions', label: 'Actions'
 					}
 				],
+				currentPage: 1,
+				perPage: 10,
+				totalRows: null,
+				sorting: {
+					sortBy: 'updated_at',
+					sortDesc: true,
+					sortDirection: 'asc'
+				},
+				search: null,
+				filters: {
+					period_start: null,
+					period_end: null,
+					obligation: null,
+					party: null
+				},
 				pageOptions: [10, 25, 100]
 			}
 		}
@@ -285,16 +336,22 @@ export default {
 
 		dataEntryTableItems() {
 			const tableFields = []
+			const { filters } = this.dataEntryTable
+			const filtersExist = Object.keys(filters).some(f => filters[f])
 			if (this.mySubmissions && this.mySubmissions.length) {
 				this.mySubmissions.forEach((element) => {
-					tableFields.push({
+					if (filtersExist && this.checkFilters(filters, element)) {
+						return
+					}
+					const row = {
 						obligation: this.getSubmissionInfo(element).obligation(),
 						reporting_period: this.getSubmissionInfo(element).period(),
 						party: this.getSubmissionInfo(element).party(),
 						version: element.version,
 						updated_at: element.updated_at,
 						details: element
-					})
+					}
+					tableFields.push(row)
 				})
 			}
 			return tableFields
@@ -415,6 +472,22 @@ export default {
 			})
 		},
 
+		checkFilters(filters, element) {
+			if (filters.obligation && element.obligation !== filters.obligation) {
+				return true
+			}
+			if (filters.party && element.party !== filters.party) {
+				return true
+			}
+			if (filters.period_start && parseInt(this.getSubmissionInfo(element).period()) < parseInt(filters.period_start.split('-')[0])) {
+				return true
+			}
+			if (filters.period_end && parseInt(this.getSubmissionInfo(element).period()) > parseInt(filters.period_end.split('-')[0])) {
+				return true
+			}
+			return false
+		},
+
 		removeSubmission(url) {
 			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
 			if (r === true) {
@@ -424,6 +497,10 @@ export default {
 
 		getFormName(obligation) {
 			return this.obligations.find(o => o.value === obligation).form_type
+		},
+		onFiltered(filteredItems) {
+			this.dataEntryTable.totalRows = filteredItems.length
+			this.dataEntryTable.currentPage = 1
 		}
 
 	},
@@ -467,8 +544,13 @@ export default {
 .dashboard-filters {
 	display: flex;
 }
-.dashboard-filters > div {
+.dashboard-filters > div,
+.filter-group > div {
 	margin-right: 5px;
-	min-width: 120px;
+	min-width: 130px;
+}
+
+.filter-group {
+	display: flex;
 }
 </style>
