@@ -220,7 +220,8 @@ export default {
 				],
 				pageOptions: [10, 25, 100],
 				modalInfo: { title: '', content: '' }
-			}
+			},
+			tableOptionsCurrentPageWasSetFromWatcher: false
 
 		}
 	},
@@ -356,10 +357,11 @@ export default {
 			return false
 		},
 		tableOptionsExceptFilters() {
+			const { sorting, currentPage, perPage } = this.$store.state.dashboard.table
 			const tableOptions = {
-				sorting: this.$store.state.dashboard.table.sorting,
-				currentPage: this.$store.state.dashboard.table.currentPage,
-				perPage: this.$store.state.dashboard.table.perPage
+				sorting,
+				currentPage,
+				perPage
 			}
 			return tableOptions
 		}
@@ -406,11 +408,11 @@ export default {
 	},
 
 	watch: {
-		// TODO: the watchers trigger each other in the case when user is on page > 1 and selects a filter, causing 2 requests instead of 1
 		'tableOptions.filters': {
 			handler() {
 				if (this.tableOptions.currentPage !== 1) {
 					this.tableOptions.currentPage = 1
+					this.tableOptionsCurrentPageWasSetFromWatcher = true
 				}
 				this.$store.dispatch('getCurrentSubmissions')
 				if (!this.$refs.table) return
@@ -420,6 +422,10 @@ export default {
 		},
 		tableOptionsExceptFilters: {
 			handler() {
+				if (this.tableOptionsCurrentPageWasSetFromWatcher) {
+					this.tableOptionsCurrentPageWasSetFromWatcher = false
+					return
+				}
 				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
