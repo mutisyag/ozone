@@ -602,18 +602,6 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
-            info = SubmissionInfo.objects.create(
-                reporting_officer=self.info.reporting_officer,
-                designation=self.info.designation,
-                organization=self.info.organization,
-                postal_code=self.info.postal_code,
-                country=self.info.country,
-                phone=self.info.phone,
-                fax=self.info.fax,
-                email=self.info.email,
-                date=self.info.date,
-                reporting_channel=self.info.reporting_channel
-            )
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
@@ -621,8 +609,25 @@ class Submission(models.Model):
                 cloned_from=self,
                 created_by=self.created_by,
                 last_edited_by=self.last_edited_by,
-                info=info
             )
+            if hasattr(self, 'info'):
+                # Clone submission might already have some pre-populated
+                # info due to how save() works. These need to be updated.
+                SubmissionInfo.objects.update_or_create(
+                    submission=clone,
+                    defaults={
+                        'reporting_officer': self.info.reporting_officer,
+                        'designation': self.info.designation,
+                        'organization': self.info.organization,
+                        'postal_code': self.info.postal_code,
+                        'country': self.info.country,
+                        'phone': self.info.phone,
+                        'fax': self.info.fax,
+                        'email': self.info.email,
+                        'date': self.info.date,
+                        'reporting_channel': self.info.reporting_channel
+                    }
+                )
         else:
             raise e
 
@@ -741,7 +746,7 @@ class Submission(models.Model):
              update_fields=None):
         # Several actions need to be performed on first save
         # No need to check `update_fields`, since this is the first
-        # save. If other fields are change during an update, they
+        # save. If other fields are changed during an update, they
         # must be added to the `update_fields` list, since we are using
         # the PartialUpdateMixIn.
         if not self.pk or force_insert:
@@ -775,15 +780,22 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
+            self.clean()
+            ret = super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
+            )
+
             # Prefill "Submission info" with values from the most recent
             # submission when creating a new submission for the same obligation
             # and party.
             # The prefill will be skipped if it's a clone action.
-            if not self.info:
+            if not hasattr(self, 'info'):
                 latest_submission = submissions.order_by('-updated_at').first()
-                if latest_submission and latest_submission.info:
+                if latest_submission and hasattr(latest_submission, 'info'):
                     latest_info = latest_submission.info
-                    self.info = SubmissionInfo.objects.create(
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
                         reporting_officer=latest_info.reporting_officer,
                         designation=latest_info.designation,
                         organization=latest_info.organization,
@@ -793,36 +805,27 @@ class Submission(models.Model):
                         fax=latest_info.fax,
                         email=latest_info.email,
                         date=latest_info.date,
-                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
                     )
                 else:
-                    self.info = SubmissionInfo.objects.create(
-                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
                     )
 
-        self.clean()
-        return super().save(
-            force_insert=force_insert, force_update=force_update,
-            using=using, update_fields=update_fields
-        )
+            return ret
 
-    @transaction.atomic()
-    def make_current(self):
-        versions = (
-            Submission.objects.select_for_update()
-            .filter(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                obligation=self.obligation,
+        else:
+            # This is not the first save
+            self.clean()
+            return super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
             )
-            .exclude(pk=self.pk)
-            .exclude(_current_state__in=self.editable_states)
-        )
-        for version in versions:
-            version.flag_superseded = True
-            version.save()
-        self.flag_superseded = False
-        self.save()
 
     def set_submitted(self):
         self.submitted_at = timezone.now()
@@ -837,8 +840,6 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     submission = models.OneToOneField(
         Submission,
         related_name='info',
-        null=True,
-        blank=True,
         on_delete=models.CASCADE
     )
 
