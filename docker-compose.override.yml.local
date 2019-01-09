@@ -41,9 +41,3 @@ volumes:
     driver: local
   envelope-files:
     driver: local
-  weblate-data:
-    driver: local
-  pg-weblate-data:
-    driver: local
-  redis-data:
-    driver: local
