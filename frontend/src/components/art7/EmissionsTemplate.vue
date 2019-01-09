@@ -55,14 +55,15 @@
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<div
 							v-if="inputField === 'facility_name'"
-							class="table-btn-group"
+							class="row-controls"
+							style="left: -45px;top: 0;"
 							:key="`${cell.item.index}_${inputField}_${tabName}_button`"
 							>
 							<b-btn
 								variant="outline-danger"
 								@click="remove_field(cell.item.index)"
 								class="table-btn"
-							>Delete</b-btn>
+							><i class="fa fa-times"></i></b-btn>
 						</div>
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -201,7 +202,7 @@ export default {
 
 		isReadOnly() {
 			return this.$store.getters.isReadOnly || this.hasDisabledFields
-		},
+		}
 
 	},
 

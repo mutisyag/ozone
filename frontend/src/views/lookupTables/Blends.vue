@@ -1,16 +1,16 @@
 <template>
-  <div class="app flex-row align-items-top">
+  <div class="app blends-lookup-table flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col>
-                    <b-input-group prepend="Name / Other Names">
-                      <b-form-input v-model="table.filters.searchName" />
-                    </b-input-group>
-                </b-col>
+					<b-input-group prepend="Name / Other Names">
+								<b-form-input v-model="table.filters.searchName" />
+					</b-input-group>
+        </b-col>
 				<b-col>
-                    <b-input-group>
+          <b-input-group>
 						<multiselect
 							:max-height="250"
 							:multiple="true"

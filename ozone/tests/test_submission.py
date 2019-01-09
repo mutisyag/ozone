@@ -181,11 +181,8 @@ class TestSubmissionMethods(BaseSubmissionTest):
             self.secretariat_user.username, "qwe123qwe"
         )
         submission = self.create_submission()
-        submission._current_state = "finalized"
-        submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.call_transition("submit", self.secretariat_user)
+        submission.clone(self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -203,11 +200,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
             self.secretariat_user.username, "qwe123qwe"
         )
         submission = self.create_submission()
-        submission._current_state = "finalized"
-        submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.call_transition("submit", self.secretariat_user)
+        clone = submission.clone(self.secretariat_user)
+        # This should make the first one superseded
+        clone.call_transition("submit", self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -224,11 +220,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
             self.secretariat_user.username, "qwe123qwe"
         )
         submission = self.create_submission()
-        submission._current_state = "finalized"
-        submission.save()
-        new_version = submission.clone(self.secretariat_user)
-        new_version.make_current()
-        new_version.save()
+        submission.call_transition("submit", self.secretariat_user)
+        clone = submission.clone(self.secretariat_user)
+        # This should make the first one superseded
+        clone.call_transition("submit", self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
