@@ -480,6 +480,69 @@ class TestPartyReporterRole(BaseUserRoleTests):
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(Submission.objects.count(), 1)
 
+    def test_edit_blend_same_party(self):
+        """
+        Test editing blend on behalf of my party.
+        """
+
+        blend = BlendFactory(party=self.party)
+        data = {
+            "blend_id": "TEST",
+            "type": "Azeotrope",
+            "components": []
+        }
+        resp = self.client.put(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk}),
+            data
+        )
+        self.assertEqual(blend.blend_id, 'TB')
+        self.assertEqual(blend.type, 'Zeotrope')
+        self.assertEqual(resp.status_code, 200)
+        blend = Blend.objects.get(pk=resp.data['id'])
+        self.assertEqual(blend.blend_id, 'TEST')
+        self.assertEqual(blend.type, 'Azeotrope')
+
+    def test_edit_blend_another_party(self):
+        """
+        Test editing blend on behalf of another party.
+        """
+
+        blend = BlendFactory(party=self.another_party)
+        data = {
+            "blend_id": "TEST",
+            "type": "Azeotrope",
+            "components": []
+        }
+        resp = self.client.put(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_delete_blend_same_party(self):
+        """
+        Test deleting blend on behalf of my party.
+        """
+
+        blend = BlendFactory(party=self.party)
+        self.assertEqual(Blend.objects.count(), 1)
+        resp = self.client.delete(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk})
+        )
+        self.assertEqual(resp.status_code, 204)
+        self.assertEqual(Blend.objects.count(), 0)
+
+    def test_delete_blend_another_party(self):
+        """
+        Test deleting blend on behalf of another party.
+        """
+
+        blend = BlendFactory(party=self.another_party)
+        resp = self.client.delete(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk})
+        )
+        self.assertEqual(resp.status_code, 403)
+
 
 class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
@@ -597,12 +660,58 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(Submission.objects.count(), 1)
 
+    def test_create_blend_same_party(self):
+        """
+        Test creating blend on behalf of a party.
+        """
+
+        data = {
+            "blend_id": "TEST",
+            "party": self.party.id,
+            "type": "Zeotrope",
+            "composition": "TEST",
+            "components": []
+        }
+        resp = self.client.post(
+            reverse("core:blends-list"),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_edit_blend_same_party(self):
+        """
+        Test editing blend on behalf of my party.
+        """
+
+        blend = BlendFactory(party=self.party)
+        data = {
+            "blend_id": "TEST",
+            "type": "Azeotrope",
+            "components": []
+        }
+        resp = self.client.put(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_delete_blend_same_party(self):
+        """
+        Test deleting blend on behalf of my party.
+        """
+
+        blend = BlendFactory(party=self.party)
+        resp = self.client.delete(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk})
+        )
+        self.assertEqual(resp.status_code, 403)
+
 
 class TestPublicUserRole(BaseUserRoleTests):
 
     def setUp(self):
         super().setUp()
-        self.reporter = ReporterUserROFactory(
+        self.reporter = ReporterUserFactory(
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
@@ -679,5 +788,51 @@ class TestPublicUserRole(BaseUserRoleTests):
         self.assertEqual(Submission.objects.count(), 1)
         resp = self.client.delete(
             reverse("core:submission-detail", kwargs={'pk': submission.pk})
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_create_blend(self):
+        """
+        Test creating blend on behalf of a party.
+        """
+
+        data = {
+            "blend_id": "TEST",
+            "party": self.party.id,
+            "type": "Zeotrope",
+            "composition": "TEST",
+            "components": []
+        }
+        resp = self.client.post(
+            reverse("core:blends-list"),
+            data
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_edit_blend(self):
+        """
+        Test editing blend.
+        """
+
+        blend = BlendFactory(party=self.party)
+        data = {
+            "blend_id": "TEST",
+            "type": "Azeotrope",
+            "components": []
+        }
+        resp = self.client.put(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk}),
+            data
+        )
+        self.assertEqual(resp.status_code, 401)
+
+    def test_delete_blend(self):
+        """
+        Test deleting blend.
+        """
+
+        blend = BlendFactory(party=self.party)
+        resp = self.client.delete(
+            reverse("core:blends-detail", kwargs={'pk': blend.pk})
         )
         self.assertEqual(resp.status_code, 401)
