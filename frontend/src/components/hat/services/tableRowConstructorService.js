@@ -1,5 +1,5 @@
 export default {
-	getInnerFields({
+	substanceRows({
 		section, substance, group, blend, prefillData, ordering_id
 	}) {
 		const baseInnerFields = {
