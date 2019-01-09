@@ -1,6 +1,7 @@
 matrix:
   include:
     - language: python
+      name: "Backend Tests"
       python:
        - 3.6
       services: postgresql
@@ -19,6 +20,7 @@ matrix:
         - pip install python-coveralls
         - coveralls
     - language: node_js
+      name: "Frontend Tests"
       services:
       addons:
       node_js:
@@ -28,3 +30,22 @@ matrix:
       before_script:
       script:
         - npm run testNoWatch
+    - language: python
+      name: "Update ozone-translations"
+      python:
+        - 3.6
+      services: postgresql
+      addons:
+        postgresql: "9.4"
+      before_install:
+        - if ! [[ $TRAVIS_BRANCH = 'develop' && $TRAVIS_PULL_REQUEST = 'false' ]]; then exit 0; fi
+        - git clone https://github.com/eaudeweb/ozone-translations.git translations
+        - export DJANGO_SETTINGS_MODULE=config.settings.test
+        - source .envrc.travis
+      install:
+        - pip install -r requirements/local.txt
+      before_script:
+        - psql -c "CREATE DATABASE travisci;" -U postgres
+      script:
+        - python manage.py createmessages
+      after_success:
