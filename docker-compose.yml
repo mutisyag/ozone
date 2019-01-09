@@ -105,6 +105,32 @@ services:
     labels:
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
+  weblate:
+    image: weblate/weblate
+    ports:
+      - 8081:80
+    volumes:
+      - weblate-data:/app/data
+    env_file:
+      - ./docker/weblate.env
+    restart: always
+    depends_on:
+      - postgres-weblate
+      - redis-weblate
+  postgres-weblate:
+    image: postgres:9.6
+    env_file:
+      - ./docker/weblate.env
+    volumes:
+      - pg-weblate-data:/var/lib/postgresql/data
+    restart: always
+  redis-weblate:
+    image: redis:4-alpine
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis-data:/data
+
 volumes:
   pg-data:
     driver: rancher-nfs
@@ -115,4 +141,10 @@ volumes:
   static-files:
     driver: rancher-nfs
   envelope-files:
+    driver: rancher-nfs
+  weblate-data:
+    driver: rancher-nfs
+  pg-weblate-data:
+    driver: rancher-nfs
+  redis-data:
     driver: rancher-nfs
