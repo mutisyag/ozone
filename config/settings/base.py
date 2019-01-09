@@ -8,6 +8,7 @@ import datetime
 import environ
 from pathlib import Path
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.translation import gettext_lazy as _
 
 
 def get_env_var(var_name, default=None):
@@ -169,6 +170,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#middleware
 MIDDLEWARE = [
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -322,3 +324,14 @@ ALLOWED_FILE_EXTENSIONS = split_env_var('ALLOWED_FILE_EXTENSIONS')
 LOCALE_PATHS = [
     ROOT_DIR / 'translations' / 'backend',
 ]
+
+USE_I18N = True
+LANGUAGE_CODE = 'en'
+LANGUAGES = (
+    ('ar', _('Arabic')),
+    ('en', _('English')),
+    ('es', _('Spanish')),
+    ('fr', _('French')),
+    ('ru', _('Russian')),
+    ('zh', _('Chinese')),
+)
