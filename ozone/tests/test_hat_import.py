@@ -149,16 +149,15 @@ class TestHATImport(BaseHATImportTest):
         hat_import = HighAmbientTemperatureImport.objects.get(pk=hat_import.id)
         self.assertEqual(hat_import.quantity_msac, 42)
 
-    @unittest.skip("Currently failing #427")
     def test_update_immutable(self):
         submission = self.create_submission()
-        submission._current_state = "finalized"
-        submission.save()
 
         hat_import = HighAmbientTemperatureImportFactory(
             submission=submission, substance=self.substance,
             **HAT_IMPORT_DATA
         )
+        submission._current_state = "finalized"
+        submission.save()
 
         data = dict(HAT_IMPORT_DATA)
         data["substance"] = self.substance.id

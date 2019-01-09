@@ -147,16 +147,14 @@ class TestHATProduction(BaseHATProductionTest):
         hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
         self.assertEqual(hat_prod.quantity_msac, 42)
 
-    @unittest.skip("Currently failing #427")
     def test_update_immutable(self):
         submission = self.create_submission()
-        submission._current_state = "finalized"
-        submission.save()
-
         hat_prod = HighAmbientTemperatureProductionFactory(
             submission=submission, substance=self.substance,
             **HAT_PROD_DATA
         )
+        submission._current_state = "finalized"
+        submission.save()
 
         data = dict(HAT_PROD_DATA)
         data["substance"] = self.substance.id

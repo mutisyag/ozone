@@ -123,7 +123,6 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["email"], "test@example.com")
 
-    @unittest.skip("Currently failing?!")
     def test_put_immutable_state(self):
         submission = self.create_submission()
         submission._current_state = "finalized"
