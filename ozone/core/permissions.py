@@ -2,14 +2,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Party, Submission
+from .models import Blend, Party, Submission
 
 
 def is_secretariat_or_admin(request):
     return request.user.is_secretariat or request.user.is_superuser
 
 
-class IsSecretariatOrSameParty(BasePermission):
+class BaseIsSecretariatOrSameParty(BasePermission):
 
     @staticmethod
     def has_same_party(request, view):
@@ -22,35 +22,8 @@ class IsSecretariatOrSameParty(BasePermission):
           already-existing objects, so does not apply to object creation.
         - update: to verify that party is not changed to something the user
           cannot create objects for
-
-        This is only to be used for Submission and data reporting models!
         """
-        if request.method not in SAFE_METHODS and \
-                not is_secretariat_or_admin(request):
-            # Get the party either directly (for Submission objects),
-            # or from the referenced submission
-            if hasattr(view, 'queryset') and view.queryset:
-                queryset = view.queryset
-            else:
-                queryset = view.get_queryset()
-
-            try:
-                if queryset.model == Submission and 'party' in request.data:
-                    party = Party.objects.get(
-                        pk=request.data.get('party', None)
-                    )
-                else:
-                    party = Submission.objects.get(
-                        pk=view.kwargs.get('submission_pk', None)
-                    ).party
-                if party != request.user.party:
-                    return False
-            except ObjectDoesNotExist:
-                # Could not find a party matching the request data, so simply
-                # return a sage default
-                return False
-
-        return True
+        pass
 
     def has_permission(self, request, view):
         """
@@ -77,15 +50,65 @@ class IsSecretariatOrSameParty(BasePermission):
         """
         Called for HTTP methods that require an object.
         This is only called if has_permission() has already passed.
-
-        Only applicable to submissions or objects related to a submission
-        (i.e. data reports)
         """
+
+        pass
+
+
+class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
+
+    @staticmethod
+    def has_same_party(request, view):
+        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
+            sub_pk = view.kwargs.get('pk', None)
+            if sub_pk:
+                # Submission object already exists.
+                party = Submission.objects.get(pk=sub_pk).party.pk
+            else:
+                # It's a create
+                party = request.data.get('party', None)
+            return party == request.user.party.pk
+        return True
+
+    def has_object_permission(self, request, view, obj):
         if is_secretariat_or_admin(request):
             return True
+        return request.user.party == obj.party
 
-        if isinstance(obj, Submission):
-            object_party = obj.party
-        else:
-            object_party = obj.submission.party
-        return request.user.party == object_party
+
+class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
+
+    @staticmethod
+    def has_same_party(request, view):
+        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
+            party = Submission.objects.get(
+                pk=view.kwargs.get('submission_pk', None)
+            ).party
+            return party == request.user.party
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if is_secretariat_or_admin(request):
+            return True
+        return request.user.party == obj.submission.party
+
+
+class IsSecretariatOrSamePartyBlend(BaseIsSecretariatOrSameParty):
+
+    @staticmethod
+    def has_same_party(request, view):
+        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
+            blend_pk = view.kwargs.get('pk', None)
+            if blend_pk:
+                # Blend object already exists.
+                party = Blend.objects.get(pk=blend_pk).party.pk
+            else:
+                # It's a create
+                party = request.data.get('party', None)
+            return party == request.user.party.pk
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if is_secretariat_or_admin(request):
+            return True
+        return request.user.party == obj.party
