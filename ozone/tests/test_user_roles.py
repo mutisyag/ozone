@@ -51,7 +51,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_create_submission(self):
         """
-        Test creating submission for party.
+        Test creating submission on behalf of a party.
         """
 
         period = ReportingPeriodFactory()
@@ -74,7 +74,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_view_submission(self):
         """
-        Test viewing submission for party.
+        Test viewing submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -91,7 +91,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_edit_submission(self):
         """
-        Test editing submission for a party.
+        Test editing submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -119,7 +119,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_delete_submission(self):
         """
-        Test deleting submission for a party.
+        Test deleting submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -136,7 +136,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_create_blend(self):
         """
-        Test creating blend.
+        Test creating blend on behalf of a party.
         """
 
         data = {
@@ -158,7 +158,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_edit_blend(self):
         """
-        Test editing blend.
+        Test editing blend on behalf of a party.
         """
 
         blend = BlendFactory(party=self.party)
@@ -180,7 +180,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
     def test_delete_blend(self):
         """
-        Test deleting blend.
+        Test deleting blend on behalf of a party.
         """
 
         blend = BlendFactory(party=self.party)
@@ -208,7 +208,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_create_submission(self):
         """
-        Test creating submission for party.
+        Test creating submission on behalf of a party.
         """
 
         period = ReportingPeriodFactory()
@@ -226,7 +226,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_view_submission(self):
         """
-        Test viewing submission for party.
+        Test viewing submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -242,7 +242,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_edit_submission(self):
         """
-        Test editing submission for a party.
+        Test editing submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -268,7 +268,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_delete_submission(self):
         """
-        Test deleting submission for a party.
+        Test deleting submission on behalf of a party.
         """
 
         submission = SubmissionFactory(
@@ -285,7 +285,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_create_blend(self):
         """
-        Test creating blend.
+        Test creating blend on behalf of a party.
         """
 
         data = {
@@ -305,7 +305,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_edit_blend(self):
         """
-        Test editing blend.
+        Test editing blend on behalf of a party.
         """
 
         blend = BlendFactory(party=self.party)
@@ -323,7 +323,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
     def test_delete_blend(self):
         """
-        Test deleting blend.
+        Test deleting blend on behalf of a party.
         """
 
         blend = BlendFactory(party=self.party)
@@ -356,7 +356,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_view_submission_same_party(self):
         """
-        Test viewing submission created by another user from the same party.
+        Test viewing submission reported by my party.
         """
         submission = SubmissionFactory(
             party=self.party,
@@ -377,7 +377,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_view_submission_another_party(self):
         """
-        Test viewing submission created by another user from another party.
+        Test viewing submission reported by another party.
         """
         submission = SubmissionFactory(
             party=self.another_party,
@@ -397,7 +397,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_edit_submission_same_party(self):
         """
-        Test editing submission created by another user from the same party.
+        Test editing submission reported by my party.
         """
 
         submission = SubmissionFactory(
@@ -431,7 +431,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_edit_submission_another_party(self):
         """
-        Test editing submission created by another user from another party.
+        Test editing submission reported by another party.
         """
 
         submission = SubmissionFactory(
@@ -463,7 +463,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_delete_submission_same_party(self):
         """
-        Test deleting submission created by another user from the same party.
+        Test deleting submission reported by my party.
         """
 
         submission = SubmissionFactory(
@@ -487,7 +487,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
     def test_delete_submission_another_party(self):
         """
-        Test deleting submission created by another user from another party.
+        Test deleting submission reported by another party.
         """
 
         submission = SubmissionFactory(
@@ -531,7 +531,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
     def test_view_submission_same_party(self):
         """
-        Test viewing submission created by another user from the same party.
+        Test viewing submission reported by my party.
         """
         submission = SubmissionFactory(
             party=self.party,
@@ -552,7 +552,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
     def test_view_submission_another_party(self):
         """
-        Test viewing submission created by another user from another party.
+        Test viewing submission reported by another party.
         """
         submission = SubmissionFactory(
             party=self.another_party,
@@ -596,7 +596,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
     def test_edit_submission_same_party(self):
         """
-        Test editing submission created by another user from the same party.
+        Test editing submission reported by my party.
         """
 
         submission = SubmissionFactory(
@@ -628,7 +628,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
     def test_delete_submission_same_party(self):
         """
-        Test deleting submission created by another user from the same party.
+        Test deleting submission reported by my party.
         """
 
         submission = SubmissionFactory(
