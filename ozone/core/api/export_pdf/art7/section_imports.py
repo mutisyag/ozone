@@ -1,38 +1,20 @@
-from functools import partial
+from reportlab.platypus import Paragraph
+from reportlab.platypus import Spacer
+from reportlab.platypus import Table
 
-from io import BytesIO
-
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-from reportlab.lib import pagesizes
-from reportlab.lib.enums import TA_JUSTIFY, TA_LEFT, TA_CENTER
-from reportlab.rl_config import defaultPageSize
 from reportlab.lib.units import inch
-from reportlab.platypus import Table, TableStyle
+
 
 from django.utils.translation import gettext_lazy as _
 
-
-PG_SIZE = pagesizes.landscape(pagesizes.A4)
-
-PAGE_HEIGHT = PG_SIZE[1]
-PAGE_WIDTH = PG_SIZE[0]
-
-STYLES = getSampleStyleSheet()
+from ..util import p_c
+from ..util import p_l
+from ..util import STYLES
+from ..util import TABLE_STYLES
 
 
-def _p(style_name, align, txt):
-    style = STYLES[style_name]
-    style.alignment = align
-    return Paragraph(txt, style)
-
-
-p_c = partial(_p, 'BodyText', TA_CENTER)
-p_l = partial(_p, 'BodyText', TA_LEFT)
-
-
-TABLE_SUBSTANCES_HEADER = (
+TABLE_IMPORTS_HEADER = (
     (
         p_c(_('Group')),
         p_c(_('Substance')),
@@ -57,7 +39,7 @@ TABLE_SUBSTANCES_HEADER = (
 )
 
 
-TABLE_SUBSTANCES_HEADER_STYLE = (
+TABLE_IMPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
@@ -70,12 +52,7 @@ TABLE_SUBSTANCES_HEADER_STYLE = (
 )
 
 
-TABLE_STYLE = (
-    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-)
-
-
-def to_row_art7import(obj):
+def to_row_substance(obj):
     substance = obj.substance
 
     _q_pre_ship = obj.quantity_quarantine_pre_shipment
@@ -93,34 +70,31 @@ def to_row_art7import(obj):
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
         (p_l(str(obj.quantity_essential_uses or '')), ) + q_pre_ship,
-        None  # TODO: decision/type of use or remark
+        str(obj.decision_essential_uses or '')
     )
 
 
-def mk_table_art7import_substances(submission):
+def mk_table_substances(submission):
+    # TODO: differentiate between blends and substances
     imports = submission.article7imports.all()
-    return map(to_row_art7import, imports)
+    return map(to_row_substance, imports)
 
 
-def export_submission(submission):
-    buff = BytesIO()
-
-    doc = SimpleDocTemplate(buff, pagesize=PG_SIZE)
-
-    story = []
-
-    table_art7import_substances = tuple(mk_table_art7import_substances(submission))
-
-    story.append(Paragraph(_('1.1 Substances'), STYLES['Heading2']))
-    table = Table(
-        TABLE_SUBSTANCES_HEADER + table_art7import_substances,
-        style=TABLE_SUBSTANCES_HEADER_STYLE + TABLE_STYLE,
-        repeatRows=2
+def export_imports(submission):
+    table_substances = tuple(mk_table_substances(submission))
+    return (
+        # TODO: Add page headings, explanatory texts.
+        Paragraph(_('1.1 Substances'), STYLES['Heading2']),
+        Table(
+            TABLE_IMPORTS_HEADER + table_substances,
+            style=TABLE_IMPORTS_HEADER_STYLE + TABLE_STYLES,
+            repeatRows=2
+        ),
+        Spacer(1, inch),
+        Paragraph(_('1.2 Blends'), STYLES['Heading2']),
+        Table(
+            TABLE_IMPORTS_HEADER,  # TODO: export blends
+            style=TABLE_IMPORTS_HEADER_STYLE + TABLE_STYLES,
+            repeatRows=2
+        ),
     )
-
-    story.append(table)
-
-    doc.build(story)
-
-    buff.seek(0)
-    return buff
