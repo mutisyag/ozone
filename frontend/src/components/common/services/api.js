@@ -145,33 +145,28 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, { tra
 
 const getNonParties = () => fetch('get-non-parties/')
 
-const uploadFile = (file, submissionId) => new Promise(async (resolve, reject) => {
+const uploadAttachment = (attachment, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
-	console.log(responseToken.data.token)
-	const upload = new tus.Upload(file,
+	const upload = new tus.Upload(attachment,
 		{
 			endpoint: filesURL,
 			metadata: {
 				token: responseToken.data.token,
-				filename: file.name
+				filename: attachment.name
 			},
 			retryDelays: [0, 1000, 3000, 5000],
 			onError: function onError(error) {
-				console.log('Failed because: ', error)
+				console.log('File upload failed because: ', error)
 				reject(error)
 			},
 			onProgress: function onProgress(bytesUploaded, bytesTotal) {
-				file.percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
-				console.log(bytesUploaded, bytesTotal, file.percentage, '%')
+				if (onProgressCallback) {
+					const percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
+					onProgressCallback(attachment, percentage)
+				}
 			},
 			onSuccess: function onSuccess() {
-				console.log('Download %s from %s', upload.file.name, upload.url)
-				resolve(
-					{
-						fileName: upload.file.name,
-						uploadUrl: upload.url
-					},
-				)
+				resolve(upload)
 			}
 		})
 	upload.start()
@@ -206,5 +201,5 @@ export {
 	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
-	uploadFile
+	uploadAttachment
 }
