@@ -32,6 +32,7 @@ export CORS_ORIGIN_WHITELIST=<LAN IP>:8000
 # export OZONE_TZ=UTC
 
 export TUSD_UPLOADS_DIR=$HOME/src/tusd-bin/data
+export ALLOWED_FILE_EXTENSIONS=pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb
 
 # Used by tusd on hooks URL
 export API_VERSION=0.1
