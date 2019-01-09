@@ -30,6 +30,10 @@ services:
     ports:
       - "80:80"
 
+  weblate:
+    ports:
+      - 8081:80
+
 volumes:
   pg-data:
     driver: local

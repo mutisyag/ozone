@@ -107,8 +107,6 @@ services:
 
   weblate:
     image: weblate/weblate
-    ports:
-      - 8081:80
     volumes:
       - weblate-data:/app/data
     env_file:
