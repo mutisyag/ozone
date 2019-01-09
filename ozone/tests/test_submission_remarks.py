@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.urls import reverse
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -41,6 +43,14 @@ class BaseRemarksTests(TestCase):
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )
         ReportingChannelFactory()
+        # Patch IsSecretariatOrSameParty since we are testing `check_remarks` here
+        # and the check is somewhat duplicated.
+        patch("ozone.core.permissions.BaseIsSecretariatOrSameParty.has_permission",
+              return_value=True).start()
+
+    def tearDown(self):
+        super().tearDown()
+        patch.stopall()
 
     def get_authorization_header(self, username, password):
         resp = self.client.post(
