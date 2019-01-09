@@ -191,9 +191,6 @@ class TestSecretariatEditRole(BaseUserRoleTests):
         self.assertEqual(resp.status_code, 204)
         self.assertEqual(Blend.objects.count(), 0)
 
-    def test_access_admin(self):
-        pass
-
 
 class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
@@ -336,9 +333,6 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
         )
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(Blend.objects.count(), 1)
-
-    def test_access_admin(self):
-        pass
 
 
 class TestPartyReporterRole(BaseUserRoleTests):
@@ -515,9 +509,6 @@ class TestPartyReporterRole(BaseUserRoleTests):
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(Submission.objects.count(), 1)
 
-    def test_access_admin(self):
-        pass
-
 
 class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
@@ -659,9 +650,6 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         self.assertEqual(resp.status_code, 403)
         self.assertEqual(Submission.objects.count(), 1)
 
-    def test_access_admin(self):
-        pass
-
 
 class TestPublicUserRole(BaseUserRoleTests):
 
@@ -746,6 +734,3 @@ class TestPublicUserRole(BaseUserRoleTests):
             reverse("core:submission-detail", kwargs={'pk': submission.pk})
         )
         self.assertEqual(resp.status_code, 401)
-
-    def test_access_admin(self):
-        pass
