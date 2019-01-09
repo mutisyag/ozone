@@ -57,17 +57,18 @@
 								</div>
 							</div>
 							<b-table show-empty
-                       outlined
-                       bordered
-                       hover
+												outlined
+												bordered
+												hover
 												head-variant="light"
 												stacked="md"
 												:filter="dataEntryTable.search"
 												:items="dataEntryTableItems"
-                       :fields="dataEntryTable.fields"
-                       :per-page="dataEntryTable.perPage"
-                       ref="dataEntryTable"
-											@filtered="onFiltered"
+												:fields="dataEntryTable.fields"
+												:per-page="dataEntryTable.perPage"
+												:current-page="dataEntryTable.currentPage"
+												ref="dataEntryTable"
+												@filtered="onFiltered"
 								>
 									<template slot="actions" slot-scope="row">
 										<router-link

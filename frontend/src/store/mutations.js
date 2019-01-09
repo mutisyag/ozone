@@ -94,7 +94,7 @@ const mutations = {
 		state.dashboard.table.filters.party = data
 	},
 	setDashboardMySubmissions(state, data) {
-		state.dashboard.mySubmissions = data.results
+		state.dashboard.mySubmissions = data
 	},
 	// alerts
 
