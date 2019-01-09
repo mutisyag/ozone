@@ -47,5 +47,5 @@ matrix:
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
       script:
-        - python manage.py createmessages
+        - python manage.py compilemessages
       after_success:
