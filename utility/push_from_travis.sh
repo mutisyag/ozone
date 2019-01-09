@@ -14,7 +14,7 @@ commit_translations() {
 
 upload_files() {
   git remote add origin-translations https://${GH_TOKEN}@github.com/eaudeweb/ozone-translations.git > /dev/null 2>&1
-  git push --quiet
+  git push --quiet --set-upstream origin-translations
 }
 
 cd translations
