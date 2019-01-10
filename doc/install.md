@@ -6,12 +6,17 @@
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
+       
+Optionally clone the translations as well in `translations` folder inside the ozone folder.
+        
+       git clone https://github.com/eaudeweb/ozone-translations.git translations
    
 2. Customize the Docker environment files:
 
        cp docker/demo.env.example docker/demo.env
        cp docker/smtp.env.example docker/smtp.env
        cp docker/postgres.env.example docker/postgres.env
+       cp docker/weblate.env.example docker/weblate.env
    
    Depending on the installation mode, create the docker-compose.override.yml file:
    
@@ -44,6 +49,10 @@
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
+       
+Optionally clone the translations as well in `translations` folder inside the ozone folder.
+        
+       git clone https://github.com/eaudeweb/ozone-translations.git translations
 
 3. Customize the environment files
 
@@ -63,7 +72,11 @@
         
         workon ozone
         
-5. Using PgAdmin (or from psql), create database `ozone` for user `ozone`.
+5. Install requirements:
+
+        pip install -r requirements/local.txt
+        
+6. Using PgAdmin (or from psql), create database `ozone` for user `ozone`.
 
    You can then run the migrations, load the fixtures and start the server:
    
@@ -71,3 +84,5 @@
         python manage.py load_inital_fixtures
         python manage.py createsuperuser
         python manage.py runserver 0.0.0.0:8000
+        
+7. See `frontend/README.md` for instructions on starting the frontend application.
