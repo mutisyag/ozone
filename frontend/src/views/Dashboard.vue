@@ -279,7 +279,7 @@ export default {
 					party: null
 				},
 				pageOptions: [10, 25, 100]
-			},
+			}
 		}
 	},
 
