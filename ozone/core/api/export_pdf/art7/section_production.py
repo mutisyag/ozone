@@ -11,7 +11,6 @@ from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
-from ..util import page_title
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -20,23 +19,22 @@ TABLE_IMPORTS_HEADER = (
     (
         p_c(_('Group')),
         p_c(_('Substance')),
-        p_c(_('Exporting party for quantities reported as imports')),
-        p_c(_('Total Quantity Imported for All Uses')),
+        p_c(_('Total production for all uses')),
+        p_c(_('Production for feedstock uses within your country')),
+        p_c(_('Production for exempted essential, '
+              'critical or other uses within your country')),
         '',
-        p_c(_('Quantity of new substances imported as feedstock')),
-        p_c(_('Quantity of new substance imported for exempted essential,'
-              'critical, high-ambient-temperature or other uses')),
-        ''
+        '',
     ),
     (
         '',
         '',
         '',
-        p_c(_('New')),
-        p_c(_('Recovered and reclaimed')),
         '',
         p_c(_('Quantity')),
-        p_c(_('Decision / type of use or remark')),
+        p_c(_('Decision / type of use')),
+        p_c(_('Production for supply to Article 5 countries in '
+              'accordance with Articles 2A 2H and 5')),
     ),
 )
 
@@ -69,9 +67,8 @@ TABLE_IMPORTS_HEADER_STYLE = (
     ('SPAN', (0, 0), (0, 1)),
     ('SPAN', (1, 0), (1, 1)),
     ('SPAN', (2, 0), (2, 1)),
-    ('SPAN', (3, 0), (4, 0)),
-    ('SPAN', (5, 0), (5, 1)),
-    ('SPAN', (6, 0), (7, 0)),
+    ('SPAN', (3, 0), (3, 1)),
+    ('SPAN', (4, 0), (5, 0)),
 )
 
 
@@ -81,7 +78,7 @@ def to_row_substance(obj):
     _q_pre_ship = obj.quantity_quarantine_pre_shipment
     q_pre_ship = (
         p_l(f'Quantity of new {substance.name} '
-            'imported to be used for QPS applications'),
+            'produced to be used for QPS applications'),
         p_l(str(_q_pre_ship))
     ) if _q_pre_ship else ()
 
@@ -108,24 +105,23 @@ def to_row_substance(obj):
     return (
         substance.group.group_id,
         p_l(substance.name),
-        p_l(obj.source_party.name),
-        str(obj.quantity_total_new or ''),
-        str(obj.quantity_total_recovered or ''),
+        str(obj.quantity_total_produced or ''),
         str(obj.quantity_feedstock or ''),
         (p_l(str(sum_quantities or '')), ) + q_pre_ship,
-        str(join_decisions or '')
+        str(join_decisions or ''),
+        str(obj.quantity_article_5 or '')
     )
 
 
 def mk_table_substances(submission):
-    # TODO: differentiate between blends and substances
-    imports = submission.article7imports.filter(blend_item__isnull=True)
+    imports = submission.article7productions.all()
     return map(to_row_substance, imports)
 
 
-def mk_table_blends(submission):
-    imports = submission.article7imports.filter(blend_item__isnull=False)
-    return map(to_row_substance, imports)
+def mk_table_substances_fii(submission):
+    # TODO: Differentiation between FII and non-FII does
+    # not appear to be implemented yet.
+    return []
 
 
 def table_from_data(data):
@@ -140,16 +136,15 @@ def table_from_data(data):
     )
 
 
-def export_imports(submission):
+def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
-    table_blends = tuple(mk_table_blends(submission))
+    table_substances_fii = tuple(mk_table_substances_fii(submission))
     return (
-        # TODO: Add explanatory texts.
+        # TODO: Add page headings, explanatory texts.
         PageBreak(),
-        page_title(_('IMPORTS')),
-        Paragraph(_('1.1 Substances'), STYLES['Heading2']),
+        Paragraph(_('3.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
-        Paragraph(_('1.2 Blends'), STYLES['Heading2']),
-        table_from_data(table_blends),
+        Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
+        table_from_data(table_substances_fii),
     )
