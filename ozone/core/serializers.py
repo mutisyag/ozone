@@ -31,6 +31,7 @@ from .models import (
     Article7NonPartyTrade,
     Article7Emission,
     HighAmbientTemperatureProduction,
+    DataOther,
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
@@ -581,6 +582,12 @@ class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
         exclude = ('submission', 'blend_item',)
 
 
+class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+    class Meta:
+        model = DataOther
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -740,6 +747,11 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         lookup_url_kwarg='submission_pk',
     )
 
+    data_others_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-data-others-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
     files_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-files-list',
         lookup_url_kwarg='submission_pk'
@@ -779,8 +791,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'article7destructions_url', 'article7productions_url',
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
-            'hat_productions_url',
-            'hat_imports_url',
+            'hat_productions_url', 'hat_imports_url', 'data_others_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
