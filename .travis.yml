@@ -32,21 +32,30 @@ matrix:
         - npm run testNoWatch
     - language: node_js
       name: "E2E Tests"
-      python:
-        - 3.6
       services: postgresql
       addons:
         postgresql: "9.4"
       before_install:
+        - sudo apt update
+        - sudo apt install -y software-properties-common
+        - sudo add-apt-repository -y ppa:deadsnakes/ppa
+        - sudo apt update
+        - sudo apt-get install -y python3.6 wget
+        - wget https://bootstrap.pypa.io/get-pip.py
+        - python3.6 get-pip.py
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
+        - alias python=python3.6
+        - alias pip=python3.6 -m pip
       install:
         - pip install -r requirements/local.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
         - nohup python manage.py runserver
+        - cd frontend && yarn install
       script:
-        - cd frontend && yarn e2e
+        - yarn e2e
+      after_success:
     - language: python
       name: "Update ozone-translations"
       python:
