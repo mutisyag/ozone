@@ -84,6 +84,26 @@ def to_row_substance(obj):
         p_l(str(_q_pre_ship))
     ) if _q_pre_ship else ()
 
+    sum_quantities = sum((
+        obj.quantity_essential_uses or 0,
+        obj.quantity_critical_uses or 0,
+        obj.quantity_high_ambient_temperature or 0,
+        obj.quantity_laboratory_analytical_uses or 0,
+        obj.quantity_process_agent_uses or 0,
+        obj.quantity_other_uses or 0,
+    ))
+
+    decisions_quantities = (
+        obj.decision_essential_uses,
+        obj.decision_critical_uses,
+        obj.decision_high_ambient_temperature,
+        obj.decision_laboratory_analytical_uses,
+        obj.decision_process_agent_uses,
+        obj.decision_other_uses,
+    )
+
+    join_decisions = ', '.join(filter(bool, decisions_quantities))
+
     return (
         substance.group.group_id,
         p_l(substance.name),
@@ -91,8 +111,8 @@ def to_row_substance(obj):
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(str(obj.quantity_essential_uses or '')), ) + q_pre_ship,
-        str(obj.decision_essential_uses or '')
+        (p_l(str(sum_quantities or '')), ) + q_pre_ship,
+        str(join_decisions or '')
     )
 
 
@@ -124,6 +144,7 @@ def export_imports(submission):
     table_blends = tuple(mk_table_blends(submission))
     return (
         # TODO: Add page headings, explanatory texts.
+        PageBreak(),
         Paragraph(_('1.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
