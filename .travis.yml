@@ -41,7 +41,7 @@ matrix:
         # See https://travis-ci.community/t/then-sudo-apt-get-update-failed-public-key-is-not-available-no-pubkey-6b05f25d762e3157-in-ubuntu-xenial/1728?u=alexkiro
         - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
         - sudo apt update --allow-unauthenticated
-        - sudo apt install -y wget tar
+        - sudo apt install -y wget tar openjdk-7-jre-headless chromium
         - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
         - source ~/.bashrc
         - nvm install node
@@ -54,6 +54,7 @@ matrix:
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
         - psql -c "CREATE DATABASE travisci;" -U postgres
+        - python manage.py migrate
         - nohup python manage.py runserver &
         - cd frontend && yarn install
       script:
