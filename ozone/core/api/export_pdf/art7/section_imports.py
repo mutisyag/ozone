@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
+from ..util import page_title
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -123,7 +124,8 @@ def export_imports(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_blends = tuple(mk_table_blends(submission))
     return (
-        # TODO: Add page headings, explanatory texts.
+        # TODO: Add explanatory texts.
+        page_title(_('IMPORTS')),
         Paragraph(_('1.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
