@@ -49,7 +49,7 @@ matrix:
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
         - alias python=python3.6
-        - alias pip=python3.6 -m pip
+        - alias pip='python3.6 -m pip'
       install:
         - pip install -r requirements/local.txt
       before_script:
