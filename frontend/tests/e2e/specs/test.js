@@ -4,14 +4,19 @@
 // http://nightwatchjs.org/guide#usage
 
 // or more concisely
-const sys = require('sys')
-const { exec } = require('child_process')
+const util = require('util')
+const execSync = util.promisify(require('child_process').execSync)
 
 module.exports = {
-	before: (browser) => {
-		console.log('Setting up...')
-		function puts(error, stdout, stderr) { sys.puts(stdout) }
-		exec('ls -la', puts)
+	before: () => {
+		console.log('running backend')
+		execSync('bash ../utility/setup_backend.sh', { env: process.env })
+		console.log('done running backend')
+	},
+	after: () => {
+		console.log('running cleanup')
+		execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
+		console.log('done running cleanup')
 	},
 	'default e2e tests': browser => {
 		browser
