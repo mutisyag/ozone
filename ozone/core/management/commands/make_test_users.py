@@ -20,6 +20,13 @@ class Command(BaseCommand):
     help = __doc__
 
     default_users = {
+        "admin": {
+            "party": None,
+            "is_secretariat": False,
+            "is_read_only": False,
+            "is_superuser": True,
+            "is_staff": True,
+        },
         "party": {
             "party": None,
             "is_secretariat": False,
@@ -92,7 +99,7 @@ class Command(BaseCommand):
         ).all()
 
         for user in to_create.values():
-            if user['is_secretariat']:
+            if user['is_secretariat'] or user.get("is_staff"):
                 # Secretariat users, don't need to have a party set.
                 continue
 
