@@ -39,7 +39,6 @@ matrix:
         postgresql: "9.4"
       before_install:
         - if ! [[ $TRAVIS_BRANCH = 'develop' && $TRAVIS_PULL_REQUEST = 'false' ]]; then exit 0; fi
-        - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
       install:
@@ -47,6 +46,7 @@ matrix:
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
       script:
+        - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - python manage.py makemessages
         - utility/push_from_travis.sh
 env:
