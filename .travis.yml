@@ -31,6 +31,7 @@ matrix:
       script:
         - npm run testNoWatch
     - language: node_js
+      dist: xenial
       name: "E2E Tests"
       services: postgresql
       addons:
@@ -51,7 +52,7 @@ matrix:
         - pip install -r requirements/local.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
-        - nohup python manage.py runserver
+        - nohup python manage.py runserver &
         - cd frontend && yarn install
       script:
         - yarn e2e
