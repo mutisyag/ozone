@@ -8,6 +8,7 @@ const util = require('util')
 const execSync = util.promisify(require('child_process').execSync)
 
 module.exports = {
+
 	before: () => {
 		console.log('running backend')
 		execSync('bash ../utility/setup_backend.sh', { env: process.env })
