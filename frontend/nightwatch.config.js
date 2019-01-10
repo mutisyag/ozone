@@ -5,7 +5,9 @@ module.exports = {
 				browserName: 'chrome',
 				chromeOptions: {
 					args: [
-						'--headless'
+						'--headless',
+						'--no-sandbox',
+						'--disable-dev-shm-usage',
 					]
 				},
 				acceptSslCerts: true

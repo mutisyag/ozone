@@ -37,11 +37,12 @@ matrix:
       services: postgresql
       addons:
         postgresql: "9.4"
+        chrome: stable
       before_install:
         # See https://travis-ci.community/t/then-sudo-apt-get-update-failed-public-key-is-not-available-no-pubkey-6b05f25d762e3157-in-ubuntu-xenial/1728?u=alexkiro
         - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
         - sudo apt update --allow-unauthenticated
-        - sudo apt install -y wget tar chromium
+        - sudo apt install -y wget tar
         - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
         - source ~/.bashrc
         - nvm install node
