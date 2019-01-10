@@ -19,17 +19,21 @@ __all__ = [
 
 STYLES = getSampleStyleSheet()
 
+FONTSIZE_TABLE = 8
 
 TABLE_STYLES = (
+    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
     ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
 )
 
 
-def _p(style_name, align, txt):
+def _p(style_name, align, txt, fontSize=None):
     style = STYLES[style_name]
     style.alignment = align
+    if fontSize:
+        style.fontSize = fontSize
     return Paragraph(txt, style)
 
 
-p_c = partial(_p, 'BodyText', TA_CENTER)
-p_l = partial(_p, 'BodyText', TA_LEFT)
+p_c = partial(_p, 'BodyText', TA_CENTER, fontSize=FONTSIZE_TABLE)
+p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
