@@ -37,3 +37,4 @@ def _p(style_name, align, txt, fontSize=None):
 
 p_c = partial(_p, 'BodyText', TA_CENTER, fontSize=FONTSIZE_TABLE)
 p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
+page_title = partial(_p, 'Heading1', TA_CENTER)
