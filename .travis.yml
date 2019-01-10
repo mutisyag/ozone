@@ -31,7 +31,6 @@ matrix:
       script:
         - npm run testNoWatch
     - language: node_js
-      dist: xenial
       name: "E2E Tests"
       services: postgresql
       addons:
@@ -51,7 +50,7 @@ matrix:
         - alias python=python3.6
         - alias pip='python3.6 -m pip'
       install:
-        - pip install -r requirements/local.txt
+        - sudo pip install -r requirements/local.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
         - nohup python manage.py runserver &
