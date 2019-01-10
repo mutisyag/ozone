@@ -30,6 +30,23 @@ matrix:
       before_script:
       script:
         - npm run testNoWatch
+    - language: node_js
+      name: "E2E Tests"
+      python:
+        - 3.6
+      services: postgresql
+      addons:
+        postgresql: "9.4"
+      before_install:
+        - export DJANGO_SETTINGS_MODULE=config.settings.test
+        - source .envrc.travis
+      install:
+        - pip install -r requirements/local.txt
+      before_script:
+        - psql -c "CREATE DATABASE travisci;" -U postgres
+        - nohup python manage.py runserver
+      script:
+        - cd frontend && yarn e2e
     - language: python
       name: "Update ozone-translations"
       python:
