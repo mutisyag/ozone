@@ -93,7 +93,7 @@ export default {
 			handler() {
 				this.currentTyping = this.field.selected
 			}
-		},
+		}
 	}
 }
 
