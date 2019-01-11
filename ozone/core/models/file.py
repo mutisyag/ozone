@@ -122,9 +122,9 @@ class SubmissionFile(ModifyPreventionMixin, File):
             }
         )
 
-    def has_valid_extension(self):
-        #TODO: implement
-        return True
+    @staticmethod
+    def has_valid_extension(self, filename):
+        return filename.split('.')[-1].lower() in settings.ALLOWED_FILE_EXTENSIONS
 
     def __str__(self):
         return f'File {self.file.name} for submission {self.submission}'
