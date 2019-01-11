@@ -32,7 +32,7 @@
             <div slot="header">
               <strong>Data entry submissions ({{dataEntryTable.totalRows}} records)</strong>
 						</div>
-							<div class="mt-2 mb-2">
+							<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
 								<div class="filter-group mb-2">
 									<b-input-group prepend="Search">
 										<b-form-input v-model="dataEntryTable.search"/>
@@ -79,11 +79,11 @@
 										</router-link>
                   </template>
               </b-table>
-							<b-row>
-                <b-col md="8" class="my-1">
+							<b-row v-if="currentUser.is_secretariat">
+                <b-col md="9" class="my-1">
                   <b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
                 </b-col>
-								<b-col md="4">
+								<b-col md="3">
                   <b-input-group horizontal prepend="Per page" class="mb-0">
                     <b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage" />
                   </b-input-group>
@@ -102,7 +102,7 @@
               </b-row>
             </template>
             <b-container fluid>
-              <div class="mt-2 mb-2 dashboard-filters">
+              <div  class="mt-2 mb-2 dashboard-filters">
 								<b-input-group prepend="Search">
 									<b-form-input v-model="tableOptions.filters.search"/>
 								</b-input-group>
@@ -184,10 +184,10 @@
               </b-table>
 
               <b-row>
-                <b-col md="8" class="my-1">
+                <b-col md="10" class="my-1">
                   <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
-								<b-col md="4">
+								<b-col md="2">
                   <b-input-group horizontal prepend="Per page" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
