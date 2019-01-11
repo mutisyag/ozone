@@ -31,7 +31,7 @@ FROM python:3.6-slim
 # Can be overriden by compose
 ARG REQUIREMENTS_FILE=requirements/local.txt
 
-RUN runDeps="netcat libpq-dev" \
+RUN runDeps="netcat libpq-dev gettext" \
     && apt-get update -y \
     && apt-get install -y --no-install-recommends $runDeps \
     && apt-get clean \

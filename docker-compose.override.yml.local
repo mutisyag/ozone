@@ -30,6 +30,10 @@ services:
     ports:
       - "80:80"
 
+  weblate:
+    ports:
+      - "8081:80"
+
 volumes:
   pg-data:
     driver: local
@@ -40,4 +44,10 @@ volumes:
   static-files:
     driver: local
   envelope-files:
+    driver: local
+  weblate-data:
+    driver: local
+  pg-weblate-data:
+    driver: local
+  redis-data:
     driver: local
