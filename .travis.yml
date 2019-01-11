@@ -56,6 +56,8 @@ matrix:
       addons:
       node_js:
         - node
+      before_install:
+        - if ! [[ $TRAVIS_BRANCH = 'develop' && $TRAVIS_PULL_REQUEST = 'false' ]]; then exit 0; fi
       install:
         - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - cd frontend && yarn install
