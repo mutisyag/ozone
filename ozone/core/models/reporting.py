@@ -486,6 +486,17 @@ class Submission(models.Model):
             })
         return True
 
+    def can_change_remark(self, user, field_name):
+        if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
+            # Secretariat users cannot modify any of the party fields, if the
+            # submission was filled by a party.
+            return False
+        elif not user.is_secretariat and field_name.endswith("_secretariat"):
+            # Party users cannot modify any of the secretariat remark fields
+            return False
+
+        return True
+
     def check_remarks(self, user, remarks):
         """
         Raise error if the user has change any remarks he was not allowed to
@@ -500,12 +511,7 @@ class Submission(models.Model):
                 # No value changed
                 continue
 
-            if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
-                # Secretariat users cannot modify any of the party fields, if the
-                # submission was filled by a party.
-                wrongly_modified_remarks.append(field_name)
-            elif not user.is_secretariat and field_name.endswith("_secretariat"):
-                # Party users cannot modify any of the secretariat remark fields
+            if not self.can_change_remark(user, field_name):
                 wrongly_modified_remarks.append(field_name)
 
         if len(wrongly_modified_remarks) > 0:

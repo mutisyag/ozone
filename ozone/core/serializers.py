@@ -782,6 +782,9 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
 
@@ -801,6 +804,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'data_changes_allowed', 'is_current', 'is_cloneable',
             'changeable_flags',  'flag_provisional', 'flag_valid',
             'flag_superseded',
+            'can_change_remarks_party', 'can_change_remarks_secretariat',
         )
 
         read_only_fields = (
@@ -818,6 +822,14 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     def get_changeable_flags(self, obj):
         user = self.context['request'].user
         return obj.get_changeable_flags(user)
+
+    def get_can_change_remarks_party(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_remark(user, 'remarks_party')
+
+    def get_can_change_remarks_secretariat(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_remark(user, 'remarks_secretariat')
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
