@@ -5,7 +5,7 @@
 		<template slot="header">
 			<b-row>
 				<b-col cols="4">
-                    <b-input-group prepend="Name">
+                    <b-input-group :prepend="$gettext('Name')">
                       <b-form-input v-model="table.filters.searchName" />
                     </b-input-group>
                 </b-col>
@@ -80,48 +80,48 @@ export default {
 			table: {
 				fields: [{
 					key: 'name',
-					label: 'Name',
+					label: this.$gettext('Name'),
 					class: 'text-left width-200',
 					sortable: true
 				}, {
 					key: 'is_eu_member',
-					label: 'EU Member',
+					label: this.$gettext('EU Member'),
 					...sortableAndTextCenter
 				}, {
 					key: 'is_article5',
-					label: 'Article 5 party',
+					label: this.$gettext('Article 5 party'),
 					...sortableAndTextCenter
 				}, {
 					key: 'is_high_ambient_temperature',
-					label: 'HAT',
+					label: this.$gettext('HAT'),
 					...sortableAndTextCenter
 				}, {
 					key: 'vienna_convention',
-					label: 'Vienna Convention',
+					label: this.$gettext('Vienna Convention'),
 					...sortableAndTextCenter
 				}, {
 					key: 'montreal_protocol',
-					label: 'Montreal Protocol',
+					label: this.$gettext('Montreal Protocol'),
 					...sortableAndTextCenter
 				}, {
 					key: 'london_amendment',
-					label: 'London Amendment',
+					label: this.$gettext('London Amendment'),
 					...sortableAndTextCenter
 				}, {
 					key: 'copenhagen_amendment',
-					label: 'Copenhagen Amendment',
+					label: this.$gettext('Copenhagen Amendment'),
 					...sortableAndTextCenter
 				}, {
 					key: 'montreal_amendment',
-					label: 'Montreal Amendment',
+					label: this.$gettext('Montreal Amendment'),
 					...sortableAndTextCenter
 				}, {
 					key: 'beijing_amendment',
-					label: 'Beijing Amendment',
+					label: this.$gettext('Beijing Amendment'),
 					...sortableAndTextCenter
 				}, {
 					key: 'kigali_amendment',
-					label: 'Kigali Amendment',
+					label: this.$gettext('Kigali Amendment'),
 					...sortableAndTextCenter
 				}],
 				currentPage: 1,
