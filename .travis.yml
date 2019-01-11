@@ -39,20 +39,7 @@ matrix:
         postgresql: "9.4"
         chrome: stable
       before_install:
-        # XXX Remove this when Travis fixes their issues.
-        # See https://travis-ci.community/t/then-sudo-apt-get-update-failed-public-key-is-not-available-no-pubkey-6b05f25d762e3157-in-ubuntu-xenial/1728?u=alexkiro
-        - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
-        # Install nvm
-        - sudo apt update --allow-unauthenticated
-        - sudo apt install -y wget tar
-        - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
-        - source ~/.bashrc
-        # Install node
-        - nvm install node
-        - node --version
-        - npm --version
-        # Install yarn
-        - npm install --global yarn
+        - ./utility/install_node.sh
       install:
         - pip install -r requirements/local.txt
       before_script:
@@ -86,15 +73,17 @@ matrix:
         - python manage.py makemessages
         - cd translations
         - ../utility/push_from_travis.sh
-    - language: node_js
+    - language: python
       name: "Update ozone-translations Frontend"
+      python:
+        - 3.6
       services:
       addons:
-      node_js:
-        - node
       before_install:
         - if ! [[ $TRAVIS_BRANCH = 'develop' && $TRAVIS_PULL_REQUEST = 'false' ]]; then exit 0; fi
+        - ./utility/install_node.sh
       install:
+        - pip install -r requirements/translations.txt
         - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - cd frontend && yarn install
       before_script:
