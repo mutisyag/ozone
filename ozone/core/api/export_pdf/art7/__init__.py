@@ -8,6 +8,7 @@ from .section_production import export_production
 __all__ = [
     'export_submission',
     'export_imports',
+    'export_exports',
     'export_production',
 ]
 
