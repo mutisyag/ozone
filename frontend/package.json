@@ -7,6 +7,7 @@
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit --watch",
     "e2e": "vue-cli-service test:e2e",
+    "e2e-local": "vue-cli-service test:e2e --config node_modules/@vue/cli-plugin-e2e-nightwatch/nightwatch.config.js",
     "testNoWatch": "vue-cli-service test:unit"
   },
   "dependencies": {
