@@ -31,7 +31,7 @@ matrix:
       script:
         - npm run testNoWatch
     - language: python
-      name: "Update ozone-translations"
+      name: "Update ozone-translations Backend"
       python:
         - 3.6
       services: postgresql
@@ -48,6 +48,22 @@ matrix:
       script:
         - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - python manage.py makemessages
+        - cd translations
+        - utility/push_from_travis.sh
+    - language: node_js
+      name: "Update ozone-translations Frontend"
+      services:
+      addons:
+      node_js:
+        - node
+      install:
+        - git clone https://github.com/eaudeweb/ozone-translations.git translations
+        - cd frontend && yarn install
+      before_script:
+      script:
+        - make makemessages
+        - cd ../translations
+        - git pull
         - utility/push_from_travis.sh
 env:
   global:
