@@ -109,6 +109,7 @@ matrix:
         # Install yarn
         - npm install --global yarn
       install:
+        - pip install -r requirements/translations.txt
         - git clone https://github.com/eaudeweb/ozone-translations.git translations
         - cd frontend && yarn install
       before_script:
