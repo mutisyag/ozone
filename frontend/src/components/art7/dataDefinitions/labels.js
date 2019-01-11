@@ -32,8 +32,8 @@ const labels = {
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
 		remarks_party: 'Remarks (Party)',
-		imports_remarks_secretariat: 'Remarks (Secretariat)',
-		imports_remarks_party: 'Remarks (Party)'
+		imports_remarks_secretariat: 'Comments (Secretariat)',
+		imports_remarks_party: 'Comments (Party)'
 	},
 	has_exports: {
 		substance: 'Substances',
@@ -66,8 +66,8 @@ const labels = {
 		quantity: 'Quantity',
 		remarks_os: 'Remarks (Secretariat)',
 		remarks_party: 'Remarks (Party)',
-		exports_remarks_party: 'Remarks (Party)',
-		exports_remarks_secretariat: 'Remarks (Secretariat)'
+		exports_remarks_party: 'Comments (Party)',
+		exports_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_produced: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -94,8 +94,8 @@ const labels = {
 		quantity_exempted: 'Production for exempted essential, critical or other uses within your country',
 		decision: 'Decision',
 		quantity: 'Quantity',
-		production_remarks_party: 'Remarks (Party)',
-		production_remarks_secretariat: 'Remarks (Secretariat)'
+		production_remarks_party: 'Comments (Party)',
+		production_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_destroyed: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -104,8 +104,8 @@ const labels = {
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
 		blend: 'Blend',
-		destruction_remarks_party: 'Remarks (Party)',
-		destruction_remarks_secretariat: 'Remarks (Secretariat)'
+		destruction_remarks_party: 'Comments (Party)',
+		destruction_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_nonparty: {
 		remarks_party: 'Remarks (Secretariat)',
@@ -118,8 +118,8 @@ const labels = {
 		substance: 'Substance',
 		blend: 'Blend',
 		trade_party: 'Exporting party for quantities reported as imports or country of destination of exports',
-		nonparty_remarks_party: 'Remarks (Party)',
-		nonparty_remarks_secretariat: 'Remarks (Secretariat)'
+		nonparty_remarks_party: 'Comments (Party)',
+		nonparty_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_emissions: {
 		facility_name: 'Facility name or identifier',
@@ -129,8 +129,8 @@ const labels = {
 		quantity_emitted: 'Amount of emissions',
 		remarks_party: 'Remarks (Secretariat)',
 		remarks_os: 'Remarks (Party)',
-		emissions_remarks_party: 'Remarks (Party)',
-		emissions_remarks_secretariat: 'Remarks (Secretariat)'
+		emissions_remarks_party: 'Comments (Party)',
+		emissions_remarks_secretariat: 'Comments (Secretariat)'
 	}
 }
 
