@@ -103,7 +103,7 @@
 			</div>
 		</div>
     <hr>
-    <AppAside v-if="hasInvalidFields" fixed>
+    <AppAside fixed>
       <DefaultAside v-on:fillSearch="table.tableFilters = true; table.filters.search = $event.facility"  :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
   </div>
