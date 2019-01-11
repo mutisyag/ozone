@@ -130,3 +130,5 @@ celerybeat*
 
 # direnv
 .envrc
+
+translations
