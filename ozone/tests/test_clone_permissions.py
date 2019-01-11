@@ -48,7 +48,6 @@ class ClonePermissionsTests(BaseTests):
         )
         ReportingChannelFactory()
 
-
     def test_clone_secretariat(self):
         """
         Testing `clone` action using a secretariat user.
@@ -62,13 +61,7 @@ class ClonePermissionsTests(BaseTests):
         )
         submission._current_state = 'submitted'
         submission.save()
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:submission-clone",kwargs={'pk': submission.pk})
         )
@@ -88,13 +81,7 @@ class ClonePermissionsTests(BaseTests):
         )
         submission._current_state = 'submitted'
         submission.save()
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:submission-clone", kwargs={'pk': submission.pk}),
             {"party": self.party.pk}
@@ -115,13 +102,7 @@ class ClonePermissionsTests(BaseTests):
         )
         submission._current_state = 'submitted'
         submission.save()
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:submission-clone",
                     kwargs={'pk': submission.pk}),
@@ -143,13 +124,7 @@ class ClonePermissionsTests(BaseTests):
         )
         submission._current_state = 'submitted'
         submission.save()
-
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:submission-clone",
                     kwargs={'pk': submission.pk}),
