@@ -29,6 +29,7 @@ __all__ = [
     'Submission',
     'SubmissionInfo',
     'ReportingChannel',
+    'OtherSubmissionType',
 ]
 
 SUBMISSION_ROOT_DIR = 'submissions'
@@ -862,3 +863,15 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
 
     def __str__(self):
         return f'{self.submission} - Info'
+
+
+class OtherSubmissionType(models.Model):
+    """
+    Model for storing other types of submission.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.name
