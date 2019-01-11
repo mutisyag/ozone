@@ -21,7 +21,7 @@ GETTEXT_SOURCES ?= $(shell find $(INPUT_FILES) -name '*.jade' -o -name '*.html' 
 .PHONY: clean makemessages translations
 
 clean:
-	rm -f /tmp/template.pot $(OUTPUT_DIR)/translations.json
+	rm -f /tmp/template.pot /tmp/template.pot-babel /tmp/template.pot-gettext $(OUTPUT_DIR)/translations.json
 
 makemessages: /tmp/template.pot
 
@@ -35,7 +35,9 @@ translations: ./$(OUTPUT_DIR)/translations.json
 # => `mkdir -p /tmp/`
 	mkdir -p $(dir $@)
 # Extract gettext strings from templates files and create a POT dictionary template.
-	gettext-extract --quiet --attribute v-translate --startDelimiter "" --endDelimiter "" --output $@ $(GETTEXT_SOURCES)
+	gettext-extract --quiet --attribute v-translate --output $@-gettext $(GETTEXT_SOURCES)
+	pybabel extract -F babel.cfg --keywords '$$gettext' -o $@-babel $(GETTEXT_SOURCES)
+	msgcat $@-gettext $@-babel -o $@
 # Generate .po files for each available language.
 	@for lang in $(LOCALES); do \
 		export PO_FILE=$(OUTPUT_DIR)/locale/$$lang/LC_MESSAGES/app.po; \

@@ -36,13 +36,6 @@ Vue.use(GetTextPlugin, {
 	silent: false
 })
 
-// See https://github.com/Polyconseil/vue-gettext/issues/9#issuecomment-354278897
-Vue.filter('translate', value => {
-	if (!value) {
-		return ''
-	}
-	return Vue.prototype.$gettext(value.toString())
-})
 
 new Vue({
 	router,

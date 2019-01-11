@@ -5,7 +5,7 @@
 		<template slot="header">
 			<b-row>
 				<b-col>
-					<b-input-group :prepend="'Name' | translate">
+					<b-input-group :prepend="$gettext('Name')">
 								<b-form-input v-model="table.filters.searchName" />
 					</b-input-group>
         </b-col>
@@ -19,7 +19,7 @@
 							:close-on-select="false"
 							label="text"
 							trackBy="value"
-							:placeholder="'Components' | translate"
+							:placeholder="$gettext('Components')"
 							v-model="table.filters.selectedComponentsNames"
 							:options="searchComponentOptions"> </multiselect>
 						<b-input-group-append>
