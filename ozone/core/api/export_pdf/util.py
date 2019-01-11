@@ -29,21 +29,13 @@ TABLE_STYLES = (
 )
 
 
-BASIC_Q_TYPES = (
-    'Essential use, other than L&A',
-    'Critical use',
-    'High ambient temperature',
-    'Laboratory and analytical',
-    'Process agent uses',
-    'Other/unspecified'
-)
-
-
-def _p(style_name, align, txt, fontSize=None):
+def _p(style_name, align, txt, fontSize=None, fontName=None):
     style = STYLES[style_name]
     style.alignment = align
     if fontSize:
         style.fontSize = fontSize
+    if fontName:
+        style.fontName = fontName
     return Paragraph(txt, style)
 
 
@@ -53,18 +45,36 @@ p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 page_title = partial(_p, 'Heading1', TA_CENTER)
 
 
+BASIC_Q_TYPES = (
+    'Essential use, other than L&amp;A',
+    'Critical use',
+    'High ambient temperature',
+    'Laboratory and analytical',
+    'Process agent uses',
+    'Other/unspecified'
+)
+
 def makeBulletList(list):
     bullets=ListFlowable(
-        [ListItem(
-            _p('BodyText', TA_LEFT, x, fontSize=6),
-            leftIndent=35, bulletColor='black', value='circle'
-        ) for x in list], bulletType='bullet'
+        [
+            ListItem(
+                _p('BodyText', TA_LEFT, x, fontSize=7),
+                leftIndent=10, bulletColor='black', value='circle'
+            ) for x in list
+        ],
+        bulletType='bullet', bulletFontSize=3, leftIndent=5,
     )
+
     return bullets
 
-def get_q_label(q_list):
+def get_substance_label(q_list, type):
     pairs = tuple(zip(BASIC_Q_TYPES, map(str,q_list)))
-    _filtered_pairs = tuple(filter(lambda x: x[1] != '0.0', pairs))
+
+    if type=='quantity':
+        _filtered_pairs = tuple(filter(lambda x: x[1] != '0.0', pairs))
+    else:
+        _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
+
 
     filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
 

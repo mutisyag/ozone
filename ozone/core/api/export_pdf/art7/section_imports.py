@@ -12,7 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title
-from ..util import get_q_label
+from ..util import get_substance_label
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -93,11 +93,10 @@ def to_row_substance(obj):
         obj.quantity_process_agent_uses or 0,
         obj.quantity_other_uses or 0,
     )
-    label = get_q_label(quantities)
-    # import pdb; pdb.set_trace()
+    q_label = get_substance_label(quantities, type='quantity')
     sum_quantities = sum(quantities)
 
-    decisions_quantities = (
+    decisions= (
         obj.decision_essential_uses,
         obj.decision_critical_uses,
         obj.decision_high_ambient_temperature,
@@ -105,8 +104,10 @@ def to_row_substance(obj):
         obj.decision_process_agent_uses,
         obj.decision_other_uses,
     )
+    d_label = get_substance_label(decisions, type='decision')
+    join_decisions = ', '.join(filter(bool, decisions))
 
-    join_decisions = ', '.join(filter(bool, decisions_quantities))
+    # import pdb; pdb.set_trace()
 
     return (
         substance.group.group_id,
@@ -115,8 +116,9 @@ def to_row_substance(obj):
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(str(sum_quantities or '')), ) + (label, ) + q_pre_ship,
-        str(join_decisions or '')
+        (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'), ) +
+        (q_label, ) + q_pre_ship,
+        (p_l(str(join_decisions or ''), fontName='Helvetica-Bold'),) + (d_label,)
     )
 
 
@@ -158,5 +160,4 @@ def export_imports(submission):
         PageBreak(),
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
         table_from_data(table_blends),
-        (get_q_label([1.1,2.2]))
     )
