@@ -5,7 +5,7 @@
 		<template slot="header">
 			<b-row>
 				<b-col>
-					<b-input-group prepend="Name / Other Names">
+					<b-input-group :prepend="'Name' | translate">
 								<b-form-input v-model="table.filters.searchName" />
 					</b-input-group>
         </b-col>
@@ -19,12 +19,12 @@
 							:close-on-select="false"
 							label="text"
 							trackBy="value"
-							placeholder="Components"
+							:placeholder="'Components' | translate"
 							v-model="table.filters.selectedComponentsNames"
 							:options="searchComponentOptions"> </multiselect>
 						<b-input-group-append>
 							<b-btn  variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
-								Sort
+								<span v-translate>Sort</span>
 								<i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
 								<i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
 							</b-btn>
@@ -33,7 +33,7 @@
                 </b-col>
 				<b-col>
                     <b-input-group-append>
-                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">Clear</b-btn>
+                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters"><span v-translate>Clear</span></b-btn>
                     </b-input-group-append>
                 </b-col>
 			</b-row>

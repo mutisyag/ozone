@@ -39,7 +39,7 @@ class Command(BaseCommand):
         "ImpEssenUse",
         "ImpProcAgent",
         "ImpQuarAppl",
-        # "ImpLabUse",
+        "ImpLabUse",
         "ImpPolyol",
     )
 
@@ -165,7 +165,7 @@ class Command(BaseCommand):
                 "quantity_critical_uses": None,
                 "quantity_essential_uses": import_row["ImpEssenUse"],
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": None,
+                "quantity_laboratory_analytical_uses": import_row["ImpLabUse"],
                 "quantity_process_agent_uses": import_row["ImpProcAgent"],
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
                 "quantity_polyols": import_row["ImpPolyol"],
@@ -428,7 +428,7 @@ class Command(BaseCommand):
                 "quantity_critical_uses": None,
                 "quantity_essential_uses": None,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": None,
+                "quantity_laboratory_analytical_uses": produce_row["ProdLabUse"],
                 "quantity_process_agent_uses": produce_row["ProdProcAgent"],
                 "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
                 "quantity_total_produced": produce_row["ProdAllNew"],

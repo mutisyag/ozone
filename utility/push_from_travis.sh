@@ -17,7 +17,6 @@ upload_files() {
   git push --quiet --set-upstream origin-translations
 }
 
-cd translations
 setup_git
 commit_translations
 upload_files
