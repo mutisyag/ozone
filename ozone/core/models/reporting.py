@@ -876,6 +876,8 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
         on_delete=models.PROTECT
     )
 
+    tracker = FieldTracker()
+
     def __str__(self):
         return f'{self.submission} - Info'
 
