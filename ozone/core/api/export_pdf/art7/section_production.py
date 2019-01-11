@@ -4,13 +4,14 @@ from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
-from reportlab.lib.units import inch
+from reportlab.lib.units import cm
 
 
 from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
+from ..util import page_title
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -140,8 +141,12 @@ def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_substances_fii = tuple(mk_table_substances_fii(submission))
     return (
-        # TODO: Add page headings, explanatory texts.
         PageBreak(),
+        page_title(_('PRODUCTION')),
+        p_c(_(
+            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
+        ), fontSize=10),
+        Spacer(1, cm),
         Paragraph(_('3.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),

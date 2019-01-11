@@ -4,8 +4,7 @@ from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import inch
+from reportlab.lib.units import cm
 
 
 from django.utils.translation import gettext_lazy as _
@@ -146,9 +145,12 @@ def export_exports(submission):
     table_blends = tuple(mk_table_blends(submission))
 
     return (
-        # TODO: Add explanatory texts.
         PageBreak(),
         page_title(_('EXPORTS')),
+        p_c(_(
+            'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
+        ), fontSize=10),
+        Spacer(1, cm),
         Paragraph(_('2.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),

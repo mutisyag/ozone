@@ -4,8 +4,7 @@ from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
-from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import inch
+from reportlab.lib.units import cm
 
 
 from django.utils.translation import gettext_lazy as _
@@ -93,9 +92,12 @@ def export_destruction(submission):
     table_blends = tuple(mk_table_blends(submission))
 
     return (
-        # TODO: Add explanatory texts.
         PageBreak(),
         page_title(_('QUANTITY OF SUBSTANCES DESTROYED ')),
+        p_c(_(
+            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
+        ), fontSize=10),
+        Spacer(1, cm),
         Paragraph(_('4.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
