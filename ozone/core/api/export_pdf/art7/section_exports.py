@@ -78,24 +78,24 @@ TABLE_IMPORTS_HEADER_STYLE = (
 def to_row_substance(obj):
     substance = obj.substance
 
-    _q_sum = sum([
+    _q_sum = sum((
         obj.quantity_essential_uses or 0,
         obj.quantity_critical_uses or 0,
         obj.quantity_high_ambient_temperature or 0,
         obj.quantity_laboratory_analytical_uses or 0,
         obj.quantity_process_agent_uses or 0,
         obj.quantity_other_uses or 0,
-    ])
+    ))
     _q_exported = str(_q_sum) if _q_sum > 0 else ''
 
-    _decisions = [
+    _decisions = (
         obj.decision_critical_uses,
         obj.decision_essential_uses,
         obj.decision_high_ambient_temperature,
         obj.decision_laboratory_analytical_uses,
         obj.decision_other_uses,
         obj.decision_process_agent_uses,
-    ]
+    )
     decisions = ','.join(list(filter(None,_decisions)))
 
     q_polyols = (

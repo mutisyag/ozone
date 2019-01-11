@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title
+from ..util import get_q_label
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -74,7 +75,6 @@ TABLE_IMPORTS_HEADER_STYLE = (
     ('SPAN', (6, 0), (7, 0)),
 )
 
-
 def to_row_substance(obj):
     substance = obj.substance
 
@@ -85,14 +85,17 @@ def to_row_substance(obj):
         p_l(str(_q_pre_ship))
     ) if _q_pre_ship else ()
 
-    sum_quantities = sum((
+    quantities = (
         obj.quantity_essential_uses or 0,
         obj.quantity_critical_uses or 0,
         obj.quantity_high_ambient_temperature or 0,
         obj.quantity_laboratory_analytical_uses or 0,
         obj.quantity_process_agent_uses or 0,
         obj.quantity_other_uses or 0,
-    ))
+    )
+    label = get_q_label(quantities)
+    # import pdb; pdb.set_trace()
+    sum_quantities = sum(quantities)
 
     decisions_quantities = (
         obj.decision_essential_uses,
@@ -112,7 +115,7 @@ def to_row_substance(obj):
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(str(sum_quantities or '')), ) + q_pre_ship,
+        (p_l(str(sum_quantities or '')), ) + (label, ) + q_pre_ship,
         str(join_decisions or '')
     )
 
@@ -155,4 +158,5 @@ def export_imports(submission):
         PageBreak(),
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
         table_from_data(table_blends),
+        (get_q_label([1.1,2.2]))
     )
