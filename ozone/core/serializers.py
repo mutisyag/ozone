@@ -586,7 +586,7 @@ class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
         return ret
 
 
-class Article7ExportSerializer(DataCheckRemarksMixIn,BaseBlendCompositionSerializer):
+class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
     group = serializers.CharField(source='substance.group.group_id', default='',
                                   read_only=True)
 
