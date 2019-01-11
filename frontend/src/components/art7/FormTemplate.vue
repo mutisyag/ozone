@@ -99,16 +99,14 @@
 							{{cell.item.group}}
 						</div>
 						<b-btn-group class="row-controls">
-							<b-btn
-								variant="outline-info"
+							<span
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square"></i></b-btn>
-							<b-btn
+							><i class="fa fa-pencil-square-o fa-lg"></i></span>
+							<span
 								v-if="!isReadOnly"
-								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
-							><i class="fa fa-times"></i></b-btn>
+							><i class="fa fa-trash fa-lg"></i></span>
 						</b-btn-group>
 					</template>
 					<template
@@ -139,7 +137,7 @@
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
@@ -236,16 +234,16 @@
 							{{cell.item.group}}
 						</div>
 						<b-btn-group class="row-controls">
-							<b-btn
-								variant="outline-info"
+							<span
+								variant="link"
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square"></i></b-btn>
-							<b-btn
+							><i class="fa fa-pencil-square-o fa-lg"></i></span>
+							<span
 								v-if="!isReadOnly"
-								variant="outline-danger"
+								variant="link"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
-							><i class="fa fa-times"></i></b-btn>
+							><i class="fa fa-trash fa-lg"></i></span>
 						</b-btn-group>
 					</template>
 
@@ -266,7 +264,7 @@
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
@@ -369,16 +367,14 @@
 							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}
 						</div>
 						<b-btn-group class="row-controls">
-							<b-btn
-								variant="outline-info"
+							<span
 								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square"></i></b-btn>
-							<b-btn
+							><i class="fa fa-pencil-square-o fa-lg"></i></span>
+							<span
 								v-if="!isReadOnly"
-								variant="outline-danger"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn"
-							><i class="fa fa-times"></i></b-btn>
+							><i class="fa fa-trash fa-lg"></i></span>
 						</b-btn-group>
 					</template>
 					<template :slot="getCountrySlot" slot-scope="cell">
@@ -402,7 +398,7 @@
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
@@ -476,7 +472,7 @@
     <hr>
 
     <AppAside v-if="!isReadOnly" fixed>
-      <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
+      <DefaultAside  v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
@@ -545,17 +541,16 @@
             <b-col lg="3" class="mb-2">
               <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
-            <b-col lg="3">
+            <b-col lg="6">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
-					style="max-width: 50%"
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
 					:disabled="isReadOnly"
 					:field="modal_data.field[`quantity_${order}`]"
                 ></fieldGenerator>
               </b-input-group>
             </b-col>
-            <b-col lg="6">
+            <b-col lg="3">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
@@ -653,6 +648,20 @@ export default {
 					return parseInt(value)
 				}
 				return value.toPrecision(3)
+			}
+		},
+
+		fillTableSearch(data) {
+			if (data.substance && data.substance === 'HFC-23' && this.tabName === 'has_produced') {
+				this.tableFII.filters.search = data.substance
+				this.tableFII.tableFilters = true
+			} else if (data.substance) {
+				this.table.filters.search = data.substance
+				this.table.tableFilters = true
+			}
+			if (data.blend) {
+				this.tableBlends.filters.search = data.blend
+				this.tableBlends.tableFilters = true
 			}
 		},
 		anotherSpecialCase(order, modal_data) {
@@ -783,6 +792,11 @@ export default {
 				if (Object.keys(tableRow).length) {
 					tableRow.originalObj = element
 					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					if (tableRow.originalObj.validation.selected.length) {
+						tableRow.validation = 'invalid'
+					} else {
+						tableRow.validation = 'valid'
+					}
 					tableFields.push(tableRow)
 				}
 			})
@@ -805,6 +819,11 @@ export default {
 				if (Object.keys(tableRow).length) {
 					tableRow.originalObj = element
 					tableRow.index = this.tab_info.form_fields.indexOf(element)
+					if (tableRow.originalObj.validation.selected.length) {
+						tableRow.validation = 'invalid'
+					} else {
+						tableRow.validation = 'valid'
+					}
 					tableFields.push(tableRow)
 				}
 			})

@@ -14,11 +14,11 @@
         </template>
           <AddBlend :tabName="tabName"></AddBlend>
       </b-tab>
-      <b-tab>
+      <b-tab :title-link-class="validationLength > 0 ? {} : null">
         <template slot="title">
-          Validation
+          Validation <b-badge v-if="validationLength" variant="danger">{{validationLength}}</b-badge>
         </template>
-        <Validation :hovered="hovered" :tabName="tabName"></Validation>
+        <Validation v-on:fillSearch="$emit('fillSearch', $event)" :hovered="hovered" :tabName="tabName"></Validation>
       </b-tab>
     </b-tabs>
 		<div class="legend">
@@ -69,6 +69,10 @@ export default {
 		},
 		hasBlends() {
 			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+		},
+		validationLength() {
+			console.log('------',this.$store.getters.getValidationForCurrentTab(this.tabName))
+			return this.$store.getters.getValidationForCurrentTab(this.tabName).length
 		}
 	},
 

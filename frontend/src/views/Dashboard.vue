@@ -464,7 +464,7 @@ export default {
 			cloneSubmission(url).then((response) => {
 				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['Submission cloned'] },
+					message: { __all__: ['New version created'] },
 					variant: 'success'
 				})
 			}).catch(error => {

@@ -101,7 +101,7 @@
 						></fieldGenerator>
 					</template>
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 				</b-table>
 			</div>
@@ -175,7 +175,7 @@
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template slot="row-details" slot-scope="row">
