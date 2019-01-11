@@ -155,43 +155,44 @@
 						>
 							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
-							<div
-								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
-								class="special-field"
-								v-if="isQps.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
-							>
-								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
-								<hr>
-								<span>
-									<fieldGenerator
-										:key="tooltipField"
-										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="isReadOnly"
-										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
-									></fieldGenerator>
-								</span>
-							</div>
-
-							<div
-								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
-								class="special-field"
-								v-if="isPolyols.includes(cell.item.originalObj.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
-							>
-								<hr>
-								Polyols quantity
-								<hr>
-								<span>
-									<fieldGenerator
-										:key="tooltipField"
-										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-										:disabled="isReadOnly"
-										:field="cell.item.originalObj.quantity_polyols"
-									></fieldGenerator>
-								</span>
-							</div>
-
 						</span>
+						<div
+							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+							class="special-field"
+							v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+							:key="tooltipField"
+						>
+							<hr>
+							Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
+							<hr>
+							<span>
+								<fieldGenerator
+									:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
+									:disabled="isReadOnly"
+									:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
+								></fieldGenerator>
+							</span>
+						</div>
+
+						<div
+							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+							class="special-field"
+							v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+							:key="tooltipField"
+						>
+							<hr>
+							Polyols quantity
+							<hr>
+							<span>
+								<fieldGenerator
+									:key="tooltipField"
+									:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+									:disabled="isReadOnly"
+									:field="cell.item.originalObj.quantity_polyols"
+								></fieldGenerator>
+							</span>
+						</div>
+
 					</template>
 				</b-table>
 			</div>
@@ -282,17 +283,18 @@
 						>
 							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
-							<div
+						</span>
+						<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isQps.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+								:key="tooltipField"
 							>
 								<hr>
 								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} {{qps_word}} to be used for QPS applications
 								<hr>
 								<span>
 									<fieldGenerator
-										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
 										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
@@ -302,21 +304,20 @@
 							<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isPolyols.includes(cell.item.substance.selected) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+								v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+								:key="tooltipField"
 							>
 								<hr>
 								Quantity of Polyols
 								<hr>
 								<span>
 									<fieldGenerator
-										:key="tooltipField"
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
 										:disabled="isReadOnly"
 										:field="cell.item.originalObj.quantity_polyols"
 									></fieldGenerator>
 								</span>
 							</div>
-						</span>
 					</template>
 				</b-table>
 			</div>
@@ -677,10 +678,10 @@ export default {
 			if (!['quarantine_pre_shipment', 'polyols'].includes(order)) {
 				return true
 			}
-			if (this.isQps.includes(modal_data.field[type].selected) && order === 'quarantine_pre_shipment') {
+			if (this.isQps.includes(parseInt(modal_data.field[type].selected)) && order === 'quarantine_pre_shipment') {
 				return true
 			}
-			if (this.isPolyols.includes(modal_data.field[type].selected) && order === 'polyols') {
+			if (this.isPolyols.includes(parseInt(modal_data.field[type].selected)) && order === 'polyols') {
 				return true
 			}
 		},
