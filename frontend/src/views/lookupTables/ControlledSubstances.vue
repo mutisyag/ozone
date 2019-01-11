@@ -5,23 +5,25 @@
 		<template slot="header">
 			<b-row>
 				<b-col>
-                    <b-input-group prepend="Group">
+                    <b-input-group :prepend="$gettext('Group')">
                       <b-form-input v-model="table.filters.searchGroup"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
-                    <b-input-group prepend="Name">
+                    <b-input-group :prepend="$gettext('Name')">
                       <b-form-input v-model="table.filters.searchName"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
-                    <b-input-group prepend="Formula">
+                    <b-input-group :prepend="$gettext('Formula')">
                       <b-form-input v-model="table.filters.searchFormula"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
                     <b-input-group-append>
-                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">Clear</b-btn>
+						<b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">
+							<span v-translate>Clear</span>
+						</b-btn>
                     </b-input-group-append>
                 </b-col>
 			</b-row>
@@ -54,21 +56,21 @@ import './styles.css'
 export default {
 	data() {
 		const fields = [{
-			key: 'annex', label: 'Annex', sortable: true, class: 'text-center'
+			key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
 		}, {
-			key: 'group_id', label: 'Group', sortable: true, class: 'text-center'
+			key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
 		}, {
-			key: 'name', label: 'Name', sortable: true, class: 'text-center'
+			key: 'name', label: this.$gettext('Name'), sortable: true, class: 'text-center'
 		}, {
-			key: 'odp', label: 'ODP', sortable: true, class: 'text-center'
+			key: 'odp', label: this.$gettext('ODP'), sortable: true, class: 'text-center'
 		}, {
-			key: 'formula', label: 'Formula', sortable: true, class: 'text-center'
+			key: 'formula', label: this.$gettext('Formula'), sortable: true, class: 'text-center'
 		}, {
-			key: 'number_of_isomers', label: 'Number of Isomers', sortable: true, class: 'text-center'
+			key: 'number_of_isomers', label: this.$gettext('Number of Isomers'), sortable: true, class: 'text-center'
 		}, {
-			key: 'min_odp', label: 'MinODP', sortable: true, class: 'text-center'
+			key: 'min_odp', label: this.$gettext('MinODP'), sortable: true, class: 'text-center'
 		}, {
-			key: 'max_odp', label: 'MaxODP', sortable: true, class: 'text-center'
+			key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
 		}]
 
 		return {

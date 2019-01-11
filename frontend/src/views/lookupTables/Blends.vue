@@ -5,12 +5,12 @@
 		<template slot="header">
 			<b-row>
 				<b-col>
-					<b-input-group :prepend="$gettext('Name')">
-								<b-form-input v-model="table.filters.searchName" />
+					<b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
+						<b-form-input v-model="table.filters.searchName" />
 					</b-input-group>
-        </b-col>
+				</b-col>
 				<b-col>
-          <b-input-group>
+					<b-input-group>
 						<multiselect
 							:max-height="250"
 							:multiple="true"
@@ -21,7 +21,7 @@
 							trackBy="value"
 							:placeholder="$gettext('Components')"
 							v-model="table.filters.selectedComponentsNames"
-							:options="searchComponentOptions"> </multiselect>
+							:options="searchComponentOptions" />
 						<b-input-group-append>
 							<b-btn  variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
 								<span v-translate>Sort</span>
@@ -104,11 +104,11 @@ export default {
 		return {
 			table: {
 				fields: [{
-					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center'
+					key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
 				}, {
-					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center'
+					key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center'
 				}, {
-					key: 'components', label: 'Components', class: 'text-center'
+					key: 'components', label: this.$gettext('Components'), class: 'text-center'
 				}
 				],
 				currentPage: 1,
@@ -121,10 +121,10 @@ export default {
 			},
 			tableComponents: {
 				fields: [{
-					key: 'component_name', label: 'Name', class: 'text-center'
+					key: 'component_name', label: this.$gettext('Name'), class: 'text-center'
 				}, {
 					key: 'percentage',
-					label: 'Percentage',
+					label: this.$gettext('Percentage'),
 					class: 'text-center',
 					formatter: (value) => `${(value * 100).toFixed(2)}%`
 				}
