@@ -71,8 +71,7 @@ export default {
 			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
 		},
 		validationLength() {
-			console.log('------',this.$store.getters.getValidationForCurrentTab(this.tabName))
-			return this.$store.getters.getValidationForCurrentTab(this.tabName).length
+			return this.$store.getters.getValidationForCurrentTab(this.tabName).filter(field => field.validation.length).length
 		}
 	},
 
