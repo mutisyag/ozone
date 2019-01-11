@@ -132,3 +132,4 @@ celerybeat*
 .envrc
 
 translations
+frontend/public/translations.json
