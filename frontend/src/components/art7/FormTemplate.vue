@@ -160,7 +160,7 @@
 							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 							class="special-field"
 							v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
-							:key="tooltipField"
+							:key="`${tooltipField}_qps`"
 						>
 							<hr>
 							Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
@@ -178,14 +178,13 @@
 							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 							class="special-field"
 							v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
-							:key="tooltipField"
+							:key="`${tooltipField}_polyols`"
 						>
 							<hr>
 							Polyols quantity
 							<hr>
 							<span>
 								<fieldGenerator
-									:key="tooltipField"
 									:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
 									:disabled="isReadOnly"
 									:field="cell.item.originalObj.quantity_polyols"
@@ -288,7 +287,7 @@
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
 								v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
-								:key="tooltipField"
+								:key="`${tooltipField}_qps`"
 							>
 								<hr>
 								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} {{qps_word}} to be used for QPS applications
@@ -305,7 +304,7 @@
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
 								v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
-								:key="tooltipField"
+								:key="`${tooltipField}_polyol`"
 							>
 								<hr>
 								Quantity of Polyols

@@ -40,7 +40,7 @@ const quantityCalculator = (fields, parent, section) => {
 	if (count === 0) {
 		returnObj.selected = ''
 	} else {
-		returnObj.selected = count
+		returnObj.selected = fromExponential(count)
 	}
 
 	const tooltip = createTooltip(forTooltip, section)
