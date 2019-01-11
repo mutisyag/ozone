@@ -496,7 +496,7 @@ class SubmissionRemarksViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
     Update the general remarks for this specific submission.
     """
     serializer_class = SubmissionRemarksSerializer
-    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated)
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
 
