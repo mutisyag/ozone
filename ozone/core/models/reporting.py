@@ -41,8 +41,19 @@ class ModifyPreventionMixin:
     prevent changes when the referenced submission is not in Data Entry.
     """
 
+    @staticmethod
+    def get_exempted_fields():
+        return [
+            # Secretariat remarks can be changed
+            # at any time, while the party remarks cannot.
+            "remarks_os"
+        ]
+
     def clean(self):
-        if not self.submission.data_changes_allowed:
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.submission.data_changes_allowed
+        ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
@@ -549,12 +560,13 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
         ]
 
-    def non_exempted_fields_modified(self):
+    @staticmethod
+    def non_exempted_fields_modified(obj):
         """
         Checks whether one of the non-exempted fields was modified.
         """
-        exempted_fields = Submission.get_exempted_fields()
-        modified_fields = self.tracker.changed()
+        exempted_fields = obj.__class__.get_exempted_fields()
+        modified_fields = obj.tracker.changed()
         for field in modified_fields.keys():
             if field not in exempted_fields:
                 return True
@@ -736,7 +748,10 @@ class Submission(models.Model):
             raise ValidationError(
                 _("Reporting cannot be performed for this reporting period.")
             )
-        if self.non_exempted_fields_modified() and not self.data_changes_allowed:
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.data_changes_allowed
+        ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
