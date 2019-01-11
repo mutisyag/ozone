@@ -504,7 +504,7 @@
 							:disabled="isReadOnly"
               label="text"
               placeholder="Select substance"
-              :value="modal_data.field.substance.selected"
+              :value="parseInt(modal_data.field.substance.selected)"
               :options="tab_data.substances"
             ></multiselect>
           </b-col>
@@ -529,7 +529,7 @@
                 label="text"
                 placeholder="Countries"
                 @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})"
-                :value="modal_data.field[order].selected"
+                :value="parseInt(modal_data.field[order].selected)"
                 :options="tab_data.countryOptions"
               ></multiselect>
             </b-col>

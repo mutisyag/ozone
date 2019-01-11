@@ -3,7 +3,7 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 import GetTextPlugin from 'vue-gettext'
-import translations from '@/assets/locale/translations.json'
+// import translations from '@/assets/locale/translations.json'
 
 import store from '@/store/index'
 import App from './App'
@@ -17,13 +17,14 @@ Vue.use(BootstrapVue)
 
 Vue.use(GetTextPlugin, {
 	availableLanguages: {
-		en_GB: 'British English',
-		en_US: 'American English',
-		es_US: 'Español',
-		fr_FR: 'Français',
-		it_IT: 'Italiano'
+		ar: 'Arabic',
+		en: 'English',
+		es: 'Spanish',
+		fr: 'French',
+		ru: 'Russian',
+		zh: 'Chinese'
 	},
-	defaultLanguage: 'en_US',
+	defaultLanguage: 'en',
 	languageVmMixin: {
 		computed: {
 			currentKebabCase() {
@@ -31,9 +32,10 @@ Vue.use(GetTextPlugin, {
 			}
 		}
 	},
-	translations,
+	translations: { ar: {}, en: {}, es: {}, fr: {}, ru: {}, zh: {} },
 	silent: false
 })
+
 
 new Vue({
 	router,

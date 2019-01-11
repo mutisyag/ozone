@@ -1,0 +1,4 @@
+# Used to generate parts of the frontend translation.
+pytz==2018.4
+babel==2.6.0
+babel-vue-extractor==1.4.3
