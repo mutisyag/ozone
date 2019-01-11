@@ -101,12 +101,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='submit'
@@ -127,12 +122,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry',
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='submit'
@@ -151,12 +141,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='submit'
@@ -176,12 +161,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='submit'
@@ -199,12 +179,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='process'
@@ -224,12 +199,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted',
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='process'
@@ -251,12 +221,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted',
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall'
@@ -276,12 +241,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall'
@@ -300,12 +260,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall'
@@ -325,12 +280,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall',
@@ -350,12 +300,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_submitted'
@@ -376,12 +321,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='processing'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_processing'
@@ -402,12 +342,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_finalized'
@@ -428,12 +363,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_submitted'
@@ -453,12 +383,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='processing'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_processing'
@@ -478,12 +403,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_finalized'
@@ -503,12 +423,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_submitted'
@@ -529,12 +444,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='processing'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_processing'
@@ -555,12 +465,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_same_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_finalized'
@@ -581,12 +486,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='submitted'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_submitted'
@@ -606,12 +506,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='processing'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_processing'
@@ -631,12 +526,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='recalled',
             previous_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_another_party.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_another_party.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall_to_finalized'
@@ -655,12 +545,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='processing',
             flag_valid=True
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='finalize'
@@ -681,12 +566,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             current_state='processing',
             flag_valid=True
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='finalize'
@@ -711,12 +591,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='finalize'
@@ -736,12 +611,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='data_entry'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='finalized'
@@ -759,12 +629,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall'
@@ -784,12 +649,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='finalized'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='recall'
@@ -807,12 +667,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='recalled'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall'
@@ -832,12 +687,7 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             party=self.party,
             current_state='recalled'
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
             transition='unrecall'
