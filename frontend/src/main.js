@@ -36,7 +36,6 @@ Vue.use(GetTextPlugin, {
 	silent: false
 })
 
-
 new Vue({
 	router,
 	store,
