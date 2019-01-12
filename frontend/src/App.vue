@@ -10,10 +10,10 @@
         <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
       <!-- </b-link> -->
       <SidebarToggler class="d-md-down-none" display="lg" />
+      <h3><span v-translate>ORS (Ozone online reporting system)</span></h3>
 
-			<h3>ORS (Ozone online reporting system)</h3>
       <b-navbar-nav class="ml-auto">
-        <Header/>
+		<Header/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
@@ -25,10 +25,11 @@
         <SidebarFooter/>
         <SidebarMinimizer/>
       </AppSidebar>
+
       <main class="main">
-				<div class="breadcrumb">
-					{{list}}
-				</div>
+		<div class="breadcrumb">
+			{{list}}
+		</div>
         <div class="container-fluid">
           <router-view></router-view>
         </div>

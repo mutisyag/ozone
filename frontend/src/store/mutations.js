@@ -203,7 +203,6 @@ const mutations = {
 	},
 
 	prefillTab(state, { tabName, data }) {
-		console.log('prefilling tab', tabName, data)
 		Object.keys(state.form.tabs[tabName].form_fields).forEach(field => {
 			if (data[field] !== undefined) {
 				state.form.tabs[tabName].form_fields[field].selected = data[field]
