@@ -9,7 +9,7 @@ setup_git() {
 
 commit_translations() {
   git add . *.po
-  git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
+  git diff-index --quiet HEAD || git commit --message "Travis build: $TRAVIS_BUILD_NUMBER"
 }
 
 upload_files() {

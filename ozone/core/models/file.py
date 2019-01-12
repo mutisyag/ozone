@@ -123,7 +123,7 @@ class SubmissionFile(ModifyPreventionMixin, File):
         )
 
     @staticmethod
-    def has_valid_extension(self, filename):
+    def has_valid_extension(filename):
         return filename.split('.')[-1].lower() in settings.ALLOWED_FILE_EXTENSIONS
 
     def __str__(self):

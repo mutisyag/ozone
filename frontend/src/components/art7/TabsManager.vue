@@ -131,7 +131,7 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `version ${this.$store.state.current_submission.version}`])
 	},
 
 	computed: {

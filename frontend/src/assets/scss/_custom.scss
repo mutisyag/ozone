@@ -49,7 +49,6 @@
 .table {
   width: 100%;
   max-width: 100%;
-  margin-bottom: 2rem;
   background-color: #fff;
   font-size: .8rem;
 }
@@ -981,7 +980,7 @@ body {
 }
 
 .group-cell {
-	min-width: 75px;
+	min-width: 47.2px;
 	text-align: center;
 }
 
@@ -992,5 +991,19 @@ body {
 	}
 	.group-cell {
 		display: none;
+	}
+}
+
+
+.submission-table .form-control {
+	padding: .2rem;
+  height: initial;
+  min-height: initial;
+}
+
+.row-controls {
+	> span {
+		margin-right: .5rem;
+		cursor: pointer;
 	}
 }

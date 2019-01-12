@@ -8,6 +8,7 @@ from django.contrib.auth.hashers import Argon2PasswordHasher
 from ozone.core.models import Submission
 from .factories import (
     PartyFactory,
+    AnotherPartyFactory,
     RegionFactory,
     ReporterUserFactory,
     ReportingChannelFactory,
@@ -22,7 +23,6 @@ REMARK_VALUE = "Some random remark here."
 
 
 class BaseRemarksTests(TestCase):
-
     success_code = 200
     fail_code = 422
 
@@ -33,6 +33,7 @@ class BaseRemarksTests(TestCase):
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
+        self.another_party = AnotherPartyFactory(subregion=self.subregion)
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
@@ -42,15 +43,12 @@ class BaseRemarksTests(TestCase):
             party=self.party,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )
+        self.another_party_user = ReporterUserFactory(
+            username="another-reporter",
+            party=self.another_party,
+            password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
+        )
         ReportingChannelFactory()
-        # Patch IsSecretariatOrSameParty since we are testing `check_remarks` here
-        # and the check is somewhat duplicated.
-        patch("ozone.core.permissions.BaseIsSecretariatOrSameParty.has_permission",
-              return_value=True).start()
-
-    def tearDown(self):
-        super().tearDown()
-        patch.stopall()
 
     def get_authorization_header(self, username, password):
         resp = self.client.post(
@@ -81,7 +79,21 @@ class BaseRemarksTests(TestCase):
         self.assertEqual(getattr(submission, field), REMARK_VALUE if expect_success else '')
 
 
-class SubmissionRemarksPermissionTests(BaseRemarksTests):
+class PatchIsSamePartyMixIn(object):
+
+    def setUp(self):
+        super().setUp()
+        # Patch IsSecretariatOrSameParty since we are testing `check_remarks` here
+        # and the check is somewhat duplicated.
+        patch("ozone.core.permissions.BaseIsSecretariatOrSameParty.has_permission",
+              return_value=True).start()
+
+    def tearDown(self):
+        super().tearDown()
+        patch.stopall()
+
+
+class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
     """Checks editable permission depending on:
         - user type who is changing the field
         - the type of the field (either party or secretariat remark)
@@ -150,7 +162,7 @@ class SubmissionRemarksPermissionTests(BaseRemarksTests):
         )
 
 
-class SubmissionRemarksPermissionWorkflowTests(BaseRemarksTests):
+class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemarksTests):
     """Checks editable permission depending on:
 
      - workflow state
@@ -281,3 +293,64 @@ class SubmissionRetrieveTest(BaseRemarksTests):
 
     def test_retrieve_as_secretariat_secretariat_reporter(self):
         self._check_remark_retrieve_data(self.secretariat_user, self.secretariat_user)
+
+
+class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
+    fail_code = 403
+
+    def _check_remark_update_permission(self, user, field_type, owner, expect_success):
+        submission = self.create_submission(owner)
+        headers = self.get_authorization_header(user.username, "qwe123qwe")
+
+        for field in remarks_data.keys():
+            if not field.endswith(field_type):
+                continue
+
+            with self.subTest("Test update %s" % field):
+                result = self.client.put(
+                    reverse(
+                        "core:submission-submission-remarks-list",
+                        kwargs={"submission_pk": submission.pk},
+                    ),
+                    {field: REMARK_VALUE},
+                    "application/json",
+                    format="json",
+                    **headers,
+                )
+                self._check_result(result, expect_success, submission, field)
+
+    def _check_remark_retrieve_data(self, user, owner, expect_success):
+        submission = self.create_submission(owner, **remarks_data)
+        headers = self.get_authorization_header(user.username, "qwe123qwe")
+
+        result = self.client.get(
+            reverse(
+                "core:submission-submission-remarks-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(len(result.json()), 1 if expect_success else 0)
+
+    def test_get_same_party(self):
+        self._check_remark_retrieve_data(self.party_user, self.party_user, True)
+
+    def test_get_different_party(self):
+        self._check_remark_retrieve_data(self.another_party_user, self.party_user, False)
+
+    def test_get_secretariat(self):
+        self._check_remark_retrieve_data(self.secretariat_user, self.party_user, True)
+
+    def test_update_same_party(self):
+        self._check_remark_update_permission(self.party_user, "party", self.party_user,
+                                             True)
+
+    def test_update_different_party(self):
+        self._check_remark_update_permission(self.another_party_user, "party", self.party_user,
+                                             False)
+
+    def test_update_secretariat(self):
+        self._check_remark_update_permission(self.secretariat_user, "secretariat", self.party_user,
+                                             True)

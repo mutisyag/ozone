@@ -44,6 +44,7 @@ from ..models import (
     Article7Emission,
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
+    DataOther,
     Group,
     Substance,
     Blend,
@@ -76,6 +77,7 @@ from ..serializers import (
     Article7EmissionSerializer,
     HighAmbientTemperatureProductionSerializer,
     HighAmbientTemperatureImportSerializer,
+    DataOtherSerializer,
     GroupSerializer,
     SubstanceSerializer,
     BlendSerializer,
@@ -494,7 +496,7 @@ class SubmissionRemarksViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
     Update the general remarks for this specific submission.
     """
     serializer_class = SubmissionRemarksSerializer
-    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated)
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
 
@@ -655,6 +657,21 @@ class HighAmbientTemperatureProductionViewSet(BulkCreateUpdateMixin, SerializerD
 
     def get_queryset(self):
         return HighAmbientTemperatureProduction.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class DataOtherViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
+                       viewsets.ModelViewSet):
+    serializer_class = DataOtherSerializer
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,)
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return DataOther.objects.filter(
             submission=self.kwargs['submission_pk']
         )
 
