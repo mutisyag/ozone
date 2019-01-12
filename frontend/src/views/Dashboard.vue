@@ -28,55 +28,54 @@
 
         <b-col>
           <b-card v-if="basicDataReady">
-            <div slot="header">
-              <strong><span v-translate='{totalRows: dataEntryTable.totalRows}'>Data entry submissions (%{totalRows} records)</span></strong>
-						</div>
-							<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
-								<div class="filter-group mb-2">
-									<b-input-group :prepend="$gettext('Search')">
-										<b-form-input v-model="dataEntryTable.search"/>
-									</b-input-group>
-									<b-input-group :prepend="$gettext('Obligation')">
-										<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-									</b-input-group>
-								</div>
-								<div class="filter-group">
-									<b-input-group :prepend="$gettext('Party')">
-										<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
-									</b-input-group>
-									<b-input-group style="width: 120px" :prepend="$gettext('From')">
-										<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
-										</b-form-select>
-									</b-input-group>
-									<b-input-group style="width: 120px" :prepend="$gettext('To')">
-										<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
-										</b-form-select>
-									</b-input-group>
-									<b-btn @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"><span v-translate>Clear</span></b-btn>
-								</div>
-							</div>
-							<b-table show-empty
-												outlined
-												bordered
-												hover
-												head-variant="light"
-												stacked="md"
-												:filter="dataEntryTable.search"
-												:items="dataEntryTableItems"
-												:fields="dataEntryTable.fields"
-												:per-page="dataEntryTable.perPage"
-												:current-page="dataEntryTable.currentPage"
-												ref="dataEntryTable"
-												@filtered="onFiltered"
-								>
-									<template slot="actions" slot-scope="row">
-										<router-link
-												class="btn btn-outline-primary btn-sm"
-												:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-											<span v-translate>Continue</span>
-										</router-link>
-                  </template>
-              </b-table>
+				<div slot="header">
+					<strong><span v-translate='{totalRows: dataEntryTable.totalRows}'>Data entry submissions (%{totalRows} records)</span></strong>
+				</div>
+				<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
+					<div class="filter-group mb-2">
+						<b-input-group :prepend="$gettext('Search')">
+							<b-form-input v-model="dataEntryTable.search"/>
+						</b-input-group>
+						<b-input-group :prepend="$gettext('Obligation')">
+							<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+						</b-input-group>
+					</div>
+					<div class="filter-group">
+						<b-input-group :prepend="$gettext('Party')">
+							<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
+						</b-input-group>
+						<b-input-group style="width: 120px" :prepend="$gettext('From')">
+							<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
+							</b-form-select>
+						</b-input-group>
+						<b-input-group style="width: 120px" :prepend="$gettext('To')">
+							<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
+							</b-form-select>
+						</b-input-group>
+						<b-btn @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"><span v-translate>Clear</span></b-btn>
+					</div>
+				</div>
+				<b-table show-empty
+									outlined
+									bordered
+									hover
+									head-variant="light"
+									stacked="md"
+									:filter="dataEntryTable.search"
+									:items="dataEntryTableItems"
+									:fields="dataEntryTable.fields"
+									:per-page="dataEntryTable.perPage"
+									:current-page="dataEntryTable.currentPage"
+									ref="dataEntryTable"
+									@filtered="onFiltered">
+						<template slot="actions" slot-scope="row">
+							<router-link
+									class="btn btn-outline-primary btn-sm"
+									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
+								<span v-translate>Continue</span>
+							</router-link>
+						</template>
+			</b-table>
 			<b-row v-if="currentUser.is_secretariat">
 				<b-col md="9" class="my-1">
 				<b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
@@ -95,8 +94,8 @@
           <b-card no-body v-if="basicDataReady">
             <template slot="header">
               <b-row>
-              <b-col><b><span v-translate='{totalRows: tableOptions.totalRows}'>All submissions (%{totalRows} records)</span></b></b-col>
-              <b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.showAllVersions"><span v-translate>Show all versions</span></b-form-checkbox></b-col>
+				<b-col><b><span v-translate='{totalRows: tableOptions.totalRows}'>All submissions (%{totalRows} records)</span></b></b-col>
+				<b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.showAllVersions"><span v-translate>Show all versions</span></b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>
@@ -132,8 +131,7 @@
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
                        :sort-direction="tableOptions.sorting.sortDirection"
-                       ref="table"
-              >
+                       ref="table">
                 <template slot="actions" slot-scope="row">
                   <b-button-group>
                     <router-link
