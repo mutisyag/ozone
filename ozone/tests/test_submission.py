@@ -309,3 +309,24 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
         self.assertEqual(result.json()[0]['current_state'], 'submitted')
 
+    def test_clone_history(self):
+        submission = self.create_submission()
+        submission.call_transition("submit", self.secretariat_user)
+        submission.save()
+
+        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
+
+        result = self.client.post(
+            reverse(
+                "core:submission-clone",
+                kwargs={"pk": submission.pk},
+            ),
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+        new_id = result.json()['url'].split("/")[-2]
+
+        new_submission_history = list(Submission.objects.get(pk=new_id).history.all())
+        self.assertEqual(new_submission_history[0].version, 2)
+        self.assertEqual(new_submission_history[-1].version, 1)
