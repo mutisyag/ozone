@@ -487,6 +487,8 @@ class Submission(models.Model):
         return True
 
     def can_change_remark(self, user, field_name):
+        if self.current_state not in self.editable_states and field_name.endswith("_party"):
+            return False
         if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
             # Secretariat users cannot modify any of the party fields, if the
             # submission was filled by a party.
