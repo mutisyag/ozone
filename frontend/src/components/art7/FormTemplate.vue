@@ -563,7 +563,7 @@
         </div>
         <b-row
           class="mt-3"
-          v-for="comment_field in ['remarks_os','remarks_party']"
+          v-for="comment_field in ['remarks_party','remarks_os']"
           :key="comment_field"
         >
           <b-col lg="3">

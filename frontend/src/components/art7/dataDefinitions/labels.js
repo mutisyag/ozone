@@ -70,8 +70,8 @@ const labels = {
 		exports_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_produced: {
-		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)',
+		remarks_party: 'Remarks (Party)',
+		remarks_os: 'Remarks (Secretariat)',
 		percent: 'Percentage',
 		quantity_critical_uses: 'Critical use',
 		decision_critical_uses: 'Critical use',
@@ -98,8 +98,8 @@ const labels = {
 		production_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_destroyed: {
-		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)',
+		remarks_party: 'Remarks (Party)',
+		remarks_os: 'Remarks (Secretariat)',
 		percent: 'Percentage',
 		quantity_destroyed: 'Quantity destroyed',
 		substance: 'Substances',
@@ -108,8 +108,8 @@ const labels = {
 		destruction_remarks_secretariat: 'Comments (Secretariat)'
 	},
 	has_nonparty: {
-		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)',
+		remarks_party: 'Remarks (Party)',
+		remarks_os: 'Remarks (Secretariat)',
 		percent: 'Percentage',
 		quantity_import_new: 'Quantity of imports from non-parties (new)',
 		quantity_import_recovered: 'Quantity of imports from non-parties (recovered)',
@@ -127,8 +127,8 @@ const labels = {
 		quantity_feedstock: 'Amount used for feedstock',
 		quantity_destroyed: 'Amount destroyed',
 		quantity_emitted: 'Amount of emissions',
-		remarks_party: 'Remarks (Secretariat)',
-		remarks_os: 'Remarks (Party)',
+		remarks_party: 'Remarks (Party)',
+		remarks_os: 'Remarks (Secretariat)',
 		emissions_remarks_party: 'Comments (Party)',
 		emissions_remarks_secretariat: 'Comments (Secretariat)'
 	}
