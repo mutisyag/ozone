@@ -2,12 +2,11 @@ from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
-
 from reportlab.lib.units import cm
-
 
 from django.utils.translation import gettext_lazy as _
 
+from ..util import get_preship_or_polyols_q
 from ..util import get_decisions
 from ..util import get_quantities
 from ..util import get_substance_label
@@ -75,10 +74,9 @@ def to_row_substance(obj):
     decisions = get_decisions(obj)
     d_label = get_substance_label(decisions, type='decision', list_font_size=9)
 
-    q_polyols = (
-        p_l('Polyols quantity'),
-        p_l(str(obj.quantity_polyols))
-    ) if obj.quantity_polyols else ()
+    extra_q = get_preship_or_polyols_q(obj)
+    if not extra_q:
+        extra_q = tuple()
 
     dest_party = obj.destination_party.name if obj.destination_party else ""
 
@@ -90,7 +88,7 @@ def to_row_substance(obj):
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
         (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'),) +
-        (q_label,) + q_polyols,
+        (q_label,) + extra_q,
         (d_label,)
     )
 

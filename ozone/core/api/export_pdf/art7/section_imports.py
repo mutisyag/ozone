@@ -10,6 +10,7 @@ from ..util import p_c
 from ..util import p_l
 from ..util import page_title
 from ..util import get_decisions
+from ..util import get_preship_or_polyols_q
 from ..util import get_quantities
 from ..util import get_substance_label
 from ..util import STYLES
@@ -66,12 +67,9 @@ TABLE_ROW_EMPTY_STYLE = (
 def to_row_substance(obj):
     substance = obj.substance
 
-    _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    q_pre_ship = (
-        p_l(f'Quantity of new {substance.name} '
-            'imported to be used for QPS applications'),
-        p_l(str(_q_pre_ship))
-    ) if _q_pre_ship else ()
+    extra_q = get_preship_or_polyols_q(obj)
+    if not extra_q:
+        extra_q = tuple()
 
     quantities = get_quantities(obj)
     q_label = get_substance_label(quantities, type='quantity')
@@ -88,7 +86,7 @@ def to_row_substance(obj):
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
         (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'), ) +
-        (q_label, ) + q_pre_ship,
+        (q_label, ) + extra_q,
         (d_label,)
     )
 

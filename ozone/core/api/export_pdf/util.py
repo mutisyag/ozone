@@ -121,3 +121,24 @@ def get_decisions(obj):
         obj.decision_process_agent_uses,
         obj.decision_other_uses,
     )
+
+def get_preship_or_polyols_q(obj):
+    _q_pre_ship = obj.quantity_quarantine_pre_shipment
+    _q_polyols = obj.quantity_polyols
+
+    substance = obj.substance
+
+    if _q_pre_ship:
+        return (
+            p_l(f'Quantity of new {substance.name} '
+            'imported to be used for QPS applications'),
+            p_l(str(_q_pre_ship)),
+        )
+
+    if _q_polyols:
+        return (
+        p_l('Polyols quantity'),
+        p_l(str(_q_polyols)),
+    )
+
+    return None
