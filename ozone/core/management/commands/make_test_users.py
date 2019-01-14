@@ -22,7 +22,7 @@ class Command(BaseCommand):
     default_users = {
         "admin": {
             "party": None,
-            "is_secretariat": False,
+            "is_secretariat": True,
             "is_read_only": False,
             "is_superuser": True,
             "is_staff": True,
