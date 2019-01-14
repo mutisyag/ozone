@@ -2,8 +2,10 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="selectedTab.detailsHtml"></div>
+		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
+			<i class="fa fa-info fa-lg"></i>
+		</b-btn>
+		<div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
       <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
@@ -20,52 +22,54 @@
   <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
     <div v-if="modal_data" v-html="modal_data"></div>
 		<div slot="modal-footer">
-			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success">
+				<span v-translate>Close</span>
+			</b-btn>
 		</div>
   </b-modal>
 
   <div class="form-wrapper" style="position: relative">
-    <b-card style="margin-bottom: 5rem;" no-body>
+	<b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
-          <b-tab title="Submission Info" active>
-             <template slot="title">
-              <div class="tab-title">
-                Submission Info
-              </div>
-             </template>
-            <SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-          </b-tab>
+			<b-tab :title="$gettext('Submission Info')" active>
+				<template slot="title">
+				<div class="tab-title">
+				<span v-translate>Submission Info</span>
+				</div>
+				</template>
+				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+			</b-tab>
 
-          <b-tab title="Questionaire">
-						<template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-						</template>
-            <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
-          </b-tab>
+			<b-tab :title="$gettext('Questionaire')">
+			<template slot="title">
+				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+			</template>
+			<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+			</b-tab>
 
-				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
-						<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-						</template>
-					<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-				</b-tab>
-
-				<b-tab :disabled="selectedDisplayTabs.has_emissions === null">
+			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
 					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
 					</template>
-					<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
-				</b-tab>
+				<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+			</b-tab>
 
-				<b-tab>
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
-					</template>
-					<Attachments :tab="$store.state.form.tabs.attachments"/>
-				</b-tab>
-      </b-tabs>
-    </b-card>
-		</div>
+			<b-tab :disabled="selectedDisplayTabs.has_emissions === null">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+				</template>
+				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+			</b-tab>
+
+			<b-tab>
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+				</template>
+				<Attachments :tab="$store.state.form.tabs.attachments"/>
+			</b-tab>
+		</b-tabs>
+	</b-card>
+	</div>
     <Footer style="display:inline">
 			<Save class="actions mt-2 mb-2" v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
 			<b-button-group class="pull-right actions mt-2 mb-2">
@@ -73,20 +77,20 @@
 					v-if="$store.state.available_transitions.includes('submit')"
 					@click="checkBeforeSubmitting"
 					variant="outline-success">
-					Submit
+						<span v-translate>Submit</span>
 				</b-btn>
-						<b-btn
-							variant="outline-primary"
-							v-for="transition in availableTransitions"
-							:key="transition"
-							@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-							{{labels[transition]}}
-						</b-btn>
+				<b-btn
+					variant="outline-primary"
+					v-for="transition in availableTransitions"
+					:key="transition"
+					@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+						{{labels[transition]}}
+				</b-btn>
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
-					Versions
+					<span v-translate>Versions</span>
 				</b-btn>
 				<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-					Delete Submission
+					<span v-translate>Delete Submission</span>
 				</b-btn>
 			</b-button-group>
     </Footer>
@@ -94,7 +98,9 @@
     <b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
 		<div slot="modal-footer">
-          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+			<b-btn @click="$refs.history_modal.hide()" variant="success">
+				<span v-translate>Close</span>
+			</b-btn>
 		</div>
     </b-modal>
   </div>
@@ -176,7 +182,7 @@ export default {
 				}).catch(error => {
 					console.log(error)
 					this.$store.dispatch('setAlert', {
-						message: { __all__: ['Can\'t find instructions for current form'] },
+						message: { __all__: [this.$gettext('Can\'t find instructions for current form')] },
 						variant: 'danger'
 					})
 				})
@@ -189,7 +195,7 @@ export default {
 				.filter(arr => arr.length)
 			if (!fields.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['You cannot submit and empty form'] },
+					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
 					variant: 'danger'
 				})
 				return
@@ -198,7 +204,7 @@ export default {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['Please save before submitting'] },
+					message: { __all__: [this.$gettext('Please save before submitting')] },
 					variant: 'danger'
 				})
 				return
@@ -206,7 +212,7 @@ export default {
 			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
-			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
+			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
 				this.$store.dispatch('removeSubmission', this.submission).then(() => {
 					this.$router.push({ name: 'Dashboard' })

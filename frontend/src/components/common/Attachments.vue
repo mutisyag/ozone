@@ -9,7 +9,8 @@
 					</div>
 					<div class="col-2">
 						<b-button v-if="attachments.length" variant="danger" class="pull-right" @click="deleteAllAttachments()">
-							<i class="fa fa-times" aria-hidden="true"></i> Delete all
+							<i class="fa fa-times" aria-hidden="true"></i>
+							<span v-translate>Delete all</span>
 						</b-button>
 					</div>
 				</div>
@@ -24,7 +25,8 @@
 					</div>
 					<div class="col-2">
 						<b-button variant="danger" class="pull-right" @click="deleteAttachment($event, attachment)">
-							<i class="fa fa-times" aria-hidden="true"></i> Delete
+							<i class="fa fa-times" aria-hidden="true"></i>
+							<span v-translate>Delete</span>
 						</b-button>
 					</div>
 				</div>
@@ -107,8 +109,7 @@ export default {
 			if (this.selectedFiles.length) {
 				const tabName = this.tab.name
 				let attachments = this.selectedFiles.filter(file => file.type
-														&& fileExtensionIsValid(file.name.toLowerCase()))
-
+																	&& fileExtensionIsValid(file.name.toLowerCase()))
 				this.addTabAttachments({ tabName, attachments })
 				attachments = await this.uploadAttachments({ attachments, onProgressCallback: this.onProgressCallback })
 				attachments.forEach(attachment => {

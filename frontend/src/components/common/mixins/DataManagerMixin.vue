@@ -21,7 +21,7 @@ export default {
 	beforeRouteLeave(to, from, next) {
 		if (process.env.NODE_ENV !== 'development') {
 			if (this.alertUnsavedData()) {
-				const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+				const answer = window.confirm(this.$gettext('Do you really want to leave? you have unsaved changes!'))
 				if (answer) {
 					next()
 				} else {

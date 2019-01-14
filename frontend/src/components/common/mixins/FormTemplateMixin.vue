@@ -23,7 +23,7 @@ export default {
 	data() {
 		return {
 			table: {
-				emptyText: 'Please use the form on the right sidebar to add substances',
+				emptyText: this.$gettext('Please use the form on the right sidebar to add substances'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -37,7 +37,7 @@ export default {
 			},
 
 			tableBlends: {
-				emptyText: 'Please use the form on the right sidebar to add blends',
+				emptyText: this.$gettext('Please use the form on the right sidebar to add blends'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -148,11 +148,11 @@ export default {
 			const options = {}
 			this.tab_info.section_subheaders.forEach((form_field) => {
 				if (form_field.name === 'substance') {
-					tableHeaders.push({ key: 'blend', label: '(2) <br> Blend', ...options })
+					tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
 				} else if (form_field.name === 'group') {
 					tableHeaders.push({
 						key: 'type',
-						label: '(1) <br> Type',
+						label: `(1) <br> ${this.$gettext('Type')}`,
 						...options
 					})
 				} else {
@@ -175,7 +175,7 @@ export default {
 		isReadOnly() {
 			const { isReadOnly } = this.$store.getters
 			if (isReadOnly) {
-				this.table.emptyText = 'There are no records to show'
+				this.table.emptyText = this.$gettext('There are no records to show')
 				this.tableBlends.emptyText = this.table.emptyText
 			}
 			return isReadOnly
@@ -265,7 +265,7 @@ export default {
 			}
 			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
 			if (topHeader.querySelector('th:first-of-type span').innerHTML) {
-				topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+				topHeader.querySelector('th:first-of-type span').innerHTML = this.$gettext('Blends')
 			}
 			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},

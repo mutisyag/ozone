@@ -1,107 +1,102 @@
 <template>
   <div v-if="tab_info">
     <div class="form-sections">
-      <table ref="tableHeader" class="table submission-table header-only">
-        <thead>
-          <tr class="first-header">
-            <th
-              v-for="(header, header_index) in tab_info.section_headers"
-              :colspan="header.colspan"
-              :key="header_index"
-            >
-              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-                <span v-html="header.label"></span>
-                <i class="fa fa-info-circle fa-lg"></i>
-              </div>
-              <div v-else>
-                <span v-html="header.label"></span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
-
-			<div class="table-wrapper">
-				<div class="table-title">
-					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
-					<div v-show="table.tableFilters" class="table-filters">
-						<b-input-group prepend="Search all columns">
-								<b-form-input v-model="table.filters.search"/>
-						</b-input-group>
-					</div>
-					<span>
-						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
-					</span>
+		<table ref="tableHeader" class="table submission-table header-only">
+			<thead>
+			<tr class="first-header">
+				<th
+				v-for="(header, header_index) in tab_info.section_headers"
+				:colspan="header.colspan"
+				:key="header_index">
+				<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+					<span v-html="header.label"></span>
+					<i class="fa fa-info-circle fa-lg"></i>
 				</div>
-				<hr>
+				<div v-else>
+					<span v-html="header.label"></span>
+				</div>
+				</th>
+			</tr>
+			</thead>
+		</table>
 
-				<b-table
-					show-empty
-					outlined
-					v-if="getTabInputFields"
-					bordered
-					hover
-					head-variant="light"
-					stacked="md"
-					class="submission-table"
-					:items="tableItems"
-					@row-hovered="rowHovered"
-					:fields="tableFields"
-					@input="tableLoaded"
-					:filter="table.filters.search"
-					ref="table"
-				>
-
-					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-						<div
-							v-if="inputField === 'facility_name'"
-							class="row-controls"
-							style="left: -35px;top: -10px;"
-							:key="`${cell.item.index}_${inputField}_${tabName}_button`"
-							>
-							<b-btn
-								variant="link"
-								@click="remove_field(cell.item.index)"
-								class="table-btn"
-							><i class="fa fa-trash"></i></b-btn>
-						</div>
-						<fieldGenerator
-							:key="`${cell.item.index}_${inputField}_${tabName}`"
-							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
-							:field="cell.item.originalObj[inputField]"
-						></fieldGenerator>
-					</template>
-
-					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
-					</template>
-				</b-table>
+		<div class="table-wrapper">
+			<div class="table-title">
+				<h4> {{tab_info.formNumber}}.1 Facilities</h4>
+				<div v-show="table.tableFilters" class="table-filters">
+					<b-input-group :prepend="$gettext('Search all columns')">
+						<b-form-input v-model="table.filters.search"/>
+					</b-input-group>
+				</div>
+				<span>
+					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
+				</span>
 			</div>
-
-			<b-btn class="mb-2" variant="primary"  @click="addField">
-				Add facility
-			</b-btn>
-
-    </div>
-		<div class="table-wapper">
-			<h4> {{tab_info.formNumber}}.2 Comments</h4>
 			<hr>
-			<div
-				v-for="(comment, comment_key) in tab_info.comments"
-				:key="comment_key"
-				class="comments-input"
-			>
-				<label>{{labels[comment_key]}}</label>
-					<!-- addComment(state, { data, tab, field }) { -->
-				<textarea
-					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
-					:disabled="getCommentFieldPermission(comment_key)"
-					class="form-control"
-					:value="comment.selected">
-				</textarea>
-			</div>
+
+			<b-table
+				show-empty
+				outlined
+				v-if="getTabInputFields"
+				bordered
+				hover
+				head-variant="light"
+				stacked="md"
+				class="submission-table"
+				:items="tableItems"
+				@row-hovered="rowHovered"
+				:fields="tableFields"
+				@input="tableLoaded"
+				:filter="table.filters.search"
+				ref="table">
+
+				<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+					<div
+						v-if="inputField === 'facility_name'"
+						class="row-controls"
+						style="left: -35px;top: -10px;"
+						:key="`${cell.item.index}_${inputField}_${tabName}_button`">
+						<b-btn
+							variant="link"
+							@click="remove_field(cell.item.index)"
+							class="table-btn">
+							<i class="fa fa-trash"></i>
+						</b-btn>
+					</div>
+					<fieldGenerator
+						:key="`${cell.item.index}_${inputField}_${tabName}`"
+						:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+						:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+						:field="cell.item.originalObj[inputField]" />
+				</template>
+
+				<template slot="validation" slot-scope="cell">
+					<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.validation" />
+				</template>
+			</b-table>
 		</div>
+
+		<b-btn class="mb-2" variant="primary"  @click="addField">
+			<span v-translate>Add facility</span>
+		</b-btn>
+    </div>
+	<div class="table-wapper">
+		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
+		<hr>
+		<div
+			v-for="(comment, comment_key) in tab_info.comments"
+			:key="comment_key"
+			class="comments-input">
+			<label>{{labels[comment_key]}}</label>
+				<!-- addComment(state, { data, tab, field }) { -->
+			<textarea
+				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+				:disabled="getCommentFieldPermission(comment_key)"
+				class="form-control"
+				:value="comment.selected">
+			</textarea>
+		</div>
+	</div>
     <hr>
     <AppAside fixed>
       <DefaultAside v-on:fillSearch="table.tableFilters = true; table.filters.search = $event.facility"  :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>

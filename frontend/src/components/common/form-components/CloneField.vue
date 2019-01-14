@@ -3,7 +3,9 @@
     <div class="container">
       <div style="position: relative">
           <multiselect :max-height="250" :multiple="true" :clear-on-select="false" :hide-selected="true" :close-on-select="false" label="text" trackBy="value" placeholder="Countries" v-model="selected_countries.selected" :options="countryOptions"></multiselect>
-          <b-btn @click="addSubstance" variant="primary" class="mt-1" size="sm" v-if="selected_countries.selected.length">Add {{selected_countries.selected.length}} rows</b-btn>
+			<b-btn @click="addSubstance" variant="primary" class="mt-1" size="sm" v-if="selected_countries.selected.length">
+				<span v-translate='{length: selected_countries.selected.length}'>Add %{length} rows</span>
+			</b-btn>
       </div>
     </div>
   </div>
@@ -94,7 +96,7 @@ export default {
 				}
 			})
 			willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
-				message: { __all__: [`The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`] },
+				message: { __all__: [`${this.$gettext('The fields for these countries were not added because they already exist')} : ${willNotAddCountryNames.join(', ')}}`] },
 				variant: 'danger'
 			})
 			this.$emit('removeThisField')

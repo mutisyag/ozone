@@ -5,7 +5,7 @@ export default {
 	mixins: [SaveMixin],
 	methods: {
 		alertUnsavedData(tabName, tab, url) {
-			const answer = window.confirm(`You have unsaved data in ${tabName} that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?`)
+			const answer = window.confirm(`${tabName}: ${this.$gettext('You have unsaved data in that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?')}`)
 			if (answer) {
 				this.$store.dispatch('removeDataFromTab', tabName).then(() => {
 					this.submitData(tab, url)
@@ -13,7 +13,7 @@ export default {
 				return true
 			}
 			this.$store.dispatch('setAlert', {
-				message: { __all__: [`Data in ${tabName} was not saved`] },
+				message: { __all__: [`${tabName}: ${this.$gettext('Data was not saved')}`] },
 				variant: 'danger' })
 			this.$store.commit('setTabStatus', { tab: tabName, value: false })
 			return false
@@ -39,7 +39,7 @@ export default {
 			})
 			if (questionaireValid.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['Submission cannot be saved before completing the questionnaire'] },
+					message: { __all__: [this.$gettext('Submission cannot be saved before completing the questionnaire')] },
 					variant: 'danger' })
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
 			} else {

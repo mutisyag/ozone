@@ -1,10 +1,8 @@
 <template>
   <div>
     <tabsmanager
-    v-if="initialDataReady"
-    :submission="submission"
-    >
-    </tabsmanager>
+		v-if="initialDataReady"
+		:submission="submission"  />
   </div>
 </template>
 
