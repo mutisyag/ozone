@@ -508,7 +508,7 @@ def validate_import_export_data(
     # Then find all substances relating to those entries (could be blends)
     related_substances = []
     for entry in initial_data:
-        if entry.get('party_field', None) is None:
+        if entry.get(party_field, None) is None:
             if entry.get('substance', None):
                 related_substances.append(entry.get('substance'))
             elif entry.get('blend', None):
