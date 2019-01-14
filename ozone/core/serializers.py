@@ -453,12 +453,16 @@ class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
         return super().create_single(data, instance, submission)
 
 
-class Article7DestructionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7DestructionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
 
 
-class Article7DestructionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7DestructionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -469,12 +473,16 @@ class Article7DestructionSerializer(DataCheckRemarksMixIn, serializers.ModelSeri
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ProductionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ProductionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class Article7ProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7ProductionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -568,7 +576,9 @@ def validate_import_export_data(
             )
 
 
-class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ExportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'destination_party'
 
@@ -603,7 +613,9 @@ class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
         return ret
 
 
-class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7ExportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(source='substance.group.group_id', default='',
                                   read_only=True)
 
@@ -613,7 +625,9 @@ class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerial
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ImportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'source_party'
 
@@ -648,7 +662,9 @@ class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
         return ret
 
 
-class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7ImportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -659,12 +675,16 @@ class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerial
         exclude = ('submission', 'blend_item',)
 
 
-class Article7NonPartyTradeListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7NonPartyTradeListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'trade_party'
 
 
-class Article7NonPartyTradeSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7NonPartyTradeSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -675,7 +695,9 @@ class Article7NonPartyTradeSerializer(DataCheckRemarksMixIn, BaseBlendCompositio
         exclude = ('submission', 'blend_item',)
 
 
-class Article7EmissionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7EmissionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     """
     The list serializer for emissions needs to delete everything
     there was and create all data fresh, as there is no field to filter on.
@@ -685,20 +707,25 @@ class Article7EmissionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUp
     substance_blend_fields = []
 
 
-class Article7EmissionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7EmissionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     class Meta:
         list_serializer_class = Article7EmissionListSerializer
         model = Article7Emission
         exclude = ('submission',)
 
 
-class HighAmbientTemperatureProductionListSerializer(DataCheckRemarksBulkUpdateMixIn,
-                                                     BaseBulkUpdateSerializer):
+class HighAmbientTemperatureProductionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class HighAmbientTemperatureProductionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -709,14 +736,16 @@ class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializ
         exclude = ('submission',)
 
 
-class HighAmbientTemperatureImportListSerializer(DataCheckRemarksBulkUpdateMixIn,
-                                                 BaseBulkUpdateSerializer):
+class HighAmbientTemperatureImportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
 
 
-class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
-                                             BaseBlendCompositionSerializer):
+class HighAmbientTemperatureImportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -751,7 +780,9 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.reporting_channel, 'name', '')
 
 
-class SubmissionFlagsSerializer(PartialUpdateSerializerMixin, serializers.ModelSerializer):
+class SubmissionFlagsSerializer(
+    PartialUpdateSerializerMixin, serializers.ModelSerializer
+):
     """
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
@@ -781,7 +812,9 @@ class SubmissionFlagsSerializer(PartialUpdateSerializerMixin, serializers.ModelS
         return super().update(instance, validated_data)
 
 
-class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.ModelSerializer):
+class SubmissionRemarksSerializer(
+    PartialUpdateSerializerMixin, serializers.ModelSerializer
+):
     """
     Specific serializer used to present all submission remarks,
     since this is easily usable by the frontend.
@@ -797,7 +830,8 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
             'nonparty_remarks_party', 'nonparty_remarks_secretariat',
             'emissions_remarks_party', 'emissions_remarks_secretariat',
             'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-            'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+            'hat_production_remarks_party',
+            'hat_production_remarks_secretariat',
         )
 
     def update(self, instance, validated_data):
@@ -825,7 +859,9 @@ class UploadTokenSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer):
+class SubmissionSerializer(
+    PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer
+):
     """
     This also needs to nested-serialize all data related to the specific
     submission.
