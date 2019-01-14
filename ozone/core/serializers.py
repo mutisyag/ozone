@@ -572,14 +572,14 @@ class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
             # sum of totals > sum of quantities
             valid = all(
                 [
-                    sums['totals_sum'] > sums['quantities_sum']
+                    sums['totals_sum'] >= sums['quantities_sum']
                     for sums in sums_dictionary.values()
                 ]
             )
             if not valid:
                 raise ValidationError(
                     'For each substance that has no destination_party,'
-                    'the sum of quantities across all data entries should be'
+                    'the sum of quantities across all data entries should be '
                     'less than the sum of totals'
                 )
 
