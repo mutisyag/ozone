@@ -20,7 +20,7 @@
  5. Encrypt the token using travis-cli and add it to the environment
  6. Configure travis to push changes to the translations repo.
  
-### Configure the project in weblate
+### Configure the project in Weblate
 
  1. Add new  project (+ "Add new translation project")
  2. Add new component to the project for the backend/frontend translations
@@ -28,4 +28,15 @@
  4. Enable push on commit
  5. Disable adding new languages
  
- 
+### Configuring Weblate OAuth
+
+ 1. Make sure that the Django site is correctly configured in Weblate Django admin
+ 2. Add a new OAuth App from ORS Django admin with:
+   - Client Type: public
+   - Redirect URI: `https://<weblate host>/accounts/complete/ozone/`
+   - Authorization grant type: `Authorization code`
+   - Name: 'weblate'
+   - Skip authorization checked (*optional)
+ 3. Configure the `SOCIAL_AUTH_OZONE_*` variables in `docker/weblate.env` with the key and secret
+ configured at step (2) and ensure that the hosts are correctly set. 
+ 4. Rebuild/restart Weblate if needed.
