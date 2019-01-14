@@ -664,8 +664,7 @@ class HighAmbientTemperatureProductionViewSet(BulkCreateUpdateMixin, SerializerD
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class DataOtherViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                       viewsets.ModelViewSet):
+class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
     serializer_class = DataOtherSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,)
     filter_backends = (IsOwnerFilterBackend,)
