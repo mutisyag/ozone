@@ -96,6 +96,7 @@
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
+						tag-placeholder="Press enter to use a new substance"
 						placeholder="Controlled or new substance"
 						v-model="substance.name"
 						:options="substances"
@@ -170,7 +171,7 @@ export default {
 			submit_blend: {
 				components: null,
 				blend_id: null,
-				type: 'Zeotrope'
+				type: 'Other'
 			},
 			selected_substance: {
 				selected: null,

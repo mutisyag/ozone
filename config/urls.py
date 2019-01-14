@@ -17,6 +17,7 @@ urlpatterns = [
     url(r'^api/docs/', include_docs_urls(title='ORS API', public=False)),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    url(r'^admin/i18n/', include('django.conf.urls.i18n')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # User management
     path(

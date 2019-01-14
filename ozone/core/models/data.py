@@ -10,12 +10,11 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import Submission
+from .reporting import ModifyPreventionMixin, Submission, OtherSubmissionType
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
 __all__ = [
-    'ModifyPreventionMixin',
     'Article7Questionnaire',
     'Article7Export',
     'Article7Import',
@@ -26,25 +25,8 @@ __all__ = [
     'HighAmbientTemperatureProduction',
     'HighAmbientTemperatureImport',
     'Transfer',
+    'DataOther',
 ]
-
-
-class ModifyPreventionMixin:
-    """
-    Mixin to be used by all data report models to prevent modification of
-    submitted submissions.
-    """
-
-    def clean(self):
-        if not self.submission.data_changes_allowed:
-            raise ValidationError(
-                _("Submitted submissions cannot be modified.")
-            )
-        super().clean()
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
 
 
 class BlendCompositionMixin:
@@ -345,6 +327,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_os = models.CharField(max_length=9999, blank=True)
 
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
 
@@ -452,6 +436,8 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     quantity_article_5 = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+
+    tracker = FieldTracker()
 
     class Meta:
         db_table = 'reporting_article_seven_production'
@@ -615,6 +601,8 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
         validators=[MinValueValidator(0.0)]
     )
 
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_emissions'
 
@@ -638,7 +626,9 @@ class BaseHighAmbientTemperature(models.Model):
         abstract = True
 
 
-class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
+class HighAmbientTemperatureProduction(
+    ModifyPreventionMixin, BaseReport, BaseHighAmbientTemperature
+):
     """
     Production under the exemption for high-ambient-temperature parties
     """
@@ -646,9 +636,12 @@ class HighAmbientTemperatureProduction(BaseReport, BaseHighAmbientTemperature):
         Substance, on_delete=models.PROTECT
     )
 
+    tracker = FieldTracker()
+
 
 class HighAmbientTemperatureImport(
-    BaseBlendCompositionReport, BaseHighAmbientTemperature
+    ModifyPreventionMixin, BaseBlendCompositionReport,
+    BaseHighAmbientTemperature
 ):
     """
     Consumption (imports) under the exemption for high-ambient-temperature
@@ -666,7 +659,7 @@ class HighAmbientTemperatureImport(
     ]
 
 
-class Transfer(BaseReport):
+class Transfer(ModifyPreventionMixin, BaseReport):
     """
     Records amounts of production rights transferred between Parties.
     """
@@ -695,3 +688,19 @@ class Transfer(BaseReport):
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
+
+    tracker = FieldTracker()
+
+
+class DataOther(ModifyPreventionMixin, BaseReport):
+    """
+    Model for Data Other reports.
+    """
+
+    other_submission_type = models.ForeignKey(
+        OtherSubmissionType,
+        related_name="data_other",
+        on_delete=models.PROTECT
+    )
+
+    tracker = FieldTracker()

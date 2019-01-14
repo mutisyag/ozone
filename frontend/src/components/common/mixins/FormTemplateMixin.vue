@@ -75,7 +75,7 @@ export default {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
-							][form_field[key].selected]
+							][form_field[key].selected][form_field[key].selected]
 							: (tableRow[key] = form_field[key].selected)
 					}
 				})
@@ -83,6 +83,11 @@ export default {
 					tableRow.originalObj = form_field
 					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
 					tableRow._showDetails = true
+					if (tableRow.originalObj.validation.selected.length) {
+						tableRow.validation = 'invalid'
+					} else {
+						tableRow.validation = 'valid'
+					}
 					tableFields.push(tableRow)
 				}
 			})
@@ -114,6 +119,11 @@ export default {
 					tableRow.originalObj = form_field
 					tableRow._showDetails = false
 					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
+					if (tableRow.originalObj.validation.selected.length) {
+						tableRow.validation = 'invalid'
+					} else {
+						tableRow.validation = 'valid'
+					}
 					tableFields.push(tableRow)
 				}
 			})
@@ -200,7 +210,12 @@ export default {
 
 		openValidation() {
 			const body = document.querySelector('body')
-			this.sidebarTabIndex = 2
+			if (this.tabName !== 'has_produced') {
+				this.sidebarTabIndex = 2
+			} else {
+				this.sidebarTabIndex = 1
+			}
+
 			body.classList.add('aside-menu-lg-show')
 		},
 

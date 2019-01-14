@@ -13,7 +13,7 @@ import {
 	getNonParties,
 	getPartyRatifications,
 	getCurrentUser,
-	uploadFile
+	uploadAttachment
 } from '@/components/common/services/api'
 
 import {
@@ -96,8 +96,9 @@ const actions = {
 				sorting: {
 					sortDesc: true,
 					sortBy: 'updated_at'
-				}
-
+				},
+				perPage: null,
+				currentPage: null
 			}).then(response => {
 				context.commit('setDashboardMySubmissions', response.data)
 				resolve()
@@ -115,7 +116,7 @@ const actions = {
 
 		const parties_temp = response.data
 			.filter(country => country.id === country.parent_party)
-			.map(country => ({ value: country.id, text: country.name }))
+			.map(country => ({ value: country.id, text: country.name, iso: country.abbr }))
 		context.commit('setDashboardParties', parties_temp)
 	},
 
@@ -252,7 +253,7 @@ const actions = {
 			const countryOptions = response.data.filter((p) => {
 				countryDisplay[p.id] = p.name
 				return p.id !== context.state.current_submission.party
-			}).map((country) => ({ value: country.id, text: country.name }))
+			}).map((country) => ({ value: country.id, text: country.name, iso: country.abbr }))
 			context.commit('updateCountries', countryOptions)
 			context.commit('updateCountriesDisplay', countryDisplay)
 		})
@@ -265,7 +266,8 @@ const actions = {
 			response.data.forEach(group => {
 				group.substances.sort((a, b) => a.sort_order - b.sort_order)
 				group.substances.forEach(substance => {
-					tempSubstances.push({ value: substance.id,
+					tempSubstances.push({
+						value: substance.id,
 						text: substance.name,
 						group,
 						is_qps: substance.is_qps,
@@ -311,7 +313,7 @@ const actions = {
 				}
 
 				// section, substance, group, country, blend, prefillData, ordering_id
-				const inner_fields = context.state.tableRowConstructor.getInnerFields({
+				const inner_fields = context.state.tableRowConstructor.substanceRows({
 					section: data.currentSectionName,
 					substance,
 					group: data.groupName,
@@ -329,7 +331,7 @@ const actions = {
 					context.commit('incrementOrderingId', { tabName: data.currentSectionName });
 					({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
 				}
-				const inner_fields = context.state.tableRowConstructor.getInnerFields({
+				const inner_fields = context.state.tableRowConstructor.substanceRows({
 					section: data.currentSectionName,
 					substance: null,
 					group: data.groupName,
@@ -350,7 +352,7 @@ const actions = {
 			({ ordering_id } = context.state.form.tabs[currentSectionName])
 		}
 
-		const row = context.state.tableRowConstructor.getSimpleTabFields({
+		const row = context.state.tableRowConstructor.nonSubstanceRows({
 			currentSectionName,
 			prefillData,
 			ordering_id
@@ -364,24 +366,14 @@ const actions = {
 			resolve()
 		})
 	},
-	uploadFormAttachments(context, uploadedFiles) {
-		// upload to the server
-		// mocking server response
-		/* const mockResponseAttachments = uploadedFiles.map(file => ({
-			id: Math.floor(Math.random() * 100000),
-			name: file.name,
-			url: 'https://www.google.com',
-			size: `${file.size} bytes`,
-			dateUploaded: new Date(),
-			description: `DESCRIPTION ${file.name}`
-		})) */
-		uploadedFiles.forEach(file => {
-			console.log(file)
-			const response = uploadFile(file, context.state.current_submission.id)
-			console.log(response)
-		})
-
-		return []
+	async uploadAttachments(context, { attachments, onProgressCallback }) {
+		for (let i = 0; i < attachments.length; i += 1) {
+			const attachment = attachments[i]
+			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
+			attachment.uploadUrl = response.url
+			attachment.percentage = 100
+		}
+		return attachments
 	}
 }
 

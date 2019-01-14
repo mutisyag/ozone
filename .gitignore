@@ -130,3 +130,6 @@ celerybeat*
 
 # direnv
 .envrc
+
+translations
+frontend/public/translations.json

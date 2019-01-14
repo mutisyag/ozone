@@ -63,7 +63,6 @@ export default {
 
 			Object.values(this.form.tabs).forEach(tab => {
 				if (isObject(tab.form_fields)) {
-					console.log(tab.form_fields)
 					for (const formFieldPropName in tab.form_fields) {
 						const formField = tab.form_fields[formFieldPropName]
 						if (formField.optionsStatePropertyPath) {

@@ -6,8 +6,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
-from .reporting import Submission
-from .data import ModifyPreventionMixin
+from model_utils import FieldTracker
+
+from .reporting import ModifyPreventionMixin, Submission
+
 
 UPLOAD_TOKEN_LENGTH = 64
 UPLOAD_TOKEN_DURATION = 60 * 60  # 60 minutes
@@ -68,9 +70,18 @@ class File(models.Model):
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
-    file = models.FileField(upload_to=get_storage_directory)
+    name = models.CharField(max_length=512)
+    file = models.FileField(
+        upload_to=get_storage_directory, null=True, blank=True
+    )
 
     description = models.CharField(max_length=512, blank=True)
+
+    uploader = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='uploaded_files',
+        on_delete=models.PROTECT
+    )
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -79,19 +90,26 @@ class File(models.Model):
     def size(self):
         return self.file.size
 
-    @property
-    def name(self):
-        # If renaming files is needed, a `name` field will be necessary
-        return self.file.name
-
     class Meta:
         abstract = True
 
 
 class SubmissionFile(ModifyPreventionMixin, File):
+    def get_storage_directory(self, filename):
+        return os.path.join(
+            self.submission.get_storage_directory(),
+            os.path.basename(filename)
+        )
+
     submission = models.ForeignKey(
         Submission, related_name='files', on_delete=models.PROTECT
     )
+
+    file = models.FileField(
+        upload_to=get_storage_directory, null=True, blank=True
+    )
+
+    tracker = FieldTracker()
 
     def get_storage_directory(self, filename):
         return os.path.join(
@@ -108,9 +126,9 @@ class SubmissionFile(ModifyPreventionMixin, File):
             }
         )
 
-    def has_valid_extension(self):
-        #TODO: implement
-        return True
+    @staticmethod
+    def has_valid_extension(filename):
+        return filename.split('.')[-1].lower() in settings.ALLOWED_FILE_EXTENSIONS
 
     def __str__(self):
         return f'File {self.file.name} for submission {self.submission}'

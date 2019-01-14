@@ -55,14 +55,15 @@
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<div
 							v-if="inputField === 'facility_name'"
-							class="table-btn-group"
+							class="row-controls"
+							style="left: -35px;top: -10px;"
 							:key="`${cell.item.index}_${inputField}_${tabName}_button`"
 							>
 							<b-btn
-								variant="outline-danger"
+								variant="link"
 								@click="remove_field(cell.item.index)"
 								class="table-btn"
-							>Delete</b-btn>
+							><i class="fa fa-trash"></i></b-btn>
 						</div>
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -102,8 +103,8 @@
 			</div>
 		</div>
     <hr>
-    <AppAside v-if="hasInvalidFields" fixed>
-      <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
+    <AppAside fixed>
+      <DefaultAside v-on:fillSearch="table.tableFilters = true; table.filters.search = $event.facility"  :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
   </div>
 </template>
@@ -201,7 +202,7 @@ export default {
 
 		isReadOnly() {
 			return this.$store.getters.isReadOnly || this.hasDisabledFields
-		},
+		}
 
 	},
 

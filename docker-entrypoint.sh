@@ -13,6 +13,10 @@ if [ "x$DJANGO_MIGRATE" = 'xyes' ]; then
     python manage.py migrate --noinput
 fi
 
+# This will only have effect if there translations repo has been
+# clones and copied as well.
+python manage.py compilemessages
+
 if [ "x$DJANGO_COLLECT_STATIC" = "xyes" ]; then
   python manage.py collectstatic --noinput
 fi

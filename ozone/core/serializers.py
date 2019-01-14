@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -31,6 +33,7 @@ from .models import (
     Article7NonPartyTrade,
     Article7Emission,
     HighAmbientTemperatureProduction,
+    DataOther,
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
@@ -482,9 +485,122 @@ class Article7ProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSeria
         exclude = ('submission',)
 
 
+def validate_import_export_data(
+    initial_data, totals_fields, quantity_fields, party_field
+):
+    """
+    Function for validation of initial data sent to the Import/Export
+    serializers in regards to complex, per-form validation criteria
+    (see https://github.com/eaudeweb/ozone/issues/81)
+    """
+
+    # Find all entries in self.initial_data that do not have a src/dst country
+    # (actually, there should only be one such entry, but this cannot be
+    # guaranteed at this stage of the request processing).
+    # Then find all substances relating to those entries (could be blends)
+    related_substances = []
+    for entry in initial_data:
+        if entry.get('party_field', None) is None:
+            if entry.get('substance', None):
+                related_substances.append(entry.get('substance'))
+            elif entry.get('blend', None):
+                related_substances.extend(
+                    Blend.objects.get(
+                        id=entry.get('blend')
+                    )
+                        .get_substance_ids()
+                )
+
+    # Calculate the sums of quantities and totals for each substance
+    if related_substances:
+        sums_dictionary = {
+            substance: {'totals_sum': 0, 'quantities_sum': 0}
+            for substance in related_substances
+        }
+        for entry in initial_data:
+            if entry.get('blend', None):
+                # Blend entry
+                blend_subs = Blend.objects.get(
+                    id=entry.get('blend')
+                ).get_substance_ids_percentages()
+
+                for substance, percentage in blend_subs:
+                    if substance in related_substances:
+                        sums_dictionary[substance]['totals_sum'] += sum(
+                            [
+                                entry.get(field, 0) * percentage
+                                for field in totals_fields
+                            ]
+                        )
+                        sums_dictionary[substance]['quantities_sum'] += sum(
+                            [
+                                entry.get(field, 0) * percentage
+                                for field in quantity_fields
+                            ]
+                        )
+
+            elif entry.get('substance', None):
+                substance = entry.get('substance')
+                sums_dictionary[substance]['totals_sum'] += sum(
+                    [
+                        entry.get(field, 0) for field in totals_fields
+                    ]
+                )
+                sums_dictionary[substance]['quantities_sum'] += sum(
+                    [
+                        entry.get(field, 0) for field in quantity_fields
+                    ]
+                )
+
+        # And finally verify that, for each substance,
+        # sum of totals > sum of quantities
+        valid = all(
+            [
+                sums['totals_sum'] >= sums['quantities_sum']
+                for sums in sums_dictionary.values()
+            ]
+        )
+        if not valid:
+            raise ValidationError(
+                'For each substance that has no destination_party,'
+                'the sum of quantities across all data entries should be '
+                'less than the sum of totals'
+            )
+
+
 class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'destination_party'
+
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding the serializer's default is_valid method so we add extra
+        validation related to feedstock vs new/recovered quantities.
+
+        Typically, such validations would be performed on the models, but in
+        our case:
+        - we need to import legacy data that might not satisfy these conditions
+        - we need to perform the validation on a list of entries (i.e. model
+        instances), aggregating data from several of them. That happens because
+        we have bulk serializers.
+
+        """
+        # Call is_valid first to avoid expensive computation on invalid data
+        ret = super().is_valid(raise_exception)
+
+        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
+        quantity_fields = [
+            f for f in Article7Export.QUANTITY_FIELDS
+            if f not in totals_fields and f != 'quantity_polyols'
+        ]
+
+        # This will simply raise a ValidationError if self.initial_data does
+        # not satisfy the totals >= quantities criteria.
+        validate_import_export_data(
+            self.initial_data, totals_fields, quantity_fields, self.unique_with
+        )
+
+        return ret
 
 
 class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
@@ -500,6 +616,36 @@ class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerial
 class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'source_party'
+
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding the serializer's default is_valid method so we add extra
+        validation related to feedstock vs new/recovered quantities.
+
+        Typically, such validations would be performed on the models, but in
+        our case:
+        - we need to import legacy data that might not satisfy these conditions
+        - we need to perform the validation on a list of entries (i.e. model
+        instances), aggregating data from several of them. That happens because
+        we have bulk serializers.
+
+        """
+        # Call is_valid first to avoid expensive computation on invalid data
+        ret = super().is_valid(raise_exception)
+
+        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
+        quantity_fields = [
+            f for f in Article7Import.QUANTITY_FIELDS
+            if f not in totals_fields and f != 'quantity_polyols'
+        ]
+
+        # This will simply raise a ValidationError if self.initial_data does
+        # not satisfy the totals >= quantities criteria.
+        validate_import_export_data(
+            self.initial_data, totals_fields, quantity_fields, self.unique_with
+        )
+
+        return ret
 
 
 class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
@@ -581,11 +727,17 @@ class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
         exclude = ('submission', 'blend_item',)
 
 
+class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+    class Meta:
+        model = DataOther
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionInfo
-        fields = '__all__'
+        exclude = ('submission',)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -593,7 +745,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionInfo
-        fields = '__all__'
+        exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
         return getattr(obj.reporting_channel, 'name', '')
@@ -740,6 +892,11 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         lookup_url_kwarg='submission_pk',
     )
 
+    data_others_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-data-others-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
     files_url = serializers.HyperlinkedIdentityField(
         view_name='core:submission-files-list',
         lookup_url_kwarg='submission_pk'
@@ -770,6 +927,9 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
 
@@ -779,8 +939,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'article7destructions_url', 'article7productions_url',
             'article7exports_url', 'article7imports_url',
             'article7nonpartytrades_url', 'article7emissions_url',
-            'hat_productions_url',
-            'hat_imports_url',
+            'hat_productions_url', 'hat_imports_url', 'data_others_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -790,6 +949,7 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'data_changes_allowed', 'is_current', 'is_cloneable',
             'changeable_flags',  'flag_provisional', 'flag_valid',
             'flag_superseded',
+            'can_change_remarks_party', 'can_change_remarks_secretariat',
         )
 
         read_only_fields = (
@@ -807,6 +967,14 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
     def get_changeable_flags(self, obj):
         user = self.context['request'].user
         return obj.get_changeable_flags(user)
+
+    def get_can_change_remarks_party(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_remark(user, 'remarks_party')
+
+    def get_can_change_remarks_secretariat(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_remark(user, 'remarks_secretariat')
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):

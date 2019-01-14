@@ -1,4 +1,5 @@
 import json
+import unittest
 
 from django.urls import reverse
 from django.test import TestCase
@@ -147,6 +148,34 @@ class TestHATImport(BaseHATImportTest):
 
         hat_import = HighAmbientTemperatureImport.objects.get(pk=hat_import.id)
         self.assertEqual(hat_import.quantity_msac, 42)
+
+    def test_update_immutable(self):
+        submission = self.create_submission()
+
+        hat_import = HighAmbientTemperatureImportFactory(
+            submission=submission, substance=self.substance,
+            **HAT_IMPORT_DATA
+        )
+        submission._current_state = "finalized"
+        submission.save()
+
+        data = dict(HAT_IMPORT_DATA)
+        data["substance"] = self.substance.id
+        data["quantity_msac"] = 42
+
+        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
+
+        result = self.client.put(
+            reverse(
+                "core:submission-hat-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            json.dumps([data]),
+            "application/json",
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 422, result.json())
 
     def test_clone(self):
         submission = self.create_submission()

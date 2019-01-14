@@ -15,3 +15,4 @@ Table of contents
 * Non-article 7 data forms
 * [System requirements](doc/system.md)
 * [OAuth provider](doc/oauth.md)
+* [Continuous Translation](doc/translations.md)

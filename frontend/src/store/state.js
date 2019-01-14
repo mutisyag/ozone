@@ -9,7 +9,7 @@ const state = {
 		table: {
 			currentPage: 1,
 			perPage: 10,
-			totalRows: null,
+			totalRows: 0,
 			sorting: {
 				sortBy: 'updated_at',
 				sortDesc: true,

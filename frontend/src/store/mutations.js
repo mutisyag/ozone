@@ -94,7 +94,7 @@ const mutations = {
 		state.dashboard.table.filters.party = data
 	},
 	setDashboardMySubmissions(state, data) {
-		state.dashboard.mySubmissions = data.results
+		state.dashboard.mySubmissions = data
 	},
 	// alerts
 
@@ -203,7 +203,6 @@ const mutations = {
 	},
 
 	prefillTab(state, { tabName, data }) {
-		console.log('prefilling tab', tabName, data)
 		Object.keys(state.form.tabs[tabName].form_fields).forEach(field => {
 			if (data[field] !== undefined) {
 				state.form.tabs[tabName].form_fields[field].selected = data[field]
@@ -226,7 +225,9 @@ const mutations = {
 	// permissions
 
 	setFlagsPermissions(state, data) {
-		Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
+		// some forms either might not have flags or the flags will be implemented on a latter date
+		// the "state.form.tabs.flags &&" verification prvents hard failure for those forms
+		state.form.tabs.flags && Object.keys(state.form.tabs.flags.form_fields).forEach(key => {
 			if (data.includes(key)) state.form.tabs.flags.form_fields[key].disabled = false
 		})
 	},
@@ -256,21 +257,26 @@ const mutations = {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
 
-	setTabAttachments(state, { tabName, attachments }) {
-		state.form.tabs[tabName].form_fields.attachments = attachments
-	},
-	addTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments.push(attachment)
+	addTabAttachments(state, { tabName, attachments }) {
+		if (!attachments) {
+			return
+		}
+		attachments.forEach(attachment => {
+			state.form.tabs[tabName].form_fields.attachments.push(attachment)
+		})
 	},
 	updateTabAttachment(state, { tabName, attachment }) {
 		const updatedAttachments = []
-		state.form.tabs[tabName].form_fields.attachments.forEach(attach => {
-			attach.id === attachment.id ? updatedAttachments.push(attachment) : updatedAttachments.push(attach)
+		state.form.tabs[tabName].form_fields.attachments.forEach(attachOld => {
+			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
 		})
 		state.form.tabs[tabName].form_fields.attachments = updatedAttachments
 	},
 	deleteTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attach => attach.id !== attachment.id)
+		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attachOld => attachOld !== attachment)
+	},
+	deleteAllTabAttachments(state, { tabName }) {
+		state.form.tabs[tabName].form_fields.attachments = []
 	}
 }
 

@@ -49,7 +49,6 @@
 .table {
   width: 100%;
   max-width: 100%;
-  margin-bottom: 2rem;
   background-color: #fff;
   font-size: .8rem;
 }
@@ -966,4 +965,46 @@ body {
 
 .edit-trigger {
 	cursor: pointer;
+}
+
+.app-header .nav-item {
+	  border: 1px solid #eee;
+    padding: .5rem;
+    border-radius: .25em;
+    background: #fafafa;
+}
+
+
+.row-controls {
+	display: none;
+}
+
+.group-cell {
+	width: 59px;
+	text-align: center;
+}
+
+.table tr:hover {
+	.row-controls {
+		display: block;
+		white-space: nowrap;
+		width: 59px;
+	}
+	.group-cell {
+		display: none;
+	}
+}
+
+
+.submission-table .form-control {
+	padding: .2rem;
+  height: initial;
+  min-height: initial;
+}
+
+.row-controls {
+	> span {
+		margin-right: .5rem;
+		cursor: pointer;
+	}
 }

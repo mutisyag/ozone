@@ -24,13 +24,44 @@ from ..exceptions import (
 )
 
 __all__ = [
+    'ModifyPreventionMixin',
     'Obligation',
     'Submission',
     'SubmissionInfo',
     'ReportingChannel',
+    'OtherSubmissionType',
 ]
 
 SUBMISSION_ROOT_DIR = 'submissions'
+
+
+class ModifyPreventionMixin:
+    """
+    Mixin to be used by models with foreign keys to Submissions which need to
+    prevent changes when the referenced submission is not in Data Entry.
+    """
+
+    @staticmethod
+    def get_exempted_fields():
+        return [
+            # Secretariat remarks can be changed
+            # at any time, while the party remarks cannot.
+            "remarks_os"
+        ]
+
+    def clean(self):
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.submission.data_changes_allowed
+        ):
+            raise ValidationError(
+                _("Submitted submissions cannot be modified.")
+            )
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class Obligation(models.Model):
@@ -65,32 +96,6 @@ class ReportingChannel(models.Model):
 
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
-
-
-class SubmissionInfo(models.Model):
-    """
-    Model for storing submission info.
-    """
-
-    reporting_officer = models.CharField(max_length=256, blank=True)
-    designation = models.CharField(max_length=256, blank=True)
-    organization = models.CharField(max_length=256, blank=True)
-    postal_code = models.CharField(max_length=64, blank=True)
-    country = models.CharField(max_length=256, blank=True)
-    phone = models.CharField(max_length=128, blank=True)
-    fax = models.CharField(max_length=128, blank=True)
-    email = models.EmailField(null=True, blank=True)
-    date = models.DateField(null=True, blank=True)
-    reporting_channel = models.ForeignKey(
-        ReportingChannel,
-        related_name="info",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT
-    )
-
-    def __str__(self):
-        return f'{self.submission} - Info'
 
 
 class Submission(models.Model):
@@ -168,14 +173,6 @@ class Submission(models.Model):
         null=True,
         blank=True,
         on_delete=models.SET_NULL
-    )
-
-    info = models.OneToOneField(
-        SubmissionInfo,
-        related_name='submission',
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE
     )
 
     # Persisted workflow class for this submission. We want this to be only set
@@ -489,6 +486,21 @@ class Submission(models.Model):
             })
         return True
 
+    def can_change_remark(self, user, field_name):
+        if self.current_state not in self.editable_states and field_name.endswith("_party"):
+            # The user cannot modify any of the party fields, if the
+            # submission isn't in an editable state (e.g. `data_entry`)
+            return False
+        if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
+            # Secretariat users cannot modify any of the party fields, if the
+            # submission was filled by a party.
+            return False
+        elif not user.is_secretariat and field_name.endswith("_secretariat"):
+            # Party users cannot modify any of the secretariat remark fields
+            return False
+
+        return True
+
     def check_remarks(self, user, remarks):
         """
         Raise error if the user has change any remarks he was not allowed to
@@ -503,12 +515,7 @@ class Submission(models.Model):
                 # No value changed
                 continue
 
-            if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
-                # Secretariat users cannot modify any of the party fields, if the
-                # submission was filled by a party.
-                wrongly_modified_remarks.append(field_name)
-            elif not user.is_secretariat and field_name.endswith("_secretariat"):
-                # Party users cannot modify any of the secretariat remark fields
+            if not self.can_change_remark(user, field_name):
                 wrongly_modified_remarks.append(field_name)
 
         if len(wrongly_modified_remarks) > 0:
@@ -563,12 +570,13 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
         ]
 
-    def non_exempted_fields_modified(self):
+    @staticmethod
+    def non_exempted_fields_modified(obj):
         """
         Checks whether one of the non-exempted fields was modified.
         """
-        exempted_fields = Submission.get_exempted_fields()
-        modified_fields = self.tracker.changed()
+        exempted_fields = obj.__class__.get_exempted_fields()
+        modified_fields = obj.tracker.changed()
         for field in modified_fields.keys():
             if field not in exempted_fields:
                 return True
@@ -617,18 +625,6 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
-            info = SubmissionInfo.objects.create(
-                reporting_officer=self.info.reporting_officer,
-                designation=self.info.designation,
-                organization=self.info.organization,
-                postal_code=self.info.postal_code,
-                country=self.info.country,
-                phone=self.info.phone,
-                fax=self.info.fax,
-                email=self.info.email,
-                date=self.info.date,
-                reporting_channel=self.info.reporting_channel
-            )
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
@@ -636,8 +632,25 @@ class Submission(models.Model):
                 cloned_from=self,
                 created_by=self.created_by,
                 last_edited_by=self.last_edited_by,
-                info=info
             )
+            if hasattr(self, 'info'):
+                # Clone submission might already have some pre-populated
+                # info due to how save() works. These need to be updated.
+                SubmissionInfo.objects.update_or_create(
+                    submission=clone,
+                    defaults={
+                        'reporting_officer': self.info.reporting_officer,
+                        'designation': self.info.designation,
+                        'organization': self.info.organization,
+                        'postal_code': self.info.postal_code,
+                        'country': self.info.country,
+                        'phone': self.info.phone,
+                        'fax': self.info.fax,
+                        'email': self.info.email,
+                        'date': self.info.date,
+                        'reporting_channel': self.info.reporting_channel
+                    }
+                )
         else:
             raise e
 
@@ -737,8 +750,6 @@ class Submission(models.Model):
             related_qs = getattr(self, related_data).all()
             if related_qs:
                 related_qs.delete()
-        if self.info:
-            self.info.delete()
 
         super().delete(*args, **kwargs)
 
@@ -747,7 +758,10 @@ class Submission(models.Model):
             raise ValidationError(
                 _("Reporting cannot be performed for this reporting period.")
             )
-        if self.non_exempted_fields_modified() and not self.data_changes_allowed:
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.data_changes_allowed
+        ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
@@ -758,7 +772,7 @@ class Submission(models.Model):
              update_fields=None):
         # Several actions need to be performed on first save
         # No need to check `update_fields`, since this is the first
-        # save. If other fields are change during an update, they
+        # save. If other fields are changed during an update, they
         # must be added to the `update_fields` list, since we are using
         # the PartialUpdateMixIn.
         if not self.pk or force_insert:
@@ -792,15 +806,22 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
+            self.clean()
+            ret = super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
+            )
+
             # Prefill "Submission info" with values from the most recent
             # submission when creating a new submission for the same obligation
             # and party.
             # The prefill will be skipped if it's a clone action.
-            if not self.info:
+            if not hasattr(self, 'info'):
                 latest_submission = submissions.order_by('-updated_at').first()
-                if latest_submission and latest_submission.info:
+                if latest_submission and hasattr(latest_submission, 'info'):
                     latest_info = latest_submission.info
-                    self.info = SubmissionInfo.objects.create(
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
                         reporting_officer=latest_info.reporting_officer,
                         designation=latest_info.designation,
                         organization=latest_info.organization,
@@ -810,37 +831,74 @@ class Submission(models.Model):
                         fax=latest_info.fax,
                         email=latest_info.email,
                         date=latest_info.date,
-                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
                     )
                 else:
-                    self.info = SubmissionInfo.objects.create(
-                        reporting_channel=ReportingChannel.objects.get(name='Web form')
+                    info = SubmissionInfo.objects.create(
+                        submission=self,
+                        reporting_channel=ReportingChannel.objects.get(
+                            name='Web form'
+                        )
                     )
 
-        self.clean()
-        return super().save(
-            force_insert=force_insert, force_update=force_update,
-            using=using, update_fields=update_fields
-        )
+            return ret
 
-    @transaction.atomic()
-    def make_current(self):
-        versions = (
-            Submission.objects.select_for_update()
-            .filter(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                obligation=self.obligation,
+        else:
+            # This is not the first save
+            self.clean()
+            return super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
             )
-            .exclude(pk=self.pk)
-            .exclude(_current_state__in=self.editable_states)
-        )
-        for version in versions:
-            version.flag_superseded = True
-            version.save()
-        self.flag_superseded = False
-        self.save()
 
     def set_submitted(self):
         self.submitted_at = timezone.now()
         self.save()
+
+
+class SubmissionInfo(ModifyPreventionMixin, models.Model):
+    """
+    Model for storing submission info.
+    """
+
+    submission = models.OneToOneField(
+        Submission,
+        related_name='info',
+        on_delete=models.CASCADE
+    )
+
+    reporting_officer = models.CharField(max_length=256, blank=True)
+    designation = models.CharField(max_length=256, blank=True)
+    organization = models.CharField(max_length=256, blank=True)
+    postal_code = models.CharField(max_length=64, blank=True)
+    country = models.CharField(max_length=256, blank=True)
+    phone = models.CharField(max_length=128, blank=True)
+    fax = models.CharField(max_length=128, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="info",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
+    tracker = FieldTracker()
+
+    def __str__(self):
+        return f'{self.submission} - Info'
+
+
+class OtherSubmissionType(models.Model):
+    """
+    Model for storing other types of submission.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.name

@@ -1,16 +1,16 @@
 <template>
-  <div class="app flex-row align-items-top">
+  <div class="app blends-lookup-table flex-row align-items-top">
 	<b-container fluid>
 	<b-card>
 		<template slot="header">
 			<b-row>
 				<b-col>
-                    <b-input-group prepend="Name / Other Names">
-                      <b-form-input v-model="table.filters.searchName" />
-                    </b-input-group>
-                </b-col>
+					<b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
+						<b-form-input v-model="table.filters.searchName" />
+					</b-input-group>
+				</b-col>
 				<b-col>
-                    <b-input-group>
+					<b-input-group>
 						<multiselect
 							:max-height="250"
 							:multiple="true"
@@ -19,12 +19,12 @@
 							:close-on-select="false"
 							label="text"
 							trackBy="value"
-							placeholder="Components"
+							:placeholder="$gettext('Components')"
 							v-model="table.filters.selectedComponentsNames"
-							:options="searchComponentOptions"> </multiselect>
+							:options="searchComponentOptions" />
 						<b-input-group-append>
 							<b-btn  variant="primary" :disabled="!table.filters.selectedComponentsNames.length" @click="toggleIsComponentsSortDirectionDesc">
-								Sort
+								<span v-translate>Sort</span>
 								<i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
 								<i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
 							</b-btn>
@@ -33,7 +33,7 @@
                 </b-col>
 				<b-col>
                     <b-input-group-append>
-                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">Clear</b-btn>
+                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters"><span v-translate>Clear</span></b-btn>
                     </b-input-group-append>
                 </b-col>
 			</b-row>
@@ -104,11 +104,11 @@ export default {
 		return {
 			table: {
 				fields: [{
-					key: 'blend_id', label: 'Name', sortable: true, class: 'text-center'
+					key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
 				}, {
-					key: 'other_names', label: 'Other Names', sortable: true, class: 'text-center'
+					key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center'
 				}, {
-					key: 'components', label: 'Components', class: 'text-center'
+					key: 'components', label: this.$gettext('Components'), class: 'text-center'
 				}
 				],
 				currentPage: 1,
@@ -121,10 +121,10 @@ export default {
 			},
 			tableComponents: {
 				fields: [{
-					key: 'component_name', label: 'Name', class: 'text-center'
+					key: 'component_name', label: this.$gettext('Name'), class: 'text-center'
 				}, {
 					key: 'percentage',
-					label: 'Percentage',
+					label: this.$gettext('Percentage'),
 					class: 'text-center',
 					formatter: (value) => `${(value * 100).toFixed(2)}%`
 				}

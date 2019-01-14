@@ -1,4 +1,6 @@
 import labels from '@/components/art7/dataDefinitions/labels'
+import fromExponential from 'from-exponential'
+import { isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -38,7 +40,7 @@ const quantityCalculator = (fields, parent, section) => {
 	if (count === 0) {
 		returnObj.selected = ''
 	} else {
-		returnObj.selected = count
+		returnObj.selected = fromExponential(count)
 	}
 
 	const tooltip = createTooltip(forTooltip, section)
@@ -81,7 +83,7 @@ const decisionGenerator = (fields, parent, section) => {
 }
 
 export default {
-	getSimpleTabFields({
+	nonSubstanceRows({
 		currentSectionName, prefillData, ordering_id
 	}) {
 		let row
@@ -100,31 +102,31 @@ export default {
 				},
 				quantity_generated: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_all_uses: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_captured_for_destruction: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_feedstock: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_destroyed: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				quantity_emitted: {
 					type: 'number',
-					selected: ''
+					selected: null
 				},
 				remarks_party: {
 					type: 'textarea',
@@ -206,9 +208,8 @@ export default {
 				}
 			}
 			if (prefillData) {
-				console.log(prefillData)
 				Object.keys(prefillData).forEach((element) => {
-					row[element].selected = prefillData[element]
+					row[element].selected = isNumber(prefillData[element]) ? fromExponential(prefillData[element]) : prefillData[element]
 				})
 			}
 			return row
@@ -217,7 +218,7 @@ export default {
 		}
 	},
 
-	getInnerFields({
+	substanceRows({
 		section, substance, group, country, blend, prefillData, ordering_id
 	}) {
 		const countryFieldName = getCountryField(section)
@@ -355,20 +356,6 @@ export default {
 		}
 
 		switch (section) {
-		case 'has_exports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
-		case 'has_imports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
 		case 'has_produced':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -506,13 +493,7 @@ export default {
 					return returnObj
 				}
 			}
-
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_destroyed':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -555,12 +536,7 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		case 'has_nonparty':
 			baseInnerFields = {
 				ordering_id: { selected: ordering_id || 0 },
@@ -619,16 +595,19 @@ export default {
 					return returnObj
 				}
 			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
+			break
 		default:
-			// statements_def
-			return {}
+			break
 		}
+		if (prefillData) {
+			Object.keys(prefillData).forEach((field) => {
+				baseInnerFields[field]
+					?	baseInnerFields[field].selected = isNumber(prefillData[field])
+						? fromExponential(prefillData[field]) : prefillData[field]
+					: null
+			})
+		}
+		return baseInnerFields
 	}
 
 }

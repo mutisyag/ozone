@@ -266,3 +266,8 @@ pyvenv.cfg
 .venv
 pip-selfcheck.json
 
+### Others 
+
+**/.git/
+**/__pycache__/
+frontend/dist

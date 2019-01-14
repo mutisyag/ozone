@@ -43,10 +43,13 @@ const getPropertyValue = (obj, propertyPath) => {
 	return propValue
 }
 
+const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n)
+
 export {
 	getLevel2PropertyValue,
 	isObject,
 	pushUnique,
 	intersect,
-	getPropertyValue
+	getPropertyValue,
+	isNumber
 }

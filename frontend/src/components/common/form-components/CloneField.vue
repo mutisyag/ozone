@@ -61,13 +61,13 @@ export default {
 				let fieldExists = false
 				for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
 					if (current_field.substance.selected) {
-						if (existing_field.substance.selected === current_field.substance.selected && existing_field[currentTypeOfCountryField].selected === country) {
+						if (parseInt(existing_field.substance.selected) === parseInt(current_field.substance.selected) && parseInt(existing_field[currentTypeOfCountryField].selected) === parseInt(country)) {
 							fieldExists = true
 							willNotAdd.push(country)
 							break
 						}
 					} else if (current_field.blend.selected) {
-						if (existing_field.blend.selected === current_field.blend.selected && existing_field[currentTypeOfCountryField].selected === country) {
+						if (parseInt(existing_field.blend.selected) === parseInt(current_field.blend.selected) && parseInt(existing_field[currentTypeOfCountryField].selected) === parseInt(country)) {
 							fieldExists = true
 							willNotAdd.push(country)
 							break
@@ -84,21 +84,19 @@ export default {
 						blendList: [current_field.blend.selected],
 						prefillData: null
 					})
-				} else {
-					const willNotAddCountryNames = []
-					willNotAdd.forEach(countryId => {
-						const { text } = this.countryOptions.find(countryDisplay => countryDisplay.value === countryId)
-						if (text) {
-							willNotAddCountryNames.push(text)
-						}
-					})
-					this.$store.dispatch('setAlert', {
-						message: { __all__: [`The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`] },
-						variant: 'danger'
-					})
 				}
 			})
-
+			const willNotAddCountryNames = []
+			willNotAdd.length && willNotAdd.forEach(countryId => {
+				const { text } = this.countryOptions.find(countryDisplay => countryDisplay.value === countryId)
+				if (text) {
+					willNotAddCountryNames.push(text)
+				}
+			})
+			willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
+				message: { __all__: [`The fields for the folllowing countries: ${willNotAddCountryNames.join(', ')} were not added because they already exist`] },
+				variant: 'danger'
+			})
 			this.$emit('removeThisField')
 			this.resetData()
 		},

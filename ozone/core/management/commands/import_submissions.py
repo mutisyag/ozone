@@ -39,7 +39,7 @@ class Command(BaseCommand):
         "ImpEssenUse",
         "ImpProcAgent",
         "ImpQuarAppl",
-        # "ImpLabUse",
+        "ImpLabUse",
         "ImpPolyol",
     )
 
@@ -165,7 +165,7 @@ class Command(BaseCommand):
                 "quantity_critical_uses": None,
                 "quantity_essential_uses": import_row["ImpEssenUse"],
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": None,
+                "quantity_laboratory_analytical_uses": import_row["ImpLabUse"],
                 "quantity_process_agent_uses": import_row["ImpProcAgent"],
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
                 "quantity_polyols": import_row["ImpPolyol"],
@@ -428,7 +428,7 @@ class Command(BaseCommand):
                 "quantity_critical_uses": None,
                 "quantity_essential_uses": None,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": None,
+                "quantity_laboratory_analytical_uses": produce_row["ProdLabUse"],
                 "quantity_process_agent_uses": produce_row["ProdProcAgent"],
                 "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
                 "quantity_total_produced": produce_row["ProdAllNew"],
@@ -573,11 +573,13 @@ class Command(BaseCommand):
                             party.abbr, period.name)
                 return False
 
-        info = SubmissionInfo.objects.create(**values["submission_info"])
         submission = Submission.objects.create(
-            info=info,
             **values["submission"]
         )
+
+        for key, value in values["submission_info"].items():
+            setattr(submission.info, key, value)
+        submission.info.save()
 
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
@@ -638,9 +640,6 @@ class Command(BaseCommand):
                     logger.debug("Deleting related data: %s", instance)
                     instance.delete()
             s.__class__.data_changes_allowed = True
-            if s.info:
-                logger.debug("Deleting SubmissionInfo: %s", s.info)
-                s.info.delete()
             s.delete()
 
     def load_workbook(self, filename, use_cache=False):

@@ -1,13 +1,17 @@
 const getters = {
 	// TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
-	getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields.map(field => (field.validation.selected
-		? {
-			validation: field.validation.selected,
-			substance: field.substance ? field.substance.selected : null,
-			blend: field.blend ? field.blend.selected : null,
-			facility_name: field.facility_name ? field.facility_name.selected : null
-		}
-		: null)),
+	getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields
+		.map(field => (field.validation.selected
+			? {
+				validation: field.validation.selected,
+				substance: field.substance ? field.substance.selected : null,
+				source_party: field.source_party ? field.source_party.selected : null,
+				destination_party: field.destination_party ? field.destination_party.selected : null,
+				trade_party: field.trade_party ? field.trade_party.selected : null,
+				blend: field.blend ? field.blend.selected : null,
+				facility_name: field.facility_name ? field.facility_name.selected : null
+			}
+			: null)),
 
 	getDuplicateSubmission: (state) => (data) => state.dashboard.submissions.filter(
 		(sub) => sub.obligation === data.obligation
@@ -15,6 +19,20 @@ const getters = {
 			&& sub.reporting_period === data.reporting_period
 			&& sub.current_state === 'data_entry'
 	),
+
+	currentCountryIso: (state) => {
+		const { currentUser } = state
+		let currentCountry = null
+		if (!currentUser || !currentUser.party) return
+		if (state.initialData.countryOptions) {
+			currentCountry = state.initialData.countryOptions.filter(c => currentUser.party === c.value)
+		}
+		if (state.dashboard.parties && state.dashboard.parties.length) {
+			currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
+		}
+		if (!currentCountry) return
+		return currentCountry && currentCountry.iso.toLowerCase()
+	},
 
 	getSubmissionInfo: (state) => (submission) => {
 		const submissionInfo = {
