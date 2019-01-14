@@ -306,11 +306,11 @@ export default {
 			get validation() {
 				const errors = []
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
-					errors.push('Total quantity imported for all uses is required')
+					errors.push(this.$gettext('Total quantity imported for all uses is required'))
 				}
 
 				if (valueConverter(this.quantity_exempted.selected) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
-					errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
+					errors.push(this.$gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
 				}
 
 				const returnObj = {
