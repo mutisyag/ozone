@@ -17,7 +17,7 @@
     <form class="form-sections">
 			<b-row>
 				<b-col>
-					<h5>Submission Info</h5>
+					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
 							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
@@ -42,7 +42,7 @@
 				</b-col>
 
 				<b-col v-if="flags_info">
-					<h5>Flags</h5>
+					<h5><span v-translate>Flags</span></h5>
 					<b-card>
 						<b-row v-for="order in flags_info.fields_order" :key="order">
 							<b-col>
@@ -69,7 +69,6 @@
 					</b-card>
 				</b-col>
 			</b-row>
-
     </form>
     </div>
 </template>

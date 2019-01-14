@@ -19,7 +19,7 @@ const createTooltip = (fields, section) => {
 			tooltip_title += `${labels[section][field]}: ${fields[field]}\n`
 		})
 	}
-	tooltip_title += '\n Click to edit'
+	tooltip_title += `\n ${this.$gettext('Click to edit')}`
 	return tooltip_title
 }
 
@@ -139,11 +139,11 @@ export default {
 				get validation() {
 					const errors = []
 					if (!this.facility_name.selected) {
-						errors.push('Please complete the "Facility name or identifier (1)" field')
+						errors.push(this.$gettext('Please complete the "Facility name or identifier (1)" field'))
 					}
 
 					if (!this.quantity_emitted.selected) {
-						errors.push('Please complete the "Amount of generated emissions (6)" field')
+						errors.push(this.$gettext('Please complete the "Amount of generated emissions (6)" field'))
 					}
 
 					if (valueConverter(this.quantity_generated.selected) < doSum([
@@ -153,14 +153,14 @@ export default {
 						this.quantity_feedstock.selected,
 						this.quantity_destroyed.selected
 					])) {
-						errors.push('Total amount generated (2) must be higher than the sum of "Amount generated and captured(3)", "Amount used for feedstock without prior capture(4)", "Amount destroyed without prior capture(5)"')
+						errors.push(this.$gettext('Total amount generated (2) must be higher than the sum of "Amount generated and captured(3)", "Amount used for feedstock without prior capture(4)", "Amount destroyed without prior capture(5)"'))
 					}
 
 					if (valueConverter(this.quantity_captured_all_uses.selected)
 					|| valueConverter(this.quantity_captured_feedstock.selected)
 					|| valueConverter(this.quantity_captured_for_destruction.selected)) {
 						if (valueConverter(this.quantity_captured_all_uses.selected) < doSum([this.quantity_captured_feedstock.selected, this.quantity_captured_for_destruction.selected])) {
-							errors.push('Ammount generated and caputred for all uses (3a) must be greater or equal to (3b) + (3c)')
+							errors.push(this.$gettext('Ammount generated and caputred for all uses (3a) must be greater or equal to (3b) + (3c)'))
 						}
 					}
 
@@ -175,7 +175,7 @@ export default {
 							this.quantity_destroyed.selected,
 							this.quantity_emitted.selected])
 						) {
-							errors.push('Total amount generated (2) must be equal to its components (3a, 4, 5, 6)')
+							errors.push(this.$gettext('Total amount generated (2) must be equal to its components (3a, 4, 5, 6)'))
 						}
 					}
 
@@ -195,7 +195,7 @@ export default {
 								this.quantity_destroyed.selected,
 								this.quantity_emitted.selected])
 							) {
-								errors.push('Total amount generated (2) must be greater or equal to its components (3a, 4, 5, 6)')
+								errors.push(this.$gettext('Total amount generated (2) must be greater or equal to its components (3a, 4, 5, 6)'))
 							}
 						}
 					}
@@ -334,11 +334,11 @@ export default {
 			get validation() {
 				const errors = []
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
-					errors.push('Total quantity imported for all uses is required')
+					errors.push(this.$gettext('Total quantity imported for all uses is required'))
 				}
 
 				if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
-					errors.push('Total quantity imported for all uses must be >= to the sum of individual components')
+					errors.push(this.$gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
 				}
 
 				const returnObj = {
@@ -459,30 +459,30 @@ export default {
 				get validation() {
 					const errors = []
 					if (this.quantity_total_produced.selected === null) {
-						errors.push('Column (3) should not be empty (total production for all uses / captured for all uses for FII)')
+						errors.push(this.$gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
 					}
 
 					if (this.group.selected && ['A', 'B', 'C', 'a', 'b', 'c'].includes(this.group.selected.split('')[0])) {
 						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_article_5.selected])) {
-							errors.push('For annexes A-C, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + Article 5 countries (7)')
+							errors.push(this.$gettext('For annexes A-C, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + Article 5 countries (7)'))
 						}
 					}
 
 					if (this.group.selected && ['E', 'e'].includes(this.group.selected.split('')[0])) {
 						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected])) {
-							errors.push('For annex E, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + QPS')
+							errors.push(this.$gettext('For annex E, total production (3) should be >= feedstock (4) + exempted, critical, other (5) + QPS'))
 						}
 					}
 
 					if (this.group.selected && ['FI', 'fi'].includes(this.group.selected)) {
 						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected])) {
-							errors.push('For annex F, total production (3) should be >= feedstock (4) + exempted, critical, other (5)')
+							errors.push(this.$gettext('For annex F, total production (3) should be >= feedstock (4) + exempted, critical, other (5)'))
 						}
 					}
 
 					if (this.group.selected && ['FII', 'fii'].includes(this.group.selected)) {
 						if (valueConverter(this.quantity_total_produced.selected) < doSum([this.quantity_feedstock.selected, this.quantity_for_destruction.selected, this.quantity_exempted.selected])) {
-							errors.push('For annex F2, total production (3) should be >= feedstock (4a) + destruction (4b) + exempted, critical, other (5)')
+							errors.push(this.$gettext('For annex F2, total production (3) should be >= feedstock (4a) + destruction (4b) + exempted, critical, other (5)'))
 						}
 					}
 					const returnObj = {
@@ -525,7 +525,7 @@ export default {
 				get validation() {
 					const errors = []
 					if (valueConverter(this.quantity_destroyed.selected) === 0) {
-						errors.push('Please complete the "Quantity destroyed (3)" field')
+						errors.push(this.$gettext('Please complete the "Quantity destroyed (3)" field'))
 					}
 
 					const returnObj = {
@@ -584,7 +584,7 @@ export default {
 				get validation() {
 					const errors = []
 					if (doSum([this.quantity_import_new.selected, this.quantity_import_recovered.selected, this.quantity_export_new.selected, this.quantity_export_recovered.selected]) <= 0) {
-						errors.push('At least one field from (4), (5), (6), (7) is required')
+						errors.push(this.$gettext('At least one field from (4), (5), (6), (7) is required'))
 					}
 
 					const returnObj = {

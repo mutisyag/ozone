@@ -4,9 +4,7 @@
     v-on="forwardListeners"
     v-model="completeValue"
     :options="options"
-    :track-by="trackBy"
-  >
-
+    :track-by="trackBy">
     <template v-if="customTemplate" slot="singleLabel" slot-scope="props">
       <div :class="{highlighted: props.option[customTemplate]}">
           <span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span> <span class="option__title">{{ props.option.text }}</span>

@@ -2,10 +2,10 @@
 	<div v-if="history">
         <b-row>
             <b-col>
-                  <b-input-group prepend="Search">
-                    <b-form-input v-model="table.filters.search" placeholder="Type to Search" />
+                  <b-input-group :prepend="$gettext('Search')">
+                    <b-form-input v-model="table.filters.search" :placeholder="$gettext('Type to Search')" />
                     <b-input-group-append>
-                      <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''">Clear</b-btn>
+                      <b-btn variant="primary" :disabled="!table.filters.search" @click="table.filters.search = ''"><span v-translate>Clear</span></b-btn>
                     </b-input-group-append>
                   </b-input-group>
               </b-col>
@@ -55,22 +55,22 @@ export default {
 			table: {
 				fields: [
 					{
-						key: 'user', label: 'User', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'user', label: this.$gettext('User'), sortable: true, sortDirection: 'desc', class: 'text-center'
 					},
 					{
-						key: 'date', label: 'Date', sortable: true, class: 'text-center'
+						key: 'date', label: this.$gettext('Date'), sortable: true, class: 'text-center'
 					},
 					{
-						key: 'current_state', label: 'Current State', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'current_state', label: this.$gettext('Current State'), sortable: true, sortDirection: 'desc', class: 'text-center'
 					},
 					{
-						key: 'flag_provisional', label: 'Provisional', sortable: true, sortDirection: 'desc', class: 'text-center'
+						key: 'flag_provisional', label: this.$gettext('Provisional'), sortable: true, sortDirection: 'desc', class: 'text-center'
 					},
 					{
-						key: 'flag_valid', label: 'Valid', sortable: true, class: 'text-center'
+						key: 'flag_valid', label: this.$gettext('Valid'), sortable: true, class: 'text-center'
 					},
 					{
-						key: 'flag_superseded', label: 'Last modified', sortable: true, class: 'text-center'
+						key: 'flag_superseded', label: this.$gettext('Last modified'), sortable: true, class: 'text-center'
 					}
 				],
 				currentPage: 1,

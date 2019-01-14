@@ -5,9 +5,7 @@
     </div>
     <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
-		<div
-				v-else-if="field.type === 'select'"
-		>
+		<div v-else-if="field.type === 'select'">
 			<multiselect
 				:multiple="false"
 				label="text"
@@ -96,7 +94,6 @@ export default {
 		}
 	}
 }
-
 </script>
 
 <style lang="css" scoped>

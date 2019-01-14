@@ -4,38 +4,38 @@
 		<b-tabs v-model="tabIndex">
       <b-tab v-if="hasSubstances">
         <template slot="title">
-          Substances
+          <span v-translate>Substances</span>
         </template>
           <add :tabName="tabName"></add>
       </b-tab>
       <b-tab v-if="hasBlends">
         <template slot="title">
-          Blends
+          <span v-translate>Blends</span>
         </template>
           <AddBlend :tabName="tabName"></AddBlend>
       </b-tab>
       <b-tab :title-link-class="validationLength > 0 ? {} : null">
         <template slot="title">
-          Validation <b-badge v-if="validationLength" variant="danger">{{validationLength}}</b-badge>
+          <span v-translate>Validation</span> <b-badge v-if="validationLength" variant="danger">{{validationLength}}</b-badge>
         </template>
         <Validation v-on:fillSearch="$emit('fillSearch', $event)" :hovered="hovered" :tabName="tabName"></Validation>
       </b-tab>
     </b-tabs>
 		<div class="legend">
-			<b>Legend:</b>
+			<b><span v-translate>Legend:</span></b>
 			<div>
 				<div class="spinner">
 					<div class="loader"></div>
-				</div> - Form is curently being saved
+				</div> - <span v-translate>Form is curently being saved</span>
 			</div>
 			<div>
-				<i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
+				<i style="color: red;" class="fa fa-times-circle fa-lg"></i> - <span v-translate>Form save failed. Please check the validation</span>
 			</div>
 			<div>
-				<i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server
+				<i style="color: green;" class="fa fa-check-circle fa-lg"></i> - <span v-translate>Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
 			</div>
 			<div>
-				<i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
+				<i class="fa fa-edit fa-lg"></i> - <span v-translate>The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
 			</div>
     </div>
   </div>
