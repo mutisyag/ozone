@@ -488,6 +488,8 @@ class Submission(models.Model):
 
     def can_change_remark(self, user, field_name):
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
+            # The user cannot modify any of the party fields, if the
+            # submission isn't in an editable state (e.g. `data_entry`)
             return False
         if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
             # Secretariat users cannot modify any of the party fields, if the
