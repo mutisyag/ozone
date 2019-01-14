@@ -980,7 +980,7 @@ body {
 }
 
 .group-cell {
-	min-width: 47.2px;
+	width: 59px;
 	text-align: center;
 }
 
@@ -988,6 +988,7 @@ body {
 	.row-controls {
 		display: block;
 		white-space: nowrap;
+		width: 59px;
 	}
 	.group-cell {
 		display: none;
