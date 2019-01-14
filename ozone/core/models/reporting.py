@@ -41,8 +41,19 @@ class ModifyPreventionMixin:
     prevent changes when the referenced submission is not in Data Entry.
     """
 
+    @staticmethod
+    def get_exempted_fields():
+        return [
+            # Secretariat remarks can be changed
+            # at any time, while the party remarks cannot.
+            "remarks_os"
+        ]
+
     def clean(self):
-        if not self.submission.data_changes_allowed:
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.submission.data_changes_allowed
+        ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
@@ -475,6 +486,21 @@ class Submission(models.Model):
             })
         return True
 
+    def can_change_remark(self, user, field_name):
+        if self.current_state not in self.editable_states and field_name.endswith("_party"):
+            # The user cannot modify any of the party fields, if the
+            # submission isn't in an editable state (e.g. `data_entry`)
+            return False
+        if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
+            # Secretariat users cannot modify any of the party fields, if the
+            # submission was filled by a party.
+            return False
+        elif not user.is_secretariat and field_name.endswith("_secretariat"):
+            # Party users cannot modify any of the secretariat remark fields
+            return False
+
+        return True
+
     def check_remarks(self, user, remarks):
         """
         Raise error if the user has change any remarks he was not allowed to
@@ -489,12 +515,7 @@ class Submission(models.Model):
                 # No value changed
                 continue
 
-            if not self.filled_by_secretariat and user.is_secretariat and field_name.endswith("_party"):
-                # Secretariat users cannot modify any of the party fields, if the
-                # submission was filled by a party.
-                wrongly_modified_remarks.append(field_name)
-            elif not user.is_secretariat and field_name.endswith("_secretariat"):
-                # Party users cannot modify any of the secretariat remark fields
+            if not self.can_change_remark(user, field_name):
                 wrongly_modified_remarks.append(field_name)
 
         if len(wrongly_modified_remarks) > 0:
@@ -549,12 +570,13 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
         ]
 
-    def non_exempted_fields_modified(self):
+    @staticmethod
+    def non_exempted_fields_modified(obj):
         """
         Checks whether one of the non-exempted fields was modified.
         """
-        exempted_fields = Submission.get_exempted_fields()
-        modified_fields = self.tracker.changed()
+        exempted_fields = obj.__class__.get_exempted_fields()
+        modified_fields = obj.tracker.changed()
         for field in modified_fields.keys():
             if field not in exempted_fields:
                 return True
@@ -736,7 +758,10 @@ class Submission(models.Model):
             raise ValidationError(
                 _("Reporting cannot be performed for this reporting period.")
             )
-        if self.non_exempted_fields_modified() and not self.data_changes_allowed:
+        if (
+            Submission.non_exempted_fields_modified(self)
+            and not self.data_changes_allowed
+        ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
             )
@@ -860,6 +885,8 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
         blank=True,
         on_delete=models.PROTECT
     )
+
+    tracker = FieldTracker()
 
     def __str__(self):
         return f'{self.submission} - Info'

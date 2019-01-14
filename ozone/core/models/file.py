@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
 
+from model_utils import FieldTracker
+
 from .reporting import ModifyPreventionMixin, Submission
 
 
@@ -106,6 +108,8 @@ class SubmissionFile(ModifyPreventionMixin, File):
     file = models.FileField(
         upload_to=get_storage_directory, null=True, blank=True
     )
+
+    tracker = FieldTracker()
 
     def get_storage_directory(self, filename):
         return os.path.join(

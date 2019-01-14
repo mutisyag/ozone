@@ -327,6 +327,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_os = models.CharField(max_length=9999, blank=True)
 
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
 
@@ -434,6 +436,8 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     quantity_article_5 = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+
+    tracker = FieldTracker()
 
     class Meta:
         db_table = 'reporting_article_seven_production'
@@ -597,6 +601,8 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
         validators=[MinValueValidator(0.0)]
     )
 
+    tracker = FieldTracker()
+
     class Meta:
         db_table = 'reporting_article_seven_emissions'
 
@@ -629,6 +635,8 @@ class HighAmbientTemperatureProduction(
     substance = models.ForeignKey(
         Substance, on_delete=models.PROTECT
     )
+
+    tracker = FieldTracker()
 
 
 class HighAmbientTemperatureImport(
@@ -681,6 +689,8 @@ class Transfer(ModifyPreventionMixin, BaseReport):
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
 
+    tracker = FieldTracker()
+
 
 class DataOther(ModifyPreventionMixin, BaseReport):
     """
@@ -692,3 +702,5 @@ class DataOther(ModifyPreventionMixin, BaseReport):
         related_name="data_other",
         on_delete=models.PROTECT
     )
+
+    tracker = FieldTracker()
