@@ -18,7 +18,7 @@
 			v-if="$store.state.available_transitions.includes('submit')"
 			@click="checkBeforeSubmitting"
 			variant="outline-success">
-			Submit
+			<span v-translate>Submit</span>
 		</b-btn>
 		<b-btn
 			variant="outline-primary"
@@ -39,16 +39,16 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
-          <b-tab title="Submission Info" active>
+          <b-tab :title="$gettext('Submission Info')" active>
              <template slot="title">
               <div class="tab-title">
-                Submission Info
+                <span v-translate>Submission Info</span>
               </div>
              </template>
 			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
-           <b-tab title="Attachments">
+           <b-tab :title="$gettext('Attachments')">
 			<template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
 			</template>
@@ -57,20 +57,20 @@
         </b-tabs>
 
         <div class="legend">
-            <b>Legend:</b>
+            <b><span v-translate>Legend:</span></b>
             <div>
               <div class="spinner">
                 <div class="loader"></div>
-              </div> - Form is curently being saved
+              </div> - <span v-translate>Form is curently being saved</span>
             </div>
             <div>
-              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - Form save failed. Please check the validation
+              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - <span v-translate>Form save failed. Please check the validation</span>
             </div>
             <div>
-              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - Form was saved or no modifications were made. Current form data is synced with the data on the server
+              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - <span v-translate>Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
             </div>
             <div>
-              <i class="fa fa-edit fa-lg"></i> - The form was edited and the data is not yet saved on the server. Please save before closing the form
+              <i class="fa fa-edit fa-lg"></i> - <span v-translate>The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
             </div>
         </div>
     </b-card>
@@ -82,7 +82,7 @@
           v-if="$store.state.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
           variant="outline-success">
-            Submit
+            <span v-translate>Submit</span>
         </b-btn>
 		<b-btn
 			variant="outline-primary"
@@ -92,10 +92,10 @@
 			{{labels[transition]}}
 		</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          Versions
+          <span v-translate>Versions</span>
         </b-btn>
         <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-          Delete Submission
+          <span v-translate>Delete Submission</span>
         </b-btn>
       </b-button-group>
     </Footer>
@@ -168,7 +168,7 @@ export default {
 				.filter(arr => arr.length)
 			if (!fields.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['You cannot submit and empty form'] },
+					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
 					variant: 'danger'
 				})
 				return
@@ -177,7 +177,7 @@ export default {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['Please save before submitting'] },
+					message: { __all__: [this.$gettext('Please save before submitting')] },
 					variant: 'danger'
 				})
 				return
@@ -185,7 +185,7 @@ export default {
 			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
-			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
+			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
 				this.$store.dispatch('removeSubmission', this.submission).then(() => {
 					this.$router.push({ name: 'Dashboard' })

@@ -27,7 +27,7 @@
     <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
 		<div v-if="modal_data" v-html="modal_data"></div>
 		<div slot="modal-footer">
-			<b-btn @click="$refs.instructions_modal.hide()" variant="success">Close</b-btn>
+			<b-btn @click="$refs.instructions_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
 		</div>
 	</b-modal>
 
@@ -35,10 +35,10 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 
-          <b-tab title="Submission Info" active>
+          <b-tab :title="$gettext('Submission Info')" active>
              <template slot="title">
               <div class="tab-title">
-                Submission Info
+                <span v-translate>Submission Info</span>
               </div>
              </template>
 			<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
@@ -51,7 +51,7 @@
 			<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 		</b-tab>
 
-           <b-tab title="Attachments">
+           <b-tab :title="$gettext('Attachments')">
 			<template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
 			</template>
@@ -70,7 +70,7 @@
 				v-if="$store.state.available_transitions.includes('submit')"
 				@click="checkBeforeSubmitting"
 				variant="outline-success">
-				Submit
+				<span v-translate>Submit</span>
 			</b-btn>
 			<b-btn
 				variant="outline-primary"
@@ -80,10 +80,10 @@
 				{{labels[transition]}}
 			</b-btn>
 			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
-				Versions
+				<span v-translate>Versions</span>
 			</b-btn>
 			<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-				Delete Submission
+				<span v-translate>Delete Submission</span>
 			</b-btn>
 		</b-button-group>
     </Footer>
@@ -91,7 +91,7 @@
 	<b-modal size="lg" ref="history_modal" id="history_modal">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
 		<div slot="modal-footer">
-          <b-btn @click="$refs.history_modal.hide()" variant="success">Close</b-btn>
+          <b-btn @click="$refs.history_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
 		</div>
 	</b-modal>
   </div>
@@ -163,7 +163,7 @@ export default {
 				.filter(arr => arr.length)
 			if (!fields.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['You cannot submit and empty form'] },
+					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
 					variant: 'danger'
 				})
 				return
@@ -172,7 +172,7 @@ export default {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: ['Please save before submitting'] },
+					message: { __all__: [this.$gettext('Please save before submitting')] },
 					variant: 'danger'
 				})
 				return
@@ -180,7 +180,7 @@ export default {
 			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
-			const r = confirm('Deleting the submission is ireversible. Are you sure ?')
+			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
 				this.$store.dispatch('removeSubmission', this.submission).then(() => {
 					this.$router.push({ name: 'Dashboard' })
