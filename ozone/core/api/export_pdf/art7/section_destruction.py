@@ -1,17 +1,14 @@
 from reportlab.platypus import Paragraph
-from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
-from reportlab.lib.units import cm
-
 
 from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
-from ..util import page_title
+from ..util import page_title_section
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -91,16 +88,18 @@ def export_destruction(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_blends = tuple(mk_table_blends(submission))
 
-    return (
-        PageBreak(),
-        page_title(_('QUANTITY OF SUBSTANCES DESTROYED ')),
-        p_c(_(
-            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
-        ), fontSize=10),
-        Spacer(1, cm),
+    destr_page = (
         Paragraph(_('4.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
         Paragraph(_('4.2 Blends'), STYLES['Heading2']),
         table_from_data(table_blends),
+        PageBreak(),
     )
+
+    return page_title_section(
+        title=_('QUANTITY OF SUBSTANCES DESTROYED '),
+        explanatory=_(
+            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
+        )
+    ) + destr_page

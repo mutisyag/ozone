@@ -1,14 +1,12 @@
 from reportlab.platypus import Paragraph
-from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
-from reportlab.lib.units import cm
 
 from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
-from ..util import page_title
+from ..util import page_title_section
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantities
@@ -117,16 +115,20 @@ def table_from_data(data):
 def export_imports(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_blends = tuple(mk_table_blends(submission))
-    return (
-        # PageBreak(),
-        page_title(_('IMPORTS')),
-        p_c(_(
-            'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
-        ), fontSize=10),
-        Spacer(1, cm),
+
+    imports_page = (
         Paragraph(_('1.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
         table_from_data(table_blends),
+        PageBreak(),
     )
+
+    return page_title_section(
+        title=_('IMPORTS'),
+        explanatory= _(
+            'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
+        )
+    ) + imports_page
+

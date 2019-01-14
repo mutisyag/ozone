@@ -1,14 +1,15 @@
 from functools import partial
 
+from reportlab.platypus import ListFlowable
+from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
+from reportlab.platypus import Spacer
 
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
-
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_CENTER
-
-from reportlab.platypus import ListFlowable, ListItem
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import cm
 
 
 __all__ = [
@@ -46,8 +47,6 @@ TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
 )
 
 
-
-
 def _p(style_name, align, txt, fontSize=None, fontName=None):
     style = STYLES[style_name]
     style.alignment = align
@@ -62,6 +61,13 @@ p_c = partial(_p, 'Normal', TA_CENTER, fontSize=FONTSIZE_TABLE)
 p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 
 page_title = partial(_p, 'Heading1', TA_CENTER)
+
+def page_title_section(title, explanatory):
+    return (
+        page_title(title),
+        p_c(explanatory, fontSize=10),
+        Spacer(1, cm),
+    )
 
 
 BASIC_Q_TYPES = (

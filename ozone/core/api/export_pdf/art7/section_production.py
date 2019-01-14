@@ -1,17 +1,14 @@
 from reportlab.platypus import Paragraph
-from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
-from reportlab.lib.units import cm
-
 
 from django.utils.translation import gettext_lazy as _
 
 from ..util import p_c
 from ..util import p_l
-from ..util import page_title
+from ..util import page_title_section
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -140,16 +137,18 @@ def table_from_data(data):
 def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_substances_fii = tuple(mk_table_substances_fii(submission))
-    return (
-        PageBreak(),
-        page_title(_('PRODUCTION')),
-        p_c(_(
-            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
-        ), fontSize=10),
-        Spacer(1, cm),
+    prod_page = (
         Paragraph(_('3.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
         PageBreak(),
         Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
         table_from_data(table_substances_fii),
+        PageBreak()
     )
+
+    return page_title_section(
+        title=_('PRODUCTION'),
+        explanatory=_(
+            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
+        )
+    ) + prod_page
