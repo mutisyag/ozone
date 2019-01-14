@@ -10,7 +10,7 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import ModifyPreventionMixin, Submission, OtherSubmissionType
+from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
@@ -696,11 +696,5 @@ class DataOther(ModifyPreventionMixin, BaseReport):
     """
     Model for Data Other reports.
     """
-
-    other_submission_type = models.ForeignKey(
-        OtherSubmissionType,
-        related_name="data_other",
-        on_delete=models.PROTECT
-    )
 
     tracker = FieldTracker()
