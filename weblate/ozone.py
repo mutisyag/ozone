@@ -13,14 +13,20 @@ class OzoneOAuth2(BaseOAuth2):
     def access_token_url(self):
         return 'http://%s/o/token/' % self.setting("SOCIAL_AUTH_OZONE_API_HOST")
 
-    def get_user_details(self, response):
+    def auth_allowed(self, response, details):
+        """Only allow secretariat with write access."""
+        # XXX It might be better to have a separate permission for this.
         if not response.get('is_secretariat') or response.get('is_read_only'):
-            return None
+            return False
+        return super().auth_allowed(response, details)
+
+    def get_user_details(self, response):
         return {
             'id': response.get('id'),
             'username': response.get('username'),
             'email': response.get('email'),
             'first_name': response.get('first_name'),
+            'last_name': response.get('last_name'),
             'social': self,
         }
 
