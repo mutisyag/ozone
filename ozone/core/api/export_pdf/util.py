@@ -97,7 +97,7 @@ def get_substance_label(q_list, type, list_font_size=7):
     pairs = tuple(zip(BASIC_Q_TYPES, map(str,q_list)))
 
     if type=='quantity':
-        _filtered_pairs = tuple(filter(lambda x: x[1] != '0.0', pairs))
+        _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))
     else:
         _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
 
