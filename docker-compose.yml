@@ -15,7 +15,6 @@ services:
     image: "catatnight/postfix"
     env_file:
       - ./docker/smtp.env
-    restart: always
 
   tusd:
     image: tusproject/tusd:latest
@@ -106,12 +105,13 @@ services:
       io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
   weblate:
-    image: weblate/weblate
-    volumes:
-      - weblate-data:/app/data
+    build:
+      context: .
+      dockerfile: Dockerfile-weblate
     env_file:
       - ./docker/weblate.env
-    restart: always
+    volumes:
+      - weblate-data:/app/data
     depends_on:
       - postgres-weblate
       - redis-weblate
@@ -121,10 +121,8 @@ services:
       - ./docker/weblate.env
     volumes:
       - pg-weblate-data:/var/lib/postgresql/data
-    restart: always
   redis-weblate:
     image: redis:4-alpine
-    restart: always
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
       - redis-data:/data

@@ -181,7 +181,10 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'is_secretariat', 'is_read_only', 'party',)
+        fields = (
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'first_name',
+            'last_name', 'email'
+        )
 
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
