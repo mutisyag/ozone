@@ -223,6 +223,21 @@ class Blend(models.Model):
             ]
         )
 
+    def get_substance_ids(self):
+        """Returns list of substance id's contained in this blend"""
+        return [
+            c.substance.id
+            for c in self.components.all() if c.substance
+        ]
+
+    def get_substance_ids_percentages(self):
+        """Returns list of substance id's contained in this blend"""
+        return [
+            (c.substance.id, c.percentage)
+            for c in self.components.all() if c.substance
+        ]
+
+
     def __str__(self):
         return self.blend_id
 
