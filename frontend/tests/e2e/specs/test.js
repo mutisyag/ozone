@@ -54,6 +54,11 @@ module.exports = {
 			.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 			.click('//div[contains(@class,"create-submission")]//button')
 		// end create submission
+		// start completing questionnaire
+			.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Questionnaire")]', 10000)
+			.click('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Questionnaire")]')
+			.waitForElementVisible('//div[contains(@class, "field-wrapper")]//div[@role="radiogroup"]', 10000)
+			.click('//div[contains(@class, "field-wrapper")]//label[@for]')
 			.end()
 	}
 }
