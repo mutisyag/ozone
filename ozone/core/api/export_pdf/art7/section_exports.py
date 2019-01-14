@@ -9,6 +9,7 @@ from reportlab.lib.units import cm
 
 from django.utils.translation import gettext_lazy as _
 
+from ..util import get_substance_label
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title
@@ -64,7 +65,11 @@ TABLE_ROW_EMPTY_STYLE = (
 
 TABLE_IMPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('TOPPADDING', (6,2), (7, -1), 10),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+    ('VALIGN', (0, 2), (5, -1), 'MIDDLE'),
+    ('VALIGN', (6, 2), (7, -1), 'TOP'),
+    ('ALIGN', (0, 2), (5, -1), 'CENTER'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
     ('SPAN', (1, 0), (1, 1)),
@@ -78,25 +83,26 @@ TABLE_IMPORTS_HEADER_STYLE = (
 def to_row_substance(obj):
     substance = obj.substance
 
-    _q_sum = sum((
+    quantities = (
         obj.quantity_essential_uses or 0,
         obj.quantity_critical_uses or 0,
         obj.quantity_high_ambient_temperature or 0,
         obj.quantity_laboratory_analytical_uses or 0,
         obj.quantity_process_agent_uses or 0,
         obj.quantity_other_uses or 0,
-    ))
-    _q_exported = str(_q_sum) if _q_sum > 0 else ''
+    )
+    q_label = get_substance_label(quantities, type='quantity')
+    sum_quantities = sum(quantities)
 
-    _decisions = (
-        obj.decision_critical_uses,
+    decisions = (
         obj.decision_essential_uses,
+        obj.decision_critical_uses,
         obj.decision_high_ambient_temperature,
         obj.decision_laboratory_analytical_uses,
-        obj.decision_other_uses,
         obj.decision_process_agent_uses,
+        obj.decision_other_uses,
     )
-    decisions = ','.join(list(filter(None,_decisions)))
+    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
 
     q_polyols = (
         p_l('Polyols quantity'),
@@ -112,8 +118,9 @@ def to_row_substance(obj):
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(_q_exported),) + q_polyols,
-        str(decisions or '')
+        (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'),) +
+        (q_label,) + q_polyols,
+        (d_label,)
     )
 
 

@@ -54,20 +54,21 @@ BASIC_Q_TYPES = (
     'Other/unspecified'
 )
 
-def makeBulletList(list):
+def makeBulletList(list, fontSize):
     bullets=ListFlowable(
         [
             ListItem(
-                _p('BodyText', TA_LEFT, x, fontSize=7),
-                leftIndent=10, bulletColor='black', value='circle'
+                _p('BodyText', TA_LEFT, x, fontSize=fontSize),
+                leftIndent=10, bulletColor='black', value='circle',
+                bulletOffsetY=-2.88
             ) for x in list
         ],
-        bulletType='bullet', bulletFontSize=3, leftIndent=5,
+        bulletType='bullet', bulletFontSize=3, leftIndent=5
     )
 
     return bullets
 
-def get_substance_label(q_list, type):
+def get_substance_label(q_list, type, list_font_size=7):
     pairs = tuple(zip(BASIC_Q_TYPES, map(str,q_list)))
 
     if type=='quantity':
@@ -78,4 +79,4 @@ def get_substance_label(q_list, type):
 
     filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
 
-    return makeBulletList(filtered_pairs)
+    return makeBulletList(filtered_pairs, list_font_size)

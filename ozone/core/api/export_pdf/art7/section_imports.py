@@ -65,7 +65,11 @@ TABLE_ROW_EMPTY_STYLE = (
 
 TABLE_IMPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('TOPPADDING', (6,2), (7, -1), 10),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+    ('VALIGN', (0, 2), (5, -1), 'MIDDLE'),
+    ('VALIGN', (6, 2), (7, -1), 'TOP'),
+    ('ALIGN', (0, 2), (5, -1), 'CENTER'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
     ('SPAN', (1, 0), (1, 1)),
@@ -104,10 +108,7 @@ def to_row_substance(obj):
         obj.decision_process_agent_uses,
         obj.decision_other_uses,
     )
-    d_label = get_substance_label(decisions, type='decision')
-    join_decisions = ', '.join(filter(bool, decisions))
-
-    # import pdb; pdb.set_trace()
+    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
 
     return (
         substance.group.group_id,
@@ -118,7 +119,7 @@ def to_row_substance(obj):
         str(obj.quantity_feedstock or ''),
         (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'), ) +
         (q_label, ) + q_pre_ship,
-        (p_l(str(join_decisions or ''), fontName='Helvetica-Bold'),) + (d_label,)
+        (d_label,)
     )
 
 
