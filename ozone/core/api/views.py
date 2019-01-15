@@ -429,6 +429,21 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             )
 
     @action(detail=True, methods=["get"])
+    def versions(self, request, pk=None):
+        queryset = self.filter_queryset(Submission.objects.get(pk=pk).versions)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = ListSubmissionSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(serializer.data)
+
+        serializer = ListSubmissionSerializer(
+            queryset, many=True, context={"request": request}
+        )
+        return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
         historical_records = Submission.objects.get(pk=pk).history.all()
         serializer = SubmissionHistorySerializer(historical_records, many=True)

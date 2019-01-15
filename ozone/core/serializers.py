@@ -1052,7 +1052,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
                 'available_transitions', 'data_changes_allowed', 'is_current',
-                'is_cloneable',
+                'is_cloneable', 'flag_provisional', 'flag_valid',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}

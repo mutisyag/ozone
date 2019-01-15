@@ -724,6 +724,14 @@ class Submission(models.Model):
         self.flag_superseded = False
         self.save()
 
+    @property
+    def versions(self):
+        return Submission.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation,
+        )
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
