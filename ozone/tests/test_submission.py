@@ -287,6 +287,25 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(new_submission.obligation, submission.obligation)
         self.assertEqual(new_submission.reporting_period, submission.reporting_period)
 
+    def test_clone_versions(self):
+        submission = self.create_submission()
+        submission.call_transition("submit", self.secretariat_user)
+        submission.save()
+        new_submission = submission.clone(self.secretariat_user)
+
+        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
+        result = self.client.get(
+            reverse(
+                "core:submission-versions",
+                kwargs={"pk": new_submission.pk},
+            ),
+            format="json",
+            **headers,
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+        self.assertEqual(result.json()[0]['version'], 2)
+        self.assertEqual(result.json()[1]['version'], 1)
+
     def test_history(self):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
