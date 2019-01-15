@@ -4,6 +4,8 @@ from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
+from reportlab.platypus.flowables import HRFlowable
+
 
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
@@ -57,6 +59,11 @@ def _p(style_name, align, txt, fontSize=None, fontName=None):
     return Paragraph(txt, style)
 
 
+hr = HRFlowable(
+    width="100%", thickness=1, lineCap='round', color=colors.lightgrey,
+    spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None
+)
+
 p_c = partial(_p, 'Normal', TA_CENTER, fontSize=FONTSIZE_TABLE)
 p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 
@@ -79,6 +86,18 @@ BASIC_Q_TYPES = (
     'Other/unspecified'
 )
 
+def get_quantity_cell(q_list, extra_q):
+    if sum(q_list) > 0:
+        if extra_q:
+            return (
+                p_l(str(sum(q_list)), fontName='Helvetica-Bold'),
+                get_substance_label(q_list, type='quantity'), hr, extra_q
+            )
+        else:
+            return get_substance_label(q_list, type='quantity')
+    else:
+        return ''
+
 def makeBulletList(list, fontSize):
     bullets=ListFlowable(
         [
@@ -94,13 +113,19 @@ def makeBulletList(list, fontSize):
     return bullets
 
 def get_substance_label(q_list, type, list_font_size=7):
-    pairs = tuple(zip(BASIC_Q_TYPES, map(str,q_list)))
+    # Adding the extra pre-shipment decision
+    if type=='decision':
+        pairs = tuple(zip(
+            ('Quarantine and pre-shipment applications', ) + BASIC_Q_TYPES,
+            map(str, q_list)
+        ))
+    else:
+        pairs = tuple(zip(BASIC_Q_TYPES, map(str, q_list)))
 
     if type=='quantity':
         _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))
     else:
         _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
-
 
     filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
 
@@ -120,6 +145,7 @@ def get_quantities(obj):
 
 def get_decisions(obj):
     return (
+        obj.decision_quarantine_pre_shipment,
         obj.decision_essential_uses,
         obj.decision_critical_uses,
         obj.decision_high_ambient_temperature,
@@ -127,6 +153,7 @@ def get_decisions(obj):
         obj.decision_process_agent_uses,
         obj.decision_other_uses,
     )
+
 
 def get_preship_or_polyols_q(obj):
     _q_pre_ship = obj.quantity_quarantine_pre_shipment

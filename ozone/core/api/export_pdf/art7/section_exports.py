@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from ..util import get_preship_or_polyols_q
 from ..util import get_decisions
 from ..util import get_quantities
+from ..util import get_quantity_cell
 from ..util import get_substance_label
 from ..util import p_c
 from ..util import p_l
@@ -66,15 +67,11 @@ def to_row_substance(obj):
     substance = obj.substance
 
     quantities = get_quantities(obj)
-    q_label = get_substance_label(quantities, type='quantity')
-    sum_quantities = sum(quantities)
+    extra_q = get_preship_or_polyols_q(obj)
+    q_cell = get_quantity_cell(quantities, extra_q)
 
     decisions = get_decisions(obj)
     d_label = get_substance_label(decisions, type='decision', list_font_size=9)
-
-    extra_q = get_preship_or_polyols_q(obj)
-    if not extra_q:
-        extra_q = tuple()
 
     dest_party = obj.destination_party.name if obj.destination_party else ""
 
@@ -85,8 +82,7 @@ def to_row_substance(obj):
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(str(sum_quantities or ''), fontName='Helvetica-Bold'),) +
-        (q_label,) + extra_q,
+        q_cell,
         (d_label,)
     )
 
