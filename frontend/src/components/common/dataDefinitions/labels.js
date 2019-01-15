@@ -1,4 +1,4 @@
-const getLabels = ($gettext) => {
+const getCommonLabels = ($gettext) => {
 	const labels = {
 		__all__: '',
 		comments_party: $gettext('Party'),
@@ -49,5 +49,5 @@ const getLabels = ($gettext) => {
 }
 
 export {
-	getLabels
+	getCommonLabels
 }

@@ -159,7 +159,7 @@
 						:key="transition"
 						size="sm"
 						:disabled="currentUser.is_read_only"
-						@click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})">
+						@click="$store.dispatch('doSubmissionTransition', {$gettext, transition, submission: row.item.details.url, source: 'dashboard'})">
 							<span>{{labels[transition]}}</span>
                     </b-btn>
 
@@ -196,7 +196,7 @@
 import { cloneSubmission } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 import { mapGetters } from 'vuex'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	name: 'Dashboard',
@@ -207,7 +207,7 @@ export default {
 				reporting_period: null,
 				party: null
 			},
-			labels: labels.general,
+			labels: getCommonLabels(this.$gettext),
 			table: {
 				fields: [
 					{
@@ -441,7 +441,10 @@ export default {
 
 	methods: {
 		addSubmission() {
-			this.$store.dispatch('addSubmission', this.current).then(r => {
+			this.$store.dispatch('addSubmission', {
+				$gettext: this.$gettext,
+				submission: this.current
+			}).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
 				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
 			})
@@ -455,11 +458,13 @@ export default {
 			cloneSubmission(url).then((response) => {
 				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('New version created')] },
 					variant: 'success'
 				})
 			}).catch(error => {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { ...error.response.data },
 					variant: 'danger' })
 				console.log(error)
@@ -485,7 +490,10 @@ export default {
 		removeSubmission(url) {
 			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
-				this.$store.dispatch('removeSubmission', url)
+				this.$store.dispatch('removeSubmission', {
+					$gettext: this.$gettext,
+					submissionUrl: url
+				})
 			}
 		},
 

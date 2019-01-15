@@ -76,7 +76,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
-import { getLabels } from '@/components/common/dataDefinitions/labels'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -85,7 +85,7 @@ export default {
 	},
 
 	created() {
-		this.labels = getLabels(this.$gettext)
+		this.labels = getCommonLabels(this.$gettext)
 	},
 
 	components: { fieldGenerator },

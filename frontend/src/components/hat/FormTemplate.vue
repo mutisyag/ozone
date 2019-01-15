@@ -311,7 +311,7 @@ export default {
 	},
 	created() {
 		this.labels = {
-			...labels.general,
+			...labels.common,
 			...labels[this.tab_info.name]
 		}
 	},

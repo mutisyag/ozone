@@ -79,6 +79,7 @@ export default {
 				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
 				if (!fieldExists) {
 					this.$store.dispatch('createSubstance', {
+						$gettext: this.$gettext,
 						substanceList: [current_field.substance.selected],
 						currentSectionName: this.tabName,
 						groupName: current_field.group.selected,
@@ -96,6 +97,7 @@ export default {
 				}
 			})
 			willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { __all__: [`${this.$gettext('The fields for these countries were not added because they already exist')} : ${willNotAddCountryNames.join(', ')}}`] },
 				variant: 'danger'
 			})

@@ -217,6 +217,7 @@ export default {
 			console.log('here')
 			if (this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [`${this.$gettext('A blend with this name already exists!')} - ${this.new_blend.text}`] },
 					variant: 'danger'
 				})
@@ -268,6 +269,7 @@ export default {
 		addSubstance(type) {
 			if (type === 'selected') {
 				this.$store.dispatch('createSubstance', {
+					$gettext: this.$gettext,
 					substanceList: null,
 					currentSectionName: this.tabName,
 					groupName: null,
@@ -292,6 +294,7 @@ export default {
 					this.$store.commit('addCreateBlendToBlendList', response.data)
 					this.display.blends[response.data.id] = { name: response.data.blend_id, components: response.data.components }
 					this.$store.dispatch('createSubstance', {
+						$gettext: this.$gettext,
 						substanceList: null,
 						currentSectionName: this.tabName,
 						groupName: null,
@@ -300,12 +303,14 @@ export default {
 						prefillData: null
 					})
 					this.$store.dispatch('setAlert', {
+						$gettext: this.$gettext,
 						message: { __all__: [this.$gettext('Blend created')] },
 						variant: 'success' })
 					this.resetData()
 				}).catch((error) => {
 					console.log(error)
 					this.$store.dispatch('setAlert', {
+						$gettext: this.$gettext,
 						message: { ...error.response.data },
 						variant: 'danger' })
 				})

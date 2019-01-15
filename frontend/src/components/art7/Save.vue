@@ -13,6 +13,7 @@ export default {
 				return true
 			}
 			this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { __all__: [`${tabName}: ${this.$gettext('Data was not saved')}`] },
 				variant: 'danger' })
 			this.$store.commit('setTabStatus', { tab: tabName, value: false })
@@ -39,6 +40,7 @@ export default {
 			})
 			if (questionaireValid.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('Submission cannot be saved before completing the questionnaire')] },
 					variant: 'danger' })
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
