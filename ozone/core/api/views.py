@@ -401,8 +401,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             return CreateSubmissionSerializer
         return SubmissionSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+    def _list_submission(self, queryset, request):
+        queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ListSubmissionSerializer(
@@ -414,6 +414,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        return self._list_submission(self.get_queryset(), request)
+
+    @action(detail=True, methods=["get"])
+    def versions(self, request, pk=None):
+        return self._list_submission(Submission.objects.get(pk=pk).versions, request)
 
     @action(detail=True, methods=["post"])
     def clone(self, request, pk=None):
@@ -436,21 +443,6 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             raise InvalidRequest(
                 _("Invalid request: request body should contain 'transition' key.")
             )
-
-    @action(detail=True, methods=["get"])
-    def versions(self, request, pk=None):
-        queryset = self.filter_queryset(Submission.objects.get(pk=pk).versions)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = ListSubmissionSerializer(
-                page, many=True, context={"request": request}
-            )
-            return self.get_paginated_response(serializer.data)
-
-        serializer = ListSubmissionSerializer(
-            queryset, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
 
     @action(detail=True, methods=["get"])
     def history(self, request, pk=None):
