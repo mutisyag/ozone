@@ -192,7 +192,7 @@ const mutations = {
 				...data,
 				expires: new Date((new Date()).getTime() + 5000)
 			})
-			toasted.show(data.displayMessage, { type: toastedOptions[data.variant] })
+			toasted.show(data.displayMessage, { type: toastedOptions[data.variant], position: 'bottom-right' })
 		}
 	},
 

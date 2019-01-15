@@ -182,7 +182,7 @@
 									v-for="(header, header_index) in tab_info.blend_substance_headers"
 									:colspan="header.colspan"
 									:key="header_index">
-										<span v-translate>{{labels[header]}}</span>
+										<span>{{labels[header]}}</span>
 								</th>
 							</tr>
 						</thead>
@@ -214,7 +214,7 @@
 			v-for="(comment, comment_index) in tab_info.comments"
 			:key="comment_index"
 			class="comments-input">
-			<label><span v-translate>{{labels[comment.name]}}</span></label>
+			<label>{{labels[comment.name]}}</label>
 			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 		</div>
 	</div>
@@ -261,7 +261,7 @@
         </b-row>
         <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col><span v-translate>{{labels[order]}}</span></b-col>
+            <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"

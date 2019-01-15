@@ -22,7 +22,7 @@
 						<div class="form-fields">
 							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
 								<b-col lg='3'>
-									<label><span v-translate>{{labels[order]}}</span></label>
+									<label>{{labels[order]}}</label>
 								</b-col>
 								<b-col>
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
@@ -76,7 +76,7 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -85,7 +85,7 @@ export default {
 	},
 
 	created() {
-		this.labels = labels.general
+		this.labels = getLabels(this.$gettext)
 	},
 
 	components: { fieldGenerator },

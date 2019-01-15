@@ -160,7 +160,7 @@
 						size="sm"
 						:disabled="currentUser.is_read_only"
 						@click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})">
-							<span v-translate>{{labels[transition]}}</span>
+							<span>{{labels[transition]}}</span>
                     </b-btn>
 
                     <b-btn
