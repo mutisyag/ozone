@@ -22,7 +22,7 @@
 						<div class="form-fields">
 							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
 								<b-col lg='3'>
-									<label>{{labels[order]}}</label>
+									<label><span v-translate>{{labels[order]}}</span></label>
 								</b-col>
 								<b-col>
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>

@@ -401,7 +401,7 @@
 							v-for="(header, header_index) in tab_info.blend_substance_headers"
 							:colspan="header.colspan"
 							:key="header_index">
-							{{labels[header]}}
+							<span v-translate>{{labels[header]}}</span>
 						</th>
 					</tr>
 				</thead>
@@ -432,7 +432,9 @@
 			v-for="(comment, comment_key) in tab_info.comments"
 			:key="comment_key"
 			class="comments-input">
-			<label>{{labels[comment_key]}}</label>
+			<label>
+				<span v-translate>{{labels[comment_key]}}</span>
+			</label>
 				<!-- addComment(state, { data, tab, field }) { -->
 			<textarea
 				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
@@ -476,7 +478,7 @@
         </b-row>
         <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col>{{labels[order]}}</b-col>
+            <b-col><span v-translate>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -505,10 +507,10 @@
             :key="order_index"
             v-show="anotherSpecialCase(order, modal_data)">
             <b-col lg="3" class="mb-2">
-              <span>{{labels[`decision_${order}`]}}</span>
+              <span v-translate>{{labels[`decision_${order}`]}}</span>
             </b-col>
             <b-col lg="6">
-              <b-input-group class="modal-group" :prepend="labels['quantity']">
+              <b-input-group class="modal-group" :prepend="$gettext(labels['quantity'])">
                 <fieldGenerator
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
 					:disabled="isReadOnly"
@@ -516,7 +518,7 @@
               </b-input-group>
             </b-col>
             <b-col lg="3">
-              <b-input-group class="modal-group" :prepend="labels['decision']">
+              <b-input-group class="modal-group" :prepend="$gettext(labels['decision'])">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
                   :disabled="isReadOnly"
@@ -530,7 +532,7 @@
           v-for="comment_field in ['remarks_party','remarks_os']"
           :key="comment_field">
           <b-col lg="3">
-            {{labels[comment_field]}}
+            <span v-translate>{{labels[comment_field]}}</span>
           </b-col>
           <b-col lg="9">
             <textarea :disabled="getCommentFieldPermission(comment_field)"
