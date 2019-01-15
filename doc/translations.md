@@ -40,3 +40,4 @@
  3. Configure the `SOCIAL_AUTH_OZONE_*` variables in `docker/weblate.env` with the key and secret
  configured at step (2) and ensure that the hosts are correctly set. 
  4. Rebuild/restart Weblate if needed.
+ 5. Link admin from Django ORS with the one from Weblate, other users are created automatically. 

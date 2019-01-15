@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q, F
 
 from guardian.mixins import GuardianUserMixin
 from rest_framework.authtoken.models import Token
@@ -13,7 +14,8 @@ class User(GuardianUserMixin, AbstractUser):
         Party, related_name='users',
         null=True,
         blank=True,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        limit_choices_to=Q(parent_party_id=F('id'))
     )
 
     is_secretariat = models.BooleanField(default=False)
