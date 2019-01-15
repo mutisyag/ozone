@@ -294,7 +294,7 @@
 <script>
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import labels from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
@@ -311,8 +311,8 @@ export default {
 	},
 	created() {
 		this.labels = {
-			...labels.common,
-			...labels[this.tab_info.name]
+			...getLabels(this.$gettext).common,
+			...getLabels(this.$gettext)[this.tab_info.name]
 		}
 	},
 	methods: {
