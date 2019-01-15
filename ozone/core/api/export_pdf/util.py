@@ -48,6 +48,10 @@ TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('SPAN', (6, 0), (7, 0)),
 )
 
+TABLE_IMPORTS_EXPORTS_COL_WIDTHS = list(
+    map(lambda x: x * cm, [1.3, 2.1, 4, 2, 2, 2, 7, 7])
+)
+
 
 def _p(style_name, align, txt, fontSize=None, fontName=None):
     style = STYLES[style_name]

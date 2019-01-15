@@ -1,6 +1,7 @@
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
+from reportlab.lib.units import cm
 
 from django.utils.translation import gettext_lazy as _
 
@@ -13,6 +14,7 @@ from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
+from ..util import TABLE_IMPORTS_EXPORTS_COL_WIDTHS as COL_WIDTHS
 from ..util import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
 from ..util import TABLE_STYLES
 
@@ -100,6 +102,7 @@ def mk_table_blends(submission):
 def table_from_data(data):
     return Table(
         TABLE_IMPORTS_HEADER + (data or TABLE_ROW_EMPTY),
+        colWidths=COL_WIDTHS,
         style=(
             TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
                 () if data else TABLE_ROW_EMPTY_STYLE
