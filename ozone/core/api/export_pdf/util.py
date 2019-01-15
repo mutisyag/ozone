@@ -36,8 +36,7 @@ TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('TOPPADDING', (6,2), (7, -1), 10),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
-    ('VALIGN', (0, 2), (5, -1), 'MIDDLE'),
-    ('VALIGN', (6, 2), (7, -1), 'TOP'),
+    ('VALIGN', (0, 2), (7, -1), 'MIDDLE'),
     ('ALIGN', (0, 2), (5, -1), 'CENTER'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
@@ -98,7 +97,10 @@ def get_quantity_cell(q_list, extra_q):
                 get_substance_label(q_list, type='quantity'), hr, extra_q
             )
         else:
-            return get_substance_label(q_list, type='quantity')
+            return (
+                p_l('<b>' + str(sum(q_list)) + '</b>'),
+                get_substance_label(q_list, type='quantity')
+            )
     else:
         return ''
 
@@ -161,7 +163,7 @@ def get_decisions(obj):
 
 def get_preship_or_polyols_q(obj):
     _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    _q_polyols = obj.quantity_polyols
+    _q_polyols = obj.quantity_polyols if hasattr(obj, 'quantity_polyols') else None
 
     substance = obj.substance
 
