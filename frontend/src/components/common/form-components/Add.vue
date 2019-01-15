@@ -118,6 +118,7 @@ export default {
 			console.log('group-field', this.group_field)
 
 			this.$store.dispatch('createSubstance', {
+				$gettext: this.$gettext,
 				substanceList: this.selected_substance.selected,
 				currentSectionName: this.tabName,
 				groupName: this.group_field.name,

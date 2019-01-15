@@ -18,7 +18,7 @@
 			variant="outline-primary"
 			v-for="transition in availableTransitions"
 			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
 			<span>{{labels[transition]}}</span>
 		</b-btn>
     </b-button-group>
@@ -76,7 +76,7 @@
 				variant="outline-primary"
 				v-for="transition in availableTransitions"
 				:key="transition"
-				@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
+				@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
 				<span>{{labels[transition]}}</span>
 			</b-btn>
 			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
@@ -163,6 +163,7 @@ export default {
 				.filter(arr => arr.length)
 			if (!fields.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
 					variant: 'danger'
 				})
@@ -172,17 +173,21 @@ export default {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('Please save before submitting')] },
 					variant: 'danger'
 				})
 				return
 			}
-			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
+			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
 			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
-				this.$store.dispatch('removeSubmission', this.submission).then(() => {
+				this.$store.dispatch('removeSubmission', {
+					$gettext: this.$gettext,
+					submissionUrl: this.submission
+				}).then(() => {
 					this.$router.push({ name: 'Dashboard' })
 				})
 			}
@@ -192,7 +197,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: labels.general
+			labels: labels.common
 		}
 	}
 }
