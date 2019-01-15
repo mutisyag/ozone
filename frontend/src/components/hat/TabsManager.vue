@@ -104,7 +104,7 @@ import Attachments from '@/components/common/Attachments.vue'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
-import labels from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/hat/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import FormTemplate from '@/components/hat/FormTemplate.vue'
 
@@ -197,7 +197,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: labels.common
+			labels: getLabels(this.$gettext).common
 		}
 	}
 }

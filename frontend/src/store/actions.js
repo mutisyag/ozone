@@ -212,7 +212,7 @@ const actions = {
 	},
 
 	getInitialData(context, { submission, formName, $gettext }) {
-		context.commit('setForm', formName)
+		context.commit('setForm', { formName, $gettext })
 		return new Promise((resolve) => {
 			context.dispatch('getSubmissionData', { submission, $gettext }).then(() => {
 				context.dispatch('getCurrentUserForm')
