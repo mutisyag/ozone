@@ -24,7 +24,6 @@ class Command(BaseCommand):
         'partieshistory',
         'partiesratification',
         'reporting_channels',
-        'other_submission_types',
     )
 
     def handle(self, *args, **options):
