@@ -94,7 +94,7 @@ def get_quantity_cell(q_list, extra_q):
     if sum(q_list) > 0:
         if extra_q:
             return (
-                p_l(str(sum(q_list)), fontName='Helvetica-Bold'),
+                p_l('<b>' + str(sum(q_list)) + '</b>'),
                 get_substance_label(q_list, type='quantity'), hr, extra_q
             )
         else:
@@ -167,14 +167,14 @@ def get_preship_or_polyols_q(obj):
 
     if _q_pre_ship:
         return (
-            p_l(f'Quantity of new {substance.name} '
-            'imported to be used for QPS applications'),
+            p_l(f'<b>Quantity of new {substance.name} '
+            'imported to be used for QPS applications</b>'),
             p_l(str(_q_pre_ship)),
         )
 
     if _q_polyols:
         return (
-        p_l('Polyols quantity'),
+        p_l('<b>Polyols quantity</b>'),
         p_l(str(_q_polyols)),
     )
 

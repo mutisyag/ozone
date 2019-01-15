@@ -1,7 +1,6 @@
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
-from reportlab.lib.units import cm
 
 from django.utils.translation import gettext_lazy as _
 
