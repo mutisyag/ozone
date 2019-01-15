@@ -676,10 +676,10 @@ class Submission(models.Model):
                 if hasattr(instance, 'blend_item') and instance.blend_item:
                     continue
                 attributes = model_to_dict(instance, exclude=exclude)
-                if 'submission_id' in attributes:
-                    attributes['submission_id'] = clone.pk
-                else:
+                if related_data == "history":
                     attributes['id'] = clone.pk
+                else:
+                    attributes['submission_id'] = clone.pk
                 instance.__class__.objects.create(**attributes)
 
         return clone
