@@ -299,6 +299,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
                 "core:submission-versions",
                 kwargs={"pk": new_submission.pk},
             ),
+            {"ordering": "-version"},
             format="json",
             **headers,
         )
