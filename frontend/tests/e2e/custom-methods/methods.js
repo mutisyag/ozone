@@ -65,7 +65,6 @@ const selectOption = (browser, select_id, option) => {
 		.keys(browser.Keys.ESCAPE)
 		.useCss()
 		.click('#add-substance-button')
-		.pause(50000)
 }
 
 module.exports = {

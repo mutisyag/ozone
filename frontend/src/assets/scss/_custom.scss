@@ -984,7 +984,8 @@ body {
 	text-align: center;
 }
 
-.table tr:hover {
+.table tr:hover,
+.table tr.hovered {
 	.row-controls {
 		display: block;
 		white-space: nowrap;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AsideToggler class="d-none d-lg-block" />
+    <AsideToggler/>
 		<b-tabs v-model="tabIndex">
       <b-tab v-if="hasSubstances">
         <template slot="title">

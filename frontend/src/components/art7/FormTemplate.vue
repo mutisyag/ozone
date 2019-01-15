@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div :id="`${tabName}_tab`" v-if="tab_info">
     <div class="form-sections">
 	<table ref="tableHeader" class="table submission-table header-only">
 	<thead>
@@ -303,7 +303,7 @@
 		class="table-wrapper">
 
 		<div class="table-title">
-			<h4> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
+			<h4 id="blends-table-title"> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 			<div v-show="tableBlends.tableFilters" class="table-filters">
 				<b-input-group :prepend="$gettext('Search')">
 					<b-form-input v-model="tableBlends.filters.search"/>
