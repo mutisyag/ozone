@@ -100,11 +100,11 @@
       </b-button-group>
     </Footer>
 
-	<b-modal size="lg" ref="history_modal" id="history_modal"
-			 :title="$gettext('Submission versions')">
+    <b-modal size="lg" ref="history_modal" id="history_modal"
+             :title="$gettext('Submission versions')">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"
-						   :currentVersion="$store.state.current_submission.version">
-		</SubmissionHistory>
+                           :currentVersion="$store.state.current_submission.version">
+        </SubmissionHistory>
     </b-modal>
   </div>
 </template>
