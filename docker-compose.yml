@@ -17,6 +17,8 @@ services:
       - ./docker/smtp.env
 
   tusd:
+    ports:
+    - "1080:1080"
     image: tusproject/tusd:latest
     env_file:
       - ./docker/demo.env
