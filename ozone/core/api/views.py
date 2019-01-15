@@ -352,6 +352,15 @@ class SubmissionViewFilterSet(filters.FilterSet):
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
+    """
+    versions:
+    Get a list of all submissions versions, including the one specified in the
+    primary key.
+
+    history:
+    Get a list of all historical states for this specific submission version.
+    Note historical states for other versions are not included.
+    """
     queryset = Submission.objects.all().prefetch_related(
         "reporting_period", "created_by", "party"
     )
