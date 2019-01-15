@@ -55,9 +55,23 @@ const selectTab = (browser, tab) => {
 		.waitForElementVisible('.aside-menu', 10000)
 }
 
+const selectOption = (browser, select_id, option) => {
+	browser
+		.click(`#${select_id} .multiselect`)
+		.waitForElementVisible(`#${select_id} .multiselect__content-wrapper`, 10000)
+		.useXpath()
+		.waitForElementVisible(`//span[contains(text(),'${option}')]/ancestor::div[contains(@id, '${select_id}')]`, 5000)
+		.click(`//div[@id='${select_id}']//ul//li//span//span[contains(text(),'${option}')]`)
+		.keys(browser.Keys.ESCAPE)
+		.useCss()
+		.click('#add-substance-button')
+		.pause(50000)
+}
+
 module.exports = {
 	login,
 	createSubmission,
 	clickQuestionnaireRadios,
-	selectTab
+	selectTab,
+	selectOption
 }

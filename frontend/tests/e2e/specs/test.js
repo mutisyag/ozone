@@ -10,7 +10,8 @@ const {
 	login,
 	createSubmission,
 	clickQuestionnaireRadios,
-	selectTab
+	selectTab,
+	selectOption
 } = require('../custom-methods/methods.js')
 // const getSelectElementByContent = require('../custom-assertions/customSelectors')
 
@@ -31,5 +32,6 @@ module.exports = {
 		createSubmission(browser)
 		clickQuestionnaireRadios(browser)
 		selectTab(browser, 'Imports')
+		selectOption(browser, 'substance_selector', 'CFC-11')
 	}
 }
