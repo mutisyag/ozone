@@ -14,7 +14,7 @@ const createTooltip = (fields, section) => {
 	let tooltip_title = ''
 	if (Object.keys(fields).length) {
 		Object.keys(fields).forEach(field => {
-			tooltip_title += `${labels[section][field]}: ${fields[field]}\n`
+			tooltip_title += `${this.$gettext(labels[section][field])}: ${fields[field]}\n`
 		})
 	}
 	return tooltip_title

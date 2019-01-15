@@ -87,7 +87,7 @@
 			v-for="(comment, comment_key) in tab_info.comments"
 			:key="comment_key"
 			class="comments-input">
-			<label>{{labels[comment_key]}}</label>
+			<label><span v-translate>{{labels[comment_key]}}</span></label>
 				<!-- addComment(state, { data, tab, field }) { -->
 			<textarea
 				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
