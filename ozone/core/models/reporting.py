@@ -121,8 +121,7 @@ class Submission(models.Model):
         'article7emissions',
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
-        'transfers',
-        'history',
+        'transfers'
     ]
 
     # TODO: this implements the `submission_type` field from the
@@ -659,7 +658,7 @@ class Submission(models.Model):
         # relation with submission and this way we avoid nasty verifications
         exclude = [
             'id', 'submission_id', '_state', '_deferred_fields', '_tracker',
-            'save', 'history_id',
+            'save',
         ]
         if (
             hasattr(self, "article7questionnaire")
@@ -676,10 +675,7 @@ class Submission(models.Model):
                 if hasattr(instance, 'blend_item') and instance.blend_item:
                     continue
                 attributes = model_to_dict(instance, exclude=exclude)
-                if related_data == "history":
-                    attributes['id'] = clone.pk
-                else:
-                    attributes['submission_id'] = clone.pk
+                attributes['submission_id'] = clone.pk
                 instance.__class__.objects.create(**attributes)
 
         return clone
