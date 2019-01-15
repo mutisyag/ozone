@@ -84,7 +84,7 @@
 					v-for="transition in availableTransitions"
 					:key="transition"
 					@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-						<span v-translate>{{labels[transition]}}</span>
+						<span>{{labels[transition]}}</span>
 				</b-btn>
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span v-translate>Versions</span>
