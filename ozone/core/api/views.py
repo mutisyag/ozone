@@ -444,12 +444,19 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
         reporting_channel_name = request.data.get('reporting_channel')
-        if reporting_channel_name:
-            reporting_channel_id = ReportingChannel.objects.get(
+        try:
+            reporting_channel = ReportingChannel.objects.get(
                 name=reporting_channel_name
-            ).pk
-            request.data['reporting_channel'] = reporting_channel_id
-        serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
+            )
+        except ReportingChannel.DoesNotExist:
+            raise InvalidRequest(
+                _("Invalid request: Reporting channel with this name does not exist.")
+            )
+        serializer = UpdateSubmissionInfoSerializer(
+            info,
+            data=request.data,
+            context={'reporting_channel': reporting_channel}
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

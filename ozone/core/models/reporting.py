@@ -301,6 +301,14 @@ class Submission(models.Model):
         help_text="General HAT obligation remarks added by the ozone secretariat for imports"
     )
 
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="submission",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -633,6 +641,7 @@ class Submission(models.Model):
                 cloned_from=self,
                 created_by=self.created_by,
                 last_edited_by=self.last_edited_by,
+                reporting_channel=self.reporting_channel
             )
             if hasattr(self, 'info'):
                 # Clone submission might already have some pre-populated
@@ -649,7 +658,6 @@ class Submission(models.Model):
                         'fax': self.info.fax,
                         'email': self.info.email,
                         'date': self.info.date,
-                        'reporting_channel': self.info.reporting_channel
                     }
                 )
         else:
@@ -831,18 +839,10 @@ class Submission(models.Model):
                         phone=latest_info.phone,
                         fax=latest_info.fax,
                         email=latest_info.email,
-                        date=latest_info.date,
-                        reporting_channel=ReportingChannel.objects.get(
-                            name='Web form'
-                        )
+                        date=latest_info.date
                     )
                 else:
-                    info = SubmissionInfo.objects.create(
-                        submission=self,
-                        reporting_channel=ReportingChannel.objects.get(
-                            name='Web form'
-                        )
-                    )
+                    info = SubmissionInfo.objects.create(submission=self)
 
             return ret
 
@@ -879,13 +879,6 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     fax = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    reporting_channel = models.ForeignKey(
-        ReportingChannel,
-        related_name="info",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT
-    )
 
     tracker = FieldTracker()
 

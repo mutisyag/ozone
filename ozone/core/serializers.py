@@ -771,6 +771,11 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
         model = SubmissionInfo
         exclude = ('submission',)
 
+    def update(self, instance, validated_data):
+        instance.submission.reporting_channel = self.context['reporting_channel']
+        instance.submission.save()
+        return super().update(instance, validated_data)
+
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
@@ -780,7 +785,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
-        return getattr(obj.reporting_channel, 'name', '')
+        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
 class SubmissionFlagsSerializer(
