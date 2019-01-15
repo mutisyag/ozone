@@ -3,9 +3,15 @@ from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
 
 from reportlab.lib import colors
+from reportlab.lib.units import cm
 
 from django.utils.translation import gettext_lazy as _
 
+from ..util import get_decisions
+from ..util import get_preship_or_polyols_q
+from ..util import get_quantity_cell
+from ..util import get_quantities
+from ..util import get_substance_label
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
@@ -22,7 +28,8 @@ TABLE_IMPORTS_HEADER = (
         p_c(_('Production for exempted essential, '
               'critical or other uses within your country')),
         '',
-        '',
+        p_c(_('Production for supply to Article 5 countries in '
+              'accordance with Articles 2A 2H and 5')),
     ),
     (
         '',
@@ -31,8 +38,7 @@ TABLE_IMPORTS_HEADER = (
         '',
         p_c(_('Quantity')),
         p_c(_('Decision / type of use')),
-        p_c(_('Production for supply to Article 5 countries in '
-              'accordance with Articles 2A 2H and 5')),
+        '',
     ),
 )
 
@@ -58,55 +64,40 @@ TABLE_ROW_EMPTY_STYLE = (
 )
 
 
-TABLE_IMPORTS_HEADER_STYLE = (
+TABLE_PRODUCTION_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+    ('VALIGN', (0, 2), (3, -1), 'MIDDLE'),
+    ('VALIGN', (5, 2), (6, -1), 'MIDDLE'),
+    ('ALIGN', (0, 2), (3, -1), 'CENTER'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('ALIGN', (6, 2), (6, -1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
     ('SPAN', (1, 0), (1, 1)),
     ('SPAN', (2, 0), (2, 1)),
     ('SPAN', (3, 0), (3, 1)),
     ('SPAN', (4, 0), (5, 0)),
+    ('SPAN', (6, 0), (6, 1)),
 )
 
 
 def to_row_substance(obj):
     substance = obj.substance
 
-    _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    q_pre_ship = (
-        p_l(f'Quantity of new {substance.name} '
-            'produced to be used for QPS applications'),
-        p_l(str(_q_pre_ship))
-    ) if _q_pre_ship else ()
+    quantities = get_quantities(obj)
+    extra_q = get_preship_or_polyols_q(obj)
+    q_cell = get_quantity_cell(quantities, extra_q)
 
-    sum_quantities = sum((
-        obj.quantity_essential_uses or 0,
-        obj.quantity_critical_uses or 0,
-        obj.quantity_high_ambient_temperature or 0,
-        obj.quantity_laboratory_analytical_uses or 0,
-        obj.quantity_process_agent_uses or 0,
-        obj.quantity_other_uses or 0,
-    ))
-
-    decisions_quantities = (
-        obj.decision_essential_uses,
-        obj.decision_critical_uses,
-        obj.decision_high_ambient_temperature,
-        obj.decision_laboratory_analytical_uses,
-        obj.decision_process_agent_uses,
-        obj.decision_other_uses,
-    )
-
-    join_decisions = ', '.join(filter(bool, decisions_quantities))
+    decisions = get_decisions(obj)
+    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
 
     return (
         substance.group.group_id,
         p_l(substance.name),
         str(obj.quantity_total_produced or ''),
         str(obj.quantity_feedstock or ''),
-        (p_l(str(sum_quantities or '')), ) + q_pre_ship,
-        str(join_decisions or ''),
+        q_cell,
+        (d_label,),
         str(obj.quantity_article_5 or '')
     )
 
@@ -123,10 +114,12 @@ def mk_table_substances_fii(submission):
 
 
 def table_from_data(data):
+    col_widths =  list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
     return Table(
         TABLE_IMPORTS_HEADER + (data or TABLE_ROW_EMPTY),
+        colWidths=col_widths,
         style=(
-            TABLE_IMPORTS_HEADER_STYLE + TABLE_STYLES + (
+            TABLE_PRODUCTION_HEADER_STYLE + TABLE_STYLES + (
                 () if data else TABLE_ROW_EMPTY_STYLE
             )
         ),
@@ -136,13 +129,14 @@ def table_from_data(data):
 
 def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
-    table_substances_fii = tuple(mk_table_substances_fii(submission))
+    # table_substances_fii = tuple(mk_table_substances_fii(submission))
+
     prod_page = (
         Paragraph(_('3.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
-        PageBreak(),
-        Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
-        table_from_data(table_substances_fii),
+        # PageBreak(),
+        # Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
+        # table_from_data(table_substances_fii),
         PageBreak()
     )
 
