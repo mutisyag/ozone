@@ -139,7 +139,7 @@ const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
 
-const getSubmissionHistory = (url) => fetch(`${url}history/`)
+const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
