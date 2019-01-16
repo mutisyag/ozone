@@ -815,6 +815,16 @@ class UploadHookViewSet(viewsets.ViewSet):
 
         try:
             token = UploadToken.objects.get(token=tok)
+            upload_id = request.data.get('ID')
+            submission_file, is_new = SubmissionFile.objects.get_or_create(
+                submission=token.submission,
+                name=file_name,
+                defaults={
+                    'uploader': token.user,
+                    'tus_id': upload_id,
+                    'upload_successful': False
+                }
+            )
 
             if not token.user.is_authenticated:
                 log.error(f'UPLOAD denied for "{token.user}": NOT ALLOWED')
@@ -823,7 +833,6 @@ class UploadHookViewSet(viewsets.ViewSet):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
-            upload_id = request.data.get('ID')
             file_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
                 f'{upload_id}.bin'
@@ -843,13 +852,6 @@ class UploadHookViewSet(viewsets.ViewSet):
             log.info(f'file extension: {file_ext}')
             log.info(f'allowed extensions: {settings.ALLOWED_FILE_EXTENSIONS}')
 
-            submission_file, is_new = SubmissionFile.objects.get_or_create(
-                submission=token.submission,
-                name=file_name,
-                defaults={
-                    'uploader': token.user,
-                }
-            )
             if not is_new:
                 # New file with same name uploaded, delete old one to avoid
                 # auto-renaming in get_available_name()
@@ -859,6 +861,7 @@ class UploadHookViewSet(viewsets.ViewSet):
                 file_name, File(file_path.open(mode='rb'))
             )
             submission_file.uploader = token.user
+            submission_file.upload_successful = True
             submission_file.save()
 
             # Finally, remove the token and the tusd files pair
