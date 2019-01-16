@@ -105,10 +105,6 @@ class Migration(migrations.Migration):
             table='exemption_nomination',
         ),
         migrations.AlterModelTable(
-            name='obligation',
-            table='obligation',
-        ),
-        migrations.AlterModelTable(
             name='party',
             table='party',
         ),

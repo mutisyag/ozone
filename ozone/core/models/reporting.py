@@ -90,7 +90,7 @@ class Obligation(models.Model):
         return self.name
 
     class Meta:
-        db_table = "obligation"
+        db_table = "core_obligation"
 
 
 class ReportingChannel(models.Model):
