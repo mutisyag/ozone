@@ -55,7 +55,7 @@ class UploadToken(models.Model):
     valid_until = models.DateTimeField(default=token_valid_until)
 
     class Meta:
-        db_table = 'core_upload_token'
+        db_table = 'upload_token'
         ordering = ('-created_at',)
 
     def __str__(self):
@@ -121,6 +121,9 @@ class SubmissionFile(ModifyPreventionMixin, File):
     )
 
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'submission_file'
 
     def get_storage_directory(self, filename):
         return os.path.join(

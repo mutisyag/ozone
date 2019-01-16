@@ -45,6 +45,7 @@ class Nomination(models.Model):
 
     class Meta:
         ordering = ('nomination_id',)
+        db_table = 'exemption_nomination'
 
 
 class BaseExemption(models.Model):
@@ -89,6 +90,9 @@ class ExemptionApproved(BaseExemption):
         max_length=256, blank=True
     )
 
+    class Meta:
+        db_table = 'exemption_approved'
+
 
 class ExemptionReported(BaseExemption):
 
@@ -118,3 +122,6 @@ class ExemptionReported(BaseExemption):
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+
+    class Meta:
+        db_table = 'exemption_reported'

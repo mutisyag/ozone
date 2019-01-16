@@ -37,6 +37,9 @@ class PartyType(models.Model):
     abbr = models.CharField(max_length=32, unique=True)
     name = models.CharField(max_length=256, unique=True)
 
+    class Meta:
+        db_table = 'party_type'
+
 
 class Region(models.Model):
     """
@@ -56,6 +59,7 @@ class Region(models.Model):
 
     class Meta:
         ordering = ('name',)
+        db_table = 'region'
 
 
 class Subregion(models.Model):
@@ -81,6 +85,7 @@ class Subregion(models.Model):
     class Meta:
         unique_together = ('abbr', 'region')
         ordering = ('region', 'name')
+        db_table = 'subregion'
 
 
 class Party(models.Model):
@@ -117,6 +122,7 @@ class Party(models.Model):
     class Meta:
         verbose_name_plural = 'parties'
         ordering = ('name',)
+        db_table = 'party'
 
 
 def current_year():
@@ -179,6 +185,7 @@ class PartyHistory(models.Model):
         unique_together = ('party', 'reporting_period')
         ordering = ('party', 'reporting_period')
         verbose_name_plural = 'parties history'
+        db_table = 'party_history'
 
 
 class PartyRatification(models.Model):
@@ -204,6 +211,9 @@ class PartyRatification(models.Model):
 
     entry_into_force_date = models.DateField()
 
+    class Meta:
+        db_table = 'party_ratification'
+
 
 class Language(models.Model):
     """
@@ -221,3 +231,4 @@ class Language(models.Model):
 
     class Meta:
         ordering = ('name',)
+        db_table = 'language'

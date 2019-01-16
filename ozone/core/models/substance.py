@@ -35,6 +35,7 @@ class Annex(models.Model):
     class Meta:
         verbose_name_plural = 'annexes'
         ordering = ('name',)
+        db_table = 'annex'
 
 
 class Group(models.Model):
@@ -77,6 +78,7 @@ class Group(models.Model):
 
     class Meta:
         ordering = ('annex', 'group_id')
+        db_table = 'group'
 
 
 class Substance(models.Model):
@@ -157,6 +159,7 @@ class Substance(models.Model):
 
     class Meta:
         ordering = ('group', 'substance_id')
+        db_table = 'substance'
 
 
 class Blend(models.Model):
@@ -237,9 +240,11 @@ class Blend(models.Model):
             for c in self.components.all() if c.substance
         ]
 
-
     def __str__(self):
         return self.blend_id
+
+    class Meta:
+        db_table = "blend"
 
 
 class BlendComponent(models.Model):
@@ -294,6 +299,7 @@ class BlendComponent(models.Model):
 
     class Meta:
         ordering = ('blend', 'substance')
+        db_table = "blend_component"
 
 
 class ProcessAgentApplication(models.Model):
@@ -312,6 +318,9 @@ class ProcessAgentApplication(models.Model):
     application = models.CharField(max_length=256)
 
     remark = models.CharField(max_length=9999, blank=True)
+
+    class Meta:
+        db_table = 'pa_application'
 
 
 class UsesType(models.Model):
@@ -335,3 +344,4 @@ class UsesType(models.Model):
 
     class Meta:
         ordering = ('name',)
+        db_table = "user_type"
