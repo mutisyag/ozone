@@ -1,8 +1,11 @@
-from reportlab.platypus import Paragraph
-from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
+from reportlab.platypus import Paragraph
+from reportlab.platypus import Spacer
+from reportlab.platypus import Table
+from reportlab.lib.units import mm
 
 from django.utils.translation import gettext_lazy as _
+from functools import partial
 
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
@@ -12,32 +15,18 @@ from ..util import get_substance_label
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
+
 from ..util import STYLES
-from ..util import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS as SUBS_WIDTHS
-from ..util import TABLE_IMPORTS_EXPORTS_BL_WIDTHS as BLEND_WIDTHS
-from ..util import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
-from ..util import TABLE_STYLES
+from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS as SUBS_WIDTHS
+from ..constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS as BLEND_WIDTHS
+from ..constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
+from ..constants import TABLE_STYLES
+from ..constants import TABLE_BLENDS_COMP_HEADER
+from ..constants import TABLE_BLENDS_COMP_STYLE
+from ..constants import TABLE_BLENDS_COMP_WIDTHS
+from ..constants import TABLE_ROW_EMPTY_IMP_EXP
+from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
-
-TABLE_ROW_EMPTY = (
-    (
-        _('No data.'),
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-    ),
-)
-
-
-TABLE_ROW_EMPTY_STYLE = (
-    ('SPAN', (0, 2), (-1, 2)),
-    ('VALIGN', (0, 2), (-1, 2), 'MIDDLE'),
-    ('ALIGN', (0, 2), (-1, 2), 'CENTER'),
-)
 
 def get_imports_header(isBlend):
     first_col = 'Type' if isBlend else 'Group'
@@ -90,6 +79,7 @@ def to_row_substance(obj):
     )
 
 def to_row_blend(obj):
+    # TODO: merge with to_row_substance
     blend = obj.blend
 
     quantities = get_quantities(obj)
@@ -109,32 +99,75 @@ def to_row_blend(obj):
         (d_label,)
     )
 
+def to_row_component(component, blend):
+
+    ptg = component.percentage
+    q_sum = sum(get_quantities(blend))*ptg
+
+    return (
+        component.component_name,
+        p_c('<b>{}%</b>'.format(round(ptg*100,1))),
+        str(round(blend.quantity_total_new * ptg)),
+        format(blend.quantity_total_recovered * ptg, '.2f'),
+        format(blend.quantity_feedstock * ptg, '.3g'),
+        str(q_sum) if q_sum != 0.0 else ''
+    )
+
 
 def mk_table_substances(submission):
     # Excluding items with no substance,
     # then getting the ones that are not a blend_item
-
     imports = submission.article7imports.exclude(substance=None)
     return map(to_row_substance, imports.filter(blend_item=None))
 
 
 def mk_table_blends(submission):
     imports = submission.article7imports.filter(substance=None)
-    return map(to_row_blend, imports)
+    blends = []
+    for blend_row in map(to_row_blend, imports):
+
+        # Getting the blend object based on the id
+        blend = imports.filter(blend__blend_id=blend_row[1]).first()
+        row_comp = partial(to_row_component, blend=blend)
+        data = tuple(map(row_comp, blend.blend.components.all()))
+
+        blends.append(blend_row)
+        blends.append(
+            (
+                (Spacer(7, mm),
+                 Table(
+                    TABLE_BLENDS_COMP_HEADER + data,
+                    style=TABLE_BLENDS_COMP_STYLE,
+                    colWidths=TABLE_BLENDS_COMP_WIDTHS,
+                 ),
+                 Spacer(7, mm))
+            ,)
+        )
+
+    return blends
 
 
 def table_from_data(data, isBlend):
     header = get_imports_header(isBlend)
     col_widths = BLEND_WIDTHS if isBlend else SUBS_WIDTHS
+    style = (
+        TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
+            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
+        )
+    )
+
+    # Spanning all columns for the blend components rows
+    if isBlend:
+        rows = len(data)+2
+        for row_idx in range(3, rows, 2):
+            style += (
+                ('SPAN', (0, row_idx), (-1, row_idx)),
+            )
 
     return Table(
-        header + (data or TABLE_ROW_EMPTY),
+        header + (data or TABLE_ROW_EMPTY_IMP_EXP),
         colWidths=col_widths,
-        style=(
-            TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
-                () if data else TABLE_ROW_EMPTY_STYLE
-            )
-        ),
+        style=style,
         repeatRows=2  # repeat header on page break
     )
 
