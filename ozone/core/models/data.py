@@ -80,6 +80,16 @@ class BlendCompositionMixin:
                 }
             )
 
+        # If this is a custom blend from a different party, raise an error
+        if (
+            self.blend is not None
+            and self.blend.party is not None
+            and self.blend.party != self.submission.party
+        ):
+            raise ValidationError(
+                _("This blend is for a different party!")
+            )
+
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
             raise ValidationError(
