@@ -20,7 +20,7 @@
 				</b-input-group>
 
 				<div class="mt-2 mb-2" style="display: flex;">
-					<b-input-group class="mt-2" prepend="Blends">
+					<b-input-group id="blend_selector" class="mt-2" prepend="Blends">
 						<multiselect
 							trackBy="value"
 							:clear-on-select="false"
@@ -57,6 +57,7 @@
 				<b-btn
 					v-if="selected_blends.selected.length"
 					@click="addSubstance('selected')"
+					id="add-blend-button"
 					variant="primary">
 						<span v-translate='{length: selected_blends.selected.length}'>Add %{length} rows</span>
 				</b-btn>
@@ -171,7 +172,7 @@ export default {
 			submit_blend: {
 				components: null,
 				blend_id: null,
-				type: 'Other'
+				type: 'Custom'
 			},
 			selected_substance: {
 				selected: null,

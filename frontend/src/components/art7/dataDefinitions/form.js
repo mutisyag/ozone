@@ -1,7 +1,7 @@
-import { getQuestionnaireFields } from './questionnaire_fields'
-import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
-import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
-import tab_flags from '@/components/common/dataDefinitions/tab_flags'
+import { getQuestionnaireFields } from './questionnaireFields'
+import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
+import { getTabAttachments } from '@/components/common/dataDefinitions/tabAttachments'
+import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormArt7 = ($gettext) => {
 	const form = {
@@ -34,11 +34,11 @@ const getFormArt7 = ($gettext) => {
 		},
 		tabs: {
 			sub_info: {
-				...tab_sub_info,
+				...getTabSubInfo($gettext),
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
 			},
 			attachments: {
-				...tab_attachments,
+				...getTabAttachments($gettext),
 				hideInfoButton: true
 			},
 			questionaire_questions: {
@@ -814,7 +814,7 @@ const getFormArt7 = ($gettext) => {
 					quantity_emitted: null
 				}
 			},
-			flags: tab_flags
+			flags: getTabFlags($gettext)
 		}
 	}
 	return form

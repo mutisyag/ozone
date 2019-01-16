@@ -22,7 +22,7 @@ services:
     image: tusproject/tusd:latest
     env_file:
       - ./docker/demo.env
-    entrypoint: ["/go/bin/tusd", "-dir", "/srv/tusd-data", "-hooks-http", "http://app:${OZONE_GUNICORN_PORT}/api/uploads/"]
+    command: ["-dir", "/srv/tusd-data", "-hooks-http", "http://app:${OZONE_GUNICORN_PORT}/api/uploads/"]
     volumes:
       - tusd-uploads:/srv/tusd-data
     labels:
