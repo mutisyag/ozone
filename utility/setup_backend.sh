@@ -5,4 +5,4 @@ cd ..
 set -e
 
 python manage.py load_initial_fixtures
-python manage.py make_test_users
+python manage.py make_test_users --party RO

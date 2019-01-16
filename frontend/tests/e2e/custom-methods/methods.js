@@ -23,7 +23,9 @@ const createSubmission = (browser) => {
 		.useCss()
 		.waitForElementVisible('#period_selector', 2000)
 		.waitForElementVisible('#period_selector .multiselect', 2000)
+		.pause(500)
 		.click('#period_selector .multiselect')
+		.pause(500)
 		.waitForElementVisible('#period_selector .multiselect__content-wrapper', 2000)
 		.useXpath()
 		.waitForElementVisible("//span[contains(text(),'2018')]/ancestor::div[contains(@id, 'period_selector')]", 5000)
@@ -66,6 +68,9 @@ const addSubstance = (browser, select_id, option) => {
 		.keys(browser.Keys.ESCAPE)
 		.useCss()
 		.click('#add-substance-button')
+		.moveToElement('aside.aside-menu > div > .navbar-toggler', undefined, undefined)
+		.pause(500)
+		.click('aside.aside-menu > div > .navbar-toggler')
 }
 
 const addBlend = (browser, select_id, option) => {
@@ -73,10 +78,13 @@ const addBlend = (browser, select_id, option) => {
 		.waitForElementVisible('.aside-menu .navbar-toggler', 10000)
 		.moveToElement('aside.aside-menu > div > .navbar-toggler', undefined, undefined)
 		.pause(500)
-		.click('aside.aside-menu > div > .navbar-toggler')
+		.click('#has_imports_tab aside.aside-menu > div > .navbar-toggler')
 		.pause(500)
-		.click('.aside-menu .tabs .nav-tabs li:nth-child(2) a')
+		.waitForElementVisible('#has_imports_tab .aside-menu .tabs .nav-tabs li:nth-child(2)', 10000)
+		.click('#has_imports_tab .aside-menu .tabs .nav-tabs li:nth-child(2) a')
+		.pause(500)
 		.click(`#${select_id} .multiselect`)
+		.pause(500)
 		.waitForElementVisible(`#${select_id} .multiselect__content-wrapper`, 10000)
 		.useXpath()
 		.waitForElementVisible(`//span[contains(text(),'${option}')]/ancestor::div[contains(@id, '${select_id}')]`, 5000)
@@ -86,6 +94,31 @@ const addBlend = (browser, select_id, option) => {
 		.waitForElementVisible('#add-blend-button', 5000)
 		.pause(500)
 		.click('#add-blend-button')
+		.moveToElement('aside.aside-menu > div > .navbar-toggler', undefined, undefined)
+		.pause(500)
+		.click('aside.aside-menu > div > .navbar-toggler')
+}
+
+const addValues = (browser, table, tab) => {
+	browser
+		.setValue(`${table} tbody tr td:nth-child(4) input`, 100)
+		.setValue(`${table} tbody tr td:nth-child(5) input`, 5)
+		.click(`${table}  tbody tr td:nth-child(2)`)
+		.assert.containsText(`${table} .validation-wrapper > span`, 'valid')
+	browser.execute(`document.querySelector("${table} tbody tr").classList.add("hovered")`, () => {
+		browser
+			.pause(5000)
+			.click(`${table} tbody tr td .row-controls span:not(.table-btn)`)
+	})
+	browser
+		.waitForElementVisible(`${tab} .modal-body`, 5000)
+		.pause(500)
+		.setValue(`${tab} .modal-body #quantity_feedstock`, 1)
+		.setValue(`${tab} .modal-body #quantity_critical_uses`, 1)
+		.setValue(`${tab} .modal-body #decision_critical_uses`, 'asd')
+		.pause(5000)
+		.click(`${tab} .modal-dialog .close`)
+		.pause(500)
 }
 
 module.exports = {
@@ -94,5 +127,6 @@ module.exports = {
 	clickQuestionnaireRadios,
 	selectTab,
 	addSubstance,
-	addBlend
+	addBlend,
+	addValues
 }

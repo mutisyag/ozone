@@ -12,7 +12,8 @@ const {
 	clickQuestionnaireRadios,
 	selectTab,
 	addSubstance,
-	addBlend
+	addBlend,
+	addValues
 } = require('../custom-methods/methods.js')
 
 module.exports = {
@@ -36,40 +37,21 @@ module.exports = {
 
 		browser
 			.useCss()
-			.waitForElementVisible('.aside-menu .navbar-toggler', 10000)
-			.moveToElement('aside.aside-menu > div > .navbar-toggler', undefined, undefined)
-			.pause(500)
-			.click('aside.aside-menu > div > .navbar-toggler')
-			.pause(500)
 			.moveToElement('#blends-table-title', undefined, undefined)
 			.waitForElementVisible('#blends-table-title', 5000)
-			.click('.badge.badge-danger.badge-pill')
-			.pause(500)
-			.click('aside.aside-menu > div > .navbar-toggler')
-			.setValue('.submission-table tbody tr td:nth-child(4) input', 100)
-			.setValue('.submission-table tbody tr td:nth-child(5) input', 5)
-			.click('.submission-table tbody tr td:nth-child(2)')
-			.assert.containsText('.validation-wrapper > span', 'valid')
-		browser.execute('document.querySelector(".submission-table tbody tr").classList.add("hovered")', () => {
-			browser
-				.pause(5000)
-				.click('.submission-table tbody tr td .row-controls span:not(.table-btn)')
-		})
-		browser
-			.waitForElementVisible('#has_imports_tab .modal-body', 5000)
-			.pause(500)
-			.setValue('#has_imports_tab .modal-body #quantity_feedstock', 1)
-			.setValue('#has_imports_tab .modal-body #quantity_critical_uses', 1)
-			.setValue('#has_imports_tab .modal-body #decision_critical_uses', 'asd')
-			.pause(5000)
-			.click('#has_imports_tab .modal-dialog .close')
-			.pause(500)
+		addValues(browser, '#substance-table', '#has_imports_tab')
 		addBlend(browser, 'blend_selector', 'R-401B')
+		browser
+			.moveToElement('#tab-comments', undefined, undefined)
+
+		addValues(browser, '#blend-table', '#has_imports_tab')
 
 		browser
 			.pause(10000)
-			.click('.app-footer .btn.btn-outline-danger')
-			.pause(1000)
-			.acceptAlert()
+			.click('.app-footer #save-button')
+			.useXpath()
+			.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
+			.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Imports")]//i[contains(@class, "fa-check-circle")]', 20000)
+			.end()
 	}
 }
