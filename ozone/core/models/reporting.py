@@ -815,6 +815,10 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
+            # The default value for reporting channel is 'Web form'
+            # when creating a new submission
+            self.reporting_channel = ReportingChannel.objects.get(name='Web form')
+
             self.clean()
             ret = super().save(
                 force_insert=force_insert, force_update=force_update,
