@@ -13,7 +13,7 @@ from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
-from ..util import TABLE_IMPORTS_EXPORTS_COL_WIDTHS as COL_WIDTHS
+from ..util import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS as COL_WIDTHS
 from ..util import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
 from ..util import TABLE_STYLES
 
