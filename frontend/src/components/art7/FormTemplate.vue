@@ -80,7 +80,6 @@
 			head-variant="light"
 			stacked="md"
 			class="submission-table"
-			id="substance-table"
 			:items="tableItems"
 			:fields="tableFields"
 			:empty-text="table.emptyText"
@@ -325,7 +324,7 @@
 			@input="tableLoadedBlends"
 			@row-hovered="rowHovered"
 			stacked="md"
-			id="blend-table"
+			id="blends-table"
 			:items="tableItemsBlends"
 			:fields="tableFieldsBlends"
 			:empty-text="tableBlends.emptyText"
@@ -427,7 +426,7 @@
 		</b-table>
 	</div>
     </div>
-    <div id="tab-comments" class="table-wrapper">
+    <div class="table-wrapper">
 		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
 		<hr>
 		<div

@@ -1,7 +1,6 @@
 <template>
     <b-btn
 			@click="validation"
-			id="save-button"
 			variant="primary">
         <span v-translate>Save and continue</span>
     </b-btn>
