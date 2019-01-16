@@ -498,6 +498,17 @@ class Article7ProductionSerializer(
         exclude = ('submission',)
 
 
+def get_field_value(initial_data_entry, field_name):
+    """
+    Returns the value of a numerical field from entries (dictionaries
+    representing a single art7 import/export data entry) in serializer's
+    self.initial_data.
+    The UI can send None as a value in these fields.
+    """
+    ret = initial_data_entry.get(field_name, 0)
+    return ret if ret is not None else 0
+
+
 def validate_import_export_data(
     initial_data, totals_fields, quantity_fields, party_field
 ):
@@ -541,13 +552,13 @@ def validate_import_export_data(
                     if substance in related_substances:
                         sums_dictionary[substance]['totals_sum'] += sum(
                             [
-                                entry.get(field, 0) * percentage
+                                get_field_value(entry, field) * percentage
                                 for field in totals_fields
                             ]
                         )
                         sums_dictionary[substance]['quantities_sum'] += sum(
                             [
-                                entry.get(field, 0) * percentage
+                                get_field_value(entry, field) * percentage
                                 for field in quantity_fields
                             ]
                         )
@@ -556,12 +567,13 @@ def validate_import_export_data(
                 substance = entry.get('substance')
                 sums_dictionary[substance]['totals_sum'] += sum(
                     [
-                        entry.get(field, 0) for field in totals_fields
+                        get_field_value(entry, field) for field in totals_fields
                     ]
                 )
                 sums_dictionary[substance]['quantities_sum'] += sum(
                     [
-                        entry.get(field, 0) for field in quantity_fields
+                        get_field_value(entry, field)
+                        for field in quantity_fields
                     ]
                 )
 
