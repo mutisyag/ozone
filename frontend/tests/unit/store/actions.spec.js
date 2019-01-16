@@ -9,6 +9,7 @@ describe('store actions', () => {
 			const commit = sinon.spy()
 			const state = {}
 			setAlert({ commit, state }, {
+				$gettext: x => x,
 				message: {
 					error1: 'Error 1',
 					error2: 'Error 2'

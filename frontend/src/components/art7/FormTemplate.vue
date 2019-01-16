@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div :id="`${tabName}_tab`" v-if="tab_info">
     <div class="form-sections">
 	<table ref="tableHeader" class="table submission-table header-only">
 	<thead>
@@ -303,7 +303,7 @@
 		class="table-wrapper">
 
 		<div class="table-title">
-			<h4> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
+			<h4 id="blends-table-title"> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 			<div v-show="tableBlends.tableFilters" class="table-filters">
 				<b-input-group :prepend="$gettext('Search')">
 					<b-form-input v-model="tableBlends.filters.search"/>
@@ -401,7 +401,7 @@
 							v-for="(header, header_index) in tab_info.blend_substance_headers"
 							:colspan="header.colspan"
 							:key="header_index">
-							<span v-translate>{{labels[header]}}</span>
+							<span>{{labels[header]}}</span>
 						</th>
 					</tr>
 				</thead>
@@ -433,7 +433,7 @@
 			:key="comment_key"
 			class="comments-input">
 			<label>
-				<span v-translate>{{labels[comment_key]}}</span>
+				<span>{{labels[comment_key]}}</span>
 			</label>
 				<!-- addComment(state, { data, tab, field }) { -->
 			<textarea
@@ -478,7 +478,7 @@
         </b-row>
         <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col><span v-translate>{{labels[order]}}</span></b-col>
+            <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -507,10 +507,10 @@
             :key="order_index"
             v-show="anotherSpecialCase(order, modal_data)">
             <b-col lg="3" class="mb-2">
-              <span v-translate>{{labels[`decision_${order}`]}}</span>
+              <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
             <b-col lg="6">
-              <b-input-group class="modal-group" :prepend="$gettext(labels['quantity'])">
+              <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
 					:disabled="isReadOnly"
@@ -518,7 +518,7 @@
               </b-input-group>
             </b-col>
             <b-col lg="3">
-              <b-input-group class="modal-group" :prepend="$gettext(labels['decision'])">
+              <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
                   :disabled="isReadOnly"
@@ -532,7 +532,7 @@
           v-for="comment_field in ['remarks_party','remarks_os']"
           :key="comment_field">
           <b-col lg="3">
-            <span v-translate>{{labels[comment_field]}}</span>
+            <span>{{labels[comment_field]}}</span>
           </b-col>
           <b-col lg="9">
             <textarea :disabled="getCommentFieldPermission(comment_field)"
@@ -549,7 +549,7 @@
 </template>
 
 <script>
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { intersect } from '@/components/common/services/utilsService'
 import CloneField from '@/components/common/form-components/CloneField.vue'
@@ -593,8 +593,8 @@ export default {
 
 	created() {
 		this.labels = {
-			...labels.general,
-			...labels[this.tab_info.name]
+			...getLabels(this.$gettext).general,
+			...getLabels(this.$gettext)[this.tab_info.name]
 		}
 	},
 	methods: {

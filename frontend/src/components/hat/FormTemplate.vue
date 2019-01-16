@@ -182,7 +182,7 @@
 									v-for="(header, header_index) in tab_info.blend_substance_headers"
 									:colspan="header.colspan"
 									:key="header_index">
-										<span v-translate>{{labels[header]}}</span>
+										<span>{{labels[header]}}</span>
 								</th>
 							</tr>
 						</thead>
@@ -214,7 +214,7 @@
 			v-for="(comment, comment_index) in tab_info.comments"
 			:key="comment_index"
 			class="comments-input">
-			<label><span v-translate>{{labels[comment.name]}}</span></label>
+			<label>{{labels[comment.name]}}</label>
 			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 		</div>
 	</div>
@@ -261,7 +261,7 @@
         </b-row>
         <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col><span v-translate>{{labels[order]}}</span></b-col>
+            <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -294,7 +294,7 @@
 <script>
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import labels from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
@@ -311,8 +311,8 @@ export default {
 	},
 	created() {
 		this.labels = {
-			...labels.general,
-			...labels[this.tab_info.name]
+			...getLabels(this.$gettext).common,
+			...getLabels(this.$gettext)[this.tab_info.name]
 		}
 	},
 	methods: {

@@ -87,7 +87,7 @@
 			v-for="(comment, comment_key) in tab_info.comments"
 			:key="comment_key"
 			class="comments-input">
-			<label><span v-translate>{{labels[comment_key]}}</span></label>
+			<label>{{labels[comment_key]}}</label>
 				<!-- addComment(state, { data, tab, field }) { -->
 			<textarea
 				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
@@ -111,7 +111,7 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -128,7 +128,7 @@ export default {
 	},
 
 	created() {
-		this.labels = labels[this.tab_info.name]
+		this.labels = getLabels(this.$gettext)[this.tab_info.name]
 	},
 
 	data() {
@@ -256,7 +256,11 @@ export default {
 			return Array.from(intersection)
 		},
 		addField() {
-			this.$store.dispatch('createRow', { prefillData: null, currentSectionName: this.tabName })
+			this.$store.dispatch('createRow', {
+				$gettext: this.$gettext,
+				prefillData: null,
+				currentSectionName: this.tabName
+			})
 		}
 	},
 

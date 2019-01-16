@@ -50,6 +50,7 @@ export default {
 			}
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [`${this.$gettext('Save failed  because of validation problems. Please check the')} ${this.invalidTabs.join(', ')} <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
 					variant: 'danger'
 				})
@@ -76,6 +77,7 @@ export default {
 				console.log(r)
 			}).catch((e) => {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: e,
 					variant: 'danger'
 				})
@@ -119,6 +121,7 @@ export default {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
 					console.log(error.response)
 					this.$store.dispatch('setAlert', {
+						$gettext: this.$gettext,
 						message: { __all__: [`${this.$gettext('Save failed for')} ${this.invalidTabs}`] },
 						variant: 'danger' })
 				})
@@ -134,6 +137,7 @@ export default {
 				}).catch(() => {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
 					this.$store.dispatch('setAlert', {
+						$gettext: this.$gettext,
 						message: { __all__: [`${this.$gettext('Save failed for')} ${this.invalidTabs}`] },
 						variant: 'danger'
 					})

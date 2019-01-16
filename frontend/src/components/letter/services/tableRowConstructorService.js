@@ -1,4 +1,4 @@
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/letter/dataDefinitions/labels'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -10,17 +10,17 @@ const getCountryField = (currentSection) => {
 	}
 }
 
-const createTooltip = (fields, section) => {
+const createTooltip = (fields, section, $gettext) => {
 	let tooltip_title = ''
 	if (Object.keys(fields).length) {
 		Object.keys(fields).forEach(field => {
-			tooltip_title += `${this.$gettext(labels[section][field])}: ${fields[field]}\n`
+			tooltip_title += `${getLabels($gettext)[section][field]}: ${fields[field]}\n`
 		})
 	}
 	return tooltip_title
 }
 
-const quantityCalculator = (fields, parent, section) => {
+const quantityCalculator = (fields, parent, section, $gettext) => {
 	let count = 0
 	const returnObj = {
 		type: 'nonInput',
@@ -44,7 +44,7 @@ const quantityCalculator = (fields, parent, section) => {
 		returnObj.selected = count.toPrecision(3)
 	}
 
-	const tooltip = createTooltip(forTooltip, section)
+	const tooltip = createTooltip(forTooltip, section, $gettext)
 
 	returnObj.tooltip = tooltip
 
@@ -60,7 +60,7 @@ const valueConverter = (item) => {
 
 const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + sum)
 
-const decisionGenerator = (fields, parent, section) => {
+const decisionGenerator = (fields, parent, section, $gettext) => {
 	const decisions = []
 	const returnObj = {
 		type: 'nonInput',
@@ -76,7 +76,7 @@ const decisionGenerator = (fields, parent, section) => {
 			forTooltip[item] = parent[item].selected
 		})
 
-	const tooltip = createTooltip(forTooltip, section)
+	const tooltip = createTooltip(forTooltip, section, $gettext)
 	returnObj.tooltip = tooltip
 
 	returnObj.selected = decisions.join(', ')
@@ -85,7 +85,7 @@ const decisionGenerator = (fields, parent, section) => {
 
 export default {
 	nonSubstanceRows({
-		currentSectionName, prefillData, ordering_id
+		$gettext, currentSectionName, prefillData, ordering_id
 	}) {
 		let row
 		switch (currentSectionName) {
@@ -128,7 +128,7 @@ export default {
 				get validation() {
 					const errors = []
 					if (!this.facility_name.selected) {
-						errors.push('eroare1')
+						errors.push($gettext('error 1 test'))
 					}
 
 					const returnObj = {
@@ -200,7 +200,7 @@ export default {
 	},
 
 	substanceRows({
-		section, substance, group, country, blend, prefillData, ordering_id
+		$gettext, section, substance, group, country, blend, prefillData, ordering_id
 	}) {
 		const countryFieldName = getCountryField(section)
 
@@ -232,12 +232,12 @@ export default {
 			},
 			get quantity_exempted() {
 				const fields = ['quantity_essential_uses', 'quantity_critical_uses', 'quantity_high_ambient_temperature', 'quantity_process_agent_uses', 'quantity_laboratory_analytical_uses', 'quantity_quarantine_pre_shipment', 'quantity_other_uses']
-				return quantityCalculator(fields, this, section)
+				return quantityCalculator(fields, this, section, $gettext)
 			},
 
 			get decision_exempted() {
 				const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_other_uses']
-				return decisionGenerator(fields, this, section)
+				return decisionGenerator(fields, this, section, $gettext)
 			},
 			quantity_essential_uses: {
 				type: 'number',
@@ -306,11 +306,11 @@ export default {
 			get validation() {
 				const errors = []
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected]) <= 0) {
-					errors.push(this.$gettext('Total quantity imported for all uses is required'))
+					errors.push($gettext('Total quantity imported for all uses is required'))
 				}
 
 				if (valueConverter(this.quantity_exempted.selected) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
-					errors.push(this.$gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
+					errors.push($gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
 				}
 
 				const returnObj = {
@@ -358,11 +358,11 @@ export default {
 				},
 				get quantity_exempted() {
 					const fields = ['quantity_critical_uses', 'quantity_essential_uses', 'quantity_high_ambient_temperature', 'quantity_laboratory_analytical_uses', 'quantity_process_agent_uses', 'quantity_quarantine_pre_shipment']
-					return quantityCalculator(fields, this, section)
+					return quantityCalculator(fields, this, section, $gettext)
 				},
 				get decision_exempted() {
 					const fields = ['decision_critical_uses', 'decision_essential_uses', 'decision_high_ambient_temperature', 'decision_laboratory_analytical_uses', 'decision_process_agent_uses', 'decision_quarantine_pre_shipment']
-					return decisionGenerator(fields, this, section)
+					return decisionGenerator(fields, this, section, $gettext)
 				},
 				quantity_critical_uses: {
 					type: 'number',

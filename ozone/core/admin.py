@@ -241,6 +241,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
     exclude = ["password"]
+    readonly_fields = ["last_login", "date_joined"]
 
     def reset_password(self, request, queryset):
         domain_override = request.META.get("HTTP_HOST")

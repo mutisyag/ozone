@@ -99,6 +99,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
@@ -111,6 +112,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
