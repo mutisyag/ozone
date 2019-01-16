@@ -330,7 +330,7 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     tracker = FieldTracker()
 
     class Meta:
-        db_table = 'reporting_article_seven_questionnaire'
+        db_table = 'reporting_art7_questionnaire'
 
 
 class Article7Export(
@@ -370,7 +370,7 @@ class Article7Export(
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_exports'
+        db_table = 'reporting_art7_exports'
 
 
 class Article7Import(
@@ -410,7 +410,7 @@ class Article7Import(
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_imports'
+        db_table = 'reporting_art7_imports'
 
 
 class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
@@ -440,7 +440,7 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     tracker = FieldTracker()
 
     class Meta:
-        db_table = 'reporting_article_seven_production'
+        db_table = 'reporting_art7_production'
 
 
 class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
@@ -462,7 +462,7 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_destruction'
+        db_table = 'reporting_art7_destruction'
 
 
 class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
@@ -497,7 +497,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_non_party_trade'
+        db_table = 'reporting_art7_npt'
 
     @staticmethod
     def get_non_parties(group_pk, reporting_period_pk=None):
@@ -604,7 +604,7 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
     tracker = FieldTracker()
 
     class Meta:
-        db_table = 'reporting_article_seven_emissions'
+        db_table = 'reporting_art7_emissions'
 
 
 class BaseHighAmbientTemperature(models.Model):
@@ -638,6 +638,9 @@ class HighAmbientTemperatureProduction(
 
     tracker = FieldTracker()
 
+    class Meta:
+        db_table = 'reporting_hat_production'
+
 
 class HighAmbientTemperatureImport(
     ModifyPreventionMixin, BaseBlendCompositionReport,
@@ -657,6 +660,9 @@ class HighAmbientTemperatureImport(
         'quantity_sdac',
         'quantity_dcpac',
     ]
+
+    class Meta:
+        db_table = 'reporting_hat_import'
 
 
 class Transfer(ModifyPreventionMixin, BaseReport):
@@ -691,6 +697,9 @@ class Transfer(ModifyPreventionMixin, BaseReport):
 
     tracker = FieldTracker()
 
+    class Meta:
+        db_table = 'reporting_transfer'
+
 
 class DataOther(ModifyPreventionMixin, BaseReport):
     """
@@ -698,3 +707,6 @@ class DataOther(ModifyPreventionMixin, BaseReport):
     """
 
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'reporting_other'

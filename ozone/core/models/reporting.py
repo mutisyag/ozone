@@ -89,6 +89,9 @@ class Obligation(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        db_table = "obligation"
+
 
 class ReportingChannel(models.Model):
     """
@@ -97,6 +100,9 @@ class ReportingChannel(models.Model):
 
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        db_table = "reporting_channel"
 
 
 class Submission(models.Model):
@@ -738,6 +744,7 @@ class Submission(models.Model):
         unique_together = (
             'party', 'reporting_period', 'obligation', 'version'
         )
+        db_table = 'submission'
 
     def delete(self, *args, **kwargs):
         if not self.data_changes_allowed:
@@ -888,6 +895,9 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     )
 
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = "submission_info"
 
     def __str__(self):
         return f'{self.submission} - Info'

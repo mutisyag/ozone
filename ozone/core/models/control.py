@@ -43,6 +43,9 @@ class ControlMeasure(models.Model):
         blank=True, null=True
     )
 
+    class Meta:
+        db_table = 'control_measure'
+
 
 class Limit(models.Model):
     """
@@ -71,6 +74,9 @@ class Limit(models.Model):
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
+    class Meta:
+        db_table = 'limit'
+
 
 class ProcessAgentEmissionLimit(models.Model):
     """
@@ -90,3 +96,6 @@ class ProcessAgentEmissionLimit(models.Model):
     max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
 
     remark = models.CharField(max_length=9999, blank=True)
+
+    class Meta:
+        db_table = 'pa_emission_limit'
