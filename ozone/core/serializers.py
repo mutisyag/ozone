@@ -970,16 +970,23 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
     changeable_flags = serializers.SerializerMethodField()
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
+    can_change_reporting_channel = serializers.SerializerMethodField()
+
+    can_upload_files = serializers.SerializerMethodField()
+
+    can_edit_data = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
-
-    can_change_remarks_party = serializers.SerializerMethodField()
-    can_change_remarks_secretariat = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
@@ -996,14 +1003,25 @@ class SubmissionSerializer(
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'filled_by_secretariat',
-            'current_state', 'previous_state', 'available_transitions',
-            'data_changes_allowed', 'is_current', 'is_cloneable',
-            'changeable_flags',  'flag_provisional', 'flag_valid',
+            'current_state', 'previous_state',
+            'data_changes_allowed', 'is_current',
+            'flag_provisional', 'flag_valid',
             'flag_superseded',
-            'can_change_remarks_party', 'can_change_remarks_secretariat',
+            # Permission-related fields; value is dependent on user
+            'available_transitions',
+            'is_cloneable',
+            'changeable_flags',
+            'can_change_remarks_party',
+            'can_change_remarks_secretariat',
+            'can_change_reporting_channel',
+            'can_upload_files',
+            'can_edit_data',
         )
 
         read_only_fields = (
+            'available_transitions', 'is_cloneable', 'changeable_flags',
+            'can_change_remarks_party', 'can_change_remarks_secretariat',
+            'can_change_reporting_channel', 'can_upload_files', 'can_edit_data'
             'created_by', 'last_edited_by',
         )
 
@@ -1026,6 +1044,18 @@ class SubmissionSerializer(
     def get_can_change_remarks_secretariat(self, obj):
         user = self.context['request'].user
         return obj.can_change_remark(user, 'remarks_secretariat')
+
+    def get_can_change_reporting_channel(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_reporting_channel(user)
+
+    def get_can_upload_files(self, obj):
+        user = self.context['request'].user
+        return obj.can_upload_files(user)
+
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_upload_files(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):

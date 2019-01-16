@@ -526,6 +526,20 @@ class Submission(models.Model):
             })
         return True
 
+    def can_change_reporting_channel(self, user):
+        # TODO: implement
+        return True
+
+    def can_upload_files(self, user):
+        # TODO: what are the permissions on file upload???
+        # TODO: use it in permissions.py
+        # TODO: implement
+        return True
+
+    def can_edit_data(self, user):
+        # TODO: implement and also use in permissions.py!
+        return True
+
     @staticmethod
     def get_exempted_fields():
         """
