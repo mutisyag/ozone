@@ -534,6 +534,11 @@ class Submission(models.Model):
             })
         return True
 
+    def check_reporting_channel(self, user):
+        if user.is_secretariat and self.filled_by_secretariat:
+            return True
+        return False
+
     @staticmethod
     def get_exempted_fields():
         """

@@ -457,10 +457,14 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
             serializer = UpdateSubmissionInfoAndReportingChannelSerializer(
                 info,
                 data=request.data,
-                context={'reporting_channel': reporting_channel}
+                context={
+                    'reporting_channel': reporting_channel,
+                    'request': request
+                }
             )
         else:
             serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

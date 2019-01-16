@@ -779,6 +779,13 @@ class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSeriali
         exclude = ('submission',)
 
     def update(self, instance, validated_data):
+        user = self.context['request'].user
+        if not instance.submission.check_reporting_channel(user):
+            raise ValidationError({
+                "reporting_channel": [
+                    _('User is not allowed to change the reporting channel')
+                ]
+            })
         instance.submission.reporting_channel = self.context['reporting_channel']
         instance.submission.save()
         return super().update(instance, validated_data)
