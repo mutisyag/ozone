@@ -98,6 +98,19 @@ class CustomBlendTests(BaseCustomBlendsTests):
         self.assertEqual(components[0].substance, self.substance1)
         self.assertEqual(components[1].substance, self.substance2)
 
+    def test_create_custom_blend_as_party_for_another_party(self):
+        headers = self.get_authorization_header(
+            self.party_user, password="qwe123qwe"
+        )
+        resp = self.client.post(
+            reverse("core:blends-list"),
+            json.dumps(self.blend_data(self.another_party)),
+            "application/json",
+            format="json",
+            **headers,
+        )
+        self.assertEqual(resp.status_code, 403)
+
     def test_create_custom_blend_as_secretariat(self):
         headers = self.get_authorization_header(
             self.secretariat_user, password="qwe123qwe"
