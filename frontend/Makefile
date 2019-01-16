@@ -52,5 +52,5 @@ $(COMPILE_OUTPUT_DIR)/translations.json:
 	mkdir -p $(COMPILE_OUTPUT_DIR)
 	@for lang in $(LOCALES); do \
 	    export PO_FILE=$(OUTPUT_DIR)/locale/$$lang/LC_MESSAGES/app.po; \
-	    gettext-compile --output $(COMPILE_OUTPUT_DIR)/translations-$$lang.json $$PO_FILE; \
+	    gettext-compile --output $(COMPILE_OUTPUT_DIR)/$$lang.json $$PO_FILE; \
 	done;
