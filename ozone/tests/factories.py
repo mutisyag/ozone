@@ -260,6 +260,12 @@ class SubstanceFactory(DjangoModelFactory):
         model = Substance
 
 
+class AnotherSubstanceFactory(SubstanceFactory):
+    name = "Kryptonite"
+    formula = "KRY-XXX"
+    substance_id = 997
+
+
 class DestructionFactory(DjangoModelFactory):
     class Meta:
         model = Article7Destruction

@@ -170,6 +170,7 @@ class Blend(models.Model):
         AZEOTROPE = 'Azeotrope'
         MeBr = 'Methyl bromide'
         OTHER = 'Other'
+        CUSTOM = 'Custom'
 
     blend_id = models.CharField(max_length=64, unique=True)
 

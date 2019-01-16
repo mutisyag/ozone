@@ -319,6 +319,8 @@ class CreateBlendSerializer(BlendSerializer):
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
+        # Enforce Custom type for new blends.
+        validated_data['type'] = 'Custom'
         blend = Blend.objects.create(**validated_data)
         for component_data in components_data:
             BlendComponent.objects.create(blend=blend, **component_data)

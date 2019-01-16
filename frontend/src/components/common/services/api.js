@@ -124,7 +124,7 @@ const createBlend = (blend) => post('blends/', blend)
 
 const cloneSubmission = (url) => post(`${url}clone/`)
 
-const getCustomBlends = () => fetch('blends/')
+const getCustomBlends = (party) => fetch('blends/', {params: {party}})
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 

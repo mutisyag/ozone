@@ -172,7 +172,7 @@ export default {
 			submit_blend: {
 				components: null,
 				blend_id: null,
-				type: 'Other'
+				type: 'Custom'
 			},
 			selected_substance: {
 				selected: null,
