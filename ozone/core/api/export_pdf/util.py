@@ -1,3 +1,6 @@
+# from .constants import STYLES
+# from .constants import FONTSIZE_TABLE
+
 from functools import partial
 
 from reportlab.platypus import ListFlowable
@@ -5,55 +8,29 @@ from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus.flowables import HRFlowable
-
-
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
+
+from reportlab.lib.styles import getSampleStyleSheet
+
 
 
 __all__ = [
-    'STYLES',
-    'TABLE_STYLES',
+    'get_decisions',
+    'get_preship_or_polyols_q',
+    'get_quantities',
+    'get_quantity_cell',
+    'hr',
+    'page_title_section',
     'p_c',
     'p_l',
 ]
 
 
 STYLES = getSampleStyleSheet()
-
 FONTSIZE_TABLE = 8
-
-TABLE_STYLES = (
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-)
-
-
-TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
-    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-    ('TOPPADDING', (6,2), (7, -1), 10),
-    ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
-    ('VALIGN', (0, 2), (7, -1), 'MIDDLE'),
-    ('ALIGN', (0, 2), (5, -1), 'CENTER'),
-    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
-    ('SPAN', (0, 0), (0, 1)),
-    ('SPAN', (1, 0), (1, 1)),
-    ('SPAN', (2, 0), (2, 1)),
-    ('SPAN', (3, 0), (4, 0)),
-    ('SPAN', (5, 0), (5, 1)),
-    ('SPAN', (6, 0), (7, 0)),
-)
-
-TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS = list(
-    map(lambda x: x * cm, [1.3, 2.1, 4, 2, 2, 2, 7, 7])
-)
-
-TABLE_IMPORTS_EXPORTS_BL_WIDTHS = list(
-    map(lambda x: x * cm, [3, 3, 3, 2, 2, 2, 6, 6])
-)
 
 
 def _p(style_name, align, txt, fontSize=None, fontName=None):
@@ -92,6 +69,7 @@ BASIC_Q_TYPES = (
     'Process agent uses',
     'Other/unspecified'
 )
+
 
 def get_quantity_cell(q_list, extra_q):
     if sum(q_list) > 0:

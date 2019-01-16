@@ -16,7 +16,7 @@ from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
-from ..util import TABLE_STYLES
+from ..constants import TABLE_STYLES
 
 
 TABLE_IMPORTS_HEADER = (
