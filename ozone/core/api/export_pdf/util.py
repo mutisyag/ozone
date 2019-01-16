@@ -26,6 +26,7 @@ __all__ = [
     'page_title_section',
     'p_c',
     'p_l',
+    'STYLES'
 ]
 
 

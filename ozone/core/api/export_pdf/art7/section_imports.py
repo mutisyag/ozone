@@ -7,25 +7,8 @@ from reportlab.lib.units import mm
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
-from ..util import get_decisions
-from ..util import get_preship_or_polyols_q
-from ..util import get_quantity_cell
-from ..util import get_quantities
-from ..util import get_substance_label
-from ..util import p_c
-from ..util import p_l
-from ..util import page_title_section
-
-from ..util import STYLES
-from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS as SUBS_WIDTHS
-from ..constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS as BLEND_WIDTHS
-from ..constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
-from ..constants import TABLE_STYLES
-from ..constants import TABLE_BLENDS_COMP_HEADER
-from ..constants import TABLE_BLENDS_COMP_STYLE
-from ..constants import TABLE_BLENDS_COMP_WIDTHS
-from ..constants import TABLE_ROW_EMPTY_IMP_EXP
-from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from .. import util as u
+from .. import constants as c
 
 
 def get_imports_header(isBlend):
@@ -34,13 +17,13 @@ def get_imports_header(isBlend):
 
     return (
         (
-            p_c(_(first_col)),
-            p_c(_(second_col)),
-            p_c(_('Exporting party for quantities reported as imports')),
-            p_c(_('Total Quantity Imported for All Uses')),
+            u.p_c(_(first_col)),
+            u.p_c(_(second_col)),
+            u.p_c(_('Exporting party for quantities reported as imports')),
+            u.p_c(_('Total Quantity Imported for All Uses')),
             '',
-            p_c(_('Quantity of new substances imported as feedstock')),
-            p_c(_('Quantity of new substance imported for exempted essential,'
+            u.p_c(_('Quantity of new substances imported as feedstock')),
+            u.p_c(_('Quantity of new substance imported for exempted essential,'
                   'critical, high-ambient-temperature or other uses')),
             ''
         ),
@@ -48,11 +31,11 @@ def get_imports_header(isBlend):
             '',
             '',
             '',
-            p_c(_('New')),
-            p_c(_('Recovered and reclaimed')),
+            u.p_c(_('New')),
+            u.p_c(_('Recovered and reclaimed')),
             '',
-            p_c(_('Quantity')),
-            p_c(_('Decision / type of use or remark')),
+            u.p_c(_('Quantity')),
+            u.p_c(_('Decision / type of use or remark')),
         ),
     )
 
@@ -60,17 +43,17 @@ def get_imports_header(isBlend):
 def to_row_substance(obj):
     substance = obj.substance
 
-    quantities = get_quantities(obj)
-    extra_q = get_preship_or_polyols_q(obj)
-    q_cell = get_quantity_cell(quantities, extra_q)
+    quantities = u.get_quantities(obj)
+    extra_q = u.get_preship_or_polyols_q(obj)
+    q_cell = u.get_quantity_cell(quantities, extra_q)
 
-    decisions = get_decisions(obj)
-    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
+    decisions = u.get_decisions(obj)
+    d_label = u.get_substance_label(decisions, type='decision', list_font_size=9)
 
     return (
         substance.group.group_id,
-        p_l(substance.name),
-        p_l(obj.source_party.name),
+        u.p_l(substance.name),
+        u.p_l(obj.source_party.name),
         str(obj.quantity_total_new or ''),
         str(obj.quantity_total_recovered or ''),
         str(obj.quantity_feedstock or ''),
@@ -82,11 +65,11 @@ def to_row_blend(obj):
     # TODO: merge with to_row_substance
     blend = obj.blend
 
-    quantities = get_quantities(obj)
-    q_cell = get_quantity_cell(quantities, None)
+    quantities = u.get_quantities(obj)
+    q_cell = u.get_quantity_cell(quantities, None)
 
-    decisions = get_decisions(obj)
-    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
+    decisions = u.get_decisions(obj)
+    d_label = u.get_substance_label(decisions, type='decision', list_font_size=9)
 
     return (
         blend.type,
@@ -102,11 +85,11 @@ def to_row_blend(obj):
 def to_row_component(component, blend):
 
     ptg = component.percentage
-    q_sum = sum(get_quantities(blend))*ptg
+    q_sum = sum(u.get_quantities(blend))*ptg
 
     return (
         component.component_name,
-        p_c('<b>{}%</b>'.format(round(ptg*100,1))),
+        u.p_c('<b>{}%</b>'.format(round(ptg*100,1))),
         str(round(blend.quantity_total_new * ptg)),
         format(blend.quantity_total_recovered * ptg, '.2f'),
         format(blend.quantity_feedstock * ptg, '.3g'),
@@ -136,9 +119,9 @@ def mk_table_blends(submission):
             (
                 (Spacer(7, mm),
                  Table(
-                    TABLE_BLENDS_COMP_HEADER + data,
-                    style=TABLE_BLENDS_COMP_STYLE,
-                    colWidths=TABLE_BLENDS_COMP_WIDTHS,
+                    c.TABLE_BLENDS_COMP_HEADER + data,
+                    style=c.TABLE_BLENDS_COMP_STYLE,
+                    colWidths=c.TABLE_BLENDS_COMP_WIDTHS,
                  ),
                  Spacer(7, mm))
             ,)
@@ -149,10 +132,11 @@ def mk_table_blends(submission):
 
 def table_from_data(data, isBlend):
     header = get_imports_header(isBlend)
-    col_widths = BLEND_WIDTHS if isBlend else SUBS_WIDTHS
+    col_widths = c.TABLE_IMPORTS_EXPORTS_BL_WIDTHS if isBlend \
+        else c.TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
     style = (
-        TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
-            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
+        c.TABLE_IMPORTS_EXPORTS_HEADER_STYLE + c.TABLE_STYLES + (
+            () if data else c.TABLE_ROW_EMPTY_STYLE_IMP_EXP
         )
     )
 
@@ -165,7 +149,7 @@ def table_from_data(data, isBlend):
             )
 
     return Table(
-        header + (data or TABLE_ROW_EMPTY_IMP_EXP),
+        header + (data or c.TABLE_ROW_EMPTY_IMP_EXP),
         colWidths=col_widths,
         style=style,
         repeatRows=2  # repeat header on page break
@@ -177,15 +161,15 @@ def export_imports(submission):
     table_blends = tuple(mk_table_blends(submission))
 
     imports_page = (
-        Paragraph(_('1.1 Substances'), STYLES['Heading2']),
+        Paragraph(_('1.1 Substances'), u.STYLES['Heading2']),
         table_from_data(table_substances, isBlend=False),
         PageBreak(),
-        Paragraph(_('1.2 Blends'), STYLES['Heading2']),
+        Paragraph(_('1.2 Blends'), u.STYLES['Heading2']),
         table_from_data(table_blends, isBlend=True),
         PageBreak(),
     )
 
-    return page_title_section(
+    return u.page_title_section(
         title=_('IMPORTS'),
         explanatory= _(
             'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
