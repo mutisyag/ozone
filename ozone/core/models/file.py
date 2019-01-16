@@ -63,18 +63,10 @@ class UploadToken(models.Model):
 
     def has_expired(self):
         return self.valid_until < (
-            timezone.now() + timezone.timedelta(seconds=self.GRACE_SECONDS)
-        )
+            timezone.now() + timezone.timedelta(seconds=self.GRACE_SECONDS))
 
 
 class File(models.Model):
-    """
-    A File object will be created on all uploads where the file is fully
-    transferred to the tusd server, irrespective of whether or not the FileField
-    is correctly filled afterwards - that one will be signalled by the
-    `upload_successful` flag.
-    """
-
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
@@ -82,9 +74,6 @@ class File(models.Model):
     file = models.FileField(
         upload_to=get_storage_directory, null=True, blank=True
     )
-
-    tus_id = models.CharField(max_length=32, blank=True, null=True)
-    upload_successful = models.BooleanField(default=False)
 
     description = models.CharField(max_length=512, blank=True)
 
