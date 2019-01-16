@@ -577,6 +577,7 @@ class Submission(models.Model):
             "hat_production_remarks_secretariat",
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
+            'reporting_channel_id',
         ]
 
     @staticmethod
