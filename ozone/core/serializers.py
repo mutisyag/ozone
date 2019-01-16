@@ -319,6 +319,8 @@ class CreateBlendSerializer(BlendSerializer):
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
+        # Enforce Custom type for new blends.
+        validated_data['type'] = 'Custom'
         blend = Blend.objects.create(**validated_data)
         for component_data in components_data:
             BlendComponent.objects.create(blend=blend, **component_data)
@@ -1094,7 +1096,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
                 'available_transitions', 'data_changes_allowed', 'is_current',
-                'is_cloneable',
+                'is_cloneable', 'flag_provisional', 'flag_valid',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}

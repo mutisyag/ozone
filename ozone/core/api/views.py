@@ -284,7 +284,7 @@ class BlendViewSet(viewsets.ModelViewSet):
         queryset = Blend.objects.all().prefetch_related(
             'components', 'components__substance'
         )
-        party = self.request.query_params.get('party', None)
+        party = self.request.user.party or self.request.query_params.get('party', None)
         if party is not None:
             queryset = queryset.filter(
                 party=party) | queryset.filter(party=None)
@@ -352,6 +352,15 @@ class SubmissionViewFilterSet(filters.FilterSet):
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
+    """
+    versions:
+    Get a list of all submissions versions, including the one specified in the
+    primary key.
+
+    history:
+    Get a list of all historical states for this specific submission version.
+    Note historical states for other versions are not included.
+    """
     queryset = Submission.objects.all().prefetch_related(
         "reporting_period", "created_by", "party"
     )
@@ -392,8 +401,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             return CreateSubmissionSerializer
         return SubmissionSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+    def _list_submission(self, queryset, request):
+        queryset = self.filter_queryset(queryset)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = ListSubmissionSerializer(
@@ -405,6 +414,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             queryset, many=True, context={"request": request}
         )
         return Response(serializer.data)
+
+    def list(self, request, *args, **kwargs):
+        return self._list_submission(self.get_queryset(), request)
+
+    @action(detail=True, methods=["get"])
+    def versions(self, request, pk=None):
+        return self._list_submission(Submission.objects.get(pk=pk).versions, request)
 
     @action(detail=True, methods=["post"])
     def clone(self, request, pk=None):

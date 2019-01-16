@@ -211,7 +211,9 @@ export default {
 		}
 	},
 	created() {
-		this.$store.dispatch('getCustomBlends')
+		// No need to filter by party here, the API will list all
+		// the available blends for this user
+		this.$store.dispatch('getCustomBlends', {party: undefined})
 		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Blends'])
 	}
 }

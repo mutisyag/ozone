@@ -100,8 +100,11 @@
       </b-button-group>
     </Footer>
 
-    <b-modal size="lg" ref="history_modal" id="history_modal">
-        <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
+    <b-modal size="lg" ref="history_modal" id="history_modal"
+             :title="$gettext('Submission versions')">
+        <SubmissionHistory :history="$store.state.currentSubmissionHistory"
+                           :currentVersion="$store.state.current_submission.version">
+        </SubmissionHistory>
     </b-modal>
   </div>
 </template>
@@ -133,7 +136,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: getLabels(this.$gettext).general
+			labels: getLabels(this.$gettext).common
 		}
 	},
 	computed: {
