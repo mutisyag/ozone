@@ -230,7 +230,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: getLabels(this.$gettext).general
+			labels: getLabels(this.$gettext).common
 		}
 	}
 }

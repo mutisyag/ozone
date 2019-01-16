@@ -1,38 +1,45 @@
-import tab_sub_info from '@/components/common/dataDefinitions/tab_sub_info'
-import tab_attachments from '@/components/common/dataDefinitions/tab_attachments'
+import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
+import { getTabAttachments } from '@/components/common/dataDefinitions/tabAttachments'
 
-const form = {
-	formDetails: {
-		tabsDisplay: ['sub_info', 'attachments'],
-		dataNeeded: [
-			'initialData.countryOptions',
-			'initialData.display.countries'
-		]
-	},
-	tabs: {
-		sub_info: {
-			...tab_sub_info,
-			fields_order: ['subject', ...tab_sub_info.fields_order],
-			form_fields: {
-				...tab_sub_info.form_fields,
-				subject: {
-					type: 'select',
-					selected: 'c',
-					options: [
-						{ value: null, text: 'Please select some item' },
-						{ value: 'a', text: 'This is First option' },
-						{ value: 'b', text: 'Default Selected Option' },
-						{ value: 'c', text: 'This is another option' },
-						{ value: 'd', text: 'This one is disabled', disabled: true }
-					]
+const getFormLetter = ($gettext) => {
+	const tabSubInfo = getTabSubInfo($gettext)
+	const form = {
+		formDetails: {
+			tabsDisplay: ['sub_info', 'attachments'],
+			dataNeeded: [
+				'initialData.countryOptions',
+				'initialData.display.countries'
+			]
+		},
+		tabs: {
+			sub_info: {
+				...tabSubInfo,
+				fields_order: ['subject', ...tabSubInfo.fields_order],
+				form_fields: {
+					...tabSubInfo.form_fields,
+					subject: {
+						type: 'select',
+						selected: 'c',
+						options: [
+							{ value: null, text: $gettext('FOR TESTING ONLY Please select some item') },
+							{ value: 'a', text: $gettext('FOR TESTING ONLY This is First option') },
+							{ value: 'b', text: $gettext('FOR TESTING ONLY Default Selected Option') },
+							{ value: 'c', text: $gettext('FOR TESTING ONLY This is another option') },
+							{ value: 'd', text: $gettext('FOR TESTING ONLY This one is disabled'), disabled: true }
+						]
+					}
+				},
+				default_properties: {
+					...tabSubInfo.default_properties,
+					subject: null
 				}
 			},
-			default_properties: {
-				...tab_sub_info.default_properties,
-				subject: null
-			}
-		},
-		attachments: tab_attachments
+			attachments: getTabAttachments($gettext)
+		}
 	}
+	return form
 }
-export default form
+
+export {
+	getFormLetter
+}
