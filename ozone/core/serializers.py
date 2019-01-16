@@ -530,7 +530,7 @@ def validate_import_export_data(
                     Blend.objects.get(
                         id=entry.get('blend')
                     )
-                        .get_substance_ids()
+                    .get_substance_ids()
                 )
 
     # Calculate the sums of quantities and totals for each substance
