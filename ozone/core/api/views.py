@@ -284,7 +284,7 @@ class BlendViewSet(viewsets.ModelViewSet):
         queryset = Blend.objects.all().prefetch_related(
             'components', 'components__substance'
         )
-        party = self.request.query_params.get('party', None)
+        party = self.request.user.party or self.request.query_params.get('party', None)
         if party is not None:
             queryset = queryset.filter(
                 party=party) | queryset.filter(party=None)
