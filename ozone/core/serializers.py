@@ -773,6 +773,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
 
 class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSerializer):
+    reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
@@ -795,6 +796,9 @@ class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSeriali
         self.check_reporting_channel(instance, user)
         instance.submission.save()
         return super().update(instance, validated_data)
+
+    def get_reporting_channel(self, obj):
+        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -994,6 +998,8 @@ class SubmissionSerializer(
     can_change_remarks_party = serializers.SerializerMethodField()
     can_change_remarks_secretariat = serializers.SerializerMethodField()
 
+    can_change_reporting_channel = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
 
@@ -1014,6 +1020,7 @@ class SubmissionSerializer(
             'changeable_flags',  'flag_provisional', 'flag_valid',
             'flag_superseded',
             'can_change_remarks_party', 'can_change_remarks_secretariat',
+            'can_change_reporting_channel',
         )
 
         read_only_fields = (
@@ -1039,6 +1046,10 @@ class SubmissionSerializer(
     def get_can_change_remarks_secretariat(self, obj):
         user = self.context['request'].user
         return obj.can_change_remark(user, 'remarks_secretariat')
+
+    def get_can_change_reporting_channel(self, obj):
+        user = self.context['request'].user
+        return obj.check_reporting_channel(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
