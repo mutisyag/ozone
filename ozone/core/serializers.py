@@ -771,6 +771,13 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
         model = SubmissionInfo
         exclude = ('submission',)
 
+
+class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubmissionInfo
+        exclude = ('submission',)
+
     def update(self, instance, validated_data):
         instance.submission.reporting_channel = self.context['reporting_channel']
         instance.submission.save()

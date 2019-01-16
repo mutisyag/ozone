@@ -85,6 +85,7 @@ from ..serializers import (
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
     UpdateSubmissionInfoSerializer,
+    UpdateSubmissionInfoAndReportingChannelSerializer,
     SubmissionFlagsSerializer,
     SubmissionRemarksSerializer,
     SubmissionFileSerializer,
@@ -444,19 +445,22 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
         reporting_channel_name = request.data.get('reporting_channel')
-        try:
-            reporting_channel = ReportingChannel.objects.get(
-                name=reporting_channel_name
+        if reporting_channel_name:
+            try:
+                reporting_channel = ReportingChannel.objects.get(
+                    name=reporting_channel_name
+                )
+            except ReportingChannel.DoesNotExist:
+                raise InvalidRequest(
+                    _("Invalid request: Reporting channel with this name does not exist.")
+                )
+            serializer = UpdateSubmissionInfoAndReportingChannelSerializer(
+                info,
+                data=request.data,
+                context={'reporting_channel': reporting_channel}
             )
-        except ReportingChannel.DoesNotExist:
-            raise InvalidRequest(
-                _("Invalid request: Reporting channel with this name does not exist.")
-            )
-        serializer = UpdateSubmissionInfoSerializer(
-            info,
-            data=request.data,
-            context={'reporting_channel': reporting_channel}
-        )
+        else:
+            serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
