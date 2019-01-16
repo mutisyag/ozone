@@ -4,6 +4,11 @@ from django.db import migrations, models
 import ozone.core.models.file
 
 
+def migrate_custom_blends(apps, schema_editor):
+    Blend = apps.get_model('core', 'Blend')
+    Blend.objects.exclude(party__isnull=True).update(type='Custom')
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -16,9 +21,5 @@ class Migration(migrations.Migration):
             name='type',
             field=models.CharField(choices=[('Zeotrope', 'ZEOTROPE'), ('Azeotrope', 'AZEOTROPE'), ('Methyl bromide', 'MeBr'), ('Other', 'OTHER'), ('Custom', 'CUSTOM')], max_length=128),
         ),
-        migrations.AlterField(
-            model_name='submissionfile',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory),
-        ),
+        migrations.RunPython(migrate_custom_blends)
     ]
