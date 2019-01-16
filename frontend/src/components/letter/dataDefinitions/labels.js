@@ -115,7 +115,7 @@ const getLabels = ($gettext) => {
 			remarks_os: $gettext('Remarks (Party)')
 		},
 		general: {
-			__all__: $gettext(''),
+			__all__: '',
 			recall: $gettext('Recall'),
 			process: $gettext('Process'),
 			finalize: $gettext('Finalize'),
