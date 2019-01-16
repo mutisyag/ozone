@@ -61,8 +61,7 @@ export default {
 				const number = /-\d+\.\d*|-[\d]*|[\d]+\.[\d]*|[\d]+/
 				if (this.currentTyping && !valid.test(this.currentTyping)) {
 					const n = this.currentTyping.match(number)
-					this.currentTyping = n ? parseFloat(n[0]) : null
-					console.log('------', this.currentTyping, n)
+					this.currentTyping = n ? n[0] : ''
 				}
 			}
 		},
@@ -72,11 +71,8 @@ export default {
 				this.validateInput()
 				// empty strings in number field are not accepted in backend, so we need to transform every '' into a null for type === number
 				if (this.currentTyping === '' && this.field.type === 'number') {
+					console.log('here')
 					this.$store.commit('updateFormField', { value: null, fieldInfo: this.fieldInfo })
-					return
-				}
-				if (this.field.type === 'number' && this.currentTyping !== '') {
-					this.$store.commit('updateFormField', { value: parseFloat(this.currentTyping), fieldInfo: this.fieldInfo })
 					return
 				}
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
