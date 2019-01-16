@@ -11,7 +11,8 @@ const {
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
-	selectOption
+	addSubstance,
+	addBlend
 } = require('../custom-methods/methods.js')
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
 		createSubmission(browser)
 		clickQuestionnaireRadios(browser)
 		selectTab(browser, 'Imports')
-		selectOption(browser, 'substance_selector', 'CFC-11')
+		addSubstance(browser, 'substance_selector', 'CFC-11')
 
 		browser
 			.useCss()
@@ -63,6 +64,10 @@ module.exports = {
 			.pause(5000)
 			.click('#has_imports_tab .modal-dialog .close')
 			.pause(500)
+		addBlend(browser, 'blend_selector', 'R-401B')
+
+		browser
+			.pause(10000)
 			.click('.app-footer .btn.btn-outline-danger')
 			.pause(1000)
 			.acceptAlert()

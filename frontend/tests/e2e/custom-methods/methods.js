@@ -55,8 +55,9 @@ const selectTab = (browser, tab) => {
 		.waitForElementVisible('.aside-menu', 10000)
 }
 
-const selectOption = (browser, select_id, option) => {
+const addSubstance = (browser, select_id, option) => {
 	browser
+		.click('.aside-menu .tabs .nav-tabs li a')
 		.click(`#${select_id} .multiselect`)
 		.waitForElementVisible(`#${select_id} .multiselect__content-wrapper`, 10000)
 		.useXpath()
@@ -67,10 +68,31 @@ const selectOption = (browser, select_id, option) => {
 		.click('#add-substance-button')
 }
 
+const addBlend = (browser, select_id, option) => {
+	browser
+		.waitForElementVisible('.aside-menu .navbar-toggler', 10000)
+		.moveToElement('aside.aside-menu > div > .navbar-toggler', undefined, undefined)
+		.pause(500)
+		.click('aside.aside-menu > div > .navbar-toggler')
+		.pause(500)
+		.click('.aside-menu .tabs .nav-tabs li:nth-child(2) a')
+		.click(`#${select_id} .multiselect`)
+		.waitForElementVisible(`#${select_id} .multiselect__content-wrapper`, 10000)
+		.useXpath()
+		.waitForElementVisible(`//span[contains(text(),'${option}')]/ancestor::div[contains(@id, '${select_id}')]`, 5000)
+		.click(`//div[@id='${select_id}']//ul//li//span//span[contains(text(),'${option}')]`)
+		.keys(browser.Keys.ESCAPE)
+		.useCss()
+		.waitForElementVisible('#add-blend-button', 5000)
+		.pause(500)
+		.click('#add-blend-button')
+}
+
 module.exports = {
 	login,
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
-	selectOption
+	addSubstance,
+	addBlend
 }

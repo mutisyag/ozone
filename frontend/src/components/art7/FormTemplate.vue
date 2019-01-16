@@ -324,6 +324,7 @@
 			@input="tableLoadedBlends"
 			@row-hovered="rowHovered"
 			stacked="md"
+			id="blends-table"
 			:items="tableItemsBlends"
 			:fields="tableFieldsBlends"
 			:empty-text="tableBlends.emptyText"
