@@ -310,9 +310,10 @@ export default {
 		}
 	},
 	created() {
+		const labels = getLabels(this.$gettext)
 		this.labels = {
-			...getLabels(this.$gettext).common,
-			...getLabels(this.$gettext)[this.tab_info.name]
+			...labels.common,
+			...labels[this.tab_info.name]
 		}
 	},
 	methods: {
