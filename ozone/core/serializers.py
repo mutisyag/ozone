@@ -1057,7 +1057,7 @@ class SubmissionSerializer(
 
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
-        return obj.can_upload_files(user)
+        return obj.can_edit_data(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
@@ -1086,6 +1086,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
+    can_edit_data = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -1095,8 +1096,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_at', 'updated_at', 'submitted_at',
                 'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
-                'available_transitions', 'data_changes_allowed', 'is_current',
-                'is_cloneable', 'flag_provisional', 'flag_valid',
+                'data_changes_allowed', 'is_current',
+                'flag_provisional', 'flag_valid',
+                # Permissions-related fields
+                'available_transitions', 'is_cloneable', 'can_edit_data',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
@@ -1108,6 +1111,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_is_cloneable(self, obj):
         user = self.context['request'].user
         return obj.is_cloneable(user)
+
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_edit_data(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):
