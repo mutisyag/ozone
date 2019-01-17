@@ -87,16 +87,16 @@ class BaseSubmissionTest(object):
         )
         return submission
 
-    def create_file(self, submission):
+    def create_file(self, submission, filename='test_file.txt'):
         submission_file = SubmissionFileFactory.create(
             submission=submission,
-            name="test_file.txt",
+            name=filename,
             uploader=self.secretariat_user,
             tus_id=None,
             upload_successful=True
         )
         stream = io.BytesIO(FILE_CONTENT)
-        submission_file.file.save("test_file.txt", File(stream))
+        submission_file.file.save(filename, File(stream))
         return submission_file
 
 
@@ -272,6 +272,21 @@ class TestDownloads(BaseSubmissionTest, TestCase):
     def test_download_files_as_secretariat(self):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.secretariat_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-download",
+                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data, submission_file.file.read())
+
+    def test_download_files_nonascii(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission, 'العربية')
 
         headers = self.get_authorization_header(self.secretariat_user, "qwe123qwe")
         resp = self.client.get(
