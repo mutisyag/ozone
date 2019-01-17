@@ -37,6 +37,7 @@ from .models import (
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
+    ReportingChannel,
 )
 
 User = get_user_model()
@@ -780,10 +781,34 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
+    reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
         exclude = ('submission',)
+
+    def get_reporting_channel(self, obj):
+        return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def check_reporting_channel(self, instance, user):
+        if (
+            instance.submission.check_reporting_channel_modified()
+            and not instance.submission.check_reporting_channel(user)
+        ):
+            raise ValidationError({
+                "reporting_channel": [
+                    _('User is not allowed to change the reporting channel')
+                ]
+            })
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        instance.submission.reporting_channel = ReportingChannel.objects.get(
+            name=self.context['reporting_channel']
+        )
+        self.check_reporting_channel(instance, user)
+        instance.submission.save()
+        return super().update(instance, validated_data)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -794,7 +819,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
-        return getattr(obj.reporting_channel, 'name', '')
+        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
 class SubmissionFlagsSerializer(
@@ -990,6 +1015,11 @@ class SubmissionSerializer(
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
+    can_change_reporting_channel = serializers.SerializerMethodField()
+
     class Meta:
         model = Submission
 
@@ -1009,6 +1039,7 @@ class SubmissionSerializer(
             'data_changes_allowed', 'is_current',
             'flag_provisional', 'flag_valid',
             'flag_superseded',
+
             # Permission-related fields; value is dependent on user
             'available_transitions',
             'is_cloneable',

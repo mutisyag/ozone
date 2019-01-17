@@ -55,7 +55,7 @@ const mutations = {
 			currentFormStructure = getFormHat($gettext)
 			tableRowConstructor = hatTableRowConstructor
 			break
-		case 'letter':
+		case 'other':
 			currentFormStructure = getFormLetter($gettext)
 			tableRowConstructor = letterTableRowConstructor
 			break
