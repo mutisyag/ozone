@@ -8,12 +8,23 @@ matrix:
       addons:
         postgresql: "9.4"
       before_install:
+        # XXX Remove this when Travis fixes their issues.
+        # See https://travis-ci.community/t/then-sudo-apt-get-update-failed-public-key-is-not-available-no-pubkey-6b05f25d762e3157-in-ubuntu-xenial/1728?u=alexkiro
+        - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B05F25D762E3157
+        - sudo apt update
+        - sudo apt install -y wget
+        # Install tusd
+        - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
+        - tar -xzvf tusd_linux_amd64.tar.gz
+        # Load environment variables
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
       install:
         - pip install -r requirements/local.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
+        # Start tusd server
+        - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
       script:
         - coverage run --omit='*/tests/*,*/migrations/*'  --source='ozone' manage.py test --keepdb
       after_success:
@@ -53,6 +64,9 @@ matrix:
         - npm --version
         # Install yarn
         - npm install --global yarn
+        # Install tusd
+        - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
+        - tar -xzvf tusd_linux_amd64.tar.gz
       install:
         - pip install -r requirements/local.txt
       before_script:
@@ -62,6 +76,9 @@ matrix:
         - python manage.py migrate
         # Start backend server
         - nohup python manage.py runserver &
+        # Start tusd server
+        - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
+        # Install frontend dependecies
         - cd frontend && yarn install
       script:
         - yarn e2e

@@ -68,8 +68,8 @@ const routes = [
 				component: HatDataManager
 			},
 			{
-				path: 'letter',
-				name: 'letter',
+				path: 'other',
+				name: 'other',
 				meta: { requiresAuth: true },
 				component: LetterDataManager
 			}
