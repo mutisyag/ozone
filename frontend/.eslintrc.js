@@ -37,6 +37,8 @@ module.exports = {
 	'no-underscore-dangle': 'off',
 	'object-curly-newline': 'off',
 	'import/prefer-default-export': 'off',
+	'import/first': 'off',
+	'quote-props': 'off',
     'vue/no-use-v-if-with-v-for': 'off',
     'vue/no-side-effects-in-computed-properties': 'off'
   },

@@ -54,31 +54,30 @@
 import './styles.css'
 
 export default {
-	data() {
-		const fields = [{
-			key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
-		}, {
-			key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
-		}, {
-			key: 'name', label: this.$gettext('Name'), sortable: true, class: 'text-center'
-		}, {
-			key: 'odp', label: this.$gettext('ODP'), sortable: true, class: 'text-center'
-		}, {
-			key: 'formula', label: this.$gettext('Formula'), sortable: true, class: 'text-center'
-		}, {
-			key: 'number_of_isomers', label: this.$gettext('Number of Isomers'), sortable: true, class: 'text-center'
-		}, {
-			key: 'min_odp', label: this.$gettext('MinODP'), sortable: true, class: 'text-center'
-		}, {
-			key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
-		}]
+	computed: {
+		table() {
+			const fields = [{
+				key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
+			}, {
+				key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
+			}, {
+				key: 'name', label: this.$gettext('Name'), sortable: true, class: 'text-center'
+			}, {
+				key: 'odp', label: this.$gettext('ODP'), sortable: true, class: 'text-center'
+			}, {
+				key: 'formula', label: this.$gettext('Formula'), sortable: true, class: 'text-center'
+			}, {
+				key: 'number_of_isomers', label: this.$gettext('Number of Isomers'), sortable: true, class: 'text-center'
+			}, {
+				key: 'min_odp', label: this.$gettext('MinODP'), sortable: true, class: 'text-center'
+			}, {
+				key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
+			}]
 
-		return {
-			table: {
+			return {
 				fields,
 				currentPage: 1,
 				perPage: Infinity,
-				totalRows: 50,
 				sortBy: 'group_id',
 				sortDesc: false,
 				filters: {
@@ -87,9 +86,7 @@ export default {
 					searchFormula: null
 				}
 			}
-		}
-	},
-	computed: {
+		},
 		isDisabledClearFilters() {
 			const { filters } = this.table
 			return !filters.searchGroup && !filters.searchName && !filters.searchFormula

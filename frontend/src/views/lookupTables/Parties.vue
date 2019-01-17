@@ -66,7 +66,7 @@
 import Vue from 'vue'
 import './styles.css'
 import CheckedImage from '@/components/common/CheckedImage'
-import { dateFormat } from '@/components/common/services/utilsService'
+import { dateFormat } from '@/components/common/services/languageService'
 
 const ratificationHtmlFormatter = (ratification) => (ratification ? `${dateFormat(ratification.ratification_date, Vue.config.language)}<br/>${ratification.ratification_type}` : 'Pending')
 
@@ -74,14 +74,13 @@ export default {
 	components: {
 		CheckedImage
 	},
-	data() {
-		const sortableAndTextCenter = {
-			sortable: true,
-			class: 'text-center'
-		}
-
-		return {
-			table: {
+	computed: {
+		table() {
+			const sortableAndTextCenter = {
+				sortable: true,
+				class: 'text-center'
+			}
+			const tableObj = {
 				fields: [{
 					key: 'name',
 					label: this.$gettext('Name'),
@@ -136,9 +135,8 @@ export default {
 					searchName: null
 				}
 			}
-		}
-	},
-	computed: {
+			return tableObj
+		},
 		parties() {
 			const { partyRatifications } = this.$store.state.initialData
 			if (!partyRatifications) {
