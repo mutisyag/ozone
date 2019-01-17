@@ -703,6 +703,14 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
             submission=self.kwargs['submission_pk']
         )
 
+    @action(detail=True, methods=["get"])
+    def download(self, request, submission_pk=None, pk=None):
+        obj = self.get_object()
+        # We could try to guess the correct mime type here.
+        response = Response(obj.file.read(), content_type="application/octet-stream")
+        response['Content-Disposition'] = 'attachment; filename="' + obj.name
+        return response
+
 
 class UploadHookViewSet(viewsets.ViewSet):
     permission_classes = (AllowAny,)
