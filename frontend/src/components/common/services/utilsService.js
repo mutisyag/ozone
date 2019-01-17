@@ -1,3 +1,5 @@
+import moment from 'moment'
+
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	if (!obj || !level2PropertyKey) {
 		return undefined
@@ -45,11 +47,17 @@ const getPropertyValue = (obj, propertyPath) => {
 
 const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n)
 
+const dateFormat = (value, language, formatString) => {
+	moment.locale(language)
+	return moment(value).format(formatString || 'LL')
+}
+
 export {
 	getLevel2PropertyValue,
 	isObject,
 	pushUnique,
 	intersect,
 	getPropertyValue,
-	isNumber
+	isNumber,
+	dateFormat
 }
