@@ -328,10 +328,10 @@ LOCALE_PATHS = [
 USE_I18N = True
 LANGUAGE_CODE = 'en'
 LANGUAGES = (
-    ('ar', _('Arabic')),
-    ('en', _('English')),
-    ('es', _('Spanish')),
-    ('fr', _('French')),
-    ('ru', _('Russian')),
-    ('zh', _('Chinese')),
+    ('ar', 'العربية'),
+    ('zh', '中文'),
+    ('en', 'English'),
+    ('fr', 'Français'),
+    ('ru', 'Русский'),
+    ('es', 'Español'),
 )
