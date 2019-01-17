@@ -1,17 +1,17 @@
 <template>
 	<div v-if="history">
 		<b-table show-empty
-				 outlined
-				 bordered
-				 hover
-				 head-variant="light"
-				 stacked="md"
-				 :items="tableItems"
-				 :fields="table.fields"
-				 :sort-by.sync="table.sortBy"
-				 :sort-desc.sync="table.sortDesc"
-				 :sort-direction="table.sortDirection"
-				 ref="table"
+				outlined
+				bordered
+				hover
+				head-variant="light"
+				stacked="md"
+				:items="tableItems"
+				:fields="table.fields"
+				:sort-by.sync="table.sortBy"
+				:sort-desc.sync="table.sortDesc"
+				:sort-direction="table.sortDirection"
+				ref="table"
 		>
 		</b-table>
 	</div>
@@ -21,7 +21,7 @@
 export default {
 	props: {
 		history: Array,
-		currentVersion: Number,
+		currentVersion: Number
 	},
 
 	data() {
