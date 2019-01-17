@@ -218,7 +218,11 @@ const actions = {
 				context.dispatch('getCurrentUserForm')
 				context.dispatch('getCountries')
 				context.dispatch('getSubstances')
-				context.dispatch('getCustomBlends')
+				// Filter custom blends by the submission's party, because the API will
+				// by default show all custom blends for secretariat users.
+				// This way, even secretariat users will only see the correct available
+				// custom blends.
+				context.dispatch('getCustomBlends', {party: context.state.current_submission.party})
 				context.dispatch('getNonParties')
 				resolve()
 			})
@@ -291,9 +295,9 @@ const actions = {
 		})
 	},
 
-	getCustomBlends(context) {
+	getCustomBlends(context, {party}) {
 		const blendsDisplay = {}
-		getCustomBlends().then((response) => {
+		getCustomBlends(party).then((response) => {
 			response.data.forEach(blend => {
 				blend.components.sort((component1, component2) => component2.percentage - component1.percentage)
 				blendsDisplay[blend.id] = { name: blend.blend_id, components: blend.components, is_qps: blend.is_qps }

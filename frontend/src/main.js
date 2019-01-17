@@ -17,12 +17,12 @@ Vue.use(BootstrapVue)
 
 Vue.use(GetTextPlugin, {
 	availableLanguages: {
-		ar: 'Arabic',
+		ar: 'العربية',
+		zh: '中文',
 		en: 'English',
-		es: 'Spanish',
-		fr: 'French',
-		ru: 'Russian',
-		zh: 'Chinese'
+		fr: 'Français',
+		ru: 'Русский',
+		es: 'Español'
 	},
 	defaultLanguage: 'en',
 	languageVmMixin: {
@@ -33,7 +33,7 @@ Vue.use(GetTextPlugin, {
 		}
 	},
 	translations: { ar: {}, en: {}, es: {}, fr: {}, ru: {}, zh: {} },
-	silent: false
+	silent: true
 })
 
 new Vue({

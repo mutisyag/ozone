@@ -124,7 +124,7 @@ const createBlend = (blend) => post('blends/', blend)
 
 const cloneSubmission = (url) => post(`${url}clone/`)
 
-const getCustomBlends = () => fetch('blends/')
+const getCustomBlends = (party) => fetch('blends/', {params: {party}})
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
@@ -139,7 +139,7 @@ const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
 
-const getSubmissionHistory = (url) => fetch(`${url}history/`)
+const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
