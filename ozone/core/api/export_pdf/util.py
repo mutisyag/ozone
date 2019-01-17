@@ -11,6 +11,7 @@ from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
+from reportlab.lib.units import mm
 
 
 __all__ = [
@@ -185,5 +186,30 @@ def table_from_data(
         style=style,
         repeatRows=2  # repeat header on page break
     )
+
+
+def table_with_blends(blends, grouping, make_component, header, style, widths):
+    result = []
+
+    for blend_row in blends:
+        # Getting the blend object based on the id
+        blend = grouping.filter(blend__blend_id=blend_row[1]).first()
+        row_comp = partial(make_component, blend=blend)
+        data = tuple(map(row_comp, blend.blend.components.all()))
+
+        result.append(blend_row)
+        result.append(
+            (
+                (Spacer(7, mm),
+                 Table(
+                     header + data,
+                     style=style,
+                     colWidths=widths,
+                 ),
+                 Spacer(7, mm))
+                ,)
+        )
+
+    return result
 
 
