@@ -886,7 +886,7 @@ class UploadHookViewSet(viewsets.ViewSet):
             file_info_path.unlink()
 
         except UploadToken.DoesNotExist:
-            log.error(f'UPLOAD denied for "{token.user}": INVALID TOKEN')
+            log.error(f'UPLOAD denied for "{tok}": INVALID TOKEN')
             return Response(
                 {'error': 'invalid token'},
                 status=status.HTTP_400_BAD_REQUEST

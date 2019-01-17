@@ -20,7 +20,7 @@ matrix:
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
       install:
-        - pip install -r requirements/local.txt
+        - pip install -r requirements/tests.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
         # Start tusd server
@@ -68,7 +68,7 @@ matrix:
         - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
         - tar -xzvf tusd_linux_amd64.tar.gz
       install:
-        - pip install -r requirements/local.txt
+        - pip install -r requirements/tests.txt
       before_script:
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
@@ -95,7 +95,7 @@ matrix:
         - export DJANGO_SETTINGS_MODULE=config.settings.test
         - source .envrc.travis
       install:
-        - pip install -r requirements/local.txt
+        - pip install -r requirements/tests.txt
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
       script:

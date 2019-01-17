@@ -1,0 +1,5 @@
+-r ./local.txt
+
+future==0.17.1
+tinydb==3.12.2
+tuspy==0.2.4
