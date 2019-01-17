@@ -9,6 +9,7 @@ from ..constants import TABLE_ROW_EMPTY_IMP_EXP
 
 from ..util import page_title_section
 from ..util import table_from_data
+from ..util import table_with_blends
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -18,9 +19,6 @@ from .imp_exp_helper import get_header
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
-from reportlab.platypus import Spacer
-from reportlab.platypus import Table
-from reportlab.lib.units import mm
 
 from django.utils.translation import gettext_lazy as _
 from functools import partial
@@ -36,29 +34,17 @@ def mk_table_substances(submission):
 def mk_table_blends(submission):
     imports = submission.article7imports.filter(substance=None)
     row = partial(big_table_row, isBlend=True)
-    blends = []
 
-    for blend_row in map(row, imports):
+    blends = map(row, imports)
 
-        # Getting the blend object based on the id
-        blend = imports.filter(blend__blend_id=blend_row[1]).first()
-        row_comp = partial(component_row, blend=blend)
-        data = tuple(map(row_comp, blend.blend.components.all()))
-
-        blends.append(blend_row)
-        blends.append(
-            (
-                (Spacer(7, mm),
-                 Table(
-                    TABLE_BLENDS_COMP_HEADER + data,
-                    style=TABLE_BLENDS_COMP_STYLE,
-                    colWidths=TABLE_BLENDS_COMP_WIDTHS,
-                 ),
-                 Spacer(7, mm))
-            ,)
-        )
-
-    return blends
+    return table_with_blends(
+        blends=blends,
+        grouping=imports,
+        make_component=component_row,
+        header=TABLE_BLENDS_COMP_HEADER,
+        style=TABLE_BLENDS_COMP_STYLE,
+        widths=TABLE_BLENDS_COMP_WIDTHS
+    )
 
 def export_imports(submission):
     table_substances = tuple(mk_table_substances(submission))
