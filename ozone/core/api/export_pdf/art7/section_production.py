@@ -1,7 +1,6 @@
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
-
 from reportlab.lib import colors
 from reportlab.lib.units import cm
 
@@ -16,10 +15,12 @@ from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
-from ..constants import TABLE_STYLES
+from ..util import TABLE_STYLES
+
+from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
 
-TABLE_IMPORTS_HEADER = (
+TABLE_PROD_HEADER = (
     (
         p_c(_('Group')),
         p_c(_('Substance')),
@@ -42,7 +43,6 @@ TABLE_IMPORTS_HEADER = (
     ),
 )
 
-
 TABLE_ROW_EMPTY = (
     (
         _('No data.'),
@@ -52,15 +52,7 @@ TABLE_ROW_EMPTY = (
         '',
         '',
         '',
-        '',
     ),
-)
-
-
-TABLE_ROW_EMPTY_STYLE = (
-    ('SPAN', (0, 2), (-1, 2)),
-    ('VALIGN', (0, 2), (-1, 2), 'MIDDLE'),
-    ('ALIGN', (0, 2), (-1, 2), 'CENTER'),
 )
 
 
@@ -79,7 +71,6 @@ TABLE_PRODUCTION_HEADER_STYLE = (
     ('SPAN', (4, 0), (5, 0)),
     ('SPAN', (6, 0), (6, 1)),
 )
-
 
 def to_row_substance(obj):
     substance = obj.substance
@@ -101,48 +92,45 @@ def to_row_substance(obj):
         str(obj.quantity_article_5 or '')
     )
 
-
 def mk_table_substances(submission):
     imports = submission.article7productions.all()
     return map(to_row_substance, imports)
-
 
 def mk_table_substances_fii(submission):
     # TODO: Differentiation between FII and non-FII does
     # not appear to be implemented yet.
     return []
 
-
 def table_from_data(data):
     col_widths =  list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
     return Table(
-        TABLE_IMPORTS_HEADER + (data or TABLE_ROW_EMPTY),
+        TABLE_PROD_HEADER + (data or TABLE_ROW_EMPTY),
         colWidths=col_widths,
         style=(
             TABLE_PRODUCTION_HEADER_STYLE + TABLE_STYLES + (
-                () if data else TABLE_ROW_EMPTY_STYLE
+                () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
             )
         ),
         repeatRows=2  # repeat header on page break
     )
 
-
 def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
-    # table_substances_fii = tuple(mk_table_substances_fii(submission))
+    table_substances_fii = tuple(mk_table_substances_fii(submission))
 
     prod_page = (
         Paragraph(_('3.1 Substances'), STYLES['Heading2']),
         table_from_data(table_substances),
-        # PageBreak(),
-        # Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
-        # table_from_data(table_substances_fii),
+        PageBreak(),
+        Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
+        table_from_data(table_substances_fii),
         PageBreak()
     )
 
     return page_title_section(
         title=_('PRODUCTION'),
         explanatory=_(
-            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
+            'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F '
+            'substances'
         )
     ) + prod_page
