@@ -85,7 +85,7 @@ matrix:
         - nohup python manage.py runserver &
         # Start tusd server
         - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
-        # Install frontend dependecies
+        # Install frontend dependencies
         - cd frontend && yarn install
       script:
         - yarn e2e
