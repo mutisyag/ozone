@@ -74,6 +74,10 @@ const mutations = {
 		state.form.tabs[data.tabName].ordering_id = data.ordering_id
 	},
 
+	setFormPermissions(state, data) {
+		state.permissions.form = data
+	},
+
 	// dashboard
 
 	setDashboardParties(state, data) {

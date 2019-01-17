@@ -25,7 +25,7 @@
 									<label>{{labels[order]}}</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row>
@@ -89,6 +89,12 @@ export default {
 	},
 
 	components: { fieldGenerator },
+
+	computed: {
+		can_edit_data() {
+			return this.$store.getters.can_edit_data
+		}
+	},
 
 	data() {
 		return {

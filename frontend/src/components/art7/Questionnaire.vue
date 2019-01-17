@@ -6,7 +6,7 @@
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <div class="field-wrapper">
             <label>{{field.label}}</label>
-            <fieldGenerator :fieldInfo="{index:field.name, tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field" />
+            <fieldGenerator :fieldInfo="{index:field.name, tabName: info.name, field:field.name}" :disabled="can_edit_data" :field="field" />
           </div>
         </div>
       </b-card>

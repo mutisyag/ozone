@@ -2,13 +2,13 @@
   <div>
     <AsideToggler/>
 		<b-tabs v-model="tabIndex">
-      <b-tab v-if="hasSubstances">
+      <b-tab v-if="hasSubstances && $store.getters.can_edit_data">
         <template slot="title">
           <span v-translate>Substances</span>
         </template>
           <add :tabName="tabName"></add>
       </b-tab>
-      <b-tab v-if="hasBlends">
+      <b-tab v-if="hasBlends && $store.getters.can_edit_data">
         <template slot="title">
           <span v-translate>Blends</span>
         </template>

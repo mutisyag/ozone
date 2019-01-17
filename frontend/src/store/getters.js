@@ -20,12 +20,14 @@ const getters = {
 			&& sub.current_state === 'data_entry'
 	),
 
+	can_edit_data: (state) => state.permissions.form && !state.permissions.form.can_edit_data,
+
 	currentCountryIso: (state) => {
 		const { currentUser } = state
 		let currentCountry = null
 		if (!currentUser || !currentUser.party) return
 		if (state.initialData.countryOptions) {
-			currentCountry = state.initialData.countryOptions.filter(c => currentUser.party === c.value)
+			currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
 		}
 		if (state.dashboard.parties && state.dashboard.parties.length) {
 			currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
@@ -53,9 +55,8 @@ const getters = {
 
 	getPeriodStatus: (state) => (periodId) => state.dashboard.periods.find((period) => period.value === periodId).is_reporting_open,
 
-	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName),
+	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName)
 
-	isReadOnly: (state) => (state.current_submission ? !state.current_submission.data_changes_allowed : false)
 }
 
 export default getters

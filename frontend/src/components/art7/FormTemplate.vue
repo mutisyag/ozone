@@ -97,7 +97,7 @@
 						@click="createModalData(cell.item.originalObj, cell.item.index)"
 					><i class="fa fa-pencil-square-o fa-lg"></i></span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
@@ -112,6 +112,7 @@
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+					:disabled="$store.getters.can_edit_data"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
 					:tabName="tabName"
@@ -123,7 +124,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -158,7 +159,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-							:disabled="isReadOnly"
+							:disabled="$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 					</span>
 				</div>
@@ -174,7 +175,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-							:disabled="isReadOnly"
+							:disabled="$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_polyols"	/>
 					</span>
 				</div>
@@ -223,7 +224,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						variant="link"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
@@ -242,7 +243,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="isReadOnly"
+					:disabled="$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -277,7 +278,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-								:disabled="isReadOnly"
+								:disabled="$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 						</span>
 					</div>
@@ -292,7 +293,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-								:disabled="isReadOnly"
+								:disabled="$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_polyols" />
 						</span>
 					</div>
@@ -350,7 +351,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
 						<i class="fa fa-trash fa-lg"></i>
@@ -359,6 +360,7 @@
 			</template>
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
+					:disabled="$store.getters.can_edit_data"
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
@@ -371,7 +373,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -447,7 +449,7 @@
 		</div>
 	</div>
     <hr>
-    <AppAside v-if="!isReadOnly" fixed>
+    <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -471,7 +473,7 @@
 				class="mb-2"
 				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
 				trackBy="value"
-				:disabled="isReadOnly"
+				:disabled="$store.getters.can_edit_data"
 				label="text"
 				:placeholder="$gettext('Select substance')"
 				:value="parseInt(modal_data.field.substance.selected)"
@@ -484,7 +486,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="isReadOnly"
+                :disabled="$store.getters.can_edit_data"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]" />
               <multiselect
@@ -492,7 +494,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-				:disabled="isReadOnly"
+								:disabled="$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
@@ -515,7 +517,7 @@
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="isReadOnly"
+					:disabled="$store.getters.can_edit_data"
 					:field="modal_data.field[`quantity_${order}`]" />
               </b-input-group>
             </b-col>
@@ -523,7 +525,7 @@
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="isReadOnly"
+                  :disabled="$store.getters.can_edit_data"
                   :field="modal_data.field[`decision_${order}`]" />
               </b-input-group>
             </b-col>
@@ -819,10 +821,6 @@ export default {
 				['source_party', 'trade_party', 'destination_party'],
 				this.tab_info.fields_order
 			)[0]
-		},
-
-		isReadOnly() {
-			return this.$store.getters.isReadOnly || this.hasDisabledFields
 		},
 
 		hasSubstances() {

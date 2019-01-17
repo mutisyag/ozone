@@ -222,7 +222,7 @@ const actions = {
 				// by default show all custom blends for secretariat users.
 				// This way, even secretariat users will only see the correct available
 				// custom blends.
-				context.dispatch('getCustomBlends', {party: context.state.current_submission.party})
+				context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
 				context.dispatch('getNonParties')
 				resolve()
 			})
@@ -236,6 +236,13 @@ const actions = {
 				context.commit('setFlagsPermissions', response.data.changeable_flags)
 				context.commit('updateAvailableTransitions', response.data.available_transitions)
 				context.dispatch('getCurrentSubmissionHistory', { submission, $gettext })
+				context.commit('setFormPermissions', {
+					can_change_remarks_party: response.data.can_change_remarks_party,
+					can_change_remarks_secretariat: response.data.can_change_remarks_secretariat,
+					can_change_reporting_channel: response.data.can_change_reporting_channel,
+					can_upload_files: response.data.can_upload_files,
+					can_edit_data: response.data.can_edit_data
+				})
 				resolve()
 			})
 		})
@@ -295,7 +302,7 @@ const actions = {
 		})
 	},
 
-	getCustomBlends(context, {party}) {
+	getCustomBlends(context, { party }) {
 		const blendsDisplay = {}
 		getCustomBlends(party).then((response) => {
 			response.data.forEach(blend => {
