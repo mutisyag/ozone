@@ -103,3 +103,39 @@ TABLE_DEST_COMP_HEADER = (
         p_c(_('Quantity destroyed')),
     ),
 )
+
+TABLE_ROW_EMPTY_NONP = ((_('No data.'), '', '', '', '', '', '', '', ''),)
+
+TABLE_NONP_HEADER_STYLE = (
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('ALIGN', (0, 2), (6, -1), 'CENTER'),
+    ('SPAN', (0, 0), (0, 1)),
+    ('SPAN', (1, 0), (1, 1)),
+    ('SPAN', (2, 0), (2, 1)),
+    ('SPAN', (3, 0), (4, 0)),
+    ('SPAN', (3, 0), (4, 0)),
+    ('SPAN', (5, 0), (6, 0)),
+    ('SPAN', (7, 0), (7, 1)),
+    ('SPAN', (8, 0), (8, 1)),
+)
+
+TABLE_NONP_SUBS_WIDTHS = list(
+    map(lambda x: x * cm, [2, 3, 4, 2, 2, 2, 2, 4, 4])
+)
+
+TABLE_NONP_COMP_WIDTHS = list(
+    map(lambda x: x * cm, [4, 3, 3, 3, 3, 3])
+)
+
+TABLE_DEST_COMP_HEADER = (
+    (
+        p_c(_('Substances')),
+        p_c(_('Percentage')),
+        p_c(_('Quantity of imports from non-parties (new)')),
+        p_c(_('Quantity of imports from non-parties (recovered)')),
+        p_c(_('Quantity of exports from non-parties (new)')),
+        p_c(_('Quantity of exports from non-parties (recovered)')),
+    ),
+)
