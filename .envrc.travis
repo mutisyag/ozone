@@ -31,7 +31,7 @@ export CORS_ORIGIN_WHITELIST=localhost:8000
 
 # export OZONE_TZ=UTC
 
-export TUSD_UPLOADS_DIR=$HOME/src/tusd-bin/data
+export TUSD_UPLOADS_DIR=/var/local/tusd_uploads
 
 # Used by tusd on hooks URL
 export API_VERSION=0.1
