@@ -57,10 +57,10 @@ def export_imports(submission):
 
     imports_page = (
         Paragraph(_('1.1 Substances'), STYLES['Heading2']),
-        table_from_data(table_substances, isBlend=False),
+        table_from_data(table_substances, isBlend=False, type='import'),
         PageBreak(),
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
-        table_from_data(table_blends, isBlend=True),
+        table_from_data(table_blends, isBlend=True, type='import'),
         PageBreak(),
     )
 
