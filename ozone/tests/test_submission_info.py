@@ -101,7 +101,6 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'organization': '',
             'phone': '0000000000',
             'postal_code': '',
-            'reporting_channel': '',
             'reporting_officer': ''
         }
 
@@ -137,7 +136,6 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'organization': '',
             'phone': '0000000000',
             'postal_code': '',
-            'reporting_channel': '',
             'reporting_officer': ''
         }
         headers = self.get_authorization_header(
