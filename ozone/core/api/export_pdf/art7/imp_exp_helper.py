@@ -23,7 +23,8 @@ def get_header(isBlend, type):
         (
             p_c(_(first_col)),
             p_c(_(second_col)),
-            p_c(_(f'{type.capitalize()}ing party for quantities reported as {type}s')),
+            p_c(_(f'{type.capitalize()}ing party for quantities reported as '
+                  f'{type}s')),
             p_c(_(f'Total Quantity {type.capitalize()}ed for All Uses')),
             '',
             p_c(_(f'Quantity of new substances {type}ed as feedstock')),
@@ -55,10 +56,13 @@ def big_table_row(obj, isBlend):
     d_label = get_substance_label(decisions, type='decision',
                                     list_font_size=9)
 
+    party = obj.source_party.name if hasattr(obj, 'source_party') else \
+        obj.destination_party.name if obj.destination_party else ""
+
     return (
         col_1,
         col_2,
-        obj.source_party.name,
+        party,
         obj.quantity_total_new,
         obj.quantity_total_recovered,
         obj.quantity_feedstock,
@@ -79,9 +83,8 @@ def component_row(component, blend):
         str(q_sum) if q_sum != 0.0 else ''
     )
 
-
-def table_from_data(data, isBlend):
-    header = get_header(isBlend, type="import")
+def table_from_data(data, isBlend, type):
+    header = get_header(isBlend, type=type)
     col_widths = TABLE_IMPORTS_EXPORTS_BL_WIDTHS if isBlend \
         else TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
     style = (
