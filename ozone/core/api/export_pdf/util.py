@@ -8,9 +8,8 @@ from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.enums import TA_CENTER
-from reportlab.lib.units import cm
-
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import cm
 
 
 __all__ = [
@@ -28,6 +27,11 @@ __all__ = [
 
 STYLES = getSampleStyleSheet()
 FONTSIZE_TABLE = 8
+
+TABLE_STYLES = (
+    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
+    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+)
 
 
 def _p(style_name, align, txt, fontSize=None, fontName=None):
@@ -153,10 +157,12 @@ def get_preship_or_polyols_q(obj):
         p_l(str(_q_pre_ship)),
         )
 
-        if _q_polyols:
-            return (
-                p_l('<b>Polyols quantity</b>'),
-                p_l(str(_q_polyols)),
-            )
+    if _q_polyols:
+        return (
+            p_l('<b>Polyols quantity</b>'),
+            p_l(str(_q_polyols)),
+        )
 
-        return None
+    return None
+
+

@@ -1,4 +1,4 @@
-from .util import FONTSIZE_TABLE
+# from .util import FONTSIZE_TABLE
 from .util import p_c
 
 from django.utils.translation import gettext_lazy as _
@@ -7,10 +7,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 
 
-TABLE_STYLES = (
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
-)
+
 
 TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
