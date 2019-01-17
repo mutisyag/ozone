@@ -187,3 +187,5 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
         self.assertEqual(submission.files.first().name, "text.txt")
         self.assertEqual(submission.files.first().file.read(), FILE_CONTENT)
 
+# TODO: test edge cases: expired token, invalid token, wrong extension,
+# TODO: token cleanup at the end.
