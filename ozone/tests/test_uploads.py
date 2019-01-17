@@ -5,6 +5,7 @@ import socket
 import unittest
 
 from django.conf import settings
+from django.core.files import File
 from django.core.servers.basehttp import ThreadedWSGIServer, WSGIRequestHandler
 from django.test.testcases import LiveServerThread
 from tusclient import client
@@ -29,6 +30,7 @@ from .factories import (
     SubstanceFactory,
     AnotherPartyFactory,
     UploadTokenFactory,
+    SubmissionFileFactory,
 )
 
 
@@ -84,6 +86,18 @@ class BaseSubmissionTest(object):
             **kwargs,
         )
         return submission
+
+    def create_file(self, submission):
+        submission_file = SubmissionFileFactory.create(
+            submission=submission,
+            name="test_file.txt",
+            uploader=self.secretariat_user,
+            tus_id=None,
+            upload_successful=True
+        )
+        stream = io.BytesIO(FILE_CONTENT)
+        submission_file.file.save("test_file.txt", File(stream))
+        return submission_file
 
 
 class TestToken(BaseSubmissionTest, TestCase):
@@ -189,3 +203,83 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
 
 # TODO: test edge cases: expired token, invalid token, wrong extension,
 # TODO: token cleanup at the end.
+
+
+class TestListFiles(BaseSubmissionTest, TestCase):
+
+    def test_list_files_as_party(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-list",
+                kwargs={"submission_pk": submission.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(len(resp.json()), 1)
+        self.assertEqual(resp.json()[0]['name'], submission_file.name)
+
+    def test_list_files_as_secretariat(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-list",
+                kwargs={"submission_pk": submission.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(len(resp.json()), 1)
+        self.assertEqual(resp.json()[0]['name'], submission_file.name)
+
+
+class TestDownloads(BaseSubmissionTest, TestCase):
+
+    def test_download_files_as_party(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-download",
+                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data, submission_file.file.read())
+
+    def test_download_files_as_different_party(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.another_party_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-download",
+                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(resp.status_code, 403)
+
+    def test_download_files_as_secretariat(self):
+        submission = self.create_submission()
+        submission_file = self.create_file(submission)
+
+        headers = self.get_authorization_header(self.secretariat_user, "qwe123qwe")
+        resp = self.client.get(
+            reverse(
+                "core:submission-files-download",
+                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+            ),
+            **headers
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data, submission_file.file.read())
