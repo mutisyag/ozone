@@ -132,7 +132,7 @@ class ReuseLiveServerThread(LiveServerThread):
         return ThreadedWSGIServer((self.host, self.port), WSGIRequestHandler, allow_reuse_address=True)
 
 
-@unittest.skipIf(not TUSD_AVAILABLE, "TUSD not available"!)
+@unittest.skipIf(not TUSD_AVAILABLE, "TUSD not available!")
 class TestUpload(BaseSubmissionTest, LiveServerTestCase):
     port = 8000
     tus_host = f"http://{settings.TUSD_HOST}:{settings.TUSD_PORT}/files/"
