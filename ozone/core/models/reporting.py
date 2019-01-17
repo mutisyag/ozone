@@ -550,15 +550,24 @@ class Submission(models.Model):
             return True
         return False
 
-    def can_upload_files(self, user):
-        # TODO: what are the permissions on file upload???
-        # TODO: use it in permissions.py
-        # TODO: implement
-        return True
+    def check_has_submission_rights(self, user):
+        # TODO: use it in permissions.py!
+        if (
+            user.is_secretariat and self.filled_by_secretariat
+            or user.party is not None and user.party == self.party
+        ):
+            return not user.is_read_only
+        return False
 
     def can_edit_data(self, user):
-        # TODO: implement and also use in permissions.py!
-        return True
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
+        return False
+
+    def can_upload_files(self, user):
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
+        return False
 
     @staticmethod
     def get_exempted_fields():
