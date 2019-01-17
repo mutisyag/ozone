@@ -696,6 +696,10 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 
 
 class SubmissionFileViewSet(viewsets.ModelViewSet):
+    """
+    download:
+    Download the submission file.
+    """
     serializer_class = SubmissionFileSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,)
 
