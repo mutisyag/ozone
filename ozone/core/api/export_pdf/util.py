@@ -4,6 +4,7 @@ from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
+from reportlab.platypus import Table
 from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
@@ -164,5 +165,25 @@ def get_preship_or_polyols_q(obj):
         )
 
     return None
+
+
+def table_from_data(
+    data, isBlend, header, colWidths, style, repeatRows, emptyData
+):
+
+    # Spanning all columns for the blend components rows
+    if isBlend:
+        rows = len(data) + repeatRows
+        for row_idx in range(repeatRows+1, rows, 2):
+            style += (
+                ('SPAN', (0, row_idx), (-1, row_idx)),
+            )
+
+    return Table(
+        header + (data or emptyData),
+        colWidths=colWidths,
+        style=style,
+        repeatRows=2  # repeat header on page break
+    )
 
 
