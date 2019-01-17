@@ -793,7 +793,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     def check_reporting_channel(self, instance, user):
         if (
             instance.submission.check_reporting_channel_modified()
-            and not instance.submission.check_reporting_channel(user)
+            and not instance.submission.can_change_reporting_channel(user)
         ):
             raise ValidationError({
                 "reporting_channel": [

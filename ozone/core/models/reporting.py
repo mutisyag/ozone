@@ -540,9 +540,15 @@ class Submission(models.Model):
             })
         return True
 
+    def check_reporting_channel_modified(self):
+        if 'reporting_channel_id' in self.tracker.changed().keys():
+            return True
+        return False
+
     def can_change_reporting_channel(self, user):
-        # TODO: implement
-        return True
+        if user.is_secretariat and self.filled_by_secretariat:
+            return True
+        return False
 
     def can_upload_files(self, user):
         # TODO: what are the permissions on file upload???
@@ -553,16 +559,6 @@ class Submission(models.Model):
     def can_edit_data(self, user):
         # TODO: implement and also use in permissions.py!
         return True
-
-    def check_reporting_channel_modified(self):
-        if 'reporting_channel_id' in self.tracker.changed().keys():
-            return True
-        return False
-
-    def check_reporting_channel(self, user):
-        if user.is_secretariat and self.filled_by_secretariat:
-            return True
-        return False
 
     @staticmethod
     def get_exempted_fields():
