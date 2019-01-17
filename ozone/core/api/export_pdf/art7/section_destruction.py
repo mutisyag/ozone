@@ -1,19 +1,27 @@
+from django.utils.translation import gettext_lazy as _
+from functools import partial
+
 from reportlab.platypus import Paragraph
+from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus import PageBreak
+from reportlab.lib.units import cm
+from reportlab.lib.units import mm
 
-from reportlab.lib import colors
 
-from django.utils.translation import gettext_lazy as _
-
+from ..constants import TABLE_DEST_HEADER_STYLE
+from ..constants import TABLE_DEST_COMP_HEADER
+from ..constants import TABLE_ROW_EMPTY_DEST
+from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
+from ..constants import TABLE_BLENDS_COMP_STYLE
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
-from ..constants import TABLE_STYLES
+from ..util import TABLE_STYLES
 
 
-TABLE_IMPORTS_HEADER = (
+TABLE_DEST_HEADER = (
     (
         p_c(_('Group')),
         p_c(_('Substance')),
@@ -24,63 +32,82 @@ TABLE_IMPORTS_HEADER = (
 )
 
 
-TABLE_ROW_EMPTY = (
-    (
-        _('No data.'),
-        '',
-        '',
-        '',
-        '',
-    ),
-)
-
-
-TABLE_ROW_EMPTY_STYLE = (
-    ('SPAN', (0, 1), (-1, 1)),
-    ('VALIGN', (0, 1), (-1, 1), 'MIDDLE'),
-    ('ALIGN', (0, 1), (-1, 1), 'CENTER'),
-)
-
-
-TABLE_IMPORTS_HEADER_STYLE = (
-    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-    ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
-    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-)
-
-
-def to_row_substance(obj):
-    substance = obj.substance
+def big_table_row(obj, isBlend):
+    col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
+    col_2 = obj.blend.blend_id if isBlend else obj.substance.name
 
     return (
-        substance.group.group_id,
-        p_l(substance.name),
+        col_1,
+        col_2,
         p_l(str(obj.quantity_destroyed)),
         str(obj.remarks_party or ''),
         str(obj.remarks_os or ''),
     )
 
+def component_row(component, blend):
+    ptg = component.percentage
+
+    return (
+        component.substance,
+        p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
+        str(blend.quantity_destroyed * ptg)
+    )
+
 
 def mk_table_substances(submission):
-    # TODO: differentiate between blends and substances
-    destruction = submission.article7destructions.filter(blend_item__isnull=True)
-    return map(to_row_substance, destruction)
-
+    # Excluding items with no substance,
+    # then getting the ones that are not a blend
+    destruction = submission.article7destructions.exclude(substance=None)
+    row = partial(big_table_row, isBlend=False)
+    return map(row, destruction.filter(blend_item=None))
 
 def mk_table_blends(submission):
-    destruction = submission.article7destructions.filter(blend_item__isnull=False)
-    return map(to_row_substance, destruction)
+    destructions = submission.article7destructions.filter(substance=None)
+    row = partial(big_table_row, isBlend=True)
 
+    blends = []
 
-def table_from_data(data):
-    return Table(
-        TABLE_IMPORTS_HEADER + (data or TABLE_ROW_EMPTY),
-        style=(
-            TABLE_IMPORTS_HEADER_STYLE + TABLE_STYLES + (
-                () if data else TABLE_ROW_EMPTY_STYLE
+    for blend_row in map(row, destructions):
+        # Getting the blend object based on the id
+        blend = destructions.filter(blend__blend_id=blend_row[1]).first()
+        row_comp = partial(component_row, blend=blend)
+        data = tuple(map(row_comp, blend.blend.components.all()))
+
+        blends.append(blend_row)
+        blends.append(
+            (
+                (Spacer(7, mm),
+                 Table(
+                     TABLE_DEST_COMP_HEADER + data,
+                     style=TABLE_BLENDS_COMP_STYLE,
+                     colWidths=list(map(lambda x: x * cm, [6, 5, 6]))
+                 ),
+                 Spacer(7, mm))
+                ,)
+        )
+
+    return blends
+
+def table_from_data(data, isBlend):
+    style = (
+        TABLE_DEST_HEADER_STYLE + TABLE_STYLES + (
+            () if data else TABLE_ROW_EMPTY_STYLE_DEST
+        )
+    )
+
+    # Spanning all columns for the blend components rows
+    if isBlend:
+        rows = len(data) + 1
+        for row_idx in range(2, rows, 2):
+            style += (
+                ('SPAN', (0, row_idx), (-1, row_idx)),
             )
-        ),
-        repeatRows=2  # repeat header on page break
+
+    return Table(
+        TABLE_DEST_HEADER + (data or TABLE_ROW_EMPTY_DEST),
+        style=style,
+        colWidths=list(map(lambda x: x * cm, [4, 3, 4, 6, 6])),
+        repeatRows=1  # repeat header on page break
     )
 
 
@@ -90,10 +117,10 @@ def export_destruction(submission):
 
     destr_page = (
         Paragraph(_('4.1 Substances'), STYLES['Heading2']),
-        table_from_data(table_substances),
+        table_from_data(table_substances, isBlend=False),
         PageBreak(),
         Paragraph(_('4.2 Blends'), STYLES['Heading2']),
-        table_from_data(table_blends),
+        table_from_data(table_blends, isBlend=True),
         PageBreak(),
     )
 

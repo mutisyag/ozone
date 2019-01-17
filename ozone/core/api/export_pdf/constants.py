@@ -1,12 +1,9 @@
-# from .util import FONTSIZE_TABLE
 from .util import p_c
 
 from django.utils.translation import gettext_lazy as _
 
 from reportlab.lib import colors
 from reportlab.lib.units import cm
-
-
 
 
 TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
@@ -23,18 +20,7 @@ TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('SPAN', (6, 0), (7, 0)),
 )
 
-TABLE_ROW_EMPTY_IMP_EXP = (
-    (
-        _('No data.'),
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-    ),
-)
+TABLE_ROW_EMPTY_IMP_EXP = ((_('No data.'), '', '', '', '', '', '', '',),)
 
 TABLE_ROW_EMPTY_STYLE_IMP_EXP = (
     ('SPAN', (0, 2), (-1, 2)),
@@ -75,3 +61,45 @@ TABLE_BLENDS_COMP_HEADER = (
     ),
 )
 
+
+TABLE_ROW_EMPTY_PROD = ((_('No data.'), '', '', '', '', '', '',),)
+
+TABLE_PROD_HEADER_STYLE = (
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+    ('VALIGN', (0, 2), (3, -1), 'MIDDLE'),
+    ('VALIGN', (5, 2), (6, -1), 'MIDDLE'),
+    ('ALIGN', (0, 2), (3, -1), 'CENTER'),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('ALIGN', (6, 2), (6, -1), 'CENTER'),
+    ('SPAN', (0, 0), (0, 1)),
+    ('SPAN', (1, 0), (1, 1)),
+    ('SPAN', (2, 0), (2, 1)),
+    ('SPAN', (3, 0), (3, 1)),
+    ('SPAN', (4, 0), (5, 0)),
+    ('SPAN', (6, 0), (6, 1)),
+)
+
+
+TABLE_ROW_EMPTY_DEST = ((_('No data.'), '', '', '', '',),)
+
+TABLE_ROW_EMPTY_STYLE_DEST = (
+    ('SPAN', (0, 1), (-1, 1)),
+    ('VALIGN', (0, 1), (-1, 1), 'MIDDLE'),
+    ('ALIGN', (0, 1), (-1, 1), 'CENTER'),
+)
+
+TABLE_DEST_HEADER_STYLE = (
+    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+    ('ALIGN', (0, 1), (2, -1), 'CENTER'),
+)
+
+TABLE_DEST_COMP_HEADER = (
+    (
+        p_c(_('Substances')),
+        p_c(_('Percentage')),
+        p_c(_('Quantity destroyed')),
+    ),
+)

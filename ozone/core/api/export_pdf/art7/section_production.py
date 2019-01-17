@@ -18,6 +18,8 @@ from ..util import STYLES
 from ..util import TABLE_STYLES
 
 from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from ..constants import TABLE_PROD_HEADER_STYLE
+from ..constants import TABLE_ROW_EMPTY_PROD
 
 
 TABLE_PROD_HEADER = (
@@ -43,34 +45,6 @@ TABLE_PROD_HEADER = (
     ),
 )
 
-TABLE_ROW_EMPTY = (
-    (
-        _('No data.'),
-        '',
-        '',
-        '',
-        '',
-        '',
-        '',
-    ),
-)
-
-
-TABLE_PRODUCTION_HEADER_STYLE = (
-    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-    ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
-    ('VALIGN', (0, 2), (3, -1), 'MIDDLE'),
-    ('VALIGN', (5, 2), (6, -1), 'MIDDLE'),
-    ('ALIGN', (0, 2), (3, -1), 'CENTER'),
-    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
-    ('ALIGN', (6, 2), (6, -1), 'CENTER'),
-    ('SPAN', (0, 0), (0, 1)),
-    ('SPAN', (1, 0), (1, 1)),
-    ('SPAN', (2, 0), (2, 1)),
-    ('SPAN', (3, 0), (3, 1)),
-    ('SPAN', (4, 0), (5, 0)),
-    ('SPAN', (6, 0), (6, 1)),
-)
 
 def to_row_substance(obj):
     substance = obj.substance
@@ -104,10 +78,10 @@ def mk_table_substances_fii(submission):
 def table_from_data(data):
     col_widths =  list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
     return Table(
-        TABLE_PROD_HEADER + (data or TABLE_ROW_EMPTY),
+        TABLE_PROD_HEADER + (data or TABLE_ROW_EMPTY_PROD),
         colWidths=col_widths,
         style=(
-            TABLE_PRODUCTION_HEADER_STYLE + TABLE_STYLES + (
+            TABLE_PROD_HEADER_STYLE + TABLE_STYLES + (
                 () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
             )
         ),
