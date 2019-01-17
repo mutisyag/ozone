@@ -23,10 +23,10 @@
 </template>
 
 <script>
-
 import authMixin from '@/components/common/mixins/auth'
 import { HeaderDropdown } from '@coreui/vue'
 import { apiBase } from '@/components/common/services/api'
+import { setLanguage } from '@/components//common/services/languageService'
 
 export default {
 	mixins: [authMixin],
@@ -44,10 +44,8 @@ export default {
 		}
 	},
 	methods: {
-		setCurrentLanguage(key) {
-			this.$language.current = key
-			console.log(this.$language)
-			// this.$store.dispatch('getTranslations', { language: this.$language, languageKey: key })
+		setCurrentLanguage(languageKey) {
+			setLanguage(languageKey, this)
 		}
 	}
 }

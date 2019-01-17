@@ -222,7 +222,7 @@ const actions = {
 				// by default show all custom blends for secretariat users.
 				// This way, even secretariat users will only see the correct available
 				// custom blends.
-				context.dispatch('getCustomBlends', {party: context.state.current_submission.party})
+				context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
 				context.dispatch('getNonParties')
 				resolve()
 			})
@@ -295,7 +295,7 @@ const actions = {
 		})
 	},
 
-	getCustomBlends(context, {party}) {
+	getCustomBlends(context, { party }) {
 		const blendsDisplay = {}
 		getCustomBlends(party).then((response) => {
 			response.data.forEach(blend => {

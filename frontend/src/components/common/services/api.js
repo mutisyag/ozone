@@ -28,6 +28,8 @@ const api = axios.create({
 	withCredentials: true
 })
 
+const apiPublicDirectory = axios.create()
+
 api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 api.defaults.xsrfCookieName = 'csrftoken'
 
@@ -50,6 +52,11 @@ const fetch = (path, config = null) => {
 	logRequests && console.log(`fetching ${path}...`)
 	checkAuth()
 	return api.get(path, config)
+}
+
+const fetchFromPublicDirectory = (path) => {
+	logRequests && console.log(`fetching ${path}...`)
+	return apiPublicDirectory.get(path)
 }
 
 const post = (path, data) => {
@@ -201,5 +208,6 @@ export {
 	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
-	uploadAttachment
+	uploadAttachment,
+	fetchFromPublicDirectory
 }
