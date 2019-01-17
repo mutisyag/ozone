@@ -654,25 +654,6 @@ export default {
 			}
 		},
 
-		getCommentFieldPermission(fieldName) {
-			let type = fieldName.split('_')
-			type = type[type.length - 1]
-			if (type === 'party') {
-				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
-					return false
-				}
-				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
-					return true
-				}
-				return this.$store.getters.isReadOnly
-			}
-			if (['secretariat', 'os'].includes(type)) {
-				if (!this.$store.state.currentUser.is_secretariat) {
-					return true
-				}
-			}
-		},
-
 		tableLoadedFII() {
 			if (!this.$refs.tableFII) {
 				return

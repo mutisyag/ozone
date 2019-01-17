@@ -25,7 +25,7 @@
 									<label>{{labels[order]}}</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? $store.getters.can_change_reporting_channel : can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row>
