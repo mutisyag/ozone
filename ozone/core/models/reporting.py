@@ -534,6 +534,11 @@ class Submission(models.Model):
             })
         return True
 
+    def check_reporting_channel_modified(self):
+        if 'reporting_channel_id' in self.tracker.changed().keys():
+            return True
+        return False
+
     def check_reporting_channel(self, user):
         if user.is_secretariat and self.filled_by_secretariat:
             return True

@@ -48,7 +48,6 @@ from ..models import (
     Group,
     Substance,
     Blend,
-    ReportingChannel,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -85,7 +84,6 @@ from ..serializers import (
     SubmissionHistorySerializer,
     SubmissionInfoSerializer,
     UpdateSubmissionInfoSerializer,
-    UpdateSubmissionInfoAndReportingChannelSerializer,
     SubmissionFlagsSerializer,
     SubmissionRemarksSerializer,
     SubmissionFileSerializer,
@@ -460,27 +458,15 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
 
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
-        reporting_channel_name = request.data.get('reporting_channel')
-        if reporting_channel_name:
-            try:
-                reporting_channel = ReportingChannel.objects.get(
-                    name=reporting_channel_name
-                )
-            except ReportingChannel.DoesNotExist:
-                raise InvalidRequest(
-                    _("Invalid request: Reporting channel with this name does not exist.")
-                )
-            serializer = UpdateSubmissionInfoAndReportingChannelSerializer(
-                info,
-                data=request.data,
-                context={
-                    'reporting_channel': reporting_channel,
-                    'request': request
-                }
-            )
-        else:
-            serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
-
+        reporting_channel = request.data.get('reporting_channel')
+        serializer = UpdateSubmissionInfoSerializer(
+            info,
+            data=request.data,
+            context={
+                'reporting_channel': reporting_channel,
+                'request': request
+            }
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

@@ -37,6 +37,7 @@ from .models import (
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
+    ReportingChannel,
 )
 
 User = get_user_model()
@@ -780,22 +781,18 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = SubmissionInfo
-        exclude = ('submission',)
-
-
-class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
         exclude = ('submission',)
 
+    def get_reporting_channel(self, obj):
+        return getattr(obj.submission.reporting_channel, 'name', '')
+
     def check_reporting_channel(self, instance, user):
         if (
-            'reporting_channel_id' in instance.submission.tracker.changed().keys()
+            instance.submission.check_reporting_channel_modified()
             and not instance.submission.check_reporting_channel(user)
         ):
             raise ValidationError({
@@ -806,13 +803,12 @@ class UpdateSubmissionInfoAndReportingChannelSerializer(serializers.ModelSeriali
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
-        instance.submission.reporting_channel = self.context['reporting_channel']
+        instance.submission.reporting_channel = ReportingChannel.objects.get(
+            name=self.context['reporting_channel']
+        )
         self.check_reporting_channel(instance, user)
         instance.submission.save()
         return super().update(instance, validated_data)
-
-    def get_reporting_channel(self, obj):
-        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
