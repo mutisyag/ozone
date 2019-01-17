@@ -40,40 +40,21 @@ def get_imports_header(isBlend):
     )
 
 
-def to_row_substance(obj):
-    substance = obj.substance
+def big_table_row(obj, isBlend):
+    col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
+    col_2 = obj.blend.blend_id if isBlend else obj.substance.name
 
     quantities = u.get_quantities(obj)
-    extra_q = u.get_preship_or_polyols_q(obj)
+    extra_q = u.get_preship_or_polyols_q(obj) if not isBlend else None
     q_cell = u.get_quantity_cell(quantities, extra_q)
 
     decisions = u.get_decisions(obj)
-    d_label = u.get_substance_label(decisions, type='decision', list_font_size=9)
+    d_label = u.get_substance_label(decisions, type='decision',
+                                    list_font_size=9)
 
     return (
-        substance.group.group_id,
-        u.p_l(substance.name),
-        u.p_l(obj.source_party.name),
-        str(obj.quantity_total_new or ''),
-        str(obj.quantity_total_recovered or ''),
-        str(obj.quantity_feedstock or ''),
-        q_cell,
-        (d_label,)
-    )
-
-def to_row_blend(obj):
-    # TODO: merge with to_row_substance
-    blend = obj.blend
-
-    quantities = u.get_quantities(obj)
-    q_cell = u.get_quantity_cell(quantities, None)
-
-    decisions = u.get_decisions(obj)
-    d_label = u.get_substance_label(decisions, type='decision', list_font_size=9)
-
-    return (
-        blend.type,
-        blend.blend_id,
+        col_1,
+        col_2,
         obj.source_party.name,
         obj.quantity_total_new,
         obj.quantity_total_recovered,
@@ -82,7 +63,7 @@ def to_row_blend(obj):
         (d_label,)
     )
 
-def to_row_component(component, blend):
+def component_row(component, blend):
 
     ptg = component.percentage
     q_sum = sum(u.get_quantities(blend))*ptg
@@ -101,17 +82,20 @@ def mk_table_substances(submission):
     # Excluding items with no substance,
     # then getting the ones that are not a blend_item
     imports = submission.article7imports.exclude(substance=None)
-    return map(to_row_substance, imports.filter(blend_item=None))
+    row = partial(big_table_row, isBlend=False)
+    return map(row, imports.filter(blend_item=None))
 
 
 def mk_table_blends(submission):
     imports = submission.article7imports.filter(substance=None)
+    row = partial(big_table_row, isBlend=True)
     blends = []
-    for blend_row in map(to_row_blend, imports):
+
+    for blend_row in map(row, imports):
 
         # Getting the blend object based on the id
         blend = imports.filter(blend__blend_id=blend_row[1]).first()
-        row_comp = partial(to_row_component, blend=blend)
+        row_comp = partial(component_row, blend=blend)
         data = tuple(map(row_comp, blend.blend.components.all()))
 
         blends.append(blend_row)
@@ -175,4 +159,3 @@ def export_imports(submission):
             'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
         )
     ) + imports_page
-

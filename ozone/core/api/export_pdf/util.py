@@ -1,6 +1,3 @@
-# from .constants import STYLES
-# from .constants import FONTSIZE_TABLE
-
 from functools import partial
 
 from reportlab.platypus import ListFlowable
@@ -14,7 +11,6 @@ from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import cm
 
 from reportlab.lib.styles import getSampleStyleSheet
-
 
 
 __all__ = [
@@ -146,21 +142,21 @@ def get_decisions(obj):
 
 def get_preship_or_polyols_q(obj):
     _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    _q_polyols = obj.quantity_polyols if hasattr(obj, 'quantity_polyols') else None
-
-    substance = obj.substance
+    _q_polyols = obj.quantity_polyols if hasattr(
+        obj, 'quantity_polyols') else None
 
     if _q_pre_ship:
+        substance = obj.substance
         return (
             p_l(f'<b>Quantity of new {substance.name} '
-            'imported to be used for QPS applications</b>'),
-            p_l(str(_q_pre_ship)),
+                 'imported to be used for QPS applications</b>'),
+        p_l(str(_q_pre_ship)),
         )
 
-    if _q_polyols:
-        return (
-        p_l('<b>Polyols quantity</b>'),
-        p_l(str(_q_polyols)),
-    )
+        if _q_polyols:
+            return (
+                p_l('<b>Polyols quantity</b>'),
+                p_l(str(_q_polyols)),
+            )
 
-    return None
+        return None
