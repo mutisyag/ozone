@@ -1,11 +1,20 @@
 from ..constants import TABLE_BLENDS_COMP_HEADER
 from ..constants import TABLE_BLENDS_COMP_STYLE
 from ..constants import TABLE_BLENDS_COMP_WIDTHS
+from ..constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
+from ..constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS
+from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
+from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from ..constants import TABLE_ROW_EMPTY_IMP_EXP
+
 from ..util import page_title_section
+from ..util import table_from_data
 from ..util import STYLES
+from ..util import TABLE_STYLES
+
 from .imp_exp_helper import big_table_row
 from .imp_exp_helper import component_row
-from .imp_exp_helper import table_from_data
+from .imp_exp_helper import get_header
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -55,12 +64,34 @@ def export_imports(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_blends = tuple(mk_table_blends(submission))
 
+    style = lambda data: (
+        TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
+            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
+        )
+    )
+
+    subst_table = table_from_data(
+        data=table_substances, isBlend=False,
+        header=get_header(isBlend="False", type='import'),
+        colWidths=TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS,
+        style=style(table_substances),
+        repeatRows=2, emptyData=TABLE_ROW_EMPTY_IMP_EXP
+    )
+
+    blends_table = table_from_data(
+        data=table_blends, isBlend=True,
+        header=get_header(isBlend="True", type='import'),
+        colWidths=TABLE_IMPORTS_EXPORTS_BL_WIDTHS,
+        style=style(table_blends),
+        repeatRows=2, emptyData=TABLE_ROW_EMPTY_IMP_EXP
+    )
+
     imports_page = (
         Paragraph(_('1.1 Substances'), STYLES['Heading2']),
-        table_from_data(table_substances, isBlend=False, type='import'),
+        subst_table,
         PageBreak(),
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
-        table_from_data(table_blends, isBlend=True, type='import'),
+        blends_table,
         PageBreak(),
     )
 
