@@ -8,6 +8,7 @@ const util = require('util')
 const execSync = util.promisify(require('child_process').execSync)
 const {
 	login,
+	logout,
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
@@ -27,6 +28,10 @@ module.exports = {
 		console.log('running cleanup')
 		execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
 		console.log('done running cleanup')
+	},
+	BU_001: browser=> {
+		login(browser, 'party', 'party')
+		logout(browser)
 	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')

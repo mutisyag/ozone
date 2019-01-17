@@ -11,6 +11,15 @@ const login = (browser, username, password) => {
 		.assert.urlContains('/reporting/dashboard')
 }
 
+const logout = (browser) => {
+	browser.waitForElementVisible('#account_options', 5000)
+		.click('#account_options')
+		.waitForElementVisible('#logout_button', 5000)
+		.click('#logout_button')
+		.waitForElementVisible('#id_username', 5000)
+		.assert.urlContains('/admin/login')
+}
+
 const createSubmission = (browser) => {
 	browser.waitForElementVisible('.create-submission', 10000)
 		.waitForElementVisible('#obligation_selector', 10000)
@@ -123,6 +132,7 @@ const addValues = (browser, table, tab) => {
 
 module.exports = {
 	login,
+	logout,
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
