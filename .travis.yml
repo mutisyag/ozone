@@ -1,6 +1,8 @@
 matrix:
   include:
     - language: python
+      cache:
+       - pip
       name: "Backend Tests"
       python:
        - 3.6
@@ -31,6 +33,8 @@ matrix:
         - pip install python-coveralls
         - coveralls
     - language: node_js
+      cache:
+       - yarn
       name: "Frontend Tests"
       services:
       addons:
@@ -42,6 +46,9 @@ matrix:
       script:
         - npm run testNoWatch
     - language: python
+      cache:
+       - pip
+       - yarn
       name: "E2E Tests"
       python:
         - 3.6
@@ -84,6 +91,8 @@ matrix:
         - yarn e2e
       after_success:
     - language: python
+      cache:
+       - pip
       name: "Update ozone-translations Backend"
       python:
         - 3.6
@@ -104,6 +113,9 @@ matrix:
         - cd translations
         - ../utility/push_from_travis.sh
     - language: python
+      cache:
+       - pip
+       - yarn
       name: "Update ozone-translations Frontend"
       python:
         - 3.6
