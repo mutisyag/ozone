@@ -19,7 +19,7 @@
 						head-variant="light"
 						stacked="md"
 						:items="parties"
-						:fields="table.fields"
+						:fields="tableFields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
 						:filter="filterCallback"
@@ -74,59 +74,9 @@ export default {
 	components: {
 		CheckedImage
 	},
-	computed: {
-		table() {
-			const sortableAndTextCenter = {
-				sortable: true,
-				class: 'text-center'
-			}
-			const tableObj = {
-				fields: [{
-					key: 'name',
-					label: this.$gettext('Name'),
-					class: 'text-left width-200',
-					sortable: true
-				}, {
-					key: 'is_eu_member',
-					label: this.$gettext('EU Member'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_article5',
-					label: this.$gettext('Article 5 party'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_high_ambient_temperature',
-					label: this.$gettext('HAT'),
-					...sortableAndTextCenter
-				}, {
-					key: 'vienna_convention',
-					label: this.$gettext('Vienna Convention'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_protocol',
-					label: this.$gettext('Montreal Protocol'),
-					...sortableAndTextCenter
-				}, {
-					key: 'london_amendment',
-					label: this.$gettext('London Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'copenhagen_amendment',
-					label: this.$gettext('Copenhagen Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_amendment',
-					label: this.$gettext('Montreal Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'beijing_amendment',
-					label: this.$gettext('Beijing Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'kigali_amendment',
-					label: this.$gettext('Kigali Amendment'),
-					...sortableAndTextCenter
-				}],
+	data() {
+		return {
+			table: {
 				currentPage: 1,
 				perPage: Infinity,
 				totalRows: 50,
@@ -135,7 +85,60 @@ export default {
 					searchName: null
 				}
 			}
-			return tableObj
+		}
+	},
+	computed: {
+		tableFields() {
+			const sortableAndTextCenter = {
+				sortable: true,
+				class: 'text-center'
+			}
+			return [{
+				key: 'name',
+				label: this.$gettext('Name'),
+				class: 'text-left width-200',
+				sortable: true
+			}, {
+				key: 'is_eu_member',
+				label: this.$gettext('EU Member'),
+				...sortableAndTextCenter
+			}, {
+				key: 'is_article5',
+				label: this.$gettext('Article 5 party'),
+				...sortableAndTextCenter
+			}, {
+				key: 'is_high_ambient_temperature',
+				label: this.$gettext('HAT'),
+				...sortableAndTextCenter
+			}, {
+				key: 'vienna_convention',
+				label: this.$gettext('Vienna Convention'),
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_protocol',
+				label: this.$gettext('Montreal Protocol'),
+				...sortableAndTextCenter
+			}, {
+				key: 'london_amendment',
+				label: this.$gettext('London Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'copenhagen_amendment',
+				label: this.$gettext('Copenhagen Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_amendment',
+				label: this.$gettext('Montreal Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'beijing_amendment',
+				label: this.$gettext('Beijing Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'kigali_amendment',
+				label: this.$gettext('Kigali Amendment'),
+				...sortableAndTextCenter
+			}]
 		},
 		parties() {
 			const { partyRatifications } = this.$store.state.initialData
@@ -161,6 +164,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Parties')])
+		},
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
@@ -172,9 +178,15 @@ export default {
 			return party.name && party.name.toLowerCase().includes(this.table.filters.searchName.toLowerCase())
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
+	},
 	created() {
 		this.$store.dispatch('getPartyRatifications')
-		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Parties'])
 	}
 }
 </script>
