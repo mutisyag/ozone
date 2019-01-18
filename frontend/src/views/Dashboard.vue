@@ -150,7 +150,7 @@
                         variant="outline-primary"
                         @click="clone(row.item.details.url, row.item.details.obligation)"
 												size="sm"
-												v-if="row.item.details.is_clonable"
+												v-if="row.item.details.is_cloneable"
 												:disabled="currentUser.is_read_only">
                       <span v-translate>Revise</span>
                     </b-btn>
