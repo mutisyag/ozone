@@ -6,6 +6,31 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 
 
+TABLE_IMPORTS_EXPORTS_HEADER = lambda isBlend, type: (
+    (
+        p_c(_('Type' if isBlend else 'Group')),
+        p_c(_('Blend' if isBlend else 'Substance')),
+        p_c(_(f'{type.capitalize()}ing party for quantities reported as '
+              f'{type}s')),
+        p_c(_(f'Total Quantity {type.capitalize()}ed for All Uses')),
+        '',
+        p_c(_(f'Quantity of new substances {type}ed as feedstock')),
+        p_c(_(f'Quantity of new substance {type}ed for exempted essential,'
+                'critical, high-ambient-temperature or other uses')),
+        ''
+    ),
+    (
+        '',
+        '',
+        '',
+        p_c(_('New')),
+        p_c(_('Recovered and reclaimed')),
+        '',
+        p_c(_('Quantity')),
+        p_c(_('Decision / type of use or remark')),
+    ),
+)
+
 TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
