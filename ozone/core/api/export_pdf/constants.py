@@ -64,6 +64,53 @@ TABLE_BLENDS_COMP_HEADER = (
 
 TABLE_ROW_EMPTY_PROD = ((_('No data.'), '', '', '', '', '', '',),)
 
+TABLE_PROD_HEADER = (
+    (
+        p_c(_('Group')),
+        p_c(_('Substance')),
+        p_c(_('Total production for all uses')),
+        p_c(_('Production for feedstock uses within your country')),
+        p_c(_('Production for exempted essential, '
+              'critical or other uses within your country')),
+        '',
+        p_c(_('Production for supply to Article 5 countries in '
+              'accordance with Articles 2A 2H and 5')),
+    ),
+    (
+        '',
+        '',
+        '',
+        '',
+        p_c(_('Quantity')),
+        p_c(_('Decision / type of use')),
+        '',
+    ),
+)
+
+TABLE_PROD_HEADER_FII = (
+    (
+        p_c(_('Group')),
+        p_c(_('Substance')),
+        p_c(_('Captured for all uses')),
+        p_c(_('Captured for feedstock uses within your country')),
+        p_c(_('Captured for destruction')),
+        p_c(_('Production for exempted essential, '
+              'critical or other uses within your country')),
+        '',
+    ),
+    (
+        '',
+        '',
+        '',
+        '',
+        '',
+        p_c(_('Quantity')),
+        p_c(_('Decision / type of use')),
+    ),
+)
+
+TABLE_PROD_WIDTH = list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
+
 TABLE_PROD_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
@@ -78,6 +125,17 @@ TABLE_PROD_HEADER_STYLE = (
     ('SPAN', (3, 0), (3, 1)),
     ('SPAN', (4, 0), (5, 0)),
     ('SPAN', (6, 0), (6, 1)),
+)
+
+TABLE_PROD_HEADER_STYLE_FII = (
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
+    ('SPAN', (0, 0), (0, 1)),
+    ('SPAN', (1, 0), (1, 1)),
+    ('SPAN', (2, 0), (2, 1)),
+    ('SPAN', (3, 0), (3, 1)),
+    ('SPAN', (4, 0), (4, 1)),
+    ('SPAN', (5, 0), (6, 0)),
 )
 
 

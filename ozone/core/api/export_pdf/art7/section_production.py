@@ -1,49 +1,25 @@
-from reportlab.platypus import Paragraph
-from reportlab.platypus import Table
-from reportlab.platypus import PageBreak
-from reportlab.lib import colors
-from reportlab.lib.units import cm
-
 from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph
+from reportlab.platypus import PageBreak
 
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantity_cell
 from ..util import get_quantities
 from ..util import get_substance_label
-from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import STYLES
 from ..util import TABLE_STYLES
+from ..util import table_from_data
 
-from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
-from ..constants import TABLE_PROD_HEADER_STYLE
+
 from ..constants import TABLE_ROW_EMPTY_PROD
-
-
-TABLE_PROD_HEADER = (
-    (
-        p_c(_('Group')),
-        p_c(_('Substance')),
-        p_c(_('Total production for all uses')),
-        p_c(_('Production for feedstock uses within your country')),
-        p_c(_('Production for exempted essential, '
-              'critical or other uses within your country')),
-        '',
-        p_c(_('Production for supply to Article 5 countries in '
-              'accordance with Articles 2A 2H and 5')),
-    ),
-    (
-        '',
-        '',
-        '',
-        '',
-        p_c(_('Quantity')),
-        p_c(_('Decision / type of use')),
-        '',
-    ),
-)
+from ..constants import TABLE_PROD_HEADER
+from ..constants import TABLE_PROD_HEADER_FII
+from ..constants import TABLE_PROD_HEADER_STYLE
+from ..constants import TABLE_PROD_HEADER_STYLE_FII
+from ..constants import TABLE_PROD_WIDTH
 
 
 def to_row_substance(obj):
@@ -67,37 +43,47 @@ def to_row_substance(obj):
     )
 
 def mk_table_substances(submission):
-    imports = submission.article7productions.all()
-    return map(to_row_substance, imports)
+    production = submission.article7productions.all()
+    return map(to_row_substance, production)
 
 def mk_table_substances_fii(submission):
     # TODO: Differentiation between FII and non-FII does
     # not appear to be implemented yet.
     return []
 
-def table_from_data(data):
-    col_widths =  list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
-    return Table(
-        TABLE_PROD_HEADER + (data or TABLE_ROW_EMPTY_PROD),
-        colWidths=col_widths,
-        style=(
-            TABLE_PROD_HEADER_STYLE + TABLE_STYLES + (
-                () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
-            )
-        ),
-        repeatRows=2  # repeat header on page break
-    )
 
 def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_substances_fii = tuple(mk_table_substances_fii(submission))
 
+    style = lambda data: (
+        TABLE_STYLES + (
+        () if data else (('SPAN', (0, 2), (-1, 2)), (('ALIGN', (0, 2), (-1, 2), 'CENTER')))
+    )
+    )
+
+    subst_table = table_from_data(
+        data=table_substances, isBlend=False,
+        header=TABLE_PROD_HEADER,
+        colWidths=TABLE_PROD_WIDTH,
+        style=style(table_substances)+TABLE_PROD_HEADER_STYLE,
+        repeatRows=2, emptyData=TABLE_ROW_EMPTY_PROD
+    )
+
+    fii_table = table_from_data(
+        data=table_substances_fii, isBlend=False,
+        header=TABLE_PROD_HEADER_FII,
+        colWidths=TABLE_PROD_WIDTH,
+        style=style(table_substances_fii)+TABLE_PROD_HEADER_STYLE_FII,
+        repeatRows=2, emptyData=TABLE_ROW_EMPTY_PROD
+    )
+
     prod_page = (
         Paragraph(_('3.1 Substances'), STYLES['Heading2']),
-        table_from_data(table_substances),
+        subst_table,
         PageBreak(),
         Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
-        table_from_data(table_substances_fii),
+        fii_table,
         PageBreak()
     )
 
