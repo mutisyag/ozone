@@ -177,7 +177,8 @@ export default {
 	},
 	methods: {
 		updateBreadcrumbs() {
-			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('version')} ${this.$store.state.current_submission.version}`])
+			console.log('in update breadcrumbs', this.labels, this.labels[this.$route.name])
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
 		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
@@ -236,8 +237,8 @@ export default {
 	watch: {
 		'$language.current': {
 			handler() {
-				this.updateBreadcrumbs()
 				this.labels = getLabels(this.$gettext).common
+				this.updateBreadcrumbs()
 			}
 		}
 	},
