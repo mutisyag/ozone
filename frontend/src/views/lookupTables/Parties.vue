@@ -150,27 +150,28 @@ export default {
 					if (!ratification.treaty) {
 						return
 					}
+					const ratificationHtml = formatRatificationHtml(ratification, this.$language.current)
 					switch (ratification.treaty.treaty_id) {
 					case 'VC':
-						party.vienna_convention = formatRatificationHtml(ratification, this.$language.current)
+						party.vienna_convention = ratificationHtml
 						break
 					case 'MP':
-						party.montreal_protocol = formatRatificationHtml(ratification, this.$language.current)
+						party.montreal_protocol = ratificationHtml
 						break
 					case 'LA':
-						party.london_amendment = formatRatificationHtml(ratification, this.$language.current)
+						party.london_amendment = ratificationHtml
 						break
 					case 'CA':
-						party.copenhagen_amendment = formatRatificationHtml(ratification, this.$language.current)
+						party.copenhagen_amendment = ratificationHtml
 						break
 					case 'MA':
-						party.montreal_amendment = formatRatificationHtml(ratification, this.$language.current)
+						party.montreal_amendment = ratificationHtml
 						break
 					case 'BA':
-						party.beijing_amendment = formatRatificationHtml(ratification, this.$language.current)
+						party.beijing_amendment = ratificationHtml
 						break
 					case 'KA':
-						party.kigali_amendment = formatRatificationHtml(ratification, this.$language.current)
+						party.kigali_amendment = ratificationHtml
 						break
 					default:
 						break
