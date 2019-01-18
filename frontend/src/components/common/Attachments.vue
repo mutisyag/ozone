@@ -5,7 +5,7 @@
 			<b-list-group-item>
 				<div class="row">
 					<div class="col-10">
-						<b-form-file :multiple="true" ref="fileinput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain />
+						<b-form-file :disabled="$store.getters.can_upload_files" :multiple="true" ref="fileinput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain />
 					</div>
 					<div class="col-2">
 						<b-button v-if="attachments.length" variant="danger" class="pull-right" @click="deleteAllAttachments()">

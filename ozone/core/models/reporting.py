@@ -393,10 +393,13 @@ class Submission(models.Model):
         List of transitions that can be performed from current state.
 
         """
+        # Simply avoid needless processing
+        if user.is_read_only:
+            return []
 
         transitions = []
         wf = self.workflow(user)
-        for transition in wf .state.transitions():
+        for transition in wf.state.transitions():
             if hasattr(wf, 'check_' + transition.name):
                 if getattr(wf, 'check_' + transition.name)():
                     transitions.append(transition.name)
@@ -455,6 +458,9 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
+        if user.is_read_only:
+            return []
+
         flags_list = []
         if user.is_secretariat:
             flags_list.extend([
@@ -502,6 +508,8 @@ class Submission(models.Model):
         return True
 
     def can_change_remark(self, user, field_name):
+        if user.is_read_only:
+            return False
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
@@ -545,9 +553,28 @@ class Submission(models.Model):
             return True
         return False
 
-    def check_reporting_channel(self, user):
+    def can_change_reporting_channel(self, user):
         if user.is_secretariat and self.filled_by_secretariat:
-            return True
+            return not user.is_read_only
+        return False
+
+    def check_has_submission_rights(self, user):
+        # TODO: use it in permissions.py!
+        if (
+            user.is_secretariat and self.filled_by_secretariat
+            or user.party is not None and user.party == self.party
+        ):
+            return not user.is_read_only
+        return False
+
+    def can_edit_data(self, user):
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
+        return False
+
+    def can_upload_files(self, user):
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
         return False
 
     @staticmethod

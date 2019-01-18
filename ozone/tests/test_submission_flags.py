@@ -1,9 +1,9 @@
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import Submission
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     AnotherPartyFactory,
@@ -22,7 +22,7 @@ NEW_VALUE = True
 OLD_VALUE = False
 
 
-class BaseFlagsTests(TestCase):
+class BaseFlagsTests(BaseTests):
     success_code = 200
     fail_code = 422
 
@@ -49,14 +49,6 @@ class BaseFlagsTests(TestCase):
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
@@ -115,7 +107,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
         if finalized:
             submission.call_transition("submit", self.secretariat_user)
             submission.save()
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         for field in fields_to_check:
             with self.subTest("Test update %s" % field):
@@ -125,9 +117,6 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                         kwargs={"submission_pk": submission.pk},
                     ),
                     {field: NEW_VALUE},
-                    "application/json",
-                    format="json",
-                    **headers,
                 )
                 self._check_result(result, expect_success, submission, field)
 
@@ -233,15 +222,13 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 class SubmissionRetrieveTest(BaseFlagsTests):
     def _check_flags_retrieve_data(self, user, owner):
         submission = self.create_submission(owner, **FLAGS_DATA)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
             reverse(
                 "core:submission-submission-flags-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.json(), [FLAGS_DATA])
 

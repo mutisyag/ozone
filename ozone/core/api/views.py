@@ -3,11 +3,13 @@ from collections import OrderedDict
 from copy import deepcopy
 from pathlib import Path
 import logging
+import urllib.parse
 import os
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -171,7 +173,9 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         if "submission_pk" in self.kwargs:
-            context['submission'] = Submission.objects.get(pk=self.kwargs["submission_pk"])
+            context['submission'] = Submission.objects.get(
+                pk=self.kwargs["submission_pk"]
+            )
         return context
 
 
@@ -294,15 +298,6 @@ class BlendViewSet(viewsets.ModelViewSet):
         if self.request.method in ["POST", "PUT", "PATCH"]:
             return CreateBlendSerializer
         return BlendSerializer
-
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        # TODO Move validation on Blend model
-        if instance.custom is False:
-            raise MethodNotAllowed(
-                _("Non custom blends cannot be modified.")
-            )
-        return super().update(request, *args, **kwargs)
 
 
 class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -482,8 +477,10 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubmissionFlagsViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
-                             GenericViewSet, SerializerRequestContextMixIn):
+class SubmissionFlagsViewSet(
+    mixins.UpdateModelMixin, mixins.ListModelMixin,
+    GenericViewSet, SerializerRequestContextMixIn
+):
     form_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
@@ -508,8 +505,10 @@ class SubmissionFlagsViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
         )
 
 
-class SubmissionRemarksViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
-                               GenericViewSet, SerializerRequestContextMixIn):
+class SubmissionRemarksViewSet(
+    mixins.UpdateModelMixin, mixins.ListModelMixin,
+    GenericViewSet, SerializerRequestContextMixIn
+):
     """
     list:
     Get the general remarks for this specific submission. These are in pairs for
@@ -573,8 +572,9 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7DestructionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                                 viewsets.ModelViewSet):
+class Article7DestructionViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7DestructionSerializer
     permission_classes = (
@@ -592,8 +592,9 @@ class Article7DestructionViewSet(BulkCreateUpdateMixin, SerializerDataContextMix
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ProductionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                                viewsets.ModelViewSet):
+class Article7ProductionViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7ProductionSerializer
     permission_classes = (
@@ -610,8 +611,9 @@ class Article7ProductionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixI
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ExportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                            viewsets.ModelViewSet):
+class Article7ExportViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7ExportSerializer
     permission_classes = (
@@ -628,8 +630,9 @@ class Article7ExportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7ImportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                            viewsets.ModelViewSet):
+class Article7ImportViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7ImportSerializer
     permission_classes = (
@@ -646,8 +649,9 @@ class Article7ImportViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                                   viewsets.ModelViewSet):
+class Article7NonPartyTradeViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (
@@ -664,8 +668,9 @@ class Article7NonPartyTradeViewSet(BulkCreateUpdateMixin, SerializerDataContextM
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class Article7EmissionViewSet(BulkCreateUpdateMixin, SerializerDataContextMixIn,
-                              viewsets.ModelViewSet):
+class Article7EmissionViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
     form_types = ("art7",)
     serializer_class = Article7EmissionSerializer
     permission_classes = (
@@ -738,6 +743,10 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 
 
 class SubmissionFileViewSet(viewsets.ModelViewSet):
+    """
+    download:
+    Download the submission file.
+    """
     form_types = None
     serializer_class = SubmissionFileSerializer
     permission_classes = (
@@ -748,6 +757,17 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
         return SubmissionFile.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+    @action(detail=True, methods=["get"])
+    def download(self, request, submission_pk=None, pk=None):
+        obj = self.get_object()
+        # We could try to guess the correct mime type here.
+        response = HttpResponse(
+            obj.file.read(), content_type="application/octet-stream"
+        )
+        file_name = urllib.parse.quote(obj.name)
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{file_name}"
+        return response
 
 
 class UploadHookViewSet(viewsets.ViewSet):
@@ -985,7 +1005,9 @@ class UploadHookViewSet(viewsets.ViewSet):
 class UploadTokenViewSet(viewsets.ModelViewSet):
     queryset = UploadToken.objects.all()
     serializer_class = UploadTokenSerializer
-    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,)
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+    )
 
     def create(self, request, submission_pk):
         """

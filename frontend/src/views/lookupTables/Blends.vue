@@ -45,7 +45,7 @@
 					head-variant="light"
 					stacked="md"
 					:items="visibleBlends"
-					:fields="table.fields"
+					:fields="tableFields"
 					:current-page="table.currentPage"
 					:per-page="table.perPage"
 					:sort-by.sync="table.sortBy"
@@ -68,7 +68,7 @@
 						head-variant="light"
 						stacked="md"
 						:items="row.item.components"
-						:fields="tableComponents.fields"
+						:fields="tableComponentsFields"
 						:current-page="tableComponents.currentPage"
 						:per-page="tableComponents.perPage"
 						ref="table">
@@ -100,17 +100,9 @@ export default {
 	components: {
 		Multiselect
 	},
-	computed: {
-		table() {
-			return {
-				fields: [{
-					key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
-				}, {
-					key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center'
-				}, {
-					key: 'components', label: this.$gettext('Components'), class: 'text-center'
-				}
-				],
+	data() {
+		return {
+			table: {
 				currentPage: 1,
 				perPage: Infinity,
 				filters: {
@@ -118,22 +110,32 @@ export default {
 					selectedComponentsNames: [],
 					isComponentsSortDirectionDesc: true
 				}
-			}
-		},
-		tableComponents() {
-			return {
-				fields: [{
-					key: 'component_name', label: this.$gettext('Name'), class: 'text-center'
-				}, {
-					key: 'percentage',
-					label: this.$gettext('Percentage'),
-					class: 'text-center',
-					formatter: (value) => `${(value * 100).toFixed(2)}%`
-				}
-				],
+			},
+			tableComponents: {
 				currentPage: 1,
 				perPage: Infinity
 			}
+		}
+	},
+	computed: {
+		tableFields() {
+			return [{
+				key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
+			}, {
+				key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center'
+			}, {
+				key: 'components', label: this.$gettext('Components'), class: 'text-center'
+			}]
+		},
+		tableComponentsFields() {
+			return [{
+				key: 'component_name', label: this.$gettext('Name'), class: 'text-center'
+			}, {
+				key: 'percentage',
+				label: this.$gettext('Percentage'),
+				class: 'text-center',
+				formatter: (value) => `${(value * 100).toFixed(2)}%`
+			}]
 		},
 		isDisabledClearFilters() {
 			const { filters } = this.table
@@ -187,6 +189,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Blends')])
+		},
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
@@ -210,11 +215,18 @@ export default {
 			filters.selectedComponentsNames = []
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
+	},
 	created() {
 		// No need to filter by party here, the API will list all
 		// the available blends for this user
 		this.$store.dispatch('getCustomBlends', { party: undefined })
-		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Blends'])
+		this.updateBreadcrumbs()
 	}
 }
 </script>
