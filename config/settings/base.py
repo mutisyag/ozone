@@ -337,3 +337,13 @@ LANGUAGES = (
     ('ru', 'Русский'),
     ('es', 'Español'),
 )
+
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn="https://%s@sentry.io/1374535" % SENTRY_DSN,
+        integrations=[DjangoIntegration()]
+    )
