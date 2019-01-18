@@ -1,10 +1,8 @@
-import json
-
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -59,15 +57,6 @@ class BaseDataRemarksTestsMixIn(object):
         )
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
-
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
@@ -125,7 +114,7 @@ class BaseDataCreateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
         field = "remarks_%s" % field
 
         submission = self.create_submission(owner)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         data = dict(self.api_data)
         if not self.no_substance:
@@ -135,9 +124,6 @@ class BaseDataCreateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
         result = self.client.post(
             reverse(self.api, kwargs={"submission_pk": submission.pk}),
             data,
-            "application/json",
-            format="json",
-            **headers,
         )
 
         self._check_result(result, expect_success)
@@ -168,91 +154,88 @@ class BaseDataUpdateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
             data["substance"] = self.substance.id
         data[field] = "Some random remark here."
 
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.put(
             reverse(self.api, kwargs={"submission_pk": submission.id}),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self._check_result(result, expect_success)
 
 
-class ImportDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class ImportDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-imports-list"
 
 
-class ImportDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class ImportDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-imports-list"
     factory_klass = ImportFactory
 
 
-class ExportDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class ExportDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-exports-list"
 
 
-class ExportDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class ExportDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-exports-list"
     factory_klass = ExportFactory
 
 
-class DestructionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class DestructionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-destructions-list"
 
 
-class DestructionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class DestructionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-destructions-list"
     factory_klass = DestructionFactory
 
 
-class ProductionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class ProductionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-productions-list"
 
 
-class ProductionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class ProductionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-productions-list"
     factory_klass = ProductionFactory
 
 
-class EmissionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class EmissionDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-emissions-list"
     api_data = {"facility_name": "Test Facility", "quantity_emitted": 10}
     no_substance = True
 
 
-class EmissionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class EmissionDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-emissions-list"
     api_data = {"facility_name": "Test Facility", "quantity_emitted": 10}
     factory_klass = EmissionFactory
     no_substance = True
 
 
-class NonPartyTradeDataCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class NonPartyTradeDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-nonpartytrades-list"
     api_data = {"quantity_import_new": 42}
 
 
-class NonPartyTradeDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class NonPartyTradeDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-article7-nonpartytrades-list"
     api_data = {"quantity_import_new": 42}
     factory_klass = NonPartyTradeFactory
 
 
-class HighAmbientTemperatureImportCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class HighAmbientTemperatureImportCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-imports-list"
 
 
-class HighAmbientTemperatureImportCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class HighAmbientTemperatureImportCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-imports-list"
     factory_klass = HighAmbientTemperatureImportFactory
 
 
-class HighAmbientTemperatureProductionCheckCreate(BaseDataCreateRemarksTestsMixIn, TestCase):
+class HighAmbientTemperatureProductionCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-productions-list"
 
 
-class HighAmbientTemperatureProductionCheckUpdate(BaseDataUpdateRemarksTestsMixIn, TestCase):
+class HighAmbientTemperatureProductionCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-productions-list"
     factory_klass = HighAmbientTemperatureProductionFactory

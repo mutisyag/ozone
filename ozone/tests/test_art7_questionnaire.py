@@ -1,12 +1,7 @@
-import json
-
 from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
-from ozone.core.models import Submission, SubmissionInfo
-
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -23,7 +18,7 @@ from .factories import (
 )
 
 
-class BaseQuestionnaireSubmissionTest(TestCase):
+class BaseQuestionnaireSubmissionTest(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -39,20 +34,10 @@ class BaseQuestionnaireSubmissionTest(TestCase):
         self.secretariat_user = SecretariatUserFactory(
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
-        self.party_user = ReporterUserFactory(
-            party=self.party,
-            password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
@@ -72,13 +57,9 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         art7question = Article7QuestionnaireFactory.create(
             submission=submission, has_imports=True,
         )
-
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
         resp = self.client.get(
             reverse("core:submission-article7-questionnaire-detail",
                     kwargs={"submission_pk": submission.pk, "pk": art7question.pk}),
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["has_imports"], True)
@@ -94,13 +75,10 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
             'has_nonparty': False,
             'has_produced': False,
         }
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
         resp = self.client.post(
             reverse("core:submission-article7-questionnaire-list",
                     kwargs={"submission_pk": submission.pk}),
             data,
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 201)
         submission.refresh_from_db()
@@ -120,14 +98,10 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
             'has_nonparty': False,
             'has_produced': False,
         }
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
         resp = self.client.put(
             reverse("core:submission-article7-questionnaire-detail",
                     kwargs={"submission_pk": submission.pk, "pk": art7question.pk}),
-            json.dumps(data),
-            "application/json",
-            format="json",
-            **headers,
+            data,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.json()["has_imports"], True)
@@ -150,13 +124,9 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
             'has_nonparty': False,
             'has_produced': False,
         }
-        headers = self.get_authorization_header(self.secretariat_user, password="qwe123qwe")
         resp = self.client.put(
             reverse("core:submission-article7-questionnaire-detail",
                     kwargs={"submission_pk": submission.pk, "pk": art7question.pk}),
-            json.dumps(data),
-            "application/json",
-            format="json",
-            **headers,
+            data,
         )
         self.assertEqual(resp.status_code, 422)

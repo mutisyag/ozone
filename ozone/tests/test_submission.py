@@ -1,18 +1,14 @@
-import json
-
 from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import Submission, SubmissionInfo
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
     ReportingPeriodFactory,
     ObligationFactory,
-    ReporterUserFactory,
     ReportingChannelFactory,
     SecretariatUserFactory,
     SubmissionFactory,
@@ -22,7 +18,7 @@ from .factories import (
 )
 
 
-class BaseSubmissionTest(TestCase):
+class BaseSubmissionTest(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -38,20 +34,10 @@ class BaseSubmissionTest(TestCase):
         self.secretariat_user = SecretariatUserFactory(
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
-        self.party_user = ReporterUserFactory(
-            party=self.party,
-            password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
@@ -66,10 +52,6 @@ class BaseSubmissionTest(TestCase):
 class TestSubmissionMethods(BaseSubmissionTest):
     """Basic Submission API tests."""
     def test_create(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
-
         data = {
             "reporting_period": self.period.id,
             "party": self.party.id,
@@ -77,10 +59,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         }
         result = self.client.post(
             reverse("core:submission-list"),
-            json.dumps(data),
-            "application/json",
-            format="json",
-            **headers,
+            data,
         )
         self.assertEqual(result.status_code, 201, result.json())
         submission = Submission.objects.get(pk=result.json()["id"])
@@ -92,10 +71,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
         """A SubmissionInfo should be automatically generated for
         a new submission.
         """
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
-
         data = {
             "reporting_period": self.period.id,
             "party": self.party.id,
@@ -103,39 +78,26 @@ class TestSubmissionMethods(BaseSubmissionTest):
         }
         result = self.client.post(
             reverse("core:submission-list"),
-            json.dumps(data),
-            "application/json",
-            format="json",
-            **headers,
+            data,
         )
         self.assertEqual(result.status_code, 201, result.json())
         submission = Submission.objects.get(pk=result.json()["id"])
         self.assertTrue(submission.info)
 
     def test_get(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
 
         result = self.client.get(
             reverse("core:submission-detail", kwargs={"pk": submission.id}),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.json()['party'], self.party.id)
 
     def test_delete(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
 
         result = self.client.delete(
             reverse("core:submission-detail", kwargs={"pk": submission.id}),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 204)
         with self.assertRaises(Submission.DoesNotExist):
@@ -145,41 +107,27 @@ class TestSubmissionMethods(BaseSubmissionTest):
             SubmissionInfo.objects.get(submission__id=submission.id)
 
     def test_update(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
 
         result = self.client.put(
             reverse("core:submission-detail", kwargs={"pk": submission.id}),
-            json.dumps({"party": self.another_party.id}),
-            "application/json",
-            format="json",
-            **headers,
+            {"party": self.another_party.id},
         )
         self.assertEqual(result.status_code, 200, result.json())
         submission = Submission.objects.get(pk=submission.id)
         self.assertEqual(submission.party, self.another_party)
 
     def test_list(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
 
         result = self.client.get(
             reverse("core:submission-list"),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1)
         self.assertEqual(result.json()[0]["id"], submission.id)
 
     def test_list_all_versions(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         submission.clone(self.secretariat_user)
@@ -187,8 +135,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
         result = self.client.get(
             reverse("core:submission-list"),
             {"ordering": "-updated_at"},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 2)
@@ -196,9 +142,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(result.json()[1]['version'], 1)
 
     def test_list_current_only(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
@@ -208,17 +151,12 @@ class TestSubmissionMethods(BaseSubmissionTest):
         result = self.client.get(
             reverse("core:submission-list"),
             {"ordering": "-updated_at", "is_current": True},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1)
         self.assertEqual(result.json()[0]['version'], 2)
 
     def test_list_superseded_only(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
@@ -228,17 +166,12 @@ class TestSubmissionMethods(BaseSubmissionTest):
         result = self.client.get(
             reverse("core:submission-list"),
             {"ordering": "-updated_at", "is_current": False},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1)
         self.assertEqual(result.json()[0]['version'], 1)
 
     def test_list_paginated(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         submission1 = self.create_submission()
         submission2 = self.create_submission(
             obligation=self.obligation, reporting_period=self.period,
@@ -247,8 +180,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
         result = self.client.get(
             reverse("core:submission-list"),
             {"page": 1, "page_size": 1, "ordering": "period"},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()['results']), 1)
@@ -257,8 +188,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
         result = self.client.get(
             reverse("core:submission-list"),
             {"page": 2, "page_size": 1, "ordering": "period"},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()['results']), 1)
@@ -269,15 +198,11 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission._current_state = "finalized"
         submission.save()
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.post(
             reverse(
                 "core:submission-clone",
                 kwargs={"pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
         new_id = result.json()['url'].split("/")[-2]
@@ -293,15 +218,12 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission.save()
         new_submission = submission.clone(self.secretariat_user)
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
         result = self.client.get(
             reverse(
                 "core:submission-versions",
                 kwargs={"pk": new_submission.pk},
             ),
             {"ordering": "-version"},
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
         self.assertEqual(result.json()[0]['version'], 2)
@@ -315,13 +237,8 @@ class TestSubmissionMethods(BaseSubmissionTest):
             obj.history_user = self.secretariat_user
             obj.save()
 
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
         result = self.client.get(
             reverse("core:submission-history", kwargs={"pk": submission.id}),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200)
         submission.refresh_from_db()

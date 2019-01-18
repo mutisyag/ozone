@@ -5,11 +5,9 @@ from rest_framework.test import APIClient
 
 
 class BaseTests(TestCase):
+    """
+    Use APIClient instead of Django default Client to help us authenticate the
+    user easily. Also we can pass the data to HTTP call as a Python dictionary,
+    without the need to convert it into json.
+    """
     client_class = APIClient
-
-    def get_token(self, username, password):
-        resp = self.client.post(reverse("core:auth-token-list"), {
-            "username": username,
-            "password": password,
-        })
-        return resp.data['token']
