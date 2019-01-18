@@ -494,7 +494,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-								:disabled="$store.getters.can_edit_data"
+				:disabled="$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
@@ -595,13 +595,16 @@ export default {
 	},
 
 	created() {
-		const labels = getLabels(this.$gettext)
-		this.labels = {
-			...labels.common,
-			...labels[this.tab_info.name]
-		}
+		this.setLabels()
 	},
 	methods: {
+		setLabels() {
+			const labels = getLabels(this.$gettext)
+			this.labels = {
+				...labels.common,
+				...labels[this.tab_info.name]
+			}
+		},
 		formatQuantity(value) {
 			if (!value) return
 			if (typeof (value) === 'string') return value
@@ -839,6 +842,13 @@ export default {
 				return fields
 			}
 			return false
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.setLabels()
+			}
 		}
 	}
 }
