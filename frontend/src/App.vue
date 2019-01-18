@@ -40,7 +40,7 @@
 
 <script>
 
-import nav from '@/_nav'
+import { getNav } from '@/_nav'
 import {
 	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
@@ -68,7 +68,7 @@ export default {
 		return {
 			refCount: 0,
 			isLoading: false,
-			nav: nav.items
+			nav: getNav(this.$gettext)
 
 		}
 	},
@@ -89,6 +89,13 @@ export default {
 			} else if (this.refCount > 0) {
 				this.refCount -= 1
 				this.isLoading = (this.refCount > 0)
+			}
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.nav = getNav(this.$gettext)
 			}
 		}
 	},

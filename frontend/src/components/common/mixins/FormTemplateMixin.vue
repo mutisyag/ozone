@@ -23,7 +23,6 @@ export default {
 	data() {
 		return {
 			table: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add substances'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -37,7 +36,6 @@ export default {
 			},
 
 			tableBlends: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add blends'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -93,7 +91,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		tableItemsBlends() {
 			const tableFields = []
 			this.tab_info.form_fields.forEach(form_field => {
@@ -129,7 +132,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableBlendsEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add blends')
+		},
 		tableFields() {
 			const tableHeaders = []
 			const options = {}
@@ -174,10 +182,6 @@ export default {
 
 		isReadOnly() {
 			const { isReadOnly } = this.$store.getters
-			if (isReadOnly) {
-				this.table.emptyText = this.$gettext('There are no records to show')
-				this.tableBlends.emptyText = this.table.emptyText
-			}
 			return isReadOnly
 		}
 	},

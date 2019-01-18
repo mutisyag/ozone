@@ -103,6 +103,13 @@ export default {
 	},
 
 	methods: {
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.labels = getCommonLabels(this.$gettext)
+			}
+		}
 	}
 
 }
