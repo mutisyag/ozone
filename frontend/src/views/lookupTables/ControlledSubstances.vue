@@ -36,7 +36,7 @@
 						head-variant="light"
 						stacked="md"
 						:items="substances"
-						:fields="table.fields"
+						:fields="tableFields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
 						:filter="filterCallback"
@@ -54,9 +54,24 @@
 import './styles.css'
 
 export default {
+	data() {
+		return {
+			table: {
+				currentPage: 1,
+				perPage: Infinity,
+				sortBy: 'group_id',
+				sortDesc: false,
+				filters: {
+					searchGroup: null,
+					searchName: null,
+					searchFormula: null
+				}
+			}
+		}
+	},
 	computed: {
-		table() {
-			const fields = [{
+		tableFields() {
+			return [{
 				key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
 			}, {
 				key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
@@ -73,19 +88,6 @@ export default {
 			}, {
 				key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
 			}]
-
-			return {
-				fields,
-				currentPage: 1,
-				perPage: Infinity,
-				sortBy: 'group_id',
-				sortDesc: false,
-				filters: {
-					searchGroup: null,
-					searchName: null,
-					searchFormula: null
-				}
-			}
 		},
 		isDisabledClearFilters() {
 			const { filters } = this.table
@@ -117,6 +119,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Controlled substances')])
+		},
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
@@ -147,9 +152,15 @@ export default {
 			filters.searchFormula = null
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
+	},
 	created() {
 		this.$store.dispatch('getSubstances')
-		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Controlled substances'])
 	}
 }
 </script>

@@ -1,17 +1,17 @@
 <template>
 	<div v-if="history">
 		<b-table show-empty
-				 outlined
-				 bordered
-				 hover
-				 head-variant="light"
-				 stacked="md"
-				 :items="tableItems"
-				 :fields="table.fields"
-				 :sort-by.sync="table.sortBy"
-				 :sort-desc.sync="table.sortDesc"
-				 :sort-direction="table.sortDirection"
-				 ref="table"
+				outlined
+				bordered
+				hover
+				head-variant="light"
+				stacked="md"
+				:items="tableItems"
+				:fields="tableFields"
+				:sort-by.sync="table.sortBy"
+				:sort-desc.sync="table.sortDesc"
+				:sort-direction="table.sortDirection"
+				ref="table"
 		>
 		</b-table>
 	</div>
@@ -21,29 +21,12 @@
 export default {
 	props: {
 		history: Array,
-		currentVersion: Number,
+		currentVersion: Number
 	},
 
 	data() {
 		return {
 			table: {
-				fields: [
-					{
-						key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc', class: 'text-center'
-					},
-					{
-						key: 'updated_at', label: this.$gettext('Last Modified'), sortable: true, class: 'text-center'
-					},
-					{
-						key: 'current_state', label: this.$gettext('Current State'), sortable: true, sortDirection: 'desc', class: 'text-center'
-					},
-					{
-						key: 'flag_provisional', label: this.$gettext('Provisional'), sortable: true, sortDirection: 'desc', class: 'text-center'
-					},
-					{
-						key: 'flag_valid', label: this.$gettext('Valid'), sortable: true, class: 'text-center'
-					}
-				],
 				sortBy: null,
 				sortDesc: false,
 				sortDirection: 'asc',
@@ -67,6 +50,25 @@ export default {
 				})
 			})
 			return tableFields
+		},
+		tableFields() {
+			return [
+				{
+					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc', class: 'text-center'
+				},
+				{
+					key: 'updated_at', label: this.$gettext('Last Modified'), sortable: true, class: 'text-center'
+				},
+				{
+					key: 'current_state', label: this.$gettext('Current State'), sortable: true, sortDirection: 'desc', class: 'text-center'
+				},
+				{
+					key: 'flag_provisional', label: this.$gettext('Provisional'), sortable: true, sortDirection: 'desc', class: 'text-center'
+				},
+				{
+					key: 'flag_valid', label: this.$gettext('Valid'), sortable: true, class: 'text-center'
+				}
+			]
 		}
 	}
 }

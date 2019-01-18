@@ -63,7 +63,7 @@
 									stacked="md"
 									:filter="dataEntryTable.search"
 									:items="dataEntryTableItems"
-									:fields="dataEntryTable.fields"
+									:fields="dataEntryTableFields"
 									:per-page="dataEntryTable.perPage"
 									:current-page="dataEntryTable.currentPage"
 									ref="dataEntryTable"
@@ -126,7 +126,7 @@
                        head-variant="light"
                        stacked="md"
                        :items="tableItems"
-                       :fields="table.fields"
+                       :fields="tableFields"
                        :per-page="tableOptions.perPage"
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
@@ -209,51 +209,10 @@ export default {
 			},
 			labels: getCommonLabels(this.$gettext),
 			table: {
-				fields: [
-					{
-						key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-					},
-					{
-						key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'current_state', label: this.$gettext('State'), sortable: true
-					},
-					{
-						key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-					},
-					{ key: 'actions', label: this.$gettext('Actions') }
-				],
 				pageOptions: [10, 25, 100]
 			},
 			tableOptionsCurrentPageWasSetFromWatcher: false,
 			dataEntryTable: {
-				fields: [
-					{
-						key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-					},
-					{
-						key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-					},
-					{
-						key: 'actions', label: this.$gettext('Actions')
-					}
-				],
 				currentPage: 1,
 				perPage: 10,
 				totalRows: 0,
@@ -280,7 +239,7 @@ export default {
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
 		this.$store.dispatch('getMyCurrentUser')
-		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
+		this.updateBreadcrumbs()
 	},
 
 	components: {
@@ -326,7 +285,29 @@ export default {
 			}
 			return tableFields
 		},
-
+		tableFields() {
+			return [
+				{
+					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+				},
+				{
+					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'current_state', label: this.$gettext('State'), sortable: true
+				},
+				{
+					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+				},
+				{ key: 'actions', label: this.$gettext('Actions') }
+			]
+		},
 		dataEntryTableItems() {
 			const tableFields = []
 			const { filters } = this.dataEntryTable
@@ -349,7 +330,28 @@ export default {
 			}
 			return tableFields
 		},
-
+		dataEntryTableFields() {
+			return [
+				{
+					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+				},
+				{
+					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+				},
+				{
+					key: 'actions', label: this.$gettext('Actions')
+				}
+			]
+		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
@@ -440,6 +442,9 @@ export default {
 	},
 
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
+		},
 		addSubmission() {
 			this.$store.dispatch('addSubmission', {
 				$gettext: this.$gettext,
@@ -504,10 +509,14 @@ export default {
 			this.dataEntryTable.totalRows = filteredItems.length
 			this.dataEntryTable.currentPage = 1
 		}
-
 	},
 
 	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		},
 		'tableOptions.filters': {
 			handler() {
 				if (this.tableOptions.currentPage !== 1) {

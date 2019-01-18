@@ -126,9 +126,8 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		this.updateBreadcrumbs()
 	},
-
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
@@ -150,6 +149,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
 			const formName = this.$route.name
@@ -192,6 +194,13 @@ export default {
 				}).then(() => {
 					this.$router.push({ name: 'Dashboard' })
 				})
+			}
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
 			}
 		}
 	},
