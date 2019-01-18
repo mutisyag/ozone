@@ -545,9 +545,28 @@ class Submission(models.Model):
             return True
         return False
 
-    def check_reporting_channel(self, user):
+    def can_change_reporting_channel(self, user):
         if user.is_secretariat and self.filled_by_secretariat:
             return True
+        return False
+
+    def check_has_submission_rights(self, user):
+        # TODO: use it in permissions.py!
+        if (
+            user.is_secretariat and self.filled_by_secretariat
+            or user.party is not None and user.party == self.party
+        ):
+            return not user.is_read_only
+        return False
+
+    def can_edit_data(self, user):
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
+        return False
+
+    def can_upload_files(self, user):
+        if self.check_has_submission_rights(user):
+            return self.data_changes_allowed
         return False
 
     @staticmethod
