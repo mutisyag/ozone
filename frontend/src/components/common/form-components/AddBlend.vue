@@ -14,9 +14,7 @@
 						:multiple="true"
 						@input="new_blend = null; selected_blends.selected = []"
 						v-model="selected_blends.filter"
-						placeholder=""
-						:options="selected_blends.filters"
-					></multiselect>
+						:options="selected_blends.filters" />
 				</b-input-group>
 
 				<div class="mt-2 mb-2" style="display: flex;">
@@ -30,7 +28,6 @@
 							label="text"
 							v-model="selected_blends.selected"
 							@input="new_blend = null"
-							placeholder=""
 							:options="filteredBlends" />
 					</b-input-group>
 
@@ -96,8 +93,8 @@
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
-						tag-placeholder="Press enter to use a new substance"
-						placeholder="Controlled or new substance"
+						:tag-placeholder="$gettext('Press enter to use a new substance')"
+						:placeholder="$gettext('Controlled or new substance')"
 						v-model="substance.name"
 						:options="substances" />
 					<b-input-group-append>

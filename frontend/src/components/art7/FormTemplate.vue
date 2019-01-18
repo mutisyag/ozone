@@ -494,7 +494,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-								:disabled="$store.getters.can_edit_data"
+				:disabled="$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
