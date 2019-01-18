@@ -200,6 +200,17 @@ export default {
 			}
 		},
 
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				return this.$store.getters.can_change_remarks_party
+			}
+			if (['secretariat', 'os'].includes(type)) {
+				return this.$store.getters.can_change_remarks_secretariat
+			}
+		},
+
 		getGroupBySubstance(value) {
 			return this.tab_data.substances.find(g => value === g.value).group.group_id
 		},

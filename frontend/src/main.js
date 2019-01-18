@@ -1,3 +1,4 @@
+import 'core-js/es6'
 import VueCookies from 'vue-cookies'
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
