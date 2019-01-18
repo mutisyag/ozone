@@ -296,15 +296,6 @@ class BlendViewSet(viewsets.ModelViewSet):
             return CreateBlendSerializer
         return BlendSerializer
 
-    def update(self, request, *args, **kwargs):
-        instance = self.get_object()
-        # TODO Move validation on Blend model
-        if instance.custom is False:
-            raise MethodNotAllowed(
-                _("Non custom blends cannot be modified.")
-            )
-        return super().update(request, *args, **kwargs)
-
 
 class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
