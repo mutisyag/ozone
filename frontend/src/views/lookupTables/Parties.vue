@@ -186,6 +186,10 @@ export default {
 		}
 	},
 	created() {
+		const body = document.querySelector('body')
+		if (body.classList.contains('aside-menu-lg-show')) {
+			document.querySelector('body').classList.remove('aside-menu-lg-show')
+		}
 		this.$store.dispatch('getPartyRatifications')
 	}
 }
