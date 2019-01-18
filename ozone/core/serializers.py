@@ -829,6 +829,29 @@ class SubmissionFlagsSerializer(
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
     """
+    per_type_fields = {
+        'art7': (
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+            'flag_has_reported_a1', 'flag_has_reported_a2',
+            'flag_has_reported_b1', 'flag_has_reported_b2',
+            'flag_has_reported_b3', 'flag_has_reported_c1',
+            'flag_has_reported_c2', 'flag_has_reported_c3',
+            'flag_has_reported_e', 'flag_has_reported_f',
+        ),
+        'hat7': (
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+        ),
+        'essencrit': (
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+        ),
+        'other': (
+            'flag_provisional', 'flag_valid', 'flag_superseded',
+        )
+    }
+
     class Meta:
         model = Submission
         fields = (
@@ -840,7 +863,15 @@ class SubmissionFlagsSerializer(
             'flag_has_reported_c2', 'flag_has_reported_c3',
             'flag_has_reported_e', 'flag_has_reported_f',
         )
-        
+
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        try:
+            per_type = self.per_type_fields[instance.obligation.form_type]
+        except KeyError:
+            return result
+        return {flag: result[flag] for flag in per_type}
+
     def update(self, instance, validated_data):
         """
         Not really kosher to perform validations here, but we need to
