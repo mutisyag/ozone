@@ -25,7 +25,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
 
-from ..exceptions import InvalidRequest, MethodNotAllowed
+from ..exceptions import InvalidRequest
 
 from ..models import (
     Region,
