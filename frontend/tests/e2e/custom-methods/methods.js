@@ -41,6 +41,7 @@ const createSubmission = (browser) => {
 		.click('//div[@id="period_selector"]//ul//li//span//span[contains(text(),"2018")]')
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
+		.waitForElementVisible('//div[@class="toasted bulma success"]', 5000)
 }
 
 const clickQuestionnaireRadios = (browser) => {
@@ -57,18 +58,56 @@ const clickQuestionnaireRadios = (browser) => {
 	}
 }
 
-const selectTab = (browser, tab) => {
+const selectTab = (browser, tab_title) => {
 	browser
 		.execute('window.scrollTo(0,0)')
 		.useXpath()
-		.click(`//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), '${tab}')]`)
+		.click(`//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), '${tab_title}')]`)
 		.useCss()
-		.waitForElementVisible('.aside-menu', 10000)
+}
+
+const addEntity = (browser, tab, entities_type, selector_id, option) => {
+	const aside_menu = `//div[@id='${tab}']//aside[@class='aside-menu']`
+	const aside_nav = `${aside_menu}//div[@class='tabs']//ul[@class='nav nav-tabs']`
+	const entities_selector = `${aside_menu}//div[@class='tabs']//div[@id='${selector_id}']`
+
+	// 'window.getComputedStyle(document.querySelector(\'#has_imports_tab .aside-menu .navbar-toggler-icon\'), \':before\').content === "\E916"'
+
+	// browser.execute(() => {
+	// 	if (getComputedStyle(document.querySelector('#has_imports_tab .aside-menu')).marginRight < 0) {
+	// 		browser
+	// 			.useXpath()
+	// 			.click(`${aside_menu}//button[@class='navbar-toggler']`)
+	// 	}
+	// })
+
+	// window.getComputedStyle(document.querySelector('#has_imports_tab .aside-menu .navbar-toggler-icon'), ':before')
+	browser.execute('getComputedStyle(document.querySelector(\'#has_imports_tab .aside-menu\')).marginRight', (result) => {
+		if (result < 0) {
+			browser
+				.useXpath()
+				.click(`${aside_menu}//button[@class='navbar-toggler']`)
+				.pause(1000)
+		}
+	})
+	browser
+		.useXpath()
+		.waitForElementVisible(`${aside_menu}//div[@class='tabs']`, 5000)
+		.click(`${aside_nav}//span[contains(text(), '${entities_type}')]`)
+		.pause(500)
+		.click(entities_selector)
+		.waitForElementVisible(`${entities_selector}//div[@class='multiselect__content-wrapper']`, 10000)
+		.click(`${entities_selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
+		.keys(browser.Keys.ESCAPE)
+		.click(`${aside_menu}//div[@class='tabs']//button[@class='btn add-button btn-primary']`)
+		.moveToElement(`${aside_menu}//button[@class='navbar-toggler']`, undefined, undefined)
+		.pause(500)
+		.click(`${aside_menu}//button[@class='navbar-toggler']`)
 }
 
 const addSubstance = (browser, select_id, option) => {
 	browser
-		.click('.aside-menu .tabs .nav-tabs li a')
+		.click('.form-wrapper .tab-content  .aside-menu .tabs .nav-tabs li a')
 		.click(`#${select_id} .multiselect`)
 		.waitForElementVisible(`#${select_id} .multiselect__content-wrapper`, 10000)
 		.useXpath()
@@ -116,7 +155,7 @@ const addValues = (browser, table, tab) => {
 		.assert.containsText(`${table} .validation-wrapper > span`, 'valid')
 	browser.execute(`document.querySelector("${table} tbody tr").classList.add("hovered")`, () => {
 		browser
-			.pause(5000)
+			.pause(500)
 			.click(`${table} tbody tr td .row-controls span:not(.table-btn)`)
 	})
 	browser
@@ -125,9 +164,10 @@ const addValues = (browser, table, tab) => {
 		.setValue(`${tab} .modal-body #quantity_feedstock`, 1)
 		.setValue(`${tab} .modal-body #quantity_critical_uses`, 1)
 		.setValue(`${tab} .modal-body #decision_critical_uses`, 'asd')
-		.pause(5000)
+		.pause(500)
 		.click(`${tab} .modal-dialog .close`)
 		.pause(500)
+		.useCss()
 }
 
 module.exports = {
@@ -136,6 +176,7 @@ module.exports = {
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
+	addEntity,
 	addSubstance,
 	addBlend,
 	addValues

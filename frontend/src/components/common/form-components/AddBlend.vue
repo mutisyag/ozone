@@ -67,7 +67,7 @@
 
 			<div v-if="!new_blend">
 				<h5><span v-translate>Add custom blend</span></h5>
-				<b-btn variant="primary" @click="addNewBlend"><span v-translate>Add new blend</span></b-btn>
+				<b-btn class="add-button" variant="primary" @click="addNewBlend"><span v-translate>Add new blend</span></b-btn>
 			</div>
 
 			<div v-if="new_blend">
