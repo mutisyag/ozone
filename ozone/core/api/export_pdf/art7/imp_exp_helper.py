@@ -1,18 +1,11 @@
-from ..constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
-from ..constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS
-from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
-from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
-from ..constants import TABLE_ROW_EMPTY_IMP_EXP
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantities
 from ..util import get_quantity_cell
 from ..util import get_substance_label
 from ..util import p_c
-from ..util import TABLE_STYLES
 
 from django.utils.translation import gettext_lazy as _
-from reportlab.platypus import Table
 
 
 def get_header(isBlend, type):
@@ -81,29 +74,4 @@ def component_row(component, blend):
         format(blend.quantity_total_recovered * ptg, '.2f'),
         format(blend.quantity_feedstock * ptg, '.3g'),
         str(q_sum) if q_sum != 0.0 else ''
-    )
-
-def table_from_data(data, isBlend, type):
-    header = get_header(isBlend, type=type)
-    col_widths = TABLE_IMPORTS_EXPORTS_BL_WIDTHS if isBlend \
-        else TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
-    style = (
-        TABLE_IMPORTS_EXPORTS_HEADER_STYLE + TABLE_STYLES + (
-            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
-        )
-    )
-
-    # Spanning all columns for the blend components rows
-    if isBlend:
-        rows = len(data) + 2
-        for row_idx in range(3, rows, 2):
-            style += (
-                ('SPAN', (0, row_idx), (-1, row_idx)),
-            )
-
-    return Table(
-        header + (data or TABLE_ROW_EMPTY_IMP_EXP),
-        colWidths=col_widths,
-        style=style,
-        repeatRows=2  # repeat header on page break
     )
