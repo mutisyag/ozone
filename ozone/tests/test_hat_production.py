@@ -19,6 +19,7 @@ from .factories import (
     SubstanceFactory,
     AnotherPartyFactory,
     HighAmbientTemperatureProductionFactory,
+    ObligationFactory,
 )
 
 
@@ -27,6 +28,7 @@ class BaseHATProductionTest(TestCase):
         super().setUp()
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type="hat")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -53,7 +55,7 @@ class BaseHATProductionTest(TestCase):
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=self.secretariat_user,
+            obligation=self.obligation, party=self.party, created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user, **kwargs
         )
         return submission

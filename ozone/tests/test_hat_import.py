@@ -10,6 +10,7 @@ from ozone.core.models import HighAmbientTemperatureImport, Submission
 
 from .factories import (
     PartyFactory,
+    ObligationFactory,
     RegionFactory,
     ReporterUserFactory,
     ReportingChannelFactory,
@@ -27,6 +28,7 @@ class BaseHATImportTest(TestCase):
         super().setUp()
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type="hat")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -53,7 +55,7 @@ class BaseHATImportTest(TestCase):
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=self.secretariat_user,
+            obligation=self.obligation, party=self.party, created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user, **kwargs
         )
         return submission
