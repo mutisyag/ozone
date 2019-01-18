@@ -10,7 +10,7 @@ from ..constants import TABLE_NONP_SUBS_WIDTHS
 from ..constants import TABLE_NONP_COMP_WIDTHS
 from ..constants import TABLE_NONP_COMP_HEADER
 from ..constants import TABLE_ROW_EMPTY_NONP
-from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
+from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
 from ..util import mk_table_blends
 from ..util import mk_table_substances
@@ -60,7 +60,7 @@ def export_nonparty(submission):
 
     style = lambda data: (
         TABLE_NONP_HEADER_STYLE + TABLE_STYLES + (
-            () if data else TABLE_ROW_EMPTY_STYLE_DEST
+            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
         )
     )
 
