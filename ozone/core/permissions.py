@@ -53,7 +53,9 @@ class BaseIsSecretariatOrSameParty(BasePermission):
 
 
 class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
-
+    """
+    This is used for evaluating permissions on Submission views.
+    """
     @staticmethod
     def has_same_party(request, view):
         if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
@@ -74,7 +76,10 @@ class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
 
 
 class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
-
+    """
+    This is used for evaluating permissions on Submission-related views (e.g.
+    Article 7 reports etc).
+    """
     @staticmethod
     def has_same_party(request, view):
         if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
@@ -91,7 +96,9 @@ class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
 
 
 class IsSecretariatOrSamePartyBlend(BaseIsSecretariatOrSameParty):
-
+    """
+    This is used for evaluating permissions on Blend views.
+    """
     @staticmethod
     def has_same_party(request, view):
         if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
