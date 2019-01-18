@@ -249,3 +249,50 @@ TABLE_NONP_HEADER_STYLE = (
 TABLE_NONP_SUBS_WIDTHS = col_widths([2, 3, 4, 2, 2, 2, 2, 4, 4])
 
 TABLE_NONP_COMP_WIDTHS = col_widths([4, 3, 3, 3, 3, 3])
+
+
+TABLE_EMISSIONS_HEADER = (
+    (
+        p_c(_('Facility name or identifier')),
+        p_c(_('Total amount generated')),
+        p_c(_('Amount generated and captured')),
+        '',
+        '',
+        p_c(_('Amount used for feedstock without prior capture')),
+        p_c(_('Amount destroyed without prior capture')),
+        p_c(_('Amount of generated emissions')),
+        p_c(_('Remarks (party)')),
+        p_c(_('Remarks (secretariat)')),
+    ),
+    (
+        '',
+        '',
+        p_c(_('For all uses')),
+        p_c(_('For feedstock use in your country')),
+        p_c(_('For Destruction')),
+        '',
+        '',
+        '',
+        '',
+        '',
+    )
+)
+
+TABLE_EMISSIONS_HEADER_STYLE = (
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('ALIGN', (0, 2), (7, -1), 'CENTER'),
+    ('SPAN', (0, 0), (0, 1)),
+    ('SPAN', (1, 0), (1, 1)),
+    ('SPAN', (2, 0), (4, 0)),
+    ('SPAN', (5, 0), (5, 1)),
+    ('SPAN', (6, 0), (6, 1)),
+    ('SPAN', (7, 0), (7, 1)),
+    ('SPAN', (8, 0), (8, 1)),
+    ('SPAN', (9, 0), (9, 1)),
+)
+
+TABLE_ROW_EMPTY_EMISSIONS = (
+    (_('No data.'), '', '', '', '', '', '', '', '', ''),
+)
