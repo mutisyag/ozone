@@ -137,7 +137,7 @@
                     <router-link
                         class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-                      <span v-translate v-if="row.item.details.data_changes_allowed && !currentUser.is_read_only">
+                      <span v-translate v-if="row.item.details.can_edit_data && !currentUser.is_read_only">
                         Edit
                       </span>
                       <span v-translate v-else>
@@ -167,7 +167,7 @@
                     <b-btn
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
-                        v-if="row.item.details.data_changes_allowed"
+                        v-if="row.item.details.can_edit_data"
 						:disabled="currentUser.is_read_only"
 						size="sm">
                       <span v-translate>Delete</span>
