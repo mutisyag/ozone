@@ -1,7 +1,5 @@
-import enum
 import os
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -558,8 +556,28 @@ class Submission(models.Model):
             return not user.is_read_only
         return False
 
-    def check_has_submission_rights(self, user):
-        # TODO: use it in permissions.py!
+    @staticmethod
+    def has_read_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return True
+        return False
+
+    def has_read_rights(self, user):
+        return self.has_read_rights_for_party(self.party, user)
+
+    @staticmethod
+    def has_create_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return not user.is_read_only
+        return False
+
+    def has_edit_rights(self, user):
         if (
             user.is_secretariat and self.filled_by_secretariat
             or user.party is not None and user.party == self.party
@@ -568,12 +586,12 @@ class Submission(models.Model):
         return False
 
     def can_edit_data(self, user):
-        if self.check_has_submission_rights(user):
+        if self.has_edit_rights(user):
             return self.data_changes_allowed
         return False
 
     def can_upload_files(self, user):
-        if self.check_has_submission_rights(user):
+        if self.has_edit_rights(user):
             return self.data_changes_allowed
         return False
 

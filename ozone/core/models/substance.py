@@ -242,6 +242,31 @@ class Blend(models.Model):
             for c in self.components.all() if c.substance
         ]
 
+    @staticmethod
+    def has_create_rights_for_party(party, user):
+        """
+        Returns True if `user` can create a custom blend associated with `party`
+        """
+        if party is None or user.is_read_only or user.party is None:
+            return False
+        return party == user.party
+
+    @staticmethod
+    def has_edit_rights_for_party(party, user):
+        """
+        Returns True if `user` can change a custom blend
+        associated with `party`.
+        """
+        if party is None or user.is_read_only or user.party is None:
+            return False
+        return party == user.party
+
+    def has_edit_rights(self, user):
+        """
+        Returns True if `user` can change composition of this custom blend
+        """
+        return self.has_edit_rights_for_party(self.party, user)
+
     def __str__(self):
         return self.blend_id
 
