@@ -10,11 +10,12 @@ from django.test.testcases import LiveServerThread
 from tusclient import client
 
 from django.urls import reverse
-from django.test import TestCase, LiveServerTestCase
+from django.test import LiveServerTestCase
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import Submission, SubmissionInfo
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -68,14 +69,6 @@ class BaseSubmissionTest(object):
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
 
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
-
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
             party=self.party,
@@ -86,41 +79,34 @@ class BaseSubmissionTest(object):
         return submission
 
 
-class TestToken(BaseSubmissionTest, TestCase):
+class TestToken(BaseSubmissionTest, BaseTests):
     def test_create_token_as_party(self):
         submission = self.create_submission()
-        headers = self.get_authorization_header(self.party_user.username, "qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse(
                 "core:submission-token-list", kwargs={"submission_pk": submission.pk}
             ),
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
 
     def test_create_token_as_party_wrong_party(self):
         submission = self.create_submission()
-        headers = self.get_authorization_header(
-            self.another_party_user.username, "qwe123qwe"
-        )
+        self.client.login(username=self.another_party_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse(
                 "core:submission-token-list", kwargs={"submission_pk": submission.pk}
             ),
-            **headers,
         )
         self.assertEqual(resp.status_code, 403)
 
     def test_create_token_as_secretariat(self):
         submission = self.create_submission()
-        headers = self.get_authorization_header(
-            self.secretariat_user.username, "qwe123qwe"
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse(
                 "core:submission-token-list", kwargs={"submission_pk": submission.pk}
             ),
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
 
