@@ -253,7 +253,7 @@ class TestDownloads(BaseSubmissionTest, TestCase):
             **headers
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data, submission_file.file.read())
+        self.assertEqual(resp.content, submission_file.file.read())
 
     def test_download_files_as_different_party(self):
         submission = self.create_submission()
@@ -282,7 +282,7 @@ class TestDownloads(BaseSubmissionTest, TestCase):
             **headers
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data, submission_file.file.read())
+        self.assertEqual(resp.content, submission_file.file.read())
 
     def test_download_files_nonascii(self):
         submission = self.create_submission()
@@ -297,4 +297,4 @@ class TestDownloads(BaseSubmissionTest, TestCase):
             **headers
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data, submission_file.file.read())
+        self.assertEqual(resp.content, submission_file.file.read())
