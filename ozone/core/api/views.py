@@ -3,11 +3,13 @@ from collections import OrderedDict
 from copy import deepcopy
 from pathlib import Path
 import logging
+import urllib.parse
 import os
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
 
@@ -696,6 +698,10 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 
 
 class SubmissionFileViewSet(viewsets.ModelViewSet):
+    """
+    download:
+    Download the submission file.
+    """
     serializer_class = SubmissionFileSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,)
 
@@ -703,6 +709,15 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
         return SubmissionFile.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+    @action(detail=True, methods=["get"])
+    def download(self, request, submission_pk=None, pk=None):
+        obj = self.get_object()
+        # We could try to guess the correct mime type here.
+        response = HttpResponse(obj.file.read(), content_type="application/octet-stream")
+        file_name = urllib.parse.quote(obj.name)
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{file_name}"
+        return response
 
 
 class UploadHookViewSet(viewsets.ViewSet):
