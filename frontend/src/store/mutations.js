@@ -49,6 +49,7 @@ const mutations = {
 		switch (formName) {
 		case 'art7':
 			currentFormStructure = getFormArt7($gettext)
+			console.log(currentFormStructure)
 			tableRowConstructor = art7TableRowConstructor
 			break
 		case 'hat':

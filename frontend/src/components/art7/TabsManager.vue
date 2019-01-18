@@ -33,9 +33,9 @@
 		<b-tabs v-model="tabIndex" card>
 			<b-tab :title="$gettext('Submission Info')" active>
 				<template slot="title">
-				<div class="tab-title">
-				<span v-translate>Submission Info</span>
-				</div>
+					<div class="tab-title">
+						<span v-translate>Submission Info</span>
+					</div>
 				</template>
 				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
 			</b-tab>
@@ -48,9 +48,9 @@
 			</b-tab>
 
 			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
-					<template slot="title">
+				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-					</template>
+				</template>
 				<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 			</b-tab>
 
@@ -236,6 +236,7 @@ export default {
 		'$language.current': {
 			handler() {
 				this.updateBreadcrumbs()
+				this.labels = getLabels(this.$gettext).common
 			}
 		}
 	},

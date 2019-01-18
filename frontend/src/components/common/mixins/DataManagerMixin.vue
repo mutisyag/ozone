@@ -90,7 +90,6 @@ export default {
 		}
 
 	},
-
 	methods: {
 
 		alertUnsavedData(e) {
@@ -172,6 +171,13 @@ export default {
 			this.$store.commit('setTabStatus', { tab: tabName, value: true })
 		}
 
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.$store.commit('setForm', { formName: this.currentFormName, $gettext: this.$gettext })
+			}
+		}
 	}
 }
 </script>

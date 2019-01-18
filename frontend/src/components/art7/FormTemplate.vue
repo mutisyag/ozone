@@ -83,7 +83,7 @@
 			id="substance-table"
 			:items="tableItems"
 			:fields="tableFields"
-			:empty-text="table.emptyText"
+			:empty-text="tableEmptyText"
 			:filter="table.filters.search"
 			ref="table">
 			<template
@@ -207,7 +207,7 @@
 			class="submission-table"
 			:items="tableItemsFII"
 			:fields="tableFieldsFII"
-			:empty-text="tableFII.emptyText"
+			:empty-text="tableFIIEmptyText"
 			:filter="tableFII.filters.search"
 			ref="tableFII">
 			<template
@@ -328,7 +328,7 @@
 			id="blend-table"
 			:items="tableItemsBlends"
 			:fields="tableFieldsBlends"
-			:empty-text="tableBlends.emptyText"
+			:empty-text="tableBlendsEmptyText"
 			:filter="tableBlends.filters.search"
 			ref="tableBlends">
 			<template slot="blend" slot-scope="cell">
@@ -574,7 +574,6 @@ export default {
 				destination_party: 'countries'
 			},
 			tableFII: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add substances'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -809,7 +808,9 @@ export default {
 			})
 			return tableHeaders
 		},
-
+		tableFIIEmptyText() {
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		getTabSpecialInputFields() {
 			return intersect(this.tab_info.special_fields_order, inputFields)
 		},
