@@ -78,6 +78,7 @@ export default {
 			return this.$route.name
 		},
 		list() {
+			console.log('list.......', this.$store.state.route)
 			return this.$store.state.route
 		}
 	},
