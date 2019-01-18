@@ -20,6 +20,8 @@ const getters = {
 			&& sub.current_state === 'data_entry'
 	),
 
+	getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
+
 	// to make the implementation easier, false = user has permission to do a certain action
 	can_edit_data: (state) => state.permissions.form && !state.permissions.form.can_edit_data,
 	can_change_remarks_party: (state) => state.permissions.form && !state.permissions.form.can_change_remarks_party,
