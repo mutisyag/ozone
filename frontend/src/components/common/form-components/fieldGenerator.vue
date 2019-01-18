@@ -7,6 +7,7 @@
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
 		<div v-else-if="field.type === 'select'">
 			<multiselect
+				:placeholder="$gettext('Select option')"
 				:multiple="false"
 				label="text"
 				trackBy="value"
