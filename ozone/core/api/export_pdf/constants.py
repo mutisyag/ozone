@@ -172,20 +172,46 @@ TABLE_DEST_HEADER = lambda isBlend: (
     ),
 )
 
-# TABLE_DEST_COMP_HEADER = (
-#     (
-#         p_c(_('Substances')),
-#         p_c(_('Percentage')),
-#         p_c(_('Quantity of imports from non-parties (new)')),
-#         p_c(_('Quantity of imports from non-parties (recovered)')),
-#         p_c(_('Quantity of exports from non-parties (new)')),
-#         p_c(_('Quantity of exports from non-parties (recovered)')),
-#     ),
-# )
+TABLE_NONP_COMP_HEADER = (
+    (
+        p_c(_('Substances')),
+        p_c(_('Percentage')),
+        p_c(_('Quantity of imports from non-parties (new)')),
+        p_c(_('Quantity of imports from non-parties (recovered)')),
+        p_c(_('Quantity of exports from non-parties (new)')),
+        p_c(_('Quantity of exports from non-parties (recovered)')),
+    ),
+)
 
 TABLE_DEST_WIDTH = list(map(lambda x: x * cm, [4, 3, 4, 6, 6]))
 
 TABLE_DEST_COMP_WIDTH = list(map(lambda x: x * cm, [6, 5, 6]))
+
+
+TABLE_NONP_HEADER = lambda isBlend: (
+        (
+            p_c(_('Type' if isBlend else 'Group')),
+            p_c(_('Blend' if isBlend else 'Substance')),
+            p_c(_('Exporting party for quantities reported as imports <b>OR</b> Country of destination of exports')),
+            p_c(_('Quantity of imports from non-parties')),
+            '',
+            p_c(_('Quantity of exports from non-parties')),
+            '',
+            p_c(_('Remarks (party)')),
+            p_c(_('Remarks (secretariat)')),
+        ),
+        (
+            '',
+            '',
+            '',
+            p_c(_('New imports')),
+            p_c(_('Recovered and reclaimed imports')),
+            p_c(_('New exports')),
+            p_c(_('Recovered and reclaimed exports')),
+            '',
+            '',
+        )
+    )
 
 TABLE_ROW_EMPTY_NONP = ((_('No data.'), '', '', '', '', '', '', '', ''),)
 
