@@ -31,37 +31,37 @@
   <div class="form-wrapper" style="position: relative">
 	<b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
-			<b-tab :title="$gettext('Submission Info')" active>
+			<b-tab :title="$gettext('Submission Info')" active :title-link-class="submissionInfoLabel > 0 ? {} : null">
 				<template slot="title">
 					<div class="tab-title">
-						<span v-translate>Submission Info</span>
+						<span>{{submissionInfoLabel}}</span>
 					</div>
 				</template>
 				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
 			</b-tab>
 
-			<b-tab :title="$gettext('Questionaire')">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-			</template>
-			<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+			<b-tab :title="$gettext('Questionaire')" :title-link-class="submissionInfoLabel> 0 ? {} : null">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+				</template>
+				<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
 			</b-tab>
 
-			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
+			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId" :title-link-class="submissionInfoLabel> 0 ? {} : null">
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
 				</template>
 				<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 			</b-tab>
 
-			<b-tab :disabled="selectedDisplayTabs.has_emissions === null">
+			<b-tab :disabled="selectedDisplayTabs.has_emissions === null" :title-link-class="submissionInfoLabel> 0 ? {} : null">
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
 				</template>
 				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
 			</b-tab>
 
-			<b-tab>
+			<b-tab :title-link-class="submissionInfoLabel> 0 ? {} : null">
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
 				</template>
@@ -144,6 +144,9 @@ export default {
 	},
 
 	computed: {
+		submissionInfoLabel() {
+			return this.$gettext('Submission Info')
+		},
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
 		},
