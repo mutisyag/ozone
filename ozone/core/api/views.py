@@ -48,7 +48,6 @@ from ..models import (
     Group,
     Substance,
     Blend,
-    ReportingChannel,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -459,13 +458,15 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
 
     def put(self, request, *args, **kwargs):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
-        reporting_channel_name = request.data.get('reporting_channel')
-        if reporting_channel_name:
-            reporting_channel_id = ReportingChannel.objects.get(
-                name=reporting_channel_name
-            ).pk
-            request.data['reporting_channel'] = reporting_channel_id
-        serializer = UpdateSubmissionInfoSerializer(info, data=request.data)
+        reporting_channel = request.data.get('reporting_channel')
+        serializer = UpdateSubmissionInfoSerializer(
+            info,
+            data=request.data,
+            context={
+                'reporting_channel': reporting_channel,
+                'request': request
+            }
+        )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -886,7 +887,7 @@ class UploadHookViewSet(viewsets.ViewSet):
             file_info_path.unlink()
 
         except UploadToken.DoesNotExist:
-            log.error(f'UPLOAD denied for "{token.user}": INVALID TOKEN')
+            log.error(f'UPLOAD denied for "{tok}": INVALID TOKEN')
             return Response(
                 {'error': 'invalid token'},
                 status=status.HTTP_400_BAD_REQUEST

@@ -277,7 +277,7 @@
           v-for="comment_field in ['remarks_os','remarks_party']"
           :key="comment_field">
           <b-col lg="3">
-            <span v-translate>{{labels[comment_field]}}</span>
+            <span>{{labels[comment_field]}}</span>
           </b-col>
           <b-col lg="9">
             <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>

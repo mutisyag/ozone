@@ -100,9 +100,9 @@ export default {
 	components: {
 		Multiselect
 	},
-	data() {
-		return {
-			table: {
+	computed: {
+		table() {
+			return {
 				fields: [{
 					key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
 				}, {
@@ -118,8 +118,10 @@ export default {
 					selectedComponentsNames: [],
 					isComponentsSortDirectionDesc: true
 				}
-			},
-			tableComponents: {
+			}
+		},
+		tableComponents() {
+			return {
 				fields: [{
 					key: 'component_name', label: this.$gettext('Name'), class: 'text-center'
 				}, {
@@ -132,9 +134,7 @@ export default {
 				currentPage: 1,
 				perPage: Infinity
 			}
-		}
-	},
-	computed: {
+		},
 		isDisabledClearFilters() {
 			const { filters } = this.table
 			return !filters.searchName && !filters.selectedComponentsNames
@@ -213,7 +213,7 @@ export default {
 	created() {
 		// No need to filter by party here, the API will list all
 		// the available blends for this user
-		this.$store.dispatch('getCustomBlends', {party: undefined})
+		this.$store.dispatch('getCustomBlends', { party: undefined })
 		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Blends'])
 	}
 }
