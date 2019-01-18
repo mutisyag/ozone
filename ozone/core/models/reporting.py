@@ -393,6 +393,8 @@ class Submission(models.Model):
         List of transitions that can be performed from current state.
 
         """
+        if user.is_read_only:
+            return []
 
         transitions = []
         wf = self.workflow(user)
@@ -412,6 +414,13 @@ class Submission(models.Model):
         entire instance!
 
         """
+        if user.is_read_only:
+            raise TransitionNotAvailable(
+                _(
+                    "You do not have the necessary permissions"
+                )
+            )
+
         # Call this now so we don't recreate the self.workflow object ad nauseam
         workflow = self.workflow(user)
 
@@ -455,6 +464,9 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
+        if user.is_read_only:
+            return []
+
         flags_list = []
         if user.is_secretariat:
             flags_list.extend([
@@ -502,6 +514,8 @@ class Submission(models.Model):
         return True
 
     def can_change_remark(self, user, field_name):
+        if user.is_read_only:
+            return False
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
@@ -547,7 +561,7 @@ class Submission(models.Model):
 
     def can_change_reporting_channel(self, user):
         if user.is_secretariat and self.filled_by_secretariat:
-            return True
+            return not user.is_read_only
         return False
 
     def check_has_submission_rights(self, user):
