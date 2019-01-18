@@ -54,7 +54,7 @@ TABLE_ROW_EMPTY_STYLE_IMP_EXP = (
 )
 
 TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS = list(
-    map(lambda x: x * cm, [1.3, 2.1, 4, 2, 2, 2, 7, 7])
+    map(lambda x: x * cm, [1.3, 3, 5, 2, 2, 2, 6, 6])
 )
 
 TABLE_IMPORTS_EXPORTS_BL_WIDTHS = list(

@@ -5,6 +5,8 @@ from ..util import get_quantity_cell
 from ..util import get_substance_label
 from ..util import p_c
 
+from django.utils.translation import gettext_lazy as _
+
 
 def big_table_row(obj, isBlend):
     col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
@@ -22,11 +24,11 @@ def big_table_row(obj, isBlend):
         obj.destination_party.name if obj.destination_party else ""
 
     return (
-        col_1,
-        col_2,
-        party,
-        obj.quantity_total_new,
-        obj.quantity_total_recovered,
+        p_c(_(col_1)),
+        p_c(_(col_2)),
+        p_c(_(party)),
+        p_c(str(obj.quantity_total_new or '')),
+        p_c(str(obj.quantity_total_recovered or '')),
         obj.quantity_feedstock,
         q_cell,
         (d_label,)
