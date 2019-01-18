@@ -1,9 +1,8 @@
 from .util import p_c
+from .util import col_widths
 
 from django.utils.translation import gettext_lazy as _
-
 from reportlab.lib import colors
-from reportlab.lib.units import cm
 
 
 TABLE_IMPORTS_EXPORTS_HEADER = lambda isBlend, type: (
@@ -53,14 +52,9 @@ TABLE_ROW_EMPTY_STYLE_IMP_EXP = (
     ('ALIGN', (0, 2), (-1, 2), 'CENTER'),
 )
 
-TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS = list(
-    map(lambda x: x * cm, [1.3, 3, 5, 2, 2, 2, 6, 6])
-)
+TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS = col_widths([1.3, 3, 5, 2, 2, 2, 6, 6])
 
-TABLE_IMPORTS_EXPORTS_BL_WIDTHS = list(
-    map(lambda x: x * cm, [3, 3, 3, 2, 2, 2, 6, 6])
-)
-
+TABLE_IMPORTS_EXPORTS_BL_WIDTHS = col_widths([3, 3, 3, 2, 2, 2, 6, 6])
 
 TABLE_BLENDS_COMP_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
@@ -70,9 +64,7 @@ TABLE_BLENDS_COMP_STYLE = (
     ('TOPPADDING', (0, 0), (-1, 0), 10),
 )
 
-TABLE_BLENDS_COMP_WIDTHS = list(
-    map(lambda x: x * cm, [4, 4, 4, 4, 4, 6])
-)
+TABLE_BLENDS_COMP_WIDTHS = col_widths([4, 4, 4, 4, 4, 6])
 
 TABLE_BLENDS_COMP_HEADER = (
     (
@@ -134,8 +126,8 @@ TABLE_PROD_HEADER_FII = (
     ),
 )
 
-TABLE_PROD_WIDTH = list(map(lambda x: x * cm, [1.3, 4, 2, 2, 7, 7, 4]))
-
+TABLE_PROD_WIDTH = col_widths([1.3, 4, 2, 2, 7, 7, 4])
+    
 TABLE_PROD_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
@@ -208,9 +200,9 @@ TABLE_NONP_COMP_HEADER = (
     ),
 )
 
-TABLE_DEST_WIDTH = list(map(lambda x: x * cm, [4, 3, 4, 6, 6]))
+TABLE_DEST_WIDTH = col_widths([4, 3, 4, 6, 6])
 
-TABLE_DEST_COMP_WIDTH = list(map(lambda x: x * cm, [6, 5, 6]))
+TABLE_DEST_COMP_WIDTH = col_widths([6, 5, 6])
 
 
 TABLE_NONP_HEADER = lambda isBlend: (
@@ -255,12 +247,6 @@ TABLE_NONP_HEADER_STYLE = (
     ('SPAN', (8, 0), (8, 1)),
 )
 
-TABLE_NONP_SUBS_WIDTHS = list(
-    map(lambda x: x * cm, [2, 3, 4, 2, 2, 2, 2, 4, 4])
-)
+TABLE_NONP_SUBS_WIDTHS = col_widths([2, 3, 4, 2, 2, 2, 2, 4, 4])
 
-TABLE_NONP_COMP_WIDTHS = list(
-    map(lambda x: x * cm, [4, 3, 3, 3, 3, 3])
-)
-
-
+TABLE_NONP_COMP_WIDTHS = col_widths([4, 3, 3, 3, 3, 3])

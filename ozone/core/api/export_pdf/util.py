@@ -64,6 +64,10 @@ def page_title_section(title, explanatory):
     )
 
 
+def col_widths(w_list):
+    return list(map(lambda x: x * cm, w_list))
+
+
 BASIC_Q_TYPES = (
     'Essential use, other than L&amp;A',
     'Critical use',
