@@ -194,13 +194,12 @@ class TestListFiles(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-list",
                 kwargs={"submission_pk": submission.pk}
             ),
-            **headers
         )
         self.assertEqual(len(resp.json()), 1)
         self.assertEqual(resp.json()[0]['name'], submission_file.name)
@@ -209,13 +208,12 @@ class TestListFiles(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-list",
                 kwargs={"submission_pk": submission.pk}
             ),
-            **headers
         )
         self.assertEqual(len(resp.json()), 1)
         self.assertEqual(resp.json()[0]['name'], submission_file.name)
