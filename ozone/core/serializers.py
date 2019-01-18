@@ -822,8 +822,14 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.submission.reporting_channel, 'name', '')
 
 
+class PerTypeFieldsMixIn(object):
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        return {field: result[field] for field in self.per_type_fields[instance.obligation.form_type]}
+
+
 class SubmissionFlagsSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer,
 ):
     """
     Specific serializer used to present all submission flags as a nested
@@ -864,10 +870,6 @@ class SubmissionFlagsSerializer(
             'flag_has_reported_e', 'flag_has_reported_f',
         )
 
-    def to_representation(self, instance):
-        result = super().to_representation(instance)
-        return {field: result[field] for field in self.per_type_fields[instance.obligation.form_type]}
-
     def update(self, instance, validated_data):
         """
         Not really kosher to perform validations here, but we need to
@@ -882,7 +884,7 @@ class SubmissionFlagsSerializer(
 
 
 class SubmissionRemarksSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer
 ):
     """
     Specific serializer used to present all submission remarks,
@@ -919,10 +921,6 @@ class SubmissionRemarksSerializer(
             'hat_production_remarks_party',
             'hat_production_remarks_secretariat',
         )
-
-    def to_representation(self, instance):
-        result = super().to_representation(instance)
-        return {field: result[field] for field in self.per_type_fields[instance.obligation.form_type]}
 
     def update(self, instance, validated_data):
         """
