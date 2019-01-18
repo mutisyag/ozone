@@ -44,12 +44,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
         self.secretariat_user = SecretariatUserFactory(
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
     def test_create_submission(self):
         """
@@ -201,12 +196,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
         self.secretariat_user_ro = SecretariatUserROFactory(
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.secretariat_user_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
 
     def test_create_submission(self):
         """
@@ -355,12 +345,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter.username, password='qwe123qwe')
 
     def test_view_submission_same_party(self):
         """
@@ -562,12 +547,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
-        self.client.credentials(
-            HTTP_AUTHORIZATION='Token ' + self.get_token(
-                username=self.reporter_ro.username,
-                password='qwe123qwe'
-            )
-        )
+        self.client.login(username=self.reporter_ro.username, password='qwe123qwe')
 
     def test_view_submission_same_party(self):
         """

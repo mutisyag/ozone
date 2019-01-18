@@ -1,13 +1,9 @@
-import json
-import unittest
-
 from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
-from ozone.core.models import HighAmbientTemperatureImport, Submission, Blend
+from ozone.core.models import Blend
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -20,11 +16,10 @@ from .factories import (
     AnotherSubstanceFactory,
     AnotherPartyFactory,
     BlendFactory,
-    HighAmbientTemperatureImportFactory,
 )
 
 
-class BaseCustomBlendsTests(TestCase):
+class BaseCustomBlendsTests(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -45,14 +40,6 @@ class BaseCustomBlendsTests(TestCase):
         self.substance1 = SubstanceFactory()
         self.substance2 = AnotherSubstanceFactory()
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
@@ -85,13 +72,10 @@ class BaseCustomBlendsTests(TestCase):
 
 class CustomBlendTests(BaseCustomBlendsTests):
     def test_create_custom_blend_as_party(self):
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:blends-list"),
-            json.dumps(self.blend_data(self.party)),
-            "application/json",
-            format="json",
-            **headers,
+            self.blend_data(self.party),
         )
         self.assertEqual(resp.status_code, 201)
 
@@ -103,26 +87,18 @@ class CustomBlendTests(BaseCustomBlendsTests):
         self.assertEqual(components[1].substance, self.substance2)
 
     def test_create_custom_blend_as_party_for_another_party(self):
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:blends-list"),
-            json.dumps(self.blend_data(self.another_party)),
-            "application/json",
-            format="json",
-            **headers,
+            self.blend_data(self.another_party),
         )
         self.assertEqual(resp.status_code, 403)
 
     def test_create_custom_blend_as_secretariat(self):
-        headers = self.get_authorization_header(
-            self.secretariat_user, password="qwe123qwe"
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.post(
             reverse("core:blends-list"),
-            json.dumps(self.blend_data(self.party)),
-            "application/json",
-            format="json",
-            **headers,
+            self.blend_data(self.party),
         )
         self.assertEqual(resp.status_code, 201)
 
@@ -135,15 +111,10 @@ class CustomBlendTests(BaseCustomBlendsTests):
 
     def test_list_custom_blends_as_secretariat_same_party(self):
         blend = BlendFactory.create(party=self.party)
-        headers = self.get_authorization_header(
-            self.secretariat_user, password="qwe123qwe"
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {"party": self.party.id},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 1)
@@ -151,28 +122,20 @@ class CustomBlendTests(BaseCustomBlendsTests):
 
     def test_list_custom_blends_as_secretariat_different_party(self):
         blend = BlendFactory.create(party=self.another_party)
-        headers = self.get_authorization_header(
-            self.secretariat_user, password="qwe123qwe"
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {"party": self.party.id},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 0)
 
     def test_list_custom_blends_as_party_same_party(self):
         blend = BlendFactory.create(party=self.party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {"party": self.party.id},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 1)
@@ -180,26 +143,20 @@ class CustomBlendTests(BaseCustomBlendsTests):
 
     def test_list_custom_blends_as_party_different_party(self):
         blend = BlendFactory.create(party=self.another_party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {"party": self.party.id},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 0)
 
     def test_list_custom_blends_as_party_same_party_no_param(self):
         blend = BlendFactory.create(party=self.party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 1)
@@ -207,20 +164,17 @@ class CustomBlendTests(BaseCustomBlendsTests):
 
     def test_list_custom_blends_as_party_different_party_no_param(self):
         blend = BlendFactory.create(party=self.another_party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse("core:blends-list"),
             {},
-            "application/json",
-            format="json",
-            **headers,
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(len(resp.json()), 0)
 
     def test_add_data_with_custom_blend_same_party(self):
         blend = BlendFactory.create(party=self.party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         submission = self.create_submission()
 
         data = {"blend": blend.id, "quantity_total_new": 1}
@@ -229,16 +183,13 @@ class CustomBlendTests(BaseCustomBlendsTests):
                 "core:submission-article7-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(resp.status_code, 201)
 
     def test_add_data_with_custom_blend_different_party(self):
         blend = BlendFactory.create(party=self.another_party)
-        headers = self.get_authorization_header(self.party_user, password="qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         submission = self.create_submission()
 
         data = {"blend": blend.id, "quantity_total_new": 1}
@@ -247,9 +198,6 @@ class CustomBlendTests(BaseCustomBlendsTests):
                 "core:submission-article7-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(resp.status_code, 422)
