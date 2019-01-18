@@ -393,12 +393,13 @@ class Submission(models.Model):
         List of transitions that can be performed from current state.
 
         """
+        # Simply avoid needless processing
         if user.is_read_only:
             return []
 
         transitions = []
         wf = self.workflow(user)
-        for transition in wf .state.transitions():
+        for transition in wf.state.transitions():
             if hasattr(wf, 'check_' + transition.name):
                 if getattr(wf, 'check_' + transition.name)():
                     transitions.append(transition.name)
@@ -414,13 +415,6 @@ class Submission(models.Model):
         entire instance!
 
         """
-        if user.is_read_only:
-            raise TransitionNotAvailable(
-                _(
-                    "You do not have the necessary permissions"
-                )
-            )
-
         # Call this now so we don't recreate the self.workflow object ad nauseam
         workflow = self.workflow(user)
 
