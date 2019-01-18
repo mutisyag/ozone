@@ -2,21 +2,27 @@ import { expect } from 'chai'
 import getters from '@/store/getters'
 
 describe('store getters', () => {
-	describe('isReadOnly', () => {
-		const { isReadOnly } = getters
-		it('missing current_submission', () => {
-			const state = {}
-			expect(isReadOnly(state)).to.be.false
-		})
-		it('value is the negation of current_submission.data_changes_allowed', () => {
+	describe('can_edit_data', () => {
+		const { can_edit_data } = getters
+		it('missing permissions.form', () => {
 			const state = {
-				current_submission: {
-					data_changes_allowed: true
+				permissions: {
+					form: null
 				}
 			}
-			expect(isReadOnly(state)).to.be.false
-			state.current_submission.data_changes_allowed = false
-			expect(isReadOnly(state)).to.be.true
+			expect(can_edit_data(state)).to.be.null
+		})
+		it('value is the negation of permissions.form.can_edit_data', () => {
+			const state = {
+				permissions: {
+					form: {
+						can_edit_data: true
+					}
+				}
+			}
+			expect(can_edit_data(state)).to.be.false
+			state.permissions.form.can_edit_data = false
+			expect(can_edit_data(state)).to.be.true
 		})
 	})
 })

@@ -1,8 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Blend, Party, Submission
+from .models import Blend, Submission
 
 
 def is_secretariat_or_admin(request):

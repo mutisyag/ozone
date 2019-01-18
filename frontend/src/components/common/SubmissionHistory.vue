@@ -7,7 +7,7 @@
 				head-variant="light"
 				stacked="md"
 				:items="tableItems"
-				:fields="tableFields"
+        :fields="tableFields"
 				:sort-by.sync="table.sortBy"
 				:sort-desc.sync="table.sortDesc"
 				:sort-direction="table.sortDirection"

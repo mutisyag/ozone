@@ -27,8 +27,9 @@ from ozone.core.models import (
     Article7NonPartyTrade,
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
+    UploadToken,
+    SubmissionFile,
 )
-
 
 User = get_user_model()
 
@@ -304,3 +305,13 @@ class HighAmbientTemperatureProductionFactory(DjangoModelFactory):
 class HighAmbientTemperatureImportFactory(DjangoModelFactory):
     class Meta:
         model = HighAmbientTemperatureImport
+
+
+class UploadTokenFactory(DjangoModelFactory):
+    class Meta:
+        model = UploadToken
+
+
+class SubmissionFileFactory(DjangoModelFactory):
+    class Meta:
+        model = SubmissionFile

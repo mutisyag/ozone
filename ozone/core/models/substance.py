@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from ..exceptions import MethodNotAllowed
 from .meeting import ExemptionTypes, Treaty
 from .party import Party
 
@@ -198,9 +199,9 @@ class Blend(models.Model):
         max_length=128, choices=((s.value, s.name) for s in BlendTypes)
     )
 
-    odp = models.FloatField(null=True)
+    odp = models.FloatField(null=True, blank=True)
 
-    gwp = models.IntegerField(null=True)
+    gwp = models.IntegerField(null=True, blank=True)
 
     hfc = models.NullBooleanField()
 
@@ -246,6 +247,15 @@ class Blend(models.Model):
 
     class Meta:
         db_table = "blend"
+
+    def save(self, *args, **kwargs):
+        if self.pk:
+            if self.custom is False:
+                raise MethodNotAllowed(
+                    _("Non custom blends cannot be modified.")
+                )
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 
 class BlendComponent(models.Model):

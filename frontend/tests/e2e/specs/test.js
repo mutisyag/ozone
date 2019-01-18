@@ -8,6 +8,7 @@ const util = require('util')
 const execSync = util.promisify(require('child_process').execSync)
 const {
 	login,
+	logout,
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
@@ -28,6 +29,10 @@ module.exports = {
 		execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
 		console.log('done running cleanup')
 	},
+	BU_001: browser => {
+		login(browser, 'party', 'party')
+		logout(browser)
+	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
@@ -42,6 +47,7 @@ module.exports = {
 		addValues(browser, '#substance-table', '#has_imports_tab')
 		addBlend(browser, 'blend_selector', 'R-401B')
 		browser
+
 			.moveToElement('#tab-comments', undefined, undefined)
 
 		addValues(browser, '#blend-table', '#has_imports_tab')

@@ -1,5 +1,5 @@
 import 'toastedjs/src/sass/toast.scss'
-import Toasted from 'toastedjs'
+import Toasted from 'toastedjs/dist/toasted.min.js'
 
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
@@ -55,7 +55,7 @@ const mutations = {
 			currentFormStructure = getFormHat($gettext)
 			tableRowConstructor = hatTableRowConstructor
 			break
-		case 'letter':
+		case 'other':
 			currentFormStructure = getFormLetter($gettext)
 			tableRowConstructor = letterTableRowConstructor
 			break
@@ -72,6 +72,10 @@ const mutations = {
 
 	setTabOrderingId(state, data) {
 		state.form.tabs[data.tabName].ordering_id = data.ordering_id
+	},
+
+	setFormPermissions(state, data) {
+		state.permissions.form = data
 	},
 
 	// dashboard
