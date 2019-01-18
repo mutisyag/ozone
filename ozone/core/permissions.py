@@ -49,7 +49,6 @@ class BaseIsSecretariatOrSameParty(BasePermission):
         Called for HTTP methods that require an object.
         This is only called if has_permission() has already passed.
         """
-
         pass
 
 
