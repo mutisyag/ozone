@@ -8,8 +8,6 @@ from ..constants import TABLE_EMISSIONS_HEADER_STYLE
 from ..constants import TABLE_ROW_EMPTY_EMISSIONS
 from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
-from ..util import mk_table_blends
-from ..util import mk_table_substances
 from ..util import p_c
 from ..util import page_title_section
 from ..util import table_from_data
