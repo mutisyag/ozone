@@ -213,3 +213,24 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
     return result
 
 
+def mk_table_substances(grouping, row_fct):
+    # Excluding items with no substance,
+    # then getting the ones that are not a blend
+    objs = grouping.exclude(substance=None).filter(blend_item=None)
+    row = partial(row_fct, isBlend=False)
+    return map(row, objs)
+
+def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
+    objs = grouping.filter(substance=None)
+    row = partial(row_fct, isBlend=True)
+
+    blends = map(row, objs)
+
+    return table_with_blends(
+        blends=blends,
+        grouping=objs,
+        make_component=comp_fct,
+        header=c_header,
+        style=c_style,
+        widths=c_widths
+    )

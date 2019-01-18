@@ -1,6 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-from functools import partial
-
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
@@ -12,11 +10,13 @@ from ..constants import TABLE_DEST_WIDTH
 from ..constants import TABLE_ROW_EMPTY_DEST
 from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
 from ..constants import TABLE_BLENDS_COMP_STYLE
+
+from ..util import mk_table_blends
+from ..util import mk_table_substances
 from ..util import p_c
 from ..util import p_l
 from ..util import page_title_section
 from ..util import table_from_data
-from ..util import table_with_blends
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -42,32 +42,14 @@ def component_row(component, blend):
         str(blend.quantity_destroyed * ptg)
     )
 
-
-def mk_table_substances(submission):
-    # Excluding items with no substance,
-    # then getting the ones that are not a blend
-    destruction = submission.article7destructions.exclude(substance=None)
-    row = partial(big_table_row, isBlend=False)
-    return map(row, destruction.filter(blend_item=None))
-
-def mk_table_blends(submission):
-    destructions = submission.article7destructions.filter(substance=None)
-    row = partial(big_table_row, isBlend=True)
-
-    blends = map(row, destructions)
-
-    return table_with_blends(
-        blends=blends,
-        grouping=destructions,
-        make_component=component_row,
-        header=TABLE_DEST_COMP_HEADER,
-        style=TABLE_BLENDS_COMP_STYLE,
-        widths=TABLE_DEST_COMP_WIDTH
-    )
-
 def export_destruction(submission):
-    table_substances = tuple(mk_table_substances(submission))
-    table_blends = tuple(mk_table_blends(submission))
+    grouping = submission.article7destructions
+
+    table_substances = tuple(mk_table_substances(grouping, big_table_row))
+    table_blends = tuple(mk_table_blends(
+        grouping, big_table_row, component_row, TABLE_DEST_COMP_HEADER,
+        TABLE_BLENDS_COMP_STYLE, TABLE_DEST_COMP_WIDTH
+    ))
 
     style = lambda data: (
         TABLE_DEST_HEADER_STYLE + TABLE_STYLES + (

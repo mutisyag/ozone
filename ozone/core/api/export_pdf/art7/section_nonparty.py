@@ -1,21 +1,22 @@
 from django.utils.translation import gettext_lazy as _
-from functools import partial
 
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
+from ..constants import TABLE_BLENDS_COMP_STYLE
 from ..constants import TABLE_NONP_HEADER
 from ..constants import TABLE_NONP_HEADER_STYLE
-from ..constants import TABLE_ROW_EMPTY_NONP
 from ..constants import TABLE_NONP_SUBS_WIDTHS
 from ..constants import TABLE_NONP_COMP_WIDTHS
 from ..constants import TABLE_NONP_COMP_HEADER
+from ..constants import TABLE_ROW_EMPTY_NONP
 from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
-from ..constants import TABLE_BLENDS_COMP_STYLE
+
+from ..util import mk_table_blends
+from ..util import mk_table_substances
 from ..util import p_c
 from ..util import page_title_section
 from ..util import table_from_data
-from ..util import table_with_blends
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -48,31 +49,14 @@ def component_row(component, blend):
         str(blend.quantity_export_recovered  * ptg),
     )
 
-def mk_table_substances(submission):
-    # Excluding items with no substance,
-    # then getting the ones that are not a blend
-    non_party = submission.article7nonpartytrades.exclude(substance=None)
-    row = partial(big_table_row, isBlend=False)
-    return map(row, non_party.filter(blend_item=None))
-
-def mk_table_blends(submission):
-    non_party = submission.article7nonpartytrades.filter(substance=None)
-    row = partial(big_table_row, isBlend=True)
-
-    blends = map(row, non_party)
-
-    return table_with_blends(
-        blends=blends,
-        grouping=non_party,
-        make_component=component_row,
-        header=TABLE_NONP_COMP_HEADER,
-        style=TABLE_BLENDS_COMP_STYLE,
-        widths=TABLE_NONP_COMP_WIDTHS
-    )
-
 def export_nonparty(submission):
-    table_substances = tuple(mk_table_substances(submission))
-    table_blends = tuple(mk_table_blends(submission))
+    grouping = submission.article7nonpartytrades
+
+    table_substances = tuple(mk_table_substances(grouping, big_table_row))
+    table_blends = tuple(mk_table_blends(
+        grouping, big_table_row, component_row, TABLE_NONP_COMP_HEADER,
+        TABLE_BLENDS_COMP_STYLE, TABLE_NONP_COMP_WIDTHS
+    ))
 
     style = lambda data: (
         TABLE_NONP_HEADER_STYLE + TABLE_STYLES + (
