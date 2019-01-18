@@ -162,6 +162,31 @@ TABLE_DEST_COMP_HEADER = (
     ),
 )
 
+TABLE_DEST_HEADER = lambda isBlend: (
+    (
+        p_c(_('Type' if isBlend else 'Group')),
+        p_c(_('Blend' if isBlend else 'Substance')),
+        p_c(_('Quantity destroyed')),
+        p_c(_('Remarks (party)')),
+        p_c(_('Remarks (secretariat)')),
+    ),
+)
+
+# TABLE_DEST_COMP_HEADER = (
+#     (
+#         p_c(_('Substances')),
+#         p_c(_('Percentage')),
+#         p_c(_('Quantity of imports from non-parties (new)')),
+#         p_c(_('Quantity of imports from non-parties (recovered)')),
+#         p_c(_('Quantity of exports from non-parties (new)')),
+#         p_c(_('Quantity of exports from non-parties (recovered)')),
+#     ),
+# )
+
+TABLE_DEST_WIDTH = list(map(lambda x: x * cm, [4, 3, 4, 6, 6]))
+
+TABLE_DEST_COMP_WIDTH = list(map(lambda x: x * cm, [6, 5, 6]))
+
 TABLE_ROW_EMPTY_NONP = ((_('No data.'), '', '', '', '', '', '', '', ''),)
 
 TABLE_NONP_HEADER_STYLE = (
@@ -187,13 +212,4 @@ TABLE_NONP_COMP_WIDTHS = list(
     map(lambda x: x * cm, [4, 3, 3, 3, 3, 3])
 )
 
-TABLE_DEST_COMP_HEADER = (
-    (
-        p_c(_('Substances')),
-        p_c(_('Percentage')),
-        p_c(_('Quantity of imports from non-parties (new)')),
-        p_c(_('Quantity of imports from non-parties (recovered)')),
-        p_c(_('Quantity of exports from non-parties (new)')),
-        p_c(_('Quantity of exports from non-parties (recovered)')),
-    ),
-)
+
