@@ -20,13 +20,14 @@ def big_table_row(obj, isBlend):
     d_label = get_substance_label(decisions, type='decision',
                                     list_font_size=9)
 
-    party = obj.source_party.name if hasattr(obj, 'source_party') else \
-        obj.destination_party.name if obj.destination_party else ""
+    party = obj.source_party if hasattr(obj, 'source_party') else \
+        obj.destination_party if obj.destination_party else ""
+
 
     return (
         p_c(_(col_1)),
         p_c(_(col_2)),
-        p_c(_(party)),
+        p_c(_(party.name if hasattr(party, 'name') else '')),
         p_c(str(obj.quantity_total_new or '')),
         p_c(str(obj.quantity_total_recovered or '')),
         obj.quantity_feedstock,
