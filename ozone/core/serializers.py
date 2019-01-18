@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -890,9 +891,21 @@ class SubmissionRemarksSerializer(
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+
+    file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubmissionFile
-        fields = '__all__'
+        exclude = ('file',)
+
+    def get_file_url(self, obj):
+        return self.context['request'].build_absolute_uri(reverse(
+            "core:submission-files-download",
+            kwargs={
+                "submission_pk": obj.submission.pk,
+                "pk": obj.pk
+            }
+        ))
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
