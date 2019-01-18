@@ -14,8 +14,6 @@ from django.urls import reverse
 from django.test import LiveServerTestCase
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
-from ozone.core.models import Submission, SubmissionInfo
-
 from .base import BaseTests
 from .factories import (
     PartyFactory,
@@ -41,7 +39,6 @@ TUSD_AVAILABLE = socket.socket(
 ).connect_ex(
     (settings.TUSD_HOST, int(settings.TUSD_PORT))
 ) == 0
-
 
 
 class BaseSubmissionTest(object):
@@ -191,7 +188,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
 # TODO: token cleanup at the end.
 
 
-class TestListFiles(BaseSubmissionTest, TestCase):
+class TestListFiles(BaseSubmissionTest, BaseTests):
 
     def test_list_files_as_party(self):
         submission = self.create_submission()
@@ -224,19 +221,18 @@ class TestListFiles(BaseSubmissionTest, TestCase):
         self.assertEqual(resp.json()[0]['name'], submission_file.name)
 
 
-class TestDownloads(BaseSubmissionTest, TestCase):
+class TestDownloads(BaseSubmissionTest, BaseTests):
 
     def test_download_files_as_party(self):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        headers = self.get_authorization_header(self.party_user, "qwe123qwe")
+        self.client.login(username=self.party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
                 kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
             ),
-            **headers
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content, submission_file.file.read())
@@ -245,13 +241,12 @@ class TestDownloads(BaseSubmissionTest, TestCase):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        headers = self.get_authorization_header(self.another_party_user, "qwe123qwe")
+        self.client.login(username=self.another_party_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
                 kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
             ),
-            **headers
         )
         self.assertEqual(resp.status_code, 403)
 
@@ -259,13 +254,12 @@ class TestDownloads(BaseSubmissionTest, TestCase):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        headers = self.get_authorization_header(self.secretariat_user, "qwe123qwe")
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
                 kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
             ),
-            **headers
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content, submission_file.file.read())
@@ -274,13 +268,12 @@ class TestDownloads(BaseSubmissionTest, TestCase):
         submission = self.create_submission()
         submission_file = self.create_file(submission, 'العربية')
 
-        headers = self.get_authorization_header(self.secretariat_user, "qwe123qwe")
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
                 kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
             ),
-            **headers
         )
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.content, submission_file.file.read())
