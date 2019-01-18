@@ -866,11 +866,7 @@ class SubmissionFlagsSerializer(
 
     def to_representation(self, instance):
         result = super().to_representation(instance)
-        try:
-            per_type = self.per_type_fields[instance.obligation.form_type]
-        except KeyError:
-            return result
-        return {flag: result[flag] for flag in per_type}
+        return {field: result[field] for field in self.per_type_fields[instance.obligation.form_type]}
 
     def update(self, instance, validated_data):
         """
@@ -893,6 +889,23 @@ class SubmissionRemarksSerializer(
     since this is easily usable by the frontend.
     """
 
+    per_type_fields = {
+        'art7': (
+            'imports_remarks_party', 'imports_remarks_secretariat',
+            'exports_remarks_party', 'exports_remarks_secretariat',
+            'production_remarks_party', 'production_remarks_secretariat',
+            'destruction_remarks_party', 'destruction_remarks_secretariat',
+            'nonparty_remarks_party', 'nonparty_remarks_secretariat',
+            'emissions_remarks_party', 'emissions_remarks_secretariat',
+        ),
+        'hat7': (
+            'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
+            'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+        ),
+        # 'essencrit': (),
+        # 'other': (),
+    }
+
     class Meta:
         model = Submission
         fields = (
@@ -906,6 +919,10 @@ class SubmissionRemarksSerializer(
             'hat_production_remarks_party',
             'hat_production_remarks_secretariat',
         )
+
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        return {field: result[field] for field in self.per_type_fields[instance.obligation.form_type]}
 
     def update(self, instance, validated_data):
         """
