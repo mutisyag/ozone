@@ -1,7 +1,9 @@
+from django.utils.translation import gettext_lazy as _
 from functools import partial
 
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
+from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
@@ -79,6 +81,7 @@ BASIC_Q_TYPES = (
 
 
 def get_quantity_cell(q_list, extra_q):
+    # import pdb; pdb.set_trace()
     if sum(q_list) > 0:
         if extra_q:
             return (
@@ -237,4 +240,20 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
         header=c_header,
         style=c_style,
         widths=c_widths
+    )
+
+
+def get_comments_section(submission, type):
+    r_party = getattr(submission, type + '_remarks_party')
+    r_secretariat = getattr(submission, type + '_remarks_secretariat')
+
+    return (
+        Paragraph(_('Comments (Party)'), STYLES['Heading3']),
+        hr,
+        p_l(_(r_party)),
+        Spacer(1, cm),
+        Paragraph(_('Comments (Secretariat)'), STYLES['Heading3']),
+        hr,
+        p_l(_(r_secretariat)),
+        PageBreak()
     )

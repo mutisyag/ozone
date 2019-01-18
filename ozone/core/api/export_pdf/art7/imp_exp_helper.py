@@ -23,7 +23,6 @@ def big_table_row(obj, isBlend):
     party = obj.source_party if hasattr(obj, 'source_party') else \
         obj.destination_party if obj.destination_party else ""
 
-
     return (
         p_c(_(col_1)),
         p_c(_(col_2)),

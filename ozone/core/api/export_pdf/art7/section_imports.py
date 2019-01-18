@@ -8,6 +8,7 @@ from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
 from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 from ..constants import TABLE_ROW_EMPTY_IMP_EXP
 
+from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import page_title_section
@@ -26,6 +27,8 @@ from django.utils.translation import gettext_lazy as _
 
 def export_imports(submission):
     grouping = submission.article7imports
+
+    comments_section = get_comments_section(submission, 'imports')
 
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
     table_blends = tuple(mk_table_blends(
@@ -62,6 +65,7 @@ def export_imports(submission):
         Paragraph(_('1.2 Blends'), STYLES['Heading2']),
         blends_table,
         PageBreak(),
+        Paragraph(_('1.3 Comments'), STYLES['Heading2']),
     )
 
     return page_title_section(
@@ -69,4 +73,4 @@ def export_imports(submission):
         explanatory= _(
             'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
         )
-    ) + imports_page
+    ) + imports_page + comments_section

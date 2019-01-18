@@ -209,7 +209,8 @@ TABLE_NONP_HEADER = lambda isBlend: (
         (
             p_c(_('Type' if isBlend else 'Group')),
             p_c(_('Blend' if isBlend else 'Substance')),
-            p_c(_('Exporting party for quantities reported as imports <b>OR</b> Country of destination of exports')),
+            p_c(_('Exporting party for quantities reported as imports '
+                  '<b>OR</b> Country of destination of exports')),
             p_c(_('Quantity of imports from non-parties')),
             '',
             p_c(_('Quantity of exports from non-parties')),
