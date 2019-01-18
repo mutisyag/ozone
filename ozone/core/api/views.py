@@ -452,7 +452,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
-    form_type = None
+    form_types = None
     serializer_class = SubmissionInfoSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
