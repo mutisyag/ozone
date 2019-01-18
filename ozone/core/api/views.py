@@ -172,7 +172,9 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
     def get_serializer_context(self):
         context = super().get_serializer_context()
         if "submission_pk" in self.kwargs:
-            context['submission'] = Submission.objects.get(pk=self.kwargs["submission_pk"])
+            context['submission'] = Submission.objects.get(
+                pk=self.kwargs["submission_pk"]
+            )
         return context
 
 
@@ -482,8 +484,10 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         )
 
 
-class SubmissionFlagsViewSet(mixins.UpdateModelMixin, mixins.ListModelMixin,
-                             GenericViewSet, SerializerRequestContextMixIn):
+class SubmissionFlagsViewSet(
+    mixins.UpdateModelMixin, mixins.ListModelMixin,
+    GenericViewSet, SerializerRequestContextMixIn
+):
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
