@@ -67,7 +67,7 @@
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
 					:sort-direction="table.sortDirection"
-					:empty-text="table.emptyText"
+					:empty-text="tableEmptyText"
 					:filter="table.filters.search"
 					ref="table">
 					<template
@@ -131,7 +131,7 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
-					:empty-text="tableBlends.emptyText"
+					:empty-text="tableBlendsEmptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends">
 					<template slot="type" slot-scope="cell">

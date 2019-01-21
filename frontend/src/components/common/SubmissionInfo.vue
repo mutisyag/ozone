@@ -33,7 +33,7 @@
 									<label>{{labels.dateOfSubmission}}</label>
 								</b-col>
 								<b-col>
-									<span v-if="$store.state.current_submission.submitted_at">{{$store.state.current_submission.submitted_at}}</span>
+									<span v-if="currentSubmissionSubmittedAt">{{currentSubmissionSubmittedAt}}</span>
 									<i v-else class="fa fa-ellipsis-h"></i>
 								</b-col>
 							</b-row>
@@ -77,6 +77,7 @@
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { dateFormat } from '@/components/common/services/languageService'
 
 export default {
 	props: {
@@ -93,6 +94,13 @@ export default {
 	computed: {
 		can_edit_data() {
 			return this.$store.getters.can_edit_data
+		},
+		currentSubmissionSubmittedAt() {
+			const { submitted_at } = this.$store.state.current_submission
+			if (!submitted_at) {
+				return null
+			}
+			return dateFormat(submitted_at, this.$language.current)
 		}
 	},
 
@@ -103,6 +111,13 @@ export default {
 	},
 
 	methods: {
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.labels = getCommonLabels(this.$gettext)
+			}
+		}
 	}
 
 }

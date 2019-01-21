@@ -6,6 +6,7 @@
 				<small><span v-translate>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</span></small>
 				<b-input-group class="mt-2" prepend="Blend types">
 					<multiselect
+						:placeholder="$gettext('Select option')"
 						:clear-on-select="false"
 						:hide-selected="true"
 						trackBy="value"
@@ -14,14 +15,13 @@
 						:multiple="true"
 						@input="new_blend = null; selected_blends.selected = []"
 						v-model="selected_blends.filter"
-						placeholder=""
-						:options="selected_blends.filters"
-					></multiselect>
+						:options="selected_blends.filters" />
 				</b-input-group>
 
 				<div class="mt-2 mb-2" style="display: flex;">
 					<b-input-group id="blend_selector" class="mt-2" prepend="Blends">
 						<multiselect
+							:placeholder="$gettext('Select option')"
 							trackBy="value"
 							:clear-on-select="false"
 							:hide-selected="true"
@@ -30,7 +30,6 @@
 							label="text"
 							v-model="selected_blends.selected"
 							@input="new_blend = null"
-							placeholder=""
 							:options="filteredBlends" />
 					</b-input-group>
 
@@ -96,8 +95,8 @@
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
-						tag-placeholder="Press enter to use a new substance"
-						placeholder="Controlled or new substance"
+						:tag-placeholder="$gettext('Press enter to use a new substance')"
+						:placeholder="$gettext('Controlled or new substance')"
 						v-model="substance.name"
 						:options="substances" />
 					<b-input-group-append>
