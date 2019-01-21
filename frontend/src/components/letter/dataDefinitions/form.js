@@ -21,11 +21,11 @@ const getFormLetter = ($gettext) => {
 						type: 'select',
 						selected: 'c',
 						options: [
-							{ value: null, text: $gettext('FOR TESTING ONLY Please select some item') },
-							{ value: 'a', text: $gettext('FOR TESTING ONLY This is First option') },
-							{ value: 'b', text: $gettext('FOR TESTING ONLY Default Selected Option') },
-							{ value: 'c', text: $gettext('FOR TESTING ONLY This is another option') },
-							{ value: 'd', text: $gettext('FOR TESTING ONLY This one is disabled'), disabled: true }
+							{ value: null, text: 'FOR TESTING ONLY Please select some item' },
+							{ value: 'a', text: 'FOR TESTING ONLY This is First option' },
+							{ value: 'b', text: 'FOR TESTING ONLY Default Selected Option' },
+							{ value: 'c', text: 'FOR TESTING ONLY This is another option' },
+							{ value: 'd', text: 'FOR TESTING ONLY This one is disabled', disabled: true }
 						]
 					}
 				},
