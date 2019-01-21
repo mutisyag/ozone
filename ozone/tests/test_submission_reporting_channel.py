@@ -135,4 +135,4 @@ class SubmissionReportingChannelTests(BaseTests):
             data
         )
         self.assertEqual(submission.reporting_channel.name, 'Web form')
-        self.assertEqual(resp.status_code, 422)
+        self.assertEqual(resp.status_code, 403)
