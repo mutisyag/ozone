@@ -505,6 +505,13 @@ class Submission(models.Model):
             })
         return True
 
+    def can_edit_remarks(self, user):
+        """
+        Returns True if user can edit at least one remark on this submission.
+        """
+        if user.is_secretariat or user.party == self.party:
+            return not user.is_read_only
+
     def can_change_remark(self, user, field_name):
         if user.is_read_only:
             return False

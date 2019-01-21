@@ -53,6 +53,8 @@ from ..models import (
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
+    IsSecretariatOrSamePartySubmissionRemarks,
+    IsSecretariatOrSamePartySubmissionFlags,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
 )
@@ -481,7 +483,7 @@ class SubmissionFlagsViewSet(
 ):
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmission,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -517,7 +519,7 @@ class SubmissionRemarksViewSet(
     """
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmission
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
