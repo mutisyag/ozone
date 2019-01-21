@@ -1,5 +1,6 @@
 <template>
 <b-row>
+{{aaa}}
 	<HeaderDropdown class="mr-3" right>
 		<template slot="header">
 			{{$language.available[$language.current]}}
@@ -41,6 +42,9 @@ export default {
 	computed: {
 		currentCountryIso() {
 			return this.$store.getters.currentCountryIso
+		},
+		aaa() {
+			return this.$gettextInterpolate('LALALALALA')
 		}
 	},
 	methods: {
