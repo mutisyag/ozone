@@ -33,6 +33,7 @@ class BaseHATProductionTest(BaseTests):
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
 
@@ -117,6 +118,7 @@ class TestHATProduction(BaseHATProductionTest):
 
         hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
         self.assertEqual(hat_prod.quantity_msac, 42)
+
     def test_update_immutable(self):
         submission = self.create_submission()
         hat_prod = HighAmbientTemperatureProductionFactory(

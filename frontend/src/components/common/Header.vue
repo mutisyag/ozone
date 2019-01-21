@@ -23,7 +23,6 @@
 </template>
 
 <script>
-
 import authMixin from '@/components/common/mixins/auth'
 import { HeaderDropdown } from '@coreui/vue'
 import { apiBase } from '@/components/common/services/api'

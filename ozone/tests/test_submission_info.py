@@ -4,7 +4,6 @@ from django.urls import reverse
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from .base import BaseTests
-
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -37,6 +36,7 @@ class BaseSubmissionInfoTest(BaseTests):
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
 
@@ -59,8 +59,12 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
         submission.info.save()
 
         resp = self.client.get(
-            reverse("core:submission-submission-info-detail",
-                    kwargs={"submission_pk": submission.pk, "pk": subinfo.pk}),
+            reverse(
+                "core:submission-submission-info-detail",
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission.info.pk
+                }
+            ),
             format="json",
         )
         self.assertEqual(resp.status_code, 200)

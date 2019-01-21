@@ -6,10 +6,11 @@
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
-   
+       
 Optionally clone the translations as well in `translations` folder inside the ozone folder.
         
        git clone https://github.com/eaudeweb/ozone-translations.git translations
+   
 2. Customize the Docker environment files:
 
        cp docker/demo.env.example docker/demo.env
@@ -48,6 +49,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
+       
 Optionally clone the translations as well in `translations` folder inside the ozone folder.
         
        git clone https://github.com/eaudeweb/ozone-translations.git translations
@@ -82,6 +84,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
         python manage.py load_inital_fixtures
         python manage.py createsuperuser
         python manage.py runserver 0.0.0.0:8000
+        
 7. See `frontend/README.md` for instructions on starting the frontend application.
 
 8. (optional) Installing tusd locally:

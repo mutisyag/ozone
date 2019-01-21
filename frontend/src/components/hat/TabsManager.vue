@@ -128,7 +128,6 @@ export default {
 	created() {
 		this.updateBreadcrumbs()
 	},
-
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')

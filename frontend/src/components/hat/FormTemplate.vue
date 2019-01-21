@@ -38,14 +38,12 @@
           </tr>
         </thead>
       </table>
-
 			<div class="table-wrapper">
-
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 <span v-translate>Substances</span></h4>
 					<div v-show="table.tableFilters" class="table-filters">
 						<b-input-group :prepend="$gettext('Search')">
-								<b-form-input v-model="table.filters.search"/>
+							<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
 					</div>
 					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -109,8 +107,8 @@
 					<h4> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 					<div v-show="tableBlends.tableFilters" class="table-filters">
 						<b-input-group :prepend="$gettext('Search')">
-									<b-form-input v-model="tableBlends.filters.search"/>
-							</b-input-group>
+							<b-form-input v-model="tableBlends.filters.search"/>
+						</b-input-group>
 					</div>
 					<i @click="tableBlends.tableFilters = !tableBlends.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
@@ -240,11 +238,11 @@
         <span v-else>{{tab_data.display.blends[modal_data.field.blend.selected].name}}</span>
       </div>
       <div v-if="modal_data">
-				<p class="muted">
+		<p class="muted">
 			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
-					<br>
+			<br>
 			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
-				</p>
+		</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             <span v-translate>Change substance</span>

@@ -71,30 +71,6 @@ services:
     volumes:
       - redis-data:/data
 
-  weblate:
-    image: weblate/weblate
-    volumes:
-      - weblate-data:/app/data
-    env_file:
-      - ./docker/weblate.env
-    restart: always
-    depends_on:
-      - postgres-weblate
-      - redis-weblate
-  postgres-weblate:
-    image: postgres:9.6
-    env_file:
-      - ./docker/weblate.env
-    volumes:
-      - pg-weblate-data:/var/lib/postgresql/data
-    restart: always
-  redis-weblate:
-    image: redis:4-alpine
-    restart: always
-    command: ["redis-server", "--appendonly", "yes"]
-    volumes:
-      - redis-data:/data
-
 volumes:
   pg-data:
     driver: rancher-nfs

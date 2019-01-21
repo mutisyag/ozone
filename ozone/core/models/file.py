@@ -10,6 +10,7 @@ from model_utils import FieldTracker
 
 from .reporting import ModifyPreventionMixin, Submission
 
+
 UPLOAD_TOKEN_LENGTH = 64
 UPLOAD_TOKEN_DURATION = 60 * 60  # 60 minutes
 
@@ -73,6 +74,7 @@ class File(models.Model):
     is correctly filled afterwards - that one will be signalled by the
     `upload_successful` flag.
     """
+
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
@@ -85,6 +87,7 @@ class File(models.Model):
     upload_successful = models.BooleanField(default=False)
 
     description = models.CharField(max_length=512, blank=True)
+
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='uploaded_files',
@@ -108,9 +111,11 @@ class SubmissionFile(ModifyPreventionMixin, File):
             self.submission.get_storage_directory(),
             os.path.basename(filename)
         )
+
     submission = models.ForeignKey(
         Submission, related_name='files', on_delete=models.PROTECT
     )
+
     file = models.FileField(
         upload_to=get_storage_directory, null=True, blank=True
     )

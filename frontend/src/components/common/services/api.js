@@ -29,6 +29,7 @@ const api = axios.create({
 })
 
 const apiPublicDirectory = axios.create()
+
 api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 api.defaults.xsrfCookieName = 'csrftoken'
 

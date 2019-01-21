@@ -99,18 +99,18 @@ export default {
 					})
 				}
 			})
-					const willNotAddCountryNames = []
+			const willNotAddCountryNames = []
 			willNotAdd.length && willNotAdd.forEach(countryId => {
-						const { text } = this.countryOptions.find(countryDisplay => countryDisplay.value === countryId)
-						if (text) {
-							willNotAddCountryNames.push(text)
-						}
-					})
+				const { text } = this.countryOptions.find(countryDisplay => countryDisplay.value === countryId)
+				if (text) {
+					willNotAddCountryNames.push(text)
+				}
+			})
 			willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
 				$gettext: this.$gettext,
 				message: { __all__: [`${this.$gettext('The fields for these countries were not added because they already exist')} : ${willNotAddCountryNames.join(', ')}}`] },
-						variant: 'danger'
-					})
+				variant: 'danger'
+			})
 			this.$emit('removeThisField')
 			this.resetData()
 		},

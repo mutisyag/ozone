@@ -24,7 +24,6 @@ REMARK_VALUE = "Some random remark here."
 
 
 class BaseRemarksTests(BaseTests):
-
     success_code = 200
     fail_code = 422
 
@@ -279,6 +278,8 @@ class SubmissionRetrieveTest(BaseRemarksTests):
 
     def test_retrieve_as_secretariat_secretariat_reporter(self):
         self._check_remark_retrieve_data(self.secretariat_user, self.secretariat_user)
+
+
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     fail_code = 403
 

@@ -1,9 +1,9 @@
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 const getLabels = ($gettext) => {
-const labels = {
+	const labels = {
 		common: getCommonLabels($gettext),
-	has_imports: {
+		has_imports: {
 			substance: $gettext('Substances'),
 			blend: $gettext('Blend'),
 			group: $gettext('Group'),
@@ -35,8 +35,8 @@ const labels = {
 			remarks_party: $gettext('Remarks (Party)'),
 			imports_remarks_secretariat: $gettext('Comments (Secretariat)'),
 			imports_remarks_party: $gettext('Comments (Party)')
-	},
-	has_exports: {
+		},
+		has_exports: {
 			substance: $gettext('Substances'),
 			blend: $gettext('Blend'),
 			percent: $gettext('Percentage'),
@@ -69,8 +69,8 @@ const labels = {
 			remarks_party: $gettext('Remarks (Party)'),
 			exports_remarks_party: $gettext('Comments (Party)'),
 			exports_remarks_secretariat: $gettext('Comments (Secretariat)')
-	},
-	has_produced: {
+		},
+		has_produced: {
 			remarks_party: $gettext('Remarks (Party)'),
 			remarks_os: $gettext('Remarks (Secretariat)'),
 			percent: $gettext('Percentage'),
@@ -97,8 +97,8 @@ const labels = {
 			quantity: $gettext('Quantity'),
 			production_remarks_party: $gettext('Comments (Party)'),
 			production_remarks_secretariat: $gettext('Comments (Secretariat)')
-	},
-	has_destroyed: {
+		},
+		has_destroyed: {
 			remarks_party: $gettext('Remarks (Party)'),
 			remarks_os: $gettext('Remarks (Secretariat)'),
 			percent: $gettext('Percentage'),
@@ -107,8 +107,8 @@ const labels = {
 			blend: $gettext('Blend'),
 			destruction_remarks_party: $gettext('Comments (Party)'),
 			destruction_remarks_secretariat: $gettext('Comments (Secretariat)')
-	},
-	has_nonparty: {
+		},
+		has_nonparty: {
 			remarks_party: $gettext('Remarks (Party)'),
 			remarks_os: $gettext('Remarks (Secretariat)'),
 			percent: $gettext('Percentage'),
@@ -121,8 +121,8 @@ const labels = {
 			trade_party: $gettext('Exporting party for quantities reported as imports or country of destination of exports'),
 			nonparty_remarks_party: $gettext('Comments (Party)'),
 			nonparty_remarks_secretariat: $gettext('Comments (Secretariat)')
-	},
-	has_emissions: {
+		},
+		has_emissions: {
 			facility_name: $gettext('Facility name or identifier'),
 			quantity_generated: $gettext('Amount [generated] (tonnes)'),
 			quantity_feedstock: $gettext('Amount used for feedstock'),
@@ -132,8 +132,8 @@ const labels = {
 			remarks_os: $gettext('Remarks (Secretariat)'),
 			emissions_remarks_party: $gettext('Comments (Party)'),
 			emissions_remarks_secretariat: $gettext('Comments (Secretariat)')
+		}
 	}
-}
 
 	return labels
 }

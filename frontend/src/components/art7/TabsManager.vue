@@ -5,7 +5,7 @@
 		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
 			<i class="fa fa-info fa-lg"></i>
 		</b-btn>
-      <div v-html="selectedTab.detailsHtml"></div>
+		<div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
       <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
@@ -29,45 +29,45 @@
   </b-modal>
 
   <div class="form-wrapper" style="position: relative">
-    <b-card style="margin-bottom: 5rem;" no-body>
+	<b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
 			<b-tab active>
-             <template slot="title">
+				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
-             </template>
-            <SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-          </b-tab>
+				</template>
+				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+			</b-tab>
 
 			<b-tab>
-						<template slot="title">
-							<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-						</template>
-            <Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
-          </b-tab>
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+				</template>
+				<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+			</b-tab>
 
-				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
-						<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-						</template>
-					<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-				</b-tab>
+			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+				</template>
+				<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+			</b-tab>
 
-				<b-tab :disabled="selectedDisplayTabs.has_emissions === null">
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
-					</template>
-					<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
-				</b-tab>
+			<b-tab :disabled="selectedDisplayTabs.has_emissions === null">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
+				</template>
+				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+			</b-tab>
 
-				<b-tab>
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
-					</template>
-					<Attachments :tab="$store.state.form.tabs.attachments"/>
-				</b-tab>
-      </b-tabs>
-    </b-card>
-		</div>
+			<b-tab >
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+				</template>
+				<Attachments :tab="$store.state.form.tabs.attachments"/>
+			</b-tab>
+		</b-tabs>
+	</b-card>
+	</div>
     <Footer style="display:inline">
 			<Save class="actions mt-2 mb-2" v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
 			<b-button-group class="pull-right actions mt-2 mb-2">
@@ -77,13 +77,13 @@
 					variant="outline-success">
 						<span v-translate>Submit</span>
 				</b-btn>
-						<b-btn
-							variant="outline-primary"
-							v-for="transition in availableTransitions"
-							:key="transition"
+				<b-btn
+					variant="outline-primary"
+					v-for="transition in availableTransitions"
+					:key="transition"
 					@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
 						<span>{{labels[transition]}}</span>
-						</b-btn>
+				</b-btn>
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span v-translate>Versions</span>
 				</b-btn>
@@ -138,10 +138,13 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		this.updateBreadcrumbs()
 	},
 
 	computed: {
+		submissionInfoLabel() {
+			return this.$gettext('Submission Info')
+		},
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
 		},

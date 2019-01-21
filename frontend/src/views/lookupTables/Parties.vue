@@ -88,63 +88,63 @@ export default {
 	},
 	computed: {
 		tableFields() {
-		const sortableAndTextCenter = {
-			sortable: true,
-			class: 'text-center'
-		}
-
+			const sortableAndTextCenter = {
+				sortable: true,
+				class: 'text-center'
+			}
 			return [{
-					key: 'name',
+				key: 'name',
 				label: this.$gettext('Name'),
-					class: 'text-left width-200',
-					sortable: true
-				}, {
-					key: 'is_eu_member',
+				class: 'text-left width-200',
+				sortable: true
+			}, {
+				key: 'is_eu_member',
 				label: this.$gettext('EU Member'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_article5',
+				...sortableAndTextCenter
+			}, {
+				key: 'is_article5',
 				label: this.$gettext('Article 5 party'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_high_ambient_temperature',
+				...sortableAndTextCenter
+			}, {
+				key: 'is_high_ambient_temperature',
 				label: this.$gettext('HAT'),
-					...sortableAndTextCenter
-				}, {
-					key: 'vienna_convention',
+				...sortableAndTextCenter
+			}, {
+				key: 'vienna_convention',
 				label: this.$gettext('Vienna Convention'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_protocol',
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_protocol',
 				label: this.$gettext('Montreal Protocol'),
-					...sortableAndTextCenter
-				}, {
-					key: 'london_amendment',
+				...sortableAndTextCenter
+			}, {
+				key: 'london_amendment',
 				label: this.$gettext('London Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'copenhagen_amendment',
+				...sortableAndTextCenter
+			}, {
+				key: 'copenhagen_amendment',
 				label: this.$gettext('Copenhagen Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_amendment',
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_amendment',
 				label: this.$gettext('Montreal Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'beijing_amendment',
+				...sortableAndTextCenter
+			}, {
+				key: 'beijing_amendment',
 				label: this.$gettext('Beijing Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'kigali_amendment',
+				...sortableAndTextCenter
+			}, {
+				key: 'kigali_amendment',
 				label: this.$gettext('Kigali Amendment'),
-					...sortableAndTextCenter
+				...sortableAndTextCenter
 			}]
-	},
+		},
 		parties() {
 			const { partyRatifications } = this.$store.state.initialData
 			if (!partyRatifications) {
 				return []
 			}
+
 			const partyRatificationsDisplay = partyRatifications.map(party => {
 				party.ratifications.forEach(ratification => {
 					if (!ratification.treaty) {

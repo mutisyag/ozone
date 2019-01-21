@@ -120,7 +120,6 @@
 					<span v-translate>Cancel</span>
 				</b-btn>
 			</b-btn-group>
-
 		</div>
 	</div>
 </template>

@@ -6,11 +6,11 @@
 			<b-row>
 				<b-col>
 					<b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
-                      <b-form-input v-model="table.filters.searchName" />
-                    </b-input-group>
-                </b-col>
+						<b-form-input v-model="table.filters.searchName" />
+					</b-input-group>
+				</b-col>
 				<b-col>
-                    <b-input-group>
+					<b-input-group>
 						<multiselect
 							:max-height="250"
 							:multiple="true"

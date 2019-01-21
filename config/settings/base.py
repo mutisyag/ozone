@@ -30,6 +30,8 @@ def get_int_env_var(var_name, default=None):
 def split_env_var(var_name, sep=','):
     var = get_env_var(var_name, '')
     return [e.strip() for e in var.split(sep)]
+
+
 # ROOT_DIR = ozone/config/settings/base.py - 3 = ozone/
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 APPS_DIR = ROOT_DIR / 'ozone' 
@@ -313,6 +315,7 @@ OAUTH2_PROVIDER = {
     # authorized or not.
     "REQUEST_APPROVAL_PROMPT": 'auto',
 }
+
 # Tusd settings
 TUSD_UPLOADS_DIR = env('TUSD_UPLOADS_DIR', default='/var/local/tusd_uploads')
 TUSD_HOST = env('TUSD_HOST', default='localhost')

@@ -227,6 +227,7 @@ class Blend(models.Model):
                 for c in self.components.all() if c.substance
             ]
         )
+
     def get_substance_ids(self):
         """Returns list of substance id's contained in this blend"""
         return [
@@ -243,6 +244,7 @@ class Blend(models.Model):
 
     def __str__(self):
         return self.blend_id
+
     class Meta:
         db_table = "blend"
 
@@ -330,6 +332,7 @@ class ProcessAgentApplication(models.Model):
 
     class Meta:
         db_table = 'pa_application'
+
 
 class UsesType(models.Model):
     """

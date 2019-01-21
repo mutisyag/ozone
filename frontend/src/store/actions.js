@@ -102,7 +102,6 @@ const actions = {
 				},
 				perPage: null,
 				currentPage: null
-
 			}).then(response => {
 				context.commit('setDashboardMySubmissions', response.data)
 				resolve()

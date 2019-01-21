@@ -493,7 +493,6 @@ export default {
 					return returnObj
 				}
 			}
-
 			break
 		case 'has_destroyed':
 			baseInnerFields = {
@@ -599,16 +598,16 @@ export default {
 			break
 		default:
 			break
-			}
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
+		}
+		if (prefillData) {
+			Object.keys(prefillData).forEach((field) => {
 				baseInnerFields[field]
 					?	baseInnerFields[field].selected = isNumber(prefillData[field])
 						? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
 					: null
-				})
-			}
-			return baseInnerFields
+			})
+		}
+		return baseInnerFields
 	}
 
 }
