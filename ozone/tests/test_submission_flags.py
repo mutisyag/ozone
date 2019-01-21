@@ -56,14 +56,19 @@ class BaseFlagsTests(BaseTests):
         )
         return submission
 
-    def _check_result(self, result, expect_success, submission, field):
+    def _check_result(
+        self, result, expect_success, submission, field, fail_code=None
+    ):
         try:
             verbose = result.json()
         except:
             verbose = result.data
+
+        # If fail_code not specified as parameter, use class attribute
+        fail_code = fail_code if fail_code is not None else self.fail_code
         self.assertEqual(
             result.status_code,
-            self.success_code if expect_success else self.fail_code,
+            self.success_code if expect_success else fail_code,
             verbose,
         )
 
@@ -102,7 +107,7 @@ FLAGS_DATA = {
 
 class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
-    def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success):
+    def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success, fail_code=None):
         submission = self.create_submission(self.secretariat_user, **FLAGS_DATA)
         if finalized:
             submission.call_transition("submit", self.secretariat_user)
@@ -118,7 +123,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                     ),
                     {field: NEW_VALUE},
                 )
-                self._check_result(result, expect_success, submission, field)
+                self._check_result(result, expect_success, submission, field, fail_code)
 
     # Superseded flags cannot be change by any user in any state
 
@@ -131,12 +136,16 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                                             True, False)
 
     def test_superseded_party_data_entry(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_superseded_party_finalized(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Provisional flag can be edited by:
     #  - Secretariat in any state
@@ -151,12 +160,16 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                                             True, True)
 
     def test_provisional_party_data_entry(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            False, True)
+                                            False, False, fail_code=403)
 
     def test_provisional_party_finalized(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Valid flag can be edited by:
     #  - Secretariat in submitted stated
@@ -172,11 +185,11 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_valid_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_valid_party_finalized(self):
         self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Blanks can be edited by:
     #  - Secretariat in any state
@@ -192,11 +205,11 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_blanks_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_blanks_party_finalized(self):
         self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Has reported flags can be edited by:
     #  - Secretariat in any state
@@ -212,11 +225,11 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_has_reported_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            False, True)
+                                            False, True, fail_code=403)
 
     def test_has_reported_party_finalized(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
 
 class SubmissionRetrieveTest(BaseFlagsTests):
