@@ -20,7 +20,7 @@
         </thead>
       </table>
 
-      <table ref="tableHeaderBlends" class="table submission-table header-only">
+      <table v-if="hasBlends"  ref="tableHeaderBlends" class="table submission-table header-only">
         <thead>
           <tr class="first-header">
             <th
