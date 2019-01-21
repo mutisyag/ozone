@@ -176,7 +176,10 @@ class Blend(models.Model):
         OTHER = 'Other'
         CUSTOM = 'Custom'
 
-    blend_id = models.CharField(max_length=64, unique=True)
+    blend_id = models.CharField(
+        max_length=64, unique=True,
+        help_text="A unique String value identifying this blend."
+    )
 
     # Custom blends will always be associated with (and only available for)
     # the Party by which they have been created (in case they've been created
@@ -186,17 +189,23 @@ class Blend(models.Model):
         Party,
         related_name='custom_blends',
         null=True,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        help_text="Only custom blends will be associated with a Party."
     )
 
     # This is a plain-text description of the composition; see `BlendComponent`
     # model for a relational one
-    composition = models.CharField(max_length=256, blank=True)
+    composition = models.CharField(
+        max_length=256, blank=True,
+        help_text="Plain-test description of the composition of the blend."
+    )
 
     other_names = models.CharField(max_length=256, blank=True)
 
     type = models.CharField(
-        max_length=128, choices=((s.value, s.name) for s in BlendTypes)
+        max_length=128, choices=((s.value, s.name) for s in BlendTypes),
+        help_text="Blend types can be Zeotrope, Azeotrope, Methyl bromide, "
+        "Other or Custom."
     )
 
     odp = models.FloatField(null=True, blank=True)

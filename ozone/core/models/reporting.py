@@ -68,7 +68,10 @@ class Obligation(models.Model):
     TODO: analysis!
     """
 
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(
+        max_length=256, unique=True,
+        help_text="A unique String value identifying this obligation."
+    )
     # TODO: obligation-party mapping!
 
     description = models.CharField(max_length=256, blank=True)
@@ -82,7 +85,10 @@ class Obligation(models.Model):
     # This will possibly get more complicated in the future
     # (e.g. when different forms will be necessary for the same obligation
     # but different reporting periods due to changes in the methodology
-    form_type = models.CharField(max_length=64)
+    form_type = models.CharField(
+        max_length=64,
+        help_text="Used to generate the correct form, based on this obligation."
+    )
 
     other = models.BooleanField(default=False)
 
@@ -204,23 +210,76 @@ class Submission(models.Model):
     )
 
     # Flags
-    flag_provisional = models.BooleanField(default=False)
-    flag_valid = models.NullBooleanField(default=None)
-    flag_superseded = models.BooleanField(default=False)
+    flag_provisional = models.BooleanField(
+        default=False,
+        help_text="If set to true it signals that future changes are foreseen."
+    )
+    flag_valid = models.NullBooleanField(
+        default=None,
+        help_text="If set to true it signals that the data in the current "
+        "version is considered correct. Can be set by the Secretariat during "
+        "Processing or at the transition between the Processing or Finalized states."
+    )
+    flag_superseded = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that the current version is not "
+        "relevant anymore. When a newer version of data is Submitted, "
+        "the current one is automatically flagged as Superseded."
+    )
     flag_checked_blanks = models.BooleanField(default=True)
     flag_has_blanks = models.BooleanField(default=False)
     flag_confirmed_blanks = models.BooleanField(default=False)
-    flag_has_reported_a1 = models.BooleanField(default=True)
-    flag_has_reported_a2 = models.BooleanField(default=True)
-    flag_has_reported_b1 = models.BooleanField(default=True)
-    flag_has_reported_b2 = models.BooleanField(default=True)
-    flag_has_reported_b3 = models.BooleanField(default=True)
-    flag_has_reported_c1 = models.BooleanField(default=True)
-    flag_has_reported_c2 = models.BooleanField(default=True)
-    flag_has_reported_c3 = models.BooleanField(default=True)
-    flag_has_reported_e = models.BooleanField(default=True)
+    flag_has_reported_a1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex A Group 1 were reported."
+    )
+    flag_has_reported_a2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex A Group 2 were reported."
+    )
+    flag_has_reported_b1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 1 were reported."
+    )
+    flag_has_reported_b2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 2 were reported."
+    )
+    flag_has_reported_b3 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 3 were reported."
+    )
+    flag_has_reported_c1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 1 were reported."
+    )
+    flag_has_reported_c2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 2 were reported."
+    )
+    flag_has_reported_c3 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 3 were reported."
+    )
+    flag_has_reported_e = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex E were reported."
+    )
     # TODO: why is the default here False? does it have other implications?
-    flag_has_reported_f = models.BooleanField(default=False)
+    flag_has_reported_f = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that substances under "
+        "Annex F were reported."
+    )
 
     # We want these to be able to be empty in forms
     remarks_party = models.CharField(max_length=9999, blank=True)
