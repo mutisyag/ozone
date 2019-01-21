@@ -568,13 +568,6 @@ export default {
 	},
 	data() {
 		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends',
-				trade_party: 'countries',
-				source_party: 'countries',
-				destination_party: 'countries'
-			},
 			tableFII: {
 				tableFilters: false,
 				pageOptions: [5, 25, 100],

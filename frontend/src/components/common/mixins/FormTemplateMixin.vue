@@ -22,6 +22,13 @@ export default {
 
 	data() {
 		return {
+			typeOfDisplayObj: {
+				substance: 'substances',
+				blend: 'blends',
+				trade_party: 'countries',
+				source_party: 'countries',
+				destination_party: 'countries'
+			},
 			table: {
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
@@ -66,6 +73,7 @@ export default {
 
 		tableItems() {
 			const tableFields = []
+			console.log(this.tab_info.form_fields)
 			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
 				Object.keys(form_field).forEach(key => {
@@ -73,7 +81,7 @@ export default {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
-							][form_field[key].selected][form_field[key].selected]
+							][form_field[key].selected]
 							: (tableRow[key] = form_field[key].selected)
 					}
 				})
