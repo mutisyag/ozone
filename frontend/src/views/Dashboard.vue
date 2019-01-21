@@ -3,34 +3,52 @@
     <b-row>
       <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="4">
         <b-card>
-			<div slot="header">
+          <div slot="header">
 				<strong><span v-translate>Create submission</span></strong>
-			</div>
+          </div>
 			<small><span v-translate>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span></small>
-			<div class="create-submission mt-2">
-				<b-input-group class="mb-2" :prepend="$gettext('Obligation')">
-				<multiselect trackBy="value" label="text" v-model="current.obligation" :options="obligations"></multiselect>
-				</b-input-group>
+          <div class="create-submission mt-2">
+				<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
+					<multiselect
+						:placeholder="$gettext('Select option')"
+						trackBy="value"
+						label="text"
+						v-model="current.obligation"
+						:options="obligations" />
+            </b-input-group>
 
-				<b-input-group class="mb-2" :prepend="$gettext('Period')">
-				<multiselect trackBy="value" label="text" customTemplateText="<i class='fa fa-clock-o fa-lg'></i>" customTemplate="is_reporting_open" v-model="current.reporting_period" :options="periods">
-				</multiselect>
-				</b-input-group>
+				<b-input-group id="period_selector"  class="mb-2" :prepend="$gettext('Period')">
+					<multiselect
+						:placeholder="$gettext('Select option')"
+						trackBy="value"
+						label="text"
+						customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
+						customTemplate="is_reporting_open"
+						v-model="current.reporting_period"
+						:options="periods" />
+            </b-input-group>
 
-				<b-input-group class="mb-2" :prepend="$gettext('Party')">
-				<multiselect trackBy="value" label="text" :disabled="Boolean(currentUser.party)" v-model="current.party" :options="parties"></multiselect>
-				</b-input-group>
+				<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
+					<multiselect
+						:placeholder="$gettext('Select option')"
+						trackBy="value"
+						label="text"
+						:disabled="Boolean(currentUser.party)"
+						v-model="current.party"
+						:options="parties" />
+            </b-input-group>
 
 				<b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
-			</div>
+          </div>
+
         </b-card>
       </b-col>
 
         <b-col>
           <b-card v-if="basicDataReady">
-				<div slot="header">
+            <div slot="header">
 					<strong><span v-translate='{totalRows: dataEntryTable.totalRows}'>Data entry submissions (%{totalRows} records)</span></strong>
-				</div>
+            </div>
 				<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
 					<div class="filter-group mb-2">
 						<b-input-group :prepend="$gettext('Search')">
@@ -63,7 +81,7 @@
 									stacked="md"
 									:filter="dataEntryTable.search"
 									:items="dataEntryTableItems"
-									:fields="dataEntryTable.fields"
+									:fields="dataEntryTableFields"
 									:per-page="dataEntryTable.perPage"
 									:current-page="dataEntryTable.currentPage"
 									ref="dataEntryTable"
@@ -72,8 +90,9 @@
 							<router-link
 									class="btn btn-outline-primary btn-sm"
 									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-								<span v-translate>Continue</span>
-							</router-link>
+								<span v-if="row.item.details.can_edit_data" v-translate>Continue</span>
+								<span v-else v-translate>View</span>
+										</router-link>
 						</template>
 			</b-table>
 			<b-row v-if="currentUser.is_secretariat">
@@ -99,24 +118,24 @@
               </b-row>
             </template>
             <b-container fluid>
-              <div  class="mt-2 mb-2 dashboard-filters">
+              <div class="mt-2 mb-2 dashboard-filters">
 					<b-input-group :prepend="$gettext('Search')">
-						<b-form-input v-model="tableOptions.filters.search"/>
-					</b-input-group>
+									<b-form-input v-model="tableOptions.filters.search"/>
+								</b-input-group>
 					<b-input-group :prepend="$gettext('Obligation')">
-						<b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-					</b-input-group>
+									<b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+								</b-input-group>
 					<b-input-group :prepend="$gettext('Party')">
-						<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
-					</b-input-group>
+									<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
+								</b-input-group>
 					<b-input-group style="width: 120px" :prepend="$gettext('From')">
-						<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
-						</b-form-select>
-					</b-input-group>
+									<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
+									</b-form-select>
+								</b-input-group>
 					<b-input-group style="width: 120px" :prepend="$gettext('To')">
-						<b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
-						</b-form-select>
-					</b-input-group>
+									<b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
+									</b-form-select>
+								</b-input-group>
 					<b-btn @click="clearFilters"><span v-translate>Clear</span></b-btn>
               </div>
               <b-table show-empty
@@ -126,7 +145,7 @@
                        head-variant="light"
                        stacked="md"
                        :items="tableItems"
-                       :fields="table.fields"
+                       :fields="tableFields"
                        :per-page="tableOptions.perPage"
                        :sort-by.sync="tableOptions.sorting.sortBy"
                        :sort-desc.sync="tableOptions.sorting.sortDesc"
@@ -137,7 +156,7 @@
                     <router-link
                         class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-                      <span v-translate v-if="row.item.details.data_changes_allowed && !currentUser.is_read_only">
+                      <span v-translate v-if="row.item.details.can_edit_data && !currentUser.is_read_only">
                         Edit
                       </span>
                       <span v-translate v-else>
@@ -149,25 +168,26 @@
                         variant="outline-primary"
                         @click="clone(row.item.details.url, row.item.details.obligation)"
 												size="sm"
+												v-if="row.item.details.is_cloneable"
 												:disabled="currentUser.is_read_only">
                       <span v-translate>Revise</span>
                     </b-btn>
 
                     <b-btn
-						variant="outline-primary"
-						v-for="transition in row.item.details.available_transitions"
-						:key="transition"
-						size="sm"
-						:disabled="currentUser.is_read_only"
-						@click="$store.dispatch('doSubmissionTransition', {submission: row.item.details.url, transition: transition, source: 'dashboard'})">
-                      {{labels[transition]}}
+                      variant="outline-primary"
+                      v-for="transition in row.item.details.available_transitions"
+                      :key="transition"
+											size="sm"
+											:disabled="currentUser.is_read_only"
+						@click="$store.dispatch('doSubmissionTransition', {$gettext, transition, submission: row.item.details.url, source: 'dashboard'})">
+							<span>{{labels[transition]}}</span>
                     </b-btn>
 
                     <b-btn
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
-                        v-if="row.item.details.data_changes_allowed"
-						:disabled="currentUser.is_read_only"
+                        v-if="row.item.details.can_edit_data"
+												:disabled="currentUser.is_read_only"
 						size="sm">
                       <span v-translate>Delete</span>
                     </b-btn>
@@ -179,12 +199,13 @@
                 <b-col md="10" class="my-1">
                   <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
-				<b-col md="2">
+								<b-col md="2">
                   <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
-				</b-col>
+								</b-col>
               </b-row>
+
             </b-container>
           </b-card>
       </b-col>
@@ -196,7 +217,7 @@
 import { cloneSubmission } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 import { mapGetters } from 'vuex'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	name: 'Dashboard',
@@ -207,53 +228,12 @@ export default {
 				reporting_period: null,
 				party: null
 			},
-			labels: labels.general,
+			labels: getCommonLabels(this.$gettext),
 			table: {
-				fields: [
-					{
-						key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-					},
-					{
-						key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'current_state', label: this.$gettext('State'), sortable: true
-					},
-					{
-						key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-					},
-					{ key: 'actions', label: this.$gettext('Actions') }
-				],
 				pageOptions: [10, 25, 100]
-			},
+					},
 			tableOptionsCurrentPageWasSetFromWatcher: false,
 			dataEntryTable: {
-				fields: [
-					{
-						key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-					},
-					{
-						key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-					},
-					{
-						key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-					},
-					{
-						key: 'actions', label: this.$gettext('Actions')
-					}
-				],
 				currentPage: 1,
 				perPage: 10,
 				totalRows: 0,
@@ -261,16 +241,17 @@ export default {
 					sortBy: 'updated_at',
 					sortDesc: true,
 					sortDirection: 'asc'
-				},
+					},
 				search: null,
 				filters: {
 					period_start: null,
 					period_end: null,
 					obligation: null,
 					party: null
-				},
+					},
 				pageOptions: [10, 25, 100]
 			}
+
 		}
 	},
 
@@ -280,7 +261,7 @@ export default {
 		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
 		this.$store.dispatch('getMyCurrentUser')
-		this.$store.commit('updateBreadcrumbs', ['Dashboard'])
+		this.updateBreadcrumbs()
 	},
 
 	components: {
@@ -326,7 +307,29 @@ export default {
 			}
 			return tableFields
 		},
-
+		tableFields() {
+			return [
+				{
+					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+				},
+				{
+					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'current_state', label: this.$gettext('State'), sortable: true
+				},
+				{
+					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+				},
+				{ key: 'actions', label: this.$gettext('Actions') }
+			]
+		},
 		dataEntryTableItems() {
 			const tableFields = []
 			const { filters } = this.dataEntryTable
@@ -349,7 +352,28 @@ export default {
 			}
 			return tableFields
 		},
-
+		dataEntryTableFields() {
+			return [
+				{
+					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+				},
+				{
+					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+				},
+				{
+					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+				},
+				{
+					key: 'actions', label: this.$gettext('Actions')
+				}
+			]
+		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
@@ -386,11 +410,11 @@ export default {
 
 		dataReady() {
 			if (this.submissions
-				&& this.periods
+        && this.periods
 				&& this.currentUser
-				&& this.obligations
-				&& this.parties
-				&& this.submissions.length) {
+        && this.obligations
+        && this.parties
+        && this.submissions.length) {
 				return true
 			}
 			return false
@@ -421,9 +445,9 @@ export default {
 
 		basicDataReady() {
 			if (this.periods
-				&& this.obligations
+        && this.obligations
 				&& this.currentUser
-				&& this.parties) {
+        && this.parties) {
 				return true
 			}
 			return false
@@ -440,8 +464,14 @@ export default {
 	},
 
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
+		},
 		addSubmission() {
-			this.$store.dispatch('addSubmission', this.current).then(r => {
+			this.$store.dispatch('addSubmission', {
+				$gettext: this.$gettext,
+				submission: this.current
+			}).then(r => {
 				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
 				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
 			})
@@ -455,11 +485,13 @@ export default {
 			cloneSubmission(url).then((response) => {
 				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('New version created')] },
 					variant: 'success'
 				})
 			}).catch(error => {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { ...error.response.data },
 					variant: 'danger' })
 				console.log(error)
@@ -481,11 +513,13 @@ export default {
 			}
 			return false
 		},
-
 		removeSubmission(url) {
 			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
-				this.$store.dispatch('removeSubmission', url)
+				this.$store.dispatch('removeSubmission', {
+					$gettext: this.$gettext,
+					submissionUrl: url
+				})
 			}
 		},
 
@@ -500,6 +534,11 @@ export default {
 	},
 
 	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		},
 		'tableOptions.filters': {
 			handler() {
 				if (this.tableOptions.currentPage !== 1) {

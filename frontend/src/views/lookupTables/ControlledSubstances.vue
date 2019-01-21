@@ -36,7 +36,7 @@
 						head-variant="light"
 						stacked="md"
 						:items="substances"
-						:fields="table.fields"
+						:fields="tableFields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
 						:filter="filterCallback"
@@ -54,31 +54,10 @@
 import './styles.css'
 
 export default {
-	data() {
-		const fields = [{
-			key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
-		}, {
-			key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
-		}, {
-			key: 'name', label: this.$gettext('Name'), sortable: true, class: 'text-center'
-		}, {
-			key: 'odp', label: this.$gettext('ODP'), sortable: true, class: 'text-center'
-		}, {
-			key: 'formula', label: this.$gettext('Formula'), sortable: true, class: 'text-center'
-		}, {
-			key: 'number_of_isomers', label: this.$gettext('Number of Isomers'), sortable: true, class: 'text-center'
-		}, {
-			key: 'min_odp', label: this.$gettext('MinODP'), sortable: true, class: 'text-center'
-		}, {
-			key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
-		}]
-
 		return {
 			table: {
-				fields,
 				currentPage: 1,
 				perPage: Infinity,
-				totalRows: 50,
 				sortBy: 'group_id',
 				sortDesc: false,
 				filters: {
@@ -90,6 +69,25 @@ export default {
 		}
 	},
 	computed: {
+		tableFields() {
+			return [{
+				key: 'annex', label: this.$gettext('Annex'), sortable: true, class: 'text-center'
+			}, {
+				key: 'group_id', label: this.$gettext('Group'), sortable: true, class: 'text-center'
+			}, {
+				key: 'name', label: this.$gettext('Name'), sortable: true, class: 'text-center'
+			}, {
+				key: 'odp', label: this.$gettext('ODP'), sortable: true, class: 'text-center'
+			}, {
+				key: 'formula', label: this.$gettext('Formula'), sortable: true, class: 'text-center'
+			}, {
+				key: 'number_of_isomers', label: this.$gettext('Number of Isomers'), sortable: true, class: 'text-center'
+			}, {
+				key: 'min_odp', label: this.$gettext('MinODP'), sortable: true, class: 'text-center'
+			}, {
+				key: 'max_odp', label: this.$gettext('MaxODP'), sortable: true, class: 'text-center'
+			}]
+		},
 		isDisabledClearFilters() {
 			const { filters } = this.table
 			return !filters.searchGroup && !filters.searchName && !filters.searchFormula
@@ -120,6 +118,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Controlled substances')])
+		},
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
@@ -150,9 +151,19 @@ export default {
 			filters.searchFormula = null
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
+	},
 	created() {
+		const body = document.querySelector('body')
+		if (body.classList.contains('aside-menu-lg-show')) {
+			document.querySelector('body').classList.remove('aside-menu-lg-show')
+		}
 		this.$store.dispatch('getSubstances')
-		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Controlled substances'])
 	}
 }
 </script>

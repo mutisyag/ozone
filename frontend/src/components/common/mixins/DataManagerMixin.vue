@@ -21,7 +21,7 @@ export default {
 	beforeRouteLeave(to, from, next) {
 		if (process.env.NODE_ENV !== 'development') {
 			if (this.alertUnsavedData()) {
-				const answer = window.confirm('Do you really want to leave? you have unsaved changes!')
+				const answer = window.confirm(this.$gettext('Do you really want to leave? you have unsaved changes!'))
 				if (answer) {
 					next()
 				} else {
@@ -42,7 +42,11 @@ export default {
 			if (process.env.NODE_ENV !== 'development') {
 				window.addEventListener('beforeunload', this.alertUnsavedData)
 			}
-			this.$store.dispatch('getInitialData', { submission: this.submission, formName: this.currentFormName }).then(() => {
+			this.$store.dispatch('getInitialData', {
+				$gettext: this.$gettext,
+				submission: this.submission,
+				formName: this.currentFormName
+			}).then(() => {
 				this.prePrefill()
 				this.prefillComments()
 			})
@@ -86,7 +90,6 @@ export default {
 		}
 
 	},
-
 	methods: {
 
 		alertUnsavedData(e) {
@@ -143,6 +146,7 @@ export default {
 				sortedData.forEach(item => {
 					if (item.substance || item.blend) {
 						this.$store.dispatch('createSubstance', {
+							$gettext: this.$gettext,
 							substanceList: item.substance ? [item.substance] : null,
 							currentSectionName: tabName,
 							groupName: null,
@@ -152,6 +156,7 @@ export default {
 						})
 					} else {
 						this.$store.dispatch('createRow', {
+							$gettext: this.$gettext,
 							currentSectionName: tabName,
 							prefillData: item
 						})
@@ -166,6 +171,13 @@ export default {
 			this.$store.commit('setTabStatus', { tab: tabName, value: true })
 		}
 
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.$store.commit('setForm', { formName: this.currentFormName, $gettext: this.$gettext })
+			}
+		}
 	}
 }
 </script>

@@ -10,7 +10,7 @@ from model_utils import FieldTracker
 
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
-from .reporting import ModifyPreventionMixin, Submission, OtherSubmissionType
+from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend, Annex, Group
 from .utils import model_to_dict
 
@@ -80,6 +80,15 @@ class BlendCompositionMixin:
                 }
             )
 
+        # If this is a custom blend from a different party, raise an error
+        if (
+            self.blend is not None
+            and self.blend.party is not None
+            and self.blend.party != self.submission.party
+        ):
+            raise ValidationError(
+                _("This blend is for a different party!")
+            )
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
             raise ValidationError(
@@ -327,8 +336,6 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_os = models.CharField(max_length=9999, blank=True)
 
-    tracker = FieldTracker()
-
     class Meta:
         db_table = 'reporting_article_seven_questionnaire'
 
@@ -370,7 +377,7 @@ class Article7Export(
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_exports'
+        db_table = 'reporting_art7_exports'
 
 
 class Article7Import(
@@ -410,7 +417,7 @@ class Article7Import(
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_imports'
+        db_table = 'reporting_art7_imports'
 
 
 class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
@@ -436,11 +443,10 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     quantity_article_5 = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-
     tracker = FieldTracker()
 
     class Meta:
-        db_table = 'reporting_article_seven_production'
+        db_table = 'reporting_art7_production'
 
 
 class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
@@ -462,7 +468,7 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_destruction'
+        db_table = 'reporting_art7_destruction'
 
 
 class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
@@ -497,7 +503,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
     )
 
     class Meta:
-        db_table = 'reporting_article_seven_non_party_trade'
+        db_table = 'reporting_art7_npt'
 
     @staticmethod
     def get_non_parties(group_pk, reporting_period_pk=None):
@@ -600,11 +606,10 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
-
     tracker = FieldTracker()
 
     class Meta:
-        db_table = 'reporting_article_seven_emissions'
+        db_table = 'reporting_art7_emissions'
 
 
 class BaseHighAmbientTemperature(models.Model):
@@ -635,8 +640,10 @@ class HighAmbientTemperatureProduction(
     substance = models.ForeignKey(
         Substance, on_delete=models.PROTECT
     )
-
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'reporting_hat_production'
 
 
 class HighAmbientTemperatureImport(
@@ -658,6 +665,8 @@ class HighAmbientTemperatureImport(
         'quantity_dcpac',
     ]
 
+    class Meta:
+        db_table = 'reporting_hat_import'
 
 class Transfer(ModifyPreventionMixin, BaseReport):
     """
@@ -688,8 +697,10 @@ class Transfer(ModifyPreventionMixin, BaseReport):
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
-
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'reporting_transfer'
 
 
 class DataOther(ModifyPreventionMixin, BaseReport):
@@ -697,10 +708,7 @@ class DataOther(ModifyPreventionMixin, BaseReport):
     Model for Data Other reports.
     """
 
-    other_submission_type = models.ForeignKey(
-        OtherSubmissionType,
-        related_name="data_other",
-        on_delete=models.PROTECT
-    )
-
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'reporting_other'

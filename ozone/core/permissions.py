@@ -1,8 +1,6 @@
-from django.core.exceptions import ObjectDoesNotExist
-
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Blend, Party, Submission
+from .models import Blend, Submission
 
 
 def is_secretariat_or_admin(request):
@@ -51,9 +49,7 @@ class BaseIsSecretariatOrSameParty(BasePermission):
         Called for HTTP methods that require an object.
         This is only called if has_permission() has already passed.
         """
-
         pass
-
 
 class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
 
@@ -74,7 +70,6 @@ class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
         if is_secretariat_or_admin(request):
             return True
         return request.user.party == obj.party
-
 
 class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
 
@@ -102,7 +97,7 @@ class IsSecretariatOrSamePartyBlend(BaseIsSecretariatOrSameParty):
             if blend_pk:
                 # Blend object already exists.
                 party = Blend.objects.get(pk=blend_pk).party.pk
-            else:
+        else:
                 # It's a create
                 party = request.data.get('party', None)
             return party == request.user.party.pk

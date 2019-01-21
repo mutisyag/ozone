@@ -20,15 +20,16 @@ import {
 	getLevel2PropertyValue
 } from '@/components/common/services/utilsService.js'
 
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 
 const actions = {
-	addSubmission(context, data) {
+	addSubmission(context, { submission, $gettext }) {
 		return new Promise((resolve, reject) => {
-			const duplicate = context.getters.getDuplicateSubmission(data)
+			const duplicate = context.getters.getDuplicateSubmission(submission)
 			if (duplicate.length) {
 				context.dispatch('setAlert', {
-					message: { __all__: ['Another submission already exists in Data Entry stage.'] },
+					$gettext,
+					message: { __all__: [$gettext('Another submission already exists in Data Entry stage.')] },
 					variant: 'danger'
 				})
 				// TODO: should this be a thing ?
@@ -36,9 +37,10 @@ const actions = {
 				//     context.dispatch('setAlert', { message: 'Reporting is not open for the selected period', variant: 'danger' })
 				// }
 			} else {
-				createSubmission(data).then((response) => {
+				createSubmission(submission).then((response) => {
 					context.dispatch('setAlert', {
-						message: { __all__: ['Submission Created'] },
+						$gettext,
+						message: { __all__: [$gettext('Submission Created')] },
 						variant: 'success'
 					})
 					context.dispatch('getCurrentSubmissions').then(() => {
@@ -46,7 +48,8 @@ const actions = {
 					})
 				}).catch((error) => {
 					context.dispatch('setAlert', {
-						message: { __all__: ['Failed to create submission'] },
+						$gettext,
+						message: { __all__: [$gettext('Failed to create submission')] },
 						variant: 'danger'
 					})
 					reject(error.response)
@@ -99,6 +102,7 @@ const actions = {
 				},
 				perPage: null,
 				currentPage: null
+
 			}).then(response => {
 				context.commit('setDashboardMySubmissions', response.data)
 				resolve()
@@ -158,7 +162,7 @@ const actions = {
 
 	setAlert(context, data) {
 		Object.keys(data.message).forEach(key => {
-			const labelValue = getLevel2PropertyValue(labels, key)
+			const labelValue = getLevel2PropertyValue(getLabels(data.$gettext), key)
 			const message = typeof (data.message[key]) !== 'string' ? data.message[key].join('<br>') : data.message[key]
 			const displayMessage = `${labelValue ? `${labelValue}: ` : ''}${message}`
 			context.commit('addAlertData', {
@@ -168,73 +172,89 @@ const actions = {
 		})
 	},
 
-	doSubmissionTransition(context, data) {
-		callTransition(data.submission, data.transition).then(() => {
-			if (data.source === 'dashboard') {
+	doSubmissionTransition(context, { source, submission, transition, $gettext }) {
+		callTransition(submission, transition).then(() => {
+			if (source === 'dashboard') {
 				context.dispatch('getCurrentSubmissions')
 			} else {
-				context.dispatch('getSubmissionData', data.submission)
+				context.dispatch('getSubmissionData', { submission, $gettext })
 			}
 			context.dispatch('setAlert', {
-				message: { __all__: ['Submission state updated'] },
+				$gettext,
+				message: { __all__: [$gettext('Submission state updated')] },
 				variant: 'success'
 			})
 		}).catch(error => {
 			context.dispatch('setAlert', {
-				message: { __all__: ['Unable to change the state of this submission'] },
+				$gettext,
+				message: { __all__: [$gettext('Unable to change the state of this submission')] },
 				variant: 'danger'
 			})
 			console.log(error)
 		})
 	},
 
-	removeSubmission(context, submissionUrl) {
+	removeSubmission(context, { submissionUrl, $gettext }) {
 		deleteSubmission(submissionUrl).then(() => {
 			context.dispatch('getCurrentSubmissions')
 			context.dispatch('setAlert', {
-				message: { __all__: ['Submission deleted'] },
+				$gettext,
+				message: { __all__: [$gettext('Submission deleted')] },
 				variant: 'success'
 			})
 		}).catch(() => {
 			context.dispatch('getCurrentSubmissions')
 			context.dispatch('setAlert', {
-				message: { __all__: ['Failed to delete submission'] },
+				$gettext,
+				message: { __all__: [$gettext('Failed to delete submission')] },
 				variant: 'danger'
 			})
 		})
 	},
 
-	getInitialData(context, { submission, formName }) {
-		context.commit('setForm', formName)
+	getInitialData(context, { submission, formName, $gettext }) {
+		context.commit('setForm', { formName, $gettext })
 		return new Promise((resolve) => {
-			context.dispatch('getSubmissionData', submission).then(() => {
+			context.dispatch('getSubmissionData', { submission, $gettext }).then(() => {
 				context.dispatch('getCurrentUserForm')
 				context.dispatch('getCountries')
 				context.dispatch('getSubstances')
-				context.dispatch('getCustomBlends')
+				// Filter custom blends by the submission's party, because the API will
+				// by default show all custom blends for secretariat users.
+				// This way, even secretariat users will only see the correct available
+				// custom blends.
+				context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
 				context.dispatch('getNonParties')
 				resolve()
 			})
 		})
 	},
 
-	getSubmissionData(context, data) {
+	getSubmissionData(context, { submission, $gettext }) {
 		return new Promise((resolve) => {
-			getSubmission(data).then((response) => {
+			getSubmission(submission).then((response) => {
 				context.commit('updateSubmissionData', response.data)
 				context.commit('setFlagsPermissions', response.data.changeable_flags)
 				context.commit('updateAvailableTransitions', response.data.available_transitions)
-				context.dispatch('getCurrentSubmissionHistory', data)
+				context.dispatch('getCurrentSubmissionHistory', { submission, $gettext })
+				context.commit('setFormPermissions', {
+					can_change_remarks_party: response.data.can_change_remarks_party,
+					can_change_remarks_secretariat: response.data.can_change_remarks_secretariat,
+					can_change_reporting_channel: response.data.can_change_reporting_channel,
+					can_upload_files: response.data.can_upload_files,
+					can_edit_data: response.data.can_edit_data
+				})
 				resolve()
 			})
 		})
 	},
 
-	getCurrentSubmissionHistory(context, data) {
-		getSubmissionHistory(data).then((response) => {
+	getCurrentSubmissionHistory(context, { submission, $gettext }) {
+		getSubmissionHistory(submission).then((response) => {
 			context.commit('setSubmissionHistory', response.data)
 		}).catch((error) => {
 			context.dispatch('setAlert', {
+				$gettext,
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
@@ -283,9 +303,9 @@ const actions = {
 		})
 	},
 
-	getCustomBlends(context) {
+	getCustomBlends(context, { party }) {
 		const blendsDisplay = {}
-		getCustomBlends().then((response) => {
+		getCustomBlends(party).then((response) => {
 			response.data.forEach(blend => {
 				blend.components.sort((component1, component2) => component2.percentage - component1.percentage)
 				blendsDisplay[blend.id] = { name: blend.blend_id, components: blend.components, is_qps: blend.is_qps }
@@ -314,6 +334,7 @@ const actions = {
 
 				// section, substance, group, country, blend, prefillData, ordering_id
 				const inner_fields = context.state.tableRowConstructor.substanceRows({
+					$gettext: data.$gettext,
 					section: data.currentSectionName,
 					substance,
 					group: data.groupName,
@@ -332,6 +353,7 @@ const actions = {
 					({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
 				}
 				const inner_fields = context.state.tableRowConstructor.substanceRows({
+					$gettext: data.$gettext,
 					section: data.currentSectionName,
 					substance: null,
 					group: data.groupName,
@@ -345,7 +367,7 @@ const actions = {
 		}
 	},
 
-	createRow(context, { currentSectionName, prefillData }) {
+	createRow(context, { currentSectionName, prefillData, $gettext }) {
 		let ordering_id = 0
 		if (!prefillData) {
 			context.commit('incrementOrderingId', { tabName: currentSectionName });
@@ -353,6 +375,7 @@ const actions = {
 		}
 
 		const row = context.state.tableRowConstructor.nonSubstanceRows({
+			$gettext,
 			currentSectionName,
 			prefillData,
 			ordering_id

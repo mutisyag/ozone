@@ -1,11 +1,11 @@
 import 'toastedjs/src/sass/toast.scss'
-import Toasted from 'toastedjs'
+import Toasted from 'toastedjs/dist/toasted.min.js'
 
-import art7Form from '@/components/art7/dataDefinitions/form'
+import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
-import letterForm from '@/components/letter/dataDefinitions/form'
+import { getFormLetter } from '@/components/letter/dataDefinitions/form'
 import letterTableRowConstructor from '@/components/letter/services/tableRowConstructorService'
-import hatForm from '@/components/hat/dataDefinitions/form'
+import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
 
 const options = {
@@ -43,21 +43,21 @@ const mutations = {
 		state.currentSubmissionHistory = data
 	},
 
-	setForm(state, data) {
+	setForm(state, { formName, $gettext }) {
 		let currentFormStructure = null
 		let tableRowConstructor = null
-		console.log('setForm', data)
-		switch (data) {
+		switch (formName) {
 		case 'art7':
-			currentFormStructure = art7Form
+			currentFormStructure = getFormArt7($gettext)
+			console.log(currentFormStructure)
 			tableRowConstructor = art7TableRowConstructor
 			break
 		case 'hat':
-			currentFormStructure = hatForm
+			currentFormStructure = getFormHat($gettext)
 			tableRowConstructor = hatTableRowConstructor
 			break
-		case 'letter':
-			currentFormStructure = letterForm
+		case 'other':
+			currentFormStructure = getFormLetter($gettext)
 			tableRowConstructor = letterTableRowConstructor
 			break
 		default:
@@ -73,6 +73,10 @@ const mutations = {
 
 	setTabOrderingId(state, data) {
 		state.form.tabs[data.tabName].ordering_id = data.ordering_id
+	},
+
+	setFormPermissions(state, data) {
+		state.permissions.form = data
 	},
 
 	// dashboard
@@ -125,21 +129,6 @@ const mutations = {
 	},
 
 	updatePartyRatifications(state, data) {
-		const htmlFormatter = (ratification) => (ratification ? `${ratification.ratification_date} <br/> ${ratification.ratification_type}` : 'Pending')
-
-		data = data.map(party => {
-			party.vienna_convention = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'VC'))
-			party.montreal_protocol = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MP'))
-			party.london_amendment = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'LA'))
-			party.copenhagen_amendment = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'CA'))
-			party.montreal_amendment = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MA'))
-			party.beijing_amendment = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'BA'))
-			party.kigali_amendment = htmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'KA'))
-			party.is_eu_member = party.flags.is_eu_member
-			party.is_article5 = party.flags.is_article5
-			party.is_high_ambient_temperature = party.flags.is_high_ambient_temperature
-			return party
-		})
 		state.initialData.partyRatifications = data
 	},
 
@@ -192,7 +181,7 @@ const mutations = {
 				...data,
 				expires: new Date((new Date()).getTime() + 5000)
 			})
-			toasted.show(data.displayMessage, { type: toastedOptions[data.variant] })
+			toasted.show(data.displayMessage, { type: toastedOptions[data.variant], position: 'bottom-right' })
 		}
 	},
 

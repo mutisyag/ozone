@@ -2,10 +2,11 @@
 	<div>
 		<div class="container">
 			<div>
-				<h5 class="mt-2">Add predefined blends</h5>
-				<small>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</small>
+				<h5 class="mt-2"><span v-translate>Add predefined blends</span></h5>
+				<small><span v-translate>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</span></small>
 				<b-input-group class="mt-2" prepend="Blend types">
 					<multiselect
+						:placeholder="$gettext('Select option')"
 						:clear-on-select="false"
 						:hide-selected="true"
 						trackBy="value"
@@ -14,14 +15,13 @@
 						:multiple="true"
 						@input="new_blend = null; selected_blends.selected = []"
 						v-model="selected_blends.filter"
-						placeholder=""
-						:options="selected_blends.filters"
-					></multiselect>
+						:options="selected_blends.filters" />
 				</b-input-group>
 
 				<div class="mt-2 mb-2" style="display: flex;">
-					<b-input-group class="mt-2" prepend="Blends">
+					<b-input-group id="blend_selector" class="mt-2" prepend="Blends">
 						<multiselect
+							:placeholder="$gettext('Select option')"
 							trackBy="value"
 							:clear-on-select="false"
 							:hide-selected="true"
@@ -30,9 +30,7 @@
 							label="text"
 							v-model="selected_blends.selected"
 							@input="new_blend = null"
-							placeholder=""
-							:options="filteredBlends"
-						></multiselect>
+							:options="filteredBlends" />
 					</b-input-group>
 
 				</div>
@@ -42,15 +40,14 @@
 				:key="blend.name"
 				v-if="selected_blends.selected"
 				v-for="blend in selected_blends.selected"
-				class="small mb-2"
-			>
-				<div>Composition of
+				class="small mb-2">
+				<div>
+					<span v-translate>Composition of</span>
 					<b>{{display.blends[blend].name}}</b>
 				</div>
 				<b-row
 					v-for="(substance, substance_index) in display.blends[blend].components"
-					:key="substance_index"
-				>
+					:key="substance_index">
 					<b-col>{{substance.component_name}}</b-col>
 					<b-col>{{substance.percentage.toLocaleString("en", {style: "percent"})}}</b-col>
 				</b-row>
@@ -59,48 +56,49 @@
 				<b-btn
 					v-if="selected_blends.selected.length"
 					@click="addSubstance('selected')"
-					variant="primary"
-				>Add {{selected_blends.selected.length}} rows</b-btn>
+					id="add-blend-button"
+					variant="primary">
+						<span v-translate='{length: selected_blends.selected.length}'>Add %{length} rows</span>
+				</b-btn>
 				<b-btn 	v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
 			</b-btn-group>
 			<hr>
 
 			<div v-if="!new_blend">
-				<h5>Add custom blend</h5>
-				<b-btn variant="primary" @click="addNewBlend">Add new blend</b-btn>
+				<h5><span v-translate>Add custom blend</span></h5>
+				<b-btn variant="primary" @click="addNewBlend"><span v-translate>Add new blend</span></b-btn>
 			</div>
 
 			<div v-if="new_blend">
-				<h5>Add custom blend</h5>
-				<small>If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</small>
+				<h5><span v-translate>Add custom blend</span></h5>
+				<small><span v-translate>If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</span></small>
 				<b-input-group class="mt-2" prepend="Blend name">
 					<b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
 					<b-input-group-append>
-						<b-btn @click="addSubstanceToBlend">Add substance</b-btn>
+						<b-btn @click="addSubstanceToBlend"><span v-translate>Add substance</span></b-btn>
 					</b-input-group-append>
 				</b-input-group>
 				<b-input-group
 					class="mb-2 mt-2"
 					v-for="(substance, substance_index) in new_blend.composition"
-					:key="substance_index"
-				>
+					:key="substance_index">
 					<b-input-group-prepend>
 						<b-btn
 							style="z-index:initial;"
 							variant="danger"
-							@click="removeSubstanceFromBlend(substance)"
-						>X</b-btn>
+							@click="removeSubstanceFromBlend(substance)">
+								X
+						</b-btn>
 					</b-input-group-prepend>
 					<multiselect
 						label="text"
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
-						tag-placeholder="Press enter to use a new substance"
-						placeholder="Controlled or new substance"
+						:tag-placeholder="$gettext('Press enter to use a new substance')"
+						:placeholder="$gettext('Controlled or new substance')"
 						v-model="substance.name"
-						:options="substances"
-					></multiselect>
+						:options="substances" />
 					<b-input-group-append>
 						<b-input-group append="%">
 							<b-form-input class="ml-2" type="text" placeholder="" v-model="substance.percent"></b-form-input>
@@ -115,9 +113,12 @@
 					v-if="new_blend"
 					:disabled="!blendIsValid"
 					@click="addSubstance('custom')"
-					variant="primary"
-				>Add row</b-btn>
-				<b-btn v-if="new_blend" @click="resetData">Cancel</b-btn>
+					variant="primary">
+						<span v-translate>Add row</span>
+				</b-btn>
+				<b-btn v-if="new_blend" @click="resetData">
+					<span v-translate>Cancel</span>
+				</b-btn>
 			</b-btn-group>
 
 		</div>
@@ -171,7 +172,7 @@ export default {
 			submit_blend: {
 				components: null,
 				blend_id: null,
-				type: 'Other'
+				type: 'Custom'
 			},
 			selected_substance: {
 				selected: null,
@@ -217,7 +218,8 @@ export default {
 			console.log('here')
 			if (this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) {
 				this.$store.dispatch('setAlert', {
-					message: { __all__: [`A blend with the name ${this.new_blend.text} already exists!`] },
+					$gettext: this.$gettext,
+					message: { __all__: [`${this.$gettext('A blend with this name already exists!')} - ${this.new_blend.text}`] },
 					variant: 'danger'
 				})
 			}
@@ -268,6 +270,7 @@ export default {
 		addSubstance(type) {
 			if (type === 'selected') {
 				this.$store.dispatch('createSubstance', {
+					$gettext: this.$gettext,
 					substanceList: null,
 					currentSectionName: this.tabName,
 					groupName: null,
@@ -292,6 +295,7 @@ export default {
 					this.$store.commit('addCreateBlendToBlendList', response.data)
 					this.display.blends[response.data.id] = { name: response.data.blend_id, components: response.data.components }
 					this.$store.dispatch('createSubstance', {
+						$gettext: this.$gettext,
 						substanceList: null,
 						currentSectionName: this.tabName,
 						groupName: null,
@@ -300,12 +304,14 @@ export default {
 						prefillData: null
 					})
 					this.$store.dispatch('setAlert', {
-						message: { __all__: ['Blend created'] },
+						$gettext: this.$gettext,
+						message: { __all__: [this.$gettext('Blend created')] },
 						variant: 'success' })
 					this.resetData()
 				}).catch((error) => {
 					console.log(error)
 					this.$store.dispatch('setAlert', {
+						$gettext: this.$gettext,
 						message: { ...error.response.data },
 						variant: 'danger' })
 				})

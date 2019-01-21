@@ -1,4 +1,3 @@
-/* eslint-disable no-tabs */
 <template>
 	<div v-if="section && tabName" class="validation-tab">
 		<div v-for="(field, field_index) in section" :key="field_index">

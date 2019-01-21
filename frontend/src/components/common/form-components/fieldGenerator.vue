@@ -1,14 +1,13 @@
 <template>
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email'">
-        <input @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type">
+        <input :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type">
     </div>
-    <b-form-radio-group @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
+    <b-form-radio-group :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
-		<div
-				v-else-if="field.type === 'select'"
-		>
+		<div v-else-if="field.type === 'select'">
 			<multiselect
+				:placeholder="$gettext('Select option')"
 				:multiple="false"
 				label="text"
 				trackBy="value"
@@ -63,7 +62,8 @@ export default {
 				const number = /-\d+\.\d*|-[\d]*|[\d]+\.[\d]*|[\d]+/
 				if (this.currentTyping && !valid.test(this.currentTyping)) {
 					const n = this.currentTyping.match(number)
-					this.currentTyping = n ? n[0] : ''
+					this.currentTyping = n ? parseFloat(n[0]) : null
+					console.log('------', this.currentTyping, n)
 				}
 			}
 		},
@@ -73,8 +73,11 @@ export default {
 				this.validateInput()
 				// empty strings in number field are not accepted in backend, so we need to transform every '' into a null for type === number
 				if (this.currentTyping === '' && this.field.type === 'number') {
-					console.log('here')
 					this.$store.commit('updateFormField', { value: null, fieldInfo: this.fieldInfo })
+					return
+				}
+				if (this.field.type === 'number' && this.currentTyping !== '') {
+					this.$store.commit('updateFormField', { value: parseFloat(this.currentTyping), fieldInfo: this.fieldInfo })
 					return
 				}
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
@@ -93,10 +96,10 @@ export default {
 			handler() {
 				this.currentTyping = this.field.selected
 			}
-		}
 	}
 }
 
+}
 </script>
 
 <style lang="css" scoped>

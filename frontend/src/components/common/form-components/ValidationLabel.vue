@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import generalLabels from '@/components/common/dataDefinitions/labels'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -24,7 +24,7 @@ export default {
 	},
 
 	created() {
-		this.labels = generalLabels
+		this.labels = getCommonLabels(this.$gettext)
 	},
 
 	components: { },

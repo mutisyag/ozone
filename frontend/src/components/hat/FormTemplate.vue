@@ -38,12 +38,14 @@
           </tr>
         </thead>
       </table>
+
 			<div class="table-wrapper">
+
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 <span v-translate>Substances</span></h4>
 					<div v-show="table.tableFilters" class="table-filters">
 						<b-input-group :prepend="$gettext('Search')">
-							<b-form-input v-model="table.filters.search"/>
+								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
 					</div>
 					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -67,7 +69,7 @@
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
 					:sort-direction="table.sortDirection"
-					:empty-text="table.emptyText"
+					:empty-text="tableEmptyText"
 					:filter="table.filters.search"
 					ref="table">
 					<template
@@ -107,8 +109,8 @@
 					<h4> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 					<div v-show="tableBlends.tableFilters" class="table-filters">
 						<b-input-group :prepend="$gettext('Search')">
-							<b-form-input v-model="tableBlends.filters.search"/>
-						</b-input-group>
+									<b-form-input v-model="tableBlends.filters.search"/>
+							</b-input-group>
 					</div>
 					<i @click="tableBlends.tableFilters = !tableBlends.tableFilters" class="fa fa-filter fa-lg"></i>
 				</div>
@@ -131,7 +133,7 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
-					:empty-text="tableBlends.emptyText"
+					:empty-text="tableBlendsEmptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends">
 					<template slot="type" slot-scope="cell">
@@ -182,7 +184,7 @@
 									v-for="(header, header_index) in tab_info.blend_substance_headers"
 									:colspan="header.colspan"
 									:key="header_index">
-										{{labels[header]}}
+										<span>{{labels[header]}}</span>
 								</th>
 							</tr>
 						</thead>
@@ -213,8 +215,7 @@
 		<div
 			v-for="(comment, comment_index) in tab_info.comments"
 			:key="comment_index"
-			class="comments-input"
-		>
+			class="comments-input">
 			<label>{{labels[comment.name]}}</label>
 			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
 		</div>
@@ -239,11 +240,11 @@
         <span v-else>{{tab_data.display.blends[modal_data.field.blend.selected].name}}</span>
       </div>
       <div v-if="modal_data">
-		<p class="muted">
+				<p class="muted">
 			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
-			<br>
+					<br>
 			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
-		</p>
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             <span v-translate>Change substance</span>
@@ -262,7 +263,7 @@
         </b-row>
         <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col>{{labels[order]}}</b-col>
+            <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -276,10 +277,9 @@
         <b-row
           class="mt-3"
           v-for="comment_field in ['remarks_os','remarks_party']"
-          :key="comment_field"
-        >
+          :key="comment_field">
           <b-col lg="3">
-            {{labels[comment_field]}}
+            <span>{{labels[comment_field]}}</span>
           </b-col>
           <b-col lg="9">
             <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
@@ -296,7 +296,7 @@
 <script>
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import labels from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/hat/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMxin],
@@ -312,8 +312,9 @@ export default {
 		}
 	},
 	created() {
+		const labels = getLabels(this.$gettext)
 		this.labels = {
-			...labels.general,
+			...labels.common,
 			...labels[this.tab_info.name]
 		}
 	},

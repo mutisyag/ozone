@@ -8,6 +8,7 @@ import logging
 
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
+from django.db.models import F
 
 from ozone.core.models.user import User
 from ozone.core.models.party import Party
@@ -96,6 +97,8 @@ class Command(BaseCommand):
 
         all_parties = Party.objects.exclude(
             abbr__in=["RO", "ECE"]
+        ).filter(
+            parent_party=F('id')
         ).all()
 
         for user in to_create.values():

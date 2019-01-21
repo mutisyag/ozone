@@ -27,8 +27,9 @@ from ozone.core.models import (
     Article7NonPartyTrade,
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
+    UploadToken,
+    SubmissionFile,
 )
-
 
 User = get_user_model()
 
@@ -260,6 +261,12 @@ class SubstanceFactory(DjangoModelFactory):
         model = Substance
 
 
+class AnotherSubstanceFactory(SubstanceFactory):
+    name = "Kryptonite"
+    formula = "KRY-XXX"
+    substance_id = 997
+
+
 class DestructionFactory(DjangoModelFactory):
     class Meta:
         model = Article7Destruction
@@ -298,3 +305,13 @@ class HighAmbientTemperatureProductionFactory(DjangoModelFactory):
 class HighAmbientTemperatureImportFactory(DjangoModelFactory):
     class Meta:
         model = HighAmbientTemperatureImport
+
+
+class UploadTokenFactory(DjangoModelFactory):
+    class Meta:
+        model = UploadToken
+
+
+class SubmissionFileFactory(DjangoModelFactory):
+    class Meta:
+        model = SubmissionFile

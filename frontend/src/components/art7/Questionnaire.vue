@@ -6,7 +6,7 @@
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <div class="field-wrapper">
             <label>{{field.label}}</label>
-            <fieldGenerator :fieldInfo="{index:field.name, tabName: info.name, field:field.name}" :disabled="$store.getters.transitionState" :field="field"></fieldGenerator>
+            <fieldGenerator :fieldInfo="{index:field.name, tabName: info.name, field:field.name}" :disabled="$store.getters.can_edit_data" :field="field" />
           </div>
         </div>
       </b-card>
@@ -28,7 +28,6 @@ export default {
 	},
 
 	created() {
-		// this.tabs.push('asd')
 	},
 
 	components: { fieldGenerator },
@@ -43,5 +42,4 @@ export default {
 </script>
 
 <style lang="css" scoped>
-
 </style>

@@ -503,6 +503,7 @@ class Command(BaseCommand):
                 "flag_has_reported_c3": overall["CIII_ComplRep"],
                 "flag_has_reported_e": overall["EI_ComplRep"],
                 "flag_has_reported_f": overall["F_ComplRep"],
+                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
             },
             "submission_info": {
                 "reporting_officer": "",
@@ -513,8 +514,7 @@ class Command(BaseCommand):
                 "phone": "",
                 "fax": "",
                 "email": "",
-                "date": date_reported,
-                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
+                "date": date_reported
             },
             "art7": {
                 "remarks_party": "",
@@ -595,8 +595,8 @@ class Command(BaseCommand):
             table_values = values[key]
             if isinstance(table_values, list):
                 klass.objects.bulk_create([
-                    klass(submission=submission, **_instance)
-                    for _instance in table_values
+                    klass(submission=submission, ordering_id=_i, **_instance)
+                    for _i, _instance in enumerate(table_values)
                 ])
             else:
                 klass.objects.bulk_create([

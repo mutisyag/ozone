@@ -7,7 +7,8 @@ module.exports = {
 					args: [
 						'--headless',
 						'--no-sandbox',
-						'--disable-dev-shm-usage'
+						'--disable-dev-shm-usage',
+						'--window-size=1300,850'
 					]
 				},
 				acceptSslCerts: true

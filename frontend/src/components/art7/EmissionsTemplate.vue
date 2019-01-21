@@ -7,8 +7,7 @@
             <th
               v-for="(header, header_index) in tab_info.section_headers"
               :colspan="header.colspan"
-              :key="header_index"
-            >
+				:key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>
                 <i class="fa fa-info-circle fa-lg"></i>
@@ -25,7 +24,7 @@
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
 					<div v-show="table.tableFilters" class="table-filters">
-						<b-input-group prepend="Search all columns">
+					<b-input-group :prepend="$gettext('Search all columns')">
 								<b-form-input v-model="table.filters.search"/>
 						</b-input-group>
 					</div>
@@ -49,28 +48,26 @@
 					:fields="tableFields"
 					@input="tableLoaded"
 					:filter="table.filters.search"
-					ref="table"
-				>
+				    ref="table">
 
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<div
 							v-if="inputField === 'facility_name'"
-							class="row-controls"
-							style="left: -35px;top: -10px;"
-							:key="`${cell.item.index}_${inputField}_${tabName}_button`"
-							>
-							<b-btn
-								variant="link"
+						class="row-controls"
+						style="left: -35px;top: -10px;"
+						:key="`${cell.item.index}_${inputField}_${tabName}_button`">
+						    <b-btn
+							variant="link"
 								@click="remove_field(cell.item.index)"
-								class="table-btn"
-							><i class="fa fa-trash"></i></b-btn>
+							class="table-btn">
+							<i class="fa fa-trash"></i>
+						</b-btn>
 						</div>
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
-							:field="cell.item.originalObj[inputField]"
-						></fieldGenerator>
+						:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+						:field="cell.item.originalObj[inputField]" />
 					</template>
 
 					<template slot="validation" slot-scope="cell">
@@ -80,18 +77,17 @@
 			</div>
 
 			<b-btn class="mb-2" variant="primary"  @click="addField">
-				Add facility
+			<span v-translate>Add facility</span>
 			</b-btn>
 
     </div>
 		<div class="table-wapper">
-			<h4> {{tab_info.formNumber}}.2 Comments</h4>
+		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
 			<hr>
 			<div
 				v-for="(comment, comment_key) in tab_info.comments"
 				:key="comment_key"
-				class="comments-input"
-			>
+			class="comments-input">
 				<label>{{labels[comment_key]}}</label>
 					<!-- addComment(state, { data, tab, field }) { -->
 				<textarea
@@ -116,7 +112,7 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import { Aside as AppAside } from '@coreui/vue'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -133,7 +129,7 @@ export default {
 	},
 
 	created() {
-		this.labels = labels[this.tab_info.name]
+		this.labels = getLabels(this.$gettext)[this.tab_info.name]
 	},
 
 	data() {
@@ -214,18 +210,10 @@ export default {
 			let type = fieldName.split('_')
 			type = type[type.length - 1]
 			if (type === 'party') {
-				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
-					return false
-				}
-				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
-					return true
-				}
-				return this.$store.getters.isReadOnly
+				return this.$store.getters.can_change_remarks_party
 			}
 			if (['secretariat', 'os'].includes(type)) {
-				if (!this.$store.state.currentUser.is_secretariat) {
-					return true
-				}
+				return this.$store.getters.can_change_remarks_secretariat
 			}
 		},
 		rowHovered(item) {
@@ -261,7 +249,11 @@ export default {
 			return Array.from(intersection)
 		},
 		addField() {
-			this.$store.dispatch('createRow', { prefillData: null, currentSectionName: this.tabName })
+			this.$store.dispatch('createRow', {
+				$gettext: this.$gettext,
+				prefillData: null,
+				currentSectionName: this.tabName
+			})
 		}
 	},
 

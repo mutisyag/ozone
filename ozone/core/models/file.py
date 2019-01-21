@@ -10,7 +10,6 @@ from model_utils import FieldTracker
 
 from .reporting import ModifyPreventionMixin, Submission
 
-
 UPLOAD_TOKEN_LENGTH = 64
 UPLOAD_TOKEN_DURATION = 60 * 60  # 60 minutes
 
@@ -55,7 +54,7 @@ class UploadToken(models.Model):
     valid_until = models.DateTimeField(default=token_valid_until)
 
     class Meta:
-        db_table = 'core_upload_token'
+        db_table = 'upload_token'
         ordering = ('-created_at',)
 
     def __str__(self):
@@ -63,10 +62,17 @@ class UploadToken(models.Model):
 
     def has_expired(self):
         return self.valid_until < (
-            timezone.now() + timezone.timedelta(seconds=self.GRACE_SECONDS))
+            timezone.now() + timezone.timedelta(seconds=self.GRACE_SECONDS)
+        )
 
 
 class File(models.Model):
+    """
+    A File object will be created on all uploads where the file is fully
+    transferred to the tusd server, irrespective of whether or not the FileField
+    is correctly filled afterwards - that one will be signalled by the
+    `upload_successful` flag.
+    """
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
@@ -75,8 +81,10 @@ class File(models.Model):
         upload_to=get_storage_directory, null=True, blank=True
     )
 
-    description = models.CharField(max_length=512, blank=True)
+    tus_id = models.CharField(max_length=32, blank=True, null=True)
+    upload_successful = models.BooleanField(default=False)
 
+    description = models.CharField(max_length=512, blank=True)
     uploader = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name='uploaded_files',
@@ -100,16 +108,17 @@ class SubmissionFile(ModifyPreventionMixin, File):
             self.submission.get_storage_directory(),
             os.path.basename(filename)
         )
-
     submission = models.ForeignKey(
         Submission, related_name='files', on_delete=models.PROTECT
     )
-
     file = models.FileField(
         upload_to=get_storage_directory, null=True, blank=True
     )
 
     tracker = FieldTracker()
+
+    class Meta:
+        db_table = 'submission_file'
 
     def get_storage_directory(self, filename):
         return os.path.join(

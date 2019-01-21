@@ -23,7 +23,6 @@ export default {
 	data() {
 		return {
 			table: {
-				emptyText: 'Please use the form on the right sidebar to add substances',
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -37,7 +36,6 @@ export default {
 			},
 
 			tableBlends: {
-				emptyText: 'Please use the form on the right sidebar to add blends',
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -93,7 +91,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		tableItemsBlends() {
 			const tableFields = []
 			this.tab_info.form_fields.forEach(form_field => {
@@ -129,7 +132,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableBlendsEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add blends')
+		},
 		tableFields() {
 			const tableHeaders = []
 			const options = {}
@@ -148,11 +156,11 @@ export default {
 			const options = {}
 			this.tab_info.section_subheaders.forEach((form_field) => {
 				if (form_field.name === 'substance') {
-					tableHeaders.push({ key: 'blend', label: '(2) <br> Blend', ...options })
+					tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
 				} else if (form_field.name === 'group') {
 					tableHeaders.push({
 						key: 'type',
-						label: '(1) <br> Type',
+						label: `(1) <br> ${this.$gettext('Type')}`,
 						...options
 					})
 				} else {
@@ -174,10 +182,6 @@ export default {
 
 		isReadOnly() {
 			const { isReadOnly } = this.$store.getters
-			if (isReadOnly) {
-				this.table.emptyText = 'There are no records to show'
-				this.tableBlends.emptyText = this.table.emptyText
-			}
 			return isReadOnly
 		}
 	},
@@ -193,6 +197,17 @@ export default {
 					value: this.getGroupBySubstance(value),
 					fieldInfo: { index: fieldInfo.index, tabName: fieldInfo.tabName, field: 'group' }
 				})
+			}
+		},
+
+		getCommentFieldPermission(fieldName) {
+			let type = fieldName.split('_')
+			type = type[type.length - 1]
+			if (type === 'party') {
+				return this.$store.getters.can_change_remarks_party
+			}
+			if (['secretariat', 'os'].includes(type)) {
+				return this.$store.getters.can_change_remarks_secretariat
 			}
 		},
 
@@ -265,7 +280,7 @@ export default {
 			}
 			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
 			if (topHeader.querySelector('th:first-of-type span').innerHTML) {
-				topHeader.querySelector('th:first-of-type span').innerHTML = 'Blends'
+				topHeader.querySelector('th:first-of-type span').innerHTML = this.$gettext('Blends')
 			}
 			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},

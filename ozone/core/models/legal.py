@@ -64,3 +64,6 @@ class ReportingPeriod(models.Model):
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'reporting_period'

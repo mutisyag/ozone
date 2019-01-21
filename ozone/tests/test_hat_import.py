@@ -1,13 +1,9 @@
-import json
-import unittest
-
 from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import HighAmbientTemperatureImport, Submission
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -22,7 +18,7 @@ from .factories import (
 )
 
 
-class BaseHATImportTest(TestCase):
+class BaseHATImportTest(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -36,20 +32,9 @@ class BaseHATImportTest(TestCase):
         self.secretariat_user = SecretariatUserFactory(
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
-        self.party_user = ReporterUserFactory(
-            party=self.party,
-            password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
-        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory(
@@ -73,8 +58,6 @@ class TestHATImport(BaseHATImportTest):
     def test_create(self):
         submission = self.create_submission()
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         data = dict(HAT_IMPORT_DATA)
         data["substance"] = self.substance.id
 
@@ -83,10 +66,7 @@ class TestHATImport(BaseHATImportTest):
                 "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(result.status_code, 201, result.json())
 
@@ -98,15 +78,11 @@ class TestHATImport(BaseHATImportTest):
             **HAT_IMPORT_DATA
         )
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.get(
             reverse(
                 "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
 
@@ -132,23 +108,17 @@ class TestHATImport(BaseHATImportTest):
         data["substance"] = self.substance.id
         data["quantity_msac"] = 42
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.put(
             reverse(
                 "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(result.status_code, 200, result.json())
 
         hat_import = HighAmbientTemperatureImport.objects.get(pk=hat_import.id)
         self.assertEqual(hat_import.quantity_msac, 42)
-
     def test_update_immutable(self):
         submission = self.create_submission()
 
@@ -163,17 +133,12 @@ class TestHATImport(BaseHATImportTest):
         data["substance"] = self.substance.id
         data["quantity_msac"] = 42
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.put(
             reverse(
                 "core:submission-hat-imports-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(result.status_code, 422, result.json())
 
@@ -187,15 +152,11 @@ class TestHATImport(BaseHATImportTest):
         submission._current_state = "finalized"
         submission.save()
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.post(
             reverse(
                 "core:submission-clone",
                 kwargs={"pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
         new_id = result.json()['url'].split("/")[-2]

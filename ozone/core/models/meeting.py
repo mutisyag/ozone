@@ -46,6 +46,7 @@ class Meeting(models.Model):
 
     class Meta:
         ordering = ('pk',)
+        db_table = 'meeting'
 
 
 class Treaty(models.Model):
@@ -74,6 +75,7 @@ class Treaty(models.Model):
 
     class Meta:
         verbose_name_plural = 'treaties'
+        db_table = 'treaty'
 
 
 class Decision(models.Model):
@@ -90,3 +92,6 @@ class Decision(models.Model):
     name = models.CharField(max_length=256, unique=True)
 
     remark = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        db_table = 'decision'

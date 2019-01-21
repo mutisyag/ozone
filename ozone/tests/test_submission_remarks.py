@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import Submission
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     AnotherPartyFactory,
@@ -22,7 +23,8 @@ User = get_user_model()
 REMARK_VALUE = "Some random remark here."
 
 
-class BaseRemarksTests(TestCase):
+class BaseRemarksTests(BaseTests):
+
     success_code = 200
     fail_code = 422
 
@@ -49,14 +51,6 @@ class BaseRemarksTests(TestCase):
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )
         ReportingChannelFactory()
-
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
@@ -102,7 +96,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
 
     def _check_remark_update_permission(self, user, field_type, owner, expect_success):
         submission = self.create_submission(owner)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         for field in remarks_data.keys():
             if not field.endswith(field_type):
@@ -115,9 +109,6 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
                         kwargs={"submission_pk": submission.pk},
                     ),
                     {field: REMARK_VALUE},
-                    "application/json",
-                    format="json",
-                    **headers,
                 )
                 self._check_result(result, expect_success, submission, field)
 
@@ -178,7 +169,7 @@ class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemark
         submission.flag_valid = True
         submission.save()
 
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         for field in remarks_data.keys():
             if not field.endswith(field_type):
@@ -190,9 +181,6 @@ class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemark
                         kwargs={"submission_pk": submission.pk},
                     ),
                     {field: REMARK_VALUE},
-                    "application/json",
-                    format="json",
-                    **headers,
                 )
                 self._check_result(result, expect_success, submission, field)
 
@@ -270,15 +258,13 @@ remarks_data = {
 class SubmissionRetrieveTest(BaseRemarksTests):
     def _check_remark_retrieve_data(self, user, owner):
         submission = self.create_submission(owner, **remarks_data)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
             reverse(
                 "core:submission-submission-remarks-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.json(), [remarks_data])
 
@@ -293,14 +279,12 @@ class SubmissionRetrieveTest(BaseRemarksTests):
 
     def test_retrieve_as_secretariat_secretariat_reporter(self):
         self._check_remark_retrieve_data(self.secretariat_user, self.secretariat_user)
-
-
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     fail_code = 403
 
     def _check_remark_update_permission(self, user, field_type, owner, expect_success):
         submission = self.create_submission(owner)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         for field in remarks_data.keys():
             if not field.endswith(field_type):
@@ -312,24 +296,19 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
                         "core:submission-submission-remarks-list",
                         kwargs={"submission_pk": submission.pk},
                     ),
-                    {field: REMARK_VALUE},
-                    "application/json",
-                    format="json",
-                    **headers,
+                    {field: REMARK_VALUE}
                 )
                 self._check_result(result, expect_success, submission, field)
 
     def _check_remark_retrieve_data(self, user, owner, expect_success):
         submission = self.create_submission(owner, **remarks_data)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
             reverse(
                 "core:submission-submission-remarks-list",
                 kwargs={"submission_pk": submission.pk},
-            ),
-            format="json",
-            **headers,
+            )
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1 if expect_success else 0)

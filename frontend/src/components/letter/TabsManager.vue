@@ -24,8 +24,8 @@
 			variant="outline-primary"
 			v-for="transition in availableTransitions"
 			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
+			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+			<span>{{labels[transition]}}</span>
 		</b-btn>
 
     </b-button-group>
@@ -88,8 +88,8 @@
 			variant="outline-primary"
 			v-for="transition in availableTransitions"
 			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {submission: submission, transition: transition})">
-			{{labels[transition]}}
+			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+			<span>{{labels[transition]}}</span>
 		</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           <span v-translate>Versions</span>
@@ -100,8 +100,11 @@
       </b-button-group>
     </Footer>
 
-    <b-modal size="lg" ref="history_modal" id="history_modal">
-        <SubmissionHistory :history="$store.state.currentSubmissionHistory"></SubmissionHistory>
+    <b-modal size="lg" ref="history_modal" id="history_modal"
+             :title="$gettext('Submission versions')">
+        <SubmissionHistory :history="$store.state.currentSubmissionHistory"
+                           :currentVersion="$store.state.current_submission.version">
+        </SubmissionHistory>
     </b-modal>
   </div>
 </template>
@@ -113,7 +116,7 @@ import Attachments from '@/components/common/Attachments.vue'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 
 export default {
@@ -133,7 +136,7 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: labels.general
+			labels: getLabels(this.$gettext).common
 		}
 	},
 	computed: {
@@ -168,6 +171,7 @@ export default {
 				.filter(arr => arr.length)
 			if (!fields.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
 					variant: 'danger'
 				})
@@ -177,17 +181,21 @@ export default {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('Please save before submitting')] },
 					variant: 'danger'
 				})
 				return
 			}
-			this.$store.dispatch('doSubmissionTransition', { submission: this.submission, transition: 'submit' })
+			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
 			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
 			if (r === true) {
-				this.$store.dispatch('removeSubmission', this.submission).then(() => {
+				this.$store.dispatch('removeSubmission', {
+					$gettext: this.$gettext,
+					submissionUrl: this.submission
+				}).then(() => {
 					this.$router.push({ name: 'Dashboard' })
 				})
 			}

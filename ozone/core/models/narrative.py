@@ -23,3 +23,6 @@ class ProcessAgentContainTechnology(models.Model):
     )
 
     contain_technology = models.CharField(max_length=9999)
+
+    class Meta:
+        db_table = 'pa_contain_technology'

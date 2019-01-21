@@ -40,7 +40,7 @@
 
 <script>
 
-import nav from '@/_nav'
+import { getNav } from '@/_nav'
 import {
 	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
@@ -68,7 +68,7 @@ export default {
 		return {
 			refCount: 0,
 			isLoading: false,
-			nav: nav.items
+			nav: getNav(this.$gettext)
 
 		}
 	},
@@ -78,6 +78,7 @@ export default {
 			return this.$route.name
 		},
 		list() {
+			console.log('list.......', this.$store.state.route)
 			return this.$store.state.route
 		}
 	},
@@ -92,6 +93,13 @@ export default {
 			}
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.nav = getNav(this.$gettext)
+			}
+		}
+	},
 	created() {
 		api.interceptors.request.use((config) => {
 			this.setLoading(true)
@@ -99,6 +107,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { ...error.response.data },
 				variant: 'danger'
 			})
@@ -111,6 +120,7 @@ export default {
 		}, (error) => {
 			this.setLoading(false)
 			this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
 				message: { ...error.response.data },
 				variant: 'danger'
 			})

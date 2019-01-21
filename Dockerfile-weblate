@@ -1,0 +1,8 @@
+FROM weblate/weblate
+
+COPY weblate/settings-override.py /app/data/settings-override.py
+COPY weblate/ozone.py /usr/local/lib/python3.6/dist-packages/social_core/backends/ozone.py
+
+EXPOSE 80
+ENTRYPOINT ["/app/bin/start"]
+CMD ["runserver"]

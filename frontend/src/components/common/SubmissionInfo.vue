@@ -17,7 +17,7 @@
     <form class="form-sections">
 			<b-row>
 				<b-col>
-					<h5>Submission Info</h5>
+					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
 							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
@@ -25,7 +25,7 @@
 									<label>{{labels[order]}}</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? $store.getters.can_change_reporting_channel : can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row>
@@ -33,7 +33,7 @@
 									<label>{{labels.dateOfSubmission}}</label>
 								</b-col>
 								<b-col>
-									<span v-if="$store.state.current_submission.submitted_at">{{$store.state.current_submission.submitted_at}}</span>
+									<span v-if="currentSubmissionSubmittedAt">{{currentSubmissionSubmittedAt}}</span>
 									<i v-else class="fa fa-ellipsis-h"></i>
 								</b-col>
 							</b-row>
@@ -42,7 +42,7 @@
 				</b-col>
 
 				<b-col v-if="flags_info">
-					<h5>Flags</h5>
+					<h5><span v-translate>Flags</span></h5>
 					<b-card>
 						<b-row v-for="order in flags_info.fields_order" :key="order">
 							<b-col>
@@ -69,7 +69,6 @@
 					</b-card>
 				</b-col>
 			</b-row>
-
     </form>
     </div>
 </template>
@@ -77,7 +76,8 @@
 <script>
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { dateFormat } from '@/components/common/services/languageService'
 
 export default {
 	props: {
@@ -86,10 +86,23 @@ export default {
 	},
 
 	created() {
-		this.labels = labels.general
+		this.labels = getCommonLabels(this.$gettext)
 	},
 
 	components: { fieldGenerator },
+
+	computed: {
+		can_edit_data() {
+			return this.$store.getters.can_edit_data
+		},
+		currentSubmissionSubmittedAt() {
+			const { submitted_at } = this.$store.state.current_submission
+			if (!submitted_at) {
+				return null
+			}
+			return dateFormat(submitted_at, this.$language.current)
+		}
+	},
 
 	data() {
 		return {
@@ -98,6 +111,13 @@ export default {
 	},
 
 	methods: {
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.labels = getCommonLabels(this.$gettext)
+			}
+		}
 	}
 
 }

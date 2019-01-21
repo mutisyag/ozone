@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div :id="`${tabName}_tab`" v-if="tab_info">
     <div class="form-sections">
       <table ref="tableHeader" class="table submission-table header-only">
         <thead>
@@ -7,8 +7,7 @@
             <th
               v-for="(header, header_index) in tab_info.section_headers"
               :colspan="header.colspan"
-              :key="header_index"
-            >
+			:key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>
                 <i class="fa fa-info-circle fa-lg"></i>
@@ -27,8 +26,7 @@
             <th
               v-for="(header, header_index) in tab_info.section_headers"
               :colspan="header.colspan"
-              :key="header_index"
-            >
+		      :key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>
                 <i class="fa fa-info-circle fa-lg"></i>
@@ -47,8 +45,7 @@
             <th
               v-for="(header, header_index) in tab_info.special_headers.section_headers"
               :colspan="header.colspan"
-              :key="header_index"
-            >
+			  :key="header_index">
               <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
                 <span v-html="header.label"></span>
                 <i class="fa fa-info-circle fa-lg"></i>
@@ -64,10 +61,10 @@
 			<div class="table-wrapper">
 
 				<div class="table-title">
-					<h4> {{tab_info.formNumber}}.1 Substances</h4>
+			    <h4> {{tab_info.formNumber}}.1 <span v-translate>Substances</span></h4>
 					<div v-show="table.tableFilters" class="table-filters">
-						<b-input-group prepend="Search">
-								<b-form-input v-model="table.filters.search"/>
+				        <b-input-group :prepend="$gettext('Search')">
+						    <b-form-input v-model="table.filters.search"/>
 						</b-input-group>
 					</div>
 					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -85,45 +82,43 @@
 					head-variant="light"
 					stacked="md"
 					class="submission-table"
+			        id="substance-table"
 					:items="tableItems"
 					:fields="tableFields"
-					:empty-text="table.emptyText"
+			        :empty-text="tableEmptyText"
 					:filter="table.filters.search"
-					ref="table"
-				>
+			        ref="table">
 					<template
 						slot="group"
-						slot-scope="cell"
-					>
-						<div class="group-cell">
-							{{cell.item.group}}
-						</div>
-						<b-btn-group class="row-controls">
-							<span
-								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square-o fa-lg"></i></span>
-							<span
-								v-if="!isReadOnly"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn"
-							><i class="fa fa-trash fa-lg"></i></span>
-						</b-btn-group>
+				slot-scope="cell">
+				<div class="group-cell">
+						{{cell.item.group}}
+				</div>
+				<b-btn-group class="row-controls">
+					<span
+						@click="createModalData(cell.item.originalObj, cell.item.index)"
+					><i class="fa fa-pencil-square-o fa-lg"></i></span>
+					<span
+						v-if="!$store.getters.can_edit_data"
+						@click="remove_field(cell.item.index, cell.item)"
+						class="table-btn"
+					><i class="fa fa-trash fa-lg"></i></span>
+				</b-btn-group>
 					</template>
 					<template
 						slot="substance"
-						slot-scope="cell"
-					>
+				slot-scope="cell">
 						{{cell.item.substance}}
 					</template>
 
 					<template :slot="getCountrySlot" slot-scope="cell">
 						<CloneField
 							:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+					:disabled="$store.getters.can_edit_data"
 							v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 							v-if="!cell.item[getCountrySlot]"
 							:tabName="tabName"
-							:current_field="cell.item.originalObj"
-						></CloneField>
+					:current_field="cell.item.originalObj" />
 						<div v-else>{{cell.item[getCountrySlot]}}</div>
 					</template>
 
@@ -131,67 +126,61 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
-							:field="cell.item.originalObj[inputField]"
-						></fieldGenerator>
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+					:field="cell.item.originalObj[inputField]" />
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
+				<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
 						v-for="tooltipField in getTabDecisionQuantityFields"
 						:slot="tooltipField"
-						slot-scope="cell"
-					>
+				slot-scope="cell">
 						<span
 							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
-							v-if="cell.item[tooltipField]"
-						>
+					v-if="cell.item[tooltipField]">
 							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
+				</span>
+							<div
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+								class="special-field"
+					v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+					:key="`${tooltipField}_qps`">
+								<hr>
+						<span v-translate='{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}'>
+							Quantity of new %{substance} %{qps_word} to be used for QPS applications
 						</span>
-						<div
-							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
-							class="special-field"
-							v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
-							:key="`${tooltipField}_qps`"
-						>
-							<hr>
-							Quantity of new {{tab_data.display.substances[cell.item.originalObj.substance.selected]}} {{qps_word}} to be used for QPS applications
-							<hr>
-							<span>
-								<fieldGenerator
-									:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-									:disabled="isReadOnly"
-									:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
-								></fieldGenerator>
-							</span>
-						</div>
+								<hr>
+								<span>
+									<fieldGenerator
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
+							:disabled="$store.getters.can_edit_data"
+							:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
+								</span>
+							</div>
 
-						<div
-							style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
-							class="special-field"
-							v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
-							:key="`${tooltipField}_polyols`"
-						>
-							<hr>
-							Polyols quantity
-							<hr>
-							<span>
-								<fieldGenerator
-									:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-									:disabled="isReadOnly"
-									:field="cell.item.originalObj.quantity_polyols"
-								></fieldGenerator>
-							</span>
-						</div>
-
+							<div
+								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+								class="special-field"
+					v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+					:key="`${tooltipField}_polyols`">
+								<hr>
+						<span v-translate>Polyols quantity</span>
+								<hr>
+								<span>
+									<fieldGenerator
+										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
+							:disabled="$store.getters.can_edit_data"
+							:field="cell.item.originalObj.quantity_polyols"	/>
+								</span>
+							</div>
 					</template>
 				</b-table>
 			</div>
@@ -200,9 +189,9 @@
 				class="table-wrapper">
 
 				<div class="table-title">
-					<h4> {{tab_info.formNumber}}.1.1 Substances - group FII</h4>
+			<h4> {{tab_info.formNumber}}.1.1 <span v-translate>Substances - group FII</span></h4>
 					<div v-show="tableFII.tableFilters" class="table-filters">
-						<b-input-group prepend="Search">
+				<b-input-group :prepend="$gettext('Search')">
 								<b-form-input v-model="tableFII.filters.search"/>
 						</b-input-group>
 					</div>
@@ -222,35 +211,34 @@
 					class="submission-table"
 					:items="tableItemsFII"
 					:fields="tableFieldsFII"
-					:empty-text="tableFII.emptyText"
+			:empty-text="tableFIIEmptyText"
 					:filter="tableFII.filters.search"
-					ref="tableFII"
-				>
+			ref="tableFII">
 					<template
 						slot="group"
-						slot-scope="cell"
-					>
-						<div class="group-cell">
-							{{cell.item.group}}
-						</div>
-						<b-btn-group class="row-controls">
-							<span
-								variant="link"
-								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square-o fa-lg"></i></span>
-							<span
-								v-if="!isReadOnly"
-								variant="link"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn"
-							><i class="fa fa-trash fa-lg"></i></span>
-						</b-btn-group>
+				slot-scope="cell">
+				<div class="group-cell">
+						{{cell.item.group}}
+				</div>
+				<b-btn-group class="row-controls">
+					<span
+						variant="link"
+						@click="createModalData(cell.item.originalObj, cell.item.index)">
+						<i class="fa fa-pencil-square-o fa-lg"></i>
+					</span>
+					<span
+						v-if="!$store.getters.can_edit_data"
+						variant="link"
+						@click="remove_field(cell.item.index, cell.item)"
+						class="table-btn">
+						<i class="fa fa-trash fa-lg"></i>
+					</span>
+				</b-btn-group>
 					</template>
 
 					<template
 						slot="substance"
-						slot-scope="cell"
-					>
+				slot-scope="cell">
 						{{cell.item.substance}}
 					</template>
 
@@ -258,63 +246,58 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
-							:field="cell.item.originalObj[inputField]"
-						></fieldGenerator>
+					:disabled="$store.getters.can_edit_data"
+					:field="cell.item.originalObj[inputField]" />
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
+				<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
 						v-for="tooltipField in getTabDecisionQuantityFields"
 						:slot="tooltipField"
-						slot-scope="cell"
-					>
+				slot-scope="cell">
 						<span
 							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
-							v-if="cell.item[tooltipField]"
-						>
+					v-if="cell.item[tooltipField]">
 							{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
-						</span>
-						<div
+				</span>
+							<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
-								:key="`${tooltipField}_qps`"
-							>
+						v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+						:key="`${tooltipField}_qps`">
 								<hr>
-								Quantity of new {{tab_data.display.substances[cell.item.substance.selected]}} {{qps_word}} to be used for QPS applications
+							<span v-translate='{qps_word: qps_word, substance: tab_data.display.substances[cell.item.substance.selected]}'>
+								Quantity of new %{substance} %{qps_word} to be used for QPS applications
+							</span>
 								<hr>
 								<span>
 									<fieldGenerator
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-										:disabled="isReadOnly"
-										:field="cell.item.originalObj.quantity_quarantine_pre_shipment"
-									></fieldGenerator>
+								:disabled="$store.getters.can_edit_data"
+								:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 								</span>
 							</div>
 							<div
 								style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 								class="special-field"
-								v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
-								:key="`${tooltipField}_polyol`"
-							>
+						v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+						:key="`${tooltipField}_polyol`">
 								<hr>
-								Quantity of Polyols
+							<span v-translate>Quantity of Polyols</span>
 								<hr>
 								<span>
 									<fieldGenerator
 										:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-										:disabled="isReadOnly"
-										:field="cell.item.originalObj.quantity_polyols"
-									></fieldGenerator>
+								:disabled="$store.getters.can_edit_data"
+								:field="cell.item.originalObj.quantity_polyols" />
 								</span>
 							</div>
 					</template>
@@ -325,9 +308,9 @@
 				class="table-wrapper">
 
 				<div class="table-title">
-					<h4> {{tab_info.formNumber}}.2 Blends</h4>
+			<h4 id="blends-table-title"> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 					<div v-show="tableBlends.tableFilters" class="table-filters">
-							<b-input-group prepend="Search">
+				<b-input-group :prepend="$gettext('Search')">
 									<b-form-input v-model="tableBlends.filters.search"/>
 							</b-input-group>
 					</div>
@@ -346,45 +329,46 @@
 					@input="tableLoadedBlends"
 					@row-hovered="rowHovered"
 					stacked="md"
+			id="blend-table"
 					:items="tableItemsBlends"
 					:fields="tableFieldsBlends"
-					:empty-text="tableBlends.emptyText"
+			:empty-text="tableBlendsEmptyText"
 					:filter="tableBlends.filters.search"
-					ref="tableBlends"
-				>
+			ref="tableBlends">
 					<template slot="blend" slot-scope="cell">
 						<span
 							style="cursor:pointer;"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
-							@click.stop="cell.toggleDetails"
-						>
+					@click.stop="cell.toggleDetails">
 							<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
 							{{cell.item.blend}}
 						</span>
 					</template>
 					<template slot="type" slot-scope="cell">
-						<div class="group-cell">
+				<div class="group-cell">
 							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}
-						</div>
-						<b-btn-group class="row-controls">
-							<span
-								@click="createModalData(cell.item.originalObj, cell.item.index)"
-							><i class="fa fa-pencil-square-o fa-lg"></i></span>
-							<span
-								v-if="!isReadOnly"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn"
-							><i class="fa fa-trash fa-lg"></i></span>
-						</b-btn-group>
+				</div>
+				<b-btn-group class="row-controls">
+					<span
+						@click="createModalData(cell.item.originalObj, cell.item.index)">
+						<i class="fa fa-pencil-square-o fa-lg"></i>
+					</span>
+					<span
+						v-if="!$store.getters.can_edit_data"
+						@click="remove_field(cell.item.index, cell.item)"
+						class="table-btn">
+						<i class="fa fa-trash fa-lg"></i>
+					</span>
+				</b-btn-group>
 					</template>
 					<template :slot="getCountrySlot" slot-scope="cell">
 						<CloneField
+					:disabled="$store.getters.can_edit_data"
 							:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
 							v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 							v-if="!cell.item[getCountrySlot]"
 							:tabName="tabName"
-							:current_field="cell.item.originalObj"
-						></CloneField>
+					:current_field="cell.item.originalObj" />
 						<div v-else>{{cell.item[getCountrySlot]}}</div>
 					</template>
 
@@ -392,28 +376,26 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
-							:field="cell.item.originalObj[inputField]"
-						></fieldGenerator>
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+					:field="cell.item.originalObj[inputField]" />
 					</template>
 
 					<template slot="validation" slot-scope="cell">
-						<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
+				<ValidationLabel :open-validation-callback="openValidation" :validation="cell.item.originalObj.validation.selected" />
 					</template>
 
 					<template
 						v-for="tooltipField in getTabDecisionQuantityFields"
 						:slot="tooltipField"
-						slot-scope="cell"
-					>
+				slot-scope="cell">
 						<span
 							class="edit-trigger"
 							v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
 							:title="cell.item.originalObj[tooltipField].tooltip"
 							:key="tooltipField"
 							@click="createModalData(cell.item.originalObj, cell.item.index)"
-							v-if="cell.item[tooltipField]"
-						>{{formatQuantity(cell.item[tooltipField])}}
+					v-if="cell.item[tooltipField]">
+					{{formatQuantity(cell.item[tooltipField])}}
 							<i class="fa fa-info-circle fa-lg"></i>
 						</span>
 					</template>
@@ -425,16 +407,16 @@
 									class="small"
 									v-for="(header, header_index) in tab_info.blend_substance_headers"
 									:colspan="header.colspan"
-									:key="header_index"
-								>{{labels[header]}}</th>
+							:key="header_index">
+							<span>{{labels[header]}}</span>
+						</th>
 							</tr>
 						</thead>
 						<tbody>
 							<tr
 								class="small"
 								v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
-								:key="substance_index"
-							>
+						:key="substance_index">
 								<td>{{substance.component_name}}</td>
 								<td>
 									<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
@@ -450,15 +432,16 @@
 				</b-table>
 			</div>
     </div>
-    <div class="table-wrapper">
-			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} Comments</h4>
+    <div id="tab-comments" class="table-wrapper">
+		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
 			<hr>
 			<div
 				v-for="(comment, comment_key) in tab_info.comments"
 				:key="comment_key"
-				class="comments-input"
-			>
-				<label>{{labels[comment_key]}}</label>
+			class="comments-input">
+			<label>
+				<span>{{labels[comment_key]}}</span>
+			</label>
 					<!-- addComment(state, { data, tab, field }) { -->
 				<textarea
 					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
@@ -471,63 +454,58 @@
 
     <hr>
 
-    <AppAside v-if="!isReadOnly" fixed>
-      <DefaultAside  v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
+    <AppAside fixed>
+      <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
       <div v-if="modal_data" slot="modal-title">
-        <span
-          v-if="modal_data.field.substance.selected"
-        >Edit {{tab_data.display.substances[modal_data.field.substance.selected]}} substance</span>
-        <span v-else>Edit {{tab_data.display.blends[modal_data.field.blend.selected].name}} blend</span>
+		<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
+        <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
       </div>
       <div v-if="modal_data">
 				<p class="muted">
-					All the quantity values should be expressed in metric tonnes ( not ODP tonnes).
+			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
 					<br>
-					<b>The values are saved automatically in the table, as you type.</b>
+			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
 				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
-            Change substance
+            <span v-translate>Change substance</span>
           </b-col>
           <b-col>
             <multiselect
               class="mb-2"
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
-							:disabled="isReadOnly"
+				:disabled="$store.getters.can_edit_data"
               label="text"
-              placeholder="Select substance"
-              :value="parseInt(modal_data.field.substance.selected)"
-              :options="tab_data.substances"
-            ></multiselect>
+				:placeholder="$gettext('Select substance')"
+				:value="parseInt(modal_data.field.substance.selected)"
+				:options="tab_data.substances" />
           </b-col>
         </b-row>
         <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
           <b-row>
-            <b-col>{{labels[order]}}</b-col>
+            <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="isReadOnly"
+                :disabled="$store.getters.can_edit_data"
                 v-if="modal_data.field[order].type != 'multiselect'"
-                :field="modal_data.field[order]"
-              ></fieldGenerator>
+                :field="modal_data.field[order]" />
               <multiselect
                 v-else
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-								:disabled="isReadOnly"
+				:disabled="$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
-                placeholder="Countries"
+                :placeholder="$gettext('Countries')"
                 @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})"
                 :value="parseInt(modal_data.field[order].selected)"
-                :options="tab_data.countryOptions"
-              ></multiselect>
+                :options="tab_data.countryOptions" />
             </b-col>
           </b-row>
         </div>
@@ -536,8 +514,7 @@
             class="mb-3"
             v-for="(order,order_index) in fieldsDecisionQuantity"
             :key="order_index"
-            v-show="anotherSpecialCase(order, modal_data)"
-          >
+            v-show="anotherSpecialCase(order, modal_data)">
             <b-col lg="3" class="mb-2">
               <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
@@ -545,18 +522,16 @@
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="isReadOnly"
-					:field="modal_data.field[`quantity_${order}`]"
-                ></fieldGenerator>
+					:disabled="$store.getters.can_edit_data"
+					:field="modal_data.field[`quantity_${order}`]" />
               </b-input-group>
             </b-col>
             <b-col lg="3">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="isReadOnly"
-                  :field="modal_data.field[`decision_${order}`]"
-                ></fieldGenerator>
+                  :disabled="$store.getters.can_edit_data"
+                  :field="modal_data.field[`decision_${order}`]" />
               </b-input-group>
             </b-col>
           </b-row>
@@ -564,28 +539,26 @@
         <b-row
           class="mt-3"
           v-for="comment_field in ['remarks_party','remarks_os']"
-          :key="comment_field"
-        >
+          :key="comment_field">
           <b-col lg="3">
-            {{labels[comment_field]}}
+            <span>{{labels[comment_field]}}</span>
           </b-col>
           <b-col lg="9">
-            <textarea
-								:disabled="getCommentFieldPermission(comment_field)"
+            <textarea :disabled="getCommentFieldPermission(comment_field)"
 								class="form-control" v-model="modal_data.field[comment_field].selected">
 						</textarea>
           </b-col>
         </b-row>
       </div>
       <div slot="modal-footer">
-          <b-btn @click="$refs.edit_modal.hide()" variant="success">Close</b-btn>
+          <b-btn @click="$refs.edit_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
-import labels from '@/components/art7/dataDefinitions/labels'
+import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { intersect } from '@/components/common/services/utilsService'
 import CloneField from '@/components/common/form-components/CloneField.vue'
@@ -608,7 +581,6 @@ export default {
 				destination_party: 'countries'
 			},
 			tableFII: {
-				emptyText: 'Please use the form on the right sidebar to add substances',
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -628,12 +600,16 @@ export default {
 	},
 
 	created() {
+		this.setLabels()
+	},
+	methods: {
+		setLabels() {
+			const labels = getLabels(this.$gettext)
 		this.labels = {
-			...labels.general,
+				...labels.common,
 			...labels[this.tab_info.name]
 		}
 	},
-	methods: {
 		formatQuantity(value) {
 			if (!value) return
 			if (typeof (value) === 'string') return value
@@ -650,7 +626,6 @@ export default {
 				return value.toPrecision(3)
 			}
 		},
-
 		fillTableSearch(data) {
 			if (data.substance && data.substance === 'HFC-23' && this.tabName === 'has_produced') {
 				this.tableFII.filters.search = data.substance
@@ -682,25 +657,6 @@ export default {
 			}
 			if (this.isPolyols.includes(parseInt(modal_data.field[type].selected)) && order === 'polyols') {
 				return true
-			}
-		},
-
-		getCommentFieldPermission(fieldName) {
-			let type = fieldName.split('_')
-			type = type[type.length - 1]
-			if (type === 'party') {
-				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
-					return false
-				}
-				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
-					return true
-				}
-				return this.$store.getters.isReadOnly
-			}
-			if (['secretariat', 'os'].includes(type)) {
-				if (!this.$store.state.currentUser.is_secretariat) {
-					return true
-				}
 			}
 		},
 
@@ -792,11 +748,6 @@ export default {
 				if (Object.keys(tableRow).length) {
 					tableRow.originalObj = element
 					tableRow.index = this.tab_info.form_fields.indexOf(element)
-					if (tableRow.originalObj.validation.selected.length) {
-						tableRow.validation = 'invalid'
-					} else {
-						tableRow.validation = 'valid'
-					}
 					tableFields.push(tableRow)
 				}
 			})
@@ -843,6 +794,9 @@ export default {
 			return tableHeaders
 		},
 
+		tableFIIEmptyText() {
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		getTabSpecialInputFields() {
 			return intersect(this.tab_info.special_fields_order, inputFields)
 		},
@@ -852,10 +806,6 @@ export default {
 				['source_party', 'trade_party', 'destination_party'],
 				this.tab_info.fields_order
 			)[0]
-		},
-
-		isReadOnly() {
-			return this.$store.getters.isReadOnly || this.hasDisabledFields
 		},
 
 		hasSubstances() {
@@ -894,6 +844,13 @@ export default {
 			return false
 		}
 
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.setLabels()
+			}
+		}
 	}
 }
 </script>

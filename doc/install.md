@@ -6,11 +6,10 @@
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
-       
+   
 Optionally clone the translations as well in `translations` folder inside the ozone folder.
         
        git clone https://github.com/eaudeweb/ozone-translations.git translations
-   
 2. Customize the Docker environment files:
 
        cp docker/demo.env.example docker/demo.env
@@ -43,13 +42,12 @@ Optionally clone the translations as well in `translations` folder inside the oz
         
 ## Install directly on development machine
 
-1. Install prerequisites: Python 3.6, PostgreSQL 9, virtualenvwrapper, direnv. Installation instructions may vary according to host OS.
+1. Install prerequisites: Python 3.6, PostgreSQL 9, virtualenvwrapper, direnv, tusd. Installation instructions may vary according to host OS.
 
 2. Get the source code:
 
        git clone https://github.com/eaudeweb/ozone
        cd ozone
-       
 Optionally clone the translations as well in `translations` folder inside the ozone folder.
         
        git clone https://github.com/eaudeweb/ozone-translations.git translations
@@ -84,5 +82,14 @@ Optionally clone the translations as well in `translations` folder inside the oz
         python manage.py load_inital_fixtures
         python manage.py createsuperuser
         python manage.py runserver 0.0.0.0:8000
-        
 7. See `frontend/README.md` for instructions on starting the frontend application.
+
+8. (optional) Installing tusd locally:
+
+        wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz 
+        tar -xzvf tusd_linux_amd64.tar.gz 
+        install tusd_linux_amd64/tusd /usr/local/bin/
+        
+9. (optional) Start tusd (make sure to configure these variable in your .envrc and load them)
+
+       tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/

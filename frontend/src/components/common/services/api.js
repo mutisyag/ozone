@@ -28,6 +28,7 @@ const api = axios.create({
 	withCredentials: true
 })
 
+const apiPublicDirectory = axios.create()
 api.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
 api.defaults.xsrfCookieName = 'csrftoken'
 
@@ -50,6 +51,11 @@ const fetch = (path, config = null) => {
 	logRequests && console.log(`fetching ${path}...`)
 	checkAuth()
 	return api.get(path, config)
+}
+
+const fetchFromPublicDirectory = (path) => {
+	logRequests && console.log(`fetching ${path}...`)
+	return apiPublicDirectory.get(path)
 }
 
 const post = (path, data) => {
@@ -124,7 +130,7 @@ const createBlend = (blend) => post('blends/', blend)
 
 const cloneSubmission = (url) => post(`${url}clone/`)
 
-const getCustomBlends = () => fetch('blends/')
+const getCustomBlends = (party) => fetch('blends/', { params: { party } })
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
@@ -139,7 +145,7 @@ const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
 
-const getSubmissionHistory = (url) => fetch(`${url}history/`)
+const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
@@ -201,5 +207,6 @@ export {
 	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
-	uploadAttachment
+	uploadAttachment,
+	fetchFromPublicDirectory
 }

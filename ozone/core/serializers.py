@@ -1,8 +1,8 @@
 from copy import deepcopy
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -37,6 +37,7 @@ from .models import (
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
+    ReportingChannel,
 )
 
 User = get_user_model()
@@ -183,7 +184,10 @@ class CurrentUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('username', 'is_secretariat', 'is_read_only', 'party',)
+        fields = (
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'first_name',
+            'last_name', 'email'
+        )
 
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
@@ -316,6 +320,8 @@ class CreateBlendSerializer(BlendSerializer):
 
     def create(self, validated_data):
         components_data = validated_data.pop('components')
+        # Enforce Custom type for new blends.
+        validated_data['type'] = 'Custom'
         blend = Blend.objects.create(**validated_data)
         for component_data in components_data:
             BlendComponent.objects.create(blend=blend, **component_data)
@@ -453,12 +459,16 @@ class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
         return super().create_single(data, instance, submission)
 
 
-class Article7DestructionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7DestructionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
 
 
-class Article7DestructionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7DestructionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -469,12 +479,16 @@ class Article7DestructionSerializer(DataCheckRemarksMixIn, serializers.ModelSeri
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ProductionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ProductionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class Article7ProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7ProductionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -483,6 +497,17 @@ class Article7ProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSeria
         list_serializer_class = Article7ProductionListSerializer
         model = Article7Production
         exclude = ('submission',)
+
+
+def get_field_value(initial_data_entry, field_name):
+    """
+    Returns the value of a numerical field from entries (dictionaries
+    representing a single art7 import/export data entry) in serializer's
+    self.initial_data.
+    The UI can send None as a value in these fields.
+    """
+    ret = initial_data_entry.get(field_name, 0)
+    return ret if ret is not None else 0
 
 
 def validate_import_export_data(
@@ -500,7 +525,7 @@ def validate_import_export_data(
     # Then find all substances relating to those entries (could be blends)
     related_substances = []
     for entry in initial_data:
-        if entry.get('party_field', None) is None:
+        if entry.get(party_field, None) is None:
             if entry.get('substance', None):
                 related_substances.append(entry.get('substance'))
             elif entry.get('blend', None):
@@ -508,7 +533,7 @@ def validate_import_export_data(
                     Blend.objects.get(
                         id=entry.get('blend')
                     )
-                        .get_substance_ids()
+                    .get_substance_ids()
                 )
 
     # Calculate the sums of quantities and totals for each substance
@@ -528,13 +553,13 @@ def validate_import_export_data(
                     if substance in related_substances:
                         sums_dictionary[substance]['totals_sum'] += sum(
                             [
-                                entry.get(field, 0) * percentage
+                                get_field_value(entry, field) * percentage
                                 for field in totals_fields
                             ]
                         )
                         sums_dictionary[substance]['quantities_sum'] += sum(
                             [
-                                entry.get(field, 0) * percentage
+                                get_field_value(entry, field) * percentage
                                 for field in quantity_fields
                             ]
                         )
@@ -543,12 +568,13 @@ def validate_import_export_data(
                 substance = entry.get('substance')
                 sums_dictionary[substance]['totals_sum'] += sum(
                     [
-                        entry.get(field, 0) for field in totals_fields
+                        get_field_value(entry, field) for field in totals_fields
                     ]
                 )
                 sums_dictionary[substance]['quantities_sum'] += sum(
                     [
-                        entry.get(field, 0) for field in quantity_fields
+                        get_field_value(entry, field)
+                        for field in quantity_fields
                     ]
                 )
 
@@ -568,7 +594,9 @@ def validate_import_export_data(
             )
 
 
-class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ExportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'destination_party'
 
@@ -603,7 +631,9 @@ class Article7ExportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
         return ret
 
 
-class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7ExportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(source='substance.group.group_id', default='',
                                   read_only=True)
 
@@ -613,7 +643,9 @@ class Article7ExportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerial
         exclude = ('submission', 'blend_item',)
 
 
-class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7ImportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'source_party'
 
@@ -648,7 +680,9 @@ class Article7ImportListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpda
         return ret
 
 
-class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7ImportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -659,12 +693,16 @@ class Article7ImportSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerial
         exclude = ('submission', 'blend_item',)
 
 
-class Article7NonPartyTradeListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7NonPartyTradeListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'trade_party'
 
 
-class Article7NonPartyTradeSerializer(DataCheckRemarksMixIn, BaseBlendCompositionSerializer):
+class Article7NonPartyTradeSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -675,7 +713,9 @@ class Article7NonPartyTradeSerializer(DataCheckRemarksMixIn, BaseBlendCompositio
         exclude = ('submission', 'blend_item',)
 
 
-class Article7EmissionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer):
+class Article7EmissionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     """
     The list serializer for emissions needs to delete everything
     there was and create all data fresh, as there is no field to filter on.
@@ -685,20 +725,25 @@ class Article7EmissionListSerializer(DataCheckRemarksBulkUpdateMixIn, BaseBulkUp
     substance_blend_fields = []
 
 
-class Article7EmissionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class Article7EmissionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     class Meta:
         list_serializer_class = Article7EmissionListSerializer
         model = Article7Emission
         exclude = ('submission',)
 
 
-class HighAmbientTemperatureProductionListSerializer(DataCheckRemarksBulkUpdateMixIn,
-                                                     BaseBulkUpdateSerializer):
+class HighAmbientTemperatureProductionListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
+class HighAmbientTemperatureProductionSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -709,14 +754,16 @@ class HighAmbientTemperatureProductionSerializer(DataCheckRemarksMixIn, serializ
         exclude = ('submission',)
 
 
-class HighAmbientTemperatureImportListSerializer(DataCheckRemarksBulkUpdateMixIn,
-                                                 BaseBulkUpdateSerializer):
+class HighAmbientTemperatureImportListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', 'blend']
     unique_with = None
 
 
-class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
-                                             BaseBlendCompositionSerializer):
+class HighAmbientTemperatureImportSerializer(
+    DataCheckRemarksMixIn, BaseBlendCompositionSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -725,8 +772,6 @@ class HighAmbientTemperatureImportSerializer(DataCheckRemarksMixIn,
         list_serializer_class = HighAmbientTemperatureImportListSerializer
         model = HighAmbientTemperatureImport
         exclude = ('submission', 'blend_item',)
-
-
 class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
     class Meta:
         model = DataOther
@@ -734,10 +779,34 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
+    reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
         exclude = ('submission',)
+
+    def get_reporting_channel(self, obj):
+        return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def check_reporting_channel(self, instance, user):
+        if (
+            instance.submission.check_reporting_channel_modified()
+            and not instance.submission.can_change_reporting_channel(user)
+        ):
+            raise ValidationError({
+                "reporting_channel": [
+                    _('User is not allowed to change the reporting channel')
+                ]
+            })
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        instance.submission.reporting_channel = ReportingChannel.objects.get(
+            name=self.context['reporting_channel']
+        )
+        self.check_reporting_channel(instance, user)
+        instance.submission.save()
+        return super().update(instance, validated_data)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -748,10 +817,12 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
-        return getattr(obj.reporting_channel, 'name', '')
+        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
-class SubmissionFlagsSerializer(PartialUpdateSerializerMixin, serializers.ModelSerializer):
+class SubmissionFlagsSerializer(
+    PartialUpdateSerializerMixin, serializers.ModelSerializer
+):
     """
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
@@ -781,7 +852,9 @@ class SubmissionFlagsSerializer(PartialUpdateSerializerMixin, serializers.ModelS
         return super().update(instance, validated_data)
 
 
-class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.ModelSerializer):
+class SubmissionRemarksSerializer(
+    PartialUpdateSerializerMixin, serializers.ModelSerializer
+):
     """
     Specific serializer used to present all submission remarks,
     since this is easily usable by the frontend.
@@ -797,7 +870,8 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
             'nonparty_remarks_party', 'nonparty_remarks_secretariat',
             'emissions_remarks_party', 'emissions_remarks_secretariat',
             'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-            'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+            'hat_production_remarks_party',
+            'hat_production_remarks_secretariat',
         )
 
     def update(self, instance, validated_data):
@@ -814,9 +888,19 @@ class SubmissionRemarksSerializer(PartialUpdateSerializerMixin, serializers.Mode
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+    file_url = serializers.SerializerMethodField()
     class Meta:
         model = SubmissionFile
-        fields = '__all__'
+        exclude = ('file',)
+
+    def get_file_url(self, obj):
+        return self.context['request'].build_absolute_uri(reverse(
+            "core:submission-files-download",
+            kwargs={
+                "submission_pk": obj.submission.pk,
+                "pk": obj.pk
+            }
+        ))
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
@@ -825,7 +909,9 @@ class UploadTokenSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer):
+class SubmissionSerializer(
+    PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer
+):
     """
     This also needs to nested-serialize all data related to the specific
     submission.
@@ -919,16 +1005,26 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         lookup_url_kwarg='submission_pk',
     )
 
+    # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
     changeable_flags = serializers.SerializerMethodField()
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
+    can_change_reporting_channel = serializers.SerializerMethodField()
+
+    can_upload_files = serializers.SerializerMethodField()
+
+    can_edit_data = serializers.SerializerMethodField()
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
-
     can_change_remarks_party = serializers.SerializerMethodField()
     can_change_remarks_secretariat = serializers.SerializerMethodField()
+
+    can_change_reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
@@ -945,14 +1041,25 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'filled_by_secretariat',
-            'current_state', 'previous_state', 'available_transitions',
-            'data_changes_allowed', 'is_current', 'is_cloneable',
-            'changeable_flags',  'flag_provisional', 'flag_valid',
+            'current_state', 'previous_state',
+            'data_changes_allowed', 'is_current',
+            'flag_provisional', 'flag_valid',
             'flag_superseded',
-            'can_change_remarks_party', 'can_change_remarks_secretariat',
+            # Permission-related fields; value is dependent on user
+            'available_transitions',
+            'is_cloneable',
+            'changeable_flags',
+            'can_change_remarks_party',
+            'can_change_remarks_secretariat',
+            'can_change_reporting_channel',
+            'can_upload_files',
+            'can_edit_data',
         )
 
         read_only_fields = (
+            'available_transitions', 'is_cloneable', 'changeable_flags',
+            'can_change_remarks_party', 'can_change_remarks_secretariat',
+            'can_change_reporting_channel', 'can_upload_files', 'can_edit_data'
             'created_by', 'last_edited_by',
         )
 
@@ -976,6 +1083,17 @@ class SubmissionSerializer(PartialUpdateSerializerMixin, serializers.Hyperlinked
         user = self.context['request'].user
         return obj.can_change_remark(user, 'remarks_secretariat')
 
+    def get_can_change_reporting_channel(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_reporting_channel(user)
+
+    def get_can_upload_files(self, obj):
+        user = self.context['request'].user
+        return obj.can_upload_files(user)
+
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_edit_data(user)
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -1003,6 +1121,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
+    can_edit_data = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -1012,8 +1131,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_at', 'updated_at', 'submitted_at',
                 'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
-                'available_transitions', 'data_changes_allowed', 'is_current',
-                'is_cloneable',
+                'data_changes_allowed', 'is_current',
+                'flag_provisional', 'flag_valid',
+                # Permissions-related fields
+                'available_transitions', 'is_cloneable', 'can_edit_data',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
@@ -1025,6 +1146,9 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_is_cloneable(self, obj):
         user = self.context['request'].user
         return obj.is_cloneable(user)
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_edit_data(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):
