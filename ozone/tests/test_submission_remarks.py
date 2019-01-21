@@ -78,7 +78,7 @@ class PatchIsSamePartyMixIn(object):
         super().setUp()
         # Patch IsSecretariatOrSameParty since we are testing `check_remarks` here
         # and the check is somewhat duplicated.
-        patch("ozone.core.permissions.BaseIsSecretariatOrSameParty.has_permission",
+        patch("ozone.core.permissions.IsSecretariatOrSamePartySubmission.has_permission",
               return_value=True).start()
 
     def tearDown(self):
