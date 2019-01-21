@@ -5,6 +5,7 @@ from reportlab.platypus import Paragraph
 from .imp_exp_helper import big_table_row
 from .imp_exp_helper import component_row
 
+from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import page_title_section
@@ -25,6 +26,8 @@ from ..constants import TABLE_ROW_EMPTY_IMP_EXP
 
 def export_exports(submission):
     grouping = submission.article7exports
+
+    comments_section = get_comments_section(submission, 'exports')
 
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
     table_blends = tuple(mk_table_blends(
@@ -60,6 +63,7 @@ def export_exports(submission):
         Paragraph(_('2.2 Blends'), STYLES['Heading2']),
         blends_table,
         PageBreak(),
+        Paragraph(_('2.3 Comments'), STYLES['Heading2']),
     )
 
     return page_title_section(
