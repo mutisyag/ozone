@@ -481,7 +481,7 @@ class SubmissionFlagsViewSet(
 ):
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmission,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -517,7 +517,7 @@ class SubmissionRemarksViewSet(
     """
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated
+        IsAuthenticated, IsSecretariatOrSamePartySubmission
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
