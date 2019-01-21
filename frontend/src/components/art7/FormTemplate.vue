@@ -568,13 +568,6 @@ export default {
 	},
 	data() {
 		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends',
-				trade_party: 'countries',
-				source_party: 'countries',
-				destination_party: 'countries'
-			},
 			tableFII: {
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
@@ -679,21 +672,6 @@ export default {
 			headers[0].parentNode.insertBefore(
 				topHeader, headers[0]
 			)
-		},
-
-		doCommentsRow(row) {
-			const fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
-			const intersection = intersect(
-				['remarks_os', 'remarks_party'],
-				fieldsToShow
-			)
-			if (
-				intersection.length === 0
-        && (row.remarks_os.selected || row.remarks_party.selected)
-			) {
-				return true
-			}
-			return false
 		}
 	},
 	computed: {

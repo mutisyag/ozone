@@ -1,75 +1,137 @@
+import fromExponential from 'from-exponential/dist/index.min.js'
+import { isNumber } from '@/components/common/services/utilsService'
+
+const valueConverter = (item) => {
+	if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
+		return 0
+	}
+	return parseFloat(item)
+}
+
+// eslint-disable-next-line no-unused-vars
+const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
+
 export default {
 	substanceRows({
-		section, substance, group, blend, prefillData, ordering_id
+		// eslint-disable-next-line no-unused-vars
+		$gettext, section, substance, group, country, blend, prefillData, ordering_id
 	}) {
-		const baseInnerFields = {
-			ordering_id: { selected: ordering_id || 0 },
-			substance: {
-				type: 'select',
-				selected: substance || null
-			},
-			blend: {
-				type: 'select',
-				selected: blend || null,
-				expand: false
-			},
-			group: {
-				selected: group
-			},
-			prop1: {
-				type: 'number',
-				selected: null
-			},
-			prop2: {
-				type: 'number',
-				selected: null
-			},
-			prop3: {
-				type: 'number',
-				selected: null
-			},
-			remarks_party: {
-				type: 'textarea',
-				selected: ''
-			},
-			remarks_os: {
-				type: 'textarea',
-				selected: ''
-			},
-			get validation() {
-				const errors = []
-				if (!this.prop3.selected) {
-					errors.push('Prop3 required')
-				}
-
-				const returnObj = {
-					type: 'nonInput',
-					selected: errors
-				}
-
-				return returnObj
-			}
-		}
-
+		let baseInnerFields = {}
 		switch (section) {
-		case 'has_imports':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
-			}
-			return baseInnerFields
 		case 'has_produced':
-			if (prefillData) {
-				Object.keys(prefillData).forEach((field) => {
-					baseInnerFields[field] ? baseInnerFields[field].selected = prefillData[field] : null
-				})
+			baseInnerFields = {
+				ordering_id: { selected: ordering_id || 0 },
+				remarks_party: {
+					type: 'textarea',
+					selected: ''
+				},
+				remarks_os: {
+					type: 'textarea',
+					selected: ''
+				},
+				group: {
+					selected: group,
+					type: 'nonInput'
+				},
+				quantity_msac: {
+					type: 'number',
+					selected: null
+				},
+				quantity_sdac: {
+					type: 'number',
+					selected: null
+				},
+				quantity_dcpac: {
+					type: 'number',
+					selected: null
+				},
+				substance: {
+					type: 'select',
+					selected: substance || null
+				},
+				blend: {
+					type: 'select',
+					selected: blend || null,
+					expand: false
+				},
+				get validation() {
+					const errors = []
+					if (this.quantity_msac.selected === null) {
+						errors.push($gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
+					}
+
+					const returnObj = {
+						type: 'nonInput',
+						selected: errors
+					}
+
+					return returnObj
+				}
 			}
-			return baseInnerFields
+			break
+		case 'has_imports':
+			baseInnerFields = {
+				ordering_id: { selected: ordering_id || 0 },
+				remarks_party: {
+					type: 'textarea',
+					selected: ''
+				},
+				remarks_os: {
+					type: 'textarea',
+					selected: ''
+				},
+				group: {
+					selected: group,
+					type: 'nonInput'
+				},
+				quantity_msac: {
+					type: 'number',
+					selected: null
+				},
+				quantity_sdac: {
+					type: 'number',
+					selected: null
+				},
+				quantity_dcpac: {
+					type: 'number',
+					selected: null
+				},
+				substance: {
+					type: 'select',
+					selected: substance || null
+				},
+				blend: {
+					type: 'select',
+					selected: blend || null,
+					expand: false
+				},
+				get validation() {
+					const errors = []
+					if (this.quantity_msac.selected === null) {
+						errors.push($gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
+					}
+
+					const returnObj = {
+						type: 'nonInput',
+						selected: errors
+					}
+
+					return returnObj
+				}
+			}
+			break
 		default:
-			// statements_def
-			return {}
+			break
 		}
+		if (prefillData) {
+			Object.keys(prefillData).forEach((field) => {
+				baseInnerFields[field]
+					?	baseInnerFields[field].selected = isNumber(prefillData[field])
+						? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
+					: null
+			})
+		}
+		return baseInnerFields
 	}
 
 }

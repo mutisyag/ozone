@@ -52,7 +52,7 @@ export default {
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: { __all__: [`${this.$gettext('Save failed  because of validation problems. Please check the')} ${this.invalidTabs.join(', ')} <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
+					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
 					variant: 'danger'
 				})
 			} else {
@@ -123,7 +123,7 @@ export default {
 					console.log(error.response)
 					this.$store.dispatch('setAlert', {
 						$gettext: this.$gettext,
-						message: { __all__: [`${this.$gettext('Save failed for')} ${this.invalidTabs}`] },
+						message: { __all__: [this.$gettextInterpolate('Save failed for %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })] },
 						variant: 'danger' })
 				})
 			}
@@ -139,7 +139,7 @@ export default {
 					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
 					this.$store.dispatch('setAlert', {
 						$gettext: this.$gettext,
-						message: { __all__: [`${this.$gettext('Save failed for')} ${this.invalidTabs}`] },
+						message: { __all__: [this.$gettextInterpolate('Save failed for %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })] },
 						variant: 'danger'
 					})
 				})
