@@ -49,17 +49,12 @@ const getFormHat = ($gettext) => {
 				detailsHtml: $gettext('Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2'),
 				isInvalid: false,
 				form_fields: [],
-				special_fields_order: [],
-				hidden_fields_order: [],
 				blend_substance_headers: ['substance', 'percent', 'quantity_msac', 'quantity_sdac', 'quantity_dcpac'],
 				get fields_order() {
 					return this.section_subheaders.map(x => x.name)
 				},
 				get input_fields() {
 					return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
-				},
-				get modal_order() {
-					return this.input_fields
 				},
 				section_subheaders: [{
 					label: `(1)<br>${$gettext('Annex/group')}`,
@@ -86,21 +81,29 @@ const getFormHat = ($gettext) => {
 					name: 'quantity_dcpac',
 					isInput: true
 				}, {
-					label: `(6)<br>${$gettext('Status')}`,
+					label: `(6)<br>${$gettext('Remarks (party')}`,
+					name: 'remarks_party',
+					isInput: true
+				}, {
+					label: `(7)<br>${$gettext('Remarks (secretariat)')}`,
+					name: 'remarks_os',
+					isInput: true
+				}, {
+					label: `(8)<br>${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
 
 				section_headers: [{
-					label: ''
-				}, {
-					label: ''
+					label: '',
+					colspan: 2
 				}, {
 					label: $gettext('Quantity of new substances imported for approved subsectors to which the high-ambient-temperature exemption applies'),
 					colspan: 3,
 					tooltip: $gettext('Only bulk gases for servicing of exempted equipment should be reported here, not gases imported inside pre-charged equipment.')
 				}, {
-					label: ''
+					label: '',
+					colspan: 3
 				}
 				],
 				comments: {
@@ -147,9 +150,6 @@ const getFormHat = ($gettext) => {
 				get input_fields() {
 					return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 				},
-				get modal_order() {
-					return this.input_fields
-				},
 				section_subheaders: [{
 					label: `(1)<br>${$gettext('Annex/group')}`,
 					name: 'group',
@@ -171,20 +171,28 @@ const getFormHat = ($gettext) => {
 					name: 'quantity_dcpac',
 					isInput: true
 				}, {
-					label: `(6)<br>${$gettext('Status')}`,
+					label: `(6)<br>${$gettext('Remarks (party')}`,
+					name: 'remarks_party',
+					isInput: true
+				}, {
+					label: `(7)<br>${$gettext('Remarks (secretariat)')}`,
+					name: 'remarks_os',
+					isInput: true
+				}, {
+					label: `(8)<br>${$gettext('Status')}`,
 					name: 'validation'
 				}],
 
 				section_headers: [{
-					label: ''
-				}, {
-					label: ''
+					label: '',
+					colspan: 2
 				}, {
 					label: $gettext('Quantity of new substances produced for approved subsectors to which the high-ambient-temperature exemption applies (production should be for use within the producing country)'),
 					colspan: 3,
 					tooltip: $gettext('For each substance produced for use in subsectors that may be approved after the assessments under paragraphs 32 and 33 of decision XXVIII/2, please specify the approved subsector. Should the column space be insufficient, further information can be provided in the “comments” box above.')
 				}, {
-					label: ''
+					label: '',
+					colspan: 3
 				}
 				],
 				comments: {

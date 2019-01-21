@@ -195,6 +195,16 @@ export default {
 	},
 
 	methods: {
+		fillTableSearch(data) {
+			if (data.substance) {
+				this.table.filters.search = data.substance
+				this.table.tableFilters = true
+			}
+			if (data.blend) {
+				this.tableBlends.filters.search = data.blend
+				this.tableBlends.tableFilters = true
+			}
+		},
 		updateFormField(value, fieldInfo) {
 			this.$store.commit('updateFormField', {
 				value,
