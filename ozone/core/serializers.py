@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -772,6 +773,8 @@ class HighAmbientTemperatureImportSerializer(
         list_serializer_class = HighAmbientTemperatureImportListSerializer
         model = HighAmbientTemperatureImport
         exclude = ('submission', 'blend_item',)
+
+
 class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
     class Meta:
         model = DataOther
@@ -888,7 +891,9 @@ class SubmissionRemarksSerializer(
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+
     file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubmissionFile
         exclude = ('file',)
@@ -1018,9 +1023,11 @@ class SubmissionSerializer(
     can_upload_files = serializers.SerializerMethodField()
 
     can_edit_data = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
+
     can_change_remarks_party = serializers.SerializerMethodField()
     can_change_remarks_secretariat = serializers.SerializerMethodField()
 
@@ -1045,6 +1052,7 @@ class SubmissionSerializer(
             'data_changes_allowed', 'is_current',
             'flag_provisional', 'flag_valid',
             'flag_superseded',
+
             # Permission-related fields; value is dependent on user
             'available_transitions',
             'is_cloneable',
@@ -1094,6 +1102,7 @@ class SubmissionSerializer(
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)
+
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -1146,6 +1155,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_is_cloneable(self, obj):
         user = self.context['request'].user
         return obj.is_cloneable(user)
+
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)

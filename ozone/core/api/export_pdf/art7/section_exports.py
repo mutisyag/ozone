@@ -71,4 +71,4 @@ def export_exports(submission):
         explanatory=_(
             'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
         )
-    ) + exports_page
+    ) + exports_page + comments_section

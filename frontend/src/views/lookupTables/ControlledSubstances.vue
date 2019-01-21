@@ -54,6 +54,7 @@
 import './styles.css'
 
 export default {
+	data() {
 		return {
 			table: {
 				currentPage: 1,

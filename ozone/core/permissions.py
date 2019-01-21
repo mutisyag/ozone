@@ -51,6 +51,7 @@ class BaseIsSecretariatOrSameParty(BasePermission):
         """
         pass
 
+
 class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
 
     @staticmethod
@@ -70,6 +71,7 @@ class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
         if is_secretariat_or_admin(request):
             return True
         return request.user.party == obj.party
+
 
 class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
 
@@ -97,7 +99,7 @@ class IsSecretariatOrSamePartyBlend(BaseIsSecretariatOrSameParty):
             if blend_pk:
                 # Blend object already exists.
                 party = Blend.objects.get(pk=blend_pk).party.pk
-        else:
+            else:
                 # It's a create
                 party = request.data.get('party', None)
             return party == request.user.party.pk

@@ -61,6 +61,8 @@ class ModifyPreventionMixin:
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
+
+
 class Obligation(models.Model):
     """
     TODO: analysis!
@@ -81,10 +83,12 @@ class Obligation(models.Model):
     # (e.g. when different forms will be necessary for the same obligation
     # but different reporting periods due to changes in the methodology
     form_type = models.CharField(max_length=64)
+
     other = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
+
     class Meta:
         db_table = "core_obligation"
 
@@ -96,7 +100,6 @@ class ReportingChannel(models.Model):
 
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
-
 
     class Meta:
         db_table = "reporting_channel"
@@ -304,6 +307,14 @@ class Submission(models.Model):
         help_text="General HAT obligation remarks added by the ozone secretariat for imports"
     )
 
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="submission",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -382,10 +393,13 @@ class Submission(models.Model):
         List of transitions that can be performed from current state.
 
         """
+        # Simply avoid needless processing
+        if user.is_read_only:
+            return []
 
         transitions = []
         wf = self.workflow(user)
-        for transition in wf .state.transitions():
+        for transition in wf.state.transitions():
             if hasattr(wf, 'check_' + transition.name):
                 if getattr(wf, 'check_' + transition.name)():
                     transitions.append(transition.name)
@@ -444,6 +458,9 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
+        if user.is_read_only:
+            return []
+
         flags_list = []
         if user.is_secretariat:
             flags_list.extend([
@@ -506,6 +523,7 @@ class Submission(models.Model):
             return False
 
         return True
+
     def check_remarks(self, user, remarks):
         """
         Raise error if the user has change any remarks he was not allowed to
@@ -529,6 +547,7 @@ class Submission(models.Model):
                 for field in wrongly_modified_remarks
             })
         return True
+
     def check_reporting_channel_modified(self):
         if 'reporting_channel_id' in self.tracker.changed().keys():
             return True
@@ -684,7 +703,7 @@ class Submission(models.Model):
                         'email': self.info.email,
                         'date': self.info.date,
                     }
-            )
+                )
         else:
             raise e
 
@@ -757,6 +776,7 @@ class Submission(models.Model):
             version.save()
         self.flag_superseded = False
         self.save()
+
     @property
     def versions(self):
         return Submission.objects.filter(
@@ -847,6 +867,7 @@ class Submission(models.Model):
             self._workflow_class = 'default'
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
+
             # The default value for reporting channel is 'Web form'
             # when creating a new submission
             self.reporting_channel = ReportingChannel.objects.get(name='Web form')
@@ -884,11 +905,11 @@ class Submission(models.Model):
 
         else:
             # This is not the first save
-        self.clean()
-        return super().save(
-            force_insert=force_insert, force_update=force_update,
-            using=using, update_fields=update_fields
-        )
+            self.clean()
+            return super().save(
+                force_insert=force_insert, force_update=force_update,
+                using=using, update_fields=update_fields
+            )
 
     def set_submitted(self):
         self.submitted_at = timezone.now()

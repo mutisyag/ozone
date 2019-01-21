@@ -89,6 +89,7 @@ class BlendCompositionMixin:
             raise ValidationError(
                 _("This blend is for a different party!")
             )
+
         # Also, no changes are allowed on blend_item != null objects
         if self.tracker.changed() and self.tracker.previous('blend_item_id'):
             raise ValidationError(
@@ -336,8 +337,10 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
     remarks_party = models.CharField(max_length=9999, blank=True)
     remarks_os = models.CharField(max_length=9999, blank=True)
 
+    tracker = FieldTracker()
+
     class Meta:
-        db_table = 'reporting_article_seven_questionnaire'
+        db_table = 'reporting_art7_questionnaire'
 
 
 class Article7Export(
@@ -443,6 +446,7 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
     quantity_article_5 = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+
     tracker = FieldTracker()
 
     class Meta:
@@ -606,6 +610,7 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
     quantity_emitted = models.FloatField(
         validators=[MinValueValidator(0.0)]
     )
+
     tracker = FieldTracker()
 
     class Meta:
@@ -640,6 +645,7 @@ class HighAmbientTemperatureProduction(
     substance = models.ForeignKey(
         Substance, on_delete=models.PROTECT
     )
+
     tracker = FieldTracker()
 
     class Meta:
@@ -667,6 +673,7 @@ class HighAmbientTemperatureImport(
 
     class Meta:
         db_table = 'reporting_hat_import'
+
 
 class Transfer(ModifyPreventionMixin, BaseReport):
     """
@@ -697,6 +704,7 @@ class Transfer(ModifyPreventionMixin, BaseReport):
     destination_party = models.ForeignKey(
         Party, related_name='received_transfers', on_delete=models.PROTECT
     )
+
     tracker = FieldTracker()
 
     class Meta:
