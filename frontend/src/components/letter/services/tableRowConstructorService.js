@@ -128,7 +128,7 @@ export default {
 				get validation() {
 					const errors = []
 					if (!this.facility_name.selected) {
-						errors.push($gettext('error 1 test'))
+						errors.push('error 1 test')
 					}
 
 					const returnObj = {
