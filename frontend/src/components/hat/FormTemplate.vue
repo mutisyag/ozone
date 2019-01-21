@@ -136,10 +136,6 @@
 						</div>
 						<b-btn-group class="row-controls">
 							<span
-								@click="createModalData(cell.item.originalObj, cell.item.index)">
-								<i class="fa fa-pencil-square-o fa-lg"></i>
-							</span>
-							<span
 								v-if="!$store.getters.can_edit_data"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn">
