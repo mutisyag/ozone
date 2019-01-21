@@ -249,6 +249,11 @@ class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    """
+    list:
+    Get the list of substances grouped by their Group.
+    """
+
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticated,)
@@ -281,6 +286,12 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class BlendViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    Get the list of all non-custom blends, plus the custom ones that belongs
+    to the user's party.
+    """
+
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyBlend, )
 
     def get_queryset(self):
@@ -426,6 +437,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"], url_path="call-transition")
     def call_transition(self, request, pk=None):
+        """
+        Request example:
+        {
+            "transition": "submit"
+        }
+        """
+
         if request.data.get("transition"):
             submission = Submission.objects.get(pk=pk)
             submission.call_transition(request.data["transition"], request.user)
