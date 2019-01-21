@@ -78,7 +78,7 @@ class PatchIsSamePartyMixIn(object):
         super().setUp()
         # Patch IsSecretariatOrSameParty since we are testing `check_remarks` here
         # and the check is somewhat duplicated.
-        patch("ozone.core.permissions.IsSecretariatOrSamePartySubmission.has_permission",
+        patch("ozone.core.permissions.IsSecretariatOrSamePartySubmissionRemarks.has_permission",
               return_value=True).start()
 
     def tearDown(self):
@@ -281,6 +281,7 @@ class SubmissionRetrieveTest(BaseRemarksTests):
 
 
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
+    success_code = 200
     fail_code = 403
 
     def _check_remark_update_permission(self, user, field_type, owner, expect_success):
@@ -311,7 +312,10 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
                 kwargs={"submission_pk": submission.pk},
             )
         )
-        self.assertEqual(result.status_code, 200)
+        self.assertEqual(
+            result.status_code,
+            self.success_code if expect_success else self.fail_code
+        )
         self.assertEqual(len(result.json()), 1 if expect_success else 0)
 
     def test_get_same_party(self):
