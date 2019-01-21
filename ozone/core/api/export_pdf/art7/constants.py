@@ -1,5 +1,5 @@
-from .util import p_c
-from .util import col_widths
+from ozone.core.api.export_pdf.util import p_c
+from ozone.core.api.export_pdf.util import col_widths
 
 from django.utils.translation import gettext_lazy as _
 from reportlab.lib import colors

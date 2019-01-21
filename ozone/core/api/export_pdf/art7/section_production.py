@@ -15,12 +15,12 @@ from ..util import TABLE_STYLES
 from ..util import table_from_data
 
 
-from ..constants import TABLE_ROW_EMPTY_PROD
-from ..constants import TABLE_PROD_HEADER
-from ..constants import TABLE_PROD_HEADER_FII
-from ..constants import TABLE_PROD_HEADER_STYLE
-from ..constants import TABLE_PROD_HEADER_STYLE_FII
-from ..constants import TABLE_PROD_WIDTH
+from .constants import TABLE_ROW_EMPTY_PROD
+from .constants import TABLE_PROD_HEADER
+from .constants import TABLE_PROD_HEADER_FII
+from .constants import TABLE_PROD_HEADER_STYLE
+from .constants import TABLE_PROD_HEADER_STYLE_FII
+from .constants import TABLE_PROD_WIDTH
 
 
 def to_row_substance(obj):

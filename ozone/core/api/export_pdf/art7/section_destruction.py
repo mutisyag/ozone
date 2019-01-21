@@ -2,14 +2,14 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
-from ..constants import TABLE_DEST_HEADER
-from ..constants import TABLE_DEST_HEADER_STYLE
-from ..constants import TABLE_DEST_COMP_HEADER
-from ..constants import TABLE_DEST_COMP_WIDTH
-from ..constants import TABLE_DEST_WIDTH
-from ..constants import TABLE_ROW_EMPTY_DEST
-from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
-from ..constants import TABLE_BLENDS_COMP_STYLE
+from .constants import TABLE_DEST_HEADER
+from .constants import TABLE_DEST_HEADER_STYLE
+from .constants import TABLE_DEST_COMP_HEADER
+from .constants import TABLE_DEST_COMP_WIDTH
+from .constants import TABLE_DEST_WIDTH
+from .constants import TABLE_ROW_EMPTY_DEST
+from .constants import TABLE_ROW_EMPTY_STYLE_DEST
+from .constants import TABLE_BLENDS_COMP_STYLE
 
 from ..util import get_comments_section
 from ..util import mk_table_blends

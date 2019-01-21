@@ -13,15 +13,15 @@ from ..util import table_from_data
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
-from ..constants import TABLE_BLENDS_COMP_HEADER
-from ..constants import TABLE_BLENDS_COMP_STYLE
-from ..constants import TABLE_BLENDS_COMP_WIDTHS
-from ..constants import TABLE_IMPORTS_EXPORTS_HEADER
-from ..constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
-from ..constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS
-from ..constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
-from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
-from ..constants import TABLE_ROW_EMPTY_IMP_EXP
+from .constants import TABLE_BLENDS_COMP_HEADER
+from .constants import TABLE_BLENDS_COMP_STYLE
+from .constants import TABLE_BLENDS_COMP_WIDTHS
+from .constants import TABLE_IMPORTS_EXPORTS_HEADER
+from .constants import TABLE_IMPORTS_EXPORTS_HEADER_STYLE
+from .constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS
+from .constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
+from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from .constants import TABLE_ROW_EMPTY_IMP_EXP
 
 
 def export_exports(submission):

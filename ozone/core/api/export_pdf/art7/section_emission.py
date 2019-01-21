@@ -3,11 +3,10 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
-from ..constants import TABLE_EMISSIONS_HEADER
-from ..constants import TABLE_EMISSIONS_HEADER_STYLE
-from ..constants import TABLE_ROW_EMPTY_EMISSIONS
-from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
-
+from .constants import TABLE_EMISSIONS_HEADER
+from .constants import TABLE_EMISSIONS_HEADER_STYLE
+from .constants import TABLE_ROW_EMPTY_EMISSIONS
+from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
 from ..util import get_comments_section
 from ..util import p_c
