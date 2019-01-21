@@ -11,6 +11,7 @@ from ..constants import TABLE_ROW_EMPTY_DEST
 from ..constants import TABLE_ROW_EMPTY_STYLE_DEST
 from ..constants import TABLE_BLENDS_COMP_STYLE
 
+from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import p_c
@@ -44,6 +45,8 @@ def component_row(component, blend):
 
 def export_destruction(submission):
     grouping = submission.article7destructions
+
+    comments_section = get_comments_section(submission, 'destruction')
 
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
     table_blends = tuple(mk_table_blends(
@@ -80,6 +83,7 @@ def export_destruction(submission):
         Paragraph(_('4.2 Blends'), STYLES['Heading2']),
         blends_table,
         PageBreak(),
+        Paragraph(_('4.3 Comments'), STYLES['Heading2'])
     )
 
     return page_title_section(
@@ -87,4 +91,4 @@ def export_destruction(submission):
         explanatory=_(
             'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F substances'
         )
-    ) + destr_page
+    ) + destr_page + comments_section

@@ -8,6 +8,8 @@ from ..constants import TABLE_EMISSIONS_HEADER_STYLE
 from ..constants import TABLE_ROW_EMPTY_EMISSIONS
 from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
+
+from ..util import get_comments_section
 from ..util import p_c
 from ..util import page_title_section
 from ..util import table_from_data
@@ -34,6 +36,8 @@ def mk_table_facilities(submission):
 def export_emission(submission):
     table_facilities = tuple(mk_table_facilities(submission))
 
+    comments_section = get_comments_section(submission, 'emissions')
+
     style = (
         TABLE_EMISSIONS_HEADER_STYLE + TABLE_STYLES + (
             () if table_facilities else TABLE_ROW_EMPTY_STYLE_IMP_EXP
@@ -52,6 +56,7 @@ def export_emission(submission):
         Paragraph(_('6.1 Facilities'), STYLES['Heading2']),
         facilities_table,
         PageBreak(),
+        Paragraph(_('6.2 Comments'), STYLES['Heading2'])
     )
 
     return page_title_section(
@@ -60,4 +65,4 @@ def export_emission(submission):
         explanatory=_(
             'In metric tons, not ODP or CO2-equivalent tonnes.'
         )
-    ) + emissions_page
+    ) + emissions_page + comments_section

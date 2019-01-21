@@ -247,13 +247,14 @@ def get_comments_section(submission, type):
     r_party = getattr(submission, type + '_remarks_party')
     r_secretariat = getattr(submission, type + '_remarks_secretariat')
 
+
     return (
         Paragraph(_('Comments (Party)'), STYLES['Heading3']),
         hr,
-        p_l(_(r_party)),
+        p_l(_(r_party if r_party else 'No comments (party)')),
         Spacer(1, cm),
         Paragraph(_('Comments (Secretariat)'), STYLES['Heading3']),
         hr,
-        p_l(_(r_secretariat)),
+        p_l(_(r_secretariat if r_secretariat else 'No comments (secretariat)')),
         PageBreak()
     )

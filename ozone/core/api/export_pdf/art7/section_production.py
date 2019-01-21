@@ -2,6 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
+from ..util import get_comments_section
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantity_cell
@@ -56,9 +57,13 @@ def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_substances_fii = tuple(mk_table_substances_fii(submission))
 
+    comments_section = get_comments_section(submission, 'production')
+
     style = lambda data: (
         TABLE_STYLES + (
-        () if data else (('SPAN', (0, 2), (-1, 2)), (('ALIGN', (0, 2), (-1, 2), 'CENTER')))
+        () if data else (
+            ('SPAN', (0, 2), (-1, 2)), (('ALIGN', (0, 2), (-1, 2), 'CENTER'))
+        )
     )
     )
 
@@ -84,7 +89,8 @@ def export_production(submission):
         PageBreak(),
         Paragraph(_('3.1.1 Substances - group FII'), STYLES['Heading2']),
         fii_table,
-        PageBreak()
+        PageBreak(),
+        Paragraph(_('3.3 Comments'), STYLES['Heading2'])
     )
 
     return page_title_section(
@@ -93,4 +99,4 @@ def export_production(submission):
             'in tonnes (not ODP or GWP tonnes) Annex A, B, C, E and F '
             'substances'
         )
-    ) + prod_page
+    ) + prod_page + comments_section

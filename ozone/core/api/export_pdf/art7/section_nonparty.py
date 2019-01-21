@@ -12,6 +12,7 @@ from ..constants import TABLE_NONP_COMP_HEADER
 from ..constants import TABLE_ROW_EMPTY_NONP
 from ..constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
+from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import p_c
@@ -52,6 +53,8 @@ def component_row(component, blend):
 def export_nonparty(submission):
     grouping = submission.article7nonpartytrades
 
+    comments_section = get_comments_section(submission, 'nonparty')
+
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
     table_blends = tuple(mk_table_blends(
         grouping, big_table_row, component_row, TABLE_NONP_COMP_HEADER,
@@ -87,6 +90,7 @@ def export_nonparty(submission):
         Paragraph(_('5.2 Blends'), STYLES['Heading2']),
         blends_table,
         PageBreak(),
+        Paragraph(_('5.3 Comments'), STYLES['Heading2'])
     )
 
     return page_title_section(
@@ -94,4 +98,4 @@ def export_nonparty(submission):
         explanatory=_(
             'in tonnes (not ODP or GWP tonnes) Annex A, B, C and E substances'
         )
-    ) + nonp_page
+    ) + nonp_page + comments_section
