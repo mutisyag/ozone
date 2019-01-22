@@ -120,7 +120,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
 
     def test_party_user_party_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            self.party_user, "party", self.secretariat_user, False
+            self.party_user, "party", self.secretariat_user, True
         )
 
     def test_party_user_secretariat_field_party_reporter(self):
