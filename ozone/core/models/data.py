@@ -322,20 +322,38 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
         on_delete=models.CASCADE
     )
 
-    has_imports = models.BooleanField()
+    has_imports = models.BooleanField(
+        help_text="If set to true it allows to complete imports data form."
+    )
 
-    has_exports = models.BooleanField()
+    has_exports = models.BooleanField(
+        help_text="If set to true it allows to complete exports data form."
+    )
 
-    has_produced = models.BooleanField()
+    has_produced = models.BooleanField(
+        help_text="If set to true it allows to complete productions data form."
+    )
 
-    has_destroyed = models.BooleanField()
+    has_destroyed = models.BooleanField(
+        help_text="If set to true it allows to complete destructions data form."
+    )
 
-    has_nonparty = models.BooleanField()
+    has_nonparty = models.BooleanField(
+        help_text="If set to true it allows to complete non-party trades data form."
+    )
 
-    has_emissions = models.BooleanField()
+    has_emissions = models.BooleanField(
+        help_text="If set to true it allows to complete emissions data form."
+    )
 
-    remarks_party = models.CharField(max_length=9999, blank=True)
-    remarks_os = models.CharField(max_length=9999, blank=True)
+    remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Remarks added by the reporting party"
+    )
+    remarks_os = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Remarks added by the ozone secretariat"
+    )
 
     tracker = FieldTracker()
 
