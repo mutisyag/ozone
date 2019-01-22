@@ -64,24 +64,27 @@ class BaseDataRemarksTestsMixIn(object):
         )
         return submission
 
-    def _check_result(self, result, expect_success):
+    def _check_result(self, result, expect_success, fail_code=None):
         try:
             verbose = result.json()
         except:
             verbose = result.data
+
+        # If fail_code is not given, use class attribute
+        fail_code = fail_code if fail_code is not None else self.fail_code
         self.assertEqual(
             result.status_code,
-            self.success_code if expect_success else self.fail_code,
+            self.success_code if expect_success else fail_code,
             verbose,
         )
 
-    def check_remark(self, user, field, owner, expect_success):
+    def check_remark(self, user, field, owner, expect_success, fail_code=None):
         raise NotImplementedError()
 
     def test_party_user_party_field_party_reporter(self):
         self.check_remark(self.party_user, "party", self.party_user, True)
 
-    def test_party_user_party_filed_secretariat_reporter(self):
+    def test_party_user_party_field_secretariat_reporter(self):
         self.check_remark(self.party_user, "party", self.secretariat_user, True)
 
     def test_party_user_secretariat_field_party_reporter(self):
@@ -91,7 +94,7 @@ class BaseDataRemarksTestsMixIn(object):
         self.check_remark(self.party_user, "os", self.secretariat_user, False)
 
     def test_secretariat_user_party_field_party_reporter(self):
-        self.check_remark(self.secretariat_user, "party", self.party_user, False)
+        self.check_remark(self.secretariat_user, "party", self.party_user, False, fail_code=403)
 
     def test_secretariat_user_party_field_secretariat_reporter(self):
         self.check_remark(self.secretariat_user, "party", self.secretariat_user, True)
@@ -110,7 +113,7 @@ class BaseDataCreateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
     success_code = 201
     fail_code = 422
 
-    def check_remark(self, user, field, owner, expect_success):
+    def check_remark(self, user, field, owner, expect_success, fail_code=None):
         field = "remarks_%s" % field
 
         submission = self.create_submission(owner)
@@ -126,7 +129,7 @@ class BaseDataCreateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
             data,
         )
 
-        self._check_result(result, expect_success)
+        self._check_result(result, expect_success, fail_code)
 
 
 class BaseDataUpdateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
@@ -137,7 +140,7 @@ class BaseDataUpdateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
     no_substance = False
     factory_klass = None
 
-    def check_remark(self, user, field, owner, expect_success):
+    def check_remark(self, user, field, owner, expect_success, fail_code=None):
         field = "remarks_%s" % field
 
         submission = self.create_submission(owner)
@@ -160,7 +163,7 @@ class BaseDataUpdateRemarksTestsMixIn(BaseDataRemarksTestsMixIn):
             reverse(self.api, kwargs={"submission_pk": submission.id}),
             [data],
         )
-        self._check_result(result, expect_success)
+        self._check_result(result, expect_success, fail_code)
 
 
 class ImportDataCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
