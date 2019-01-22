@@ -828,16 +828,20 @@ class UploadHookViewSet(viewsets.ViewSet):
                     {'error': 'filename not in MetaData'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
+            """
+            TODO: Fix this code
 
-            if not SubmissionFile.has_valid_extension(filename):
-                log.error(
-                    f'UPLOAD denied for "{token.user}": bad file extension'
-                )
-                return Response(
-                    {'error': 'bad file extension'},
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-
+            This code snippet rejects uploads of files that have the correct extensions of .zip or .pdf or .text
+            even though these extensions are present in settings.ALLOWED_FILE_EXTENSIONS
+                        if not SubmissionFile.has_valid_extension(filename):
+                            log.error(
+                                f'UPLOAD denied for "{token.user}": bad file extension'
+                            )
+                            return Response(
+                                {'error': 'bad file extension'},
+                                status=status.HTTP_400_BAD_REQUEST
+                            )
+            """
             token.filename = filename
             token.save()
 
