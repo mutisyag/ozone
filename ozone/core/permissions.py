@@ -65,14 +65,15 @@ class IsSecretariatOrSamePartySubmissionFlags(BasePermission):
                 pk=view.kwargs.get('submission_pk', None)
             )
             # The serializer will look more closely at the modified fields
-            return len(submission.get_changeable_flags(request.user)) > 0
+            # and also reject some changes based on state and flag-user mapping
+            return submission.can_edit_flags(request.user)
 
         # No need to call has_read_rights here, as queryset is filtered
         return True
 
     def has_object_permission(self, request, view, obj):
         if request.method not in SAFE_METHODS:
-            return len(obj.get_changeable_flags(request.user)) > 0
+            return obj.can_edit_flags(request.user)
         return obj.submission.has_read_rights(request.user)
 
 

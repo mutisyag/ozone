@@ -449,6 +449,18 @@ class Submission(models.Model):
         self._current_state = workflow.state.name
         self.save()
 
+    def can_edit_flags(self, user):
+        """
+        Returns True if user can set *any* flags on this submission,
+        based strictly on read/write rights and ownership
+        (i.e. does not take submission state into account)
+        """
+        if (
+            user.is_secretariat
+            or (user.party == self.party and not self.filled_by_secretariat)
+        ):
+            return not user.is_read_only
+
     def get_changeable_flags(self, user):
         """
         Returns list of flags that can be changed by the current user in the
@@ -509,7 +521,10 @@ class Submission(models.Model):
         """
         Returns True if user can edit at least one remark on this submission.
         """
-        if user.is_secretariat or user.party == self.party:
+        if (
+            user.is_secretariat
+            or (user.party == self.party and not self.filled_by_secretariat)
+        ):
             return not user.is_read_only
 
     def can_change_remark(self, user, field_name):

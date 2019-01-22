@@ -225,7 +225,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_has_reported_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            False, True, fail_code=403)
+                                            False, False, fail_code=403)
 
     def test_has_reported_party_finalized(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
