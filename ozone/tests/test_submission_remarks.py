@@ -57,14 +57,17 @@ class BaseRemarksTests(BaseTests):
         )
         return submission
 
-    def _check_result(self, result, expect_success, submission, field):
+    def _check_result(self, result, expect_success, submission, field, fail_code=None):
         try:
             verbose = result.json()
         except:
             verbose = result.data
+
+        # Use class attribute if parameter is None
+        fail_code = fail_code if fail_code is not None else self.fail_code
         self.assertEqual(
             result.status_code,
-            self.success_code if expect_success else self.fail_code,
+            self.success_code if expect_success else fail_code,
             verbose,
         )
 
@@ -93,7 +96,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
         - user type who reported the submission
     """
 
-    def _check_remark_update_permission(self, user, field_type, owner, expect_success):
+    def _check_remark_update_permission(self, user, field_type, owner, expect_success, fail_code=None):
         submission = self.create_submission(owner)
         self.client.login(username=user.username, password='qwe123qwe')
 
@@ -109,7 +112,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
                     ),
                     {field: REMARK_VALUE},
                 )
-                self._check_result(result, expect_success, submission, field)
+                self._check_result(result, expect_success, submission, field, fail_code)
 
     def test_party_user_party_field_party_reporter(self):
         self._check_remark_update_permission(
@@ -316,7 +319,8 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
             result.status_code,
             self.success_code if expect_success else self.fail_code
         )
-        self.assertEqual(len(result.json()), 1 if expect_success else 0)
+        # Failures return json containing dict-based error info.
+        self.assertEqual(type(result.json()), list if expect_success else dict)
 
     def test_get_same_party(self):
         self._check_remark_retrieve_data(self.party_user, self.party_user, True)
