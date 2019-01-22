@@ -16,7 +16,7 @@
 		<hr>
     <form class="form-sections">
 			<b-row>
-				<b-col>
+				<b-col cols="4">
 					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
@@ -44,28 +44,78 @@
 				<b-col v-if="flags_info">
 					<h5><span v-translate>Flags</span></h5>
 					<b-card>
-						<b-row v-for="order in flags_info.fields_order" :key="order">
+						<b-row>
 							<b-col>
-								<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
-									<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
-										<i class="fa fa-info-circle fa-lg"></i>
-										{{labels.flags[order]}}
-									</div>
-									<div v-else>
-										{{labels.flags[order]}}
-									</div>
-								</label>
+								<b-row v-for="order in general_flags" :key="order">
+									<b-col cols="1">
+										<fieldGenerator
+											:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+											:disabled="$store.getters.transitionState"
+											:field="flags_info.form_fields[order]"
+											:id="order">
+										</fieldGenerator>
+									</b-col>
+									<b-col>
+										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+												<i class="fa fa-info-circle fa-lg"></i>
+												{{labels.flags[order]}}
+											</div>
+											<div v-else>
+												{{labels.flags[order]}}
+											</div>
+										</label>
+									</b-col>
+								</b-row>
 							</b-col>
 							<b-col>
-								<fieldGenerator
-									:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
-									:disabled="$store.getters.transitionState"
-									:field="flags_info.form_fields[order]"
-									:id="order">
-								</fieldGenerator>
+								<b-row v-for="order in blank_flags" :key="order">
+									<b-col cols="1">
+										<fieldGenerator
+											:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+											:disabled="$store.getters.transitionState"
+											:field="flags_info.form_fields[order]"
+											:id="order">
+										</fieldGenerator>
+									</b-col>
+									<b-col>
+										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+												<i class="fa fa-info-circle fa-lg"></i>
+												{{labels.flags[order]}}
+											</div>
+											<div v-else>
+												{{labels.flags[order]}}
+											</div>
+										</label>
+									</b-col>
+								</b-row>
 							</b-col>
-
 						</b-row>
+						<div>
+							<h5 class="mt-4 mb-4" v-translate>Annex groups reported in submission</h5>
+								<div class="specific-flags-wrapper" v-for="order in specific_flags" :key="order">
+									<span cols="1">
+										<fieldGenerator
+											:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+											:disabled="$store.getters.transitionState"
+											:field="flags_info.form_fields[order]"
+											:id="order">
+										</fieldGenerator>
+									</span>
+									<span>
+										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+												<i class="fa fa-info-circle fa-lg"></i>
+												{{labels.flags[order]}}
+											</div>
+											<div v-else>
+												{{labels.flags[order]}}
+											</div>
+										</label>
+									</span>
+								</div>
+						</div>
 					</b-card>
 				</b-col>
 			</b-row>
@@ -92,6 +142,19 @@ export default {
 	components: { fieldGenerator },
 
 	computed: {
+
+		general_flags() {
+			return ['flag_provisional', 'flag_superseded', 'flag_valid']
+		},
+
+		blank_flags() {
+			return Object.keys(this.flags_info.form_fields).filter(f => f.split('_').includes('blanks'))
+		},
+
+		specific_flags() {
+			return Object.keys(this.flags_info.form_fields).filter(f => ![...this.general_flags, ...this.blank_flags].includes(f))
+		},
+
 		can_edit_data() {
 			return this.$store.getters.can_edit_data
 		},

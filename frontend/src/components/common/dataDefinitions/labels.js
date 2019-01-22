@@ -34,16 +34,16 @@ const getCommonLabels = ($gettext) => {
 			flag_has_blanks: $gettext('Has blanks'),
 			flag_valid: $gettext('Valid'),
 			flag_confirmed_blanks: $gettext('Confirmed blanks'),
-			flag_has_reported_a1: $gettext('Annex group A1'),
-			flag_has_reported_a2: $gettext('Annex group A2'),
-			flag_has_reported_b1: $gettext('Annex group B1'),
-			flag_has_reported_b2: $gettext('Annex group B2'),
-			flag_has_reported_b3: $gettext('Annex group B3'),
-			flag_has_reported_c1: $gettext('Annex group C1'),
-			flag_has_reported_c2: $gettext('Annex group C2'),
-			flag_has_reported_c3: $gettext('Annex group C3'),
-			flag_has_reported_e: $gettext('Annex group E'),
-			flag_has_reported_f: $gettext('Annex group F')
+			flag_has_reported_a1: $gettext('A1'),
+			flag_has_reported_a2: $gettext('A2'),
+			flag_has_reported_b1: $gettext('B1'),
+			flag_has_reported_b2: $gettext('B2'),
+			flag_has_reported_b3: $gettext('B3'),
+			flag_has_reported_c1: $gettext('C1'),
+			flag_has_reported_c2: $gettext('C2'),
+			flag_has_reported_c3: $gettext('C3'),
+			flag_has_reported_e: $gettext('E'),
+			flag_has_reported_f: $gettext('F')
 		}
 	}
 	return labels
