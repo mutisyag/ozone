@@ -128,18 +128,51 @@ export default {
 
 		addSubstance() {
 			this.updateGroup(this.selected_substance.selected)
-			console.log('group-field', this.group_field)
 
-			this.$store.dispatch('createSubstance', {
-				$gettext: this.$gettext,
-				substanceList: this.selected_substance.selected,
-				currentSectionName: this.tabName,
-				groupName: this.group_field.name,
-				country: null,
-				blendList: null,
-				prefillData: null
+			const current_field = this.$store.state.form.tabs[this.tabName].default_properties
+			const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
+			let currentTypeOfCountryField = ''
+			const willNotAdd = []
+
+			typeOfCountryFields.forEach(type => {
+				if (current_field.hasOwnProperty(type)) currentTypeOfCountryField = type
 			})
 
+			for (const subst of this.selected_substance.selected) {
+				let fieldExists = false
+				for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
+					if (parseInt(existing_field.substance.selected) === subst && existing_field[currentTypeOfCountryField].selected === null) {
+						fieldExists = true
+						willNotAdd.push(subst)
+						break
+					}
+				}
+				// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+				if (!fieldExists) {
+					this.$store.dispatch('createSubstance', {
+						$gettext: this.$gettext,
+						substanceList: [subst],
+						currentSectionName: this.tabName,
+						groupName: this.group_field.name,
+						country: null,
+						blendList: null,
+						prefillData: null
+					})
+				}
+			}
+
+			const willNotAddSubstanceNames = []
+			willNotAdd.length && willNotAdd.forEach(id => {
+				const { text } = this.substances.find(substanceDisplay => substanceDisplay.value === id)
+				if (text) {
+					willNotAddSubstanceNames.push(text)
+				}
+			})
+			willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
+				$gettext: this.$gettext,
+				message: { __all__: [`${this.$gettext('The following substances were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('select at least one country for each substance before adding it again')}`] },
+				variant: 'danger'
+			})
 			this.resetData()
 		},
 

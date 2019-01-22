@@ -268,14 +268,50 @@ export default {
 
 		addSubstance(type) {
 			if (type === 'selected') {
-				this.$store.dispatch('createSubstance', {
+				const current_field = this.$store.state.form.tabs[this.tabName].default_properties
+				const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
+				let currentTypeOfCountryField = ''
+				const willNotAdd = []
+
+				typeOfCountryFields.forEach(typec => {
+					if (current_field.hasOwnProperty(typec)) currentTypeOfCountryField = typec
+				})
+
+				for (const blend of this.selected_blends.selected) {
+					let fieldExists = false
+					for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
+						if (parseInt(existing_field.blend.selected) === blend && existing_field[currentTypeOfCountryField].selected === null) {
+							fieldExists = true
+							willNotAdd.push(blend)
+							break
+						}
+					}
+					// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+					if (!fieldExists) {
+						this.$store.dispatch('createSubstance', {
+							$gettext: this.$gettext,
+							substanceList: null,
+							currentSectionName: this.tabName,
+							groupName: null,
+							country: null,
+							blendList: [blend],
+							prefillData: null
+						})
+						this.resetData()
+					}
+				}
+
+				const willNotAddSubstanceNames = []
+				willNotAdd.length && willNotAdd.forEach(id => {
+					const { blend_id } = this.blends.find(blendDisplay => blendDisplay.id === id)
+					if (blend_id) {
+						willNotAddSubstanceNames.push(blend_id)
+					}
+				})
+				willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					substanceList: null,
-					currentSectionName: this.tabName,
-					groupName: null,
-					country: null,
-					blendList: this.selected_blends.selected,
-					prefillData: null
+					message: { __all__: [`${this.$gettext('The following blends were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('select at least one country for each substance before adding it again')}`] },
+					variant: 'danger'
 				})
 				this.resetData()
 			} else {
