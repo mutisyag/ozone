@@ -84,6 +84,13 @@
 					><i class="fa fa-trash fa-lg"></i></span>
 				</b-btn-group>
 				</template>
+				<template
+						slot="substance"
+						slot-scope="cell">
+						<div class="substance-blend-cell">
+							{{cell.item.substance}}
+						</div>
+					</template>
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -146,6 +153,7 @@
 					<template slot="blend" slot-scope="cell">
 						<span
 							style="cursor:pointer;"
+							class="substance-blend-cell"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
 							@click.stop="cell.toggleDetails">
 							<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>

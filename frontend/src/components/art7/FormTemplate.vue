@@ -106,7 +106,9 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template :slot="getCountrySlot" slot-scope="cell">
@@ -236,7 +238,9 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template v-for="inputField in getTabSpecialInputFields" :slot="inputField" slot-scope="cell">
@@ -335,6 +339,7 @@
 			<template slot="blend" slot-scope="cell">
 				<span
 					style="cursor:pointer;"
+					class="substance-blend-cell"
 					v-b-tooltip.hover="'Click to expand/collapse blend'"
 					@click.stop="cell.toggleDetails">
 					<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
