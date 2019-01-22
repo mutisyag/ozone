@@ -1,7 +1,9 @@
 from ..util import p_c
 
 from django.utils.translation import gettext_lazy as _
+from ozone.core.api.export_pdf.util import col_widths
 from reportlab.lib import colors
+
 
 
 TABLE_IMPORTS_HEADER = lambda isBlend, type: (
@@ -50,11 +52,33 @@ TABLE_ROW_EMPTY_STYLE_IMP = (
 )
 
 
+TABLE_BLENDS_COMP_HEADER = (
+    (
+        p_c(_('Substances')),
+        p_c(_('Percentage')),
+        p_c(_('New imports for use in multi-split air conditioners')),
+        p_c(_('New imports for use in split ducted air conditioners')),
+        p_c(_('New imports for use in ducted commercial packaged '
+              '(self-contained) air conditioners')),
+    ),
+)
+
+TABLE_BLENDS_COMP_STYLE = (
+    ('BACKGROUND', (0, 0), (-1, 0), colors.whitesmoke),
+    ('GRID', (0, 0), (-1, -1), 0.5, colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, 0), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('TOPPADDING', (0, 0), (-1, 0), 10),
+)
+
+TABLE_BLENDS_COMP_WIDTHS = col_widths([4, 4, 5, 5, 5])
+
+TABLE_IMPORTS_BL_WIDTHS = col_widths([3, 3, 4, 4, 4, 4, 4, 4])
+
+
 def big_table_row(obj, isBlend):
     col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
     col_2 = obj.blend.blend_id if isBlend else obj.substance.name
-
-    import pdb; pdb.set_trace()
 
     return (
         p_c(_(col_1 or '')),

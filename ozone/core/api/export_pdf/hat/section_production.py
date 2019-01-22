@@ -1,10 +1,6 @@
-# from .constants import TABLE_BLENDS_COMP_HEADER
-# from .constants import TABLE_BLENDS_COMP_STYLE
-# from .constants import TABLE_BLENDS_COMP_WIDTHS
+from .hat_helper import big_table_row
 from .hat_helper import TABLE_IMPORTS_HEADER
 from .hat_helper import TABLE_IMPORTS_HEADER_STYLE
-# from .constants import TABLE_IMPORTS_EXPORTS_BL_WIDTHS
-# from .constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
 from .hat_helper import TABLE_ROW_EMPTY_STYLE_IMP
 from .hat_helper import TABLE_ROW_EMPTY_IMP
 
@@ -13,8 +9,6 @@ from ..util import page_title_section
 from ..util import table_from_data
 from ..util import STYLES
 from ..util import TABLE_STYLES
-
-from .hat_helper import big_table_row
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -34,7 +28,6 @@ def export_production(submission):
 
     comments_section = get_comments_section(submission, 'hat_production')
 
-
     style = lambda data: (
         TABLE_IMPORTS_HEADER_STYLE + TABLE_STYLES + (
             () if data else TABLE_ROW_EMPTY_STYLE_IMP
@@ -45,7 +38,6 @@ def export_production(submission):
         data=table_substances, isBlend=False,
         header=TABLE_IMPORTS_HEADER(False, 'produc'),
         colWidths=None,
-        # colWidths=TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS,
         style=style(table_substances),
         repeatRows=2, emptyData=TABLE_ROW_EMPTY_IMP
     )
@@ -58,8 +50,9 @@ def export_production(submission):
     )
 
     return page_title_section(
-        title=_('IMPORTS'),
+        title=_('PRODUCTION'),
         explanatory= _(
-            'Annexes A, B, C and E substances in metric tonnes (not ODP tonnes)'
+            'Annex F substances for exempted subsectors in metric tonnes '
+            '(not ODP or CO2-equivalent tonnes)'
         )
     ) + prod_page + comments_section
