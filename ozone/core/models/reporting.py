@@ -1,7 +1,5 @@
-import enum
 import os
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -452,6 +450,18 @@ class Submission(models.Model):
         self._current_state = workflow.state.name
         self.save()
 
+    def can_edit_flags(self, user):
+        """
+        Returns True if user can set *any* flags on this submission,
+        based strictly on read/write rights and ownership
+        (i.e. does not take submission state into account)
+        """
+        if (
+            user.is_secretariat
+            or (user.party == self.party and not self.filled_by_secretariat)
+        ):
+            return not user.is_read_only
+
     def get_changeable_flags(self, user):
         """
         Returns list of flags that can be changed by the current user in the
@@ -459,7 +469,8 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
-        if user.is_read_only:
+        # First do a quick check based on actual permissions
+        if not self.can_edit_flags(user):
             return []
 
         flags_list = []
@@ -508,9 +519,25 @@ class Submission(models.Model):
             })
         return True
 
+    def can_edit_remarks(self, user):
+        """
+        Returns True if user can edit at least one remark on this submission.
+        This is based purely on submission ownership!
+        """
+        # Party users should be able to change party remarks even on
+        # secretariat-filled submissions
+        if user.is_secretariat or user.party == self.party:
+            return not user.is_read_only
+
     def can_change_remark(self, user, field_name):
-        if user.is_read_only:
+        """
+        Verifies whether user can change remark field `field_name`, based on
+        both submission ownership/permissions and remarks mappings (OS vs party)
+        """
+        # First do a quick check based purely on ownership
+        if not self.can_edit_remarks(user):
             return False
+
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
@@ -559,8 +586,28 @@ class Submission(models.Model):
             return not user.is_read_only
         return False
 
-    def check_has_submission_rights(self, user):
-        # TODO: use it in permissions.py!
+    @staticmethod
+    def has_read_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return True
+        return False
+
+    def has_read_rights(self, user):
+        return self.has_read_rights_for_party(self.party, user)
+
+    @staticmethod
+    def has_create_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return not user.is_read_only
+        return False
+
+    def has_edit_rights(self, user):
         if (
             user.is_secretariat and self.filled_by_secretariat
             or user.party is not None and user.party == self.party
@@ -569,12 +616,12 @@ class Submission(models.Model):
         return False
 
     def can_edit_data(self, user):
-        if self.check_has_submission_rights(user):
+        if self.has_edit_rights(user):
             return self.data_changes_allowed
         return False
 
     def can_upload_files(self, user):
-        if self.check_has_submission_rights(user):
+        if self.has_edit_rights(user):
             return self.data_changes_allowed
         return False
 
