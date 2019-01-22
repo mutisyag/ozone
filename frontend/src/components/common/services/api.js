@@ -139,7 +139,7 @@ const getInstructions = (formName, tabName) => {
 	if (isTestSession) {
 		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 	}
-	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
+	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 }
 
 const deleteSubmission = (url) => remove(url)
