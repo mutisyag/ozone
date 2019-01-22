@@ -1,5 +1,5 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import fromExponential from 'from-exponential/dist/index.min.js'
+import { fromExponential } from '@/components/common/services/utilsService'
 import { isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {

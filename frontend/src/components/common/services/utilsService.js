@@ -1,3 +1,5 @@
+import fromExponential from 'from-exponential/dist/index.min.js'
+
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	if (!obj || !level2PropertyKey) {
 		return undefined
@@ -51,5 +53,6 @@ export {
 	pushUnique,
 	intersect,
 	getPropertyValue,
-	isNumber
+	isNumber,
+	fromExponential
 }
