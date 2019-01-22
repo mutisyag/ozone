@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
@@ -119,9 +118,9 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
             self.party_user, "party", self.party_user, True
         )
 
-    def test_party_user_party_filed_secretariat_reporter(self):
+    def test_party_user_party_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            self.party_user, "party", self.secretariat_user, True
+            self.party_user, "party", self.secretariat_user, False
         )
 
     def test_party_user_secretariat_field_party_reporter(self):
