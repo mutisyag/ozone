@@ -1,6 +1,5 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import { fromExponential } from '@/components/common/services/utilsService'
-import { isNumber } from '@/components/common/services/utilsService'
+import { fromExponential, isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
