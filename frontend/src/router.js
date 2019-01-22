@@ -11,8 +11,6 @@ const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
-const Page500 = () => import(/* webpackChunkName: "500" */ '@/views/pages/Page500')
-const Register = () => import(/* webpackChunkName: "register" */ '@/views/pages/Register')
 
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
@@ -87,16 +85,6 @@ const routes = [
 				path: '404',
 				name: 'Page404',
 				component: Page404
-			},
-			{
-				path: '500',
-				name: 'Page500',
-				component: Page500
-			},
-			{
-				path: 'register',
-				name: 'Register',
-				component: Register
 			}
 		]
 	},
