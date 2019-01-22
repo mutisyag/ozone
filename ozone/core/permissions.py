@@ -87,13 +87,25 @@ class IsSecretariatOrSamePartySubmissionRelated(BasePermission):
             submission = Submission.objects.get(
                 pk=view.kwargs.get('submission_pk', None)
             )
-            return submission.has_edit_rights(request.user)
+            # All Submission-related fields have remarks!
+            # It is up to the serializer/model to further check whether
+            # remarks or data have been changed by someone who shouldn't have
+            return (
+                submission.has_edit_rights(request.user)
+                or submission.can_edit_remarks(request.user)
+            )
         # No need to call has_read_rights here, as queryset is filtered
         return True
 
     def has_object_permission(self, request, view, obj):
         if request.method not in SAFE_METHODS:
-            return obj.submission.has_edit_rights(request.user)
+            # All Submission-related fields have remarks!
+            # It is up to the serializer/model to further check whether
+            # remarks or data have been changed by someone who shouldn't have
+            return (
+                obj.submission.has_edit_rights(request.user)
+                or obj.submission.can_edit_remarks(request.user)
+            )
         return obj.submission.has_read_rights(request.user)
 
 

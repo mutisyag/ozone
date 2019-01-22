@@ -94,7 +94,7 @@ class BaseDataRemarksTestsMixIn(object):
         self.check_remark(self.party_user, "os", self.secretariat_user, False)
 
     def test_secretariat_user_party_field_party_reporter(self):
-        self.check_remark(self.secretariat_user, "party", self.party_user, False, fail_code=403)
+        self.check_remark(self.secretariat_user, "party", self.party_user, False)
 
     def test_secretariat_user_party_field_secretariat_reporter(self):
         self.check_remark(self.secretariat_user, "party", self.secretariat_user, True)
