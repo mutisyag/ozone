@@ -22,7 +22,6 @@ const getCommonLabels = ($gettext) => {
 		email: $gettext('E-mail'),
 		date: $gettext('Date'),
 		dateOfSubmission: $gettext('Date of submission'),
-		subject: $gettext('Subject'),
 		art7: $gettext('Article 7'),
 		hat: $gettext('HAT'),
 		valid: $gettext('valid'),
