@@ -806,7 +806,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         # Quick fix for staging error. Reporting channel info has been lost for
         # some submissions, otherwise this check wouldn't be necessary.
-        if self.context['reporting_channel']:
+        if self.context.get('reporting_channel', None):
             instance.submission.reporting_channel = ReportingChannel.objects.get(
                 name=self.context['reporting_channel']
             )
