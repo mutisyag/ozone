@@ -468,7 +468,8 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
-        if user.is_read_only:
+        # First do a quick check based on actual permissions
+        if not self.can_edit_flags(user):
             return []
 
         flags_list = []
@@ -520,6 +521,7 @@ class Submission(models.Model):
     def can_edit_remarks(self, user):
         """
         Returns True if user can edit at least one remark on this submission.
+        This is based purely on submission ownership!
         """
         if (
             user.is_secretariat
@@ -528,8 +530,14 @@ class Submission(models.Model):
             return not user.is_read_only
 
     def can_change_remark(self, user, field_name):
-        if user.is_read_only:
+        """
+        Verifies whether user can change remark field `field_name`, based on
+        both submission ownership/permissions and remarks mappings (OS vs party)
+        """
+        # First do a quick check based purely on ownership
+        if not self.can_edit_remarks(user):
             return False
+
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
