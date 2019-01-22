@@ -185,6 +185,7 @@ def table_from_data(
         for row_idx in range(repeatRows+1, rows, 2):
             style += (
                 ('SPAN', (0, row_idx), (-1, row_idx)),
+                ('ALIGN', (0, row_idx), (-1, row_idx), 'CENTER')
             )
 
     return Table(
@@ -200,7 +201,7 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
 
     for blend_row in blends:
         # Getting the blend object based on the id
-        blend = grouping.filter(blend__blend_id=blend_row[1]).first()
+        blend = grouping.filter(blend__blend_id=blend_row[1].text).first()
         row_comp = partial(make_component, blend=blend)
         data = tuple(map(row_comp, blend.blend.components.all()))
 
@@ -235,7 +236,7 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
 
     return table_with_blends(
         blends=blends,
-        grouping=objs,
+        grouping=grouping,
         make_component=comp_fct,
         header=c_header,
         style=c_style,
