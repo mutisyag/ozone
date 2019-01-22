@@ -716,7 +716,12 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected !== 'FII') {
+					if (this.tabName === 'has_produced') {
+						if (element.group.selected === 'FII') {
+							return
+						}
+					}
+					if (element.substance.selected) {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
@@ -743,7 +748,7 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected === 'FII') {
+					if (this.tabName === 'has_produced' && element.substance.selected && element.group.selected === 'FII') {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
