@@ -12,15 +12,8 @@
       </div>
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-    <b-button-group class="actions">
-		<Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
-			<span>{{labels[transition]}}</span>
-		</b-btn>
+   <b-button-group class="actions">
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 

@@ -7,6 +7,7 @@ const getCommonLabels = ($gettext) => {
 		process: $gettext('Process'),
 		finalize: $gettext('Finalize'),
 		submit: $gettext('Submit'),
+		other: $gettext('Other'),
 		unrecall_to_submitted: $gettext('Reinstate'),
 		unrecall_to_processing: $gettext('Reinstate'),
 		unrecall_to_finalized: $gettext('Reinstate'),
