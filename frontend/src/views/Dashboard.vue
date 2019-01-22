@@ -212,9 +212,9 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { cloneSubmission } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
-import { mapGetters } from 'vuex'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
@@ -226,7 +226,6 @@ export default {
 				reporting_period: null,
 				party: null
 			},
-			labels: getCommonLabels(this.$gettext),
 			table: {
 				pageOptions: [10, 25, 100]
 			},
@@ -304,28 +303,24 @@ export default {
 			}
 			return tableFields
 		},
+		labels() {
+			return getCommonLabels(this.$gettext)
+		},
 		tableFields() {
-			return [
-				{
-					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-				},
-				{
-					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'current_state', label: this.$gettext('State'), sortable: true
-				},
-				{
-					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-				},
-				{ key: 'actions', label: this.$gettext('Actions') }
-			]
+			return [{
+				key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+			}, {
+				key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'current_state', label: this.$gettext('State'), sortable: true
+			}, {
+				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+			}, { key: 'actions', label: this.$gettext('Actions')
+			}]
 		},
 		dataEntryTableItems() {
 			const tableFields = []
@@ -350,26 +345,19 @@ export default {
 			return tableFields
 		},
 		dataEntryTableFields() {
-			return [
-				{
-					key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-				},
-				{
-					key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-				},
-				{
-					key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-				},
-				{
-					key: 'actions', label: this.$gettext('Actions')
-				}
-			]
+			return [{
+				key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+			}, {
+				key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+			}, {
+				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+			}, {
+				key: 'actions', label: this.$gettext('Actions')
+			}]
 		},
 		sortOptionsPeriodFrom() {
 			return this.periods.map(f => {
