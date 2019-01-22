@@ -1,45 +1,45 @@
 <template>
   <div class="animated fadeIn">
     <b-row>
-      <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="4">
+    <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
         <b-card>
-			<div slot="header">
-				<strong><span v-translate>Create submission</span></strong>
-			</div>
-			<small><span v-translate>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span></small>
-			<div class="create-submission mt-2">
-				<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						v-model="current.obligation"
-						:options="obligations" />
-				</b-input-group>
+					<div slot="header">
+						<strong><span v-translate>Create submission</span></strong>
+					</div>
+					<small><span v-translate>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span></small>
+					<div class="create-submission mt-2">
+						<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								v-model="current.obligation"
+								:options="obligations" />
+						</b-input-group>
 
-				<b-input-group id="period_selector"  class="mb-2" :prepend="$gettext('Period')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
-						customTemplate="is_reporting_open"
-						v-model="current.reporting_period"
-						:options="periods" />
-				</b-input-group>
+						<b-input-group id="period_selector"  class="mb-2" :prepend="$gettext('Period')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
+								customTemplate="is_reporting_open"
+								v-model="current.reporting_period"
+								:options="periods" />
+						</b-input-group>
 
-				<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						:disabled="Boolean(currentUser.party)"
-						v-model="current.party"
-						:options="parties" />
-				</b-input-group>
+						<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								:disabled="Boolean(currentUser.party)"
+								v-model="current.party"
+								:options="parties" />
+						</b-input-group>
 
-				<b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
-			</div>
+						<b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
+					</div>
         </b-card>
       </b-col>
 
