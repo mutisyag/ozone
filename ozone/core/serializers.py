@@ -1031,11 +1031,6 @@ class SubmissionSerializer(
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
-    can_change_remarks_party = serializers.SerializerMethodField()
-    can_change_remarks_secretariat = serializers.SerializerMethodField()
-
-    can_change_reporting_channel = serializers.SerializerMethodField()
-
     class Meta:
         model = Submission
 
