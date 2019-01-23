@@ -746,7 +746,7 @@ class HighAmbientTemperatureProductionViewSet(
 
 
 class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
-    form_types = None
+    form_types = ("other",)
     serializer_class = DataOtherSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation

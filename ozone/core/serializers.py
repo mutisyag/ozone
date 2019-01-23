@@ -1107,7 +1107,6 @@ class SubmissionSerializer(
 
         base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
-            'data_others_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -1140,7 +1139,9 @@ class SubmissionSerializer(
                 'hat_productions_url', 'hat_imports_url',
             ),
             'essencrit': base_fields,
-            'other': base_fields,
+            'other': base_fields + (
+                'data_others_url',
+            ),
         }
         # All possible fields still need to be specified here.
         # Otherwise DRF won't load them.
