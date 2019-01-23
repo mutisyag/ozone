@@ -3,6 +3,7 @@ import {
 	callTransition,
 	getSubstances,
 	getSubmission,
+	getSubmissionFiles,
 	getCustomBlends,
 	deleteSubmission,
 	getSubmissions,
@@ -391,9 +392,13 @@ const actions = {
 	async uploadAttachments(context, { attachments, onProgressCallback }) {
 		for (let i = 0; i < attachments.length; i += 1) {
 			const attachment = attachments[i]
+			console.log('attachment..................', attachment)
 			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
 			attachment.uploadUrl = response.url
 			attachment.percentage = 100
+			console.log('getSubmissionFiles..................')
+			const files = await getSubmissionFiles(context.state.current_submission.id)
+			console.log(files)
 		}
 		return attachments
 	}

@@ -804,11 +804,14 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         user = self.context['request'].user
-        instance.submission.reporting_channel = ReportingChannel.objects.get(
-            name=self.context['reporting_channel']
-        )
-        self.check_reporting_channel(instance, user)
-        instance.submission.save()
+        # Quick fix for staging error. Reporting channel info has been lost for
+        # some submissions, otherwise this check wouldn't be necessary.
+        if self.context.get('reporting_channel', None):
+            instance.submission.reporting_channel = ReportingChannel.objects.get(
+                name=self.context['reporting_channel']
+            )
+            self.check_reporting_channel(instance, user)
+            instance.submission.save()
         return super().update(instance, validated_data)
 
 

@@ -24,12 +24,17 @@ class ReportingPeriod(models.Model):
     # are mapped to calendar years
     name = models.CharField(max_length=64, unique=True)
 
-    # Indicates whether reporting can be performed for this reporting period.
-    # Will be False for baseline years.
-    is_reporting_allowed = models.BooleanField(default=True)
+    is_reporting_allowed = models.BooleanField(
+        default=True,
+        help_text="Indicates whether reporting can be performed for this "
+        "reporting period. Will be False for baseline years."
+    )
 
-    # Indicates whether reporting is open/ongoing for this reporting period.
-    is_reporting_open = models.BooleanField(default=False)
+    is_reporting_open = models.BooleanField(
+        default=False,
+        help_text="Indicates whether reporting is open/ongoing for this "
+        "reporting period."
+    )
 
     # this is always required, and can be in the future
     start_date = models.DateField()

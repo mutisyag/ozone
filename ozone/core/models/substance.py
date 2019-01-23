@@ -176,7 +176,10 @@ class Blend(models.Model):
         OTHER = 'Other'
         CUSTOM = 'Custom'
 
-    blend_id = models.CharField(max_length=64, unique=True)
+    blend_id = models.CharField(
+        max_length=64, unique=True,
+        help_text="A unique String value identifying this blend."
+    )
 
     # Custom blends will always be associated with (and only available for)
     # the Party by which they have been created (in case they've been created
@@ -186,17 +189,23 @@ class Blend(models.Model):
         Party,
         related_name='custom_blends',
         null=True,
-        on_delete=models.PROTECT
+        on_delete=models.PROTECT,
+        help_text="Only custom blends will be associated with a Party."
     )
 
     # This is a plain-text description of the composition; see `BlendComponent`
     # model for a relational one
-    composition = models.CharField(max_length=256, blank=True)
+    composition = models.CharField(
+        max_length=256, blank=True,
+        help_text="Plain-test description of the composition of the blend."
+    )
 
     other_names = models.CharField(max_length=256, blank=True)
 
     type = models.CharField(
-        max_length=128, choices=((s.value, s.name) for s in BlendTypes)
+        max_length=128, choices=((s.value, s.name) for s in BlendTypes),
+        help_text="Blend types can be Zeotrope, Azeotrope, Methyl bromide, "
+        "Other or Custom."
     )
 
     odp = models.FloatField(null=True, blank=True)
@@ -241,6 +250,36 @@ class Blend(models.Model):
             (c.substance.id, c.percentage)
             for c in self.components.all() if c.substance
         ]
+
+    def has_read_rights(self, user):
+        if self.party is None:
+            return True
+        return user.is_secretariat or self.party == user.party
+
+    @staticmethod
+    def has_create_rights_for_party(party, user):
+        """
+        Returns True if `user` can create a custom blend associated with `party`
+        """
+        if party is None or user.is_read_only:
+            return False
+        return user.is_secretariat or party == user.party
+
+    @staticmethod
+    def has_edit_rights_for_party(party, user):
+        """
+        Returns True if `user` can change a custom blend
+        associated with `party`.
+        """
+        if party is None or user.is_read_only:
+            return False
+        return user.is_secretariat or party == user.party
+
+    def has_edit_rights(self, user):
+        """
+        Returns True if `user` can change composition of this custom blend
+        """
+        return self.has_edit_rights_for_party(self.party, user)
 
     def __str__(self):
         return self.blend_id

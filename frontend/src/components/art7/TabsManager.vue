@@ -177,7 +177,6 @@ export default {
 	},
 	methods: {
 		updateBreadcrumbs() {
-			console.log('in update breadcrumbs', this.labels, this.labels[this.$route.name])
 			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
 		},
 		createModalData() {

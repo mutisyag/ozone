@@ -139,12 +139,14 @@ const getInstructions = (formName, tabName) => {
 	if (isTestSession) {
 		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 	}
-	return fetch(`${window.location.origin}/instructions/${tabName}.html`)
+	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 }
 
 const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
+
+const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files`)
 
 const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
@@ -199,6 +201,7 @@ export {
 	getObligations,
 	createSubmission,
 	getSubmission,
+	getSubmissionFiles,
 	createBlend,
 	getCustomBlends,
 	getSubmissionsVersions,

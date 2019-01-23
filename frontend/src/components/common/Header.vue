@@ -1,6 +1,6 @@
 <template>
 <b-row>
-	<HeaderDropdown class="mr-3" right>
+	<HeaderDropdown class="mr-3" right v-if="routeName==='Dashboard'">
 		<template slot="header">
 			{{$language.available[$language.current]}}
 		</template>
@@ -41,6 +41,12 @@ export default {
 	computed: {
 		currentCountryIso() {
 			return this.$store.getters.currentCountryIso
+		},
+		aaa() {
+			return this.$gettextInterpolate('LALALALALA %{x}', { x: 10 })
+		},
+		routeName() {
+			return this.$route.name
 		}
 	},
 	methods: {

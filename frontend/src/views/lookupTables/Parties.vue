@@ -63,12 +63,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import './styles.css'
 import CheckedImage from '@/components/common/CheckedImage'
 import { dateFormat } from '@/components/common/services/languageService'
 
-const ratificationHtmlFormatter = (ratification) => (ratification ? `${dateFormat(ratification.ratification_date, Vue.config.language)}<br/>${ratification.ratification_type}` : 'Pending')
+const formatRatificationHtml = (ratification, language) => (ratification ? `${dateFormat(ratification.ratification_date, language)}<br/>${ratification.ratification_type}` : 'Pending')
 
 export default {
 	components: {
@@ -147,13 +146,38 @@ export default {
 			}
 
 			const partyRatificationsDisplay = partyRatifications.map(party => {
-				party.vienna_convention = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'VC'))
-				party.montreal_protocol = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MP'))
-				party.london_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'LA'))
-				party.copenhagen_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'CA'))
-				party.montreal_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MA'))
-				party.beijing_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'BA'))
-				party.kigali_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'KA'))
+				party.ratifications.forEach(ratification => {
+					if (!ratification.treaty) {
+						return
+					}
+					const ratificationHtml = formatRatificationHtml(ratification, this.$language.current)
+					switch (ratification.treaty.treaty_id) {
+					case 'VC':
+						party.vienna_convention = ratificationHtml
+						break
+					case 'MP':
+						party.montreal_protocol = ratificationHtml
+						break
+					case 'LA':
+						party.london_amendment = ratificationHtml
+						break
+					case 'CA':
+						party.copenhagen_amendment = ratificationHtml
+						break
+					case 'MA':
+						party.montreal_amendment = ratificationHtml
+						break
+					case 'BA':
+						party.beijing_amendment = ratificationHtml
+						break
+					case 'KA':
+						party.kigali_amendment = ratificationHtml
+						break
+					default:
+						break
+					}
+				})
+
 				party.is_eu_member = party.flags.is_eu_member
 				party.is_article5 = party.flags.is_article5
 				party.is_high_ambient_temperature = party.flags.is_high_ambient_temperature
@@ -186,6 +210,10 @@ export default {
 		}
 	},
 	created() {
+		const body = document.querySelector('body')
+		if (body.classList.contains('aside-menu-lg-show')) {
+			document.querySelector('body').classList.remove('aside-menu-lg-show')
+		}
 		this.$store.dispatch('getPartyRatifications')
 	}
 }

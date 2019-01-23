@@ -106,7 +106,9 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template :slot="getCountrySlot" slot-scope="cell">
@@ -236,7 +238,9 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template v-for="inputField in getTabSpecialInputFields" :slot="inputField" slot-scope="cell">
@@ -335,6 +339,7 @@
 			<template slot="blend" slot-scope="cell">
 				<span
 					style="cursor:pointer;"
+					class="substance-blend-cell"
 					v-b-tooltip.hover="'Click to expand/collapse blend'"
 					@click.stop="cell.toggleDetails">
 					<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
@@ -568,13 +573,6 @@ export default {
 	},
 	data() {
 		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends',
-				trade_party: 'countries',
-				source_party: 'countries',
-				destination_party: 'countries'
-			},
 			tableFII: {
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
@@ -679,21 +677,6 @@ export default {
 			headers[0].parentNode.insertBefore(
 				topHeader, headers[0]
 			)
-		},
-
-		doCommentsRow(row) {
-			const fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
-			const intersection = intersect(
-				['remarks_os', 'remarks_party'],
-				fieldsToShow
-			)
-			if (
-				intersection.length === 0
-        && (row.remarks_os.selected || row.remarks_party.selected)
-			) {
-				return true
-			}
-			return false
 		}
 	},
 	computed: {
@@ -733,7 +716,12 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected !== 'FII') {
+					if (this.tabName === 'has_produced') {
+						if (element.group.selected === 'FII') {
+							return
+						}
+					}
+					if (element.substance.selected) {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
@@ -760,7 +748,7 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected === 'FII') {
+					if (this.tabName === 'has_produced' && element.substance.selected && element.group.selected === 'FII') {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
