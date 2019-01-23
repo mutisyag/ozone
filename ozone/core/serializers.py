@@ -76,20 +76,20 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         `entry.get(field)` returns either a `Blend` or a `Substance` object,
         instead of integer id's.
         """
-        if self.unique_with is None:
-            data_dictionary = {
-                entry.get(field): entry
-                for entry in validated_data
-                for field in self.substance_blend_fields
-                if entry.get(field, None) is not None
-            }
-        else:
-            data_dictionary = {
-                (entry.get(field), entry.get(self.unique_with)): entry
-                for entry in validated_data
-                for field in self.substance_blend_fields
-                if entry.get(field, None) is not None
-            }
+        data_dictionary = {}
+        for entry in validated_data:
+            for field in self.substance_blend_fields:
+                if self.unique_with is None:
+                    field_value = entry.get(field, None)
+                else:
+                    field_value = (entry.get(field), entry.get(self.unique_with))
+
+                if entry.get(field, None) is None:
+                    continue
+                if field_value in data_dictionary:
+                    raise ValidationError(_(f"Duplicate value for {field_value}"))
+                data_dictionary[field_value] = entry
+
         return data_dictionary
 
     def construct_key(self, existing_entry):
@@ -176,6 +176,11 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
             ret.append(obj)
 
         return ret
+
+    def create(self, validated_data):
+        # Call this method to check for duplicates
+        self.construct_data_dictionary(validated_data)
+        return super().create(validated_data)
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
