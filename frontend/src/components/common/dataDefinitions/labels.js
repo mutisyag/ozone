@@ -7,6 +7,7 @@ const getCommonLabels = ($gettext) => {
 		process: $gettext('Process'),
 		finalize: $gettext('Finalize'),
 		submit: $gettext('Submit'),
+		other: $gettext('Other'),
 		unrecall_to_submitted: $gettext('Reinstate'),
 		unrecall_to_processing: $gettext('Reinstate'),
 		unrecall_to_finalized: $gettext('Reinstate'),
@@ -21,7 +22,6 @@ const getCommonLabels = ($gettext) => {
 		email: $gettext('E-mail'),
 		date: $gettext('Date'),
 		dateOfSubmission: $gettext('Date of submission'),
-		subject: $gettext('Subject'),
 		art7: $gettext('Article 7'),
 		hat: $gettext('HAT'),
 		valid: $gettext('valid'),
@@ -33,16 +33,16 @@ const getCommonLabels = ($gettext) => {
 			flag_has_blanks: $gettext('Has blanks'),
 			flag_valid: $gettext('Valid'),
 			flag_confirmed_blanks: $gettext('Confirmed blanks'),
-			flag_has_reported_a1: $gettext('Annex group A1'),
-			flag_has_reported_a2: $gettext('Annex group A2'),
-			flag_has_reported_b1: $gettext('Annex group B1'),
-			flag_has_reported_b2: $gettext('Annex group B2'),
-			flag_has_reported_b3: $gettext('Annex group B3'),
-			flag_has_reported_c1: $gettext('Annex group C1'),
-			flag_has_reported_c2: $gettext('Annex group C2'),
-			flag_has_reported_c3: $gettext('Annex group C3'),
-			flag_has_reported_e: $gettext('Annex group E'),
-			flag_has_reported_f: $gettext('Annex group F')
+			flag_has_reported_a1: $gettext('A1'),
+			flag_has_reported_a2: $gettext('A2'),
+			flag_has_reported_b1: $gettext('B1'),
+			flag_has_reported_b2: $gettext('B2'),
+			flag_has_reported_b3: $gettext('B3'),
+			flag_has_reported_c1: $gettext('C1'),
+			flag_has_reported_c2: $gettext('C2'),
+			flag_has_reported_c3: $gettext('C3'),
+			flag_has_reported_e: $gettext('E'),
+			flag_has_reported_f: $gettext('F')
 		}
 	}
 	return labels

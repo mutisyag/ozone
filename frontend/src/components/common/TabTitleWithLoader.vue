@@ -1,7 +1,7 @@
 <template>
 <div class="tab-title">
 	<span class="formNumber" v-if="tab.formNumber">({{tab.formNumber}})</span>
-	{{tab.title}}
+		{{$store.getters.getTabTitle(tab.name)}}
 	<div v-if="tab.status === 'saving'" class="spinner">
 		<div class="loader"></div>
 	</div>

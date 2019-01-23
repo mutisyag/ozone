@@ -25,7 +25,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
 
-from ..exceptions import InvalidRequest, MethodNotAllowed
+from ..exceptions import InvalidRequest
 
 from ..models import (
     Region,
@@ -53,6 +53,8 @@ from ..models import (
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
+    IsSecretariatOrSamePartySubmissionRemarks,
+    IsSecretariatOrSamePartySubmissionFlags,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
@@ -250,6 +252,11 @@ class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    """
+    list:
+    Get the list of substances grouped by their Group.
+    """
+
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = (IsAuthenticated,)
@@ -282,6 +289,12 @@ class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class BlendViewSet(viewsets.ModelViewSet):
+    """
+    list:
+    Get the list of all non-custom blends, plus the custom ones that belongs
+    to the user's party.
+    """
+
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyBlend, )
 
     def get_queryset(self):
@@ -427,6 +440,13 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["post"], url_path="call-transition")
     def call_transition(self, request, pk=None):
+        """
+        Request example:
+        {
+            "transition": "submit"
+        }
+        """
+
         if request.data.get("transition"):
             submission = Submission.objects.get(pk=pk)
             submission.call_transition(request.data["transition"], request.user)
@@ -484,7 +504,7 @@ class SubmissionFlagsViewSet(
     form_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -522,7 +542,7 @@ class SubmissionRemarksViewSet(
     form_types = None
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks, IsCorrectObligation
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -824,7 +844,6 @@ class UploadHookViewSet(viewsets.ViewSet):
                     {'error': 'filename not in MetaData'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
             if not SubmissionFile.has_valid_extension(filename):
                 log.error(
                     f'UPLOAD denied for "{token.user}": bad file extension'

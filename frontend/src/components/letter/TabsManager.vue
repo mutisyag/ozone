@@ -12,22 +12,8 @@
       </div>
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-    <b-button-group class="actions">
-      <Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			v-if="$store.state.available_transitions.includes('submit')"
-			@click="checkBeforeSubmitting"
-			variant="outline-success">
-			<span v-translate>Submit</span>
-		</b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
-			<span>{{labels[transition]}}</span>
-		</b-btn>
-
+   <b-button-group class="actions">
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -75,29 +61,29 @@
         </div>
     </b-card>
     </div>
-    <Footer>
-      <b-button-group class="actions mt-2 mb-2">
-        <Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
-        <b-btn
-          v-if="$store.state.available_transitions.includes('submit')"
-          @click="checkBeforeSubmitting"
-          variant="outline-success">
-            <span v-translate>Submit</span>
-        </b-btn>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
-			<span>{{labels[transition]}}</span>
-		</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          <span v-translate>Versions</span>
-        </b-btn>
-        <b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
-          <span v-translate>Delete Submission</span>
-        </b-btn>
-      </b-button-group>
+    <Footer style="display:inline">
+			<Save class="actions mt-2 mb-2" v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+			<b-button-group class="pull-right actions mt-2 mb-2">
+				<b-btn
+					v-if="$store.state.available_transitions.includes('submit')"
+					@click="checkBeforeSubmitting"
+					variant="outline-success">
+						<span v-translate>Submit</span>
+				</b-btn>
+				<b-btn
+					variant="outline-primary"
+					v-for="transition in availableTransitions"
+					:key="transition"
+					@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+						<span>{{labels[transition]}}</span>
+				</b-btn>
+				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
+					<span v-translate>Versions</span>
+				</b-btn>
+				<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
+					<span v-translate>Delete Submission</span>
+				</b-btn>
+			</b-button-group>
     </Footer>
 
     <b-modal size="lg" ref="history_modal" id="history_modal"
@@ -138,6 +124,9 @@ export default {
 			modal_data: null,
 			labels: getLabels(this.$gettext).common
 		}
+	},
+	created() {
+		this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
 	},
 	computed: {
 		availableTransitions() {

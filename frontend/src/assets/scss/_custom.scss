@@ -1009,3 +1009,17 @@ body {
 		cursor: pointer;
 	}
 }
+
+.substance-blend-cell {
+	display: block;
+	min-width: 65px;
+}
+
+.specific-flags-wrapper {
+    display: inline-flex;
+    margin: 0 .7rem;
+	> span {
+		display: inline-block;
+		max-width: 25px;
+	}
+}

@@ -595,8 +595,8 @@ class Command(BaseCommand):
             table_values = values[key]
             if isinstance(table_values, list):
                 klass.objects.bulk_create([
-                    klass(submission=submission, **_instance)
-                    for _instance in table_values
+                    klass(submission=submission, ordering_id=_i, **_instance)
+                    for _i, _instance in enumerate(table_values)
                 ])
             else:
                 klass.objects.bulk_create([

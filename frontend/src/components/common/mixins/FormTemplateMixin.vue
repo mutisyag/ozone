@@ -22,8 +22,14 @@ export default {
 
 	data() {
 		return {
+			typeOfDisplayObj: {
+				substance: 'substances',
+				blend: 'blends',
+				trade_party: 'countries',
+				source_party: 'countries',
+				destination_party: 'countries'
+			},
 			table: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add substances'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -37,7 +43,6 @@ export default {
 			},
 
 			tableBlends: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add blends'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -68,6 +73,7 @@ export default {
 
 		tableItems() {
 			const tableFields = []
+			console.log(this.tab_info.form_fields)
 			this.tab_info.form_fields.forEach(form_field => {
 				const tableRow = {}
 				Object.keys(form_field).forEach(key => {
@@ -75,7 +81,7 @@ export default {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
-							][form_field[key].selected][form_field[key].selected]
+							][form_field[key].selected]
 							: (tableRow[key] = form_field[key].selected)
 					}
 				})
@@ -93,7 +99,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		tableItemsBlends() {
 			const tableFields = []
 			this.tab_info.form_fields.forEach(form_field => {
@@ -129,7 +140,12 @@ export default {
 			})
 			return tableFields
 		},
-
+		tableBlendsEmptyText() {
+			if (this.isReadOnly) {
+				return this.$gettext('There are no records to show')
+			}
+			return this.$gettext('Please use the form on the right sidebar to add blends')
+		},
 		tableFields() {
 			const tableHeaders = []
 			const options = {}
@@ -174,15 +190,21 @@ export default {
 
 		isReadOnly() {
 			const { isReadOnly } = this.$store.getters
-			if (isReadOnly) {
-				this.table.emptyText = this.$gettext('There are no records to show')
-				this.tableBlends.emptyText = this.table.emptyText
-			}
 			return isReadOnly
 		}
 	},
 
 	methods: {
+		fillTableSearch(data) {
+			if (data.substance) {
+				this.table.filters.search = data.substance
+				this.table.tableFilters = true
+			}
+			if (data.blend) {
+				this.tableBlends.filters.search = data.blend
+				this.tableBlends.tableFilters = true
+			}
+		},
 		updateFormField(value, fieldInfo) {
 			this.$store.commit('updateFormField', {
 				value,

@@ -1,115 +1,137 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Blend, Submission
+from .models import Blend, Submission, Party
 
 
-def is_secretariat_or_admin(request):
-    return request.user.is_secretariat or request.user.is_superuser
-
-
-class BaseIsSecretariatOrSameParty(BasePermission):
-
-    @staticmethod
-    def has_same_party(request, view):
-        """
-        Allows us to verify that the user making the request is not trying to
-        create an object for a Party he does not belong to.
-
-        Needed on:
-        - create: because `get_object_permission` only works for
-          already-existing objects, so does not apply to object creation.
-        - update: to verify that party is not changed to something the user
-          cannot create objects for
-        """
-        pass
-
+class IsSecretariatOrSamePartySubmission(BasePermission):
+    """
+    This is used for evaluating permissions on Submission views.
+    """
     def has_permission(self, request, view):
-        """
-        Called for all HTTP methods. Assumes user is already authenticated.
-        """
-        # Allow any read requests (the view's queryset takes care of filtering
-        # out inaccessible objects)
         if request.method in SAFE_METHODS:
             return True
 
-        # Request is write, filter out read-only users
-        if request.user.is_read_only:
-                return False
-
-        # At this point request is write, user is write
-        if is_secretariat_or_admin(request):
-            return True
-
-        # It's a Party write user and a write request - calling has_same_party
-        # to make sure user is not trying to create an obj for different party
-        return self.has_same_party(request, view)
-
-    def has_object_permission(self, request, view, obj):
-        """
-        Called for HTTP methods that require an object.
-        This is only called if has_permission() has already passed.
-        """
-
-        pass
-
-
-class IsSecretariatOrSamePartySubmission(BaseIsSecretariatOrSameParty):
-
-    @staticmethod
-    def has_same_party(request, view):
-        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
-            sub_pk = view.kwargs.get('pk', None)
-            if sub_pk:
-                # Submission object already exists.
-                party = Submission.objects.get(pk=sub_pk).party.pk
-            else:
-                # It's a create
-                party = request.data.get('party', None)
-            return party == request.user.party.pk
-        return True
+        # Definitely not a safe method :)
+        sub_pk = view.kwargs.get('pk', None)
+        if sub_pk:
+            # Submission object already exists.
+            submission = Submission.objects.get(pk=sub_pk)
+            return submission.has_edit_rights(request.user)
+        else:
+            # It's a create
+            party = Party.objects.get(id=request.data.get('party', None))
+            return Submission.has_create_rights_for_party(party, request.user)
 
     def has_object_permission(self, request, view, obj):
-        if is_secretariat_or_admin(request):
-            return True
-        return request.user.party == obj.party
+        if request.method not in SAFE_METHODS:
+            return obj.has_edit_rights(request.user)
+        return obj.has_read_rights(request.user)
 
 
-class IsSecretariatOrSamePartySubmissionRelated(BaseIsSecretariatOrSameParty):
+class IsSecretariatOrSamePartySubmissionRemarks(BasePermission):
+    """
+    This is used for evaluating permissions on Submission-related views (e.g.
+    Article 7 reports etc).
+    `submission_pk` will *always* be set to something in this case.
+    """
+    def has_permission(self, request, view):
+        submission = Submission.objects.get(
+            pk=view.kwargs.get('submission_pk', None)
+        )
+        if request.method not in SAFE_METHODS:
+            # The serializer will look more closely at the modified fields
+            return submission.can_edit_remarks(request.user)
+        else:
+            # Whoever can view the submission can also view its remarks
+            return submission.has_read_rights(request.user)
 
-    @staticmethod
-    def has_same_party(request, view):
-        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
-            party = Submission.objects.get(
+    def has_object_permission(self, request, view, obj):
+        if request.method not in SAFE_METHODS:
+            return obj.can_edit_remarks(request.user)
+        return obj.has_read_rights(request.user)
+
+
+class IsSecretariatOrSamePartySubmissionFlags(BasePermission):
+    """
+    This is used for evaluating permissions on Submission-related views (e.g.
+    Article 7 reports etc).
+    `submission_pk` will *always* be set to something in this case.
+    """
+    def has_permission(self, request, view):
+        if request.method not in SAFE_METHODS:
+            submission = Submission.objects.get(
                 pk=view.kwargs.get('submission_pk', None)
-            ).party
-            return party == request.user.party
+            )
+            # The serializer will look more closely at the modified fields
+            # and also reject some changes based on state and flag-user mapping
+            return submission.can_edit_flags(request.user)
+
+        # No need to call has_read_rights here, as queryset is filtered
         return True
 
     def has_object_permission(self, request, view, obj):
-        if is_secretariat_or_admin(request):
-            return True
-        return request.user.party == obj.submission.party
+        if request.method not in SAFE_METHODS:
+            return obj.can_edit_flags(request.user)
+        return obj.submission.has_read_rights(request.user)
 
 
-class IsSecretariatOrSamePartyBlend(BaseIsSecretariatOrSameParty):
+class IsSecretariatOrSamePartySubmissionRelated(BasePermission):
+    """
+    This is used for evaluating permissions on Submission-related views (e.g.
+    Article 7 reports etc) for models that have a submission as FK.
+    `submission_pk` will *always* be set to something in this case.
+    """
+    def has_permission(self, request, view):
+        if request.method not in SAFE_METHODS:
+            submission = Submission.objects.get(
+                pk=view.kwargs.get('submission_pk', None)
+            )
+            # All Submission-related fields have remarks!
+            # It is up to the serializer/model to further check whether
+            # remarks or data have been changed by someone who shouldn't have
+            return (
+                submission.has_edit_rights(request.user)
+                or submission.can_edit_remarks(request.user)
+            )
+        # No need to call has_read_rights here, as queryset is filtered
+        return True
 
-    @staticmethod
-    def has_same_party(request, view):
-        if request.method not in SAFE_METHODS and not is_secretariat_or_admin(request):
+    def has_object_permission(self, request, view, obj):
+        if request.method not in SAFE_METHODS:
+            # All Submission-related fields have remarks!
+            # It is up to the serializer/model to further check whether
+            # remarks or data have been changed by someone who shouldn't have
+            return (
+                obj.submission.has_edit_rights(request.user)
+                or obj.submission.can_edit_remarks(request.user)
+            )
+        return obj.submission.has_read_rights(request.user)
+
+
+class IsSecretariatOrSamePartyBlend(BasePermission):
+    """
+    This is used for evaluating permissions on Blend views.
+    """
+    def has_permission(self, request, view):
+        if request.method not in SAFE_METHODS:
             blend_pk = view.kwargs.get('pk', None)
             if blend_pk:
                 # Blend object already exists.
-                party = Blend.objects.get(pk=blend_pk).party.pk
+                blend = Blend.objects.get(pk=blend_pk)
+                return blend.has_edit_rights(request.user)
             else:
                 # It's a create
-                party = request.data.get('party', None)
-            return party == request.user.party.pk
+                party = Party.objects.get(id=request.data.get('party', None))
+                return Blend.has_create_rights_for_party(party, request.user)
+
         return True
 
     def has_object_permission(self, request, view, obj):
-        if is_secretariat_or_admin(request):
-            return True
-        return request.user.party == obj.party
+        if request.method not in SAFE_METHODS:
+            return obj.has_edit_rights(request.user)
+        return obj.has_read_rights(request.user)
 
 
 class IsCorrectObligation(BasePermission):

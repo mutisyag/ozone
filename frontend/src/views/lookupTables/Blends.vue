@@ -225,6 +225,10 @@ export default {
 	created() {
 		// No need to filter by party here, the API will list all
 		// the available blends for this user
+		const body = document.querySelector('body')
+		if (body.classList.contains('aside-menu-lg-show')) {
+			document.querySelector('body').classList.remove('aside-menu-lg-show')
+		}
 		this.$store.dispatch('getCustomBlends', { party: undefined })
 		this.updateBreadcrumbs()
 	}
