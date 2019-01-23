@@ -10,7 +10,6 @@ const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/compo
 const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/hat/DataManager')
 const RafDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/raf/DataManager')
 
-const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
 

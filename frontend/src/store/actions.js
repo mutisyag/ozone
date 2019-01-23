@@ -341,7 +341,8 @@ const actions = {
 					country: data.country,
 					blend: null,
 					prefillData: data.prefillData,
-					ordering_id
+					ordering_id,
+					countries: context.state.initialData.display.countries
 				})
 				context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
 			})

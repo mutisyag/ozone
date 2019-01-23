@@ -5,7 +5,7 @@ import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 const getFormRaf = ($gettext) => {
 	const form = {
 		formDetails: {
-			tabsDisplay: ['sub_info', 'has_produced', 'attachments'],
+			tabsDisplay: ['sub_info', 'essencrit', 'attachments'],
 			dataNeeded: [
 				'initialData.countryOptions',
 				'initialData.substances',
@@ -35,16 +35,16 @@ const getFormRaf = ($gettext) => {
 				...getTabAttachments($gettext),
 				hideInfoButton: true
 			},
-			has_produced: {
-				name: 'has_produced',
+			essencrit: {
+				name: 'essencrit',
 				hasAssideMenu: true,
-				endpoint_url: 'hat_productions_url',
+				endpoint_url: 'ff',
 				ordering_id: 0,
 				status: null,
 				validate: true,
 				saving: false,
 				formNumber: 2,
-				title: $gettext('Production'),
+				title: $gettext('Essential and critical uses'),
 				titleHtml: `<b>${$gettext('PRODUCTION')}</b><br><small>${$gettext('Annex F substances for exempted subsectors')}<br>${$gettext('in metric tonnes (not ODP or CO2-equivalent tonnes)')}</small>`,
 				detailsHtml: `1. ${$gettext('Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2')}`,
 				isInvalid: false,
@@ -61,44 +61,56 @@ const getFormRaf = ($gettext) => {
 					name: 'group',
 					colspan: 2
 				}, {
-					label: `(2)<br>${$gettext('Substance')}`,
+					label: `(2)<br>${$gettext('Ozone depletig substances')}`,
 					name: 'substance',
 					colspan: 2
 				}, {
-					label: `(3)<br>${$gettext('New production for use in multi-split air conditioners')}`,
-					name: 'quantity_msac',
+					label: `(3)<br>${$gettext('Amount exempted')}`,
+					name: 'quantity_exempted',
 					isInput: true
 				}, {
-					label: `(4)<br>${$gettext('New production for use in split ducted air conditioners')}`,
-					name: 'quantity_sdac',
+					label: `(4)<br>${$gettext('Amount acquired by production')}`,
+					name: 'quantity_production',
 					isInput: true
 				}, {
-					label: `(5)<br>${$gettext('New production for use in ducted commercial packaged (self-contained) air conditioners')}`,
-					name: 'quantity_dcpac',
+					label: `(5)<br>${$gettext('Amount acquired by import & countries of manufacture')}`,
+					name: 'quantity_import'
+				}, {
+					label: `(6)<br>${$gettext('Total acquired')}`,
+					name: 'quantity_acquired'
+				}, {
+					label: `(7)<br>${$gettext('Authorized but not acquired')}`,
+					name: 'quantity_authorized_not_acquired'
+				}, {
+					label: `(8)<br>${$gettext('On hand start of the year')}`,
+					name: 'on_hand_start_year',
 					isInput: true
 				}, {
-					label: `(6)<br>${$gettext('Remarks (party')}`,
-					name: 'remarks_party',
+					label: `(9)<br>${$gettext('Available for use')}`,
+					name: 'available_for_use'
+				}, {
+					label: `(10)<br>${$gettext('Used')}`,
+					name: 'used',
 					isInput: true
 				}, {
-					label: `(7)<br>${$gettext('Remarks (secretariat)')}`,
-					name: 'remarks_os',
+					label: `(11)<br>${$gettext('Amount exported')}`,
+					name: 'quantity_exported',
 					isInput: true
 				}, {
-					label: `(8)<br>${$gettext('Status')}`,
+					label: `(12)<br>${$gettext('Amount destroyed')}`,
+					name: 'quantity_destroyed',
+					isInput: true
+				}, {
+					label: `(13)<br>${$gettext('On hand end of year')}`,
+					name: 'on_hand_end_year'
+				}, {
+					label: `(16)<br>${$gettext('Status')}`,
 					name: 'validation'
 				}],
 
 				section_headers: [{
 					label: '',
-					colspan: 2
-				}, {
-					label: $gettext('Quantity of new substances produced for approved subsectors to which the high-ambient-temperature exemption applies (production should be for use within the producing country)'),
-					colspan: 3,
-					tooltip: $gettext('For each substance produced for use in subsectors that may be approved after the assessments under paragraphs 32 and 33 of decision XXVIII/2, please specify the approved subsector. Should the column space be insufficient, further information can be provided in the “comments” box above.')
-				}, {
-					label: '',
-					colspan: 3
+					colspan: 16
 				}
 				],
 				comments: {
@@ -114,13 +126,22 @@ const getFormRaf = ($gettext) => {
 					}
 				},
 				default_properties: {
-					'remarks_party': '',
-					'remarks_os': '',
-					'ordering_id': null,
-					'quantity_msac': null,
-					'quantity_sdac': null,
-					'quantity_dcpac': null,
-					'substance': null
+					'group': null,
+					'substance': null,
+					'quantity_exempted': null,
+					'quantity_production': null,
+					'quantity_import': null,
+					'quantity_acquired': null,
+					'quantity_authorized_not_acquired': null,
+					'on_hand_start_year': null,
+					'available_for_use': null,
+					'used': null,
+					'quantity_exported': null,
+					'quantity_destroyed': null,
+					'on_hand_end_year': null,
+					'remarks_party': null,
+					'remarks_os': null,
+					'validation': null
 				}
 			},
 			flags: getTabFlags($gettext)
