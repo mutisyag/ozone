@@ -39,6 +39,11 @@
 				</div>
 				<b-btn-group class="row-controls">
 					<span
+						variant="link"
+						@click="createModalData(cell.item.originalObj, cell.item.index)">
+						<i class="fa fa-pencil-square-o fa-lg"></i>
+					</span>
+					<span
 						v-if="!$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
@@ -120,7 +125,64 @@
         <small>{{footnote}}</small>
       </p>
     </div>
-
+    <b-modal size="lg" ref="edit_modal" id="edit_modal">
+      <div v-if="modal_data" slot="modal-title">
+				<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
+        <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
+      </div>
+      <div v-if="modal_data">
+				<p class="muted">
+					<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
+					<br>
+					<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
+				</p>
+        <b-row v-if="modal_data.field.substance.selected">
+          <b-col>
+            <span v-translate>Change substance</span>
+          </b-col>
+          <b-col>
+            <multiselect
+				class="mb-2"
+				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
+				trackBy="value"
+				:disabled="$store.getters.can_edit_data"
+				label="text"
+				:placeholder="$gettext('Select substance')"
+				:value="parseInt(modal_data.field.substance.selected)"
+				:options="tab_data.substances" />
+          </b-col>
+        </b-row>
+				<b-row>
+					<b-col>
+						<addParties :index="modal_data.index" :tabName="tabName"></addParties>
+					</b-col>
+				</b-row>
+				<b-row v-for="country in getRowCountries(modal_data.field)" :key="country">
+							<b-col cols="2">{{$store.state.initialData.display.countries[country]}}</b-col>
+							<b-col>
+								<fieldGenerator
+								:fieldInfo="{index:modal_data.index,tabName: tabName, field:country}"
+								:field="modal_data.field[country]" />
+							</b-col>
+				</b-row>
+        <b-row
+          class="mt-3"
+          v-for="comment_field in ['remarks_party','remarks_os']"
+          :key="comment_field">
+          <b-col lg="3">
+            <span>{{labels[comment_field]}}</span>
+          </b-col>
+          <b-col lg="9">
+            <textarea :disabled="getCommentFieldPermission(comment_field)"
+								class="form-control" v-model="modal_data.field[comment_field].selected">
+							</textarea>
+          </b-col>
+        </b-row>
+      </div>
+      <div slot="modal-footer">
+          <b-btn @click="$refs.edit_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
+      </div>
+    </b-modal>
     <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)"  :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
@@ -130,12 +192,14 @@
 <script>
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
-import { getLabels } from '@/components/hat/dataDefinitions/labels'
+import { getLabels } from '@/components/raf/dataDefinitions/labels'
+import addParties from '@/components/raf/AddParties'
 
 export default {
 	mixins: [FormTemplateMxin],
 	components: {
-		ValidationLabel
+		ValidationLabel,
+		addParties
 	},
 	data() {
 		return {
@@ -153,7 +217,10 @@ export default {
 		}
 	},
 	methods: {
-
+		getRowCountries(data) {
+			console.log('---------',data)
+			 return [...Array(200).keys()].filter(k => data[k])
+		}
 	},
 	computed: {
 		getTabInputFields() {

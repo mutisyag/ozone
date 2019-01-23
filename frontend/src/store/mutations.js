@@ -235,6 +235,12 @@ const mutations = {
 		state.permissions.actions = permission
 	},
 
+	addCountryEntries(state, { tabName, index, countryList }) {
+		countryList.forEach(c => {
+			state.form.tabs[tabName].form_fields[index][c] = { selected: null, type: 'number' }
+		})
+	},
+
 	// form state
 	updateNewTabs(state, tab) {
 		if (tab !== 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
