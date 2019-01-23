@@ -8,6 +8,7 @@ from .constants import TABLE_EMISSIONS_HEADER_STYLE
 from .constants import TABLE_ROW_EMPTY_EMISSIONS
 from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
+from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import p_c
 from ..util import page_title_section
@@ -19,13 +20,13 @@ from ..util import TABLE_STYLES
 def to_row_facility(obj):
     return (
         p_c(_(obj.facility_name)),
-        p_c(_(str(obj.quantity_generated or ''))),
-        p_c(_(str(obj.quantity_captured_all_uses or ''))),
-        p_c(_(str(obj.quantity_captured_feedstock or ''))),
-        p_c(_(str(obj.quantity_captured_for_destruction or ''))),
-        p_c(_(str(obj.quantity_feedstock or ''))),
-        p_c(_(str(obj.quantity_destroyed or ''))),
-        p_c(_(str(obj.quantity_emitted or ''))),
+        p_c(_(get_big_float(obj.quantity_generated or ''))),
+        p_c(_(get_big_float(obj.quantity_captured_all_uses or ''))),
+        p_c(_(get_big_float(obj.quantity_captured_feedstock or ''))),
+        p_c(_(get_big_float(obj.quantity_captured_for_destruction or ''))),
+        p_c(_(get_big_float(obj.quantity_feedstock or ''))),
+        p_c(_(get_big_float(obj.quantity_destroyed or ''))),
+        p_c(_(get_big_float(obj.quantity_emitted or ''))),
     )
 
 def mk_table_facilities(submission):
@@ -46,9 +47,8 @@ def export_emission(submission):
     facilities_table = table_from_data(
         data=table_facilities, isBlend=False,
         header=TABLE_EMISSIONS_HEADER,
-        colWidths=None,
-        style=style,
-        repeatRows=2, emptyData=TABLE_ROW_EMPTY_EMISSIONS
+        colWidths=None, style=style, repeatRows=2,
+        emptyData=TABLE_ROW_EMPTY_EMISSIONS
     )
 
     emissions_page = (

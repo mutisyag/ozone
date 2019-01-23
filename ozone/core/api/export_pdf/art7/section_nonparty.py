@@ -12,12 +12,14 @@ from .constants import TABLE_NONP_COMP_HEADER
 from .constants import TABLE_ROW_EMPTY_NONP
 from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
 
+from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import p_c
 from ..util import page_title_section
 from ..util import table_from_data
+from ..util import to_precision
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -27,15 +29,15 @@ def big_table_row(obj, isBlend):
     col_2 = obj.blend.blend_id if isBlend else obj.substance.name
 
     return (
-        col_1,
-        col_2,
-        obj.trade_party.name if obj.trade_party else '',
-        str(obj.quantity_import_new or ''),
-        str(obj.quantity_import_recovered or ''),
-        str(obj.quantity_export_new or ''),
-        str(obj.quantity_export_recovered or ''),
-        str(obj.remarks_party or ''),
-        str(obj.remarks_os or ''),
+        p_c(_(col_1)),
+        p_c(_(col_2)),
+        p_c(_(get_big_float(obj.trade_party.name))) if obj.trade_party else '',
+        p_c(_(get_big_float(obj.quantity_import_new or ''))),
+        p_c(_(get_big_float(obj.quantity_import_recovered or ''))),
+        p_c(_(get_big_float(obj.quantity_export_new or ''))),
+        p_c(_(get_big_float(obj.quantity_export_recovered or ''))),
+        p_c(_(get_big_float(obj.remarks_party or ''))),
+        p_c(_(get_big_float(obj.remarks_os or ''))),
     )
 
 def component_row(component, blend):
@@ -44,10 +46,10 @@ def component_row(component, blend):
     return (
         component.substance,
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        str(blend.quantity_import_new * ptg),
-        str(blend.quantity_import_recovered * ptg),
-        str(blend.quantity_export_new * ptg),
-        str(blend.quantity_export_recovered  * ptg),
+        to_precision(blend.quantity_import_new * ptg, 3),
+        to_precision(blend.quantity_import_recovered * ptg, 3),
+        to_precision(blend.quantity_export_new * ptg, 3),
+        to_precision(blend.quantity_export_recovered * ptg, 3),
     )
 
 def export_nonparty(submission):

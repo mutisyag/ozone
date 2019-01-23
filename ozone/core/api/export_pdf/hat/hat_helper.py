@@ -1,3 +1,4 @@
+from ..util import get_big_float
 from ..util import p_c
 
 from django.utils.translation import gettext_lazy as _
@@ -83,9 +84,9 @@ def big_table_row(obj, isBlend):
     return (
         p_c(_(col_1 or '')),
         p_c(_(col_2 or '')),
-        p_c(_(str(obj.quantity_msac or ''))),
-        p_c(_(str(obj.quantity_sdac or ''))),
-        p_c(_(str(obj.quantity_dcpac or ''))),
+        p_c(_(get_big_float(obj.quantity_msac or ''))),
+        p_c(_(get_big_float(obj.quantity_sdac or ''))),
+        p_c(_(get_big_float(obj.quantity_dcpac or ''))),
         p_c(_(obj.remarks_party or '')),
         p_c(_(obj.remarks_os or '')),
     )

@@ -1,3 +1,5 @@
+import re
+
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
@@ -70,6 +72,78 @@ def col_widths(w_list):
     return list(map(lambda x: x * cm, w_list))
 
 
+# Returning number as string to avoid 'E' notation
+def get_big_float(nr):
+    if 'e' in str(nr):
+        n, exp = str(nr).split('e')
+        s_n = str(float(n)/10)
+
+        idx = s_n.index('.')
+        return s_n[:idx+1] + '0' * (int(exp[-1])-1) + s_n[idx+1:]
+    else:
+        return str(nr)
+
+
+# Imitate JavaScript's toPrecision. Retunrning the number with 'decimals'
+# digits starting from the first non-zero digit
+def to_precision(nr, decimals):
+
+    if int(nr) > 999:
+        return str(int(nr))
+    else:
+        s_nr = get_big_float(nr)
+
+        # Getting the first non-zero digitindex
+        p = re.compile('(?=\d)(?=[^0])')
+
+        m = p.search(s_nr)
+        f_nonzero = m.span()[0]
+
+        # Complete the number with 0's to have space for nr of decimals
+        if len(s_nr) <= f_nonzero + decimals:
+            nr = s_nr[0:f_nonzero] + s_nr[f_nonzero:]
+            return nr
+        else:
+            # Checking if substring with the number of decimals
+            # has a float point
+            if '.' not in s_nr[f_nonzero:f_nonzero + decimals]:
+                sub = s_nr[f_nonzero:f_nonzero + decimals]
+                next_digit = s_nr[f_nonzero + decimals]
+
+                # In case of numbers with 3 digits before the point
+                if next_digit == '.':
+                    next_digit = s_nr[f_nonzero + decimals + 1]
+            else:
+                sub = s_nr[f_nonzero:f_nonzero + decimals + 1]
+                # For numbers that start wih a non-zero and have exactly
+                # 'decimals' digits
+                if len(sub) == len(s_nr):
+                    next_digit = 0
+                else:
+                    next_digit = s_nr[f_nonzero + decimals + 1]
+
+            # Concatenating the string before the first non-zero digit
+            n = s_nr[0:f_nonzero] + sub
+
+            # Rounding if the next digit after the number of decimals
+            # is greater or equal to 5
+            if int(next_digit) >= 5:
+                # If the point comes after the number of decimals, the number
+                # gets rounded with 1
+                if s_nr.find(sub) < s_nr.find('.'):
+                    add_with = '1'
+                else:
+                    # Rounding with the correct value depending of the decimals
+                    add_with = '0.' + '0' * len(n[n.find('.') + 1 : -1])+'1'
+
+                n = str(round(float(n) + float(add_with), 10))
+
+            # Getting rid of the 'E' notation
+            if 'e' in n:
+                return get_big_float(n)
+            return n
+
+
 BASIC_Q_TYPES = (
     'Essential use, other than L&amp;A',
     'Critical use',
@@ -81,16 +155,15 @@ BASIC_Q_TYPES = (
 
 
 def get_quantity_cell(q_list, extra_q):
-    # import pdb; pdb.set_trace()
     if sum(q_list) > 0:
         if extra_q:
             return (
-                p_l('<b>' + str(sum(q_list)) + '</b>'),
+                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
                 get_substance_label(q_list, type='quantity'), hr, extra_q
             )
         else:
             return (
-                p_l('<b>' + str(sum(q_list)) + '</b>'),
+                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
                 get_substance_label(q_list, type='quantity')
             )
     else:
@@ -115,10 +188,10 @@ def get_substance_label(q_list, type, list_font_size=7):
     if type=='decision':
         pairs = tuple(zip(
             ('Quarantine and pre-shipment applications', ) + BASIC_Q_TYPES,
-            map(str, q_list)
+            map(get_big_float, q_list)
         ))
     else:
-        pairs = tuple(zip(BASIC_Q_TYPES, map(str, q_list)))
+        pairs = tuple(zip(BASIC_Q_TYPES, map(get_big_float, q_list)))
 
     if type=='quantity':
         _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))

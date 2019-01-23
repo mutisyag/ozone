@@ -11,13 +11,14 @@ from .constants import TABLE_ROW_EMPTY_DEST
 from .constants import TABLE_ROW_EMPTY_STYLE_DEST
 from .constants import TABLE_BLENDS_COMP_STYLE
 
+from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import p_c
-from ..util import p_l
 from ..util import page_title_section
 from ..util import table_from_data
+from ..util import to_precision
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -27,20 +28,20 @@ def big_table_row(obj, isBlend):
     col_2 = obj.blend.blend_id if isBlend else obj.substance.name
 
     return (
-        col_1,
-        col_2,
-        p_l(str(obj.quantity_destroyed)),
-        str(obj.remarks_party or ''),
-        str(obj.remarks_os or ''),
+        p_c(_(col_1)),
+        p_c(_(col_2)),
+        p_c(get_big_float(obj.quantity_destroyed or '')),
+        p_c(_(obj.remarks_party or '')),
+        p_c(_(obj.remarks_os or '')),
     )
 
 def component_row(component, blend):
     ptg = component.percentage
 
     return (
-        component.substance,
+        p_c(_(component.substance)),
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        str(blend.quantity_destroyed * ptg)
+        p_c(to_precision(blend.quantity_destroyed * ptg, 3))
     )
 
 def export_destruction(submission):

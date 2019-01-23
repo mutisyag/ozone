@@ -1,9 +1,11 @@
+from ..util import get_big_float
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantities
 from ..util import get_quantity_cell
 from ..util import get_substance_label
 from ..util import p_c
+from ..util import to_precision
 
 from django.utils.translation import gettext_lazy as _
 
@@ -27,9 +29,9 @@ def big_table_row(obj, isBlend):
         p_c(_(col_1)),
         p_c(_(col_2)),
         p_c(_(party.name if hasattr(party, 'name') else '')),
-        p_c(str(obj.quantity_total_new or '')),
-        p_c(str(obj.quantity_total_recovered or '')),
-        obj.quantity_feedstock,
+        p_c(get_big_float(obj.quantity_total_new or '')),
+        p_c(get_big_float(obj.quantity_total_recovered or '')),
+        p_c(get_big_float(obj.quantity_feedstock or '')),
         q_cell,
         (d_label,)
     )
@@ -39,10 +41,10 @@ def component_row(component, blend):
     q_sum = sum(get_quantities(blend)) * ptg
 
     return (
-        component.component_name,
+        p_c(_(component.component_name)),
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        str(round(blend.quantity_total_new * ptg)),
-        format(blend.quantity_total_recovered * ptg, '.2f'),
-        format(blend.quantity_feedstock * ptg, '.3g'),
-        str(q_sum) if q_sum != 0.0 else ''
+        p_c(to_precision(blend.quantity_total_new * ptg, 3)),
+        p_c(to_precision(blend.quantity_total_recovered * ptg, 3)),
+        p_c(to_precision(blend.quantity_feedstock * ptg, 3)),
+        p_c(get_big_float(q_sum)) if q_sum != 0.0 else ''
     )

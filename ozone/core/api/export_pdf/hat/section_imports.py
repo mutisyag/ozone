@@ -14,6 +14,7 @@ from ..util import mk_table_substances
 from ..util import page_title_section
 from ..util import p_c
 from ..util import table_from_data
+from ..util import to_precision
 from ..util import STYLES
 from ..util import TABLE_STYLES
 
@@ -28,11 +29,11 @@ def component_row(component, blend):
     ptg = component.percentage
 
     return (
-        component.substance,
+        p_c(_(component.substance)),
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        str(blend.quantity_msac * ptg),
-        str(blend.quantity_sdac * ptg),
-        str(blend.quantity_dcpac * ptg),
+        p_c(to_precision(blend.quantity_msac * ptg, 3)),
+        p_c(to_precision(blend.quantity_sdac * ptg, 3)),
+        p_c(to_precision(blend.quantity_dcpac * ptg, 3)),
     )
 
 def export_imports(submission):

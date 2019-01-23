@@ -2,18 +2,18 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
+from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import get_decisions
 from ..util import get_preship_or_polyols_q
 from ..util import get_quantity_cell
 from ..util import get_quantities
 from ..util import get_substance_label
-from ..util import p_l
+from ..util import p_c
 from ..util import page_title_section
 from ..util import STYLES
 from ..util import TABLE_STYLES
 from ..util import table_from_data
-
 
 from .constants import TABLE_ROW_EMPTY_PROD
 from .constants import TABLE_PROD_HEADER
@@ -35,12 +35,12 @@ def to_row_substance(obj):
 
     return (
         substance.group.group_id,
-        p_l(substance.name),
-        str(obj.quantity_total_produced or ''),
-        str(obj.quantity_feedstock or ''),
+        p_c(_(substance.name)),
+        p_c(get_big_float(obj.quantity_total_produced or '')),
+        p_c(get_big_float(obj.quantity_feedstock or '')),
         q_cell,
         (d_label,),
-        str(obj.quantity_article_5 or '')
+        p_c(get_big_float(obj.quantity_article_5 or ''))
     )
 
 def mk_table_substances(submission):
