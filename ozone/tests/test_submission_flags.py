@@ -80,6 +80,9 @@ class BaseFlagsTests(BaseTests):
         submission = Submission.objects.get(pk=submission.id)
 
         expected_value = OLD_VALUE
+        # If the field we are trying to change is not available
+        # for the obligation type, we don't raise an error, but the
+        # value doesn't actually change.
         if expect_success and field in self.flag_data:
             expected_value = NEW_VALUE
 
