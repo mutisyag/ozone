@@ -9,6 +9,8 @@ from django.views.generic import RedirectView
 from django.conf.urls import url
 from rest_framework.documentation import include_docs_urls
 
+from ozone.core import views
+
 
 urlpatterns = [
     # Cannot add this in the api.urls because of
@@ -17,7 +19,8 @@ urlpatterns = [
     url(r'^api/docs/', include_docs_urls(title='ORS API', public=False)),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-    url(r'^admin/i18n/', include('django.conf.urls.i18n')),
+    path('admin/i18n/setlang/', views.set_language, name='set_language'),
+    # url(', include('django.conf.urls.i18n')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
     # User management
     path(
