@@ -1,4 +1,4 @@
-import moment from 'moment'
+import fromExponential from 'from-exponential/dist/index.min.js'
 
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
 	if (!obj || !level2PropertyKey) {
@@ -47,11 +47,6 @@ const getPropertyValue = (obj, propertyPath) => {
 
 const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n)
 
-const dateFormat = (value, language, formatString) => {
-	moment.locale(language)
-	return moment(value).format(formatString || 'LL')
-}
-
 export {
 	getLevel2PropertyValue,
 	isObject,
@@ -59,5 +54,5 @@ export {
 	intersect,
 	getPropertyValue,
 	isNumber,
-	dateFormat
+	fromExponential
 }

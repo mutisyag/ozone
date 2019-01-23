@@ -113,7 +113,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
         Testing `submit` transition using a secretariat user for a submission
         created by a party reporter.
-        Expected result: 412 Precondition Failed - the user is a secretariat
+        Expected result: 403 Permission Denied - the user is a secretariat
         member but he is not the owner of the submission.
         """
 
@@ -127,7 +127,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             submission=submission,
             transition='submit'
         )
-        self.assertEqual(resp.status_code, 412)
+        self.assertEqual(resp.status_code, 403)
 
     def test_submit_same_party(self):
         """
@@ -233,7 +233,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
         Testing `recall` transition using a secretariat user for a submission
         created by a party reported.
-        Expected result: 412.
+        Expected result: 403.
         """
 
         submission = self.create_submission(
@@ -246,7 +246,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             submission=submission,
             transition='recall'
         )
-        self.assertEqual(resp.status_code, 412)
+        self.assertEqual(resp.status_code, 403)
 
     def test_recall_same_party(self):
         """
@@ -354,7 +354,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
         """
         Testing `unrecall_to_submitted` using a secretariat user for a submission
         created by a party reporter.
-        Expected result: 412 Precondition Failed.
+        Expected result: 403 Permission Denied.
         """
 
         submission = self.create_submission(
@@ -368,13 +368,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             submission=submission,
             transition='unrecall_to_submitted'
         )
-        self.assertEqual(resp.status_code, 412)
+        self.assertEqual(resp.status_code, 403)
 
     def test_unrecall_to_processing_secretariat_not_owner(self):
         """
         Testing `unrecall_to_processing` using a secretariat user for a submission
         created by a party reporter.
-        Expected result: 412 Precondition Failed.
+        Expected result: 403 Permission Denied.
         """
 
         submission = self.create_submission(
@@ -388,13 +388,13 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             submission=submission,
             transition='unrecall_to_processing'
         )
-        self.assertEqual(resp.status_code, 412)
+        self.assertEqual(resp.status_code, 403)
 
     def test_unrecall_to_finalized_secretariat_not_owner(self):
         """
         Testing `unrecall_to_finalized` using a secretariat user for a submission
         created by a party reporter.
-        Expected result: 412 Precondition Failed.
+        Expected result: 403 Permission Denied.
         """
 
         submission = self.create_submission(
@@ -408,7 +408,7 @@ class DefaultWorkflowPermissionsTests(BaseWorkflowPermissionsTests):
             submission=submission,
             transition='unrecall_to_finalized'
         )
-        self.assertEqual(resp.status_code, 412)
+        self.assertEqual(resp.status_code, 403)
 
     def test_unrecall_to_submitted_same_party(self):
         """

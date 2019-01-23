@@ -1,6 +1,6 @@
 <template>
 <b-row>
-	<HeaderDropdown class="mr-3" right>
+	<HeaderDropdown class="mr-3" right v-if="routeName==='Dashboard'">
 		<template slot="header">
 			{{$language.available[$language.current]}}
 		</template>
@@ -23,10 +23,10 @@
 </template>
 
 <script>
-
 import authMixin from '@/components/common/mixins/auth'
 import { HeaderDropdown } from '@coreui/vue'
 import { apiBase } from '@/components/common/services/api'
+import { setLanguage } from '@/components//common/services/languageService'
 
 export default {
 	mixins: [authMixin],
@@ -41,13 +41,17 @@ export default {
 	computed: {
 		currentCountryIso() {
 			return this.$store.getters.currentCountryIso
+		},
+		aaa() {
+			return this.$gettextInterpolate('LALALALALA %{x}', { x: 10 })
+		},
+		routeName() {
+			return this.$route.name
 		}
 	},
 	methods: {
-		setCurrentLanguage(key) {
-			this.$language.current = key
-			console.log(this.$language)
-			// this.$store.dispatch('getTranslations', { language: this.$language, languageKey: key })
+		setCurrentLanguage(languageKey) {
+			setLanguage(languageKey, this)
 		}
 	}
 }

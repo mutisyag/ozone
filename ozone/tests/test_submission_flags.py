@@ -1,9 +1,9 @@
 from django.urls import reverse
-from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import Submission
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     AnotherPartyFactory,
@@ -22,7 +22,7 @@ NEW_VALUE = True
 OLD_VALUE = False
 
 
-class BaseFlagsTests(TestCase):
+class BaseFlagsTests(BaseTests):
     success_code = 200
     fail_code = 422
 
@@ -50,28 +50,25 @@ class BaseFlagsTests(TestCase):
         )
         ReportingChannelFactory()
 
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
-
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
             party=self.party, created_by=owner, last_edited_by=owner, **kwargs
         )
         return submission
 
-    def _check_result(self, result, expect_success, submission, field):
+    def _check_result(
+        self, result, expect_success, submission, field, fail_code=None
+    ):
         try:
             verbose = result.json()
         except:
             verbose = result.data
+
+        # If fail_code not specified as parameter, use class attribute
+        fail_code = fail_code if fail_code is not None else self.fail_code
         self.assertEqual(
             result.status_code,
-            self.success_code if expect_success else self.fail_code,
+            self.success_code if expect_success else fail_code,
             verbose,
         )
 
@@ -110,12 +107,12 @@ FLAGS_DATA = {
 
 class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
-    def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success):
+    def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success, fail_code=None):
         submission = self.create_submission(self.secretariat_user, **FLAGS_DATA)
         if finalized:
             submission.call_transition("submit", self.secretariat_user)
             submission.save()
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         for field in fields_to_check:
             with self.subTest("Test update %s" % field):
@@ -125,11 +122,8 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                         kwargs={"submission_pk": submission.pk},
                     ),
                     {field: NEW_VALUE},
-                    "application/json",
-                    format="json",
-                    **headers,
                 )
-                self._check_result(result, expect_success, submission, field)
+                self._check_result(result, expect_success, submission, field, fail_code)
 
     # Superseded flags cannot be change by any user in any state
 
@@ -142,12 +136,16 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                                             True, False)
 
     def test_superseded_party_data_entry(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_superseded_party_finalized(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Provisional flag can be edited by:
     #  - Secretariat in any state
@@ -162,12 +160,16 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                                             True, True)
 
     def test_provisional_party_data_entry(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            False, True)
+                                            False, False, fail_code=403)
 
     def test_provisional_party_finalized(self):
+        # fail_code is 403 as party user has no permission to change flags
+        # on secretariat-created submissions
         self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Valid flag can be edited by:
     #  - Secretariat in submitted stated
@@ -183,11 +185,11 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_valid_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_valid_party_finalized(self):
         self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Blanks can be edited by:
     #  - Secretariat in any state
@@ -203,11 +205,11 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_blanks_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            False, False)
+                                            False, False, fail_code=403)
 
     def test_blanks_party_finalized(self):
         self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
     # Has reported flags can be edited by:
     #  - Secretariat in any state
@@ -223,25 +225,23 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_has_reported_party_data_entry(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            False, True)
+                                            False, False, fail_code=403)
 
     def test_has_reported_party_finalized(self):
         self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            True, False)
+                                            True, False, fail_code=403)
 
 
 class SubmissionRetrieveTest(BaseFlagsTests):
     def _check_flags_retrieve_data(self, user, owner):
         submission = self.create_submission(owner, **FLAGS_DATA)
-        headers = self.get_authorization_header(user.username, "qwe123qwe")
+        self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
             reverse(
                 "core:submission-submission-flags-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.json(), [FLAGS_DATA])
 

@@ -20,7 +20,7 @@
         </thead>
       </table>
 
-      <table ref="tableHeaderBlends" class="table submission-table header-only">
+      <table v-if="hasBlends"  ref="tableHeaderBlends" class="table submission-table header-only">
         <thead>
           <tr class="first-header">
             <th
@@ -67,32 +67,35 @@
 					:sort-by.sync="table.sortBy"
 					:sort-desc.sync="table.sortDesc"
 					:sort-direction="table.sortDirection"
-					:empty-text="table.emptyText"
+					:empty-text="tableEmptyText"
 					:filter="table.filters.search"
 					ref="table">
-					<template
-						slot="group"
+						<template
+				slot="group"
+				slot-scope="cell">
+				<div class="group-cell">
+					{{cell.item.group}}
+				</div>
+				<b-btn-group class="row-controls">
+					<span
+						v-if="!$store.getters.can_edit_data"
+						@click="remove_field(cell.item.index, cell.item)"
+						class="table-btn"
+					><i class="fa fa-trash fa-lg"></i></span>
+				</b-btn-group>
+				</template>
+				<template
+						slot="substance"
 						slot-scope="cell">
-						<div class="table-btn-group">
-							<b-btn
-								variant="info"
-								@click="createModalData(cell.item.originalObj, cell.item.index)">
-									<span v-translate>Edit</span>
-							</b-btn>
-							<b-btn
-								variant="outline-danger"
-								@click="remove_field(cell.item.index, cell.item)"
-								class="table-btn">
-									<span v-translate>Delete</span>
-							</b-btn>
+						<div class="substance-blend-cell">
+							{{cell.item.substance}}
 						</div>
-						{{cell.item.group}}
 					</template>
 					<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -102,7 +105,7 @@
 				</b-table>
 			</div>
 
-			<div class="table-wrapper">
+			<div v-if="hasBlends" class="table-wrapper">
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.2 <span v-translate>Blends</span></h4>
 					<div v-show="tableBlends.tableFilters" class="table-filters">
@@ -131,29 +134,26 @@
 					:sort-by.sync="tableBlends.sortBy"
 					:sort-desc.sync="tableBlends.sortDesc"
 					:sort-direction="tableBlends.sortDirection"
-					:empty-text="tableBlends.emptyText"
+					:empty-text="tableBlendsEmptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends">
 					<template slot="type" slot-scope="cell">
-						<div class="table-btn-group">
-							<b-btn
-								variant="info"
-								@click="createModalData(cell.item.originalObj, cell.item.index)">
-									<span v-translate>Edit</span>
-							</b-btn>
-							<b-btn
-								variant="outline-danger"
+						<div class="group-cell">
+							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}
+						</div>
+						<b-btn-group class="row-controls">
+							<span
+								v-if="!$store.getters.can_edit_data"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn">
-									<span v-translate>Delete</span>
-							</b-btn>
-						</div>
-						<span>{{cell.item.type}}</span>
+								<i class="fa fa-trash fa-lg"></i>
+							</span>
+						</b-btn-group>
 					</template>
-
 					<template slot="blend" slot-scope="cell">
 						<span
 							style="cursor:pointer;"
+							class="substance-blend-cell"
 							v-b-tooltip.hover="'Click to expand/collapse blend'"
 							@click.stop="cell.toggleDetails">
 							<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
@@ -165,7 +165,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="isReadOnly"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -211,12 +211,20 @@
 		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
 		<hr>
 		<div
-			v-for="(comment, comment_index) in tab_info.comments"
-			:key="comment_index"
-			class="comments-input">
-			<label>{{labels[comment.name]}}</label>
-			<textarea :disabled="$store.getters.isReadOnly" class="form-control" v-model="comment.selected"></textarea>
-		</div>
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input">
+				<label>
+					<span>{{labels[comment_key]}}</span>
+				</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
+			</div>
 	</div>
 
     <hr>
@@ -227,67 +235,9 @@
       </p>
     </div>
 
-    <AppAside v-if="!isReadOnly" fixed>
-      <DefaultAside :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
+    <AppAside fixed>
+      <DefaultAside v-on:fillSearch="fillTableSearch($event)"  :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
-
-    <b-modal size="lg" ref="edit_modal" id="edit_modal">
-      <div v-if="modal_data" slot="modal-title">
-        <span v-if="modal_data.field.substance.selected">
-			{{tab_data.display.substances[modal_data.field.substance.selected]}}</span>
-        <span v-else>{{tab_data.display.blends[modal_data.field.blend.selected].name}}</span>
-      </div>
-      <div v-if="modal_data">
-		<p class="muted">
-			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
-			<br>
-			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
-		</p>
-        <b-row v-if="modal_data.field.substance.selected">
-          <b-col>
-            <span v-translate>Change substance</span>
-          </b-col>
-          <b-col>
-            <multiselect
-              class="mb-2"
-              @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
-              trackBy="value"
-              label="text"
-              :placeholder="$gettext('Select substance')"
-              :value="modal_data.field.substance.selected"
-              :options="tab_data.substances"
-            ></multiselect>
-          </b-col>
-        </b-row>
-        <div v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
-          <b-row>
-            <b-col><span>{{labels[order]}}</span></b-col>
-            <b-col>
-              <fieldGenerator
-                :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="isReadOnly"
-                :field="modal_data.field[order]"
-              ></fieldGenerator>
-            </b-col>
-          </b-row>
-          <hr>
-        </div>
-        <b-row
-          class="mt-3"
-          v-for="comment_field in ['remarks_os','remarks_party']"
-          :key="comment_field">
-          <b-col lg="3">
-            <span v-translate>{{labels[comment_field]}}</span>
-          </b-col>
-          <b-col lg="9">
-            <textarea class="form-control" v-model="modal_data.field[comment_field].selected"></textarea>
-          </b-col>
-        </b-row>
-      </div>
-      <div slot="modal-footer">
-          <b-btn @click="$refs.edit_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
-      </div>
-    </b-modal>
   </div>
 </template>
 
@@ -317,6 +267,7 @@ export default {
 		}
 	},
 	methods: {
+
 	},
 	computed: {
 		getTabInputFields() {

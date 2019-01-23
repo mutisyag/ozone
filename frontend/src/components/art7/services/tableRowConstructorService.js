@@ -1,6 +1,5 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import fromExponential from 'from-exponential'
-import { isNumber } from '@/components/common/services/utilsService'
+import { fromExponential, isNumber } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -209,7 +208,7 @@ export default {
 			}
 			if (prefillData) {
 				Object.keys(prefillData).forEach((element) => {
-					row[element].selected = isNumber(prefillData[element]) ? fromExponential(prefillData[element]) : prefillData[element]
+					row[element].selected = isNumber(prefillData[element]) ? parseFloat(fromExponential(prefillData[element])) : prefillData[element]
 				})
 			}
 			return row
@@ -603,7 +602,7 @@ export default {
 			Object.keys(prefillData).forEach((field) => {
 				baseInnerFields[field]
 					?	baseInnerFields[field].selected = isNumber(prefillData[field])
-						? fromExponential(prefillData[field]) : prefillData[field]
+						? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
 					: null
 			})
 		}

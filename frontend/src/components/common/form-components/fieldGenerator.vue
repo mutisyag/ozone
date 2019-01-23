@@ -7,6 +7,7 @@
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
 		<div v-else-if="field.type === 'select'">
 			<multiselect
+				:placeholder="$gettext('Select option')"
 				:multiple="false"
 				label="text"
 				trackBy="value"
@@ -16,11 +17,12 @@
 				:options="fieldOptions" />
 		</div>
     <textarea @change="updateFormField"  :disabled="disabled" class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
-  </div>
+	</div>
 </template>
 
 <script>
 import Multiselect from '@/components/common/ModifiedMultiselect'
+import { fromExponential } from '@/components/common/services/utilsService'
 
 export default {
 
@@ -34,7 +36,7 @@ export default {
 		Multiselect
 	},
 	created() {
-		this.currentTyping = this.field.selected
+		this.currentTyping = this.field.selected && this.field.type === 'number' ? fromExponential(this.field.selected) : this.field.selected
 		if (this.field.type === 'select') {
 		// Some numbers can arrive here (usually after prefill) as strings.
 		// This issue affects only the select because of the pair (text - value) that needs to match
@@ -62,7 +64,6 @@ export default {
 				if (this.currentTyping && !valid.test(this.currentTyping)) {
 					const n = this.currentTyping.match(number)
 					this.currentTyping = n ? parseFloat(n[0]) : null
-					console.log('------', this.currentTyping, n)
 				}
 			}
 		},
@@ -87,14 +88,6 @@ export default {
 
 		updateFormFieldWithTabs(event) {
 			this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
-		}
-
-	},
-	watch: {
-		'field.selected': {
-			handler() {
-				this.currentTyping = this.field.selected
-			}
 		}
 	}
 }

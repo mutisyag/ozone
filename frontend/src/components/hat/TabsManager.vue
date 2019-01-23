@@ -12,15 +12,8 @@
       </div>
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-    <b-button-group class="actions">
-		<Save  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
-		<b-btn
-			variant="outline-primary"
-			v-for="transition in availableTransitions"
-			:key="transition"
-			@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
-			<span>{{labels[transition]}}</span>
-		</b-btn>
+   <b-button-group class="actions">
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -88,10 +81,9 @@
 		</b-button-group>
     </Footer>
 
-	<b-modal size="lg" ref="history_modal" id="history_modal"
-			 :title="$gettext('Submission versions')">
+	<b-modal size="lg" ref="history_modal" id="history_modal" :title="$gettext('Submission versions')">
         <SubmissionHistory :history="$store.state.currentSubmissionHistory"
-						   :currentVersion="$store.state.current_submission.version">
+							:currentVersion="$store.state.current_submission.version">
 		</SubmissionHistory>
 		<div slot="modal-footer">
           <b-btn @click="$refs.history_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
@@ -105,7 +97,7 @@ import { Footer } from '@coreui/vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
 import Attachments from '@/components/common/Attachments.vue'
 import { getInstructions } from '@/components/common/services/api'
-import Save from '@/components/letter/Save'
+import Save from '@/components/hat/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/hat/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
@@ -127,9 +119,8 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		this.updateBreadcrumbs()
 	},
-
 	computed: {
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
@@ -151,6 +142,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
 			const formName = this.$route.name
@@ -193,6 +187,13 @@ export default {
 				}).then(() => {
 					this.$router.push({ name: 'Dashboard' })
 				})
+			}
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
 			}
 		}
 	},

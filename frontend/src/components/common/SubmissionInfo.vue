@@ -16,7 +16,7 @@
 		<hr>
     <form class="form-sections">
 			<b-row>
-				<b-col>
+				<b-col cols="8">
 					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
@@ -25,7 +25,7 @@
 									<label>{{labels[order]}}</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="$store.getters.transitionState" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? $store.getters.can_change_reporting_channel : can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row>
@@ -33,7 +33,7 @@
 									<label>{{labels.dateOfSubmission}}</label>
 								</b-col>
 								<b-col>
-									<span v-if="$store.state.current_submission.submitted_at">{{$store.state.current_submission.submitted_at}}</span>
+									<span v-if="currentSubmissionSubmittedAt">{{currentSubmissionSubmittedAt}}</span>
 									<i v-else class="fa fa-ellipsis-h"></i>
 								</b-col>
 							</b-row>
@@ -44,28 +44,83 @@
 				<b-col v-if="flags_info">
 					<h5><span v-translate>Flags</span></h5>
 					<b-card>
-						<b-row v-for="order in flags_info.fields_order" :key="order">
+						<b-row>
 							<b-col>
-								<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
-									<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
-										<i class="fa fa-info-circle fa-lg"></i>
-										{{labels.flags[order]}}
-									</div>
-									<div v-else>
-										{{labels.flags[order]}}
-									</div>
-								</label>
+								<b-row v-for="order in general_flags" :key="order">
+									<b-col cols="1">
+										<fieldGenerator
+											:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+											:disabled="$store.getters.transitionState"
+											:field="flags_info.form_fields[order]"
+											:id="order">
+										</fieldGenerator>
+									</b-col>
+									<b-col>
+										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+												<i class="fa fa-info-circle fa-lg"></i>
+												{{labels.flags[order]}}
+											</div>
+											<div v-else>
+												{{labels.flags[order]}}
+											</div>
+										</label>
+									</b-col>
+								</b-row>
 							</b-col>
 							<b-col>
-								<fieldGenerator
-									:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
-									:disabled="$store.getters.transitionState"
-									:field="flags_info.form_fields[order]"
-									:id="order">
-								</fieldGenerator>
+								<b-row v-for="order in blank_flags" :key="order">
+									<b-col cols="1">
+										<fieldGenerator
+											:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+											:disabled="$store.getters.transitionState"
+											:field="flags_info.form_fields[order]"
+											:id="order">
+										</fieldGenerator>
+									</b-col>
+									<b-col>
+										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+												<i class="fa fa-info-circle fa-lg"></i>
+												{{labels.flags[order]}}
+											</div>
+											<div v-else>
+												{{labels.flags[order]}}
+											</div>
+										</label>
+									</b-col>
+								</b-row>
 							</b-col>
-
 						</b-row>
+						<div>
+							<h5 class="mt-4 mb-4" v-translate>Annex groups reported in submission</h5>
+								<b-row>
+									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
+										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
+											<span cols="1">
+												<fieldGenerator
+													:fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+													:disabled="$store.getters.transitionState"
+													:field="flags_info.form_fields[order]"
+													:id="order">
+												</fieldGenerator>
+											</span>
+											<span>
+												<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+													<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
+														<i class="fa fa-info-circle fa-lg"></i>
+														{{labels.flags[order]}}
+													</div>
+													<div v-else>
+														{{labels.flags[order]}}
+													</div>
+												</label>
+											</span>
+										</div>
+								</b-col>
+								</b-row>
+
+						</div>
 					</b-card>
 				</b-col>
 			</b-row>
@@ -77,6 +132,7 @@
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { dateFormat } from '@/components/common/services/languageService'
 
 export default {
 	props: {
@@ -90,6 +146,36 @@ export default {
 
 	components: { fieldGenerator },
 
+	computed: {
+
+		general_flags() {
+			return ['flag_provisional', 'flag_superseded', 'flag_valid']
+		},
+
+		blank_flags() {
+			return Object.keys(this.flags_info.form_fields).filter(f => f.split('_').includes('blanks'))
+		},
+
+		specific_flags() {
+			return Object.keys(this.flags_info.form_fields).filter(f => ![...this.general_flags, ...this.blank_flags].includes(f))
+		},
+
+		specific_flags_columns() {
+			return [...new Set(this.specific_flags.map(f => f.split('_')[3]).map(f => f.split('')[0]))]
+		},
+
+		can_edit_data() {
+			return this.$store.getters.can_edit_data
+		},
+		currentSubmissionSubmittedAt() {
+			const { submitted_at } = this.$store.state.current_submission
+			if (!submitted_at) {
+				return null
+			}
+			return dateFormat(submitted_at, this.$language.current)
+		}
+	},
+
 	data() {
 		return {
 			labels: null
@@ -97,6 +183,13 @@ export default {
 	},
 
 	methods: {
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.labels = getCommonLabels(this.$gettext)
+			}
+		}
 	}
 
 }

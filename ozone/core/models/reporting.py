@@ -1,7 +1,5 @@
-import enum
 import os
 
-from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
@@ -68,7 +66,10 @@ class Obligation(models.Model):
     TODO: analysis!
     """
 
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(
+        max_length=256, unique=True,
+        help_text="A unique String value identifying this obligation."
+    )
     # TODO: obligation-party mapping!
 
     description = models.CharField(max_length=256, blank=True)
@@ -82,7 +83,10 @@ class Obligation(models.Model):
     # This will possibly get more complicated in the future
     # (e.g. when different forms will be necessary for the same obligation
     # but different reporting periods due to changes in the methodology
-    form_type = models.CharField(max_length=64)
+    form_type = models.CharField(
+        max_length=64,
+        help_text="Used to generate the correct form, based on this obligation."
+    )
 
     other = models.BooleanField(default=False)
 
@@ -128,7 +132,8 @@ class Submission(models.Model):
         'article7emissions',
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
-        'transfers'
+        'transfers',
+        'dataothers'
     ]
 
     # TODO: this implements the `submission_type` field from the
@@ -204,23 +209,76 @@ class Submission(models.Model):
     )
 
     # Flags
-    flag_provisional = models.BooleanField(default=False)
-    flag_valid = models.NullBooleanField(default=None)
-    flag_superseded = models.BooleanField(default=False)
+    flag_provisional = models.BooleanField(
+        default=False,
+        help_text="If set to true it signals that future changes are foreseen."
+    )
+    flag_valid = models.NullBooleanField(
+        default=None,
+        help_text="If set to true it signals that the data in the current "
+        "version is considered correct. Can be set by the Secretariat during "
+        "Processing or at the transition between the Processing or Finalized states."
+    )
+    flag_superseded = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that the current version is not "
+        "relevant anymore. When a newer version of data is Submitted, "
+        "the current one is automatically flagged as Superseded."
+    )
     flag_checked_blanks = models.BooleanField(default=True)
     flag_has_blanks = models.BooleanField(default=False)
     flag_confirmed_blanks = models.BooleanField(default=False)
-    flag_has_reported_a1 = models.BooleanField(default=True)
-    flag_has_reported_a2 = models.BooleanField(default=True)
-    flag_has_reported_b1 = models.BooleanField(default=True)
-    flag_has_reported_b2 = models.BooleanField(default=True)
-    flag_has_reported_b3 = models.BooleanField(default=True)
-    flag_has_reported_c1 = models.BooleanField(default=True)
-    flag_has_reported_c2 = models.BooleanField(default=True)
-    flag_has_reported_c3 = models.BooleanField(default=True)
-    flag_has_reported_e = models.BooleanField(default=True)
+    flag_has_reported_a1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex A Group 1 were reported."
+    )
+    flag_has_reported_a2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex A Group 2 were reported."
+    )
+    flag_has_reported_b1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 1 were reported."
+    )
+    flag_has_reported_b2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 2 were reported."
+    )
+    flag_has_reported_b3 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex B Group 3 were reported."
+    )
+    flag_has_reported_c1 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 1 were reported."
+    )
+    flag_has_reported_c2 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 2 were reported."
+    )
+    flag_has_reported_c3 = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex C Group 3 were reported."
+    )
+    flag_has_reported_e = models.BooleanField(
+        default=True,
+        help_text="If set to true it means that substances under "
+        "Annex E were reported."
+    )
     # TODO: why is the default here False? does it have other implications?
-    flag_has_reported_f = models.BooleanField(default=False)
+    flag_has_reported_f = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that substances under "
+        "Annex F were reported."
+    )
 
     # We want these to be able to be empty in forms
     remarks_party = models.CharField(max_length=9999, blank=True)
@@ -307,6 +365,14 @@ class Submission(models.Model):
         help_text="General HAT obligation remarks added by the ozone secretariat for imports"
     )
 
+    reporting_channel = models.ForeignKey(
+        ReportingChannel,
+        related_name="submission",
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -385,10 +451,13 @@ class Submission(models.Model):
         List of transitions that can be performed from current state.
 
         """
+        # Simply avoid needless processing
+        if user.is_read_only:
+            return []
 
         transitions = []
         wf = self.workflow(user)
-        for transition in wf .state.transitions():
+        for transition in wf.state.transitions():
             if hasattr(wf, 'check_' + transition.name):
                 if getattr(wf, 'check_' + transition.name)():
                     transitions.append(transition.name)
@@ -440,6 +509,18 @@ class Submission(models.Model):
         self._current_state = workflow.state.name
         self.save()
 
+    def can_edit_flags(self, user):
+        """
+        Returns True if user can set *any* flags on this submission,
+        based strictly on read/write rights and ownership
+        (i.e. does not take submission state into account)
+        """
+        if (
+            user.is_secretariat
+            or (user.party == self.party and not self.filled_by_secretariat)
+        ):
+            return not user.is_read_only
+
     def get_changeable_flags(self, user):
         """
         Returns list of flags that can be changed by the current user in the
@@ -447,6 +528,10 @@ class Submission(models.Model):
         N.B.: flag_superseded cannot be changed directly by users, it is
         only changed automatically by the system.
         """
+        # First do a quick check based on actual permissions
+        if not self.can_edit_flags(user):
+            return []
+
         flags_list = []
         if user.is_secretariat:
             flags_list.extend([
@@ -493,7 +578,25 @@ class Submission(models.Model):
             })
         return True
 
+    def can_edit_remarks(self, user):
+        """
+        Returns True if user can edit at least one remark on this submission.
+        This is based purely on submission ownership!
+        """
+        # Party users should be able to change party remarks even on
+        # secretariat-filled submissions
+        if user.is_secretariat or user.party == self.party:
+            return not user.is_read_only
+
     def can_change_remark(self, user, field_name):
+        """
+        Verifies whether user can change remark field `field_name`, based on
+        both submission ownership/permissions and remarks mappings (OS vs party)
+        """
+        # First do a quick check based purely on ownership
+        if not self.can_edit_remarks(user):
+            return False
+
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
@@ -531,6 +634,55 @@ class Submission(models.Model):
                 for field in wrongly_modified_remarks
             })
         return True
+
+    def check_reporting_channel_modified(self):
+        if 'reporting_channel_id' in self.tracker.changed().keys():
+            return True
+        return False
+
+    def can_change_reporting_channel(self, user):
+        if user.is_secretariat and self.filled_by_secretariat:
+            return not user.is_read_only
+        return False
+
+    @staticmethod
+    def has_read_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return True
+        return False
+
+    def has_read_rights(self, user):
+        return self.has_read_rights_for_party(self.party, user)
+
+    @staticmethod
+    def has_create_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return not user.is_read_only
+        return False
+
+    def has_edit_rights(self, user):
+        if (
+            user.is_secretariat and self.filled_by_secretariat
+            or user.party is not None and user.party == self.party
+        ):
+            return not user.is_read_only
+        return False
+
+    def can_edit_data(self, user):
+        if self.has_edit_rights(user):
+            return self.data_changes_allowed
+        return False
+
+    def can_upload_files(self, user):
+        if self.has_edit_rights(user):
+            return self.data_changes_allowed
+        return False
 
     @staticmethod
     def get_exempted_fields():
@@ -575,6 +727,7 @@ class Submission(models.Model):
             "hat_production_remarks_secretariat",
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
+            'reporting_channel_id',
         ]
 
     @staticmethod
@@ -639,6 +792,7 @@ class Submission(models.Model):
                 cloned_from=self,
                 created_by=self.created_by,
                 last_edited_by=self.last_edited_by,
+                reporting_channel=self.reporting_channel
             )
             if hasattr(self, 'info'):
                 # Clone submission might already have some pre-populated
@@ -655,7 +809,6 @@ class Submission(models.Model):
                         'fax': self.info.fax,
                         'email': self.info.email,
                         'date': self.info.date,
-                        'reporting_channel': self.info.reporting_channel
                     }
                 )
         else:
@@ -822,6 +975,10 @@ class Submission(models.Model):
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
+            # The default value for reporting channel is 'Web form'
+            # when creating a new submission
+            self.reporting_channel = ReportingChannel.objects.get(name='Web form')
+
             self.clean()
             ret = super().save(
                 force_insert=force_insert, force_update=force_update,
@@ -846,18 +1003,10 @@ class Submission(models.Model):
                         phone=latest_info.phone,
                         fax=latest_info.fax,
                         email=latest_info.email,
-                        date=latest_info.date,
-                        reporting_channel=ReportingChannel.objects.get(
-                            name='Web form'
-                        )
+                        date=latest_info.date
                     )
                 else:
-                    info = SubmissionInfo.objects.create(
-                        submission=self,
-                        reporting_channel=ReportingChannel.objects.get(
-                            name='Web form'
-                        )
-                    )
+                    info = SubmissionInfo.objects.create(submission=self)
 
             return ret
 
@@ -894,13 +1043,6 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     fax = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    reporting_channel = models.ForeignKey(
-        ReportingChannel,
-        related_name="info",
-        null=True,
-        blank=True,
-        on_delete=models.PROTECT
-    )
 
     tracker = FieldTracker()
 

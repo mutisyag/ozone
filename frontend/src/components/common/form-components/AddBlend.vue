@@ -6,6 +6,7 @@
 				<small><span v-translate>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</span></small>
 				<b-input-group class="mt-2" prepend="Blend types">
 					<multiselect
+						:placeholder="$gettext('Select option')"
 						:clear-on-select="false"
 						:hide-selected="true"
 						trackBy="value"
@@ -14,14 +15,13 @@
 						:multiple="true"
 						@input="new_blend = null; selected_blends.selected = []"
 						v-model="selected_blends.filter"
-						placeholder=""
-						:options="selected_blends.filters"
-					></multiselect>
+						:options="selected_blends.filters" />
 				</b-input-group>
 
 				<div class="mt-2 mb-2" style="display: flex;">
 					<b-input-group id="blend_selector" class="mt-2" prepend="Blends">
 						<multiselect
+							:placeholder="$gettext('Select option')"
 							trackBy="value"
 							:clear-on-select="false"
 							:hide-selected="true"
@@ -30,7 +30,6 @@
 							label="text"
 							v-model="selected_blends.selected"
 							@input="new_blend = null"
-							placeholder=""
 							:options="filteredBlends" />
 					</b-input-group>
 
@@ -96,8 +95,8 @@
 						@tag="addTag($event,substance)"
 						:taggable="true"
 						trackBy="value"
-						tag-placeholder="Press enter to use a new substance"
-						placeholder="Controlled or new substance"
+						:tag-placeholder="$gettext('Press enter to use a new substance')"
+						:placeholder="$gettext('Controlled or new substance')"
 						v-model="substance.name"
 						:options="substances" />
 					<b-input-group-append>
@@ -269,14 +268,50 @@ export default {
 
 		addSubstance(type) {
 			if (type === 'selected') {
-				this.$store.dispatch('createSubstance', {
+				const current_field = this.$store.state.form.tabs[this.tabName].default_properties
+				const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
+				let currentTypeOfCountryField = ''
+				const willNotAdd = []
+
+				typeOfCountryFields.forEach(typec => {
+					if (current_field.hasOwnProperty(typec)) currentTypeOfCountryField = typec
+				})
+
+				for (const blend of this.selected_blends.selected) {
+					let fieldExists = false
+					for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
+						if (parseInt(existing_field.blend.selected) === blend && existing_field[currentTypeOfCountryField].selected === null) {
+							fieldExists = true
+							willNotAdd.push(blend)
+							break
+						}
+					}
+					// substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+					if (!fieldExists) {
+						this.$store.dispatch('createSubstance', {
+							$gettext: this.$gettext,
+							substanceList: null,
+							currentSectionName: this.tabName,
+							groupName: null,
+							country: null,
+							blendList: [blend],
+							prefillData: null
+						})
+						this.resetData()
+					}
+				}
+
+				const willNotAddSubstanceNames = []
+				willNotAdd.length && willNotAdd.forEach(id => {
+					const { blend_id } = this.blends.find(blendDisplay => blendDisplay.id === id)
+					if (blend_id) {
+						willNotAddSubstanceNames.push(blend_id)
+					}
+				})
+				willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					substanceList: null,
-					currentSectionName: this.tabName,
-					groupName: null,
-					country: null,
-					blendList: this.selected_blends.selected,
-					prefillData: null
+					message: { __all__: [`${this.$gettext('The following blends were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('select at least one country for each substance before adding it again')}`] },
+					variant: 'danger'
 				})
 				this.resetData()
 			} else {

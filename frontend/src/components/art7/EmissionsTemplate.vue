@@ -66,7 +66,7 @@
 					<fieldGenerator
 						:key="`${cell.item.index}_${inputField}_${tabName}`"
 						:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-						:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+						:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 						:field="cell.item.originalObj[inputField]" />
 				</template>
 
@@ -205,24 +205,18 @@ export default {
 		remove_field(index) {
 			this.$store.commit('removeField', { tab: this.tabName, index })
 		},
+
 		getCommentFieldPermission(fieldName) {
 			let type = fieldName.split('_')
 			type = type[type.length - 1]
 			if (type === 'party') {
-				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
-					return false
-				}
-				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
-					return true
-				}
-				return this.$store.getters.isReadOnly
+				return this.$store.getters.can_change_remarks_party
 			}
 			if (['secretariat', 'os'].includes(type)) {
-				if (!this.$store.state.currentUser.is_secretariat) {
-					return true
-				}
+				return this.$store.getters.can_change_remarks_secretariat
 			}
 		},
+
 		rowHovered(item) {
 			this.hovered = item.index
 		},

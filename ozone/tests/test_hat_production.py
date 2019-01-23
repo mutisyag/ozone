@@ -1,13 +1,9 @@
-import json
-import unittest
-
 from django.urls import reverse
-from django.test import TestCase
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from ozone.core.models import HighAmbientTemperatureProduction, Submission
 
+from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
@@ -17,12 +13,13 @@ from .factories import (
     SubmissionFactory,
     SubregionFactory,
     SubstanceFactory,
+    AnotherSubstanceFactory,
     AnotherPartyFactory,
     HighAmbientTemperatureProductionFactory,
 )
 
 
-class BaseHATProductionTest(TestCase):
+class BaseHATProductionTest(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -36,20 +33,11 @@ class BaseHATProductionTest(TestCase):
         self.secretariat_user = SecretariatUserFactory(
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
-        self.party_user = ReporterUserFactory(
-            party=self.party,
-            password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
-        )
-        self.substance = SubstanceFactory()
-        ReportingChannelFactory()
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
-    def get_authorization_header(self, username, password):
-        resp = self.client.post(
-            reverse("core:auth-token-list"),
-            {"username": username, "password": password},
-            format="json",
-        )
-        return {"HTTP_AUTHORIZATION": "Token " + resp.data["token"]}
+        self.substance = SubstanceFactory()
+        self.another_substance = AnotherSubstanceFactory()
+        ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory(
@@ -73,8 +61,6 @@ class TestHATProduction(BaseHATProductionTest):
     def test_create(self):
         submission = self.create_submission()
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         data = dict(HAT_PROD_DATA)
         data["substance"] = self.substance.id
 
@@ -83,12 +69,45 @@ class TestHATProduction(BaseHATProductionTest):
                 "core:submission-hat-productions-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_multiple(self):
+        submission = self.create_submission()
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.another_substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_multiple_duplicate(self):
+        submission = self.create_submission()
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 422, result.json())
 
     def test_get(self):
         submission = self.create_submission()
@@ -98,15 +117,11 @@ class TestHATProduction(BaseHATProductionTest):
             **HAT_PROD_DATA
         )
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.get(
             reverse(
                 "core:submission-hat-productions-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
 
@@ -130,22 +145,76 @@ class TestHATProduction(BaseHATProductionTest):
         data["substance"] = self.substance.id
         data["quantity_msac"] = 42
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
+        result = self.client.put(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data],
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+
+        hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
+        self.assertEqual(hat_prod.quantity_msac, 42)
+
+    def test_update_multiple(self):
+        submission = self.create_submission()
+
+        hat_prod = HighAmbientTemperatureProductionFactory(
+            submission=submission, substance=self.substance,
+            **HAT_PROD_DATA
+        )
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+        data1["quantity_msac"] = 42
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.another_substance.id
+        data2["quantity_msac"] = 42
 
         result = self.client.put(
             reverse(
                 "core:submission-hat-productions-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data1, data2],
         )
         self.assertEqual(result.status_code, 200, result.json())
 
-        hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
-        self.assertEqual(hat_prod.quantity_msac, 42)
+        hat_prod1 = submission.highambienttemperatureproductions.get(
+            substance_id=self.substance.id
+        )
+        hat_prod2 = submission.highambienttemperatureproductions.get(
+            substance_id=self.another_substance.id
+        )
+        self.assertEqual(hat_prod1.quantity_msac, 42)
+        self.assertEqual(hat_prod2.quantity_msac, 42)
+
+    def test_update_multiple_duplicate(self):
+        submission = self.create_submission()
+
+        hat_prod = HighAmbientTemperatureProductionFactory(
+            submission=submission, substance=self.substance,
+            **HAT_PROD_DATA
+        )
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+        data1["quantity_msac"] = 42
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.substance.id
+        data2["quantity_msac"] = 42
+
+        result = self.client.put(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 422, result.json())
 
     def test_update_immutable(self):
         submission = self.create_submission()
@@ -160,17 +229,12 @@ class TestHATProduction(BaseHATProductionTest):
         data["substance"] = self.substance.id
         data["quantity_msac"] = 42
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.put(
             reverse(
                 "core:submission-hat-productions-list",
                 kwargs={"submission_pk": submission.pk},
             ),
-            json.dumps([data]),
-            "application/json",
-            format="json",
-            **headers,
+            [data],
         )
         self.assertEqual(result.status_code, 422, result.json())
 
@@ -184,15 +248,11 @@ class TestHATProduction(BaseHATProductionTest):
         submission._current_state = "finalized"
         submission.save()
 
-        headers = self.get_authorization_header(self.secretariat_user.username, "qwe123qwe")
-
         result = self.client.post(
             reverse(
                 "core:submission-clone",
                 kwargs={"pk": submission.pk},
             ),
-            format="json",
-            **headers,
         )
         self.assertEqual(result.status_code, 200, result.json())
         new_id = result.json()['url'].split("/")[-2]

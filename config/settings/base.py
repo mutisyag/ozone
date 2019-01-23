@@ -318,6 +318,8 @@ OAUTH2_PROVIDER = {
 
 # Tusd settings
 TUSD_UPLOADS_DIR = env('TUSD_UPLOADS_DIR', default='/var/local/tusd_uploads')
+TUSD_HOST = env('TUSD_HOST', default='localhost')
+TUSD_PORT = env('TUSD_PORT', default='1080')
 ALLOWED_FILE_EXTENSIONS = split_env_var('ALLOWED_FILE_EXTENSIONS')
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#locale-paths
@@ -335,3 +337,13 @@ LANGUAGES = (
     ('ru', 'Русский'),
     ('es', 'Español'),
 )
+
+SENTRY_DSN = env('SENTRY_DSN', default=None)
+if SENTRY_DSN:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(
+        dsn="https://%s@sentry.io/1374535" % SENTRY_DSN,
+        integrations=[DjangoIntegration()]
+    )

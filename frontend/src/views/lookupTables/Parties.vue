@@ -19,7 +19,7 @@
 						head-variant="light"
 						stacked="md"
 						:items="parties"
-						:fields="table.fields"
+						:fields="tableFields"
 						:current-page="table.currentPage"
 						:per-page="table.perPage"
 						:filter="filterCallback"
@@ -63,71 +63,19 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import './styles.css'
 import CheckedImage from '@/components/common/CheckedImage'
-import { dateFormat } from '@/components/common/services/utilsService'
+import { dateFormat } from '@/components/common/services/languageService'
 
-const ratificationHtmlFormatter = (ratification) => (ratification ? `${dateFormat(ratification.ratification_date, Vue.config.language)}<br/>${ratification.ratification_type}` : 'Pending')
+const formatRatificationHtml = (ratification, language) => (ratification ? `${dateFormat(ratification.ratification_date, language)}<br/>${ratification.ratification_type}` : 'Pending')
 
 export default {
 	components: {
 		CheckedImage
 	},
 	data() {
-		const sortableAndTextCenter = {
-			sortable: true,
-			class: 'text-center'
-		}
-
 		return {
 			table: {
-				fields: [{
-					key: 'name',
-					label: this.$gettext('Name'),
-					class: 'text-left width-200',
-					sortable: true
-				}, {
-					key: 'is_eu_member',
-					label: this.$gettext('EU Member'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_article5',
-					label: this.$gettext('Article 5 party'),
-					...sortableAndTextCenter
-				}, {
-					key: 'is_high_ambient_temperature',
-					label: this.$gettext('HAT'),
-					...sortableAndTextCenter
-				}, {
-					key: 'vienna_convention',
-					label: this.$gettext('Vienna Convention'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_protocol',
-					label: this.$gettext('Montreal Protocol'),
-					...sortableAndTextCenter
-				}, {
-					key: 'london_amendment',
-					label: this.$gettext('London Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'copenhagen_amendment',
-					label: this.$gettext('Copenhagen Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'montreal_amendment',
-					label: this.$gettext('Montreal Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'beijing_amendment',
-					label: this.$gettext('Beijing Amendment'),
-					...sortableAndTextCenter
-				}, {
-					key: 'kigali_amendment',
-					label: this.$gettext('Kigali Amendment'),
-					...sortableAndTextCenter
-				}],
 				currentPage: 1,
 				perPage: Infinity,
 				totalRows: 50,
@@ -139,6 +87,58 @@ export default {
 		}
 	},
 	computed: {
+		tableFields() {
+			const sortableAndTextCenter = {
+				sortable: true,
+				class: 'text-center'
+			}
+			return [{
+				key: 'name',
+				label: this.$gettext('Name'),
+				class: 'text-left width-200',
+				sortable: true
+			}, {
+				key: 'is_eu_member',
+				label: this.$gettext('EU Member'),
+				...sortableAndTextCenter
+			}, {
+				key: 'is_article5',
+				label: this.$gettext('Article 5 party'),
+				...sortableAndTextCenter
+			}, {
+				key: 'is_high_ambient_temperature',
+				label: this.$gettext('HAT'),
+				...sortableAndTextCenter
+			}, {
+				key: 'vienna_convention',
+				label: this.$gettext('Vienna Convention'),
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_protocol',
+				label: this.$gettext('Montreal Protocol'),
+				...sortableAndTextCenter
+			}, {
+				key: 'london_amendment',
+				label: this.$gettext('London Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'copenhagen_amendment',
+				label: this.$gettext('Copenhagen Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'montreal_amendment',
+				label: this.$gettext('Montreal Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'beijing_amendment',
+				label: this.$gettext('Beijing Amendment'),
+				...sortableAndTextCenter
+			}, {
+				key: 'kigali_amendment',
+				label: this.$gettext('Kigali Amendment'),
+				...sortableAndTextCenter
+			}]
+		},
 		parties() {
 			const { partyRatifications } = this.$store.state.initialData
 			if (!partyRatifications) {
@@ -146,13 +146,38 @@ export default {
 			}
 
 			const partyRatificationsDisplay = partyRatifications.map(party => {
-				party.vienna_convention = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'VC'))
-				party.montreal_protocol = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MP'))
-				party.london_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'LA'))
-				party.copenhagen_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'CA'))
-				party.montreal_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'MA'))
-				party.beijing_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'BA'))
-				party.kigali_amendment = ratificationHtmlFormatter(party.ratifications.find(ratification => ratification.treaty && ratification.treaty.treaty_id === 'KA'))
+				party.ratifications.forEach(ratification => {
+					if (!ratification.treaty) {
+						return
+					}
+					const ratificationHtml = formatRatificationHtml(ratification, this.$language.current)
+					switch (ratification.treaty.treaty_id) {
+					case 'VC':
+						party.vienna_convention = ratificationHtml
+						break
+					case 'MP':
+						party.montreal_protocol = ratificationHtml
+						break
+					case 'LA':
+						party.london_amendment = ratificationHtml
+						break
+					case 'CA':
+						party.copenhagen_amendment = ratificationHtml
+						break
+					case 'MA':
+						party.montreal_amendment = ratificationHtml
+						break
+					case 'BA':
+						party.beijing_amendment = ratificationHtml
+						break
+					case 'KA':
+						party.kigali_amendment = ratificationHtml
+						break
+					default:
+						break
+					}
+				})
+
 				party.is_eu_member = party.flags.is_eu_member
 				party.is_article5 = party.flags.is_article5
 				party.is_high_ambient_temperature = party.flags.is_high_ambient_temperature
@@ -163,6 +188,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Parties')])
+		},
 		onFiltered(filteredItems) {
 			this.table.totalRows = filteredItems.length
 			this.table.currentPage = 1
@@ -174,9 +202,19 @@ export default {
 			return party.name && party.name.toLowerCase().includes(this.table.filters.searchName.toLowerCase())
 		}
 	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
+	},
 	created() {
+		const body = document.querySelector('body')
+		if (body.classList.contains('aside-menu-lg-show')) {
+			document.querySelector('body').classList.remove('aside-menu-lg-show')
+		}
 		this.$store.dispatch('getPartyRatifications')
-		this.$store.commit('updateBreadcrumbs', ['Lookup tables', 'Parties'])
 	}
 }
 </script>

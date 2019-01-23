@@ -83,7 +83,7 @@
 			id="substance-table"
 			:items="tableItems"
 			:fields="tableFields"
-			:empty-text="table.emptyText"
+			:empty-text="tableEmptyText"
 			:filter="table.filters.search"
 			ref="table">
 			<template
@@ -97,7 +97,7 @@
 						@click="createModalData(cell.item.originalObj, cell.item.index)"
 					><i class="fa fa-pencil-square-o fa-lg"></i></span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
@@ -106,12 +106,15 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
+					:disabled="$store.getters.can_edit_data"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
 					:tabName="tabName"
@@ -123,7 +126,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -158,7 +161,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-							:disabled="isReadOnly"
+							:disabled="$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 					</span>
 				</div>
@@ -174,7 +177,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-							:disabled="isReadOnly"
+							:disabled="$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_polyols"	/>
 					</span>
 				</div>
@@ -207,7 +210,7 @@
 			class="submission-table"
 			:items="tableItemsFII"
 			:fields="tableFieldsFII"
-			:empty-text="tableFII.emptyText"
+			:empty-text="tableFIIEmptyText"
 			:filter="tableFII.filters.search"
 			ref="tableFII">
 			<template
@@ -223,7 +226,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						variant="link"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
@@ -235,14 +238,16 @@
 			<template
 				slot="substance"
 				slot-scope="cell">
-				{{cell.item.substance}}
+				<div class="substance-blend-cell">
+					{{cell.item.substance}}
+				</div>
 			</template>
 
 			<template v-for="inputField in getTabSpecialInputFields" :slot="inputField" slot-scope="cell">
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="isReadOnly"
+					:disabled="$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -277,7 +282,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-								:disabled="isReadOnly"
+								:disabled="$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 						</span>
 					</div>
@@ -292,7 +297,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-								:disabled="isReadOnly"
+								:disabled="$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_polyols" />
 						</span>
 					</div>
@@ -328,12 +333,13 @@
 			id="blend-table"
 			:items="tableItemsBlends"
 			:fields="tableFieldsBlends"
-			:empty-text="tableBlends.emptyText"
+			:empty-text="tableBlendsEmptyText"
 			:filter="tableBlends.filters.search"
 			ref="tableBlends">
 			<template slot="blend" slot-scope="cell">
 				<span
 					style="cursor:pointer;"
+					class="substance-blend-cell"
 					v-b-tooltip.hover="'Click to expand/collapse blend'"
 					@click.stop="cell.toggleDetails">
 					<i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>
@@ -350,7 +356,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!isReadOnly"
+						v-if="!$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
 						<i class="fa fa-trash fa-lg"></i>
@@ -359,6 +365,7 @@
 			</template>
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
+					:disabled="$store.getters.can_edit_data"
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
@@ -371,7 +378,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : isReadOnly"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -447,7 +454,7 @@
 		</div>
 	</div>
     <hr>
-    <AppAside v-if="!isReadOnly" fixed>
+    <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
@@ -471,7 +478,7 @@
 				class="mb-2"
 				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
 				trackBy="value"
-				:disabled="isReadOnly"
+				:disabled="$store.getters.can_edit_data"
 				label="text"
 				:placeholder="$gettext('Select substance')"
 				:value="parseInt(modal_data.field.substance.selected)"
@@ -484,7 +491,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="isReadOnly"
+                :disabled="$store.getters.can_edit_data"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]" />
               <multiselect
@@ -492,7 +499,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-				:disabled="isReadOnly"
+				:disabled="$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
@@ -515,7 +522,7 @@
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
 					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="isReadOnly"
+					:disabled="$store.getters.can_edit_data"
 					:field="modal_data.field[`quantity_${order}`]" />
               </b-input-group>
             </b-col>
@@ -523,7 +530,7 @@
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="isReadOnly"
+                  :disabled="$store.getters.can_edit_data"
                   :field="modal_data.field[`decision_${order}`]" />
               </b-input-group>
             </b-col>
@@ -566,15 +573,7 @@ export default {
 	},
 	data() {
 		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends',
-				trade_party: 'countries',
-				source_party: 'countries',
-				destination_party: 'countries'
-			},
 			tableFII: {
-				emptyText: this.$gettext('Please use the form on the right sidebar to add substances'),
 				tableFilters: false,
 				pageOptions: [5, 25, 100],
 				filters: {
@@ -594,13 +593,16 @@ export default {
 	},
 
 	created() {
-		const labels = getLabels(this.$gettext)
-		this.labels = {
-			...labels.common,
-			...labels[this.tab_info.name]
-		}
+		this.setLabels()
 	},
 	methods: {
+		setLabels() {
+			const labels = getLabels(this.$gettext)
+			this.labels = {
+				...labels.common,
+				...labels[this.tab_info.name]
+			}
+		},
 		formatQuantity(value) {
 			if (!value) return
 			if (typeof (value) === 'string') return value
@@ -652,25 +654,6 @@ export default {
 			}
 		},
 
-		getCommentFieldPermission(fieldName) {
-			let type = fieldName.split('_')
-			type = type[type.length - 1]
-			if (type === 'party') {
-				if (this.$store.state.currentUser.is_secretariat && this.$store.state.current_submission.filled_by_secretariat) {
-					return false
-				}
-				if (this.$store.state.currentUser.is_secretariat && !this.$store.state.current_submission.filled_by_secretariat) {
-					return true
-				}
-				return this.$store.getters.isReadOnly
-			}
-			if (['secretariat', 'os'].includes(type)) {
-				if (!this.$store.state.currentUser.is_secretariat) {
-					return true
-				}
-			}
-		},
-
 		tableLoadedFII() {
 			if (!this.$refs.tableFII) {
 				return
@@ -694,21 +677,6 @@ export default {
 			headers[0].parentNode.insertBefore(
 				topHeader, headers[0]
 			)
-		},
-
-		doCommentsRow(row) {
-			const fieldsToShow = JSON.parse(JSON.stringify(this.tab_info.fields_order))
-			const intersection = intersect(
-				['remarks_os', 'remarks_party'],
-				fieldsToShow
-			)
-			if (
-				intersection.length === 0
-        && (row.remarks_os.selected || row.remarks_party.selected)
-			) {
-				return true
-			}
-			return false
 		}
 	},
 	computed: {
@@ -748,7 +716,12 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected !== 'FII') {
+					if (this.tabName === 'has_produced') {
+						if (element.group.selected === 'FII') {
+							return
+						}
+					}
+					if (element.substance.selected) {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
@@ -775,7 +748,7 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (element.substance.selected && element.group.selected === 'FII') {
+					if (this.tabName === 'has_produced' && element.substance.selected && element.group.selected === 'FII') {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]
@@ -809,7 +782,9 @@ export default {
 			})
 			return tableHeaders
 		},
-
+		tableFIIEmptyText() {
+			return this.$gettext('Please use the form on the right sidebar to add substances')
+		},
 		getTabSpecialInputFields() {
 			return intersect(this.tab_info.special_fields_order, inputFields)
 		},
@@ -819,10 +794,6 @@ export default {
 				['source_party', 'trade_party', 'destination_party'],
 				this.tab_info.fields_order
 			)[0]
-		},
-
-		isReadOnly() {
-			return this.$store.getters.isReadOnly || this.hasDisabledFields
 		},
 
 		hasSubstances() {
@@ -859,6 +830,13 @@ export default {
 				return fields
 			}
 			return false
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.setLabels()
+			}
 		}
 	}
 }

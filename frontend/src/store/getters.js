@@ -20,12 +20,21 @@ const getters = {
 			&& sub.current_state === 'data_entry'
 	),
 
+	getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
+
+	// to make the implementation easier, false = user has permission to do a certain action
+	can_edit_data: (state) => state.permissions.form && !state.permissions.form.can_edit_data,
+	can_change_remarks_party: (state) => state.permissions.form && !state.permissions.form.can_change_remarks_party,
+	can_change_remarks_secretariat: (state) => state.permissions.form && !state.permissions.form.can_change_remarks_secretariat,
+	can_change_reporting_channel: (state) => state.permissions.form && !state.permissions.form.can_change_reporting_channel,
+	can_upload_files: (state) => state.permissions.form && !state.permissions.form.can_upload_files,
+
 	currentCountryIso: (state) => {
 		const { currentUser } = state
 		let currentCountry = null
 		if (!currentUser || !currentUser.party) return
 		if (state.initialData.countryOptions) {
-			currentCountry = state.initialData.countryOptions.filter(c => currentUser.party === c.value)
+			currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
 		}
 		if (state.dashboard.parties && state.dashboard.parties.length) {
 			currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
@@ -53,9 +62,8 @@ const getters = {
 
 	getPeriodStatus: (state) => (periodId) => state.dashboard.periods.find((period) => period.value === periodId).is_reporting_open,
 
-	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName),
+	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName)
 
-	isReadOnly: (state) => (state.current_submission ? !state.current_submission.data_changes_allowed : false)
 }
 
 export default getters

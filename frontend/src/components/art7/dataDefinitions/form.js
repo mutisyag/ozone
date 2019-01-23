@@ -14,7 +14,9 @@ const getFormArt7 = ($gettext) => {
 				'current_submission',
 				'initialData.display.substances',
 				'initialData.display.blends',
-				'initialData.display.countries'
+				'initialData.display.countries',
+				'currentUser',
+				'permissions.form'
 			],
 			comments_default_properties: {
 				imports_remarks_party: '',
@@ -200,7 +202,7 @@ const getFormArt7 = ($gettext) => {
 				saving: false,
 				formNumber: 1,
 				intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
-				title: 'Imports',
+				title: $gettext('Imports'),
 				titleHtml: `<b>${$gettext('IMPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C and E substances')}</small> <br> <small>${$gettext('in metric tonnes ( not ODP tonnes)')}</small>`,
 				detailsHtml: $gettext('Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
 				comments: {
@@ -323,7 +325,7 @@ const getFormArt7 = ($gettext) => {
 				saving: false,
 				formNumber: 3,
 				intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
-				title: 'Production',
+				title: $gettext('Production'),
 				titleHtml: `<b>${$gettext('PRODUCTION')}</b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)')}<br>${$gettext('Annex A, B, C, E and F substances')}</small>`,
 				detailsHtml: $gettext('Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
 				subtitle: $gettext('in metric tonnes (not ODP tonnes)'),

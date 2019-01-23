@@ -3,6 +3,7 @@ from copy import deepcopy
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
@@ -37,6 +38,7 @@ from .models import (
     SubmissionFile,
     UploadToken,
     HighAmbientTemperatureImport,
+    ReportingChannel,
 )
 
 User = get_user_model()
@@ -74,20 +76,20 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         `entry.get(field)` returns either a `Blend` or a `Substance` object,
         instead of integer id's.
         """
-        if self.unique_with is None:
-            data_dictionary = {
-                entry.get(field): entry
-                for entry in validated_data
-                for field in self.substance_blend_fields
-                if entry.get(field, None) is not None
-            }
-        else:
-            data_dictionary = {
-                (entry.get(field), entry.get(self.unique_with)): entry
-                for entry in validated_data
-                for field in self.substance_blend_fields
-                if entry.get(field, None) is not None
-            }
+        data_dictionary = {}
+        for entry in validated_data:
+            for field in self.substance_blend_fields:
+                if self.unique_with is None:
+                    field_value = entry.get(field, None)
+                else:
+                    field_value = (entry.get(field), entry.get(self.unique_with))
+
+                if entry.get(field, None) is None:
+                    continue
+                if field_value in data_dictionary:
+                    raise ValidationError(_(f"Duplicate value for {field_value}"))
+                data_dictionary[field_value] = entry
+
         return data_dictionary
 
     def construct_key(self, existing_entry):
@@ -174,6 +176,11 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
             ret.append(obj)
 
         return ret
+
+    def create(self, validated_data):
+        # Call this method to check for duplicates
+        self.construct_data_dictionary(validated_data)
+        return super().create(validated_data)
 
 
 class CurrentUserSerializer(serializers.ModelSerializer):
@@ -532,7 +539,7 @@ def validate_import_export_data(
                     Blend.objects.get(
                         id=entry.get('blend')
                     )
-                        .get_substance_ids()
+                    .get_substance_ids()
                 )
 
     # Calculate the sums of quantities and totals for each substance
@@ -780,10 +787,37 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
+    reporting_channel = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
         exclude = ('submission',)
+
+    def get_reporting_channel(self, obj):
+        return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def check_reporting_channel(self, instance, user):
+        if (
+            instance.submission.check_reporting_channel_modified()
+            and not instance.submission.can_change_reporting_channel(user)
+        ):
+            raise ValidationError({
+                "reporting_channel": [
+                    _('User is not allowed to change the reporting channel')
+                ]
+            })
+
+    def update(self, instance, validated_data):
+        user = self.context['request'].user
+        # Quick fix for staging error. Reporting channel info has been lost for
+        # some submissions, otherwise this check wouldn't be necessary.
+        if self.context.get('reporting_channel', None):
+            instance.submission.reporting_channel = ReportingChannel.objects.get(
+                name=self.context['reporting_channel']
+            )
+            self.check_reporting_channel(instance, user)
+            instance.submission.save()
+        return super().update(instance, validated_data)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
@@ -794,7 +828,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
     def get_reporting_channel(self, obj):
-        return getattr(obj.reporting_channel, 'name', '')
+        return getattr(obj.submission.reporting_channel, 'name', '')
 
 
 class SubmissionFlagsSerializer(
@@ -865,9 +899,21 @@ class SubmissionRemarksSerializer(
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
+
+    file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = SubmissionFile
-        fields = '__all__'
+        exclude = ('file',)
+
+    def get_file_url(self, obj):
+        return self.context['request'].build_absolute_uri(reverse(
+            "core:submission-files-download",
+            kwargs={
+                "submission_pk": obj.submission.pk,
+                "pk": obj.pk
+            }
+        ))
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
@@ -972,16 +1018,23 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
     changeable_flags = serializers.SerializerMethodField()
 
+    can_change_remarks_party = serializers.SerializerMethodField()
+    can_change_remarks_secretariat = serializers.SerializerMethodField()
+
+    can_change_reporting_channel = serializers.SerializerMethodField()
+
+    can_upload_files = serializers.SerializerMethodField()
+
+    can_edit_data = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
-
-    can_change_remarks_party = serializers.SerializerMethodField()
-    can_change_remarks_secretariat = serializers.SerializerMethodField()
 
     class Meta:
         model = Submission
@@ -998,14 +1051,26 @@ class SubmissionSerializer(
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'filled_by_secretariat',
-            'current_state', 'previous_state', 'available_transitions',
-            'data_changes_allowed', 'is_current', 'is_cloneable',
-            'changeable_flags',  'flag_provisional', 'flag_valid',
+            'current_state', 'previous_state',
+            'data_changes_allowed', 'is_current',
+            'flag_provisional', 'flag_valid',
             'flag_superseded',
-            'can_change_remarks_party', 'can_change_remarks_secretariat',
+
+            # Permission-related fields; value is dependent on user
+            'available_transitions',
+            'is_cloneable',
+            'changeable_flags',
+            'can_change_remarks_party',
+            'can_change_remarks_secretariat',
+            'can_change_reporting_channel',
+            'can_upload_files',
+            'can_edit_data',
         )
 
         read_only_fields = (
+            'available_transitions', 'is_cloneable', 'changeable_flags',
+            'can_change_remarks_party', 'can_change_remarks_secretariat',
+            'can_change_reporting_channel', 'can_upload_files', 'can_edit_data'
             'created_by', 'last_edited_by',
         )
 
@@ -1028,6 +1093,18 @@ class SubmissionSerializer(
     def get_can_change_remarks_secretariat(self, obj):
         user = self.context['request'].user
         return obj.can_change_remark(user, 'remarks_secretariat')
+
+    def get_can_change_reporting_channel(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_reporting_channel(user)
+
+    def get_can_upload_files(self, obj):
+        user = self.context['request'].user
+        return obj.can_upload_files(user)
+
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_edit_data(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
@@ -1056,6 +1133,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
+    can_edit_data = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -1065,8 +1143,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'created_at', 'updated_at', 'submitted_at',
                 'created_by', 'last_edited_by', 'filled_by_secretariat',
                 'version', 'current_state', 'previous_state',
-                'available_transitions', 'data_changes_allowed', 'is_current',
-                'is_cloneable', 'flag_provisional', 'flag_valid',
+                'data_changes_allowed', 'is_current',
+                'flag_provisional', 'flag_valid',
+                # Permissions-related fields
+                'available_transitions', 'is_cloneable', 'can_edit_data',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
@@ -1078,6 +1158,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_is_cloneable(self, obj):
         user = self.context['request'].user
         return obj.is_cloneable(user)
+
+    def get_can_edit_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_edit_data(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):

@@ -31,26 +31,24 @@
   <div class="form-wrapper" style="position: relative">
 	<b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
-			<b-tab :title="$gettext('Submission Info')" active>
+			<b-tab active>
 				<template slot="title">
-				<div class="tab-title">
-				<span v-translate>Submission Info</span>
-				</div>
+					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
 				</template>
 				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
 			</b-tab>
 
-			<b-tab :title="$gettext('Questionaire')">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
-			</template>
-			<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+			<b-tab>
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
+				</template>
+				<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
 			</b-tab>
 
 			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
-					<template slot="title">
+				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-					</template>
+				</template>
 				<FormTemplate :hasDisabledFields="!selectedDisplayTabs[$store.state.form.tabs[tabId].name]" :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 			</b-tab>
 
@@ -61,7 +59,7 @@
 				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
 			</b-tab>
 
-			<b-tab>
+			<b-tab >
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
 				</template>
@@ -140,10 +138,13 @@ export default {
 	},
 
 	created() {
-		this.$store.commit('updateBreadcrumbs', ['Dashboard', this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `version ${this.$store.state.current_submission.version}`])
+		this.updateBreadcrumbs()
 	},
 
 	computed: {
+		submissionInfoLabel() {
+			return this.$gettext('Submission Info')
+		},
 		availableTransitions() {
 			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
 		},
@@ -175,6 +176,9 @@ export default {
 		}
 	},
 	methods: {
+		updateBreadcrumbs() {
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
+		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
 			const formName = this.$route.name
@@ -226,6 +230,14 @@ export default {
 				}).then(() => {
 					this.$router.push({ name: 'Dashboard' })
 				})
+			}
+		}
+	},
+	watch: {
+		'$language.current': {
+			handler() {
+				this.labels = getLabels(this.$gettext).common
+				this.updateBreadcrumbs()
 			}
 		}
 	},
