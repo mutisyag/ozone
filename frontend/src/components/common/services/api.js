@@ -146,7 +146,7 @@ const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
 
-const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files`)
+const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`)
 
 const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
