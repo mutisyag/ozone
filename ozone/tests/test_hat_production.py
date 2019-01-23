@@ -13,6 +13,7 @@ from .factories import (
     SubmissionFactory,
     SubregionFactory,
     SubstanceFactory,
+    AnotherSubstanceFactory,
     AnotherPartyFactory,
     HighAmbientTemperatureProductionFactory,
 )
@@ -35,6 +36,7 @@ class BaseHATProductionTest(BaseTests):
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
         self.substance = SubstanceFactory()
+        self.another_substance = AnotherSubstanceFactory()
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
@@ -70,6 +72,42 @@ class TestHATProduction(BaseHATProductionTest):
             [data],
         )
         self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_multiple(self):
+        submission = self.create_submission()
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.another_substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_multiple_duplicate(self):
+        submission = self.create_submission()
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 422, result.json())
 
     def test_get(self):
         submission = self.create_submission()
@@ -118,6 +156,65 @@ class TestHATProduction(BaseHATProductionTest):
 
         hat_prod = HighAmbientTemperatureProduction.objects.get(pk=hat_prod.id)
         self.assertEqual(hat_prod.quantity_msac, 42)
+
+    def test_update_multiple(self):
+        submission = self.create_submission()
+
+        hat_prod = HighAmbientTemperatureProductionFactory(
+            submission=submission, substance=self.substance,
+            **HAT_PROD_DATA
+        )
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+        data1["quantity_msac"] = 42
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.another_substance.id
+        data2["quantity_msac"] = 42
+
+        result = self.client.put(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+
+        hat_prod1 = submission.highambienttemperatureproductions.get(
+            substance_id=self.substance.id
+        )
+        hat_prod2 = submission.highambienttemperatureproductions.get(
+            substance_id=self.another_substance.id
+        )
+        self.assertEqual(hat_prod1.quantity_msac, 42)
+        self.assertEqual(hat_prod2.quantity_msac, 42)
+
+    def test_update_multiple_duplicate(self):
+        submission = self.create_submission()
+
+        hat_prod = HighAmbientTemperatureProductionFactory(
+            submission=submission, substance=self.substance,
+            **HAT_PROD_DATA
+        )
+
+        data1 = dict(HAT_PROD_DATA)
+        data1["substance"] = self.substance.id
+        data1["quantity_msac"] = 42
+
+        data2 = dict(HAT_PROD_DATA)
+        data2["substance"] = self.substance.id
+        data2["quantity_msac"] = 42
+
+        result = self.client.put(
+            reverse(
+                "core:submission-hat-productions-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 422, result.json())
 
     def test_update_immutable(self):
         submission = self.create_submission()
