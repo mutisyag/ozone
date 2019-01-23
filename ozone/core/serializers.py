@@ -177,6 +177,11 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
 
         return ret
 
+    def create(self, validated_data):
+        # Call this method to check for duplicates
+        self.construct_data_dictionary(validated_data)
+        return super().create(validated_data)
+
 
 class CurrentUserSerializer(serializers.ModelSerializer):
     """
