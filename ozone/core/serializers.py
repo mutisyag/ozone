@@ -848,7 +848,7 @@ class PerTypeFieldsMixIn(object):
             # A detail view.
             pass
         fields = self.get_dynamic_fields(instance)
-        if fields:
+        if fields is not None:
             # Drop any fields that are not specified in the `fields` argument.
             allowed = set(fields)
             existing = set(self.fields)
@@ -938,8 +938,8 @@ class SubmissionRemarksSerializer(
                 'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
                 'hat_production_remarks_party', 'hat_production_remarks_secretariat',
             ),
-            # 'essencrit': (),
-            # 'other': (),
+            'essencrit': (),
+            'other': (),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
