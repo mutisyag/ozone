@@ -79,12 +79,12 @@ class BaseBulkUpdateSerializer(serializers.ListSerializer):
         data_dictionary = {}
         for entry in validated_data:
             for field in self.substance_blend_fields:
-                if self.unique_with:
+                if self.unique_with is None:
                     field_value = entry.get(field, None)
                 else:
                     field_value = (entry.get(field), entry.get(self.unique_with))
 
-                if field_value is None:
+                if entry.get(field, None) is None:
                     continue
                 if field_value in data_dictionary:
                     raise ValidationError(_(f"Duplicate value for {field_value}"))
