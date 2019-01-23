@@ -4,7 +4,8 @@ import {
 	isObject,
 	pushUnique,
 	intersect,
-	getPropertyValue
+	getPropertyValue,
+	sortDescending
 } from '@/components/common/services/utilsService'
 
 describe('utilsService', () => {
@@ -224,6 +225,39 @@ describe('utilsService', () => {
 			expect(getPropertyValue(testObj, 'level1b.level2e')).to.equal(5)
 			expect(getPropertyValue(testObj, 'level1c.level2g.level3b')).to.equal(8)
 			expect(getPropertyValue(testObj, 'level1c.level2g.level3b.')).to.be.undefined
+		})
+	})
+
+	describe('sortDescending', () => {
+		it('for undefined, null or not an array should return null', () => {
+			expect(sortDescending()).to.be.null
+			expect(sortDescending(null)).to.be.null
+			expect(sortDescending({ value: 1 })).to.be.null
+			expect(sortDescending({ value: 1 }, 'value')).to.be.null
+		})
+
+		it('for empty array', () => {
+			expect(sortDescending([])).to.be.empty
+			expect(sortDescending([], 'propName')).to.be.empty
+		})
+
+		it('for number arrays', () => {
+			expect(sortDescending([2, 1, 5, 3, 4])).to.deep.equal([5, 4, 3, 2, 1])
+			expect(sortDescending([2, 1, 5, 3, 4], 'propertyNameNotExisting')).to.deep.equal([2, 1, 5, 3, 4])
+		})
+
+		it('for string arrays', () => {
+			expect(sortDescending(['2a', '1a', '5a', '3a', '4a'])).to.deep.equal(['5a', '4a', '3a', '2a', '1a'])
+			expect(sortDescending(['2a', '1a', '5a', '3a', '4a'], 'propertyNameNotExisting')).to.deep.equal(['2a', '1a', '5a', '3a', '4a'])
+		})
+
+		it('for object arrays', () => {
+			const inputArray = [{ name: 'b', value: 3 }, { name: 'a', value: 7 }, { name: 'c', value: 1 }, { name: 'd', value: 5 }]
+			expect(sortDescending([...inputArray])).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], null)).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], 'propertyNameNotExisting')).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], 'name')).to.deep.equal([{ name: 'd', value: 5 }, { name: 'c', value: 1 }, { name: 'b', value: 3 }, { name: 'a', value: 7 }])
+			expect(sortDescending([...inputArray], 'value')).to.deep.equal([{ name: 'a', value: 7 }, { name: 'd', value: 5 }, { name: 'b', value: 3 }, { name: 'c', value: 1 }])
 		})
 	})
 })
