@@ -11,6 +11,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
+from django.utils.translation import gettext_lazy as _
 
 from import_export.admin import (
     ImportExportActionModelAdmin,
@@ -72,7 +73,7 @@ class OzoneAuthenticationForm(AuthenticationForm):
     """Custom auth form, that allows non-staff users as well."""
     error_messages = {
         **AuthenticationForm.error_messages,
-        'invalid_login': (
+        'invalid_login': _(
             "Please enter the correct %(username)s and password for the "
             "account. Note that both fields may be case-sensitive."
         ),
@@ -88,13 +89,13 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
     login_form = OzoneAuthenticationForm
 
     # Text to put at the end of each page's <title>.
-    site_title = 'ORS'
+    site_title = _('ORS')
 
     # Text to put in each page's <h1>.
-    site_header = 'Ozone Reporting System'
+    site_header = _('Ozone Reporting System')
 
     # Text to put at the top of the admin index page.
-    index_title = 'Administration'
+    index_title = _('Administration')
 
     @never_cache
     def login(self, request, extra_context=None):
@@ -254,13 +255,13 @@ class UserAdmin(admin.ModelAdmin):
             form.save(domain_override=domain_override, use_https=use_https)
             users.append(user.username)
         if len(users) > 10:
-            self.message_user(request, "Email sent to %d users for password reset" % len(users),
+            self.message_user(request, _("Email sent to %d users for password reset") % len(users),
                               level=messages.SUCCESS)
         else:
-            self.message_user(request, "Email sent to %s for password reset" % ", ".join(users),
+            self.message_user(request, _("Email sent to %s for password reset") % ", ".join(users),
                               level=messages.SUCCESS)
 
-    reset_password.short_description = "Reset user password"
+    reset_password.short_description = _("Reset user password")
 
     def save_model(self, request, obj, form, change):
         if not change:
