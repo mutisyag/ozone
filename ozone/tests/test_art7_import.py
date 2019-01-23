@@ -13,6 +13,7 @@ from .factories import (
     ReportingChannelFactory,
     SecretariatUserFactory,
     SubmissionFactory,
+    ObligationFactory,
     SubregionFactory,
     SubstanceFactory,
     AnotherSubstanceFactory,
@@ -27,6 +28,7 @@ class BaseArt7ImportTest(BaseTests):
         self.maxDiff = None
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type="art7")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -43,6 +45,9 @@ class BaseArt7ImportTest(BaseTests):
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
+        if "obligation" not in kwargs:
+            kwargs["obligation"] = self.obligation
+
         submission = SubmissionFactory(
             party=self.party, created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user, **kwargs
@@ -90,6 +95,22 @@ class TestArt7Import(BaseArt7ImportTest):
             [data],
         )
         self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_wrong_obligation(self):
+        obligation = ObligationFactory.create(form_type="hat", name="Much obliged")
+        submission = self.create_submission(obligation=obligation)
+
+        data = dict(ART7_IMPORT_DATA)
+        data["substance"] = self.substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data],
+        )
+        self.assertEqual(result.status_code, 403, result.json())
 
     def test_create_multiple(self):
         submission = self.create_submission()
