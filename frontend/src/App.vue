@@ -102,7 +102,9 @@ export default {
 	},
 	created() {
 		api.interceptors.request.use((config) => {
-			this.setLoading(true)
+			if (!config.hideLoader) {
+				this.setLoading(true)
+			}
 			return config
 		}, (error) => {
 			this.setLoading(false)
