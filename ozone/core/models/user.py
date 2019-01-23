@@ -5,7 +5,7 @@ from django.db.models import Q, F
 from guardian.mixins import GuardianUserMixin
 from rest_framework.authtoken.models import Token
 
-from .party import Party
+from .party import Party, Language
 
 
 class User(GuardianUserMixin, AbstractUser):
@@ -22,6 +22,14 @@ class User(GuardianUserMixin, AbstractUser):
 
     # Both Party and Secretariat users can be read-only
     is_read_only = models.BooleanField(default=True)
+
+    language = models.ForeignKey(
+        Language,
+        related_name='users',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
 
     def save(self, *args, **kwargs):
         # Create authentication token only on first-time save
