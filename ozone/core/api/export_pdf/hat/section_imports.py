@@ -29,7 +29,7 @@ def component_row(component, blend):
     ptg = component.percentage
 
     return (
-        p_c(_(component.substance)),
+        p_c(_(component.substance.name)),
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
         p_c(to_precision(blend.quantity_msac * ptg, 3)),
         p_c(to_precision(blend.quantity_sdac * ptg, 3)),
