@@ -34,7 +34,8 @@ class DataOtherTest(BaseTests):
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
-        self.obligation = ObligationFactory(name="Other obligation", other=True)
+        self.obligation = ObligationFactory(name="Other obligation", other=True,
+                                            form_type="other")
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
