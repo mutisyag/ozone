@@ -1130,7 +1130,7 @@ class SubmissionSerializer(
                 'article7exports_url', 'article7imports_url',
                 'article7nonpartytrades_url', 'article7emissions_url',
             ),
-            'hat7': base_fields + (
+            'hat': base_fields + (
                 'hat_productions_url', 'hat_imports_url',
             ),
             'essencrit': base_fields,
