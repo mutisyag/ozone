@@ -7,6 +7,8 @@ import { getFormLetter } from '@/components/letter/dataDefinitions/form'
 import letterTableRowConstructor from '@/components/letter/services/tableRowConstructorService'
 import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
+import { getFormRaf } from '@/components/raf/dataDefinitions/form'
+import rafTableRowConstructor from '@/components/raf/services/tableRowConstructorService'
 
 const options = {
 	position: 'bottom-left',
@@ -59,6 +61,10 @@ const mutations = {
 		case 'other':
 			currentFormStructure = getFormLetter($gettext)
 			tableRowConstructor = letterTableRowConstructor
+			break
+		case 'essencrit':
+			currentFormStructure = getFormRaf($gettext)
+			tableRowConstructor = rafTableRowConstructor
 			break
 		default:
 			break
