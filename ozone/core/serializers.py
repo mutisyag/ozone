@@ -831,25 +831,81 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.submission.reporting_channel, 'name', '')
 
 
+class PerTypeFieldsMixIn(object):
+    """
+    A ModelSerializer that takes an additional `fields` argument that
+    controls which fields should be displayed/updated
+
+    See https://www.django-rest-framework.org/api-guide/serializers/#dynamically-modifying-fields
+    """
+
+    def __init__(self, instance=None, **kwargs):
+        # Instantiate the superclass normally
+        super().__init__(instance=instance, **kwargs)
+        try:
+            # Fields and remarks return a list of
+            # one.
+            instance = instance[0]
+        except IndexError:
+            # Empty queryset.
+            return
+        except TypeError:
+            # A detail view.
+            pass
+        fields = self.get_dynamic_fields(instance)
+        if fields is not None:
+            # Drop any fields that are not specified in the `fields` argument.
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    @classmethod
+    def get_dynamic_fields(cls, instance):
+        """Get the corresponding fields"""
+        if not instance:
+            return
+        try:
+            return cls.Meta.per_type_fields[instance.obligation.form_type]
+        except KeyError:
+            return cls.Meta.base_fields
+
+
 class SubmissionFlagsSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer,
 ):
     """
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
     """
+
     class Meta:
         model = Submission
-        fields = (
+        base_fields = (
             'flag_provisional', 'flag_valid', 'flag_superseded',
-            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
-            'flag_has_reported_a1', 'flag_has_reported_a2',
-            'flag_has_reported_b1', 'flag_has_reported_b2',
-            'flag_has_reported_b3', 'flag_has_reported_c1',
-            'flag_has_reported_c2', 'flag_has_reported_c3',
-            'flag_has_reported_e', 'flag_has_reported_f',
         )
-        
+        per_type_fields = {
+            'art7': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_has_reported_a1', 'flag_has_reported_a2',
+                'flag_has_reported_b1', 'flag_has_reported_b2',
+                'flag_has_reported_b3', 'flag_has_reported_c1',
+                'flag_has_reported_c2', 'flag_has_reported_c3',
+                'flag_has_reported_e', 'flag_has_reported_f',
+            ),
+            'hat': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_has_reported_a1', 'flag_has_reported_a2',
+                'flag_has_reported_b1', 'flag_has_reported_b2',
+                'flag_has_reported_b3', 'flag_has_reported_c1',
+                'flag_has_reported_c2', 'flag_has_reported_c3',
+                'flag_has_reported_e', 'flag_has_reported_f',
+            ),
+            'essencrit': base_fields,
+            'other': base_fields,
+        }
+        fields = list(set(sum(per_type_fields.values(), ())))
+
     def update(self, instance, validated_data):
         """
         Not really kosher to perform validations here, but we need to
@@ -864,7 +920,7 @@ class SubmissionFlagsSerializer(
 
 
 class SubmissionRemarksSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer
 ):
     """
     Specific serializer used to present all submission remarks,
@@ -873,17 +929,24 @@ class SubmissionRemarksSerializer(
 
     class Meta:
         model = Submission
-        fields = (
-            'imports_remarks_party', 'imports_remarks_secretariat',
-            'exports_remarks_party', 'exports_remarks_secretariat',
-            'production_remarks_party', 'production_remarks_secretariat',
-            'destruction_remarks_party', 'destruction_remarks_secretariat',
-            'nonparty_remarks_party', 'nonparty_remarks_secretariat',
-            'emissions_remarks_party', 'emissions_remarks_secretariat',
-            'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-            'hat_production_remarks_party',
-            'hat_production_remarks_secretariat',
-        )
+        base_fields = ()
+        per_type_fields = {
+            'art7': (
+                'imports_remarks_party', 'imports_remarks_secretariat',
+                'exports_remarks_party', 'exports_remarks_secretariat',
+                'production_remarks_party', 'production_remarks_secretariat',
+                'destruction_remarks_party', 'destruction_remarks_secretariat',
+                'nonparty_remarks_party', 'nonparty_remarks_secretariat',
+                'emissions_remarks_party', 'emissions_remarks_secretariat',
+            ),
+            'hat': (
+                'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
+                'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+            ),
+            'essencrit': (),
+            'other': (),
+        }
+        fields = list(set(sum(per_type_fields.values(), ())))
 
     def update(self, instance, validated_data):
         """
@@ -923,7 +986,10 @@ class UploadTokenSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(
-    PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer
+    PerTypeFieldsMixIn,
+    PartialUpdateSerializerMixin,
+    serializers.HyperlinkedModelSerializer,
+
 ):
     """
     This also needs to nested-serialize all data related to the specific
@@ -1039,13 +1105,8 @@ class SubmissionSerializer(
     class Meta:
         model = Submission
 
-        fields = (
+        base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
-            'article7questionnaire_url', 'article7questionnaire',
-            'article7destructions_url', 'article7productions_url',
-            'article7exports_url', 'article7imports_url',
-            'article7nonpartytrades_url', 'article7emissions_url',
-            'hat_productions_url', 'hat_imports_url', 'data_others_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -1067,6 +1128,25 @@ class SubmissionSerializer(
             'can_edit_data',
         )
 
+        per_type_fields = {
+            'art7': base_fields + (
+                'article7questionnaire_url', 'article7questionnaire',
+                'article7destructions_url', 'article7productions_url',
+                'article7exports_url', 'article7imports_url',
+                'article7nonpartytrades_url', 'article7emissions_url',
+            ),
+            'hat': base_fields + (
+                'hat_productions_url', 'hat_imports_url',
+            ),
+            'essencrit': base_fields,
+            'other': base_fields + (
+                'data_others_url',
+            ),
+        }
+        # All possible fields still need to be specified here.
+        # Otherwise DRF won't load them.
+        fields = list(set(sum(per_type_fields.values(), ())))
+
         read_only_fields = (
             'available_transitions', 'is_cloneable', 'changeable_flags',
             'can_change_remarks_party', 'can_change_remarks_secretariat',
@@ -1084,7 +1164,8 @@ class SubmissionSerializer(
 
     def get_changeable_flags(self, obj):
         user = self.context['request'].user
-        return obj.get_changeable_flags(user)
+        flags = set(SubmissionFlagsSerializer.get_dynamic_fields(obj))
+        return flags.intersection(obj.get_changeable_flags(user))
 
     def get_can_change_remarks_party(self, obj):
         user = self.context['request'].user

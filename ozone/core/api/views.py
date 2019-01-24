@@ -57,6 +57,7 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmissionFlags,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
+    IsCorrectObligation,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -466,9 +467,10 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
+    form_types = None
     serializer_class = SubmissionInfoSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -499,9 +501,10 @@ class SubmissionFlagsViewSet(
     mixins.UpdateModelMixin, mixins.ListModelMixin,
     GenericViewSet, SerializerRequestContextMixIn
 ):
+    form_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -535,9 +538,11 @@ class SubmissionRemarksViewSet(
     update:
     Update the general remarks for this specific submission.
     """
+    # XXX TODO Check if this should be available for all #497
+    form_types = None
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks, IsCorrectObligation
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -559,9 +564,10 @@ class SubmissionRemarksViewSet(
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
+    form_types = ("art7",)
     serializer_class = Article7QuestionnaireSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -589,9 +595,10 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 class Article7DestructionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7DestructionSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -608,9 +615,10 @@ class Article7DestructionViewSet(
 class Article7ProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ProductionSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -626,9 +634,10 @@ class Article7ProductionViewSet(
 class Article7ExportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ExportSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -644,9 +653,10 @@ class Article7ExportViewSet(
 class Article7ImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ImportSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -662,9 +672,10 @@ class Article7ImportViewSet(
 class Article7NonPartyTradeViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -680,9 +691,10 @@ class Article7NonPartyTradeViewSet(
 class Article7EmissionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7EmissionSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -698,9 +710,10 @@ class Article7EmissionViewSet(
 class HighAmbientTemperatureImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("hat",)
     serializer_class = HighAmbientTemperatureImportSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -716,9 +729,10 @@ class HighAmbientTemperatureImportViewSet(
 class HighAmbientTemperatureProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("hat",)
     serializer_class = HighAmbientTemperatureProductionSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -732,9 +746,10 @@ class HighAmbientTemperatureProductionViewSet(
 
 
 class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
+    form_types = ("other",)
     serializer_class = DataOtherSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -752,9 +767,10 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
     download:
     Download the submission file.
     """
+    form_types = None
     serializer_class = SubmissionFileSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated, IsCorrectObligation,
     )
 
     def get_queryset(self):

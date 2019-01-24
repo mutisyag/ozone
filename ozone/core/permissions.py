@@ -132,3 +132,16 @@ class IsSecretariatOrSamePartyBlend(BasePermission):
         if request.method not in SAFE_METHODS:
             return obj.has_edit_rights(request.user)
         return obj.has_read_rights(request.user)
+
+
+class IsCorrectObligation(BasePermission):
+    """Check if the API is for the correct obligation type."""
+
+    def has_permission(self, request, view):
+        # Explicit is better than implicit.
+        if view.form_types is None:
+            return True
+        form_type = Submission.objects.get(
+            pk=view.kwargs.get('submission_pk', None)
+        ).obligation.form_type
+        return form_type in view.form_types
