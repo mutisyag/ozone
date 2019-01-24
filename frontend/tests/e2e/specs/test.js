@@ -12,12 +12,14 @@ const {
 	createSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
-	addSubstance,
-	addBlend,
+	addEntity,
 	addValues
 } = require('../custom-methods/methods.js')
 
 module.exports = {
+	before: (browser, done) => {
+		browser.resizeWindow(1480, 900, done)
+	},
 
 	beforeEach: () => {
 		console.log('running backend')
@@ -36,24 +38,24 @@ module.exports = {
 	BU_006: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
-		clickQuestionnaireRadios(browser)
+		clickQuestionnaireRadios(browser, ['#has_imports'])
 		selectTab(browser, 'Imports')
-		addSubstance(browser, 'substance_selector', 'CFC-11')
+		addEntity(browser, 'has_imports_tab', 'Substances', 'substance_selector', 'CFC-11')
 
 		browser
 			.useCss()
-			.moveToElement('#blends-table-title', undefined, undefined)
-			.waitForElementVisible('#blends-table-title', 5000)
+			.moveToElement('#has_imports_tab #blends-table-title', undefined, undefined)
+			.waitForElementVisible('#has_imports_tab #blends-table-title', 5000)
 		addValues(browser, '#substance-table', '#has_imports_tab')
-		addBlend(browser, 'blend_selector', 'R-401B')
+		addEntity(browser, 'has_imports_tab', 'Blends', 'blend_selector', 'R-401B')
+
 		browser
-
+			.useCss()
 			.moveToElement('#tab-comments', undefined, undefined)
-
 		addValues(browser, '#blend-table', '#has_imports_tab')
 
 		browser
-			.pause(10000)
+			.pause(500)
 			.click('.app-footer #save-button')
 			.useXpath()
 			.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
