@@ -13,8 +13,6 @@ const {
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
-	addSubstance,
-	addBlend,
 	addValues
 } = require('../custom-methods/methods.js')
 
@@ -33,14 +31,14 @@ module.exports = {
 		execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
 		console.log('done running cleanup')
 	},
-	// BU_001: browser => {
-	// 	login(browser, 'party', 'party')
-	// 	logout(browser)
-	// },
+	BU_001: browser => {
+		login(browser, 'party', 'party')
+		logout(browser)
+	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
-		clickQuestionnaireRadios(browser)
+		clickQuestionnaireRadios(browser, ['#has_imports'])
 		selectTab(browser, 'Imports')
 		addEntity(browser, 'has_imports_tab', 'Substances', 'substance_selector', 'CFC-11')
 
@@ -52,15 +50,16 @@ module.exports = {
 		addEntity(browser, 'has_imports_tab', 'Blends', 'blend_selector', 'R-401B')
 
 		browser
+			.useCss()
 			.moveToElement('#tab-comments', undefined, undefined)
 		addValues(browser, '#blend-table', '#has_imports_tab')
 
-		// browser
-		// 	.pause(10000)
-		// 	.click('.app-footer #save-button')
-		// 	.useXpath()
-		// 	.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-		// 	.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Imports")]//i[contains(@class, "fa-check-circle")]', 20000)
-		// 	.end()
+		browser
+			.pause(500)
+			.click('.app-footer #save-button')
+			.useXpath()
+			.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
+			.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Imports")]//i[contains(@class, "fa-check-circle")]', 20000)
+			.end()
 	}
 }
