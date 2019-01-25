@@ -44,6 +44,16 @@ class User(GuardianUserMixin, AbstractUser):
             else:
                 return 'Party Read-Only'
 
+    def has_edit_rights(self, user):
+        if self == user:
+            return True
+        return False
+
+    def has_read_rights(self, user):
+        if self.is_secretariat or self.party == user.party:
+            return True
+        return False
+
     def save(self, *args, **kwargs):
         # Create authentication token only on first-time save
         first_save = False

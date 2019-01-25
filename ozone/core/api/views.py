@@ -58,6 +58,7 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
+    IsSecretariatOrSamePartyUser,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -181,23 +182,13 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
         return context
 
 
-class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+class CurrentUserViewSet(
+    ReadOnlyMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+    GenericViewSet
+):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        """
-        For the moment you can only view your profile.
-        TODO extract this logic into a permission class.
-        """
-        if self.kwargs.get('pk', None):
-            if self.request.user.pk != int(self.kwargs.get('pk', None)):
-                raise Forbidden(
-                    _("You can't access the profile of another user.")
-                )
-
-        return self.queryset.filter(id=self.request.user.pk)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyUser)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
