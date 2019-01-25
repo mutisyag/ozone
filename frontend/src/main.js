@@ -12,7 +12,8 @@ import { initLanguages } from '@/components/common/services/languageService'
 
 if (process.env.NODE_ENV !== 'development') {
 	Sentry.init({
-		dsn: 'https://a39fa9d7165b43b0b573cdddf61d35af@sentry.io/1374535',
+		dsn: `https://${process.env.SENTRY_DSN}@sentry.io/1374535`,
+		environment: process.env.SENTRY_ENV,
 		integrations: [new Sentry.Integrations.Vue({ Vue })]
 	})
 }

@@ -345,5 +345,6 @@ if SENTRY_DSN:
 
     sentry_sdk.init(
         dsn="https://%s@sentry.io/1374535" % SENTRY_DSN,
+        environment=env('SENTRY_ENV', default=''),
         integrations=[DjangoIntegration()]
     )
