@@ -4,6 +4,7 @@ import {
 	getSubstances,
 	getSubmission,
 	getSubmissionFiles,
+	deleteSubmissionFile,
 	getCustomBlends,
 	deleteSubmission,
 	getSubmissions,
@@ -415,6 +416,23 @@ const actions = {
 			}
 		})
 		return attachments
+	},
+	async deleteTabAttachment({ state, commit }, { tabName, attachment }) {
+		console.log(attachment)
+		if (attachment.tus_id) {
+			await deleteSubmissionFile({ attachment, submissionId: state.current_submission.id })
+		}
+
+		commit('deleteTabAttachment', { tabName, attachment })
+	},
+	async deleteAllTabAttachments({ state, dispatch }, { tabName }) {
+		const { attachments } = state.form.tabs[tabName].form_fields
+		for (let i = 0; i < attachments.length; i += 1) {
+			const attachment = attachments[i]
+			await dispatch('deleteTabAttachment', { tabName, attachment })
+		}
+
+		// commit('deleteAllTabAttachments', { tabName })
 	}
 }
 

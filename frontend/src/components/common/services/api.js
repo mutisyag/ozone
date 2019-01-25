@@ -148,6 +148,8 @@ const getSubmission = (url) => fetch(url)
 
 const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, { hideLoader: true })
 
+const deleteSubmissionFile = ({ attachment, submissionId }) => remove(`submissions/${submissionId}/files/${attachment.id}/`)
+
 const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
@@ -156,6 +158,7 @@ const getNonParties = () => fetch('get-non-parties/')
 
 const uploadAttachment = (attachment, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
+	console.log(attachment)
 	const upload = new tus.Upload(attachment,
 		{
 			endpoint: filesURL,
@@ -202,6 +205,7 @@ export {
 	createSubmission,
 	getSubmission,
 	getSubmissionFiles,
+	deleteSubmissionFile,
 	createBlend,
 	getCustomBlends,
 	getSubmissionsVersions,
@@ -211,6 +215,6 @@ export {
 	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
-	uploadAttachment,
-	fetchFromPublicDirectory
+	fetchFromPublicDirectory,
+	uploadAttachment
 }
