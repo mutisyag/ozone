@@ -196,6 +196,27 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         )
 
 
+class UserAccountSerializer(serializers.ModelSerializer):
+    """
+    Used to get account details.
+    """
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'first_name', 'last_name', 'language', 'role'
+        )
+
+
+class UpdateUserAccountSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'email', 'first_name', 'last_name', 'language'
+        )
+
+
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
     """
     This will be used as a base for all reporting serializers that accept
