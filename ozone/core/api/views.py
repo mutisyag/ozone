@@ -12,6 +12,7 @@ from django.core.files import File
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
+from impersonate.views import stop_impersonate
 
 from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
@@ -1094,7 +1095,9 @@ class AuthTokenViewSet(
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        response = Response({'token': token.key})
+        response.set_cookie("authToken", token.key)
+        return response
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -1109,6 +1112,14 @@ class AuthTokenViewSet(
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         self.perform_destroy(instance)
-        # Also remove any active session.
-        request.session.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        response = Response(status=status.HTTP_204_NO_CONTENT)
+        if "_impersonate" in request.session:
+            stop_impersonate(request)
+            token, created = Token.objects.get_or_create(user=request.user)
+            response.set_cookie("authToken", token.key)
+        else:
+            # Also remove any active session.
+            request.session.delete()
+            response.delete_cookie("authToken")
+        return response
