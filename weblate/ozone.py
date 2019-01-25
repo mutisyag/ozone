@@ -1,4 +1,6 @@
+from django.core.exceptions import PermissionDenied
 from social_core.backends.oauth import BaseOAuth2
+from django.utils.translation import gettext_lazy as _
 
 
 class OzoneOAuth2(BaseOAuth2):
@@ -17,7 +19,7 @@ class OzoneOAuth2(BaseOAuth2):
         """Only allow secretariat with write access."""
         # XXX It might be better to have a separate permission for this.
         if not response.get('is_secretariat') or response.get('is_read_only'):
-            return False
+            raise PermissionDenied(_("Authentication has been forbidden by server."))
         return super().auth_allowed(response, details)
 
     def get_user_details(self, response):
