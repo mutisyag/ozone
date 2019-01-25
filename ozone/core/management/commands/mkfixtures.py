@@ -355,7 +355,6 @@ class Command(BaseCommand):
 
     def substance_edw_map(self, f, row):
         f['r_code'] = row['RCode']
-        f['mp_control'] = row['MPControl'] or ""
         f['main_usage'] = row['MainUsage'] or ""
         return self.substance_map(f, row)
 

@@ -17,15 +17,32 @@ from .factories import (
     AnotherPartyFactory,
 )
 
+LINKS_ART7 = (
+    'article7questionnaire_url', 'article7questionnaire',
+    'article7destructions_url', 'article7productions_url',
+    'article7exports_url', 'article7imports_url',
+    'article7nonpartytrades_url', 'article7emissions_url',
+)
+LINKS_HAT = (
+    'hat_productions_url', 'hat_imports_url',
+)
+LINKS_ESSENCRIT = ()
+LINKS_OTHER = (
+    'data_others_url',
+)
+ALL_LINKS = LINKS_ART7 + LINKS_HAT + LINKS_ESSENCRIT + LINKS_OTHER
+
 
 class BaseSubmissionTest(BaseTests):
+    form_type = "art7"
+
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
         self.region = RegionFactory.create()
         self.period = ReportingPeriodFactory.create(name="Some period")
-        self.obligation = ObligationFactory.create(name="Some obligation")
+        self.obligation = ObligationFactory.create(form_type=self.form_type)
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
@@ -42,6 +59,7 @@ class BaseSubmissionTest(BaseTests):
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
             **kwargs,
@@ -51,6 +69,9 @@ class BaseSubmissionTest(BaseTests):
 
 class TestSubmissionMethods(BaseSubmissionTest):
     """Basic Submission API tests."""
+
+    links_data = LINKS_ART7
+
     def test_create(self):
         data = {
             "reporting_period": self.period.id,
@@ -92,6 +113,21 @@ class TestSubmissionMethods(BaseSubmissionTest):
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(result.json()['party'], self.party.id)
+
+    def test_get_check_urls(self):
+        submission = self.create_submission()
+
+        result = self.client.get(
+            reverse("core:submission-detail", kwargs={"pk": submission.id}),
+        )
+        self.assertEqual(result.status_code, 200)
+
+        for link in ALL_LINKS:
+            with self.subTest("Check link %s" % link):
+                if link in self.links_data:
+                    self.assertIn(link, result.json())
+                else:
+                    self.assertNotIn(link, result.json())
 
     def test_delete(self):
         submission = self.create_submission()
@@ -173,9 +209,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_list_paginated(self):
         submission1 = self.create_submission()
-        submission2 = self.create_submission(
-            obligation=self.obligation, reporting_period=self.period,
-        )
+        submission2 = self.create_submission(reporting_period=self.period)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -246,3 +280,17 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
         self.assertEqual(result.json()[0]['current_state'], 'submitted')
 
+
+class HATSubmissionMethods(TestSubmissionMethods):
+    form_type = "hat"
+    links_data = LINKS_HAT
+
+
+class EssenCritSubmissionMethods(TestSubmissionMethods):
+    form_type = "essencrit"
+    links_data = LINKS_ESSENCRIT
+
+
+class OtherSubmissionMethods(TestSubmissionMethods):
+    form_type = "other"
+    links_data = LINKS_OTHER

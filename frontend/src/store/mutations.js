@@ -1,6 +1,8 @@
 import 'toastedjs/src/sass/toast.scss'
 import Toasted from 'toastedjs/dist/toasted.min.js'
 
+import { sortDescending } from '@/components/common/services/utilsService'
+
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
 import { getFormLetter } from '@/components/letter/dataDefinitions/form'
@@ -245,24 +247,27 @@ const mutations = {
 	removeField(state, data) {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
-
 	addTabAttachments(state, { tabName, attachments }) {
 		if (!attachments) {
 			return
 		}
+		const { form_fields } = state.form.tabs[tabName]
 		attachments.forEach(attachment => {
-			state.form.tabs[tabName].form_fields.attachments.push(attachment)
+			form_fields.attachments.push(attachment)
 		})
+		form_fields.attachments = sortDescending(form_fields.attachments, 'updated')
 	},
 	updateTabAttachment(state, { tabName, attachment }) {
+		const { form_fields } = state.form.tabs[tabName]
 		const updatedAttachments = []
-		state.form.tabs[tabName].form_fields.attachments.forEach(attachOld => {
+		form_fields.attachments.forEach(attachOld => {
 			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
 		})
-		state.form.tabs[tabName].form_fields.attachments = updatedAttachments
+		form_fields.attachments = sortDescending(updatedAttachments, 'updated')
 	},
 	deleteTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attachOld => attachOld !== attachment)
+		const { form_fields } = state.form.tabs[tabName]
+		form_fields.attachments = form_fields.attachments.filter(attachOld => attachOld !== attachment)
 	},
 	deleteAllTabAttachments(state, { tabName }) {
 		state.form.tabs[tabName].form_fields.attachments = []

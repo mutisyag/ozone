@@ -5,7 +5,8 @@
         "fields": {
             "language_id": "A",
             "name": "Arabic",
-            "remark": ""
+            "remark": "",
+            "iso": "ar"
         }
     },
     {
@@ -14,7 +15,8 @@
         "fields": {
             "language_id": "C",
             "name": "Chinese",
-            "remark": ""
+            "remark": "",
+            "iso": "zh"
         }
     },
     {
@@ -23,7 +25,8 @@
         "fields": {
             "language_id": "E",
             "name": "English",
-            "remark": ""
+            "remark": "",
+            "iso": "en"
         }
     },
     {
@@ -32,7 +35,8 @@
         "fields": {
             "language_id": "F",
             "name": "French",
-            "remark": ""
+            "remark": "",
+            "iso": "fr"
         }
     },
     {
@@ -41,7 +45,8 @@
         "fields": {
             "language_id": "R",
             "name": "Russian",
-            "remark": ""
+            "remark": "",
+            "iso": "ru"
         }
     },
     {
@@ -50,7 +55,8 @@
         "fields": {
             "language_id": "S",
             "name": "Spanish",
-            "remark": ""
+            "remark": "",
+            "iso": "es"
         }
     }
 ]

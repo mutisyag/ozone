@@ -392,14 +392,28 @@ const actions = {
 	async uploadAttachments(context, { attachments, onProgressCallback }) {
 		for (let i = 0; i < attachments.length; i += 1) {
 			const attachment = attachments[i]
-			console.log('attachment..................', attachment)
 			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
-			attachment.uploadUrl = response.url
+			attachment.tus_url = response.url
 			attachment.percentage = 100
-			console.log('getSubmissionFiles..................')
-			const files = await getSubmissionFiles(context.state.current_submission.id)
-			console.log(files)
 		}
+	},
+	async getAttachmentsWithUploadStatus(context, { attachments }) {
+		console.log('attachments', attachments)
+		const files = await getSubmissionFiles(context.state.current_submission.id)
+		console.log('files', files)
+		if (!attachments) {
+			return files.data
+		}
+		files.data.forEach(file => {
+			const attach = attachments.find(attachment => attachment.tus_url && attachment.tus_url.endsWith(file.tus_id))
+			if (attach) {
+				attach.upload_successful = file.upload_successful
+				attach.file_url = file.file_url
+				attach.updated = file.updated
+				attach.tus_id = file.tus_id
+				console.log('found attach', attach)
+			}
+		})
 		return attachments
 	}
 }

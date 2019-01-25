@@ -133,3 +133,4 @@ celerybeat*
 
 translations
 frontend/public/translations.json
+ozone/media/

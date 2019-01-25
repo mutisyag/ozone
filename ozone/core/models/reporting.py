@@ -785,14 +785,15 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
+            channel = ReportingChannel.objects.get(name='Web form')
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
                 obligation=self.obligation,
                 cloned_from=self,
-                created_by=self.created_by,
-                last_edited_by=self.last_edited_by,
-                reporting_channel=self.reporting_channel
+                created_by=user,
+                last_edited_by=user,
+                reporting_channel=channel
             )
             if hasattr(self, 'info'):
                 # Clone submission might already have some pre-populated

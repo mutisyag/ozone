@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import Argon2PasswordHasher
 from ozone.core.models import Submission
 from .base import BaseTests
 from .factories import (
+    ObligationFactory,
     PartyFactory,
     AnotherPartyFactory,
     RegionFactory,
@@ -25,11 +26,14 @@ OLD_VALUE = False
 class BaseFlagsTests(BaseTests):
     success_code = 200
     fail_code = 422
+    form_type = "art7"
+    flag_data = {}
 
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type=self.form_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -52,7 +56,8 @@ class BaseFlagsTests(BaseTests):
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=owner, last_edited_by=owner, **kwargs
+            party=self.party, created_by=owner, last_edited_by=owner, obligation=self.obligation,
+            **kwargs
         )
         return submission
 
@@ -73,7 +78,15 @@ class BaseFlagsTests(BaseTests):
         )
 
         submission = Submission.objects.get(pk=submission.id)
-        self.assertEqual(getattr(submission, field), NEW_VALUE if expect_success else OLD_VALUE)
+
+        expected_value = OLD_VALUE
+        # If the field we are trying to change is not available
+        # for the obligation type, we don't raise an error, but the
+        # value doesn't actually change.
+        if expect_success and field in self.flag_data:
+            expected_value = NEW_VALUE
+
+        self.assertEqual(getattr(submission, field), expected_value)
 
 
 BLANKS_FLAGS = (
@@ -100,15 +113,25 @@ SUPERSEDED_FLAGS = (
 )
 
 ALL_FLAGS = BLANKS_FLAGS + HAS_REPORTED_FLAGS + PROVISIONAL_FLAGS + VALID_FLAGS + SUPERSEDED_FLAGS
-FLAGS_DATA = {
+ALL_FLAGS_DATA = {
     _flag: OLD_VALUE for _flag in ALL_FLAGS
+}
+BASE_FLAG_DATA = {
+    _flag: OLD_VALUE for _flag in SUPERSEDED_FLAGS + VALID_FLAGS + PROVISIONAL_FLAGS
+}
+BLANKS_FLAGS_DATA = {
+    _flag: OLD_VALUE for _flag in BLANKS_FLAGS
+}
+HAS_REPORTED_FLAGS_DATA = {
+    _flag: OLD_VALUE for _flag in HAS_REPORTED_FLAGS
 }
 
 
 class SubmissionFlagsPermissionTests(BaseFlagsTests):
+    flag_data = ALL_FLAGS_DATA
 
     def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success, fail_code=None):
-        submission = self.create_submission(self.secretariat_user, **FLAGS_DATA)
+        submission = self.create_submission(self.secretariat_user, **ALL_FLAGS_DATA)
         if finalized:
             submission.call_transition("submit", self.secretariat_user)
             submission.save()
@@ -232,9 +255,26 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                                             True, False, fail_code=403)
 
 
+class HATSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
+    flag_data = ALL_FLAGS_DATA
+    form_type = "hat"
+
+
+class EssenCritSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
+    flag_data = BASE_FLAG_DATA
+    form_type = "essencrit"
+
+
+class OtherSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
+    flag_data = BASE_FLAG_DATA
+    form_type = "other"
+
+
 class SubmissionRetrieveTest(BaseFlagsTests):
+    flag_data = ALL_FLAGS_DATA
+
     def _check_flags_retrieve_data(self, user, owner):
-        submission = self.create_submission(owner, **FLAGS_DATA)
+        submission = self.create_submission(owner, **ALL_FLAGS_DATA)
         self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
@@ -243,7 +283,7 @@ class SubmissionRetrieveTest(BaseFlagsTests):
                 kwargs={"submission_pk": submission.pk},
             ),
         )
-        self.assertEqual(result.json(), [FLAGS_DATA])
+        self.assertEqual(result.json(), [self.flag_data])
 
     def test_retrieve_as_party_party_reporter(self):
         self._check_flags_retrieve_data(self.party_user, self.party_user)
@@ -256,3 +296,18 @@ class SubmissionRetrieveTest(BaseFlagsTests):
 
     def test_retrieve_as_secretariat_secretariat_reporter(self):
         self._check_flags_retrieve_data(self.secretariat_user, self.secretariat_user)
+
+
+class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
+    flag_data = ALL_FLAGS_DATA
+    form_type = "hat"
+
+
+class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
+    flag_data = BASE_FLAG_DATA
+    form_type = "essencrit"
+
+
+class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
+    flag_data = BASE_FLAG_DATA
+    form_type = "other"

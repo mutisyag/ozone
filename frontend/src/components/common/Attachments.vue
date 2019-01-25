@@ -5,7 +5,8 @@
 			<b-list-group-item>
 				<div class="row">
 					<div class="col-10">
-						<b-form-file :disabled="$store.getters.can_upload_files" :multiple="true" ref="fileinput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain />
+						$store.getters.can_upload_files - {{$store.getters.can_upload_files}}
+						<b-form-file :disabled="loadingInitialFiles || $store.getters.can_upload_files" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" />
 					</div>
 					<div class="col-2">
 						<b-button v-if="attachments.length" variant="danger" class="pull-right" @click="deleteAllAttachments()">
@@ -15,12 +16,15 @@
 					</div>
 				</div>
 			</b-list-group-item>
-			<b-list-group-item style="font-size: 1.5rem" v-for="attachment in attachments" :key="attachment.id">
+			<b-list-group-item style="font-size: 1.5rem" v-for="attachment in attachments" :key="attachment.name + attachment.updated">
 				<div class="row">
 					<div class="col-10">
-						<a :href="attachment.url">
+						<div class="spinner" v-show="!attachment.tus_id && !attachment.upload_successful">
+							<div class="loader"></div>
+						</div>
+						<a :href="attachment.file_url">
 							<i class="fa fa-file-zip-o fa-lg"></i>
-							<span> {{attachment.name}} - {{(attachment.size / 1000000).toFixed(2)}} MB - Date uploaded ?</span>
+							<span> {{attachment.name}} - {{attachment.updated}}</span>
 						</a>
 					</div>
 					<div class="col-2">
@@ -31,7 +35,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="col-12">
+					<div class="col-12" v-show="!attachment.tus_id">
 						<b-progress :value="attachment.percentage" :max="100" animated></b-progress>
 					</div>
 				</div>
@@ -49,15 +53,7 @@
 <script>
 import { mapActions, mapMutations } from 'vuex'
 
-const fileExtensionIsValid = (fileNameLowercase) => {
-	const validExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.zip', '.rar', '.txt', '.htm', '.html', '.odt', '.ods', '.eml', '.ppt', '.pptx', '.mdb']
-	for (let i = 0; i < validExtensions.length; i += 1) {
-		if (fileNameLowercase.endsWith(validExtensions[i])) {
-			return true
-		}
-	}
-	return false
-}
+const ALLOWED_FILE_EXTENSIONS = 'pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb'
 
 export default {
 	props: {
@@ -66,29 +62,35 @@ export default {
 	data() {
 		return {
 			selectedFiles: [],
-			isSaveDisabled: true
+			loadingInitialFiles: true
 		}
 	},
 	computed: {
 		attachments() {
 			return this.$store.state.form.tabs[this.tab.name].form_fields.attachments
+		},
+		allAttachmentsUploadedSuccessfully() {
+			return !this.attachments.find(attachment => !attachment.upload_successful)
+		},
+		allowedExtensions() {
+			return ALLOWED_FILE_EXTENSIONS.split(',').map(x => `.${x}`)
 		}
 	},
 	methods: {
-		...mapActions(['uploadAttachments']),
+		...mapActions(['uploadAttachments', 'getAttachmentsWithUploadStatus']),
 		...mapMutations(['addTabAttachments', 'updateTabAttachment', 'deleteTabAttachment', 'deleteAllTabAttachments']),
 		deleteAllAttachments() {
 			this.deleteAllTabAttachments({
 				tabName: this.tab.name
 			})
-			this.isSaveDisabled = false
+			this.$refs.filesInput.reset()
 		},
 		deleteAttachment(e, attachment) {
 			this.deleteTabAttachment({
 				tabName: this.tab.name,
 				attachment
 			})
-			this.isSaveDisabled = false
+			this.$refs.filesInput.reset()
 		},
 		onDescriptionChange(e, attachment) {
 			attachment.description = e
@@ -96,7 +98,6 @@ export default {
 				tabName: this.tab.name,
 				attachment
 			})
-			this.isSaveDisabled = false
 		},
 		onProgressCallback(attachment, percentage) {
 			attachment.percentage = percentage
@@ -106,23 +107,50 @@ export default {
 			})
 		},
 		async onSelectedFilesChanged() {
-			if (this.selectedFiles.length) {
-				const tabName = this.tab.name
-				let attachments = this.selectedFiles.filter(file => file.type
-																	&& fileExtensionIsValid(file.name.toLowerCase()))
-				this.addTabAttachments({ tabName, attachments })
-				attachments = await this.uploadAttachments({ attachments, onProgressCallback: this.onProgressCallback })
-				attachments.forEach(attachment => {
+			if (!this.selectedFiles || !this.selectedFiles.length) {
+				return
+			}
+			const attachments = this.selectedFiles.filter(file => this.allowedExtensions.find(extension => file.name.toLowerCase().trim().endsWith(extension))
+				&& !this.attachments.find(attachment => file.name.toLowerCase().trim() === attachment.name.toLowerCase().trim()))
+
+			if (!attachments.length) {
+				this.$refs.filesInput.reset()
+				return
+			}
+			const tabName = this.tab.name
+			attachments.forEach(attachment => {
+				attachment.updated = 'zz' // to appear first in the descending sorted file list while it is uploaded
+			})
+			this.addTabAttachments({ tabName, attachments })
+			await this.uploadAttachments({ attachments, onProgressCallback: this.onProgressCallback })
+			attachments.forEach(attachment => {
+				this.updateTabAttachment({
+					tabName,
+					attachment
+				})
+			})
+			this.$refs.filesInput.reset()
+
+			const checkAttachmentsUploadedSuccessfullyInterval = setInterval(async () => {
+				if (this.allAttachmentsUploadedSuccessfully) {
+					clearInterval(checkAttachmentsUploadedSuccessfullyInterval)
+					return
+				}
+				await this.getAttachmentsWithUploadStatus({ attachments: this.attachments })
+
+				this.attachments.forEach(attachment => {
 					this.updateTabAttachment({
-						tabName: this.tab.name,
+						tabName,
 						attachment
 					})
 				})
-				console.log(this.attachments)
-				this.$refs.fileinput.reset()
-				this.isSaveDisabled = false
-			}
+			}, 1500)
 		}
+	},
+	async created() {
+		const existingAttachments = await this.getAttachmentsWithUploadStatus({})
+		this.addTabAttachments({ tabName: this.tab.name, attachments: existingAttachments })
+		this.loadingInitialFiles = false
 	}
 }
 </script>

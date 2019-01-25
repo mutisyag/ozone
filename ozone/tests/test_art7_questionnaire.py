@@ -25,7 +25,7 @@ class BaseQuestionnaireSubmissionTest(BaseTests):
 
         self.region = RegionFactory.create()
         self.period = ReportingPeriodFactory.create(name="Some period")
-        self.obligation = ObligationFactory.create(name="Some obligation")
+        self.obligation = ObligationFactory.create(form_type="art7")
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
@@ -40,6 +40,9 @@ class BaseQuestionnaireSubmissionTest(BaseTests):
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
+        if "obligation" not in kwargs:
+            kwargs["obligation"] = self.obligation
+
         submission = SubmissionFactory.create(
             party=self.party,
             created_by=self.secretariat_user,
@@ -84,6 +87,24 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         submission.refresh_from_db()
         self.assertEqual(submission.article7questionnaire.has_imports, True)
         self.assertEqual(submission.article7questionnaire.has_exports, False)
+
+    def test_post_wrong_obligation(self):
+        obligation = ObligationFactory.create(form_type="other", name="Much obliged")
+        submission = self.create_submission(obligation=obligation)
+        data = {
+            'has_destroyed': False,
+            'has_emissions': False,
+            'has_exports': False,
+            'has_imports': True,
+            'has_nonparty': False,
+            'has_produced': False,
+        }
+        resp = self.client.post(
+            reverse("core:submission-article7-questionnaire-list",
+                    kwargs={"submission_pk": submission.pk}),
+            data,
+        )
+        self.assertEqual(resp.status_code, 403)
 
     def test_put(self):
         submission = self.create_submission()
