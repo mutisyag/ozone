@@ -240,7 +240,7 @@ class ObligationAdmin(
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
-    actions = ["reset_password"]
+    actions = ["reset_password", "impersonate"]
     exclude = ["password"]
     readonly_fields = ["last_login", "date_joined"]
 
@@ -260,8 +260,12 @@ class UserAdmin(admin.ModelAdmin):
         else:
             self.message_user(request, _("Email sent to %s for password reset") % ", ".join(users),
                               level=messages.SUCCESS)
-
     reset_password.short_description = _("Reset user password")
+
+    def impersonate(self, request, queryset):
+        user = queryset.first()
+        return redirect('impersonate-start', uid=user.id)
+    impersonate.short_description = _("Impersonate user")
 
     def save_model(self, request, obj, form, change):
         if not change:

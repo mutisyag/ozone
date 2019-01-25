@@ -112,6 +112,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     'ozone.core.apps.CoreConfig',
     'ozone.core.apps.OzoneAdminConfig',
+    'impersonate',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = THIRD_PARTY_APPS + LOCAL_APPS + DJANGO_APPS
@@ -181,6 +182,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
     'core.middleware.ExceptionMiddleware',
+    'impersonate.middleware.ImpersonateMiddleware',
+    'core.middleware.ImpersonateTokenAuthMiddleware',
 ]
 
 # STATIC
@@ -347,3 +350,10 @@ if SENTRY_DSN:
         dsn="https://%s@sentry.io/1374535" % SENTRY_DSN,
         integrations=[DjangoIntegration()]
     )
+
+# Impersonate
+
+IMPERSONATE = {
+    'REQUIRE_SUPERUSER': True,
+    'REDIRECT_URL': '/',
+}

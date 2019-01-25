@@ -19,6 +19,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     url(r'^admin/i18n/', include('django.conf.urls.i18n')),
     url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
+    url(r'^impersonate/', include('impersonate.urls')),
     # User management
     path(
         'admin/password_reset/',
