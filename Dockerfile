@@ -21,8 +21,10 @@ RUN runDeps="nodejs yarn build-essential gcc" \
 RUN mkdir -p $APP_HOME
 COPY requirements $APP_HOME/requirements
 RUN pip install --no-cache-dir -r $APP_HOME/requirements/translations.txt
-COPY . $APP_HOME
+COPY frontend/package.json $APP_HOME/frontend/package.json
+COPY frontend/yarn.lock $APP_HOME/frontend/yarn.lock
 RUN cd $APP_HOME/frontend && yarn install
+COPY . $APP_HOME
 RUN $APP_HOME/utility/compile_fe_translations.sh
 RUN rm -rf frontend/dist
 #COPY package.json postcss.config.js yarn.lock $APP_HOME/
