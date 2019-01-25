@@ -242,7 +242,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
     exclude = ["password"]
-    readonly_fields = ["last_login", "date_joined"]
+    readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
 
     def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
@@ -274,6 +274,9 @@ class UserAdmin(admin.ModelAdmin):
             # Set a random password for the new user
             # The user will need to set a new password
             obj.password = str(uuid.uuid4())
+            obj.created_by = request.user
+            # The user is inactive until a password is set
+            obj.activated = False
         super(UserAdmin, self).save_model(request, obj, form, change)
         if not change:
             self.reset_password(request, [obj], template="account_created")

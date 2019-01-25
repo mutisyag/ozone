@@ -1,7 +1,9 @@
 from django.conf import settings
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.shortcuts import render
 from django.views.i18n import set_language as set_language_django
 
+from ozone.core.email import send_mail_from_template
 from ozone.core.models import Language
 
 # Create your views here.
@@ -23,3 +25,25 @@ def set_language(request):
         except (KeyError, Language.DoesNotExist):
             pass
     return response
+
+
+class ActivateUserPasswordResetConfirmView(PasswordResetConfirmView):
+
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        # First password reset
+        if not self.user.activated:
+            self.user.activated = True
+            self.user.save()
+            if self.user.created_by is not None:
+                # Send email to the admin that created this user.
+                send_mail_from_template(
+                    "registration/account_activated_subject.txt",
+                    "registration/account_activated_email.html",
+                    context={
+                        "account": self.user,
+                        "site_name": self.request.META.get("HTTP_HOST")
+                    },
+                    to_email=self.user.created_by
+                )
+        return result
