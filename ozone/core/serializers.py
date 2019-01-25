@@ -191,29 +191,11 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'first_name',
-            'last_name', 'email'
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party',
+            'first_name', 'last_name', 'email', 'language', 'role'
         )
-
-
-class UserAccountSerializer(serializers.ModelSerializer):
-    """
-    Used to get account details.
-    """
-
-    class Meta:
-        model = User
-        fields = (
-            'email', 'first_name', 'last_name', 'language', 'role'
-        )
-
-
-class UpdateUserAccountSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = User
-        fields = (
-            'email', 'first_name', 'last_name', 'language'
+        read_only_fields = (
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'role'
         )
 
 

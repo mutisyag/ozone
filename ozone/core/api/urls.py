@@ -219,9 +219,6 @@ auth_tokens.register(
 )
 router.extend(auth_tokens)
 
-# Account page for Party/Secretariat
-router.register(r"user-account", views.UserAccountViewSet, base_name='user-account')
-
 urlpatterns = (
     router.urls
     + [url for router in nested_routers for url in router.urls]

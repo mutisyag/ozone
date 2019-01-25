@@ -93,8 +93,6 @@ from ..serializers import (
     SubmissionRemarksSerializer,
     SubmissionFileSerializer,
     UploadTokenSerializer,
-    UserAccountSerializer,
-    UpdateUserAccountSerializer,
 )
 
 
@@ -189,6 +187,16 @@ class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
+        """
+        For the moment you can only view your profile.
+        TODO extract this logic into a permission class.
+        """
+        if self.kwargs.get('pk', None):
+            if self.request.user.pk != int(self.kwargs.get('pk', None)):
+                raise Forbidden(
+                    _("You can't access the profile of another user.")
+                )
+
         return self.queryset.filter(id=self.request.user.pk)
 
 
@@ -1114,31 +1122,3 @@ class AuthTokenViewSet(
         # Also remove any active session.
         request.session.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class UserAccountViewSet(
-    mixins.ListModelMixin,
-    mixins.RetrieveModelMixin,
-    mixins.UpdateModelMixin,
-    viewsets.GenericViewSet
-):
-    queryset = User.objects.all()
-    permission_classes = (IsAuthenticated,)
-
-    def get_serializer_class(self):
-        if self.request.method == 'PUT':
-            return UpdateUserAccountSerializer
-        return UserAccountSerializer
-
-    def get_queryset(self):
-        """
-        For the moment you can only view your profile.
-        TODO extract this logic into a permission class.
-        """
-        if self.kwargs.get('pk', None):
-            if self.request.user.pk != int(self.kwargs.get('pk', None)):
-                raise Forbidden(
-                    _("You can't access the profile of another user.")
-                )
-
-        return self.queryset.filter(id=self.request.user.pk)
