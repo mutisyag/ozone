@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
@@ -239,8 +240,14 @@ class ObligationAdmin(
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    base_list_display = (
+        "username", "first_name", "last_name", "email", "is_secretariat", "party",
+    )
+    superuser_list_display = (
+        "login_as",
+    )
     search_fields = ["username", "first_name", "last_name"]
-    actions = ["reset_password", "impersonate"]
+    actions = ["reset_password"]
     exclude = ["password"]
     readonly_fields = ["last_login", "date_joined"]
 
@@ -262,10 +269,18 @@ class UserAdmin(admin.ModelAdmin):
                               level=messages.SUCCESS)
     reset_password.short_description = _("Reset user password")
 
-    def impersonate(self, request, queryset):
-        user = queryset.first()
-        return redirect('impersonate-start', uid=user.id)
-    impersonate.short_description = _("Impersonate user")
+    def login_as(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>',
+            reverse('impersonate-start', kwargs={"uid": obj.id}),
+            _('Login'),
+        )
+
+    def get_list_display(self, request):
+        if request.user.is_superuser:
+            return self.base_list_display + self.superuser_list_display
+
+        return self.base_list_display
 
     def save_model(self, request, obj, form, change):
         if not change:
