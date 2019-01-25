@@ -60,6 +60,9 @@ class TokenAdminAuthMiddleware(object):
 
 
 class ImpersonateTokenAuthMiddleware(object):
+    """Sets the authToken cookie after the impersonate is triggered.
+    This allows the FE app to behave like the impersonated user is logged in.
+    """
 
     def __init__(self, get_response):
         self.get_response = get_response

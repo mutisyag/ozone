@@ -1117,6 +1117,8 @@ class AuthTokenViewSet(
         if "_impersonate" in request.session:
             real_user = User.objects.get(pk=request.session["_auth_user_id"])
             stop_impersonate(request)
+            # Set the token of the "real user", that has been impersonating
+            # this user.
             token, created = Token.objects.get_or_create(user=real_user)
             response.set_cookie("authToken", token.key)
         else:
