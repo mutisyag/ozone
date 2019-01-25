@@ -241,7 +241,7 @@ class ObligationAdmin(
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     base_list_display = (
-        "username", "first_name", "last_name", "email", "is_secretariat", "party",
+        "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
     )
     superuser_list_display = (
         "login_as",
