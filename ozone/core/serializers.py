@@ -187,16 +187,24 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     """
     Used to get basic info for current user
     """
+    impersonated_by = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = (
             'id', 'username', 'is_secretariat', 'is_read_only', 'party',
-            'first_name', 'last_name', 'email', 'language', 'role'
+            'first_name', 'last_name', 'email', 'language', 'role',
+            'impersonated_by',
         )
         read_only_fields = (
             'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'role'
         )
+
+    def get_impersonated_by(self, obj):
+        session = self.context['request'].session
+        if '_impersonate' not in session:
+            return None
+        return User.objects.get(pk=session['_auth_user_id']).username
 
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
