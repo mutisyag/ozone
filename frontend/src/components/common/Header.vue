@@ -1,8 +1,8 @@
 <template>
 <b-row>
-	<HeaderDropdown class="mr-3" right id="account_options">
-		<template v-if="$store.state.currentUser" slot="header">
-			{{$store.state.currentUser.username}} <span style="font-size: 1.2rem;" v-if="currentCountryIso" :class="`flag-icon flag-icon-${currentCountryIso}`"></span>
+	<HeaderDropdown v-if="$store.state.currentUser"  class="mr-3" right id="account_options">
+		<template slot="header">
+			{{currentUserName}} <span style="font-size: 1.2rem;" v-if="currentCountryIso" :class="`flag-icon flag-icon-${currentCountryIso}`"></span>
 		</template>
 		<template slot="dropdown">
 			<b-dropdown-header tag="div" class="text-center"><strong><span v-translate>Account</span></strong></b-dropdown-header>
