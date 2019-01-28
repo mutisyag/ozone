@@ -13,19 +13,16 @@ export default {
 					const date = new Date()
 
 					date.setDate(date.getDate() + 30)
-					this.$cookies.set('authToken', response.data.token, date)
 					this.$router.push({ name: 'Dashboard' })
 				})
 		},
 
 		logout(cookie) {
 			if (cookie === 'cookie') {
-				this.$cookies.remove('authToken')
 				this.$router.push({ name: 'Login' })
 			} else {
 				removeLoginToken().then(() => {
 					console.log(this.$cookies)
-					this.$cookies.remove('authToken')
 					this.$router.push({ name: 'Login' })
 				})
 			}
