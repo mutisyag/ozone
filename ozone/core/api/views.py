@@ -26,7 +26,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
 
-from ..exceptions import InvalidRequest
+from ..exceptions import InvalidRequest, Forbidden
 
 from ..models import (
     Region,
@@ -59,6 +59,7 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
+    IsSecretariatOrSamePartyUser,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -182,13 +183,13 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
         return context
 
 
-class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+class CurrentUserViewSet(
+    ReadOnlyMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+    GenericViewSet
+):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
-    permission_classes = (IsAuthenticated,)
-
-    def get_queryset(self):
-        return self.queryset.filter(id=self.request.user.pk)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyUser)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):

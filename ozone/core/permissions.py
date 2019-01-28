@@ -1,8 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from .models import Blend, Submission, Party
+
+
+User = get_user_model()
 
 
 class IsSecretariatOrSamePartySubmission(BasePermission):
@@ -145,3 +149,19 @@ class IsCorrectObligation(BasePermission):
             pk=view.kwargs.get('submission_pk', None)
         ).obligation.form_type
         return form_type in view.form_types
+
+
+class IsSecretariatOrSamePartyUser(BasePermission):
+    """
+    Check if user can view/update the profile of another user.
+    """
+
+    def has_permission(self, request, view):
+        user_pk = view.kwargs.get('pk', None)
+        if user_pk:
+            user = User.objects.get(pk=user_pk)
+            if request.method not in SAFE_METHODS:
+                return user.has_edit_rights(request.user)
+            else:
+                return user.has_read_rights(request.user)
+        return False

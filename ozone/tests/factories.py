@@ -30,6 +30,7 @@ from ozone.core.models import (
     DataOther,
     UploadToken,
     SubmissionFile,
+    Language,
 )
 
 User = get_user_model()
@@ -68,6 +69,24 @@ class AnotherPartyFactory(DjangoModelFactory):
 
     class Meta:
         model = Party
+
+
+class LanguageEnFactory(DjangoModelFactory):
+    language_id = 'E'
+    name = 'English'
+    iso = 'en'
+
+    class Meta:
+        model = Language
+
+
+class LanguageFrFactory(DjangoModelFactory):
+    language_id = 'F'
+    name = 'French'
+    iso = 'fr'
+
+    class Meta:
+        model = Language
 
 
 class SecretariatUserFactory(DjangoModelFactory):
