@@ -242,17 +242,23 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
     exclude = ["password"]
-    readonly_fields = ["last_login", "date_joined"]
+    readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
 
-    def reset_password(self, request, queryset):
+    def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
         use_https = request.environ.get("wsgi.url_scheme", "https").lower() == "https"
         users = []
 
+        body = f"registration/{template}_email.html"
+        subject = f"registration/{template}_subject.txt"
+
         for user in queryset:
             form = PasswordResetForm({'email': user.email})
             form.full_clean()
-            form.save(domain_override=domain_override, use_https=use_https)
+            form.save(
+                domain_override=domain_override, use_https=use_https, email_template_name=body,
+                subject_template_name=subject,
+            )
             users.append(user.username)
         if len(users) > 10:
             self.message_user(request, _("Email sent to %d users for password reset") % len(users),
@@ -268,7 +274,9 @@ class UserAdmin(admin.ModelAdmin):
             # Set a random password for the new user
             # The user will need to set a new password
             obj.password = str(uuid.uuid4())
+            obj.created_by = request.user
+            # The user is inactive until a password is set
+            obj.activated = False
         super(UserAdmin, self).save_model(request, obj, form, change)
         if not change:
-            # TODO likely better to use a different email template here.
-            self.reset_password(request, [obj])
+            self.reset_password(request, [obj], template="account_created")

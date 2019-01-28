@@ -17,6 +17,14 @@ class User(GuardianUserMixin, AbstractUser):
         on_delete=models.PROTECT,
         limit_choices_to=Q(parent_party_id=F('id'))
     )
+    created_by = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL
+    )
+
+    activated = models.BooleanField(default=True)
 
     is_secretariat = models.BooleanField(default=False)
 
