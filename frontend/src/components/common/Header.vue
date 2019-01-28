@@ -8,8 +8,8 @@
 			<b-dropdown-item @click="setCurrentLanguage(key)" v-for="(language, key) in $language.available" :key="language.key"><span>{{language}}</span></b-dropdown-item>
 		</template>
 	</HeaderDropdown>
-	<HeaderDropdown class="mr-3" right id="account_options">
-		<template v-if="$store.state.currentUser" slot="header">
+	<HeaderDropdown class="mr-3" right id="account_options" v-if="$store.state.currentUser">
+		<template slot="header">
 			{{currentUserName}} <span style="font-size: 1.2rem;" v-if="currentCountryIso" :class="`flag-icon flag-icon-${currentCountryIso}`"></span>
 		</template>
 		<template slot="dropdown">
