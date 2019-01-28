@@ -681,7 +681,7 @@ class Submission(models.Model):
 
     def can_upload_files(self, user):
         if self.has_edit_rights(user):
-            return self.data_changes_allowed
+            return True
         return False
 
     @staticmethod
