@@ -38,8 +38,6 @@ const setLanguage = async (languageKey, vm) => {
 		translations[languageKey] = languageResponse.data[languageKey]
 	}
 	vm.$language.current = languageKey
-	console.log(translations)
-	console.log('Update User info: SHOULD POST THE NEW USER LANGUAGE TO THE SERVER')
 }
 
 const dateFormat = (value, language, formatString) => {
