@@ -9,6 +9,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
@@ -239,20 +240,32 @@ class ObligationAdmin(
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    base_list_display = (
+        "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
+    )
+    superuser_list_display = (
+        "login_as",
+    )
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
     exclude = ["password"]
-    readonly_fields = ["last_login", "date_joined"]
+    readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
 
-    def reset_password(self, request, queryset):
+    def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
         use_https = request.environ.get("wsgi.url_scheme", "https").lower() == "https"
         users = []
 
+        body = f"registration/{template}_email.html"
+        subject = f"registration/{template}_subject.txt"
+
         for user in queryset:
             form = PasswordResetForm({'email': user.email})
             form.full_clean()
-            form.save(domain_override=domain_override, use_https=use_https)
+            form.save(
+                domain_override=domain_override, use_https=use_https, email_template_name=body,
+                subject_template_name=subject,
+            )
             users.append(user.username)
         if len(users) > 10:
             self.message_user(request, _("Email sent to %d users for password reset") % len(users),
@@ -260,15 +273,29 @@ class UserAdmin(admin.ModelAdmin):
         else:
             self.message_user(request, _("Email sent to %s for password reset") % ", ".join(users),
                               level=messages.SUCCESS)
-
     reset_password.short_description = _("Reset user password")
+
+    def login_as(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>',
+            reverse('impersonate-start', kwargs={"uid": obj.id}),
+            _('Login'),
+        )
+
+    def get_list_display(self, request):
+        if request.user.is_superuser:
+            return self.base_list_display + self.superuser_list_display
+
+        return self.base_list_display
 
     def save_model(self, request, obj, form, change):
         if not change:
             # Set a random password for the new user
             # The user will need to set a new password
             obj.password = str(uuid.uuid4())
+            obj.created_by = request.user
+            # The user is inactive until a password is set
+            obj.activated = False
         super(UserAdmin, self).save_model(request, obj, form, change)
         if not change:
-            # TODO likely better to use a different email template here.
-            self.reset_password(request, [obj])
+            self.reset_password(request, [obj], template="account_created")
