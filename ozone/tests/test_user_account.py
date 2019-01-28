@@ -80,6 +80,7 @@ class UserAccountTests(BaseTests):
         expected_data['username'] = self.reporter.username
         expected_data['party'] = self.reporter.party.pk
         expected_data['language'] = self.reporter.language.pk
+        expected_data['impersonated_by'] = None
         self.assertEqual(result.json(), expected_data)
 
     def test_get_user_account_secretariat(self):
