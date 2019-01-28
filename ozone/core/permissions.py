@@ -164,4 +164,7 @@ class IsSecretariatOrSamePartyUser(BasePermission):
                 return user.has_edit_rights(request.user)
             else:
                 return user.has_read_rights(request.user)
-        return False
+
+        # It means that we only want the current logged in user;
+        # get_queryset will take care of this.
+        return True
