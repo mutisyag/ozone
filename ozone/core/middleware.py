@@ -2,6 +2,7 @@ import traceback
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.http import JsonResponse
 from rest_framework.authtoken.models import Token
+from sentry_sdk import capture_exception
 
 
 class ExceptionMiddleware(object):
@@ -27,6 +28,7 @@ class ExceptionMiddleware(object):
             status = exception.status_code
             exception_dict = exception.to_dict()
         else:
+            capture_exception(exception)
             status = 500
             exception_dict = {
                 NON_FIELD_ERRORS: ['Unexpected Error!']

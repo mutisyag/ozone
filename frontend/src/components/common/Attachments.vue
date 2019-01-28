@@ -1,58 +1,58 @@
 <template>
-<div class="row">
-	<div class="col-12">
-		<b-list-group>
-			<b-list-group-item>
-				<div class="row">
-					<div class="col-10">
-						$store.getters.can_upload_files - {{$store.getters.can_upload_files}}
-						<b-form-file :disabled="loadingInitialFiles || $store.getters.can_upload_files" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" />
+<div>
+	<div class="row">
+		<div class="col-12 form-inline" v-for="(attachment, index) in attachments" :key="index">
+			<span>
+				<a :href="attachment.file_url">
+					<div class="spinner" v-if="!attachment.upload_successful">
+						<div class="loader"></div>
 					</div>
-					<div class="col-2">
-						<b-button v-if="attachments.length" variant="danger" class="pull-right" @click="deleteAllAttachments()">
-							<i class="fa fa-times" aria-hidden="true"></i>
-							<span v-translate>Delete all</span>
-						</b-button>
-					</div>
-				</div>
-			</b-list-group-item>
-			<b-list-group-item style="font-size: 1.5rem" v-for="attachment in attachments" :key="attachment.name + attachment.updated">
-				<div class="row">
-					<div class="col-10">
-						<div class="spinner" v-show="!attachment.tus_id && !attachment.upload_successful">
-							<div class="loader"></div>
-						</div>
-						<a :href="attachment.file_url">
-							<i class="fa fa-file-zip-o fa-lg"></i>
-							<span> {{attachment.name}} - {{attachment.updated}}</span>
-						</a>
-					</div>
-					<div class="col-2">
-						<b-button variant="danger" class="pull-right" @click="deleteAttachment($event, attachment)">
-							<i class="fa fa-times" aria-hidden="true"></i>
-							<span v-translate>Delete</span>
-						</b-button>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12" v-show="!attachment.tus_id">
-						<b-progress :value="attachment.percentage" :max="100" animated></b-progress>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-12">
-						<b-form-textarea placeholder="Description" :value="attachment.description" :rows="3" @input="onDescriptionChange($event, attachment)"></b-form-textarea>
-					</div>
-				</div>
-			</b-list-group-item>
-		</b-list-group>
+					<i v-if="attachment.upload_successful" class="fa fa-download" aria-hidden="true"></i>
+					&nbsp;
+					{{attachment.name}}
+					<span v-if="attachment.upload_successful">- {{attachment.updated}}</span>
+				</a>
+			</span>
+			&nbsp;
+			<b-form-input class="d-inline" placeholder="Optional description" :value="attachment.description" @input="onDescriptionChange($event, attachment)" />
+			&nbsp;
+			<b-button variant="danger" class="pull-right" @click="deleteAttachment($event, attachment)">
+				<i class="fa fa-trash" aria-hidden="true"></i>
+			</b-button>
+			&nbsp;
+			<div style="width:200px">
+				<b-progress v-show="!attachment.tus_id" :value="attachment.percentage" :max="100" animated></b-progress>
+			</div>
+		</div>
+	</div>
+	<div class="row" v-if="attachments.length > 1">
+		<div class="col-12">
+			<b-button class="pull-right" variant="danger" @click="deleteAllAttachments()">
+				<i class="fa fa-trash" aria-hidden="true"></i>
+				&nbsp;
+				<span v-translate>Delete all</span>
+			</b-button>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			$store.getters.can_upload_files - {{$store.getters.can_upload_files}} - it should be true!
+			<b-form-file :disabled="loadingInitialFiles || $store.getters.can_upload_files" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain/>
+		</div>
+	</div>
+	<div class="row" v-if="attachmentsNotUploaded.length">
+		<div class="col-12">
+			<b-button v-if="attachments.length" variant="danger" @click="upload()">
+				<i class="fa fa-upload" aria-hidden="true"></i>
+				&nbsp;
+				<span v-translate>Upload</span>
+			</b-button>
+		</div>
 	</div>
 </div>
 </template>
 
 <script>
-import { mapActions, mapMutations } from 'vuex'
-
 const ALLOWED_FILE_EXTENSIONS = 'pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb'
 
 export default {
@@ -74,19 +74,20 @@ export default {
 		},
 		allowedExtensions() {
 			return ALLOWED_FILE_EXTENSIONS.split(',').map(x => `.${x}`)
+		},
+		attachmentsNotUploaded() {
+			return this.attachments.filter(attachment => !attachment.tus_id)
 		}
 	},
 	methods: {
-		...mapActions(['uploadAttachments', 'getAttachmentsWithUploadStatus']),
-		...mapMutations(['addTabAttachments', 'updateTabAttachment', 'deleteTabAttachment', 'deleteAllTabAttachments']),
 		deleteAllAttachments() {
-			this.deleteAllTabAttachments({
+			this.$store.dispatch('deleteAllTabAttachments', {
 				tabName: this.tab.name
 			})
 			this.$refs.filesInput.reset()
 		},
 		deleteAttachment(e, attachment) {
-			this.deleteTabAttachment({
+			this.$store.dispatch('deleteTabAttachment', {
 				tabName: this.tab.name,
 				attachment
 			})
@@ -94,14 +95,14 @@ export default {
 		},
 		onDescriptionChange(e, attachment) {
 			attachment.description = e
-			this.updateTabAttachment({
+			this.$store.commit('updateTabAttachment', {
 				tabName: this.tab.name,
 				attachment
 			})
 		},
 		onProgressCallback(attachment, percentage) {
 			attachment.percentage = percentage
-			this.updateTabAttachment({
+			this.$store.commit('updateTabAttachment', {
 				tabName: this.tab.name,
 				attachment
 			})
@@ -110,36 +111,35 @@ export default {
 			if (!this.selectedFiles || !this.selectedFiles.length) {
 				return
 			}
-			const attachments = this.selectedFiles.filter(file => this.allowedExtensions.find(extension => file.name.toLowerCase().trim().endsWith(extension))
-				&& !this.attachments.find(attachment => file.name.toLowerCase().trim() === attachment.name.toLowerCase().trim()))
+			const attachments = this.selectedFiles.filter(file => this.allowedExtensions.find(extension => file.name.toLowerCase().trim().endsWith(extension)))
 
-			if (!attachments.length) {
-				this.$refs.filesInput.reset()
-				return
-			}
-			const tabName = this.tab.name
-			attachments.forEach(attachment => {
-				attachment.updated = 'zz' // to appear first in the descending sorted file list while it is uploaded
+			attachments.forEach((attachment, index) => {
+				attachment.updated = index
 			})
-			this.addTabAttachments({ tabName, attachments })
-			await this.uploadAttachments({ attachments, onProgressCallback: this.onProgressCallback })
+			this.$store.commit('addTabAttachments', { tabName: this.tab.name, attachments })
+
+			this.$refs.filesInput.reset()
+		},
+		async upload() {
+			const attachments = this.attachmentsNotUploaded
+			const tabName = this.tab.name
+			await this.$store.dispatch('uploadAttachments', { attachments, onProgressCallback: this.onProgressCallback })
 			attachments.forEach(attachment => {
-				this.updateTabAttachment({
+				this.$store.commit('updateTabAttachment', {
 					tabName,
 					attachment
 				})
 			})
-			this.$refs.filesInput.reset()
 
 			const checkAttachmentsUploadedSuccessfullyInterval = setInterval(async () => {
 				if (this.allAttachmentsUploadedSuccessfully) {
 					clearInterval(checkAttachmentsUploadedSuccessfullyInterval)
 					return
 				}
-				await this.getAttachmentsWithUploadStatus({ attachments: this.attachments })
+				await this.$store.dispatch('getAttachmentsWithUploadStatus', { attachments: this.attachments })
 
 				this.attachments.forEach(attachment => {
-					this.updateTabAttachment({
+					this.$store.commit('updateTabAttachment', {
 						tabName,
 						attachment
 					})
@@ -148,8 +148,8 @@ export default {
 		}
 	},
 	async created() {
-		const existingAttachments = await this.getAttachmentsWithUploadStatus({})
-		this.addTabAttachments({ tabName: this.tab.name, attachments: existingAttachments })
+		const existingAttachments = await this.$store.dispatch('getAttachmentsWithUploadStatus', {})
+		this.$store.commit('addTabAttachments', { tabName: this.tab.name, attachments: existingAttachments })
 		this.loadingInitialFiles = false
 	}
 }
