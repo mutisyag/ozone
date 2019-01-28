@@ -42,7 +42,7 @@
 	</div>
 	<div class="row" v-if="attachmentsNotUploaded.length">
 		<div class="col-12">
-			<b-button v-if="attachments.length" variant="danger" @click="upload()">
+			<b-button v-if="attachments.length" variant="primary" @click="upload()">
 				<i class="fa fa-upload" aria-hidden="true"></i>
 				&nbsp;
 				<span v-translate>Upload</span>

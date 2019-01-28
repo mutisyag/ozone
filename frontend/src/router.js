@@ -11,6 +11,7 @@ const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/
 const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
+const UserProfile = () => import(/* webpackChunkName: "userProfile" */ '@/views/UserProfile')
 
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
@@ -29,6 +30,12 @@ const routes = [
 		name: 'Dashboard',
 		meta: { requiresAuth: true },
 		component: Dashboard
+	},
+	{
+		path: '/user-profile',
+		name: 'UserProfile',
+		meta: { requiresAuth: true },
+		component: UserProfile
 	},
 	{
 		path: '/login',
