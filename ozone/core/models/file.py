@@ -105,7 +105,7 @@ class File(models.Model):
         abstract = True
 
 
-class SubmissionFile(ModifyPreventionMixin, File):
+class SubmissionFile(File):
     def get_storage_directory(self, filename):
         return os.path.join(
             self.submission.get_storage_directory(),
