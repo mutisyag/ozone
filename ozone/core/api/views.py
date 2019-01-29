@@ -938,23 +938,22 @@ class UploadHookViewSet(viewsets.ViewSet):
 
         try:
             token = UploadToken.objects.get(token=tok)
-            upload_id = request.data.get('ID')
-            submission_file, is_new = SubmissionFile.objects.get_or_create(
-                submission=token.submission,
-                name=file_name,
-                defaults={
-                    'uploader': token.user,
-                    'tus_id': upload_id,
-                    'upload_successful': False
-                }
-            )
-
             if not token.user.is_authenticated:
                 log.error(f'UPLOAD denied for "{token.user}": NOT ALLOWED')
                 return Response(
                     {'error': 'user not authenticated'},
                     status=status.HTTP_403_FORBIDDEN
                 )
+
+            upload_id = request.data.get('ID')
+
+            submission_file = SubmissionFile.objects.create(
+                submission=token.submission,
+                name=file_name,
+                uploader=token.user,
+                tus_id=upload_id,
+                upload_successful=False
+            )
 
             file_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
@@ -975,13 +974,10 @@ class UploadHookViewSet(viewsets.ViewSet):
             log.info(f'file extension: {file_ext}')
             log.info(f'allowed extensions: {settings.ALLOWED_FILE_EXTENSIONS}')
 
-            if not is_new:
-                # New file with same name uploaded, delete old one to avoid
-                # auto-renaming in get_available_name()
-                token.submission.delete_disk_file(file_name)
-
+            # At this point, submission_file.file_name is not necessarily
+            # identical to the original file name
             submission_file.file.save(
-                file_name, File(file_path.open(mode='rb'))
+                submission_file.name, File(file_path.open(mode='rb'))
             )
             submission_file.uploader = token.user
             submission_file.upload_successful = True
