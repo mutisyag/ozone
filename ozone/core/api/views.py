@@ -977,7 +977,7 @@ class UploadHookViewSet(viewsets.ViewSet):
             # At this point, submission_file.file_name is not necessarily
             # identical to the original file name
             submission_file.file.save(
-                submission_file.file_name, File(file_path.open(mode='rb'))
+                submission_file.name, File(file_path.open(mode='rb'))
             )
             submission_file.uploader = token.user
             submission_file.upload_successful = True
