@@ -1,3 +1,4 @@
+from datetime import datetime
 from base64 import b64encode
 from collections import OrderedDict
 from copy import deepcopy
@@ -96,6 +97,9 @@ from ..serializers import (
     SubmissionFileSerializer,
     UploadTokenSerializer,
 )
+
+
+from .export_pdf import export_submission
 
 
 User = get_user_model()
@@ -472,6 +476,16 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         historical_records = Submission.objects.get(pk=pk).history.all()
         serializer = SubmissionHistorySerializer(historical_records, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
+    def export_pdf(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
+        filename = f'submission_{pk}_{timestamp}.pdf'
+        buf_pdf = export_submission(submission)
+        resp = HttpResponse(buf_pdf, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return resp
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
