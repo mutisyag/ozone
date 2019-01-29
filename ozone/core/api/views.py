@@ -185,11 +185,17 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
 
 class CurrentUserViewSet(
     ReadOnlyMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-    GenericViewSet
+    mixins.ListModelMixin, GenericViewSet
 ):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyUser)
+
+    def get_queryset(self):
+        if self.kwargs.get('pk'):
+            return self.queryset.filter(id=self.kwargs.get('pk'))
+        else:
+            return self.queryset.filter(id=self.request.user.pk)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
