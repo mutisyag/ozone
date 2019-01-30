@@ -40,6 +40,7 @@ module.exports = {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
 		deleteSubmission(browser)
+		logout(browser)
 	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')

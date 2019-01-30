@@ -1,6 +1,7 @@
 const login = (browser, username, password) => {
 	browser.url(process.env.VUE_DEV_SERVER_URL)
 	// start login
+		.useCss()
 		.waitForElementVisible('#id_username', 20000)
 		.setValue('#id_username', username)
 		.setValue('#id_password', password)
@@ -12,7 +13,8 @@ const login = (browser, username, password) => {
 }
 
 const logout = (browser) => {
-	browser.waitForElementVisible('#account_options', 5000)
+	browser.useCss()
+		.waitForElementVisible('#account_options', 5000)
 		.click('#account_options')
 		.waitForElementVisible('#logout_button', 5000)
 		.click('#logout_button')
@@ -21,7 +23,8 @@ const logout = (browser) => {
 }
 
 const createSubmission = (browser) => {
-	browser.waitForElementVisible('.create-submission', 10000)
+	browser.useCss()
+		.waitForElementVisible('.create-submission', 10000)
 		.waitForElementVisible('#obligation_selector', 10000)
 		.waitForElementVisible('#obligation_selector .multiselect', 10000)
 		.click('#obligation_selector .multiselect')
