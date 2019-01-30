@@ -137,8 +137,7 @@
 					</b-input-group>
 					<b-btn @click="clearFilters"><span v-translate>Clear</span></b-btn>
               </div>
-              <b-table
-											id="all-submissions-table"
+              <b-table id="all-submissions-table"
 											show-empty
 											outlined
 											bordered
