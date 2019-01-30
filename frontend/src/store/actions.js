@@ -200,7 +200,7 @@ const actions = {
 			context.dispatch('getCurrentSubmissions')
 			context.dispatch('setAlert', {
 				$gettext,
-				message: { __all__: [$gettext('Submission deleted')] },
+				message: { __all__: [$gettext('Submission Deleted')] },
 				variant: 'success'
 			})
 		}).catch(() => {
