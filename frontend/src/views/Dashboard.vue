@@ -138,19 +138,19 @@
 					<b-btn @click="clearFilters"><span v-translate>Clear</span></b-btn>
               </div>
               <b-table id="all-submissions-table"
-											show-empty
-											outlined
-											bordered
-											hover
-											head-variant="light"
-											stacked="md"
-											:items="tableItems"
-											:fields="tableFields"
-											:per-page="tableOptions.perPage"
-											:sort-by.sync="tableOptions.sorting.sortBy"
-											:sort-desc.sync="tableOptions.sorting.sortDesc"
-											:sort-direction="tableOptions.sorting.sortDirection"
-											ref="table">
+								show-empty
+								outlined
+								bordered
+								hover
+								head-variant="light"
+								stacked="md"
+								:items="tableItems"
+								:fields="tableFields"
+								:per-page="tableOptions.perPage"
+								:sort-by.sync="tableOptions.sorting.sortBy"
+								:sort-desc.sync="tableOptions.sorting.sortDesc"
+								:sort-direction="tableOptions.sorting.sortDirection"
+								ref="table">
                 <template slot="actions" slot-scope="row">
                   <b-button-group>
                     <router-link
