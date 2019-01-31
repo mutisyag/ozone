@@ -162,14 +162,14 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 				/** Open aside menu * */
 				browser
 					.click(`${aside_menu}//button[@class='navbar-toggler']`)
-					.pause(500)
+					.pause(1500)
+					.waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities_type}')]`, 5000)
 			}
 		})
 
 	browser
 		.useXpath()
 		.waitForElementVisible(`${aside_menu}//div[@class='tabs']`, 5000)
-		.pause(500)
 		.click(`${aside_nav}//span[contains(text(), '${entities_type}')]`)
 		.pause(500)
 		.waitForElementVisible(entities_selector, 5000)
