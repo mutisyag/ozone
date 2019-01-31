@@ -156,6 +156,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
             file_stream=stream, chunk_size=200,
             metadata={
                 "filename": "text.txt",
+                "description": "description",
                 "token": token.token,
             }
         )
@@ -164,6 +165,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
         # XXX Wait to (hopefully) ensure that tusd has finished
         time.sleep(2)
         self.assertEqual(submission.files.first().name, "text.txt")
+        self.assertEqual(submission.files.first().description, "description")
         self.assertEqual(submission.files.first().file.read(), FILE_CONTENT)
 
     def test_upload_as_secretariat(self):
@@ -174,6 +176,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
             file_stream=stream, chunk_size=200,
             metadata={
                 "filename": "text.txt",
+                "description": "description",
                 "token": token.token,
             }
         )
@@ -182,6 +185,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
         # XXX Wait to (hopefully) ensure that tusd has finished
         time.sleep(2)
         self.assertEqual(submission.files.first().name, "text.txt")
+        self.assertEqual(submission.files.first().description, "description")
         self.assertEqual(submission.files.first().file.read(), FILE_CONTENT)
 
 # TODO: test edge cases: expired token, invalid token, wrong extension,
