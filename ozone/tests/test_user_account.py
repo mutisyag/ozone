@@ -40,7 +40,7 @@ class UserAccountTests(BaseTests):
         party = PartyFactory.create(subregion=subregion)
         another_party = AnotherPartyFactory(subregion=subregion)
         self.language_en = LanguageEnFactory()
-        self.language_fr= LanguageFrFactory()
+        self.language_fr = LanguageFrFactory()
         self.reporter = ReporterUserFactory.create(
             first_name='Test',
             last_name='Test',
@@ -79,7 +79,7 @@ class UserAccountTests(BaseTests):
         expected_data['id'] = self.reporter.pk
         expected_data['username'] = self.reporter.username
         expected_data['party'] = self.reporter.party.pk
-        expected_data['language'] = self.reporter.language.pk
+        expected_data['language'] = self.reporter.language.iso
         expected_data['impersonated_by'] = None
         self.assertEqual(result.json(), expected_data)
 
@@ -130,7 +130,7 @@ class UserAccountTests(BaseTests):
         data['email'] = 'reporter_edited@example.com'
         data['first_name'] = 'Test Edited'
         data['last_name'] = 'Test Edited'
-        data['language'] = self.language_fr.pk
+        data['language'] = self.language_fr.iso
 
         result = self.client.put(
             reverse(

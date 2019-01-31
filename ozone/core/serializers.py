@@ -39,6 +39,7 @@ from .models import (
     UploadToken,
     HighAmbientTemperatureImport,
     ReportingChannel,
+    Language,
 )
 
 User = get_user_model()
@@ -188,6 +189,12 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     Used to get basic info for current user
     """
     impersonated_by = serializers.SerializerMethodField()
+    language = serializers.SlugRelatedField(
+        read_only=False,
+        queryset=Language.objects.all(),
+        many=False,
+        slug_field='iso'
+    )
 
     class Meta:
         model = User
