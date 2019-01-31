@@ -83,6 +83,8 @@ const getUsers = () => fetch('users/')
 
 const getCurrentUser = () => fetch('current-user/')
 
+const updateCurrentUser = (user) => update(`current-user/${user.id}/`, user)
+
 const getParties = () => fetch('parties/')
 
 const getPartyRatifications = () => fetch('get-party-ratifications/')
@@ -215,6 +217,7 @@ export {
 	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
+	updateCurrentUser,
 	fetchFromPublicDirectory,
 	uploadAttachment
 }

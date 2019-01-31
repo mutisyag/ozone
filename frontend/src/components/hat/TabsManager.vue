@@ -143,7 +143,7 @@ export default {
 	},
 	methods: {
 		updateBreadcrumbs() {
-			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.$store.state.current_submission.obligation, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
 		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]

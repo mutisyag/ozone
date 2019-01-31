@@ -6,18 +6,18 @@
 	<b-input-group class="mb-2" :prepend="$gettext('Last name')">
 		<input class="form-control" v-model="userProfile.last_name" />
 	</b-input-group>
+	<b-input-group class="mb-2" :prepend="$gettext('Email')">
+		<input class="form-control" v-model="userProfile.email" />
+	</b-input-group>
 	<b-input-group class="mb-2" :prepend="$gettext('Language')">
 		<multiselect
 				trackBy="value"
 				label="text"
-				v-model="userProfile.languageKey"
+				v-model="userProfile.language"
 				:options="availableLanguages" />
 	</b-input-group>
 	<b-input-group class="mb-2" :prepend="$gettext('User name')">
 		<input class="form-control" v-model="userProfile.username" :disabled="true" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('Email')">
-		<input class="form-control" v-model="userProfile.email" :disabled="true" />
 	</b-input-group>
 	<b-input-group class="mb-2" :prepend="$gettext('Party')">
 		<input class="form-control" v-model="userProfile.party" :disabled="true" />
@@ -57,10 +57,12 @@ export default {
 	},
 	created() {
 		this.$store.commit('updateBreadcrumbs', [this.$gettext('User profile')])
+		console.log(this.$store.state.currentUser)
 		this.userProfile = {
-			...this.$store.state.currentUser,
-			// TODO: REMOVE THIS ONCE languageKey WILL BE HOLD IN currentUser
-			languageKey: this.$language.current
+			...this.$store.state.currentUser
+		}
+		if (!this.userProfile.language) {
+			this.userProfile.language = this.$language.current
 		}
 	},
 
@@ -72,14 +74,14 @@ export default {
 	},
 	methods: {
 		save() {
-			console.log('TODO: SAVE USER PROFILE TO SERVER....', this.userProfile)
+			this.$store.dispatch('updateCurrentUser', this.userProfile)
 		}
 	},
 	watch: {
-		'userProfile.languageKey': {
+		'userProfile.language': {
 			handler(newValue, oldValue) {
 				if (newValue !== oldValue) {
-					setLanguage(this.userProfile.languageKey, this)
+					setLanguage(this.userProfile.language, this)
 				}
 			}
 		}

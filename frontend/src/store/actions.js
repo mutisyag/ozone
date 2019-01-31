@@ -15,6 +15,7 @@ import {
 	getNonParties,
 	getPartyRatifications,
 	getCurrentUser,
+	updateCurrentUser,
 	uploadAttachment
 } from '@/components/common/services/api'
 
@@ -76,13 +77,26 @@ const actions = {
 		})
 	},
 
-	getMyCurrentUser(context) {
-		getCurrentUser().then(response => {
-			context.commit('setCurrentUser', response.data)
+	async getMyCurrentUser({ commit, dispatch }) {
+		let response
+		try {
+			response = await getCurrentUser()
+			commit('setCurrentUser', response.data)
 			// TODO: WHY IS IT AN ARRAY ?
-			context.commit('setCurrentUserPartyInDashboard', response.data[0].party)
-			context.dispatch('getCurrentSubmissions')
-		})
+			commit('setCurrentUserPartyInDashboard', response.data[0].party)
+			dispatch('getCurrentSubmissions')
+		} catch (e) {
+			console.log('getMyCurrentUser', e)
+		}
+	},
+
+	async updateCurrentUser({ dispatch }, user) {
+		try {
+			await updateCurrentUser(user)
+			dispatch('getMyCurrentUser')
+		} catch (e) {
+			console.log('updateCurrentUser', e)
+		}
 	},
 
 	getCurrentUserForm(context) {
@@ -424,15 +438,6 @@ const actions = {
 		}
 
 		commit('deleteTabAttachment', { tabName, attachment })
-	},
-	async deleteAllTabAttachments({ state, dispatch }, { tabName }) {
-		const { attachments } = state.form.tabs[tabName].form_fields
-		for (let i = 0; i < attachments.length; i += 1) {
-			const attachment = attachments[i]
-			await dispatch('deleteTabAttachment', { tabName, attachment })
-		}
-
-		// commit('deleteAllTabAttachments', { tabName })
 	}
 }
 
