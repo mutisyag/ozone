@@ -162,12 +162,14 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 				/** Open aside menu * */
 				browser
 					.click(`${aside_menu}//button[@class='navbar-toggler']`)
+					.pause(500)
 			}
 		})
 
 	browser
 		.useXpath()
 		.waitForElementVisible(`${aside_menu}//div[@class='tabs']`, 5000)
+		.pause(500)
 		.click(`${aside_nav}//span[contains(text(), '${entities_type}')]`)
 		.pause(500)
 		.waitForElementVisible(entities_selector, 5000)
@@ -180,7 +182,7 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 		.waitForElementVisible(add_button, 5000)
 		.click(add_button)
 		.pause(500)
-		/** Close aside menu * */
+		/* Close aside menu  */
 		.click(`${aside_menu}//button[@class='navbar-toggler']`)
 		.pause(500)
 }
