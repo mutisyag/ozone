@@ -72,19 +72,20 @@
 						<b-btn @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"><span v-translate>Clear</span></b-btn>
 					</div>
 				</div>
-				<b-table show-empty
-									outlined
-									bordered
-									hover
-									head-variant="light"
-									stacked="md"
-									:filter="dataEntryTable.search"
-									:items="dataEntryTableItems"
-									:fields="dataEntryTableFields"
-									:per-page="dataEntryTable.perPage"
-									:current-page="dataEntryTable.currentPage"
-									ref="dataEntryTable"
-									@filtered="onFiltered">
+				<b-table id="data-entry-submissions-table"
+					show-empty
+					outlined
+					bordered
+					hover
+					head-variant="light"
+					stacked="md"
+					:filter="dataEntryTable.search"
+					:items="dataEntryTableItems"
+					:fields="dataEntryTableFields"
+					:per-page="dataEntryTable.perPage"
+					:current-page="dataEntryTable.currentPage"
+					ref="dataEntryTable"
+					@filtered="onFiltered">
 						<template slot="actions" slot-scope="row">
 							<router-link
 									class="btn btn-outline-primary btn-sm"
