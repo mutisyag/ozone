@@ -44,7 +44,7 @@ const createSubmission = (browser) => {
 		.click('//div[@id="period_selector"]//ul//li//span//span[contains(text(),"2018")]')
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
-		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission Created')]", 5000)
+		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission created')]", 5000)
 }
 
 const deleteSubmission = (browser) => {
@@ -59,7 +59,7 @@ const deleteSubmission = (browser) => {
 		.click("//button[@id='delete-button']")
 		.pause(500)
 		.acceptAlert()
-		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission Deleted')]", 5000)
+		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission deleted')]", 5000)
 		.waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 10000)
 }
 

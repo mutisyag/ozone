@@ -42,7 +42,7 @@ const actions = {
 				createSubmission(submission).then((response) => {
 					context.dispatch('setAlert', {
 						$gettext,
-						message: { __all__: [$gettext('Submission Created')] },
+						message: { __all__: [$gettext('Submission created')] },
 						variant: 'success'
 					})
 					context.dispatch('getCurrentSubmissions').then(() => {
@@ -200,7 +200,7 @@ const actions = {
 			context.dispatch('getCurrentSubmissions')
 			context.dispatch('setAlert', {
 				$gettext,
-				message: { __all__: [$gettext('Submission Deleted')] },
+				message: { __all__: [$gettext('Submission deleted')] },
 				variant: 'success'
 			})
 		}).catch(() => {
