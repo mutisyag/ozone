@@ -25,15 +25,6 @@
 			</div>
 		</div>
 	</div>
-	<div class="row" v-if="attachments.length > 1">
-		<div class="col-12">
-			<b-button class="pull-right" variant="danger" @click="deleteAllAttachments()">
-				<i class="fa fa-trash" aria-hidden="true"></i>
-				&nbsp;
-				<span v-translate>Delete all</span>
-			</b-button>
-		</div>
-	</div>
 	<div class="row">
 		<div class="col-12">
 			$store.getters.can_upload_files - {{$store.getters.can_upload_files}} - it should be true!
@@ -80,12 +71,6 @@ export default {
 		}
 	},
 	methods: {
-		deleteAllAttachments() {
-			this.$store.dispatch('deleteAllTabAttachments', {
-				tabName: this.tab.name
-			})
-			this.$refs.filesInput.reset()
-		},
 		deleteAttachment(e, attachment) {
 			this.$store.dispatch('deleteTabAttachment', {
 				tabName: this.tab.name,

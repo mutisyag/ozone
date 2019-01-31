@@ -1,7 +1,7 @@
 import 'toastedjs/src/sass/toast.scss'
 import Toasted from 'toastedjs/dist/toasted.min.js'
 
-import { sortDescending } from '@/components/common/services/utilsService'
+import { sortAscending } from '@/components/common/services/utilsService'
 
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
@@ -255,7 +255,7 @@ const mutations = {
 		attachments.forEach(attachment => {
 			form_fields.attachments.push(attachment)
 		})
-		form_fields.attachments = sortDescending(form_fields.attachments, 'updated')
+		form_fields.attachments = sortAscending(form_fields.attachments, 'updated')
 	},
 	updateTabAttachment(state, { tabName, attachment }) {
 		const { form_fields } = state.form.tabs[tabName]
@@ -263,14 +263,11 @@ const mutations = {
 		form_fields.attachments.forEach(attachOld => {
 			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
 		})
-		form_fields.attachments = sortDescending(updatedAttachments, 'updated')
+		form_fields.attachments = sortAscending(updatedAttachments, 'updated')
 	},
 	deleteTabAttachment(state, { tabName, attachment }) {
 		const { form_fields } = state.form.tabs[tabName]
 		form_fields.attachments = form_fields.attachments.filter(attachOld => attachOld !== attachment)
-	},
-	deleteAllTabAttachments(state, { tabName }) {
-		state.form.tabs[tabName].form_fields.attachments = []
 	}
 }
 
