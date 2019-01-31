@@ -42,7 +42,7 @@ const actions = {
 				createSubmission(submission).then((response) => {
 					context.dispatch('setAlert', {
 						$gettext,
-						message: { __all__: [$gettext('Submission Created')] },
+						message: { __all__: [$gettext('Submission created')] },
 						variant: 'success'
 					})
 					context.dispatch('getCurrentSubmissions').then(() => {

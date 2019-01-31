@@ -1,6 +1,7 @@
 const login = (browser, username, password) => {
 	browser.url(process.env.VUE_DEV_SERVER_URL)
 	// start login
+		.useCss()
 		.waitForElementVisible('#id_username', 20000)
 		.setValue('#id_username', username)
 		.setValue('#id_password', password)
@@ -12,7 +13,8 @@ const login = (browser, username, password) => {
 }
 
 const logout = (browser) => {
-	browser.waitForElementVisible('#account_options', 5000)
+	browser.useCss()
+		.waitForElementVisible('#account_options', 5000)
 		.click('#account_options')
 		.waitForElementVisible('#logout_button', 5000)
 		.click('#logout_button')
@@ -21,7 +23,8 @@ const logout = (browser) => {
 }
 
 const createSubmission = (browser) => {
-	browser.waitForElementVisible('.create-submission', 10000)
+	browser.useCss()
+		.waitForElementVisible('.create-submission', 10000)
 		.waitForElementVisible('#obligation_selector', 10000)
 		.waitForElementVisible('#obligation_selector .multiselect', 10000)
 		.click('#obligation_selector .multiselect')
@@ -41,7 +44,23 @@ const createSubmission = (browser) => {
 		.click('//div[@id="period_selector"]//ul//li//span//span[contains(text(),"2018")]')
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
-		.waitForElementVisible('//div[@class="toasted bulma success"]', 5000)
+		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission created')]", 5000)
+}
+
+const deleteSubmission = (browser) => {
+	browser.useXpath()
+		//	Fake delete
+		.waitForElementVisible("//button[@id='delete-button']", 10000)
+		.click("//button[@id='delete-button']")
+		.pause(500)
+		.dismissAlert()
+		//	Delete Submission
+		.waitForElementVisible("//button[@id='delete-button']", 10000)
+		.click("//button[@id='delete-button']")
+		.pause(500)
+		.acceptAlert()
+		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission deleted')]", 5000)
+		.waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 10000)
 }
 
 const clickQuestionnaireRadios = (browser, fields = []) => {
@@ -154,6 +173,7 @@ module.exports = {
 	login,
 	logout,
 	createSubmission,
+	deleteSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,

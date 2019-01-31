@@ -10,6 +10,7 @@ const {
 	login,
 	logout,
 	createSubmission,
+	deleteSubmission,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
@@ -33,6 +34,12 @@ module.exports = {
 	},
 	BU_001: browser => {
 		login(browser, 'party', 'party')
+		logout(browser)
+	},
+	BU_002: browser => {
+		login(browser, 'party', 'party')
+		createSubmission(browser)
+		deleteSubmission(browser)
 		logout(browser)
 	},
 	BU_006: browser => {
