@@ -1,11 +1,11 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabAttachments } from '@/components/common/dataDefinitions/tabAttachments'
+import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormHat = ($gettext) => {
 	const form = {
 		formDetails: {
-			tabsDisplay: ['sub_info', 'has_imports', 'has_produced', 'attachments'],
+			tabsDisplay: ['sub_info', 'has_imports', 'has_produced', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
 				'initialData.substances',
@@ -31,8 +31,8 @@ const getFormHat = ($gettext) => {
 				hideInfoButton: true,
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
 			},
-			attachments: {
-				...getTabAttachments($gettext),
+			files: {
+				...getTabFiles($gettext),
 				hideInfoButton: true
 			},
 			has_imports: {

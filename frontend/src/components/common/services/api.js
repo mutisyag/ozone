@@ -97,6 +97,28 @@ const getExportBlends = () => {
 	return null
 }
 
+const getPeriods = () => fetch('periods/')
+
+const getObligations = () => fetch('obligations/')
+
+const createSubmission = (submisson_data) => {
+	console.log(api.defaults)
+	return post('submissions/', submisson_data)
+}
+
+const createBlend = (blend) => post('blends/', blend)
+
+const cloneSubmission = (url) => post(`${url}clone/`)
+
+const getCustomBlends = (party) => fetch('blends/', { params: { party } })
+
+const getInstructions = (formName, tabName) => {
+	if (isTestSession) {
+		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
+	}
+	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
+}
+
 const getSubmissions = (tableOptions) => {
 	const params = {
 		page_size: tableOptions.perPage,
@@ -120,53 +142,34 @@ const getSubmissions = (tableOptions) => {
 	return fetch('submissions/', { params })
 }
 
-const getPeriods = () => fetch('periods/')
-
-const getObligations = () => fetch('obligations/')
-
-const createSubmission = (submisson_data) => {
-	console.log(api.defaults)
-	return post('submissions/', submisson_data)
-}
-
-const createBlend = (blend) => post('blends/', blend)
-
-const cloneSubmission = (url) => post(`${url}clone/`)
-
-const getCustomBlends = (party) => fetch('blends/', { params: { party } })
+const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
-
-const getInstructions = (formName, tabName) => {
-	if (isTestSession) {
-		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
-	}
-	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
-}
-
-const deleteSubmission = (url) => remove(url)
 
 const getSubmission = (url) => fetch(url)
 
 const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, { hideLoader: true })
 
-const deleteSubmissionFile = ({ attachment, submissionId }) => remove(`submissions/${submissionId}/files/${attachment.id}/`)
+const deleteSubmission = (url) => remove(url)
 
-const getSubmissionHistory = (url) => fetch(`${url}versions/`)
+const deleteSubmissionFile = ({ file, submissionId }) => remove(`submissions/${submissionId}/files/${file.id}/`)
+
+const updateSubmissionFiles = (submissionId, files) => update(`submissions/${submissionId}/files/`, files)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
 const getNonParties = () => fetch('get-non-parties/')
 
-const uploadAttachment = (attachment, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
+const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
-	console.log(attachment)
-	const upload = new tus.Upload(attachment,
+	console.log(file)
+	const upload = new tus.Upload(file,
 		{
 			endpoint: filesURL,
 			metadata: {
 				token: responseToken.data.token,
-				filename: attachment.name
+				filename: file.name,
+				description: file.description
 			},
 			retryDelays: [0, 1000, 3000, 5000],
 			onError: function onError(error) {
@@ -176,7 +179,7 @@ const uploadAttachment = (attachment, submissionId, onProgressCallback) => new P
 			onProgress: function onProgress(bytesUploaded, bytesTotal) {
 				if (onProgressCallback) {
 					const percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
-					onProgressCallback(attachment, percentage)
+					onProgressCallback(file, percentage)
 				}
 			},
 			onSuccess: function onSuccess() {
@@ -201,23 +204,24 @@ export {
 	getUsers,
 	getParties,
 	getPartyRatifications,
-	getSubmissions,
 	getPeriods,
 	getObligations,
 	createSubmission,
+	getSubmissions,
+	getSubmissionHistory,
+	getSubmissionsVersions,
 	getSubmission,
 	getSubmissionFiles,
+	deleteSubmission,
 	deleteSubmissionFile,
+	updateSubmissionFiles,
 	createBlend,
 	getCustomBlends,
-	getSubmissionsVersions,
 	callTransition,
-	deleteSubmission,
 	cloneSubmission,
-	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
 	updateCurrentUser,
 	fetchFromPublicDirectory,
-	uploadAttachment
+	uploadFile
 }
