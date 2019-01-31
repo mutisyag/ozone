@@ -932,6 +932,7 @@ class UploadHookViewSet(viewsets.ViewSet):
         log.info(f'UPLOAD post-finish: {request.data}')
         meta_data = request.data.get('MetaData', {})
         tok = meta_data.get('token', '')
+        description = meta_data.get('description', '')
         # filename presence was enforced during pre-create
         file_name = meta_data['filename']
         file_ext = file_name.split('.')[-1].lower()
@@ -952,6 +953,7 @@ class UploadHookViewSet(viewsets.ViewSet):
                 name=file_name,
                 uploader=token.user,
                 tus_id=upload_id,
+                description=description,
                 upload_successful=False
             )
 
