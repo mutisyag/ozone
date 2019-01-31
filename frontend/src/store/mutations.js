@@ -247,27 +247,27 @@ const mutations = {
 	removeField(state, data) {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
-	addTabAttachments(state, { tabName, attachments }) {
-		if (!attachments) {
+	addTabFiles(state, { tabName, files }) {
+		if (!files) {
 			return
 		}
 		const { form_fields } = state.form.tabs[tabName]
-		attachments.forEach(attachment => {
-			form_fields.attachments.push(attachment)
+		files.forEach(file => {
+			form_fields.files.push(file)
 		})
-		form_fields.attachments = sortAscending(form_fields.attachments, 'updated')
+		form_fields.files = sortAscending(form_fields.files, 'updated')
 	},
-	updateTabAttachment(state, { tabName, attachment }) {
+	updateTabFile(state, { tabName, file }) {
 		const { form_fields } = state.form.tabs[tabName]
-		const updatedAttachments = []
-		form_fields.attachments.forEach(attachOld => {
-			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
+		const updatedfiles = []
+		form_fields.files.forEach(fileOld => {
+			fileOld === file ? updatedfiles.push(file) : updatedfiles.push(fileOld)
 		})
-		form_fields.attachments = sortAscending(updatedAttachments, 'updated')
+		form_fields.files = sortAscending(updatedfiles, 'updated')
 	},
-	deleteTabAttachment(state, { tabName, attachment }) {
+	deleteTabFile(state, { tabName, file }) {
 		const { form_fields } = state.form.tabs[tabName]
-		form_fields.attachments = form_fields.attachments.filter(attachOld => attachOld !== attachment)
+		form_fields.files = form_fields.files.filter(fileOld => fileOld !== file)
 	}
 }
 

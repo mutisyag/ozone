@@ -1,11 +1,11 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabAttachments } from '@/components/common/dataDefinitions/tabAttachments'
+import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 
 const getFormLetter = ($gettext) => {
 	const tabSubInfo = getTabSubInfo($gettext)
 	const form = {
 		formDetails: {
-			tabsDisplay: ['sub_info', 'attachments'],
+			tabsDisplay: ['sub_info', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
 				'initialData.display.countries'
@@ -22,7 +22,7 @@ const getFormLetter = ($gettext) => {
 					...tabSubInfo.default_properties
 				}
 			},
-			attachments: getTabAttachments($gettext)
+			files: getTabFiles($gettext)
 		}
 	}
 	return form

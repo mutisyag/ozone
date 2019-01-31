@@ -61,9 +61,9 @@
 
 			<b-tab >
 				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+					<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 				</template>
-				<Attachments :tab="$store.state.form.tabs.attachments"/>
+				<Files :tab="$store.state.form.tabs.files" />
 			</b-tab>
 		</b-tabs>
 	</b-card>
@@ -113,7 +113,7 @@ import Questionnaire from '@/components/art7/Questionnaire.vue'
 import FormTemplate from '@/components/art7/FormTemplate.vue'
 import EmissionsTemplate from '@/components/art7/EmissionsTemplate.vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
-import Attachments from '@/components/common/Attachments.vue'
+import Files from '@/components/common/Files'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/art7/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
@@ -126,7 +126,7 @@ export default {
 		FormTemplate,
 		EmissionsTemplate,
 		SubmissionInfo,
-		Attachments,
+		Files,
 		Footer,
 		Save,
 		SubmissionHistory,
@@ -198,7 +198,7 @@ export default {
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
+				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {

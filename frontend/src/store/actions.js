@@ -2,12 +2,13 @@ import {
 	getSubmissionHistory,
 	callTransition,
 	getSubstances,
+	getCustomBlends,
+	getSubmissions,
 	getSubmission,
 	getSubmissionFiles,
-	deleteSubmissionFile,
-	getCustomBlends,
 	deleteSubmission,
-	getSubmissions,
+	deleteSubmissionFile,
+	updateSubmissionFiles,
 	getPeriods,
 	getObligations,
 	createSubmission,
@@ -16,7 +17,7 @@ import {
 	getPartyRatifications,
 	getCurrentUser,
 	updateCurrentUser,
-	uploadAttachment
+	uploadFile
 } from '@/components/common/services/api'
 
 import {
@@ -404,40 +405,40 @@ const actions = {
 			resolve()
 		})
 	},
-	async uploadAttachments(context, { attachments, onProgressCallback }) {
-		for (let i = 0; i < attachments.length; i += 1) {
-			const attachment = attachments[i]
-			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
-			attachment.tus_url = response.url
-			attachment.percentage = 100
+	async uploadFiles(context, { files, onProgressCallback }) {
+		for (let i = 0; i < files.length; i += 1) {
+			const file = files[i]
+			const response = await uploadFile(file, context.state.current_submission.id, onProgressCallback)
+			file.tus_url = response.url
+			file.percentage = 100
 		}
 	},
-	async getAttachmentsWithUploadStatus(context, { attachments }) {
-		console.log('attachments', attachments)
-		const files = await getSubmissionFiles(context.state.current_submission.id)
-		console.log('files', files)
-		if (!attachments) {
-			return files.data
-		}
-		files.data.forEach(file => {
-			const attach = attachments.find(attachment => attachment.tus_url && attachment.tus_url.endsWith(file.tus_id))
-			if (attach) {
-				attach.upload_successful = file.upload_successful
-				attach.file_url = file.file_url
-				attach.updated = file.updated
-				attach.tus_id = file.tus_id
-				console.log('found attach', attach)
+	async getSubmissionFiles(context) {
+		const response = await getSubmissionFiles(context.state.current_submission.id)
+		return response.data
+	},
+	async setJustUploadedFilesState({ dispatch }, { files }) {
+		const filesOnServer = await dispatch('getSubmissionFiles')
+		filesOnServer.forEach(file => {
+			const fileJustUploaded = files.find(x => x.tus_url && x.tus_url.endsWith(file.tus_id))
+			if (fileJustUploaded) {
+				fileJustUploaded.upload_successful = file.upload_successful
+				fileJustUploaded.file_url = file.file_url
+				fileJustUploaded.updated = file.updated
+				fileJustUploaded.tus_id = file.tus_id
 			}
 		})
-		return attachments
 	},
-	async deleteTabAttachment({ state, commit }, { tabName, attachment }) {
-		console.log(attachment)
-		if (attachment.tus_id) {
-			await deleteSubmissionFile({ attachment, submissionId: state.current_submission.id })
+	async deleteTabFile({ state, commit }, { tabName, file }) {
+		console.log(file)
+		if (file.tus_id) {
+			await deleteSubmissionFile({ file, submissionId: state.current_submission.id })
 		}
 
-		commit('deleteTabAttachment', { tabName, attachment })
+		commit('deleteTabFile', { tabName, file })
+	},
+	async updateSubmissionFiles(context, files) {
+		await updateSubmissionFiles(context.state.current_submission.id, files)
 	}
 }
 

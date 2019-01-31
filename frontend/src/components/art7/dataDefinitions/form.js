@@ -1,12 +1,12 @@
 import { getQuestionnaireFields } from './questionnaireFields'
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabAttachments } from '@/components/common/dataDefinitions/tabAttachments'
+import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormArt7 = ($gettext) => {
 	const form = {
 		formDetails: {
-			tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'attachments', 'flags'],
+			tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'files', 'flags'],
 			dataNeeded: [
 				'initialData.countryOptions',
 				'initialData.substances',
@@ -39,8 +39,8 @@ const getFormArt7 = ($gettext) => {
 				...getTabSubInfo($gettext),
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
 			},
-			attachments: {
-				...getTabAttachments($gettext),
+			files: {
+				...getTabFiles($gettext),
 				hideInfoButton: true
 			},
 			questionaire_questions: {
