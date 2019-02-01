@@ -1,15 +1,11 @@
-from copy import deepcopy
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework.serializers import raise_errors_on_nested_writes
-from rest_framework.utils import model_meta
 from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from .models import (
@@ -435,7 +431,8 @@ class DataCheckRemarksMixInBase(object):
 
 
 class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
-    """Check create and update permissions on remarks for adding/updating a single
+    """
+    Check create and update permissions on remarks for adding/updating a single
     data entry.
     """
 
@@ -457,7 +454,8 @@ class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
 
 
 class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
-    """Check create and update permissions on remarks for adding/updating bulk
+    """
+    Check create and update permissions on remarks for adding/updating bulk
     data entries.
     """
 
@@ -978,7 +976,11 @@ class SubmissionFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionFile
-        exclude = ('file',)
+        exclude = ('submission', 'file',)
+        read_only_fields = (
+            'id', 'file_url', 'tus_id', 'upload_successful', 'created',
+            'updated', 'original_name', 'suffix', 'uploader'
+        )
 
     def get_file_url(self, obj):
         return self.context['request'].build_absolute_uri(reverse(
@@ -988,6 +990,38 @@ class SubmissionFileSerializer(serializers.ModelSerializer):
                 "pk": obj.pk
             }
         ))
+
+    def update(self, instance, validated_data):
+        """
+        Implements bulk update functionality for files.
+        File entries will be identified by id, not by name, to allow renames.
+        """
+        if not isinstance(validated_data, list):
+            validated_data = [validated_data, ]
+
+        for modified_entry in validated_data:
+            modified_id = modified_entry.get('id', None)
+            if modified_id is None:
+                raise ValidationError({
+                    "id": [_('File id must be specified at update')]
+                })
+            try:
+                # `instance` is a queryset due to the `BulkCreateUpdateMixin`
+                obj = instance.get(id=modified_id)
+                changed = False
+                # We only allow changing the name and description
+                if 'name' in modified_entry:
+                    obj.name = modified_entry.get('name')
+                    changed = True
+                if 'description' in modified_entry:
+                    obj.description = modified_entry.get('description')
+                    changed = True
+                if changed:
+                    obj.save()
+            except ObjectDoesNotExist:
+                raise ValidationError({
+                    "id": [_('Specified file id not found for this submission')]
+                })
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):

@@ -103,30 +103,42 @@ class TestToken(BaseSubmissionTest, BaseTests):
 
     def test_create_token_as_party_wrong_party(self):
         submission = self.create_submission()
-        self.client.login(username=self.another_party_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.another_party_user.username, password='qwe123qwe'
+        )
         resp = self.client.post(
             reverse(
-                "core:submission-token-list", kwargs={"submission_pk": submission.pk}
+                "core:submission-token-list",
+                kwargs={"submission_pk": submission.pk}
             ),
         )
         self.assertEqual(resp.status_code, 403)
 
     def test_create_token_as_secretariat(self):
         submission = self.create_submission()
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
         resp = self.client.post(
             reverse(
-                "core:submission-token-list", kwargs={"submission_pk": submission.pk}
+                "core:submission-token-list",
+                kwargs={"submission_pk": submission.pk}
             ),
         )
         self.assertEqual(resp.status_code, 200)
 
 
 class ReuseLiveServerThread(LiveServerThread):
-    """Enables SO_REUSEADDR, avoid errors while the socket is still in TIME_WAIT."""
+    """
+    Enables SO_REUSEADDR, avoid errors while the socket is still in TIME_WAIT.
+    """
 
     def _create_server(self):
-        return ThreadedWSGIServer((self.host, self.port), WSGIRequestHandler, allow_reuse_address=True)
+        return ThreadedWSGIServer(
+            (self.host, self.port),
+            WSGIRequestHandler,
+            allow_reuse_address=True
+        )
 
 
 @unittest.skipIf(not TUSD_AVAILABLE, "TUSD not available!")
@@ -212,7 +224,9 @@ class TestListFiles(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        self.client.login(username=self.party_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
         resp = self.client.get(
             reverse(
                 "core:submission-files-list",
@@ -223,17 +237,76 @@ class TestListFiles(BaseSubmissionTest, BaseTests):
         self.assertEqual(resp.json()[0]['name'], submission_file.name)
 
 
+class TestChangeDetails(BaseSubmissionTest, BaseTests):
+    """
+    Only name and description can be changed through the API.
+    """
+    def test_change_files_as_party(self):
+        submission = self.create_submission()
+        self.create_file(submission)
+
+        self.client.login(
+            username=self.party_user.username, password='qwe123qwe'
+        )
+
+        files_list_url = reverse(
+            "core:submission-files-list",
+            kwargs={"submission_pk": submission.pk}
+        )
+
+        resp = self.client.get(files_list_url)
+
+        json_response = resp.json()
+        json_response[0]['name'] = 'text_modified.txt'
+        json_response[0]['description'] = 'description modified'
+
+        self.client.put(files_list_url, json_response)
+
+        self.assertEqual(resp.json()[0]['name'], 'text_modified.txt')
+        self.assertEqual(
+            resp.json()[0]['description'], 'description_modified.txt'
+        )
+
+    def test_change_files_as_secretariat(self):
+        submission = self.create_submission()
+        self.create_file(submission)
+
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
+
+        files_list_url = reverse(
+            "core:submission-files-list",
+            kwargs={"submission_pk": submission.pk}
+        )
+        resp = self.client.get(files_list_url)
+        json_response = resp.json()
+        json_response[0]['name'] = 'text_modified.txt'
+        json_response[0]['description'] = 'description modified'
+
+        self.client.put(files_list_url, json_response)
+        self.assertEqual(resp.json()[0]['name'], 'text_modified.txt')
+        self.assertEqual(
+            resp.json()[0]['description'], 'description_modified.txt'
+        )
+
+
 class TestDownloads(BaseSubmissionTest, BaseTests):
 
     def test_download_files_as_party(self):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        self.client.login(username=self.party_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.party_user.username, password='qwe123qwe'
+        )
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
-                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+                kwargs={
+                    "submission_pk": submission.pk,
+                    "pk": submission_file.pk
+                }
             ),
         )
         self.assertEqual(resp.status_code, 200)
@@ -243,11 +316,15 @@ class TestDownloads(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        self.client.login(username=self.another_party_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.another_party_user.username, password='qwe123qwe'
+        )
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
-                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission_file.pk
+                }
             ),
         )
         self.assertEqual(resp.status_code, 403)
@@ -256,11 +333,15 @@ class TestDownloads(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission)
 
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
-                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission_file.pk
+                }
             ),
         )
         self.assertEqual(resp.status_code, 200)
@@ -270,11 +351,15 @@ class TestDownloads(BaseSubmissionTest, BaseTests):
         submission = self.create_submission()
         submission_file = self.create_file(submission, 'العربية')
 
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
         resp = self.client.get(
             reverse(
                 "core:submission-files-download",
-                kwargs={"submission_pk": submission.pk, "pk": submission_file.pk}
+                kwargs={
+                    "submission_pk": submission.pk, "pk": submission_file.pk
+                }
             ),
         )
         self.assertEqual(resp.status_code, 200)
