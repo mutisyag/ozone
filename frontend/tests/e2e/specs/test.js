@@ -11,6 +11,10 @@ const {
 	logout,
 	createSubmission,
 	deleteSubmission,
+	saveSubmission,
+	saveAndFail,
+	editSubmission,
+	openDashboard,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
@@ -35,12 +39,25 @@ module.exports = {
 	BU_001: browser => {
 		login(browser, 'party', 'party')
 		logout(browser)
+		browser.end()
 	},
 	BU_002: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
 		deleteSubmission(browser)
 		logout(browser)
+		browser.end()
+	},
+	BU_003: browser => {
+		login(browser, 'party', 'party')
+		createSubmission(browser)
+		openDashboard(browser)
+		editSubmission(browser)
+		saveAndFail(browser)
+		clickQuestionnaireRadios(browser)
+		saveSubmission(browser)
+		logout(browser)
+		browser.end()
 	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')
@@ -61,10 +78,8 @@ module.exports = {
 			.moveToElement('#tab-comments', undefined, undefined)
 		addValues(browser, '#blend-table', '#has_imports_tab')
 
-		browser
-			.pause(500)
-			.click('.app-footer #save-button')
-			.useXpath()
+		saveSubmission(browser)
+		browser.useXpath()
 			.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
 			.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Imports")]//i[contains(@class, "fa-check-circle")]', 20000)
 			.end()

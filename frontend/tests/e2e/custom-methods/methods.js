@@ -63,6 +63,45 @@ const deleteSubmission = (browser) => {
 		.waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 10000)
 }
 
+const saveSubmission = (browser) => {
+	browser.useXpath()
+		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
+		.click("//footer[@class='app-footer']//button[@id='save-button']")
+		.pause(500)
+		.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
+		.waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]//i[contains(@class, 'fa-check-circle')]", 20000)
+}
+/**
+ * 	saveAndFail(browser)
+ *	Use this before calling clickQuestionnaireRadios(args)
+ */
+const saveAndFail = (browser) => {
+	browser.useXpath()
+		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
+		.click("//footer[@class='app-footer']//button[@id='save-button']")
+		.pause(500)
+		.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
+		.waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]//i[contains(@class, 'fa-times-circle')]", 20000)
+}
+/**
+ * 	editSubmission(browser)
+ *	Must be in dashboard before using this function
+ */
+const editSubmission = (browser) => {
+	browser.useXpath()
+		.waitForElementVisible("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]", 10000)
+		.click("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]")
+		.pause(500)
+}
+
+const openDashboard = (browser) => {
+	browser.useXpath()
+		.waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
+		.click("//a[@href='/reporting/dashboard']")
+		.pause(500)
+		.assert.urlContains('/reporting/dashboard')
+}
+
 const clickQuestionnaireRadios = (browser, fields = []) => {
 	let restricted_fields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
 
@@ -123,6 +162,8 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 				/** Open aside menu * */
 				browser
 					.click(`${aside_menu}//button[@class='navbar-toggler']`)
+					.pause(1500)
+					.waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities_type}')]`, 5000)
 			}
 		})
 
@@ -141,7 +182,7 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 		.waitForElementVisible(add_button, 5000)
 		.click(add_button)
 		.pause(500)
-		/** Close aside menu * */
+		/* Close aside menu  */
 		.click(`${aside_menu}//button[@class='navbar-toggler']`)
 		.pause(500)
 }
@@ -174,6 +215,10 @@ module.exports = {
 	logout,
 	createSubmission,
 	deleteSubmission,
+	saveSubmission,
+	saveAndFail,
+	editSubmission,
+	openDashboard,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
