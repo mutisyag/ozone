@@ -20,7 +20,7 @@
 					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
-							<b-row v-for="order in info.fields_order" class="field-wrapper" :key="order">
+							<b-row :id="order" v-for="order in info.fields_order" class="field-wrapper" :key="order">
 								<b-col lg='3'>
 									<label>{{labels[order]}}</label>
 								</b-col>
@@ -43,7 +43,7 @@
 
 				<b-col v-if="flags_info">
 					<h5><span v-translate>Flags</span></h5>
-					<b-card>
+					<b-card id="flags">
 						<b-row>
 							<b-col>
 								<b-row v-for="order in general_flags" :key="order">
@@ -94,7 +94,7 @@
 						</b-row>
 						<div>
 							<h5 class="mt-4 mb-4" v-translate>Annex groups reported in submission</h5>
-								<b-row>
+								<b-row id="annex-flags">
 									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
 											<span cols="1">

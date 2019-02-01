@@ -15,6 +15,7 @@ const {
 	saveAndFail,
 	editSubmission,
 	openDashboard,
+	fillSubmissionInfo,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
@@ -56,6 +57,32 @@ module.exports = {
 		saveAndFail(browser)
 		clickQuestionnaireRadios(browser)
 		saveSubmission(browser)
+		logout(browser)
+		browser.end()
+	},
+	BU_004: browser => {
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_code: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			fax: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+
+		login(browser, 'party', 'party')
+		createSubmission(browser)
+		clickQuestionnaireRadios(browser)
+		fillSubmissionInfo(browser, submissionInfo)
+		browser.useXpath()
+			.waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
+			.click("//button[contains(@class, 'btn-info-outline')]")
+			.pause(500)
+			.click("//div[@id='instructions_modal']//button//span[contains(text(), 'Close')]")
+			.pause(500)
 		logout(browser)
 		browser.end()
 	},
