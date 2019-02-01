@@ -143,7 +143,7 @@ class BulkCreateUpdateMixin:
 
     def get_object(self):
         try:
-            super().get_object()
+            return super().get_object()
         except AssertionError:
             # If it's not one we return many!
             return self.get_queryset()
@@ -828,6 +828,7 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         obj = self.get_object()
         if isinstance(obj, QuerySet):
             obj = obj.get(pk=pk)
+
         # We could try to guess the correct mime type here.
         response = HttpResponse(
             obj.file.read(), content_type="application/octet-stream"
