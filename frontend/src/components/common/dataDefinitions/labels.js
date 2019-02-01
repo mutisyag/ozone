@@ -14,7 +14,7 @@ const getCommonLabels = ($gettext) => {
 		reporting_officer: $gettext('Name of reporting officer'),
 		designation: $gettext('Designation'),
 		organization: $gettext('Organization'),
-		postal_code: $gettext('Postal adddress'),
+		postal_code: $gettext('Postal address'),
 		country: $gettext('Country'),
 		phone: $gettext('Phone'),
 		reporting_channel: $gettext('Reporting channel'),

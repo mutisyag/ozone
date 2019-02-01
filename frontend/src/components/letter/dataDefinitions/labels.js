@@ -126,7 +126,7 @@ const getLabels = ($gettext) => {
 			reporting_officer: $gettext('Name of reporting officer'),
 			designation: $gettext('Designation'),
 			organization: $gettext('Organization'),
-			postal_code: $gettext('Postal Adddress'),
+			postal_code: $gettext('Postal address'),
 			country: $gettext('Country'),
 			phone: $gettext('Phone'),
 			fax: $gettext('Fax'),

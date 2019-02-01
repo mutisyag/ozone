@@ -102,14 +102,48 @@ const openDashboard = (browser) => {
 		.assert.urlContains('/reporting/dashboard')
 }
 
+const fillSubmissionInfo = (browser, submissionInfo = {}) => {
+	browser.useXpath()
+		.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Submission Info")]', 10000)
+		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]")
+		.pause(500)
+		.execute('window.scrollTo(0,document.body.scrollHeight);')
+		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
+		.pause
+
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'fax', 'email', 'date']
+
+	fields.forEach(field => {
+		/* Check if submissionInfo has missing fields */
+		if (!submissionInfo.hasOwnProperty(field)) {
+			submissionInfo[field] = ''
+		}
+		browser
+			.setValue(`//input[@id='${field}']`, submissionInfo[field])
+	})
+
+	browser
+		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
+		.click("//form[@class='form-sections']//div[@class='multiselect']")
+		.pause(500)
+		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+		.pause(500)
+		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
+		.pause(500)
+		.click("//div[@id='flags']//div[contains(text(), 'Provisional')]")
+		.pause(500)
+		.click("//div[@id='annex-flags']//div[contains(text(), 'F')]")
+		.pause(500)
+}
+
 const clickQuestionnaireRadios = (browser, fields = []) => {
-	let restricted_fields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
+	let restrictedFields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
 
 	if (typeof fields !== 'undefined' && fields.length == 0) {
 		fields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
 	}
 
-	restricted_fields = restricted_fields.filter((e) => fields.indexOf(e) === -1)
+	restrictedFields = restrictedFields.filter((e) => fields.indexOf(e) === -1)
 
 	browser
 		.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Questionnaire")]', 10000)
@@ -124,9 +158,9 @@ const clickQuestionnaireRadios = (browser, fields = []) => {
 			.click(`.field-wrapper ${field} .custom-control:first-of-type label`)
 	}
 
-	for (const restricted_field of restricted_fields) {
+	for (const restrictedField of restrictedFields) {
 		browser
-			.click(`.field-wrapper ${restricted_field} .custom-control:nth-of-type(2) label`)
+			.click(`.field-wrapper ${restrictedField} .custom-control:nth-of-type(2) label`)
 	}
 }
 
@@ -219,6 +253,7 @@ module.exports = {
 	saveAndFail,
 	editSubmission,
 	openDashboard,
+	fillSubmissionInfo,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
