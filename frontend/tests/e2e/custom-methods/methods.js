@@ -112,6 +112,14 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 		.pause
 
 	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'fax', 'email', 'date']
+	const flags = [
+		'flag_provisional',
+		'flag_has_reported_a1', 'flag_has_reported_a2',
+		'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
+		'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',
+		'flag_has_reported_e',
+		'flag_has_reported_f'
+	]
 
 	fields.forEach(field => {
 		/* Check if submissionInfo has missing fields */
@@ -126,14 +134,25 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
 		.click("//form[@class='form-sections']//div[@class='multiselect']")
 		.pause(500)
+		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
 		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
 		.pause(500)
 		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
-		.pause(500)
-		.click("//div[@id='flags']//div[contains(text(), 'Provisional')]")
-		.pause(500)
-		.click("//div[@id='annex-flags']//div[contains(text(), 'F')]")
-		.pause(500)
+
+	flags.forEach(flag => {
+		browser.useCss()
+			.getAttribute(`#${flag}`, 'checked', (result) => {
+				if (result.value != 'true') {
+					browser
+						.useXpath()
+						.waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
+						.click(`(//label[@for='${flag}'])[2]`)
+						.pause(500)
+				}
+			})
+			.useCss()
+			.expect.element(`#${flag}`).to.be.selected
+	})
 }
 
 const clickQuestionnaireRadios = (browser, fields = []) => {
