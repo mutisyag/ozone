@@ -985,6 +985,8 @@ class SubmissionFileListSerializer(serializers.ListSerializer):
         if not isinstance(validated_data, list):
             validated_data = [validated_data, ]
 
+        ret = []
+
         for modified_entry in validated_data:
             modified_id = modified_entry.get('id', None)
             if modified_id is None:
@@ -1004,10 +1006,13 @@ class SubmissionFileListSerializer(serializers.ListSerializer):
                     changed = True
                 if changed:
                     obj.save()
+                    ret.append(obj)
             except ObjectDoesNotExist:
                 raise ValidationError({
                     "id": [_('Specified file id not found for this submission')]
                 })
+
+        return ret
 
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
