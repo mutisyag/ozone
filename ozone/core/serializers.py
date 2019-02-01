@@ -1012,6 +1012,8 @@ class SubmissionFileListSerializer(serializers.ListSerializer):
 
 class SubmissionFileSerializer(serializers.ModelSerializer):
 
+    # This needs to be specified explicitly so it is allowed on updates
+    id = serializers.IntegerField()
     file_url = serializers.SerializerMethodField()
 
     class Meta:
@@ -1019,18 +1021,20 @@ class SubmissionFileSerializer(serializers.ModelSerializer):
         list_serializer_class = SubmissionFileListSerializer
         exclude = ('submission', 'file',)
         read_only_fields = (
-            'id', 'file_url', 'tus_id', 'upload_successful', 'created',
-            'updated', 'original_name', 'suffix', 'uploader'
+            'file_url', 'tus_id', 'upload_successful', 'created', 'updated',
+            'original_name', 'suffix', 'uploader',
         )
 
     def get_file_url(self, obj):
-        return self.context['request'].build_absolute_uri(reverse(
-            "core:submission-files-download",
-            kwargs={
-                "submission_pk": obj.submission.pk,
-                "pk": obj.pk
-            }
-        ))
+        return self.context['request'].build_absolute_uri(
+            reverse(
+                "core:submission-files-download",
+                kwargs={
+                    "submission_pk": obj.submission.pk,
+                    "pk": obj.pk
+                }
+            )
+        )
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
