@@ -10,6 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
@@ -825,6 +826,8 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def download(self, request, submission_pk=None, pk=None):
         obj = self.get_object()
+        if isinstance(obj, QuerySet):
+            obj = obj.get(pk=pk)
         # We could try to guess the correct mime type here.
         response = HttpResponse(
             obj.file.read(), content_type="application/octet-stream"
