@@ -649,8 +649,9 @@ class Article7ExportListSerializer(
 class Article7ExportSerializer(
     DataCheckRemarksMixIn, BaseBlendCompositionSerializer
 ):
-    group = serializers.CharField(source='substance.group.group_id', default='',
-                                  read_only=True)
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
 
     class Meta:
         list_serializer_class = Article7ExportListSerializer
@@ -929,7 +930,8 @@ class SubmissionFlagsSerializer(
 
 
 class SubmissionRemarksSerializer(
-    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin,
+    serializers.ModelSerializer
 ):
     """
     Specific serializer used to present all submission remarks,
@@ -970,26 +972,10 @@ class SubmissionRemarksSerializer(
         return super().update(instance, validated_data)
 
 
-class SubmissionFileSerializer(serializers.ModelSerializer):
-
-    file_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = SubmissionFile
-        exclude = ('submission', 'file',)
-        read_only_fields = (
-            'id', 'file_url', 'tus_id', 'upload_successful', 'created',
-            'updated', 'original_name', 'suffix', 'uploader'
-        )
-
-    def get_file_url(self, obj):
-        return self.context['request'].build_absolute_uri(reverse(
-            "core:submission-files-download",
-            kwargs={
-                "submission_pk": obj.submission.pk,
-                "pk": obj.pk
-            }
-        ))
+class SubmissionFileListSerializer(serializers.ListSerializer):
+    """
+    ListSerializer for SubmissionFile's
+    """
 
     def update(self, instance, validated_data):
         """
@@ -1022,6 +1008,29 @@ class SubmissionFileSerializer(serializers.ModelSerializer):
                 raise ValidationError({
                     "id": [_('Specified file id not found for this submission')]
                 })
+
+
+class SubmissionFileSerializer(serializers.ModelSerializer):
+
+    file_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = SubmissionFile
+        list_serializer_class = SubmissionFileListSerializer
+        exclude = ('submission', 'file',)
+        read_only_fields = (
+            'id', 'file_url', 'tus_id', 'upload_successful', 'created',
+            'updated', 'original_name', 'suffix', 'uploader'
+        )
+
+    def get_file_url(self, obj):
+        return self.context['request'].build_absolute_uri(reverse(
+            "core:submission-files-download",
+            kwargs={
+                "submission_pk": obj.submission.pk,
+                "pk": obj.pk
+            }
+        ))
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
