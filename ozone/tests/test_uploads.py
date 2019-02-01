@@ -264,7 +264,7 @@ class TestChangeDetails(BaseSubmissionTest, BaseTests):
 
         self.assertEqual(resp.json()[0]['name'], 'text_modified.txt')
         self.assertEqual(
-            resp.json()[0]['description'], 'description_modified.txt'
+            resp.json()[0]['description'], 'description modified'
         )
 
     def test_change_files_as_secretariat(self):
@@ -287,7 +287,7 @@ class TestChangeDetails(BaseSubmissionTest, BaseTests):
         self.client.put(files_list_url, json_response)
         self.assertEqual(resp.json()[0]['name'], 'text_modified.txt')
         self.assertEqual(
-            resp.json()[0]['description'], 'description_modified.txt'
+            resp.json()[0]['description'], 'description modified'
         )
 
 
