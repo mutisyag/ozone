@@ -1,15 +1,11 @@
-from copy import deepcopy
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework.serializers import raise_errors_on_nested_writes
-from rest_framework.utils import model_meta
 from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from .models import (
@@ -442,7 +438,8 @@ class DataCheckRemarksMixInBase(object):
 
 
 class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
-    """Check create and update permissions on remarks for adding/updating a single
+    """
+    Check create and update permissions on remarks for adding/updating a single
     data entry.
     """
 
@@ -464,7 +461,8 @@ class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
 
 
 class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
-    """Check create and update permissions on remarks for adding/updating bulk
+    """
+    Check create and update permissions on remarks for adding/updating bulk
     data entries.
     """
 
@@ -658,8 +656,9 @@ class Article7ExportListSerializer(
 class Article7ExportSerializer(
     DataCheckRemarksMixIn, BaseBlendCompositionSerializer
 ):
-    group = serializers.CharField(source='substance.group.group_id', default='',
-                                  read_only=True)
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
 
     class Meta:
         list_serializer_class = Article7ExportListSerializer
@@ -938,7 +937,8 @@ class SubmissionFlagsSerializer(
 
 
 class SubmissionRemarksSerializer(
-    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin,
+    serializers.ModelSerializer
 ):
     """
     Specific serializer used to present all submission remarks,
@@ -979,22 +979,74 @@ class SubmissionRemarksSerializer(
         return super().update(instance, validated_data)
 
 
+class SubmissionFileListSerializer(serializers.ListSerializer):
+    """
+    ListSerializer for SubmissionFile's
+    """
+
+    def update(self, instance, validated_data):
+        """
+        Implements bulk update functionality for files.
+        File entries will be identified by id, not by name, to allow renames.
+        """
+        if not isinstance(validated_data, list):
+            validated_data = [validated_data, ]
+
+        ret = []
+
+        for modified_entry in validated_data:
+            modified_id = modified_entry.get('id', None)
+            if modified_id is None:
+                raise ValidationError({
+                    "id": [_('File id must be specified at update')]
+                })
+            try:
+                # `instance` is a queryset due to the `BulkCreateUpdateMixin`
+                obj = instance.get(id=modified_id)
+                changed = False
+                # We only allow changing the name and description
+                if 'name' in modified_entry:
+                    obj.name = modified_entry.get('name')
+                    changed = True
+                if 'description' in modified_entry:
+                    obj.description = modified_entry.get('description')
+                    changed = True
+                if changed:
+                    obj.save()
+                    ret.append(obj)
+            except ObjectDoesNotExist:
+                raise ValidationError({
+                    "id": [_('Specified file id not found for this submission')]
+                })
+
+        return ret
+
+
 class SubmissionFileSerializer(serializers.ModelSerializer):
 
+    # This needs to be specified explicitly so it is allowed on updates
+    id = serializers.IntegerField()
     file_url = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionFile
-        exclude = ('file',)
+        list_serializer_class = SubmissionFileListSerializer
+        exclude = ('submission', 'file',)
+        read_only_fields = (
+            'file_url', 'tus_id', 'upload_successful', 'created', 'updated',
+            'original_name', 'suffix', 'uploader',
+        )
 
     def get_file_url(self, obj):
-        return self.context['request'].build_absolute_uri(reverse(
-            "core:submission-files-download",
-            kwargs={
-                "submission_pk": obj.submission.pk,
-                "pk": obj.pk
-            }
-        ))
+        return self.context['request'].build_absolute_uri(
+            reverse(
+                "core:submission-files-download",
+                kwargs={
+                    "submission_pk": obj.submission.pk,
+                    "pk": obj.pk
+                }
+            )
+        )
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
