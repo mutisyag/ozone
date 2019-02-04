@@ -36,6 +36,8 @@ from .models import (
     HighAmbientTemperatureImport,
     ReportingChannel,
     Language,
+    Nomination,
+    ExemptionApproved,
 )
 
 User = get_user_model()
@@ -803,6 +805,34 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
         exclude = ('submission',)
 
 
+class ExemptionNominationListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class ExemptionNominationSerializer(serializers.ModelSerializer):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    class Meta:
+        list_serialize_class = ExemptionNominationListSerializer
+        model = Nomination
+        exclude = ('submission',)
+
+
+class ExemptionApprovedListSerializer(BaseBulkUpdateSerializer):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class ExemptionApprovedSerializer(serializers.ModelSerializer):
+    class Meta:
+        list_serialize_class = ExemptionApprovedListSerializer
+        model = ExemptionApproved
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
 
@@ -1149,6 +1179,17 @@ class SubmissionSerializer(
         view_name='core:submission-submission-flags-list',
         lookup_url_kwarg='submission_pk',
     )
+
+    exemption_nomination_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-exemption-nomination-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
+    exemption_approved_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-exemption-approved-list',
+        lookup_url_kwarg='submission_pk'
+    )
+
     submission_remarks = serializers.HyperlinkedIdentityField(
         view_name='core:submission-submission-remarks-list',
         lookup_url_kwarg='submission_pk',
@@ -1212,6 +1253,9 @@ class SubmissionSerializer(
             'other': base_fields + (
                 'data_others_url',
             ),
+            'exemption': base_fields + (
+                'exemption_nomination_url', 'exemption_approved_url',
+            )
         }
         # All possible fields still need to be specified here.
         # Otherwise DRF won't load them.

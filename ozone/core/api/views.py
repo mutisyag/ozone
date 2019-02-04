@@ -53,6 +53,8 @@ from ..models import (
     Group,
     Substance,
     Blend,
+    Nomination,
+    ExemptionApproved,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -97,6 +99,8 @@ from ..serializers import (
     SubmissionRemarksSerializer,
     SubmissionFileSerializer,
     UploadTokenSerializer,
+    ExemptionNominationSerializer,
+    ExemptionApprovedSerializer,
 )
 
 
@@ -799,6 +803,44 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 
     def get_queryset(self):
         return DataOther.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class ExemptionNominationViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
+    form_types = None #("exemption",)
+    serializer_class = ExemptionNominationSerializer
+    permission_classes = (
+        IsAuthenticated, IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return Nomination.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class ExemptionApprovedViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
+):
+    form_types = None #("exemption",)
+    serializer_class = ExemptionApprovedSerializer
+    permission_classes = (
+        IsAuthenticated, IsCorrectObligation
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return ExemptionApproved.objects.filter(
             submission=self.kwargs['submission_pk']
         )
 
