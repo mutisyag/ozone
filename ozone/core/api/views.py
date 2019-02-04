@@ -814,7 +814,7 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 class ExemptionNominationViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = None #("exemption",)
+    form_types = ("exemption",)
     serializer_class = ExemptionNominationSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation,
@@ -833,7 +833,7 @@ class ExemptionNominationViewSet(
 class ExemptionApprovedViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = None #("exemption",)
+    form_types = ("exemption",)
     serializer_class = ExemptionApprovedSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation
