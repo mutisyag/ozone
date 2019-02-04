@@ -105,5 +105,16 @@
       "has_reporting_periods": true,
       "other": true
     }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 11,
+    "fields": {
+      "name": "Exemption",
+      "description": "",
+      "form_type": "exemption",
+      "has_reporting_periods": true,
+      "other": false
+    }
   }
 ]

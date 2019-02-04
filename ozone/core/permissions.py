@@ -168,3 +168,15 @@ class IsSecretariatOrSamePartyUser(BasePermission):
         # It means that we only want the current logged in user;
         # get_queryset will take care of this.
         return True
+
+
+class IsSecretariatOrSafeMethod(BasePermission):
+    """
+    Check if user is secretariat.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return request.user.is_secretariat

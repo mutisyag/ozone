@@ -177,6 +177,24 @@ upload_token_router.register(
     base_name='submission-token'
 )
 
+exemption_nomination_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+exemption_nomination_router.register(
+    "exemption-nomination",
+    views.ExemptionNominationViewSet,
+    base_name="submission-exemption-nomination"
+)
+
+exemption_approved_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+exemption_approved_router.register(
+    "exemption-approved",
+    views.ExemptionApprovedViewSet,
+    base_name="submission-exemption-approved"
+)
+
 nested_routers = [
     questionnaire_router,
     destructions_router,
@@ -193,6 +211,8 @@ nested_routers = [
     submission_remarks_router,
     submission_files_router,
     upload_token_router,
+    exemption_nomination_router,
+    exemption_approved_router,
 ]
 
 # Groups
