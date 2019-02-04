@@ -80,6 +80,7 @@ export default {
 		filesWithUpdatedDescription() {
 			return this.files.filter(file => file.isDescriptionUpdated).map(file => ({
 				id: file.id,
+				name: file.name,
 				description: file.description
 			}))
 		}
@@ -96,17 +97,25 @@ export default {
 			if (file.description === newDescription) {
 				return
 			}
+			this.$store.commit('deleteTabFile', {
+				tabName: this.tab.name,
+				file
+			})
 			file.description = newDescription
 			file.isDescriptionUpdated = true
-			this.$store.commit('updateTabFile', {
+			this.$store.commit('addTabFile', {
 				tabName: this.tab.name,
 				file
 			})
 			console.log('onFileDescriptionChanged', file)
 		},
 		onProgressCallback(file, percentage) {
+			this.$store.commit('deleteTabFile', {
+				tabName: this.tab.name,
+				file
+			})
 			file.percentage = percentage
-			this.$store.commit('updateTabFile', {
+			this.$store.commit('addTabFile', {
 				tabName: this.tab.name,
 				file
 			})
@@ -127,14 +136,7 @@ export default {
 		upload() {
 			return new Promise(async (resolve, reject) => {
 				try {
-					const tabName = this.tab.name
 					await this.$store.dispatch('uploadFiles', { files: this.filesNotUploaded, onProgressCallback: this.onProgressCallback })
-					this.filesNotUploaded.forEach(file => {
-						this.$store.commit('updateTabFile', {
-							tabName,
-							file
-						})
-					})
 
 					const checkFilesUploadedSuccessfullyInterval = setInterval(async () => {
 						if (this.allFilesUploadedSuccessfully) {
@@ -142,14 +144,7 @@ export default {
 							resolve()
 							return
 						}
-						await this.$store.dispatch('setJustUploadedFilesState', { files: this.files })
-
-						this.files.forEach(file => {
-							this.$store.commit('updateTabFile', {
-								tabName,
-								file
-							})
-						})
+						await this.$store.dispatch('setJustUploadedFilesState', { files: this.files, tabName: this.tab.name })
 					}, 1500)
 				} catch (error) {
 					console.log('error upload', error)

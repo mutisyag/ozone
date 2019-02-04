@@ -417,15 +417,23 @@ const actions = {
 		const response = await getSubmissionFiles(context.state.current_submission.id)
 		return response.data
 	},
-	async setJustUploadedFilesState({ dispatch }, { files }) {
+	async setJustUploadedFilesState({ dispatch, commit }, { files, tabName }) {
 		const filesOnServer = await dispatch('getSubmissionFiles')
 		filesOnServer.forEach(file => {
 			const fileJustUploaded = files.find(x => x.tus_url && x.tus_url.endsWith(file.tus_id))
 			if (fileJustUploaded) {
+				commit('deleteTabFile', {
+					tabName,
+					file: fileJustUploaded
+				})
 				fileJustUploaded.upload_successful = file.upload_successful
 				fileJustUploaded.file_url = file.file_url
 				fileJustUploaded.updated = file.updated
 				fileJustUploaded.tus_id = file.tus_id
+				commit('addTabFile', {
+					tabName,
+					file: fileJustUploaded
+				})
 			}
 		})
 	},
