@@ -835,6 +835,10 @@ class ExemptionApprovedListSerializer(
 class ExemptionApprovedSerializer(
     DataCheckRemarksMixIn, serializers.ModelSerializer
 ):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
     class Meta:
         list_serialize_class = ExemptionApprovedListSerializer
         model = ExemptionApproved
@@ -1188,18 +1192,17 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
-    exemption_nomination_url = serializers.HyperlinkedIdentityField(
-        view_name='core:submission-submission-exemption-nomination-list',
-        lookup_url_kwarg='submission_pk'
-    )
-
-    exemption_approved_url = serializers.HyperlinkedIdentityField(
-        view_name='core:submission-submission-exemption-approved-list',
-        lookup_url_kwarg='submission_pk'
-    )
-
     submission_remarks = serializers.HyperlinkedIdentityField(
         view_name='core:submission-submission-remarks-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
+    exemption_nomination_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-exemption-nomination-list',
+        lookup_url_kwarg='submission_pk',
+    )
+    exemption_approved_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-exemption-approved-list',
         lookup_url_kwarg='submission_pk',
     )
 
