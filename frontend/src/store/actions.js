@@ -417,10 +417,22 @@ const actions = {
 		const response = await getSubmissionFiles(context.state.current_submission.id)
 		return response.data
 	},
-	async setJustUploadedFilesState({ dispatch, commit }, { files, tabName }) {
-		const filesOnServer = await dispatch('getSubmissionFiles')
+	async deleteTabFile({ state, commit }, { tabName, file }) {
+		console.log(file)
+		if (file.tus_id) {
+			await deleteSubmissionFile({ file, submissionId: state.current_submission.id })
+		}
+
+		commit('deleteTabFile', { tabName, file })
+	},
+	updateLocalFilesFromServerFilesResponse({ commit }, { tabName, filesLocal, filesOnServer }) {
 		filesOnServer.forEach(file => {
-			const fileJustUploaded = files.find(x => x.tus_url && x.tus_url.endsWith(file.tus_id))
+			const fileJustUploaded = filesLocal.find(x => {
+				if (x.tus_id) {
+					return x.tus_id === file.tus_id
+				}
+				return x.tus_url && x.tus_url.endsWith(file.tus_id)
+			})
 			if (fileJustUploaded) {
 				commit('deleteTabFile', {
 					tabName,
@@ -437,16 +449,25 @@ const actions = {
 			}
 		})
 	},
-	async deleteTabFile({ state, commit }, { tabName, file }) {
-		console.log(file)
-		if (file.tus_id) {
-			await deleteSubmissionFile({ file, submissionId: state.current_submission.id })
-		}
-
-		commit('deleteTabFile', { tabName, file })
+	async setJustUploadedFilesState({ dispatch }, { files, tabName }) {
+		const filesOnServer = await dispatch('getSubmissionFiles')
+		dispatch('updateLocalFilesFromServerFilesResponse', {
+			tabName,
+			filesOnServer,
+			filesLocal: files
+		})
 	},
-	async updateSubmissionFiles(context, files) {
-		await updateSubmissionFiles(context.state.current_submission.id, files)
+	async updateSubmissionFiles({ state, dispatch }, { files, tabName }) {
+		const response = await updateSubmissionFiles(state.current_submission.id, files.map(file => ({
+			id: file.id,
+			name: file.name,
+			description: file.description
+		})))
+		dispatch('updateLocalFilesFromServerFilesResponse', {
+			tabName,
+			filesOnServer: response.data,
+			filesLocal: files
+		})
 	}
 }
 

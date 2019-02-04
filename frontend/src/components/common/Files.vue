@@ -78,11 +78,7 @@ export default {
 			return this.files.filter(file => !file.tus_id)
 		},
 		filesWithUpdatedDescription() {
-			return this.files.filter(file => file.isDescriptionUpdated).map(file => ({
-				id: file.id,
-				name: file.name,
-				description: file.description
-			}))
+			return this.files.filter(file => file.isDescriptionUpdated)
 		}
 	},
 	methods: {
@@ -103,11 +99,11 @@ export default {
 			})
 			file.description = newDescription
 			file.isDescriptionUpdated = true
+			file.upload_successful = false
 			this.$store.commit('addTabFile', {
 				tabName: this.tab.name,
 				file
 			})
-			console.log('onFileDescriptionChanged', file)
 		},
 		onProgressCallback(file, percentage) {
 			this.$store.commit('deleteTabFile', {
@@ -155,7 +151,7 @@ export default {
 		async uploadAndSave() {
 			await this.upload()
 			if (this.filesWithUpdatedDescription.length) {
-				await this.$store.dispatch('updateSubmissionFiles', this.filesWithUpdatedDescription)
+				await this.$store.dispatch('updateSubmissionFiles', { files: this.filesWithUpdatedDescription, tabName: this.tab.name })
 			}
 		}
 	}
