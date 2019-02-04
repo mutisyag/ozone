@@ -805,12 +805,16 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class ExemptionNominationListSerializer(BaseBulkUpdateSerializer):
+class ExemptionNominationListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class ExemptionNominationSerializer(serializers.ModelSerializer):
+class ExemptionNominationSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
@@ -821,12 +825,16 @@ class ExemptionNominationSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
-class ExemptionApprovedListSerializer(BaseBulkUpdateSerializer):
+class ExemptionApprovedListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
     substance_blend_fields = ['substance', ]
     unique_with = None
 
 
-class ExemptionApprovedSerializer(serializers.ModelSerializer):
+class ExemptionApprovedSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
     class Meta:
         list_serialize_class = ExemptionApprovedListSerializer
         model = ExemptionApproved

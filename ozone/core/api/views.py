@@ -64,6 +64,7 @@ from ..permissions import (
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
     IsSecretariatOrSamePartyUser,
+    IsSecretariatOrSafeMethod,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -816,7 +817,7 @@ class ExemptionNominationViewSet(
     form_types = None #("exemption",)
     serializer_class = ExemptionNominationSerializer
     permission_classes = (
-        IsAuthenticated, IsCorrectObligation,
+        IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -835,7 +836,7 @@ class ExemptionApprovedViewSet(
     form_types = None #("exemption",)
     serializer_class = ExemptionApprovedSerializer
     permission_classes = (
-        IsAuthenticated, IsCorrectObligation
+        IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation
     )
     filter_backends = (IsOwnerFilterBackend,)
 
