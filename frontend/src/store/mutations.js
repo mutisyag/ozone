@@ -257,13 +257,9 @@ const mutations = {
 		})
 		form_fields.files = sortAscending(form_fields.files, 'updated')
 	},
-	updateTabFile(state, { tabName, file }) {
+	addTabFile(state, { tabName, file }) {
 		const { form_fields } = state.form.tabs[tabName]
-		const updatedfiles = []
-		form_fields.files.forEach(fileOld => {
-			fileOld === file ? updatedfiles.push(file) : updatedfiles.push(fileOld)
-		})
-		form_fields.files = sortAscending(updatedfiles, 'updated')
+		form_fields.files = sortAscending([...form_fields.files, file], 'updated')
 	},
 	deleteTabFile(state, { tabName, file }) {
 		const { form_fields } = state.form.tabs[tabName]

@@ -78,10 +78,7 @@ export default {
 			return this.files.filter(file => !file.tus_id)
 		},
 		filesWithUpdatedDescription() {
-			return this.files.filter(file => file.isDescriptionUpdated).map(file => ({
-				id: file.id,
-				description: file.description
-			}))
+			return this.files.filter(file => file.isDescriptionUpdated)
 		}
 	},
 	methods: {
@@ -96,17 +93,25 @@ export default {
 			if (file.description === newDescription) {
 				return
 			}
-			file.description = newDescription
-			file.isDescriptionUpdated = true
-			this.$store.commit('updateTabFile', {
+			this.$store.commit('deleteTabFile', {
 				tabName: this.tab.name,
 				file
 			})
-			console.log('onFileDescriptionChanged', file)
+			file.description = newDescription
+			file.isDescriptionUpdated = true
+			file.upload_successful = false
+			this.$store.commit('addTabFile', {
+				tabName: this.tab.name,
+				file
+			})
 		},
 		onProgressCallback(file, percentage) {
+			this.$store.commit('deleteTabFile', {
+				tabName: this.tab.name,
+				file
+			})
 			file.percentage = percentage
-			this.$store.commit('updateTabFile', {
+			this.$store.commit('addTabFile', {
 				tabName: this.tab.name,
 				file
 			})
@@ -127,14 +132,7 @@ export default {
 		upload() {
 			return new Promise(async (resolve, reject) => {
 				try {
-					const tabName = this.tab.name
 					await this.$store.dispatch('uploadFiles', { files: this.filesNotUploaded, onProgressCallback: this.onProgressCallback })
-					this.filesNotUploaded.forEach(file => {
-						this.$store.commit('updateTabFile', {
-							tabName,
-							file
-						})
-					})
 
 					const checkFilesUploadedSuccessfullyInterval = setInterval(async () => {
 						if (this.allFilesUploadedSuccessfully) {
@@ -142,14 +140,7 @@ export default {
 							resolve()
 							return
 						}
-						await this.$store.dispatch('setJustUploadedFilesState', { files: this.files })
-
-						this.files.forEach(file => {
-							this.$store.commit('updateTabFile', {
-								tabName,
-								file
-							})
-						})
+						await this.$store.dispatch('setJustUploadedFilesState', { files: this.files, tabName: this.tab.name })
 					}, 1500)
 				} catch (error) {
 					console.log('error upload', error)
@@ -160,7 +151,7 @@ export default {
 		async uploadAndSave() {
 			await this.upload()
 			if (this.filesWithUpdatedDescription.length) {
-				await this.$store.dispatch('updateSubmissionFiles', this.filesWithUpdatedDescription)
+				await this.$store.dispatch('updateSubmissionFiles', { files: this.filesWithUpdatedDescription, tabName: this.tab.name })
 			}
 		}
 	}

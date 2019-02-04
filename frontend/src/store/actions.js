@@ -417,18 +417,6 @@ const actions = {
 		const response = await getSubmissionFiles(context.state.current_submission.id)
 		return response.data
 	},
-	async setJustUploadedFilesState({ dispatch }, { files }) {
-		const filesOnServer = await dispatch('getSubmissionFiles')
-		filesOnServer.forEach(file => {
-			const fileJustUploaded = files.find(x => x.tus_url && x.tus_url.endsWith(file.tus_id))
-			if (fileJustUploaded) {
-				fileJustUploaded.upload_successful = file.upload_successful
-				fileJustUploaded.file_url = file.file_url
-				fileJustUploaded.updated = file.updated
-				fileJustUploaded.tus_id = file.tus_id
-			}
-		})
-	},
 	async deleteTabFile({ state, commit }, { tabName, file }) {
 		console.log(file)
 		if (file.tus_id) {
@@ -437,8 +425,49 @@ const actions = {
 
 		commit('deleteTabFile', { tabName, file })
 	},
-	async updateSubmissionFiles(context, files) {
-		await updateSubmissionFiles(context.state.current_submission.id, files)
+	updateLocalFilesFromServerFilesResponse({ commit }, { tabName, filesLocal, filesOnServer }) {
+		filesOnServer.forEach(file => {
+			const fileJustUploaded = filesLocal.find(x => {
+				if (x.tus_id) {
+					return x.tus_id === file.tus_id
+				}
+				return x.tus_url && x.tus_url.endsWith(file.tus_id)
+			})
+			if (fileJustUploaded) {
+				commit('deleteTabFile', {
+					tabName,
+					file: fileJustUploaded
+				})
+				fileJustUploaded.upload_successful = file.upload_successful
+				fileJustUploaded.file_url = file.file_url
+				fileJustUploaded.updated = file.updated
+				fileJustUploaded.tus_id = file.tus_id
+				commit('addTabFile', {
+					tabName,
+					file: fileJustUploaded
+				})
+			}
+		})
+	},
+	async setJustUploadedFilesState({ dispatch }, { files, tabName }) {
+		const filesOnServer = await dispatch('getSubmissionFiles')
+		dispatch('updateLocalFilesFromServerFilesResponse', {
+			tabName,
+			filesOnServer,
+			filesLocal: files
+		})
+	},
+	async updateSubmissionFiles({ state, dispatch }, { files, tabName }) {
+		const response = await updateSubmissionFiles(state.current_submission.id, files.map(file => ({
+			id: file.id,
+			name: file.name,
+			description: file.description
+		})))
+		dispatch('updateLocalFilesFromServerFilesResponse', {
+			tabName,
+			filesOnServer: response.data,
+			filesLocal: files
+		})
 	}
 }
 
