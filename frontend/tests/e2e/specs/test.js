@@ -86,6 +86,15 @@ module.exports = {
 		logout(browser)
 		browser.end()
 	},
+	BU_005: browser => {
+		login(browser, 'party', 'party')
+		createSubmission(browser)
+		saveAndFail(browser)
+		clickQuestionnaireRadios(browser, [], false)
+		saveSubmission(browser)
+		logout(browser)
+		browser.end()
+	},
 	BU_006: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser)
