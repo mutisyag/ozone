@@ -54,5 +54,9 @@ class DefaultExemptionWorkflow(BaseWorkflow):
             not self.user.is_read_only and self.user.is_secretariat
             and self.model_instance.has_filled_approved_exemptions()
             and self.model_instance.has_set_approved_flag()
+        ) or (
+            not self.user.is_read_only and self.user.is_secretariat
+            and self.model_instance.has_set_approved_flag() is False
+            and not self.model_instance.has_filled_approved_exemptions()
         )
 
