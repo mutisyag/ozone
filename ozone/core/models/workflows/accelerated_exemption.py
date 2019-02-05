@@ -33,6 +33,10 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
+        """
+        Here we don't need to check approved flag becasue it makes no sense for
+        the OS to create a submission with no approved exemptions.
+        """
         return (
             not self.user.is_read_only and self.user.is_secretariat
             and self.model_instance.has_filled_approved_exemptions()

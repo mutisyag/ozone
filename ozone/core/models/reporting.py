@@ -907,9 +907,12 @@ class Submission(models.Model):
     def has_filled_approved_exemptions(self):
         return self.exemptionapproveds.exists()
 
+    def has_set_approved_flag(self):
+        return all(exemption.flag_approved is not None for exemption in self.exemptionapproveds.all())
+
     def is_emergency(self):
         if self.has_filled_approved_exemptions():
-            all(exemption.emergency for exemption in self.exemptionapproveds.all())
+            return all(exemption.emergency for exemption in self.exemptionapproveds.all())
         return False
 
     def __str__(self):
