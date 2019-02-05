@@ -381,6 +381,17 @@ class Submission(models.Model):
         on_delete=models.PROTECT
     )
 
+    # Exemption related flags
+    flag_emergency = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that ozone secretariat "
+                  "can fill out only the Approved form directly."
+    )
+    flag_approved = models.NullBooleanField(
+        default=None,
+        help_text="If set to true it means that the nomination was approved."
+    )
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -736,6 +747,7 @@ class Submission(models.Model):
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
             'reporting_channel_id',
+            'flag_approved',
         ]
 
     @staticmethod
@@ -908,12 +920,10 @@ class Submission(models.Model):
         return self.exemptionapproveds.exists()
 
     def has_set_approved_flag(self):
-        return all(exemption.flag_approved is not None for exemption in self.exemptionapproveds.all())
+        return self.flag_approved
 
     def is_emergency(self):
-        if self.has_filled_approved_exemptions():
-            return all(exemption.emergency for exemption in self.exemptionapproveds.all())
-        return False
+        return self.flag_emergency
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
