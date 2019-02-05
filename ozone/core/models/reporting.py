@@ -901,14 +901,14 @@ class Submission(models.Model):
             obligation=self.obligation,
         )
 
-    def has_nominations(self):
+    def has_filled_nominations(self):
         return self.nominations.exists()
 
-    def has_approved_exemptions(self):
+    def has_filled_approved_exemptions(self):
         return self.exemptionapproveds.exists()
 
     def is_emergency(self):
-        if self.has_approved_exemptions():
+        if self.has_filled_approved_exemptions():
             all(exemption.emergency for exemption in self.exemptionapproveds.all())
         return False
 

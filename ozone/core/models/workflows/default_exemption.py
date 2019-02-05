@@ -45,13 +45,13 @@ class DefaultExemptionWorkflow(BaseWorkflow):
     def check_fill_nomination(self):
         return (
             not self.user.is_read_only and self.user.is_secretariat
-            and self.model_instance.has_nominations()
+            and self.model_instance.has_filled_nominations()
         )
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
         return (
             not self.user.is_read_only and self.user.is_secretariat
-            and self.model_instance.has_approved_exemptions()
+            and self.model_instance.has_filled_approved_exemptions()
         )
 

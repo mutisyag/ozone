@@ -35,7 +35,7 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
     def check_finalize(self):
         return (
             not self.user.is_read_only and self.user.is_secretariat
-            and self.model_instance.has_approved_exemptions()
+            and self.model_instance.has_filled_approved_exemptions()
             and self.model_instance.is_emergency()
         )
 
