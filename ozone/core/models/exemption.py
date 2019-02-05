@@ -56,6 +56,8 @@ class ExemptionApproved(BaseExemption):
 
     decision_approved = models.CharField(max_length=256, blank=True)
 
+    flag_approved = models.BooleanField(default=False)
+
     class Meta:
         db_table = 'exemption_approved'
 
