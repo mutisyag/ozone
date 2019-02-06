@@ -561,6 +561,7 @@ class Submission(models.Model):
                 'flag_has_reported_b3', 'flag_has_reported_c1',
                 'flag_has_reported_c2', 'flag_has_reported_c3',
                 'flag_has_reported_e', 'flag_has_reported_f',
+                'flag_approved',
             ])
             if not self.data_changes_allowed:
                 # valid flag can only be set after submitting

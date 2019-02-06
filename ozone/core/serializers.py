@@ -962,6 +962,9 @@ class SubmissionFlagsSerializer(
             ),
             'essencrit': base_fields,
             'other': base_fields,
+            'exemption': base_fields + (
+                'flag_approved', 'flag_emergency',
+            )
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
