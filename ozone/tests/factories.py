@@ -31,6 +31,8 @@ from ozone.core.models import (
     UploadToken,
     SubmissionFile,
     Language,
+    Nomination,
+    ExemptionApproved,
 )
 
 User = get_user_model()
@@ -341,3 +343,13 @@ class UploadTokenFactory(DjangoModelFactory):
 class SubmissionFileFactory(DjangoModelFactory):
     class Meta:
         model = SubmissionFile
+
+
+class NominationFactory(DjangoModelFactory):
+    class Meta:
+        model = Nomination
+
+
+class ExemptionApprovedFactory(DjangoModelFactory):
+    class Meta:
+        model = ExemptionApproved
