@@ -137,7 +137,10 @@ class Submission(models.Model):
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
         'transfers',
-        'dataothers'
+        'dataothers',
+        'nominations',
+        'exemptionapproveds',
+
     ]
 
     # TODO: this implements the `submission_type` field from the
