@@ -52,8 +52,6 @@ class ExemptionApproved(BaseExemption):
     Filled by a Secretariat after a Meeting of the Parties (or an emergency decision).
     """
 
-    emergency = models.BooleanField(default=False)
-
     decision_approved = models.CharField(max_length=256, blank=True)
 
     class Meta:

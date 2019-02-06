@@ -14,6 +14,8 @@ from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
+from .workflows.default_exemption import DefaultExemptionWorkflow
+from .workflows.accelerated_exemption import AcceleratedExemptionWorkflow
 from ..exceptions import (
     Forbidden,
     MethodNotAllowed,
@@ -120,7 +122,9 @@ class Submission(models.Model):
         'empty': None,
         'base': BaseWorkflow,
         'default': DefaultArticle7Workflow,
-        'accelerated': AcceleratedArticle7Workflow
+        'accelerated': AcceleratedArticle7Workflow,
+        'default_exemption': DefaultExemptionWorkflow,
+        'accelerated_exemption': AcceleratedExemptionWorkflow
     }
 
     RELATED_DATA = [
@@ -377,6 +381,17 @@ class Submission(models.Model):
         on_delete=models.PROTECT
     )
 
+    # Exemption related flags
+    flag_emergency = models.BooleanField(
+        default=False,
+        help_text="If set to true it means that ozone secretariat "
+                  "can fill out only the Approved form directly."
+    )
+    flag_approved = models.NullBooleanField(
+        default=None,
+        help_text="If set to true it means that the nomination was approved."
+    )
+
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
 
@@ -546,6 +561,7 @@ class Submission(models.Model):
                 'flag_has_reported_b3', 'flag_has_reported_c1',
                 'flag_has_reported_c2', 'flag_has_reported_c3',
                 'flag_has_reported_e', 'flag_has_reported_f',
+                'flag_approved',
             ])
             if not self.data_changes_allowed:
                 # valid flag can only be set after submitting
@@ -732,6 +748,7 @@ class Submission(models.Model):
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
             'reporting_channel_id',
+            'flag_approved',
         ]
 
     @staticmethod
@@ -897,6 +914,18 @@ class Submission(models.Model):
             obligation=self.obligation,
         )
 
+    def has_filled_nominations(self):
+        return self.nominations.exists()
+
+    def has_filled_approved_exemptions(self):
+        return self.exemptionapproveds.exists()
+
+    def has_set_approved_flag(self):
+        return self.flag_approved
+
+    def is_emergency(self):
+        return self.flag_emergency
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -976,7 +1005,10 @@ class Submission(models.Model):
             # (e.g. fast-tracked secretariat submissions).
             # For now we will naively instantiate all submissions with
             # the default article 7 workflow.
-            self._workflow_class = 'default'
+            if self.obligation.name == 'Exemption':
+                self._workflow_class = 'default_exemption'
+            else:
+                self._workflow_class = 'default'
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
