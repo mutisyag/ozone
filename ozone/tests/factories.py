@@ -30,6 +30,9 @@ from ozone.core.models import (
     DataOther,
     UploadToken,
     SubmissionFile,
+    Language,
+    Nomination,
+    ExemptionApproved,
 )
 
 User = get_user_model()
@@ -68,6 +71,24 @@ class AnotherPartyFactory(DjangoModelFactory):
 
     class Meta:
         model = Party
+
+
+class LanguageEnFactory(DjangoModelFactory):
+    language_id = 'E'
+    name = 'English'
+    iso = 'en'
+
+    class Meta:
+        model = Language
+
+
+class LanguageFrFactory(DjangoModelFactory):
+    language_id = 'F'
+    name = 'French'
+    iso = 'fr'
+
+    class Meta:
+        model = Language
 
 
 class SecretariatUserFactory(DjangoModelFactory):
@@ -147,6 +168,7 @@ class ReporterUserAnotherPartyFactory(DjangoModelFactory):
 
 class ObligationFactory(DjangoModelFactory):
     name = 'Test Obligation'
+    form_type = 'art7'
 
     class Meta:
         model = Obligation
@@ -321,3 +343,13 @@ class UploadTokenFactory(DjangoModelFactory):
 class SubmissionFileFactory(DjangoModelFactory):
     class Meta:
         model = SubmissionFile
+
+
+class NominationFactory(DjangoModelFactory):
+    class Meta:
+        model = Nomination
+
+
+class ExemptionApprovedFactory(DjangoModelFactory):
+    class Meta:
+        model = ExemptionApproved

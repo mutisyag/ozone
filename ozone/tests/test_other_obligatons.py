@@ -34,13 +34,17 @@ class DataOtherTest(BaseTests):
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
-        self.obligation = ObligationFactory(name="Other obligation", other=True)
+        self.obligation = ObligationFactory(name="Other obligation", other=True,
+                                            form_type="other")
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
+        if "obligation" not in kwargs:
+            kwargs["obligation"] = self.obligation
+
         submission = SubmissionFactory(
-            party=self.party, obligation=self.obligation,
-            created_by=self.secretariat_user, last_edited_by=self.secretariat_user, **kwargs
+            party=self.party, created_by=self.secretariat_user,
+            last_edited_by=self.secretariat_user, **kwargs
         )
         return submission
 
@@ -59,6 +63,22 @@ class DataOtherTest(BaseTests):
 
         self.assertEqual(result.status_code, 201)
         self.assertEqual(submission.obligation, self.obligation)
+
+    def test_create_wrong_obligation(self):
+        obligation = ObligationFactory.create(form_type="art7", name="Much obliged")
+        submission = self.create_submission(obligation=obligation)
+
+        data = dict(REMARKS_DATA)
+
+        result = self.client.post(
+            reverse(
+                "core:submission-data-others-list",
+                kwargs={"submission_pk": submission.pk}
+            ),
+            data
+        )
+
+        self.assertEqual(result.status_code, 403)
 
     def test_get(self):
         submission = self.create_submission()

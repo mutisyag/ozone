@@ -138,8 +138,6 @@ class Substance(models.Model):
         max_length=128, unique=True, blank=True, null=True
     )
 
-    mp_control = models.CharField(max_length=256, blank=True)
-
     main_usage = models.CharField(max_length=256, blank=True)
 
     sort_order = models.IntegerField(null=True)
@@ -215,8 +213,6 @@ class Blend(models.Model):
     hfc = models.NullBooleanField()
 
     hcfc = models.NullBooleanField()
-
-    mp_control = models.CharField(max_length=256, blank=True)
 
     main_usage = models.CharField(max_length=256, blank=True)
 

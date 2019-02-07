@@ -1,15 +1,11 @@
-from copy import deepcopy
-
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
-from rest_framework.serializers import raise_errors_on_nested_writes
-from rest_framework.utils import model_meta
 from rest_framework_extensions.serializers import PartialUpdateSerializerMixin
 
 from .models import (
@@ -39,6 +35,9 @@ from .models import (
     UploadToken,
     HighAmbientTemperatureImport,
     ReportingChannel,
+    Language,
+    Nomination,
+    ExemptionApproved,
 )
 
 User = get_user_model()
@@ -187,13 +186,30 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     """
     Used to get basic info for current user
     """
+    impersonated_by = serializers.SerializerMethodField()
+    language = serializers.SlugRelatedField(
+        read_only=False,
+        queryset=Language.objects.all(),
+        many=False,
+        slug_field='iso'
+    )
 
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'first_name',
-            'last_name', 'email'
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party',
+            'first_name', 'last_name', 'email', 'language', 'role',
+            'impersonated_by',
         )
+        read_only_fields = (
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'role'
+        )
+
+    def get_impersonated_by(self, obj):
+        session = self.context['request'].session
+        if '_impersonate' not in session:
+            return None
+        return User.objects.get(pk=session['_auth_user_id']).username
 
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
@@ -424,7 +440,8 @@ class DataCheckRemarksMixInBase(object):
 
 
 class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
-    """Check create and update permissions on remarks for adding/updating a single
+    """
+    Check create and update permissions on remarks for adding/updating a single
     data entry.
     """
 
@@ -446,7 +463,8 @@ class DataCheckRemarksMixIn(DataCheckRemarksMixInBase):
 
 
 class DataCheckRemarksBulkUpdateMixIn(DataCheckRemarksMixIn):
-    """Check create and update permissions on remarks for adding/updating bulk
+    """
+    Check create and update permissions on remarks for adding/updating bulk
     data entries.
     """
 
@@ -640,8 +658,9 @@ class Article7ExportListSerializer(
 class Article7ExportSerializer(
     DataCheckRemarksMixIn, BaseBlendCompositionSerializer
 ):
-    group = serializers.CharField(source='substance.group.group_id', default='',
-                                  read_only=True)
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
 
     class Meta:
         list_serializer_class = Article7ExportListSerializer
@@ -786,6 +805,46 @@ class DataOtherSerializer(DataCheckRemarksMixIn, serializers.ModelSerializer):
         exclude = ('submission',)
 
 
+class ExemptionNominationListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class ExemptionNominationSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    class Meta:
+        list_serialize_class = ExemptionNominationListSerializer
+        model = Nomination
+        exclude = ('submission',)
+
+
+class ExemptionApprovedListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class ExemptionApprovedSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    class Meta:
+        list_serialize_class = ExemptionApprovedListSerializer
+        model = ExemptionApproved
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
 
@@ -831,25 +890,84 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.submission.reporting_channel, 'name', '')
 
 
+class PerTypeFieldsMixIn(object):
+    """
+    A ModelSerializer that takes an additional `fields` argument that
+    controls which fields should be displayed/updated
+
+    See https://www.django-rest-framework.org/api-guide/serializers/#dynamically-modifying-fields
+    """
+
+    def __init__(self, instance=None, **kwargs):
+        # Instantiate the superclass normally
+        super().__init__(instance=instance, **kwargs)
+        try:
+            # Fields and remarks return a list of
+            # one.
+            instance = instance[0]
+        except IndexError:
+            # Empty queryset.
+            return
+        except TypeError:
+            # A detail view.
+            pass
+        fields = self.get_dynamic_fields(instance)
+        if fields is not None:
+            # Drop any fields that are not specified in the `fields` argument.
+            allowed = set(fields)
+            existing = set(self.fields)
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    @classmethod
+    def get_dynamic_fields(cls, instance):
+        """Get the corresponding fields"""
+        if not instance:
+            return
+        try:
+            return cls.Meta.per_type_fields[instance.obligation.form_type]
+        except KeyError:
+            return cls.Meta.base_fields
+
+
 class SubmissionFlagsSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer,
 ):
     """
     Specific serializer used to present all submission flags as a nested
     object, since this is easily usable by the frontend.
     """
+
     class Meta:
         model = Submission
-        fields = (
+        base_fields = (
             'flag_provisional', 'flag_valid', 'flag_superseded',
-            'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
-            'flag_has_reported_a1', 'flag_has_reported_a2',
-            'flag_has_reported_b1', 'flag_has_reported_b2',
-            'flag_has_reported_b3', 'flag_has_reported_c1',
-            'flag_has_reported_c2', 'flag_has_reported_c3',
-            'flag_has_reported_e', 'flag_has_reported_f',
         )
-        
+        per_type_fields = {
+            'art7': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_has_reported_a1', 'flag_has_reported_a2',
+                'flag_has_reported_b1', 'flag_has_reported_b2',
+                'flag_has_reported_b3', 'flag_has_reported_c1',
+                'flag_has_reported_c2', 'flag_has_reported_c3',
+                'flag_has_reported_e', 'flag_has_reported_f',
+            ),
+            'hat': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_has_reported_a1', 'flag_has_reported_a2',
+                'flag_has_reported_b1', 'flag_has_reported_b2',
+                'flag_has_reported_b3', 'flag_has_reported_c1',
+                'flag_has_reported_c2', 'flag_has_reported_c3',
+                'flag_has_reported_e', 'flag_has_reported_f',
+            ),
+            'essencrit': base_fields,
+            'other': base_fields,
+            'exemption': base_fields + (
+                'flag_approved', 'flag_emergency',
+            )
+        }
+        fields = list(set(sum(per_type_fields.values(), ())))
+
     def update(self, instance, validated_data):
         """
         Not really kosher to perform validations here, but we need to
@@ -864,7 +982,8 @@ class SubmissionFlagsSerializer(
 
 
 class SubmissionRemarksSerializer(
-    PartialUpdateSerializerMixin, serializers.ModelSerializer
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin,
+    serializers.ModelSerializer
 ):
     """
     Specific serializer used to present all submission remarks,
@@ -873,17 +992,24 @@ class SubmissionRemarksSerializer(
 
     class Meta:
         model = Submission
-        fields = (
-            'imports_remarks_party', 'imports_remarks_secretariat',
-            'exports_remarks_party', 'exports_remarks_secretariat',
-            'production_remarks_party', 'production_remarks_secretariat',
-            'destruction_remarks_party', 'destruction_remarks_secretariat',
-            'nonparty_remarks_party', 'nonparty_remarks_secretariat',
-            'emissions_remarks_party', 'emissions_remarks_secretariat',
-            'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-            'hat_production_remarks_party',
-            'hat_production_remarks_secretariat',
-        )
+        base_fields = ()
+        per_type_fields = {
+            'art7': (
+                'imports_remarks_party', 'imports_remarks_secretariat',
+                'exports_remarks_party', 'exports_remarks_secretariat',
+                'production_remarks_party', 'production_remarks_secretariat',
+                'destruction_remarks_party', 'destruction_remarks_secretariat',
+                'nonparty_remarks_party', 'nonparty_remarks_secretariat',
+                'emissions_remarks_party', 'emissions_remarks_secretariat',
+            ),
+            'hat': (
+                'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
+                'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+            ),
+            'essencrit': (),
+            'other': (),
+        }
+        fields = list(set(sum(per_type_fields.values(), ())))
 
     def update(self, instance, validated_data):
         """
@@ -898,22 +1024,74 @@ class SubmissionRemarksSerializer(
         return super().update(instance, validated_data)
 
 
+class SubmissionFileListSerializer(serializers.ListSerializer):
+    """
+    ListSerializer for SubmissionFile's
+    """
+
+    def update(self, instance, validated_data):
+        """
+        Implements bulk update functionality for files.
+        File entries will be identified by id, not by name, to allow renames.
+        """
+        if not isinstance(validated_data, list):
+            validated_data = [validated_data, ]
+
+        ret = []
+
+        for modified_entry in validated_data:
+            modified_id = modified_entry.get('id', None)
+            if modified_id is None:
+                raise ValidationError({
+                    "id": [_('File id must be specified at update')]
+                })
+            try:
+                # `instance` is a queryset due to the `BulkCreateUpdateMixin`
+                obj = instance.get(id=modified_id)
+                changed = False
+                # We only allow changing the name and description
+                if 'name' in modified_entry:
+                    obj.name = modified_entry.get('name')
+                    changed = True
+                if 'description' in modified_entry:
+                    obj.description = modified_entry.get('description')
+                    changed = True
+                if changed:
+                    obj.save()
+                    ret.append(obj)
+            except ObjectDoesNotExist:
+                raise ValidationError({
+                    "id": [_('Specified file id not found for this submission')]
+                })
+
+        return ret
+
+
 class SubmissionFileSerializer(serializers.ModelSerializer):
 
+    # This needs to be specified explicitly so it is allowed on updates
+    id = serializers.IntegerField()
     file_url = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionFile
-        exclude = ('file',)
+        list_serializer_class = SubmissionFileListSerializer
+        exclude = ('submission', 'file',)
+        read_only_fields = (
+            'file_url', 'tus_id', 'upload_successful', 'created', 'updated',
+            'original_name', 'suffix', 'uploader',
+        )
 
     def get_file_url(self, obj):
-        return self.context['request'].build_absolute_uri(reverse(
-            "core:submission-files-download",
-            kwargs={
-                "submission_pk": obj.submission.pk,
-                "pk": obj.pk
-            }
-        ))
+        return self.context['request'].build_absolute_uri(
+            reverse(
+                "core:submission-files-download",
+                kwargs={
+                    "submission_pk": obj.submission.pk,
+                    "pk": obj.pk
+                }
+            )
+        )
 
 
 class UploadTokenSerializer(serializers.ModelSerializer):
@@ -923,7 +1101,10 @@ class UploadTokenSerializer(serializers.ModelSerializer):
 
 
 class SubmissionSerializer(
-    PartialUpdateSerializerMixin, serializers.HyperlinkedModelSerializer
+    PerTypeFieldsMixIn,
+    PartialUpdateSerializerMixin,
+    serializers.HyperlinkedModelSerializer,
+
 ):
     """
     This also needs to nested-serialize all data related to the specific
@@ -1013,8 +1194,18 @@ class SubmissionSerializer(
         view_name='core:submission-submission-flags-list',
         lookup_url_kwarg='submission_pk',
     )
+
     submission_remarks = serializers.HyperlinkedIdentityField(
         view_name='core:submission-submission-remarks-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
+    exemption_nomination_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-exemption-nomination-list',
+        lookup_url_kwarg='submission_pk',
+    )
+    exemption_approved_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-exemption-approved-list',
         lookup_url_kwarg='submission_pk',
     )
 
@@ -1039,13 +1230,8 @@ class SubmissionSerializer(
     class Meta:
         model = Submission
 
-        fields = (
+        base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
-            'article7questionnaire_url', 'article7questionnaire',
-            'article7destructions_url', 'article7productions_url',
-            'article7exports_url', 'article7imports_url',
-            'article7nonpartytrades_url', 'article7emissions_url',
-            'hat_productions_url', 'hat_imports_url', 'data_others_url',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -1067,6 +1253,28 @@ class SubmissionSerializer(
             'can_edit_data',
         )
 
+        per_type_fields = {
+            'art7': base_fields + (
+                'article7questionnaire_url', 'article7questionnaire',
+                'article7destructions_url', 'article7productions_url',
+                'article7exports_url', 'article7imports_url',
+                'article7nonpartytrades_url', 'article7emissions_url',
+            ),
+            'hat': base_fields + (
+                'hat_productions_url', 'hat_imports_url',
+            ),
+            'essencrit': base_fields,
+            'other': base_fields + (
+                'data_others_url',
+            ),
+            'exemption': base_fields + (
+                'exemption_nomination_url', 'exemption_approved_url',
+            )
+        }
+        # All possible fields still need to be specified here.
+        # Otherwise DRF won't load them.
+        fields = list(set(sum(per_type_fields.values(), ())))
+
         read_only_fields = (
             'available_transitions', 'is_cloneable', 'changeable_flags',
             'can_change_remarks_party', 'can_change_remarks_secretariat',
@@ -1084,7 +1292,8 @@ class SubmissionSerializer(
 
     def get_changeable_flags(self, obj):
         user = self.context['request'].user
-        return obj.get_changeable_flags(user)
+        flags = set(SubmissionFlagsSerializer.get_dynamic_fields(obj))
+        return flags.intersection(obj.get_changeable_flags(user))
 
     def get_can_change_remarks_party(self, obj):
         user = self.context['request'].user

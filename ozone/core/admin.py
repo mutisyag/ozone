@@ -9,8 +9,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
 from django.urls import reverse
+from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
+from django.utils.translation import gettext_lazy as _
 
 from import_export.admin import (
     ImportExportActionModelAdmin,
@@ -72,7 +74,7 @@ class OzoneAuthenticationForm(AuthenticationForm):
     """Custom auth form, that allows non-staff users as well."""
     error_messages = {
         **AuthenticationForm.error_messages,
-        'invalid_login': (
+        'invalid_login': _(
             "Please enter the correct %(username)s and password for the "
             "account. Note that both fields may be case-sensitive."
         ),
@@ -88,13 +90,13 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
     login_form = OzoneAuthenticationForm
 
     # Text to put at the end of each page's <title>.
-    site_title = 'ORS'
+    site_title = _('ORS')
 
     # Text to put in each page's <h1>.
-    site_header = 'Ozone Reporting System'
+    site_header = _('Ozone Reporting System')
 
     # Text to put at the top of the admin index page.
-    index_title = 'Administration'
+    index_title = _('Administration')
 
     @never_cache
     def login(self, request, extra_context=None):
@@ -238,36 +240,62 @@ class ObligationAdmin(
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
+    base_list_display = (
+        "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
+    )
+    superuser_list_display = (
+        "login_as",
+    )
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
     exclude = ["password"]
-    readonly_fields = ["last_login", "date_joined"]
+    readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
 
-    def reset_password(self, request, queryset):
+    def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
         use_https = request.environ.get("wsgi.url_scheme", "https").lower() == "https"
         users = []
 
+        body = f"registration/{template}_email.html"
+        subject = f"registration/{template}_subject.txt"
+
         for user in queryset:
             form = PasswordResetForm({'email': user.email})
             form.full_clean()
-            form.save(domain_override=domain_override, use_https=use_https)
+            form.save(
+                domain_override=domain_override, use_https=use_https, email_template_name=body,
+                subject_template_name=subject,
+            )
             users.append(user.username)
         if len(users) > 10:
-            self.message_user(request, "Email sent to %d users for password reset" % len(users),
+            self.message_user(request, _("Email sent to %d users for password reset") % len(users),
                               level=messages.SUCCESS)
         else:
-            self.message_user(request, "Email sent to %s for password reset" % ", ".join(users),
+            self.message_user(request, _("Email sent to %s for password reset") % ", ".join(users),
                               level=messages.SUCCESS)
+    reset_password.short_description = _("Reset user password")
 
-    reset_password.short_description = "Reset user password"
+    def login_as(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>',
+            reverse('impersonate-start', kwargs={"uid": obj.id}),
+            _('Login'),
+        )
+
+    def get_list_display(self, request):
+        if request.user.is_superuser:
+            return self.base_list_display + self.superuser_list_display
+
+        return self.base_list_display
 
     def save_model(self, request, obj, form, change):
         if not change:
             # Set a random password for the new user
             # The user will need to set a new password
             obj.password = str(uuid.uuid4())
+            obj.created_by = request.user
+            # The user is inactive until a password is set
+            obj.activated = False
         super(UserAdmin, self).save_model(request, obj, form, change)
         if not change:
-            # TODO likely better to use a different email template here.
-            self.reset_password(request, [obj])
+            self.reset_password(request, [obj], template="account_created")

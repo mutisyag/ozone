@@ -222,6 +222,8 @@ class Language(models.Model):
 
     language_id = models.CharField(max_length=16, unique=True)
 
+    iso = models.CharField(max_length=5, unique=True)
+
     name = models.CharField(max_length=64, unique=True)
 
     remark = models.CharField(max_length=256, blank=True)

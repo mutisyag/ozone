@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import Argon2PasswordHasher
 from ozone.core.models import Submission
 from .base import BaseTests
 from .factories import (
+    ObligationFactory,
     PartyFactory,
     AnotherPartyFactory,
     RegionFactory,
@@ -20,16 +21,48 @@ from .factories import (
 User = get_user_model()
 
 REMARK_VALUE = "Some random remark here."
+ART7_REMARKS_DATA = {
+    "imports_remarks_party": "Testing",
+    "imports_remarks_secretariat": "Testing",
+    "exports_remarks_party": "Testing",
+    "exports_remarks_secretariat": "Testing",
+    "production_remarks_party": "Testing",
+    "production_remarks_secretariat": "Testing",
+    "destruction_remarks_party": "Testing",
+    "destruction_remarks_secretariat": "Testing",
+    "nonparty_remarks_party": "Testing",
+    "nonparty_remarks_secretariat": "Testing",
+    "emissions_remarks_party": "Testing",
+    "emissions_remarks_secretariat": "Testing",
+}
+HAT7_REMARKS_DATA = {
+    "hat_production_remarks_party": "Testing",
+    "hat_production_remarks_secretariat": "Testing",
+    "hat_imports_remarks_party": "Testing",
+    "hat_imports_remarks_secretariat": "Testing",
+}
+ESSENCRIT_REMARKS_DATA = {}
+OTHER_REMARKS_DATA = {}
+ALL_REMARK_DATA = dict(
+    **ART7_REMARKS_DATA,
+    **HAT7_REMARKS_DATA,
+    **ESSENCRIT_REMARKS_DATA,
+    **OTHER_REMARKS_DATA,
+)
 
 
 class BaseRemarksTests(BaseTests):
     success_code = 200
     fail_code = 422
+    form_type = "art7"
+    remarks_data = {}
+    fail_on_wrong_field = False
 
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type=self.form_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -52,7 +85,11 @@ class BaseRemarksTests(BaseTests):
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=owner, last_edited_by=owner, **kwargs
+            party=self.party,
+            created_by=owner,
+            last_edited_by=owner,
+            obligation=self.obligation,
+            **kwargs,
         )
         return submission
 
@@ -64,14 +101,25 @@ class BaseRemarksTests(BaseTests):
 
         # Use class attribute if parameter is None
         fail_code = fail_code if fail_code is not None else self.fail_code
-        self.assertEqual(
-            result.status_code,
-            self.success_code if expect_success else fail_code,
-            verbose,
-        )
+
+        expected_code = self.success_code
+        # If the field we are trying to change is not available
+        # for the obligation type, we don't raise an error, but the
+        # value doesn't actually change.
+        if not expect_success and (field in self.remarks_data or self.fail_on_wrong_field):
+            expected_code = fail_code
+
+        self.assertEqual(result.status_code, expected_code, verbose)
+
+        expected_value = ""
+        # If the field we are trying to change is not available
+        # for the obligation type, we don't raise an error, but the
+        # value doesn't actually change.
+        if expect_success and field in self.remarks_data:
+            expected_value = REMARK_VALUE
 
         submission = Submission.objects.get(pk=submission.id)
-        self.assertEqual(getattr(submission, field), REMARK_VALUE if expect_success else '')
+        self.assertEqual(getattr(submission, field), expected_value)
 
 
 class PatchIsSamePartyMixIn(object):
@@ -95,11 +143,16 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
         - user type who reported the submission
     """
 
-    def _check_remark_update_permission(self, user, field_type, owner, expect_success, fail_code=None):
-        submission = self.create_submission(owner)
-        self.client.login(username=user.username, password='qwe123qwe')
+    remarks_data = ART7_REMARKS_DATA
+    form_type = "art7"
 
-        for field in remarks_data.keys():
+    def _check_remark_update_permission(
+        self, user, field_type, owner, expect_success, fail_code=None
+    ):
+        submission = self.create_submission(owner)
+        self.client.login(username=user.username, password="qwe123qwe")
+
+        for field in ALL_REMARK_DATA.keys():
             if not field.endswith(field_type):
                 continue
 
@@ -154,12 +207,30 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
         )
 
 
+class HATSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
+    remarks_data = HAT7_REMARKS_DATA
+    form_type = "hat"
+
+
+class EssenCritSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
+    remarks_data = ESSENCRIT_REMARKS_DATA
+    form_type = "essencrit"
+
+
+class OtherSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
+    remarks_data = OTHER_REMARKS_DATA
+    form_type = "other"
+
+
 class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemarksTests):
     """Checks editable permission depending on:
 
      - workflow state
      - field type
     """
+
+    remarks_data = ART7_REMARKS_DATA
+    form_type = "art7"
 
     def _check_remark_update_permission_state(
         self, user, field_type, owner, previous_state, current_state, expect_success
@@ -170,9 +241,9 @@ class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemark
         submission.flag_valid = True
         submission.save()
 
-        self.client.login(username=user.username, password='qwe123qwe')
+        self.client.login(username=user.username, password="qwe123qwe")
 
-        for field in remarks_data.keys():
+        for field in ALL_REMARK_DATA.keys():
             if not field.endswith(field_type):
                 continue
             with self.subTest("Test update state %s" % field):
@@ -236,38 +307,36 @@ class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemark
         )
 
 
-remarks_data = {
-    "imports_remarks_party": "Testing",
-    "imports_remarks_secretariat": "Testing",
-    "exports_remarks_party": "Testing",
-    "exports_remarks_secretariat": "Testing",
-    "production_remarks_party": "Testing",
-    "production_remarks_secretariat": "Testing",
-    "destruction_remarks_party": "Testing",
-    "destruction_remarks_secretariat": "Testing",
-    "nonparty_remarks_party": "Testing",
-    "nonparty_remarks_secretariat": "Testing",
-    "emissions_remarks_party": "Testing",
-    "emissions_remarks_secretariat": "Testing",
-    "hat_production_remarks_party": "Testing",
-    "hat_production_remarks_secretariat": "Testing",
-    "hat_imports_remarks_party": "Testing",
-    "hat_imports_remarks_secretariat": "Testing",
-}
+class HATSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+    remarks_data = HAT7_REMARKS_DATA
+    form_type = "hat"
+
+
+class EssenCritSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+    remarks_data = ESSENCRIT_REMARKS_DATA
+    form_type = "essencrit"
+
+
+class OtherCritSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+    remarks_data = OTHER_REMARKS_DATA
+    form_type = "other"
 
 
 class SubmissionRetrieveTest(BaseRemarksTests):
+    remarks_data = ART7_REMARKS_DATA
+    form_type = "art7"
+
     def _check_remark_retrieve_data(self, user, owner):
-        submission = self.create_submission(owner, **remarks_data)
-        self.client.login(username=user.username, password='qwe123qwe')
+        submission = self.create_submission(owner, **ALL_REMARK_DATA)
+        self.client.login(username=user.username, password="qwe123qwe")
 
         result = self.client.get(
             reverse(
                 "core:submission-submission-remarks-list",
                 kwargs={"submission_pk": submission.pk},
-            ),
+            )
         )
-        self.assertEqual(result.json(), [remarks_data])
+        self.assertEqual(result.json(), [self.remarks_data])
 
     def test_retrieve_as_party_party_reporter(self):
         self._check_remark_retrieve_data(self.party_user, self.party_user)
@@ -282,15 +351,33 @@ class SubmissionRetrieveTest(BaseRemarksTests):
         self._check_remark_retrieve_data(self.secretariat_user, self.secretariat_user)
 
 
+class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
+    remarks_data = HAT7_REMARKS_DATA
+    form_type = "hat"
+
+
+class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
+    remarks_data = ESSENCRIT_REMARKS_DATA
+    form_type = "essencrit"
+
+
+class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
+    remarks_data = OTHER_REMARKS_DATA
+    form_type = "other"
+
+
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     success_code = 200
     fail_code = 403
+    form_type = "art7"
+    remarks_data = ART7_REMARKS_DATA
+    fail_on_wrong_field = True
 
     def _check_remark_update_permission(self, user, field_type, owner, expect_success):
         submission = self.create_submission(owner)
         self.client.login(username=user.username, password='qwe123qwe')
 
-        for field in remarks_data.keys():
+        for field in ALL_REMARK_DATA.keys():
             if not field.endswith(field_type):
                 continue
 
@@ -305,8 +392,8 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
                 self._check_result(result, expect_success, submission, field)
 
     def _check_remark_retrieve_data(self, user, owner, expect_success):
-        submission = self.create_submission(owner, **remarks_data)
-        self.client.login(username=user.username, password='qwe123qwe')
+        submission = self.create_submission(owner, **ALL_REMARK_DATA)
+        self.client.login(username=user.username, password="qwe123qwe")
 
         result = self.client.get(
             reverse(
@@ -341,3 +428,24 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     def test_update_secretariat(self):
         self._check_remark_update_permission(self.secretariat_user, "secretariat", self.party_user,
                                              True)
+
+
+class HATSubmissionRemarksTestIsSamePartyPermissions(
+    SubmissionRemarksTestIsSamePartyPermissions
+):
+    form_type = "hat"
+    remarks_data = HAT7_REMARKS_DATA
+
+
+class EssenCritSubmissionRemarksTestIsSamePartyPermissions(
+    SubmissionRemarksTestIsSamePartyPermissions
+):
+    form_type = "essencrit"
+    remarks_data = ESSENCRIT_REMARKS_DATA
+
+
+class OtherSubmissionRemarksTestIsSamePartyPermissions(
+    SubmissionRemarksTestIsSamePartyPermissions
+):
+    form_type = "other"
+    remarks_data = OTHER_REMARKS_DATA

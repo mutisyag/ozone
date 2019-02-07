@@ -1,7 +1,7 @@
 import os
 
 from django.conf import settings
-from django.db import models
+from django.db import models, transaction
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.crypto import get_random_string
@@ -78,7 +78,9 @@ class File(models.Model):
     def get_storage_directory(self, filename):
         raise NotImplementedError
 
+    # The name the file gets in the ORS
     name = models.CharField(max_length=512)
+
     file = models.FileField(
         upload_to=get_storage_directory, null=True, blank=True
     )
@@ -105,12 +107,17 @@ class File(models.Model):
         abstract = True
 
 
-class SubmissionFile(ModifyPreventionMixin, File):
+class SubmissionFile(File):
     def get_storage_directory(self, filename):
         return os.path.join(
             self.submission.get_storage_directory(),
             os.path.basename(filename)
         )
+
+    # The name as given originally by the uploader
+    original_name = models.CharField(max_length=512, blank=True, default='')
+    # Indicates the suffix in the case of multiple files of same original name
+    suffix = models.PositiveSmallIntegerField(default=0)
 
     submission = models.ForeignKey(
         Submission, related_name='files', on_delete=models.PROTECT
@@ -143,6 +150,24 @@ class SubmissionFile(ModifyPreventionMixin, File):
     @staticmethod
     def has_valid_extension(filename):
         return filename.split('.')[-1].lower() in settings.ALLOWED_FILE_EXTENSIONS
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        # On any save, we need to check whether the name we are trying to use
+        # is taken. This is also called
+        self.original_name = self.name
+        self.suffix = 0
+        if not self.pk or kwargs.get('force_insert', None) is not None:
+            current_files = SubmissionFile.objects.filter(
+                submission=self.submission,
+                name=self.name
+            )
+            if current_files.exists():
+                # There is already at least a file with this name
+                self.suffix = current_files.latest('suffix').suffix + 1
+                self.name = f'{self.original_name}({self.suffix})'
+
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f'File {self.file.name} for submission {self.submission}'

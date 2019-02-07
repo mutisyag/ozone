@@ -6,6 +6,7 @@ from ozone.core.models import HighAmbientTemperatureImport, Submission
 from .base import BaseTests
 from .factories import (
     PartyFactory,
+    ObligationFactory,
     RegionFactory,
     ReporterUserFactory,
     ReportingChannelFactory,
@@ -24,6 +25,7 @@ class BaseHATImportTest(BaseTests):
         super().setUp()
         self.workflow_class = "default"
 
+        self.obligation = ObligationFactory(form_type="hat")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -40,6 +42,9 @@ class BaseHATImportTest(BaseTests):
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
+        if "obligation" not in kwargs:
+            kwargs["obligation"] = self.obligation
+
         submission = SubmissionFactory(
             party=self.party, created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user, **kwargs
@@ -72,6 +77,22 @@ class TestHATImport(BaseHATImportTest):
             [data],
         )
         self.assertEqual(result.status_code, 201, result.json())
+
+    def test_create_wrong_obligation(self):
+        obligation = ObligationFactory.create(form_type="art7", name="Much obliged")
+        submission = self.create_submission(obligation=obligation)
+
+        data = dict(HAT_IMPORT_DATA)
+        data["substance"] = self.substance.id
+
+        result = self.client.post(
+            reverse(
+                "core:submission-hat-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data],
+        )
+        self.assertEqual(result.status_code, 403, result.json())
 
     def test_create_multiple(self):
         submission = self.create_submission()

@@ -1,8 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
 from .models import Blend, Submission, Party
+
+
+User = get_user_model()
 
 
 class IsSecretariatOrSamePartySubmission(BasePermission):
@@ -132,3 +136,47 @@ class IsSecretariatOrSamePartyBlend(BasePermission):
         if request.method not in SAFE_METHODS:
             return obj.has_edit_rights(request.user)
         return obj.has_read_rights(request.user)
+
+
+class IsCorrectObligation(BasePermission):
+    """Check if the API is for the correct obligation type."""
+
+    def has_permission(self, request, view):
+        # Explicit is better than implicit.
+        if view.form_types is None:
+            return True
+        form_type = Submission.objects.get(
+            pk=view.kwargs.get('submission_pk', None)
+        ).obligation.form_type
+        return form_type in view.form_types
+
+
+class IsSecretariatOrSamePartyUser(BasePermission):
+    """
+    Check if user can view/update the profile of another user.
+    """
+
+    def has_permission(self, request, view):
+        user_pk = view.kwargs.get('pk', None)
+        if user_pk:
+            user = User.objects.get(pk=user_pk)
+            if request.method not in SAFE_METHODS:
+                return user.has_edit_rights(request.user)
+            else:
+                return user.has_read_rights(request.user)
+
+        # It means that we only want the current logged in user;
+        # get_queryset will take care of this.
+        return True
+
+
+class IsSecretariatOrSafeMethod(BasePermission):
+    """
+    Check if user is secretariat.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return request.user.is_secretariat

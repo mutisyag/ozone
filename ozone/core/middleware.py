@@ -1,7 +1,12 @@
 import traceback
 from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.http import JsonResponse
+from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
+from sentry_sdk import capture_exception
+
+
+User = get_user_model()
 
 
 class ExceptionMiddleware(object):
@@ -27,6 +32,7 @@ class ExceptionMiddleware(object):
             status = exception.status_code
             exception_dict = exception.to_dict()
         else:
+            capture_exception(exception)
             status = 500
             exception_dict = {
                 NON_FIELD_ERRORS: ['Unexpected Error!']
@@ -52,4 +58,20 @@ class TokenAdminAuthMiddleware(object):
             except (Token.DoesNotExist, KeyError):
                 pass
         response = self.get_response(request)
+        return response
+
+
+class ImpersonateTokenAuthMiddleware(object):
+    """Sets the authToken cookie after the impersonate is triggered.
+    This allows the FE app to behave like the impersonated user is logged in.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if getattr(request.user, "is_impersonate", False):
+            token, created = Token.objects.get_or_create(user=request.user)
+            response.set_cookie("authToken", token.key)
         return response

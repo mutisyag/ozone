@@ -1,3 +1,4 @@
+from datetime import datetime
 from base64 import b64encode
 from collections import OrderedDict
 from copy import deepcopy
@@ -9,9 +10,11 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.db.models.query import QuerySet
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
+from impersonate.views import stop_impersonate
 
 from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
@@ -25,7 +28,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
 
-from ..exceptions import InvalidRequest
+from ..exceptions import InvalidRequest, Forbidden
 
 from ..models import (
     Region,
@@ -50,6 +53,8 @@ from ..models import (
     Group,
     Substance,
     Blend,
+    Nomination,
+    ExemptionApproved,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -57,6 +62,9 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmissionFlags,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
+    IsCorrectObligation,
+    IsSecretariatOrSamePartyUser,
+    IsSecretariatOrSafeMethod,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -92,7 +100,12 @@ from ..serializers import (
     SubmissionRemarksSerializer,
     SubmissionFileSerializer,
     UploadTokenSerializer,
+    ExemptionNominationSerializer,
+    ExemptionApprovedSerializer,
 )
+
+
+from .export_pdf import export_submission
 
 
 User = get_user_model()
@@ -135,7 +148,7 @@ class BulkCreateUpdateMixin:
 
     def get_object(self):
         try:
-            super().get_object()
+            return super().get_object()
         except AssertionError:
             # If it's not one we return many!
             return self.get_queryset()
@@ -180,13 +193,19 @@ class SerializerDataContextMixIn(SerializerRequestContextMixIn):
         return context
 
 
-class CurrentUserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+class CurrentUserViewSet(
+    ReadOnlyMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+    mixins.ListModelMixin, GenericViewSet
+):
     queryset = User.objects.all()
     serializer_class = CurrentUserSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsSecretariatOrSamePartyUser)
 
     def get_queryset(self):
-        return self.queryset.filter(id=self.request.user.pk)
+        if self.kwargs.get('pk'):
+            return self.queryset.filter(id=self.kwargs.get('pk'))
+        else:
+            return self.queryset.filter(id=self.request.user.pk)
 
 
 class RegionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
@@ -427,14 +446,22 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["get"])
     def versions(self, request, pk=None):
-        return self._list_submission(Submission.objects.get(pk=pk).versions, request)
+        return self._list_submission(
+            Submission.objects.get(pk=pk).versions, request
+        )
 
     @action(detail=True, methods=["post"])
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         clone = submission.clone(request.user)
         return Response(
-            {"url": reverse('core:submission-detail', request=request, kwargs={'pk': clone.id})}
+            {
+                "url": reverse(
+                    'core:submission-detail',
+                    request=request,
+                    kwargs={'pk': clone.id}
+                )
+            }
         )
 
     @action(detail=True, methods=["post"], url_path="call-transition")
@@ -464,11 +491,23 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         serializer = SubmissionHistorySerializer(historical_records, many=True)
         return Response(serializer.data)
 
+    @action(detail=True, methods=["get"])
+    def export_pdf(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
+        filename = f'submission_{pk}_{timestamp}.pdf'
+        buf_pdf = export_submission(submission)
+        resp = HttpResponse(buf_pdf, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return resp
+
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
+    form_types = None
     serializer_class = SubmissionInfoSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -499,9 +538,11 @@ class SubmissionFlagsViewSet(
     mixins.UpdateModelMixin, mixins.ListModelMixin,
     GenericViewSet, SerializerRequestContextMixIn
 ):
+    form_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -535,9 +576,12 @@ class SubmissionRemarksViewSet(
     update:
     Update the general remarks for this specific submission.
     """
+    # XXX TODO Check if this should be available for all #497
+    form_types = None
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
-        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
     http_method_names = ['get', 'put']
@@ -559,9 +603,11 @@ class SubmissionRemarksViewSet(
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
+    form_types = ("art7",)
     serializer_class = Article7QuestionnaireSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -589,9 +635,11 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 class Article7DestructionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7DestructionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -608,9 +656,11 @@ class Article7DestructionViewSet(
 class Article7ProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -626,9 +676,11 @@ class Article7ProductionViewSet(
 class Article7ExportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ExportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -644,9 +696,11 @@ class Article7ExportViewSet(
 class Article7ImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7ImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -662,9 +716,11 @@ class Article7ImportViewSet(
 class Article7NonPartyTradeViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -680,9 +736,11 @@ class Article7NonPartyTradeViewSet(
 class Article7EmissionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("art7",)
     serializer_class = Article7EmissionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -698,9 +756,11 @@ class Article7EmissionViewSet(
 class HighAmbientTemperatureImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("hat",)
     serializer_class = HighAmbientTemperatureImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -716,9 +776,11 @@ class HighAmbientTemperatureImportViewSet(
 class HighAmbientTemperatureProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
+    form_types = ("hat",)
     serializer_class = HighAmbientTemperatureProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -732,9 +794,11 @@ class HighAmbientTemperatureProductionViewSet(
 
 
 class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
+    form_types = ("other",)
     serializer_class = DataOtherSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
 
@@ -747,14 +811,54 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
         serializer.save(submission_id=self.kwargs['submission_pk'])
 
 
-class SubmissionFileViewSet(viewsets.ModelViewSet):
+class ExemptionNominationViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
+):
+    form_types = ("exemption",)
+    serializer_class = ExemptionNominationSerializer
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return Nomination.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class ExemptionApprovedViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
+):
+    form_types = ("exemption",)
+    serializer_class = ExemptionApprovedSerializer
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return ExemptionApproved.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+    def perform_create(self, serializer):
+        serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     """
     download:
     Download the submission file.
     """
+    form_types = None
     serializer_class = SubmissionFileSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
     )
 
     def get_queryset(self):
@@ -765,6 +869,9 @@ class SubmissionFileViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def download(self, request, submission_pk=None, pk=None):
         obj = self.get_object()
+        if isinstance(obj, QuerySet):
+            obj = obj.get(pk=pk)
+
         # We could try to guess the correct mime type here.
         response = HttpResponse(
             obj.file.read(), content_type="application/octet-stream"
@@ -894,29 +1001,30 @@ class UploadHookViewSet(viewsets.ViewSet):
         log.info(f'UPLOAD post-finish: {request.data}')
         meta_data = request.data.get('MetaData', {})
         tok = meta_data.get('token', '')
+        description = meta_data.get('description', '')
         # filename presence was enforced during pre-create
         file_name = meta_data['filename']
         file_ext = file_name.split('.')[-1].lower()
 
         try:
             token = UploadToken.objects.get(token=tok)
-            upload_id = request.data.get('ID')
-            submission_file, is_new = SubmissionFile.objects.get_or_create(
-                submission=token.submission,
-                name=file_name,
-                defaults={
-                    'uploader': token.user,
-                    'tus_id': upload_id,
-                    'upload_successful': False
-                }
-            )
-
             if not token.user.is_authenticated:
                 log.error(f'UPLOAD denied for "{token.user}": NOT ALLOWED')
                 return Response(
                     {'error': 'user not authenticated'},
                     status=status.HTTP_403_FORBIDDEN
                 )
+
+            upload_id = request.data.get('ID')
+
+            submission_file = SubmissionFile.objects.create(
+                submission=token.submission,
+                name=file_name,
+                uploader=token.user,
+                tus_id=upload_id,
+                description=description,
+                upload_successful=False
+            )
 
             file_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
@@ -937,13 +1045,10 @@ class UploadHookViewSet(viewsets.ViewSet):
             log.info(f'file extension: {file_ext}')
             log.info(f'allowed extensions: {settings.ALLOWED_FILE_EXTENSIONS}')
 
-            if not is_new:
-                # New file with same name uploaded, delete old one to avoid
-                # auto-renaming in get_available_name()
-                token.submission.delete_disk_file(file_name)
-
+            # At this point, submission_file.file_name is not necessarily
+            # identical to the original file name
             submission_file.file.save(
-                file_name, File(file_path.open(mode='rb'))
+                submission_file.name, File(file_path.open(mode='rb'))
             )
             submission_file.uploader = token.user
             submission_file.upload_successful = True
@@ -1078,7 +1183,9 @@ class AuthTokenViewSet(
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key})
+        response = Response({'token': token.key})
+        response.set_cookie("authToken", token.key)
+        return response
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -1093,6 +1200,17 @@ class AuthTokenViewSet(
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         self.perform_destroy(instance)
-        # Also remove any active session.
-        request.session.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+        response = Response(status=status.HTTP_204_NO_CONTENT)
+        if "_impersonate" in request.session:
+            real_user = User.objects.get(pk=request.session["_auth_user_id"])
+            stop_impersonate(request)
+            # Set the token of the "real user", that has been impersonating
+            # this user.
+            token, created = Token.objects.get_or_create(user=real_user)
+            response.set_cookie("authToken", token.key)
+        else:
+            # Also remove any active session.
+            request.session.delete()
+            response.delete_cookie("authToken")
+        return response
