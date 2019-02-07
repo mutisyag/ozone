@@ -1,6 +1,7 @@
 const getTabFiles = ($gettext) => {
 	const tabFiles = {
 		name: 'files',
+		hideInfoButton: true,
 		hasAssideMenu: false,
 		title: $gettext('Files'),
 		titleHtml: $gettext('Files'),

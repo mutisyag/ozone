@@ -129,19 +129,19 @@ export default {
 		addSubstance() {
 			this.updateGroup(this.selected_substance.selected)
 
-			const current_field = this.$store.state.form.tabs[this.tabName].default_properties
+			const { default_properties } = this.$store.state.form.tabs[this.tabName]
 			const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
 			let currentTypeOfCountryField = ''
 			const willNotAdd = []
 
 			typeOfCountryFields.forEach(type => {
-				if (current_field.hasOwnProperty(type)) currentTypeOfCountryField = type
+				if (default_properties.hasOwnProperty(type)) currentTypeOfCountryField = type
 			})
 
 			for (const subst of this.selected_substance.selected) {
 				let fieldExists = false
 				for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
-					if (parseInt(existing_field.substance.selected) === subst && existing_field[currentTypeOfCountryField].selected === null) {
+					if (parseInt(existing_field.substance.selected) === subst && (!currentTypeOfCountryField || existing_field[currentTypeOfCountryField].selected === null)) {
 						fieldExists = true
 						willNotAdd.push(subst)
 						break
@@ -170,7 +170,7 @@ export default {
 			})
 			willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
 				$gettext: this.$gettext,
-				message: { __all__: [`${this.$gettext('The following substances were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('select at least one country for each substance before adding it again')}`] },
+				message: { __all__: [`${this.$gettext('The following substances were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${currentTypeOfCountryField ? this.$gettext('select at least one country for each substance before adding it again') : ''}`] },
 				variant: 'danger'
 			})
 			this.resetData()

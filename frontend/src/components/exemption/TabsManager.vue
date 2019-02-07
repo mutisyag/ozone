@@ -26,22 +26,27 @@
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
 		<b-tabs v-model="tabIndex" card>
-
-          <b-tab :title="$gettext('Submission Info')" active>
-             <template slot="title">
-              <div class="tab-title">
-                <span v-translate>Submission Info</span>
-              </div>
-             </template>
+			<b-tab :title="$gettext('Submission Info')" active>
+				<template slot="title">
+				<div class="tab-title">
+				<span v-translate>Submission Info</span>
+				</div>
+				</template>
 			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-          </b-tab>
+			</b-tab>
 
-           <b-tab :title="$gettext('Files')">
+			<b-tab :title="$gettext('Files')">
 			<template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 			</template>
-            <Files :tab="$store.state.form.tabs.files" />
-          </b-tab>
+			<Files :tab="$store.state.form.tabs.files" />
+			</b-tab>
+			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+				</template>
+				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+			</b-tab>
         </b-tabs>
 
         <div class="legend">
@@ -106,6 +111,7 @@ import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
+import FormTemplate from '@/components/exemption/FormTemplate.vue'
 
 export default {
 	components: {
@@ -114,7 +120,8 @@ export default {
 		Footer,
 		Save,
 		SubmissionHistory,
-		TabTitleWithLoader
+		TabTitleWithLoader,
+		FormTemplate
 	},
 	props: {
 		data: null,
@@ -144,6 +151,10 @@ export default {
 				body.classList.remove('aside-menu-lg-show')
 			}
 			return tab
+		},
+		tabsIdsWithAssideMenu() {
+			const { form } = this.$store.state
+			return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
 		}
 	},
 	methods: {

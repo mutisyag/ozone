@@ -1,10 +1,8 @@
 <script>
-import inputFields from '@/components/art7/dataDefinitions/inputFields'
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { Aside as AppAside } from '@coreui/vue'
 import DefaultAside from '@/components/common/form-components/DefaultAside'
 import Multiselect from '@/components/common/ModifiedMultiselect'
-import { intersect } from '@/components/common/services/utilsService'
 
 export default {
 	props: {
@@ -63,10 +61,6 @@ export default {
 	},
 
 	computed: {
-		getTabInputFields() {
-			return intersect(inputFields, this.tab_info.fields_order)
-		},
-
 		blendSubstanceHeaders() {
 			return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
 		},

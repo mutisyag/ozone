@@ -6,9 +6,10 @@ import { sortAscending } from '@/components/common/services/utilsService'
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
 import { getFormLetter } from '@/components/letter/dataDefinitions/form'
-import letterTableRowConstructor from '@/components/letter/services/tableRowConstructorService'
 import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
+import { getFormExemption } from '@/components/exemption/dataDefinitions/form'
+import exemptionTableRowConstructor from '@/components/exemption/services/tableRowConstructorService'
 
 const options = {
 	position: 'bottom-left',
@@ -51,17 +52,20 @@ const mutations = {
 		switch (formName) {
 		case 'art7':
 			currentFormStructure = getFormArt7($gettext)
-			console.log(currentFormStructure)
 			tableRowConstructor = art7TableRowConstructor
 			break
 		case 'hat':
 			currentFormStructure = getFormHat($gettext)
 			tableRowConstructor = hatTableRowConstructor
 			break
+		case 'exemption':
+			currentFormStructure = getFormExemption($gettext)
+			tableRowConstructor = exemptionTableRowConstructor
+			break
 		case 'other':
 			currentFormStructure = getFormLetter($gettext)
-			tableRowConstructor = letterTableRowConstructor
 			break
+
 		default:
 			break
 		}
