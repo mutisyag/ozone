@@ -1,7 +1,6 @@
 const getters = {
 	// TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
 	getValidationForCurrentTab: (state) => (tab) => {
-		console.log(tab, state.form.tabs[tab])
 		return state.form.tabs[tab].form_fields
 			.map(field => (field.validation.selected
 				? {

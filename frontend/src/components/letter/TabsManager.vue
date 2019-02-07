@@ -2,8 +2,10 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="selectedTab.detailsHtml"></div>
+		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
+			<i class="fa fa-info fa-lg"></i>
+		</b-btn>
+		<div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
       <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
