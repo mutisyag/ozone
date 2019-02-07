@@ -5,6 +5,8 @@ from django.contrib.auth.hashers import Argon2PasswordHasher
 from .base import BaseTests
 from .factories import (
     AnotherPartyFactory,
+    ExemptionApprovedFactory,
+    NominationFactory,
     PartyFactory,
     RegionFactory,
     ReporterUserFactory,
@@ -15,6 +17,7 @@ from .factories import (
     SecretariatUserROFactory,
     SubmissionFactory,
     SubregionFactory,
+    SubstanceFactory,
 )
 
 
@@ -66,7 +69,8 @@ class BaseWorkflowPermissionsTests(BaseTests):
             party,
             current_state,
             previous_state=None,
-            flag_valid=None
+            flag_valid=None,
+            flag_approved=None,
     ):
         submission = SubmissionFactory(
             party=party,
@@ -79,6 +83,7 @@ class BaseWorkflowPermissionsTests(BaseTests):
         submission._previous_state = previous_state
         submission._current_state = current_state
         submission.flag_valid = flag_valid
+        submission.flag_approved = flag_approved
         submission.save()
         return submission
 
@@ -693,3 +698,236 @@ class AcceleratedWorkflowTests(BaseWorkflowPermissionsTests):
             transition='unrecall'
         )
         self.assertEqual(resp.status_code, 403)
+
+
+EXEMPTION_NOMINATION_DATA = {
+    "quantity": 100,
+    "remarks_os": "nothing to remark OS",
+}
+
+EXEMPTION_APPROVED_DATA = {
+    "quantity": 100,
+    "remarks_os": "nothing to remark OS",
+    "decision_approved": "it's a test"
+}
+
+
+class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
+
+    def setUp(self):
+        super().setUp()
+        self.workflow_class = 'default_exemption'
+        self.substance = SubstanceFactory()
+
+    def test_submit_secretariat(self):
+        """
+        Testing `submit` transition using a secretariat user for a submission
+        created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='data_entry'
+        )
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='submit'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'submitted')
+
+    def test_submit_reporter(self):
+        """
+        Testing `submit` transition using a party reporter user for a submission
+        created by the same party reporter user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='data_entry'
+        )
+        self.client.login(username=self.reporter_same_party.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='submit'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'submitted')
+
+    def test_fill_nomination_secretariat(self):
+        """
+        Testing `fill_nomination` transition using a secretariat user for
+        a submission created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='submitted'
+        )
+
+        NominationFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_NOMINATION_DATA
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='fill_nomination'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'nomination_filled')
+
+    def test_fill_nomination_reporter(self):
+        """
+        Testing `fill_nomination` transition using a party reporter user for
+        a submission created by the same party reporter user.
+        Expected result: 412 Only secretariat users can make this transition.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='submitted'
+        )
+
+        NominationFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_NOMINATION_DATA
+        )
+
+        self.client.login(username=self.reporter.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='fill_nomination'
+        )
+        self.assertEqual(resp.status_code, 412)
+
+    def test_finalize_approved_secretariat(self):
+        """
+        Testing `finalize` transition, for an approved nomination, using a
+        secretariat user for a submission created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='nomination_filled',
+            flag_approved=True
+        )
+
+        ExemptionApprovedFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_APPROVED_DATA
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='finalize'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'finalized')
+
+    def test_finalize_no_data_secretariat(self):
+        """
+        Testing `finalize` transition without exempted data, using a
+        secretariat user for a submission created by the same secretariat user.
+        Expected result: 412.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='nomination_filled',
+            flag_approved=True
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='finalize'
+        )
+        self.assertEqual(resp.status_code, 412)
+
+    def test_finalize_not_approved_secretariat(self):
+        """
+        Testing `finalize` transition, for a refused nomination, using a
+        secretariat user for a submission created by the same secretariat user.
+        Expected result: 412.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='nomination_filled',
+            flag_approved=False
+        )
+
+        ExemptionApprovedFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_APPROVED_DATA
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='finalize'
+        )
+        self.assertEqual(resp.status_code, 412)
+
+    def test_finalize_not_approved_no_data_secretariat(self):
+        """
+        Testing `finalize` transition, for a refused nomination but with no data,
+        using a secretariat user for a submission created by the same secretariat user.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='nomination_filled',
+            flag_approved=False
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='finalize'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'finalized')
+
+    def test_finalize_party_reporter(self):
+        """
+        Testing `finalize` transition, using a party reporter user for
+        a submission created by the same party reporter user.
+        Expected result: 412 Only secretariat users can make this transition.
+        """
+
+        submission = self.create_submission(
+            owner=self.reporter,
+            party=self.party,
+            current_state='nomination_filled',
+            flag_approved=True
+        )
+
+        ExemptionApprovedFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_APPROVED_DATA
+        )
+
+        self.client.login(username=self.reporter.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='finalize'
+        )
+        self.assertEqual(resp.status_code, 412)
