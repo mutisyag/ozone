@@ -820,7 +820,7 @@ class ExemptionNominationSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionNominationListSerializer
+        list_serializer_class = ExemptionNominationListSerializer
         model = Nomination
         exclude = ('submission',)
 
@@ -840,7 +840,7 @@ class ExemptionApprovedSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionApprovedListSerializer
+        list_serializer_class = ExemptionApprovedListSerializer
         model = ExemptionApproved
         exclude = ('submission',)
 
