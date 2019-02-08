@@ -26,6 +26,8 @@ __all__ = [
     'HighAmbientTemperatureImport',
     'Transfer',
     'DataOther',
+    'RAFReport',
+    'RAFImport',
 ]
 
 

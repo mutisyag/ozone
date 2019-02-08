@@ -38,6 +38,8 @@ from .models import (
     Language,
     Nomination,
     ExemptionApproved,
+    RAFReport,
+    RAFImport,
 )
 
 User = get_user_model()
@@ -845,6 +847,35 @@ class ExemptionApprovedSerializer(
         exclude = ('submission',)
 
 
+class RAFImportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RAFImport
+        exclude = ('report',)
+
+
+class RAFListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+
+class RAFSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    imports = RAFImportSerializer(many=True)
+
+    class Meta:
+        list_serializer_class = RAFListSerializer
+        model = RAFReport
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
 
@@ -945,7 +976,8 @@ class SubmissionFlagsSerializer(
         )
         per_type_fields = {
             'art7': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
                 'flag_has_reported_a1', 'flag_has_reported_a2',
                 'flag_has_reported_b1', 'flag_has_reported_b2',
                 'flag_has_reported_b3', 'flag_has_reported_c1',
@@ -953,7 +985,8 @@ class SubmissionFlagsSerializer(
                 'flag_has_reported_e', 'flag_has_reported_f',
             ),
             'hat': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
                 'flag_has_reported_a1', 'flag_has_reported_a2',
                 'flag_has_reported_b1', 'flag_has_reported_b2',
                 'flag_has_reported_b3', 'flag_has_reported_c1',
@@ -964,7 +997,11 @@ class SubmissionFlagsSerializer(
             'other': base_fields,
             'exemption': base_fields + (
                 'flag_approved', 'flag_emergency',
-            )
+            ),
+            'raf': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
+            ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1008,6 +1045,8 @@ class SubmissionRemarksSerializer(
             ),
             'essencrit': (),
             'other': (),
+            'exemption': ('exemption_remarks_secretariat',),
+            'raf': ('raf_remarks_party', 'raf_remarks_secretariat',),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
