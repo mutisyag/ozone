@@ -4,7 +4,7 @@
 			<div>
 				<h5 class="mt-2"><span v-translate>Add predefined blends</span></h5>
 				<small><span v-translate>Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</span></small>
-				<b-input-group class="mt-2" prepend="Blend types">
+				<b-input-group id="blend_type_selector" class="mt-2" prepend="Blend types">
 					<multiselect
 						:placeholder="$gettext('Select option')"
 						:clear-on-select="false"

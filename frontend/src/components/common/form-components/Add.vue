@@ -3,7 +3,7 @@
     <div class="container">
       <h3><span v-translate>Add substances</span></h3>
 			<small><span v-translate>Filter annex groups in order to select one or more substances. A row for each substance will be added in substances table. Substances can be deleted using table controls.</span></small>
-			<b-input-group class="mt-2" :prepend="$gettext('Annex groups')">
+			<b-input-group id="substance_annex_selector" class="mt-2" :prepend="$gettext('Annex groups')">
 				<multiselect
 					:placeholder="$gettext('Select option')"
 					@input="prepareSubstances"
