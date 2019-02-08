@@ -986,7 +986,7 @@ class SubmissionRemarksSerializer(
     serializers.ModelSerializer
 ):
     """
-    Specific serializer used to present all submission remarks,
+    Specific serializer used to present all general submission remarks,
     since this is easily usable by the frontend.
     """
 
@@ -1008,6 +1008,7 @@ class SubmissionRemarksSerializer(
             ),
             'essencrit': (),
             'other': (),
+            'exemption': ('exemption_remarks_secretariat'),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
