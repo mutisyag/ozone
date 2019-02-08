@@ -33,18 +33,18 @@ const getFormExemption = ($gettext) => {
 			nomination: {
 				...getTabsCommonInfoForNominationAndApproved($gettext),
 				name: 'nomination',
+				formNumber: 1,
 				title: $gettext('Nomination'),
 				titleHtml: `<b>${$gettext('Nomination')}</b>`,
-				endpoint_url: 'exemptionnomination_url',
-				formNumber: 1
+				endpoint_url: 'exemption_nomination_url'
 			},
 			approved: {
 				...getTabsCommonInfoForNominationAndApproved($gettext),
 				name: 'approved',
+				formNumber: 2,
 				title: $gettext('Approved'),
 				titleHtml: `<b>${$gettext('Approved')}</b>`,
-				endpoint_url: 'exemptionapproved_url',
-				formNumber: 2
+				endpoint_url: 'exemption_approved_url'
 			}
 		}
 	}
