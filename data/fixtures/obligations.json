@@ -116,5 +116,16 @@
       "has_reporting_periods": true,
       "other": false
     }
+  },
+    {
+    "model": "core.obligation",
+    "pk": 12,
+    "fields": {
+      "name": "RAF",
+      "description": "",
+      "form_type": "raf",
+      "has_reporting_periods": true,
+      "other": false
+    }
   }
 ]
