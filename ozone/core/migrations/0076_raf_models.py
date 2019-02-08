@@ -46,11 +46,6 @@ class Migration(migrations.Migration):
             },
             bases=(ozone.core.models.reporting.ModifyPreventionMixin, models.Model),
         ),
-        migrations.AlterField(
-            model_name='submissionfile',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory),
-        ),
         migrations.AddField(
             model_name='rafimport',
             name='report',
