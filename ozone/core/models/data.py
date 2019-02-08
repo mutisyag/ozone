@@ -177,10 +177,15 @@ class BaseReport(models.Model):
     )
 
     # Each entry in the Article 7 forms can have remarks
-    remarks_party = models.CharField(max_length=9999, blank=True,
-                                     help_text="Remarks added by the reporting party")
-    remarks_os = models.CharField(max_length=9999, blank=True,
-                                  help_text="Remarks added by the ozone secretariat")
+    remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Remarks added by the reporting party"
+    )
+    remarks_os = models.CharField(
+        max_length=9999,
+        blank=True,
+        help_text="Remarks added by the ozone secretariat"
+    )
 
     ordering_id = models.IntegerField(
         default=0,
@@ -738,3 +743,71 @@ class DataOther(ModifyPreventionMixin, BaseReport):
 
     class Meta:
         db_table = 'reporting_other'
+
+
+class RAFReport(ModifyPreventionMixin, BaseReport):
+    """
+    Model for RAF reports.
+
+    These behave the same as Article 7 reports in regards to workflow, cloning,
+    etc.
+    """
+
+    # These reports only refer to substances
+    substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
+
+    quantity_exempted = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    quantity_production = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    quantity_used = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    quantity_exported = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    quantity_destroyed = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    on_hand_start_year = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    tracker = FieldTracker()
+
+    @property
+    def quantity_imports(self):
+        if self.imports:
+            return sum([imp.get('quantity', 0) for imp in self.imports])
+        return 0
+
+    class Meta:
+        db_table = 'reporting_raf'
+
+
+class RAFImport(models.Model):
+    """
+    This is used for modelling multiple import quantities/country of origin
+    pairs on each RAFReport row.
+
+    Substance is the one from the RAFReport entry, so no need for it here.
+    """
+    report = models.ForeignKey(
+        RAFReport, blank=False, null=False, on_delete=models.PROTECT,
+        related_name='imports'
+    )
+
+    party = models.ForeignKey(Party, on_delete=models.PROTECT)
+
+    # This needs to have a quantity specified
+    quantity = models.FloatField(validators=[MinValueValidator(0.0)])
+
+    class Meta:
+        db_table = 'reporting_raf_import'

@@ -140,7 +140,7 @@ class Submission(models.Model):
         'dataothers',
         'nominations',
         'exemptionapproveds',
-
+        'rafreports',
     ]
 
     # TODO: this implements the `submission_type` field from the
