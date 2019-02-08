@@ -86,6 +86,7 @@ export default {
 		},
 
 		submitData(tab, url) {
+			console.log('submitData..................')
 			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			let current_tab_data
 

@@ -5,6 +5,7 @@ export default {
 	mixins: [SaveMixin],
 	methods: {
 		prepareDataForSave() {
+			console.log('prepareDataForSave00')
 			const justSave = []
 			const removeDataAndSave = []
 			const doNotSave = []
