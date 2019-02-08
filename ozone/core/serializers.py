@@ -993,14 +993,13 @@ class SubmissionFlagsSerializer(
                 'flag_has_reported_c2', 'flag_has_reported_c3',
                 'flag_has_reported_e', 'flag_has_reported_f',
             ),
-            'essencrit': base_fields,
+            'essencrit': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
+            ),
             'other': base_fields,
             'exemption': base_fields + (
                 'flag_approved', 'flag_emergency',
-            ),
-            'raf': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks',
-                'flag_confirmed_blanks',
             ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
@@ -1043,10 +1042,9 @@ class SubmissionRemarksSerializer(
                 'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
                 'hat_production_remarks_party', 'hat_production_remarks_secretariat',
             ),
-            'essencrit': (),
+            'essencrit': ('raf_remarks_party', 'raf_remarks_secretariat',),
             'other': (),
             'exemption': ('exemption_remarks_secretariat',),
-            'raf': ('raf_remarks_party', 'raf_remarks_secretariat',),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 

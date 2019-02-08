@@ -854,7 +854,7 @@ class ExemptionApprovedViewSet(
 class RAFViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = ("raf",)
+    form_types = ("essencrit",)
     serializer_class = RAFSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
