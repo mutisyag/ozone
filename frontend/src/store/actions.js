@@ -8,7 +8,6 @@ import {
 	getSubmissionFiles,
 	deleteSubmission,
 	deleteSubmissionFile,
-	updateSubmissionFiles,
 	getPeriods,
 	getObligations,
 	createSubmission,
@@ -417,57 +416,36 @@ const actions = {
 		const response = await getSubmissionFiles(context.state.current_submission.id)
 		return response.data
 	},
-	async deleteTabFile({ state, commit }, { tabName, file }) {
+	async deleteTabFile({ state, commit }, { file }) {
 		console.log(file)
 		if (file.tus_id) {
 			await deleteSubmissionFile({ file, submissionId: state.current_submission.id })
 		}
 
-		commit('deleteTabFile', { tabName, file })
+		commit('deleteTabFile', { file })
 	},
-	updateLocalFilesFromServerFilesResponse({ commit }, { tabName, filesLocal, filesOnServer }) {
-		filesOnServer.forEach(file => {
+	updateLocalFilesFromServerFilesResponse({ state, commit }, { filesOnServer }) {
+		const { form_fields } = state.form.tabs.files
+		const filesLocal = form_fields.files
+		filesOnServer.forEach(fileServerInfo => {
 			const fileJustUploaded = filesLocal.find(x => {
 				if (x.tus_id) {
-					return x.tus_id === file.tus_id
+					return x.tus_id === fileServerInfo.tus_id
 				}
-				return x.tus_url && x.tus_url.endsWith(file.tus_id)
+				return x.tus_url && x.tus_url.endsWith(fileServerInfo.tus_id)
 			})
+			console.log(fileJustUploaded)
 			if (fileJustUploaded) {
-				commit('deleteTabFile', {
-					tabName,
-					file: fileJustUploaded
-				})
-				fileJustUploaded.upload_successful = file.upload_successful
-				fileJustUploaded.file_url = file.file_url
-				fileJustUploaded.updated = file.updated
-				fileJustUploaded.tus_id = file.tus_id
-				commit('addTabFile', {
-					tabName,
-					file: fileJustUploaded
+				commit('updateTabFileWithServerInfo', {
+					file: fileJustUploaded,
+					fileServerInfo
 				})
 			}
 		})
 	},
-	async setJustUploadedFilesState({ dispatch }, { files, tabName }) {
+	async setJustUploadedFilesState({ dispatch }) {
 		const filesOnServer = await dispatch('getSubmissionFiles')
-		dispatch('updateLocalFilesFromServerFilesResponse', {
-			tabName,
-			filesOnServer,
-			filesLocal: files
-		})
-	},
-	async updateSubmissionFiles({ state, dispatch }, { files, tabName }) {
-		const response = await updateSubmissionFiles(state.current_submission.id, files.map(file => ({
-			id: file.id,
-			name: file.name,
-			description: file.description
-		})))
-		dispatch('updateLocalFilesFromServerFilesResponse', {
-			tabName,
-			filesOnServer: response.data,
-			filesLocal: files
-		})
+		await dispatch('updateLocalFilesFromServerFilesResponse', {	filesOnServer })
 	}
 }
 

@@ -40,7 +40,7 @@
 			<template slot="title">
 				<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 			</template>
-            <Files :tab="$store.state.form.tabs.files" />
+            <Files />
           </b-tab>
         </b-tabs>
 

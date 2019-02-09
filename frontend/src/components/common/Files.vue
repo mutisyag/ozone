@@ -31,28 +31,14 @@
 			<b-form-file :disabled="loadingInitialFiles || $store.getters.can_upload_files" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain/>
 		</div>
 	</div>
-	<div class="row" v-if="filesNotUploaded.length || filesWithUpdatedDescription.length">
-		<div class="col-12">
-			<b-button variant="primary" @click="uploadAndSave()">
-				<span v-if="filesNotUploaded.length">
-					<i class="fa fa-upload" aria-hidden="true"></i>
-					&nbsp;
-					<span v-translate>Upload</span> &
-				</span>
-				<span v-translate>Save</span>
-			</b-button>
-		</div>
-	</div>
 </div>
 </template>
 
 <script>
-const ALLOWED_FILE_EXTENSIONS = 'pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb'
+import FilesMixin from '@/components/common/mixins/FilesMixin'
 
 export default {
-	props: {
-		tab: Object
-	},
+	mixins: [FilesMixin],
 	data() {
 		return {
 			selectedFiles: [],
@@ -60,61 +46,24 @@ export default {
 		}
 	},
 	async created() {
-		const files = await this.$store.dispatch('getSubmissionFiles')
-		this.$store.commit('addTabFiles', { tabName: this.tab.name, files })
+		await this.getSubmissionFiles()
 		this.loadingInitialFiles = false
-	},
-	computed: {
-		files() {
-			return this.$store.state.form.tabs[this.tab.name].form_fields.files
-		},
-		allFilesUploadedSuccessfully() {
-			return !this.files.find(file => !file.upload_successful)
-		},
-		allowedExtensions() {
-			return ALLOWED_FILE_EXTENSIONS.split(',').map(x => `.${x}`)
-		},
-		filesNotUploaded() {
-			return this.files.filter(file => !file.tus_id)
-		},
-		filesWithUpdatedDescription() {
-			return this.files.filter(file => file.isDescriptionUpdated)
-		}
 	},
 	methods: {
 		deleteFile(e, file) {
-			this.$store.dispatch('deleteTabFile', {
-				tabName: this.tab.name,
-				file
-			})
+			this.$store.dispatch('deleteTabFile', {	file })
 			this.$refs.filesInput.reset()
 		},
-		onFileDescriptionChanged(newDescription, file) {
-			if (file.description === newDescription) {
-				return
-			}
-			this.$store.commit('deleteTabFile', {
-				tabName: this.tab.name,
-				file
-			})
-			file.description = newDescription
-			file.isDescriptionUpdated = true
-			file.upload_successful = false
-			this.$store.commit('addTabFile', {
-				tabName: this.tab.name,
-				file
+		onFileDescriptionChanged(description, file) {
+			this.$store.commit('updateTabFileDescription', {
+				file,
+				description
 			})
 		},
 		onProgressCallback(file, percentage) {
-			this.$store.commit('deleteTabFile', {
-				tabName: this.tab.name,
-				file
-			})
+			this.$store.commit('deleteTabFile', { file })
 			file.percentage = percentage
-			this.$store.commit('addTabFile', {
-				tabName: this.tab.name,
-				file
-			})
+			this.$store.commit('addTabFile', { file })
 		},
 		async onSelectedFilesChanged() {
 			if (!this.selectedFiles || !this.selectedFiles.length) {
@@ -125,34 +74,9 @@ export default {
 			files.forEach((file, index) => {
 				file.updated = index
 			})
-			this.$store.commit('addTabFiles', { tabName: this.tab.name, files })
+			this.$store.commit('addTabFiles', { files })
 
 			this.$refs.filesInput.reset()
-		},
-		upload() {
-			return new Promise(async (resolve, reject) => {
-				try {
-					await this.$store.dispatch('uploadFiles', { files: this.filesNotUploaded, onProgressCallback: this.onProgressCallback })
-
-					const checkFilesUploadedSuccessfullyInterval = setInterval(async () => {
-						if (this.allFilesUploadedSuccessfully) {
-							clearInterval(checkFilesUploadedSuccessfullyInterval)
-							resolve()
-							return
-						}
-						await this.$store.dispatch('setJustUploadedFilesState', { files: this.files, tabName: this.tab.name })
-					}, 1500)
-				} catch (error) {
-					console.log('error upload', error)
-					reject(error)
-				}
-			})
-		},
-		async uploadAndSave() {
-			await this.upload()
-			if (this.filesWithUpdatedDescription.length) {
-				await this.$store.dispatch('updateSubmissionFiles', { files: this.filesWithUpdatedDescription, tabName: this.tab.name })
-			}
 		}
 	}
 }

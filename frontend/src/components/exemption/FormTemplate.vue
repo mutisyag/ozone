@@ -34,7 +34,7 @@
 		<b-table
 			show-empty
 			outlined
-			v-if="getTabInputFields"
+			v-if="tableRows"
 			bordered
 			@input="tableLoaded"
 			@row-hovered="rowHovered"
@@ -43,7 +43,7 @@
 			stacked="md"
 			class="submission-table"
 			id="substance-table"
-			:items="tableItems"
+			:items="tableRows"
 			:fields="tableFields"
 			:empty-text="tableEmptyText"
 			:filter="table.filters.search"
@@ -73,27 +73,12 @@
 				</div>
 			</template>
 
-			<template
-				slot="substance"
-				slot-scope="cell">
-				<div class="substance-blend-cell">
-					{{cell.item.substance}}
-				</div>
-			</template>
-			<template
-				slot="substance"
-				slot-scope="cell">
-				<div class="substance-blend-cell">
-					{{cell.item.substance}}
-				</div>
-			</template>
-
-			<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+			<template v-for="inputField in tab_info.rowInputFields" :slot="inputField.name" slot-scope="cell">
 				<fieldGenerator
-					:key="`${cell.item.index}_${inputField}_${tabName}`"
-					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+					:key="`${cell.item.index}_${inputField.name}_${tabName}`"
+					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField.name}"
 					:disabled="false"
-					:field="cell.item.originalObj[inputField]" />
+					:field="cell.item.originalObj[inputField.name]" />
 			</template>
 
 			<template slot="validation" slot-scope="cell">
@@ -102,6 +87,24 @@
 		</b-table>
 	</div>
     </div>
+	<div id="tab-comments" class="table-wrapper" v-if="tab_info.comments">
+		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
+		<hr>
+		<div
+			v-for="comment in tab_info.comments_array"
+			:key="comment.name"
+			class="comments-input">
+			<label>
+				<span>{{comment.label}}</span>
+			</label>
+			<textarea
+				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment.name})"
+				:disabled="getCommentFieldPermission(comment.name)"
+				class="form-control"
+				:value="comment.selected">
+			</textarea>
+		</div>
+	</div>
     <hr>
     <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
@@ -110,7 +113,6 @@
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
       <div v-if="modal_data" slot="modal-title">
 		<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
-        <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
       </div>
       <div v-if="modal_data">
 		<p class="muted">
@@ -134,43 +136,17 @@
 				:options="tab_data.substances" />
           </b-col>
         </b-row>
-        <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
+        <div class="mb-3" v-for="modalField in tab_info.rowInputFields" :key="modalField.name">
           <b-row>
-            <b-col><span>{{labels[order]}}</span></b-col>
+            <b-col><span>{{modalField.label}}</span></b-col>
             <b-col>
-              <fieldGenerator
-                :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="$store.getters.can_edit_data"
-                v-if="modal_data.field[order].type != 'multiselect'"
-                :field="modal_data.field[order]" />
-              <multiselect
-                v-else
-                :clear-on-select="true"
-                :hide-selected="true"
-                :close-on-select="true"
-				:disabled="$store.getters.can_edit_data"
-                trackBy="value"
-                label="text"
-                :placeholder="$gettext('Countries')"
-                @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})"
-                :value="parseInt(modal_data.field[order].selected)"
-                :options="tab_data.countryOptions" />
+				<fieldGenerator
+					:fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField.name}"
+					:disabled="$store.getters.can_edit_data"
+					:field="modal_data.field[modalField.name]" />
             </b-col>
           </b-row>
         </div>
-        <b-row
-          class="mt-3"
-          v-for="comment_field in ['remarks_party','remarks_os']"
-          :key="comment_field">
-          <b-col lg="3">
-            <span>{{labels[comment_field]}}</span>
-          </b-col>
-          <b-col lg="9">
-            <textarea :disabled="getCommentFieldPermission(comment_field)"
-					class="form-control" v-model="modal_data.field[comment_field].selected">
-			</textarea>
-          </b-col>
-        </b-row>
       </div>
       <div slot="modal-footer">
           <b-btn @click="$refs.edit_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
@@ -180,7 +156,6 @@
 </template>
 
 <script>
-import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 
@@ -191,6 +166,7 @@ export default {
 	},
 	data() {
 		return {
+			tableRows: null
 		}
 	},
 
@@ -199,29 +175,18 @@ export default {
 	},
 
 	created() {
-		this.setLabels()
+		this.setTableRows()
 	},
 	methods: {
-		setLabels() {
-			const labels = getLabels(this.$gettext)
-			this.labels = {
-				...labels.common,
-				...labels[this.tab_info.name]
-			}
-		},
 		fillTableSearch(data) {
 			if (data.substance) {
 				this.table.filters.search = data.substance
 				this.table.tableFilters = true
 			}
-		}
-	},
-	computed: {
-		getTabInputFields() {
-			return this.tab_info.input_fields
 		},
-		tableItems() {
-			const tableFields = []
+		setTableRows() {
+			console.log('tableItems', this.tab_info.form_fields)
+			const tableRows = []
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
@@ -241,17 +206,31 @@ export default {
 					} else {
 						tableRow.validation = 'valid'
 					}
-					tableFields.push(tableRow)
+					tableRows.push(tableRow)
 				}
 			})
-			return tableFields
+			this.tableRows = tableRows
 		}
+	},
+	computed: {
+
 	},
 	watch: {
 		'$language.current': {
 			handler() {
 				this.setLabels()
 			}
+		},
+		'tab_info.form_fields': {
+			handler() {
+				if (this.$refs.edit_modal.is_show) {
+					this.tableRows = []
+					setTimeout(() => this.setTableRows(), 200)
+				} else {
+					this.setTableRows()
+				}
+			},
+			deep: true
 		}
 	}
 }

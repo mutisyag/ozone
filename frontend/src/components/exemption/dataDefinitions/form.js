@@ -1,5 +1,6 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
 import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
 const getFormExemption = ($gettext) => {
@@ -15,7 +16,11 @@ const getFormExemption = ($gettext) => {
 				'initialData.display.countries',
 				'currentUser',
 				'permissions.form'
-			]
+			],
+			comments_default_properties: {
+				exemption_remarks_secretariat: ''
+			},
+			comments_endpoint_url: 'submission_remarks'
 		},
 		tabs: {
 			sub_info: {
@@ -44,7 +49,18 @@ const getFormExemption = ($gettext) => {
 				formNumber: 2,
 				title: $gettext('Approved'),
 				titleHtml: `<b>${$gettext('Approved')}</b>`,
-				endpoint_url: 'exemption_approved_url'
+				endpoint_url: 'exemption_approved_url',
+				comments: {
+					exemption_remarks_secretariat: {
+						name: 'exemption_remarks_secretariat',
+						selected: '',
+						type: 'textarea',
+						label: $gettext('Remarks (Secretariat)')
+					}
+				},
+				get comments_array() {
+					return getObjectLevel1PropertyValuesAsArray(this.comments)
+				}
 			}
 		}
 	}

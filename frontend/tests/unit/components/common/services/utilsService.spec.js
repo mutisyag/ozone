@@ -6,7 +6,8 @@ import {
 	intersect,
 	getPropertyValue,
 	sortAscending,
-	sortDescending
+	sortDescending,
+	getObjectLevel1PropertyValuesAsArray
 } from '@/components/common/services/utilsService'
 
 describe('utilsService', () => {
@@ -292,6 +293,39 @@ describe('utilsService', () => {
 			expect(sortDescending([...inputArray], 'propertyNameNotExisting')).to.deep.equal([...inputArray])
 			expect(sortDescending([...inputArray], 'name')).to.deep.equal([{ name: 'd', value: 5 }, { name: 'c', value: 1 }, { name: 'b', value: 3 }, { name: 'a', value: 7 }])
 			expect(sortDescending([...inputArray], 'value')).to.deep.equal([{ name: 'a', value: 7 }, { name: 'd', value: 5 }, { name: 'b', value: 3 }, { name: 'c', value: 1 }])
+		})
+	})
+
+	describe('getObjectLevel1PropertyValuesAsArray', () => {
+		it('for undefined, null, nor an object or empty object should return empty array', () => {
+			expect(getObjectLevel1PropertyValuesAsArray()).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(null)).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray({})).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(9)).to.be.empty
+		})
+
+		it('should work for strings', () => {
+			expect(getObjectLevel1PropertyValuesAsArray('text')).to.deep.equal(['t', 'e', 'x', 't'])
+			expect(getObjectLevel1PropertyValuesAsArray('abc')).to.deep.equal(['a', 'b', 'c'])
+		})
+
+		it('should work for arrays', () => {
+			expect(getObjectLevel1PropertyValuesAsArray([1, 2, 3])).to.deep.equal([1, 2, 3])
+			expect(getObjectLevel1PropertyValuesAsArray([1, 'abc'])).to.deep.equal([1, 'abc'])
+		})
+
+		it('should work for objects', () => {
+			expect(getObjectLevel1PropertyValuesAsArray({
+				x: 1,
+				y: 2
+			})).to.deep.equal([1, 2])
+
+			expect(getObjectLevel1PropertyValuesAsArray({
+				prop1: 'a',
+				prop2: 2,
+				prop3: null,
+				prop4: { x: 7, y: 8 }
+			})).to.deep.equal(['a', 2, null, { x: 7, y: 8 }])
 		})
 	})
 })
