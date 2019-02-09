@@ -1,3 +1,5 @@
+import { fromExponential, isNumber } from '@/components/common/services/utilsService'
+
 const valueConverter = (item) => {
 	if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
 		return 0
@@ -7,7 +9,7 @@ const valueConverter = (item) => {
 
 export default {
 	substanceRows({
-		$gettext, substance, group, ordering_id // , prefillData
+		$gettext, substance, group, ordering_id, prefillData
 	}) {
 		const baseInnerFields = {
 			ordering_id: { selected: ordering_id || 0 },
@@ -25,7 +27,7 @@ export default {
 			},
 			remarks_os: {
 				type: 'text',
-				selected: null
+				selected: ''
 			},
 			get validation() {
 				const errors = []
@@ -41,9 +43,11 @@ export default {
 			}
 		}
 
-		/* prefillData should be this.$store.state.form.tabs[this.tabName].default_properties
+		/* prefillData is used to populate rows from server response.
+
+		I think that when we create new rows prefillData shouldn't be null! It should be this.$store.state.form.tabs[this.tabName].default_properties
 		and in formComponents/Add.vue, inside addSubstance we should call this.$store.dispatch('createSubstance') with  {prefillData: default_properties}
-		now it is called with {prefillData: null}. I can't modify this now because it would break Art7
+		now it is called with {prefillData: null}. I can't modify this now because it would break Art7  */
 
 		if (prefillData) {
 			Object.keys(prefillData).forEach((field) => {
@@ -56,7 +60,6 @@ export default {
 				}
 			})
 		}
-*/
 		return baseInnerFields
 	}
 

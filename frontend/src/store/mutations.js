@@ -37,9 +37,14 @@ const mutations = {
 	},
 
 	updateFormField(state, data) {
-		data.fieldInfo.index === data.fieldInfo.field
-			? state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
-			: state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value
+		console.log('updateFormField', data)
+		const tab = state.form.tabs[data.fieldInfo.tabName]
+		const formField = tab.form_fields[data.fieldInfo.index]
+		if (data.fieldInfo.index === data.fieldInfo.field) {
+			formField.selected = data.value
+		} else {
+			formField[data.fieldInfo.field].selected = data.value
+		}
 	},
 
 	setSubmissionHistory(state, data) {
@@ -251,23 +256,43 @@ const mutations = {
 	removeField(state, data) {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
-	addTabFiles(state, { tabName, files }) {
+	addTabFiles(state, { files }) {
 		if (!files) {
 			return
 		}
-		const { form_fields } = state.form.tabs[tabName]
+		const { form_fields } = state.form.tabs.files
 		files.forEach(file => {
 			form_fields.files.push(file)
 		})
 		form_fields.files = sortAscending(form_fields.files, 'updated')
 	},
-	addTabFile(state, { tabName, file }) {
-		const { form_fields } = state.form.tabs[tabName]
+	addTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
 		form_fields.files = sortAscending([...form_fields.files, file], 'updated')
 	},
-	deleteTabFile(state, { tabName, file }) {
-		const { form_fields } = state.form.tabs[tabName]
+	updateTabFileDescription(state, { file, description }) {
+		if (file.description === description) {
+			return
+		}
+		file.description = description
+		file.isDescriptionUpdated = true
+		file.upload_successful = false
+	},
+	updateTabFileWithServerInfo(state, { file, fileServerInfo }) {
+		console.log('updateTabFileWithServerInfo', { file, fileServerInfo })
+		file.id = fileServerInfo.id
+		file.upload_successful = fileServerInfo.upload_successful
+		file.file_url = fileServerInfo.file_url
+		file.updated = fileServerInfo.updated
+		file.tus_id = fileServerInfo.tus_id
+	},
+	deleteTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
 		form_fields.files = form_fields.files.filter(fileOld => fileOld !== file)
+	},
+	deleteAllTabFiles(state) {
+		const { form_fields } = state.form.tabs.files
+		form_fields.files = []
 	}
 }
 

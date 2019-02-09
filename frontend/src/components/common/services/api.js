@@ -9,7 +9,7 @@ const logRequests = process.env.NODE_ENV === 'development'
 
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
-const filesURL = `http://${window.location.origin}:1080/files/`
+let filesURL = `${window.location.origin}:1080/files/`
 
 /* const TUSD_HOST = 'localhost'
 const TUSD_PORT = 1080
@@ -22,6 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 	isTestSession = true
 	apiURL = 'http://localhost:8000/api'
 	apiBase = 'http://localhost:8000'
+	filesURL = 'http://localhost:1080/files/'
 }
 
 const api = axios.create({
@@ -155,8 +156,6 @@ const deleteSubmission = (url) => remove(url)
 
 const deleteSubmissionFile = ({ file, submissionId }) => remove(`submissions/${submissionId}/files/${file.id}/`)
 
-const updateSubmissionFiles = (submissionId, files) => update(`submissions/${submissionId}/files/`, files)
-
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
 const getNonParties = () => fetch('get-non-parties/')
@@ -215,7 +214,6 @@ export {
 	getSubmissionFiles,
 	deleteSubmission,
 	deleteSubmissionFile,
-	updateSubmissionFiles,
 	createBlend,
 	getCustomBlends,
 	callTransition,
