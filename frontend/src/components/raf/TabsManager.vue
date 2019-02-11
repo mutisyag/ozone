@@ -26,31 +26,31 @@
 
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
-		<b-tabs v-model="tabIndex" card>
+			<b-tabs v-model="tabIndex" card>
 
-          <b-tab :title="$gettext('Submission Info')" active>
-             <template slot="title">
-              <div class="tab-title">
-                <span v-translate>Submission Info</span>
-              </div>
-             </template>
-			<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-          </b-tab>
+						<b-tab :title="$gettext('Submission Info')" active>
+							<template slot="title">
+								<div class="tab-title">
+									<span v-translate>Submission Info</span>
+								</div>
+							</template>
+				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+						</b-tab>
 
-		<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-			</template>
-			<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-		</b-tab>
+			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+				</template>
+				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+			</b-tab>
 
-           <b-tab :title="$gettext('Attachments')">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
-			</template>
-            <attachments :tab="$store.state.form.tabs.attachments"></attachments>
-          </b-tab>
-        </b-tabs>
+				<b-tab>
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs.files" />
+					</template>
+					<Files />
+				</b-tab>
+			</b-tabs>
     </b-card>
     </div>
     <Footer style="display:inline">
@@ -95,7 +95,7 @@
 <script>
 import { Footer } from '@coreui/vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
-import Attachments from '@/components/common/Attachments.vue'
+import Files from '@/components/common/Files'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/hat/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
@@ -106,7 +106,7 @@ import FormTemplate from '@/components/raf/FormTemplate.vue'
 export default {
 	components: {
 		SubmissionInfo,
-		Attachments,
+		Files,
 		Footer,
 		Save,
 		SubmissionHistory,
@@ -155,7 +155,7 @@ export default {
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
+				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {

@@ -218,8 +218,7 @@ export default {
 	},
 	methods: {
 		getRowCountries(data) {
-			console.log('---------',data)
-			 return [...Array(200).keys()].filter(k => data[k])
+			return [...Array(200).keys()].filter(k => data[k])
 		}
 	},
 	computed: {
