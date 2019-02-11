@@ -186,7 +186,6 @@ export default {
 			}
 		},
 		setTableRows() {
-			console.log('tableItems', this.tab_info.form_fields)
 			const tableRows = []
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
