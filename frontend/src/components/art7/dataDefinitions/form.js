@@ -1,6 +1,6 @@
 import { getQuestionnaireFields } from './questionnaireFields'
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormArt7 = ($gettext) => {
@@ -35,13 +35,10 @@ const getFormArt7 = ($gettext) => {
 			comments_endpoint_url: 'submission_remarks'
 		},
 		tabs: {
+			...setTabFiles($gettext),
 			sub_info: {
 				...getTabSubInfo($gettext),
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
-			},
-			files: {
-				...getTabFiles($gettext),
-				hideInfoButton: true
 			},
 			questionaire_questions: {
 				name: 'questionaire_questions',
