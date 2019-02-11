@@ -387,10 +387,6 @@ class Submission(models.Model):
         max_length=9999, blank=True,
         help_text="General RAF remarks added by the ozone secretariat"
     )
-    exemption_remarks_secretariat = models.CharField(
-        max_length=9999, blank=True,
-        help_text="General Exemption remarks added by the ozone secretariat"
-    )
 
     reporting_channel = models.ForeignKey(
         ReportingChannel,
