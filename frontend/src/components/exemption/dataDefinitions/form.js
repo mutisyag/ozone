@@ -18,7 +18,7 @@ const getFormExemption = ($gettext) => {
 				'permissions.form'
 			],
 			comments_default_properties: {
-				exemptions_nomination_remarks_os: '',
+				exemption_nomination_remarks_os: '',
 				exemption_approved_remarks_os: ''
 			},
 			comments_endpoint_url: 'submission_remarks'
@@ -44,7 +44,7 @@ const getFormExemption = ($gettext) => {
 				titleHtml: `<b>${$gettext('Nomination')}</b>`,
 				endpoint_url: 'exemption_nomination_url',
 				comments: {
-					exemptions_nomination_remarks_os: {
+					exemption_nomination_remarks_os: {
 						name: 'exemption_nomination_remarks_os',
 						selected: '',
 						type: 'textarea',
