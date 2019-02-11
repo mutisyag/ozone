@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
@@ -24,6 +24,7 @@ const getFormExemption = ($gettext) => {
 			comments_endpoint_url: 'submission_remarks'
 		},
 		tabs: {
+			...setTabFiles($gettext),
 			sub_info: {
 				...tabSubInfo,
 				hideInfoButton: true,
@@ -35,7 +36,6 @@ const getFormExemption = ($gettext) => {
 					...tabSubInfo.default_properties
 				}
 			},
-			files: getTabFiles($gettext),
 			nomination: {
 				...getTabsCommonInfoForNominationAndApproved($gettext),
 				name: 'nomination',
