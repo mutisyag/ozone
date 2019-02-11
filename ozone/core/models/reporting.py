@@ -371,9 +371,14 @@ class Submission(models.Model):
         max_length=9999, blank=True,
         help_text="General HAT obligation remarks added by the ozone secretariat for imports"
     )
-    exemption_remarks_secretariat = models.CharField(
+
+    exemptions_nomination_remarks_os = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Exemption remarks added by the ozone secretariat"
+        help_text="Exemption nomination remarks added by the ozone secretariat"
+    )
+    exemption_approved_remarks_os = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Exemption approved remarks added by the ozone secretariat"
     )
 
     reporting_channel = models.ForeignKey(
