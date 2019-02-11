@@ -47,6 +47,51 @@ const getPropertyValue = (obj, propertyPath) => {
 
 const isNumber = (n) => !isNaN(parseFloat(n)) && isFinite(n)
 
+const sortAscending = (array, propertyName) => {
+	if (!Array.isArray(array)) {
+		return null
+	}
+	return array.sort((x, y) => {
+		let valueX = x
+		let valueY = y
+		if (propertyName) {
+			valueX = x[propertyName]
+			valueY = y[propertyName]
+		}
+		if (valueX < valueY) return -1
+		if (valueX > valueY) return 1
+		return 0
+	})
+}
+
+const sortDescending = (array, propertyName) => {
+	if (!Array.isArray(array)) {
+		return null
+	}
+	return array.sort((x, y) => {
+		let valueX = x
+		let valueY = y
+		if (propertyName) {
+			valueX = x[propertyName]
+			valueY = y[propertyName]
+		}
+		if (valueX > valueY) return -1
+		if (valueX < valueY) return 1
+		return 0
+	})
+}
+
+const getObjectLevel1PropertyValuesAsArray = (obj) => {
+	const result = []
+	if (!obj) {
+		return result
+	}
+	Object.keys(obj).forEach(level1Key => {
+		result.push(obj[level1Key])
+	})
+	return result
+}
+
 export {
 	getLevel2PropertyValue,
 	isObject,
@@ -54,5 +99,8 @@ export {
 	intersect,
 	getPropertyValue,
 	isNumber,
-	fromExponential
+	fromExponential,
+	sortAscending,
+	sortDescending,
+	getObjectLevel1PropertyValuesAsArray
 }

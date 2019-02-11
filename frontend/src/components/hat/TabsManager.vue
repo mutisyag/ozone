@@ -44,11 +44,11 @@
 			<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 		</b-tab>
 
-           <b-tab :title="$gettext('Attachments')">
+           <b-tab :title="$gettext('Files')">
 			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+				<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 			</template>
-            <attachments :tab="$store.state.form.tabs.attachments"></attachments>
+            <Files />
           </b-tab>
         </b-tabs>
     </b-card>
@@ -95,7 +95,7 @@
 <script>
 import { Footer } from '@coreui/vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
-import Attachments from '@/components/common/Attachments.vue'
+import Files from '@/components/common/Files'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/hat/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
@@ -106,7 +106,7 @@ import FormTemplate from '@/components/hat/FormTemplate.vue'
 export default {
 	components: {
 		SubmissionInfo,
-		Attachments,
+		Files,
 		Footer,
 		Save,
 		SubmissionHistory,
@@ -143,7 +143,7 @@ export default {
 	},
 	methods: {
 		updateBreadcrumbs() {
-			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.$store.state.current_submission.obligation, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
 		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
@@ -155,7 +155,7 @@ export default {
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
+				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {

@@ -2,11 +2,12 @@ import {
 	getSubmissionHistory,
 	callTransition,
 	getSubstances,
+	getCustomBlends,
+	getSubmissions,
 	getSubmission,
 	getSubmissionFiles,
-	getCustomBlends,
 	deleteSubmission,
-	getSubmissions,
+	deleteSubmissionFile,
 	getPeriods,
 	getObligations,
 	createSubmission,
@@ -14,7 +15,8 @@ import {
 	getNonParties,
 	getPartyRatifications,
 	getCurrentUser,
-	uploadAttachment
+	updateCurrentUser,
+	uploadFile
 } from '@/components/common/services/api'
 
 import {
@@ -41,7 +43,7 @@ const actions = {
 				createSubmission(submission).then((response) => {
 					context.dispatch('setAlert', {
 						$gettext,
-						message: { __all__: [$gettext('Submission Created')] },
+						message: { __all__: [$gettext('Submission created')] },
 						variant: 'success'
 					})
 					context.dispatch('getCurrentSubmissions').then(() => {
@@ -75,13 +77,26 @@ const actions = {
 		})
 	},
 
-	getMyCurrentUser(context) {
-		getCurrentUser().then(response => {
-			context.commit('setCurrentUser', response.data)
+	async getMyCurrentUser({ commit, dispatch }) {
+		let response
+		try {
+			response = await getCurrentUser()
+			commit('setCurrentUser', response.data)
 			// TODO: WHY IS IT AN ARRAY ?
-			context.commit('setCurrentUserPartyInDashboard', response.data[0].party)
-			context.dispatch('getCurrentSubmissions')
-		})
+			commit('setCurrentUserPartyInDashboard', response.data[0].party)
+			dispatch('getCurrentSubmissions')
+		} catch (e) {
+			console.log('getMyCurrentUser', e)
+		}
+	},
+
+	async updateCurrentUser({ dispatch }, user) {
+		try {
+			await updateCurrentUser(user)
+			dispatch('getMyCurrentUser')
+		} catch (e) {
+			console.log('updateCurrentUser', e)
+		}
 	},
 
 	getCurrentUserForm(context) {
@@ -390,18 +405,48 @@ const actions = {
 			resolve()
 		})
 	},
-	async uploadAttachments(context, { attachments, onProgressCallback }) {
-		for (let i = 0; i < attachments.length; i += 1) {
-			const attachment = attachments[i]
-			console.log('attachment..................', attachment)
-			const response = await uploadAttachment(attachment, context.state.current_submission.id, onProgressCallback)
-			attachment.uploadUrl = response.url
-			attachment.percentage = 100
-			console.log('getSubmissionFiles..................')
-			const files = await getSubmissionFiles(context.state.current_submission.id)
-			console.log(files)
+	async uploadFiles(context, { files, onProgressCallback }) {
+		for (let i = 0; i < files.length; i += 1) {
+			const file = files[i]
+			const response = await uploadFile(file, context.state.current_submission.id, onProgressCallback)
+			file.tus_url = response.url
+			file.percentage = 100
 		}
-		return attachments
+	},
+	async getSubmissionFiles(context) {
+		const response = await getSubmissionFiles(context.state.current_submission.id)
+		return response.data
+	},
+	async deleteTabFile({ state, commit }, { file }) {
+		console.log(file)
+		if (file.tus_id) {
+			await deleteSubmissionFile({ file, submissionId: state.current_submission.id })
+		}
+
+		commit('deleteTabFile', { file })
+	},
+	updateLocalFilesFromServerFilesResponse({ state, commit }, { filesOnServer }) {
+		const { form_fields } = state.form.tabs.files
+		const filesLocal = form_fields.files
+		filesOnServer.forEach(fileServerInfo => {
+			const fileJustUploaded = filesLocal.find(x => {
+				if (x.tus_id) {
+					return x.tus_id === fileServerInfo.tus_id
+				}
+				return x.tus_url && x.tus_url.endsWith(fileServerInfo.tus_id)
+			})
+			console.log(fileJustUploaded)
+			if (fileJustUploaded) {
+				commit('updateTabFileWithServerInfo', {
+					file: fileJustUploaded,
+					fileServerInfo
+				})
+			}
+		})
+	},
+	async setJustUploadedFilesState({ dispatch }) {
+		const filesOnServer = await dispatch('getSubmissionFiles')
+		await dispatch('updateLocalFilesFromServerFilesResponse', {	filesOnServer })
 	}
 }
 

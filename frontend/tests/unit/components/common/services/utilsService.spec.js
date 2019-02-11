@@ -4,7 +4,10 @@ import {
 	isObject,
 	pushUnique,
 	intersect,
-	getPropertyValue
+	getPropertyValue,
+	sortAscending,
+	sortDescending,
+	getObjectLevel1PropertyValuesAsArray
 } from '@/components/common/services/utilsService'
 
 describe('utilsService', () => {
@@ -224,6 +227,105 @@ describe('utilsService', () => {
 			expect(getPropertyValue(testObj, 'level1b.level2e')).to.equal(5)
 			expect(getPropertyValue(testObj, 'level1c.level2g.level3b')).to.equal(8)
 			expect(getPropertyValue(testObj, 'level1c.level2g.level3b.')).to.be.undefined
+		})
+	})
+
+	describe('sortAscending', () => {
+		it('for undefined, null or not an array should return null', () => {
+			expect(sortAscending()).to.be.null
+			expect(sortAscending(null)).to.be.null
+			expect(sortAscending({ value: 1 })).to.be.null
+			expect(sortAscending({ value: 1 }, 'value')).to.be.null
+		})
+
+		it('for empty array', () => {
+			expect(sortAscending([])).to.be.empty
+			expect(sortAscending([], 'propName')).to.be.empty
+		})
+
+		it('for number arrays', () => {
+			expect(sortAscending([2, 1, 5, 3, 4])).to.deep.equal([1, 2, 3, 4, 5])
+			expect(sortAscending([2, 1, 5, 3, 4], 'propertyNameNotExisting')).to.deep.equal([2, 1, 5, 3, 4])
+		})
+
+		it('for string arrays', () => {
+			expect(sortAscending(['2a', '1a', '5a', '3a', '4a'])).to.deep.equal(['1a', '2a', '3a', '4a', '5a'])
+			expect(sortAscending(['2a', '1a', '5a', '3a', '4a'], 'propertyNameNotExisting')).to.deep.equal(['2a', '1a', '5a', '3a', '4a'])
+		})
+
+		it('for object arrays', () => {
+			const inputArray = [{ name: 'b', value: 3 }, { name: 'a', value: 7 }, { name: 'c', value: 1 }, { name: 'd', value: 5 }]
+			expect(sortAscending([...inputArray])).to.deep.equal([...inputArray])
+			expect(sortAscending([...inputArray], null)).to.deep.equal([...inputArray])
+			expect(sortAscending([...inputArray], 'propertyNameNotExisting')).to.deep.equal([...inputArray])
+			expect(sortAscending([...inputArray], 'name')).to.deep.equal([{ name: 'a', value: 7 }, { name: 'b', value: 3 }, { name: 'c', value: 1 }, { name: 'd', value: 5 }])
+			expect(sortAscending([...inputArray], 'value')).to.deep.equal([{ name: 'c', value: 1 }, { name: 'b', value: 3 }, { name: 'd', value: 5 }, { name: 'a', value: 7 }])
+		})
+	})
+
+	describe('sortDescending', () => {
+		it('for undefined, null or not an array should return null', () => {
+			expect(sortDescending()).to.be.null
+			expect(sortDescending(null)).to.be.null
+			expect(sortDescending({ value: 1 })).to.be.null
+			expect(sortDescending({ value: 1 }, 'value')).to.be.null
+		})
+
+		it('for empty array', () => {
+			expect(sortDescending([])).to.be.empty
+			expect(sortDescending([], 'propName')).to.be.empty
+		})
+
+		it('for number arrays', () => {
+			expect(sortDescending([2, 1, 5, 3, 4])).to.deep.equal([5, 4, 3, 2, 1])
+			expect(sortDescending([2, 1, 5, 3, 4], 'propertyNameNotExisting')).to.deep.equal([2, 1, 5, 3, 4])
+		})
+
+		it('for string arrays', () => {
+			expect(sortDescending(['2a', '1a', '5a', '3a', '4a'])).to.deep.equal(['5a', '4a', '3a', '2a', '1a'])
+			expect(sortDescending(['2a', '1a', '5a', '3a', '4a'], 'propertyNameNotExisting')).to.deep.equal(['2a', '1a', '5a', '3a', '4a'])
+		})
+
+		it('for object arrays', () => {
+			const inputArray = [{ name: 'b', value: 3 }, { name: 'a', value: 7 }, { name: 'c', value: 1 }, { name: 'd', value: 5 }]
+			expect(sortDescending([...inputArray])).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], null)).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], 'propertyNameNotExisting')).to.deep.equal([...inputArray])
+			expect(sortDescending([...inputArray], 'name')).to.deep.equal([{ name: 'd', value: 5 }, { name: 'c', value: 1 }, { name: 'b', value: 3 }, { name: 'a', value: 7 }])
+			expect(sortDescending([...inputArray], 'value')).to.deep.equal([{ name: 'a', value: 7 }, { name: 'd', value: 5 }, { name: 'b', value: 3 }, { name: 'c', value: 1 }])
+		})
+	})
+
+	describe('getObjectLevel1PropertyValuesAsArray', () => {
+		it('for undefined, null, nor an object or empty object should return empty array', () => {
+			expect(getObjectLevel1PropertyValuesAsArray()).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(null)).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray({})).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(9)).to.be.empty
+		})
+
+		it('should work for strings', () => {
+			expect(getObjectLevel1PropertyValuesAsArray('text')).to.deep.equal(['t', 'e', 'x', 't'])
+			expect(getObjectLevel1PropertyValuesAsArray('abc')).to.deep.equal(['a', 'b', 'c'])
+		})
+
+		it('should work for arrays', () => {
+			expect(getObjectLevel1PropertyValuesAsArray([1, 2, 3])).to.deep.equal([1, 2, 3])
+			expect(getObjectLevel1PropertyValuesAsArray([1, 'abc'])).to.deep.equal([1, 'abc'])
+		})
+
+		it('should work for objects', () => {
+			expect(getObjectLevel1PropertyValuesAsArray({
+				x: 1,
+				y: 2
+			})).to.deep.equal([1, 2])
+
+			expect(getObjectLevel1PropertyValuesAsArray({
+				prop1: 'a',
+				prop2: 2,
+				prop3: null,
+				prop4: { x: 7, y: 8 }
+			})).to.deep.equal(['a', 2, null, { x: 7, y: 8 }])
 		})
 	})
 })

@@ -9,18 +9,20 @@ const logRequests = process.env.NODE_ENV === 'development'
 
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
+let filesURL = `${window.location.origin}:1080/files/`
 
-const TUSD_HOST = 'localhost'
+/* const TUSD_HOST = 'localhost'
 const TUSD_PORT = 1080
 const _tusd_host = process.env.TUSD_HOST || TUSD_HOST
 const _tusd_port = (process.env.TUSD_PORT && Number(process.env.TUSD_PORT)) || TUSD_PORT
-const filesURL = `http://${_tusd_host}:${_tusd_port}/files/`
+const filesURL = `http://${_tusd_host}:${_tusd_port}/files/` */
 
 let isTestSession = false
 if (process.env.NODE_ENV === 'development') {
 	isTestSession = true
 	apiURL = 'http://localhost:8000/api'
 	apiBase = 'http://localhost:8000'
+	filesURL = 'http://localhost:1080/files/'
 }
 
 const api = axios.create({
@@ -83,6 +85,8 @@ const getUsers = () => fetch('users/')
 
 const getCurrentUser = () => fetch('current-user/')
 
+const updateCurrentUser = (user) => update(`current-user/${user.id}/`, user)
+
 const getParties = () => fetch('parties/')
 
 const getPartyRatifications = () => fetch('get-party-ratifications/')
@@ -93,6 +97,28 @@ const getExportBlends = () => {
 		return axios.get(`${window.location.origin}/blends.json`)
 	}
 	return null
+}
+
+const getPeriods = () => fetch('periods/')
+
+const getObligations = () => fetch('obligations/')
+
+const createSubmission = (submisson_data) => {
+	console.log(api.defaults)
+	return post('submissions/', submisson_data)
+}
+
+const createBlend = (blend) => post('blends/', blend)
+
+const cloneSubmission = (url) => post(`${url}clone/`)
+
+const getCustomBlends = (party) => fetch('blends/', { params: { party } })
+
+const getInstructions = (formName, tabName) => {
+	if (isTestSession) {
+		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
+	}
+	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
 }
 
 const getSubmissions = (tableOptions) => {
@@ -118,50 +144,32 @@ const getSubmissions = (tableOptions) => {
 	return fetch('submissions/', { params })
 }
 
-const getPeriods = () => fetch('periods/')
-
-const getObligations = () => fetch('obligations/')
-
-const createSubmission = (submisson_data) => {
-	console.log(api.defaults)
-	return post('submissions/', submisson_data)
-}
-
-const createBlend = (blend) => post('blends/', blend)
-
-const cloneSubmission = (url) => post(`${url}clone/`)
-
-const getCustomBlends = (party) => fetch('blends/', { params: { party } })
+const getSubmissionHistory = (url) => fetch(`${url}versions/`)
 
 const getSubmissionsVersions = () => fetch('submission-versions/')
 
-const getInstructions = (formName, tabName) => {
-	if (isTestSession) {
-		return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
-	}
-	return fetch(`${window.location.origin}/instructions/${formName}/${tabName}.html`)
-}
+const getSubmission = (url) => fetch(url)
+
+const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, { hideLoader: true })
 
 const deleteSubmission = (url) => remove(url)
 
-const getSubmission = (url) => fetch(url)
-
-const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files`)
-
-const getSubmissionHistory = (url) => fetch(`${url}versions/`)
+const deleteSubmissionFile = ({ file, submissionId }) => remove(`submissions/${submissionId}/files/${file.id}/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
 
 const getNonParties = () => fetch('get-non-parties/')
 
-const uploadAttachment = (attachment, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
+const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
-	const upload = new tus.Upload(attachment,
+	console.log(file)
+	const upload = new tus.Upload(file,
 		{
 			endpoint: filesURL,
 			metadata: {
 				token: responseToken.data.token,
-				filename: attachment.name
+				filename: file.name,
+				description: file.description
 			},
 			retryDelays: [0, 1000, 3000, 5000],
 			onError: function onError(error) {
@@ -171,7 +179,7 @@ const uploadAttachment = (attachment, submissionId, onProgressCallback) => new P
 			onProgress: function onProgress(bytesUploaded, bytesTotal) {
 				if (onProgressCallback) {
 					const percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
-					onProgressCallback(attachment, percentage)
+					onProgressCallback(file, percentage)
 				}
 			},
 			onSuccess: function onSuccess() {
@@ -196,21 +204,23 @@ export {
 	getUsers,
 	getParties,
 	getPartyRatifications,
-	getSubmissions,
 	getPeriods,
 	getObligations,
 	createSubmission,
+	getSubmissions,
+	getSubmissionHistory,
+	getSubmissionsVersions,
 	getSubmission,
 	getSubmissionFiles,
+	deleteSubmission,
+	deleteSubmissionFile,
 	createBlend,
 	getCustomBlends,
-	getSubmissionsVersions,
 	callTransition,
-	deleteSubmission,
 	cloneSubmission,
-	getSubmissionHistory,
 	getNonParties,
 	getCurrentUser,
-	uploadAttachment,
-	fetchFromPublicDirectory
+	updateCurrentUser,
+	fetchFromPublicDirectory,
+	uploadFile
 }

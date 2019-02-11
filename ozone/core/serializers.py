@@ -213,6 +213,12 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             return None
         return User.objects.get(pk=session['_auth_user_id']).username
 
+    def get_impersonated_by(self, obj):
+        session = self.context['request'].session
+        if '_impersonate' not in session:
+            return None
+        return User.objects.get(pk=session['_auth_user_id']).username
+
 
 class BaseBlendCompositionSerializer(serializers.ModelSerializer):
     """
@@ -822,7 +828,7 @@ class ExemptionNominationSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionNominationListSerializer
+        list_serializer_class = ExemptionNominationListSerializer
         model = Nomination
         exclude = ('submission',)
 
@@ -842,7 +848,7 @@ class ExemptionApprovedSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionApprovedListSerializer
+        list_serializer_class = ExemptionApprovedListSerializer
         model = ExemptionApproved
         exclude = ('submission',)
 
@@ -1053,7 +1059,7 @@ class SubmissionRemarksSerializer(
     serializers.ModelSerializer
 ):
     """
-    Specific serializer used to present all submission remarks,
+    Specific serializer used to present all general submission remarks,
     since this is easily usable by the frontend.
     """
 

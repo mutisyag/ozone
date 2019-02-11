@@ -5,9 +5,18 @@ import BootstrapVue from 'bootstrap-vue'
 import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 import store from '@/store/index'
+import * as Sentry from '@sentry/browser'
 import App from './App'
 import router from './router'
 import { initLanguages } from '@/components/common/services/languageService'
+
+if (process.env.NODE_ENV !== 'development') {
+	Sentry.init({
+		dsn: `https://${process.env.VUE_APP_SENTRY_DSN}@sentry.io/1374535`,
+		environment: process.env.VUE_APP_SENTRY_ENV,
+		integrations: [new Sentry.Integrations.Vue({ Vue })]
+	})
+}
 
 Vue.use(VueCookies)
 

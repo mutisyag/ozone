@@ -559,14 +559,14 @@
 
 <script>
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
+import inputFields from '@/components/art7/dataDefinitions/inputFields'
+import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import { intersect } from '@/components/common/services/utilsService'
 import CloneField from '@/components/common/form-components/CloneField.vue'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
-import inputFields from '@/components/art7/dataDefinitions/inputFields'
 
 export default {
-	mixins: [FormTemplateMxin],
+	mixins: [FormTemplateMixin],
 	components: {
 		CloneField,
 		ValidationLabel
@@ -680,6 +680,9 @@ export default {
 		}
 	},
 	computed: {
+		getTabInputFields() {
+			return intersect(inputFields, this.tab_info.fields_order)
+		},
 		qps_word() {
 			let word = ''
 			switch (this.tab_info.name) {

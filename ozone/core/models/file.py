@@ -120,7 +120,7 @@ class SubmissionFile(File):
     suffix = models.PositiveSmallIntegerField(default=0)
 
     submission = models.ForeignKey(
-        Submission, related_name='files', on_delete=models.PROTECT
+        Submission, related_name='files', on_delete=models.CASCADE
     )
 
     file = models.FileField(

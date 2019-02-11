@@ -2,8 +2,10 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="selectedTab.detailsHtml"></div>
+		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
+			<i class="fa fa-info fa-lg"></i>
+		</b-btn>
+		<div v-html="selectedTab.detailsHtml"></div>
     </small>
     <div class="tab-title">
       <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
@@ -34,11 +36,11 @@
 			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
           </b-tab>
 
-           <b-tab :title="$gettext('Attachments')">
+           <b-tab :title="$gettext('Files')">
 			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.attachments" />
+				<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 			</template>
-            <attachments :tab="$store.state.form.tabs.attachments"></attachments>
+            <Files />
           </b-tab>
         </b-tabs>
 
@@ -98,7 +100,7 @@
 <script>
 import { Footer } from '@coreui/vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
-import Attachments from '@/components/common/Attachments.vue'
+import Files from '@/components/common/Files'
 import { getInstructions } from '@/components/common/services/api'
 import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
@@ -108,7 +110,7 @@ import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 export default {
 	components: {
 		SubmissionInfo,
-		Attachments,
+		Files,
 		Footer,
 		Save,
 		SubmissionHistory,
@@ -126,7 +128,7 @@ export default {
 		}
 	},
 	created() {
-		this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
+		this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.$store.state.current_submission.obligation, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
 	},
 	computed: {
 		availableTransitions() {
@@ -155,7 +157,7 @@ export default {
 		},
 		checkBeforeSubmitting() {
 			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'attachments'].includes(tab))
+				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
 				.map(tab => this.$store.state.form.tabs[tab].form_fields)
 				.filter(arr => arr.length)
 			if (!fields.length) {

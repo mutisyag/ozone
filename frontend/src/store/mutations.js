@@ -1,14 +1,17 @@
 import 'toastedjs/src/sass/toast.scss'
 import Toasted from 'toastedjs/dist/toasted.min.js'
 
+import { sortAscending } from '@/components/common/services/utilsService'
+
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
 import { getFormLetter } from '@/components/letter/dataDefinitions/form'
-import letterTableRowConstructor from '@/components/letter/services/tableRowConstructorService'
 import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
 import { getFormRaf } from '@/components/raf/dataDefinitions/form'
 import rafTableRowConstructor from '@/components/raf/services/tableRowConstructorService'
+import { getFormExemption } from '@/components/exemption/dataDefinitions/form'
+import exemptionTableRowConstructor from '@/components/exemption/services/tableRowConstructorService'
 
 const options = {
 	position: 'bottom-left',
@@ -36,9 +39,14 @@ const mutations = {
 	},
 
 	updateFormField(state, data) {
-		data.fieldInfo.index === data.fieldInfo.field
-			? state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
-			: state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value
+		console.log('updateFormField', data)
+		const tab = state.form.tabs[data.fieldInfo.tabName]
+		const formField = tab.form_fields[data.fieldInfo.index]
+		if (data.fieldInfo.index === data.fieldInfo.field) {
+			formField.selected = data.value
+		} else {
+			formField[data.fieldInfo.field].selected = data.value
+		}
 	},
 
 	setSubmissionHistory(state, data) {
@@ -51,21 +59,24 @@ const mutations = {
 		switch (formName) {
 		case 'art7':
 			currentFormStructure = getFormArt7($gettext)
-			console.log(currentFormStructure)
 			tableRowConstructor = art7TableRowConstructor
 			break
 		case 'hat':
 			currentFormStructure = getFormHat($gettext)
 			tableRowConstructor = hatTableRowConstructor
 			break
+		case 'exemption':
+			currentFormStructure = getFormExemption($gettext)
+			tableRowConstructor = exemptionTableRowConstructor
+			break
 		case 'other':
 			currentFormStructure = getFormLetter($gettext)
-			tableRowConstructor = letterTableRowConstructor
 			break
 		case 'essencrit':
 			currentFormStructure = getFormRaf($gettext)
 			tableRowConstructor = rafTableRowConstructor
 			break
+
 		default:
 			break
 		}
@@ -257,27 +268,43 @@ const mutations = {
 	removeField(state, data) {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
-
-	addTabAttachments(state, { tabName, attachments }) {
-		if (!attachments) {
+	addTabFiles(state, { files }) {
+		if (!files) {
 			return
 		}
-		attachments.forEach(attachment => {
-			state.form.tabs[tabName].form_fields.attachments.push(attachment)
+		const { form_fields } = state.form.tabs.files
+		files.forEach(file => {
+			form_fields.files.push(file)
 		})
+		form_fields.files = sortAscending(form_fields.files, 'updated')
 	},
-	updateTabAttachment(state, { tabName, attachment }) {
-		const updatedAttachments = []
-		state.form.tabs[tabName].form_fields.attachments.forEach(attachOld => {
-			attachOld === attachment ? updatedAttachments.push(attachment) : updatedAttachments.push(attachOld)
-		})
-		state.form.tabs[tabName].form_fields.attachments = updatedAttachments
+	addTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
+		form_fields.files = sortAscending([...form_fields.files, file], 'updated')
 	},
-	deleteTabAttachment(state, { tabName, attachment }) {
-		state.form.tabs[tabName].form_fields.attachments = state.form.tabs[tabName].form_fields.attachments.filter(attachOld => attachOld !== attachment)
+	updateTabFileDescription(state, { file, description }) {
+		if (file.description === description) {
+			return
+		}
+		file.description = description
+		file.isDescriptionUpdated = true
+		file.upload_successful = false
 	},
-	deleteAllTabAttachments(state, { tabName }) {
-		state.form.tabs[tabName].form_fields.attachments = []
+	updateTabFileWithServerInfo(state, { file, fileServerInfo }) {
+		console.log('updateTabFileWithServerInfo', { file, fileServerInfo })
+		file.id = fileServerInfo.id
+		file.upload_successful = fileServerInfo.upload_successful
+		file.file_url = fileServerInfo.file_url
+		file.updated = fileServerInfo.updated
+		file.tus_id = fileServerInfo.tus_id
+	},
+	deleteTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
+		form_fields.files = form_fields.files.filter(fileOld => fileOld !== file)
+	},
+	deleteAllTabFiles(state) {
+		const { form_fields } = state.form.tabs.files
+		form_fields.files = []
 	}
 }
 

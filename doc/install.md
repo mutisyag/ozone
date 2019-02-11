@@ -17,6 +17,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
        cp docker/smtp.env.example docker/smtp.env
        cp docker/postgres.env.example docker/postgres.env
        cp docker/weblate.env.example docker/weblate.env
+       cp frontend/.env.example frontend/.env.local
    
    Depending on the installation mode, create the docker-compose.override.yml file:
    
