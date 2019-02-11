@@ -860,6 +860,25 @@ class RAFListSerializer(
     substance_blend_fields = ['substance', ]
     unique_with = None
 
+    def update_single(self, existing_entry, entry):
+        """
+        Updates a single entry taking into account the special "imports" case
+        """
+        changed = False
+        for field, value in entry.items():
+            if field == 'imports':
+                # Delete all existing imports and recreate them
+                existing_entry.imports.all().delete()
+                for value_entry in value:
+                    RAFImport.objects.create(
+                        report=existing_entry, **value_entry
+                    )
+                changed = True
+            elif getattr(existing_entry, field, None) != value:
+                setattr(existing_entry, field, value)
+                changed = True
+        return changed
+
 
 class RAFSerializer(
     DataCheckRemarksMixIn, serializers.ModelSerializer
@@ -869,6 +888,18 @@ class RAFSerializer(
     )
 
     imports = RAFImportSerializer(many=True)
+
+    def create(self, validated_data):
+
+        imports_data = validated_data.pop("imports", None)
+        instance = RAFReport.objects.create(
+            submission=self.context['submission'], **validated_data
+        )
+        if imports_data is not None:
+            for data in imports_data:
+                RAFImport.objects.create(report=instance, **data)
+
+        return instance
 
     class Meta:
         list_serializer_class = RAFListSerializer
@@ -1246,6 +1277,11 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    raf_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-raf-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
@@ -1300,7 +1336,7 @@ class SubmissionSerializer(
             'hat': base_fields + (
                 'hat_productions_url', 'hat_imports_url',
             ),
-            'essencrit': base_fields,
+            'essencrit': base_fields + ('raf_url',),
             'other': base_fields + (
                 'data_others_url',
             ),

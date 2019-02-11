@@ -802,7 +802,7 @@ class RAFImport(models.Model):
     Substance is the one from the RAFReport entry, so no need for it here.
     """
     report = models.ForeignKey(
-        RAFReport, blank=False, null=False, on_delete=models.PROTECT,
+        RAFReport, blank=False, null=False, on_delete=models.CASCADE,
         related_name='imports'
     )
 
