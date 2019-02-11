@@ -1011,8 +1011,8 @@ class SubmissionRemarksSerializer(
             'essencrit': (),
             'other': (),
             'exemption': (
-                'exemption_nomination_remarks_os',
-                'exemption_approved_remarks_os',
+                'exemption_nomination_remarks_secretariat',
+                'exemption_approved_remarks_secretariat',
             ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
