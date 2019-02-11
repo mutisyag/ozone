@@ -1003,13 +1003,16 @@ class SubmissionRemarksSerializer(
                 'emissions_remarks_party', 'emissions_remarks_secretariat',
             ),
             'hat': (
-                'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-                'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+                'hat_imports_remarks_party',
+                'hat_imports_remarks_secretariat',
+                'hat_production_remarks_party',
+                'hat_production_remarks_secretariat',
             ),
             'essencrit': (),
             'other': (),
             'exemption': (
-                'exemptions_nomination_remarks_os', 'exemption_approved_remarks_os',
+                'exemption_nomination_remarks_os',
+                'exemption_approved_remarks_os',
             ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
