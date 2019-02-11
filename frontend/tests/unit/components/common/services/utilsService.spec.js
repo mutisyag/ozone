@@ -302,16 +302,63 @@ describe('utilsService', () => {
 			expect(getObjectLevel1PropertyValuesAsArray(null)).to.be.empty
 			expect(getObjectLevel1PropertyValuesAsArray({})).to.be.empty
 			expect(getObjectLevel1PropertyValuesAsArray(9)).to.be.empty
+
+			expect(getObjectLevel1PropertyValuesAsArray(undefined, 'name')).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(null, 'name')).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray({}, 'name')).to.be.empty
+			expect(getObjectLevel1PropertyValuesAsArray(9, 'name')).to.be.empty
 		})
 
 		it('should work for strings', () => {
 			expect(getObjectLevel1PropertyValuesAsArray('text')).to.deep.equal(['t', 'e', 'x', 't'])
 			expect(getObjectLevel1PropertyValuesAsArray('abc')).to.deep.equal(['a', 'b', 'c'])
+
+			expect(getObjectLevel1PropertyValuesAsArray('text', 'index')).to.deep.equal([{
+				index: '0',
+				value: 't'
+			}, {
+				index: '1',
+				value: 'e'
+			}, {
+				index: '2',
+				value: 'x'
+			}, {
+				index: '3',
+				value: 't'
+			}])
+			expect(getObjectLevel1PropertyValuesAsArray('abc', 'nr')).to.deep.equal([{
+				nr: '0',
+				value: 'a'
+			}, {
+				nr: '1',
+				value: 'b'
+			}, {
+				nr: '2',
+				value: 'c'
+			}])
 		})
 
 		it('should work for arrays', () => {
 			expect(getObjectLevel1PropertyValuesAsArray([1, 2, 3])).to.deep.equal([1, 2, 3])
 			expect(getObjectLevel1PropertyValuesAsArray([1, 'abc'])).to.deep.equal([1, 'abc'])
+
+			expect(getObjectLevel1PropertyValuesAsArray([1, 2, 3], 'index')).to.deep.equal([{
+				index: '0',
+				value: 1
+			}, {
+				index: '1',
+				value: 2
+			}, {
+				index: '2',
+				value: 3
+			}])
+			expect(getObjectLevel1PropertyValuesAsArray([1, 'abc'], 'order')).to.deep.equal([{
+				order: '0',
+				value: 1
+			}, {
+				order: '1',
+				value: 'abc'
+			}])
 		})
 
 		it('should work for objects', () => {
@@ -319,6 +366,17 @@ describe('utilsService', () => {
 				x: 1,
 				y: 2
 			})).to.deep.equal([1, 2])
+
+			expect(getObjectLevel1PropertyValuesAsArray({
+				x: 1,
+				y: 2
+			}, 'propName')).to.deep.equal([{
+				propName: 'x',
+				value: 1
+			}, {
+				propName: 'y',
+				value: 2
+			}])
 
 			const tObj = { t: 'text' }
 			const prop4Obj = { x: 7, y: tObj }
@@ -328,9 +386,71 @@ describe('utilsService', () => {
 				prop3: null,
 				prop4: prop4Obj
 			})
-			expect(result).to.deep.equal(['a', 2, null, prop4Obj])
 			expect(result[3]).to.equal(prop4Obj)
 			expect(result[3].y).to.equal(tObj)
+			expect(result).to.deep.equal(['a', 2, null, prop4Obj])
+
+			const resultWithAddedPropNameForKey = getObjectLevel1PropertyValuesAsArray({
+				prop1: 'a',
+				prop2: 2,
+				prop3: null,
+				prop4: prop4Obj
+			}, 'propName')
+			expect(resultWithAddedPropNameForKey[3]).not.to.equal(prop4Obj)
+			expect(resultWithAddedPropNameForKey[3].y).to.equal(tObj)
+			expect(resultWithAddedPropNameForKey).to.deep.equal([{
+				propName: 'prop1',
+				value: 'a'
+			}, {
+				propName: 'prop2',
+				value: 2
+			}, {
+				propName: 'prop3',
+				value: null
+			}, {
+				propName: 'prop4',
+				x: 7,
+				y: tObj
+			}])
+
+			expect(getObjectLevel1PropertyValuesAsArray({
+				blue: {
+					price: 3
+				},
+				green: {
+					price: 2
+				},
+				red: {
+					price: 7
+				}
+			}, 'price')).to.deep.equal([{
+				price: 'blue'
+			}, {
+				price: 'green'
+			}, {
+				price: 'red'
+			}])
+
+			expect(getObjectLevel1PropertyValuesAsArray({
+				blue: {
+					price: 3
+				},
+				green: {
+					price: 2
+				},
+				red: {
+					price: 7
+				}
+			}, 'product')).to.deep.equal([{
+				product: 'blue',
+				price: 3
+			}, {
+				product: 'green',
+				price: 2
+			}, {
+				product: 'red',
+				price: 7
+			}])
 		})
 	})
 })
