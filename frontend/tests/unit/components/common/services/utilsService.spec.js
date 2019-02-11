@@ -320,12 +320,17 @@ describe('utilsService', () => {
 				y: 2
 			})).to.deep.equal([1, 2])
 
-			expect(getObjectLevel1PropertyValuesAsArray({
+			const tObj = { t: 'text' }
+			const prop4Obj = { x: 7, y: tObj }
+			const result = getObjectLevel1PropertyValuesAsArray({
 				prop1: 'a',
 				prop2: 2,
 				prop3: null,
-				prop4: { x: 7, y: 8 }
-			})).to.deep.equal(['a', 2, null, { x: 7, y: 8 }])
+				prop4: prop4Obj
+			})
+			expect(result).to.deep.equal(['a', 2, null, prop4Obj])
+			expect(result[3]).to.equal(prop4Obj)
+			expect(result[3].y).to.equal(tObj)
 		})
 	})
 })
