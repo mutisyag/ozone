@@ -755,8 +755,10 @@ class Submission(models.Model):
             "hat_production_remarks_secretariat",
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
-            'reporting_channel_id',
-            'flag_approved',
+            "exemption_nomination_remarks_secretariat",
+            "exemption_approved_remarks_secretariat",
+            "reporting_channel_id",
+            "flag_approved",
         ]
 
     @staticmethod

@@ -875,7 +875,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 name=self.context['reporting_channel']
             )
             self.check_reporting_channel(instance, user)
-            instance.submission.save()
+            instance.submission.save(update_fields=['reporting_channel'])
         return super().update(instance, validated_data)
 
 
@@ -902,8 +902,7 @@ class PerTypeFieldsMixIn(object):
         # Instantiate the superclass normally
         super().__init__(instance=instance, **kwargs)
         try:
-            # Fields and remarks return a list of
-            # one.
+            # Fields and remarks return a list of one.
             instance = instance[0]
         except IndexError:
             # Empty queryset.
