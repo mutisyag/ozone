@@ -27,8 +27,7 @@
 	</div>
 	<div class="row">
 		<div class="col-12">
-			$store.getters.can_upload_files - {{$store.getters.can_upload_files}} - it should be true!
-			<b-form-file :disabled="loadingInitialFiles || $store.getters.can_upload_files" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain/>
+			<b-form-file :disabled="!$store.getters.can_upload_files || loadingInitialFiles" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged" plain/>
 		</div>
 	</div>
 </div>

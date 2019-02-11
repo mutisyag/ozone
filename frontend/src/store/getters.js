@@ -22,12 +22,11 @@ const getters = {
 
 	getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
 
-	// to make the implementation easier, false = user has permission to do a certain action
-	can_edit_data: (state) => state.permissions.form && !state.permissions.form.can_edit_data,
-	can_change_remarks_party: (state) => state.permissions.form && !state.permissions.form.can_change_remarks_party,
-	can_change_remarks_secretariat: (state) => state.permissions.form && !state.permissions.form.can_change_remarks_secretariat,
-	can_change_reporting_channel: (state) => state.permissions.form && !state.permissions.form.can_change_reporting_channel,
-	can_upload_files: (state) => state.permissions.form && !state.permissions.form.can_upload_files,
+	can_edit_data: (state) => state.permissions.form && state.permissions.form.can_edit_data,
+	can_change_remarks_party: (state) => state.permissions.form && state.permissions.form.can_change_remarks_party,
+	can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,
+	can_change_reporting_channel: (state) => state.permissions.form && state.permissions.form.can_change_reporting_channel,
+	can_upload_files: (state) => state.permissions.form && state.permissions.form.can_upload_files,
 
 	currentCountryIso: (state) => {
 		const { currentUser } = state

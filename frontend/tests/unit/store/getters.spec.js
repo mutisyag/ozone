@@ -12,7 +12,7 @@ describe('store getters', () => {
 			}
 			expect(can_edit_data(state)).to.be.null
 		})
-		it('value is the negation of permissions.form.can_edit_data', () => {
+		it('value is equal to permissions.form.can_edit_data', () => {
 			const state = {
 				permissions: {
 					form: {
@@ -20,9 +20,9 @@ describe('store getters', () => {
 					}
 				}
 			}
-			expect(can_edit_data(state)).to.be.false
-			state.permissions.form.can_edit_data = false
 			expect(can_edit_data(state)).to.be.true
+			state.permissions.form.can_edit_data = false
+			expect(can_edit_data(state)).to.be.false
 		})
 	})
 })
