@@ -68,6 +68,10 @@ class Obligation(models.Model):
     TODO: analysis!
     """
 
+    NOT_CLONEABLE = [
+        'exemption',
+    ]
+
     name = models.CharField(
         max_length=256, unique=True,
         help_text="A unique String value identifying this obligation."
@@ -813,6 +817,14 @@ class Submission(models.Model):
                 False,
                 Forbidden(
                     _("You do not have permission to perform this action.")
+                )
+            )
+
+        if self.obligation.form_type in self.obligation.NOT_CLONEABLE:
+            return (
+                False,
+                ValidationError(
+                    _("You can't clone a submission with this type of obligation")
                 )
             )
 
