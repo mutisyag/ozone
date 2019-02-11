@@ -1,6 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
 import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
-import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
 const getFormExemption = ($gettext) => {
@@ -50,9 +49,6 @@ const getFormExemption = ($gettext) => {
 						type: 'textarea',
 						label: $gettext('Remarks (Secretariat)')
 					}
-				},
-				get comments_array() {
-					return getObjectLevel1PropertyValuesAsArray(this.comments)
 				}
 			},
 			approved: {
@@ -69,9 +65,6 @@ const getFormExemption = ($gettext) => {
 						type: 'textarea',
 						label: $gettext('Remarks (Secretariat)')
 					}
-				},
-				get comments_array() {
-					return getObjectLevel1PropertyValuesAsArray(this.comments)
 				}
 			}
 		}

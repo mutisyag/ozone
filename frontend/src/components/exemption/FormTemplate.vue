@@ -91,7 +91,7 @@
 		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
 		<hr>
 		<div
-			v-for="comment in tab_info.comments_array"
+			v-for="comment in commentsArray"
 			:key="comment.name"
 			class="comments-input">
 			<label>
@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 
@@ -213,7 +214,9 @@ export default {
 		}
 	},
 	computed: {
-
+		commentsArray() {
+			return getObjectLevel1PropertyValuesAsArray(this.tab_info.comments)
+		}
 	},
 	watch: {
 		'$language.current': {
