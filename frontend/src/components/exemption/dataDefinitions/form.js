@@ -18,7 +18,8 @@ const getFormExemption = ($gettext) => {
 				'permissions.form'
 			],
 			comments_default_properties: {
-				exemption_remarks_secretariat: ''
+				exemptions_nomination_remarks_os: '',
+				exemption_approved_remarks_os: ''
 			},
 			comments_endpoint_url: 'submission_remarks'
 		},
@@ -41,7 +42,18 @@ const getFormExemption = ($gettext) => {
 				formNumber: 1,
 				title: $gettext('Nomination'),
 				titleHtml: `<b>${$gettext('Nomination')}</b>`,
-				endpoint_url: 'exemption_nomination_url'
+				endpoint_url: 'exemption_nomination_url',
+				comments: {
+					exemptions_nomination_remarks_os: {
+						name: 'exemption_nomination_remarks_os',
+						selected: '',
+						type: 'textarea',
+						label: $gettext('Remarks (Secretariat)')
+					}
+				},
+				get comments_array() {
+					return getObjectLevel1PropertyValuesAsArray(this.comments)
+				}
 			},
 			approved: {
 				...getTabsCommonInfoForNominationAndApproved($gettext),
@@ -51,8 +63,8 @@ const getFormExemption = ($gettext) => {
 				titleHtml: `<b>${$gettext('Approved')}</b>`,
 				endpoint_url: 'exemption_approved_url',
 				comments: {
-					exemption_remarks_secretariat: {
-						name: 'exemption_remarks_secretariat',
+					exemption_approved_remarks_os: {
+						name: 'exemption_approved_remarks_os',
 						selected: '',
 						type: 'textarea',
 						label: $gettext('Remarks (Secretariat)')
