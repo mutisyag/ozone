@@ -215,7 +215,7 @@ export default {
 	},
 	computed: {
 		commentsArray() {
-			return getObjectLevel1PropertyValuesAsArray(this.tab_info.comments)
+			return getObjectLevel1PropertyValuesAsArray(this.tab_info.comments, 'name')
 		}
 	},
 	watch: {

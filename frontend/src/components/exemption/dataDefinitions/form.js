@@ -44,7 +44,6 @@ const getFormExemption = ($gettext) => {
 				endpoint_url: 'exemption_nomination_url',
 				comments: {
 					exemption_nomination_remarks_secretariat: {
-						name: 'exemption_nomination_remarks_secretariat',
 						selected: '',
 						type: 'textarea',
 						label: $gettext('Remarks (Secretariat)')
@@ -60,7 +59,6 @@ const getFormExemption = ($gettext) => {
 				endpoint_url: 'exemption_approved_url',
 				comments: {
 					exemption_approved_remarks_secretariat: {
-						name: 'exemption_approved_remarks_secretariat',
 						selected: '',
 						type: 'textarea',
 						label: $gettext('Remarks (Secretariat)')
