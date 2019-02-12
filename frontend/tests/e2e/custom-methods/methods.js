@@ -111,7 +111,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
 		.pause
 
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'fax', 'email', 'date']
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'email', 'date']
 	const flags = [
 		'flag_provisional',
 		'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -142,7 +142,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 	flags.forEach(flag => {
 		browser.useCss()
 			.getAttribute(`#${flag}`, 'checked', (result) => {
-				if (result.value != 'true') {
+				if (result.value !== 'true') {
 					browser
 						.useXpath()
 						.waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
@@ -158,7 +158,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 	let restrictedFields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
 
-	if (typeof fields !== 'undefined' && fields.length == 0 && allow_all === true) {
+	if (typeof fields !== 'undefined' && fields.length === 0 && allow_all === true) {
 		fields = ['#has_imports', '#has_exports', '#has_produced', '#has_destroyed', '#has_nonparty', '#has_emissions']
 	}
 
@@ -221,7 +221,7 @@ const addEntity = (browser, tab, entities_type, selector_id, option) => {
 		}, [selector], (result) => {
 			const closed = '\\ue916'
 
-			if (result.value == closed) {
+			if (result.value === closed) {
 				/** Open aside menu * */
 				browser
 					.click(`${aside_menu}//button[@class='navbar-toggler']`)
