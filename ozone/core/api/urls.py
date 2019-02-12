@@ -195,6 +195,16 @@ exemption_approved_router.register(
     base_name="submission-exemption-approved"
 )
 
+raf_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+raf_router.register(
+    "raf",
+    views.RAFViewSet,
+    base_name="submission-raf"
+)
+
+
 nested_routers = [
     questionnaire_router,
     destructions_router,
@@ -213,6 +223,7 @@ nested_routers = [
     upload_token_router,
     exemption_nomination_router,
     exemption_approved_router,
+    raf_router,
 ]
 
 # Groups

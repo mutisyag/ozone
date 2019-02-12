@@ -2,7 +2,7 @@
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email' || field.type === 'nonInput'">
         <span v-if="field.type === 'nonInput'" :id="fieldInfo ? fieldInfo.field : ''">{{field.selected}}</span>
-		<input v-else :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type" />
+				<input v-else :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type" />
     </div>
     <b-form-radio-group :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
@@ -18,6 +18,8 @@
 				:options="fieldOptions" />
 		</div>
     <textarea @change="updateFormField"  :disabled="disabled" class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
+
+		<input v-if="isPartyField" :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormFieldParty" class="form-control" v-model="currentTyping" type="text" />
 	</div>
 </template>
 
@@ -38,6 +40,9 @@ export default {
 	},
 	created() {
 		this.currentTyping = this.field.selected && this.field.type === 'number' ? fromExponential(this.field.selected) : this.field.selected
+		if (this.isPartyField) {
+			this.currentTyping = this.field.quantity
+		}
 		if (this.field.type === 'select') {
 		// Some numbers can arrive here (usually after prefill) as strings.
 		// This issue affects only the select because of the pair (text - value) that needs to match
@@ -54,6 +59,9 @@ export default {
 	computed: {
 		fieldOptions() {
 			return this.field.options
+		},
+		isPartyField() {
+			return this.field.hasOwnProperty('party') && this.field.hasOwnProperty('quantity')
 		}
 	},
 
@@ -84,6 +92,15 @@ export default {
 				this.$store.commit('updateFormField', { value: this.currentTyping, fieldInfo: this.fieldInfo })
 			} else {
 				this.$store.commit('updateFormField', { value: e, fieldInfo: this.fieldInfo })
+			}
+		},
+
+		updateFormFieldParty() {
+			this.validateInput()
+			if (this.currentTyping === '') {
+				this.$store.commit('updateFormField', { value: null, fieldInfo: this.fieldInfo })
+			} else {
+				this.$store.commit('updateFormField', { value: parseFloat(this.currentTyping), fieldInfo: this.fieldInfo })
 			}
 		},
 

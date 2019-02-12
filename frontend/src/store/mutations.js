@@ -8,6 +8,8 @@ import art7TableRowConstructor from '@/components/art7/services/tableRowConstruc
 import { getFormLetter } from '@/components/letter/dataDefinitions/form'
 import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
+import { getFormRaf } from '@/components/raf/dataDefinitions/form'
+import rafTableRowConstructor from '@/components/raf/services/tableRowConstructorService'
 import { getFormExemption } from '@/components/exemption/dataDefinitions/form'
 import exemptionTableRowConstructor from '@/components/exemption/services/tableRowConstructorService'
 
@@ -39,6 +41,11 @@ const mutations = {
 	updateFormField(state, data) {
 		const tab = state.form.tabs[data.fieldInfo.tabName]
 		const formField = tab.form_fields[data.fieldInfo.index]
+		if (data.fieldInfo.party) {
+			formField.imports.find(i => parseInt(i.party) === parseInt(data.fieldInfo.party)).quantity = data.value
+			return
+		}
+
 		if (data.fieldInfo.index === data.fieldInfo.field) {
 			formField.selected = data.value
 		} else {
@@ -68,6 +75,10 @@ const mutations = {
 			break
 		case 'other':
 			currentFormStructure = getFormLetter($gettext)
+			break
+		case 'essencrit':
+			currentFormStructure = getFormRaf($gettext)
+			tableRowConstructor = rafTableRowConstructor
 			break
 
 		default:
@@ -237,6 +248,14 @@ const mutations = {
 
 	updateActionsPermissions(state, permission) {
 		state.permissions.actions = permission
+	},
+
+	addCountryEntries(state, { tabName, index, countryList }) {
+		countryList.forEach(c => {
+			state.form.tabs[tabName].form_fields[index].imports.push({
+				party: c, quantity: 0
+			})
+		})
 	},
 
 	// form state

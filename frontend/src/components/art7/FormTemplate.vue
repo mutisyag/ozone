@@ -460,15 +460,15 @@
 
     <b-modal size="lg" ref="edit_modal" id="edit_modal">
       <div v-if="modal_data" slot="modal-title">
-		<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
+				<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
         <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
       </div>
       <div v-if="modal_data">
-		<p class="muted">
-			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
-			<br>
-			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
-		</p>
+				<p class="muted">
+					<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
+					<br>
+					<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             <span v-translate>Change substance</span>
