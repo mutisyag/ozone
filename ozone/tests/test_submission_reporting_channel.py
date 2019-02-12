@@ -80,7 +80,6 @@ class SubmissionReportingChannelTests(BaseTests):
             "postal_code": "test",
             "country": "test",
             "phone": "test",
-            "fax": "test",
             "email": None,
             "date": None
         }

@@ -512,7 +512,6 @@ class Command(BaseCommand):
                 "postal_code": "",
                 "country": party.name,
                 "phone": "",
-                "fax": "",
                 "email": "",
                 "date": date_reported
             },
