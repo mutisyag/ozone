@@ -26,6 +26,8 @@ const getCommonLabels = ($gettext) => {
 		hat: $gettext('HAT'),
 		valid: $gettext('valid'),
 		invalid: $gettext('invalid'),
+		questionnaire_remarks_party: $gettext('Comments (Party)'),
+		questionnaire_remarks_secretariat: $gettext('Comments (Secretariat)'),
 		flags: {
 			flag_superseded: $gettext('Superseded'),
 			flag_provisional: $gettext('Provisional'),

@@ -126,7 +126,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? !getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -378,7 +378,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? !getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -419,40 +419,40 @@
 						class="small"
 						v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
 						:key="substance_index">
-						<td>{{substance.component_name}}</td>
-						<td>
-							<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
-						</td>
-						<td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
-							<!-- <span v-if="row.item[order]"> -->
-							{{splitBlend(row.item[order], substance.percentage)}}
-							<!-- </span> -->
-						</td>
-					</tr>
-				</tbody>
-			</template>
-		</b-table>
-	</div>
-    </div>
-    <div id="tab-comments" class="table-wrapper">
-		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
-		<hr>
-		<div
-			v-for="(comment, comment_key) in tab_info.comments"
-			:key="comment_key"
-			class="comments-input">
-			<label>
-				<span>{{labels[comment_key]}}</span>
-			</label>
-				<!-- addComment(state, { data, tab, field }) { -->
-			<textarea
-				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
-				:disabled="getCommentFieldPermission(comment_key)"
-				class="form-control"
-				:value="comment.selected">
-			</textarea>
+							<td>{{substance.component_name}}</td>
+							<td>
+								<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
+							</td>
+							<td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
+								<!-- <span v-if="row.item[order]"> -->
+								{{splitBlend(row.item[order], substance.percentage)}}
+								<!-- </span> -->
+							</td>
+						</tr>
+					</tbody>
+				</template>
+			</b-table>
 		</div>
 	</div>
+		<div id="tab-comments" class="table-wrapper">
+			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
+			<hr>
+			<div
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input">
+				<label>
+					<span>{{labels[comment_key]}}</span>
+				</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
+			</div>
+		</div>
     <hr>
     <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>

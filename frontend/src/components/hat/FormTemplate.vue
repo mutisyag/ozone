@@ -95,7 +95,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? !getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -165,7 +165,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? !getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
