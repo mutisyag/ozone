@@ -45,8 +45,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
 			return this.section_subheaders
 				.filter(x => x.isInput)
 				.map(x => ({
-					name: x.name,
-					label: x.label.substring(9)
+					name: x.name
 				}))
 		},
 		section_headers: null,
