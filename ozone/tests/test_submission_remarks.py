@@ -41,7 +41,10 @@ HAT7_REMARKS_DATA = {
     "hat_imports_remarks_party": "Testing",
     "hat_imports_remarks_secretariat": "Testing",
 }
-ESSENCRIT_REMARKS_DATA = {}
+ESSENCRIT_REMARKS_DATA = {
+    "raf_remarks_party": "Testing",
+    "raf_remarks_secretariat": "Testing",
+}
 OTHER_REMARKS_DATA = {}
 ALL_REMARK_DATA = dict(
     **ART7_REMARKS_DATA,
