@@ -42,6 +42,11 @@ const mutations = {
 		console.log('updateFormField', data)
 		const tab = state.form.tabs[data.fieldInfo.tabName]
 		const formField = tab.form_fields[data.fieldInfo.index]
+		if (data.fieldInfo.party) {
+			formField.imports.find(i => parseInt(i.party) === parseInt(data.fieldInfo.party)).quantity = data.value
+			return
+		}
+
 		if (data.fieldInfo.index === data.fieldInfo.field) {
 			formField.selected = data.value
 		} else {
@@ -248,7 +253,9 @@ const mutations = {
 
 	addCountryEntries(state, { tabName, index, countryList }) {
 		countryList.forEach(c => {
-			state.form.tabs[tabName].form_fields[index][c] = { selected: null, type: 'number' }
+			state.form.tabs[tabName].form_fields[index].imports.push({
+				party: c, quantity: 0
+			})
 		})
 	},
 

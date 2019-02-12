@@ -64,6 +64,7 @@
 						class="edit-trigger"
 						v-b-tooltip.hover="cell.item.originalObj.quantity_import.tooltip ? true : false"
 						:title="cell.item.originalObj.quantity_import.tooltip"
+						@click="createModalData(cell.item.originalObj, cell.item.index)"
 						>
 						{{(cell.item.quantity_import)}}
 						<i class="fa fa-info-circle fa-lg"></i>
@@ -142,27 +143,27 @@
           </b-col>
           <b-col>
             <multiselect
-				class="mb-2"
-				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
-				trackBy="value"
-				:disabled="$store.getters.can_edit_data"
-				label="text"
-				:placeholder="$gettext('Select substance')"
-				:value="parseInt(modal_data.field.substance.selected)"
-				:options="tab_data.substances" />
+							class="mb-2"
+							@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
+							trackBy="value"
+							:disabled="$store.getters.can_edit_data"
+							label="text"
+							:placeholder="$gettext('Select substance')"
+							:value="parseInt(modal_data.field.substance.selected)"
+							:options="tab_data.substances" />
           </b-col>
         </b-row>
 				<b-row>
 					<b-col>
-						<addParties :index="modal_data.index" :tabName="tabName"></addParties>
+						<addParties :parties="modal_data.field.imports" :index="modal_data.index" :tabName="tabName"></addParties>
 					</b-col>
 				</b-row>
-				<b-row v-for="country in getRowCountries(modal_data.field)" :key="country">
-							<b-col cols="2">{{$store.state.initialData.display.countries[country]}}</b-col>
+				<b-row v-for="country in modal_data.field.imports" :key="country.party">
+							<b-col cols="2">{{$store.state.initialData.display.countries[country.party]}}</b-col>
 							<b-col>
 								<fieldGenerator
-								:fieldInfo="{index:modal_data.index,tabName: tabName, field:country}"
-								:field="modal_data.field[country]" />
+								:fieldInfo="{index:modal_data.index,tabName: tabName, field:country, party:country.party}"
+								:field="country" />
 							</b-col>
 				</b-row>
         <b-row
@@ -217,9 +218,6 @@ export default {
 		}
 	},
 	methods: {
-		getRowCountries(data) {
-			return [...Array(200).keys()].filter(k => data[k])
-		}
 	},
 	computed: {
 		getTabInputFields() {

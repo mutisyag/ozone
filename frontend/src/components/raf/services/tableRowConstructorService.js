@@ -21,16 +21,16 @@ const createTooltip = (fields, section, $gettext, countries) => {
 const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 	let count = 0
 	const returnObj = {
+		tooltip: '',
 		type: 'nonInput',
 		selected: count
 	}
 
 	const forTooltip = {}
-	fields.filter(quantity => parent[quantity].selected)
-		.forEach(quantity => {
-			count += parseFloat(parent[quantity].selected)
-			forTooltip[quantity] = parent[quantity].selected
-		})
+	fields.forEach(field => {
+		count += parseFloat(field.quantity)
+		forTooltip[field.party] = field.quantity
+	})
 
 	if (count === 0) {
 		returnObj.selected = ''
@@ -39,7 +39,6 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 	}
 
 	const tooltip = createTooltip(forTooltip, section, $gettext, countries)
-
 	returnObj.tooltip = tooltip
 
 	return returnObj
@@ -55,14 +54,6 @@ export default {
 	}) {
 		const	baseInnerFields = {
 			ordering_id: { selected: ordering_id || 0 },
-			5: {
-				type: 'number',
-				selected: 5
-			},
-			10: {
-				type: 'number',
-				selected: 10
-			},
 			remarks_party: {
 				type: 'textarea',
 				selected: ''
@@ -75,6 +66,10 @@ export default {
 				selected: group,
 				type: 'nonInput'
 			},
+			substance: {
+				type: 'select',
+				selected: substance || null
+			},
 			quantity_exempted: {
 				type: 'number',
 				selected: null
@@ -83,14 +78,9 @@ export default {
 				type: 'number',
 				selected: null
 			},
+			imports: [],
 			get quantity_import() {
-				const range = [...Array(200).keys()]
-				const currentCountries = range.filter(c => this[c])
-				return quantityCalculator(currentCountries, this, section, $gettext, countries)
-			},
-			substance: {
-				type: 'select',
-				selected: substance || null
+				return quantityCalculator(this.imports, this, section, $gettext, countries)
 			},
 			get quantity_acquired() {
 				return {
@@ -110,11 +100,11 @@ export default {
 			},
 			get available_for_use() {
 				return {
-					type: 'number',
+					type: 'nonInput',
 					selected: doSum([this.on_hand_start_year.selected], [this.quantity_acquired.selected])
 				}
 			},
-			used: {
+			quantity_used: {
 				type: 'number',
 				selected: null
 			},
@@ -129,7 +119,7 @@ export default {
 			get on_hand_end_year() {
 				return {
 					type: 'number',
-					selected: valueConverter(this.available_for_use.selected) - valueConverter(this.used.selected) - valueConverter(this.quantity_destroyed.selected)
+					selected: valueConverter(this.available_for_use.selected) - valueConverter(this.quantity_used.selected) - valueConverter(this.quantity_destroyed.selected)
 				}
 			},
 			get validation() {
@@ -147,13 +137,18 @@ export default {
 			}
 		}
 		if (prefillData) {
+			console.log('prefillData', prefillData)
 			Object.keys(prefillData).forEach((field) => {
+				if (Array.isArray(prefillData[field]) && field === 'imports') {
+					baseInnerFields[field] = prefillData[field]
+				}
 				baseInnerFields[field]
 					?	baseInnerFields[field].selected = isNumber(prefillData[field])
 						? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
 					: null
 			})
 		}
+
 		return baseInnerFields
 	}
 

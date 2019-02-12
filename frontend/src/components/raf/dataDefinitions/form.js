@@ -38,7 +38,7 @@ const getFormRaf = ($gettext) => {
 			essencrit: {
 				name: 'essencrit',
 				hasAssideMenu: true,
-				endpoint_url: 'ff',
+				endpoint_url: 'raf_url',
 				ordering_id: 0,
 				status: null,
 				validate: true,
@@ -87,10 +87,11 @@ const getFormRaf = ($gettext) => {
 					isInput: true
 				}, {
 					label: `(9)<br>${$gettext('Available for use')}`,
-					name: 'available_for_use'
+					name: 'available_for_use',
+					isInput: true
 				}, {
 					label: `(10)<br>${$gettext('Used')}`,
-					name: 'used',
+					name: 'quantity_used',
 					isInput: true
 				}, {
 					label: `(11)<br>${$gettext('Amount exported')}`,
@@ -126,22 +127,17 @@ const getFormRaf = ($gettext) => {
 					}
 				},
 				default_properties: {
-					'group': null,
-					'substance': null,
+					'imports': [],
+					'remarks_party': '',
+					'remarks_os': '',
+					'ordering_id': null,
 					'quantity_exempted': null,
 					'quantity_production': null,
-					'quantity_import': null,
-					'quantity_acquired': null,
-					'quantity_authorized_not_acquired': null,
-					'on_hand_start_year': null,
-					'available_for_use': null,
-					'used': null,
+					'quantity_used': null,
 					'quantity_exported': null,
 					'quantity_destroyed': null,
-					'on_hand_end_year': null,
-					'remarks_party': null,
-					'remarks_os': null,
-					'validation': null
+					'on_hand_start_year': null,
+					'substance': null
 				}
 			},
 			flags: getTabFlags($gettext)

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tabName">
+  <div v-if="tabName && parties">
 		<b-row>
 			<b-col lg="9">
 				<b-input-group id="countries_selector" class="mb-2 mt-2" :prepend="$gettext('Add countries')">
@@ -35,7 +35,8 @@ export default {
 
 	props: {
 		tabName: String,
-		index: Number
+		index: Number,
+		parties: Array
 	},
 
 	components: {
@@ -44,7 +45,7 @@ export default {
 
 	computed: {
 		countries() {
-			return this.$store.state.initialData.countryOptions
+			return this.$store.state.initialData.countryOptions.filter(o => !this.parties.find(p => parseInt(p.party) === parseInt(o.value)))
 		}
 	},
 
@@ -68,6 +69,7 @@ export default {
 		},
 		addEntries() {
 			this.$store.commit('addCountryEntries', { tabName: this.tabName, index: this.index, countryList: this.selected_countries.selected })
+			this.resetData()
 		}
 	}
 }
