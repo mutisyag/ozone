@@ -994,6 +994,8 @@ class SubmissionRemarksSerializer(
         base_fields = ()
         per_type_fields = {
             'art7': (
+                'questionnaire_remarks_party',
+                'questionnaire_remarks_secretariat',
                 'imports_remarks_party', 'imports_remarks_secretariat',
                 'exports_remarks_party', 'exports_remarks_secretariat',
                 'production_remarks_party', 'production_remarks_secretariat',
