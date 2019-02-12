@@ -45,8 +45,7 @@ const getFormExemption = ($gettext) => {
 				comments: {
 					exemption_nomination_remarks_secretariat: {
 						selected: '',
-						type: 'textarea',
-						label: $gettext('Remarks (Secretariat)')
+						type: 'textarea'
 					}
 				}
 			},
@@ -60,8 +59,7 @@ const getFormExemption = ($gettext) => {
 				comments: {
 					exemption_approved_remarks_secretariat: {
 						selected: '',
-						type: 'textarea',
-						label: $gettext('Remarks (Secretariat)')
+						type: 'textarea'
 					}
 				}
 			}

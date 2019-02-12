@@ -91,15 +91,15 @@
 		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
 		<hr>
 		<div
-			v-for="comment in commentsArray"
-			:key="comment.name"
+			v-for="(comment, comment_key) in tab_info.comments"
+			:key="comment_key"
 			class="comments-input">
 			<label>
-				<span>{{comment.label}}</span>
+				<span>{{labels[comment_key]}}</span>
 			</label>
 			<textarea
-				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment.name})"
-				:disabled="getCommentFieldPermission(comment.name)"
+				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+				:disabled="getCommentFieldPermission(comment_key)"
 				class="form-control"
 				:value="comment.selected">
 			</textarea>
@@ -138,7 +138,7 @@
         </b-row>
         <div class="mb-3" v-for="modalField in tab_info.rowInputFields" :key="modalField.name">
           <b-row>
-            <b-col><span>{{modalField.label}}</span></b-col>
+            <b-col><span>{{labels[modalField.name]}}</span></b-col>
             <b-col>
 				<fieldGenerator
 					:fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField.name}"
@@ -159,6 +159,7 @@
 import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
+import { getLabels } from '@/components/exemption/dataDefinitions/labels'
 
 export default {
 	mixins: [FormTemplateMixin],
@@ -167,7 +168,8 @@ export default {
 	},
 	data() {
 		return {
-			tableRows: null
+			tableRows: null,
+			labels: null
 		}
 	},
 
@@ -176,6 +178,10 @@ export default {
 	},
 
 	created() {
+		const labels = getLabels(this.$gettext)
+		this.labels = {
+			...labels[this.tab_info.name]
+		}
 		this.setTableRows()
 	},
 	methods: {
