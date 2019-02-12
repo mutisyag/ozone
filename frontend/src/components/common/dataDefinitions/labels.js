@@ -18,7 +18,6 @@ const getCommonLabels = ($gettext) => {
 		country: $gettext('Country'),
 		phone: $gettext('Phone'),
 		reporting_channel: $gettext('Reporting channel'),
-		fax: $gettext('Fax'),
 		email: $gettext('E-mail'),
 		date: $gettext('Date'),
 		dateOfSubmission: $gettext('Date of submission'),

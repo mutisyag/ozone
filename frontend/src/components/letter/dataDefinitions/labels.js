@@ -129,7 +129,6 @@ const getLabels = ($gettext) => {
 			postal_code: $gettext('Postal address'),
 			country: $gettext('Country'),
 			phone: $gettext('Phone'),
-			fax: $gettext('Fax'),
 			email: $gettext('E-mail'),
 			date: $gettext('Date')
 		}
