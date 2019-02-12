@@ -1,9 +1,10 @@
 <template>
     <b-btn
-			@click="validation"
-			id="save-button"
-			variant="primary">
-        <span v-translate>Save and continue</span>
+		:disabled="isFilesUploadInProgress"
+		@click="validation"
+		id="save-button"
+		variant="primary">
+			<span v-translate>Save and continue</span>
     </b-btn>
 </template>
 
@@ -72,20 +73,20 @@ export default {
 			this.saveComments(commentsObj, url)
 		},
 
-		saveComments(data, url) {
-			update(url, data).then((r) => {
-				console.log(r)
-			}).catch((e) => {
+		async saveComments(data, url) {
+			try {
+				await update(url, data)
+			} catch (error) {
+				console.log(error)
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: e,
+					message: error,
 					variant: 'danger'
 				})
-			})
+			}
 		},
 
 		async submitData(tab, url) {
-			console.log('submitData..................')
 			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			let current_tab_data
 

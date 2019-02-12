@@ -27,19 +27,18 @@ const mutations = {
 
 	addComment(state, { data, tab, field }) {
 		// If there is no field specified, it means that the data comes from server for prefill
-		console.log('comments', data, tab, field)
+		const { comments } = state.form.tabs[tab]
 		if (!field) {
 			const [commentsData] = data
-			Object.keys(state.form.tabs[tab].comments).forEach(comment => {
-				state.form.tabs[tab].comments[comment].selected = commentsData[comment]
+			Object.keys(comments).forEach(comment => {
+				comments[comment].selected = commentsData[comment]
 			})
 		} else {
-			state.form.tabs[tab].comments[field].selected = data
+			comments[field].selected = data
 		}
 	},
 
 	updateFormField(state, data) {
-		console.log('updateFormField', data)
 		const tab = state.form.tabs[data.fieldInfo.tabName]
 		const formField = tab.form_fields[data.fieldInfo.index]
 		if (data.fieldInfo.party) {
@@ -298,7 +297,6 @@ const mutations = {
 		file.upload_successful = false
 	},
 	updateTabFileWithServerInfo(state, { file, fileServerInfo }) {
-		console.log('updateTabFileWithServerInfo', { file, fileServerInfo })
 		file.id = fileServerInfo.id
 		file.upload_successful = fileServerInfo.upload_successful
 		file.file_url = fileServerInfo.file_url

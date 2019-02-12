@@ -59,7 +59,7 @@
 						@click="createModalData(cell.item.originalObj, cell.item.index)"
 					><i class="fa fa-pencil-square-o fa-lg"></i></span>
 					<span
-						v-if="!$store.getters.can_edit_data"
+						v-if="$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
@@ -91,7 +91,7 @@
 		<h4> {{tab_info.formNumber}}.2 <span v-translate>Comments</span></h4>
 		<hr>
 		<div
-			v-for="comment in tab_info.comments_array"
+			v-for="comment in commentsArray"
 			:key="comment.name"
 			class="comments-input">
 			<label>
@@ -129,7 +129,7 @@
 				class="mb-2"
 				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
 				trackBy="value"
-				:disabled="$store.getters.can_edit_data"
+				:disabled="!$store.getters.can_edit_data"
 				label="text"
 				:placeholder="$gettext('Select substance')"
 				:value="parseInt(modal_data.field.substance.selected)"
@@ -142,7 +142,7 @@
             <b-col>
 				<fieldGenerator
 					:fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField.name}"
-					:disabled="$store.getters.can_edit_data"
+					:disabled="!$store.getters.can_edit_data"
 					:field="modal_data.field[modalField.name]" />
             </b-col>
           </b-row>
@@ -156,6 +156,7 @@
 </template>
 
 <script>
+import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 
@@ -185,7 +186,6 @@ export default {
 			}
 		},
 		setTableRows() {
-			console.log('tableItems', this.tab_info.form_fields)
 			const tableRows = []
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
@@ -213,7 +213,9 @@ export default {
 		}
 	},
 	computed: {
-
+		commentsArray() {
+			return getObjectLevel1PropertyValuesAsArray(this.tab_info.comments, 'name')
+		}
 	},
 	watch: {
 		'$language.current': {

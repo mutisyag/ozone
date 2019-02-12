@@ -22,6 +22,8 @@ User = get_user_model()
 
 REMARK_VALUE = "Some random remark here."
 ART7_REMARKS_DATA = {
+    "questionnaire_remarks_party": "Testing",
+    "questionnaire_remarks_secretariat": "Testing",
     "imports_remarks_party": "Testing",
     "imports_remarks_secretariat": "Testing",
     "exports_remarks_party": "Testing",
@@ -46,11 +48,16 @@ ESSENCRIT_REMARKS_DATA = {
     "raf_remarks_secretariat": "Testing",
 }
 OTHER_REMARKS_DATA = {}
+EXEMPTION_REMARKS_DATA = {
+    "exemption_nomination_remarks_secretariat": "Testing",
+    "exemption_approved_remarks_secretariat": "Testing",
+}
 ALL_REMARK_DATA = dict(
     **ART7_REMARKS_DATA,
     **HAT7_REMARKS_DATA,
     **ESSENCRIT_REMARKS_DATA,
     **OTHER_REMARKS_DATA,
+    **EXEMPTION_REMARKS_DATA,
 )
 
 
@@ -224,8 +231,16 @@ class OtherSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
     remarks_data = OTHER_REMARKS_DATA
     form_type = "other"
 
+class ExemptionSubmissionRemarksPermissionTests(
+    SubmissionRemarksPermissionTests
+):
+    remarks_data = EXEMPTION_REMARKS_DATA
+    form_type = "exemption"
 
-class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemarksTests):
+
+class SubmissionRemarksPermissionWorkflowTests(
+    PatchIsSamePartyMixIn, BaseRemarksTests
+):
     """Checks editable permission depending on:
 
      - workflow state
@@ -310,19 +325,32 @@ class SubmissionRemarksPermissionWorkflowTests(PatchIsSamePartyMixIn, BaseRemark
         )
 
 
-class HATSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+class HATSubmissionRemarksPermissionWorkflowTests(
+    SubmissionRemarksPermissionWorkflowTests
+):
     remarks_data = HAT7_REMARKS_DATA
     form_type = "hat"
 
 
-class EssenCritSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+class EssenCritSubmissionRemarksPermissionWorkflowTests(
+    SubmissionRemarksPermissionWorkflowTests
+):
     remarks_data = ESSENCRIT_REMARKS_DATA
     form_type = "essencrit"
 
 
-class OtherCritSubmissionRemarksPermissionWorkflowTests(SubmissionRemarksPermissionWorkflowTests):
+class OtherSubmissionRemarksPermissionWorkflowTests(
+    SubmissionRemarksPermissionWorkflowTests
+):
     remarks_data = OTHER_REMARKS_DATA
     form_type = "other"
+
+
+class ExemptionSubmissionRemarksPermissionWorkflowTests(
+    SubmissionRemarksPermissionWorkflowTests
+):
+    remarks_data = EXEMPTION_REMARKS_DATA
+    form_type = "exemption"
 
 
 class SubmissionRetrieveTest(BaseRemarksTests):
@@ -367,6 +395,11 @@ class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
 class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
     remarks_data = OTHER_REMARKS_DATA
     form_type = "other"
+
+
+class ExemptionSubmissionRetrieveTest(SubmissionRetrieveTest):
+    remarks_data = EXEMPTION_REMARKS_DATA
+    form_type = "exemption"
 
 
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
@@ -415,22 +448,29 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
         self._check_remark_retrieve_data(self.party_user, self.party_user, True)
 
     def test_get_different_party(self):
-        self._check_remark_retrieve_data(self.another_party_user, self.party_user, False)
+        self._check_remark_retrieve_data(
+            self.another_party_user, self.party_user, False
+        )
 
     def test_get_secretariat(self):
-        self._check_remark_retrieve_data(self.secretariat_user, self.party_user, True)
+        self._check_remark_retrieve_data(
+            self.secretariat_user, self.party_user, True
+        )
 
     def test_update_same_party(self):
-        self._check_remark_update_permission(self.party_user, "party", self.party_user,
-                                             True)
+        self._check_remark_update_permission(
+            self.party_user, "party", self.party_user, True
+        )
 
     def test_update_different_party(self):
-        self._check_remark_update_permission(self.another_party_user, "party", self.party_user,
-                                             False)
+        self._check_remark_update_permission(
+            self.another_party_user, "party", self.party_user, False
+        )
 
     def test_update_secretariat(self):
-        self._check_remark_update_permission(self.secretariat_user, "secretariat", self.party_user,
-                                             True)
+        self._check_remark_update_permission(
+            self.secretariat_user, "secretariat", self.party_user, True
+        )
 
 
 class HATSubmissionRemarksTestIsSamePartyPermissions(
@@ -452,3 +492,10 @@ class OtherSubmissionRemarksTestIsSamePartyPermissions(
 ):
     form_type = "other"
     remarks_data = OTHER_REMARKS_DATA
+
+
+class ExemptionSubmissionRemarksTestIsSamePartyPermissions(
+    SubmissionRemarksTestIsSamePartyPermissions
+):
+    form_type = "exemption"
+    remarks_data = EXEMPTION_REMARKS_DATA

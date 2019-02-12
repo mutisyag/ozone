@@ -943,7 +943,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 name=self.context['reporting_channel']
             )
             self.check_reporting_channel(instance, user)
-            instance.submission.save()
+            instance.submission.save(update_fields=['reporting_channel'])
         return super().update(instance, validated_data)
 
 
@@ -970,8 +970,7 @@ class PerTypeFieldsMixIn(object):
         # Instantiate the superclass normally
         super().__init__(instance=instance, **kwargs)
         try:
-            # Fields and remarks return a list of
-            # one.
+            # Fields and remarks return a list of one.
             instance = instance[0]
         except IndexError:
             # Empty queryset.
@@ -1068,6 +1067,8 @@ class SubmissionRemarksSerializer(
         base_fields = ()
         per_type_fields = {
             'art7': (
+                'questionnaire_remarks_party',
+                'questionnaire_remarks_secretariat',
                 'imports_remarks_party', 'imports_remarks_secretariat',
                 'exports_remarks_party', 'exports_remarks_secretariat',
                 'production_remarks_party', 'production_remarks_secretariat',
@@ -1076,12 +1077,17 @@ class SubmissionRemarksSerializer(
                 'emissions_remarks_party', 'emissions_remarks_secretariat',
             ),
             'hat': (
-                'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-                'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+                'hat_imports_remarks_party',
+                'hat_imports_remarks_secretariat',
+                'hat_production_remarks_party',
+                'hat_production_remarks_secretariat',
             ),
             'essencrit': ('raf_remarks_party', 'raf_remarks_secretariat',),
             'other': (),
-            'exemption': ('exemption_remarks_secretariat',),
+            'exemption': (
+                'exemption_nomination_remarks_secretariat',
+                'exemption_approved_remarks_secretariat',
+            ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 

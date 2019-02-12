@@ -292,6 +292,16 @@ class Submission(models.Model):
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
     # Art7 Remarks
+    questionnaire_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for questionnaire"
+    )
+    questionnaire_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for questionnaire"
+    )
     imports_remarks_party = models.CharField(
         max_length=9999, blank=True,
         help_text="General Article7 obligation remarks added by the reporting "
@@ -374,9 +384,13 @@ class Submission(models.Model):
                   "secretariat for imports"
     )
     # Exemption
-    exemption_remarks_secretariat = models.CharField(
+    exemption_nomination_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Exemption remarks added by the ozone secretariat"
+        help_text="Exemption nomination remarks added by the ozone secretariat"
+    )
+    exemption_approved_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Exemption approved remarks added by the ozone secretariat"
     )
     # RAF
     raf_remarks_party = models.CharField(
@@ -746,6 +760,8 @@ class Submission(models.Model):
             "flag_has_reported_f",
             # Remarks, secretariat remarks can be change
             # at any time, while the party remarks cannot.
+            # "questionnaire_remarks_party",
+            "questionnaire_remarks_secretariat",
             # "imports_remarks_party",
             "imports_remarks_secretariat",
             # "exports_remarks_party",
@@ -764,6 +780,8 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
             # "raf_remarks_party",
             "raf_remarks_secretariat",
+            "exemption_nomination_remarks_secretariat",
+            "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
             "flag_approved",
         ]

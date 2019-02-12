@@ -1,5 +1,5 @@
-const getTabFiles = ($gettext) => {
-	const tabFiles = {
+const setTabFiles = ($gettext) => ({
+	files: {
 		name: 'files',
 		endpoint_url: 'files_url',
 		hideInfoButton: true,
@@ -14,8 +14,7 @@ const getTabFiles = ($gettext) => {
 			files: []
 		}
 	}
-	return tabFiles
-}
+})
 export {
-	getTabFiles
+	setTabFiles
 }
