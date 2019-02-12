@@ -125,13 +125,20 @@ BLANKS_FLAGS_DATA = {
 HAS_REPORTED_FLAGS_DATA = {
     _flag: OLD_VALUE for _flag in HAS_REPORTED_FLAGS
 }
+ESSENCRIT_FLAGS_DATA = {
+    _flag: OLD_VALUE for _flag in BLANKS_FLAGS + PROVISIONAL_FLAGS + VALID_FLAGS + SUPERSEDED_FLAGS
+}
 
 
 class SubmissionFlagsPermissionTests(BaseFlagsTests):
     flag_data = ALL_FLAGS_DATA
 
-    def _check_flags_update_permission(self, user, fields_to_check, finalized, expect_success, fail_code=None):
-        submission = self.create_submission(self.secretariat_user, **ALL_FLAGS_DATA)
+    def _check_flags_update_permission(
+        self, user, fields_to_check, finalized, expect_success, fail_code=None
+    ):
+        submission = self.create_submission(
+            self.secretariat_user, **ALL_FLAGS_DATA
+        )
         if finalized:
             submission.call_transition("submit", self.secretariat_user)
             submission.save()
@@ -146,113 +153,135 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
                     ),
                     {field: NEW_VALUE},
                 )
-                self._check_result(result, expect_success, submission, field, fail_code)
+                self._check_result(
+                    result, expect_success, submission, field, fail_code
+                )
 
     # Superseded flags cannot be change by any user in any state
 
     def test_superseded_secretariat_data_entry(self):
-        self._check_flags_update_permission(self.secretariat_user, SUPERSEDED_FLAGS,
-                                            False, False)
+        self._check_flags_update_permission(
+            self.secretariat_user, SUPERSEDED_FLAGS, False, False
+        )
 
     def test_superseded_secretariat_finalized(self):
-        self._check_flags_update_permission(self.secretariat_user, SUPERSEDED_FLAGS,
-                                            True, False)
+        self._check_flags_update_permission(
+            self.secretariat_user, SUPERSEDED_FLAGS, True, False
+        )
 
     def test_superseded_party_data_entry(self):
         # fail_code is 403 as party user has no permission to change flags
         # on secretariat-created submissions
-        self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            False, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, SUPERSEDED_FLAGS, False, False, fail_code=403
+        )
 
     def test_superseded_party_finalized(self):
         # fail_code is 403 as party user has no permission to change flags
         # on secretariat-created submissions
-        self._check_flags_update_permission(self.party_user, SUPERSEDED_FLAGS,
-                                            True, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, SUPERSEDED_FLAGS, True, False, fail_code=403
+        )
 
     # Provisional flag can be edited by:
     #  - Secretariat in any state
     #  - Party in data entry
 
     def test_provisional_secretariat_data_entry(self):
-        self._check_flags_update_permission(self.secretariat_user, PROVISIONAL_FLAGS,
-                                            False, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, PROVISIONAL_FLAGS, False, True
+        )
 
     def test_provisional_secretariat_finalized(self):
-        self._check_flags_update_permission(self.secretariat_user, PROVISIONAL_FLAGS,
-                                            True, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, PROVISIONAL_FLAGS, True, True
+        )
 
     def test_provisional_party_data_entry(self):
         # fail_code is 403 as party user has no permission to change flags
         # on secretariat-created submissions
-        self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            False, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, PROVISIONAL_FLAGS, False, False, fail_code=403
+        )
 
     def test_provisional_party_finalized(self):
         # fail_code is 403 as party user has no permission to change flags
         # on secretariat-created submissions
-        self._check_flags_update_permission(self.party_user, PROVISIONAL_FLAGS,
-                                            True, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, PROVISIONAL_FLAGS, True, False, fail_code=403
+        )
 
     # Valid flag can be edited by:
     #  - Secretariat in submitted stated
     #  - Party in no state
 
     def test_valid_secretariat_data_entry(self):
-        self._check_flags_update_permission(self.secretariat_user, VALID_FLAGS,
-                                            False, False)
+        self._check_flags_update_permission(
+            self.secretariat_user, VALID_FLAGS, False, False
+        )
 
     def test_valid_secretariat_finalized(self):
-        self._check_flags_update_permission(self.secretariat_user, VALID_FLAGS,
-                                            True, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, VALID_FLAGS, True, True
+        )
 
     def test_valid_party_data_entry(self):
-        self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            False, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, VALID_FLAGS, False, False, fail_code=403
+        )
 
     def test_valid_party_finalized(self):
-        self._check_flags_update_permission(self.party_user, VALID_FLAGS,
-                                            True, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, VALID_FLAGS, True, False, fail_code=403
+        )
 
     # Blanks can be edited by:
     #  - Secretariat in any state
     #  - Party in no state
 
     def test_blanks_secretariat_data_entry(self):
-        self._check_flags_update_permission(self.secretariat_user, BLANKS_FLAGS,
-                                            False, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, BLANKS_FLAGS, False, True
+        )
 
     def test_blanks_secretariat_finalized(self):
-        self._check_flags_update_permission(self.secretariat_user, BLANKS_FLAGS,
-                                            True, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, BLANKS_FLAGS, True, True
+        )
 
     def test_blanks_party_data_entry(self):
-        self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            False, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, BLANKS_FLAGS, False, False, fail_code=403
+        )
 
     def test_blanks_party_finalized(self):
-        self._check_flags_update_permission(self.party_user, BLANKS_FLAGS,
-                                            True, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, BLANKS_FLAGS, True, False, fail_code=403
+        )
 
     # Has reported flags can be edited by:
     #  - Secretariat in any state
     #  - Party in data entry state
 
     def test_has_reported_secretariat_data_entry(self):
-        self._check_flags_update_permission(self.secretariat_user, HAS_REPORTED_FLAGS,
-                                            False, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, HAS_REPORTED_FLAGS, False, True
+        )
 
     def test_has_reported_secretariat_finalized(self):
-        self._check_flags_update_permission(self.secretariat_user, HAS_REPORTED_FLAGS,
-                                            True, True)
+        self._check_flags_update_permission(
+            self.secretariat_user, HAS_REPORTED_FLAGS, True, True
+        )
 
     def test_has_reported_party_data_entry(self):
-        self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            False, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, HAS_REPORTED_FLAGS, False, False, fail_code=403
+        )
 
     def test_has_reported_party_finalized(self):
-        self._check_flags_update_permission(self.party_user, HAS_REPORTED_FLAGS,
-                                            True, False, fail_code=403)
+        self._check_flags_update_permission(
+            self.party_user, HAS_REPORTED_FLAGS, True, False, fail_code=403
+        )
 
 
 class HATSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
@@ -261,7 +290,7 @@ class HATSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
 
 
 class EssenCritSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
-    flag_data = BASE_FLAG_DATA
+    flag_data = ESSENCRIT_FLAGS_DATA
     form_type = "essencrit"
 
 
@@ -295,7 +324,9 @@ class SubmissionRetrieveTest(BaseFlagsTests):
         self._check_flags_retrieve_data(self.secretariat_user, self.party_user)
 
     def test_retrieve_as_secretariat_secretariat_reporter(self):
-        self._check_flags_retrieve_data(self.secretariat_user, self.secretariat_user)
+        self._check_flags_retrieve_data(
+            self.secretariat_user, self.secretariat_user
+        )
 
 
 class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
@@ -304,7 +335,7 @@ class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
 
 
 class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
-    flag_data = BASE_FLAG_DATA
+    flag_data = ESSENCRIT_FLAGS_DATA
     form_type = "essencrit"
 
 
