@@ -110,7 +110,7 @@
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
-    <b-modal size="lg" ref="edit_modal" id="edit_modal">
+    <b-modal size="lg" ref="edit_modal" id="edit_modal" @hide="modal_data = null">
       <div v-if="modal_data" slot="modal-title">
 		<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
       </div>

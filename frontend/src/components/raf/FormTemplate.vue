@@ -126,7 +126,7 @@
         <small>{{footnote}}</small>
       </p>
     </div>
-    <b-modal size="lg" ref="edit_modal" id="edit_modal">
+    <b-modal size="lg" ref="edit_modal" id="edit_modal" @hide="modal_data = null">
       <div v-if="modal_data" slot="modal-title">
 				<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
         <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
