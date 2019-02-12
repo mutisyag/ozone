@@ -73,12 +73,12 @@
 				</div>
 			</template>
 
-			<template v-for="inputField in tab_info.rowInputFields" :slot="inputField.name" slot-scope="cell">
+			<template v-for="inputField in tab_info.rowInputFields" :slot="inputField" slot-scope="cell">
 				<fieldGenerator
-					:key="`${cell.item.index}_${inputField.name}_${tabName}`"
-					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField.name}"
+					:key="`${cell.item.index}_${inputField}_${tabName}`"
+					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
 					:disabled="false"
-					:field="cell.item.originalObj[inputField.name]" />
+					:field="cell.item.originalObj[inputField]" />
 			</template>
 
 			<template slot="validation" slot-scope="cell">
@@ -136,14 +136,14 @@
 				:options="tab_data.substances" />
           </b-col>
         </b-row>
-        <div class="mb-3" v-for="modalField in tab_info.rowInputFields" :key="modalField.name">
+        <div class="mb-3" v-for="modalField in tab_info.rowInputFields" :key="modalField">
           <b-row>
-            <b-col><span>{{labels[modalField.name]}}</span></b-col>
+            <b-col><span>{{labels[modalField]}}</span></b-col>
             <b-col>
 				<fieldGenerator
-					:fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField.name}"
+					:fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField}"
 					:disabled="!$store.getters.can_edit_data"
-					:field="modal_data.field[modalField.name]" />
+					:field="modal_data.field[modalField]" />
             </b-col>
           </b-row>
         </div>
