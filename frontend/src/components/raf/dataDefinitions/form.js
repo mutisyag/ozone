@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormRaf = ($gettext) => {
@@ -32,7 +32,7 @@ const getFormRaf = ($gettext) => {
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
 			},
 			files: {
-				...getTabFiles($gettext),
+				...setTabFiles($gettext),
 				hideInfoButton: true
 			},
 			essencrit: {
