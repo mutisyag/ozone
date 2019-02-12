@@ -31,10 +31,7 @@ const getFormRaf = ($gettext) => {
 				hideInfoButton: true,
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
 			},
-			files: {
-				...setTabFiles($gettext),
-				hideInfoButton: true
-			},
+			...setTabFiles($gettext),
 			essencrit: {
 				name: 'essencrit',
 				hasAssideMenu: true,
