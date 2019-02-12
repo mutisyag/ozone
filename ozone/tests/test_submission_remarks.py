@@ -22,6 +22,8 @@ User = get_user_model()
 
 REMARK_VALUE = "Some random remark here."
 ART7_REMARKS_DATA = {
+    "questionnaire_remarks_party": "Testing",
+    "questionnaire_remarks_secretariat": "Testing",
     "imports_remarks_party": "Testing",
     "imports_remarks_secretariat": "Testing",
     "exports_remarks_party": "Testing",
