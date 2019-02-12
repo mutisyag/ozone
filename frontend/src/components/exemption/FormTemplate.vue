@@ -156,7 +156,6 @@
 </template>
 
 <script>
-import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import { getLabels } from '@/components/exemption/dataDefinitions/labels'
@@ -216,11 +215,6 @@ export default {
 				}
 			})
 			this.tableRows = tableRows
-		}
-	},
-	computed: {
-		commentsArray() {
-			return getObjectLevel1PropertyValuesAsArray(this.tab_info.comments, 'name')
 		}
 	},
 	watch: {
