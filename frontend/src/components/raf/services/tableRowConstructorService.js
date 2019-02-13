@@ -28,8 +28,8 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 
 	const forTooltip = {}
 	fields.forEach(field => {
-		count += parseFloat(field.quantity)
-		forTooltip[field.party] = field.quantity
+		count += valueConverter(field.quantity)
+		forTooltip[field.party] = valueConverter(field.quantity)
 	})
 
 	if (count === 0) {
@@ -101,7 +101,7 @@ export default {
 			get available_for_use() {
 				return {
 					type: 'nonInput',
-					selected: doSum([this.on_hand_start_year.selected], [this.quantity_acquired.selected])
+					selected: valueConverter(doSum([this.on_hand_start_year.selected], [this.quantity_acquired.selected]))
 				}
 			},
 			quantity_used: {
@@ -118,7 +118,7 @@ export default {
 			},
 			get on_hand_end_year() {
 				return {
-					type: 'number',
+					type: 'nonInput',
 					selected: valueConverter(this.available_for_use.selected) - valueConverter(this.quantity_used.selected) - valueConverter(this.quantity_destroyed.selected)
 				}
 			},

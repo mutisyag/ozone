@@ -54,6 +54,10 @@ const getFormRaf = ($gettext) => {
 				get input_fields() {
 					return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 				},
+
+				get modal_order() {
+					return this.section_subheaders.map(x => x.name).filter(x => !['group', 'substance', 'validation', 'imports'].includes(x))
+				},
 				section_subheaders: [{
 					label: `(1)<br>${$gettext('Annex/group')}`,
 					name: 'group',

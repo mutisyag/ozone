@@ -485,7 +485,7 @@
 				:options="tab_data.substances" />
           </b-col>
         </b-row>
-        <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
+        <div class="mb-3" v-for="(order, order_index) in tab_info.modal_order" :key="order_index">
           <b-row>
             <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
@@ -499,7 +499,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-				:disabled="!$store.getters.can_edit_data"
+								:disabled="!$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
@@ -521,9 +521,9 @@
             <b-col lg="6">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
-					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="!$store.getters.can_edit_data"
-					:field="modal_data.field[`quantity_${order}`]" />
+								:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
+								:disabled="!$store.getters.can_edit_data"
+								:field="modal_data.field[`quantity_${order}`]" />
               </b-input-group>
             </b-col>
             <b-col lg="3">

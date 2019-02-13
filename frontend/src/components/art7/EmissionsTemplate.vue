@@ -116,7 +116,7 @@ import { getLabels } from '@/components/art7/dataDefinitions/labels'
 export default {
 	props: {
 		tabName: String,
-		tabId: String,
+		tabId: Number,
 		tabIndex: Number
 	},
 
