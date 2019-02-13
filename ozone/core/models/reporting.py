@@ -718,7 +718,7 @@ class Submission(models.Model):
     def has_edit_rights(self, user):
         if (
             user.is_secretariat and self.filled_by_secretariat
-            or user.party is not None and user.party == self.party
+            or user.party == self.party and not self.filled_by_secretariat
         ):
             return not user.is_read_only
         return False
