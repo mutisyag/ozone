@@ -63,7 +63,7 @@
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 				</template>
-				<Files />
+				<Files tabId="8" :tabIndex="tabIndex" />
 			</b-tab>
 		</b-tabs>
 	</b-card>

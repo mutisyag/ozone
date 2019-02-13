@@ -2,12 +2,12 @@
 <div class="tab-title">
 	<span class="formNumber" v-if="tab.formNumber">({{tab.formNumber}})</span>
 		{{$store.getters.getTabTitle(tab.name)}}
-	<div v-if="tab.status === 'saving'" class="spinner">
+	<div v-if="tabStatus === 'saving'" class="spinner">
 		<div class="loader"></div>
 	</div>
-	<i v-if="tab.status === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-	<i v-if="tab.status === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-	<i v-if="tab.status === 'edited'" class="fa fa-edit fa-lg"></i>
+	<i v-if="tabStatus === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+	<i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+	<i v-if="tabStatus === 'edited'" class="fa fa-edit fa-lg"></i>
 </div>
 </template>
 
@@ -16,6 +16,11 @@
 export default {
 	props: {
 		tab: Object
+	},
+	computed: {
+		tabStatus() {
+			return this.$store.getters.getTabStatus(this.tab.name)
+		}
 	}
 }
 </script>

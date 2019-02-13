@@ -2,6 +2,7 @@ const getTabSubInfo = ($gettext) => {
 	const tabSubInfo = {
 		name: 'sub_info',
 		hasAssideMenu: false,
+		status: null,
 		endpoint_url: 'sub_info_url',
 		endpoint_additional_url: '',
 		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_code', 'postal_address', 'country', 'phone', 'email', 'date'],

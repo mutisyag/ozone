@@ -38,6 +38,11 @@ import FilesMixin from '@/components/common/mixins/FilesMixin'
 
 export default {
 	mixins: [FilesMixin],
+
+	props: {
+		tabId: Number,
+		tabIndex: Number
+	},
 	data() {
 		return {
 			selectedFiles: [],
@@ -76,6 +81,22 @@ export default {
 			this.$store.commit('addTabFiles', { files })
 
 			this.$refs.filesInput.reset()
+		}
+	},
+	watch: {
+		'files': {
+			handler() {
+				console.log('here', this.tabId, this.tabIndex)
+				if (parseInt(this.tabId) === this.tabIndex) {
+					if (this.$store.state.form.tabs.files !== 'edited') {
+						this.$store.commit('setTabStatus', {
+							tab: this.$store.state.form.tabs.files.name,
+							value: 'edited'
+						})
+					}
+				}
+			},
+			deep: true
 		}
 	}
 }

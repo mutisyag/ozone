@@ -28,14 +28,12 @@
     <b-card style="margin-bottom: 5rem;" no-body>
 			<b-tabs v-model="tabIndex" card>
 
-						<b-tab :title="$gettext('Submission Info')" active>
-							<template slot="title">
-								<div class="tab-title">
-									<span v-translate>Submission Info</span>
-								</div>
-							</template>
-				<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-						</b-tab>
+			<b-tab active>
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
+				</template>
+					<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+			</b-tab>
 
 			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
 				<template slot="title">
@@ -48,7 +46,7 @@
 					<template slot="title">
 						<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 					</template>
-					<Files />
+					<Files :tabId="2" :tabIndex="tabIndex" />
 				</b-tab>
 			</b-tabs>
     </b-card>
