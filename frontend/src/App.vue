@@ -47,6 +47,7 @@ import {
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
 import auth from '@/components/common/mixins/auth'
+import { setLanguage } from '@/components/common/services/languageService'
 
 export default {
 	name: 'app',
@@ -78,7 +79,6 @@ export default {
 			return this.$route.name
 		},
 		list() {
-			console.log('list.......', this.$store.state.route)
 			return this.$store.state.route
 		}
 	},
@@ -97,6 +97,13 @@ export default {
 		'$language.current': {
 			handler() {
 				this.nav = getNav(this.$gettext)
+			}
+		},
+		'$store.state.currentUser': {
+			handler(newValue) {
+				if (newValue) {
+					setLanguage(newValue.language, this)
+				}
 			}
 		}
 	},

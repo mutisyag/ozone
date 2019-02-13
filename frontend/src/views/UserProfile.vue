@@ -17,8 +17,9 @@
 					v-model="userProfile.language"
 					:options="availableLanguages" />
 		</b-input-group>
-		<b-input-group class="mb-2" :prepend="$gettext('User name')">
-			<input class="form-control" v-model="userProfile.username" :disabled="true" />
+		<b-input-group class="mb-2">
+			<span v-translate>User name:</span>&nbsp;
+			<b><span>{{userProfile.username}}</span></b>
 		</b-input-group>
 		<b-input-group class="mb-2" v-if="!userProfile.is_secretariat">
 			<span v-translate>Party:</span>&nbsp;
@@ -43,7 +44,6 @@
 
 <script>
 import Multiselect from '@/components/common/ModifiedMultiselect'
-import { setLanguage } from '@/components/common/services/languageService'
 
 export default {
 	components: {
@@ -76,15 +76,6 @@ export default {
 	methods: {
 		save() {
 			this.$store.dispatch('updateCurrentUser', { user: this.userProfile, $gettext: this.$gettext })
-		}
-	},
-	watch: {
-		'userProfile.language': {
-			handler(newValue, oldValue) {
-				if (newValue !== oldValue) {
-					setLanguage(this.userProfile.language, this)
-				}
-			}
 		}
 	}
 }
