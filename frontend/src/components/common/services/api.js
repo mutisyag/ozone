@@ -10,8 +10,8 @@ const logRequests = process.env.NODE_ENV === 'development'
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
 
-let windowLocation = window.location.origin.split('//')
-windowLocation[1] = 'tusd.' + windowLocation[1]
+const windowLocation = window.location.origin.split('//')
+windowLocation[1] = `tusd.${windowLocation[1]}`
 
 let filesURL = windowLocation.join('//')
 
