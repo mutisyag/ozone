@@ -61,11 +61,11 @@
 						<b-input-group :prepend="$gettext('Party')">
 							<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
 						</b-input-group>
-						<b-input-group style="width: 120px" :prepend="$gettext('From')">
+						<b-input-group class="w120" :prepend="$gettext('From')">
 							<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
 							</b-form-select>
 						</b-input-group>
-						<b-input-group style="width: 120px" :prepend="$gettext('To')">
+						<b-input-group class="w120" :prepend="$gettext('To')">
 							<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
 							</b-form-select>
 						</b-input-group>
@@ -128,11 +128,11 @@
 					<b-input-group :prepend="$gettext('Party')">
 						<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
 					</b-input-group>
-					<b-input-group style="width: 120px" :prepend="$gettext('From')">
+					<b-input-group class="w120" :prepend="$gettext('From')">
 						<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
 						</b-form-select>
 					</b-input-group>
-					<b-input-group style="width: 120px" :prepend="$gettext('To')">
+					<b-input-group class="w120" :prepend="$gettext('To')">
 						<b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
 						</b-form-select>
 					</b-input-group>
@@ -593,5 +593,8 @@ export default {
 
 .filter-group {
 	display: flex;
+}
+.w120 {
+ width: 120px;
 }
 </style>

@@ -90,7 +90,7 @@
 							</b-col>
 						</b-row>
 						<div>
-							<h5 class="mt-4 mb-4" v-translate>Annex groups reported in submission</h5>
+							<h5 class="mt-4 mb-4" v-translate>Annex group reported in full</h5>
 								<b-row id="annex-flags">
 									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
