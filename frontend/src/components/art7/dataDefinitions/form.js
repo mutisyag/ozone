@@ -15,6 +15,7 @@ const getFormArt7 = ($gettext) => {
 				'initialData.display.substances',
 				'initialData.display.blends',
 				'initialData.display.countries',
+				'initialData.countryOptionsSubInfo',
 				'currentUser',
 				'permissions.form'
 			],

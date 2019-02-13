@@ -9,6 +9,7 @@ const getFormExemption = ($gettext) => {
 			tabsDisplay: ['sub_info', 'files', 'nomination', 'approved'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',				
 				'initialData.substances',
 				'current_submission',
 				'initialData.display.substances',

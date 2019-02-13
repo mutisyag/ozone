@@ -61,7 +61,7 @@ const getTabSubInfo = ($gettext) => {
 			country: {
 				type: 'select',
 				selected: '',
-				optionsStatePropertyPath: 'initialData.countryOptions',
+				optionsStatePropertyPath: 'initialData.countryOptionsSubInfo',
 				options: []
 			},
 			phone: {

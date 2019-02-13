@@ -8,6 +8,7 @@ const getFormRaf = ($gettext) => {
 			tabsDisplay: ['sub_info', 'essencrit', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',
 				'initialData.substances',
 				'initialData.blends',
 				'current_submission',
