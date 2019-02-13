@@ -961,6 +961,15 @@ class Submission(models.Model):
     def is_emergency(self):
         return self.flag_emergency
 
+    def can_change_submitted_at(self, user):
+        return user.is_secretariat and self.filled_by_secretariat
+
+    def is_submitted_at_automatically_filled(self, user):
+        """
+        Return True if the user is a Party Reporter.
+        """
+        return not user.is_secretariat
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'

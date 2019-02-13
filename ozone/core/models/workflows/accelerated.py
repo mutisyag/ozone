@@ -49,7 +49,8 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
     @xworkflows.transition('finalize')
     def finalize(self):
         self.model_instance.make_current()
-        self.model_instance.set_submitted()
+        if self.model_instance.is_submitted_at_automatically_filled(self.user):
+            self.model_instance.set_submitted()
 
     @xworkflows.transition('unrecall')
     def unrecall(self):

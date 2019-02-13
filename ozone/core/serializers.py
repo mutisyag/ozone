@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -915,6 +917,7 @@ class RAFSerializer(
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
+    submitted_at = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
@@ -922,6 +925,11 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     def get_reporting_channel(self, obj):
         return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def get_submitted_at(self, obj):
+        submitted_at = getattr(obj.submission, 'submitted_at', None)
+        if submitted_at:
+            return submitted_at.strftime('%Y-%m-%dT%H:%M:%S')
 
     def check_reporting_channel(self, instance, user):
         if (
@@ -934,21 +942,39 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 ]
             })
 
+    def check_submitted_at(self, instance, user):
+        if not instance.submission.can_change_submitted_at(user):
+            raise ValidationError({
+                "submitted_at": [
+                    _('User is not allowed to change date of submission.')
+                ]
+            })
+
     def update(self, instance, validated_data):
         user = self.context['request'].user
         # Quick fix for staging error. Reporting channel info has been lost for
         # some submissions, otherwise this check wouldn't be necessary.
+        to_update_fields = []
         if self.context.get('reporting_channel', None):
             instance.submission.reporting_channel = ReportingChannel.objects.get(
                 name=self.context['reporting_channel']
             )
             self.check_reporting_channel(instance, user)
-            instance.submission.save(update_fields=['reporting_channel'])
+            to_update_fields.append('reporting_channel')
+        if self.context.get('submitted_at', None):
+            self.check_submitted_at(instance, user)
+            instance.submission.submitted_at = datetime.strptime(
+                self.context['submitted_at'],
+                '%Y-%m-%dT%H:%M:%S'
+            )
+            to_update_fields.append('submitted_at')
+        instance.submission.save(update_fields=to_update_fields)
         return super().update(instance, validated_data)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
+    submitted_at = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
@@ -956,6 +982,11 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
 
     def get_reporting_channel(self, obj):
         return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def get_submitted_at(self, obj):
+        submitted_at = getattr(obj.submission, 'submitted_at', None)
+        if submitted_at:
+            return submitted_at.strftime('%Y-%m-%dT%H:%M:%S')
 
 
 class PerTypeFieldsMixIn(object):
