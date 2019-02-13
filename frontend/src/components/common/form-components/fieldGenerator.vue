@@ -1,7 +1,7 @@
 <template>
   <div v-if="field">
     <div v-if="field.type === 'text' || field.type === 'number' || field.type === 'date' || field.type ==='email' || field.type === 'nonInput'">
-        <span v-if="field.type === 'nonInput'" :id="fieldInfo ? fieldInfo.field : ''">{{field.selected}}</span>
+        <span class="nonInput" v-if="field.type === 'nonInput'" :id="fieldInfo ? fieldInfo.field : ''">{{field.selected}}</span>
 				<input v-else :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type" />
     </div>
     <b-form-radio-group :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
@@ -106,6 +106,13 @@ export default {
 
 		updateFormFieldWithTabs(event) {
 			this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
+		}
+	},
+	watch: {
+		'field.selected': {
+			handler() {
+				this.currentTyping = this.field.selected && this.field.type === 'number' ? fromExponential(this.field.selected) : this.field.selected
+			}
 		}
 	}
 }

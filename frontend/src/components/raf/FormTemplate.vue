@@ -75,7 +75,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -146,19 +146,21 @@
 							class="mb-2"
 							@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
 							trackBy="value"
-							:disabled="$store.getters.can_edit_data"
+							:disabled="!$store.getters.can_edit_data"
 							label="text"
 							:placeholder="$gettext('Select substance')"
 							:value="parseInt(modal_data.field.substance.selected)"
 							:options="tab_data.substances" />
           </b-col>
         </b-row>
+				<div>Amount acquired by import & countries of manufacture</div>
+				<hr>
 				<b-row>
 					<b-col>
 						<addParties :parties="modal_data.field.imports" :index="modal_data.index" :tabName="tabName"></addParties>
 					</b-col>
 				</b-row>
-				<b-row v-for="country in modal_data.field.imports" :key="country.party">
+				<b-row class="mb-2 special" v-for="country in modal_data.field.imports" :key="country.party">
 							<b-col cols="2">{{$store.state.initialData.display.countries[country.party]}}</b-col>
 							<b-col>
 								<fieldGenerator
@@ -166,6 +168,31 @@
 								:field="country" />
 							</b-col>
 				</b-row>
+				<hr>
+				<div class="mb-3" v-for="(order, order_index) in tab_info.modal_order" :key="`modal_${order_index}`">
+          <b-row class="special">
+						<b-col cols="3">{{labels[order]}}</b-col>
+            <b-col cols="6">
+              <fieldGenerator
+                :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
+                :disabled="!$store.getters.can_edit_data"
+                v-if="modal_data.field[order].type != 'multiselect'"
+                :field="modal_data.field[order]" />
+              <multiselect
+                v-else
+                :clear-on-select="true"
+                :hide-selected="true"
+                :close-on-select="true"
+								:disabled="!$store.getters.can_edit_data"
+                trackBy="value"
+                label="text"
+                :placeholder="$gettext('Countries')"
+                @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:order})"
+                :value="parseInt(modal_data.field[order].selected)"
+                :options="tab_data.countryOptions" />
+            </b-col>
+          </b-row>
+        </div>
         <b-row
           class="mt-3"
           v-for="comment_field in ['remarks_party','remarks_os']"

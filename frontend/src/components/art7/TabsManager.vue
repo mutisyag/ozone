@@ -42,7 +42,7 @@
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions" />
 				</template>
-				<Questionnaire tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
+				<Questionnaire :tabId="1" :info="$store.state.form.tabs.questionaire_questions" />
 			</b-tab>
 
 			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :disabled="selectedDisplayTabs[$store.state.form.tabs[tabId].name] === null" :key="tabId">
@@ -56,14 +56,14 @@
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.has_emissions" />
 				</template>
-				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
+				<EmissionsTemplate :hasDisabledFields="!selectedDisplayTabs.has_emissions" :tabId="7" ref="has_emissions"  :tabIndex="tabIndex"  tabName="has_emissions" />
 			</b-tab>
 
 			<b-tab >
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 				</template>
-				<Files tabId="8" :tabIndex="tabIndex" />
+				<Files :tabId="8" :tabIndex="tabIndex" />
 			</b-tab>
 		</b-tabs>
 	</b-card>
