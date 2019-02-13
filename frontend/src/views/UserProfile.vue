@@ -1,45 +1,39 @@
 <template>
-<b-card class="col-md-4">
-	<b-input-group class="mb-2" :prepend="$gettext('First name')">
-		<input class="form-control" v-model="userProfile.first_name" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('Last name')">
-		<input class="form-control" v-model="userProfile.last_name" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('Email')">
-		<input class="form-control" v-model="userProfile.email" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('Language')">
-		<multiselect
-				trackBy="value"
-				label="text"
-				v-model="userProfile.language"
-				:options="availableLanguages" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('User name')">
-		<input class="form-control" v-model="userProfile.username" :disabled="true" />
-	</b-input-group>
-	<b-input-group class="mb-2" :prepend="$gettext('Party')">
-		<input class="form-control" v-model="userProfile.party" :disabled="true" />
-	</b-input-group>
-	<b-input-group class="mb-2">
-		<b-form-checkbox v-model="userProfile.is_read_only" :disabled="true">
-		Is read only
-		</b-form-checkbox>
-	</b-input-group>
-	<b-input-group class="mb-2">
-		<b-form-checkbox v-model="userProfile.is_secretariat" :disabled="true">
-		Is secretariat
-		</b-form-checkbox>
-	</b-input-group>
-	<b-input-group class="mb-2">
-		<b-button variant="primary" @click="save()">
-			<i class="fa fa-floppy-o" aria-hidden="true"></i>
-			&nbsp;
-			<span v-translate>Save</span>
-		</b-button>
-	</b-input-group>
-</b-card>
+<div class="row justify-content-center">
+	<b-card class="col-md-6">
+		<b-input-group class="mb-2" :prepend="$gettext('First name')">
+			<input class="form-control" v-model="userProfile.first_name" />
+		</b-input-group>
+		<b-input-group class="mb-2" :prepend="$gettext('Last name')">
+			<input class="form-control" v-model="userProfile.last_name" />
+		</b-input-group>
+		<b-input-group class="mb-2" :prepend="$gettext('Email')">
+			<input class="form-control" v-model="userProfile.email" />
+		</b-input-group>
+		<b-input-group class="mb-2" :prepend="$gettext('Language')">
+			<multiselect
+					trackBy="value"
+					label="text"
+					v-model="userProfile.language"
+					:options="availableLanguages" />
+		</b-input-group>
+		<b-input-group class="mb-2" :prepend="$gettext('User name')">
+			<input class="form-control" v-model="userProfile.username" :disabled="true" />
+		</b-input-group>
+		<b-input-group class="mb-2" v-if="!userProfile.is_secretariat">
+			<span v-translate>Party:</span>&nbsp;
+			<b><span>{{userProfile.party}}</span></b>
+		</b-input-group>
+		<b-input-group class="mb-2">
+			<span v-translate>Role:</span>&nbsp;
+			<b>
+				<span v-translate v-if="userProfile.is_secretariat">Secretariat</span>
+				<span v-translate v-else>Party</span>
+				&nbsp;<span v-translate v-if="userProfile.is_read_only">read-only</span>
+			</b>
+		</b-input-group>
+	</b-card>
+</div>
 </template>
 
 <script>
