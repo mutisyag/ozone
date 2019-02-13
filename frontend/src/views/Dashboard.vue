@@ -362,29 +362,29 @@ export default {
 			}]
 		},
 		sortOptionsPeriodFrom() {
-			return this.periods.map(f => {
+			return 	Array.from(new Set(this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
 				&& f.start_date > this.tableOptions.filters.period_end) {
 					return null
 				}
 				return {
 					text: f.start_date.split('-')[0],
-					value: f.start_date
+					value: this.getStartDateOfYear(f.start_date)
 				}
-			}).filter(f => f !== null)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
 		},
 
 		sortOptionsPeriodTo() {
-			return this.periods.map(f => {
+			return 	Array.from(new Set(this.periods.map(f => {
 				if (this.tableOptions.filters.period_start !== null
 				&& f.end_date < this.tableOptions.filters.period_start) {
 					return null
 				}
 				return {
 					text: f.start_date.split('-')[0],
-					value: f.end_date
+					value: this.getEndDateOfYear(f.end_date)
 				}
-			}).filter(f => f !== null)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
 		},
 
 		sortOptionsObligation() {
@@ -451,6 +451,21 @@ export default {
 	},
 
 	methods: {
+
+		getStartDateOfYear(year) {
+			const currentYear = year.split('-')
+			currentYear[1] = '01'
+			currentYear[2] = '01'
+			return currentYear.join('-')
+		},
+
+		getEndDateOfYear(year) {
+			const currentYear = year.split('-')
+			currentYear[1] = '12'
+			currentYear[2] = '31'
+			return currentYear.join('-')
+		},
+
 		updateBreadcrumbs() {
 			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
 		},
@@ -461,7 +476,6 @@ export default {
 			}).then(r => {
 				this.$store.dispatch('getMyCurrentSubmissions').then(() => {
 					const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)
-					console.log(currentSubmission)
 					this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
 				})
 			})
