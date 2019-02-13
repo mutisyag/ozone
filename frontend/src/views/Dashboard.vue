@@ -459,8 +459,11 @@ export default {
 				$gettext: this.$gettext,
 				submission: this.current
 			}).then(r => {
-				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
-				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+				this.$store.dispatch('getMyCurrentSubmissions').then(() => {
+					const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)
+					console.log(currentSubmission)
+					this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+				})
 			})
 		},
 		clearFilters() {
