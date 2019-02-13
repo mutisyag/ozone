@@ -80,6 +80,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'email': "test@example.com",
             'organization': '',
             'phone': '0000000000',
+            'postal_address': '',
             'postal_code': '',
             'reporting_officer': ''
         }
@@ -108,6 +109,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'email': "test@example.com",
             'organization': '',
             'phone': '0000000000',
+            'postal_address': '',
             'postal_code': '',
             'reporting_officer': ''
         }

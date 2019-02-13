@@ -71,12 +71,15 @@ class SubmissionReportingChannelTests(BaseTests):
             current_state='submitted',
             previous_state='data_entry'
         )
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        self.client.login(
+            username=self.secretariat_user.username, password='qwe123qwe'
+        )
         data = {
             "reporting_channel": "API",
             "reporting_officer": "test",
             "designation": "test",
             "organization": "test",
+            "postal_address": "test",
             "postal_code": "test",
             "country": "test",
             "phone": "test",

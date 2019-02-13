@@ -860,6 +860,7 @@ class Submission(models.Model):
                         'reporting_officer': self.info.reporting_officer,
                         'designation': self.info.designation,
                         'organization': self.info.organization,
+                        'postal_address': self.info.postal_address,
                         'postal_code': self.info.postal_code,
                         'country': self.info.country,
                         'phone': self.info.phone,
@@ -1069,6 +1070,7 @@ class Submission(models.Model):
                         reporting_officer=latest_info.reporting_officer,
                         designation=latest_info.designation,
                         organization=latest_info.organization,
+                        postal_address=latest_info.postal_address,
                         postal_code=latest_info.postal_code,
                         country=latest_info.country,
                         phone=latest_info.phone,
@@ -1107,6 +1109,7 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     reporting_officer = models.CharField(max_length=256, blank=True)
     designation = models.CharField(max_length=256, blank=True)
     organization = models.CharField(max_length=256, blank=True)
+    postal_address = models.CharField(max_length=512, blank=True)
     postal_code = models.CharField(max_length=64, blank=True)
     country = models.CharField(max_length=256, blank=True)
     phone = models.CharField(max_length=128, blank=True)
