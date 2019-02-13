@@ -231,6 +231,14 @@ export default {
 				} else {
 					this.setTableRows()
 				}
+				if (parseInt(this.tabId) === this.tabIndex) {
+					if (this.tab_info.status !== 'edited') {
+						this.$store.commit('setTabStatus', {
+							tab: this.tabName,
+							value: 'edited'
+						})
+					}
+				}
 			},
 			deep: true
 		}

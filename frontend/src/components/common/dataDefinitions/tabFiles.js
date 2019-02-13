@@ -3,6 +3,7 @@ const setTabFiles = ($gettext) => ({
 		name: 'files',
 		endpoint_url: 'files_url',
 		hideInfoButton: true,
+		status: null,
 		hasAssideMenu: false,
 		title: $gettext('Files'),
 		titleHtml: $gettext('Files'),

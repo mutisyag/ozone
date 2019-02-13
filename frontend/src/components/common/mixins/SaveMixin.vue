@@ -53,7 +53,7 @@ export default {
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
+					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
 					variant: 'danger'
 				})
 			} else {
@@ -88,7 +88,9 @@ export default {
 		},
 
 		async submitData(tab, url) {
-			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
+			if (tab.status !== null) {
+				this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
+			}
 			let current_tab_data
 
 			if (Array.isArray(tab.form_fields)) {
@@ -159,8 +161,9 @@ export default {
 					if (tab.name === 'files') {
 						await this.getSubmissionFiles()
 					}
-
-					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+					if (tab.status !== null) {
+						this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+					}
 
 					if (Array.isArray(tab.form_fields)) {
 						if (!tab.form_fields.length) {
@@ -173,7 +176,7 @@ export default {
 				console.log(error)
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: { __all__: [this.$gettextInterpolate('Save failed for %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })] },
+					message: { __all__: [this.$gettext('Save failed')] },
 					variant: 'danger' })
 			}
 		}
