@@ -8,6 +8,7 @@ const getFormHat = ($gettext) => {
 			tabsDisplay: ['sub_info', 'has_imports', 'has_produced', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',
 				'initialData.substances',
 				'initialData.blends',
 				'current_submission',

@@ -8,6 +8,7 @@ const getFormLetter = ($gettext) => {
 			tabsDisplay: ['sub_info', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',
 				'initialData.display.countries'
 			]
 		},
