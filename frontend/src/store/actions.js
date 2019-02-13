@@ -90,11 +90,19 @@ const actions = {
 		}
 	},
 
-	async updateCurrentUser({ dispatch }, user) {
+	async updateCurrentUser({ commit, dispatch }, { user, $gettext }) {
 		try {
 			await updateCurrentUser(user)
-			dispatch('getMyCurrentUser')
+			await dispatch('getMyCurrentUser')
+			commit('addAlertData', {
+				displayMessage: $gettext('Saved'),
+				variant: 'success'
+			})
 		} catch (e) {
+			commit('addAlertData', {
+				displayMessage: $gettext('Error'),
+				variant: 'danger'
+			})
 			console.log('updateCurrentUser', e)
 		}
 	},
