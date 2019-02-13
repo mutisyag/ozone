@@ -9,11 +9,11 @@
 			:colspan="header.colspan"
 			:key="header_index">
 			<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-			<span v-html="header.label"></span>
-			<i class="fa fa-info-circle fa-lg"></i>
+				<span v-html="header.label"></span>
+				<i class="fa fa-info-circle fa-lg"></i>
 			</div>
 			<div v-else>
-			<span v-html="header.label"></span>
+				<span v-html="header.label"></span>
 			</div>
 		</th>
 		</tr>

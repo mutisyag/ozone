@@ -22,7 +22,13 @@
 						<div class="form-fields">
 							<b-row :id="order" v-for="order in info.fields_order" class="field-wrapper" :key="order">
 								<b-col lg='3'>
-									<label>{{labels[order]}}</label>
+									<span v-if="info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="info.form_fields[order].tooltip">
+										<i class="fa fa-info-circle fa-lg"></i>&nbsp;
+										<label>{{labels[order]}}</label>
+									</span>
+									<span v-else>
+										<label>{{labels[order]}}</label>
+									</span>
 								</b-col>
 								<b-col>
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? !$store.getters.can_change_reporting_channel : !$store.getters.can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
