@@ -157,6 +157,10 @@ const mutations = {
 		state.initialData.countryOptions = data
 	},
 
+	updateCountriesSubInfo(state, data) {
+		state.initialData.countryOptionsSubInfo = data
+	},
+
 	updateCountriesDisplay(state, data) {
 		state.initialData.display.countries = data
 	},
