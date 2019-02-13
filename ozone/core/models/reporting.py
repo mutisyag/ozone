@@ -784,6 +784,7 @@ class Submission(models.Model):
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
             "flag_approved",
+            "submitted_at",
         ]
 
     @staticmethod
