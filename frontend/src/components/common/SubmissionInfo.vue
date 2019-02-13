@@ -34,15 +34,6 @@
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? !$store.getters.can_change_reporting_channel : !$store.getters.can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
-							<b-row>
-								<b-col lg='3'>
-									<label>{{labels.dateOfSubmission}}</label>
-								</b-col>
-								<b-col>
-									<span v-if="currentSubmissionSubmittedAt">{{currentSubmissionSubmittedAt}}</span>
-									<i v-else class="fa fa-ellipsis-h"></i>
-								</b-col>
-							</b-row>
 						</div>
 					</b-card>
 				</b-col>

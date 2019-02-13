@@ -4,7 +4,7 @@ const getTabSubInfo = ($gettext) => {
 		hasAssideMenu: false,
 		endpoint_url: 'sub_info_url',
 		endpoint_additional_url: '',
-		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_code', 'postal_address', 'country', 'phone', 'email', 'date'],
+		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_code', 'postal_address', 'country', 'phone', 'email', 'date', 'submitted_at'],
 		intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
 		title: $gettext('Submission Info'),
 		titleHtml: `<b>${$gettext('Submission Info')}</b>`,
@@ -80,6 +80,10 @@ const getTabSubInfo = ($gettext) => {
 				type: 'date',
 				selected: '',
 				tooltip: $gettext('The date indicated on the submitted document')
+			},
+			submitted_at: {
+				type: 'date',
+				selected: ''
 			}
 		},
 		default_properties: {
@@ -93,6 +97,7 @@ const getTabSubInfo = ($gettext) => {
 			phone: null,
 			email: null,
 			date: null,
+			submitted_at: null,
 			reporting_channel: null
 		}
 	}
