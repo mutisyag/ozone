@@ -1029,3 +1029,34 @@ body {
     align-items: center;
     display: flex;
 }
+
+
+/* ie11 fix start */
+.multiselect__placeholder {
+  width: 100%;
+}
+
+body .multiselect__select {
+  text-align: right;
+  width: 100%;
+  height: 100%;
+  transition: none;
+}
+
+/* we use scale(1, -1) to flip the caret vertically since rotate no longer works,
+ because of width and height 100% */
+body .multiselect--active .multiselect__select{
+  transform: scale(1, -1);
+}
+/* ie11 fix end */
+
+
+/* reset to initial values for modern browsers since ie11 doesn't know @supports */
+@supports (height: unset) {
+  body .multiselect__select {
+    text-align: right;
+    width: 40px;
+    height: 38px;
+    transition: .2s ease, -webkit-transform .2s ease
+  }
+}

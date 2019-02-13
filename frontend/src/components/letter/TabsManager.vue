@@ -156,19 +156,6 @@ export default {
 			})
 		},
 		checkBeforeSubmitting() {
-			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
-				.map(tab => this.$store.state.form.tabs[tab].form_fields)
-				.filter(arr => arr.length)
-			if (!fields.length) {
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
-					variant: 'danger'
-				})
-				return
-			}
-
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
