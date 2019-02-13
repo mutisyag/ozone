@@ -78,7 +78,7 @@
 				</div>
 				<b-btn-group class="row-controls">
 					<span
-						v-if="!$store.getters.can_edit_data"
+						v-if="$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
@@ -95,7 +95,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>
@@ -143,7 +143,7 @@
 						</div>
 						<b-btn-group class="row-controls">
 							<span
-								v-if="!$store.getters.can_edit_data"
+								v-if="$store.getters.can_edit_data"
 								@click="remove_field(cell.item.index, cell.item)"
 								class="table-btn">
 								<i class="fa fa-trash fa-lg"></i>
@@ -165,7 +165,7 @@
 						<fieldGenerator
 							:key="`${cell.item.index}_${inputField}_${tabName}`"
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+							:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 							:field="cell.item.originalObj[inputField]"
 						></fieldGenerator>
 					</template>

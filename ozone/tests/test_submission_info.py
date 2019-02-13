@@ -78,9 +78,9 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'date': None,
             'designation': '',
             'email': "test@example.com",
-            'fax': '',
             'organization': '',
             'phone': '0000000000',
+            'postal_address': '',
             'postal_code': '',
             'reporting_officer': ''
         }
@@ -107,9 +107,9 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'date': None,
             'designation': '',
             'email': "test@example.com",
-            'fax': '',
             'organization': '',
             'phone': '0000000000',
+            'postal_address': '',
             'postal_code': '',
             'reporting_officer': ''
         }

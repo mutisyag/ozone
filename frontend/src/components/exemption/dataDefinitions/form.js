@@ -1,6 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
 import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
-import { getObjectLevel1PropertyValuesAsArray } from '@/components/common/services/utilsService'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
 const getFormExemption = ($gettext) => {
@@ -18,8 +17,8 @@ const getFormExemption = ($gettext) => {
 				'permissions.form'
 			],
 			comments_default_properties: {
-				exemption_nomination_remarks_os: '',
-				exemption_approved_remarks_os: ''
+				exemption_nomination_remarks_secretariat: '',
+				exemption_approved_remarks_secretariat: ''
 			},
 			comments_endpoint_url: 'submission_remarks'
 		},
@@ -44,15 +43,10 @@ const getFormExemption = ($gettext) => {
 				titleHtml: `<b>${$gettext('Nomination')}</b>`,
 				endpoint_url: 'exemption_nomination_url',
 				comments: {
-					exemption_nomination_remarks_os: {
-						name: 'exemption_nomination_remarks_os',
+					exemption_nomination_remarks_secretariat: {
 						selected: '',
-						type: 'textarea',
-						label: $gettext('Remarks (Secretariat)')
+						type: 'textarea'
 					}
-				},
-				get comments_array() {
-					return getObjectLevel1PropertyValuesAsArray(this.comments)
 				}
 			},
 			approved: {
@@ -63,15 +57,10 @@ const getFormExemption = ($gettext) => {
 				titleHtml: `<b>${$gettext('Approved')}</b>`,
 				endpoint_url: 'exemption_approved_url',
 				comments: {
-					exemption_approved_remarks_os: {
-						name: 'exemption_approved_remarks_os',
+					exemption_approved_remarks_secretariat: {
 						selected: '',
-						type: 'textarea',
-						label: $gettext('Remarks (Secretariat)')
+						type: 'textarea'
 					}
-				},
-				get comments_array() {
-					return getObjectLevel1PropertyValuesAsArray(this.comments)
 				}
 			}
 		}

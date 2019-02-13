@@ -55,6 +55,7 @@ from ..models import (
     Blend,
     Nomination,
     ExemptionApproved,
+    RAFReport,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -102,6 +103,7 @@ from ..serializers import (
     UploadTokenSerializer,
     ExemptionNominationSerializer,
     ExemptionApprovedSerializer,
+    RAFSerializer,
 )
 
 
@@ -847,6 +849,23 @@ class ExemptionApprovedViewSet(
 
     def perform_create(self, serializer):
         serializer.save(submission_id=self.kwargs['submission_pk'])
+
+
+class RAFViewSet(
+    BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
+):
+    form_types = ("essencrit",)
+    serializer_class = RAFSerializer
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return RAFReport.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
 
 
 class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):

@@ -68,7 +68,6 @@ module.exports = {
 			postal_code: 'test address',
 			country: 'France',
 			phone: '+490000000',
-			fax: '+490000000',
 			email: 'john.doe@gmail.com',
 			date: '01/11/2019'
 		}

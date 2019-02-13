@@ -1,9 +1,10 @@
 <template>
     <b-btn
-			@click="validation"
-			id="save-button"
-			variant="primary">
-        <span v-translate>Save and continue</span>
+		:disabled="isFilesUploadInProgress"
+		@click="validation"
+		id="save-button"
+		variant="primary">
+			<span v-translate>Save and continue</span>
     </b-btn>
 </template>
 
@@ -72,20 +73,20 @@ export default {
 			this.saveComments(commentsObj, url)
 		},
 
-		saveComments(data, url) {
-			update(url, data).then((r) => {
-				console.log(r)
-			}).catch((e) => {
+		async saveComments(data, url) {
+			try {
+				await update(url, data)
+			} catch (error) {
+				console.log(error)
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: e,
+					message: error,
 					variant: 'danger'
 				})
-			})
+			}
 		},
 
 		async submitData(tab, url) {
-			console.log('submitData..................')
 			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			let current_tab_data
 
@@ -94,7 +95,12 @@ export default {
 				tab.form_fields.forEach(form_field => {
 					const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 					for (const row in form_field) {
-						save_obj[row] = form_field[row].selected
+						// special case for raf imports
+						if (!Array.isArray(form_field[row])) {
+							save_obj[row] = form_field[row].selected
+						} else {
+							save_obj[row] = form_field[row]
+						}
 					}
 					current_tab_data.push(save_obj)
 				})

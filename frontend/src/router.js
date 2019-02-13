@@ -8,8 +8,10 @@ import {
 const Art7DataManager = () => import(/* webpackChunkName: "art7" */ '@/components/art7/DataManager')
 const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/components/letter/DataManager')
 const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/hat/DataManager')
+const RafDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/raf/DataManager')
+
 const ExemptionDataManager = () => import(/* webpackChunkName: "exemption" */ '@/components/exemption/DataManager')
-const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
+// const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
 // Views - Pages
 const Page404 = () => import(/* webpackChunkName: "404" */ '@/views/pages/Page404')
 const UserProfile = () => import(/* webpackChunkName: "userProfile" */ '@/views/UserProfile')
@@ -65,7 +67,7 @@ const routes = [
 				path: 'essencrit',
 				name: 'essencrit',
 				meta: { requiresAuth: true },
-				component: FormNotFound
+				component: RafDataManager
 			},
 			{
 				path: 'hat',

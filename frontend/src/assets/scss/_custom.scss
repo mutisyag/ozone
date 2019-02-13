@@ -1023,3 +1023,9 @@ body {
 		max-width: 25px;
 	}
 }
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}

@@ -18,7 +18,6 @@ const getCommonLabels = ($gettext) => {
 		country: $gettext('Country'),
 		phone: $gettext('Phone'),
 		reporting_channel: $gettext('Reporting channel'),
-		fax: $gettext('Fax'),
 		email: $gettext('E-mail'),
 		date: $gettext('Date'),
 		dateOfSubmission: $gettext('Date of submission'),
@@ -26,6 +25,8 @@ const getCommonLabels = ($gettext) => {
 		hat: $gettext('HAT'),
 		valid: $gettext('valid'),
 		invalid: $gettext('invalid'),
+		questionnaire_remarks_party: $gettext('Comments (Party)'),
+		questionnaire_remarks_secretariat: $gettext('Comments (Secretariat)'),
 		flags: {
 			flag_superseded: $gettext('Superseded'),
 			flag_provisional: $gettext('Provisional'),

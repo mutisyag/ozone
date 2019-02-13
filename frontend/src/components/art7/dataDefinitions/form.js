@@ -30,7 +30,9 @@ const getFormArt7 = ($gettext) => {
 				nonparty_remarks_party: '',
 				nonparty_remarks_secretariat: '',
 				emissions_remarks_party: '',
-				emissions_remarks_secretariat: ''
+				emissions_remarks_secretariat: '',
+				questionnaire_remarks_party: '',
+				questionnaire_remarks_secretariat: ''
 			},
 			comments_endpoint_url: 'submission_remarks'
 		},
@@ -52,6 +54,16 @@ const getFormArt7 = ($gettext) => {
 				isInvalid: false,
 				description: '',
 				form_fields: getQuestionnaireFields($gettext),
+				comments: {
+					questionnaire_remarks_party: {
+						selected: '',
+						type: 'textarea'
+					},
+					questionnaire_remarks_secretariat: {
+						selected: '',
+						type: 'textarea'
+					}
+				},
 				default_properties: {
 					has_imports: false,
 					has_exports: false,
