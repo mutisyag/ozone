@@ -288,12 +288,8 @@ const actions = {
 			const countryOptions = response.data.map((country) => {
 				countryDisplay[country.id] = country.name
 				return { value: country.id, text: country.name, iso: country.abbr }
-			}).filter((p) => {
-				return p.value !== context.state.current_submission.party
-			})
-			const countryOptionsSubInfo = response.data.map((country) => {
-				return { value: country.id, text: country.name, iso: country.abbr }
-			})
+			}).filter((p) => p.value !== context.state.current_submission.party)
+			const countryOptionsSubInfo = response.data.map((country) => ({ value: country.id, text: country.name, iso: country.abbr }))
 			context.commit('updateCountries', countryOptions)
 			context.commit('updateCountriesDisplay', countryDisplay)
 			context.commit('updateCountriesSubInfo', countryOptionsSubInfo)
