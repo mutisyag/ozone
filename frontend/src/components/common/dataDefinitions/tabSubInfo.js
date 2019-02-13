@@ -78,7 +78,8 @@ const getTabSubInfo = ($gettext) => {
 			},
 			date: {
 				type: 'date',
-				selected: ''
+				selected: '',
+				tooltip: $gettext('The date indicated on the submitted document')
 			}
 		},
 		default_properties: {
