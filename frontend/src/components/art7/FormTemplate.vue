@@ -199,6 +199,7 @@
 		<hr>
 
 		<b-table
+			id="fii-table"
 			show-empty
 			outlined
 			bordered

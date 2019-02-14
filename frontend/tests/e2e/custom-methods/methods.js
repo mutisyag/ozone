@@ -1,6 +1,6 @@
 const login = (browser, username, password) => {
 	browser.url(process.env.VUE_DEV_SERVER_URL)
-	// start login
+		// start login
 		.useCss()
 		.waitForElementVisible('#id_username', 20000)
 		.setValue('#id_username', username)
@@ -96,15 +96,16 @@ const editSubmission = (browser) => {
 	browser.useXpath()
 		.waitForElementVisible("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]", 10000)
 		.click("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]")
-		.pause(500)
+		.pause(3000)
 }
 
 const openDashboard = (browser) => {
 	browser.useXpath()
 		.waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
 		.click("//a[@href='/reporting/dashboard']")
-		.pause(500)
+		.pause(3000)
 		.assert.urlContains('/reporting/dashboard')
+		.pause(3000)
 }
 
 const fillSubmissionInfo = (browser, submissionInfo = {}) => {
@@ -147,7 +148,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 	flags.forEach(flag => {
 		browser.useCss()
 			.getAttribute(`#${flag}`, 'checked', (result) => {
-				if (result.value != 'true') {
+				if (result.value !== 'true') {
 					browser
 						.useXpath()
 						.waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
@@ -171,7 +172,7 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 		has_emission: 'Emission'
 	}
 
-	if (typeof fields !== 'undefined' && fields.length == 0 && allow_all === true) {
+	if (typeof fields !== 'undefined' && fields.length === 0 && allow_all === true) {
 		fields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
 	}
 
@@ -181,13 +182,13 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 
 	for (const tab in tabs) {
 		browser
-			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 5000)
+			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 10000)
 	}
 
 	browser
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 5000)
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 5000)
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 5000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 10000)
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
 		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]")
 		.useCss()
@@ -212,7 +213,7 @@ const selectTab = (browser, tab) => {
 		.useXpath()
 		.waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
 		.click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
-		.pause(500)
+		.pause(1500)
 }
 
 const openAsideMenu = (browser, tab) => {
@@ -220,6 +221,7 @@ const openAsideMenu = (browser, tab) => {
 	const aside_menu_toggler = `#${tab} .aside-menu .navbar-toggler-icon`
 	/* Open aside menu if clossed */
 	browser
+		.execute('window.scrollTo(0,0)')
 		.useXpath()
 		.execute(function getContent(data) {
 			/* Convert the unicode of toggler icon to string */
@@ -227,7 +229,7 @@ const openAsideMenu = (browser, tab) => {
 		}, [aside_menu_toggler], (result) => {
 			const closed = '\\ue916'
 
-			if (result.value == closed) {
+			if (result.value === closed) {
 				/* Open aside menu */
 				browser
 					.click(`//div[@id='${tab}']//aside[@class='aside-menu']//button[@class='navbar-toggler']`)
@@ -238,38 +240,48 @@ const openAsideMenu = (browser, tab) => {
 
 const closeAsideMenu = (browser, tab) => {
 	browser
+		.execute('window.scrollTo(0,0)')
+		.useXpath()
 		.click(`//div[@id='${tab}']//aside[@class='aside-menu']//button[@class='navbar-toggler']`)
 		.pause(500)
 }
 
-const addEntity = (browser, tab, entity, option_1, option_2, order = 1, check = false) => {
+const addEntity = (browser, tab, entity, options, order = undefined, check = false) => {
+	const selectors = []
 	/**
 	 * 	Entity structure
 	 * 	entity: [tab_name, option_1_selector, option_2_selector, submit_button, table_id]
+	 * 	ex -> substance: ['Substance', 'FII', 'HFC-23', 'add-substance-button', 'fii-table']
 	 */
 	const entities = {
 		'substance': ['Substance', 'substance_annex_selector', 'substance_selector', 'add-substance-button', 'substance-table'],
 		'blend': ['Blend', 'blend_type_selector', 'blend_selector', 'add-blend-button', 'blend-table']
 	}
+	/* Special case */
+	// TODO: find a dynamic way
+	if (options[0] === 'FII') {
+		entities.substance.pop()
+		entities.substance.push('fii-table')
+	}
 	/* Correlate tab with nav names */
 	const tabs_header = {
-		has_imports_tab: 'Imports',
-		has_exports_tab: 'Exports',
-		has_produced_tab: 'Production',
-		has_destroyed_tab: 'Destruction',
-		has_nonparty_tab: 'Nonparty'
+		has_imports_tab: { name: 'Imports', status_column: 9 },
+		has_exports_tab: { name: 'Exports', status_column: 9 },
+		has_produced_tab: { name: 'Production', status_column: 8 },
+		has_destroyed_tab: { name: 'Destruction', status_column: 6 },
+		has_nonparty_tab: { name: 'Nonparty', status_column: 10 }
 	}
 	/* Get XPath of aside menu components	*/
 	const aside_menu = `//div[@id='${tab}']//aside[@class='aside-menu']`
 	const aside_nav = `${aside_menu}//div[@class='tabs']//ul[@class='nav nav-tabs']`
 	/* Get XPath of entity selectors	*/
-	const option_1_selector = `${aside_menu}//div[@class='tabs']//div[@id='${entities[entity][1]}']`
-	const option_2_selector = `${aside_menu}//div[@class='tabs']//div[@id='${entities[entity][2]}']`
+	selectors.push(`${aside_menu}//div[@class='tabs']//div[@id='${entities[entity][1]}']`)
+	selectors.push(`${aside_menu}//div[@class='tabs']//div[@id='${entities[entity][2]}']`)
 	const add_entity_button = `${aside_menu}//div[@class='tabs']//button[@id='${entities[entity][3]}']`
+	/* Open desired tab */
+	selectTab(browser, tabs_header[tab].name)
 	/* Open aside menu if clossed */
 	openAsideMenu(browser, tab)
-	/* Open desired tab */
-	selectTab(browser, tabs_header[tab])
 	browser
 		.useXpath()
 		/* Open entity form */
@@ -277,27 +289,21 @@ const addEntity = (browser, tab, entity, option_1, option_2, order = 1, check = 
 		.waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`, 5000)
 		.click(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`)
 		.pause(500)
-		/* Add first option */
-		.waitForElementVisible(option_1_selector, 5000)
-		.click(option_1_selector)
-		.pause(500)
-		.waitForElementVisible(`${option_1_selector}//div[@class='multiselect__content-wrapper']`, 5000)
-		.click(`${option_1_selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option_1}')]`)
-		/* Close selector */
-		.pause(100)
-		.keys(browser.Keys.ESCAPE)
-		.pause(500)
-		/* Add second option */
-		.waitForElementVisible(option_2_selector, 5000)
-		.click(option_2_selector)
-		.pause(500)
-		.waitForElementVisible(`${option_2_selector}//div[@class='multiselect__content-wrapper']`, 5000)
-		.click(`${option_2_selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option_2}')]`)
-		/* Close selector */
-		.pause(100)
-		.keys(browser.Keys.ESCAPE)
-		.pause(500)
-		/* Add entity */
+	selectors.forEach((selector, index) => {
+		browser
+			/* Add option */
+			.waitForElementVisible(selector, 5000)
+			.click(selector)
+			.pause(500)
+			.waitForElementVisible(`${selector}//div[@class='multiselect__content-wrapper']`, 5000)
+			.click(`${selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${options[index]}')]`)
+			/* Close selector */
+			.pause(100)
+			.keys(browser.Keys.ESCAPE)
+			.pause(500)
+	})
+	/* Submit entity */
+	browser
 		.waitForElementVisible(add_entity_button, 5000)
 		.click(add_entity_button)
 		.pause(500)
@@ -307,10 +313,16 @@ const addEntity = (browser, tab, entity, option_1, option_2, order = 1, check = 
 	if (check === true) {
 		browser
 			/* Check if entity was added and status is invalid */
-			.waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[9]//span[contains(text(), 'invalid')]`, 5000)
-			.execute('window.scrollTo(0,0)')
-			.execute(`window.scrollTo(0, document.querySelector("#${tab} #${entities[entity][4]} tbody tr:nth-child(${order}) td:nth-child(9) span").getBoundingClientRect().top - window.innerHeight + 100`)
-			.click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[9]//span[contains(text(), 'invalid')]`)
+			.waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`, 5000)
+			.moveTo(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]`)
+
+			.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+			.pause(500)
+
+			.click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`)
+			.pause(500)
+
+			.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
 			.pause(500)
 			/* Check if Validation tab is opened and has a warrning */
 			.waitForElementVisible(`${aside_menu}//div[@class='validation-tab']`, 5000)
@@ -321,15 +333,50 @@ const addEntity = (browser, tab, entity, option_1, option_2, order = 1, check = 
 	}
 }
 
-const addValues = (browser, table, tab, row, row_values, modal_values) => {
+const addFacility = (browser, table, tab, row, row_values, start_column, check = false) => {
+	/* Open desired tab */
+	selectTab(browser, 'Emissions')
 	browser
 		.useCss()
-	/* Add values to entity */
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+		.pause(500)
+		.click('#add-facility-button')
+
+	if (check === true) {
+		browser
+			.useXpath()
+			.click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//td[11]//span[contains(text(), 'invalid')]`)
+			.pause(500)
+
+		closeAsideMenu(browser, 'has_emissions_tab')
+	}
+
+	/* Add values to facility */
 	row_values.forEach((value, key) => {
 		browser
-			.click(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + 3}) input`)
-			.clearValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + 3}) input`)
-			.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + 3}) input`, value)
+			.useCss()
+			.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
+	})
+
+	browser
+		.pause(500)
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+		.pause(500)
+}
+
+const addValues = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
+	browser
+		.useXpath()
+		/* Hide app-footer	*/
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+		.pause(500)
+		.useCss()
+		.moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
+	/* Add values to entity */
+	row_values.forEach((value, key) => {
+		// TODO: find a way to add in textarea also
+		browser
+			.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
 	})
 	/* Check if valid */
 	browser
@@ -358,6 +405,9 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
 		.click(`#${tab} .modal-dialog .close`)
 		.pause(500)
 		.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
+		/* Show app-footer */
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+		.pause(500)
 }
 
 const addComment = (browser, tab, comment) => {
@@ -365,6 +415,25 @@ const addComment = (browser, tab, comment) => {
 		.useCss()
 		.setValue(`#${tab} .comments-input textarea`, comment)
 		.pause(500)
+}
+
+const uploadeFile = (browser) => {
+	const path = require('path')
+	const find_root = require('find-root')
+	const root = find_root(path.resolve(__dirname))
+	const FILENAME = 'hello.pdf'
+	const FILEPATH = '../../../'
+	const file = path.resolve(root + FILEPATH + FILENAME)
+
+	browser
+		.useCss()
+		.waitForElementVisible('#choose-files-button', 10000)
+		.setValue('input#choose-files-button', file, (result) => {
+			if (result.status !== 0) {
+				console.log(result)
+			}
+		})
+		.pause(1000)
 }
 
 module.exports = {
@@ -382,6 +451,8 @@ module.exports = {
 	openAsideMenu,
 	closeAsideMenu,
 	addEntity,
+	addFacility,
 	addValues,
-	addComment
+	addComment,
+	uploadeFile
 }
