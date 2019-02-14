@@ -30,8 +30,6 @@ services:
 
   app:
     image: eudeweb/ozone:latest
-    ports:
-      - "8000:8000"
     env_file:
       - ./docker/demo.env
       - ./docker/postgres.env
