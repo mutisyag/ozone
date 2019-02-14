@@ -38,6 +38,8 @@ from .models import (
     Language,
     Nomination,
     ExemptionApproved,
+    RAFReport,
+    RAFImport,
 )
 
 User = get_user_model()
@@ -204,6 +206,12 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         read_only_fields = (
             'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'role'
         )
+
+    def get_impersonated_by(self, obj):
+        session = self.context['request'].session
+        if '_impersonate' not in session:
+            return None
+        return User.objects.get(pk=session['_auth_user_id']).username
 
     def get_impersonated_by(self, obj):
         session = self.context['request'].session
@@ -820,7 +828,7 @@ class ExemptionNominationSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionNominationListSerializer
+        list_serializer_class = ExemptionNominationListSerializer
         model = Nomination
         exclude = ('submission',)
 
@@ -840,8 +848,68 @@ class ExemptionApprovedSerializer(
     )
 
     class Meta:
-        list_serialize_class = ExemptionApprovedListSerializer
+        list_serializer_class = ExemptionApprovedListSerializer
         model = ExemptionApproved
+        exclude = ('submission',)
+
+
+class RAFImportSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RAFImport
+        exclude = ('report',)
+
+
+class RAFListSerializer(
+    DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
+):
+    substance_blend_fields = ['substance', ]
+    unique_with = None
+
+    def update_single(self, existing_entry, entry):
+        """
+        Updates a single entry taking into account the special "imports" case
+        """
+        changed = False
+        for field, value in entry.items():
+            if field == 'imports':
+                # Delete all existing imports and recreate them
+                existing_entry.imports.all().delete()
+                for value_entry in value:
+                    RAFImport.objects.create(
+                        report=existing_entry, **value_entry
+                    )
+                changed = True
+            elif getattr(existing_entry, field, None) != value:
+                setattr(existing_entry, field, value)
+                changed = True
+        return changed
+
+
+class RAFSerializer(
+    DataCheckRemarksMixIn, serializers.ModelSerializer
+):
+    group = serializers.CharField(
+        source='substance.group.group_id', default='', read_only=True
+    )
+
+    imports = RAFImportSerializer(many=True)
+
+    def create(self, validated_data):
+
+        imports_data = validated_data.pop("imports", None)
+        instance = RAFReport.objects.create(
+            submission=self.context['submission'], **validated_data
+        )
+        if imports_data is not None:
+            for data in imports_data:
+                RAFImport.objects.create(report=instance, **data)
+
+        return instance
+
+    class Meta:
+        list_serializer_class = RAFListSerializer
+        model = RAFReport
         exclude = ('submission',)
 
 
@@ -875,7 +943,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 name=self.context['reporting_channel']
             )
             self.check_reporting_channel(instance, user)
-            instance.submission.save()
+            instance.submission.save(update_fields=['reporting_channel'])
         return super().update(instance, validated_data)
 
 
@@ -902,8 +970,7 @@ class PerTypeFieldsMixIn(object):
         # Instantiate the superclass normally
         super().__init__(instance=instance, **kwargs)
         try:
-            # Fields and remarks return a list of
-            # one.
+            # Fields and remarks return a list of one.
             instance = instance[0]
         except IndexError:
             # Empty queryset.
@@ -945,7 +1012,8 @@ class SubmissionFlagsSerializer(
         )
         per_type_fields = {
             'art7': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
                 'flag_has_reported_a1', 'flag_has_reported_a2',
                 'flag_has_reported_b1', 'flag_has_reported_b2',
                 'flag_has_reported_b3', 'flag_has_reported_c1',
@@ -953,18 +1021,22 @@ class SubmissionFlagsSerializer(
                 'flag_has_reported_e', 'flag_has_reported_f',
             ),
             'hat': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
                 'flag_has_reported_a1', 'flag_has_reported_a2',
                 'flag_has_reported_b1', 'flag_has_reported_b2',
                 'flag_has_reported_b3', 'flag_has_reported_c1',
                 'flag_has_reported_c2', 'flag_has_reported_c3',
                 'flag_has_reported_e', 'flag_has_reported_f',
             ),
-            'essencrit': base_fields,
+            'essencrit': base_fields + (
+                'flag_checked_blanks', 'flag_has_blanks',
+                'flag_confirmed_blanks',
+            ),
             'other': base_fields,
             'exemption': base_fields + (
                 'flag_approved', 'flag_emergency',
-            )
+            ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -986,7 +1058,7 @@ class SubmissionRemarksSerializer(
     serializers.ModelSerializer
 ):
     """
-    Specific serializer used to present all submission remarks,
+    Specific serializer used to present all general submission remarks,
     since this is easily usable by the frontend.
     """
 
@@ -995,6 +1067,8 @@ class SubmissionRemarksSerializer(
         base_fields = ()
         per_type_fields = {
             'art7': (
+                'questionnaire_remarks_party',
+                'questionnaire_remarks_secretariat',
                 'imports_remarks_party', 'imports_remarks_secretariat',
                 'exports_remarks_party', 'exports_remarks_secretariat',
                 'production_remarks_party', 'production_remarks_secretariat',
@@ -1003,11 +1077,17 @@ class SubmissionRemarksSerializer(
                 'emissions_remarks_party', 'emissions_remarks_secretariat',
             ),
             'hat': (
-                'hat_imports_remarks_party', 'hat_imports_remarks_secretariat',
-                'hat_production_remarks_party', 'hat_production_remarks_secretariat',
+                'hat_imports_remarks_party',
+                'hat_imports_remarks_secretariat',
+                'hat_production_remarks_party',
+                'hat_production_remarks_secretariat',
             ),
-            'essencrit': (),
+            'essencrit': ('raf_remarks_party', 'raf_remarks_secretariat',),
             'other': (),
+            'exemption': (
+                'exemption_nomination_remarks_secretariat',
+                'exemption_approved_remarks_secretariat',
+            ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1209,6 +1289,11 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    raf_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-raf-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
@@ -1263,7 +1348,7 @@ class SubmissionSerializer(
             'hat': base_fields + (
                 'hat_productions_url', 'hat_imports_url',
             ),
-            'essencrit': base_fields,
+            'essencrit': base_fields + ('raf_url',),
             'other': base_fields + (
                 'data_others_url',
             ),

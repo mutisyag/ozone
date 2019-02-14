@@ -65,6 +65,7 @@ const deleteSubmission = (browser) => {
 
 const saveSubmission = (browser, tabs = []) => {
 	browser.useXpath()
+		.execute('window.scrollTo(0,document.body.scrollHeight);')
 		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
 		.click("//footer[@class='app-footer']//button[@id='save-button']")
 		.pause(500)
@@ -82,6 +83,7 @@ const saveSubmission = (browser, tabs = []) => {
  */
 const saveAndFail = (browser) => {
 	browser.useXpath()
+		.execute('window.scrollTo(0,document.body.scrollHeight);')
 		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
 		.click("//footer[@class='app-footer']//button[@id='save-button']")
 		.pause(500)
@@ -110,6 +112,7 @@ const openDashboard = (browser) => {
 
 const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 	browser.useXpath()
+		.execute('window.scrollTo(0,100);')
 		.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Submission Info")]', 10000)
 		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]")
 		.pause(500)
@@ -117,7 +120,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
 		.pause
 
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'fax', 'email', 'date']
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'email', 'date']
 	const flags = [
 		'flag_provisional',
 		'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -192,8 +195,8 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
 		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]")
 		.useCss()
-		.execute('window.scrollTo(0,document.body.scrollHeight);')
-		.waitForElementVisible('.field-wrapper #has_emissions .custom-control:first-of-type label', 10000)
+		.execute('window.scrollTo(0,250);')
+		.waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 10000)
 		.pause(500)
 
 	for (const field of fields) {

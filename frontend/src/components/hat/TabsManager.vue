@@ -26,31 +26,26 @@
 
   <div class="form-wrapper" style="position: relative">
     <b-card style="margin-bottom: 5rem;" no-body>
-		<b-tabs v-model="tabIndex" card>
-
-          <b-tab :title="$gettext('Submission Info')" active>
-             <template slot="title">
-              <div class="tab-title">
-                <span v-translate>Submission Info</span>
-              </div>
-             </template>
-			<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-          </b-tab>
-
-		<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-			</template>
-			<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-		</b-tab>
-
-           <b-tab :title="$gettext('Files')">
-			<template slot="title">
-				<tab-title-with-loader :tab="$store.state.form.tabs.files" />
-			</template>
-            <Files :tab="$store.state.form.tabs.files" />
-          </b-tab>
-        </b-tabs>
+			<b-tabs v-model="tabIndex" card>
+				<b-tab active>
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
+					</template>
+					<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
+				</b-tab>
+				<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+					</template>
+					<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+				</b-tab>
+				<b-tab>
+					<template slot="title">
+						<tab-title-with-loader :tab="$store.state.form.tabs.files" />
+					</template>
+							<Files :tabIndex="tabIndex" :tabId="3" />
+				</b-tab>
+			</b-tabs>
     </b-card>
     </div>
     <Footer style="display:inline">
@@ -154,19 +149,6 @@ export default {
 			})
 		},
 		checkBeforeSubmitting() {
-			const fields = Object.keys(this.$store.state.form.tabs)
-				.filter(tab => !['questionaire_questions', 'sub_info', 'files'].includes(tab))
-				.map(tab => this.$store.state.form.tabs[tab].form_fields)
-				.filter(arr => arr.length)
-			if (!fields.length) {
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { __all__: [this.$gettext('You cannot submit and empty form')] },
-					variant: 'danger'
-				})
-				return
-			}
-
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {

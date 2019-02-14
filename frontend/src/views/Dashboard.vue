@@ -61,11 +61,11 @@
 						<b-input-group :prepend="$gettext('Party')">
 							<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
 						</b-input-group>
-						<b-input-group style="width: 120px" :prepend="$gettext('From')">
+						<b-input-group class="w120" :prepend="$gettext('From')">
 							<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
 							</b-form-select>
 						</b-input-group>
-						<b-input-group style="width: 120px" :prepend="$gettext('To')">
+						<b-input-group class="w120" :prepend="$gettext('To')">
 							<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
 							</b-form-select>
 						</b-input-group>
@@ -128,11 +128,11 @@
 					<b-input-group :prepend="$gettext('Party')">
 						<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
 					</b-input-group>
-					<b-input-group style="width: 120px" :prepend="$gettext('From')">
+					<b-input-group class="w120" :prepend="$gettext('From')">
 						<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
 						</b-form-select>
 					</b-input-group>
-					<b-input-group style="width: 120px" :prepend="$gettext('To')">
+					<b-input-group class="w120" :prepend="$gettext('To')">
 						<b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
 						</b-form-select>
 					</b-input-group>
@@ -362,29 +362,29 @@ export default {
 			}]
 		},
 		sortOptionsPeriodFrom() {
-			return this.periods.map(f => {
+			return 	Array.from(new Set(this.periods.map(f => {
 				if (this.tableOptions.filters.period_end !== null
 				&& f.start_date > this.tableOptions.filters.period_end) {
 					return null
 				}
 				return {
 					text: f.start_date.split('-')[0],
-					value: f.start_date
+					value: this.getStartDateOfYear(f.start_date)
 				}
-			}).filter(f => f !== null)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
 		},
 
 		sortOptionsPeriodTo() {
-			return this.periods.map(f => {
+			return 	Array.from(new Set(this.periods.map(f => {
 				if (this.tableOptions.filters.period_start !== null
 				&& f.end_date < this.tableOptions.filters.period_start) {
 					return null
 				}
 				return {
 					text: f.start_date.split('-')[0],
-					value: f.end_date
+					value: this.getEndDateOfYear(f.end_date)
 				}
-			}).filter(f => f !== null)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
 		},
 
 		sortOptionsObligation() {
@@ -451,6 +451,21 @@ export default {
 	},
 
 	methods: {
+
+		getStartDateOfYear(year) {
+			const currentYear = year.split('-')
+			currentYear[1] = '01'
+			currentYear[2] = '01'
+			return currentYear.join('-')
+		},
+
+		getEndDateOfYear(year) {
+			const currentYear = year.split('-')
+			currentYear[1] = '12'
+			currentYear[2] = '31'
+			return currentYear.join('-')
+		},
+
 		updateBreadcrumbs() {
 			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
 		},
@@ -459,8 +474,10 @@ export default {
 				$gettext: this.$gettext,
 				submission: this.current
 			}).then(r => {
-				const currentSubmission = this.submissions.find(sub => sub.id === r.id)
-				this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+				this.$store.dispatch('getMyCurrentSubmissions').then(() => {
+					const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)
+					this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+				})
 			})
 		},
 		clearFilters() {
@@ -576,5 +593,8 @@ export default {
 
 .filter-group {
 	display: flex;
+}
+.w120 {
+ width: 120px;
 }
 </style>

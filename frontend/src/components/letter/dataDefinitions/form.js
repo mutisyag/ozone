@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 
 const getFormLetter = ($gettext) => {
 	const tabSubInfo = getTabSubInfo($gettext)
@@ -8,10 +8,12 @@ const getFormLetter = ($gettext) => {
 			tabsDisplay: ['sub_info', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',
 				'initialData.display.countries'
 			]
 		},
 		tabs: {
+			...setTabFiles($gettext),
 			sub_info: {
 				...tabSubInfo,
 				hideInfoButton: true,
@@ -22,8 +24,7 @@ const getFormLetter = ($gettext) => {
 				default_properties: {
 					...tabSubInfo.default_properties
 				}
-			},
-			files: getTabFiles($gettext)
+			}
 		}
 	}
 	return form

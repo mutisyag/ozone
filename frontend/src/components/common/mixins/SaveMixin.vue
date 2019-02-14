@@ -1,9 +1,10 @@
 <template>
     <b-btn
-			@click="validation"
-			id="save-button"
-			variant="primary">
-        <span v-translate>Save and continue</span>
+		:disabled="isFilesUploadInProgress"
+		@click="validation"
+		id="save-button"
+		variant="primary">
+			<span v-translate>Save and continue</span>
     </b-btn>
 </template>
 
@@ -11,11 +12,10 @@
 
 import { post, update } from '@/components/common/services/api'
 import { isObject } from '@/components/common/services/utilsService'
+import FilesMixin from './FilesMixin'
 
 export default {
-
-	name: 'Save',
-
+	mixins: [FilesMixin],
 	props: {
 		submission: String
 	},
@@ -52,7 +52,7 @@ export default {
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg" style="color: red;"></i>`] },
+					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
 					variant: 'danger'
 				})
 			} else {
@@ -73,20 +73,23 @@ export default {
 			this.saveComments(commentsObj, url)
 		},
 
-		saveComments(data, url) {
-			update(url, data).then((r) => {
-				console.log(r)
-			}).catch((e) => {
+		async saveComments(data, url) {
+			try {
+				await update(url, data)
+			} catch (error) {
+				console.log(error)
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: e,
+					message: error,
 					variant: 'danger'
 				})
-			})
+			}
 		},
 
-		submitData(tab, url) {
-			this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
+		async submitData(tab, url) {
+			if (tab.status !== null) {
+				this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
+			}
 			let current_tab_data
 
 			if (Array.isArray(tab.form_fields)) {
@@ -94,7 +97,12 @@ export default {
 				tab.form_fields.forEach(form_field => {
 					const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 					for (const row in form_field) {
-						save_obj[row] = form_field[row].selected
+						// special case for raf imports
+						if (!Array.isArray(form_field[row])) {
+							save_obj[row] = form_field[row].selected
+						} else {
+							save_obj[row] = form_field[row]
+						}
 					}
 					current_tab_data.push(save_obj)
 				})
@@ -105,12 +113,16 @@ export default {
 				current_tab_data = {}
 				Object.keys(save_obj).forEach(key => { current_tab_data[key] = tab.form_fields[key].selected })
 			}
-			if (this.newTabs.includes(tab.name)) {
-				post(url, current_tab_data).then(() => {
+
+			try {
+				if (this.newTabs.includes(tab.name) && tab.name !== 'files') {
+					await post(url, current_tab_data)
 					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+
 					if (isObject(tab.form_fields)) {
 						this.$store.commit('tabHasBeenSaved', tab.name)
 					}
+
 					if (Array.isArray(tab.form_fields)) {
 						if (tab.form_fields.length) {
 							this.$store.commit('tabHasBeenSaved', tab.name)
@@ -118,34 +130,42 @@ export default {
 							this.$store.commit('updateNewTabs', tab.name)
 						}
 					}
-				}).catch((error) => {
-					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
-					console.log(error.response)
-					this.$store.dispatch('setAlert', {
-						$gettext: this.$gettext,
-						message: { __all__: [this.$gettextInterpolate('Save failed for %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })] },
-						variant: 'danger' })
-				})
-			}
-			if (!this.newTabs.includes(tab.name)) {
-				update(url, current_tab_data).then(() => {
-					this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+				} else {
+					if (tab.name === 'files') {
+						await this.uploadFiles()
+
+						current_tab_data = this.getFilesWithUpdatedDescription()
+							.map(file => ({
+								id: file.id,
+								name: file.name,
+								description: file.description
+							}))
+					}
+
+					await update(url, current_tab_data)
+
+					if (tab.name === 'files') {
+						await this.getSubmissionFiles()
+					}
+					if (tab.status !== null) {
+						this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+					}
+
 					if (Array.isArray(tab.form_fields)) {
 						if (!tab.form_fields.length) {
 							this.$store.commit('updateNewTabs', tab.name)
 						}
 					}
-				}).catch(() => {
-					this.$store.commit('setTabStatus', { tab: tab.name, value: false })
-					this.$store.dispatch('setAlert', {
-						$gettext: this.$gettext,
-						message: { __all__: [this.$gettextInterpolate('Save failed for %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })] },
-						variant: 'danger'
-					})
-				})
+				}
+			} catch (error) {
+				this.$store.commit('setTabStatus', { tab: tab.name, value: false })
+				console.log(error)
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { __all__: [this.$gettext('Save failed')] },
+					variant: 'danger' })
 			}
 		}
-
 	}
 }
 </script>

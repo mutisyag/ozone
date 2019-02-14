@@ -9,11 +9,11 @@
 			:colspan="header.colspan"
 			:key="header_index">
 			<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-			<span v-html="header.label"></span>
-			<i class="fa fa-info-circle fa-lg"></i>
+				<span v-html="header.label"></span>
+				<i class="fa fa-info-circle fa-lg"></i>
 			</div>
 			<div v-else>
-			<span v-html="header.label"></span>
+				<span v-html="header.label"></span>
 			</div>
 		</th>
 		</tr>
@@ -97,7 +97,7 @@
 						@click="createModalData(cell.item.originalObj, cell.item.index)"
 					><i class="fa fa-pencil-square-o fa-lg"></i></span>
 					<span
-						v-if="!$store.getters.can_edit_data"
+						v-if="$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
@@ -114,7 +114,7 @@
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-					:disabled="$store.getters.can_edit_data"
+					:disabled="!$store.getters.can_edit_data"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
 					:tabName="tabName"
@@ -126,7 +126,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -161,7 +161,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-							:disabled="$store.getters.can_edit_data"
+							:disabled="!$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 					</span>
 				</div>
@@ -177,7 +177,7 @@
 					<span>
 						<fieldGenerator
 							:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-							:disabled="$store.getters.can_edit_data"
+							:disabled="!$store.getters.can_edit_data"
 							:field="cell.item.originalObj.quantity_polyols"	/>
 					</span>
 				</div>
@@ -227,7 +227,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!$store.getters.can_edit_data"
+						v-if="$store.getters.can_edit_data"
 						variant="link"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
@@ -248,7 +248,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="$store.getters.can_edit_data"
+					:disabled="!$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -283,7 +283,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
-								:disabled="$store.getters.can_edit_data"
+								:disabled="!$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_quarantine_pre_shipment" />
 						</span>
 					</div>
@@ -298,7 +298,7 @@
 						<span>
 							<fieldGenerator
 								:fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
-								:disabled="$store.getters.can_edit_data"
+								:disabled="!$store.getters.can_edit_data"
 								:field="cell.item.originalObj.quantity_polyols" />
 						</span>
 					</div>
@@ -357,7 +357,7 @@
 						<i class="fa fa-pencil-square-o fa-lg"></i>
 					</span>
 					<span
-						v-if="!$store.getters.can_edit_data"
+						v-if="$store.getters.can_edit_data"
 						@click="remove_field(cell.item.index, cell.item)"
 						class="table-btn">
 						<i class="fa fa-trash fa-lg"></i>
@@ -366,7 +366,7 @@
 			</template>
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
-					:disabled="$store.getters.can_edit_data"
+					:disabled="!$store.getters.can_edit_data"
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
@@ -379,7 +379,7 @@
 				<fieldGenerator
 					:key="`${cell.item.index}_${inputField}_${tabName}`"
 					:fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : $store.getters.can_edit_data"
+					:disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
 					:field="cell.item.originalObj[inputField]" />
 			</template>
 
@@ -420,56 +420,56 @@
 						class="small"
 						v-for="(substance, substance_index) in tab_data.display.blends[row.item.originalObj.blend.selected].components"
 						:key="substance_index">
-						<td>{{substance.component_name}}</td>
-						<td>
-							<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
-						</td>
-						<td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
-							<!-- <span v-if="row.item[order]"> -->
-							{{splitBlend(row.item[order], substance.percentage)}}
-							<!-- </span> -->
-						</td>
-					</tr>
-				</tbody>
-			</template>
-		</b-table>
-	</div>
-    </div>
-    <div id="tab-comments" class="table-wrapper">
-		<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
-		<hr>
-		<div
-			v-for="(comment, comment_key) in tab_info.comments"
-			:key="comment_key"
-			class="comments-input">
-			<label>
-				<span>{{labels[comment_key]}}</span>
-			</label>
-				<!-- addComment(state, { data, tab, field }) { -->
-			<textarea
-				@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
-				:disabled="getCommentFieldPermission(comment_key)"
-				class="form-control"
-				:value="comment.selected">
-			</textarea>
+							<td>{{substance.component_name}}</td>
+							<td>
+								<b>{{(substance.percentage * 100).toPrecision(3)}}%</b>
+							</td>
+							<td v-for="(order, order_index) in blendSubstanceHeaders" :key="order_index">
+								<!-- <span v-if="row.item[order]"> -->
+								{{splitBlend(row.item[order], substance.percentage)}}
+								<!-- </span> -->
+							</td>
+						</tr>
+					</tbody>
+				</template>
+			</b-table>
 		</div>
 	</div>
+		<div id="tab-comments" class="table-wrapper">
+			<h4> {{tab_info.formNumber}}.{{tableCounter + 1}} <span v-translate>Comments</span></h4>
+			<hr>
+			<div
+				v-for="(comment, comment_key) in tab_info.comments"
+				:key="comment_key"
+				class="comments-input">
+				<label>
+					<span>{{labels[comment_key]}}</span>
+				</label>
+					<!-- addComment(state, { data, tab, field }) { -->
+				<textarea
+					@change="$store.commit('addComment', {data: $event.target.value, tab:tabName, field: comment_key})"
+					:disabled="getCommentFieldPermission(comment_key)"
+					class="form-control"
+					:value="comment.selected">
+				</textarea>
+			</div>
+		</div>
     <hr>
     <AppAside fixed>
       <DefaultAside v-on:fillSearch="fillTableSearch($event)" :parentTabIndex.sync="sidebarTabIndex" :hovered="hovered" :tabName="tabName"></DefaultAside>
     </AppAside>
 
-    <b-modal size="lg" ref="edit_modal" id="edit_modal">
+    <b-modal size="lg" ref="edit_modal" id="edit_modal"  @hide="modal_data = null">
       <div v-if="modal_data" slot="modal-title">
-		<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
+				<span v-if="modal_data.field.substance.selected" v-translate='{name: tab_data.display.substances[modal_data.field.substance.selected]}'>Edit %{name} substance</span>
         <span v-else v-translate='{name: tab_data.display.blends[modal_data.field.blend.selected].name}'>Edit %{name} blend</span>
       </div>
       <div v-if="modal_data">
-		<p class="muted">
-			<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
-			<br>
-			<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
-		</p>
+				<p class="muted">
+					<span v-translate>All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
+					<br>
+					<b><span v-translate>The values are saved automatically in the table, as you type.</span></b>
+				</p>
         <b-row v-if="modal_data.field.substance.selected">
           <b-col>
             <span v-translate>Change substance</span>
@@ -479,20 +479,20 @@
 				class="mb-2"
 				@input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
 				trackBy="value"
-				:disabled="$store.getters.can_edit_data"
+				:disabled="!$store.getters.can_edit_data"
 				label="text"
 				:placeholder="$gettext('Select substance')"
 				:value="parseInt(modal_data.field.substance.selected)"
 				:options="tab_data.substances" />
           </b-col>
         </b-row>
-        <div class="mb-3" v-for="(order, order_index) in this.tab_info.modal_order" :key="order_index">
+        <div class="mb-3" v-for="(order, order_index) in tab_info.modal_order" :key="order_index">
           <b-row>
             <b-col><span>{{labels[order]}}</span></b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
-                :disabled="$store.getters.can_edit_data"
+                :disabled="!$store.getters.can_edit_data"
                 v-if="modal_data.field[order].type != 'multiselect'"
                 :field="modal_data.field[order]" />
               <multiselect
@@ -500,7 +500,7 @@
                 :clear-on-select="true"
                 :hide-selected="true"
                 :close-on-select="true"
-				:disabled="$store.getters.can_edit_data"
+								:disabled="!$store.getters.can_edit_data"
                 trackBy="value"
                 label="text"
                 :placeholder="$gettext('Countries')"
@@ -522,16 +522,16 @@
             <b-col lg="6">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
-					:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
-					:disabled="$store.getters.can_edit_data"
-					:field="modal_data.field[`quantity_${order}`]" />
+								:fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
+								:disabled="!$store.getters.can_edit_data"
+								:field="modal_data.field[`quantity_${order}`]" />
               </b-input-group>
             </b-col>
             <b-col lg="3">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"
-                  :disabled="$store.getters.can_edit_data"
+                  :disabled="!$store.getters.can_edit_data"
                   :field="modal_data.field[`decision_${order}`]" />
               </b-input-group>
             </b-col>

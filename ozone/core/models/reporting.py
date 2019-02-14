@@ -68,6 +68,10 @@ class Obligation(models.Model):
     TODO: analysis!
     """
 
+    NOT_CLONEABLE = [
+        'exemption',
+    ]
+
     name = models.CharField(
         max_length=256, unique=True,
         help_text="A unique String value identifying this obligation."
@@ -140,7 +144,7 @@ class Submission(models.Model):
         'dataothers',
         'nominations',
         'exemptionapproveds',
-
+        'rafreports',
     ]
 
     # TODO: this implements the `submission_type` field from the
@@ -238,53 +242,53 @@ class Submission(models.Model):
     flag_has_reported_a1 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex A Group 1 were reported."
+                  "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex A Group 2 were reported."
+                  "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex B Group 1 were reported."
+                  "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex B Group 2 were reported."
+                  "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex B Group 3 were reported."
+                  "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex C Group 1 were reported."
+                  "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex C Group 2 were reported."
+                  "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex C Group 3 were reported."
+                  "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
         default=True,
         help_text="If set to true it means that substances under "
-        "Annex E were reported."
+                  "Annex E were reported."
     )
     # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
         help_text="If set to true it means that substances under "
-        "Annex F were reported."
+                  "Annex F were reported."
     )
 
     # We want these to be able to be empty in forms
@@ -292,88 +296,114 @@ class Submission(models.Model):
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
     # Art7 Remarks
+    questionnaire_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for questionnaire"
+    )
+    questionnaire_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for questionnaire"
+    )
     imports_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "imports"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for imports"
     )
     imports_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "imports"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for imports"
     )
     exports_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "exports"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for exports"
     )
     exports_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "exports"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for exports"
     )
     production_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "production"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for production"
     )
     production_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "production"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for production"
     )
     destruction_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "destruction"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for destruction"
     )
     destruction_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "destruction"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for destruction"
     )
     nonparty_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "nonparty"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for nonparty"
     )
     nonparty_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "nonparty"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for nonparty"
     )
     emissions_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the reporting party for "
-                  "emissions"
+        help_text="General Article7 obligation remarks added by the reporting "
+                  "party for emissions"
     )
     emissions_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Article7 obligation remarks added by the ozone secretariat for "
-                  "emissions"
+        help_text="General Article7 obligation remarks added by the ozone "
+                  "secretariat for emissions"
     )
     # HAT Remarks
     hat_production_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General HAT obligation remarks added by the reporting party for "
-                  "production"
+        help_text="General HAT obligation remarks added by the reporting party "
+                  "for production"
     )
     hat_production_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General HAT obligation remarks added by the ozone secretariat for "
-                  "production"
+        help_text="General HAT obligation remarks added by the ozone "
+                  "secretariat for production"
     )
     hat_imports_remarks_party = models.CharField(
         max_length=9999, blank=True,
-        help_text="General HAT obligation remarks added by the reporting party for imports"
+        help_text="General HAT obligation remarks added by the reporting party "
+                  "for imports"
     )
     hat_imports_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General HAT obligation remarks added by the ozone secretariat for imports"
+        help_text="General HAT obligation remarks added by the ozone "
+                  "secretariat for imports"
     )
-    exemption_remarks_secretariat = models.CharField(
+    # Exemption
+    exemption_nomination_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
-        help_text="General Exemption remarks added by the ozone secretariat"
+        help_text="Exemption nomination remarks added by the ozone secretariat"
+    )
+    exemption_approved_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="Exemption approved remarks added by the ozone secretariat"
+    )
+    # RAF
+    raf_remarks_party = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General RAF remarks added by the reporting party"
+    )
+    raf_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General RAF remarks added by the ozone secretariat"
     )
 
     reporting_channel = models.ForeignKey(
@@ -692,7 +722,7 @@ class Submission(models.Model):
     def has_edit_rights(self, user):
         if (
             user.is_secretariat and self.filled_by_secretariat
-            or user.party is not None and user.party == self.party
+            or user.party == self.party and not self.filled_by_secretariat
         ):
             return not user.is_read_only
         return False
@@ -734,6 +764,8 @@ class Submission(models.Model):
             "flag_has_reported_f",
             # Remarks, secretariat remarks can be change
             # at any time, while the party remarks cannot.
+            # "questionnaire_remarks_party",
+            "questionnaire_remarks_secretariat",
             # "imports_remarks_party",
             "imports_remarks_secretariat",
             # "exports_remarks_party",
@@ -750,8 +782,12 @@ class Submission(models.Model):
             "hat_production_remarks_secretariat",
             # "hat_imports_remarks_party",
             "hat_imports_remarks_secretariat",
-            'reporting_channel_id',
-            'flag_approved',
+            # "raf_remarks_party",
+            "raf_remarks_secretariat",
+            "exemption_nomination_remarks_secretariat",
+            "exemption_approved_remarks_secretariat",
+            "reporting_channel_id",
+            "flag_approved",
         ]
 
     @staticmethod
@@ -780,6 +816,14 @@ class Submission(models.Model):
                 False,
                 Forbidden(
                     _("You do not have permission to perform this action.")
+                )
+            )
+
+        if self.obligation.form_type in self.obligation.NOT_CLONEABLE:
+            return (
+                False,
+                ValidationError(
+                    _("You can't clone a submission with this type of obligation")
                 )
             )
 
@@ -828,10 +872,10 @@ class Submission(models.Model):
                         'reporting_officer': self.info.reporting_officer,
                         'designation': self.info.designation,
                         'organization': self.info.organization,
+                        'postal_address': self.info.postal_address,
                         'postal_code': self.info.postal_code,
                         'country': self.info.country,
                         'phone': self.info.phone,
-                        'fax': self.info.fax,
                         'email': self.info.email,
                         'date': self.info.date,
                     }
@@ -1038,10 +1082,10 @@ class Submission(models.Model):
                         reporting_officer=latest_info.reporting_officer,
                         designation=latest_info.designation,
                         organization=latest_info.organization,
+                        postal_address=latest_info.postal_address,
                         postal_code=latest_info.postal_code,
                         country=latest_info.country,
                         phone=latest_info.phone,
-                        fax=latest_info.fax,
                         email=latest_info.email,
                         date=latest_info.date
                     )
@@ -1077,10 +1121,10 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     reporting_officer = models.CharField(max_length=256, blank=True)
     designation = models.CharField(max_length=256, blank=True)
     organization = models.CharField(max_length=256, blank=True)
+    postal_address = models.CharField(max_length=512, blank=True)
     postal_code = models.CharField(max_length=64, blank=True)
     country = models.CharField(max_length=256, blank=True)
     phone = models.CharField(max_length=128, blank=True)
-    fax = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
 

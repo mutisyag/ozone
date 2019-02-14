@@ -81,6 +81,34 @@ const sortDescending = (array, propertyName) => {
 	})
 }
 
+const getObjectLevel1PropertyValuesAsArray = (obj, addedPropNameForKey) => {
+	const result = []
+	if (!obj) {
+		return result
+	}
+	Object.keys(obj).forEach(level1Key => {
+		const objLevel1Value = obj[level1Key]
+		if (!addedPropNameForKey) {
+			result.push(objLevel1Value)
+		} else {
+			const objWithPropNameForKey = {}
+			objWithPropNameForKey[addedPropNameForKey] = level1Key
+			if (isObject(objLevel1Value)) {
+				result.push({
+					...objLevel1Value,
+					...objWithPropNameForKey
+				})
+			} else {
+				result.push({
+					value: objLevel1Value,
+					...objWithPropNameForKey
+				})
+			}
+		}
+	})
+	return result
+}
+
 export {
 	getLevel2PropertyValue,
 	isObject,
@@ -90,5 +118,6 @@ export {
 	isNumber,
 	fromExponential,
 	sortAscending,
-	sortDescending
+	sortDescending,
+	getObjectLevel1PropertyValuesAsArray
 }

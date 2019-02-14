@@ -1,6 +1,6 @@
 import { getQuestionnaireFields } from './questionnaireFields'
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormArt7 = ($gettext) => {
@@ -15,6 +15,7 @@ const getFormArt7 = ($gettext) => {
 				'initialData.display.substances',
 				'initialData.display.blends',
 				'initialData.display.countries',
+				'initialData.countryOptionsSubInfo',
 				'currentUser',
 				'permissions.form'
 			],
@@ -30,18 +31,17 @@ const getFormArt7 = ($gettext) => {
 				nonparty_remarks_party: '',
 				nonparty_remarks_secretariat: '',
 				emissions_remarks_party: '',
-				emissions_remarks_secretariat: ''
+				emissions_remarks_secretariat: '',
+				questionnaire_remarks_party: '',
+				questionnaire_remarks_secretariat: ''
 			},
 			comments_endpoint_url: 'submission_remarks'
 		},
 		tabs: {
+			...setTabFiles($gettext),
 			sub_info: {
 				...getTabSubInfo($gettext),
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
-			},
-			files: {
-				...getTabFiles($gettext),
-				hideInfoButton: true
 			},
 			questionaire_questions: {
 				name: 'questionaire_questions',
@@ -55,6 +55,16 @@ const getFormArt7 = ($gettext) => {
 				isInvalid: false,
 				description: '',
 				form_fields: getQuestionnaireFields($gettext),
+				comments: {
+					questionnaire_remarks_party: {
+						selected: '',
+						type: 'textarea'
+					},
+					questionnaire_remarks_secretariat: {
+						selected: '',
+						type: 'textarea'
+					}
+				},
 				default_properties: {
 					has_imports: false,
 					has_exports: false,

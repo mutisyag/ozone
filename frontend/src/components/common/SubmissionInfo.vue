@@ -22,10 +22,16 @@
 						<div class="form-fields">
 							<b-row :id="order" v-for="order in info.fields_order" class="field-wrapper" :key="order">
 								<b-col lg='3'>
-									<label>{{labels[order]}}</label>
+									<span v-if="info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="info.form_fields[order].tooltip">
+										<i class="fa fa-info-circle fa-lg"></i>&nbsp;
+										<label>{{labels[order]}}</label>
+									</span>
+									<span v-else>
+										<label>{{labels[order]}}</label>
+									</span>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? $store.getters.can_change_reporting_channel : can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? !$store.getters.can_change_reporting_channel : !$store.getters.can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row>
@@ -93,7 +99,7 @@
 							</b-col>
 						</b-row>
 						<div>
-							<h5 class="mt-4 mb-4" v-translate>Annex groups reported in submission</h5>
+							<h5 class="mt-4 mb-4" v-translate>Annex group reported in full</h5>
 								<b-row id="annex-flags">
 									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
@@ -162,10 +168,6 @@ export default {
 
 		specific_flags_columns() {
 			return [...new Set(this.specific_flags.map(f => f.split('_')[3]).map(f => f.split('')[0]))]
-		},
-
-		can_edit_data() {
-			return this.$store.getters.can_edit_data
 		},
 		currentSubmissionSubmittedAt() {
 			const { submitted_at } = this.$store.state.current_submission

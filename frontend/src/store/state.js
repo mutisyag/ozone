@@ -44,6 +44,7 @@ const state = {
 	form: null,
 	initialData: {
 		countryOptions: null,
+		countryOptionsSubInfo: null,
 		groupSubstances: null,
 		substances: null,
 		partyRatifications: null,

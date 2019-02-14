@@ -8,6 +8,8 @@ import art7TableRowConstructor from '@/components/art7/services/tableRowConstruc
 import { getFormLetter } from '@/components/letter/dataDefinitions/form'
 import { getFormHat } from '@/components/hat/dataDefinitions/form'
 import hatTableRowConstructor from '@/components/hat/services/tableRowConstructorService'
+import { getFormRaf } from '@/components/raf/dataDefinitions/form'
+import rafTableRowConstructor from '@/components/raf/services/tableRowConstructorService'
 import { getFormExemption } from '@/components/exemption/dataDefinitions/form'
 import exemptionTableRowConstructor from '@/components/exemption/services/tableRowConstructorService'
 
@@ -25,21 +27,30 @@ const mutations = {
 
 	addComment(state, { data, tab, field }) {
 		// If there is no field specified, it means that the data comes from server for prefill
-		console.log('comments', data, tab, field)
+		const { comments } = state.form.tabs[tab]
 		if (!field) {
 			const [commentsData] = data
-			Object.keys(state.form.tabs[tab].comments).forEach(comment => {
-				state.form.tabs[tab].comments[comment].selected = commentsData[comment]
+			Object.keys(comments).forEach(comment => {
+				comments[comment].selected = commentsData[comment]
 			})
 		} else {
-			state.form.tabs[tab].comments[field].selected = data
+			comments[field].selected = data
 		}
 	},
 
 	updateFormField(state, data) {
-		data.fieldInfo.index === data.fieldInfo.field
-			? state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index].selected = data.value
-			: state.form.tabs[data.fieldInfo.tabName].form_fields[data.fieldInfo.index][data.fieldInfo.field].selected = data.value
+		const tab = state.form.tabs[data.fieldInfo.tabName]
+		const formField = tab.form_fields[data.fieldInfo.index]
+		if (data.fieldInfo.party) {
+			formField.imports.find(i => parseInt(i.party) === parseInt(data.fieldInfo.party)).quantity = data.value
+			return
+		}
+
+		if (data.fieldInfo.index === data.fieldInfo.field) {
+			formField.selected = data.value
+		} else {
+			formField[data.fieldInfo.field].selected = data.value
+		}
 	},
 
 	setSubmissionHistory(state, data) {
@@ -64,6 +75,10 @@ const mutations = {
 			break
 		case 'other':
 			currentFormStructure = getFormLetter($gettext)
+			break
+		case 'essencrit':
+			currentFormStructure = getFormRaf($gettext)
+			tableRowConstructor = rafTableRowConstructor
 			break
 
 		default:
@@ -140,6 +155,10 @@ const mutations = {
 
 	updateCountries(state, data) {
 		state.initialData.countryOptions = data
+	},
+
+	updateCountriesSubInfo(state, data) {
+		state.initialData.countryOptionsSubInfo = data
 	},
 
 	updateCountriesDisplay(state, data) {
@@ -235,6 +254,14 @@ const mutations = {
 		state.permissions.actions = permission
 	},
 
+	addCountryEntries(state, { tabName, index, countryList }) {
+		countryList.forEach(c => {
+			state.form.tabs[tabName].form_fields[index].imports.push({
+				party: c, quantity: 0
+			})
+		})
+	},
+
 	// form state
 	updateNewTabs(state, tab) {
 		if (tab !== 'sub_info') state.newTabs = Array.from(new Set([...state.newTabs, ...[tab]]))
@@ -251,23 +278,42 @@ const mutations = {
 	removeField(state, data) {
 		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
 	},
-	addTabFiles(state, { tabName, files }) {
+	addTabFiles(state, { files }) {
 		if (!files) {
 			return
 		}
-		const { form_fields } = state.form.tabs[tabName]
+		const { form_fields } = state.form.tabs.files
 		files.forEach(file => {
 			form_fields.files.push(file)
 		})
 		form_fields.files = sortAscending(form_fields.files, 'updated')
 	},
-	addTabFile(state, { tabName, file }) {
-		const { form_fields } = state.form.tabs[tabName]
+	addTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
 		form_fields.files = sortAscending([...form_fields.files, file], 'updated')
 	},
-	deleteTabFile(state, { tabName, file }) {
-		const { form_fields } = state.form.tabs[tabName]
+	updateTabFileDescription(state, { file, description }) {
+		if (file.description === description) {
+			return
+		}
+		file.description = description
+		file.isDescriptionUpdated = true
+		file.upload_successful = false
+	},
+	updateTabFileWithServerInfo(state, { file, fileServerInfo }) {
+		file.id = fileServerInfo.id
+		file.upload_successful = fileServerInfo.upload_successful
+		file.file_url = fileServerInfo.file_url
+		file.updated = fileServerInfo.updated
+		file.tus_id = fileServerInfo.tus_id
+	},
+	deleteTabFile(state, { file }) {
+		const { form_fields } = state.form.tabs.files
 		form_fields.files = form_fields.files.filter(fileOld => fileOld !== file)
+	},
+	deleteAllTabFiles(state) {
+		const { form_fields } = state.form.tabs.files
+		form_fields.files = []
 	}
 }
 

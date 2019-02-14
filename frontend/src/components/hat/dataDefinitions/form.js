@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { getTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormHat = ($gettext) => {
@@ -8,6 +8,7 @@ const getFormHat = ($gettext) => {
 			tabsDisplay: ['sub_info', 'has_imports', 'has_produced', 'files'],
 			dataNeeded: [
 				'initialData.countryOptions',
+				'initialData.countryOptionsSubInfo',
 				'initialData.substances',
 				'initialData.blends',
 				'current_submission',
@@ -26,14 +27,11 @@ const getFormHat = ($gettext) => {
 			comments_endpoint_url: 'submission_remarks'
 		},
 		tabs: {
+			...setTabFiles($gettext),
 			sub_info: {
 				...getTabSubInfo($gettext),
 				hideInfoButton: true,
 				detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
-			},
-			files: {
-				...getTabFiles($gettext),
-				hideInfoButton: true
 			},
 			has_imports: {
 				name: 'has_imports',
