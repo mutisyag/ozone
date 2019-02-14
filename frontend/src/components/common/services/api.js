@@ -10,10 +10,9 @@ const logRequests = process.env.NODE_ENV === 'development'
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
 
-let windowLocation = window.location.origin.split('//')
-windowLocation[1] = 'tusd.' + windowLocation[1] + '/files/'
+const windowLocation = window.location.origin.split('//')
+windowLocation[1] = `tusd.${windowLocation[1]}/files/`
 let filesURL = windowLocation.join('//')
-
 
 /* const TUSD_HOST = 'localhost'
 const TUSD_PORT = 1080
