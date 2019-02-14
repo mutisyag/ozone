@@ -525,6 +525,9 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
                 'request': request
             }
         )
+        # Horrible hack to allow date to be an empty string
+        if serializer.initial_data.get('date', None) == '':
+            serializer.initial_data['date'] = None
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
