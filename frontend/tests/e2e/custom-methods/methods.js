@@ -44,7 +44,9 @@ const createSubmission = (browser) => {
 		.click('//div[@id="period_selector"]//ul//li//span//span[contains(text(),"2018")]')
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
+		.pause(5000)
 		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission created')]", 5000)
+		.pause(5000)
 }
 
 const deleteSubmission = (browser) => {
@@ -105,6 +107,8 @@ const openDashboard = (browser) => {
 	browser.useXpath()
 		.waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
 		.click("//a[@href='/reporting/dashboard']")
+		.pause(3000)
+		.waitForElementVisible('//div[@id="obligation_selector"]', 10000)
 		.pause(3000)
 		.assert.urlContains('/reporting/dashboard')
 		.pause(3000)
