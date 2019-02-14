@@ -6,11 +6,11 @@
 			<b-row>
 				<b-col>
 					<b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
-						<b-form-input v-model="table.filters.searchName" />
+						<b-form-input id="blends-name-filter" v-model="table.filters.searchName" />
 					</b-input-group>
 				</b-col>
 				<b-col>
-					<b-input-group>
+					<b-input-group id="blends-component-filter">
 						<multiselect
 							:max-height="250"
 							:multiple="true"
@@ -33,7 +33,7 @@
                 </b-col>
 				<b-col>
                     <b-input-group-append>
-                      <b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters"><span v-translate>Clear</span></b-btn>
+                      <b-btn id="blends-clear-button" variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters"><span v-translate>Clear</span></b-btn>
                     </b-input-group-append>
                 </b-col>
 			</b-row>

@@ -6,7 +6,7 @@
 			<b-row>
 				<b-col cols="4">
                     <b-input-group :prepend="$gettext('Name')">
-                      <b-form-input v-model="table.filters.searchName" />
+                      <b-form-input id="parties-name-filter" v-model="table.filters.searchName" />
                     </b-input-group>
                 </b-col>
 			</b-row>

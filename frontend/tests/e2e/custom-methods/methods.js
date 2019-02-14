@@ -1,6 +1,5 @@
 const login = (browser, username, password) => {
 	browser.url(process.env.VUE_DEV_SERVER_URL)
-		// start login
 		.useCss()
 		.waitForElementVisible('#id_username', 20000)
 		.setValue('#id_username', username)
@@ -22,7 +21,7 @@ const logout = (browser) => {
 		.assert.urlContains('/admin/login')
 }
 
-const createSubmission = (browser) => {
+const createSubmission = (browser, obligation, period) => {
 	browser.useCss()
 		.waitForElementVisible('.create-submission', 10000)
 		.waitForElementVisible('#obligation_selector', 10000)
@@ -30,8 +29,8 @@ const createSubmission = (browser) => {
 		.click('#obligation_selector .multiselect')
 		.waitForElementVisible('#obligation_selector .multiselect__content-wrapper', 10000)
 		.useXpath()
-		.waitForElementVisible("//span[contains(text(),'Article 7')]/ancestor::div[contains(@id, 'obligation_selector')]", 5000)
-		.click('//div[@id="obligation_selector"]//ul//li//span//span[contains(text(),"Article 7")]')
+		.waitForElementVisible(`//span[contains(text(),'${obligation}')]/ancestor::div[contains(@id, 'obligation_selector')]`, 5000)
+		.click(`//div[@id="obligation_selector"]//ul//li//span//span[contains(text(),'${obligation}')]`)
 		.useCss()
 		.waitForElementVisible('#period_selector', 2000)
 		.waitForElementVisible('#period_selector .multiselect', 2000)
@@ -40,8 +39,8 @@ const createSubmission = (browser) => {
 		.pause(500)
 		.waitForElementVisible('#period_selector .multiselect__content-wrapper', 2000)
 		.useXpath()
-		.waitForElementVisible("//span[contains(text(),'2018')]/ancestor::div[contains(@id, 'period_selector')]", 5000)
-		.click('//div[@id="period_selector"]//ul//li//span//span[contains(text(),"2018")]')
+		.waitForElementVisible(`//span[contains(text(),'${period}')]/ancestor::div[contains(@id, 'period_selector')]`, 5000)
+		.click(`//div[@id="period_selector"]//ul//li//span//span[contains(text(),'${period}')]`)
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
 		.pause(5000)
@@ -51,12 +50,12 @@ const createSubmission = (browser) => {
 
 const deleteSubmission = (browser) => {
 	browser.useXpath()
-		//	Fake delete
+		/* Fake delete */
 		.waitForElementVisible("//button[@id='delete-button']", 10000)
 		.click("//button[@id='delete-button']")
 		.pause(500)
 		.dismissAlert()
-		//	Delete Submission
+		/* Delete Submission */
 		.waitForElementVisible("//button[@id='delete-button']", 10000)
 		.click("//button[@id='delete-button']")
 		.pause(500)
@@ -67,14 +66,15 @@ const deleteSubmission = (browser) => {
 
 const saveSubmission = (browser, tabs = []) => {
 	browser.useXpath()
+		/* Click Save and continue button */
 		.execute('window.scrollTo(0,document.body.scrollHeight);')
 		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
 		.click("//footer[@class='app-footer']//button[@id='save-button']")
 		.pause(500)
 		.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-		.waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]//i[contains(@class, 'fa-check-circle')]", 20000)
 
 	tabs.forEach(tab => {
+		/* Check if desired tabs are valid */
 		browser
 			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]//i[contains(@class, 'fa-check-circle')]`, 20000)
 	})
@@ -96,11 +96,37 @@ const saveAndFail = (browser) => {
  * 	editSubmission(browser)
  *	Must be in dashboard before using this function
  */
-const editSubmission = (browser) => {
+const editSubmission = (browser, table_order) => {
 	browser.useXpath()
-		.waitForElementVisible("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]", 10000)
-		.click("//table[@id='data-entry-submissions-table']//tbody//tr[1]//span[contains(text(), 'Continue')]")
+		.waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`, 10000)
+		.click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`)
 		.pause(3000)
+}
+
+const selectTab = (browser, tab) => {
+	browser
+		.execute('window.scrollTo(0,0)')
+		.useXpath()
+		.waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
+		.click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
+		.pause(1500)
+}
+
+const openLookupTable = (browser, page) => {
+	browser
+		.useCss()
+		.execute('window.scrollTo(0,0)')
+		.waitForElementVisible('li.router-link-exact-active', 20000)
+		.moveToElement('li.router-link-exact-active', undefined, undefined, () => {
+			browser
+				.pause(500)
+				.useXpath()
+				.pause(500)
+				.click(`//li[contains(@class, 'router-link-exact-active')]//a[contains(text(), '${page}')]`)
+				.useCss()
+				.moveToElement('.app-header h3', 0, 0)
+				.pause(5000)
+		})
 }
 
 const openDashboard = (browser) => {
@@ -114,113 +140,13 @@ const openDashboard = (browser) => {
 		.pause(3000)
 }
 
-const fillSubmissionInfo = (browser, submissionInfo = {}) => {
+const openGeneralInstructions = (browser) => {
 	browser.useXpath()
-		.execute('window.scrollTo(0,100);')
-		.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Submission Info")]', 10000)
-		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]")
+		.waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
+		.click("//button[contains(@class, 'btn-info-outline')]")
 		.pause(500)
-		.execute('window.scrollTo(0,document.body.scrollHeight);')
-		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
-		.pause
-
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'email', 'date']
-	const flags = [
-		'flag_provisional',
-		'flag_has_reported_a1', 'flag_has_reported_a2',
-		'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
-		'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',
-		'flag_has_reported_e',
-		'flag_has_reported_f'
-	]
-
-	fields.forEach(field => {
-		/* Check if submissionInfo has missing fields */
-		if (!submissionInfo.hasOwnProperty(field)) {
-			submissionInfo[field] = ''
-		}
-		browser
-			.setValue(`//input[@id='${field}']`, submissionInfo[field])
-	})
-
-	browser
-		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
-		.click("//form[@class='form-sections']//div[@class='multiselect']")
+		.click("//div[@id='instructions_modal']//button//span[contains(text(), 'Close')]")
 		.pause(500)
-		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
-		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
-		.pause(500)
-		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
-
-	flags.forEach(flag => {
-		browser.useCss()
-			.getAttribute(`#${flag}`, 'checked', (result) => {
-				if (result.value !== 'true') {
-					browser
-						.useXpath()
-						.waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
-						.click(`(//label[@for='${flag}'])[2]`)
-						.pause(500)
-				}
-			})
-			.useCss()
-			.expect.element(`#${flag}`).to.be.selected
-	})
-}
-
-const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
-	let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
-	const tabs = {
-		has_imports: 'Imports',
-		has_exports: 'Exports',
-		has_produced: 'Production',
-		has_destroyed: 'Destruction',
-		has_nonparty: 'Nonparty',
-		has_emission: 'Emission'
-	}
-
-	if (typeof fields !== 'undefined' && fields.length === 0 && allow_all === true) {
-		fields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
-	}
-
-	restrictedFields = restrictedFields.filter((e) => fields.indexOf(e) === -1)
-
-	browser.useXpath()
-
-	for (const tab in tabs) {
-		browser
-			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 10000)
-	}
-
-	browser
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 10000)
-		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
-		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]")
-		.useCss()
-		.execute('window.scrollTo(0,250);')
-		.waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 10000)
-		.pause(500)
-
-	for (const field of fields) {
-		browser
-			.click(`.field-wrapper #${field} .custom-control:first-of-type label`)
-	}
-
-	for (const restrictedField of restrictedFields) {
-		browser
-			.click(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`)
-	}
-}
-
-const selectTab = (browser, tab) => {
-	browser
-		.execute('window.scrollTo(0,0)')
-		.useXpath()
-		.waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
-		.click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
-		.pause(1500)
 }
 
 const openAsideMenu = (browser, tab) => {
@@ -253,6 +179,156 @@ const closeAsideMenu = (browser, tab) => {
 		.pause(500)
 }
 
+const filterEntity = (browser, tab, filters) => {
+	const tabs = {
+		controlled_substances: {
+			fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'], 
+			clear: 'substances-clear-button'
+		},
+		blends: {
+			fields: ['blends-name-filter', 'blends-component-filter'],
+			clear: 'blends-clear-button'
+		},
+		parties: {
+			fields: ['parties-name-filter'],
+			clear: ''
+		}
+	}
+	browser.execute('window.scrollTo(0,0)').useCss()
+	tabs[tab].fields.forEach((field, index) => {
+		browser
+			.useCss()
+			.element('css selector', `#${field} .multiselect__select`, (result) => {
+				if (result.status !== -1) {
+					browser
+						.click(`#${field}`)
+						.pause(500)
+						.waitForElementVisible(`#${field} .multiselect__content-wrapper`, 5000)
+						.useXpath()
+						.click(`//div[@id='${field}']//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${filters[index]}')]`)
+						.pause(100)
+						.keys(browser.Keys.ESCAPE)
+						.pause(500)
+				} else {
+					browser
+						.setValue(`input#${field}`, filters[index])
+				}
+			})
+			.pause(1000)
+	})
+	browser.useCss().pause(2000)
+	if (tabs[tab].clear !== '') {
+		browser
+			.waitForElementVisible(`#${tabs[tab].clear}`, 10000)
+			.click(`#${tabs[tab].clear}`)
+			.pause(1500)
+	}
+}
+
+const fillSubmissionInfo = (browser, submissionInfo = {}) => {
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'email', 'date']
+	/* Open Submission Info tab */
+	selectTab(browser, 'Submission Info')
+	browser.useXpath()
+		.execute('window.scrollTo(0,document.body.scrollHeight);')
+		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
+		.pause(500)
+
+	fields.forEach(field => {
+		/* Check if submissionInfo has missing fields */
+		if (!submissionInfo.hasOwnProperty(field)) {
+			submissionInfo[field] = ''
+		}
+		/* Add submissionInfo in input fields */
+		browser
+			.setValue(`//input[@id='${field}']`, submissionInfo[field])
+	})
+	/* Add country name (special case) */
+	browser
+		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
+		.click("//form[@class='form-sections']//div[@class='multiselect']")
+		.pause(500)
+		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
+		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+		.pause(500)
+		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
+		.pause(500)
+}
+
+const checkSumbissionInfoFlags = (browser) => {
+	const flags = [
+		'flag_provisional',
+		'flag_has_reported_a1', 'flag_has_reported_a2',
+		'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
+		'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',
+		'flag_has_reported_e',
+		'flag_has_reported_f'
+	]
+	/* Open Submission Info tab */
+	selectTab(browser, 'Submission Info')
+	/* Check all flags */
+	flags.forEach(flag => {
+		browser.useCss()
+			.getAttribute(`#${flag}`, 'checked', (result) => {
+				if (result.value !== 'true') {
+					browser
+						.useXpath()
+						.waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
+						.click(`(//label[@for='${flag}'])[2]`)
+						.pause(500)
+				}
+			})
+			.useCss()
+			.expect.element(`#${flag}`).to.be.selected
+	})
+}
+
+const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
+	let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
+	const tabs = {
+		has_imports: 'Imports',
+		has_exports: 'Exports',
+		has_produced: 'Production',
+		has_destroyed: 'Destruction',
+		has_nonparty: 'Nonparty',
+		has_emission: 'Emission'
+	}
+	/* fields that will be set to 'yes' of no fields are given as argument */
+	if (typeof fields !== 'undefined' && fields.length === 0 && allow_all === true) {
+		fields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
+	}
+	/* fields that will be set to 'no' */
+	restrictedFields = restrictedFields.filter((e) => fields.indexOf(e) === -1)
+
+	browser.useXpath()
+	/* Check if all tabs are disabled */
+	for (const tab in tabs) {
+		browser
+			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 10000)
+	}
+
+	browser
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 10000)
+		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
+		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]")
+		.useCss()
+		.execute('window.scrollTo(0,250);')
+		.waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 10000)
+		.pause(500)
+	/* Set fields to 'yes' */
+	for (const field of fields) {
+		browser
+			.click(`.field-wrapper #${field} .custom-control:first-of-type label`)
+	}
+	/* Set restrictedFields to 'no' */
+	for (const restrictedField of restrictedFields) {
+		browser
+			.click(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`)
+	}
+}
+
 const addEntity = (browser, tab, entity, options, order = undefined, check = false) => {
 	const selectors = []
 	/**
@@ -270,7 +346,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
 		entities.substance.pop()
 		entities.substance.push('fii-table')
 	}
-	/* Correlate tab with nav names */
+	/* Correlate tabs with nav names and status column */
 	const tabs_header = {
 		has_imports_tab: { name: 'Imports', status_column: 9 },
 		has_exports_tab: { name: 'Exports', status_column: 9 },
@@ -424,13 +500,11 @@ const addComment = (browser, tab, comment) => {
 		.pause(500)
 }
 
-const uploadeFile = (browser) => {
+const uploadeFile = (browser, filename, filepath) => {
 	const path = require('path')
 	const find_root = require('find-root')
 	const root = find_root(path.resolve(__dirname))
-	const FILENAME = 'hello.pdf'
-	const FILEPATH = '../../../'
-	const file = path.resolve(root + FILEPATH + FILENAME)
+	const file = path.resolve(root + filename + filepath)
 
 	browser
 		.useCss()
@@ -451,12 +525,16 @@ module.exports = {
 	saveSubmission,
 	saveAndFail,
 	editSubmission,
-	openDashboard,
-	fillSubmissionInfo,
-	clickQuestionnaireRadios,
 	selectTab,
+	openLookupTable,
+	openDashboard,
+	openGeneralInstructions,
 	openAsideMenu,
 	closeAsideMenu,
+	filterEntity,
+	fillSubmissionInfo,
+	checkSumbissionInfoFlags,
+	clickQuestionnaireRadios,
 	addEntity,
 	addFacility,
 	addValues,

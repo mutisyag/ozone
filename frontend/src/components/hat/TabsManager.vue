@@ -70,7 +70,7 @@
 			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 				<span v-translate>Versions</span>
 			</b-btn>
-			<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
+			<b-btn id="delete-button" @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
 				<span v-translate>Delete Submission</span>
 			</b-btn>
 		</b-button-group>
