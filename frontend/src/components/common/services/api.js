@@ -13,7 +13,7 @@ let apiBase = `${window.location.origin}`
 const windowLocation = window.location.origin.split('//')
 windowLocation[1] = `tusd.${windowLocation[1]}`
 
-let filesURL = `${windowLocation.join('//')}/files`
+let filesURL = `${windowLocation.join('//')}:1080/files`
 
 /* const TUSD_HOST = 'localhost'
 const TUSD_PORT = 1080
