@@ -6,22 +6,22 @@
 			<b-row>
 				<b-col>
                     <b-input-group :prepend="$gettext('Group')">
-                      <b-form-input v-model="table.filters.searchGroup"/>
+                      <b-form-input id="substances-group-filter" v-model="table.filters.searchGroup"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
                     <b-input-group :prepend="$gettext('Name')">
-                      <b-form-input v-model="table.filters.searchName"/>
+                      <b-form-input id="substances-name-filter" v-model="table.filters.searchName"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
                     <b-input-group :prepend="$gettext('Formula')">
-                      <b-form-input v-model="table.filters.searchFormula"/>
+                      <b-form-input id="substances-formula-filter" v-model="table.filters.searchFormula"/>
                     </b-input-group>
                 </b-col>
 				<b-col>
                     <b-input-group-append>
-						<b-btn variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">
+						<b-btn id='substances-clear-button' variant="primary" :disabled="isDisabledClearFilters" @click="clearFilters">
 							<span v-translate>Clear</span>
 						</b-btn>
                     </b-input-group-append>

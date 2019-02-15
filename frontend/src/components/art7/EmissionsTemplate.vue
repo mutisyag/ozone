@@ -1,5 +1,5 @@
 <template>
-  <div v-if="tab_info">
+  <div v-if="tab_info" id="has_emissions_tab">
     <div class="form-sections">
 		<table ref="tableHeader" class="table submission-table header-only">
 			<thead>
@@ -35,6 +35,7 @@
 			<hr>
 
 			<b-table
+				id="facility-table"
 				show-empty
 				outlined
 				v-if="getTabInputFields"
@@ -76,7 +77,7 @@
 			</b-table>
 		</div>
 
-		<b-btn class="mb-2" variant="primary"  @click="addField">
+		<b-btn id="add-facility-button" class="mb-2" variant="primary"  @click="addField">
 			<span v-translate>Add facility</span>
 		</b-btn>
     </div>
