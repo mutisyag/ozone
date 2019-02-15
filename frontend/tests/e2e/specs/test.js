@@ -45,11 +45,13 @@ module.exports = {
 	},
 	BU_001: browser => {
 		logout(browser)
+		browser.end()
 	},
 	BU_002: browser => {
 		createSubmission(browser, 'Article 7', '2018')
 		deleteSubmission(browser)
 		logout(browser)
+		browser.end()
 	},
 	BU_003: browser => {
 		createSubmission(browser, 'Article 7', '2018')
@@ -59,6 +61,7 @@ module.exports = {
 		clickQuestionnaireRadios(browser)
 		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
+		browser.end()
 	},
 	BU_004: browser => {
 		const submissionInfo = {
@@ -88,6 +91,7 @@ module.exports = {
 		clickQuestionnaireRadios(browser, [], false)
 		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
+		browser.end()
 	},
 	BU_006: browser => {
 		const row_values = [0.0123, 0.12]
@@ -108,6 +112,7 @@ module.exports = {
 		addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
 		saveSubmission(browser, ['Questionnaire', 'Imports'])
+		browser.end()
 	},
 	BU_007: browser => {
 		const row_values = [0.0123, 0.12]
@@ -129,6 +134,7 @@ module.exports = {
 
 		addComment(browser, 'has_exports_tab', 'Hakuna Matata')
 		saveSubmission(browser, ['Questionnaire', 'Exports'])
+		browser.end()
 	},
 	BU_008: browser => {
 		const row_values_e1 = [5, 3]
@@ -150,6 +156,7 @@ module.exports = {
 
 		addComment(browser, 'has_produced_tab', 'Hakuna Matata')
 		saveSubmission(browser, ['Questionnaire', 'Production'])
+		browser.end()
 	},
 	BU_009: browser => {
 		const row_values_e1 = [100]
@@ -170,6 +177,7 @@ module.exports = {
 
 		addComment(browser, 'has_destroyed_tab', 'Hakuna Matata')
 		saveSubmission(browser, ['Questionnaire', 'Destruction'])
+		browser.end()
 	},
 	BU_010: browser => {
 		const row_values = [0.0123, 0.12]
@@ -190,6 +198,7 @@ module.exports = {
 
 		addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
 		saveSubmission(browser, ['Questionnaire', 'Nonparty'])
+		browser.end()
 	},
 	BU_011: browser => {
 		const row_values = ['CCT Facility', 10, '', '', '', '', '', 10]
