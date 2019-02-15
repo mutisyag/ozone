@@ -929,7 +929,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     def get_submitted_at(self, obj):
         submitted_at = getattr(obj.submission, 'submitted_at', None)
         if submitted_at:
-            return submitted_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            return submitted_at.strftime('%Y-%m-%d')
 
     def check_reporting_channel(self, instance, user):
         if (
@@ -965,7 +965,7 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
             self.check_submitted_at(instance, user)
             instance.submission.submitted_at = datetime.strptime(
                 self.context['submitted_at'],
-                '%Y-%m-%dT%H:%M:%S.%fZ'
+                '%Y-%m-%d'
             )
             to_update_fields.append('submitted_at')
         instance.submission.save(update_fields=to_update_fields)
@@ -974,7 +974,10 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
-    submitted_at = serializers.SerializerMethodField()
+    submitted_at = serializers.CharField(
+        source='submission.submitted_at',
+        read_only=True
+    )
 
     class Meta:
         model = SubmissionInfo
@@ -982,11 +985,6 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
 
     def get_reporting_channel(self, obj):
         return getattr(obj.submission.reporting_channel, 'name', '')
-
-    def get_submitted_at(self, obj):
-        submitted_at = getattr(obj.submission, 'submitted_at', None)
-        if submitted_at:
-            return submitted_at.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
 
 
 class PerTypeFieldsMixIn(object):

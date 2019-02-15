@@ -1,9 +1,9 @@
 import os
 
+from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
@@ -171,7 +171,7 @@ class Submission(models.Model):
     )
 
     # Is set only at *the first* transition to Submitted
-    submitted_at = models.DateTimeField(null=True)
+    submitted_at = models.DateField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -1113,7 +1113,7 @@ class Submission(models.Model):
             )
 
     def set_submitted(self):
-        self.submitted_at = timezone.now()
+        self.submitted_at = datetime.now().date()
         self.save()
 
 
