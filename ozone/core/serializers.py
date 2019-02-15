@@ -1337,6 +1337,10 @@ class SubmissionSerializer(
 
     can_edit_data = serializers.SerializerMethodField()
 
+    can_change_submitted_at = serializers.SerializerMethodField()
+    is_submitted_at_visible = serializers.SerializerMethodField()
+    is_submitted_at_mandatory = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
@@ -1365,6 +1369,9 @@ class SubmissionSerializer(
             'can_change_reporting_channel',
             'can_upload_files',
             'can_edit_data',
+            'can_change_submitted_at',
+            'is_submitted_at_visible',
+            'is_submitted_at_mandatory',
         )
 
         per_type_fields = {
@@ -1428,6 +1435,18 @@ class SubmissionSerializer(
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)
+
+    def get_can_change_submitted_at(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_submitted_at(user)
+
+    def get_is_submitted_at_visible(self, obj):
+        user = self.context['request'].user
+        return obj.is_submitted_at_visible(user)
+
+    def get_is_submitted_at_mandatory(self, obj):
+        user = self.context['request'].user
+        return obj.is_submitted_at_mandatory(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):

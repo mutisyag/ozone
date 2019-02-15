@@ -977,6 +977,15 @@ class Submission(models.Model):
     def can_change_submitted_at(self, user):
         return not user.is_read_only and user.is_secretariat and self.filled_by_secretariat
 
+    def is_submitted_at_visible(self, user):
+        if user.is_secretariat:
+            return True
+        elif user.party is not None and user.party == self.party:
+            return not self.data_changes_allowed
+
+    def is_submitted_at_mandatory(self, user):
+        return self.can_change_submitted_at(user)
+
     def is_submitted_at_automatically_filled(self, user):
         """
         Return True if the user is a Party Reporter.
