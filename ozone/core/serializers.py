@@ -1029,10 +1029,7 @@ class SubmissionFlagsSerializer(
                 'flag_has_reported_c2', 'flag_has_reported_c3',
                 'flag_has_reported_e', 'flag_has_reported_f',
             ),
-            'essencrit': base_fields + (
-                'flag_checked_blanks', 'flag_has_blanks',
-                'flag_confirmed_blanks',
-            ),
+            'essencrit': base_fields,
             'other': base_fields,
             'exemption': base_fields + (
                 'flag_approved', 'flag_emergency',
