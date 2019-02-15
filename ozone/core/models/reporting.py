@@ -975,7 +975,7 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
-        return user.is_secretariat and self.filled_by_secretariat
+        return not user.is_read_only and user.is_secretariat and self.filled_by_secretariat
 
     def is_submitted_at_automatically_filled(self, user):
         """
