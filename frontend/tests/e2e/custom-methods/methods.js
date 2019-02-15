@@ -21,31 +21,60 @@ const logout = (browser) => {
 		.assert.urlContains('/admin/login')
 }
 
-const createSubmission = (browser, obligation, period) => {
-	browser.useCss()
-		.waitForElementVisible('.create-submission', 10000)
-		.waitForElementVisible('#obligation_selector', 10000)
-		.waitForElementVisible('#obligation_selector .multiselect', 10000)
-		.click('#obligation_selector .multiselect')
-		.waitForElementVisible('#obligation_selector .multiselect__content-wrapper', 10000)
+const setMultiSelector = (browser, selector_id, option) => {
+	const time = 20000
+
+	browser
 		.useXpath()
-		.waitForElementVisible(`//span[contains(text(),'${obligation}')]/ancestor::div[contains(@id, 'obligation_selector')]`, 5000)
-		.click(`//div[@id="obligation_selector"]//ul//li//span//span[contains(text(),'${obligation}')]`)
+		/* Check if multiselect is visible */
+		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, time)
+		/* Open multiselect */
+		.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
+		.pause(1000)
+		/* Check if multiselect is opened */
+		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']`, time)
+		/* Check if desired option is visible */
+		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, time)
+		/* Select option */
+		.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
+		.pause(1000)
+		/* Press escape if necessary */
+		.keys(browser.Keys.ESCAPE)
+		.pause(500)
+}
+
+const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
+	const submission = {
+		obligation_selector: { option: obligation, read_write: true },
+		period_selector: { option: period, read_write: true },
+		party_selector: { option: party, read_write: edit_party }
+	}
+
+	browser
 		.useCss()
-		.waitForElementVisible('#period_selector', 2000)
-		.waitForElementVisible('#period_selector .multiselect', 2000)
-		.pause(500)
-		.click('#period_selector .multiselect')
-		.pause(500)
-		.waitForElementVisible('#period_selector .multiselect__content-wrapper', 2000)
-		.useXpath()
-		.waitForElementVisible(`//span[contains(text(),'${period}')]/ancestor::div[contains(@id, 'period_selector')]`, 5000)
-		.click(`//div[@id="period_selector"]//ul//li//span//span[contains(text(),'${period}')]`)
+		.waitForElementVisible('.create-submission', 10000)
+
+	for (const selector_id in submission) {
+		if (submission[selector_id].read_write === true) {
+			setMultiSelector(browser, selector_id, submission[selector_id].option)
+		}
+	}
+
+	browser
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
 		.pause(5000)
 		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission created')]", 5000)
-		.pause(5000)
+
+	if (back_to_dashboard === true) {
+		browser.useXpath()
+			.pause(500)
+			.waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
+			.click("//a[@href='/reporting/dashboard']")
+			.pause(500)
+	} else {
+		browser.pause(5000)
+	}
 }
 
 const deleteSubmission = (browser) => {
@@ -179,10 +208,66 @@ const closeAsideMenu = (browser, tab) => {
 		.pause(500)
 }
 
+const filterSubmission = (browser, table, options, first_row_expected, rows_number_expected) => {
+	const filters = {
+		submission_search_filter: options[0],
+		submission_obligation_filter: options[1],
+		submission_party_filter: options[2],
+		submission_from_filter: options[3],
+		submission_to_filter: options[4]
+	}
+	const clear_button = 'submission_clear_button'
+
+	browser.useCss()
+
+	for (const filter in filters) {
+		if (filters[filter] !== '') {
+			browser
+				.element('css selector', `input#${filter}`, (result) => {
+					if (result.status !== -1) {
+						browser
+							.useCss()
+							.setValue(`#${filter}`, filters[filter])
+							.pause(500)
+					} else {
+						browser
+							.useXpath()
+							.moveTo(`//select[@id='${filter}']`, 0, 0)
+							.pause(500)
+							.click(`//select[@id='${filter}']`)
+							.pause(500)
+							.click(`//select[@id='${filter}']//option[contains(text(), '${filters[filter]}')]`)
+							.pause(500)
+							/* Press escape if necessary */
+							.keys(browser.Keys.ESCAPE)
+							.pause(500)
+					}
+				})
+		}
+	}
+
+	browser.useXpath().execute('window.scrollTo(0,document.body.scrollHeight);')
+
+	first_row_expected.forEach((column_value, index) => {
+		if (column_value !== '') {
+			browser.waitForElementVisible(`//table[@id='${table}']//tbody//tr[1]//td[${index + 1}]//div[contains(text(), '${column_value}')]`, 20000)
+		}
+	})
+
+	browser
+		.elements('css selector', `#${table} tbody tr`, (result) => {
+			browser.assert.equal(`${result.value.length} rows`, `${rows_number_expected} rows`)
+		})
+		.pause(1500)
+		.useCss()
+		.waitForElementVisible(`#${clear_button}`, 20000)
+		.click(`#${clear_button}`)
+}
+
 const filterEntity = (browser, tab, filters) => {
 	const tabs = {
 		controlled_substances: {
-			fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'], 
+			fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'],
 			clear: 'substances-clear-button'
 		},
 		blends: {
@@ -459,7 +544,15 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
 	row_values.forEach((value, key) => {
 		// TODO: find a way to add in textarea also
 		browser
-			.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
+			.element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (result) => {
+				if (result.status !== -1) {
+					browser
+						.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, value)
+				} else {
+					browser
+						.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
+				}
+			})
 	})
 	/* Check if valid */
 	browser
@@ -475,12 +568,12 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
 		.waitForElementVisible(`#${tab} .modal-body`, 5000)
 		.pause(500)
 	/* Add values in modal */
-	for (const value of Object.keys(modal_values)) {
+	for (const field_id of Object.keys(modal_values)) {
 		browser
-			.click(`#${tab} .modal-body #${value}`)
+			.click(`#${tab} .modal-body #${field_id}`)
 			.pause(200)
-			.clearValue(`#${tab} .modal-body #${value}`)
-			.setValue(`#${tab} .modal-body #${value}`, modal_values[value])
+			.clearValue(`#${tab} .modal-body #${field_id}`)
+			.setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
 	}
 	/* Close modal */
 	browser
@@ -497,6 +590,58 @@ const addComment = (browser, tab, comment) => {
 	browser
 		.useCss()
 		.setValue(`#${tab} .comments-input textarea`, comment)
+		.pause(500)
+}
+
+const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
+	browser
+		.useXpath()
+		/* Hide app-footer	*/
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+		.pause(500)
+		.useCss()
+		.moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
+	/* Check if row is empty */
+	row_values.forEach((value, key) => {
+		browser
+			.element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (result) => {
+				if (result.status !== -1) {
+					browser
+						.getValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (data) => {
+							browser.assert.equal(data.value, '')
+						})
+				} else {
+					browser
+						.getValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, (data) => {
+							browser.assert.equal(data.value, '')
+						})
+				}
+			})
+	})
+	/* Open edit modal */
+	browser.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.add("hovered")`, () => {
+		browser
+			.pause(500)
+			.click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
+	})
+	browser
+		.waitForElementVisible(`#${tab} .modal-body`, 5000)
+		.pause(500)
+	/* Check if modal inputs are empty */
+	for (const field_id of Object.keys(modal_values)) {
+		browser
+			.getValue(`#${tab} .modal-body #${field_id}`, (data) => {
+				browser.assert.equal(data.value, '')
+			})
+	}
+	/* Close modal */
+	browser
+		.pause(500)
+		.click(`#${tab} .modal-dialog .close`)
+		.pause(500)
+		.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
+		/* Show app-footer */
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
 		.pause(500)
 }
 
@@ -520,6 +665,7 @@ const uploadeFile = (browser, filename, filepath) => {
 module.exports = {
 	login,
 	logout,
+	setMultiSelector,
 	createSubmission,
 	deleteSubmission,
 	saveSubmission,
@@ -531,6 +677,7 @@ module.exports = {
 	openGeneralInstructions,
 	openAsideMenu,
 	closeAsideMenu,
+	filterSubmission,
 	filterEntity,
 	fillSubmissionInfo,
 	checkSumbissionInfoFlags,
@@ -539,5 +686,6 @@ module.exports = {
 	addFacility,
 	addValues,
 	addComment,
+	rowIsEmpty,
 	uploadeFile
 }
