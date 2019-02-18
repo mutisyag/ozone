@@ -32,8 +32,9 @@ const getters = {
 	&& (state.permissions.form.can_edit_data
 		|| state.permissions.form.can_change_remarks_secretariat
 		|| state.permissions.form.can_change_reporting_channel
+		|| state.permissions.form.can_change_remarks_party
 		|| state.permissions.form.can_upload_files
-		|| (state.current_submission && (state.current_submission.changeable_flags.length || state.current_submission.can))),
+		|| (state.current_submission && state.current_submission.changeable_flags.length)),
 
 	currentCountryIso: (state) => {
 		const { currentUser } = state
