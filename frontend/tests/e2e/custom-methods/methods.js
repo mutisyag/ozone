@@ -79,11 +79,69 @@ const saveSubmission = (browser, tabs = []) => {
 			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]//i[contains(@class, 'fa-check-circle')]`, 20000)
 	})
 }
+
+const selectTab = (browser, tab) => {
+	browser
+		.execute('window.scrollTo(0,0)')
+		.useXpath()
+		.waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
+		.click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
+		.pause(1500)
+}
+
+const fillSubmissionInfo = (browser, submissionInfo = {}) => {
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email', 'date']
+	/* Open Submission Info tab */
+	selectTab(browser, 'Submission Info')
+	browser.useXpath()
+		.execute('window.scrollTo(0,document.body.scrollHeight);')
+		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
+		.pause(500)
+
+	fields.forEach(field => {
+		/* Check if submissionInfo has missing fields */
+		if (!submissionInfo.hasOwnProperty(field)) {
+			submissionInfo[field] = ''
+		}
+		/* Add submissionInfo in input fields */
+		if (field === 'postal_address') {
+			browser
+				.setValue(`//textarea[@id='${field}']`, submissionInfo[field])
+		} else {
+			browser
+				.setValue(`//input[@id='${field}']`, submissionInfo[field])
+		}
+	})
+	/* Add country name (special case) */
+	browser
+		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
+		.click("//form[@class='form-sections']//div[@class='multiselect']")
+		.pause(500)
+		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
+		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+		.pause(500)
+		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
+		.pause(500)
+}
+
 /**
  * 	saveAndFail(browser)
  *	Use this before calling clickQuestionnaireRadios(args)
  */
 const saveAndFail = (browser) => {
+	const submissionInfo = {
+		reporting_officer: 'test name',
+		designation: 'test designation',
+		organization: 'test organisation',
+		postal_address: 'test address',
+		country: 'France',
+		phone: '+490000000',
+		email: 'john.doe@gmail.com',
+		date: '01/11/2019'
+	}
+
+	fillSubmissionInfo(browser, submissionInfo)
+
 	browser.useXpath()
 		.execute('window.scrollTo(0,document.body.scrollHeight);')
 		.waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
@@ -101,15 +159,6 @@ const editSubmission = (browser, table_order) => {
 		.waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`, 10000)
 		.click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`)
 		.pause(3000)
-}
-
-const selectTab = (browser, tab) => {
-	browser
-		.execute('window.scrollTo(0,0)')
-		.useXpath()
-		.waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
-		.click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
-		.pause(1500)
 }
 
 const openLookupTable = (browser, page) => {
@@ -145,7 +194,9 @@ const openGeneralInstructions = (browser) => {
 		.waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
 		.click("//button[contains(@class, 'btn-info-outline')]")
 		.pause(500)
-		.click("//div[@id='instructions_modal']//button//span[contains(text(), 'Close')]")
+		.execute('window.scrollTo(0,0)')
+		.pause(500)
+		.click("//div[@id='instructions_modal']//header//button")
 		.pause(500)
 }
 
@@ -182,7 +233,7 @@ const closeAsideMenu = (browser, tab) => {
 const filterEntity = (browser, tab, filters) => {
 	const tabs = {
 		controlled_substances: {
-			fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'], 
+			fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'],
 			clear: 'substances-clear-button'
 		},
 		blends: {
@@ -223,36 +274,6 @@ const filterEntity = (browser, tab, filters) => {
 			.click(`#${tabs[tab].clear}`)
 			.pause(1500)
 	}
-}
-
-const fillSubmissionInfo = (browser, submissionInfo = {}) => {
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email', 'date']
-	/* Open Submission Info tab */
-	selectTab(browser, 'Submission Info')
-	browser.useXpath()
-		.execute('window.scrollTo(0,document.body.scrollHeight);')
-		.waitForElementVisible("//input[@id='reporting_officer']", 10000)
-		.pause(500)
-
-	fields.forEach(field => {
-		/* Check if submissionInfo has missing fields */
-		if (!submissionInfo.hasOwnProperty(field)) {
-			submissionInfo[field] = ''
-		}
-		/* Add submissionInfo in input fields */
-		browser
-			.setValue(`//input[@id='${field}']`, submissionInfo[field])
-	})
-	/* Add country name (special case) */
-	browser
-		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
-		.click("//form[@class='form-sections']//div[@class='multiselect']")
-		.pause(500)
-		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
-		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
-		.pause(500)
-		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
-		.pause(500)
 }
 
 const checkSumbissionInfoFlags = (browser) => {
