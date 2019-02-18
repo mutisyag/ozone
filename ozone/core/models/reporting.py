@@ -1,4 +1,5 @@
 import os
+import enum
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -105,7 +106,7 @@ class Obligation(models.Model):
 
 class ReportingChannel(models.Model):
     """
-    Model for storing submission types.
+    Describes the way the form was submitted.
     """
 
     name = models.CharField(unique=True, max_length=256)
@@ -1112,6 +1113,15 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     Model for storing submission info.
     """
 
+    @enum.unique
+    class SubmissionFormats(enum.Enum):
+        A7_DATA_FORMS = 'A7 Data forms'
+        ANNEX_TO_DATA_FORM_1 = 'Annex to data form 1'
+        COUNTRY_PROGRAMME_DATA = 'Country Programme data'
+        EMAIL = 'Email'
+        LETTER = 'Letter'
+        QUESTIONNAIRE = 'Questionnaire'
+
     submission = models.OneToOneField(
         Submission,
         related_name='info',
@@ -1127,6 +1137,11 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     phone = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    submission_format = models.CharField(
+        max_length=128, choices=((s.value, s.name) for s in SubmissionFormats),
+        blank=True,
+        help_text="This field describes type of submission."
+    )
 
     tracker = FieldTracker()
 
