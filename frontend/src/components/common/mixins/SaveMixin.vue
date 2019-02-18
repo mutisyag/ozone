@@ -51,8 +51,8 @@ export default {
 						}
 					}
 				} else {
-					
-					if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected && this.form.tabs[tab].form_fields.validation.selected.length) {
+					console.log(this.form.tabs[tab].form_fields.validation.selected.length)
+					if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
 						this.invalidTabs.push(this.form.tabs[tab].name)
 						this.$store.commit('setTabStatus', { tab, value: false })
 					}
@@ -96,7 +96,6 @@ export default {
 		},
 
 		async submitData(tab, url) {
-			console.log('submitData', tab)
 			if (tab.status !== null) {
 				this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			}
@@ -126,9 +125,7 @@ export default {
 			if (isObject(tab.form_fields)) {
 				const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 				current_tab_data = {}
-				console.log('submitData', url, save_obj)
 				Object.keys(save_obj).forEach(key => {
-					console.log(key)
 					current_tab_data[key] = tab.form_fields[key].selected
 					if (tab.form_fields[key].type === 'date') {
 						console.log('isObject dateFormatToIso')
