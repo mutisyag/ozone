@@ -13,7 +13,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
    <b-button-group class="actions">
-      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.getters.can_save_form"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -53,7 +53,7 @@
     </div>
     <Footer style="display:inline">
 		<b-button-group class="actions mt-2 mb-2">
-			<Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+			<Save v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
 		</b-button-group>
 
 		<b-button-group class="pull-right actions mt-2 mb-2">

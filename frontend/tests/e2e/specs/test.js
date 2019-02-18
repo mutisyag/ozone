@@ -14,23 +14,29 @@ const {
 	saveSubmission,
 	saveAndFail,
 	editSubmission,
+	openLookupTable,
 	openDashboard,
+	openGeneralInstructions,
+	filterEntity,
 	fillSubmissionInfo,
+	checkSumbissionInfoFlags,
 	clickQuestionnaireRadios,
 	selectTab,
 	addEntity,
-	addValues
+	addFacility,
+	addValues,
+	addComment,
+	uploadeFile
 } = require('../custom-methods/methods.js')
 
 module.exports = {
-	before: (browser, done) => {
-		browser.resizeWindow(1480, 900, done)
-	},
-
-	beforeEach: () => {
+	beforeEach: (browser) => {
+		browser.resizeWindow(1480, 900)
 		console.log('running backend')
 		execSync('bash ../utility/setup_backend.sh', { env: process.env })
 		console.log('done running backend')
+
+		login(browser, 'party', 'party')
 	},
 	afterEach: () => {
 		console.log('running cleanup')
@@ -38,25 +44,22 @@ module.exports = {
 		console.log('done running cleanup')
 	},
 	BU_001: browser => {
-		login(browser, 'party', 'party')
 		logout(browser)
 		browser.end()
 	},
 	BU_002: browser => {
-		login(browser, 'party', 'party')
-		createSubmission(browser)
+		createSubmission(browser, 'Article 7', '2018')
 		deleteSubmission(browser)
 		logout(browser)
 		browser.end()
 	},
 	BU_003: browser => {
-		login(browser, 'party', 'party')
-		createSubmission(browser)
+		createSubmission(browser, 'Article 7', '2018')
 		openDashboard(browser)
-		editSubmission(browser)
+		editSubmission(browser, 1)
 		saveAndFail(browser)
 		clickQuestionnaireRadios(browser)
-		saveSubmission(browser)
+		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
 		browser.end()
 	},
@@ -65,58 +68,287 @@ module.exports = {
 			reporting_officer: 'test name',
 			designation: 'test designation',
 			organization: 'test organisation',
-			postal_code: 'test address',
+			postal_address: 'test address',
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com',
 			date: '01/11/2019'
 		}
 
-		login(browser, 'party', 'party')
-		createSubmission(browser)
+		createSubmission(browser, 'Article 7', '2018')
 		clickQuestionnaireRadios(browser)
 		fillSubmissionInfo(browser, submissionInfo)
-		browser.useXpath()
-			.waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
-			.click("//button[contains(@class, 'btn-info-outline')]")
-			.pause(500)
-			.click("//div[@id='instructions_modal']//button//span[contains(text(), 'Close')]")
-			.pause(500)
+		saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+		checkSumbissionInfoFlags(browser)
+		saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+		openGeneralInstructions(browser)
 		logout(browser)
 		browser.end()
 	},
 	BU_005: browser => {
-		login(browser, 'party', 'party')
-		createSubmission(browser)
+		createSubmission(browser, 'Article 7', '2018')
 		saveAndFail(browser)
 		clickQuestionnaireRadios(browser, [], false)
-		saveSubmission(browser)
+		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
 		browser.end()
 	},
 	BU_006: browser => {
-		login(browser, 'party', 'party')
-		createSubmission(browser)
-		clickQuestionnaireRadios(browser, ['#has_imports'])
-		selectTab(browser, 'Imports')
-		addEntity(browser, 'has_imports_tab', 'Substances', 'substance_selector', 'CFC-11')
+		const row_values = [0.0123, 0.12]
+		const modal_values = {
+			quantity_feedstock: 0.10,
+			quantity_critical_uses: 0.02,
+			decision_critical_uses: 'Do that'
+		}
+		const start_column = 4
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_imports'])
+		fillSubmissionInfo(browser, submissionInfo)
+		addEntity(browser, 'has_imports_tab', 'substance', ['AI', 'CFC-11'])
+		addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
-		browser
-			.useCss()
-			.moveToElement('#has_imports_tab #blends-table-title', undefined, undefined)
-			.waitForElementVisible('#has_imports_tab #blends-table-title', 5000)
-		addValues(browser, '#substance-table', '#has_imports_tab')
-		addEntity(browser, 'has_imports_tab', 'Blends', 'blend_selector', 'R-401B')
+		addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
+		addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
-		browser
-			.useCss()
-			.moveToElement('#tab-comments', undefined, undefined)
-		addValues(browser, '#blend-table', '#has_imports_tab')
+		saveSubmission(browser, ['Questionnaire', 'Imports'])
+		browser.end()
+	},
+	BU_007: browser => {
+		const row_values = [0.0123, 0.12]
+		const modal_values = {
+			quantity_feedstock: 0.10,
+			quantity_critical_uses: 0.02,
+			decision_critical_uses: 'Do that'
+		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		const start_column = 4
 
-		saveSubmission(browser)
-		browser.useXpath()
-			.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-			.waitForElementVisible('//div[contains(@class,"form-wrapper")]//div[contains(@class, "card-header")]//ul//li//div[contains(text(), "Imports")]//i[contains(@class, "fa-check-circle")]', 20000)
-			.end()
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_exports'])
+		fillSubmissionInfo(browser, submissionInfo)
+
+		addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+		addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
+
+		addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+		addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
+
+		addComment(browser, 'has_exports_tab', 'Hakuna Matata')
+		saveSubmission(browser, ['Questionnaire', 'Exports'])
+		browser.end()
+	},
+	BU_008: browser => {
+		const row_values_e1 = [5, 3]
+		const row_values_e2 = [10]
+		const modal_values = {
+			quantity_critical_uses: 0.02,
+			decision_critical_uses: 'Do that'
+		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		const start_column = 3
+
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_produced'])
+		fillSubmissionInfo(browser, submissionInfo)
+
+		addEntity(browser, 'has_produced_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+		addValues(browser, 'substance-table', 'has_produced_tab', 1, row_values_e1, modal_values, start_column)
+
+		addEntity(browser, 'has_produced_tab', 'substance', ['FII', 'HFC-23'], 1, true)
+		addValues(browser, 'fii-table', 'has_produced_tab', 1, row_values_e2, modal_values, start_column)
+
+		addComment(browser, 'has_produced_tab', 'Hakuna Matata')
+		saveSubmission(browser, ['Questionnaire', 'Production'])
+		browser.end()
+	},
+	BU_009: browser => {
+		const row_values_e1 = [100]
+		const row_values_e2 = [10]
+		const modal_values = {
+			quantity_destroyed: 5
+		}
+		const start_column = 3
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_destroyed'])
+		fillSubmissionInfo(browser, submissionInfo)
+
+		addEntity(browser, 'has_destroyed_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+		addValues(browser, 'substance-table', 'has_destroyed_tab', 1, row_values_e1, modal_values, start_column)
+
+		addEntity(browser, 'has_destroyed_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+		addValues(browser, 'blend-table', 'has_destroyed_tab', 1, row_values_e2, modal_values, start_column)
+
+		addComment(browser, 'has_destroyed_tab', 'Hakuna Matata')
+		saveSubmission(browser, ['Questionnaire', 'Destruction'])
+		browser.end()
+	},
+	BU_010: browser => {
+		const row_values = [0.0123, 0.12]
+		const modal_values = {
+			quantity_export_new: 2,
+			quantity_export_recovered: 1
+		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		const start_column = 4
+
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_nonparty'])
+		fillSubmissionInfo(browser, submissionInfo)
+
+		addEntity(browser, 'has_nonparty_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+		addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values, start_column)
+
+		addEntity(browser, 'has_nonparty_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+		addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values, start_column)
+
+		addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
+		saveSubmission(browser, ['Questionnaire', 'Nonparty'])
+		browser.end()
+	},
+	BU_011: browser => {
+		const row_values = ['CCT Facility', 10, '', '', '', '', '', 10]
+		const start_column = 1
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_emissions'])
+		fillSubmissionInfo(browser, submissionInfo)
+
+		addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, start_column, true)
+
+		addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
+		saveSubmission(browser, ['Questionnaire', 'Emissions'])
+	},
+	BU_012: browser => {
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser)
+		fillSubmissionInfo(browser, submissionInfo)
+		selectTab(browser, 'Files')
+		uploadeFile(browser, 'hello.pdf', '../../../../')
+		saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+		browser.end()
+	},
+	BU_013: browser => {
+		createSubmission(browser, 'HAT Imports and Production', '2018')
+		deleteSubmission(browser)
+		browser.end()
+	},
+	BU_014: browser => {
+		createSubmission(browser, 'HAT Imports and Production', '2018')
+		deleteSubmission(browser)
+		browser.end()
+	},
+	BU_015: browser => {
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
+
+		createSubmission(browser, 'HAT Imports and Production', '2018')
+		fillSubmissionInfo(browser, submissionInfo)
+		saveSubmission(browser, ['Submission Info'])
+		checkSumbissionInfoFlags(browser)
+		saveSubmission(browser, ['Submission Info'])
+		logout(browser)
+		browser.end()
+	},
+	BU_019: browser => {
+		const group = 'AI'
+		const name = 'CFC-11'
+		const formula = 'CFCl3'
+
+		openLookupTable(browser, 'Controlled substances')
+		filterEntity(browser, 'controlled_substances', [group, name, formula])
+		logout(browser)
+		browser.end()
+	},
+	BU_020: browser => {
+		const name = 'R-411B'
+		const components = 'HCFC-22'
+
+		openLookupTable(browser, 'Blends')
+		filterEntity(browser, 'blends', [name, components])
+		logout(browser)
+		browser.end()
+	},
+	BU_021: browser => {
+		const name = 'Afghanistan'
+
+		openLookupTable(browser, 'Parties')
+		filterEntity(browser, 'parties', [name])
+		logout(browser)
+		browser.end()
 	}
 }

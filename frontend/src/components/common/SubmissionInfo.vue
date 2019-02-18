@@ -24,9 +24,11 @@
 								<b-col lg='3'>
 									<span v-if="info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="info.form_fields[order].tooltip">
 										<i class="fa fa-info-circle fa-lg"></i>&nbsp;
-										<label>{{labels[order]}}</label>
+										<label>{{labels[order]}}
+										</label>
 									</span>
 									<span v-else>
+										<b-badge class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>Required</b-badge>
 										<label>{{labels[order]}}</label>
 									</span>
 								</b-col>

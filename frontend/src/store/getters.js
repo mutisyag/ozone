@@ -28,6 +28,13 @@ const getters = {
 	can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,
 	can_change_reporting_channel: (state) => state.permissions.form && state.permissions.form.can_change_reporting_channel,
 	can_upload_files: (state) => state.permissions.form && state.permissions.form.can_upload_files,
+	can_save_form: (state) => state.permissions.form
+	&& (state.permissions.form.can_edit_data
+		|| state.permissions.form.can_change_remarks_secretariat
+		|| state.permissions.form.can_change_reporting_channel
+		|| state.permissions.form.can_change_remarks_party
+		|| state.permissions.form.can_upload_files
+		|| (state.current_submission && state.current_submission.changeable_flags.length)),
 
 	currentCountryIso: (state) => {
 		const { currentUser } = state

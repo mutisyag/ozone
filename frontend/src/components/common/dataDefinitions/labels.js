@@ -28,6 +28,10 @@ const getCommonLabels = ($gettext) => {
 		invalid: $gettext('invalid'),
 		questionnaire_remarks_party: $gettext('Comments (Party)'),
 		questionnaire_remarks_secretariat: $gettext('Comments (Secretariat)'),
+		edit: $gettext('Edit'),
+		view: $gettext('View'),
+		revise: $gettext('Revise'),
+		delete: $gettext('Delete'),
 		flags: {
 			flag_superseded: $gettext('Superseded'),
 			flag_provisional: $gettext('Provisional'),

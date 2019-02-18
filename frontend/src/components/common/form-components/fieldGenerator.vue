@@ -17,7 +17,7 @@
 				v-model="currentTyping"
 				:options="fieldOptions" />
 		</div>
-    <textarea @change="updateFormField"  :disabled="disabled" class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
+    <textarea :id="fieldInfo ? fieldInfo.field : ''" @change="updateFormField"  :disabled="disabled" class="form-control" v-else-if="field.type === 'textarea'"  v-model="currentTyping"></textarea>
 
 		<input v-if="isPartyField" :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormFieldParty" class="form-control" v-model="currentTyping" type="text" />
 	</div>
