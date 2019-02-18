@@ -226,7 +226,7 @@ const filterEntity = (browser, tab, filters) => {
 }
 
 const fillSubmissionInfo = (browser, submissionInfo = {}) => {
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_code', 'phone', 'email', 'date']
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email', 'date']
 	/* Open Submission Info tab */
 	selectTab(browser, 'Submission Info')
 	browser.useXpath()
