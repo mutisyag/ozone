@@ -161,7 +161,7 @@
 													{{labels['edit']}}
                       </span>
                       <span v-else>
-													{{labels['view']}}												
+													{{labels['view']}}
                       </span>
                     </router-link>
 

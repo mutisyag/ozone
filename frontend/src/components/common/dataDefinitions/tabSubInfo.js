@@ -3,6 +3,7 @@ const getTabSubInfo = ($gettext) => {
 		name: 'sub_info',
 		hasAssideMenu: false,
 		status: null,
+		validate: true,
 		endpoint_url: 'sub_info_url',
 		endpoint_additional_url: '',
 		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_address', 'country', 'phone', 'email', 'date'],
@@ -45,7 +46,8 @@ const getTabSubInfo = ($gettext) => {
 			},
 			reporting_officer: {
 				type: 'text',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			designation: {
 				type: 'text',
@@ -57,7 +59,8 @@ const getTabSubInfo = ($gettext) => {
 			},
 			postal_address: {
 				type: 'textarea',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			country: {
 				type: 'select',
@@ -71,12 +74,34 @@ const getTabSubInfo = ($gettext) => {
 			},
 			email: {
 				type: 'email',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			date: {
 				type: 'date',
 				selected: '',
 				tooltip: $gettext('The date indicated on the submitted document')
+			},
+			get validation() {
+				const invalid = []
+				if (!this.reporting_officer.selected) {
+					this.reporting_officer.validation = $gettext('Required')
+					invalid.push('Reporting officer')
+				} else {
+					this.reporting_officer.validation = null
+				}
+
+				if (!this.postal_address.selected && !this.email.selected) {
+					this.postal_address.validation = $gettext('Required')
+					this.email.validation = $gettext('Required')
+					invalid.push('Email/Address')
+				} else {
+					this.postal_address.validation = null
+					this.email.validation = null
+				}
+				return {
+					selected: invalid
+				}
 			}
 		},
 		default_properties: {
