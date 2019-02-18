@@ -114,7 +114,7 @@
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-					:disabled="!$store.getters.can_edit_data"
+					:disabled="$store.getters.can_edit_data"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
 					:tabName="tabName"
@@ -366,7 +366,7 @@
 			</template>
 			<template :slot="getCountrySlot" slot-scope="cell">
 				<CloneField
-					:disabled="!$store.getters.can_edit_data"
+					:disabled="$store.getters.can_edit_data"
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
 					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
 					v-if="!cell.item[getCountrySlot]"
