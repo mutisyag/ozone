@@ -83,6 +83,7 @@ const getTabSubInfo = ($gettext) => {
 				tooltip: $gettext('The date indicated on the submitted document')
 			},
 			get validation() {
+				return []
 				const invalid = []
 				if (!this.reporting_officer.selected) {
 					this.reporting_officer.validation = $gettext('Required')
