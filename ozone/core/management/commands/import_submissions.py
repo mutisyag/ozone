@@ -510,7 +510,6 @@ class Command(BaseCommand):
                 "designation": "",
                 "organization": "",
                 "postal_address": "",
-                "postal_code": "",
                 "country": party.name,
                 "phone": "",
                 "email": "",
