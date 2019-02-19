@@ -42,6 +42,7 @@ from .models import (
     ExemptionApproved,
     RAFReport,
     RAFImport,
+    SubmissionFormat,
 )
 
 User = get_user_model()
@@ -918,6 +919,7 @@ class RAFSerializer(
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
     submitted_at = serializers.SerializerMethodField()
+    submission_format = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
@@ -930,6 +932,9 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
         submitted_at = getattr(obj.submission, 'submitted_at', None)
         if submitted_at:
             return submitted_at.strftime('%Y-%m-%d')
+
+    def get_submission_format(self, obj):
+        return getattr(obj.submission_format, 'name', '')
 
     def check_reporting_channel(self, instance, user):
         if (
@@ -969,6 +974,12 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
             )
             to_update_fields.append('submitted_at')
         instance.submission.save(update_fields=to_update_fields)
+
+        if self.context.get('submission_format', None):
+            instance.submission_format = SubmissionFormat.objects.get(
+                name=self.context['submission_format']
+            )
+
         return super().update(instance, validated_data)
 
 
@@ -978,6 +989,7 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         source='submission.submitted_at',
         read_only=True
     )
+    submission_format = serializers.SerializerMethodField()
 
     class Meta:
         model = SubmissionInfo
@@ -985,6 +997,9 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
 
     def get_reporting_channel(self, obj):
         return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def get_submission_format(self, obj):
+        return getattr(obj.submission_format, 'name', '')
 
 
 class PerTypeFieldsMixIn(object):

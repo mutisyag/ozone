@@ -11,6 +11,7 @@ from .factories import (
     SecretariatUserFactory,
     SubmissionFactory,
     SubregionFactory,
+    SubmissionFormatFactory,
 )
 
 User = get_user_model()
@@ -36,6 +37,7 @@ class SubmissionReportingChannelTests(BaseTests):
         )
         ReportingChannelFactory.create(name='Web form')
         ReportingChannelFactory.create(name='API')
+        SubmissionFormatFactory()
 
     def create_submission(self, owner, current_state='data_entry', previous_state=None):
         submission = SubmissionFactory(
@@ -80,11 +82,11 @@ class SubmissionReportingChannelTests(BaseTests):
             "designation": "test",
             "organization": "test",
             "postal_address": "test",
-            "postal_code": "test",
             "country": "test",
             "phone": "test",
             "email": None,
-            "date": None
+            "date": None,
+            'submission_format': 'A7 Data forms'
         }
         resp = self.client.put(
             reverse(

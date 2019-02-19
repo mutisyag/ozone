@@ -518,12 +518,14 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         info = Submission.objects.get(pk=self.kwargs['submission_pk']).info
         reporting_channel = request.data.get('reporting_channel')
         submitted_at = self.request.data.get('submitted_at')
+        submission_format = request.data.get('submission_format')
         serializer = UpdateSubmissionInfoSerializer(
             info,
             data=request.data,
             context={
                 'reporting_channel': reporting_channel,
                 'submitted_at': submitted_at,
+                'submission_format': submission_format,
                 'request': request
             }
         )

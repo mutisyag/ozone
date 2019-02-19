@@ -33,6 +33,7 @@ from ozone.core.models import (
     Language,
     Nomination,
     ExemptionApproved,
+    SubmissionFormat,
 )
 
 User = get_user_model()
@@ -353,3 +354,10 @@ class NominationFactory(DjangoModelFactory):
 class ExemptionApprovedFactory(DjangoModelFactory):
     class Meta:
         model = ExemptionApproved
+
+
+class SubmissionFormatFactory(DjangoModelFactory):
+    name = 'A7 Data forms'
+
+    class Meta:
+        model = SubmissionFormat
