@@ -38,10 +38,11 @@
 							</b-row>
 							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
 								<b-col lg='3'>
+									<b-badge class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>{{info.form_fields['submitted_at'].validation}}</b-badge>
 									<label>{{labels.submitted_at}}</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields['submitted_at']" :disabled="!is_secretariat"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields.submitted_at" :disabled="!is_secretariat"></fieldGenerator>
 								</b-col>
 							</b-row>
 						</div>
@@ -148,6 +149,7 @@ export default {
 
 	created() {
 		this.labels = getCommonLabels(this.$gettext)
+		this.setSubmitted_atValidation()
 	},
 
 	components: { fieldGenerator },
@@ -182,11 +184,25 @@ export default {
 	},
 
 	methods: {
+		setSubmitted_atValidation() {
+			const { submitted_at } = this.info.form_fields
+			if (!this.is_secretariat || submitted_at.selected) {
+				submitted_at.validation = null
+			} else {
+				submitted_at.validation = this.$gettext('Required')
+			}
+			this.$forceUpdate()
+		}
 	},
 	watch: {
 		'$language.current': {
 			handler() {
 				this.labels = getCommonLabels(this.$gettext)
+			}
+		},
+		'info.form_fields.submitted_at.selected': {
+			handler() {
+				this.setSubmitted_atValidation()
 			}
 		}
 	}

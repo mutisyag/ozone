@@ -103,6 +103,12 @@ const getTabSubInfo = ($gettext) => {
 					this.postal_address.validation = null
 					this.email.validation = null
 				}
+
+				if (this.submitted_at.validation) {
+					// This is a special case because this field is required only for secretariat users
+					invalid.push($gettext('Date of submission'))
+				}
+
 				return {
 					selected: invalid
 				}
