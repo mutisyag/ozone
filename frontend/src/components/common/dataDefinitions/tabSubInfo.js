@@ -82,6 +82,10 @@ const getTabSubInfo = ($gettext) => {
 				selected: '',
 				tooltip: $gettext('The date indicated on the submitted document')
 			},
+			submitted_at: {
+				type: 'date',
+				selected: ''
+			},
 			get validation() {
 				const invalid = []
 				if (!this.reporting_officer.selected) {

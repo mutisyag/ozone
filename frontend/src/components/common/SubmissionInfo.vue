@@ -36,6 +36,14 @@
 									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? !$store.getters.can_change_reporting_channel : !$store.getters.can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
+							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
+								<b-col lg='3'>
+									<label>{{labels.submitted_at}}</label>
+								</b-col>
+								<b-col>
+									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields['submitted_at']" :disabled="!is_secretariat"></fieldGenerator>
+								</b-col>
+							</b-row>
 						</div>
 					</b-card>
 				</b-col>
@@ -131,7 +139,6 @@
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
-import { dateFormat } from '@/components/common/services/languageService'
 
 export default {
 	props: {
@@ -162,12 +169,9 @@ export default {
 		specific_flags_columns() {
 			return [...new Set(this.specific_flags.map(f => f.split('_')[3]).map(f => f.split('')[0]))]
 		},
-		currentSubmissionSubmittedAt() {
-			const { submitted_at } = this.$store.state.current_submission
-			if (!submitted_at) {
-				return null
-			}
-			return dateFormat(submitted_at, this.$language.current)
+
+		is_secretariat() {
+			return this.$store.state.currentUser.is_secretariat
 		}
 	},
 

@@ -46,6 +46,9 @@ const dateFormat = (value, language, formatString) => {
 }
 
 const dateFormatToIso = (value, language) => {
+	if (!value) {
+		return value
+	}
 	moment().locale(language)
 	return moment(value).toISOString().split('T')[0]
 }

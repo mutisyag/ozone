@@ -3,7 +3,6 @@ import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
 const getFormExemption = ($gettext) => {
-	const tabSubInfo = getTabSubInfo($gettext)
 	const form = {
 		formDetails: {
 			tabsDisplay: ['sub_info', 'files', 'nomination', 'approved'],
