@@ -200,11 +200,11 @@
                 <b-col md="10" class="my-1">
                   <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
-				<b-col md="2">
+								<b-col md="2">
                   <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
-				</b-col>
+								</b-col>
               </b-row>
             </b-container>
           </b-card>
@@ -528,7 +528,6 @@ export default {
 				})
 			}
 		},
-
 		getFormName(obligation) {
 			return this.obligations.find(o => o.value === obligation).form_type
 		},
