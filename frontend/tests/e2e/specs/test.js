@@ -71,7 +71,7 @@ module.exports = {
 			reporting_officer: 'test name',
 			designation: 'test designation',
 			organization: 'test organisation',
-			postal_code: 'test address',
+			postal_address: 'test address',
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com',
@@ -106,11 +106,20 @@ module.exports = {
 			decision_critical_uses: 'Do that'
 		}
 		const start_column = 4
-
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_imports'])
-
+		fillSubmissionInfo(browser, submissionInfo)
 		addEntity(browser, 'has_imports_tab', 'substance', ['AI', 'CFC-11'])
 		addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
@@ -127,11 +136,22 @@ module.exports = {
 			quantity_critical_uses: 0.02,
 			decision_critical_uses: 'Do that'
 		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 		const start_column = 4
 
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_exports'])
+		fillSubmissionInfo(browser, submissionInfo)
 
 		addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-11'], 1, true)
 		addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
@@ -150,11 +170,22 @@ module.exports = {
 			quantity_critical_uses: 0.02,
 			decision_critical_uses: 'Do that'
 		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 		const start_column = 3
 
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_produced'])
+		fillSubmissionInfo(browser, submissionInfo)
 
 		addEntity(browser, 'has_produced_tab', 'substance', ['AI', 'CFC-11'], 1, true)
 		addValues(browser, 'substance-table', 'has_produced_tab', 1, row_values_e1, modal_values, start_column)
@@ -173,10 +204,21 @@ module.exports = {
 			quantity_destroyed: 5
 		}
 		const start_column = 3
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_destroyed'])
+		fillSubmissionInfo(browser, submissionInfo)
 
 		addEntity(browser, 'has_destroyed_tab', 'substance', ['AI', 'CFC-11'], 1, true)
 		addValues(browser, 'substance-table', 'has_destroyed_tab', 1, row_values_e1, modal_values, start_column)
@@ -194,11 +236,22 @@ module.exports = {
 			quantity_export_new: 2,
 			quantity_export_recovered: 1
 		}
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 		const start_column = 4
 
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_nonparty'])
+		fillSubmissionInfo(browser, submissionInfo)
 
 		addEntity(browser, 'has_nonparty_tab', 'substance', ['AI', 'CFC-11'], 1, true)
 		addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values, start_column)
@@ -213,10 +266,21 @@ module.exports = {
 	BU_011: browser => {
 		const row_values = ['CCT Facility', 10, '', '', '', '', '', 10]
 		const start_column = 1
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_emissions'])
+		fillSubmissionInfo(browser, submissionInfo)
 
 		addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, start_column, true)
 
@@ -224,9 +288,20 @@ module.exports = {
 		saveSubmission(browser, ['Questionnaire', 'Emissions'])
 	},
 	BU_012: browser => {
+		const submissionInfo = {
+			reporting_officer: 'test name',
+			designation: 'test designation',
+			organization: 'test organisation',
+			postal_address: 'test address',
+			country: 'France',
+			phone: '+490000000',
+			email: 'john.doe@gmail.com',
+			date: '01/11/2019'
+		}
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser)
+		fillSubmissionInfo(browser, submissionInfo)
 		selectTab(browser, 'Files')
 		uploadeFile(browser, 'hello.pdf', '../../../../')
 		saveSubmission(browser, ['Submission Info', 'Questionnaire'])
@@ -249,7 +324,7 @@ module.exports = {
 			reporting_officer: 'test name',
 			designation: 'test designation',
 			organization: 'test organisation',
-			postal_code: 'test address',
+			postal_address: 'test address',
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com',

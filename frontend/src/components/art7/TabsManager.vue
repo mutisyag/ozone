@@ -2,7 +2,7 @@
   <div>
   <div class="breadcrumb custom">
     <small style="width: 30%;">
-		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
+		<b-btn variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton" style="margin-right:.5rem">
 			<i class="fa fa-info fa-lg"></i>
 		</b-btn>
 		<div v-html="selectedTab.detailsHtml"></div>
@@ -15,7 +15,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
     <b-button-group class="actions">
-      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.getters.can_save_form"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -69,7 +69,7 @@
 	</b-card>
 	</div>
     <Footer style="display:inline">
-			<Save class="actions mt-2 mb-2" v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+			<Save class="actions mt-2 mb-2" v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
 			<b-button-group class="pull-right actions mt-2 mb-2">
 				<b-btn
 					v-if="$store.state.available_transitions.includes('submit')"
@@ -84,6 +84,16 @@
 					@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
 						<span>{{labels[transition]}}</span>
 				</b-btn>
+
+				<b-btn
+						variant="outline-primary"
+						@click="clone($route.query.submission)"
+						size="sm"
+						v-if="$store.state.current_submission.is_cloneable"
+						:disabled="$store.state.currentUser.is_read_only">
+					Revise
+				</b-btn>
+
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span v-translate>Versions</span>
 				</b-btn>
@@ -114,7 +124,7 @@ import FormTemplate from '@/components/art7/FormTemplate.vue'
 import EmissionsTemplate from '@/components/art7/EmissionsTemplate.vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
 import Files from '@/components/common/Files'
-import { getInstructions } from '@/components/common/services/api'
+import { getInstructions, cloneSubmission } from '@/components/common/services/api'
 import Save from '@/components/art7/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
@@ -176,6 +186,25 @@ export default {
 		}
 	},
 	methods: {
+		clone(url) {
+			cloneSubmission(url).then((response) => {
+				this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
+				this.$router.go(this.$router.currentRoute)
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { __all__: [this.$gettext('New version created')] },
+					variant: 'success'
+				})
+				this.$destroy()
+			}).catch(error => {
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { ...error.response.data },
+					variant: 'danger' })
+				console.log(error)
+			})
+		},
+
 		updateBreadcrumbs() {
 			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.$store.state.current_submission.obligation, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version}`])
 		},

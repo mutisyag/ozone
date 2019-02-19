@@ -157,11 +157,11 @@
                     <router-link
                         class="btn btn-outline-primary btn-sm"
                         :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-                      <span v-translate v-if="row.item.details.can_edit_data && !currentUser.is_read_only">
-                        Edit
+                      <span v-if="row.item.details.can_edit_data && !currentUser.is_read_only">
+													{{labels['edit']}}
                       </span>
-                      <span v-translate v-else>
-                        View
+                      <span v-else>
+													{{labels['view']}}
                       </span>
                     </router-link>
 
@@ -171,26 +171,26 @@
 												size="sm"
 												v-if="row.item.details.is_cloneable"
 												:disabled="currentUser.is_read_only">
-                      <span v-translate>Revise</span>
+											{{labels['revise']}}
                     </b-btn>
 
                     <b-btn
-						variant="outline-primary"
-						v-for="transition in row.item.details.available_transitions"
-						:key="transition"
-						size="sm"
-						:disabled="currentUser.is_read_only"
-						@click="$store.dispatch('doSubmissionTransition', {$gettext, transition, submission: row.item.details.url, source: 'dashboard'})">
-							<span>{{labels[transition]}}</span>
+											variant="outline-primary"
+											v-for="transition in row.item.details.available_transitions"
+											:key="transition"
+											size="sm"
+											:disabled="currentUser.is_read_only"
+											@click="$store.dispatch('doSubmissionTransition', {$gettext, transition, submission: row.item.details.url, source: 'dashboard'})">
+											<span>{{labels[transition]}}</span>
                     </b-btn>
 
                     <b-btn
                         variant="outline-danger"
                         @click="removeSubmission(row.item.details.url)"
                         v-if="row.item.details.can_edit_data"
-						:disabled="currentUser.is_read_only"
-						size="sm">
-                      <span v-translate>Delete</span>
+												:disabled="currentUser.is_read_only"
+												size="sm">
+												{{labels['delete']}}
                     </b-btn>
                   </b-button-group>
                   </template>
@@ -200,11 +200,11 @@
                 <b-col md="10" class="my-1">
                   <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
                 </b-col>
-				<b-col md="2">
+								<b-col md="2">
                   <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
                     <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
                   </b-input-group>
-				</b-col>
+								</b-col>
               </b-row>
             </b-container>
           </b-card>
@@ -493,6 +493,7 @@ export default {
 					message: { __all__: [this.$gettext('New version created')] },
 					variant: 'success'
 				})
+				this.$destroy()
 			}).catch(error => {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
@@ -527,7 +528,6 @@ export default {
 				})
 			}
 		},
-
 		getFormName(obligation) {
 			return this.obligations.find(o => o.value === obligation).form_type
 		},

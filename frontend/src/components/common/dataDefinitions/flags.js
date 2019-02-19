@@ -79,10 +79,5 @@ export default {
 		selected: false,
 		type: 'checkbox',
 		disabled: true
-	},
-	flag_has_reported_f2: {
-		selected: false,
-		type: 'checkbox',
-		disabled: true
 	}
 }

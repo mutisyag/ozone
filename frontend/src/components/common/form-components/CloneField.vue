@@ -8,6 +8,7 @@
 			:clear-on-select="false"
 			:hide-selected="true"
 			:close-on-select="false"
+			:disabled="!disabled"
 			label="text"
 			trackBy="value"
 			:placeholder="$gettext('Countries')"
@@ -28,7 +29,8 @@ export default {
 
 	props: {
 		tabName: String,
-		current_field: Object
+		current_field: Object,
+		disabled: Boolean
 	},
 
 	components: {

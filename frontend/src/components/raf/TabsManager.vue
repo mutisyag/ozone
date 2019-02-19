@@ -13,7 +13,7 @@
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
    <b-button-group class="actions">
-      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.state.available_transitions.includes('submit')"  :data="$store.state.form" :submission="submission"></Save>
+      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.getters.can_save_form"  :data="$store.state.form" :submission="submission"></Save>
     </b-button-group>
   </div>
 
@@ -53,7 +53,7 @@
     </div>
     <Footer style="display:inline">
 		<b-button-group class="actions mt-2 mb-2">
-			<Save v-if="$store.state.available_transitions.includes('submit')" :data="$store.state.form" :submission="submission"></Save>
+			<Save v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
 		</b-button-group>
 
 		<b-button-group class="pull-right actions mt-2 mb-2">
@@ -69,6 +69,14 @@
 				:key="transition"
 				@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
 				<span>{{labels[transition]}}</span>
+			</b-btn>
+			<b-btn
+					variant="outline-primary"
+					@click="clone($route.query.submission)"
+					size="sm"
+					v-if="$store.state.current_submission.is_cloneable"
+					:disabled="$store.state.currentUser.is_read_only">
+				Revise
 			</b-btn>
 			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 				<span v-translate>Versions</span>
@@ -94,7 +102,7 @@
 import { Footer } from '@coreui/vue'
 import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
 import Files from '@/components/common/Files'
-import { getInstructions } from '@/components/common/services/api'
+import { getInstructions, cloneSubmission } from '@/components/common/services/api'
 import Save from '@/components/hat/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/raf/dataDefinitions/labels'
@@ -140,6 +148,24 @@ export default {
 		}
 	},
 	methods: {
+		clone(url) {
+			cloneSubmission(url).then((response) => {
+				this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
+				this.$router.go(this.$router.currentRoute)
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { __all__: [this.$gettext('New version created')] },
+					variant: 'success'
+				})
+				this.$destroy()
+			}).catch(error => {
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { ...error.response.data },
+					variant: 'danger' })
+				console.log(error)
+			})
+		},
 		updateBreadcrumbs() {
 			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.labels[this.$route.name], this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
 		},
