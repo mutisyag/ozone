@@ -26,15 +26,7 @@ const getFormExemption = ($gettext) => {
 		tabs: {
 			...setTabFiles($gettext),
 			sub_info: {
-				...tabSubInfo,
-				hideInfoButton: true,
-				fields_order: [...tabSubInfo.fields_order],
-				form_fields: {
-					...tabSubInfo.form_fields
-				},
-				default_properties: {
-					...tabSubInfo.default_properties
-				}
+				...getTabSubInfo($gettext)
 			},
 			nomination: {
 				...getTabsCommonInfoForNominationAndApproved($gettext),
