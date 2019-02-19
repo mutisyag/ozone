@@ -16,6 +16,7 @@ from .factories import (
     SubregionFactory,
     SubstanceFactory,
     AnotherPartyFactory,
+    SubmissionFormatFactory,
 )
 
 
@@ -39,6 +40,7 @@ class BaseSubmissionInfoTest(BaseTests):
 
         self.substance = SubstanceFactory()
         ReportingChannelFactory()
+        SubmissionFormatFactory()
 
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
@@ -81,7 +83,8 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'organization': '',
             'phone': '0000000000',
             'postal_address': '',
-            'reporting_officer': ''
+            'reporting_officer': '',
+            'submission_format': 'A7 Data forms'
         }
 
         resp = self.client.put(
@@ -109,7 +112,8 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
             'organization': '',
             'phone': '0000000000',
             'postal_address': '',
-            'reporting_officer': ''
+            'reporting_officer': '',
+            'submission_format': 'A7 Data forms'
         }
         resp = self.client.put(
             reverse(
