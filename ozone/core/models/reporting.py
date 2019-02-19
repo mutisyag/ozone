@@ -30,6 +30,7 @@ __all__ = [
     'Submission',
     'SubmissionInfo',
     'ReportingChannel',
+    'SubmissionFormat',
 ]
 
 SUBMISSION_ROOT_DIR = 'submissions'
@@ -878,6 +879,7 @@ class Submission(models.Model):
                         'phone': self.info.phone,
                         'email': self.info.email,
                         'date': self.info.date,
+                        'submission_format': self.info.submission_format,
                     }
                 )
         else:
@@ -1086,7 +1088,8 @@ class Submission(models.Model):
                         country=latest_info.country,
                         phone=latest_info.phone,
                         email=latest_info.email,
-                        date=latest_info.date
+                        date=latest_info.date,
+                        submission_format=latest_info.submission_format
                     )
                 else:
                     info = SubmissionInfo.objects.create(submission=self)
@@ -1106,19 +1109,22 @@ class Submission(models.Model):
         self.save()
 
 
+class SubmissionFormat(models.Model):
+    """
+    Describes type of submission.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        db_table = "submission_format"
+
+
 class SubmissionInfo(ModifyPreventionMixin, models.Model):
     """
     Model for storing submission info.
     """
-
-    @enum.unique
-    class SubmissionFormats(enum.Enum):
-        A7_DATA_FORMS = 'A7 Data forms'
-        ANNEX_TO_DATA_FORM_1 = 'Annex to data form 1'
-        COUNTRY_PROGRAMME_DATA = 'Country Programme data'
-        EMAIL = 'Email'
-        LETTER = 'Letter'
-        QUESTIONNAIRE = 'Questionnaire'
 
     submission = models.OneToOneField(
         Submission,
@@ -1134,10 +1140,12 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     phone = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
-    submission_format = models.CharField(
-        max_length=128, choices=((s.value, s.name) for s in SubmissionFormats),
+    submission_format = models.ForeignKey(
+        SubmissionFormat,
+        related_name="infos",
+        null=True,
         blank=True,
-        help_text="This field describes type of submission."
+        on_delete=models.PROTECT
     )
 
     tracker = FieldTracker()
