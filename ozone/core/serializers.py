@@ -1204,7 +1204,7 @@ class SubmissionSerializer(
     reporting_period = serializers.StringRelatedField(
         many=False, read_only=True
     )
-    obligation = serializers.StringRelatedField(
+    obligation = serializers.PrimaryKeyRelatedField(
         many=False, read_only=True
     )
 
