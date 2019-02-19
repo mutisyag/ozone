@@ -12,7 +12,7 @@
 
 import { post, update } from '@/components/common/services/api'
 import { isObject } from '@/components/common/services/utilsService'
-import { dateFormatToIso } from '@/components/common/services/languageService'
+import { dateFormatToYYYYMMDD } from '@/components/common/services/languageService'
 import FilesMixin from './FilesMixin'
 
 export default {
@@ -114,8 +114,7 @@ export default {
 						}
 
 						if (form_field[row].type === 'date') {
-							console.log('isArray dateFormatToIso')
-							save_obj[row] = dateFormatToIso(save_obj[row], this.$language.current)
+							save_obj[row] = dateFormatToYYYYMMDD(save_obj[row], this.$language.current)
 						}
 					}
 					current_tab_data.push(save_obj)
@@ -128,8 +127,7 @@ export default {
 				Object.keys(save_obj).forEach(key => {
 					current_tab_data[key] = tab.form_fields[key].selected
 					if (tab.form_fields[key].type === 'date') {
-						console.log('isObject dateFormatToIso')
-						current_tab_data[key] = dateFormatToIso(current_tab_data[key], this.$language.current)
+						current_tab_data[key] = dateFormatToYYYYMMDD(current_tab_data[key], this.$language.current)
 					}
 				})
 			}

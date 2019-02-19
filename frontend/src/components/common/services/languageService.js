@@ -45,17 +45,11 @@ const dateFormat = (value, language, formatString) => {
 	return moment(value).format(formatString || 'LL')
 }
 
-const dateFormatToIso = (value, language) => {
-	if (!value) {
-		return value
-	}
-	moment().locale(language)
-	return moment(value).toISOString().split('T')[0]
-}
+const dateFormatToYYYYMMDD = (value, language) => dateFormat(value, language, 'YYYY-MM-DD')
 
 export {
 	initLanguages,
 	setLanguage,
 	dateFormat,
-	dateFormatToIso
+	dateFormatToYYYYMMDD
 }
