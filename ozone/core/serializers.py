@@ -973,7 +973,8 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 '%Y-%m-%d'
             )
             to_update_fields.append('submitted_at')
-        instance.submission.save(update_fields=to_update_fields)
+        if to_update_fields:
+            instance.submission.save(update_fields=to_update_fields)
 
         if self.context.get('submission_format', None):
             instance.submission_format = SubmissionFormat.objects.get(
