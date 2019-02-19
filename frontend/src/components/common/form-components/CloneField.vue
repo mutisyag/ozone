@@ -8,7 +8,7 @@
 			:clear-on-select="false"
 			:hide-selected="true"
 			:close-on-select="false"
-			:disabled="!disabled"
+			:disabled="disabled"
 			label="text"
 			trackBy="value"
 			:placeholder="$gettext('Countries')"
