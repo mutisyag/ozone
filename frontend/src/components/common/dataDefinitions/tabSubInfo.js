@@ -3,9 +3,10 @@ const getTabSubInfo = ($gettext) => {
 		name: 'sub_info',
 		hasAssideMenu: false,
 		status: null,
+		validate: true,
 		endpoint_url: 'sub_info_url',
 		endpoint_additional_url: '',
-		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_code', 'postal_address', 'country', 'phone', 'email', 'date'],
+		fields_order: ['reporting_channel', 'reporting_officer', 'designation', 'organization', 'postal_address', 'country', 'phone', 'email', 'date'],
 		intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
 		title: $gettext('Submission Info'),
 		titleHtml: `<b>${$gettext('Submission Info')}</b>`,
@@ -45,7 +46,8 @@ const getTabSubInfo = ($gettext) => {
 			},
 			reporting_officer: {
 				type: 'text',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			designation: {
 				type: 'text',
@@ -55,13 +57,10 @@ const getTabSubInfo = ($gettext) => {
 				type: 'text',
 				selected: ''
 			},
-			postal_code: {
-				type: 'text',
-				selected: ''
-			},
 			postal_address: {
 				type: 'textarea',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			country: {
 				type: 'select',
@@ -75,12 +74,34 @@ const getTabSubInfo = ($gettext) => {
 			},
 			email: {
 				type: 'email',
-				selected: ''
+				selected: '',
+				validation: null
 			},
 			date: {
 				type: 'date',
 				selected: '',
 				tooltip: $gettext('The date indicated on the submitted document')
+			},
+			get validation() {
+				const invalid = []
+				if (!this.reporting_officer.selected) {
+					this.reporting_officer.validation = $gettext('Required')
+					invalid.push('Reporting officer')
+				} else {
+					this.reporting_officer.validation = null
+				}
+
+				if (!this.postal_address.selected && !this.email.selected) {
+					this.postal_address.validation = $gettext('Required')
+					this.email.validation = $gettext('Required')
+					invalid.push('Email/Address')
+				} else {
+					this.postal_address.validation = null
+					this.email.validation = null
+				}
+				return {
+					selected: invalid
+				}
 			}
 		},
 		default_properties: {
@@ -88,7 +109,6 @@ const getTabSubInfo = ($gettext) => {
 			id: null,
 			designation: null,
 			organization: null,
-			postal_code: null,
 			postal_address: null,
 			country: null,
 			phone: null,
