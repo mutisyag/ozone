@@ -120,23 +120,23 @@
             <b-container fluid>
               <div  class="mt-2 mb-2 dashboard-filters">
 					<b-input-group :prepend="$gettext('Search')">
-						<b-form-input v-model="tableOptions.filters.search"/>
+						<b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
 					</b-input-group>
 					<b-input-group :prepend="$gettext('Obligation')">
-						<b-form-select v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+						<b-form-select id="submission_obligation_filter" v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
 					</b-input-group>
 					<b-input-group :prepend="$gettext('Party')">
-						<b-form-select :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
+						<b-form-select id="submission_party_filter" :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
 					</b-input-group>
 					<b-input-group class="w120" :prepend="$gettext('From')">
-						<b-form-select v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
+						<b-form-select id="submission_from_filter" v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
 						</b-form-select>
 					</b-input-group>
 					<b-input-group class="w120" :prepend="$gettext('To')">
-						<b-form-select v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
+						<b-form-select id="submission_to_filter" v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
 						</b-form-select>
 					</b-input-group>
-					<b-btn @click="clearFilters"><span v-translate>Clear</span></b-btn>
+					<b-btn id="submission_clear_button" @click="clearFilters"><span v-translate>Clear</span></b-btn>
               </div>
               <b-table id="all-submissions-table"
 								show-empty

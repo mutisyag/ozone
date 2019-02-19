@@ -17,6 +17,7 @@ const {
 	openLookupTable,
 	openDashboard,
 	openGeneralInstructions,
+	filterSubmission,
 	filterEntity,
 	fillSubmissionInfo,
 	checkSumbissionInfoFlags,
@@ -26,6 +27,7 @@ const {
 	addFacility,
 	addValues,
 	addComment,
+	rowIsEmpty,
 	uploadeFile
 } = require('../custom-methods/methods.js')
 
@@ -35,8 +37,6 @@ module.exports = {
 		console.log('running backend')
 		execSync('bash ../utility/setup_backend.sh', { env: process.env })
 		console.log('done running backend')
-
-		login(browser, 'party', 'party')
 	},
 	afterEach: () => {
 		console.log('running cleanup')
@@ -44,17 +44,20 @@ module.exports = {
 		console.log('done running cleanup')
 	},
 	BU_001: browser => {
+		login(browser, 'party', 'party')
 		logout(browser)
 		browser.end()
 	},
 	BU_002: browser => {
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		deleteSubmission(browser)
 		logout(browser)
 		browser.end()
 	},
 	BU_003: browser => {
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		openDashboard(browser)
 		editSubmission(browser, 1)
 		saveAndFail(browser)
@@ -75,7 +78,8 @@ module.exports = {
 			date: '01/11/2019'
 		}
 
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser)
 		fillSubmissionInfo(browser, submissionInfo)
 		saveSubmission(browser, ['Submission Info', 'Questionnaire'])
@@ -86,7 +90,8 @@ module.exports = {
 		browser.end()
 	},
 	BU_005: browser => {
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		saveAndFail(browser)
 		clickQuestionnaireRadios(browser, [], false)
 		saveSubmission(browser, ['Questionnaire'])
@@ -111,7 +116,8 @@ module.exports = {
 			email: 'john.doe@gmail.com',
 			date: '01/11/2019'
 		}
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_imports'])
 		fillSubmissionInfo(browser, submissionInfo)
 		addEntity(browser, 'has_imports_tab', 'substance', ['AI', 'CFC-11'])
@@ -142,7 +148,8 @@ module.exports = {
 		}
 		const start_column = 4
 
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_exports'])
 		fillSubmissionInfo(browser, submissionInfo)
 
@@ -175,7 +182,8 @@ module.exports = {
 		}
 		const start_column = 3
 
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_produced'])
 		fillSubmissionInfo(browser, submissionInfo)
 
@@ -207,7 +215,8 @@ module.exports = {
 			date: '01/11/2019'
 		}
 
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_destroyed'])
 		fillSubmissionInfo(browser, submissionInfo)
 
@@ -239,7 +248,8 @@ module.exports = {
 		}
 		const start_column = 4
 
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_nonparty'])
 		fillSubmissionInfo(browser, submissionInfo)
 
@@ -266,7 +276,9 @@ module.exports = {
 			email: 'john.doe@gmail.com',
 			date: '01/11/2019'
 		}
-		createSubmission(browser, 'Article 7', '2018')
+
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser, ['has_emissions'])
 		fillSubmissionInfo(browser, submissionInfo)
 
@@ -286,7 +298,8 @@ module.exports = {
 			email: 'john.doe@gmail.com',
 			date: '01/11/2019'
 		}
-		createSubmission(browser, 'Article 7', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018', '')
 		clickQuestionnaireRadios(browser)
 		fillSubmissionInfo(browser, submissionInfo)
 		selectTab(browser, 'Files')
@@ -295,11 +308,13 @@ module.exports = {
 		browser.end()
 	},
 	BU_013: browser => {
+		login(browser, 'party', 'party')
 		createSubmission(browser, 'HAT Imports and Production', '2018')
 		deleteSubmission(browser)
 		browser.end()
 	},
 	BU_014: browser => {
+		login(browser, 'party', 'party')
 		createSubmission(browser, 'HAT Imports and Production', '2018')
 		deleteSubmission(browser)
 		browser.end()
@@ -316,7 +331,8 @@ module.exports = {
 			date: '01/11/2019'
 		}
 
-		createSubmission(browser, 'HAT Imports and Production', '2018')
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'HAT Imports and Production', '2018', '')
 		fillSubmissionInfo(browser, submissionInfo)
 		saveSubmission(browser, ['Submission Info'])
 		checkSumbissionInfoFlags(browser)
@@ -329,6 +345,7 @@ module.exports = {
 		const name = 'CFC-11'
 		const formula = 'CFCl3'
 
+		login(browser, 'party', 'party')
 		openLookupTable(browser, 'Controlled substances')
 		filterEntity(browser, 'controlled_substances', [group, name, formula])
 		logout(browser)
@@ -338,6 +355,7 @@ module.exports = {
 		const name = 'R-411B'
 		const components = 'HCFC-22'
 
+		login(browser, 'party', 'party')
 		openLookupTable(browser, 'Blends')
 		filterEntity(browser, 'blends', [name, components])
 		logout(browser)
@@ -346,8 +364,133 @@ module.exports = {
 	BU_021: browser => {
 		const name = 'Afghanistan'
 
+		login(browser, 'party', 'party')
 		openLookupTable(browser, 'Parties')
 		filterEntity(browser, 'parties', [name])
+		logout(browser)
+		browser.end()
+	},
+	BU_022: browser => {
+		const submissions = [
+			{
+				name: 'Article 7',
+				data: [{ year: '2018', party: 'Romania' }, { year: '2017', party: 'Albania' }]
+			},
+			{
+				name: 'Essential and Critical uses (RAF)',
+				data: [{ year: '2018', party: 'Algeria' }]
+			},
+			{
+				name: 'HAT Imports and Production',
+				data: [{ year: '2018', party: 'Angola' }]
+			},
+			{
+				name: 'Transfer or addition of production or consumption',
+				data: [{ year: '2018', party: 'Argentina' }]
+			},
+			{
+				name: 'Laboratory and analytical uses',
+				data: [{ year: '2017', party: 'Romania' }]
+			},
+			{
+				name: 'Process agent uses',
+				data: [{ year: '2017', party: 'Belarus' }]
+			},
+			{
+				name: 'Licensing information',
+				data: [{ year: '2018', party: 'Brazil' }]
+			},
+			{
+				name: 'Research, development, public awareness and exchange of information',
+				data: [{ year: '2017', party: 'China' }]
+			},
+			{
+				name: 'Requests for changes in reported baseline data',
+				data: [{ year: '2018', party: 'Romania' }]
+			}
+		]
+
+		const scenarios = [
+			{
+				filters: ['', '', '', '2018', '2018'],
+				first_row_expected: ['Article 7', '2018', 'Romania'],
+				rows_number_expected: 6
+			},
+			{
+				filters: ['', 'Essential and Critical uses (RAF)', 'Algeria', '2018', '2018'],
+				first_row_expected: ['Essential and Critical uses (RAF)', '2018', 'Algeria'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', '', 'Romania', '', ''],
+				first_row_expected: ['Article 7', '2018', 'Romania'],
+				rows_number_expected: 3
+			},
+			{
+				filters: ['', '', 'Romania', '2017', '2017'],
+				first_row_expected: ['Laboratory and analytical uses', '2017', 'Romania'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
+				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
+				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', '', 'Romania', '2016', '2016'],
+				first_row_expected: ['There are no records to show'],
+				rows_number_expected: 1
+			}
+		]
+
+		login(browser, 'secretariat', 'secretariat')
+
+		submissions.forEach(submission => {
+			submission.data.forEach(data => {
+				createSubmission(browser, submission.name, data.year, data.party, true, true)
+			})
+		})
+
+		/* Sort by obligation name */
+		browser
+			.useXpath()
+			.waitForElementVisible("//table[@id='all-submissions-table']//thead//th[1]", 10000)
+			.click("//table[@id='all-submissions-table']//thead//th[1]")
+			.pause(200)
+			.click("//table[@id='all-submissions-table']//thead//th[1]")
+			.pause(500)
+
+		scenarios.forEach(scenario => {
+			filterSubmission(browser, 'all-submissions-table', scenario.filters, scenario.first_row_expected, scenario.rows_number_expected)
+		})
+
+		logout(browser)
+		browser.end()
+	},
+	BU_023: browser => {
+		const row_values = [0.0123, 0.12]
+		const modal_values = {
+			quantity_feedstock: 0.10,
+			quantity_critical_uses: 0.02,
+			decision_critical_uses: 'Do that'
+		}
+		const start_column = 4
+
+		login(browser, 'party', 'party')
+		createSubmission(browser, 'Article 7', '2018')
+		clickQuestionnaireRadios(browser, ['has_exports'])
+
+		addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-11'], 1)
+		addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
+
+		addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-12'], 1)
+		rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values, start_column)
+
 		logout(browser)
 		browser.end()
 	}
