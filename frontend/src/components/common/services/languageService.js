@@ -41,12 +41,18 @@ const setLanguage = async (languageKey, vm) => {
 }
 
 const dateFormat = (value, language, formatString) => {
-	moment.locale(language)
+	moment().locale(language)
 	return moment(value).format(formatString || 'LL')
+}
+
+const dateFormatToIso = (value, language) => {
+	moment().locale(language)
+	return moment(value).toISOString().split('T')[0]
 }
 
 export {
 	initLanguages,
 	setLanguage,
-	dateFormat
+	dateFormat,
+	dateFormatToIso
 }

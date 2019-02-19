@@ -12,6 +12,7 @@
 
 import { post, update } from '@/components/common/services/api'
 import { isObject } from '@/components/common/services/utilsService'
+import { dateFormatToIso } from '@/components/common/services/languageService'
 import FilesMixin from './FilesMixin'
 
 export default {
@@ -111,6 +112,11 @@ export default {
 						} else {
 							save_obj[row] = form_field[row]
 						}
+
+						if (form_field[row].type === 'date') {
+							console.log('isArray dateFormatToIso')
+							save_obj[row] = dateFormatToIso(save_obj[row], this.$language.current)
+						}
 					}
 					current_tab_data.push(save_obj)
 				})
@@ -119,8 +125,16 @@ export default {
 			if (isObject(tab.form_fields)) {
 				const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 				current_tab_data = {}
-				Object.keys(save_obj).forEach(key => { current_tab_data[key] = tab.form_fields[key].selected })
+				Object.keys(save_obj).forEach(key => {
+					current_tab_data[key] = tab.form_fields[key].selected
+					if (tab.form_fields[key].type === 'date') {
+						console.log('isObject dateFormatToIso')
+						current_tab_data[key] = dateFormatToIso(current_tab_data[key], this.$language.current)
+					}
+				})
 			}
+
+			console.log(current_tab_data)
 
 			try {
 				if (this.newTabs.includes(tab.name) && tab.name !== 'files') {

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
@@ -916,6 +918,7 @@ class RAFSerializer(
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
+    submitted_at = serializers.SerializerMethodField()
     submission_format = serializers.SerializerMethodField()
 
     class Meta:
@@ -924,6 +927,11 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
 
     def get_reporting_channel(self, obj):
         return getattr(obj.submission.reporting_channel, 'name', '')
+
+    def get_submitted_at(self, obj):
+        submitted_at = getattr(obj.submission, 'submitted_at', None)
+        if submitted_at:
+            return submitted_at.strftime('%Y-%m-%d')
 
     def get_submission_format(self, obj):
         return getattr(obj.submission_format, 'name', '')
@@ -939,25 +947,49 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
                 ]
             })
 
+    def check_submitted_at(self, instance, user):
+        if not instance.submission.can_change_submitted_at(user):
+            raise ValidationError({
+                "submitted_at": [
+                    _('User is not allowed to change date of submission.')
+                ]
+            })
+
     def update(self, instance, validated_data):
         user = self.context['request'].user
         # Quick fix for staging error. Reporting channel info has been lost for
         # some submissions, otherwise this check wouldn't be necessary.
+        to_update_fields = []
         if self.context.get('reporting_channel', None):
             instance.submission.reporting_channel = ReportingChannel.objects.get(
                 name=self.context['reporting_channel']
             )
             self.check_reporting_channel(instance, user)
-            instance.submission.save(update_fields=['reporting_channel'])
+            to_update_fields.append('reporting_channel')
+        if self.context.get('submitted_at', None):
+            self.check_submitted_at(instance, user)
+            instance.submission.submitted_at = datetime.strptime(
+                self.context['submitted_at'],
+                '%Y-%m-%d'
+            )
+            to_update_fields.append('submitted_at')
+        if to_update_fields:
+            instance.submission.save(update_fields=to_update_fields)
+
         if self.context.get('submission_format', None):
             instance.submission_format = SubmissionFormat.objects.get(
                 name=self.context['submission_format']
             )
+
         return super().update(instance, validated_data)
 
 
 class SubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
+    submitted_at = serializers.CharField(
+        source='submission.submitted_at',
+        read_only=True
+    )
     submission_format = serializers.SerializerMethodField()
 
     class Meta:
@@ -1318,6 +1350,10 @@ class SubmissionSerializer(
 
     can_edit_data = serializers.SerializerMethodField()
 
+    can_change_submitted_at = serializers.SerializerMethodField()
+    is_submitted_at_visible = serializers.SerializerMethodField()
+    is_submitted_at_mandatory = serializers.SerializerMethodField()
+
     updated_at = serializers.DateTimeField(format='%Y-%m-%d')
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
@@ -1346,6 +1382,9 @@ class SubmissionSerializer(
             'can_change_reporting_channel',
             'can_upload_files',
             'can_edit_data',
+            'can_change_submitted_at',
+            'is_submitted_at_visible',
+            'is_submitted_at_mandatory',
         )
 
         per_type_fields = {
@@ -1409,6 +1448,18 @@ class SubmissionSerializer(
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)
+
+    def get_can_change_submitted_at(self, obj):
+        user = self.context['request'].user
+        return obj.can_change_submitted_at(user)
+
+    def get_is_submitted_at_visible(self, obj):
+        user = self.context['request'].user
+        return obj.is_submitted_at_visible(user)
+
+    def get_is_submitted_at_mandatory(self, obj):
+        user = self.context['request'].user
+        return obj.is_submitted_at_mandatory(user)
 
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):

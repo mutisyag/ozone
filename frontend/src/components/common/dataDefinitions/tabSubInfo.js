@@ -114,6 +114,7 @@ const getTabSubInfo = ($gettext) => {
 			phone: null,
 			email: null,
 			date: null,
+			submitted_at: null,
 			reporting_channel: null
 		}
 	}

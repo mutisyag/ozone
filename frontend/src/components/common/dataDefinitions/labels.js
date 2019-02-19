@@ -21,7 +21,7 @@ const getCommonLabels = ($gettext) => {
 		reporting_channel: $gettext('Reporting channel'),
 		email: $gettext('E-mail'),
 		date: $gettext('Date'),
-		dateOfSubmission: $gettext('Date of submission'),
+		submitted_at: $gettext('Date of submission'),
 		art7: $gettext('Article 7'),
 		hat: $gettext('HAT'),
 		valid: $gettext('valid'),

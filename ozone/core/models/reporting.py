@@ -1,10 +1,10 @@
 import os
 import enum
 
+from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
@@ -173,7 +173,7 @@ class Submission(models.Model):
     )
 
     # Is set only at *the first* transition to Submitted
-    submitted_at = models.DateTimeField(null=True)
+    submitted_at = models.DateField(null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
@@ -790,6 +790,7 @@ class Submission(models.Model):
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
             "flag_approved",
+            "submitted_at",
         ]
 
     @staticmethod
@@ -975,6 +976,24 @@ class Submission(models.Model):
     def is_emergency(self):
         return self.flag_emergency
 
+    def can_change_submitted_at(self, user):
+        return not user.is_read_only and user.is_secretariat and self.filled_by_secretariat
+
+    def is_submitted_at_visible(self, user):
+        if user.is_secretariat:
+            return True
+        elif user.party is not None and user.party == self.party:
+            return not self.data_changes_allowed
+
+    def is_submitted_at_mandatory(self, user):
+        return self.can_change_submitted_at(user)
+
+    def is_submitted_at_automatically_filled(self, user):
+        """
+        Return True if the user is a Party Reporter.
+        """
+        return not user.is_secretariat
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -1105,7 +1124,7 @@ class Submission(models.Model):
             )
 
     def set_submitted(self):
-        self.submitted_at = timezone.now()
+        self.submitted_at = datetime.now().date()
         self.save()
 
 
