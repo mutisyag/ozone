@@ -90,7 +90,7 @@ const getTabSubInfo = ($gettext) => {
 				const invalid = []
 				if (!this.reporting_officer.selected) {
 					this.reporting_officer.validation = $gettext('Required')
-					invalid.push('Reporting officer')
+					invalid.push($gettext('Reporting officer'))
 				} else {
 					this.reporting_officer.validation = null
 				}
@@ -98,7 +98,7 @@ const getTabSubInfo = ($gettext) => {
 				if (!this.postal_address.selected && !this.email.selected) {
 					this.postal_address.validation = $gettext('Required')
 					this.email.validation = $gettext('Required')
-					invalid.push('Email/Address')
+					invalid.push($gettext('Email/Address'))
 				} else {
 					this.postal_address.validation = null
 					this.email.validation = null
