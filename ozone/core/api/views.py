@@ -161,7 +161,7 @@ class IsOwnerFilterBackend(BaseFilterBackend):
     def filter_queryset(self, request, queryset, view):
         if not request.user.is_authenticated or request.user.is_anonymous:
             return queryset.none()
-        elif request.user.is_secretariat or request.user.is_superuser:
+        elif request.user.is_secretariat:
             # Secretariat user
             return queryset
         else:
