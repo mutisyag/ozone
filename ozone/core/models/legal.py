@@ -60,7 +60,7 @@ class ReportingPeriod(models.Model):
     def get_most_recent(cls):
         return (
             cls.objects.filter(is_reporting_open=True)
-            .order_by('-end_date')
+            .order_by('-start_date')
             .first()
         )
 
