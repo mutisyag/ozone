@@ -56,6 +56,14 @@ class ReportingPeriod(models.Model):
             end_date__gte=today,
         ).first()
 
+    @classmethod
+    def get_most_recent(cls):
+        return (
+            cls.objects.filter(is_reporting_open=True)
+            .order_by('-start_date')
+            .first()
+        )
+
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
             raise ValidationError(

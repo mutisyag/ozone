@@ -1240,3 +1240,30 @@ class AuthTokenViewSet(
             request.session.delete()
             response.delete_cookie("authToken")
         return response
+
+
+class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
+    """
+    retrieve:
+    Get the default values for 'Obligation' and 'Reporting Period'.
+    """
+    permission_classes = (IsAuthenticated,)
+    renderer_classes = (JSONRenderer,)
+
+    def get(self, request):
+        default_obligation_obj = Obligation.get_default()
+        default_obligation = (
+            default_obligation_obj.name
+            if default_obligation_obj
+            else None
+        )
+        default_reporting_period_obj = ReportingPeriod.get_most_recent()
+        default_reporting_period = (
+            default_reporting_period_obj.name
+            if default_reporting_period_obj
+            else None
+        )
+        return Response({
+            'obligation': default_obligation,
+            'reporting_period': default_reporting_period
+        })
