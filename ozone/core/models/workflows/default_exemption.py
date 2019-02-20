@@ -60,3 +60,8 @@ class DefaultExemptionWorkflow(BaseWorkflow):
             and not self.model_instance.has_filled_approved_exemptions()
         )
 
+    @xworkflows.transition('submit')
+    def submit(self):
+        if self.model_instance.is_submitted_at_automatically_filled(self.user):
+            self.model_instance.set_submitted()
+
