@@ -264,5 +264,10 @@ urlpatterns = (
             views.PartyRatificationViewSet.as_view(),
             name='get_ratifications',
         ),
+        path(
+            'default-values/',
+            views.DefaultValuesViewSet.as_view(),
+            name='default_values'
+        )
     ]
 )

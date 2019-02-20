@@ -98,8 +98,32 @@ class Obligation(models.Model):
 
     other = models.BooleanField(default=False)
 
+    is_default = models.NullBooleanField(
+        default=None,
+        help_text="If set to true it means that the current obligation is used "
+                  "as default for 'Data entry submissions' and 'All submissions' sections."
+    )
+
     def __str__(self):
         return self.name
+
+    @classmethod
+    def get_default(cls):
+        return (
+            cls.objects.filter(is_default=True)
+            .first()
+        )
+
+    def clean(self):
+        default_obligation_qs = Obligation.objects.filter(is_default=True)
+        if (
+            self.is_default
+            and default_obligation_qs.count() > 0
+            and self not in default_obligation_qs
+        ):
+            raise ValidationError(
+                _('Only one obligation can be set as default.')
+            )
 
     class Meta:
         db_table = "core_obligation"
