@@ -33,6 +33,9 @@ export default {
 		},
 		newTabs() {
 			return this.$store.state.newTabs
+		},
+		is_secretariat() {
+			return this.$store.state.currentUser.is_secretariat
 		}
 	},
 
@@ -96,6 +99,9 @@ export default {
 		},
 
 		async submitData(tab, url) {
+			if (tab.skipSave) {
+				return
+			}
 			if (tab.status !== null) {
 				this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
 			}
@@ -125,14 +131,16 @@ export default {
 				const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
 				current_tab_data = {}
 				Object.keys(save_obj).forEach(key => {
+					if (key === 'submitted_at' && !this.is_secretariat) {
+						return
+					}
 					current_tab_data[key] = tab.form_fields[key].selected
 					if (tab.form_fields[key].type === 'date') {
 						current_tab_data[key] = dateFormatToYYYYMMDD(current_tab_data[key], this.$language.current)
 					}
 				})
 			}
-
-			console.log(current_tab_data)
+			console.log('submitData', current_tab_data)
 
 			try {
 				if (this.newTabs.includes(tab.name) && tab.name !== 'files') {

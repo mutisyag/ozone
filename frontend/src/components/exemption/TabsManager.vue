@@ -30,20 +30,19 @@
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
 				</template>
-			<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-			</b-tab>
-
-			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-				</template>
-				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
+				<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
 			</b-tab>
 			<b-tab>
 				<template slot="title">
 					<tab-title-with-loader :tab="$store.state.form.tabs.files" />
 				</template>
 				<Files :tabId="3" :tabIndex="tabIndex" />
+			</b-tab>
+			<b-tab v-if="is_secretariat" v-for="tabId in tabsIdsForSecretariat" :key="tabId">
+				<template slot="title">
+					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
+				</template>
+				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
 			</b-tab>
     </b-tabs>
 
@@ -150,9 +149,18 @@ export default {
 			}
 			return tab
 		},
-		tabsIdsWithAssideMenu() {
+		tabsIdsForSecretariat() {
 			const { form } = this.$store.state
-			return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
+			const tabIds = form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
+			tabIds.forEach(tabId => {
+				if (!this.is_secretariat) {
+					this.$store.state.form.tabs[tabId].skipSave = true
+				}
+			})
+			return tabIds
+		},
+		is_secretariat() {
+			return this.$store.state.currentUser.is_secretariat
 		}
 	},
 	methods: {
