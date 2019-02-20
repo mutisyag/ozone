@@ -165,7 +165,6 @@ const getNonParties = () => fetch('get-non-parties/')
 
 const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
-	console.log(file)
 	const upload = new tus.Upload(file,
 		{
 			endpoint: filesURL,

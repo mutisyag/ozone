@@ -46,10 +46,12 @@ const dateFormat = (value, language, formatString) => {
 }
 
 const dateFormatToYYYYMMDD = (value, language) => dateFormat(value, language, 'YYYY-MM-DD')
+const dateFormatToSeconds = (value, language) => dateFormat(value, language, 'YYYY-MM-DD HH:mm:ss')
 
 export {
 	initLanguages,
 	setLanguage,
 	dateFormat,
-	dateFormatToYYYYMMDD
+	dateFormatToYYYYMMDD,
+	dateFormatToSeconds
 }

@@ -4,10 +4,8 @@
 		<div class="col-12 form-inline" v-for="(file, index) in files" :key="index">
 			<span>
 				<a :href="file.file_url">
-					<div class="spinner" v-if="!file.upload_successful">
-						<div class="loader"></div>
-					</div>
 					<i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
+					<i v-else class="fa fa-upload" aria-hidden="true"></i>
 					&nbsp;
 					{{file.name}}
 					<span v-if="file.upload_successful">- {{file.updated}}</span>
@@ -20,8 +18,8 @@
 				<i class="fa fa-trash" aria-hidden="true"></i>
 			</b-button>
 			&nbsp;
-			<div style="width:200px">
-				<b-progress v-show="!file.tus_id" :value="file.percentage" :max="100" animated></b-progress>
+			<div style="width:200px" v-show="file.percentage">
+				<b-progress :value="file.percentage" :max="100" animated></b-progress>
 			</div>
 		</div>
 	</div>
@@ -64,11 +62,6 @@ export default {
 				description
 			})
 		},
-		onProgressCallback(file, percentage) {
-			this.$store.commit('deleteTabFile', { file })
-			file.percentage = percentage
-			this.$store.commit('addTabFile', { file })
-		},
 		async onSelectedFilesChanged() {
 			if (!this.selectedFiles || !this.selectedFiles.length) {
 				return
@@ -86,7 +79,6 @@ export default {
 	watch: {
 		'files': {
 			handler() {
-				console.log('here', this.tabId, this.tabIndex)
 				if (parseInt(this.tabId) === this.tabIndex) {
 					if (this.$store.state.form.tabs.files !== 'edited') {
 						this.$store.commit('setTabStatus', {

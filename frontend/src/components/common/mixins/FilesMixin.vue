@@ -9,7 +9,8 @@ export default {
 	},
 	computed: {
 		files() {
-			return this.$store.state.form.tabs.files.form_fields.files
+			const { files } = this.$store.state.form.tabs.files.form_fields
+			return files
 		},
 		allowedExtensions() {
 			return ALLOWED_FILE_EXTENSIONS.split(',').map(x => `.${x}`)
@@ -29,6 +30,9 @@ export default {
 		},
 		getFilesNotUploaded() {
 			return this.files.filter(file => !file.tus_id)
+		},
+		onProgressCallback(file, percentage) {
+			this.$store.commit('updateFilePercentage', { file, percentage })
 		},
 		uploadFiles() {
 			const files = this.getFilesNotUploaded()

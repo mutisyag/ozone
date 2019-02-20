@@ -2,6 +2,7 @@ import 'toastedjs/src/sass/toast.scss'
 import Toasted from 'toastedjs/dist/toasted.min.js'
 
 import { sortAscending } from '@/components/common/services/utilsService'
+import { dateFormatToSeconds } from '@/components/common/services/languageService'
 
 import { getFormArt7 } from '@/components/art7/dataDefinitions/form'
 import art7TableRowConstructor from '@/components/art7/services/tableRowConstructorService'
@@ -285,6 +286,7 @@ const mutations = {
 		}
 		const { form_fields } = state.form.tabs.files
 		files.forEach(file => {
+			file.updated = dateFormatToSeconds(file.updated, state.currentUser.language)
 			form_fields.files.push(file)
 		})
 		form_fields.files = sortAscending(form_fields.files, 'updated')
@@ -305,8 +307,13 @@ const mutations = {
 		file.id = fileServerInfo.id
 		file.upload_successful = fileServerInfo.upload_successful
 		file.file_url = fileServerInfo.file_url
-		file.updated = fileServerInfo.updated
+		file.updated = dateFormatToSeconds(fileServerInfo.updated, state.currentUser.language)
 		file.tus_id = fileServerInfo.tus_id
+	},
+	updateFilePercentage(state, { file, percentage }) {
+		const { form_fields } = state.form.tabs.files
+		file.percentage = percentage
+		form_fields.files = [...form_fields.files]
 	},
 	deleteTabFile(state, { file }) {
 		const { form_fields } = state.form.tabs.files
