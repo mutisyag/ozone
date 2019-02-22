@@ -81,6 +81,30 @@ class IsSecretariatOrSamePartySubmissionFlags(BasePermission):
         return obj.submission.has_read_rights(request.user)
 
 
+class IsSecretariatOrSamePartySubmissionClone(BasePermission):
+    """
+    This is used for deciding whether the user has, in principle, permission
+    to clone this specific submission.
+    DRF allows specifying permission classes per action (i.e. in the params of
+    the @action decorator). However, since in the URL the action name is not
+    followed by any pk, only the return value of has_permission() will be taken
+    into account; has_object_permission() is never called in this case.
+    """
+    def has_permission(self, request, view):
+        """
+        In principle, if a user can see a certain submission, he/she can also
+        clone it, *if* he is not read-only. :)
+        """
+        if request.user.is_read_only:
+            return False
+
+        submission = Submission.objects.get(pk=view.kwargs.get('pk', None))
+        return submission.has_read_rights(request.user)
+
+    def has_object_permission(self, request, view, obj):
+        return True
+
+
 class IsSecretariatOrSamePartySubmissionRelated(BasePermission):
     """
     This is used for evaluating permissions on Submission-related views (e.g.
