@@ -20,7 +20,9 @@ from rest_framework import viewsets, mixins, status, generics, views
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.decorators import action
-from rest_framework.filters import BaseFilterBackend, OrderingFilter, SearchFilter
+from rest_framework.filters import (
+    BaseFilterBackend, OrderingFilter, SearchFilter
+)
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -61,6 +63,7 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmission,
     IsSecretariatOrSamePartySubmissionRemarks,
     IsSecretariatOrSamePartySubmissionFlags,
+    IsSecretariatOrSamePartySubmissionClone,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
@@ -452,7 +455,11 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             Submission.objects.get(pk=pk).versions, request
         )
 
-    @action(detail=True, methods=["post"])
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsSecretariatOrSamePartySubmissionClone]
+    )
     def clone(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         clone = submission.clone(request.user)
