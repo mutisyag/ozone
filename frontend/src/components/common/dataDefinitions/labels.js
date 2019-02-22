@@ -48,8 +48,7 @@ const getCommonLabels = ($gettext) => {
 			flag_has_reported_c2: $gettext('C/II'),
 			flag_has_reported_c3: $gettext('C/IIII'),
 			flag_has_reported_e: $gettext('E/I'),
-			flag_has_reported_f: $gettext('F/I'),
-			flag_has_reported_f2: $gettext('F/II')
+			flag_has_reported_f: $gettext('F')
 		}
 	}
 	return labels
