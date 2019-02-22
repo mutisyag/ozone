@@ -878,8 +878,9 @@ class Submission(models.Model):
                     False,
                     ValidationError(
                         _(
-                            "Only one Data Entry submission can be created by "
-                            "Secretariat."
+                            "There is already a Data Entry submission created "
+                            "by Secretariat for this party/period/obligation "
+                            "combination."
                         )
                     )
                 )
@@ -888,8 +889,9 @@ class Submission(models.Model):
                     False,
                     ValidationError(
                         _(
-                            "Only one Data Entry submission can be created by "
-                            "party."
+                            "There is already a Data Entry submission created "
+                            "by party for this party/period/obligation "
+                            "combination."
                         )
                     )
                 )
@@ -1106,7 +1108,7 @@ class Submission(models.Model):
                 s.filled_by_secretariat == self.filled_by_secretariat
                 for s in current_submissions if s.data_changes_allowed
             ]):
-                actor = "Secretariat" if s.filled_by_secretariat else "party"
+                actor = "Secretariat" if self.filled_by_secretariat else "party"
                 raise ValidationError(
                     _(
                         f"There is already a Data Entry submission created "
