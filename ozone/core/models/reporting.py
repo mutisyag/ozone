@@ -850,7 +850,10 @@ class Submission(models.Model):
             return (
                 False,
                 ValidationError(
-                    _("You can't clone a submission with this type of obligation")
+                    _(
+                        "You can't clone a submission with this type of "
+                        "obligation"
+                    )
                 )
             )
 
@@ -866,14 +869,32 @@ class Submission(models.Model):
                         )
                     )
                 )
-        # All non-data-entry submissions for open rep. periods can be cloned
+
+        # Data-entry submissions can be cloned if cloning is done by a different
+        # user type (OS, party) than the one who created the original submission
         if self.data_changes_allowed:
-            return (
-                False,
-                ValidationError(
-                    _("Submission in Data Entry cannot be cloned.")
+            if self.filled_by_secretariat and user.is_secretariat:
+                return (
+                    False,
+                    ValidationError(
+                        _(
+                            "There is already a Data Entry submission created "
+                            "by Secretariat for this party/period/obligation "
+                            "combination."
+                        )
+                    )
                 )
-            )
+            if not self.filled_by_secretariat and not user.is_secretariat:
+                return (
+                    False,
+                    ValidationError(
+                        _(
+                            "There is already a Data Entry submission created "
+                            "by party for this party/period/obligation "
+                            "combination."
+                        )
+                    )
+                )
 
         return (True, None)
 
@@ -1082,11 +1103,17 @@ class Submission(models.Model):
             current_submissions = submissions.filter(
                 reporting_period=self.reporting_period
             )
-            if any([s.data_changes_allowed for s in current_submissions]):
+            # Check that OS and party have only one data_entry submission
+            if any([
+                s.filled_by_secretariat == self.filled_by_secretariat
+                for s in current_submissions if s.data_changes_allowed
+            ]):
+                actor = "Secretariat" if self.filled_by_secretariat else "party"
                 raise ValidationError(
                     _(
-                        "There is already a submission in Data Entry for "
-                        "this party/period/obligation combination."
+                        f"There is already a Data Entry submission created "
+                        f"by {actor} for this party/period/obligation "
+                        f"combination."
                     )
                 )
             if current_submissions:
