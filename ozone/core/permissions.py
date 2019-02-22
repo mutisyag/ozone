@@ -93,8 +93,11 @@ class IsSecretariatOrSamePartySubmissionClone(BasePermission):
     def has_permission(self, request, view):
         """
         In principle, if a user can see a certain submission, he/she can also
-        clone it.
+        clone it, *if* he is not read-only. :)
         """
+        if request.user.is_read_only:
+            return False
+
         submission = Submission.objects.get(pk=view.kwargs.get('pk', None))
         return submission.has_read_rights(request.user)
 
