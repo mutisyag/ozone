@@ -22,6 +22,18 @@ const options = {
 const toasted = new Toasted(options)
 
 const mutations = {
+	setConfirmModal(state, value) {
+		state.confirmModal = value
+	},
+	resetConfirmModal(state) {
+		state.confirmModal = {
+			isVisible: false,
+			title: null,
+			description: null,
+			okCallback: () => {},
+			cancelCallback: () => {}
+		}
+	},
 	updateBreadcrumbs(state, data) {
 		state.route = data.join(' / ')
 	},

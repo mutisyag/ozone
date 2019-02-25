@@ -30,6 +30,13 @@ const state = {
 		show: false,
 		variant: null
 	},
+	confirmModal: {
+		isVisible: false,
+		title: null,
+		description: null,
+		okCallback: () => {},
+		cancelCallback: () => {}
+	},
 	current_submission: null,
 	route: '',
 	currentSubmissionHistory: null,

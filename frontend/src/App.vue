@@ -33,6 +33,22 @@
         <div class="container-fluid">
           <router-view></router-view>
         </div>
+
+		<!-- Confirm Modal -->
+		<b-modal
+			centered
+			no-close-on-backdrop
+			hide-header-close
+			hide-header
+			:visible="$store.state.confirmModal.isVisible"
+			@ok="$store.state.confirmModal.okCallback"
+			@cancel="$store.state.confirmModal.cancelCallback"
+		>
+			<p class="my-2"><b>{{$store.state.confirmModal.title}}</b></p>
+			<p class="my-4" v-if="$store.state.confirmModal.description">
+				{{$store.state.confirmModal.description}}
+			</p>
+		</b-modal>
       </main>
     </div>
   </div>

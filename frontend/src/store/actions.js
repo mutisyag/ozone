@@ -26,6 +26,26 @@ import {
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 
 const actions = {
+	openConfirmModal({ commit }, { title, description, $gettext }) {
+		return new Promise(resolve => {
+			if (!title) {
+				title = $gettext('Please confirm')
+			}
+			commit('setConfirmModal', {
+				title,
+				description,
+				isVisible: true,
+				okCallback: () => {
+					commit('resetConfirmModal')
+					resolve(true)
+				},
+				cancelCallback: () => {
+					commit('resetConfirmModal')
+					resolve(false)
+				}
+			})
+		})
+	},
 	addSubmission(context, { submission, $gettext }) {
 		return new Promise((resolve, reject) => {
 			const duplicate = context.getters.getDuplicateSubmission(submission)
@@ -195,20 +215,24 @@ const actions = {
 		})
 	},
 
-	doSubmissionTransition(context, { source, submission, transition, $gettext }) {
+	async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext }) {
+		const confirmed = await dispatch('openConfirmModal', { $gettext })
+		if (!confirmed) {
+			return
+		}
 		callTransition(submission, transition).then(() => {
 			if (source === 'dashboard') {
-				context.dispatch('getCurrentSubmissions')
+				dispatch('getCurrentSubmissions')
 			} else {
-				context.dispatch('getSubmissionData', { submission, $gettext })
+				dispatch('getSubmissionData', { submission, $gettext })
 			}
-			context.dispatch('setAlert', {
+			dispatch('setAlert', {
 				$gettext,
 				message: { __all__: [$gettext('Submission state updated')] },
 				variant: 'success'
 			})
 		}).catch(error => {
-			context.dispatch('setAlert', {
+			dispatch('setAlert', {
 				$gettext,
 				message: { __all__: [$gettext('Unable to change the state of this submission')] },
 				variant: 'danger'
@@ -217,17 +241,21 @@ const actions = {
 		})
 	},
 
-	removeSubmission(context, { submissionUrl, $gettext }) {
+	async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
+		const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the submission is ireversible.', $gettext })
+		if (!confirmed) {
+			return
+		}
 		deleteSubmission(submissionUrl).then(() => {
-			context.dispatch('getCurrentSubmissions')
-			context.dispatch('setAlert', {
+			dispatch('getCurrentSubmissions')
+			dispatch('setAlert', {
 				$gettext,
 				message: { __all__: [$gettext('Submission deleted')] },
 				variant: 'success'
 			})
 		}).catch(() => {
-			context.dispatch('getCurrentSubmissions')
-			context.dispatch('setAlert', {
+			dispatch('getCurrentSubmissions')
+			dispatch('setAlert', {
 				$gettext,
 				message: { __all__: [$gettext('Failed to delete submission')] },
 				variant: 'danger'

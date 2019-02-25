@@ -520,13 +520,10 @@ export default {
 		},
 
 		removeSubmission(url) {
-			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
-			if (r === true) {
-				this.$store.dispatch('removeSubmission', {
-					$gettext: this.$gettext,
-					submissionUrl: url
-				})
-			}
+			this.$store.dispatch('removeSubmission', {
+				$gettext: this.$gettext,
+				submissionUrl: url
+			})
 		},
 		getFormName(obligation) {
 			return this.obligations.find(o => o.value === obligation).form_type

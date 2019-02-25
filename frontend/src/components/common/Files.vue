@@ -52,7 +52,11 @@ export default {
 		this.loadingInitialFiles = false
 	},
 	methods: {
-		deleteFile(e, file) {
+		async deleteFile(e, file) {
+			const confirmed = await this.$store.dispatch('openConfirmModal', { $gettext: this.$gettext })
+			if (!confirmed) {
+				return
+			}
 			this.$store.dispatch('deleteTabFile', {	file })
 			this.$refs.filesInput.reset()
 		},

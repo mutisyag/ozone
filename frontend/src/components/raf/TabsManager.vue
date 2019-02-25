@@ -190,15 +190,12 @@ export default {
 			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
-			const r = confirm(this.$gettext('Deleting the submission is ireversible. Are you sure ?'))
-			if (r === true) {
-				this.$store.dispatch('removeSubmission', {
-					$gettext: this.$gettext,
-					submissionUrl: this.submission
-				}).then(() => {
-					this.$router.push({ name: 'Dashboard' })
-				})
-			}
+			this.$store.dispatch('removeSubmission', {
+				$gettext: this.$gettext,
+				submissionUrl: this.submission
+			}).then(() => {
+				this.$router.push({ name: 'Dashboard' })
+			})
 		}
 	},
 	watch: {
