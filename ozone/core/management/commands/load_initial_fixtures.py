@@ -25,6 +25,7 @@ class Command(BaseCommand):
         'partiesratification',
         'reporting_channels',
         'submission_formats',
+        'raf_type_of_uses',
     )
 
     def handle(self, *args, **options):

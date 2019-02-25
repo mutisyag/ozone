@@ -747,6 +747,18 @@ class DataOther(ModifyPreventionMixin, BaseReport):
         db_table = 'reporting_other'
 
 
+class RAFTypeOfUse(models.Model):
+    """
+    Describes type of use of RAF forms.
+    """
+
+    name = models.CharField(unique=True, max_length=256)
+    description = models.CharField(max_length=256, blank=True)
+
+    class Meta:
+        db_table = "raf_type_of_use"
+
+
 class RAFReport(ModifyPreventionMixin, BaseReport):
     """
     Model for RAF reports.
@@ -757,6 +769,12 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
 
     # These reports only refer to substances
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
+
+    type_of_use = models.ForeignKey(
+        RAFTypeOfUse,
+        default=1,
+        on_delete=models.PROTECT
+    )
 
     quantity_exempted = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
