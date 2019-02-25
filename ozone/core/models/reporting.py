@@ -830,7 +830,7 @@ class Submission(models.Model):
         return False
 
     @staticmethod
-    def has_editable_peers_by_same_user_type(queryset, user):
+    def has_editable_peers_by_same_user_type(peers, user):
         """
         This is used for checking whether a submission has an editable peer
         (same party-period-obligation combination) created by the same type
@@ -841,13 +841,18 @@ class Submission(models.Model):
         this should contain its peers. Caller must ensure that this is properly
         constructed.
         """
-        for sub in queryset:
+        actor = "Secretariat" if user.is_secretariat else "party"
+        message = _(
+            f"There is already a Data Entry submission created by {actor} for "
+            f"this party/period/obligation combination."
+        )
+        for sub in peers:
             if sub.data_changes_allowed:
                 if sub.filled_by_secretariat and user.is_secretariat:
-                    return True
+                    return True, message
                 if not sub.filled_by_secretariat and not user.is_secretariat:
-                    return True
-        return False
+                    return True, message
+        return False, None
 
     def check_cloning(self, user):
         """
@@ -898,20 +903,13 @@ class Submission(models.Model):
             obligation=self.obligation,
             reporting_period=self.reporting_period
         )
-        if self.has_editable_peers_by_same_user_type(peers, user):
-            actor = "Secretariat" if user.is_secretariat else "party"
-            return (
-                False,
-                ValidationError(
-                    _(
-                        f"There is already a Data Entry submission created "
-                        f"by {actor} for this party/period/obligation "
-                        f"combination."
-                    )
-                )
-            )
+        has_peers, message = self.has_editable_peers_by_same_user_type(
+            peers, user
+        )
+        if has_peers:
+            return False, ValidationError(message)
 
-        return (True, None)
+        return True, None
 
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
@@ -1119,17 +1117,12 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period
             )
             # Check that OS and party have only one data_entry submission
-            if self.has_editable_peers_by_same_user_type(
+            has_peers, message = self.has_editable_peers_by_same_user_type(
                 current_submissions, self.created_by
-            ):
-                actor = "Secretariat" if self.filled_by_secretariat else "party"
-                raise ValidationError(
-                    _(
-                        f"There is already a Data Entry submission created "
-                        f"by {actor} for this party/period/obligation "
-                        f"combination."
-                    )
-                )
+            )
+            if has_peers:
+                raise ValidationError(message)
+
             if current_submissions:
                 self.version = current_submissions.latest('version').version + 1
 
@@ -1147,7 +1140,9 @@ class Submission(models.Model):
 
             # The default value for reporting channel is 'Web form'
             # when creating a new submission
-            self.reporting_channel = ReportingChannel.objects.get(name='Web form')
+            self.reporting_channel = ReportingChannel.objects.get(
+                name='Web form'
+            )
 
             self.clean()
             ret = super().save(
