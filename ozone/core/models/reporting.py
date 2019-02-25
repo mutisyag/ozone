@@ -1119,10 +1119,9 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period
             )
             # Check that OS and party have only one data_entry submission
-            if any([
-                s.filled_by_secretariat == self.filled_by_secretariat
-                for s in current_submissions if s.data_changes_allowed
-            ]):
+            if self.has_editable_peers_by_same_user_type(
+                current_submissions, self.created_by
+            ):
                 actor = "Secretariat" if self.filled_by_secretariat else "party"
                 raise ValidationError(
                     _(
