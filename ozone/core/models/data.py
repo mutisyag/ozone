@@ -28,6 +28,7 @@ __all__ = [
     'DataOther',
     'RAFReport',
     'RAFImport',
+    'RAFTypeOfUse',
 ]
 
 
@@ -824,7 +825,12 @@ class RAFImport(models.Model):
         related_name='imports'
     )
 
-    party = models.ForeignKey(Party, on_delete=models.PROTECT)
+    party = models.ForeignKey(
+        Party,
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
 
     # This needs to have a quantity specified
     quantity = models.FloatField(validators=[MinValueValidator(0.0)])
