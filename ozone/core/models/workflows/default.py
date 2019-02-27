@@ -1,3 +1,5 @@
+from django.utils.translation import gettext_lazy as _
+
 import xworkflows
 
 from .base import BaseWorkflow
@@ -99,8 +101,19 @@ class DefaultArticle7Workflow(BaseWorkflow):
         return (
             not self.user.is_read_only
             and self.user.is_secretariat
-            and self.model_instance.flag_valid is not None
         )
+
+    @xworkflows.before_transition('finalize')
+    def before_finalize(self, *args, **kwargs):
+        """
+        Called right before the transition is actually performed.
+        Used to avoid checking flag_valid's sanity in check_finalize, as that
+        would have always shown the transition as unavailable
+        """
+        if self.model_instance.flag_valid is None:
+            raise xworkflows.ForbiddenTransition(
+                _('Valid flag must be set before submission is finalized')
+            )
 
     @xworkflows.transition('submit')
     def submit(self):
