@@ -37,6 +37,10 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
     def data_changes_allowed(self):
         return self.state in self.editable_data_states
 
+    @property
+    def in_initial_state(self):
+        return self.state == self.state.workflow.initial_state
+
     def is_secretariat_or_same_party_owner(self, submission):
         owner = submission.created_by
         return (
