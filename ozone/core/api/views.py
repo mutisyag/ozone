@@ -64,6 +64,7 @@ from ..permissions import (
     IsSecretariatOrSamePartySubmissionRemarks,
     IsSecretariatOrSamePartySubmissionFlags,
     IsSecretariatOrSamePartySubmissionClone,
+    IsSecretariatOrSamePartySubmissionTransition,
     IsSecretariatOrSamePartySubmissionRelated,
     IsSecretariatOrSamePartyBlend,
     IsCorrectObligation,
@@ -473,7 +474,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             }
         )
 
-    @action(detail=True, methods=["post"], url_path="call-transition")
+    @action(
+        detail=True,
+        methods=["post"],
+        url_path="call-transition",
+        permission_classes = [IsSecretariatOrSamePartySubmissionTransition]
+    )
     def call_transition(self, request, pk=None):
         """
         Request example:
@@ -491,7 +497,10 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             raise InvalidRequest(
-                _("Invalid request: request body should contain 'transition' key.")
+                _(
+                    "Invalid request: request body should contain 'transition' "
+                    "key."
+                )
             )
 
     @action(detail=True, methods=["get"])

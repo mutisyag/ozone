@@ -28,6 +28,7 @@ class AcceleratedArticle7WorkflowStateDescription(xworkflows.Workflow):
 
 
 class AcceleratedArticle7Workflow(BaseWorkflow):
+
     # No states are truly final in this workflow
     final_states = []
     editable_data_states = ['data_entry']
