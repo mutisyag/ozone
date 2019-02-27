@@ -72,7 +72,9 @@ class Command(BaseCommand):
             return
 
         raf_values = self.load_raf_sheet(options["file"])
-        self.import_data(raf_values, Obligation.objects.get(pk=2), options)
+
+        if not options["dry_run"]:
+            self.import_data(raf_values, Obligation.objects.get(pk=2), options)
 
     def load_raf_sheet(self, filename):
         """
