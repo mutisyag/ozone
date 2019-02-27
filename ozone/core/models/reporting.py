@@ -512,6 +512,10 @@ class Submission(models.Model):
         return self.workflow().editable_data_states
 
     @property
+    def in_initial_state(self):
+        return self.workflow().in_initial_state
+
+    @property
     def is_current(self):
         if (
             self.flag_superseded
@@ -830,13 +834,13 @@ class Submission(models.Model):
         return False
 
     @staticmethod
-    def has_editable_peers_by_same_user_type(peers, user):
+    def has_initial_state_peers_by_same_user_type(peers, user):
         """
-        This is used for checking whether a submission has an editable peer
+        This is used for checking whether a submission has an initial state peer
         (same party-period-obligation combination) created by the same type
         (Secretariat, party) of user.
-        At any time, only one editable submission per type of user and
-        party-period-obligation can exist.
+        At any time, only one submission in initial state can exist per
+        type of user and party-period-obligation.
         Since this is also used in save(), it takes a queryset as argument;
         this should contain its peers. Caller must ensure that this is properly
         constructed.
@@ -847,7 +851,7 @@ class Submission(models.Model):
             f"this party/period/obligation combination."
         )
         for sub in peers:
-            if sub.data_changes_allowed:
+            if sub.in_initial_state:
                 if sub.filled_by_secretariat and user.is_secretariat:
                     return True, message
                 if not sub.filled_by_secretariat and not user.is_secretariat:
@@ -903,7 +907,7 @@ class Submission(models.Model):
             obligation=self.obligation,
             reporting_period=self.reporting_period
         )
-        has_peers, message = self.has_editable_peers_by_same_user_type(
+        has_peers, message = self.has_initial_state_peers_by_same_user_type(
             peers, user
         )
         if has_peers:
@@ -1117,7 +1121,7 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period
             )
             # Check that OS and party have only one data_entry submission
-            has_peers, message = self.has_editable_peers_by_same_user_type(
+            has_peers, message = self.has_initial_state_peers_by_same_user_type(
                 current_submissions, self.created_by
             )
             if has_peers:
