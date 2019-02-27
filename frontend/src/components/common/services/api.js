@@ -163,6 +163,8 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, { tra
 
 const getNonParties = () => fetch('get-non-parties/')
 
+const getSubmissionDefaultValues = () => fetch('default-values/')
+
 const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
 	const responseToken = await post(`submissions/${submissionId}/token/`)
 	const upload = new tus.Upload(file,
@@ -224,5 +226,6 @@ export {
 	getCurrentUser,
 	updateCurrentUser,
 	fetchFromPublicDirectory,
+	getSubmissionDefaultValues,
 	uploadFile
 }

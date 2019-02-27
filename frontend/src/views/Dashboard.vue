@@ -13,7 +13,7 @@
 								:placeholder="$gettext('Select option')"
 								trackBy="value"
 								label="text"
-								v-model="current.obligation"
+								v-model="submissionNew.obligation"
 								:options="obligations" />
 						</b-input-group>
 
@@ -24,7 +24,7 @@
 								label="text"
 								customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
 								customTemplate="is_reporting_open"
-								v-model="current.reporting_period"
+								v-model="submissionNew.reporting_period"
 								:options="periods" />
 						</b-input-group>
 
@@ -34,11 +34,11 @@
 								trackBy="value"
 								label="text"
 								:disabled="Boolean(currentUser.party)"
-								v-model="current.party"
+								v-model="submissionNew.party"
 								:options="parties" />
 						</b-input-group>
 
-						<b-btn v-if="basicDataReady" :disabled="!(current.obligation && current.reporting_period && current.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
+						<b-btn v-if="basicDataReady" :disabled="!(submissionNew.obligation && submissionNew.reporting_period && submissionNew.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
 					</div>
         </b-card>
       </b-col>
@@ -223,9 +223,9 @@ export default {
 	name: 'Dashboard',
 	data() {
 		return {
-			current: {
+			submissionNew: {
 				obligation: null,
-				reporting_period: null,
+				reporting_period: 2017,
 				party: null
 			},
 			table: {
@@ -253,12 +253,22 @@ export default {
 		}
 	},
 
-	created() {
+	async created() {
 		document.querySelector('body').classList.remove('aside-menu-lg-show')
 		this.$store.dispatch('getDashboardParties')
-		this.$store.dispatch('getDashboardPeriods')
 		this.$store.dispatch('getDashboardObligations')
 		this.$store.dispatch('getMyCurrentUser')
+
+		const dashboardPeriods = await this.$store.dispatch('getDashboardPeriods')
+		const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
+		const defaultPeriod = dashboardPeriods
+			.find(period => period.text.trim() === submissionDefaultValues.reporting_period)
+		const reporting_period = defaultPeriod.value
+		this.submissionNew = {
+			...this.submissionNew,
+			...submissionDefaultValues,
+			reporting_period
+		}
 		this.updateBreadcrumbs()
 	},
 
@@ -410,9 +420,11 @@ export default {
 			return this.$store.state.dashboard.table
 		},
 		currentUser() {
-			const current = this.$store.state.currentUser
-			if (current) this.current.party = current.party
-			return current
+			const { currentUser } = this.$store.state
+			if (currentUser) {
+				this.submissionNew.party = currentUser.party
+			}
+			return currentUser
 		},
 		periods() {
 			return this.$store.state.dashboard.periods
@@ -472,7 +484,7 @@ export default {
 		addSubmission() {
 			this.$store.dispatch('addSubmission', {
 				$gettext: this.$gettext,
-				submission: this.current
+				submission: this.submissionNew
 			}).then(r => {
 				this.$store.dispatch('getMyCurrentSubmissions').then(() => {
 					const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)

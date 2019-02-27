@@ -16,7 +16,8 @@ import {
 	getPartyRatifications,
 	getCurrentUser,
 	updateCurrentUser,
-	uploadFile
+	uploadFile,
+	getSubmissionDefaultValues
 } from '@/components/common/services/api'
 
 import {
@@ -167,33 +168,33 @@ const actions = {
 		context.commit('setDashboardParties', parties_temp)
 	},
 
-	getDashboardPeriods(context) {
-		getPeriods().then(response => {
-			let sortedPeriods = response.data
-				.filter(a => a.is_reporting_allowed)
-				.sort((a, b) => ((parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
-					? (parseInt(b.start_date.split('-')[0]) - parseInt(a.start_date.split('-')[0]))
-					: (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))))
-				.sort((a, b) => b.is_year - a.is_year)
-			sortedPeriods = sortedPeriods.map((period) => {
-				const start = period.start_date.split('-')[0]
-				const end = period.end_date.split('-')[0]
-				let periodDisplay = ''
-				if (start === end) {
-					if (period.name !== start) {
-						periodDisplay += `(${start})`
-					}
-				} else {
-					periodDisplay += `(${start} - ${end})`
+	async getDashboardPeriods(context) {
+		const response = await getPeriods()
+		let sortedPeriods = response.data
+			.filter(a => a.is_reporting_allowed)
+			.sort((a, b) => ((parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
+				? (parseInt(b.start_date.split('-')[0]) - parseInt(a.start_date.split('-')[0]))
+				: (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))))
+			.sort((a, b) => b.is_year - a.is_year)
+		sortedPeriods = sortedPeriods.map((period) => {
+			const start = period.start_date.split('-')[0]
+			const end = period.end_date.split('-')[0]
+			let periodDisplay = ''
+			if (start === end) {
+				if (period.name !== start) {
+					periodDisplay += `(${start})`
 				}
+			} else {
+				periodDisplay += `(${start} - ${end})`
+			}
 
-				return {
-					value: period.id, text: `${period.name} ${periodDisplay}`, end_date: period.end_date, start_date: period.start_date, is_reporting_open: period.is_reporting_open
-				}
-			})
-
-			context.commit('setDashboardPeriods', sortedPeriods)
+			return {
+				value: period.id, text: `${period.name} ${periodDisplay}`, end_date: period.end_date, start_date: period.start_date, is_reporting_open: period.is_reporting_open
+			}
 		})
+
+		context.commit('setDashboardPeriods', sortedPeriods)
+		return sortedPeriods
 	},
 
 	getDashboardObligations(context) {
@@ -485,6 +486,10 @@ const actions = {
 	async setJustUploadedFilesState({ dispatch }) {
 		const filesOnServer = await dispatch('getSubmissionFiles')
 		await dispatch('updateLocalFilesFromServerFilesResponse', {	filesOnServer })
+	},
+	async getSubmissionDefaultValues() {
+		const response = await getSubmissionDefaultValues()
+		return response.data || {}
 	}
 }
 
