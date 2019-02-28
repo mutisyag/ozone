@@ -47,11 +47,12 @@ const actions = {
 			})
 		})
 	},
-	addSubmission(context, { submission, $gettext }) {
+	addSubmission({ state, getters, dispatch }, { submission, $gettext }) {
 		return new Promise((resolve, reject) => {
-			const duplicate = context.getters.getDuplicateSubmission(submission)
-			if (duplicate.length) {
-				context.dispatch('setAlert', {
+			const duplicatesAll = getters.getDuplicateSubmission(submission)
+			const duplicatesByCurrentUser = duplicatesAll.filter(x => x.created_by === state.currentUser.id)
+			if (duplicatesAll.length >= 2 || duplicatesByCurrentUser.length) {
+				dispatch('setAlert', {
 					$gettext,
 					message: { __all__: [$gettext('Another submission already exists in Data Entry stage.')] },
 					variant: 'danger'
@@ -62,16 +63,16 @@ const actions = {
 				// }
 			} else {
 				createSubmission(submission).then((response) => {
-					context.dispatch('setAlert', {
+					dispatch('setAlert', {
 						$gettext,
 						message: { __all__: [$gettext('Submission created')] },
 						variant: 'success'
 					})
-					context.dispatch('getCurrentSubmissions').then(() => {
+					dispatch('getCurrentSubmissions').then(() => {
 						resolve(response.data)
 					})
 				}).catch((error) => {
-					context.dispatch('setAlert', {
+					dispatch('setAlert', {
 						$gettext,
 						message: { __all__: [$gettext('Failed to create submission')] },
 						variant: 'danger'
