@@ -1,6 +1,6 @@
 [
     {
-        "model": "core.raftypeofuse",
+        "model": "core.essentialcriticaltype",
         "pk": 1,
         "fields": {
             "name": "Essential",
@@ -8,7 +8,7 @@
         }
     },
     {
-        "model": "core.raftypeofuse",
+        "model": "core.essentialcriticaltype",
         "pk": 2,
         "fields": {
             "name": "Critical",
@@ -16,7 +16,7 @@
         }
     },
     {
-        "model": "core.raftypeofuse",
+        "model": "core.essentialcriticaltype",
         "pk": 3,
         "fields": {
             "name": "Emergency Essential",
@@ -24,7 +24,7 @@
         }
     },
     {
-        "model": "core.raftypeofuse",
+        "model": "core.essentialcriticaltype",
         "pk": 4,
         "fields": {
             "name": "Emergency Critical",
