@@ -53,7 +53,6 @@ module.exports = {
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		deleteSubmissionFake(browser)
-		editSubmission(browser, 1)
 		deleteSubmission(browser)
 		logout(browser)
 		browser.end()
