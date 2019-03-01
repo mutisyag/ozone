@@ -2,11 +2,26 @@
 
 from django.db import migrations, models
 from django.core.management import call_command
+from django.core.serializers import base, python
 import django.db.models.deletion
 
 
-def load_raf_type_of_uses(apps, schme_editor):
-    call_command('loaddata', 'raf_type_of_uses')
+def load_essen_crit_types(apps, schme_editor):
+    old_get_model = python._get_model
+
+    def _get_model(model_identifier):
+        try:
+            return apps.get_model(model_identifier)
+        except (LookupError, TypeError):
+            raise base.DeserializationError(
+                "Invalid model identifier: '%s'" % model_identifier)
+
+    python._get_model = _get_model
+
+    try:
+        call_command('loaddata', 'essen_crit_types_old')
+    finally:
+        python._get_model = old_get_model
 
 
 class Migration(migrations.Migration):
@@ -32,5 +47,5 @@ class Migration(migrations.Migration):
             name='type_of_use',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='core.RAFTypeOfUse'),
         ),
-        migrations.RunPython(load_raf_type_of_uses),
+        migrations.RunPython(load_essen_crit_types),
     ]
