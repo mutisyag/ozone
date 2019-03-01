@@ -12,7 +12,8 @@ class EmailAuthTests(BaseTests):
         self.user = User.objects.create_user(
             username="user1",
             email='test@example.com',
-            password='qwe123qwe'
+            password='qwe123qwe',
+            is_secretariat=True
         )
 
     def test_login(self):
