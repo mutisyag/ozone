@@ -39,8 +39,6 @@ class Command(BaseCommand):
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
 
-        self.precision = 10
-
     def add_arguments(self, parser):
         parser.add_argument('file',
                             help="the xlsx input file")
