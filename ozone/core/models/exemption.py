@@ -1,6 +1,7 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from .data import EssentialCriticalType
 from .party import Party
 from .reporting import Submission
 from .substance import Substance
@@ -53,6 +54,17 @@ class ExemptionApproved(BaseExemption):
     """
 
     decision_approved = models.CharField(max_length=256, blank=True)
+
+    approved_teap_amount = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+        blank=True, null=True
+    )
+
+    essen_crit_type = models.ForeignKey(
+        EssentialCriticalType,
+        default=1,
+        on_delete=models.PROTECT
+    )
 
     class Meta:
         db_table = 'exemption_approved'
