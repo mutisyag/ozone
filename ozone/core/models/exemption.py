@@ -22,7 +22,10 @@ class BaseExemption(models.Model):
 
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
-    quantity = models.FloatField(validators=[MinValueValidator(0.0)])
+    quantity = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+        blank=True, null=True
+    )
 
     remarks_os = models.CharField(
         max_length=9999, blank=True,
