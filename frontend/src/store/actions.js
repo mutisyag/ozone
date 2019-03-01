@@ -246,7 +246,7 @@ const actions = {
 	async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
 		const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the submission is ireversible.', $gettext })
 		if (!confirmed) {
-			return
+			return confirmed
 		}
 		deleteSubmission(submissionUrl).then(() => {
 			dispatch('getCurrentSubmissions')
@@ -263,6 +263,7 @@ const actions = {
 				variant: 'danger'
 			})
 		})
+		return confirmed
 	},
 
 	getInitialData(context, { submission, formName, $gettext }) {

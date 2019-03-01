@@ -36,6 +36,7 @@
 
 		<!-- Confirm Modal -->
 		<b-modal
+			id="confirm-modal"
 			centered
 			no-close-on-backdrop
 			hide-header-close

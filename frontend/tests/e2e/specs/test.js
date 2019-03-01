@@ -10,6 +10,7 @@ const {
 	login,
 	logout,
 	createSubmission,
+	deleteSubmissionFake,
 	deleteSubmission,
 	saveSubmission,
 	saveAndFail,
@@ -51,6 +52,8 @@ module.exports = {
 	BU_002: browser => {
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
+		deleteSubmissionFake(browser)
+		editSubmission(browser, 1)
 		deleteSubmission(browser)
 		logout(browser)
 		browser.end()
