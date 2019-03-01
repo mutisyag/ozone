@@ -35,7 +35,8 @@ EXEMPTION_NOMINATION_DATA = {
 EXEMPTION_APPROVED_DATA = {
     "quantity": 100,
     "remarks_os": "nothing to remark OS",
-    "decision_approved": "it's a test"
+    "decision_approved": "it's a test",
+    "approved_teap_amount": 100
 }
 
 
@@ -286,6 +287,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
+        # Default value for EssentialCriticalType is Essential with pk=1.
+        expected_data["essen_crit_type"] = 1
         self.assertEqual(result.json(), [expected_data])
 
     def test_get_reporter(self):
@@ -309,6 +312,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
+        # Default value for EssentialCriticalType is Essential with pk=1.
+        expected_data["essen_crit_type"] = 1
         self.assertEqual(result.json(), [expected_data])
 
     def test_update_secretariat(self):
