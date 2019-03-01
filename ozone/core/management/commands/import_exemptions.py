@@ -1,7 +1,4 @@
-import collections
-import decimal
 import logging
-import pickle
 import re
 
 from django.contrib.auth import get_user_model
@@ -16,8 +13,10 @@ from ozone.core.models import (
     ReportingChannel,
     RAFReport,
     RAFImport,
-    RAFTypeOfUse,
+    EssentialCriticalType,
     Obligation,
+    Nomination,
+    ExemptionApproved,
 )
 
 
@@ -72,9 +71,11 @@ class Command(BaseCommand):
             return
 
         raf_values = self.load_raf_sheet(options["file"])
+        exemption_values = self.load_exemption_sheets(options["file"])
 
         if not options["dry_run"]:
             self.import_data(raf_values, Obligation.objects.get(pk=2), options)
+            self.import_data(exemption_values, Obligation.objects.get(pk=11), options)
 
     def load_raf_sheet(self, filename):
         """
@@ -89,7 +90,7 @@ class Command(BaseCommand):
                     "EssenUse",
                     "Exported",
                     "Destroyed",
-                    "TypeOfUse"
+                    "EssenCrit"
                 ):
                     [ { data1 }, { data2 } ]
                 ....
@@ -122,7 +123,7 @@ class Command(BaseCommand):
                 row["EssenUse"],
                 row["Exported"],
                 row["Destroyed"],
-                self.get_raf_type_of_use(
+                self.get_essen_crit_type_raf(
                     row["SubstID"],
                     row["Remark"] if row["Remark"] else ""
                 )
@@ -150,7 +151,7 @@ class Command(BaseCommand):
 
         return results
 
-    def get_raf_type_of_use(self, substance_id, remark):
+    def get_essen_crit_type_raf(self, substance_id, remark):
         if substance_id == 194:
             if re.search('emergency', remark, re.IGNORECASE):
                 return "Emergency Critical"
@@ -161,6 +162,45 @@ class Command(BaseCommand):
                 return "Emergency Essential"
             else:
                 return "Essential"
+
+    def load_exemption_sheets(self, filename):
+        """
+        Loads the 'EssenNom' and 'EssenExemp' from the Excel file.
+        Returns a dictionary in the following format:
+        {
+            ("CntryID", PeriodID): {
+                "EssenNom': [ { data1 }, { data2 }, ... ],
+                "EssenExemp": [ { data1 }, { data2 }, ... ]
+            }
+        }
+        where
+        * [{data_i}] is a list of dictionaries where keys are the headers
+        of the sheet (EssenNom or EssenExemp) and values are the values from
+        row number i.
+        """
+
+        results = {}
+
+        wb = load_workbook(filename=filename)
+
+        ws_list = [wb['EssenNom'], wb['EssenExemp']]
+
+        for sheet in ws_list:
+            values = list(sheet.values)
+            headers = values[0]
+            for row in values[1:]:
+                row = dict(zip(headers, row))
+                pk = row["CntryID"], row["PeriodID"]
+                if not results.get(pk):
+                    results[pk] = {}
+                    # Initialize both lists.
+                    results[pk]['EssenNom'] = []
+                    results[pk]['EssenExemp'] = []
+                    results[pk][sheet.title].append(row)
+                else:
+                    results[pk][sheet.title].append(row)
+
+        return results
 
     def import_data(self, values, obligation, options):
         success_count = 0
@@ -174,7 +214,7 @@ class Command(BaseCommand):
                 purge=options["purge"]
             )
 
-        logger.info("Success on %s out of %s RAFs", success_count, len(values))
+        logger.info("Success on %s out of %s", success_count, len(values))
 
     def process_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
         """
@@ -187,8 +227,10 @@ class Command(BaseCommand):
                 return self.proccess_submission_raf_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
-            # else:
-            #     return self.proccess_submission_exemption_entry(party_abbr, period_name, rows)
+            else:
+                return self.proccess_submission_exemption_entry(
+                    party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
+                )
         except Exception as e:
             logger.error("Error %s while saving: %s/%s", e, party_abbr, period_name,
                          exc_info=True)
@@ -204,7 +246,17 @@ class Command(BaseCommand):
             period = self.periods[period_name]
         except KeyError as e:
             logger.critical("Unable to find matching %s: %s", e, rows)
-            return
+            return False
+
+        if not period.is_reporting_allowed:
+            logger.error(
+                "Error `Reporting cannot be performed for this reporting period.`"
+                "while saving: %s/%s ",
+                party_abbr,
+                period_name,
+                exc_info=True
+            )
+            return False
 
         if purge:
             self.delete_instance(party, period, obligation)
@@ -213,7 +265,7 @@ class Command(BaseCommand):
         if recreate:
             self.delete_instance(party, period, obligation)
 
-        data = self.get_data(party, period, rows)
+        data = self.get_submission_raf_data(party, period, rows)
 
         submission = Submission.objects.create(
             **data["submission"]
@@ -246,6 +298,64 @@ class Command(BaseCommand):
 
         return True
 
+    def proccess_submission_exemption_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
+        """
+        Inserts the processed data into the DB.
+        """
+
+        try:
+            party = self.parties[party_abbr]
+            period = self.periods[period_name]
+        except KeyError as e:
+            logger.critical("Unable to find matching %s: %s", e, rows)
+            return False
+
+        if not period.is_reporting_allowed:
+            logger.error(
+                "Error `Reporting cannot be performed for this reporting period.` "
+                "while saving: %s/%s ",
+                party_abbr,
+                period_name,
+                exc_info=True
+            )
+            return False
+
+        if purge:
+            self.delete_instance(party, period, obligation)
+            return True
+
+        if recreate:
+            self.delete_instance(party, period, obligation)
+
+        data = self.get_submission_exemption_data(party, period, rows)
+
+        submission = Submission.objects.create(
+            **data["submission"]
+        )
+
+        for key, value in data["submission_info"].items():
+            setattr(submission.info, key, value)
+        submission.info.save()
+
+        for key, klass in (
+            ("nominations", Nomination),
+            ("exemptionapproveds", ExemptionApproved),
+        ):
+            for val in data[key]:
+                klass.objects.create(
+                    submission=submission,
+                    **val
+                )
+
+        submission._current_state = "finalized"
+        submission.save()
+
+        for obj in submission.history.all():
+            obj.history_user = self.admin
+            obj.save()
+
+        return True
+
     def delete_instance(self, party, period, obligation):
         """
         Removes the submission identified by the party, period and obligation
@@ -267,16 +377,16 @@ class Command(BaseCommand):
             sub.__class__.data_changes_allowed = True
             sub.delete()
 
-    def get_data(self, party, period, rows):
+    def get_submission_raf_data(self, party, period, rows):
         """
         Structure and parse the raw data from the Excel file
-        so it matches our Submission model.
+        so it matches our Submission model with RAF obligation.
         """
 
         # Because there are multiple 'DateCreate' values we will take the latest value.
         created_at = None
         for pk in rows.keys():
-            # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "TypeOfUse")
+            # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "EssenCrit")
             for row in rows[pk]:
                 if not created_at and row["DateCreate"]:
                     created_at = row["DateCreate"]
@@ -333,6 +443,62 @@ class Command(BaseCommand):
             "rafreports": self.get_rafs(party, period, rows)
         }
 
+    def get_submission_exemption_data(self, party, period, rows):
+        """
+        Structure and parse the raw data from the Excel file
+        so it matches our Submission model with Exemption obligation.
+        """
+
+        # Because there are multiple 'DateCreate' and 'SubmitDate' values
+        # we will take the latest value.
+        submitted_at_list = [entry['SubmitDate'] for entry in rows['EssenNom'] if entry['SubmitDate']]
+        submitted_at = min(submitted_at_list) if submitted_at_list else None
+        updated_at_list = [entry['DateUpdate'] for entry in rows['EssenNom'] if entry['DateUpdate']]
+        updated_at = min(updated_at_list) if updated_at_list else None
+        created_at_list = [entry['DateCreate'] for entry in rows['EssenNom'] if entry['DateCreate']]
+        created_at = min(created_at_list) if created_at_list else updated_at
+
+        is_emergency = self.check_is_emergency(rows['EssenExemp'])
+
+        return {
+            "submission": {
+                "schema_version": "legacy",
+                "submitted_at": submitted_at,
+                "created_at": created_at,
+                "updated_at": updated_at,
+                "version": 1,
+                "flag_emergency": is_emergency,
+                "_workflow_class": "default_exemption" if not is_emergency else "accelerated_exemption",
+                "_current_state": "finalized",
+                "_previous_state": None,
+                "flag_provisional": False,
+                "flag_valid": True,
+                "flag_superseded": False,
+                "remarks_party": "",
+                "remarks_secretariat": "",
+                "created_by_id": self.admin.id,
+                "last_edited_by_id": self.admin.id,
+                "obligation_id": 11,
+                "party_id": party.id,
+                "reporting_period_id": period.id,
+                "cloned_from_id": None,
+                # "info_id": "",
+                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
+            },
+            "submission_info": {
+                "reporting_officer": "",
+                "designation": "",
+                "organization": "",
+                "postal_address": "",
+                "country": party.name,
+                "phone": "",
+                "email": "",
+                "date": created_at
+            },
+           "nominations": self.get_nominations(party, period, rows['EssenNom']),
+           "exemptionapproveds": self.get_exemptions_approved(party, period, rows['EssenExemp'])
+        }
+
     def get_rafs(self, party, period, rows):
         """
         Parses the RAF data for the submission identified by
@@ -344,7 +510,7 @@ class Command(BaseCommand):
         rafs = []
 
         for pk, entries in rows.items():
-            # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "TypeOfUse")
+            # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "EssenCrit")
             try:
                 substance_id = self.substances[pk[0]].id
             except KeyError as e:
@@ -361,7 +527,7 @@ class Command(BaseCommand):
                     "quantity_used": pk[3],
                     "quantity_exported": pk[4],
                     "quantity_destroyed": pk[5],
-                    "type_of_use": RAFTypeOfUse.objects.get(name=pk[6]),
+                    "essen_crit_type": EssentialCriticalType.objects.get(name=pk[6]),
                     "remarks_os": self.get_raf_remarks(entries),
                     "remarks_party": ""
                 },
@@ -402,3 +568,84 @@ class Command(BaseCommand):
                     "quantity": entry["Imported"]
                 })
         return raf_imports
+
+    def check_is_emergency(self, rows):
+        """
+        If one entry is an emergency, then the whole submission becomes an emergency.
+        """
+
+        for row in rows:
+            if row['IsEmergency']:
+                return True
+
+        return False
+
+    def get_nominations(self, party, period, rows):
+        """
+        Parses the Exemption Nomination data for the submission identified by
+        the party/period combination.
+
+        Return a list of exemption nominations.
+        """
+
+        nominations = []
+
+        for row in rows:
+            try:
+                substance_id = self.substances[row['SubstID']].id
+            except KeyError as e:
+                logger.error("Reporting new unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            nominations.append({
+                "substance_id": substance_id,
+                "quantity": row['SubmitAmt'],
+                "remarks_os": row['Remark'] if row['Remark'] else ""
+            })
+
+        return nominations
+
+    def get_exemptions_approved(self, party, period, rows):
+        """
+        Parses the Exemption Approved data for the submission identified by
+        the party/period combination.
+
+        Return a list of approved exemptions.
+        """
+
+        approved_exemptions = []
+
+        for row in rows:
+            try:
+                substance_id = self.substances[row['SubstID']].id
+            except KeyError as e:
+                logger.error("Reporting new unknown substance %s: %s/%s", e, party.abbr, period.name)
+                continue
+
+            essen_crit_type_id = self.get_essen_crit_type(row["TypeEssenCrit"], row["IsEmergency"])
+
+            approved_exemptions.append({
+                "substance_id": substance_id,
+                "decision_approved": row['ApprDec'],
+                "approved_teap_amount": row['ApprTEAP'],
+                "quantity": row["ApprAmt"],
+                "remarks_os": row['Remark'] if row['Remark'] else "",
+                "essen_crit_type_id":  essen_crit_type_id
+            })
+
+        return approved_exemptions
+
+    def get_essen_crit_type(self, essen_crit_type, is_emergency):
+        if essen_crit_type == 'E':
+            if is_emergency:
+                return EssentialCriticalType.objects.get(name="Emergency Essential").pk
+            else:
+                return EssentialCriticalType.objects.get(name="Essential").pk
+        elif essen_crit_type == 'C':
+            if is_emergency:
+                return EssentialCriticalType.objects.get(name="Emergency Critical").pk
+            else:
+                return EssentialCriticalType.objects.get(name="Critical").pk
+
+        # Default
+        return EssentialCriticalType.objects.get(name="Essential").pk
