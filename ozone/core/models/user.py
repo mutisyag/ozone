@@ -1,6 +1,8 @@
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import Q, F
+from django.utils.translation import gettext_lazy as _
 
 from guardian.mixins import GuardianUserMixin
 from rest_framework.authtoken.models import Token
@@ -62,12 +64,24 @@ class User(GuardianUserMixin, AbstractUser):
             return True
         return False
 
+    def clean(self):
+        if self.is_secretariat and self.party is not None:
+            raise ValidationError(
+                _('Secretariat users cannot belong to a Party')
+            )
+        if not self.is_secretariat and self.party is None:
+            raise ValidationError(
+                _('User needs to be either Secretariat or Party')
+            )
+        super().clean()
+
     def save(self, *args, **kwargs):
         # Create authentication token only on first-time save
         first_save = False
         if not self.pk or kwargs.get('force_insert', False):
             first_save = True
 
+        self.clean()
         super().save(*args, **kwargs)
         if first_save:
             Token.objects.create(user=self)
