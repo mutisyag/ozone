@@ -352,7 +352,7 @@
       "description": "2017",
       "end_date": "2017-12-31",
       "is_reporting_allowed": true,
-      "is_reporting_open": true,
+      "is_reporting_open": false,
       "name": "2017",
       "start_date": "2017-01-01"
     },
