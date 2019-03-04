@@ -28,19 +28,24 @@ const setMultiSelector = (browser, selector_id, option) => {
 		.useXpath()
 		/* Check if multiselect is visible */
 		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, time)
-		/* Open multiselect */
-		.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
-		.pause(1000)
-		/* Check if multiselect is opened */
-		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']`, time)
-		/* Check if desired option is visible */
-		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, time)
-		/* Select option */
-		.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
-		.pause(1000)
-		/* Press escape if necessary */
-		.keys(browser.Keys.ESCAPE)
-		.pause(500)
+		.element('xpath', `//div[@id='${selector_id}']//span[contains(@class, 'multiselect__single')]//span[contains(text(), '${option}')]`, (result) => {
+			if (result.status === -1) {
+				browser
+					/* Open multiselect */
+					.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
+					.pause(1000)
+					/* Check if multiselect is opened */
+					.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']`, time)
+					/* Check if desired option is visible */
+					.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, time)
+					/* Select option */
+					.click(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
+					.pause(1000)
+					/* Press escape if necessary */
+					.keys(browser.Keys.ESCAPE)
+					.pause(500)
+			}
+		})
 }
 
 const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
@@ -77,18 +82,45 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
 	}
 }
 
+const handleModal = (browser, accept = true) => {
+	const modal = "//div[@id='confirm-modal']"
+	const acceptButton = "//button[contains(@class, 'btn-primary')]"
+	const declineButton = "//button[contains(@class, 'btn-secondary')]"
+	browser
+		/* Check if moodal is opened */
+		.useXpath()
+		.waitForElementVisible(modal, 10000)
+	if (accept) {
+		browser
+			.waitForElementVisible(modal + acceptButton, 10000)
+			.click(modal + acceptButton)
+	} else {
+		browser
+			.waitForElementVisible(modal + declineButton, 10000)
+			.click(modal + declineButton)
+	}
+	browser
+		.pause(500)
+}
+
+const deleteSubmissionFake = (browser) => {
+	browser
+		.useXpath()
+		.waitForElementVisible("//button[@id='delete-button']", 10000)
+		.click("//button[@id='delete-button']")
+		.pause(500)
+	handleModal(browser, false)
+}
 const deleteSubmission = (browser) => {
-	browser.useXpath()
-		/* Fake delete */
+	browser
+		.useXpath()
 		.waitForElementVisible("//button[@id='delete-button']", 10000)
 		.click("//button[@id='delete-button']")
 		.pause(500)
-		.dismissAlert()
-		/* Delete Submission */
-		.waitForElementVisible("//button[@id='delete-button']", 10000)
-		.click("//button[@id='delete-button']")
-		.pause(500)
-		.acceptAlert()
+	handleModal(browser)
+
+	/* Validation */
+	browser
 		.waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission deleted')]", 5000)
 		.waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 10000)
 }
@@ -184,7 +216,8 @@ const saveAndFail = (browser) => {
  *	Must be in dashboard before using this function
  */
 const editSubmission = (browser, table_order) => {
-	browser.useXpath()
+	browser
+		.useXpath()
 		.waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`, 10000)
 		.click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`)
 		.pause(3000)
@@ -688,6 +721,7 @@ module.exports = {
 	logout,
 	setMultiSelector,
 	createSubmission,
+	deleteSubmissionFake,
 	deleteSubmission,
 	saveSubmission,
 	saveAndFail,
