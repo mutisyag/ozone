@@ -41,6 +41,8 @@ class User(GuardianUserMixin, AbstractUser):
         on_delete=models.PROTECT
     )
 
+    email = models.EmailField(_('email address'))
+
     @property
     def role(self):
         if self.is_secretariat:
