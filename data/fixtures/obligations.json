@@ -6,7 +6,8 @@
       "name": "Article 7",
       "description": "Data forms 1-6",
       "form_type": "art7",
-      "has_reporting_periods": true
+      "has_reporting_periods": true,
+      "is_default": true
     }
   },
   {
