@@ -65,14 +65,16 @@ class User(GuardianUserMixin, AbstractUser):
         return False
 
     def clean(self):
-        if self.is_secretariat and self.party is not None:
-            raise ValidationError(
-                _('Secretariat users cannot belong to a Party')
-            )
-        if not self.is_secretariat and self.party is None:
-            raise ValidationError(
-                _('User needs to be either Secretariat or Party')
-            )
+        # Superusers can be allowed to be neither of party & OS
+        if not self.is_superuser:
+            if self.is_secretariat and self.party is not None:
+                raise ValidationError(
+                    _('Secretariat users cannot belong to a Party')
+                )
+            if not self.is_secretariat and self.party is None:
+                raise ValidationError(
+                    _('User needs to be either Secretariat or Party')
+                )
         super().clean()
 
     def save(self, *args, **kwargs):
