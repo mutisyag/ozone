@@ -1,5 +1,8 @@
 <template>
   <div v-if="tab_info" id="has_emissions_tab">
+		<h5 class="errorHeading" v-if="$store.state.form.tabs.questionaire_questions.form_fields[tabName].selected === false && tab_info.form_fields.length">
+			The data in this form will not be saved because you have selected in the questionnarie "no" for this section
+		</h5>
     <div class="form-sections">
 		<table ref="tableHeader" class="table submission-table header-only">
 			<thead>

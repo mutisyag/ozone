@@ -5,18 +5,18 @@ export default {
 	mixins: [SaveMixin],
 	methods: {
 		alertUnsavedData(tabName, tab, url) {
-			const answer = window.confirm(`${tabName}: ${this.$gettext('You have unsaved data in that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?')}`)
+			const answer = window.confirm(`${tabName}: ${this.$gettext('You have unsaved data that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?')}`)
 			if (answer) {
 				this.$store.dispatch('removeDataFromTab', tabName).then(() => {
 					this.submitData(tab, url)
 				})
 				return true
 			}
-			this.$store.dispatch('setAlert', {
-				$gettext: this.$gettext,
-				message: { __all__: [`${tabName}: ${this.$gettext('Data was not saved')}`] },
-				variant: 'danger' })
-			this.$store.commit('setTabStatus', { tab: tabName, value: false })
+			// this.$store.dispatch('setAlert', {
+			// 	$gettext: this.$gettext,
+			// 	message: { __all__: [`${tabName}: ${this.$gettext('Data was not saved')}`] },
+			// 	variant: 'danger' })
+			// this.$store.commit('setTabStatus', { tab: tabName, value: false })
 			return false
 		},
 
@@ -45,20 +45,29 @@ export default {
 					variant: 'danger' })
 				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
 			} else {
+				let stopSave = false
 				Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
 					const url = this.$store.state.current_submission[tab.endpoint_url]
-					if (!doNotSave.includes(tab.name)) {
-						if (removeDataAndSave.includes(tab.name)) {
-							if (!this.alertUnsavedData(tab.name, tab, url)) {
-								return false
-							}
-						} else if (justSave.includes(tab.name)) {
-							this.submitData(tab, url)
+					if (removeDataAndSave.includes(tab.name)) {
+						if (!this.alertUnsavedData(tab.name, tab, url)) {
+							stopSave = true
 						} else {
-							url && this.submitData(tab, url)
+							stopSave = false
 						}
 					}
 				})
+				if (!stopSave) {
+					Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
+						const url = this.$store.state.current_submission[tab.endpoint_url]
+						if (!doNotSave.includes(tab.name)) {
+							if (justSave.includes(tab.name)) {
+								this.submitData(tab, url)
+							} else {
+								url && this.submitData(tab, url)
+							}
+						}
+					})
+				}
 			}
 		}
 	}
