@@ -1,5 +1,4 @@
 import os
-import enum
 
 from datetime import datetime
 from django.contrib.auth import get_user_model
@@ -583,7 +582,8 @@ class Submission(models.Model):
             )
 
         # Call the transition; this should work (bar exceptions in pre-post
-        # transition hooks)
+        # transition hooks, which will get caught later down the line if they
+        # occur)
         transition()
 
         # If everything went OK, persist the result and the transition.
