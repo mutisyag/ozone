@@ -601,17 +601,19 @@ def validate_import_export_data(
 
             elif entry.get('substance', None):
                 substance = entry.get('substance')
-                sums_dictionary[substance]['totals_sum'] += sum(
-                    [
-                        get_field_value(entry, field) for field in totals_fields
-                    ]
-                )
-                sums_dictionary[substance]['quantities_sum'] += sum(
-                    [
-                        get_field_value(entry, field)
-                        for field in quantity_fields
-                    ]
-                )
+                if substance in related_substances:
+                    sums_dictionary[substance]['totals_sum'] += sum(
+                        [
+                            get_field_value(entry, field)
+                            for field in totals_fields
+                        ]
+                    )
+                    sums_dictionary[substance]['quantities_sum'] += sum(
+                        [
+                            get_field_value(entry, field)
+                            for field in quantity_fields
+                        ]
+                    )
 
         # And finally verify that, for each substance,
         # sum of totals > sum of quantities
