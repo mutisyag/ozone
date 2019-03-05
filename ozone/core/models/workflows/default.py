@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 import xworkflows
 
 from .base import BaseWorkflow
+from ...exceptions import TransitionFailed
 
 
 class DefaultArticle7WorkflowStateDescription(xworkflows.Workflow):
@@ -111,7 +112,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
         would have always shown the transition as unavailable
         """
         if self.model_instance.flag_valid is None:
-            raise xworkflows.ForbiddenTransition(
+            raise TransitionFailed(
                 _('Valid flag must be set before submission is finalized')
             )
 

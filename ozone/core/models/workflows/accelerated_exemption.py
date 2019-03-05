@@ -1,6 +1,9 @@
+from django.utils.translation import gettext_lazy as _
+
 import xworkflows
 
 from .base import BaseWorkflow
+from ...exceptions import TransitionFailed
 
 
 class AcceleratedExemptionWorkflowStateDescription(xworkflows.Workflow):
@@ -33,13 +36,34 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
+        return self.user.is_secretariat and not self.user.is_read_only
+
+    @xworkflows.before_transition('finalize')
+    def before_finalize(self, *args, **kwargs):
         """
-        Here we don't need to check approved flag becasue it makes no sense for
+        Called right before the "finalize" transition is actually performed.
+
+        Here we don't need to check approved flag because it makes no sense for
         the OS to create a submission with no approved exemptions.
         """
-        return (
-            not self.user.is_read_only and self.user.is_secretariat
-            and self.model_instance.has_filled_approved_exemptions()
-            and self.model_instance.is_emergency()
-        )
 
+        if not self.model_instance.is_emergency():
+            raise TransitionFailed(
+                _(
+                    'An emergency exemption needs to have its emergency flag'
+                    'set.'
+                )
+            )
+
+        if not self.model_instance.has_filled_approved_exemptions():
+            raise TransitionFailed(
+                _(
+                    'An emergency exemption should have at least one'
+                    'approved substance.'
+                )
+            )
+
+    @xworkflows.transition('finalize')
+    def finalize(self):
+        self.model_instance.flag_approved = True
+        self.model_instance.save()
