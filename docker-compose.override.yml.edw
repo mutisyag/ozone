@@ -12,6 +12,8 @@ services:
       io.rancher.scheduler.affinity:host_label_ne: frontend=yes
 
   tusd:
+    ports:
+      - "1080:1080"
     labels:
       io.rancher.scheduler.affinity:host_label_ne: frontend=yes
 
