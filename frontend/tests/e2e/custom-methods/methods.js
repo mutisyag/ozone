@@ -50,8 +50,8 @@ const setMultiSelector = (browser, selector_id, option) => {
 
 const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
 	const submission = {
-		obligation_selector: { option: obligation, read_write: true },
-		period_selector: { option: period, read_write: true },
+		// obligation_selector: { option: obligation, read_write: true },
+		// period_selector: { option: period, read_write: true },
 		party_selector: { option: party, read_write: edit_party }
 	}
 
@@ -66,6 +66,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
 	}
 
 	browser
+		.useXpath()
 		.waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
 		.click('//div[contains(@class,"create-submission")]//button')
 		.pause(5000)
@@ -151,7 +152,7 @@ const selectTab = (browser, tab) => {
 }
 
 const fillSubmissionInfo = (browser, submissionInfo = {}) => {
-	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email', 'date']
+	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
 	/* Open Submission Info tab */
 	selectTab(browser, 'Submission Info')
 	browser.useXpath()
@@ -197,8 +198,7 @@ const saveAndFail = (browser) => {
 		postal_address: 'test address',
 		country: 'France',
 		phone: '+490000000',
-		email: 'john.doe@gmail.com',
-		date: '01/11/2019'
+		email: 'john.doe@gmail.com'
 	}
 
 	fillSubmissionInfo(browser, submissionInfo)
