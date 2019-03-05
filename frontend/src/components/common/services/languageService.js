@@ -45,7 +45,7 @@ const dateFormat = (value, language, formatString) => {
 	return moment(value).format(formatString || 'LL')
 }
 
-const dateFormatToYYYYMMDD = (value, language) => dateFormat(value, language, 'YYYY-MM-DD')
+const dateFormatToYYYYMMDD = (value, language) => (dateFormat(value, language, 'YYYY-MM-DD') === 'Invalid date' ? null : dateFormat(value, language, 'YYYY-MM-DD'))
 const dateFormatToSeconds = (value, language) => dateFormat(value, language, 'YYYY-MM-DD HH:mm:ss')
 
 export {
