@@ -264,11 +264,18 @@ export default {
 		const defaultPeriod = dashboardPeriods
 			.find(period => period.text.trim() === submissionDefaultValues.reporting_period)
 		const reporting_period = defaultPeriod.value
+		let defaultObligation = null
+		if (submissionDefaultValues.obligation) {
+			defaultObligation = this.obligations.find(o => o.text === submissionDefaultValues.obligation).value
+		}
+
 		this.submissionNew = {
 			...this.submissionNew,
 			...submissionDefaultValues,
-			reporting_period
+			reporting_period,
+			obligation: defaultObligation
 		}
+		console.log(this.submissionNew)
 		this.updateBreadcrumbs()
 	},
 
