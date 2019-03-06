@@ -29,7 +29,7 @@
 									</span>
 									<span v-else>
 										<label>{{labels[order]}}
-											<div class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>(Required)</div>
+											<div class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>(required)</div>
 										</label>
 									</span>
 								</b-col>
