@@ -44,7 +44,9 @@ matrix:
         - cd frontend && yarn install
       before_script:
       script:
-        - npm run testNoWatch
+        - yarn run test-ci
+      after_success:
+        - cat ./coverage/lcov.info | coveralls
     - language: python
       cache:
        - pip

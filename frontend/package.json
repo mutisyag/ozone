@@ -6,6 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit --watch",
+    "test-ci": "cross-env NODE_ENV=coverage nyc --reporter=lcovonly --exclude \"tests/\" --all yarn run testNoWatch",
+    "test-cover": "cross-env NODE_ENV=coverage nyc --reporter=text --exclude \"tests/\" --all yarn run testNoWatch",
     "e2e": "vue-cli-service test:e2e --mode development",
     "e2e-local": "vue-cli-service test:e2e --config node_modules/@vue/cli-plugin-e2e-nightwatch/nightwatch.config.js --mode development",
     "testNoWatch": "vue-cli-service test:unit"
@@ -44,10 +46,14 @@
     "@vue/eslint-config-airbnb": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "chai": "^4.2.0",
+    "coveralls": "^3.0.3",
+    "cross-env": "^5.2.0",
     "easygettext": "^2.7.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0-0",
+    "istanbul-instrumenter-loader": "^3.0.1",
     "node-sass": "^4.9.0",
+    "nyc": "^13.3.0",
     "sass-loader": "^7.0.1",
     "sinon": "^7.2.2",
     "vue-template-compiler": "^2.5.17"
