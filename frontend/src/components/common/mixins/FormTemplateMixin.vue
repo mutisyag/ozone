@@ -304,7 +304,7 @@ export default {
 		},
 
 		remove_field(index, noAlert) {
-			this.$store.dispatch('removeField', { 
+			this.$store.dispatch('removeField', {
 				tab: this.tabName,
 				index,
 				$gettext: this.$gettext,

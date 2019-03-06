@@ -67,6 +67,13 @@
     </div>
     <Footer style="display:inline">
 			<Save class="actions mt-2 mb-2"  v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
+			<router-link
+						class="btn btn-warning ml-2"
+						:to="{name: 'Dashboard'}"
+						v-translate
+			>
+					Close
+			</router-link>
 			<b-button-group class="pull-right actions mt-2 mb-2">
 				<b-btn
 					v-if="$store.state.available_transitions.includes('submit')"
