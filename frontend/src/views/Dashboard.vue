@@ -90,7 +90,7 @@
 							<router-link
 									class="btn btn-outline-primary btn-sm"
 									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-								<span v-if="row.item.details.can_edit_data" v-translate>Continue</span>
+								<span v-if="row.item.details.can_edit_data" v-translate>Edit</span>
 								<span v-else v-translate>View</span>
 							</router-link>
 						</template>
