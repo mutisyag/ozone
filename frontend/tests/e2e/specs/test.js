@@ -115,7 +115,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
@@ -145,7 +144,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		const start_column = 4
 
