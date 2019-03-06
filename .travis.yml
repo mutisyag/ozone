@@ -46,9 +46,9 @@ matrix:
       script:
         - cross-env NODE_ENV=coverage nyc --reporter=lcovonly --exclude "tests/" --all yarn run testNoWatch
       after_success:
-        # XXX Temp added for debug.
-        - cat ./coverage/lcov.info | grep "SF:"
-        - cat ./coverage/lcov.info | coveralls
+        # We need to change back to the parent dir, so coveralls knows where
+        # to find the files in the repo.
+          - cd .. ; cat ./frontend/coverage/lcov.info | ./frontend/node_modules/.bin/coveralls
     - language: python
       cache:
        - pip
