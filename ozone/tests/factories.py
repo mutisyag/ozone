@@ -209,9 +209,6 @@ class SubmissionFactory(DjangoModelFactory):
         """
         Automatically called after create() is completed
         """
-        # Questionnaire is needed for "Submit" to actually work on Article 7
-        # workflows
-        questionnaire = Article7QuestionnaireFactory(submission=self)
 
         # Submission info needs to be properly populated for submit to work
         self.info.reporting_officer = 'Test Officer'
@@ -221,6 +218,13 @@ class SubmissionFactory(DjangoModelFactory):
 
         if self.filled_by_secretariat:
             self.submitted_at = datetime.strptime('2018-12-31', '%Y-%m-%d')
+
+    @post_generation
+    def populate_questionnaire(self, create, extracted, **kwargs):
+        # Questionnaire is needed for "Submit" to actually work on Article 7
+        # workflows
+        if extracted is not False:
+            questionnaire = Article7QuestionnaireFactory(submission=self)
 
     class Meta:
         model = Submission
