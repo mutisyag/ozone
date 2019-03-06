@@ -93,39 +93,39 @@ const getFormArt7 = ($gettext) => {
 				isInvalid: false,
 				section_subheaders: [
 					{
-						label: `(1) <br> ${$gettext('Group')}`,
+						label: `(1a) <br> ${$gettext('Annex/Group')}`,
 						name: 'group'
 					},
 					{
-						label: `(2) <br> ${$gettext('Substances')}`,
+						label: `(1b) <br> ${$gettext('Substances')}`,
 						name: 'substance'
 					},
 					{
-						label: `(3) <br> ${$gettext('Country of destination of exports')}`,
+						label: `(2) <br> ${$gettext('Country of destination of exports')}`,
 						name: 'destination_party'
 					},
 					{
-						label: `(4) <br> ${$gettext('New')}`,
+						label: `(3) <br> ${$gettext('New')}`,
 						name: 'quantity_total_new'
 					},
 					{
-						label: `(5) <br> ${$gettext('Recovered and reclaimed')}`,
+						label: `(4) <br> ${$gettext('Recovered and reclaimed')}`,
 						name: 'quantity_total_recovered'
 					},
 					{
-						label: `(6) <br> ${$gettext('Quantity of new substances exported as feedstock')}`,
+						label: `(5) <br> ${$gettext('Quantity of new substances exported as feedstock')}`,
 						name: 'quantity_feedstock'
 					},
 					{
-						label: `(7) <br> ${$gettext('Quantity')}`,
+						label: `(6) <br> ${$gettext('Quantity')}`,
 						name: 'quantity_exempted'
 					},
 					{
-						label: `(8) <br> ${$gettext('Decision / type of use or remark')}`,
+						label: `(7) <br> ${$gettext('Decision / type of use or remark')}`,
 						name: 'decision_exempted'
 					},
 					{
-						label: `(9) <br> ${$gettext('Status')}`,
+						label: `<br> ${$gettext('Status')}`,
 						name: 'validation'
 					}
 				],
@@ -230,38 +230,38 @@ const getFormArt7 = ($gettext) => {
 				blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
 				section_subheaders: [{
 					name: 'group',
-					label: `(1) ${$gettext('Group')}`
+					label: `(1) ${$gettext('Annex/Group')}`
 				},
 				{
 					name: 'substance',
-					label: `(2) ${$gettext('Substance')}`
+					label: `(2a) ${$gettext('Substance')}`
 				},
 				{
 					name: 'source_party',
-					label: `(3) <br> ${$gettext('Exporting party for quantities reported as imports')}`
+					label: `(2b) <br> ${$gettext('Exporting party for quantities reported as imports')}`
 				},
 				{
-					label: `(4) <br> ${$gettext('New')}`,
+					label: `(3) <br> ${$gettext('New')}`,
 					name: 'quantity_total_new'
 				},
 				{
-					label: `(5) <br> ${$gettext('Recovered and reclaimed')}`,
+					label: `(4) <br> ${$gettext('Recovered and reclaimed')}`,
 					name: 'quantity_total_recovered'
 				},
 				{
 					name: 'quantity_feedstock',
-					label: `(6) <br> ${$gettext('Quantity of new substances imported as feedstock')}`
+					label: `(5) <br> ${$gettext('Quantity of new substances imported as feedstock')}`
 				},
 				{
-					label: `(7) <br> ${$gettext('Quantity')}`,
+					label: `(6) <br> ${$gettext('Quantity')}`,
 					name: 'quantity_exempted'
 				},
 				{
-					label: `(8) <br> ${$gettext('Decision / type of use or remark')}`,
+					label: `(7) <br> ${$gettext('Decision / type of use or remark')}`,
 					name: 'decision_exempted'
 				},
 				{
-					label: `(9) <br> ${$gettext('Status')}`,
+					label: `<br> ${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
@@ -350,7 +350,7 @@ const getFormArt7 = ($gettext) => {
 				section_subheaders: [
 					{
 						name: 'group',
-						label: `(1) <br> ${$gettext('Group')}`
+						label: `(1) <br> ${$gettext('Annex/Group')}`
 					},
 					{
 						label: `(2) <br> ${$gettext('Substance')}`,
@@ -377,7 +377,7 @@ const getFormArt7 = ($gettext) => {
 						name: 'quantity_article_5'
 					},
 					{
-						label: `(8) <br> ${$gettext('Status')}`,
+						label: `<br> ${$gettext('Status')}`,
 						name: 'validation'
 					}
 				],
@@ -439,7 +439,7 @@ const getFormArt7 = ($gettext) => {
 					section_subheaders: [
 						{
 							name: 'group',
-							label: `(1) <br> ${$gettext('Group')}`
+							label: `(1) <br> ${$gettext('Annex/Group')}`
 						},
 						{
 							label: `(2) <br> ${$gettext('Substance')}`,
@@ -524,27 +524,27 @@ const getFormArt7 = ($gettext) => {
 				isInvalid: false,
 				form_fields: [],
 				section_subheaders: [{
-					label: `(1) ${$gettext('Group')}`,
+					label: `(1a) ${$gettext('Annex/Group')}`,
 					name: 'group'
 				},
 				{
-					label: `(2) ${$gettext('Substance')}`,
+					label: `(1b) ${$gettext('Substance')}`,
 					name: 'substance'
 				},
 				{
-					label: `(3) ${$gettext('Quantity destroyed')}`,
+					label: `(2) ${$gettext('Quantity destroyed')}`,
 					name: 'quantity_destroyed'
 				},
 				{
-					label: `(4) ${$gettext('Remarks (party)')}`,
+					label: `(3a) ${$gettext('Remarks (party)')}`,
 					name: 'remarks_party'
 				},
 				{
-					label: `(5) ${$gettext('Remarks (secretariat)')}`,
+					label: `(3b) ${$gettext('Remarks (secretariat)')}`,
 					name: 'remarks_os'
 				},
 				{
-					label: `(6) ${$gettext('Status')}`,
+					label: `${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
@@ -608,7 +608,7 @@ const getFormArt7 = ($gettext) => {
 				blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
 				form_fields: [],
 				section_subheaders: [{
-					label: `(1) <br> ${$gettext('Group')}`,
+					label: `(1) <br> ${$gettext('Annex/Group')}`,
 					name: 'group'
 				},
 				{
@@ -636,15 +636,15 @@ const getFormArt7 = ($gettext) => {
 					name: 'quantity_export_recovered'
 				},
 				{
-					label: `(8) <br> ${$gettext('Remarks (party)')}`,
+					label: `(8a) <br> ${$gettext('Remarks (party)')}`,
 					name: 'remarks_party'
 				},
 				{
-					label: `(9) <br> ${$gettext('Remarks (Secretariat)')}`,
+					label: `(8b) <br> ${$gettext('Remarks (Secretariat)')}`,
 					name: 'remarks_os'
 				},
 				{
-					label: `(10) <br> ${$gettext('Status')}`,
+					label: `(<br> ${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
@@ -756,15 +756,15 @@ const getFormArt7 = ($gettext) => {
 					name: 'quantity_emitted'
 				},
 				{
-					label: `(7) <br> ${$gettext('Remarks (party)')}`,
+					label: `(7a) <br> ${$gettext('Remarks (party)')}`,
 					name: 'remarks_party'
 				},
 				{
-					label: `(8) ${$gettext('Remarks (secretariat)')}`,
+					label: `(7b) ${$gettext('Remarks (secretariat)')}`,
 					name: 'remarks_os'
 				},
 				{
-					label: `(9) ${$gettext('Status')}`,
+					label: `${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
