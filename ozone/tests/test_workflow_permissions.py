@@ -1,12 +1,9 @@
-from datetime import datetime
-
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
 from .base import BaseTests
 from .factories import (
-    Article7QuestionnaireFactory,
     AnotherPartyFactory,
     ExemptionApprovedFactory,
     NominationFactory,
@@ -80,21 +77,6 @@ class BaseWorkflowPermissionsTests(BaseTests):
             created_by=owner,
             last_edited_by=owner,
         )
-        # Questionnaire is needed for "Submit" to actually work on Article 7
-        # workflows
-        if self.workflow_class in ('default', 'accelerated'):
-            questionnaire = Article7QuestionnaireFactory(
-                submission=submission
-            )
-
-        # Submission info needs to be properly populated for submit to work
-        submission.info.reporting_officer = 'Test Officer'
-        submission.info.postal_address = 'Test Address'
-        submission.info.email = 'test@officer.net'
-        submission.info.save()
-
-        if submission.filled_by_secretariat:
-            submission.submitted_at = datetime.strptime('2018-12-31', '%Y-%m-%d')
 
         # To proper instantiate the workflow class, we need a second call to
         # save method. Also here we change the current state.

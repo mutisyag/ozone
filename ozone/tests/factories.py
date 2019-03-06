@@ -1,5 +1,5 @@
 from datetime import datetime
-from factory import SubFactory
+from factory import SubFactory, post_generation
 from factory.django import DjangoModelFactory
 from django.contrib.auth import get_user_model
 
@@ -203,6 +203,24 @@ class SubmissionInfoFactory(DjangoModelFactory):
 class SubmissionFactory(DjangoModelFactory):
     obligation = SubFactory(ObligationFactory)
     reporting_period = SubFactory(ReportingPeriodFactory)
+
+    @post_generation
+    def populate_fields_for_submit(self, *args, **kwargs):
+        """
+        Automatically called after create() is completed
+        """
+        # Questionnaire is needed for "Submit" to actually work on Article 7
+        # workflows
+        questionnaire = Article7QuestionnaireFactory(submission=self)
+
+        # Submission info needs to be properly populated for submit to work
+        self.info.reporting_officer = 'Test Officer'
+        self.info.postal_address = 'Test Address'
+        self.info.email = 'test@officer.net'
+        self.info.save()
+
+        if self.filled_by_secretariat:
+            self.submitted_at = datetime.strptime('2018-12-31', '%Y-%m-%d')
 
     class Meta:
         model = Submission
