@@ -1,5 +1,5 @@
 <template>
-  <div v-if="info">
+  <div v-if="info" class="submission-info-tab">
     <b-row>
       <b-col>
         <b-input-group size="sm" :prepend="info.party.label">
@@ -28,8 +28,9 @@
 										</label>
 									</span>
 									<span v-else>
-										<b-badge class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>Required</b-badge>
-										<label>{{labels[order]}}</label>
+										<label>{{labels[order]}}
+											<div class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>(Required)</div>
+										</label>
 									</span>
 								</b-col>
 								<b-col>
@@ -38,8 +39,9 @@
 							</b-row>
 							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
 								<b-col lg='3'>
-									<b-badge class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>{{info.form_fields['submitted_at'].validation}}</b-badge>
-									<label>{{labels.submitted_at}}</label>
+									<label>{{labels.submitted_at}}
+										<div class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>({{info.form_fields['submitted_at'].validation}})</div>
+									</label>
 								</b-col>
 								<b-col>
 									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields.submitted_at" :disabled="!is_secretariat"></fieldGenerator>

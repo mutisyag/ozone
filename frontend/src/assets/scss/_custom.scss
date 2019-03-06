@@ -1080,12 +1080,18 @@ body .multiselect--active .multiselect__select{
     border: 1px solid #e4e7ea;
 }
 }
-
+.submission-info-tab {
+	label {
+		position: relative;
+	}
+}
 
 .floating-error {
 	position: absolute;
-  top: -16px;
-	left: 14px;
+  bottom: -15px;
+	left: 0;
+	font-size: smaller;
+	font-weight: bold;
 }
 
 .errorHeading {
