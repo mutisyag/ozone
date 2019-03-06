@@ -1005,6 +1005,13 @@ class SubmissionInfoSerializer(serializers.ModelSerializer):
         return getattr(obj.submission_format, 'name', '')
 
 
+class SubmissionFormatSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = SubmissionFormat
+        fields = ('name', )
+
+
 class PerTypeFieldsMixIn(object):
     """
     A ModelSerializer that takes an additional `fields` argument that
