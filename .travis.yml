@@ -44,8 +44,10 @@ matrix:
         - cd frontend && yarn install
       before_script:
       script:
-        - yarn run test-ci
+        - cross-env NODE_ENV=coverage nyc --reporter=lcovonly --exclude "tests/" --all yarn run testNoWatch
       after_success:
+        # XXX Temp added for debug.
+        - cat ./coverage/lcov.info | grep "SF:"
         - cat ./coverage/lcov.info | coveralls
     - language: python
       cache:
