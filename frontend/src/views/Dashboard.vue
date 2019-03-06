@@ -316,6 +316,7 @@ export default {
 						current_state: element.current_state,
 						version: element.version,
 						updated_at: element.updated_at,
+						created_by: element.created_by,
 						details: element
 					})
 				})
@@ -338,7 +339,10 @@ export default {
 				key: 'current_state', label: this.$gettext('State'), sortable: true
 			}, {
 				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-			}, { key: 'actions', label: this.$gettext('Actions')
+			}, {
+				key: 'created_by', label: this.$gettext('Created by')
+			}, {
+				key: 'actions', label: this.$gettext('Actions')
 			}]
 		},
 		dataEntryTableItems() {
@@ -356,6 +360,7 @@ export default {
 						party: this.getSubmissionInfo(element).party(),
 						version: element.version,
 						updated_at: element.updated_at,
+						created_by: element.created_by,
 						details: element
 					}
 					tableFields.push(row)
@@ -374,6 +379,8 @@ export default {
 				key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
 			}, {
 				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+			}, {
+				key: 'created_by', label: this.$gettext('Created by')
 			}, {
 				key: 'actions', label: this.$gettext('Actions')
 			}]
