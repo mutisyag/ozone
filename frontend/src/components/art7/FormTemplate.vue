@@ -154,7 +154,7 @@
 				<div
 					style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 					class="special-field"
-					v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+					v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
 					:key="`${tooltipField}_qps`">
 					<hr>
 						<span v-translate='{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}'>
@@ -172,7 +172,7 @@
 				<div
 					style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 					class="special-field"
-					v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+					v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
 					:key="`${tooltipField}_polyols`">
 					<hr>
 						<span v-translate>Polyols quantity</span>
@@ -276,7 +276,7 @@
 				<div
 						style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 						class="special-field"
-						v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_quarantine_pre_shipment"
+						v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
 						:key="`${tooltipField}_qps`">
 						<hr>
 							<span v-translate='{qps_word: qps_word, substance: tab_data.display.substances[cell.item.substance.selected]}'>
@@ -293,7 +293,7 @@
 					<div
 						style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
 						class="special-field"
-						v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted' && cell.item.quantity_polyols"
+						v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
 						:key="`${tooltipField}_polyol`">
 						<hr>
 							<span v-translate>Quantity of Polyols</span>
