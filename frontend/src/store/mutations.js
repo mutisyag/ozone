@@ -289,8 +289,8 @@ const mutations = {
 	resetTab(state, tab) {
 		state.form.tabs[tab].form_fields = []
 	},
-	removeField(state, data) {
-		state.form.tabs[data.tab].form_fields.splice(data.index, 1)
+	removeField(state, { tab, index }) {
+		state.form.tabs[tab].form_fields.splice(index, 1)
 	},
 	addTabFiles(state, { files }) {
 		if (!files) {

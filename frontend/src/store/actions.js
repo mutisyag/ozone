@@ -243,6 +243,16 @@ const actions = {
 		})
 	},
 
+	async removeField({ dispatch, commit }, { tab, index, $gettext, noAlert }) {
+		if (!noAlert) {
+			const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the row is ireversible.', $gettext })
+			if (!confirmed) {
+				return confirmed
+			}
+		}
+		commit('removeField', { tab, index })
+	},
+
 	async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
 		const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the submission is ireversible.', $gettext })
 		if (!confirmed) {

@@ -242,8 +242,9 @@ export default {
 				$gettext: this.$gettext,
 				submissionUrl: this.submission
 			}).then((result) => {
-				if (result) 
+				if (result) {
 					this.$router.push({ name: 'Dashboard' })
+				}
 			})
 		}
 	},

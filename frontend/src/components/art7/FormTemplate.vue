@@ -101,7 +101,7 @@
 					><i class="fa fa-pencil-square-o fa-lg"></i></span>
 					<span
 						v-if="$store.getters.can_edit_data"
-						@click="remove_field(cell.item.index, cell.item)"
+						@click="remove_field(cell.item.index)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
 				</b-btn-group>
@@ -232,7 +232,7 @@
 					<span
 						v-if="$store.getters.can_edit_data"
 						variant="link"
-						@click="remove_field(cell.item.index, cell.item)"
+						@click="remove_field(cell.item.index)"
 						class="table-btn">
 						<i class="fa fa-trash fa-lg"></i>
 					</span>
@@ -361,7 +361,7 @@
 					</span>
 					<span
 						v-if="$store.getters.can_edit_data"
-						@click="remove_field(cell.item.index, cell.item)"
+						@click="remove_field(cell.item.index)"
 						class="table-btn">
 						<i class="fa fa-trash fa-lg"></i>
 					</span>
@@ -371,7 +371,7 @@
 				<CloneField
 					:disabled="!$store.getters.can_edit_data"
 					:key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
-					v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
+					v-on:removeThisField="remove_field(cell.item.index, true)"
 					v-if="!cell.item[getCountrySlot]"
 					:tabName="tabName"
 					:current_field="cell.item.originalObj" />

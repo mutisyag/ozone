@@ -79,7 +79,7 @@
 				<b-btn-group class="row-controls">
 					<span
 						v-if="$store.getters.can_edit_data"
-						@click="remove_field(cell.item.index, cell.item)"
+						@click="remove_field(cell.item.index)"
 						class="table-btn"
 					><i class="fa fa-trash fa-lg"></i></span>
 				</b-btn-group>
@@ -144,7 +144,7 @@
 						<b-btn-group class="row-controls">
 							<span
 								v-if="$store.getters.can_edit_data"
-								@click="remove_field(cell.item.index, cell.item)"
+								@click="remove_field(cell.item.index)"
 								class="table-btn">
 								<i class="fa fa-trash fa-lg"></i>
 							</span>
