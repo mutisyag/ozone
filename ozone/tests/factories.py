@@ -191,6 +191,15 @@ class ReportingChannelFactory(DjangoModelFactory):
         model = ReportingChannel
 
 
+class SubmissionInfoFactory(DjangoModelFactory):
+    reporting_officer = 'Test Officer'
+    postal_address = 'Test Address'
+    email = 'test@officer.net'
+
+    class Meta:
+        model = SubmissionInfo
+
+
 class SubmissionFactory(DjangoModelFactory):
     obligation = SubFactory(ObligationFactory)
     reporting_period = SubFactory(ReportingPeriodFactory)
@@ -245,23 +254,6 @@ class BlendFactory(DjangoModelFactory):
         model = Blend
 
 
-class SubmissionInfoFactory(DjangoModelFactory):
-    class Meta:
-        model = SubmissionInfo
-
-
-class Article7QuestionnaireFactory(DjangoModelFactory):
-    has_imports = False
-    has_exports = False
-    has_produced = False
-    has_destroyed = False
-    has_nonparty = False
-    has_emissions = False
-
-    class Meta:
-        model = Article7Questionnaire
-
-
 class SubstanceFactory(DjangoModelFactory):
     name = "Chemical X"
     description = "Don't mix with sugar, spice and everything nice"
@@ -289,6 +281,18 @@ class AnotherSubstanceFactory(SubstanceFactory):
     name = "Kryptonite"
     formula = "KRY-XXX"
     substance_id = 997
+
+
+class Article7QuestionnaireFactory(DjangoModelFactory):
+    has_imports = False
+    has_exports = False
+    has_produced = False
+    has_destroyed = False
+    has_nonparty = False
+    has_emissions = False
+
+    class Meta:
+        model = Article7Questionnaire
 
 
 class DestructionFactory(DjangoModelFactory):
