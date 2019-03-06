@@ -1092,3 +1092,22 @@ body .multiselect--active .multiselect__select{
 	color: #f86c6b;
 	padding: 1rem;
 }
+
+body .vdp-datepicker__calendar {
+	bottom: 100%;
+	min-width: 300px;
+	width: 100%;
+}
+
+.vdp-datepicker .form-control[readonly] {
+	background-color: initial;
+}
+
+.vdp-datepicker .form-control:disabled {
+	background-color: #e4e7ea;
+}
+.vdp-datepicker__clear-button {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+}

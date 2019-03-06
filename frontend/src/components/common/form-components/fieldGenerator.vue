@@ -4,7 +4,7 @@
         <span class="nonInput" v-if="field.type === 'nonInput'" :id="fieldInfo ? fieldInfo.field : ''">{{field.selected}}</span>
 				<input v-else :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type" />
     </div>
-		<Datepicker clear-button @input="updateFormField" v-model="currentTyping" format="d MMMM yyyy" v-else-if="field.type === 'date'"></Datepicker>
+		<Datepicker input-class="form-control" :disabled="disabled" :clear-button="!disabled" @input="updateFormField" v-model="currentTyping" format="d MMMM yyyy" v-else-if="field.type === 'date'"></Datepicker>
     <b-form-radio-group :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
 		<div v-else-if="field.type === 'select'">
