@@ -276,7 +276,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         )
         self.assertEqual(result.status_code, 200)
         submission.refresh_from_db()
-        self.assertEqual(len(result.json()), 4)
+        # Apparently there should be 4 history items; the extra one appears
+        # because SubmissionFactory.create() actually does change attributes
+        # on the submission to make "Submit" available!
+        self.assertEqual(len(result.json()), 5)
         self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
         self.assertEqual(result.json()[0]['current_state'], 'submitted')
 
