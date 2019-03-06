@@ -16,7 +16,7 @@
 		<hr>
     <form class="form-sections">
 			<b-row>
-				<b-col cols="8">
+				<b-col cols="7">
 					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
@@ -105,7 +105,7 @@
 						<div>
 							<h5 class="mt-4 mb-4" v-translate>Annex group reported in full</h5>
 								<b-row id="annex-flags">
-									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
+									<b-col sm=12 md="12" lg="" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
 											<span cols="1">
 												<fieldGenerator

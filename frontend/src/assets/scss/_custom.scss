@@ -1082,8 +1082,18 @@ body .multiselect--active .multiselect__select{
 }
 .submission-info-tab {
 	label {
-		position: relative;
+		// position: relative;
 	}
+	.custom-control-label {
+		position: static;
+	}
+
+	.custom-control-label:before {
+		left: 0;
+	}
+	.custom-control-label:after {
+		left: 0;
+	} 
 }
 
 .floating-error {
@@ -1116,4 +1126,9 @@ body .vdp-datepicker__calendar {
     position: absolute;
     top: .5rem;
     right: .5rem;
+}
+
+.specific-flags-wrapper {
+	display: block;
+	white-space: nowrap;
 }
