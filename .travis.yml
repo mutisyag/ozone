@@ -48,7 +48,7 @@ matrix:
       after_success:
         # We need to change back to the parent dir, so coveralls knows where
         # to find the files in the repo.
-          - cd .. ; cat ./frontend/coverage/lcov.info | ./frontend/node_modules/.bin/coveralls
+        - cd .. ; cat ./frontend/coverage/lcov.info | ./frontend/node_modules/.bin/coveralls
     - language: python
       cache:
        - pip
