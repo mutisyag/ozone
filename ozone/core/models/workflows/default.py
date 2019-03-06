@@ -56,6 +56,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
         return (
             not self.user.is_read_only
             and self.is_secretariat_or_same_party_owner(self.model_instance)
+            and self.model_instance.is_submittable()
         )
 
     @xworkflows.transition_check('process')
