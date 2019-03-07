@@ -164,7 +164,7 @@
 													{{labels['view']}}
                       </span>
                     </router-link>
-
+<!--
                     <b-btn
                         variant="outline-primary"
                         @click="clone(row.item.details.url, row.item.details.obligation)"
@@ -191,7 +191,7 @@
 												:disabled="currentUser.is_read_only"
 												size="sm">
 												{{labels['delete']}}
-                    </b-btn>
+                    </b-btn> -->
                   </b-button-group>
                   </template>
               </b-table>
