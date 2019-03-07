@@ -316,7 +316,7 @@ export default {
 						current_state: element.current_state,
 						version: element.version,
 						updated_at: element.updated_at,
-						created_by: element.created_by,
+						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
 						details: element
 					})
 				})
@@ -360,7 +360,7 @@ export default {
 						party: this.getSubmissionInfo(element).party(),
 						version: element.version,
 						updated_at: element.updated_at,
-						created_by: element.created_by,
+						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
 						details: element
 					}
 					tableFields.push(row)
