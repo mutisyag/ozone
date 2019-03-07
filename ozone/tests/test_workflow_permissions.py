@@ -77,14 +77,16 @@ class BaseWorkflowPermissionsTests(BaseTests):
             created_by=owner,
             last_edited_by=owner,
         )
-        # To proper instantiate the workflow class, we need a second call to save method.
-        # Also here we change the current state.
+
+        # To proper instantiate the workflow class, we need a second call to
+        # save method. Also here we change the current state.
         submission._workflow_class = self.workflow_class
         submission._previous_state = previous_state
         submission._current_state = current_state
         submission.flag_valid = flag_valid
         submission.flag_approved = flag_approved
         submission.save()
+
         return submission
 
 

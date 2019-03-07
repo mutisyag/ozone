@@ -56,7 +56,7 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
     """Basic Submission API tests."""
 
     def test_get(self):
-        submission = self.create_submission()
+        submission = self.create_submission(populate_questionnaire=False)
         art7question = Article7QuestionnaireFactory.create(
             submission=submission, has_imports=True,
         )
@@ -69,7 +69,7 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         self.assertEqual(resp.json()["has_exports"], False)
 
     def test_post(self):
-        submission = self.create_submission()
+        submission = self.create_submission(populate_questionnaire=False)
         data = {
             'has_destroyed': False,
             'has_emissions': False,
@@ -89,8 +89,12 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         self.assertEqual(submission.article7questionnaire.has_exports, False)
 
     def test_post_wrong_obligation(self):
-        obligation = ObligationFactory.create(form_type="other", name="Much obliged")
-        submission = self.create_submission(obligation=obligation)
+        obligation = ObligationFactory.create(
+            form_type="other", name="Much obliged"
+        )
+        submission = self.create_submission(
+            obligation=obligation, populate_questionnaire=False
+        )
         data = {
             'has_destroyed': False,
             'has_emissions': False,
@@ -107,7 +111,7 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         self.assertEqual(resp.status_code, 403)
 
     def test_put(self):
-        submission = self.create_submission()
+        submission = self.create_submission(populate_questionnaire=False)
         art7question = Article7QuestionnaireFactory.create(
             submission=submission,
         )
@@ -129,7 +133,7 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
         self.assertEqual(resp.json()["has_exports"], False)
 
     def test_put_immutable_state(self):
-        submission = self.create_submission()
+        submission = self.create_submission(populate_questionnaire=False)
         art7question = Article7QuestionnaireFactory.create(
             submission=submission,
 

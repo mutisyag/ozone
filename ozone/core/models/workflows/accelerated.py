@@ -37,7 +37,11 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):
-        return not self.user.is_read_only and self.user.is_secretariat
+        return (
+            self.user.is_secretariat
+            and not self.user.is_read_only
+            and self.model_instance.is_submittable()
+        )
 
     @xworkflows.transition_check('recall')
     def check_recall(self):

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.urls import reverse
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
@@ -181,6 +183,12 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.info.reporting_officer = 'Test Officer'
+        clone.info.postal_address = 'Test Address'
+        clone.info.email = 'test@officer.net'
+        clone.info.save()
+        clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
+        clone.save()
         # This should make the first one superseded
         clone.call_transition("submit", self.secretariat_user)
 
@@ -196,6 +204,12 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.info.reporting_officer = 'Test Officer'
+        clone.info.postal_address = 'Test Address'
+        clone.info.email = 'test@officer.net'
+        clone.info.save()
+        clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
+        clone.save()
         # This should make the first one superseded
         clone.call_transition("submit", self.secretariat_user)
 
@@ -276,7 +290,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         )
         self.assertEqual(result.status_code, 200)
         submission.refresh_from_db()
-        self.assertEqual(len(result.json()), 4)
+        # Apparently there should be 4 history items; the extra one appears
+        # because SubmissionFactory.create() actually does change attributes
+        # on the submission to make "Submit" available!
+        self.assertEqual(len(result.json()), 5)
         self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
         self.assertEqual(result.json()[0]['current_state'], 'submitted')
 
