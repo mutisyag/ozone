@@ -183,6 +183,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.info.reporting_officer = 'Test Officer'
+        clone.info.postal_address = 'Test Address'
+        clone.info.email = 'test@officer.net'
+        clone.info.save()
         clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
         clone.save()
         # This should make the first one superseded
@@ -200,6 +204,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.info.reporting_officer = 'Test Officer'
+        clone.info.postal_address = 'Test Address'
+        clone.info.email = 'test@officer.net'
+        clone.info.save()
         clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
         clone.save()
         # This should make the first one superseded
