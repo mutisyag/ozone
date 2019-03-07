@@ -508,6 +508,9 @@ export default {
 		},
 		clearFilters() {
 			Object.keys(this.tableOptions.filters).forEach(key => {
+				if (this.currentUser.party && key === 'party') {
+					return
+				}
 				this.tableOptions.filters[key] = null
 			})
 		},
