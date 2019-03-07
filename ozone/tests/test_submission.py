@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.urls import reverse
 from django.contrib.auth.hashers import Argon2PasswordHasher
 
@@ -181,6 +183,8 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
+        clone.save()
         # This should make the first one superseded
         clone.call_transition("submit", self.secretariat_user)
 
@@ -196,6 +200,8 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission = self.create_submission()
         submission.call_transition("submit", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
+        clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
+        clone.save()
         # This should make the first one superseded
         clone.call_transition("submit", self.secretariat_user)
 
