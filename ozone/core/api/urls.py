@@ -268,6 +268,11 @@ urlpatterns = (
             'default-values/',
             views.DefaultValuesViewSet.as_view(),
             name='default_values'
+        ),
+        path(
+            'get-submission-formats/',
+            views.GetSubmissionFormatsViewSet.as_view(),
+            name='get_submission_formats'
         )
     ]
 )

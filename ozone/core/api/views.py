@@ -58,6 +58,7 @@ from ..models import (
     Nomination,
     ExemptionApproved,
     RAFReport,
+    SubmissionFormat,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -108,6 +109,7 @@ from ..serializers import (
     ExemptionNominationSerializer,
     ExemptionApprovedSerializer,
     RAFSerializer,
+    SubmissionFormatSerializer,
 )
 
 
@@ -557,6 +559,17 @@ class SubmissionInfoViewSet(viewsets.ModelViewSet):
         return SubmissionInfo.objects.filter(
             submission=self.kwargs['submission_pk']
         )
+
+
+class GetSubmissionFormatsViewSet(ReadOnlyMixin, generics.ListAPIView):
+    """
+    retrieve:
+    Get the available options for the submission format.
+    """
+
+    queryset = SubmissionFormat.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = SubmissionFormatSerializer
 
 
 class SubmissionFlagsViewSet(
