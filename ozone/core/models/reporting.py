@@ -598,8 +598,8 @@ class Submission(models.Model):
         This only works for Article 7 submissions.
         """
         if (
-            self.info.reporting_officer is None
-            or self.info.postal_address is None
+            self.info.reporting_officer is ''
+            or self.info.postal_address is ''
             or self.info.email is None
             or self.filled_by_secretariat and self.submitted_at is None
         ):
