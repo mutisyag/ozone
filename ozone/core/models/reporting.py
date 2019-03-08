@@ -65,9 +65,6 @@ class ModifyPreventionMixin:
 
 
 class Obligation(models.Model):
-    """
-    TODO: analysis!
-    """
 
     NOT_CLONEABLE = [
         'exemption',
@@ -594,8 +591,6 @@ class Submission(models.Model):
     def is_submittable(self):
         """
         Checks that all required info has been filled before submission.
-
-        This only works for Article 7 submissions.
         """
         if (
             self.info.reporting_officer is ''
@@ -605,8 +600,11 @@ class Submission(models.Model):
             return False
 
         if (
-            not hasattr(self, "article7questionnaire")
-            or self.article7questionnaire is None
+            self.obligation.name == 'Article 7'
+            and (
+                not hasattr(self, "article7questionnaire")
+                or self.article7questionnaire is None
+            )
         ):
             return False
 
