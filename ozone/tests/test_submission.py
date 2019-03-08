@@ -194,7 +194,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
         result = self.client.get(
             reverse("core:submission-list"),
-            {"ordering": "-updated_at", "is_current": True},
+            {"ordering": "-updated_at", "is_superseded": False},
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1)
@@ -215,7 +215,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
         result = self.client.get(
             reverse("core:submission-list"),
-            {"ordering": "-updated_at", "is_current": False},
+            {"ordering": "-updated_at", "is_superseded": True},
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()), 1)
