@@ -1345,6 +1345,8 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    in_initial_state = serializers.SerializerMethodField()
+
     # Permission-related fields
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
@@ -1377,7 +1379,7 @@ class SubmissionSerializer(
             'submission_flags_url', 'submission_remarks',
             'updated_at', 'submitted_at', 'created_by', 'last_edited_by',
             'filled_by_secretariat',
-            'current_state', 'previous_state',
+            'current_state', 'previous_state', 'in_initial_state',
             'data_changes_allowed', 'is_current',
             'flag_provisional', 'flag_valid',
             'flag_superseded',
@@ -1424,6 +1426,9 @@ class SubmissionSerializer(
             'can_change_reporting_channel', 'can_upload_files', 'can_edit_data'
             'created_by', 'last_edited_by',
         )
+
+    def get_in_initial_state(self, obj):
+        return obj.in_initial_state
 
     def get_available_transitions(self, obj):
         user = self.context['request'].user
