@@ -261,12 +261,15 @@ export default {
 
 		const dashboardPeriods = await this.$store.dispatch('getDashboardPeriods')
 		const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
-		const defaultPeriod = dashboardPeriods
-			.find(period => period.text.trim() === submissionDefaultValues.reporting_period)
+		const defaultPeriod = this.$store.getters.defaultPeriod(submissionDefaultValues)
 		const reporting_period = defaultPeriod.value
 		let defaultObligation = null
 		if (submissionDefaultValues.obligation) {
-			defaultObligation = this.obligations.find(o => o.text === submissionDefaultValues.obligation).value
+			defaultObligation = this.$store.getters.defaultObligation(submissionDefaultValues)
+			if (this.currentUser.is_secretariat) {
+				this.tableOptions.filters.obligation = defaultObligation
+				this.tableOptions.filters.period_start = defaultPeriod.start_date
+			}
 		}
 
 		this.submissionNew = {
@@ -275,7 +278,8 @@ export default {
 			reporting_period,
 			obligation: defaultObligation
 		}
-		console.log(this.submissionNew)
+		this.$store.dispatch('getCurrentSubmissions')
+
 		this.updateBreadcrumbs()
 	},
 
@@ -395,7 +399,7 @@ export default {
 					text: f.start_date.split('-')[0],
 					value: this.getStartDateOfYear(f.start_date)
 				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
 		},
 
 		sortOptionsPeriodTo() {
@@ -408,7 +412,7 @@ export default {
 					text: f.start_date.split('-')[0],
 					value: this.getEndDateOfYear(f.end_date)
 				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
 		},
 
 		sortOptionsObligation() {
@@ -425,7 +429,9 @@ export default {
 				&& this.currentUser
 				&& this.obligations
 				&& this.parties
-				&& this.submissions.length) {
+				&& this.submissions.length
+				// && Object.values(this.submissionNew).some(value => value)
+				) {
 				return true
 			}
 			return false
@@ -571,23 +577,27 @@ export default {
 		},
 		'tableOptions.filters': {
 			handler() {
-				if (this.tableOptions.currentPage !== 1) {
-					this.tableOptions.currentPage = 1
-					this.tableOptionsCurrentPageWasSetFromWatcher = true
+				if (this.dataReady) {
+					if (this.tableOptions.currentPage !== 1) {
+						this.tableOptions.currentPage = 1
+						this.tableOptionsCurrentPageWasSetFromWatcher = true
+					}
+					this.$store.dispatch('getCurrentSubmissions')
+					if (!this.$refs.table) return
+					this.$refs.table.refresh()
 				}
-				this.$store.dispatch('getCurrentSubmissions')
-				if (!this.$refs.table) return
-				this.$refs.table.refresh()
 			},
 			deep: true
 		},
 		tableOptionsExceptFilters: {
 			handler() {
-				if (this.tableOptionsCurrentPageWasSetFromWatcher) {
-					this.tableOptionsCurrentPageWasSetFromWatcher = false
-					return
+				if (this.dataReady) {
+					if (this.tableOptionsCurrentPageWasSetFromWatcher) {
+						this.tableOptionsCurrentPageWasSetFromWatcher = false
+						return
+					}
+					this.$store.dispatch('getCurrentSubmissions')
 				}
-				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
 		}

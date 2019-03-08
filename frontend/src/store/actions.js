@@ -106,7 +106,6 @@ const actions = {
 			commit('setCurrentUser', response.data)
 			// TODO: WHY IS IT AN ARRAY ?
 			commit('setCurrentUserPartyInDashboard', response.data[0].party)
-			dispatch('getCurrentSubmissions')
 		} catch (e) {
 			console.log('getMyCurrentUser', e)
 		}
@@ -144,7 +143,7 @@ const actions = {
 				},
 				sorting: {
 					sortDesc: true,
-					sortBy: 'updated_at'
+					sortBy: 'reporting_period'
 				},
 				perPage: null,
 				currentPage: null
