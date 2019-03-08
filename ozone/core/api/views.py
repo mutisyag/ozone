@@ -358,9 +358,10 @@ class SubmissionViewFilterSet(filters.FilterSet):
     reporting_period = filters.NumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
-    is_current = filters.BooleanFilter(
-        method="filter_current",
-        help_text="If set to true only show latest versions."
+    is_superseded = filters.BooleanFilter(
+        method="filter_superseded",
+        help_text="If set to true only show superseded submissions. "
+                  "If set to false only show non-superseded submissions. "
     )
     from_period = filters.DateFilter(
         "reporting_period__start_date",
@@ -378,11 +379,11 @@ class SubmissionViewFilterSet(filters.FilterSet):
         "_current_state", help_text="Filter by the submission state."
     )
 
-    def filter_current(self, queryset, name, value):
+    def filter_superseded(self, queryset, name, value):
         if value:
-            return queryset.exclude(flag_superseded=True)
-        else:
             return queryset.filter(flag_superseded=True)
+        else:
+            return queryset.exclude(flag_superseded=True)
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
