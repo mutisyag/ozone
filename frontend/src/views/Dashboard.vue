@@ -370,6 +370,7 @@ export default {
 					tableFields.push(row)
 				})
 			}
+			this.dataEntryTable.totalRows = tableFields.length
 			return tableFields
 		},
 		dataEntryTableFields() {
@@ -431,7 +432,7 @@ export default {
 				&& this.parties
 				&& this.submissions.length
 				// && Object.values(this.submissionNew).some(value => value)
-				) {
+			) {
 				return true
 			}
 			return false

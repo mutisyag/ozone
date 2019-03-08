@@ -99,7 +99,7 @@ const actions = {
 		})
 	},
 
-	async getMyCurrentUser({ commit, dispatch }) {
+	async getMyCurrentUser({ commit }) {
 		let response
 		try {
 			response = await getCurrentUser()
