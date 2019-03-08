@@ -333,7 +333,7 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 						browser
 							.useCss()
 							.setValue(`#${filter}`, filters[filter])
-							.pause(500)
+							.pause(1000)
 					} else {
 						browser
 							.useXpath()
@@ -351,7 +351,7 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 		}
 	}
 
-	browser.useXpath().execute('window.scrollTo(0,document.body.scrollHeight);')
+	browser.useXpath().execute('window.scrollTo(0,document.body.scrollHeight);').pause(500)
 
 	first_row_expected.forEach((column_value, index) => {
 		if (column_value !== '') {
@@ -363,10 +363,11 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 		.elements('css selector', `#${table} tbody tr`, (result) => {
 			browser.assert.equal(`${result.value.length} rows`, `${rows_number_expected} rows`)
 		})
-		.pause(1500)
+		.pause(500)
 		.useCss()
 		.waitForElementVisible(`#${clear_button}`, 20000)
 		.click(`#${clear_button}`)
+		.pause(1000)
 }
 
 const filterEntity = (browser, tab, filters) => {
