@@ -57,7 +57,7 @@
 		</b-button-group>
 
 		<router-link
-					class="btn btn-warning ml-2"
+					class="btn btn-primary ml-2"
 					:to="{name: 'Dashboard'}"
 					v-translate
 		>

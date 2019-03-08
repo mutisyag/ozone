@@ -71,7 +71,7 @@
     <Footer style="display:inline">
 			<Save class="actions mt-2 mb-2" v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
 			<router-link
-						class="btn btn-warning ml-2"
+						class="btn btn-primary ml-2"
 						:to="{name: 'Dashboard'}"
 						v-translate
 			>
