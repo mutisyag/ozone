@@ -102,6 +102,10 @@ const mutations = {
 		state.tableRowConstructor = tableRowConstructor
 	},
 
+	updateTransitions(state, data) {
+		state.current_submission.available_transitions = data
+	},
+
 	incrementOrderingId(state, data) {
 		state.form.tabs[data.tabName].ordering_id += 1
 	},
@@ -150,10 +154,6 @@ const mutations = {
 	},
 
 	// initial data
-
-	updateAvailableTransitions(state, data) {
-		state.available_transitions = data
-	},
 
 	setCurrentUser(state, data) {
 		[state.currentUser] = data

@@ -66,7 +66,7 @@
 
 		<b-button-group class="pull-right actions mt-2 mb-2">
 			<b-btn
-				v-if="$store.state.available_transitions.includes('submit')"
+				v-if="$store.state.current_submission.available_transitions.includes('submit')"
 				@click="checkBeforeSubmitting"
 				variant="outline-success">
 				<span v-translate>Submit</span>
