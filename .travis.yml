@@ -44,7 +44,7 @@ matrix:
         - cd frontend && yarn install
       before_script:
       script:
-        - cross-env NODE_ENV=coverage nyc --reporter=lcovonly --exclude "tests/" --all yarn run testNoWatch
+        - yarn run test-cover
       after_success:
         # We need to change back to the parent dir, so coveralls knows where
         # to find the files in the repo.
