@@ -99,6 +99,9 @@ export default {
 		},
 
 		async submitData(tab, url) {
+			if (tab.name === 'sub_info' && !this.$store.getters.can_edit_data) {
+				return
+			}
 			if (tab.skipSave) {
 				return
 			}
@@ -140,7 +143,6 @@ export default {
 					}
 				})
 			}
-			console.log('submitData', current_tab_data)
 
 			try {
 				if (this.newTabs.includes(tab.name) && tab.name !== 'files') {
@@ -184,6 +186,9 @@ export default {
 							this.$store.commit('updateNewTabs', tab.name)
 						}
 					}
+				}
+				if (tab.name === 'sub_info') {
+					this.$store.dispatch('getNewTransitions')
 				}
 			} catch (error) {
 				this.$store.commit('setTabStatus', { tab: tab.name, value: false })

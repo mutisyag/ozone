@@ -92,6 +92,8 @@ const updateCurrentUser = (user) => update(`current-user/${user.id}/`, user)
 
 const getParties = () => fetch('parties/')
 
+const getTransitions = (url) => fetch(url)
+
 const getPartyRatifications = () => fetch('get-party-ratifications/')
 
 const getExportBlends = () => {
@@ -225,5 +227,6 @@ export {
 	updateCurrentUser,
 	fetchFromPublicDirectory,
 	getSubmissionDefaultValues,
-	uploadFile
+	uploadFile,
+	getTransitions
 }

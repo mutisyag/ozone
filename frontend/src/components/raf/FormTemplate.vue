@@ -31,24 +31,45 @@
 					:empty-text="tableEmptyText"
 					:filter="table.filters.search"
 					ref="table">
-						<template
-				slot="group"
-				slot-scope="cell">
-				<div class="group-cell">
-					{{cell.item.group}}
-				</div>
-				<b-btn-group class="row-controls">
-					<span
-						variant="link"
-						@click="createModalData(cell.item.originalObj, cell.item.index)">
-						<i class="fa fa-pencil-square-o fa-lg"></i>
-					</span>
-					<span
-						v-if="$store.getters.can_edit_data"
-						@click="remove_field(cell.item.index)"
-						class="table-btn"
-					><i class="fa fa-trash fa-lg"></i></span>
-				</b-btn-group>
+					<template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+						<div v-html="field.label" :key="field.key"></div>
+					</template>
+					<!-- TODO: might be needed later -->
+					<!-- <template slot="thead-top">
+							<tr class="first-header">
+							<th
+								v-for="(header, header_index) in tab_info.section_headers"
+								:colspan="header.colspan"
+								:key="header_index">
+								<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+									<span v-html="header.label"></span>
+									<i class="fa fa-info-circle fa-lg"></i>
+								</div>
+								<div v-else>
+									<span v-html="header.label"></span>
+								</div>
+							</th>
+						</tr>
+					</template> -->
+
+				<template
+					slot="group"
+					slot-scope="cell">
+					<div class="group-cell">
+						{{cell.item.group}}
+					</div>
+					<b-btn-group class="row-controls">
+						<span
+							variant="link"
+							@click="createModalData(cell.item.originalObj, cell.item.index)">
+							<i class="fa fa-pencil-square-o fa-lg"></i>
+						</span>
+						<span
+							v-if="$store.getters.can_edit_data"
+							@click="remove_field(cell.item.index)"
+							class="table-btn"
+						><i class="fa fa-trash fa-lg"></i></span>
+					</b-btn-group>
 				</template>
 				<template
 						slot="substance"

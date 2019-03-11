@@ -1,43 +1,6 @@
 <template>
   <div v-if="tab_info">
     <div class="form-sections">
-      <table ref="tableHeader" class="table submission-table header-only">
-        <thead>
-          <tr class="first-header">
-            <th
-              v-for="(header, header_index) in tab_info.section_headers"
-              :colspan="header.colspan"
-              :key="header_index">
-              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-                <span v-html="header.label"></span>
-                <i class="fa fa-info-circle fa-lg"></i>
-              </div>
-              <div v-else>
-                <span v-html="header.label"></span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
-
-      <table v-if="hasBlends"  ref="tableHeaderBlends" class="table submission-table header-only">
-        <thead>
-          <tr class="first-header">
-            <th
-              v-for="(header, header_index) in tab_info.section_headers"
-              :colspan="header.colspan"
-              :key="header_index">
-              <div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-                <span v-html="header.label"></span>
-                <i class="fa fa-info-circle fa-lg"></i>
-              </div>
-              <div v-else>
-                <span v-html="header.label"></span>
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </table>
 			<div class="table-wrapper">
 				<div class="table-title">
 					<h4> {{tab_info.formNumber}}.1 <span v-translate>Substances</span></h4>
@@ -50,11 +13,10 @@
 				</div>
 				<hr>
 
-				<b-table
+			<b-table
 					show-empty
 					outlined
 					bordered
-					@input="tableLoaded"
 					@row-hovered="rowHovered"
 					hover
 					head-variant="light"
@@ -70,9 +32,29 @@
 					:empty-text="tableEmptyText"
 					:filter="table.filters.search"
 					ref="table">
-						<template
-				slot="group"
-				slot-scope="cell">
+				<template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+					<div v-html="field.label" :key="field.key"></div>
+				</template>
+				<template slot="thead-top">
+						<tr class="first-header">
+						<th
+							v-for="(header, header_index) in tab_info.section_headers"
+							:colspan="header.colspan"
+							:key="header_index">
+							<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+								<span v-html="header.label"></span>
+								<i class="fa fa-info-circle fa-lg"></i>
+							</div>
+							<div v-else>
+								<span v-html="header.label"></span>
+							</div>
+						</th>
+					</tr>
+				</template>
+
+				<template
+					slot="group"
+					slot-scope="cell">
 				<div class="group-cell">
 					{{cell.item.group}}
 				</div>
@@ -124,7 +106,6 @@
 					hover
 					head-variant="light"
 					class="submission-table"
-					@input="tableLoadedBlends"
 					@row-hovered="rowHovered"
 					stacked="md"
 					:items="tableItemsBlends"
@@ -137,6 +118,25 @@
 					:empty-text="tableBlendsEmptyText"
 					:filter="tableBlends.filters.search"
 					ref="tableBlends">
+					<template v-for="field in tableFieldsBlends" :slot="`HEAD_${field.key}`">
+						<div v-html="field.label" :key="field.key"></div>
+					</template>
+					<template slot="thead-top">
+						<tr class="first-header">
+							<th
+								v-for="(header, header_index) in tab_info.section_headers"
+								:colspan="header.colspan"
+								:key="header_index">
+								<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+								<span v-html="header.label"></span>
+								<i class="fa fa-info-circle fa-lg"></i>
+								</div>
+								<div v-else>
+								<span v-html="header.label"></span>
+								</div>
+							</th>
+						</tr>
+					</template>
 					<template slot="type" slot-scope="cell">
 						<div class="group-cell">
 							{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}

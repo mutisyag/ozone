@@ -41,7 +41,6 @@ const state = {
 	current_submission: null,
 	route: '',
 	currentSubmissionHistory: null,
-	available_transitions: null,
 	permissions: {
 		dashboard: null,
 		form: null,

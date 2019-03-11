@@ -158,13 +158,27 @@ export default {
 			const options = {}
 			this.tab_info.section_subheaders.forEach((form_field) => {
 				if (form_field.name === 'substance') {
-					tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
+					if (this.tabName === 'has_imports' && this.$route.name === 'art7') {
+						tableHeaders.push({ key: 'blend', label: `(2a) <br> ${this.$gettext('Blend')}`, ...options })
+					} else if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
+						tableHeaders.push({ key: 'blend', label: `(1b) <br> ${this.$gettext('Blend')}`, ...options })
+					} else {
+						tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
+					}
 				} else if (form_field.name === 'group') {
-					tableHeaders.push({
-						key: 'type',
-						label: `(1) <br> ${this.$gettext('Type')}`,
-						...options
-					})
+					if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
+						tableHeaders.push({
+							key: 'type',
+							label: `(1a) <br> ${this.$gettext('Type')}`,
+							...options
+						})
+					} else {
+						tableHeaders.push({
+							key: 'type',
+							label: `(1) <br> ${this.$gettext('Type')}`,
+							...options
+						})
+					}
 				} else {
 					tableHeaders.push({
 						key: form_field.name,
@@ -244,57 +258,6 @@ export default {
 			}
 
 			body.classList.add('aside-menu-lg-show')
-		},
-
-		tableLoaded() {
-			if (!this.$refs.table) {
-				return
-			}
-
-			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
-			if (headers.length > 1) {
-				return // nothing to do, header row already created
-			}
-
-			this.$refs.table.$el
-				.querySelector('tbody')
-				.addEventListener('mouseleave', () => {
-					this.hovered = false
-				})
-
-			if (!this.$refs.tableHeader) {
-				return
-			}
-			const topHeader = this.$refs.tableHeader.querySelector('tr')
-			headers[0].parentNode.insertBefore(
-				topHeader, headers[0]
-			)
-		},
-
-		tableLoadedBlends() {
-			if (!this.$refs.tableBlends) {
-				return
-			}
-
-			const headers = this.$refs.tableBlends.$el.querySelectorAll('thead tr')
-			if (headers.length > 1) {
-				return // nothing to do, header row already created
-			}
-
-			this.$refs.tableBlends.$el
-				.querySelector('tbody')
-				.addEventListener('mouseleave', () => {
-					this.hovered = false
-				})
-
-			if (!this.$refs.tableHeaderBlends) {
-				return
-			}
-			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
-			if (topHeader.querySelector('th:first-of-type span').innerHTML) {
-				topHeader.querySelector('th:first-of-type span').innerHTML = this.$gettext('Blends')
-			}
-			headers[0].parentNode.insertBefore(topHeader, headers[0])
 		},
 
 		pushUnique(array, item) {

@@ -17,7 +17,8 @@ import {
 	getCurrentUser,
 	updateCurrentUser,
 	uploadFile,
-	getSubmissionDefaultValues
+	getSubmissionDefaultValues,
+	getTransitions
 } from '@/components/common/services/api'
 
 import {
@@ -298,7 +299,6 @@ const actions = {
 			getSubmission(submission).then((response) => {
 				context.commit('updateSubmissionData', response.data)
 				context.commit('setFlagsPermissions', response.data.changeable_flags)
-				context.commit('updateAvailableTransitions', response.data.available_transitions)
 				context.dispatch('getCurrentSubmissionHistory', { submission, $gettext })
 				context.commit('setFormPermissions', {
 					can_change_remarks_party: response.data.can_change_remarks_party,
@@ -463,6 +463,13 @@ const actions = {
 			file.percentage = 100
 		}
 	},
+
+	async getNewTransitions({ state, commit }) {
+		const transitions = await getTransitions(state.current_submission.available_transitions_url)
+		console.log(transitions)
+		commit('updateTransitions', transitions.data[0].available_transitions)
+	},
+
 	async getSubmissionFiles(context) {
 		const response = await getSubmissionFiles(context.state.current_submission.id)
 		return response.data
