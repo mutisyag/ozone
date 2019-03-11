@@ -100,6 +100,7 @@ from ..serializers import (
     BlendSerializer,
     CreateBlendSerializer,
     SubmissionHistorySerializer,
+    SubmissionTransitionsSerializer,
     SubmissionInfoSerializer,
     UpdateSubmissionInfoSerializer,
     SubmissionFlagsSerializer,
@@ -521,6 +522,22 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
+
+
+class SubmissionTransitionsViewSet(viewsets.ModelViewSet):
+    form_types = None
+    serializer_class = SubmissionTransitionsSerializer
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+    http_method_names = ['get']
+
+    def get_queryset(self):
+        return Submission.objects.filter(
+            id=self.kwargs['submission_pk']
+        )
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
