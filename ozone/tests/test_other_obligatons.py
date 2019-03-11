@@ -35,7 +35,7 @@ class DataOtherTest(BaseTests):
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
 
         self.obligation = ObligationFactory(name="Other obligation", other=True,
-                                            form_type="other")
+                                            _form_type="other")
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
@@ -65,7 +65,7 @@ class DataOtherTest(BaseTests):
         self.assertEqual(submission.obligation, self.obligation)
 
     def test_create_wrong_obligation(self):
-        obligation = ObligationFactory.create(form_type="art7", name="Much obliged")
+        obligation = ObligationFactory.create(_form_type="art7", name="Much obliged")
         submission = self.create_submission(obligation=obligation)
 
         data = dict(REMARKS_DATA)

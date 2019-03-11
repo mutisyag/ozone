@@ -38,13 +38,13 @@ class BaseDataRemarksTestsMixIn(object):
 
     api = None
     api_data = {}
-    form_type = "art7"
+    _form_type = "art7"
 
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory.create(form_type=self.form_type)
+        self.obligation = ObligationFactory.create(_form_type=self._form_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -232,21 +232,21 @@ class NonPartyTradeDataCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
 
 class HighAmbientTemperatureImportCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-imports-list"
-    form_type = "hat"
+    _form_type = "hat"
 
 
 class HighAmbientTemperatureImportCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-imports-list"
     factory_klass = HighAmbientTemperatureImportFactory
-    form_type = "hat"
+    _form_type = "hat"
 
 
 class HighAmbientTemperatureProductionCheckCreate(BaseDataCreateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-productions-list"
-    form_type = "hat"
+    _form_type = "hat"
 
 
 class HighAmbientTemperatureProductionCheckUpdate(BaseDataUpdateRemarksTestsMixIn, BaseTests):
     api = "core:submission-hat-productions-list"
     factory_klass = HighAmbientTemperatureProductionFactory
-    form_type = "hat"
+    _form_type = "hat"

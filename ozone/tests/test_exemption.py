@@ -44,7 +44,7 @@ class BaseExemptionTests(BaseTests):
     def setUp(self):
         super().setUp()
         self.workflow_class = "default_exemption"
-        self.obligation = ObligationFactory(form_type="exemption")
+        self.obligation = ObligationFactory(_form_type="exemption")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -106,7 +106,7 @@ class ExemptionNominationTests(BaseExemptionTests):
         self.assertEqual(result.status_code, 403)
 
     def test_create_wrong_obligation(self):
-        obligation = ObligationFactory.create(form_type="art7", name="Much obliged")
+        obligation = ObligationFactory.create(_form_type="art7", name="Much obliged")
         submission = self.create_submission(obligation=obligation)
 
         data = dict(EXEMPTION_NOMINATION_DATA)
@@ -250,7 +250,7 @@ class ExemptionApprovedTests(BaseExemptionTests):
         self.assertEqual(result.status_code, 403)
 
     def test_create_wrong_obligation(self):
-        obligation = ObligationFactory.create(form_type="art7", name="Much obliged")
+        obligation = ObligationFactory.create(_form_type="art7", name="Much obliged")
         submission = self.create_submission(obligation=obligation)
 
         data = dict(EXEMPTION_APPROVED_DATA)

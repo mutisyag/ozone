@@ -26,14 +26,14 @@ OLD_VALUE = False
 class BaseFlagsTests(BaseTests):
     success_code = 200
     fail_code = 422
-    form_type = "art7"
+    _form_type = "art7"
     flag_data = {}
 
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory(form_type=self.form_type)
+        self.obligation = ObligationFactory(_form_type=self._form_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -292,17 +292,17 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
 class HATSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = ALL_FLAGS_DATA
-    form_type = "hat"
+    _form_type = "hat"
 
 
 class EssenCritSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = ESSENCRIT_FLAGS_DATA
-    form_type = "essencrit"
+    _form_type = "essencrit"
 
 
 class OtherSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = BASE_FLAG_DATA
-    form_type = "other"
+    _form_type = "other"
 
 
 class SubmissionRetrieveTest(BaseFlagsTests):
@@ -337,14 +337,14 @@ class SubmissionRetrieveTest(BaseFlagsTests):
 
 class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = ALL_FLAGS_DATA
-    form_type = "hat"
+    _form_type = "hat"
 
 
 class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = ESSENCRIT_FLAGS_DATA
-    form_type = "essencrit"
+    _form_type = "essencrit"
 
 
 class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = BASE_FLAG_DATA
-    form_type = "other"
+    _form_type = "other"
