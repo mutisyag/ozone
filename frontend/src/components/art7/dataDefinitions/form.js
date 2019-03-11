@@ -644,7 +644,7 @@ const getFormArt7 = ($gettext) => {
 					name: 'remarks_os'
 				},
 				{
-					label: `(<br> ${$gettext('Status')}`,
+					label: `<br> ${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
@@ -740,7 +740,7 @@ const getFormArt7 = ($gettext) => {
 					name: 'quantity_captured_feedstock'
 				},
 				{
-					label: `(3c) <br> ${$gettext('For Destruction')}`,
+					label: `(3c) <br> ${$gettext('For destruction')}`,
 					name: 'quantity_captured_for_destruction'
 				},
 				{
