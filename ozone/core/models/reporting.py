@@ -513,10 +513,7 @@ class Submission(models.Model):
 
     @property
     def is_current(self):
-        if (
-            self.flag_superseded
-            or self.current_state == self.workflow().state.workflow.initial_state.name
-        ):
+        if self.flag_superseded or self.in_initial_state:
             return False
         return True
 
