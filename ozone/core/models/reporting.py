@@ -635,19 +635,22 @@ class Submission(models.Model):
             flags_list.extend([
                 'flag_provisional', 'flag_checked_blanks',
                 'flag_has_blanks', 'flag_confirmed_blanks',
-                'flag_has_reported_a1', 'flag_has_reported_a2',
-                'flag_has_reported_b1', 'flag_has_reported_b2',
-                'flag_has_reported_b3', 'flag_has_reported_c1',
-                'flag_has_reported_c2', 'flag_has_reported_c3',
-                'flag_has_reported_e', 'flag_has_reported_f',
                 'flag_approved',
             ])
-            if not self.data_changes_allowed:
+            if self.in_initial_state:
+                flags_list.extend([
+                    'flag_has_reported_a1', 'flag_has_reported_a2',
+                    'flag_has_reported_b1', 'flag_has_reported_b2',
+                    'flag_has_reported_b3', 'flag_has_reported_c1',
+                    'flag_has_reported_c2', 'flag_has_reported_c3',
+                    'flag_has_reported_e', 'flag_has_reported_f',
+                ])
+            else:
                 # valid flag can only be set after submitting
                 flags_list.append('flag_valid')
         else:
             # Party user
-            if self.data_changes_allowed:
+            if self.in_initial_state:
                 flags_list.extend([
                     'flag_provisional',
                     'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -741,7 +744,7 @@ class Submission(models.Model):
 
     def can_change_reporting_channel(self, user):
         if user.is_secretariat and self.filled_by_secretariat:
-            return not user.is_read_only
+            return not user.is_read_only and self.in_initial_state
         return False
 
     @staticmethod
@@ -1055,7 +1058,12 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
-        return not user.is_read_only and user.is_secretariat and self.filled_by_secretariat
+        return (
+            not user.is_read_only
+            and user.is_secretariat
+            and self.filled_by_secretariat
+            and self.in_initial_state
+        )
 
     def is_submitted_at_visible(self, user):
         if user.is_secretariat:
