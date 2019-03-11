@@ -42,8 +42,7 @@ RUN runDeps="netcat libpq-dev gettext" \
     && rm -vrf /var/lib/apt/lists/*
 RUN buildDeps="build-essential gcc" \
     && apt-get update -y \
-    && apt-get install -y --no-install-recommends $buildDeps \
-    && apt-get -y remove --purge --auto-remove $buildDeps
+    && apt-get install -y --no-install-recommends $buildDeps
 
 ENV APP_HOME=/var/local/ozone
 RUN mkdir -p $APP_HOME

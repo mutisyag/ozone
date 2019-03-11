@@ -30,6 +30,9 @@ case "$1" in
         exec python manage.py "$1"
         ;;
     run)
+        exec uwsgi uwsgi.ini
+        ;;
+    runsever)
         exec python manage.py runserver 0.0.0.0:${REPORTEK_GUNICORN_PORT:-8000}
         ;;
     *)
