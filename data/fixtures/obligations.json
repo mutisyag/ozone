@@ -5,7 +5,7 @@
     "fields": {
       "name": "Article 7",
       "description": "Data forms 1-6",
-      "form_type": "art7",
+      "_form_type": "art7",
       "has_reporting_periods": true,
       "is_default": true
     }
@@ -16,7 +16,7 @@
     "fields": {
       "name": "Essential and Critical uses (RAF)",
       "description": "Reporting account format",
-      "form_type": "essencrit",
+      "_form_type": "essencrit",
       "has_reporting_periods": true
     }
   },
@@ -26,7 +26,7 @@
     "fields": {
       "name": "HAT Imports and Production",
       "description": "Data forms 7 and 8",
-      "form_type": "hat",
+      "_form_type": "hat",
       "has_reporting_periods": true
     }
   },
@@ -36,7 +36,7 @@
     "fields": {
       "name": "Transfer or addition of production or consumption",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -47,7 +47,7 @@
     "fields": {
       "name": "Laboratory and analytical uses",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -58,7 +58,7 @@
     "fields": {
       "name": "Process agent uses",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -69,7 +69,7 @@
     "fields": {
       "name": "Licensing information",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -80,7 +80,7 @@
     "fields": {
       "name": "Research, development, public awareness and exchange of information",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -91,7 +91,7 @@
     "fields": {
       "name": "Requests for changes in reported baseline data",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -102,7 +102,7 @@
     "fields": {
       "name": "Other information",
       "description": "",
-      "form_type": "other",
+      "_form_type": "other",
       "has_reporting_periods": true,
       "other": true
     }
@@ -113,7 +113,7 @@
     "fields": {
       "name": "Exemption",
       "description": "",
-      "form_type": "exemption",
+      "_form_type": "exemption",
       "has_reporting_periods": true,
       "other": false
     }
