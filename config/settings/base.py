@@ -69,10 +69,10 @@ USE_TZ = True
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': env.get_value('POSTGRES_DB'),
-        'HOST': env.get_value('POSTGRES_HOST'),
-        'USER': env.get_value('POSTGRES_USER'),
-        'PASSWORD': env.get_value('POSTGRES_PASSWORD'),
+        'NAME': env.get_value('POSTGRES_DB', default=""),
+        'HOST': env.get_value('POSTGRES_HOST', default=""),
+        'USER': env.get_value('POSTGRES_USER', default=""),
+        'PASSWORD': env.get_value('POSTGRES_PASSWORD', default=""),
     }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
@@ -132,7 +132,8 @@ AUTHENTICATION_BACKENDS = [
     'guardian.backends.ObjectPermissionBackend',
 ]
 
-TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_INTERVAL'))
+TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_INTERVAL',
+                                                                default=30))
 
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
