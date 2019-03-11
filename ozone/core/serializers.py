@@ -1225,6 +1225,20 @@ class SubmissionFileSerializer(serializers.ModelSerializer):
         )
 
 
+class SubmissionTransitionsSerializer(serializers.ModelSerializer):
+
+    available_transitions = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Submission
+        fields = ('available_transitions',)
+        read_only_fields = ('available_transitions',)
+
+    def get_available_transitions(self, obj):
+        user = self.context['request'].user
+        return obj.available_transitions(user)
+
+
 class UploadTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadToken
@@ -1348,8 +1362,14 @@ class SubmissionSerializer(
     in_initial_state = serializers.SerializerMethodField()
 
     # Permission-related fields
+    available_transitions_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-submission-transitions-list',
+        lookup_url_kwarg='submission_pk'
+    )
     available_transitions = serializers.SerializerMethodField()
+
     is_cloneable = serializers.SerializerMethodField()
+
     changeable_flags = serializers.SerializerMethodField()
 
     can_change_remarks_party = serializers.SerializerMethodField()
@@ -1385,7 +1405,7 @@ class SubmissionSerializer(
             'flag_superseded',
 
             # Permission-related fields; value is dependent on user
-            'available_transitions',
+            'available_transitions', 'available_transitions_url',
             'is_cloneable',
             'changeable_flags',
             'can_change_remarks_party',
