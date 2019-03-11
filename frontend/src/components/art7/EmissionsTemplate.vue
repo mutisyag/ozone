@@ -4,36 +4,17 @@
 			The data in this form will not be saved because you have selected in the questionnarie "no" for this section
 		</h5>
     <div class="form-sections">
-		<table ref="tableHeader" class="table submission-table header-only">
-			<thead>
-			<tr class="first-header">
-				<th
-				v-for="(header, header_index) in tab_info.section_headers"
-				:colspan="header.colspan"
-				:key="header_index">
-				<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-					<span v-html="header.label"></span>
-					<i class="fa fa-info-circle fa-lg"></i>
-				</div>
-				<div v-else>
-					<span v-html="header.label"></span>
-				</div>
-				</th>
-			</tr>
-			</thead>
-		</table>
-
-		<div class="table-wrapper">
-			<div class="table-title">
-				<h4> {{tab_info.formNumber}}.1 Facilities</h4>
-				<div v-show="table.tableFilters" class="table-filters">
-					<b-input-group :prepend="$gettext('Search all columns')">
-						<b-form-input v-model="table.filters.search"/>
-					</b-input-group>
-				</div>
-				<span>
-					<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
-				</span>
+			<div class="table-wrapper">
+				<div class="table-title">
+					<h4> {{tab_info.formNumber}}.1 Facilities</h4>
+					<div v-show="table.tableFilters" class="table-filters">
+						<b-input-group :prepend="$gettext('Search all columns')">
+							<b-form-input v-model="table.filters.search"/>
+						</b-input-group>
+					</div>
+					<span>
+						<i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
+					</span>
 			</div>
 			<hr>
 
@@ -50,10 +31,27 @@
 				:items="tableItems"
 				@row-hovered="rowHovered"
 				:fields="tableFields"
-				@input="tableLoaded"
 				:filter="table.filters.search"
 				ref="table">
-
+				<template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+					<div v-html="field.label" :key="field.key"></div>
+				</template>
+				<template slot="thead-top">
+						<tr class="first-header">
+						<th
+							v-for="(header, header_index) in tab_info.section_headers"
+							:colspan="header.colspan"
+							:key="header_index">
+							<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
+								<span v-html="header.label"></span>
+								<i class="fa fa-info-circle fa-lg"></i>
+							</div>
+							<div v-else>
+								<span v-html="header.label"></span>
+							</div>
+						</th>
+					</tr>
+				</template>
 				<template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
 					<div
 						v-if="inputField === 'facility_name'"
@@ -228,25 +226,6 @@ export default {
 			const body = document.querySelector('body')
 			body.classList.add('aside-menu-lg-show')
 		},
-		tableLoaded() {
-			if (!this.$refs.table) {
-				return
-			}
-
-			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
-			if (headers.length > 1) {
-				return // nothing to do, header row already created
-			}
-
-			if (!this.$refs.tableHeader) {
-				return
-			}
-			const topHeader = this.$refs.tableHeader.querySelector('tr')
-			headers[0].parentNode.insertBefore(
-				topHeader, headers[0]
-			)
-		},
-
 		intersect(a, b) {
 			const setA = new Set(a)
 			const setB = new Set(b)

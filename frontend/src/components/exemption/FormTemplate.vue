@@ -1,24 +1,6 @@
 <template>
   <div :id="`${tabName}_tab`" v-if="tab_info">
     <div class="form-sections">
-	<table ref="tableHeader" class="table submission-table header-only">
-	<thead>
-		<tr class="first-header">
-		<th
-			v-for="(header, header_index) in tab_info.section_headers"
-			:colspan="header.colspan"
-			:key="header_index">
-			<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-			<span v-html="header.label"></span>
-			<i class="fa fa-info-circle fa-lg"></i>
-			</div>
-			<div v-else>
-			<span v-html="header.label"></span>
-			</div>
-		</th>
-		</tr>
-	</thead>
-	</table>
 	<div class="table-wrapper">
 		<div class="table-title">
 			<h4> {{tab_info.formNumber}}.1 <span v-translate>Substances</span></h4>
@@ -36,7 +18,6 @@
 			outlined
 			v-if="tableRows"
 			bordered
-			@input="tableLoaded"
 			@row-hovered="rowHovered"
 			hover
 			head-variant="light"
@@ -48,6 +29,9 @@
 			:empty-text="tableEmptyText"
 			:filter="table.filters.search"
 			ref="table">
+			<template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+					<div v-html="field.label" :key="field.key"></div>
+			</template>
 			<template
 				slot="group"
 				slot-scope="cell">

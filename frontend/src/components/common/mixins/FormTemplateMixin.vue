@@ -246,57 +246,6 @@ export default {
 			body.classList.add('aside-menu-lg-show')
 		},
 
-		tableLoaded() {
-			if (!this.$refs.table) {
-				return
-			}
-
-			const headers = this.$refs.table.$el.querySelectorAll('thead tr')
-			if (headers.length > 1) {
-				return // nothing to do, header row already created
-			}
-
-			this.$refs.table.$el
-				.querySelector('tbody')
-				.addEventListener('mouseleave', () => {
-					this.hovered = false
-				})
-
-			if (!this.$refs.tableHeader) {
-				return
-			}
-			const topHeader = this.$refs.tableHeader.querySelector('tr')
-			headers[0].parentNode.insertBefore(
-				topHeader, headers[0]
-			)
-		},
-
-		tableLoadedBlends() {
-			if (!this.$refs.tableBlends) {
-				return
-			}
-
-			const headers = this.$refs.tableBlends.$el.querySelectorAll('thead tr')
-			if (headers.length > 1) {
-				return // nothing to do, header row already created
-			}
-
-			this.$refs.tableBlends.$el
-				.querySelector('tbody')
-				.addEventListener('mouseleave', () => {
-					this.hovered = false
-				})
-
-			if (!this.$refs.tableHeaderBlends) {
-				return
-			}
-			const topHeader = this.$refs.tableHeaderBlends.querySelector('tr')
-			if (topHeader.querySelector('th:first-of-type span').innerHTML) {
-				topHeader.querySelector('th:first-of-type span').innerHTML = this.$gettext('Blends')
-			}
-			headers[0].parentNode.insertBefore(topHeader, headers[0])
-		},
-
 		pushUnique(array, item) {
 			if (array.indexOf(item) === -1) {
 				array.push(item)
