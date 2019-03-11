@@ -77,7 +77,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 
 		login(browser, 'party', 'party')
@@ -116,7 +115,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
@@ -146,7 +144,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		const start_column = 4
 
@@ -180,7 +177,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		const start_column = 3
 
@@ -214,7 +210,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 
 		login(browser, 'party', 'party')
@@ -246,7 +241,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		const start_column = 4
 
@@ -276,7 +270,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 
 		login(browser, 'party', 'party')
@@ -298,7 +291,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
@@ -330,7 +322,6 @@ module.exports = {
 			country: 'France',
 			phone: '+490000000',
 			email: 'john.doe@gmail.com'
-
 		}
 
 		login(browser, 'party', 'party')
@@ -372,108 +363,108 @@ module.exports = {
 		logout(browser)
 		browser.end()
 	},
-	// BU_022: browser => {
-	// 	const submissions = [
-	// 		{
-	// 			name: 'Article 7',
-	// 			data: [{ year: '2018', party: 'Romania' }, { year: '2017', party: 'Albania' }]
-	// 		},
-	// 		{
-	// 			name: 'Essential and Critical uses (RAF)',
-	// 			data: [{ year: '2018', party: 'Algeria' }]
-	// 		},
-	// 		{
-	// 			name: 'HAT Imports and Production',
-	// 			data: [{ year: '2018', party: 'Angola' }]
-	// 		},
-	// 		{
-	// 			name: 'Transfer or addition of production or consumption',
-	// 			data: [{ year: '2018', party: 'Argentina' }]
-	// 		},
-	// 		{
-	// 			name: 'Laboratory and analytical uses',
-	// 			data: [{ year: '2017', party: 'Romania' }]
-	// 		},
-	// 		{
-	// 			name: 'Process agent uses',
-	// 			data: [{ year: '2017', party: 'Belarus' }]
-	// 		},
-	// 		{
-	// 			name: 'Licensing information',
-	// 			data: [{ year: '2018', party: 'Brazil' }]
-	// 		},
-	// 		{
-	// 			name: 'Research, development, public awareness and exchange of information',
-	// 			data: [{ year: '2017', party: 'China' }]
-	// 		},
-	// 		{
-	// 			name: 'Requests for changes in reported baseline data',
-	// 			data: [{ year: '2018', party: 'Romania' }]
-	// 		}
-	// 	]
+	BU_022: browser => {
+		const submissions = [
+			{
+				name: 'Article 7',
+				data: [{ year: '2018', party: 'Romania' }, { year: '2017', party: 'Albania' }]
+			},
+			{
+				name: 'Essential and Critical uses (RAF)',
+				data: [{ year: '2018', party: 'Algeria' }]
+			},
+			{
+				name: 'HAT Imports and Production',
+				data: [{ year: '2018', party: 'Angola' }]
+			},
+			{
+				name: 'Transfer or addition of production or consumption',
+				data: [{ year: '2018', party: 'Argentina' }]
+			},
+			{
+				name: 'Laboratory and analytical uses',
+				data: [{ year: '2017', party: 'Romania' }]
+			},
+			{
+				name: 'Process agent uses',
+				data: [{ year: '2017', party: 'Belarus' }]
+			},
+			{
+				name: 'Licensing information',
+				data: [{ year: '2018', party: 'Brazil' }]
+			},
+			{
+				name: 'Research, development, public awareness and exchange of information',
+				data: [{ year: '2017', party: 'China' }]
+			},
+			{
+				name: 'Requests for changes in reported baseline data',
+				data: [{ year: '2018', party: 'Romania' }]
+			}
+		]
 
-	// 	const scenarios = [
-	// 		{
-	// 			filters: ['', '', '', '2018', '2018'],
-	// 			first_row_expected: ['Article 7', '2018', 'Romania'],
-	// 			rows_number_expected: 6
-	// 		},
-	// 		{
-	// 			filters: ['', 'Essential and Critical uses (RAF)', 'Algeria', '2018', '2018'],
-	// 			first_row_expected: ['Essential and Critical uses (RAF)', '2018', 'Algeria'],
-	// 			rows_number_expected: 1
-	// 		},
-	// 		{
-	// 			filters: ['', '', 'Romania', '', ''],
-	// 			first_row_expected: ['Article 7', '2018', 'Romania'],
-	// 			rows_number_expected: 3
-	// 		},
-	// 		{
-	// 			filters: ['', '', 'Romania', '2017', '2017'],
-	// 			first_row_expected: ['Laboratory and analytical uses', '2017', 'Romania'],
-	// 			rows_number_expected: 1
-	// 		},
-	// 		{
-	// 			filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
-	// 			first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
-	// 			rows_number_expected: 1
-	// 		},
-	// 		{
-	// 			filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
-	// 			first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
-	// 			rows_number_expected: 1
-	// 		},
-	// 		{
-	// 			filters: ['', '', 'Romania', '2016', '2016'],
-	// 			first_row_expected: ['There are no records to show'],
-	// 			rows_number_expected: 1
-	// 		}
-	// 	]
+		const scenarios = [
+			{
+				filters: ['', '', '', '2018', '2018'],
+				first_row_expected: ['Article 7', '2018', 'Romania'],
+				rows_number_expected: 6
+			},
+			{
+				filters: ['', 'Essential and Critical uses (RAF)', 'Algeria', '2018', '2018'],
+				first_row_expected: ['Essential and Critical uses (RAF)', '2018', 'Algeria'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', '', 'Romania', '', ''],
+				first_row_expected: ['Article 7', '2018', 'Romania'],
+				rows_number_expected: 3
+			},
+			{
+				filters: ['', '', 'Romania', '2017', '2017'],
+				first_row_expected: ['Laboratory and analytical uses', '2017', 'Romania'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
+				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
+				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
+				rows_number_expected: 1
+			},
+			{
+				filters: ['', '', 'Romania', '2016', '2016'],
+				first_row_expected: ['There are no records to show'],
+				rows_number_expected: 1
+			}
+		]
 
-	// 	login(browser, 'secretariat', 'secretariat')
+		login(browser, 'secretariat', 'secretariat')
 
-	// 	submissions.forEach(submission => {
-	// 		submission.data.forEach(data => {
-	// 			createSubmission(browser, submission.name, data.year, data.party, true, true)
-	// 		})
-	// 	})
+		submissions.forEach(submission => {
+			submission.data.forEach(data => {
+				createSubmission(browser, submission.name, data.year, data.party, true, true)
+			})
+		})
 
-	// 	/* Sort by obligation name */
-	// 	browser
-	// 		.useXpath()
-	// 		.waitForElementVisible("//table[@id='all-submissions-table']//thead//th[1]", 10000)
-	// 		.click("//table[@id='all-submissions-table']//thead//th[1]")
-	// 		.pause(200)
-	// 		.click("//table[@id='all-submissions-table']//thead//th[1]")
-	// 		.pause(500)
+		/* Sort by obligation name */
+		browser
+			.useXpath()
+			.waitForElementVisible("//table[@id='all-submissions-table']//thead//th[1]", 10000)
+			.click("//table[@id='all-submissions-table']//thead//th[1]")
+			.pause(200)
+			.click("//table[@id='all-submissions-table']//thead//th[1]")
+			.pause(500)
 
-	// 	scenarios.forEach(scenario => {
-	// 		filterSubmission(browser, 'all-submissions-table', scenario.filters, scenario.first_row_expected, scenario.rows_number_expected)
-	// 	})
+		scenarios.forEach(scenario => {
+			filterSubmission(browser, 'all-submissions-table', scenario.filters, scenario.first_row_expected, scenario.rows_number_expected)
+		})
 
-	// 	logout(browser)
-	// 	browser.end()
-	// },
+		logout(browser)
+		browser.end()
+	},
 	BU_023: browser => {
 		const row_values = [0.0123, 0.12]
 		const modal_values = {

@@ -1080,15 +1080,72 @@ body .multiselect--active .multiselect__select{
     border: 1px solid #e4e7ea;
 }
 }
+.submission-info-tab {
+	label {
+		position: relative;
+	}
+	.custom-control-label {
+		position: static;
+	}
 
+	.custom-control-label:before {
+		left: 0;
+	}
+	.custom-control-label:after {
+		left: 0;
+	} 
+}
 
 .floating-error {
 	position: absolute;
-  top: -16px;
-	left: 14px;
+  bottom: -15px;
+	left: 0;
+	font-size: smaller;
+	font-weight: bold;
 }
 
 .errorHeading {
 	color: #f86c6b;
 	padding: 1rem;
+}
+
+body .vdp-datepicker__calendar {
+	bottom: 100%;
+	min-width: 300px;
+	width: 100%;
+}
+
+.vdp-datepicker .form-control[readonly] {
+	background-color: initial;
+}
+
+.vdp-datepicker .form-control:disabled {
+	background-color: #e4e7ea;
+}
+.vdp-datepicker__clear-button {
+    position: absolute;
+    top: .5rem;
+    right: .5rem;
+}
+
+.specific-flags-wrapper {
+	display: block;
+	white-space: nowrap;
+}
+#annex-flags {
+	display: flex;
+	justify-content: space-between;
+	.custom-control {
+		padding-left: 1.2rem;
+	}
+	@media (max-width: 1000px) {
+		flex-wrap: wrap;
+	
+	}
+	@media (max-width: 1150px) {
+			.specific-flags-wrapper {
+			max-width: 40px;
+    	margin: 0 .5rem;
+		}
+	}
 }

@@ -65,9 +65,6 @@ class ModifyPreventionMixin:
 
 
 class Obligation(models.Model):
-    """
-    TODO: analysis!
-    """
 
     NOT_CLONEABLE = [
         'exemption',
@@ -590,6 +587,28 @@ class Submission(models.Model):
         self._previous_state = self._current_state
         self._current_state = workflow.state.name
         self.save()
+
+    def is_submittable(self):
+        """
+        Checks that all required info has been filled before submission.
+        """
+        if (
+            self.info.reporting_officer is ''
+            or self.info.postal_address is '' and self.info.email is None
+            or self.filled_by_secretariat and self.submitted_at is None
+        ):
+            return False
+
+        if (
+            self.obligation.name == 'Article 7'
+            and (
+                not hasattr(self, "article7questionnaire")
+                or self.article7questionnaire is None
+            )
+        ):
+            return False
+
+        return True
 
     def can_edit_flags(self, user):
         """

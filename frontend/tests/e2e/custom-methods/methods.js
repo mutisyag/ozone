@@ -21,14 +21,22 @@ const logout = (browser) => {
 		.assert.urlContains('/admin/login')
 }
 
-const setMultiSelector = (browser, selector_id, option) => {
+const setMultiSelector = (browser, selector_id, option, singleSelectWithText = true) => {
 	const time = 20000
+	let multiselectSingle = '';
+
+	if (singleSelectWithText) {
+		multiselectSingle = `//div[@id='${selector_id}']//span[contains(@class, 'multiselect__single') and contains(text(), '${option}')]`
+	} else {
+		multiselectSingle = `//div[@id='${selector_id}']//span[contains(@class, 'multiselect__single')]//span[contains(text(), '${option}')]`
+	}
 
 	browser
 		.useXpath()
 		/* Check if multiselect is visible */
 		.waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, time)
-		.element('xpath', `//div[@id='${selector_id}']//span[contains(@class, 'multiselect__single')]//span[contains(text(), '${option}')]`, (result) => {
+		
+		.element('xpath', multiselectSingle, (result) => {
 			if (result.status === -1) {
 				browser
 					/* Open multiselect */
@@ -50,9 +58,9 @@ const setMultiSelector = (browser, selector_id, option) => {
 
 const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
 	const submission = {
-		// obligation_selector: { option: obligation, read_write: true },
-		// period_selector: { option: period, read_write: true },
-		party_selector: { option: party, read_write: edit_party }
+		obligation_selector: { option: obligation, read_write: true, singleSelectWithText: true },
+		period_selector: { option: period, read_write: true, singleSelectWithText: false },
+		party_selector: { option: party, read_write: edit_party, singleSelectWithText: true }
 	}
 
 	browser
@@ -61,7 +69,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
 
 	for (const selector_id in submission) {
 		if (submission[selector_id].read_write === true) {
-			setMultiSelector(browser, selector_id, submission[selector_id].option)
+			setMultiSelector(browser, selector_id, submission[selector_id].option, submission[selector_id].singleSelectWithText)
 		}
 	}
 
@@ -151,6 +159,17 @@ const selectTab = (browser, tab) => {
 		.pause(1500)
 }
 
+const datePickerValue = (browser) => {
+	const day = "//div[@id='date']//div[contains(@class, 'vdp-datepicker__calendar')][1]//span[contains(@class, 'cell day') and text()='1']"
+	browser
+		.waitForElementVisible("//div[@id='date']//input", 10000)
+		.click("//div[@id='date']//input")
+		.pause(1000)
+		.waitForElementVisible(day, 10000)
+		.click(day)
+		.pause(1000)
+}
+
 const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
 	/* Open Submission Info tab */
@@ -184,6 +203,8 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 		.pause(500)
 		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
 		.pause(500)
+	/* Add date (special case) */
+	datePickerValue(browser)
 }
 
 /**
@@ -218,8 +239,8 @@ const saveAndFail = (browser) => {
 const editSubmission = (browser, table_order) => {
 	browser
 		.useXpath()
-		.waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`, 10000)
-		.click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Continue')]`)
+		.waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Edit')]`, 10000)
+		.click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Edit')]`)
 		.pause(3000)
 }
 
@@ -312,7 +333,7 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 						browser
 							.useCss()
 							.setValue(`#${filter}`, filters[filter])
-							.pause(500)
+							.pause(1000)
 					} else {
 						browser
 							.useXpath()
@@ -330,7 +351,7 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 		}
 	}
 
-	browser.useXpath().execute('window.scrollTo(0,document.body.scrollHeight);')
+	browser.useXpath().execute('window.scrollTo(0,document.body.scrollHeight);').pause(500)
 
 	first_row_expected.forEach((column_value, index) => {
 		if (column_value !== '') {
@@ -342,10 +363,11 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 		.elements('css selector', `#${table} tbody tr`, (result) => {
 			browser.assert.equal(`${result.value.length} rows`, `${rows_number_expected} rows`)
 		})
-		.pause(1500)
+		.pause(500)
 		.useCss()
 		.waitForElementVisible(`#${clear_button}`, 20000)
 		.click(`#${clear_button}`)
+		.pause(1000)
 }
 
 const filterEntity = (browser, tab, filters) => {
@@ -704,10 +726,10 @@ const uploadeFile = (browser, filename, filepath) => {
 	const find_root = require('find-root')
 	const root = find_root(path.resolve(__dirname))
 	const file = path.resolve(root + filename + filepath)
-
+	console.log(file)
 	browser
 		.useCss()
-		.waitForElementVisible('#choose-files-button', 10000)
+		.waitForElementVisible('#choose-files-button__BV_file_control_', 10000)
 		.setValue('input#choose-files-button', file, (result) => {
 			if (result.status !== 0) {
 				console.log(result)

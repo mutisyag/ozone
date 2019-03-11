@@ -1,5 +1,5 @@
 <template>
-  <div v-if="info">
+  <div v-if="info" class="submission-info-tab">
     <b-row>
       <b-col>
         <b-input-group size="sm" :prepend="info.party.label">
@@ -16,7 +16,7 @@
 		<hr>
     <form class="form-sections">
 			<b-row>
-				<b-col cols="8">
+				<b-col md="7" lg="7">
 					<h5><span v-translate>Submission Info</span></h5>
 					<b-card>
 						<div class="form-fields">
@@ -28,8 +28,9 @@
 										</label>
 									</span>
 									<span v-else>
-										<b-badge class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>Required</b-badge>
-										<label>{{labels[order]}}</label>
+										<label>{{labels[order]}}
+											<div class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>(required)</div>
+										</label>
 									</span>
 								</b-col>
 								<b-col>
@@ -38,8 +39,9 @@
 							</b-row>
 							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
 								<b-col lg='3'>
-									<b-badge class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>{{info.form_fields['submitted_at'].validation}}</b-badge>
-									<label>{{labels.submitted_at}}</label>
+									<label>{{labels.submitted_at}}
+										<div class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>({{info.form_fields['submitted_at'].validation}})</div>
+									</label>
 								</b-col>
 								<b-col>
 									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields.submitted_at" :disabled="!is_secretariat"></fieldGenerator>
@@ -102,8 +104,8 @@
 						</b-row>
 						<div>
 							<h5 class="mt-4 mb-4" v-translate>Annex group reported in full</h5>
-								<b-row id="annex-flags">
-									<b-col sm="12" md="2" lg="2" v-for="column in specific_flags_columns" :key="column">
+								<div id="annex-flags">
+									<div class="flags-row" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
 											<span cols="1">
 												<fieldGenerator
@@ -125,8 +127,8 @@
 												</label>
 											</span>
 										</div>
-								</b-col>
-								</b-row>
+									</div>
+								</div>
 
 						</div>
 					</b-card>

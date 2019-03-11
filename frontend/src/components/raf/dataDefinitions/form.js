@@ -107,7 +107,7 @@ const getFormRaf = ($gettext) => {
 					label: `(13)<br>${$gettext('On hand end of year')}`,
 					name: 'on_hand_end_year'
 				}, {
-					label: `(16)<br>${$gettext('Status')}`,
+					label: `<br>${$gettext('Status')}`,
 					name: 'validation'
 				}],
 

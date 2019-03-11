@@ -207,7 +207,7 @@ export default {
 
 	methods: {
 		remove_field(index) {
-			this.$store.commit('removeField', { tab: this.tabName, index })
+			this.$store.dispatch('removeField', { tab: this.tabName, index, $gettext: this.$gettext })
 		},
 
 		getCommentFieldPermission(fieldName) {

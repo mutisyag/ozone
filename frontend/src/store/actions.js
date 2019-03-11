@@ -99,14 +99,13 @@ const actions = {
 		})
 	},
 
-	async getMyCurrentUser({ commit, dispatch }) {
+	async getMyCurrentUser({ commit }) {
 		let response
 		try {
 			response = await getCurrentUser()
 			commit('setCurrentUser', response.data)
 			// TODO: WHY IS IT AN ARRAY ?
 			commit('setCurrentUserPartyInDashboard', response.data[0].party)
-			dispatch('getCurrentSubmissions')
 		} catch (e) {
 			console.log('getMyCurrentUser', e)
 		}
@@ -144,7 +143,7 @@ const actions = {
 				},
 				sorting: {
 					sortDesc: true,
-					sortBy: 'updated_at'
+					sortBy: 'reporting_period'
 				},
 				perPage: null,
 				currentPage: null
@@ -200,7 +199,7 @@ const actions = {
 
 	getDashboardObligations(context) {
 		getObligations().then(response => {
-			const obligations_temp = response.data.map(obligation => ({ value: obligation.id, text: obligation.name, form_type: obligation.form_type }))
+			const obligations_temp = response.data.sort((a, b) => a.id > b.id).map(obligation => ({ value: obligation.id, text: obligation.name, form_type: obligation.form_type }))
 			context.commit('setDashboardObligations', obligations_temp)
 		})
 	},
@@ -241,6 +240,16 @@ const actions = {
 			})
 			console.log(error)
 		})
+	},
+
+	async removeField({ dispatch, commit }, { tab, index, $gettext, noAlert }) {
+		if (!noAlert) {
+			const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the row is ireversible.', $gettext })
+			if (!confirmed) {
+				return confirmed
+			}
+		}
+		commit('removeField', { tab, index })
 	},
 
 	async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {

@@ -303,8 +303,13 @@ export default {
 			}
 		},
 
-		remove_field(index) {
-			this.$store.commit('removeField', { tab: this.tabName, index })
+		remove_field(index, noAlert) {
+			this.$store.dispatch('removeField', {
+				tab: this.tabName,
+				index,
+				$gettext: this.$gettext,
+				noAlert
+			})
 		},
 
 		splitBlend(value, percent) {

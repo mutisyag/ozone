@@ -16,7 +16,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
 		isInvalid: false,
 		section_subheaders: [
 			{
-				label: `(1) <br> ${$gettext('Group')}`,
+				label: `(1) <br> ${$gettext('Annex/Group')}`,
 				name: 'group'
 			},
 			{
@@ -34,7 +34,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
 				isInput: true
 			},
 			{
-				label: `(5) <br> ${$gettext('Status')}`,
+				label: `<br> ${$gettext('Status')}`,
 				name: 'validation'
 			}
 		],

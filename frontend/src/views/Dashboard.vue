@@ -90,7 +90,7 @@
 							<router-link
 									class="btn btn-outline-primary btn-sm"
 									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-								<span v-if="row.item.details.can_edit_data" v-translate>Continue</span>
+								<span v-if="row.item.details.can_edit_data" v-translate>Edit</span>
 								<span v-else v-translate>View</span>
 							</router-link>
 						</template>
@@ -164,7 +164,7 @@
 													{{labels['view']}}
                       </span>
                     </router-link>
-
+<!--
                     <b-btn
                         variant="outline-primary"
                         @click="clone(row.item.details.url, row.item.details.obligation)"
@@ -191,7 +191,7 @@
 												:disabled="currentUser.is_read_only"
 												size="sm">
 												{{labels['delete']}}
-                    </b-btn>
+                    </b-btn> -->
                   </b-button-group>
                   </template>
               </b-table>
@@ -261,12 +261,15 @@ export default {
 
 		const dashboardPeriods = await this.$store.dispatch('getDashboardPeriods')
 		const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
-		const defaultPeriod = dashboardPeriods
-			.find(period => period.text.trim() === submissionDefaultValues.reporting_period)
+		const defaultPeriod = this.$store.getters.defaultPeriod(submissionDefaultValues)
 		const reporting_period = defaultPeriod.value
 		let defaultObligation = null
 		if (submissionDefaultValues.obligation) {
-			defaultObligation = this.obligations.find(o => o.text === submissionDefaultValues.obligation).value
+			defaultObligation = this.$store.getters.defaultObligation(submissionDefaultValues)
+			if (this.currentUser.is_secretariat) {
+				this.tableOptions.filters.obligation = defaultObligation
+				this.tableOptions.filters.period_start = defaultPeriod.start_date
+			}
 		}
 
 		this.submissionNew = {
@@ -275,7 +278,8 @@ export default {
 			reporting_period,
 			obligation: defaultObligation
 		}
-		console.log(this.submissionNew)
+		this.$store.dispatch('getCurrentSubmissions')
+
 		this.updateBreadcrumbs()
 	},
 
@@ -316,6 +320,7 @@ export default {
 						current_state: element.current_state,
 						version: element.version,
 						updated_at: element.updated_at,
+						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
 						details: element
 					})
 				})
@@ -338,7 +343,10 @@ export default {
 				key: 'current_state', label: this.$gettext('State'), sortable: true
 			}, {
 				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-			}, { key: 'actions', label: this.$gettext('Actions')
+			}, {
+				key: 'created_by', label: this.$gettext('Created by')
+			}, {
+				key: 'actions', label: this.$gettext('Actions')
 			}]
 		},
 		dataEntryTableItems() {
@@ -356,11 +364,13 @@ export default {
 						party: this.getSubmissionInfo(element).party(),
 						version: element.version,
 						updated_at: element.updated_at,
+						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
 						details: element
 					}
 					tableFields.push(row)
 				})
 			}
+			this.dataEntryTable.totalRows = tableFields.length
 			return tableFields
 		},
 		dataEntryTableFields() {
@@ -375,6 +385,8 @@ export default {
 			}, {
 				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
 			}, {
+				key: 'created_by', label: this.$gettext('Created by')
+			}, {
 				key: 'actions', label: this.$gettext('Actions')
 			}]
 		},
@@ -388,7 +400,7 @@ export default {
 					text: f.start_date.split('-')[0],
 					value: this.getStartDateOfYear(f.start_date)
 				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
 		},
 
 		sortOptionsPeriodTo() {
@@ -401,7 +413,7 @@ export default {
 					text: f.start_date.split('-')[0],
 					value: this.getEndDateOfYear(f.end_date)
 				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse)
+			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
 		},
 
 		sortOptionsObligation() {
@@ -418,7 +430,9 @@ export default {
 				&& this.currentUser
 				&& this.obligations
 				&& this.parties
-				&& this.submissions.length) {
+				&& this.submissions.length
+				// && Object.values(this.submissionNew).some(value => value)
+			) {
 				return true
 			}
 			return false
@@ -501,6 +515,9 @@ export default {
 		},
 		clearFilters() {
 			Object.keys(this.tableOptions.filters).forEach(key => {
+				if (this.currentUser.party && key === 'party') {
+					return
+				}
 				this.tableOptions.filters[key] = null
 			})
 		},
@@ -561,23 +578,27 @@ export default {
 		},
 		'tableOptions.filters': {
 			handler() {
-				if (this.tableOptions.currentPage !== 1) {
-					this.tableOptions.currentPage = 1
-					this.tableOptionsCurrentPageWasSetFromWatcher = true
+				if (this.dataReady) {
+					if (this.tableOptions.currentPage !== 1) {
+						this.tableOptions.currentPage = 1
+						this.tableOptionsCurrentPageWasSetFromWatcher = true
+					}
+					this.$store.dispatch('getCurrentSubmissions')
+					if (!this.$refs.table) return
+					this.$refs.table.refresh()
 				}
-				this.$store.dispatch('getCurrentSubmissions')
-				if (!this.$refs.table) return
-				this.$refs.table.refresh()
 			},
 			deep: true
 		},
 		tableOptionsExceptFilters: {
 			handler() {
-				if (this.tableOptionsCurrentPageWasSetFromWatcher) {
-					this.tableOptionsCurrentPageWasSetFromWatcher = false
-					return
+				if (this.dataReady) {
+					if (this.tableOptionsCurrentPageWasSetFromWatcher) {
+						this.tableOptionsCurrentPageWasSetFromWatcher = false
+						return
+					}
+					this.$store.dispatch('getCurrentSubmissions')
 				}
-				this.$store.dispatch('getCurrentSubmissions')
 			},
 			deep: true
 		}

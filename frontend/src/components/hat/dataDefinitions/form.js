@@ -55,7 +55,7 @@ const getFormHat = ($gettext) => {
 					return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 				},
 				section_subheaders: [{
-					label: `(1)<br>${$gettext('Annex/group')}`,
+					label: `(1)<br>${$gettext('Annex/Group')}`,
 					name: 'group',
 					sort: 1,
 					colspan: 2,
@@ -79,15 +79,15 @@ const getFormHat = ($gettext) => {
 					name: 'quantity_dcpac',
 					isInput: true
 				}, {
-					label: `(6)<br>${$gettext('Remarks (party')}`,
+					label: `(6a)<br>${$gettext('Remarks (party')}`,
 					name: 'remarks_party',
 					isInput: true
 				}, {
-					label: `(7)<br>${$gettext('Remarks (secretariat)')}`,
+					label: `(6b)<br>${$gettext('Remarks (secretariat)')}`,
 					name: 'remarks_os',
 					isInput: true
 				}, {
-					label: `(8)<br>${$gettext('Status')}`,
+					label: `<br>${$gettext('Status')}`,
 					name: 'validation'
 				}
 				],
@@ -149,7 +149,7 @@ const getFormHat = ($gettext) => {
 					return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
 				},
 				section_subheaders: [{
-					label: `(1)<br>${$gettext('Annex/group')}`,
+					label: `(1)<br>${$gettext('Annex/Group')}`,
 					name: 'group',
 					colspan: 2
 				}, {
@@ -169,15 +169,15 @@ const getFormHat = ($gettext) => {
 					name: 'quantity_dcpac',
 					isInput: true
 				}, {
-					label: `(6)<br>${$gettext('Remarks (party')}`,
+					label: `(6a)<br>${$gettext('Remarks (party')}`,
 					name: 'remarks_party',
 					isInput: true
 				}, {
-					label: `(7)<br>${$gettext('Remarks (secretariat)')}`,
+					label: `(6b)<br>${$gettext('Remarks (secretariat)')}`,
 					name: 'remarks_os',
 					isInput: true
 				}, {
-					label: `(8)<br>${$gettext('Status')}`,
+					label: `<br>${$gettext('Status')}`,
 					name: 'validation'
 				}],
 

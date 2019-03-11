@@ -10,20 +10,21 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from openpyxl import load_workbook
 
-from ozone.core.models import User
-from ozone.core.models import Party
-from ozone.core.models import Substance
-from ozone.core.models import Submission
-from ozone.core.models import Article7Import
-from ozone.core.models import Article7Export
-from ozone.core.models import SubmissionInfo
-from ozone.core.models import ReportingPeriod
-from ozone.core.models import Article7Production
-from ozone.core.models import Article7Destruction
-from ozone.core.models import Article7NonPartyTrade
-from ozone.core.models import Article7Questionnaire
-from ozone.core.models import ReportingChannel
-
+from ozone.core.models import (
+    User,
+    Party,
+    Substance,
+    Submission,
+    Article7Import,
+    Article7Export,
+    ReportingPeriod,
+    Article7Production,
+    Article7Destruction,
+    Article7NonPartyTrade,
+    Article7Questionnaire,
+    ReportingChannel,
+    SubmissionFormat,
+)
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -474,6 +475,7 @@ class Command(BaseCommand):
                 "schema_version": "legacy",
                 "created_at": created_at,
                 "updated_at": updated_at,
+                "submitted_at": date_reported,
                 "version": 1,
                 "_workflow_class": "default",
                 "_current_state": "finalized",
@@ -481,8 +483,6 @@ class Command(BaseCommand):
                 "flag_provisional": False,
                 "flag_valid": True,
                 "flag_superseded": False,
-                "remarks_party": overall["Remark"] or "",
-                "remarks_secretariat": overall["SubmissionType"] or "",
                 "created_by_id": self.admin.id,
                 "last_edited_by_id": self.admin.id,
                 "obligation_id": 1,
@@ -513,11 +513,11 @@ class Command(BaseCommand):
                 "country": party.name,
                 "phone": "",
                 "email": "",
-                "date": date_reported
+                #TODO submission_format
             },
             "art7": {
                 "remarks_party": "",
-                "remarks_os": "",
+                "remarks_os": overall["Remark"] or "",
                 "has_imports": overall["Imported"],
                 "has_exports": overall["Exported"],
                 "has_produced": overall["Produced"],

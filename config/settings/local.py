@@ -46,14 +46,13 @@ INSTALLED_APPS += ['debug_toolbar', 'corsheaders']  # noqa F405
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', 'corsheaders.middleware.CorsMiddleware', 'django.middleware.common.CommonMiddleware',  ]  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
 
-CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8080',
+    env('OZONE_HOST'),
 )
-CORS_ORIGIN_REGEX_WHITELIST = (
-    'localhost:8080',
-)
+
+if DEBUG:
+    CORS_ORIGIN_WHITELIST += ("localhost", "localhost:8080")
 
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [

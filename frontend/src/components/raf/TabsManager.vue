@@ -56,6 +56,14 @@
 			<Save v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
 		</b-button-group>
 
+		<router-link
+					class="btn btn-primary ml-2"
+					:to="{name: 'Dashboard'}"
+					v-translate
+		>
+				Close
+		</router-link>
+
 		<b-button-group class="pull-right actions mt-2 mb-2">
 			<b-btn
 				v-if="$store.state.available_transitions.includes('submit')"
@@ -81,7 +89,7 @@
 			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 				<span v-translate>Versions</span>
 			</b-btn>
-			<b-btn @click="removeSubmission" v-if="$store.state.available_transitions.includes('submit')"  variant="outline-danger">
+			<b-btn @click="removeSubmission" v-if="$store.getters.can_edit_data"  variant="outline-danger">
 				<span v-translate>Delete Submission</span>
 			</b-btn>
 		</b-button-group>
