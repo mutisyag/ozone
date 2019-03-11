@@ -34,17 +34,17 @@ matrix:
         - coveralls
     - language: node_js
       cache:
-       - yarn
+       - npm
       name: "Frontend Tests"
       services:
       addons:
       node_js:
         - node
       install:
-        - cd frontend && yarn install
+        - cd frontend && npm install
       before_script:
       script:
-        - yarn run test-cover
+        - npm run test-cover
       after_success:
         # We need to change back to the parent dir, so coveralls knows where
         # to find the files in the repo.
@@ -52,7 +52,7 @@ matrix:
     - language: python
       cache:
        - pip
-       - yarn
+       - npm
       name: "E2E Tests"
       python:
         - 3.6
@@ -73,8 +73,6 @@ matrix:
         - nvm install node
         - node --version
         - npm --version
-        # Install yarn
-        - npm install --global yarn
         # Install tusd
         - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
         - tar -xzvf tusd_linux_amd64.tar.gz
@@ -90,9 +88,9 @@ matrix:
         # Start tusd server
         - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
         # Install frontend dependencies
-        - cd frontend && yarn install
+        - cd frontend && npm install
       script:
-        - yarn e2e
+        - npm run e2e
       after_success:
     - language: python
       cache:
@@ -119,7 +117,7 @@ matrix:
     - language: python
       cache:
        - pip
-       - yarn
+       - npm
       name: "Update ozone-translations Frontend"
       python:
         - 3.6
@@ -139,12 +137,10 @@ matrix:
         - nvm install node
         - node --version
         - npm --version
-        # Install yarn
-        - npm install --global yarn
       install:
         - pip install -r requirements/translations.txt
         - git clone https://github.com/eaudeweb/ozone-translations.git translations
-        - cd frontend && yarn install
+        - cd frontend && npm install
       before_script:
       script:
         - make makemessages
