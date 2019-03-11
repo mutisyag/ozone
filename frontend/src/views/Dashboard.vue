@@ -114,7 +114,7 @@
             <template slot="header">
               <b-row>
 				<b-col><b><span v-translate='{totalRows: tableOptions.totalRows}'>All submissions (%{totalRows} records)</span></b></b-col>
-				<b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.showAllVersions"><span v-translate>Show all versions</span></b-form-checkbox></b-col>
+				<b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.is_superseded"><span v-translate>Show all versions</span></b-form-checkbox></b-col>
               </b-row>
             </template>
             <b-container fluid>

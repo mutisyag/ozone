@@ -48,7 +48,7 @@ class SubmissionReportingChannelTests(BaseTests):
         submission.save()
         return submission
 
-    def test_secretartiat_owner(self):
+    def test_secretariat_owner(self):
         submission = self.create_submission(owner=self.secretariat_user)
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         data = {
@@ -100,7 +100,7 @@ class SubmissionReportingChannelTests(BaseTests):
         self.assertEqual(submission.reporting_channel.name, 'Web form')
         self.assertEqual(resp.status_code, 422)
 
-    def test_secretartiat_owner_submitted_submission(self):
+    def test_secretariat_owner_submitted_submission(self):
         submission = self.create_submission(
             owner=self.secretariat_user,
             current_state='submitted',
@@ -120,10 +120,9 @@ class SubmissionReportingChannelTests(BaseTests):
             data
         )
         self.assertEqual(submission.reporting_channel.name, 'Web form')
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data['reporting_channel'], 'API')
+        self.assertEqual(resp.status_code, 422)
 
-    def test_secretartiat_not_owner(self):
+    def test_secretariat_not_owner(self):
         submission = self.create_submission(owner=self.reporter)
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         data = {

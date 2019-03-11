@@ -18,6 +18,7 @@ const state = {
 			filters: {
 				search: null,
 				period_start: null,
+				is_superseded: null,
 				period_end: null,
 				obligation: null,
 				party: null,

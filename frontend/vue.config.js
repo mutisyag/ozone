@@ -1,7 +1,6 @@
-const path = require('path')
-
 module.exports = {
 	chainWebpack: config => {
+		config.output.chunkFilename('js/[name].[id].[chunkhash:8].js')
 		if (process.env.NODE_ENV !== 'production') {
 			config.devtool('eval')
 			config.module

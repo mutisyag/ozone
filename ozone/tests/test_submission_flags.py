@@ -136,6 +136,12 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
     def _check_flags_update_permission(
         self, user, fields_to_check, finalized, expect_success, fail_code=None
     ):
+        fields_to_check = list(
+            set(fields_to_check) & set(self.flag_data.keys())
+        )
+        if not fields_to_check:
+            return
+
         submission = self.create_submission(
             self.secretariat_user, **ALL_FLAGS_DATA
         )
@@ -212,7 +218,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
         )
 
     # Valid flag can be edited by:
-    #  - Secretariat in submitted stated
+    #  - Secretariat in submitted, processing & finalized states
     #  - Party in no state
 
     def test_valid_secretariat_data_entry(self):
@@ -260,7 +266,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
         )
 
     # Has reported flags can be edited by:
-    #  - Secretariat in any state
+    #  - Secretariat in data entry state
     #  - Party in data entry state
 
     def test_has_reported_secretariat_data_entry(self):
@@ -270,7 +276,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
     def test_has_reported_secretariat_finalized(self):
         self._check_flags_update_permission(
-            self.secretariat_user, HAS_REPORTED_FLAGS, True, True
+            self.secretariat_user, HAS_REPORTED_FLAGS, True, False
         )
 
     def test_has_reported_party_data_entry(self):
@@ -303,7 +309,7 @@ class SubmissionRetrieveTest(BaseFlagsTests):
     flag_data = ALL_FLAGS_DATA
 
     def _check_flags_retrieve_data(self, user, owner):
-        submission = self.create_submission(owner, **ALL_FLAGS_DATA)
+        submission = self.create_submission(owner, **self.flag_data)
         self.client.login(username=user.username, password='qwe123qwe')
 
         result = self.client.get(
