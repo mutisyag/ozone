@@ -9,16 +9,7 @@ const logRequests = process.env.NODE_ENV === 'development'
 
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
-
-const windowLocation = window.location.origin.split('//')
-windowLocation[1] = `tusd.${windowLocation[1]}/files/`
-let filesURL = windowLocation.join('//')
-
-/* const TUSD_HOST = 'localhost'
-const TUSD_PORT = 1080
-const _tusd_host = process.env.TUSD_HOST || TUSD_HOST
-const _tusd_port = (process.env.TUSD_PORT && Number(process.env.TUSD_PORT)) || TUSD_PORT
-const filesURL = `http://${_tusd_host}:${_tusd_port}/files/` */
+let filesURL = `${window.location.protocol}//${process.env.VUE_APP_TUSD_HOST}:${process.env.VUE_APP_TUSD_PORT}/files/`
 
 let isTestSession = false
 if (process.env.NODE_ENV === 'development') {
