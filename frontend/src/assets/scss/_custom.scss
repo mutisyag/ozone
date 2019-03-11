@@ -643,20 +643,52 @@ button img.icon {
 
 .aside-menu  {
 
-
-  .navbar-toggler {
-      position: absolute;
+	.navbar-toggler-wrapper {
+ 			position: absolute;
       right: 100%;
-      top: 45px;
+      top: -1px;
       border: 1px solid #c8ced3;
       border-radius: 0;
-      background: white;
+      border-top-left-radius: .25em;
+      border-bottom-left-radius: .25em;
+			background: white;
+			padding: 0.25rem 0.75rem;
+			white-space: nowrap;
+			padding-right: 3rem;
+			// color: #20a8d8;
+			height: 47px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			// box-shadow: -3px 3px 3px rgba(0,0,0,0.2); 
+	}
+  .navbar-toggler {
+    position: absolute;
+    right: 0;
+		top: 10px;
+    left: 0;
+    text-align: right;
+    width: 100%;
+    justify-content: flex-end;
+    display: flex;
+		padding: 0;
+		padding-right: .5rem;
+		&:focus {
+			outline: none;	
+		}
   }
+
+	.toggler-text {
+		overflow: hidden;
+		display: inline-block;
+		vertical-align: top;
+	}
 
   .navbar-toggler span {
      	display: flex;
       justify-content: center;
       align-items: center;
+			// color: white;
   }
 
   .navbar-toggler span:before{
@@ -671,6 +703,17 @@ button img.icon {
   content:"\E917";
 }
 
+.aside-menu-show,
+.aside-menu-lg-show {
+
+	.toggler-text {
+		width: 0;
+	}
+	.navbar-toggler-wrapper {
+		padding-right: 2rem;
+	}
+} 
+ 
 
 .footnotes p {
   margin-bottom: .5rem;

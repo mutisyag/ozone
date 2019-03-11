@@ -26,13 +26,13 @@
         <SidebarMinimizer/>
       </AppSidebar>
 
-      <main class="main">
+    <main class="main">
 		<div class="breadcrumb">
 			{{list}}
 		</div>
-        <div class="container-fluid">
-          <router-view></router-view>
-        </div>
+		<div class="container-fluid">
+			<router-view></router-view>
+		</div>
 
 		<!-- Confirm Modal -->
 		<b-modal

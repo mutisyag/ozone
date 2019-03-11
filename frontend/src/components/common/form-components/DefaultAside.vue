@@ -43,7 +43,7 @@
 
 <script>
 
-import { AsideToggler } from '@coreui/vue'
+import AsideToggler from './AsideTogglerModified'
 import Add from './Add'
 import AddBlend from './AddBlend'
 import Validation from './Validation'
