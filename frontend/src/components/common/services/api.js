@@ -104,6 +104,8 @@ const getExportBlends = () => {
 	return null
 }
 
+const getSubmissionFormat = () => fetch('get-submission-formats/')
+
 const getPeriods = () => fetch('periods/')
 
 const getObligations = () => fetch('obligations/')
@@ -228,5 +230,6 @@ export {
 	fetchFromPublicDirectory,
 	getSubmissionDefaultValues,
 	uploadFile,
-	getTransitions
+	getTransitions,
+	getSubmissionFormat
 }

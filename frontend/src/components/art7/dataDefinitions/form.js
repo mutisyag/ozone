@@ -17,6 +17,7 @@ const getFormArt7 = ($gettext) => {
 				'initialData.display.countries',
 				'initialData.countryOptionsSubInfo',
 				'currentUser',
+				'initialData.submissionFormats',
 				'permissions.form'
 			],
 			comments_default_properties: {

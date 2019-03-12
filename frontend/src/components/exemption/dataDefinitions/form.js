@@ -13,6 +13,7 @@ const getFormExemption = ($gettext) => {
 				'current_submission',
 				'initialData.display.substances',
 				'initialData.display.countries',
+				'initialData.submissionFormats',
 				'currentUser',
 				'permissions.form'
 			],

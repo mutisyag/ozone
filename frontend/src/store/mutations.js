@@ -118,6 +118,9 @@ const mutations = {
 		state.permissions.form = data
 	},
 
+	setSubmissionFormatOptions(state, data) {
+		state.initialData.submissionFormats = data
+	},
 	// dashboard
 
 	setDashboardParties(state, data) {

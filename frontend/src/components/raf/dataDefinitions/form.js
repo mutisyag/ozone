@@ -15,6 +15,7 @@ const getFormRaf = ($gettext) => {
 				'initialData.display.substances',
 				'initialData.display.blends',
 				'initialData.display.countries',
+				'initialData.submissionFormats',
 				'currentUser',
 				'permissions.form'
 			],

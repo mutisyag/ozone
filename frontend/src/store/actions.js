@@ -18,7 +18,8 @@ import {
 	updateCurrentUser,
 	uploadFile,
 	getSubmissionDefaultValues,
-	getTransitions
+	getTransitions,
+	getSubmissionFormat
 } from '@/components/common/services/api'
 
 import {
@@ -289,9 +290,15 @@ const actions = {
 				// custom blends.
 				context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
 				context.dispatch('getNonParties')
+				context.dispatch('getSubmissionFormatOptions')
 				resolve()
 			})
 		})
+	},
+
+	async getSubmissionFormatOptions(context) {
+		const submissionFormatOptions = await getSubmissionFormat()
+		context.commit('setSubmissionFormatOptions', submissionFormatOptions.data.map(s => ({ text: s.name, value: s.name })))
 	},
 
 	getSubmissionData(context, { submission, $gettext }) {

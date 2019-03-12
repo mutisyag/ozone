@@ -9,7 +9,8 @@ const getFormLetter = ($gettext) => {
 			dataNeeded: [
 				'initialData.countryOptions',
 				'initialData.countryOptionsSubInfo',
-				'initialData.display.countries'
+				'initialData.display.countries',
+				'initialData.submissionFormats'
 			]
 		},
 		tabs: {

@@ -24,6 +24,7 @@ const getCommonLabels = ($gettext) => {
 		submitted_at: $gettext('Date of submission'),
 		art7: $gettext('Article 7'),
 		hat: $gettext('HAT'),
+		submission_format: $gettext('Submission format'),
 		valid: $gettext('valid'),
 		invalid: $gettext('invalid'),
 		questionnaire_remarks_party: $gettext('Comments (Party)'),
