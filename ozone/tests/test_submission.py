@@ -229,7 +229,6 @@ class TestSubmissionMethods(BaseSubmissionTest):
             reverse("core:submission-list"),
             {"page": 1, "page_size": 1, "ordering": "period"},
         )
-        import pdb; pdb.set_trace()
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()['results']), 1)
         self.assertEqual(result.json()['results'][0]["id"], submission1.id)
