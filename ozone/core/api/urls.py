@@ -41,7 +41,7 @@ submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
 router.extend(submissions_router)
 
-# Data reports, nested on submissions
+# Data reports, info & other stuff that's nested on submissions
 questionnaire_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )

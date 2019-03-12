@@ -3,7 +3,7 @@ import os
 
 from datetime import datetime
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
@@ -142,11 +142,40 @@ class Obligation(models.Model):
 
 class ReportingChannel(models.Model):
     """
-    Describes the way the form was submitted.
+    Describes the medium through which the form was submitted.
     """
 
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
+
+    # These mark whether this channel is default for party/os
+    is_default_party = models.BooleanField(default=False)
+    is_default_secretariat = models.BooleanField(default=False)
+
+    # True if this is the default channel set when cloning a submission
+    is_default_for_cloning = models.BooleanField(default=False)
+
+    @classmethod
+    def get_default(cls, user):
+        """
+        Returns default reporting channel value for given user.
+        """
+        try:
+            if user.is_secretariat:
+                return cls.objects.get(is_default_secretariat=True)
+            if user.party is not None:
+                return cls.objects.get(is_default_party=True)
+        except ObjectDoesNotExist:
+            return None
+
+        return None
+
+    @classmethod
+    def get_cloning_default(cls):
+        try:
+            return cls.objects.get(is_default_for_cloning=True)
+        except ObjectDoesNotExist:
+            return None
 
     class Meta:
         db_table = "reporting_channel"
@@ -951,7 +980,9 @@ class Submission(models.Model):
     def clone(self, user):
         is_cloneable, e = self.check_cloning(user)
         if is_cloneable:
-            channel = ReportingChannel.objects.get(name='Web form')
+            channel = ReportingChannel.objects.get(
+                is_default_for_cloning=True
+            )
             clone = Submission.objects.create(
                 party=self.party,
                 reporting_period=self.reporting_period,
@@ -1182,8 +1213,8 @@ class Submission(models.Model):
 
             # The default value for reporting channel is 'Web form'
             # when creating a new submission
-            self.reporting_channel = ReportingChannel.objects.get(
-                name='Web form'
+            self.reporting_channel = ReportingChannel.get_default(
+                self.created_by
             )
 
             self.clean()

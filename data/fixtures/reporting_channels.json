@@ -2,7 +2,10 @@
   {
     "fields": {
       "name": "Web form",
-      "description": ""
+      "description": "",
+      "is_default_party": true,
+      "is_default_secretariat": false,
+      "is_default_for_cloning": true
     },
     "model": "core.reportingchannel",
     "pk": 1
@@ -10,7 +13,10 @@
   {
     "fields": {
       "name": "Email",
-      "description": ""
+      "description": "",
+      "is_default_party": false,
+      "is_default_secretariat": true,
+      "is_default_for_cloning": false
     },
     "model": "core.reportingchannel",
     "pk": 2
@@ -18,7 +24,10 @@
   {
     "fields": {
       "name": "Legacy",
-      "description": ""
+      "description": "",
+      "is_default_party": false,
+      "is_default_secretariat": false,
+      "is_default_for_cloning": false
     },
     "model": "core.reportingchannel",
     "pk": 3
@@ -26,7 +35,10 @@
   {
     "fields": {
       "name": "Paper",
-      "description": ""
+      "description": "",
+      "is_default_party": false,
+      "is_default_secretariat": false,
+      "is_default_for_cloning": false
     },
     "model": "core.reportingchannel",
     "pk": 4
@@ -34,7 +46,10 @@
   {
     "fields": {
       "name": "API",
-      "description": ""
+      "description": "",
+      "is_default_party": false,
+      "is_default_secretariat": false,
+      "is_default_for_cloning": false
     },
     "model": "core.reportingchannel",
     "pk": 5
