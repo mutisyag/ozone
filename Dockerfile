@@ -18,11 +18,6 @@ COPY requirements $APP_HOME/requirements
 WORKDIR $APP_HOME
 RUN pip install --no-cache-dir -r $REQUIREMENTS_FILE
 COPY . $APP_HOME
-#RUN rm -rf frontend
-#    && mkdir -p $APP_HOME/frontend/dist \
-#    && mkdir $APP_HOME/static
-COPY --from=npm_builder $APP_HOME/frontend/frontend/dist $APP_HOME/frontend/dist
-#COPY --from=npm_builder $APP_HOME/frontend/dist/stats.json $APP_HOME/frontend/dist/stats.json
 
 ENTRYPOINT ["./docker-entrypoint.sh"]
 CMD ["run"]
