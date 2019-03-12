@@ -635,7 +635,6 @@ class Submission(models.Model):
             flags_list.extend([
                 'flag_provisional', 'flag_checked_blanks',
                 'flag_has_blanks', 'flag_confirmed_blanks',
-                'flag_approved',
             ])
             if self.in_initial_state:
                 flags_list.extend([
@@ -646,8 +645,8 @@ class Submission(models.Model):
                     'flag_has_reported_e', 'flag_has_reported_f',
                 ])
             else:
-                # valid flag can only be set after submitting
-                flags_list.append('flag_valid')
+                # valid & approved flags can only be set after submitting
+                flags_list.extend(['flag_valid', 'flag_approved',])
         else:
             # Party user
             if self.in_initial_state:
