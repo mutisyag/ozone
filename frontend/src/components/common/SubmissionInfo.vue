@@ -54,7 +54,7 @@
 				<b-col v-if="flags_info">
 					<h5><span v-translate>Flags</span></h5>
 					<b-card id="flags">
-						<b-row>
+						<b-row class="mb-2" v-if="$store.state.currentUser.is_secretariat">
 							<b-col>
 								<b-row v-for="order in general_flags" :key="order">
 									<b-col cols="1">
@@ -103,7 +103,7 @@
 							</b-col>
 						</b-row>
 						<div>
-							<h5 class="mt-4 mb-4" v-translate>Annex group reported in full</h5>
+							<h5 class="mb-3" v-translate>Annex group reported in full</h5>
 								<div id="annex-flags">
 									<div class="flags-row" v-for="column in specific_flags_columns" :key="column">
 										<div class="specific-flags-wrapper" v-if="order.split('_')[3].includes(column)" v-for="order in specific_flags" :key="order">
@@ -163,11 +163,11 @@ export default {
 		},
 
 		blank_flags() {
-			return Object.keys(this.flags_info.form_fields).filter(f => f.split('_').includes('blanks'))
+			return Object.keys(this.flags_info.form_fields).filter(f => f !== 'validation' && f.split('_').includes('blanks'))
 		},
 
 		specific_flags() {
-			return Object.keys(this.flags_info.form_fields).filter(f => ![...this.general_flags, ...this.blank_flags].includes(f))
+			return Object.keys(this.flags_info.form_fields).filter(f => ![...this.general_flags, ...this.blank_flags, 'validation'].includes(f))
 		},
 
 		specific_flags_columns() {
