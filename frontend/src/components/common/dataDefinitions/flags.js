@@ -91,6 +91,13 @@ export default {
 		} else {
 			this.flag_confirmed_blanks.disabled = false
 		}
+		if (!this.flag_checked_blanks.selected) {
+			this.flag_has_blanks.selected = false
+			this.flag_confirmed_blanks.selected = false
+		}
+		if (!this.flag_has_blanks.selected) {
+			this.flag_confirmed_blanks.selected = false
+		}
 		return {}
 	}
 }
