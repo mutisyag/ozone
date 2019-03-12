@@ -1173,7 +1173,7 @@ class Submission(models.Model):
             # (e.g. fast-tracked secretariat submissions).
             # For now we will naively instantiate all submissions with
             # the default article 7 workflow.
-            if self.obligation.name == 'Exemption':
+            if self.obligation.form_type == 'exemption':
                 self._workflow_class = 'default_exemption'
             else:
                 self._workflow_class = 'default'
