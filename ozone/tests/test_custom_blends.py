@@ -16,10 +16,13 @@ from .factories import (
     AnotherSubstanceFactory,
     AnotherPartyFactory,
     BlendFactory,
+    ObligationFactory,
 )
 
 
 class BaseCustomBlendsTests(BaseTests):
+    _form_type = "art7"
+
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
@@ -28,6 +31,8 @@ class BaseCustomBlendsTests(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
+
+        self.obligation = ObligationFactory.create(_form_type=self._form_type)
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
@@ -44,6 +49,7 @@ class BaseCustomBlendsTests(BaseTests):
     def create_submission(self, **kwargs):
         submission = SubmissionFactory.create(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
             **kwargs,

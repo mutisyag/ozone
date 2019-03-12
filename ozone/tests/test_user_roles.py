@@ -27,6 +27,7 @@ User = get_user_model()
 
 
 class BaseUserRoleTests(BaseTests):
+    _form_type = "art7"
 
     def setUp(self):
         super().setUp()
@@ -34,6 +35,7 @@ class BaseUserRoleTests(BaseTests):
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory.create(subregion=self.subregion)
+        self.obligation = ObligationFactory.create(_form_type=self._form_type)
         ReportingChannelFactory()
 
 
@@ -52,11 +54,10 @@ class TestSecretariatEditRole(BaseUserRoleTests):
         """
 
         period = ReportingPeriodFactory()
-        obligation = ObligationFactory()
         data = {
             "party": self.party.id,
             "reporting_period": period.id,
-            "obligation": obligation.id,
+            "obligation": self.obligation.id,
         }
         resp = self.client.post(
             reverse("core:submission-list"),
@@ -66,7 +67,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
         submission = Submission.objects.get(id=resp.data["id"])
         self.assertEqual(submission.party, self.party)
-        self.assertEqual(submission.obligation, obligation)
+        self.assertEqual(submission.obligation, self.obligation)
         self.assertEqual(submission.reporting_period, period)
 
     def test_view_submission(self):
@@ -76,6 +77,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
         )
@@ -93,6 +95,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
         )
@@ -121,6 +124,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
         )
@@ -204,11 +208,10 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
         """
 
         period = ReportingPeriodFactory()
-        obligation = ObligationFactory()
         data = {
             "party": self.party.id,
             "reporting_period": period.id,
-            "obligation": obligation.id,
+            "obligation": self.obligation.id,
         }
         resp = self.client.post(
             reverse("core:submission-list"),
@@ -223,6 +226,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user_ro,
             last_edited_by=self.secretariat_user_ro,
         )
@@ -239,6 +243,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user_ro,
             last_edited_by=self.secretariat_user_ro,
         )
@@ -265,6 +270,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.secretariat_user_ro,
             last_edited_by=self.secretariat_user_ro,
         )
@@ -353,6 +359,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
         """
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -368,6 +375,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
         """
         submission = SubmissionFactory(
             party=self.another_party,
+            obligation=self.obligation,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
         )
@@ -383,6 +391,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -410,6 +419,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.another_party,
+            obligation=self.obligation,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
         )
@@ -436,6 +446,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -454,6 +465,7 @@ class TestPartyReporterRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.another_party,
+            obligation=self.obligation,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
         )
@@ -555,6 +567,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         """
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -570,6 +583,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         """
         submission = SubmissionFactory(
             party=self.another_party,
+            obligation=self.obligation,
             created_by=self.reporter_another_party,
             last_edited_by=self.reporter_another_party,
         )
@@ -584,11 +598,10 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         """
 
         period = ReportingPeriodFactory()
-        obligation = ObligationFactory()
         data = {
             "party": self.party.id,
             "reporting_period": period.id,
-            "obligation": obligation.id,
+            "obligation": self.obligation.id,
         }
         resp = self.client.post(
             reverse("core:submission-list"),
@@ -603,6 +616,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -629,6 +643,7 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter_same_party,
             last_edited_by=self.reporter_same_party,
         )
@@ -703,6 +718,7 @@ class TestPublicUserRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter,
             last_edited_by=self.reporter,
         )
@@ -718,11 +734,10 @@ class TestPublicUserRole(BaseUserRoleTests):
         """
 
         period = ReportingPeriodFactory()
-        obligation = ObligationFactory()
         data = {
             "party": self.party.id,
             "reporting_period": period.id,
-            "obligation": obligation.id,
+            "obligation": self.obligation.id,
         }
         resp = self.client.post(
             reverse("core:submission-list"),
@@ -737,6 +752,7 @@ class TestPublicUserRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter,
             last_edited_by=self.reporter,
         )
@@ -762,6 +778,7 @@ class TestPublicUserRole(BaseUserRoleTests):
 
         submission = SubmissionFactory(
             party=self.party,
+            obligation=self.obligation,
             created_by=self.reporter,
             last_edited_by=self.reporter,
         )

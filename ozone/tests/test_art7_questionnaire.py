@@ -25,7 +25,7 @@ class BaseQuestionnaireSubmissionTest(BaseTests):
 
         self.region = RegionFactory.create()
         self.period = ReportingPeriodFactory.create(name="Some period")
-        self.obligation = ObligationFactory.create(form_type="art7")
+        self.obligation = ObligationFactory.create(_form_type="art7")
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
@@ -90,7 +90,7 @@ class TestSubmissionMethods(BaseQuestionnaireSubmissionTest):
 
     def test_post_wrong_obligation(self):
         obligation = ObligationFactory.create(
-            form_type="other", name="Much obliged"
+            _form_type="other", name="Much obliged"
         )
         submission = self.create_submission(
             obligation=obligation, populate_questionnaire=False

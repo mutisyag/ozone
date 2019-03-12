@@ -1,3 +1,4 @@
+import enum
 import os
 
 from datetime import datetime
@@ -64,6 +65,15 @@ class ModifyPreventionMixin:
         return super().save(*args, **kwargs)
 
 
+@enum.unique
+class FormTypes(enum.Enum):
+    ART7 = 'art7'
+    ESSENCRIT = 'essencrit'
+    HAT = 'hat'
+    OTHER = 'other'
+    EXEMPTION = 'exemption'
+
+
 class Obligation(models.Model):
 
     NOT_CLONEABLE = [
@@ -87,8 +97,9 @@ class Obligation(models.Model):
     # This will possibly get more complicated in the future
     # (e.g. when different forms will be necessary for the same obligation
     # but different reporting periods due to changes in the methodology
-    form_type = models.CharField(
-        max_length=64,
+    _form_type = models.CharField(
+        max_length=64, choices=((s.value, s.name) for s in FormTypes),
+        null=True,
         help_text="Used to generate the correct form, based on this obligation."
     )
 
@@ -99,6 +110,10 @@ class Obligation(models.Model):
         help_text="If set to true it means that the current obligation is used "
                   "as default for 'Data entry submissions' and 'All submissions' sections."
     )
+
+    @property
+    def form_type(self):
+        return self._form_type
 
     def __str__(self):
         return self.name

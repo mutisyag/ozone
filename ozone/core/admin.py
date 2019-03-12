@@ -235,6 +235,7 @@ class ObligationAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
     search_fields = ["name"]
+    readonly_fields = ["_form_type"]
     resource_class = ObligationResource
 
 

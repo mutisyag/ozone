@@ -36,7 +36,7 @@ ALL_LINKS = LINKS_ART7 + LINKS_HAT + LINKS_ESSENCRIT + LINKS_OTHER
 
 
 class BaseSubmissionTest(BaseTests):
-    form_type = "art7"
+    _form_type = "art7"
 
     def setUp(self):
         super().setUp()
@@ -44,7 +44,7 @@ class BaseSubmissionTest(BaseTests):
 
         self.region = RegionFactory.create()
         self.period = ReportingPeriodFactory.create(name="Some period")
-        self.obligation = ObligationFactory.create(form_type=self.form_type)
+        self.obligation = ObligationFactory.create(_form_type=self._form_type)
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
@@ -229,6 +229,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
             reverse("core:submission-list"),
             {"page": 1, "page_size": 1, "ordering": "period"},
         )
+        import pdb; pdb.set_trace()
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()['results']), 1)
         self.assertEqual(result.json()['results'][0]["id"], submission1.id)
@@ -299,15 +300,15 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
 
 class HATSubmissionMethods(TestSubmissionMethods):
-    form_type = "hat"
+    _form_type = "hat"
     links_data = LINKS_HAT
 
 
 class EssenCritSubmissionMethods(TestSubmissionMethods):
-    form_type = "essencrit"
+    _form_type = "essencrit"
     links_data = LINKS_ESSENCRIT
 
 
 class OtherSubmissionMethods(TestSubmissionMethods):
-    form_type = "other"
+    _form_type = "other"
     links_data = LINKS_OTHER
