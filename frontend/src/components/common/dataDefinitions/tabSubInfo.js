@@ -72,7 +72,8 @@ const getTabSubInfo = ($gettext) => {
 				type: 'select',
 				selected: '',
 				optionsStatePropertyPath: 'initialData.submissionFormats',
-				options: []
+				options: [],
+				permission: 'is_secretariat'
 			},
 			phone: {
 				type: 'text',

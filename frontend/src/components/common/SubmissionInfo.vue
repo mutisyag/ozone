@@ -34,7 +34,7 @@
 									</span>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="order === 'reporting_channel' ? !$store.getters.can_change_reporting_channel : !$store.getters.can_edit_data" :field="info.form_fields[order]"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:order, tabName: info.name, field:order}" :disabled="checkUserType(order)" :field="info.form_fields[order]"></fieldGenerator>
 								</b-col>
 							</b-row>
 							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
@@ -194,6 +194,15 @@ export default {
 				submitted_at.validation = this.$gettext('Required')
 			}
 			this.$forceUpdate()
+		},
+		checkUserType(order) {
+			if (order === 'reporting_channel') {
+				return !this.$store.getters.can_change_reporting_channel
+			}
+			if (order === 'submission_format' && !this.$store.state.currentUser.is_secretariat) {
+				return true
+			}
+			return !this.$store.getters.can_edit_data
 		}
 	},
 	watch: {
