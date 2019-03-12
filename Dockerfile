@@ -1,35 +1,3 @@
-FROM python:3.6-slim as npm_builder
-
-# Can be overriden by compose
-ARG BACKEND_HOST=ozone.eaudeweb.ro
-ARG BACKEND_PORT=80
-ARG TUSD_HOST=ozone.eaudeweb.ro
-ARG TUSD_PORT=8080
-
-# Overriden in compose as needed
-ENV BACKEND_HOST=$BACKEND_HOST
-
-ENV APP_HOME=/var/local/ozone/frontend
-RUN apt-get update -y --allow-unauthenticated \
-    && apt-get install -y --no-install-recommends apt-utils curl software-properties-common gnupg \
-    && curl -sL https://deb.nodesource.com/setup_8.x | bash -
-RUN runDeps="nodejs build-essential gcc" \
-    && apt-get update -y --allow-unauthenticated \
-    && apt-get install -y --no-install-recommends $runDeps
-RUN mkdir -p $APP_HOME
-COPY requirements $APP_HOME/requirements
-RUN pip install --no-cache-dir -r $APP_HOME/requirements/translations.txt
-COPY frontend/package.json $APP_HOME/frontend/package.json
-COPY frontend/package-lock.json $APP_HOME/frontend/package-lock.json
-RUN cd $APP_HOME/frontend && npm install
-COPY . $APP_HOME
-RUN $APP_HOME/utility/compile_fe_translations.sh
-RUN rm -rf frontend/dist
-#COPY package.json postcss.config.js yarn.lock $APP_HOME/
-WORKDIR $APP_HOME
-#RUN npm_config_tmp=$APP_HOME yarn
-RUN cd $APP_HOME/frontend && npm run build
-
 FROM python:3.6-slim
 
 # Can be overriden by compose
