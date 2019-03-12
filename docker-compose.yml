@@ -1,86 +1,88 @@
-version: '2.1'
+version: '2.2'
 
 services:
+  # XXX Only for staging
+  smtp:
+    image: eaudeweb/mailtrap
+    ports:
+      - "8025:80"
+
+  # Nginx load-balancing/proxy
+  nginx:
+    image: nginx:latest
+    environment:
+      NGINX_CONF: |-
+        server {
+          listen 80;
+          server_name _;
+
+          location / {
+            uwsgi_pass app:8000;
+            include uwsgi_params;
+          }
+        }
+    command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/conf.d/default.conf && exec nginx -g "daemon off;"'
+    ports:
+      - "127.0.0.1:8000:80"
+
+  # Main app DB
   postgres:
     image: postgres:9.6
     env_file:
-      - ./docker/postgres.env
+      - ./docker/app.env
     volumes:
-      - pg-data:/var/lib/postgresql/data
-      - pg-backups:/pg_backups
-    labels:
-      io.rancher.scheduler.affinity:host_label_ne: reserved=yes
+      - /var/lib/postgresql/data
 
-  smtp:
-    image: "catatnight/postfix"
-    env_file:
-      - ./docker/smtp.env
-
+  # TUSD server
   tusd:
     image: tusproject/tusd:latest
-    env_file:
-      - ./docker/demo.env
+    ports:
+      - "127.0.0.1:8001:1080"
     command: ["-dir", "/srv/tusd-data", "-hooks-http", "http://app:8000/api/uploads/"]
     volumes:
       - tusd-uploads:/srv/tusd-data
-    labels:
-      io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
+  # Django application
   app:
-    image: eaudeweb/ozone:latest
+    image: eaudeweb/ozone:dev
+    scale: 2
     env_file:
-      - ./docker/demo.env
-      - ./docker/postgres.env
+      - ./docker/app.env
     volumes:
-    - static-files:/var/local/ozone/static
-    - tusd-uploads:/var/local/tusd_uploads
-    - envelope-files:/var/local/protected_uploads
+     - tusd-uploads:/var/local/tusd_uploads
+     - /var/local/protected_uploads
     depends_on:
       - postgres
       - tusd
-    labels:
-      io.rancher.container.pull_image: always
-      io.rancher.scheduler.affinity:host_label_ne: reserved=yes
 
+  # Weblate instance
   weblate:
-    build:
-      context: .
-      dockerfile: Dockerfile-weblate
+    image: eaudeweb/ozone-weblate:dev
+    ports:
+      - "127.0.0.1:8002:80"
     env_file:
       - ./docker/weblate.env
     volumes:
-      - weblate-data:/app/data
+      - /app/data
     depends_on:
       - postgres-weblate
       - redis-weblate
-      
+
+  # Weblate DB
   postgres-weblate:
     image: postgres:9.6
     env_file:
       - ./docker/weblate.env
     volumes:
-      - pg-weblate-data:/var/lib/postgresql/data
-      
+      - /var/lib/postgresql/data
+
+  # Weblate redis
   redis-weblate:
     image: redis:4-alpine
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
-      - redis-data:/data
+      - /data
 
 volumes:
-  pg-data:
-    driver: rancher-nfs
-  pg-backups:
-    driver: rancher-nfs
   tusd-uploads:
-    driver: rancher-nfs
-  static-files:
-    driver: rancher-nfs
-  envelope-files:
-    driver: rancher-nfs
-  weblate-data:
-    driver: rancher-nfs
-  pg-weblate-data:
-    driver: rancher-nfs
-  redis-data:
-    driver: rancher-nfs
+    driver: local

@@ -2,6 +2,8 @@
 
 ## Docker
 
+XXX TODO update this for prod/local instalations
+
 1. Get the source code:
 
        git clone https://github.com/eaudeweb/ozone
@@ -13,9 +15,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
    
 2. Customize the Docker environment files:
 
-       cp docker/demo.env.example docker/demo.env
-       cp docker/smtp.env.example docker/smtp.env
-       cp docker/postgres.env.example docker/postgres.env
+       cp docker/app.env.example docker/demo.env
        cp docker/weblate.env.example docker/weblate.env
        cp frontend/.env.example frontend/.env.local
    
