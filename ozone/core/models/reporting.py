@@ -612,7 +612,7 @@ class Submission(models.Model):
             return False
 
         if (
-            self.obligation.name == 'Article 7'
+            self.obligation.form_type == 'art7'
             and (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
