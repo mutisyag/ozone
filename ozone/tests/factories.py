@@ -186,6 +186,9 @@ class ReportingPeriodFactory(DjangoModelFactory):
 
 class ReportingChannelFactory(DjangoModelFactory):
     name = 'Web form'
+    is_default_party = True
+    is_default_secretariat = False
+    is_default_for_cloning = True
 
     class Meta:
         model = ReportingChannel

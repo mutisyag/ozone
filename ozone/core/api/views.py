@@ -37,6 +37,7 @@ from ..models import (
     Subregion,
     Party,
     ReportingPeriod,
+    ReportingChannel,
     Obligation,
     Submission,
     SubmissionInfo,
@@ -1304,13 +1305,25 @@ class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
             if default_obligation_obj
             else None
         )
+
         default_reporting_period_obj = ReportingPeriod.get_most_recent()
         default_reporting_period = (
             default_reporting_period_obj.name
             if default_reporting_period_obj
             else None
         )
+
+        default_reporting_channel_obj = ReportingChannel.get_default(
+            request.user
+        )
+        default_reporting_channel = (
+            default_reporting_channel_obj.name
+            if default_reporting_channel_obj
+            else None
+        )
+
         return Response({
             'obligation': default_obligation,
-            'reporting_period': default_reporting_period
+            'reporting_period': default_reporting_period,
+            'reporting_channel': default_reporting_channel
         })
