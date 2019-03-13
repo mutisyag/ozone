@@ -5,3 +5,18 @@ services:
     image: eaudeweb/mailtrap
     ports:
       - "8025:80"
+
+  app:
+    scale: 2
+
+  nginx:
+    ports:
+      - "127.0.0.1:8000:8000"
+
+  tusd:
+    ports:
+      - "127.0.0.1:8001:1080"
+
+  weblate:
+    ports:
+      - "127.0.0.1:8002:80"

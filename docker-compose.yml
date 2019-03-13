@@ -24,8 +24,6 @@ services:
           }
         }
     command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/nginx.conf && exec nginx -g "daemon off;"'
-    ports:
-      - "127.0.0.1:8000:8000"
 
   # Main app DB
   postgres:
@@ -38,8 +36,6 @@ services:
   # TUSD server
   tusd:
     image: tusproject/tusd:latest
-    ports:
-      - "127.0.0.1:8001:1080"
     command: ["-dir", "/srv/tusd-data", "-hooks-http", "http://app:8000/api/uploads/"]
     volumes:
       - tusd-uploads:/srv/tusd-data
@@ -59,8 +55,6 @@ services:
   # Weblate instance
   weblate:
     image: eaudeweb/ozone-weblate:dev
-    ports:
-      - "127.0.0.1:8002:80"
     env_file:
       - ./docker/weblate.env
     volumes:
