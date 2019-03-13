@@ -1,0 +1,25 @@
+version: '2.2'
+
+services:
+  smtp:
+    image: eaudeweb/mailtrap
+    ports:
+      - "8025:80"
+
+  app:
+    image: eaudeweb/ozone:latest
+    scale: 2
+
+  nginx:
+    ports:
+      - "127.0.0.1:8091:8000"
+
+  tusd:
+    ports:
+      - "127.0.0.1:8084:1080"
+    command: ["-behind-proxy", "-dir", "/srv/tusd-data", "-hooks-http", "http://app:8000/api/uploads/"]
+
+  weblate:
+    image: eaudeweb/ozone-weblate:latest
+    ports:
+      - "127.0.0.1:8083:80"

@@ -31,7 +31,7 @@ services:
     env_file:
       - ./docker/app.env
     volumes:
-      - /var/lib/postgresql/data
+      - pg-data:/var/lib/postgresql/data
 
   # TUSD server
   tusd:
@@ -47,7 +47,7 @@ services:
       - ./docker/app.env
     volumes:
      - tusd-uploads:/var/local/tusd_uploads
-     - /var/local/protected_uploads
+     - envelope-files:/var/local/protected_uploads
     depends_on:
       - postgres
       - tusd
@@ -58,7 +58,7 @@ services:
     env_file:
       - ./docker/weblate.env
     volumes:
-      - /app/data
+      - weblate-data:/app/data
     depends_on:
       - postgres-weblate
       - redis-weblate
@@ -69,15 +69,25 @@ services:
     env_file:
       - ./docker/weblate.env
     volumes:
-      - /var/lib/postgresql/data
+      - pg-weblate-data:/var/lib/postgresql/data
 
   # Weblate redis
   redis-weblate:
     image: redis:4-alpine
     command: ["redis-server", "--appendonly", "yes"]
     volumes:
-      - /data
+      - redis-data:/data
 
 volumes:
+  pg-data:
+    driver: local
   tusd-uploads:
+    driver: local
+  envelope-files:
+    driver: local
+  weblate-data:
+    driver: local
+  pg-weblate-data:
+    driver: local
+  redis-data:
     driver: local
