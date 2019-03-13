@@ -1,12 +1,12 @@
 # Development environment settings for direnv [ https://direnv.net/ ]
 
 # Django settings
-export DJANGO_SETTINGS_MODULE=config.settings.production
-export DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-export DJANGO_SECRET_KEY="^secret"
+export DJANGO_SETTINGS_MODULE=config.settings.local
+export DJANGO_EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+export DJANGO_SECRET_KEY="secret"
 
 # Django app start steps
-export DJANGO_COLLECT_STATIC=no
+export DJANGO_COLLECT_STATIC=yes
 export DJANGO_MIGRATE=yes
 export DJANGO_LOAD_INITIAL_FIXTURES=no
 
@@ -31,4 +31,4 @@ export POSTGRES_PASSWORD=ozone
 
 # Other
 # XXX TODO: Why is this needed?
-USE_DOCKER=yes
+export USE_DOCKER=yes
