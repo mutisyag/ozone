@@ -13,7 +13,7 @@ ENV APP_HOME=/var/local/ozone
 RUN mkdir -p $APP_HOME
 COPY requirements $APP_HOME/requirements
 WORKDIR $APP_HOME
-RUN pip install --no-cache-dir -r $requirements/production.txt
+RUN pip install --no-cache-dir -r requirements/production.txt
 COPY . $APP_HOME
 # XXX TODO, it should not be required to use the test config for this.
 # This will only have effect if there translations repo has been
