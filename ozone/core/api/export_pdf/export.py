@@ -16,10 +16,10 @@ def export_submission(submission):
     doc = SimpleDocTemplate(buff, pagesize=PG_SIZE)
     # TODO: add front page, extra information (country, year?)
 
-    obligation = submission.obligation.name
-    if obligation == 'Article 7':
+    obligation = submission.obligation.form_type
+    if obligation == 'art7':
         doc.build(art7.export_submission(submission))
-    elif obligation == 'HAT Imports and Production':
+    elif obligation == 'hat':
         doc.build(hat.export_submission(submission))
 
     buff.seek(0)
