@@ -3,7 +3,7 @@ export default {
 		selected: true,
 		type: 'checkbox',
 		disabled: true,
-		tooltip: 'test'
+		tooltip: 'Another report will need to be submitted with the final data'
 	},
 	flag_valid: {
 		selected: false,

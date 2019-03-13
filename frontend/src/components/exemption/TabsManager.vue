@@ -140,7 +140,7 @@ export default {
 			[this.$gettext('Dashboard'),
 				this.$store.state.current_submission.obligation,
 				this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-				this.$store.state.current_submission.reporting_period, 
+				this.$store.state.current_submission.reporting_period,
 				`${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
 	},
 	computed: {

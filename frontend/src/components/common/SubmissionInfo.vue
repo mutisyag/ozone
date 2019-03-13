@@ -51,10 +51,10 @@
 					</b-card>
 				</b-col>
 
-				<b-col v-if="flags_info">
-					<h5><span v-translate>Flags</span></h5>
-					<b-card id="flags">
-						<b-row class="mb-2" v-if="$store.state.currentUser.is_secretariat">
+				<b-col>
+					<h5><span v-if="flags_info" v-translate>Flags</span></h5>
+					<b-card v-if="flags_info && $store.state.currentUser.is_secretariat" id="flags">
+						<b-row class="mb-2">
 							<b-col>
 								<b-row v-for="order in general_flags" :key="order">
 									<b-col cols="1">
@@ -68,8 +68,8 @@
 									<b-col>
 										<label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
 											<div v-if="flags_info.form_fields[order].tooltip" v-b-tooltip.hover placement="left" :title="flags_info.form_fields[order].tooltip">
-												<i class="fa fa-info-circle fa-lg"></i>
 												{{labels.flags[order]}}
+												<i class="fa fa-info-circle fa-lg"></i>
 											</div>
 											<div v-else>
 												{{labels.flags[order]}}
@@ -102,7 +102,9 @@
 								</b-row>
 							</b-col>
 						</b-row>
-						<div>
+					</b-card>
+
+						<b-card v-if="flags_info">
 							<h5 class="mb-3" v-translate>Annex group reported in full</h5>
 								<div id="annex-flags">
 									<div class="flags-row" v-for="column in specific_flags_columns" :key="column">
@@ -129,8 +131,11 @@
 										</div>
 									</div>
 								</div>
+						</b-card>
 
-						</div>
+					<h5><span v-translate>Submission status</span></h5>
+					<b-card>
+						<SubmissionStatus/>
 					</b-card>
 				</b-col>
 			</b-row>
@@ -142,6 +147,7 @@
 
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import SubmissionStatus from '@/components/common/SubmissionStatus'
 
 export default {
 	props: {
@@ -154,7 +160,10 @@ export default {
 		this.setSubmitted_atValidation()
 	},
 
-	components: { fieldGenerator },
+	components: {
+		fieldGenerator,
+		SubmissionStatus
+	},
 
 	computed: {
 
