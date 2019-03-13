@@ -3,22 +3,14 @@ import tus from 'tus-js-client'
 
 const logRequests = process.env.NODE_ENV === 'development'
 
-// const BACKEND_HOST = 'localhost'
-// const BACKEND_PORT = 8000
-// let apiURL = `http://${BACKEND_HOST}:${BACKEND_PORT}/api/`;
-
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
+let filesURL = `${window.location.protocol}//${process.env.VUE_APP_TUSD_HOST}:${process.env.VUE_APP_TUSD_PORT}/files/`
 
-const windowLocation = window.location.origin.split('//')
-windowLocation[1] = `tusd.${windowLocation[1]}/files/`
-let filesURL = windowLocation.join('//')
-
-/* const TUSD_HOST = 'localhost'
-const TUSD_PORT = 1080
-const _tusd_host = process.env.TUSD_HOST || TUSD_HOST
-const _tusd_port = (process.env.TUSD_PORT && Number(process.env.TUSD_PORT)) || TUSD_PORT
-const filesURL = `http://${_tusd_host}:${_tusd_port}/files/` */
+if (process.env.VUE_APP_API_HOST) {
+	apiURL = `${window.location.protocol}//${process.env.VUE_APP_API_HOST}/api`
+	apiBase = `${window.location.protocol}//${process.env.VUE_APP_API_HOST}`
+}
 
 let isTestSession = false
 if (process.env.NODE_ENV === 'development') {
