@@ -47,7 +47,6 @@ services:
   # Django application
   app:
     image: eaudeweb/ozone:dev
-    scale: 2
     env_file:
       - ./docker/app.env
     volumes:
