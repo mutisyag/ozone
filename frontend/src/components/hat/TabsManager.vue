@@ -12,9 +12,6 @@
       </div>
       <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-   <b-button-group class="actions">
-      <Save style="border-top-right-radius: .25em;border-bottom-right-radius: .25em;"  v-if="$store.getters.can_save_form"  :data="$store.state.form" :submission="submission"></Save>
-    </b-button-group>
   </div>
 
     <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
@@ -172,7 +169,12 @@ export default {
 			})
 		},
 		updateBreadcrumbs() {
-			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard'), this.$store.state.current_submission.obligation, this.$store.state.initialData.display.countries[this.$store.state.current_submission.party], this.$store.state.current_submission.reporting_period])
+			this.$store.commit('updateBreadcrumbs',
+				[this.$gettext('Dashboard'),
+					this.$store.state.current_submission.obligation,
+					this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
+					this.$store.state.current_submission.reporting_period,
+					`${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
 		},
 		createModalData() {
 			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]

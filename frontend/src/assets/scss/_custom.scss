@@ -1193,3 +1193,10 @@ body .vdp-datepicker__calendar {
 		}
 	}
 }
+
+.tab-pane:focus {
+	outline: none;
+}
+.sidebar-minimized .sidebar section :not(.nav-dropdown-items) > .nav-item:last-child::after {
+	display: none;
+}
