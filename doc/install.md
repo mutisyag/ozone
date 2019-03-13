@@ -2,7 +2,7 @@
 
 ## Docker
 
-XXX TODO update this for prod/local instalations
+### Backend application
 
 1. Get the source code:
 
@@ -21,7 +21,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
    
    Depending on the installation mode, create the docker-compose.override.yml file:
    
-       cp docker-compose.override.[local|edw].yml docker-compose.override.yml
+       cp docker-compose.override.[local|staging|prod].yml docker-compose.override.yml
    
    (when installing on a development machine, docker-compose.override.local.yml should be used)
    
@@ -41,6 +41,34 @@ Optionally clone the translations as well in `translations` folder inside the oz
    In the app console, create superuser if needed:
    
         python manage.py createsuperuser
+        
+        
+### Frontend application and static files build
+
+1. Build frontend application:
+
+    pip install -r requirements/translations.txt
+    cd frontend
+    npm install
+    make translations
+    npm run build
+    
+2. Build backend application:
+
+    pip install -r requirements/production.txt
+    env DJANGO_SETTINGS_MODULE=config.settings.production python manage.py collectstatic --no-input 
+
+3. Create tar file with all the static files. E.g.
+
+    touch build.tar
+    tar -rf build.tar static/*
+    cd frontend/dist
+    tar -rf ../../build.tar *
+    cd ../../
+    gzip build.tar
+    
+4. Serve static files from a webserver. See `config/nginx/nginx.conf.example` for an example.
+
         
 ## Install directly on development machine
 
