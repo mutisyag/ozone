@@ -1,47 +1,34 @@
 # Development environment settings for direnv [ https://direnv.net/ ]
 
-export DJANGO_SETTINGS_MODULE=config.settings.local
-export DJANGO_SECRET_KEY='secret-key'
-export ALLOWED_HOSTS=*
-export DEBUG=yes
+# Django settings
+export DJANGO_SETTINGS_MODULE=config.settings.production
+export DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+export DJANGO_SECRET_KEY="^secret"
 
-export POSTGRES_HOST=localhost
+# Django app start steps
+export DJANGO_COLLECT_STATIC=no
+export DJANGO_MIGRATE=yes
+export DJANGO_LOAD_INITIAL_FIXTURES=no
+
+# Used to for CORS
+export OZONE_HOST=localhost
+export ALLOWED_HOSTS=localhost
+
+# File upload
+export TUSD_UPLOADS_DIR=/var/local/tusd_uploads
+export ALLOWED_FILE_EXTENSIONS=pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb
+
+# Sentry config
+export SENTRY_DSN=
+export SENTRY_ENV=
+export SENTRY_RELEASE=dev
+
+# DB configuration
+export POSTGRES_HOST=postgres
 export POSTGRES_DB=ozone
 export POSTGRES_USER=ozone
 export POSTGRES_PASSWORD=ozone
 
-export USE_DOCKER=yes
-
-#export DJANGO_LOG_LEVEL=DEBUG
-export DJANGO_COLLECT_STATIC=yes
-export DJANGO_MIGRATE=yes
-export DJANGO_LOAD_INITIAL_FIXTURES=yes
-
-# Used to build fully qualified URLs for file download
-export OZONE_DOMAIN=<LAN IP>:8000
-
-# Accepts yes/no
-export OZONE_USE_TLS=no
-
-export OZONE_HOST=localhost
-export OZONE_GUNICORN_PORT=8000
-
-# Can be a list of comma-separated <host>:<port> pairs
-export CORS_ORIGIN_WHITELIST=<LAN IP>:8000
-
-# export OZONE_TZ=UTC
-
-export TUSD_UPLOADS_DIR=$HOME/src/tusd-bin/data
-export ALLOWED_FILE_EXTENSIONS=pdf,doc,docx,xls,xlsx,zip,rar,txt,htm,html,odt,ods,eml,ppt,pptx,mdb
-
-# Used by tusd on hooks URL
-export API_VERSION=0.1
-
-# Used for frontend configuration
-export HOST=0.0.0.0
-export BACKEND_HOST=<LAN_IP>
-export BACKEND_PORT=8000
-export TUSD_HOST=<LAN_IP>
-export TUSD_PORT=1080
-
-export TOKEN_EXPIRE_INTERVAL=30
+# Other
+# XXX TODO: Why is this needed?
+USE_DOCKER=yes
