@@ -15,6 +15,8 @@ from .models import (
     Blend,
     BlendComponent,
     Language,
+    Submission,
+    SubmissionInfo,
 )
 
 
@@ -91,3 +93,13 @@ class ReportingPeriodResource(resources.ModelResource):
 class ObligationResource(resources.ModelResource):
     class Meta:
         model = Obligation
+
+
+class SubmissionResource(resources.ModelResource):
+    class Meta:
+        model = Submission
+
+
+class SubmissionInfoResource(resources.ModelResource):
+    class Meta:
+        model = SubmissionInfo

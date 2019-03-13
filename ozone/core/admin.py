@@ -37,6 +37,8 @@ from .models import (
     Blend,
     BlendComponent,
     Language,
+    Submission,
+    SubmissionInfo,
 )
 from .resources import (
     MeetingResource,
@@ -54,6 +56,8 @@ from .resources import (
     ReportingPeriodResource,
     ObligationResource,
     LanguageResource,
+    SubmissionResource,
+    SubmissionInfoResource,
 )
 
 User = get_user_model()
@@ -300,3 +304,20 @@ class UserAdmin(admin.ModelAdmin):
         super(UserAdmin, self).save_model(request, obj, form, change)
         if not change:
             self.reset_password(request, [obj], template="account_created")
+
+
+@admin.register(Submission)
+class SubmissionAdmin(admin.ModelAdmin):
+    resource_class = SubmissionResource
+
+    def get_readonly_fields(self, request, obj=None):
+        self.readonly_fields = []
+        for field in self.model._meta.fields:
+            if 'flag' not in field.name and 'state' not in field.name:
+                self.readonly_fields.append(field.name)
+        return self.readonly_fields
+
+
+@admin.register(SubmissionInfo)
+class SubmissionAdmin(admin.ModelAdmin):
+    resource_class = SubmissionResource
