@@ -724,7 +724,8 @@ button img.icon {
   color: black!important;
 }
 
-.card-header a[disabled="disabled"] {
+.card-header a[disabled="disabled"],
+.card-header a.disabled {
   color: #aaa!important;
 }
 
