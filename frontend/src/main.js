@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== 'development') {
 	Sentry.init({
 		dsn: `https://${process.env.VUE_APP_SENTRY_DSN}@sentry.io/1374535`,
 		environment: process.env.VUE_APP_SENTRY_ENV,
+		release: process.env.VUE_APP_SENTRY_RELEASE,
 		integrations: [new Sentry.Integrations.Vue({ Vue })]
 	})
 }
