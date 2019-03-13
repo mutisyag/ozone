@@ -1,29 +1,31 @@
 version: '2.2'
 
 services:
-  # XXX Only for staging
-  smtp:
-    image: eaudeweb/mailtrap
-    ports:
-      - "8025:80"
-
   # Nginx load-balancing/proxy
   nginx:
     image: nginx:latest
     environment:
+      # Override the default as we only need stream and not http.
       NGINX_CONF: |-
-        server {
-          listen 80;
-          server_name _;
+        user  nginx;
+        worker_processes  1;
 
-          location / {
-            uwsgi_pass app:8000;
-            include uwsgi_params;
+        error_log  /var/log/nginx/error.log warn;
+        pid        /var/run/nginx.pid;
+
+        events {
+            worker_connections  1024;
+        }
+
+        stream {
+          server {
+            listen 8000;
+            proxy_pass app:8000;
           }
         }
-    command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/conf.d/default.conf && exec nginx -g "daemon off;"'
+    command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/nginx.conf && exec nginx -g "daemon off;"'
     ports:
-      - "127.0.0.1:8000:80"
+      - "127.0.0.1:8000:8000"
 
   # Main app DB
   postgres:

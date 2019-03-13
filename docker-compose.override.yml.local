@@ -1,6 +1,11 @@
 version: '2.2'
 
 services:
+  smtp:
+    image: eaudeweb/mailtrap
+    ports:
+      - "8025:80"
+
   nginx:
     command: /bin/true
     ports:
