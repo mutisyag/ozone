@@ -4,7 +4,7 @@ from .base import env
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug
-DEBUG = True
+DEBUG = env.bool('DJANGO_DEBUG', True)
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env('DJANGO_SECRET_KEY', default='4LrHQL80LfXKYSzyxvruJ3O5byxH1ev0WJNO4ecRyXrQDJ2KCAikAtwJ1iUmNan3')
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
@@ -41,15 +41,10 @@ EMAIL_HOST_PASSWORD = ''
 # django-debug-toolbar
 # ------------------------------------------------------------------------------
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#prerequisites
-INSTALLED_APPS += ['debug_toolbar', 'corsheaders']  # noqa F405
+INSTALLED_APPS += ['debug_toolbar']  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#middleware
 MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', 'corsheaders.middleware.CorsMiddleware', 'django.middleware.common.CommonMiddleware',  ]  # noqa F405
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
-
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = (
-    env('OZONE_HOST'),
-)
 
 if DEBUG:
     CORS_ORIGIN_WHITELIST += ("localhost", "localhost:8080")

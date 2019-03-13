@@ -97,6 +97,7 @@ DJANGO_APPS = [
     # 'django.contrib.admin', # Replaced by OzoneAdminConfig
 ]
 THIRD_PARTY_APPS = [
+    'corsheaders',
     'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
@@ -135,6 +136,13 @@ AUTHENTICATION_BACKENDS = [
 TOKEN_EXPIRE_INTERVAL = datetime.timedelta(days=get_int_env_var('TOKEN_EXPIRE_INTERVAL',
                                                                 default=30))
 
+CORS_ALLOW_CREDENTIALS = True
+OZONE_HOST = env('OZONE_HOST', default="")
+CORS_ORIGIN_WHITELIST = ()
+if OZONE_HOST:
+    CORS_ORIGIN_WHITELIST = (
+        OZONE_HOST,
+    )
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = 'core.User'

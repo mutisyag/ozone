@@ -14,8 +14,6 @@ services:
   app:
     build:
       context: .
-      args:
-        REQUIREMENTS_FILE: requirements/local.txt
-    scale: 1
+    command: ["runserver"]
     ports:
       - 8000:8000
