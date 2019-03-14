@@ -8,6 +8,10 @@ services:
 
   app:
     scale: 2
+    environment:
+      - DJANGO_MIGRATE=no
+    depends_on:
+      - app-migration
 
   nginx:
     ports:
@@ -20,3 +24,14 @@ services:
   weblate:
     ports:
       - "127.0.0.1:8002:80"
+
+  # Run Django migration, cannot be run in the normal
+  # app, when scaling is used, as we cannot have only
+  # one of them run the migration.
+  app-migration:
+    image: eaudeweb/ozone:dev
+    env_file:
+      - ./docker/app.env
+    command: ["migrate"]
+    depends_on:
+      - postgres

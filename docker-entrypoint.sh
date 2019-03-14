@@ -18,8 +18,8 @@ if [ "x$DJANGO_LOAD_INITIAL_FIXTURES" = 'xyes' ]; then
 fi
 
 case "$1" in
-    manage)
-        exec python manage.py "$1"
+    migrate)
+        exec python manage.py migrate --noinput
         ;;
     run)
         exec uwsgi uwsgi.ini
