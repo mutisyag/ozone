@@ -32,7 +32,7 @@ services:
   # app, when scaling is used, as we cannot have only
   # one of them run the migration.
   app-migration:
-    image: eaudeweb/ozone:dev
+    image: eaudeweb/ozone:latest
     env_file:
       - ./docker/app.env
     command: ["migrate"]
