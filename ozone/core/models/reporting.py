@@ -357,10 +357,6 @@ class Submission(models.Model):
                   "Annex F were reported."
     )
 
-    # We want these to be able to be empty in forms
-    remarks_party = models.CharField(max_length=9999, blank=True)
-    remarks_secretariat = models.CharField(max_length=9999, blank=True)
-
     # Art7 Remarks
     questionnaire_remarks_party = models.CharField(
         max_length=9999, blank=True,
