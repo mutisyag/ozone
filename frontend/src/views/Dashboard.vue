@@ -90,24 +90,28 @@
 							<router-link
 									class="btn btn-outline-primary btn-sm"
 									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-								<span v-if="row.item.details.can_edit_data" v-translate>Edit</span>
-								<span v-else v-translate>View</span>
+								<span v-if="row.item.details.can_edit_data">
+													{{labels['edit']}}
+								</span>
+								<span v-else>
+													{{labels['view']}}
+								</span>
 							</router-link>
 						</template>
-			</b-table>
-			<b-row v-if="currentUser.is_secretariat">
-				<b-col md="9" class="my-1">
-				<b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
-				</b-col>
-				<b-col md="3">
-					<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
-						<b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage" />
-					</b-input-group>
-				</b-col>
-			</b-row>
-          </b-card>
-        </b-col>
-    </b-row>
+				</b-table>
+				<b-row v-if="currentUser.is_secretariat">
+					<b-col md="9" class="my-1">
+						<b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
+					</b-col>
+					<b-col md="3">
+						<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
+							<b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage" />
+						</b-input-group>
+					</b-col>
+				</b-row>
+			</b-card>
+    </b-col>
+  </b-row>
     <b-row>
       <b-col sm="12">
           <b-card no-body v-if="basicDataReady">
