@@ -11,6 +11,7 @@ const getCommonLabels = ($gettext) => {
 		data_entry: $gettext('Data entry'),
 		submitted: $gettext('Submitted'),
 		processing: $gettext('Processing'),
+		recalled: $gettext('Recalled'),
 		finalized: $gettext('Finalized'),
 		nomination_filled: $gettext('Nomination filled'),
 		unrecall_to_submitted: $gettext('Reinstate'),

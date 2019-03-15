@@ -14,12 +14,12 @@
 				ref="table"
 		>
 			<template slot="actions" slot-scope="cell">
-							<a
-									@click="changeRoute({ name: getFormName(cell.item.details.obligation), query: {submission: cell.item.actions}})"
-									class="btn btn-outline-primary btn-sm"
-									>
-								<span v-translate>View</span>
-							</a>
+				<a
+						@click="changeRoute({ name: getFormName(cell.item.details.obligation), query: {submission: cell.item.actions}})"
+						class="btn btn-outline-primary btn-sm"
+						>
+					<span v-translate>View</span>
+				</a>
 			</template>
 		</b-table>
 	</div>
@@ -27,6 +27,7 @@
 
 <script>
 import { getObligations } from '@/components/common/services/api'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	props: {
@@ -40,6 +41,7 @@ export default {
 	data() {
 		return {
 			obligations: null,
+			labels: getCommonLabels(this.$gettext),
 			table: {
 				sortBy: null,
 				sortDesc: false,
@@ -50,7 +52,11 @@ export default {
 	},
 
 	methods: {
-		changeRoute({ name, query }) {
+		async changeRoute({ name, query }) {
+			const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'You are about to close the current submission and open another version. Any unsaved data will be lost. Please confirm', $gettext: this.$gettext })
+			if (!confirmed) {
+				return
+			}
 			this.$router.push({ name, query: { submission: query.submission } })
 			this.$router.go(this.$router.currentRoute)
 		},
@@ -60,6 +66,25 @@ export default {
 		async getObligations() {
 			const obligations = await getObligations()
 			this.obligations = obligations.data
+		},
+		getStatus(version) {
+			const versionFlags = []
+			if (version.flag_provisional) {
+				versionFlags.push(this.$gettext('Provisional'))
+			}
+			if (version.flag_valid) {
+				versionFlags.push(this.$gettext('Valid'))
+			}
+			if (version.flag_valid === false) {
+				versionFlags.push(this.$gettext('Invalid'))
+			}
+			if (version.flag_superseded) {
+				versionFlags.push(this.$gettext('Superseded'))
+			}
+			if (versionFlags.length) {
+				return `(${versionFlags.join(',')})`
+			}
+			return ''
 		}
 	},
 
@@ -71,7 +96,7 @@ export default {
 					version: element.version,
 					created_by: element.filled_by_secretariat ? 'Secretariat' : 'Party',
 					updated_at: element.updated_at,
-					current_state: element.current_state,
+					current_state: `${this.labels[element.current_state]} ${this.getStatus(element)}`,
 					actions: element.url,
 					details: element,
 					_rowVariant: this.currentVersion === element.version ? 'info' : ''
