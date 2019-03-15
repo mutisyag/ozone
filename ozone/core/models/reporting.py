@@ -1149,7 +1149,7 @@ class Submission(models.Model):
         db_table = 'submission'
 
     def delete(self, *args, **kwargs):
-        if not self.data_changes_allowed:
+        if not self.deletion_allowed:
             raise MethodNotAllowed(
                 _("Submitted submissions cannot be deleted.")
             )
@@ -1170,7 +1170,7 @@ class Submission(models.Model):
             )
         if (
             Submission.non_exempted_fields_modified(self)
-            and not self.deletion_allowed
+            and not self.data_changes_allowed
         ):
             raise ValidationError(
                 _("Submitted submissions cannot be modified.")
