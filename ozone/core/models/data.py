@@ -354,15 +354,6 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
         help_text="If set to true it allows to complete emissions data form."
     )
 
-    remarks_party = models.CharField(
-        max_length=9999, blank=True,
-        help_text="Remarks added by the reporting party"
-    )
-    remarks_os = models.CharField(
-        max_length=9999, blank=True,
-        help_text="Remarks added by the ozone secretariat"
-    )
-
     tracker = FieldTracker()
 
     class Meta:
