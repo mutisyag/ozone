@@ -172,11 +172,11 @@ export default {
 		},
 
 		blank_flags() {
-			return Object.keys(this.flags_info.form_fields).filter(f => f !== 'validation' && f.split('_').includes('blanks'))
+			return Object.keys(this.flags_info.form_fields).filter(f => this.flags_info.fields_order.includes(f) && f !== 'validation' && f.split('_').includes('blanks'))
 		},
 
 		specific_flags() {
-			return Object.keys(this.flags_info.form_fields).filter(f => ![...this.general_flags, ...this.blank_flags, 'validation'].includes(f))
+			return Object.keys(this.flags_info.form_fields).filter(f => this.flags_info.fields_order.includes(f) && ![...this.general_flags, ...this.blank_flags, 'validation'].includes(f))
 		},
 
 		specific_flags_columns() {

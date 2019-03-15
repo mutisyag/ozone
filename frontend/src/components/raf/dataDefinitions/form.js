@@ -143,7 +143,27 @@ const getFormRaf = ($gettext) => {
 					'substance': null
 				}
 			},
-			flags: getTabFlags($gettext)
+			flags: {
+				...getTabFlags($gettext),
+				get fields_order() {
+					return Object.keys(this.default_properties)
+				},
+				default_properties: {
+					flag_provisional: false,
+					flag_valid: null,
+					flag_superseded: false,
+					flag_has_reported_a1: false,
+					flag_has_reported_a2: false,
+					flag_has_reported_b1: false,
+					flag_has_reported_b2: false,
+					flag_has_reported_b3: false,
+					flag_has_reported_c1: false,
+					flag_has_reported_c2: false,
+					flag_has_reported_c3: false,
+					flag_has_reported_e: false,
+					flag_has_reported_f: false
+				}
+			}
 		}
 	}
 	return form
