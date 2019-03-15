@@ -106,11 +106,10 @@ export default {
 		},
 
 		prepareGroups() {
-			const indexOfAll = (arr, val) => arr.reduce((acc, el, i) => (el === val ? [...acc, i] : acc), [])
 			const currentGroups = []
 			this.substances.forEach(substance => {
-				currentGroups.push(substance.group.group_id)
-				if (indexOfAll(currentGroups, substance.group.group_id).length <= 1) {
+				if (currentGroups.indexOf(substance.group.group_id) === -1 ) {
+					currentGroups.push(substance.group.group_id)
 					this.selected_groups.options.push({ text: substance.group.group_id, value: substance.group.group_id })
 				}
 			})
