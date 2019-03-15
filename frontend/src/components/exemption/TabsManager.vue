@@ -88,6 +88,7 @@
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span v-translate>Versions</span>
 				</b-btn>
+				<a class="btn btn-outline-primary" :href="`${submission}export_pdf`">Export as PDF</a>
 				<b-btn @click="removeSubmission" v-if="$store.state.current_submission.can_delete_data"  variant="outline-danger">
 					<span v-translate>Delete Submission</span>
 				</b-btn>

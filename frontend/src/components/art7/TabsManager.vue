@@ -97,7 +97,7 @@
 						:disabled="$store.state.currentUser.is_read_only">
 					Revise
 				</b-btn>
-
+				<a class="btn btn-outline-primary" :href="`${submission}export_pdf`">Export as PDF</a>
 				<b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span v-translate>Versions</span>
 				</b-btn>
