@@ -503,7 +503,9 @@ class Command(BaseCommand):
                 "flag_has_reported_c3": overall["CIII_ComplRep"],
                 "flag_has_reported_e": overall["EI_ComplRep"],
                 "flag_has_reported_f": overall["F_ComplRep"],
-                "reporting_channel": ReportingChannel.objects.get(name="Legacy")
+                "reporting_channel": ReportingChannel.objects.get(name="Legacy"),
+                "questionnaire_remarks_party": "",
+                "questionnaire_remarks_secretariat": overall["Remark"] or "",
             },
             "submission_info": {
                 "reporting_officer": "",
@@ -516,8 +518,6 @@ class Command(BaseCommand):
                 #TODO submission_format
             },
             "art7": {
-                "remarks_party": "",
-                "remarks_os": overall["Remark"] or "",
                 "has_imports": overall["Imported"],
                 "has_exports": overall["Exported"],
                 "has_produced": overall["Produced"],
