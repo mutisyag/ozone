@@ -535,6 +535,13 @@ class Submission(models.Model):
         return self.workflow().data_changes_allowed
 
     @property
+    def deletion_allowed(self):
+        """
+        Check whether deletion is allowed in current state.
+        """
+        return self.workflow().deletion_allowed
+
+    @property
     def available_states(self):
         """
         List of states that can be reached directly from current state.
@@ -818,6 +825,11 @@ class Submission(models.Model):
     def can_edit_data(self, user):
         if self.has_edit_rights(user):
             return self.data_changes_allowed
+        return False
+
+    def can_delete_data(self, user):
+        if self.has_edit_rights(user):
+            return self.deletion_allowed
         return False
 
     def can_upload_files(self, user):
@@ -1137,7 +1149,7 @@ class Submission(models.Model):
         db_table = 'submission'
 
     def delete(self, *args, **kwargs):
-        if not self.data_changes_allowed:
+        if not self.deletion_allowed:
             raise MethodNotAllowed(
                 _("Submitted submissions cannot be deleted.")
             )

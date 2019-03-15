@@ -1380,6 +1380,7 @@ class SubmissionSerializer(
     can_upload_files = serializers.SerializerMethodField()
 
     can_edit_data = serializers.SerializerMethodField()
+    can_delete_data = serializers.SerializerMethodField()
 
     can_change_submitted_at = serializers.SerializerMethodField()
     is_submitted_at_visible = serializers.SerializerMethodField()
@@ -1415,6 +1416,7 @@ class SubmissionSerializer(
             'can_change_reporting_channel',
             'can_upload_files',
             'can_edit_data',
+            'can_delete_data',
             'can_change_submitted_at',
             'is_submitted_at_visible',
             'is_submitted_at_mandatory',
@@ -1445,7 +1447,8 @@ class SubmissionSerializer(
         read_only_fields = (
             'available_transitions', 'is_cloneable', 'changeable_flags',
             'can_change_remarks_party', 'can_change_remarks_secretariat',
-            'can_change_reporting_channel', 'can_upload_files', 'can_edit_data'
+            'can_change_reporting_channel', 'can_upload_files',
+            'can_edit_data', 'can_delete_data',
             'created_by', 'last_edited_by',
         )
 
@@ -1484,6 +1487,10 @@ class SubmissionSerializer(
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)
+
+    def get_can_delete_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_delete_data(user)
 
     def get_can_change_submitted_at(self, obj):
         user = self.context['request'].user
@@ -1525,6 +1532,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
     can_edit_data = serializers.SerializerMethodField()
+    can_delete_data = serializers.SerializerMethodField()
 
     class Meta(CreateSubmissionSerializer.Meta):
         fields = (
@@ -1537,7 +1545,8 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'data_changes_allowed', 'is_current',
                 'flag_provisional', 'flag_valid',
                 # Permissions-related fields
-                'available_transitions', 'is_cloneable', 'can_edit_data',
+                'available_transitions', 'is_cloneable',
+                'can_edit_data', 'can_delete_data',
             )
         )
         extra_kwargs = {'url': {'view_name': 'core:submission-detail'}}
@@ -1553,6 +1562,10 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_can_edit_data(self, obj):
         user = self.context['request'].user
         return obj.can_edit_data(user)
+
+    def get_can_delete_data(self, obj):
+        user = self.context['request'].user
+        return obj.can_delete_data(user)
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):

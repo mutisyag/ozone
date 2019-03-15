@@ -38,6 +38,10 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
         return self.state in self.editable_data_states
 
     @property
+    def deletion_allowed(self):
+        return self.in_initial_state
+
+    @property
     def in_initial_state(self):
         return self.state == self.state.workflow.initial_state
 
