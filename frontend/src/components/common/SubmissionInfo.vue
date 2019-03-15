@@ -44,7 +44,7 @@
 									</label>
 								</b-col>
 								<b-col>
-									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields.submitted_at" :disabled="!is_secretariat"></fieldGenerator>
+									<fieldGenerator :fieldInfo="{index:'submitted_at', tabName: info.name, field:'submitted_at'}" :field="info.form_fields.submitted_at" :disabled="!$store.state.current_submission.can_change_submitted_at"></fieldGenerator>
 								</b-col>
 							</b-row>
 						</div>
