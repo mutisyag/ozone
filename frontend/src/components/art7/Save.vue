@@ -24,7 +24,6 @@ export default {
 			const justSave = []
 			const removeDataAndSave = []
 			const doNotSave = []
-			const questionaireValid = Object.values(this.form.tabs.questionaire_questions.form_fields).filter(question => question.selected === null)
 			Object.values(this.form.tabs.questionaire_questions.form_fields).forEach(questionnaire_field => {
 				if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
 					justSave.push(questionnaire_field.name)
@@ -38,36 +37,28 @@ export default {
 					doNotSave.push(questionnaire_field.name)
 				}
 			})
-			if (questionaireValid.length) {
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { __all__: [this.$gettext('Submission cannot be saved before completing the questionnaire')] },
-					variant: 'danger' })
-				this.$store.commit('setTabStatus', { tab: 'questionaire_questions', value: false })
-			} else {
-				let stopSave = false
+			let stopSave = false
+			Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
+				const url = this.$store.state.current_submission[tab.endpoint_url]
+				if (removeDataAndSave.includes(tab.name)) {
+					if (!this.alertUnsavedData(tab.name, tab, url)) {
+						stopSave = true
+					} else {
+						stopSave = false
+					}
+				}
+			})
+			if (!stopSave) {
 				Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
 					const url = this.$store.state.current_submission[tab.endpoint_url]
-					if (removeDataAndSave.includes(tab.name)) {
-						if (!this.alertUnsavedData(tab.name, tab, url)) {
-							stopSave = true
+					if (!doNotSave.includes(tab.name)) {
+						if (justSave.includes(tab.name)) {
+							this.submitData(tab, url)
 						} else {
-							stopSave = false
+							url && this.submitData(tab, url)
 						}
 					}
 				})
-				if (!stopSave) {
-					Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
-						const url = this.$store.state.current_submission[tab.endpoint_url]
-						if (!doNotSave.includes(tab.name)) {
-							if (justSave.includes(tab.name)) {
-								this.submitData(tab, url)
-							} else {
-								url && this.submitData(tab, url)
-							}
-						}
-					})
-				}
 			}
 		}
 	}

@@ -108,7 +108,7 @@ export default {
 		prepareGroups() {
 			const currentGroups = []
 			this.substances.forEach(substance => {
-				if (currentGroups.indexOf(substance.group.group_id) === -1 ) {
+				if (currentGroups.indexOf(substance.group.group_id) === -1) {
 					currentGroups.push(substance.group.group_id)
 					this.selected_groups.options.push({ text: substance.group.group_id, value: substance.group.group_id })
 				}
