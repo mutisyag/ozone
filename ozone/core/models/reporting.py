@@ -1131,6 +1131,11 @@ class Submission(models.Model):
         """
         return not user.is_secretariat
 
+    def check_submitted_at_modified(self):
+        if 'submitted_at' in self.tracker.changed().keys():
+            return True
+        return False
+
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
