@@ -24,6 +24,8 @@ services:
           }
         }
     command: /bin/sh -c 'echo "$$NGINX_CONF" > /etc/nginx/nginx.conf && exec nginx -g "daemon off;"'
+    depends_on:
+      - app
 
   # Main app DB
   postgres:
