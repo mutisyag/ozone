@@ -647,7 +647,6 @@ class Submission(models.Model):
             if (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
-                or self.article7questionnaire.is_filled is False
             ):
                 return False
 

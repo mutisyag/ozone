@@ -117,6 +117,17 @@ class DefaultArticle7Workflow(BaseWorkflow):
                 _('Valid flag must be set before submission is finalized')
             )
 
+    def before_submit(self, *args, **kwargs):
+        """
+        Called right before the transition is actually performed.
+        Will not allow transition and warn users if the questionnaire is not
+        filled.
+        """
+        if self.model_instance.article7questionnaire.is_filled is False:
+            raise TransitionFailed(
+                _('All questionnaire answers must be filled before submitting!')
+            )
+
     @xworkflows.transition('submit')
     def submit(self):
         self.model_instance.make_current()
