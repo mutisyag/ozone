@@ -950,7 +950,10 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
             })
 
     def check_submitted_at(self, instance, user):
-        if not instance.submission.can_change_submitted_at(user):
+        if (
+            instance.submission.check_submitted_at_modified()
+            and not instance.submission.can_change_submitted_at(user)
+        ):
             raise ValidationError({
                 "submitted_at": [
                     _('User is not allowed to change date of submission.')
@@ -969,11 +972,11 @@ class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
             self.check_reporting_channel(instance, user)
             to_update_fields.append('reporting_channel')
         if self.context.get('submitted_at', None):
-            self.check_submitted_at(instance, user)
             instance.submission.submitted_at = datetime.strptime(
                 self.context['submitted_at'],
                 '%Y-%m-%d'
-            )
+            ).date()
+            self.check_submitted_at(instance, user)
             to_update_fields.append('submitted_at')
         if to_update_fields:
             instance.submission.save(update_fields=to_update_fields)

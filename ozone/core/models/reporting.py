@@ -159,23 +159,37 @@ class ReportingChannel(models.Model):
     def get_default(cls, user):
         """
         Returns default reporting channel value for given user.
+        If none is found, returns None (because first() returns None).
         """
-        try:
-            if user.is_secretariat:
-                return cls.objects.get(is_default_secretariat=True)
-            if user.party is not None:
-                return cls.objects.get(is_default_party=True)
-        except ObjectDoesNotExist:
-            return None
-
-        return None
+        if user.is_secretariat:
+            return cls.objects.filter(is_default_secretariat=True).first()
+        if user.party is not None:
+            return cls.objects.filter(is_default_party=True).first()
 
     @classmethod
     def get_cloning_default(cls):
-        try:
-            return cls.objects.get(is_default_for_cloning=True)
-        except ObjectDoesNotExist:
-            return None
+        return cls.objects.filter(is_default_for_cloning=True).first()
+
+    def clean(self):
+        unique_fields = {
+            'is_default_party': 'party',
+            'is_default_secretariat': 'secretariat',
+            'is_default_for_cloning': 'cloning',
+        }
+        for field in unique_fields.keys():
+            queryset = ReportingChannel.objects.filter(**{field: True})
+
+            if (
+                getattr(self, field, default=False) is True
+                and queryset.count() > 0
+                and self not in queryset
+            ):
+                raise ValidationError(
+                    _(
+                        f'Only one reporting channel can be set as default for '
+                        f'{unique_fields[field]}.'
+                    )
+                )
 
     class Meta:
         db_table = "reporting_channel"
@@ -1130,6 +1144,11 @@ class Submission(models.Model):
         Return True if the user is a Party Reporter.
         """
         return not user.is_secretariat
+
+    def check_submitted_at_modified(self):
+        if 'submitted_at' in self.tracker.changed().keys():
+            return True
+        return False
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
