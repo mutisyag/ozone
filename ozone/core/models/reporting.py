@@ -168,37 +168,28 @@ class ReportingChannel(models.Model):
 
     @classmethod
     def get_cloning_default(cls):
-        try:
-            return cls.objects.get(is_default_for_cloning=True)
-        except ObjectDoesNotExist:
-            return None
+        return cls.objects.filter(is_default_for_cloning=True).first()
 
     def clean(self):
-        party_channel_qs = ReportingChannel.objects.filter(
-            is_default_party=True
-        )
-        secretariat_channel_qs = ReportingChannel.objects.filter(
-            is_default_secretariat=True
-        )
-        if (
-            self.is_default_party
-            and party_channel_qs.count() > 0
-            and self not in party_channel_qs
-        ):
-            raise ValidationError(
-                _('Only one reporting channel can be set as default for party.')
-            )
-        if (
-            self.is_default_secretariat
-            and secretariat_channel_qs.count() > 0
-            and self not in secretariat_channel_qs
-        ):
-            raise ValidationError(
-                _(
-                    'Only one reporting channel can be set as default for '
-                    'secretariat.'
+        unique_fields = {
+            'is_default_party': 'party',
+            'is_default_secretariat': 'secretariat',
+            'is_default_for_cloning': 'cloning',
+        }
+        for field in unique_fields.keys():
+            queryset = ReportingChannel.objects.filter(**{field: True})
+
+            if (
+                getattr(self, field, default=False) is True
+                and queryset.count() > 0
+                and self not in queryset
+            ):
+                raise ValidationError(
+                    _(
+                        f'Only one reporting channel can be set as default for '
+                        f'{unique_fields[field]}.'
+                    )
                 )
-            )
 
     class Meta:
         db_table = "reporting_channel"
