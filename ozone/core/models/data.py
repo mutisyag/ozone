@@ -330,31 +330,42 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
         on_delete=models.CASCADE
     )
 
-    has_imports = models.BooleanField(
+    has_imports = models.NullBooleanField(
         help_text="If set to true it allows to complete imports data form."
     )
 
-    has_exports = models.BooleanField(
+    has_exports = models.NullBooleanField(
         help_text="If set to true it allows to complete exports data form."
     )
 
-    has_produced = models.BooleanField(
+    has_produced = models.NullBooleanField(
         help_text="If set to true it allows to complete productions data form."
     )
 
-    has_destroyed = models.BooleanField(
+    has_destroyed = models.NullBooleanField(
         help_text="If set to true it allows to complete destructions data form."
     )
 
-    has_nonparty = models.BooleanField(
+    has_nonparty = models.NullBooleanField(
         help_text="If set to true it allows to complete non-party trades data form."
     )
 
-    has_emissions = models.BooleanField(
+    has_emissions = models.NullBooleanField(
         help_text="If set to true it allows to complete emissions data form."
     )
 
     tracker = FieldTracker()
+
+    @property
+    def is_filled(self):
+        return (
+            self.has_imports is not None
+            and self.has_exports is not None
+            and self.has_produced is not None
+            and self.has_destroyed is not None
+            and self.has_nonparty is not None
+            and self.has_emissions is not None
+        )
 
     class Meta:
         db_table = 'reporting_art7_questionnaire'
