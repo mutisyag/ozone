@@ -159,16 +159,12 @@ class ReportingChannel(models.Model):
     def get_default(cls, user):
         """
         Returns default reporting channel value for given user.
+        If none is found, returns None (because first() returns None).
         """
-        try:
-            if user.is_secretariat:
-                return cls.objects.get(is_default_secretariat=True)
-            if user.party is not None:
-                return cls.objects.get(is_default_party=True)
-        except ObjectDoesNotExist:
-            return None
-
-        return None
+        if user.is_secretariat:
+            return cls.objects.filter(is_default_secretariat=True).first()
+        if user.party is not None:
+            return cls.objects.filter(is_default_party=True).first()
 
     @classmethod
     def get_cloning_default(cls):
@@ -176,6 +172,33 @@ class ReportingChannel(models.Model):
             return cls.objects.get(is_default_for_cloning=True)
         except ObjectDoesNotExist:
             return None
+
+    def clean(self):
+        party_channel_qs = ReportingChannel.objects.filter(
+            is_default_party=True
+        )
+        secretariat_channel_qs = ReportingChannel.objects.filter(
+            is_default_secretariat=True
+        )
+        if (
+            self.is_default_party
+            and party_channel_qs.count() > 0
+            and self not in party_channel_qs
+        ):
+            raise ValidationError(
+                _('Only one reporting channel can be set as default for party.')
+            )
+        if (
+            self.is_default_secretariat
+            and secretariat_channel_qs.count() > 0
+            and self not in secretariat_channel_qs
+        ):
+            raise ValidationError(
+                _(
+                    'Only one reporting channel can be set as default for '
+                    'secretariat.'
+                )
+            )
 
     class Meta:
         db_table = "reporting_channel"
