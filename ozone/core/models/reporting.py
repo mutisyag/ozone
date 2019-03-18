@@ -643,14 +643,13 @@ class Submission(models.Model):
         ):
             return False
 
-        if (
-            self.obligation.form_type == 'art7'
-            and (
+        if self.obligation.form_type == 'art7':
+            if (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
-            )
-        ):
-            return False
+                or self.article7questionnaire.is_filled is False
+            ):
+                return False
 
         return True
 
