@@ -85,7 +85,7 @@
 					variant="outline-primary"
 					v-for="transition in availableTransitions"
 					:key="transition"
-					@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+					@click="this.currentTransition = transition">
 						<span>{{labels[transition]}}</span>
 				</b-btn>
 
@@ -118,7 +118,7 @@
 					</b-btn>
 				</div>
     </b-modal>
-		<TransitionQuestions :submission="$store.state.current_submission" :transition="currentTransition"></TransitionQuestions>
+		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="$store.state.current_submission" :transition="currentTransition"></TransitionQuestions>
   </div>
 </template>
 
@@ -248,7 +248,8 @@ export default {
 				return
 			}
 			this.currentTransition = 'submit'
-			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
+			console.log('here')
+			// this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
 			this.$store.dispatch('removeSubmission', {
