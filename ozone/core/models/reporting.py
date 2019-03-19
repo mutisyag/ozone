@@ -827,6 +827,10 @@ class Submission(models.Model):
         return False
 
     def has_edit_rights(self, user):
+        """
+        Returns whether user has edit rights on this submission based on
+        user type & who it was created by (state not taken into account).
+        """
         if self.obligation.form_type == 'exemption':
             if (
                 user.is_secretariat
