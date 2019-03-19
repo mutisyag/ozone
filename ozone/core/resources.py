@@ -17,6 +17,7 @@ from .models import (
     Language,
     Submission,
     SubmissionInfo,
+    ReportingChannel,
 )
 
 
@@ -103,3 +104,8 @@ class SubmissionResource(resources.ModelResource):
 class SubmissionInfoResource(resources.ModelResource):
     class Meta:
         model = SubmissionInfo
+
+
+class ReportingChannelResource(resources.ModelResource):
+    class Meta:
+        model = ReportingChannel

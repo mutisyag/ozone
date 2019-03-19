@@ -39,6 +39,7 @@ from .models import (
     Language,
     Submission,
     SubmissionInfo,
+    ReportingChannel,
 )
 from .resources import (
     MeetingResource,
@@ -58,6 +59,7 @@ from .resources import (
     LanguageResource,
     SubmissionResource,
     SubmissionInfoResource,
+    ReportingChannelResource,
 )
 
 User = get_user_model()
@@ -321,3 +323,8 @@ class SubmissionAdmin(admin.ModelAdmin):
 @admin.register(SubmissionInfo)
 class SubmissionInfoAdmin(admin.ModelAdmin):
     resource_class = SubmissionInfoResource
+
+
+@admin.register(ReportingChannel)
+class ReportingChannelAdmin(admin.ModelAdmin):
+    resource_class = ReportingChannelResource
