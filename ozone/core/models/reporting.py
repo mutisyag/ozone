@@ -831,16 +831,29 @@ class Submission(models.Model):
         Returns whether user has edit rights on this submission based on
         user type & who it was created by (state not taken into account).
         """
-        if (
-            user.is_secretariat and self.filled_by_secretariat
-            or user.party == self.party and not self.filled_by_secretariat
-        ):
-            return not user.is_read_only
+        if self.obligation.form_type == 'exemption':
+            if (
+                user.is_secretariat
+                or user.party == self.party and not self.filled_by_secretariat
+            ):
+                return not user.is_read_only
+        else:
+            if (
+                user.is_secretariat and self.filled_by_secretariat
+                or user.party == self.party and not self.filled_by_secretariat
+            ):
+                return not user.is_read_only
         return False
 
     def can_edit_data(self, user):
         if self.has_edit_rights(user):
-            return self.data_changes_allowed
+            if (
+                self.obligation.form_type == 'exemption'
+                and not user.is_secretariat and user.party is not None
+            ):
+                return self.in_initial_state
+            else:
+                return self.data_changes_allowed
         return False
 
     def can_delete_data(self, user):
