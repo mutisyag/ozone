@@ -827,6 +827,10 @@ class Submission(models.Model):
         return False
 
     def has_edit_rights(self, user):
+        """
+        Returns whether user has edit rights on this submission based on
+        user type & who it was created by (state not taken into account).
+        """
         if (
             user.is_secretariat and self.filled_by_secretariat
             or user.party == self.party and not self.filled_by_secretariat
