@@ -180,7 +180,7 @@ class ReportingChannel(models.Model):
             queryset = ReportingChannel.objects.filter(**{field: True})
 
             if (
-                getattr(self, field, default=False) is True
+                getattr(self, field, False) is True
                 and queryset.count() > 0
                 and self not in queryset
             ):
