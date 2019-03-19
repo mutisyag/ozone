@@ -319,5 +319,5 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubmissionInfo)
-class SubmissionAdmin(admin.ModelAdmin):
-    resource_class = SubmissionResource
+class SubmissionInfoAdmin(admin.ModelAdmin):
+    resource_class = SubmissionInfoResource
