@@ -847,7 +847,7 @@ class Submission(models.Model):
                 self.obligation.form_type == 'exemption'
                 and not user.is_secretariat and user.party is not None
             ):
-              return self.in_initial_state
+                return self.in_initial_state
             else:
                 return self.data_changes_allowed
         return False
