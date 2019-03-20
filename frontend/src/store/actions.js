@@ -218,10 +218,12 @@ const actions = {
 		})
 	},
 
-	async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext }) {
-		const confirmed = await dispatch('openConfirmModal', { $gettext })
-		if (!confirmed) {
-			return
+	async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext, noModal }) {
+		if (!noModal) {
+			const confirmed = await dispatch('openConfirmModal', { $gettext })
+			if (!confirmed) {
+				return
+			}
 		}
 		callTransition(submission, transition).then(() => {
 			if (source === 'dashboard') {

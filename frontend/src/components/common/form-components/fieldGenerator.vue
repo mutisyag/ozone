@@ -5,7 +5,7 @@
 				<input v-else :id="fieldInfo ? fieldInfo.field : ''" @keyup="validateInput" @change="updateFormField" :disabled="disabled" class="form-control" v-model="currentTyping" :type="field.type ==='number' ? 'text' : field.type" />
     </div>
 		<Datepicker input-class="form-control" :disabled="disabled" :clear-button="!disabled" @input="updateFormField" v-model="currentTyping" format="d MMMM yyyy" v-else-if="field.type === 'date'"></Datepicker>
-    <b-form-radio-group :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
+    <b-form-radio-group :stacked="field.radioType" :id="field.name" @change="updateFormFieldWithTabs" :disabled="disabled" v-else-if="field.type === 'radio'" :checked="field.selected" :options="field.options"></b-form-radio-group>
     <b-form-checkbox :id="id" @change="updateFormFieldWithTabs" :disabled="field.disabled" v-else-if="field.type === 'checkbox'" v-model="currentTyping"></b-form-checkbox>
 		<div v-else-if="field.type === 'select'">
 			<multiselect

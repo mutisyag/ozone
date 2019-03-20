@@ -8,6 +8,11 @@ export default {
 	flag_valid: {
 		selected: false,
 		type: 'checkbox',
+		options: [
+			{ text: 'Submission is valid', value: true },
+			{ text: 'Submission is not valid', value: false }
+		],
+		radioType: 'stacked',
 		disabled: true
 	},
 	flag_superseded: {

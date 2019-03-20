@@ -85,7 +85,7 @@
 					variant="outline-primary"
 					v-for="transition in availableTransitions"
 					:key="transition"
-					@click="this.currentTransition = transition">
+					@click="currentTransition = transition">
 						<span>{{labels[transition]}}</span>
 				</b-btn>
 
@@ -118,7 +118,7 @@
 					</b-btn>
 				</div>
     </b-modal>
-		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="$store.state.current_submission" :transition="currentTransition"></TransitionQuestions>
+		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="submission" :transition="currentTransition"></TransitionQuestions>
   </div>
 </template>
 
