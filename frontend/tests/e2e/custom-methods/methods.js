@@ -13,8 +13,8 @@ const login = (browser, username, password) => {
 
 const logout = (browser) => {
 	browser.useCss()
-		.waitForElementVisible('#account_options', 5000)
-		.click('#account_options')
+		.waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
+		.click('header.app-header .navbar-nav a.dropdown-toggle')
 		.waitForElementVisible('#logout_button', 5000)
 		.click('#logout_button')
 		.waitForElementVisible('#id_username', 5000)
@@ -170,7 +170,7 @@ const datePickerValue = (browser) => {
 		.pause(1000)
 }
 
-const fillSubmissionInfo = (browser, submissionInfo = {}) => {
+const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) => {
 	const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
 	/* Open Submission Info tab */
 	selectTab(browser, 'Submission Info')
@@ -181,28 +181,33 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
 
 	fields.forEach(field => {
 		/* Check if submissionInfo has missing fields */
-		if (!submissionInfo.hasOwnProperty(field)) {
+		if (!submissionInfo.hasOwnProperty(field) && autocomplet) {
 			submissionInfo[field] = ''
-		}
-		/* Add submissionInfo in input fields */
-		if (field === 'postal_address') {
-			browser
-				.setValue(`//textarea[@id='${field}']`, submissionInfo[field])
-		} else {
-			browser
-				.setValue(`//input[@id='${field}']`, submissionInfo[field])
+		} 
+
+		if (submissionInfo.hasOwnProperty(field)) {
+			/* Add submissionInfo in input fields */
+			if (field === 'postal_address') {
+				browser
+					.setValue(`//textarea[@id='${field}']`, submissionInfo[field])
+			} else {
+				browser
+					.setValue(`//input[@id='${field}']`, submissionInfo[field])
+			}
 		}
 	})
 	/* Add country name (special case) */
-	browser
-		.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
-		.click("//form[@class='form-sections']//div[@class='multiselect']")
-		.pause(500)
-		.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
-		.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
-		.pause(500)
-		.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
-		.pause(500)
+	if (submissionInfo.country !== undefined) {
+		browser
+			.waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
+			.click("//form[@class='form-sections']//div[@class='multiselect']")
+			.pause(500)
+			.moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
+			.waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+			.pause(500)
+			.click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
+			.pause(500)
+	}
 	/* Add date (special case) */
 	datePickerValue(browser)
 }
@@ -211,16 +216,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}) => {
  * 	saveAndFail(browser)
  *	Use this before calling clickQuestionnaireRadios(args)
  */
-const saveAndFail = (browser) => {
-	const submissionInfo = {
-		reporting_officer: 'test name',
-		designation: 'test designation',
-		organization: 'test organisation',
-		postal_address: 'test address',
-		country: 'France',
-		phone: '+490000000',
-		email: 'john.doe@gmail.com'
-	}
+const saveAndFail = (browser, submissionInfo) => {
 
 	fillSubmissionInfo(browser, submissionInfo)
 
@@ -230,7 +226,7 @@ const saveAndFail = (browser) => {
 		.click("//footer[@class='app-footer']//button[@id='save-button']")
 		.pause(500)
 		.execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-		.waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]//i[contains(@class, 'fa-times-circle')]", 20000)
+		.waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-times-circle')]", 20000)
 }
 /**
  * 	editSubmission(browser)
@@ -323,7 +319,12 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 	}
 	const clear_button = 'submission_clear_button'
 
-	browser.useCss()
+	browser
+		.execute('window.scrollTo(0,document.body.scrollHeight);').pause(500)
+		.useCss()
+		.waitForElementVisible(`#${clear_button}`, 20000)
+		.click(`#${clear_button}`)
+		.pause(1000)
 
 	for (const filter in filters) {
 		if (filters[filter] !== '') {
@@ -364,10 +365,6 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 			browser.assert.equal(`${result.value.length} rows`, `${rows_number_expected} rows`)
 		})
 		.pause(500)
-		.useCss()
-		.waitForElementVisible(`#${clear_button}`, 20000)
-		.click(`#${clear_button}`)
-		.pause(1000)
 }
 
 const filterEntity = (browser, tab, filters) => {
@@ -418,7 +415,6 @@ const filterEntity = (browser, tab, filters) => {
 
 const checkSumbissionInfoFlags = (browser) => {
 	const flags = [
-		'flag_provisional',
 		'flag_has_reported_a1', 'flag_has_reported_a2',
 		'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
 		'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',
@@ -468,12 +464,13 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 			.waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 10000)
 	}
 
+	selectTab(browser, 'Questionnaire')
+
 	browser
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 10000)
 		.waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
-		.click("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]")
 		.useCss()
 		.execute('window.scrollTo(0,250);')
 		.waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 10000)
@@ -729,7 +726,7 @@ const uploadeFile = (browser, filename, filepath) => {
 	console.log(file)
 	browser
 		.useCss()
-		.waitForElementVisible('#choose-files-button__BV_file_control_', 10000)
+		.waitForElementVisible('#choose-files-button__BV_file_outer_', 10000)
 		.setValue('input#choose-files-button', file, (result) => {
 			if (result.status !== 0) {
 				console.log(result)
