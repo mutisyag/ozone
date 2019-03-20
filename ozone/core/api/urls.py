@@ -283,6 +283,11 @@ urlpatterns = (
             'get-submission-formats/',
             views.GetSubmissionFormatsViewSet.as_view(),
             name='get_submission_formats'
+        ),
+        path(
+            'get-essen-crit-types/',
+            views.GetEssenCritTypesViewSet.as_view(),
+            name='get_essen_crit_types'
         )
     ]
 )
