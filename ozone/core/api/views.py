@@ -60,6 +60,7 @@ from ..models import (
     ExemptionApproved,
     RAFReport,
     SubmissionFormat,
+    EssentialCriticalType,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -112,6 +113,7 @@ from ..serializers import (
     ExemptionApprovedSerializer,
     RAFSerializer,
     SubmissionFormatSerializer,
+    EssentialCriticalTypeSerializer,
 )
 
 
@@ -589,6 +591,17 @@ class GetSubmissionFormatsViewSet(ReadOnlyMixin, generics.ListAPIView):
     queryset = SubmissionFormat.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = SubmissionFormatSerializer
+
+
+class GetEssenCritTypesViewSet(ReadOnlyMixin, generics.ListAPIView):
+    """
+    retrieve:
+    Get the available types of essential and critical uses.
+    """
+
+    queryset = EssentialCriticalType.objects.all()
+    permission_classes = (IsAuthenticated,)
+    serializer_class = EssentialCriticalTypeSerializer
 
 
 class SubmissionFlagsViewSet(
