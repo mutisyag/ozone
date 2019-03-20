@@ -58,11 +58,26 @@ module.exports = {
 		browser.end()
 	},
 	BU_003: browser => {
+		const data = {
+			submissionInfo: {
+				designation: 'test designation',
+				organization: 'test organisation',
+				postal_address: 'test address',
+				country: 'France',
+				phone: '+490000000',
+				email: 'john.doe@gmail.com'
+			},
+			reporting_officer: 'test name'
+		}
+
+		const autocomplet = false;
+
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
 		openDashboard(browser)
 		editSubmission(browser, 1)
-		saveAndFail(browser)
+		saveAndFail(browser, data.submissionInfo)
+		fillSubmissionInfo(browser, data, autocomplet)
 		clickQuestionnaireRadios(browser)
 		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
@@ -91,9 +106,22 @@ module.exports = {
 		browser.end()
 	},
 	BU_005: browser => {
+		const data = {
+			submissionInfo: {
+				designation: 'test designation',
+				organization: 'test organisation',
+				postal_address: 'test address',
+				country: 'France',
+				phone: '+490000000',
+				email: 'john.doe@gmail.com'
+			},
+			reporting_officer: 'test name'
+		}
+
 		login(browser, 'party', 'party')
 		createSubmission(browser, 'Article 7', '2018', '')
-		saveAndFail(browser)
+		saveAndFail(browser, data.submissionInfo)
+		fillSubmissionInfo(browser, data, false)
 		clickQuestionnaireRadios(browser, [], false)
 		saveSubmission(browser, ['Questionnaire'])
 		logout(browser)
@@ -367,7 +395,7 @@ module.exports = {
 		const submissions = [
 			{
 				name: 'Article 7',
-				data: [{ year: '2018', party: 'Romania' }, { year: '2017', party: 'Albania' }]
+				data: [{ year: '2018', party: 'Romania' }]
 			},
 			{
 				name: 'Essential and Critical uses (RAF)',
@@ -427,16 +455,6 @@ module.exports = {
 			{
 				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
 				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
-				rows_number_expected: 1
-			},
-			{
-				filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
-				first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
-				rows_number_expected: 1
-			},
-			{
-				filters: ['', '', 'Romania', '2016', '2016'],
-				first_row_expected: ['There are no records to show'],
 				rows_number_expected: 1
 			}
 		]

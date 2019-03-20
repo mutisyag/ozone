@@ -1,6 +1,6 @@
 <template>
 <b-row>
-	<HeaderDropdown v-if="$store.state.currentUser"  class="mr-3" right id="account_options">
+	<HeaderDropdown v-if="$store.state.currentUser"  class="mr-3" right>
 		<template slot="header">
 			{{currentUserName}} <span style="font-size: 1.2rem;" v-if="currentCountryIso" :class="`flag-icon flag-icon-${currentCountryIso}`"></span>
 		</template>
