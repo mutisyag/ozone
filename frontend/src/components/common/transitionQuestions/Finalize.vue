@@ -1,14 +1,16 @@
 <template>
 	<div>
-		<p>You are about to finalize this submission. Please check one of the options below</p>
-		<hr>
-		<fieldGenerator
-				:fieldInfo="{index:'flag_valid', tabName: 'flags', field:'flag_valid'}"
-				:disabled="$store.getters.transitionState"
-				:field="validField"
-				id="flag_valid">
-		</fieldGenerator>
-		<hr>
+		<div v-if="validField">
+			<p>You are about to finalize this submission. Please check one of the options below</p>
+			<hr>
+			<fieldGenerator
+					:fieldInfo="{index:'flag_valid', tabName: 'flags', field:'flag_valid'}"
+					:disabled="$store.getters.transitionState"
+					:field="validField"
+					id="flag_valid">
+			</fieldGenerator>
+			<hr>
+		</div>
 		<p>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
 	</div>
 </template>
@@ -34,7 +36,7 @@ export default {
 			return this.$store.state.form.tabs
 		},
 		validField() {
-			return { ...this.formTabs.flags.form_fields.flag_valid, type: 'radio' }
+			return this.formTabs.flags && { ...this.formTabs.flags.form_fields.flag_valid, type: 'radio' }
 		}
 	},
 	methods: {

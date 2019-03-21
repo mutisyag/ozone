@@ -19,7 +19,7 @@
 				<hr>
 			</div>
 		</div>
-		<div v-if="$store.state.currentUser.is_secretariat">
+		<div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">
 			<b-row v-for="order in blank_flags" :key="order">
 				<b-col cols="1">
 					<fieldGenerator
@@ -66,13 +66,13 @@ export default {
 	},
 	computed: {
 		provisional() {
-			return this.$store.state.form.tabs.flags.form_fields.flag_provisional.selected
+			return this.formTabs.flags && this.formTabs.flags.form_fields.flag_provisional.selected
 		},
 		blank_flags() {
-			return Object.keys(this.formTabs.flags.form_fields).filter(f => this.formTabs.flags.fields_order.includes(f) && f !== 'validation' && f.split('_').includes('blanks'))
+			return this.$store.state.form.tabs.flags && Object.keys(this.formTabs.flags.form_fields).filter(f => this.formTabs.flags.fields_order.includes(f) && f !== 'validation' && f.split('_').includes('blanks'))
 		},
 		questionnaire() {
-			return this.$store.state.form.tabs.questionaire_questions
+			return this.$store.state.form.tabs.questionaire_questions && this.formTabs.questionaire_questions
 		},
 		formTabs() {
 			return this.$store.state.form.tabs
@@ -86,6 +86,9 @@ export default {
 			return anweredYesNoData
 		},
 		uncheckedFlags() {
+			if (!this.$store.state.form.tabs.flags) {
+				return []
+			}
 			return Object.keys(this.formTabs.flags.form_fields).filter(flag => flag.includes('flag_has_reported') && !this.formTabs.flags.form_fields[flag].selected)
 		}
 	},
