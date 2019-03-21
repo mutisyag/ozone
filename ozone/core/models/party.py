@@ -228,6 +228,10 @@ class Language(models.Model):
 
     remark = models.CharField(max_length=256, blank=True)
 
+    @classmethod
+    def get_default_language(cls):
+        return cls.objects.get(iso='en').id
+
     def __str__(self):
         return self.name
 

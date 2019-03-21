@@ -35,6 +35,7 @@ class User(GuardianUserMixin, AbstractUser):
 
     language = models.ForeignKey(
         Language,
+        default=Language.get_default_language(),
         related_name='users',
         null=True,
         blank=True,
