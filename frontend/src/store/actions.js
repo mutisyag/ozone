@@ -101,6 +101,18 @@ const actions = {
 		})
 	},
 
+	saveCallback(context, { actionToDispatch, data }) {
+		context.dispatch(actionToDispatch, data)
+	},
+
+	triggerSave(context, { action, data }) {
+		if (data) {
+			context.commit('setActionToDispatch', action)
+			context.commit('setDataForAction', data)
+		}
+		document.getElementById('save-button').click()
+	},
+
 	async getMyCurrentUser({ commit }) {
 		let response
 		try {
@@ -218,10 +230,12 @@ const actions = {
 		})
 	},
 
-	async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext }) {
-		const confirmed = await dispatch('openConfirmModal', { $gettext })
-		if (!confirmed) {
-			return
+	async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext, noModal }) {
+		if (!noModal) {
+			const confirmed = await dispatch('openConfirmModal', { $gettext })
+			if (!confirmed) {
+				return
+			}
 		}
 		callTransition(submission, transition).then(() => {
 			if (source === 'dashboard') {

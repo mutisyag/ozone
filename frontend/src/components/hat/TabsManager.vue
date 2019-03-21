@@ -69,7 +69,7 @@
 				variant="outline-primary"
 				v-for="transition in availableTransitions"
 				:key="transition"
-				@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+				@click="currentTransition = transition">
 				<span>{{labels[transition]}}</span>
 			</b-btn>
 			<b-btn
@@ -90,14 +90,15 @@
 		</b-button-group>
     </Footer>
 
-	<b-modal size="lg" ref="history_modal" id="history_modal" :title="$gettext('Submission versions')">
-        <SubmissionHistory :history="$store.state.currentSubmissionHistory"
-							:currentVersion="$store.state.current_submission.version">
-		</SubmissionHistory>
-		<div slot="modal-footer">
-          <b-btn @click="$refs.history_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
-		</div>
-	</b-modal>
+		<b-modal size="lg" ref="history_modal" id="history_modal" :title="$gettext('Submission versions')">
+			<SubmissionHistory :history="$store.state.currentSubmissionHistory"
+						:currentVersion="$store.state.current_submission.version">
+			</SubmissionHistory>
+			<div slot="modal-footer">
+				<b-btn @click="$refs.history_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
+			</div>
+		</b-modal>
+		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="submission" :transition="currentTransition"></TransitionQuestions>
   </div>
 </template>
 
@@ -111,6 +112,7 @@ import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/hat/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import FormTemplate from '@/components/hat/FormTemplate.vue'
+import TransitionQuestions from '@/components/common/TransitionQuestions'
 
 export default {
 	components: {
@@ -120,7 +122,8 @@ export default {
 		Save,
 		SubmissionHistory,
 		TabTitleWithLoader,
-		FormTemplate
+		FormTemplate,
+		TransitionQuestions
 	},
 	props: {
 		data: null,
@@ -195,7 +198,8 @@ export default {
 				})
 				return
 			}
-			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
+			this.currentTransition = 'submit'
+			// this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
 			this.$store.dispatch('removeSubmission', {
@@ -219,7 +223,8 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: getLabels(this.$gettext).common
+			labels: getLabels(this.$gettext).common,
+			currentTransition: null
 		}
 	}
 }

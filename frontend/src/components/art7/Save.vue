@@ -48,6 +48,8 @@ export default {
 					}
 				}
 			})
+			console.log('1111111-asd-1111111111', justSave, removeDataAndSave)
+			this.tabsToSave = [...justSave, ...removeDataAndSave]
 			if (!stopSave) {
 				Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
 					const url = this.$store.state.current_submission[tab.endpoint_url]
@@ -60,6 +62,7 @@ export default {
 					}
 				})
 			}
+
 		}
 	}
 }

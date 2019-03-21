@@ -80,7 +80,7 @@
 					variant="outline-primary"
 					v-for="transition in availableTransitions"
 					:key="transition"
-					@click="$store.dispatch('doSubmissionTransition', {$gettext, submission, transition})">
+					@click="currentTransition = transition">
 						<span>{{labels[transition]}}</span>
 				</b-btn>
 				<b-btn
@@ -106,6 +106,7 @@
                            :currentVersion="$store.state.current_submission.version">
         </SubmissionHistory>
     </b-modal>
+		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="submission" :transition="currentTransition"></TransitionQuestions>
   </div>
 </template>
 
@@ -118,6 +119,7 @@ import Save from '@/components/letter/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
+import TransitionQuestions from '@/components/common/TransitionQuestions'
 
 export default {
 	components: {
@@ -126,7 +128,8 @@ export default {
 		Footer,
 		Save,
 		SubmissionHistory,
-		TabTitleWithLoader
+		TabTitleWithLoader,
+		TransitionQuestions
 	},
 	props: {
 		data: null,
@@ -136,7 +139,8 @@ export default {
 		return {
 			tabIndex: 0,
 			modal_data: null,
-			labels: getLabels(this.$gettext).common
+			labels: getLabels(this.$gettext).common,
+			currentTransition: null
 		}
 	},
 	created() {
@@ -199,7 +203,8 @@ export default {
 				})
 				return
 			}
-			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
+			this.currentTransition = 'submit'
+			// this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
 			this.$store.dispatch('removeSubmission', {

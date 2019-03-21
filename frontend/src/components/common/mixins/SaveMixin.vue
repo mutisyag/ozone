@@ -3,6 +3,7 @@
 		:disabled="isFilesUploadInProgress"
 		@click="validation"
 		id="save-button"
+		ref="save_button"
 		variant="primary">
 			<span v-translate>Save and continue</span>
     </b-btn>
@@ -23,7 +24,8 @@ export default {
 
 	data() {
 		return {
-			invalidTabs: []
+			invalidTabs: [],
+			tabsToSave: []
 		}
 	},
 
@@ -40,7 +42,6 @@ export default {
 	},
 
 	methods: {
-
 		validation() {
 			this.invalidTabs = []
 			const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
@@ -197,6 +198,12 @@ export default {
 					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('Save failed')] },
 					variant: 'danger' })
+			}
+			this.tabsToSave = this.tabsToSave.filter(t => t !== tab.name)
+			if (this.tabsToSave.length === 0 && this.$store.state.actionToDispatch) {
+				this.$store.dispatch('saveCallback', { actionToDispatch: this.$store.state.actionToDispatch, data: this.$store.state.dataForAction })
+				this.$store.commit('setActionToDispatch', null)
+				this.$store.commit('setDataForAction', null)
 			}
 		}
 	}

@@ -102,6 +102,14 @@ const mutations = {
 		state.tableRowConstructor = tableRowConstructor
 	},
 
+	setDataForAction(state, data) {
+		state.dataForAction = data
+	},
+
+	setActionToDispatch(state, data) {
+		state.actionToDispatch = data
+	},
+
 	updateTransitions(state, data) {
 		state.current_submission.available_transitions = data
 	},
