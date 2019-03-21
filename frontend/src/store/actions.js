@@ -105,10 +105,10 @@ const actions = {
 		context.dispatch(actionToDispatch, data)
 	},
 
-	triggerSave(context, { action, data }) {
+	triggerSave(context, data) {
 		if (data) {
-			context.commit('setActionToDispatch', action)
-			context.commit('setDataForAction', data)
+			context.commit('setActionToDispatch', data.action)
+			context.commit('setDataForAction', data.data)
 		}
 		document.getElementById('save-button').click()
 	},

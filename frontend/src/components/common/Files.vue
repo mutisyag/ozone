@@ -29,6 +29,11 @@
 			<b-form-file id="choose-files-button" :disabled="!$store.getters.can_upload_files || loadingInitialFiles" :multiple="true" ref="filesInput" v-model="selectedFiles" @input="onSelectedFilesChanged"/>
 		</div>
 	</div>
+	<!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
+	<div v-if="files.length">
+		<hr>
+		<b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
+	</div>
 </div>
 </template>
 
