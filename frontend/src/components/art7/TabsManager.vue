@@ -248,7 +248,6 @@ export default {
 				return
 			}
 			this.currentTransition = 'submit'
-			console.log('here')
 			// this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: 'submit' })
 		},
 		removeSubmission() {
