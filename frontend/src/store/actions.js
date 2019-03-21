@@ -101,6 +101,18 @@ const actions = {
 		})
 	},
 
+	saveCallback(context, { actionToDispatch, data }) {
+		context.dispatch(actionToDispatch, data)
+	},
+
+	triggerSave(context, { action, data }) {
+		if (data) {
+			context.commit('setActionToDispatch', action)
+			context.commit('setDataForAction', data)
+		}
+		document.getElementById('save-button').click()
+	},
+
 	async getMyCurrentUser({ commit }) {
 		let response
 		try {

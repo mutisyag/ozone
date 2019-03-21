@@ -50,7 +50,7 @@ export default {
 	},
 	methods: {
 		doTransition() {
-			this.$store.dispatch('doSubmissionTransition', { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true })
+			this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true } })
 			this.$refs.transition_modal.hide()
 		}
 	},
