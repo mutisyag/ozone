@@ -168,34 +168,6 @@
 													{{labels['view']}}
                       </span>
                     </router-link>
-<!--
-                    <b-btn
-                        variant="outline-primary"
-                        @click="clone(row.item.details.url, row.item.details.obligation)"
-												size="sm"
-												v-if="row.item.details.is_cloneable"
-												:disabled="currentUser.is_read_only">
-											{{labels['revise']}}
-                    </b-btn>
-
-                    <b-btn
-											variant="outline-primary"
-											v-for="transition in row.item.details.available_transitions"
-											:key="transition"
-											size="sm"
-											:disabled="currentUser.is_read_only"
-											@click="$store.dispatch('doSubmissionTransition', {$gettext, transition, submission: row.item.details.url, source: 'dashboard'})">
-											<span>{{labels[transition]}}</span>
-                    </b-btn>
-
-                    <b-btn
-                        variant="outline-danger"
-                        @click="removeSubmission(row.item.details.url)"
-                        v-if="row.item.details.can_edit_data"
-												:disabled="currentUser.is_read_only"
-												size="sm">
-												{{labels['delete']}}
-                    </b-btn> -->
                   </b-button-group>
                   </template>
               </b-table>
@@ -227,6 +199,7 @@ export default {
 	name: 'Dashboard',
 	data() {
 		return {
+			dataLoaded: false,
 			submissionNew: {
 				obligation: null,
 				reporting_period: null,
@@ -472,6 +445,7 @@ export default {
 				&& this.obligations
 				&& this.currentUser
 				&& this.parties) {
+				this.dataLoaded = true
 				return true
 			}
 			return false
@@ -582,7 +556,8 @@ export default {
 		},
 		'tableOptions.filters': {
 			handler() {
-				if (this.dataReady) {
+				console.log(this.dataLoaded)
+				if (this.dataLoaded) {
 					if (this.tableOptions.currentPage !== 1) {
 						this.tableOptions.currentPage = 1
 						this.tableOptionsCurrentPageWasSetFromWatcher = true
@@ -596,7 +571,9 @@ export default {
 		},
 		tableOptionsExceptFilters: {
 			handler() {
-				if (this.dataReady) {
+				console.log(this.dataLoaded)
+
+				if (this.dataLoaded) {
 					if (this.tableOptionsCurrentPageWasSetFromWatcher) {
 						this.tableOptionsCurrentPageWasSetFromWatcher = false
 						return
