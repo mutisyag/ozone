@@ -50,14 +50,17 @@ class UserAccountTests(BaseTests):
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123'),
         )
         self.reporter_same_party = ReporterUserSamePartyFactory(
+            language=self.language_en,
             party=party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            language=self.language_en,
             party=another_party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language_en,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
 

@@ -7,6 +7,7 @@ from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
+    LanguageEnFactory,
     ReporterUserFactory,
     ReportingChannelFactory,
     SecretariatUserFactory,
@@ -31,14 +32,16 @@ class BaseCustomBlendsTests(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
-
+        self.language = LanguageEnFactory()
         self.obligation = ObligationFactory.create(_form_type=self._form_type)
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.party_user = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )

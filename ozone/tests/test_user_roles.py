@@ -10,6 +10,7 @@ from .factories import (
     BlendFactory,
     ObligationFactory,
     PartyFactory,
+    LanguageEnFactory,
     ReporterUserFactory,
     ReporterUserROFactory,
     ReporterUserSamePartyFactory,
@@ -36,6 +37,7 @@ class BaseUserRoleTests(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory.create(subregion=self.subregion)
         self.obligation = ObligationFactory.create(_form_type=self._form_type)
+        self.language = LanguageEnFactory()
         ReportingChannelFactory()
 
 
@@ -44,6 +46,7 @@ class TestSecretariatEditRole(BaseUserRoleTests):
     def setUp(self):
         super().setUp()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
@@ -198,6 +201,7 @@ class TestSecretariatReadOnlyRole(BaseUserRoleTests):
     def setUp(self):
         super().setUp()
         self.secretariat_user_ro = SecretariatUserROFactory(
+            language=self.language,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.client.login(username=self.secretariat_user_ro.username, password='qwe123qwe')
@@ -340,14 +344,17 @@ class TestPartyReporterRole(BaseUserRoleTests):
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
 
         self.reporter = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_same_party = ReporterUserSamePartyFactory(
+            language=self.language,
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            language=self.language,
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
@@ -548,14 +555,17 @@ class TestPartyReporterReadOnlyRole(BaseUserRoleTests):
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
 
         self.reporter_ro = ReporterUserROFactory(
+            language=self.language,
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_same_party = ReporterUserSamePartyFactory(
+            language=self.language,
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            language=self.language,
             party=self.another_party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
@@ -707,6 +717,7 @@ class TestPublicUserRole(BaseUserRoleTests):
     def setUp(self):
         super().setUp()
         self.reporter = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=self.hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )

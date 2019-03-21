@@ -7,16 +7,12 @@ from ozone.core.models import Submission, Nomination, ExemptionApproved
 from .base import BaseTests
 from .factories import (
     AnotherSubstanceFactory,
-    AnotherPartyFactory,
     ExemptionApprovedFactory,
     LanguageEnFactory,
-    LanguageFrFactory,
     NominationFactory,
     PartyFactory,
     RegionFactory,
-    ReporterUserAnotherPartyFactory,
     ReporterUserFactory,
-    ReporterUserSamePartyFactory,
     ReportingChannelFactory,
     ObligationFactory,
     SecretariatUserFactory,
@@ -48,11 +44,15 @@ class BaseExemptionTests(BaseTests):
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
+        self.language = LanguageEnFactory()
+
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language = self.language,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.reporter = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
