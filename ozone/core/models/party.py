@@ -220,6 +220,9 @@ class Language(models.Model):
     Model for languages used by Ozone Secretariat.
     """
 
+    # This is a sane default (English language) based on the current fixtures
+    DEFAULT_LANGUAGE_ID = 3
+
     language_id = models.CharField(max_length=16, unique=True)
 
     iso = models.CharField(max_length=5, unique=True)
@@ -227,10 +230,6 @@ class Language(models.Model):
     name = models.CharField(max_length=64, unique=True)
 
     remark = models.CharField(max_length=256, blank=True)
-
-    @classmethod
-    def get_default_language(cls):
-        return cls.objects.get(iso='en').id
 
     def __str__(self):
         return self.name
