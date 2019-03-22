@@ -53,6 +53,7 @@ class BaseSubmissionTest(BaseTests):
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
