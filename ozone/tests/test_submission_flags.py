@@ -9,6 +9,7 @@ from .factories import (
     PartyFactory,
     AnotherPartyFactory,
     RegionFactory,
+    LanguageEnFactory,
     ReporterUserFactory,
     ReportingChannelFactory,
     SecretariatUserFactory,
@@ -38,16 +39,20 @@ class BaseFlagsTests(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
+        self.language = LanguageEnFactory()
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.party_user = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
         )
         self.another_party_user = ReporterUserFactory(
+            language=self.language,
             username="another-reporter",
             party=self.another_party,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123"),
@@ -56,7 +61,8 @@ class BaseFlagsTests(BaseTests):
 
     def create_submission(self, owner, **kwargs):
         submission = SubmissionFactory(
-            party=self.party, created_by=owner, last_edited_by=owner, obligation=self.obligation,
+            party=self.party, created_by=owner, last_edited_by=owner,
+            obligation=self.obligation,
             **kwargs
         )
         return submission

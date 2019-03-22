@@ -2,6 +2,7 @@ from django.urls import reverse
 from django.contrib.auth import get_user_model
 
 from .base import BaseTests
+from .factories import LanguageEnFactory
 
 User = get_user_model()
 
@@ -13,7 +14,8 @@ class EmailAuthTests(BaseTests):
             username="user1",
             email='test@example.com',
             password='qwe123qwe',
-            is_secretariat=True
+            is_secretariat=True,
+            language=LanguageEnFactory()
         )
 
     def test_login(self):

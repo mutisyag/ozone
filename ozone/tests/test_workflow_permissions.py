@@ -9,6 +9,7 @@ from .factories import (
     NominationFactory,
     PartyFactory,
     RegionFactory,
+    LanguageEnFactory,
     ReporterUserFactory,
     ReporterUserSamePartyFactory,
     ReporterUserAnotherPartyFactory,
@@ -34,23 +35,29 @@ class BaseWorkflowPermissionsTests(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
+        self.language = LanguageEnFactory()
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.secretariat_user_ro = SecretariatUserROFactory(
+            language=self.language,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter = ReporterUserFactory(
+            language=self.language,
             party=self.party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_same_party = ReporterUserSamePartyFactory(
+            language=self.language,
             party=self.party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )
         self.reporter_another_party = ReporterUserAnotherPartyFactory(
+            language=self.language,
             party=self.another_party,
             password=hash_alg.encode(password='qwe123qwe', salt='123salt123')
         )

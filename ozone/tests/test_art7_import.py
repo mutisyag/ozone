@@ -9,7 +9,7 @@ from .base import BaseTests
 from .factories import (
     PartyFactory,
     RegionFactory,
-    ReporterUserFactory,
+    LanguageEnFactory,
     ReportingChannelFactory,
     SecretariatUserFactory,
     SubmissionFactory,
@@ -33,9 +33,11 @@ class BaseArt7ImportTest(BaseTests):
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
+        self.language = LanguageEnFactory()
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
+            language=self.language,
             password=hash_alg.encode(password="qwe123qwe", salt="123salt123")
         )
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
