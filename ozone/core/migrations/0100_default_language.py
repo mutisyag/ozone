@@ -2,7 +2,6 @@
 
 from django.db import migrations, models
 import django.db.models.deletion
-import ozone.core.models.file
 
 
 class Migration(migrations.Migration):
