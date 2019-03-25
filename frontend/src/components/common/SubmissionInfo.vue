@@ -40,7 +40,7 @@
 							<b-row v-if="is_secretariat || (!is_secretariat && info.form_fields['submitted_at'].selected)">
 								<b-col lg='3'>
 									<label>{{labels.submitted_at}}
-										<div class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>({{info.form_fields['submitted_at'].validation}})</div>
+										<div  :class="{danger: error_danger}" class="floating-error" v-if="info.form_fields['submitted_at'].validation" variant="danger" v-translate>({{info.form_fields['submitted_at'].validation}})</div>
 									</label>
 								</b-col>
 								<b-col>

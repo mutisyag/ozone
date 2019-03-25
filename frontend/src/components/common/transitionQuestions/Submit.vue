@@ -82,13 +82,13 @@ export default {
 			}
 			const answeredYes = Object.keys(this.questionnaire.form_fields).filter(q => this.questionnaire.form_fields[q].selected)
 			const anweredYesNoData = Object.keys(this.formTabs).filter(tab => answeredYes.includes(tab) && !this.formTabs[tab].form_fields.length)
-			return anweredYesNoData
+			return anweredYesNoData.map(tab => this.labels[tab])
 		},
 		uncheckedFlags() {
 			if (!this.$store.state.form.tabs.flags) {
 				return []
 			}
-			return Object.keys(this.formTabs.flags.form_fields).filter(flag => flag.includes('flag_has_reported') && !this.formTabs.flags.form_fields[flag].selected)
+			return Object.keys(this.formTabs.flags.form_fields).filter(flag => flag.includes('flag_has_reported') && !this.formTabs.flags.form_fields[flag].selected).map(flag => this.labels.flags[flag])
 		}
 	},
 	methods: {

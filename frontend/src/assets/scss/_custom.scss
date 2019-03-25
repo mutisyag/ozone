@@ -661,6 +661,10 @@ button img.icon {
 			justify-content: center;
 			align-items: center;
 			// box-shadow: -3px 3px 3px rgba(0,0,0,0.2); 
+			background: #20a8d8;
+    	* {
+				color: white;
+			}
 	}
   .navbar-toggler {
     position: absolute;

@@ -15,6 +15,7 @@ import { post, update } from '@/components/common/services/api'
 import { isObject } from '@/components/common/services/utilsService'
 import { dateFormatToYYYYMMDD } from '@/components/common/services/languageService'
 import FilesMixin from './FilesMixin'
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
 	mixins: [FilesMixin],
@@ -25,8 +26,13 @@ export default {
 	data() {
 		return {
 			invalidTabs: [],
-			tabsToSave: []
+			tabsToSave: [],
+			labels: null
 		}
+	},
+
+	created() {
+		this.labels = getCommonLabels(this.$gettext)
 	},
 
 	computed: {
@@ -65,7 +71,7 @@ export default {
 			if (this.invalidTabs.length) {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
-					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
+					message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
 					variant: 'danger'
 				})
 			} else {
