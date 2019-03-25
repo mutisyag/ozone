@@ -467,6 +467,11 @@ class Command(BaseCommand):
         created_at = overall["DateCreate"] or overall["DateReported"] or overall["DateUpdate"]
         updated_at = overall["DateUpdate"] or overall["DateCreate"] or overall["DateReported"]
 
+        if overall["SubmissionType"]:
+            submission_format = SubmissionFormat.objects.get(name=overall["SubmissionType"])
+        else:
+            submission_format = None
+
         if not created_at or not updated_at or not date_reported:
             logger.warning("No date available %s/%s", party.abbr, period.name)
 
@@ -515,7 +520,7 @@ class Command(BaseCommand):
                 "country": party.name,
                 "phone": "",
                 "email": "",
-                #TODO submission_format
+                "submission_format": submission_format,
             },
             "art7": {
                 "has_imports": overall["Imported"],
