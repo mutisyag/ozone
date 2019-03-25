@@ -29,7 +29,7 @@
 									</span>
 									<span v-else>
 										<label>{{labels[order]}}
-											<div class="floating-error" v-if="info.form_fields[order].validation" variant="danger" v-translate>(required)</div>
+											<div class="floating-error" :class="{danger: error_danger}" v-if="info.form_fields[order].validation" variant="danger" v-translate>(required)</div>
 										</label>
 									</span>
 								</b-col>
@@ -166,7 +166,9 @@ export default {
 	},
 
 	computed: {
-
+		error_danger() {
+			return this.info.status === false
+		},
 		general_flags() {
 			return ['flag_provisional', 'flag_superseded', 'flag_valid']
 		},

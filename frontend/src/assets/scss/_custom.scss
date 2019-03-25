@@ -1200,3 +1200,7 @@ body .vdp-datepicker__calendar {
 .sidebar-minimized .sidebar section :not(.nav-dropdown-items) > .nav-item:last-child::after {
 	display: none;
 }
+
+.floating-error.danger {
+	color: red;
+}
