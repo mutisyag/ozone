@@ -14,6 +14,8 @@ const getCommonLabels = ($gettext) => {
 		has_destroyed: $gettext('Destruction'),
 		has_nonparty: $gettext('Nonparty'),
 		has_emissions: $gettext('Emissions'),
+		delete_submission: $gettext('Delete Submission'),
+		versions: $gettext('Versions'),
 		has_imports: $gettext('Imports'),
 		sub_info: $gettext('Subission info'),
 		questionaire_questions: $gettext('Questionnaire'),
