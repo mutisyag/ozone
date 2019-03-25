@@ -134,7 +134,7 @@ import Save from '@/components/art7/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
-import TransitionQuestions from '@/components/art7/TransitionQuestions'
+import TransitionQuestions from '@/components/common/TransitionQuestions'
 
 export default {
 	components: {

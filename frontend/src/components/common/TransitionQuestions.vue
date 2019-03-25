@@ -14,7 +14,7 @@
 					<b-btn class="mr-2" @click="$refs.transition_modal.hide()" variant="danger">
 						<span v-translate>Close</span>
 					</b-btn>
-					<b-btn @click="doTransition" variant="success">Ok</b-btn>
+					<b-btn :disabled="disableOkButton" @click="doTransition" variant="success">Ok</b-btn>
 				</div>
     </b-modal>
 	</div>
@@ -42,6 +42,17 @@ export default {
 	data() {
 		return {
 			labels: {}
+		}
+	},
+	computed: {
+		disableOkButton() {
+			if (this.transition === 'finalize' && this.hasValidFlag && this.$store.state.form.tabs.flags.form_fields.flag_valid.selected === null) {
+				return true
+			}
+			return false
+		},
+		hasValidFlag() {
+			return this.$store.state.form.tabs.flags && this.$store.state.form.tabs.flags.form_fields.flag_valid
 		}
 	},
 	mounted() {

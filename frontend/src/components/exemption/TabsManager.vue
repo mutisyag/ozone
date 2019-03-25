@@ -115,7 +115,7 @@ import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import FormTemplate from '@/components/exemption/FormTemplate.vue'
-import TransitionQuestions from '@/components/common/TransitionQuestions'
+import TransitionQuestions from '@/components/exemption/TransitionQuestions'
 
 export default {
 	components: {

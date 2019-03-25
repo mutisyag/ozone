@@ -33,7 +33,7 @@ export default {
 	},
 	computed: {
 		disableOkButton() {
-			if (this.transition === 'finalize' && this.$store.state.form.tabs.flags.form_fields.flag_valid.selected === null) {
+			if (this.transition === 'finalize' && this.$store.state.form.tabs.flags.form_fields.flag_approved.selected === null) {
 				return true
 			}
 			return false
