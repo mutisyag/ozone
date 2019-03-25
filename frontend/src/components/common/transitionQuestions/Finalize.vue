@@ -4,10 +4,10 @@
 			<p>You are about to finalize this submission. Please check one of the options below</p>
 			<hr>
 			<fieldGenerator
-					:fieldInfo="{index:'flag_valid', tabName: 'flags', field:'flag_valid'}"
+					:fieldInfo="{index:final_flag, tabName: 'flags', field:final_flag}"
 					:disabled="$store.getters.transitionState"
 					:field="validField"
-					id="flag_valid">
+					:id=final_flag>
 			</fieldGenerator>
 			<hr>
 		</div>
@@ -32,11 +32,14 @@ export default {
 		fieldGenerator
 	},
 	computed: {
+		final_flag() {
+			return Object.keys(this.formTabs.flags.default_properties).includes('flag_approved') ? 'flag_approved' : 'flag_valid'
+		},
 		formTabs() {
 			return this.$store.state.form.tabs
 		},
 		validField() {
-			return this.formTabs.flags && { ...this.formTabs.flags.form_fields.flag_valid, type: 'radio' }
+			return this.formTabs.flags && { ...this.formTabs.flags.form_fields[this.final_flag], type: 'radio' }
 		}
 	},
 	methods: {

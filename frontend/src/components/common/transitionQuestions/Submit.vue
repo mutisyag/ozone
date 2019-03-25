@@ -41,7 +41,6 @@
 					</label>
 				</b-col>
 			</b-row>
-			<hr>
 		</div>
 		<p>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
 
@@ -66,7 +65,7 @@ export default {
 	},
 	computed: {
 		provisional() {
-			return this.formTabs.flags && this.formTabs.flags.form_fields.flag_provisional.selected
+			return this.formTabs.flags && this.formTabs.flags.form_fields.flag_provisional && this.formTabs.flags.form_fields.flag_provisional.selected
 		},
 		blank_flags() {
 			return this.$store.state.form.tabs.flags && Object.keys(this.formTabs.flags.form_fields).filter(f => this.formTabs.flags.fields_order.includes(f) && f !== 'validation' && f.split('_').includes('blanks'))

@@ -1,6 +1,7 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
 import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
+import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
 const getFormExemption = ($gettext) => {
 	const form = {
@@ -56,6 +57,24 @@ const getFormExemption = ($gettext) => {
 						selected: '',
 						type: 'textarea'
 					}
+				}
+			},
+			flags: {
+				...getTabFlags($gettext),
+				form_fields: {
+					flag_approved: {
+						selected: false,
+						type: 'checkbox',
+						options: [
+							{ text: $gettext('Approved'), value: true },
+							{ text: $gettext('Not approved'), value: false }
+						],
+						radioType: 'stacked',
+						disabled: true
+					}
+				},
+				default_properties: {
+					flag_approved: false
 				}
 			}
 		}
