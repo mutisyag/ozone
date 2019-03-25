@@ -17,7 +17,8 @@ const getFormRaf = ($gettext) => {
 				'initialData.display.countries',
 				'initialData.submissionFormats',
 				'currentUser',
-				'permissions.form'
+				'permissions.form',
+				'initialData.essenCritTypes'
 			],
 			comments_default_properties: {
 				'hat_imports_remarks_party': '',
@@ -68,6 +69,10 @@ const getFormRaf = ($gettext) => {
 					name: 'substance',
 					colspan: 2
 				}, {
+					label: 'Type of use',
+					name: 'essen_crit_type',
+					isInput: true
+				}, {
 					label: `(3)<br>${$gettext('Amount exempted')}`,
 					name: 'quantity_exempted',
 					isInput: true
@@ -114,7 +119,7 @@ const getFormRaf = ($gettext) => {
 
 				section_headers: [{
 					label: '',
-					colspan: 16
+					colspan: 17
 				}
 				],
 				comments: {
@@ -134,6 +139,7 @@ const getFormRaf = ($gettext) => {
 					'remarks_party': '',
 					'remarks_os': '',
 					'ordering_id': null,
+					'essen_crit_type': null,
 					'quantity_exempted': null,
 					'quantity_production': null,
 					'quantity_used': null,

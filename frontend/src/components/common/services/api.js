@@ -151,6 +151,8 @@ const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/
 
 const deleteSubmission = (url) => remove(url)
 
+const getEssenCritTypes = () => fetch('get-essen-crit-types/')
+
 const deleteSubmissionFile = ({ file, submissionId }) => remove(`submissions/${submissionId}/files/${file.id}/`)
 
 const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
@@ -223,5 +225,6 @@ export {
 	getSubmissionDefaultValues,
 	uploadFile,
 	getTransitions,
-	getSubmissionFormat
+	getSubmissionFormat,
+	getEssenCritTypes
 }

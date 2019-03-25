@@ -114,6 +114,10 @@ const mutations = {
 		state.current_submission.available_transitions = data
 	},
 
+	setEssenCritTypes(state, data) {
+		state.initialData.essenCritTypes = data
+	},
+
 	incrementOrderingId(state, data) {
 		state.form.tabs[data.tabName].ordering_id += 1
 	},

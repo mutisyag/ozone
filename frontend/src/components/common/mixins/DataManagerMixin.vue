@@ -14,7 +14,7 @@ export default {
 		return {
 			currentFormName: this.$route.name,
 			submission: this.$route.query.submission,
-			prefilled: false
+			prefilled: false,
 		}
 	},
 
@@ -45,7 +45,8 @@ export default {
 			this.$store.dispatch('getInitialData', {
 				$gettext: this.$gettext,
 				submission: this.submission,
-				formName: this.currentFormName
+				formName: this.currentFormName,
+				additionalAction: null
 			}).then(() => {
 				this.prePrefill()
 				this.prefillComments()

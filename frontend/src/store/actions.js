@@ -19,7 +19,8 @@ import {
 	uploadFile,
 	getSubmissionDefaultValues,
 	getTransitions,
-	getSubmissionFormat
+	getSubmissionFormat,
+	getEssenCritTypes
 } from '@/components/common/services/api'
 
 import {
@@ -89,6 +90,13 @@ const actions = {
 		Object.keys(context.state.form.tabs)
 			.filter(tab => context.state.form.tabs[tab].comments)
 			.forEach(tab => context.commit('addComment', { data, tab }))
+	},
+
+	async getEssenCritTypes(context) {
+		const types = await getEssenCritTypes()
+		if (types.data && types.data.length) {
+			context.commit('setEssenCritTypes', types.data.map(t => ({ text: t.name, value: types.data.indexOf(t) })))
+		}
 	},
 
 	getCurrentSubmissions(context) {
@@ -291,7 +299,7 @@ const actions = {
 		return confirmed
 	},
 
-	getInitialData(context, { submission, formName, $gettext }) {
+	getInitialData(context, { submission, formName, $gettext, additionalAction }) {
 		context.commit('setForm', { formName, $gettext })
 		return new Promise((resolve) => {
 			context.dispatch('getSubmissionData', { submission, $gettext }).then(() => {
@@ -305,6 +313,9 @@ const actions = {
 				context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
 				context.dispatch('getNonParties')
 				context.dispatch('getSubmissionFormatOptions')
+				if (additionalAction) {
+					context.dispatch(additionalAction)
+				}
 				resolve()
 			})
 		})
@@ -417,6 +428,7 @@ const actions = {
 					context.commit('incrementOrderingId', { tabName: data.currentSectionName });
 					({ ordering_id } = context.state.form.tabs[data.currentSectionName])
 				}
+				const essenCritType = context.state.initialData.essenCritTypes
 
 				// section, substance, group, country, blend, prefillData, ordering_id
 				const inner_fields = context.state.tableRowConstructor.substanceRows({
@@ -428,7 +440,8 @@ const actions = {
 					blend: null,
 					prefillData: data.prefillData,
 					ordering_id,
-					countries: context.state.initialData.display.countries
+					countries: context.state.initialData.display.countries,
+					essen_crit_type: essenCritType
 				})
 				context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
 			})

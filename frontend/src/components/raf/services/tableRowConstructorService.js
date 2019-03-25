@@ -50,7 +50,7 @@ const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) 
 export default {
 	substanceRows({
 		// eslint-disable-next-line no-unused-vars
-		$gettext, section, substance, group, country, blend, prefillData, ordering_id, countries
+		$gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, essen_crit_type
 	}) {
 		const	baseInnerFields = {
 			ordering_id: { selected: ordering_id || 0 },
@@ -73,6 +73,11 @@ export default {
 			quantity_exempted: {
 				type: 'number',
 				selected: null
+			},
+			essen_crit_type: {
+				type: 'select',
+				selected: null,
+				options: essen_crit_type
 			},
 			quantity_production: {
 				type: 'number',
