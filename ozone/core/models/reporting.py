@@ -1314,6 +1314,33 @@ class SubmissionFormat(models.Model):
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
 
+    is_default_party = models.BooleanField(default=False)
+
+    @classmethod
+    def get_default(cls, user):
+        if user.party is not None:
+            return cls.objects.filter(is_default_party=True).first()
+        return None
+
+    def clean(self):
+        unique_fields = {
+            'is_default_party': 'party',
+        }
+        for field in unique_fields.keys():
+            queryset = SubmissionFormat.objects.filter(**{field: True})
+
+            if (
+                getattr(self, field, False) is True
+                and queryset.count() > 0
+                and self not in queryset
+            ):
+                raise ValidationError(
+                    _(
+                        f'Only one submission format can be set as default for '
+                        f'{unique_fields[field]}.'
+                    )
+                )
+
     class Meta:
         db_table = "submission_format"
 
