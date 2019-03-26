@@ -37,8 +37,6 @@ class User(GuardianUserMixin, AbstractUser):
         Language,
         default=Language.DEFAULT_LANGUAGE_ID,
         related_name='users',
-        null=True,
-        blank=True,
         on_delete=models.PROTECT
     )
 
