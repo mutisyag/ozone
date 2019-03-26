@@ -39,6 +39,7 @@ from ..models import (
     ReportingPeriod,
     ReportingChannel,
     Obligation,
+    SubmissionFormat,
     Submission,
     SubmissionInfo,
     SubmissionFile,
@@ -1335,8 +1336,18 @@ class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
             else None
         )
 
+        default_submission_format_obj = SubmissionFormat.get_default(
+            request.user
+        )
+        default_submission_format = (
+            default_submission_format_obj.name
+            if default_submission_format_obj
+            else None
+        )
+
         return Response({
             'obligation': default_obligation,
             'reporting_period': default_reporting_period,
-            'reporting_channel': default_reporting_channel
+            'reporting_channel': default_reporting_channel,
+            'submission_format': default_submission_format_obj,
         })
