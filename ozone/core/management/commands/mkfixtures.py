@@ -311,8 +311,8 @@ class Command(BaseCommand):
         for treaty_id in treaties:
             if row['RD_' + treaty_id]:
                 ratification_date = row['RD_' + treaty_id].date()
-                ratification_date = row['RD_' + treaty_id].date()
-                entry_into_force_date = row['EIF_' + treaty_id].date()
+                entry_into_force_datetime = row['EIF_' + treaty_id]
+                entry_into_force_date = entry_into_force_datetime.date() if entry_into_force_datetime else ""
                 objs.append({
                     'party': party,
                     'treaty': self.lookup_id('treaty', 'treaty_id', treaty_id),
