@@ -1349,5 +1349,5 @@ class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
             'obligation': default_obligation,
             'reporting_period': default_reporting_period,
             'reporting_channel': default_reporting_channel,
-            'submission_format': default_submission_format_obj,
+            'submission_format': default_submission_format,
         })
