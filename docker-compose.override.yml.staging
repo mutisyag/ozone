@@ -18,6 +18,7 @@ services:
       - "127.0.0.1:8000:8000"
 
   tusd:
+    command: ["-dir", "/srv/tusd-data", "-hooks-http", "https://ozone-staging.edw.ro/api/uploads/"]
     ports:
       - "127.0.0.1:8001:1080"
 
