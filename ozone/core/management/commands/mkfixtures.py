@@ -362,6 +362,7 @@ class Command(BaseCommand):
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
+        f['legacy_blend_id'] = row['BlendID']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
             f['sort_order'] = 1000 + row['_index']
