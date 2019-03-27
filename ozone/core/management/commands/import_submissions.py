@@ -24,6 +24,7 @@ from ozone.core.models import (
     Article7Questionnaire,
     ReportingChannel,
     SubmissionFormat,
+    Blend,
 )
 
 logger = logging.getLogger(__name__)
@@ -70,6 +71,8 @@ class Command(BaseCommand):
                         for _party in Party.objects.all()}
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
+        self.blends = {_blend.legacy_blend_id: _blend
+                       for _blend in Blend.objects.all()}
 
         self.precision = 10
 
@@ -150,11 +153,22 @@ class Command(BaseCommand):
                                  period.name)
                     source_party_id = None
 
+            substance = self.substances.get(import_row["SubstID"])
+            substance_id = ""
             try:
-                substance_id = self.substances[import_row["SubstID"]].id
-            except KeyError as e:
-                logger.error("Import new unknown substance %s: %s/%s", e, party.abbr, period.name)
-                continue
+                substance_id = substance.id
+            except AttributeError:
+                pass
+
+            blend = None
+            blend_id = ""
+            if not substance:
+                blend = self.blends.get(import_row["SubstID"])
+                try:
+                    blend_id = blend.id
+                except AttributeError:
+                    logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
+                    continue
 
             imports.append({
                 "remarks_party": import_row["Remark"] or "",
@@ -178,9 +192,9 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                # "blend_id": "",
+                "blend_id": blend_id if blend else "",
                 # "blend_item_id": "", #???
-                "substance_id": substance_id,
+                "substance_id": substance_id if substance else "",
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
             })
