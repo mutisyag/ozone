@@ -331,6 +331,8 @@ class Command(BaseCommand):
             group = annex + row['Grp']
             if f['name'] == 'HFC-23':
                 group = 'FII'
+            if group == 'FIII':
+                return
             f['group'] = self.lookup_id('group', 'group_id', group)
         f['sort_order'] = row['AnxGrpSort'] or 9999
         f['odp'] = row['SubstODP']
