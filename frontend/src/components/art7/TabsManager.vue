@@ -246,10 +246,19 @@ export default {
 		},
 		checkBeforeSubmitting() {
 			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
+			const incompleteQuestionnaire = Object.values(this.$store.state.form.tabs.questionaire_questions.form_fields).some(question => question.selected === null)
 			if (unsavedTabs.length) {
 				this.$store.dispatch('setAlert', {
 					$gettext: this.$gettext,
 					message: { __all__: [this.$gettext('Please save before submitting')] },
+					variant: 'danger'
+				})
+				return
+			}
+			if (incompleteQuestionnaire) {
+				this.$store.dispatch('setAlert', {
+					$gettext: this.$gettext,
+					message: { __all__: [this.$gettext('Please complete the questionnaire submitting')] },
 					variant: 'danger'
 				})
 				return
