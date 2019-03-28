@@ -36,21 +36,7 @@ export default {
 	},
 
 	created() {
-		if (!this.submission) {
-			this.$router.push({ name: 'Dashboard' })
-		} else {
-			if (process.env.NODE_ENV !== 'development') {
-				window.addEventListener('beforeunload', this.alertUnsavedData)
-			}
-			this.$store.dispatch('getInitialData', {
-				$gettext: this.$gettext,
-				submission: this.submission,
-				formName: this.currentFormName
-			}).then(() => {
-				this.prePrefill()
-				this.prefillComments()
-			})
-		}
+		this.doInitialStuff()
 	},
 
 	computed: {
@@ -91,7 +77,24 @@ export default {
 
 	},
 	methods: {
-
+		doInitialStuff() {
+			if (!this.submission) {
+				this.$router.push({ name: 'Dashboard' })
+			} else {
+				if (process.env.NODE_ENV !== 'development') {
+					window.addEventListener('beforeunload', this.alertUnsavedData)
+				}
+				this.$store.dispatch('getInitialData', {
+					$gettext: this.$gettext,
+					submission: this.submission,
+					formName: this.currentFormName,
+					additionalAction: null
+				}).then(() => {
+					this.prePrefill()
+					this.prefillComments()
+				})
+			}
+		},
 		alertUnsavedData(e) {
 			const tabsWithData = []
 			Object.values(this.form.tabs).forEach((tab) => {

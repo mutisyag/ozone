@@ -57,6 +57,7 @@ const state = {
 		groupSubstances: null,
 		substances: null,
 		partyRatifications: null,
+		essenCritTypes: null,
 		submissionFormats: null,
 		blends: null,
 		nonParties: null,

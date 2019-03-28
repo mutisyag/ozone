@@ -7,6 +7,7 @@ const getLabels = ($gettext) => {
 			remarks_party: $gettext('Remarks (Secretariat)'),
 			remarks_os: $gettext('Remarks (Party)'),
 			percent: $gettext('Percentage'),
+			essen_crit_type: $gettext('Type of use'),
 			essencrit: $gettext('Essential and critical uses'),
 			quantity_msac: $gettext('New production for use in multi-split air conditioners	'),
 			quantity_sdac: $gettext('New production for use in split ducted air conditioners	'),
