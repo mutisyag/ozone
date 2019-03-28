@@ -1257,10 +1257,13 @@ class Submission(models.Model):
                 self.workflow().state.workflow.initial_state.name
 
             # The default value for reporting channel is 'Web form'
-            # when creating a new submission
-            self.reporting_channel = ReportingChannel.get_default(
-                self.created_by
-            )
+            # when creating a new submission.
+            # The prefill will be skipped if it's a clone action or a
+            # legacy import.
+            if not getattr(self, 'reporting_channel'):
+                self.reporting_channel = ReportingChannel.get_default(
+                    self.created_by
+                )
 
             self.clean()
             ret = super().save(
@@ -1313,6 +1316,33 @@ class SubmissionFormat(models.Model):
 
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
+
+    is_default_party = models.BooleanField(default=False)
+
+    @classmethod
+    def get_default(cls, user):
+        if user.party is not None:
+            return cls.objects.filter(is_default_party=True).first()
+        return None
+
+    def clean(self):
+        unique_fields = {
+            'is_default_party': 'party',
+        }
+        for field in unique_fields.keys():
+            queryset = SubmissionFormat.objects.filter(**{field: True})
+
+            if (
+                getattr(self, field, False) is True
+                and queryset.count() > 0
+                and self not in queryset
+            ):
+                raise ValidationError(
+                    _(
+                        f'Only one submission format can be set as default for '
+                        f'{unique_fields[field]}.'
+                    )
+                )
 
     class Meta:
         db_table = "submission_format"

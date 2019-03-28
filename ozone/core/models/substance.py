@@ -179,6 +179,12 @@ class Blend(models.Model):
         help_text="A unique String value identifying this blend."
     )
 
+    legacy_blend_id = models.IntegerField(
+        null=True, blank=True, unique=True,
+        help_text="Used by data import management command, for reports that "
+                  "contain blends, instead of substances."
+    )
+
     # Custom blends will always be associated with (and only available for)
     # the Party by which they have been created (in case they've been created
     # by Secretariat using the reporting interface, they will be associated
@@ -203,7 +209,7 @@ class Blend(models.Model):
     type = models.CharField(
         max_length=128, choices=((s.value, s.name) for s in BlendTypes),
         help_text="Blend types can be Zeotrope, Azeotrope, Methyl bromide, "
-        "Other or Custom."
+                  "Other or Custom."
     )
 
     odp = models.FloatField(null=True, blank=True)
