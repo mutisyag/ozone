@@ -1257,10 +1257,13 @@ class Submission(models.Model):
                 self.workflow().state.workflow.initial_state.name
 
             # The default value for reporting channel is 'Web form'
-            # when creating a new submission
-            self.reporting_channel = ReportingChannel.get_default(
-                self.created_by
-            )
+            # when creating a new submission.
+            # The prefill will be skipped if it's a clone action or a
+            # legacy import.
+            if not getattr(self, 'reporting_channel'):
+                self.reporting_channel = ReportingChannel.get_default(
+                    self.created_by
+                )
 
             self.clean()
             ret = super().save(
