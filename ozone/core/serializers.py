@@ -1398,7 +1398,7 @@ class SubmissionSerializer(
     is_submitted_at_mandatory = serializers.SerializerMethodField()
 
     created_at = serializers.DateTimeField(format='%Y-%m-%d')
-    updated_at = serializers.DateTimeField(format='%Y-%m-%d')
+    updated_at = serializers.SerializerMethodField()
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
 
@@ -1515,6 +1515,14 @@ class SubmissionSerializer(
         user = self.context['request'].user
         return obj.is_submitted_at_mandatory(user)
 
+    def get_updated_at(self, obj):
+        return (
+            obj.history.all()
+            .order_by('-history_date')
+            .first()
+            .history_date.strftime('%Y-%m-%d')
+        )
+
 
 class CreateSubmissionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -1539,7 +1547,7 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%d')
-    updated_at = serializers.DateTimeField(format='%Y-%m-%d')
+    updated_at = serializers.SerializerMethodField()
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
     can_edit_data = serializers.SerializerMethodField()
@@ -1577,6 +1585,14 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
     def get_can_delete_data(self, obj):
         user = self.context['request'].user
         return obj.can_delete_data(user)
+
+    def get_updated_at(self, obj):
+        return (
+            obj.history.all()
+            .order_by('-history_date')
+            .first()
+            .history_date.strftime('%Y-%m-%d')
+        )
 
 
 class SubmissionHistorySerializer(serializers.ModelSerializer):
