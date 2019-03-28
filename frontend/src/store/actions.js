@@ -1,4 +1,5 @@
 import {
+	fetch,
 	getSubmissionHistory,
 	callTransition,
 	getSubstances,
@@ -130,6 +131,20 @@ const actions = {
 			commit('setCurrentUserPartyInDashboard', response.data[0].party)
 		} catch (e) {
 			console.log('getMyCurrentUser', e)
+		}
+	},
+
+	async downloadStuff(context, { url, fileName }) {
+		try {
+			const downloaded = await fetch(url)
+			const download_url = window.URL.createObjectURL(new Blob([downloaded.data]))
+			const link = document.createElement('a')
+			link.href = download_url
+			link.setAttribute('download', fileName)
+			document.body.appendChild(link)
+			link.click()
+		} catch (e) {
+			console.log('download error', e)
 		}
 	},
 
