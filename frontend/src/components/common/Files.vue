@@ -4,13 +4,18 @@
 		<b-input-group class="mb-2" v-for="(file, index) in files" :key="index">
 			<b-input-group-text slot="prepend">
 				<span>
-					<a :href="file.file_url">
+				<b-btn variant="link"
+					@click="$store.dispatch('downloadStuff',
+						{
+							url: file.file_url,
+							fileName:file.name
+						})">
 						<i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
 						<i v-else class="fa fa-upload" aria-hidden="true"></i>
 						&nbsp;
 						{{file.name}}
 						<span v-if="file.upload_successful">- {{file.updated}}</span>
-					</a>
+				</b-btn>
 				</span>
 			</b-input-group-text>
 			<b-form-input class="d-inline" placeholder="Optional description" :value="file.description" @input="onFileDescriptionChanged($event, file)" />

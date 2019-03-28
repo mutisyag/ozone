@@ -143,6 +143,7 @@ const actions = {
 			link.setAttribute('download', fileName)
 			document.body.appendChild(link)
 			link.click()
+			link.parentNode.removeChild(link)
 		} catch (e) {
 			console.log('download error', e)
 		}
