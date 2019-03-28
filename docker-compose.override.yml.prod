@@ -21,7 +21,7 @@ services:
   tusd:
     ports:
       - "127.0.0.1:8084:1080"
-    command: ["-behind-proxy", "-dir", "/srv/tusd-data", "-hooks-http", "http://app:8000/api/uploads/"]
+    command: ["-behind-proxy", "-dir", "/srv/tusd-data", "-hooks-http", "https://ozone.edw.ro/api/uploads/"]
 
   weblate:
     image: eaudeweb/ozone-weblate:latest

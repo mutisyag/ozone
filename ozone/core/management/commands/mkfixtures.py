@@ -311,8 +311,8 @@ class Command(BaseCommand):
         for treaty_id in treaties:
             if row['RD_' + treaty_id]:
                 ratification_date = row['RD_' + treaty_id].date()
-                ratification_date = row['RD_' + treaty_id].date()
-                entry_into_force_date = row['EIF_' + treaty_id].date()
+                entry_into_force_datetime = row['EIF_' + treaty_id]
+                entry_into_force_date = entry_into_force_datetime.date() if entry_into_force_datetime else None
                 objs.append({
                     'party': party,
                     'treaty': self.lookup_id('treaty', 'treaty_id', treaty_id),
@@ -331,6 +331,8 @@ class Command(BaseCommand):
             group = annex + row['Grp']
             if f['name'] == 'HFC-23':
                 group = 'FII'
+            if group == 'FIII':
+                return
             f['group'] = self.lookup_id('group', 'group_id', group)
         f['sort_order'] = row['AnxGrpSort'] or 9999
         f['odp'] = row['SubstODP']
@@ -360,6 +362,7 @@ class Command(BaseCommand):
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
+        f['legacy_blend_id'] = row['BlendID']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
             f['sort_order'] = 1000 + row['_index']

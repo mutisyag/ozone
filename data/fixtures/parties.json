@@ -1597,7 +1597,7 @@
   {
     "fields": {
       "abbr": "MK",
-      "name": "The former Yugoslav Republic of Macedonia",
+      "name": "North Macedonia",
       "parent_party": 146,
       "remark": "",
       "subregion": 7
@@ -2026,7 +2026,7 @@
   {
     "fields": {
       "abbr": "PS",
-      "name": "Palestine",
+      "name": "State of Palestine",
       "parent_party": null,
       "remark": "",
       "subregion": 5
@@ -2356,7 +2356,7 @@
   {
     "fields": {
       "abbr": "SZ",
-      "name": "Eswatini (the Kingdom of)",
+      "name": "Eswatini",
       "parent_party": 215,
       "remark": "",
       "subregion": 1
@@ -2521,7 +2521,7 @@
   {
     "fields": {
       "abbr": "TW",
-      "name": "Taiwan, Province of China",
+      "name": "Taiwan Province",
       "parent_party": 49,
       "remark": "",
       "subregion": 4

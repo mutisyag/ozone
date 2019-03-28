@@ -2,7 +2,8 @@
   {
     "fields": {
       "name": "A7 Data forms",
-      "description": ""
+      "description": "",
+      "is_default_party": true
     },
     "model": "core.submissionformat",
     "pk": 1
@@ -10,7 +11,8 @@
   {
     "fields": {
       "name": "Annex to data form 1",
-      "description": ""
+      "description": "",
+      "is_default_party": false
     },
     "model": "core.submissionformat",
     "pk": 2
@@ -18,7 +20,8 @@
   {
     "fields": {
       "name": "Country Programme data",
-      "description": ""
+      "description": "",
+      "is_default_party": false
     },
     "model": "core.submissionformat",
     "pk": 3
@@ -26,7 +29,8 @@
   {
     "fields": {
       "name": "Email",
-      "description": ""
+      "description": "",
+      "is_default_party": false
     },
     "model": "core.submissionformat",
     "pk": 4
@@ -34,7 +38,8 @@
   {
     "fields": {
       "name": "Letter",
-      "description": ""
+      "description": "",
+      "is_default_party": false
     },
     "model": "core.submissionformat",
     "pk": 5
@@ -42,7 +47,8 @@
   {
     "fields": {
       "name": "Questionnaire",
-      "description": ""
+      "description": "",
+      "is_default_party": false
     },
     "model": "core.submissionformat",
     "pk": 6
