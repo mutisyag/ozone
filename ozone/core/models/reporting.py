@@ -1347,6 +1347,9 @@ class SubmissionFormat(models.Model):
     class Meta:
         db_table = "submission_format"
 
+    def __str__(self):
+        return self.name
+
 
 class SubmissionInfo(ModifyPreventionMixin, models.Model):
     """
