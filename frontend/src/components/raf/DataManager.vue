@@ -17,22 +17,24 @@ export default {
 	},
 	mixins: [dataManagerMixin],
 
-	created() {
-		if (!this.submission) {
-			this.$router.push({ name: 'Dashboard' })
-		} else {
-			if (process.env.NODE_ENV !== 'development') {
-				window.addEventListener('beforeunload', this.alertUnsavedData)
+	methods: {
+		doInitialStuff() {
+			if (!this.submission) {
+				this.$router.push({ name: 'Dashboard' })
+			} else {
+				if (process.env.NODE_ENV !== 'development') {
+					window.addEventListener('beforeunload', this.alertUnsavedData)
+				}
+				this.$store.dispatch('getInitialData', {
+					$gettext: this.$gettext,
+					submission: this.submission,
+					formName: this.currentFormName,
+					additionalAction: 'getEssenCritTypes'
+				}).then(() => {
+					this.prePrefill()
+					this.prefillComments()
+				})
 			}
-			this.$store.dispatch('getInitialData', {
-				$gettext: this.$gettext,
-				submission: this.submission,
-				formName: this.currentFormName,
-				additionalAction: 'getEssenCritTypes'
-			}).then(() => {
-				this.prePrefill()
-				this.prefillComments()
-			})
 		}
 	}
 
