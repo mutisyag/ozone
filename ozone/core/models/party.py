@@ -209,7 +209,7 @@ class PartyRatification(models.Model):
 
     ratification_date = models.DateField()
 
-    entry_into_force_date = models.DateField(blank=True)
+    entry_into_force_date = models.DateField(null=True, blank=True)
 
     class Meta:
         db_table = 'party_ratification'
