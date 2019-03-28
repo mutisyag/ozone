@@ -199,9 +199,6 @@
 						</div>
 					</th>
 				</tr>
-        <tr>
-          <th v-for="field in tableFields" :key="field.key" v-html="field.label"></th>
-        </tr>
       </template>
 
 			<template
