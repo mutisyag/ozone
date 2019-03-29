@@ -689,12 +689,12 @@ export default {
 			return word
 		},
 		isPolyols() {
-			return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
-				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)]
+			return ['has_imports', 'has_exports'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)] : []
 		},
 		isQps() {
-			return [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
-				...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)]
+			return ['has_imports', 'has_exports'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
+				...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)] : []
 		},
 		tableItems() {
 			const tableFields = []
