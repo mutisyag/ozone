@@ -693,7 +693,7 @@ export default {
 				...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)] : []
 		},
 		isQps() {
-			return ['has_imports', 'has_exports'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
+			return ['has_imports', 'has_exports', 'has_produced'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
 				...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)] : []
 		},
 		tableItems() {
