@@ -422,6 +422,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         "_current_state": "current_state",
         "updated_at": "updated_at",
     }
+    ordering = ("-reporting_period", "obligation")
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
