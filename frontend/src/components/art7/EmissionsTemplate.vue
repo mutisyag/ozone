@@ -29,7 +29,7 @@
 				stacked="md"
 				class="submission-table"
 				:items="tableItems"
-				@row-hovered="rowHovered"
+				@row-clicked="rowHovered"
 				:fields="tableFields"
 				:filter="table.filters.search"
 				ref="table">

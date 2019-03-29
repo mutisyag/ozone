@@ -17,7 +17,7 @@
 					show-empty
 					outlined
 					bordered
-					@row-hovered="rowHovered"
+					@row-clicked="rowHovered"
 					hover
 					head-variant="light"
 					class="submission-table"

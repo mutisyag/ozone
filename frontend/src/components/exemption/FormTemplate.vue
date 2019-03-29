@@ -18,7 +18,7 @@
 			outlined
 			v-if="tableRows"
 			bordered
-			@row-hovered="rowHovered"
+			@row-clicked="rowHovered"
 			hover
 			head-variant="light"
 			stacked="md"

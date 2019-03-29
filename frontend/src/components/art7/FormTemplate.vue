@@ -22,7 +22,7 @@
 			outlined
 			v-if="getTabInputFields && getTabDecisionQuantityFields"
 			bordered
-			@row-hovered="rowHovered"
+			@row-clicked="rowHovered"
 			hover
 			head-variant="light"
 			stacked="md"
@@ -171,7 +171,7 @@
 			show-empty
 			outlined
 			bordered
-			@row-hovered="rowHovered"
+			@row-clicked="rowHovered"
 			hover
 			head-variant="light"
 			stacked="md"
@@ -315,7 +315,7 @@
 			hover
 			head-variant="light"
 			class="submission-table"
-			@row-hovered="rowHovered"
+			@row-clicked="rowHovered"
 			stacked="md"
 			id="blend-table"
 			:items="tableItemsBlends"
