@@ -1228,7 +1228,7 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
                         'You are not allowed to upload files on this submission'
                     )
                 },
-                status=status.HTTP_400_BAD_REQUEST
+                status=status.HTTP_403_FORBIDDEN
             )
 
         token = submission.upload_tokens.create(user=request.user)
