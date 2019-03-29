@@ -104,7 +104,8 @@ class TestToken(BaseSubmissionTest, BaseTests):
                 "core:submission-token-list", kwargs={"submission_pk": submission.pk}
             ),
         )
-        self.assertEqual(resp.status_code, 200)
+        # Party cannot create token on secretariat submission
+        self.assertEqual(resp.status_code, 403)
 
     def test_create_token_as_party_wrong_party(self):
         submission = self.create_submission()
