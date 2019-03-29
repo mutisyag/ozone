@@ -18,6 +18,7 @@ from .models import (
     Submission,
     SubmissionInfo,
     ReportingChannel,
+    SubmissionFormat,
 )
 
 
@@ -109,3 +110,8 @@ class SubmissionInfoResource(resources.ModelResource):
 class ReportingChannelResource(resources.ModelResource):
     class Meta:
         model = ReportingChannel
+
+
+class SubmissionFormatResource(resources.ModelResource):
+    class Meta:
+        model = SubmissionFormat
