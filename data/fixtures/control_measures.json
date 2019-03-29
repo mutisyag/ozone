@@ -1,0 +1,4032 @@
+[
+  {
+    "model": "core.controlmeasure",
+    "pk": 1,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1989-07-01",
+      "end_date": "1993-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 2,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1989-07-01",
+      "end_date": "1993-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 3,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 4,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 5,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 6,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 7,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 8,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 9,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 10,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 11,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1999-01-07",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 12,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "1999-01-07",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 13,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 14,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2005-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 15,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 16,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 17,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 18,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 19,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 20,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 21,
+    "fields": {
+      "limit_type": "Production",
+      "group": 1,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 22,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 1,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 23,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1992-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 24,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1994-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 25,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 26,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 27,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 28,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 29,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 30,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 31,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 32,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 33,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 34,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 35,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 36,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 37,
+    "fields": {
+      "limit_type": "Production",
+      "group": 2,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 38,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 2,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 39,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1993-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 40,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1993-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 41,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 42,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 43,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 44,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 45,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 46,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 47,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 48,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 49,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2003-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 50,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2003-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 51,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 52,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 53,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 54,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 55,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 56,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 57,
+    "fields": {
+      "limit_type": "Production",
+      "group": 3,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 58,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 3,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 59,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1995-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 60,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1995-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 61,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 62,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 63,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 64,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 65,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 66,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 67,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 68,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 69,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 70,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 71,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 72,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 73,
+    "fields": {
+      "limit_type": "Production",
+      "group": 4,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 74,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 4,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 75,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1993-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 76,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1993-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 77,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 78,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1994-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 79,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 80,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 81,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 82,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 83,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 84,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 85,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2003-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 86,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2003-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 87,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 88,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 89,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 90,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2010-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 91,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 92,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 93,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 94,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 95,
+    "fields": {
+      "limit_type": "Production",
+      "group": 5,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 96,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 5,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 97,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2003-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 98,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2004-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.65
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 99,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2010-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 100,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 101,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 102,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 103,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2020-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.005
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 104,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2020-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.005
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 105,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2013-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 106,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 107,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 108,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 109,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2020-01-01",
+      "end_date": "2024-12-31",
+      "allowed": 0.65
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 110,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2020-01-01",
+      "end_date": "2024-12-31",
+      "allowed": 0.65
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 111,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2025-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.325
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 112,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2025-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.325
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 113,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2030-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.025
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 114,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2030-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.025
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 115,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2040-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 116,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2040-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 117,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2030-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 118,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2030-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 119,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2004-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 120,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2010-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.25
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 121,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 122,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 123,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 124,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2020-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.005
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 125,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2020-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.005
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 126,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2030-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 127,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2030-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 128,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2013-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 129,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 130,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 131,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 132,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2020-01-01",
+      "end_date": "2024-12-31",
+      "allowed": 0.65
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 133,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2020-01-01",
+      "end_date": "2024-12-31",
+      "allowed": 0.65
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 134,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2025-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.325
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 135,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2025-01-01",
+      "end_date": "2029-12-31",
+      "allowed": 0.325
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 136,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2030-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.025
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 137,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2030-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.025
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 139,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2040-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 140,
+    "fields": {
+      "limit_type": "Production",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2040-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 141,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 142,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 143,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 144,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 145,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 146,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 147,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 148,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 149,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 150,
+    "fields": {
+      "limit_type": "Production",
+      "group": 7,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 151,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 152,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 7,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 153,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2002-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 154,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2002-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 155,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 156,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 157,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 158,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 159,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 160,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 161,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 162,
+    "fields": {
+      "limit_type": "Production",
+      "group": 8,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 163,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 164,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 8,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 165,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1995-01-01",
+      "end_date": "1998-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 166,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1999-01-01",
+      "end_date": "2000-12-31",
+      "allowed": 0.75
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 167,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2001-01-01",
+      "end_date": "2002-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 168,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2003-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 169,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2005-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 170,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 171,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 172,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 173,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 174,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 175,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 176,
+    "fields": {
+      "limit_type": "Production",
+      "group": 9,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 177,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1995-01-01",
+      "end_date": "1998-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 178,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "1999-01-01",
+      "end_date": "2000-12-31",
+      "allowed": 0.75
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 179,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2001-01-01",
+      "end_date": "2002-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 180,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2003-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 181,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 4,
+      "start_date": "2005-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 182,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 183,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 184,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 185,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2005-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 186,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 2,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 187,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 188,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 9,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 189,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2023-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 190,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2023-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 191,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 0.6
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 192,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 0.6
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 193,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2029-01-01",
+      "end_date": "2033-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 194,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2029-01-01",
+      "end_date": "2033-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 195,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2034-01-01",
+      "end_date": "2035-12-31",
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 196,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2034-01-01",
+      "end_date": "2035-12-31",
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 197,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2036-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 198,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2036-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 199,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 200,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2029-01-01",
+      "end_date": "2034-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 201,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2035-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 202,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2040-01-01",
+      "end_date": "2044-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 203,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2045-01-01",
+      "end_date": null,
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 204,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2028-01-01",
+      "end_date": "2031-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 205,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2032-01-01",
+      "end_date": "2036-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 206,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2037-01-01",
+      "end_date": "2041-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 207,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2042-01-01",
+      "end_date": "2046-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 208,
+    "fields": {
+      "limit_type": "Production",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2047-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 209,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": "2023-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 210,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2019-01-01",
+      "end_date": "2023-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 211,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 0.6
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 212,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 0.6
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 213,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2029-01-01",
+      "end_date": "2033-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 214,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2029-01-01",
+      "end_date": "2033-12-31",
+      "allowed": 0.3
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 215,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2034-01-01",
+      "end_date": "2035-12-31",
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 216,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2034-01-01",
+      "end_date": "2035-12-31",
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 217,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 5,
+      "baseline_type": 4,
+      "start_date": "2036-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 218,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 6,
+      "baseline_type": 4,
+      "start_date": "2036-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 219,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2024-01-01",
+      "end_date": "2028-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 220,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2029-01-01",
+      "end_date": "2034-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 221,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2035-01-01",
+      "end_date": "2039-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 222,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2040-01-01",
+      "end_date": "2044-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 223,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 2,
+      "baseline_type": 2,
+      "start_date": "2045-01-01",
+      "end_date": null,
+      "allowed": 0.2
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 224,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2028-01-01",
+      "end_date": "2031-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 225,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2032-01-01",
+      "end_date": "2036-12-31",
+      "allowed": 0.9
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 226,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2037-01-01",
+      "end_date": "2041-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 227,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2042-01-01",
+      "end_date": "2046-12-31",
+      "allowed": 0.7
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 228,
+    "fields": {
+      "limit_type": "Consumption",
+      "group": 10,
+      "party_type": 3,
+      "baseline_type": 2,
+      "start_date": "2047-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 229,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1989-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 230,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2000-07-27",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 231,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2000-07-28",
+      "end_date": "2002-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 232,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2003-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 233,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2005-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 234,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 235,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 236,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 5,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 237,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 6,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 238,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1999-07-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 239,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 240,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 241,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 1,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 242,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1992-01-01",
+      "end_date": "1993-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 243,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1994-01-01",
+      "end_date": "2001-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 244,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 245,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2005-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.5
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 246,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 247,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 5,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 248,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 6,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 249,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2002-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 250,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 251,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 252,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 2,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 253,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1993-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 254,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2002-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 255,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2003-01-01",
+      "end_date": "2006-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 256,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2007-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 257,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 258,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 5,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 259,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 6,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 260,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2003-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 261,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 262,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 263,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 3,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 264,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1995-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 265,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 266,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 267,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 268,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2009-01-01",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 269,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 270,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 271,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 4,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 272,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1993-01-01",
+      "end_date": "1995-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 273,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 274,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 275,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 276,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2003-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 277,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 278,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 279,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 5,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 280,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2004-01-01",
+      "end_date": "2009-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 281,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2010-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 282,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 283,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": "2019-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 284,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2020-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 285,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2020-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 286,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2013-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 287,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 288,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 6,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 289,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 290,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 291,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 292,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2002-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 293,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 5,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 294,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 6,
+      "baseline_type": 3,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 295,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 296,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 297,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 7,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 298,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "1996-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 299,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 300,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 8,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 301,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "1995-01-01",
+      "end_date": "2000-07-27",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 302,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 3,
+      "start_date": "2000-07-28",
+      "end_date": "2001-12-31",
+      "allowed": 0.15
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 303,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 1.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 304,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2005-01-01",
+      "end_date": "2014-12-31",
+      "allowed": 0.8
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 305,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 4,
+      "baseline_type": 5,
+      "start_date": "2015-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 306,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 5,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 307,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 6,
+      "baseline_type": 5,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 308,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2002-01-01",
+      "end_date": "2004-12-31",
+      "allowed": 0.1
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 309,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 1,
+      "baseline_type": 1,
+      "start_date": "2005-01-01",
+      "end_date": "2018-12-31",
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 310,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 2,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  },
+  {
+    "model": "core.controlmeasure",
+    "pk": 311,
+    "fields": {
+      "limit_type": "BDN",
+      "group": 9,
+      "party_type": 3,
+      "baseline_type": 1,
+      "start_date": "2019-01-01",
+      "end_date": null,
+      "allowed": 0.0
+    }
+  }
+]

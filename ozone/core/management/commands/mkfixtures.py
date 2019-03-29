@@ -330,7 +330,7 @@ class Command(BaseCommand):
         if annex and annex != '-':
             group = annex + row['Grp']
             if f['name'] == 'HFC-23':
-                group = 'FII'
+                group = 'FI'
             if group == 'FIII':
                 return
             f['group'] = self.lookup_id('group', 'group_id', group)

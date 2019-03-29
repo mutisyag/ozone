@@ -41,6 +41,10 @@ from .models import (
     SubmissionInfo,
     ReportingChannel,
     SubmissionFormat,
+    BaselineType,
+    ControlMeasure,
+    Baseline,
+    Limit,
 )
 from .resources import (
     MeetingResource,
@@ -62,6 +66,10 @@ from .resources import (
     SubmissionInfoResource,
     ReportingChannelResource,
     SubmissionFormatResource,
+    BaselineTypeResource,
+    ControlMeasureResource,
+    BaselineResource,
+    LimitResource,
 )
 
 User = get_user_model()
@@ -329,9 +337,46 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
 
 @admin.register(ReportingChannel)
 class ReportingChannelAdmin(admin.ModelAdmin):
+    list_display = (
+        'name', 'description',
+        'is_default_party', 'is_default_secretariat', 'is_default_for_cloning',
+    )
     resource_class = ReportingChannelResource
 
 
 @admin.register(SubmissionFormat)
 class SubmissionFormatAdmin(admin.ModelAdmin):
     resource_class = SubmissionFormatResource
+
+
+@admin.register(BaselineType)
+class BaselineTypeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'remarks')
+    resource_class = BaselineTypeResource
+
+
+@admin.register(ControlMeasure)
+class ControlMeasureAdmin(admin.ModelAdmin):
+    list_display = (
+        'group', 'party_type', 'limit_type', 'baseline_type', 'start_date', 'end_date', 'allowed',
+    )
+    list_filter = ('group', 'party_type', 'limit_type', 'baseline_type')
+    resource_class = ControlMeasureResource
+
+
+@admin.register(Baseline)
+class BaselineAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'group', 'baseline_type', 'baseline',
+    )
+    list_filter = ('group', 'baseline_type')
+    resource_class = BaselineResource
+
+
+@admin.register(Limit)
+class LimitAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'group', 'reporting_period', 'limit_type', 'limit',
+    )
+    list_filter = ('group', 'reporting_period', 'limit_type')
+    resource_class = LimitResource

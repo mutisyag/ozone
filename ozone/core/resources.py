@@ -19,6 +19,10 @@ from .models import (
     SubmissionInfo,
     ReportingChannel,
     SubmissionFormat,
+    BaselineType,
+    ControlMeasure,
+    Baseline,
+    Limit,
 )
 
 
@@ -115,3 +119,23 @@ class ReportingChannelResource(resources.ModelResource):
 class SubmissionFormatResource(resources.ModelResource):
     class Meta:
         model = SubmissionFormat
+
+
+class BaselineTypeResource(resources.ModelResource):
+    class Meta:
+        model = BaselineType
+
+
+class ControlMeasureResource(resources.ModelResource):
+    class Meta:
+        model = ControlMeasure
+
+
+class BaselineResource(resources.ModelResource):
+    class Meta:
+        model = Baseline
+
+
+class LimitResource(resources.ModelResource):
+    class Meta:
+        model = Limit

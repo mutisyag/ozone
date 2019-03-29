@@ -140,23 +140,8 @@
         "fields": {
             "group_id": "FI",
             "annex": 5,
-            "name": "Annex F Group I",
+            "name": "Annex F Group I/II",
             "description": "Hydrofluorocarbons (HFCs)",
-            "control_treaty": 7,
-            "report_treaty": 7,
-            "phase_out_year_article_5": null,
-            "phase_out_year_non_article_5": null,
-            "exemption": ""
-        }
-    },
-    {
-        "pk": 11,
-        "model": "core.group",
-        "fields": {
-            "group_id": "FII",
-            "annex": 5,
-            "name": "Annex F Group II",
-            "description": "HFC-23",
             "control_treaty": 7,
             "report_treaty": 7,
             "phase_out_year_article_5": null,
