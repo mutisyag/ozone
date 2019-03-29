@@ -322,6 +322,7 @@ const actions = {
 				context.dispatch('getCurrentUserForm')
 				context.dispatch('getCountries')
 				context.dispatch('getSubstances')
+				context.dispatch('getSubmissionDefaultValues')
 				// Filter custom blends by the submission's party, because the API will
 				// by default show all custom blends for secretariat users.
 				// This way, even secretariat users will only see the correct available
@@ -555,8 +556,9 @@ const actions = {
 		const filesOnServer = await dispatch('getSubmissionFiles')
 		await dispatch('updateLocalFilesFromServerFilesResponse', {	filesOnServer })
 	},
-	async getSubmissionDefaultValues() {
+	async getSubmissionDefaultValues({ commit }) {
 		const response = await getSubmissionDefaultValues()
+		commit('setSubmissionDefaultValues', response.data)
 		return response.data || {}
 	}
 }

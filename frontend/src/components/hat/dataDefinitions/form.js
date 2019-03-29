@@ -17,7 +17,8 @@ const getFormHat = ($gettext) => {
 				'initialData.display.countries',
 				'initialData.submissionFormats',
 				'currentUser',
-				'permissions.form'
+				'permissions.form',
+				'submissionDefaultValues.submission_format'
 			],
 			comments_default_properties: {
 				'hat_imports_remarks_party': '',

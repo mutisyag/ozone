@@ -18,7 +18,8 @@ const getFormRaf = ($gettext) => {
 				'initialData.submissionFormats',
 				'currentUser',
 				'permissions.form',
-				'initialData.essenCritTypes'
+				'initialData.essenCritTypes',
+				'submissionDefaultValues.submission_format'
 			],
 			comments_default_properties: {
 				'hat_imports_remarks_party': '',

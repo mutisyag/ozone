@@ -18,7 +18,8 @@ const getFormArt7 = ($gettext) => {
 				'initialData.countryOptionsSubInfo',
 				'currentUser',
 				'initialData.submissionFormats',
-				'permissions.form'
+				'permissions.form',
+				'submissionDefaultValues.submission_format'
 			],
 			comments_default_properties: {
 				imports_remarks_party: '',

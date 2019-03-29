@@ -64,6 +64,16 @@ export default {
 								}
 							}
 						}
+						if (formField.selectedPropertyPath) {
+							for (const propertyPath of dataNeeded) {
+								if (formField.selectedPropertyPath === propertyPath) {
+									const propValue = getPropertyValue(this.$store.state, propertyPath)
+									formField.selected = propValue
+									console.log('aaaaaa', formField, propValue)
+									break
+								}
+							}
+						}
 					}
 				}
 			})

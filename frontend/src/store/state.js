@@ -1,6 +1,7 @@
 const state = {
 	currentUser: null,
 	actionToDispatch: null,
+	submissionDefaultValues: null,
 	dataForAction: null,
 	dashboard: {
 		mySubmissions: null,

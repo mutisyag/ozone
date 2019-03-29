@@ -168,6 +168,9 @@ const mutations = {
 		state.currentAlert.variant = variant
 	},
 
+	setSubmissionDefaultValues(state, data) {
+		state.submissionDefaultValues = data
+	},
 	// initial data
 
 	setCurrentUser(state, data) {
