@@ -1221,9 +1221,13 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
         """
         submission = Submission.objects.get(pk=submission_pk)
 
-        if not submission.data_changes_allowed:
+        if not submission.can_upload_files(request.user):
             return Response(
-                {'error': 'Submission state does not allow uploads'},
+                {
+                    'error': _(
+                        'You are not allowed to upload files on this submission'
+                    )
+                },
                 status=status.HTTP_400_BAD_REQUEST
             )
 
