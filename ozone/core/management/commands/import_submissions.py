@@ -625,6 +625,7 @@ class Command(BaseCommand):
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
         # we prefer preserving the legacy data as pristine as possible.
+
         for key, klass in (
             ("art7", Article7Questionnaire),
             ("imports", Article7Import),
@@ -635,14 +636,14 @@ class Command(BaseCommand):
         ):
             table_values = values[key]
             if isinstance(table_values, list):
-                klass.objects.bulk_create([
-                    klass(submission=submission, ordering_id=_i, **_instance)
-                    for _i, _instance in enumerate(table_values)
-                ])
+                for _i, _instance in enumerate(table_values):
+                    klass.objects.create(
+                        submission=submission, ordering_id=_i, **_instance
+                    )
             else:
-                klass.objects.bulk_create([
-                    klass(submission=submission, **table_values)
-                ])
+                klass.objects.create(
+                    submission=submission, **table_values
+                )
 
         # Extra tidy
         submission._current_state = "finalized"
