@@ -193,7 +193,7 @@ class Command(BaseCommand):
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
                 "blend_id": blend_id if blend else None,
-                # "blend_item_id": "", #???
+                # "blend_item_id": "", # created automatically at save()
                 "substance_id": substance_id if substance else None,
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
