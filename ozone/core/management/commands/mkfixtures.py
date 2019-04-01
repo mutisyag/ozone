@@ -327,10 +327,12 @@ class Command(BaseCommand):
         f['name'] = row['SubstName']
         # Skipped fields: SubstNameFr, SubstNameSp
         annex = row['Anx']
+        is_captured = False
         if annex and annex != '-':
             group = annex + row['Grp']
             if f['name'] == 'HFC-23':
                 group = 'F'
+                is_captured = True
             if group == 'FI' or group == 'FII':
                 group = 'F'
             if group == 'FIII':
@@ -353,6 +355,7 @@ class Command(BaseCommand):
         f['chlorines'] = row['Chlorines'] or ""
         f['bromines'] = row['Bromines'] or ""
         f['is_contained_in_polyols'] = f['name'] in ['CFC-11', 'HCFC-141B']
+        f['is_captured'] = is_captured
 
         # TODO: Not mapped: r_code, mp_control, main_usage
         return f

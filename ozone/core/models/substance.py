@@ -144,6 +144,8 @@ class Substance(models.Model):
 
     is_contained_in_polyols = models.BooleanField()
 
+    is_captured = models.BooleanField(default=False)
+
     @property
     def is_qps(self):
         """
