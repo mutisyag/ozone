@@ -113,11 +113,11 @@ class Substance(models.Model):
 
     formula = models.CharField(max_length=256)
 
-    number_of_isomers = models.SmallIntegerField(null=True)
+    number_of_isomers = models.SmallIntegerField(null=True, blank=True)
 
     # TODO: what is this?
-    gwp2 = models.IntegerField(null=True)
-    gwp_error_plus_minus = models.IntegerField(null=True)
+    gwp2 = models.IntegerField(null=True, blank=True)
+    gwp_error_plus_minus = models.IntegerField(null=True, blank=True)
 
     # Existing data seems to suggest this field is always non-blank,
     # allowing it though just in case...
