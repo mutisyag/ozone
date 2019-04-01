@@ -46,11 +46,16 @@ export default {
 			}
 			for (const propertyPath of this.form.formDetails.dataNeeded) {
 				const propValue = getPropertyValue(this.$store.state, propertyPath)
+				if (propertyPath === 'submissionDefaultValues.submission_format') {
+					// eslint-disable-next-line no-continue
+					continue
+				}
 				if (!propValue) return false
 			}
+			console.log('herererere')
 
 			const { dataNeeded } = this.form.formDetails
-
+			console.log(dataNeeded)
 			Object.values(this.form.tabs).forEach(tab => {
 				if (isObject(tab.form_fields)) {
 					for (const formFieldPropName in tab.form_fields) {
