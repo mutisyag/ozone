@@ -26,6 +26,8 @@ class Command(BaseCommand):
         'reporting_channels',
         'submission_formats',
         'essen_crit_types',
+        'baseline_types',
+        'control_measures',
     )
 
     def handle(self, *args, **options):

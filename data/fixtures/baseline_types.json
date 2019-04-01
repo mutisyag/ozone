@@ -1,0 +1,42 @@
+[
+    {
+        "model": "core.baselinetype",
+        "pk": 1,
+        "fields": {
+            "name": "A5Prod",
+            "remarks": "Production baseline for Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 2,
+        "fields": {
+            "name": "A5Cons",
+            "remarks": "Consumption baseline for Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 3,
+        "fields": {
+            "name": "NA5Prod",
+            "remarks": "Production baseline for non-Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 4,
+        "fields": {
+            "name": "NA5Cons",
+            "remarks": "Consumption baseline for non-Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 5,
+        "fields": {
+            "name": "BDN_NA5",
+            "remarks": "BDN production baseline after 28 July 2000"
+        }
+    }
+]
