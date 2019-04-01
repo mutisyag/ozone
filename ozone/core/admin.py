@@ -192,7 +192,7 @@ class PartyHistoryAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
     list_display = ('party', 'reporting_period')
-    search_fields = ["party"]
+    search_fields = ["party__name"]
     resource_class = PartyHistoryResource
 
 
@@ -212,7 +212,7 @@ class AnnexAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 
 @admin.register(Group)
 class GroupAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["group_id", "annex"]
+    search_fields = ["group_id", "annex__name"]
     resource_class = GroupResource
 
 
@@ -233,7 +233,7 @@ class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 class BlendComponentAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    search_fields = ["blend", "substance"]
+    search_fields = ["blend__blend_id", "substance__name"]
     resource_class = BlendComponentResource
 
 
