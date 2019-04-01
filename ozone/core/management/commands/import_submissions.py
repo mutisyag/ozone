@@ -154,14 +154,14 @@ class Command(BaseCommand):
                     source_party_id = None
 
             substance = self.substances.get(import_row["SubstID"])
-            substance_id = ""
+            substance_id = None
             try:
                 substance_id = substance.id
             except AttributeError:
                 pass
 
             blend = None
-            blend_id = ""
+            blend_id = None
             if not substance:
                 blend = self.blends.get(import_row["SubstID"])
                 try:
@@ -192,9 +192,9 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                "blend_id": blend_id if blend else "",
-                # "blend_item_id": "", #???
-                "substance_id": substance_id if substance else "",
+                "blend_id": blend_id if blend else None,
+                # "blend_item_id": "", # created automatically at save()
+                "substance_id": substance_id if substance else None,
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
             })
@@ -344,14 +344,14 @@ class Command(BaseCommand):
                     destination_party_id = None
 
             substance = self.substances.get(exports_row["SubstID"])
-            substance_id = ""
+            substance_id = None
             try:
                 substance_id = substance.id
             except AttributeError:
                 pass
 
             blend = None
-            blend_id = ""
+            blend_id = None
             if not substance:
                 blend = self.blends.get(exports_row["SubstID"])
                 try:
@@ -388,9 +388,9 @@ class Command(BaseCommand):
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
-                "blend_id": blend_id if blend else "",
+                "blend_id": blend_id if blend else None,
                 # "blend_item_id": "",
-                "substance_id": substance_id if substance else "",
+                "substance_id": substance_id if substance else None,
                 # "ordering_id": "",
                 # "submission_id": "", # Automatically filled.
             })
@@ -407,14 +407,14 @@ class Command(BaseCommand):
 
         for destroyed_row in row["Destroy"]:
             substance = self.substances.get(destroyed_row["SubstID"])
-            substance_id = ""
+            substance_id = None
             try:
                 substance_id = substance.id
             except AttributeError:
                 pass
 
             blend = None
-            blend_id = ""
+            blend_id = None
             if not substance:
                 blend = self.blends.get(destroyed_row["SubstID"])
                 try:
@@ -429,10 +429,10 @@ class Command(BaseCommand):
 
             destroyed.append({
                 "remarks_party": destroyed_row["Remark"] or "",
-                "substance_id": substance_id if substance else "",
+                "substance_id": substance_id if substance else None,
                 # "remarks_os": "",
                 "quantity_destroyed": destroyed_row["Destroyed"],
-                "blend_id": blend_id if blend else "",
+                "blend_id": blend_id if blend else None,
                 # "blend_item_id": "",
                 # "submission_id": "", # Auto filled
                 # "ordering_id": "",
@@ -625,6 +625,7 @@ class Command(BaseCommand):
         # Use bulk create to bypass any model level validation.
         # This will mean that some entries will be in impossible states but
         # we prefer preserving the legacy data as pristine as possible.
+
         for key, klass in (
             ("art7", Article7Questionnaire),
             ("imports", Article7Import),
@@ -635,14 +636,14 @@ class Command(BaseCommand):
         ):
             table_values = values[key]
             if isinstance(table_values, list):
-                klass.objects.bulk_create([
-                    klass(submission=submission, ordering_id=_i, **_instance)
-                    for _i, _instance in enumerate(table_values)
-                ])
+                for _i, _instance in enumerate(table_values):
+                    klass.objects.create(
+                        submission=submission, ordering_id=_i, **_instance
+                    )
             else:
-                klass.objects.bulk_create([
-                    klass(submission=submission, **table_values)
-                ])
+                klass.objects.create(
+                    submission=submission, **table_values
+                )
 
         # Extra tidy
         submission._current_state = "finalized"
