@@ -138,7 +138,7 @@
         "pk": 10,
         "model": "core.group",
         "fields": {
-            "group_id": "FI",
+            "group_id": "F",
             "annex": 5,
             "name": "Annex F Group I/II",
             "description": "Hydrofluorocarbons (HFCs)",
