@@ -2451,9 +2451,9 @@
       "group": 10,
       "party_type": 6,
       "baseline_type": 3,
-      "start_date": "2019-01-01",
+      "start_date": "2020-01-01",
       "end_date": "2023-12-31",
-      "allowed": 0.9
+      "allowed": 0.95
     }
   },
   {
@@ -2477,9 +2477,9 @@
       "group": 10,
       "party_type": 6,
       "baseline_type": 3,
-      "start_date": "2024-01-01",
+      "start_date": "2025-01-01",
       "end_date": "2028-12-31",
-      "allowed": 0.6
+      "allowed": 0.65
     }
   },
   {
@@ -2711,9 +2711,9 @@
       "group": 10,
       "party_type": 6,
       "baseline_type": 4,
-      "start_date": "2019-01-01",
+      "start_date": "2020-01-01",
       "end_date": "2023-12-31",
-      "allowed": 0.9
+      "allowed": 0.95
     }
   },
   {
@@ -2737,9 +2737,9 @@
       "group": 10,
       "party_type": 6,
       "baseline_type": 4,
-      "start_date": "2024-01-01",
+      "start_date": "2025-01-01",
       "end_date": "2028-12-31",
-      "allowed": 0.6
+      "allowed": 0.65
     }
   },
   {
