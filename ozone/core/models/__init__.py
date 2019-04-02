@@ -9,4 +9,4 @@ from .reporting import *
 from .substance import *
 from .legal import *
 from .file import *
-from .aggregations import *
+from .aggregation import *
