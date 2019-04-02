@@ -188,7 +188,8 @@ class AggregationMixin:
     @classmethod
     def get_field_sum_by_group(cls, submission, group_id, field_name):
         """
-        Returns ODP-based sum of
+        Returns ODP-based sum of quantities reported for given group_id, for a
+        certain submission.
         """
         def zero_if_none(value):
             return value if value is not None else 0
@@ -211,13 +212,15 @@ class AggregationMixin:
         # Aggregate
 
         return {
-            group_id: {
+            group_name: {
                 field_name: cls.get_field_sum_by_group(
                     submission, group_id, field_name
                 )
                 for field_name in cls.get_quantity_fields()
             }
-            for group_id in Group.objects.all().values_list('id', flat=True)
+            for group_id, group_name in Group.objects.all().values_list(
+                'id', 'name'
+            )
         }
 
 
@@ -466,8 +469,8 @@ class Article7Export(
 
 
 class Article7Import(
-    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
-    BaseImportExportReport, BaseUses
+    AggregationMixin, ModifyPreventionMixin, PolyolsMixin,
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on imports.
@@ -666,7 +669,7 @@ class Article7NonPartyTrade(
         return super().save(*args, **kwargs)
 
 
-class Article7Emission(AggregationMixin, ModifyPreventionMixin, BaseReport):
+class Article7Emission(ModifyPreventionMixin, BaseReport):
     """
     Model for a simple Article 7 data report on HFC-23 emissions.
 
