@@ -11,7 +11,7 @@ from model_utils import FieldTracker
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
 from .reporting import ModifyPreventionMixin, Submission
-from .substance import BlendComponent, Substance, Blend, Annex, Group
+from .substance import BlendComponent, Substance, Blend, Group
 from .utils import model_to_dict
 
 __all__ = [
@@ -192,8 +192,8 @@ class BaseReport(models.Model):
 
     ordering_id = models.IntegerField(
         default=0,
-        help_text="This allows the interface to keep the data entries in their original "
-                  "order, as given by the user."
+        help_text="This allows the interface to keep the data entries in their"
+                  "original order, as given by the user."
     )
 
     class Meta:
@@ -446,6 +446,54 @@ class Article7Import(
         related_name='article7imports_from',
         on_delete=models.PROTECT
     )
+
+    @classmethod
+    def get_quantity_fields(cls):
+        """
+        Returns list of field names belonging to this model which are used
+        for quantities.
+        Assumes for now that all quantity fields are <FloatField>s
+        """
+        return [
+            field.name
+            for field in cls._meta.get_fields()
+            if field.get_internal_type() == 'FloatField'
+        ]
+
+    @classmethod
+    def get_field_sum_by_group(cls, submission, group_id, field_name):
+        """
+        Returns ODP-based sum of
+        """
+        def zero_if_none(value):
+            return value if value is not None else 0
+
+        return sum(
+            [
+                zero_if_none(qty) * odp
+                for qty, odp in cls.objects.filter(
+                    submission=submission, substance__group__id=group_id
+                ).values_list(field_name, 'substance__odp')
+            ]
+        )
+
+    @classmethod
+    def get_aggregated_data(cls, submission):
+        """
+        Calculates aggregated ODP values, for all the model's quantity fields,
+        on the specified submission, broken down by annex group.
+        """
+        # Aggregate
+
+        return {
+            group_id: {
+                field_name: cls.get_field_sum_by_group(
+                    submission, group_id, field_name
+                )
+                for field_name in cls.get_quantity_fields()
+            }
+            for group_id in Group.objects.all().values_list('id', flat=True)
+        }
 
     class Meta:
         db_table = 'reporting_art7_imports'
