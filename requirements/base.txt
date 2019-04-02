@@ -3,7 +3,7 @@ python-slugify==1.2.5  # https://github.com/un33k/python-slugify
 Pillow==5.1.0  # https://github.com/python-pillow/Pillow
 argon2-cffi==18.1.0  # https://github.com/hynek/argon2_cffi
 redis>=2.10.5  # https://github.com/antirez/redis
-bootstrap-admin==0.4.0
+bootstrap-admin==0.4.2
 openpyxl==2.4.9
 xworkflows==1.0.4
 sentry-sdk==0.6.7
