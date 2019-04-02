@@ -167,6 +167,60 @@ class PolyolsMixin:
         super().save(*args, **kwargs)
 
 
+class AggregationMixin:
+    """
+    Used by all data-report classes that need to generate aggregated data.
+    """
+
+    @classmethod
+    def get_quantity_fields(cls):
+        """
+        Returns list of field names belonging to this model which are used
+        for quantities.
+        Assumes for now that all quantity fields are <FloatField>s
+        """
+        return [
+            field.name
+            for field in cls._meta.get_fields()
+            if field.get_internal_type() == 'FloatField'
+        ]
+
+    @classmethod
+    def get_field_sum_by_group(cls, submission, group_id, field_name):
+        """
+        Returns ODP-based sum of
+        """
+        def zero_if_none(value):
+            return value if value is not None else 0
+
+        return sum(
+            [
+                zero_if_none(qty) * odp
+                for qty, odp in cls.objects.filter(
+                    submission=submission, substance__group__id=group_id
+                ).values_list(field_name, 'substance__odp')
+            ]
+        )
+
+    @classmethod
+    def get_aggregated_data(cls, submission):
+        """
+        Calculates aggregated ODP values, for all the model's quantity fields,
+        on the specified submission, broken down by annex group.
+        """
+        # Aggregate
+
+        return {
+            group_id: {
+                field_name: cls.get_field_sum_by_group(
+                    submission, group_id, field_name
+                )
+                for field_name in cls.get_quantity_fields()
+            }
+            for group_id in Group.objects.all().values_list('id', flat=True)
+        }
+
+
 class BaseReport(models.Model):
     """
     This will be used as a base for all reporting models.
@@ -192,7 +246,7 @@ class BaseReport(models.Model):
 
     ordering_id = models.IntegerField(
         default=0,
-        help_text="This allows the interface to keep the data entries in their"
+        help_text="This allows the interface to keep the data entries in their "
                   "original order, as given by the user."
     )
 
@@ -372,8 +426,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
 
 
 class Article7Export(
-    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
-    BaseImportExportReport, BaseUses
+    AggregationMixin, ModifyPreventionMixin, PolyolsMixin,
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on exports.
@@ -447,59 +501,14 @@ class Article7Import(
         on_delete=models.PROTECT
     )
 
-    @classmethod
-    def get_quantity_fields(cls):
-        """
-        Returns list of field names belonging to this model which are used
-        for quantities.
-        Assumes for now that all quantity fields are <FloatField>s
-        """
-        return [
-            field.name
-            for field in cls._meta.get_fields()
-            if field.get_internal_type() == 'FloatField'
-        ]
-
-    @classmethod
-    def get_field_sum_by_group(cls, submission, group_id, field_name):
-        """
-        Returns ODP-based sum of
-        """
-        def zero_if_none(value):
-            return value if value is not None else 0
-
-        return sum(
-            [
-                zero_if_none(qty) * odp
-                for qty, odp in cls.objects.filter(
-                    submission=submission, substance__group__id=group_id
-                ).values_list(field_name, 'substance__odp')
-            ]
-        )
-
-    @classmethod
-    def get_aggregated_data(cls, submission):
-        """
-        Calculates aggregated ODP values, for all the model's quantity fields,
-        on the specified submission, broken down by annex group.
-        """
-        # Aggregate
-
-        return {
-            group_id: {
-                field_name: cls.get_field_sum_by_group(
-                    submission, group_id, field_name
-                )
-                for field_name in cls.get_quantity_fields()
-            }
-            for group_id in Group.objects.all().values_list('id', flat=True)
-        }
-
     class Meta:
         db_table = 'reporting_art7_imports'
 
 
-class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
+class Article7Production(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseReport, BaseUses
+):
     """
     Model for a simple Article 7 data report on production.
 
@@ -529,7 +538,10 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
         db_table = 'reporting_art7_production'
 
 
-class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
+class Article7Destruction(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseBlendCompositionReport
+):
     """
     Model for a simple Article 7 data report on destruction.
 
@@ -551,7 +563,10 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
         db_table = 'reporting_art7_destruction'
 
 
-class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
+class Article7NonPartyTrade(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseBlendCompositionReport
+):
     """
     Model for a simple Article 7 data report on non-party trade.
 
@@ -567,7 +582,9 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         'quantity_export_recovered',
     ]
 
-    trade_party = models.ForeignKey(Party, blank=True, null=True, on_delete=models.PROTECT)
+    trade_party = models.ForeignKey(
+        Party, blank=True, null=True, on_delete=models.PROTECT
+    )
 
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -649,7 +666,7 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         return super().save(*args, **kwargs)
 
 
-class Article7Emission(ModifyPreventionMixin, BaseReport):
+class Article7Emission(AggregationMixin, ModifyPreventionMixin, BaseReport):
     """
     Model for a simple Article 7 data report on HFC-23 emissions.
 
