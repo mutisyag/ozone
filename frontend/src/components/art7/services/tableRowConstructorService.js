@@ -1,5 +1,5 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import { fromExponential, isNumber } from '@/components/common/services/utilsService'
+import { fromExponential, isNumber, valueConverter, doSum } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -48,15 +48,6 @@ const quantityCalculator = (fields, parent, section, $gettext) => {
 
 	return returnObj
 }
-
-const valueConverter = (item) => {
-	if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
-		return 0
-	}
-	return parseFloat(item)
-}
-
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
 
 const decisionGenerator = (fields, parent, section, $gettext) => {
 	const decisions = []

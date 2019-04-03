@@ -19,6 +19,11 @@
 				- <span style="color: red">{{error}}</span>
 			</div>
 		</div>
+		<div v-if="multiRowValidation && Object.keys(multiRowValidation).length">
+			<div v-for="(substance, index) in multiRowValidation" :key="index">
+				Error for {{ display.substances[index] }}
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -32,6 +37,9 @@ export default {
 
 	computed: {
 		section() { return this.$store.getters.getValidationForCurrentTab(this.tabName) },
+		multiRowValidation() {
+			return this.$store.getters.multiRowValidation(this.tabName)
+		},
 		display() { return this.$store.state.initialData.display }
 	},
 

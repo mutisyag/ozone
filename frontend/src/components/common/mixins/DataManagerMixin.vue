@@ -52,10 +52,8 @@ export default {
 				}
 				if (!propValue) return false
 			}
-			console.log('herererere')
 
 			const { dataNeeded } = this.form.formDetails
-			console.log(dataNeeded)
 			Object.values(this.form.tabs).forEach(tab => {
 				if (isObject(tab.form_fields)) {
 					for (const formFieldPropName in tab.form_fields) {
