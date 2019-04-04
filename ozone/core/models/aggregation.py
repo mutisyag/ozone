@@ -132,7 +132,8 @@ class ProdCons(models.Model):
     )
 
     # Non-party
-    # TODO are values an aggregation of art7 [import/export]_[new/recovered]?
+    # TODO are values an aggregation of art7 non-party trade?
+    # ([import/export]_[new/recovered])
     non_party_import = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
@@ -142,7 +143,10 @@ class ProdCons(models.Model):
     )
 
     # Essential Uses
-    # TODO: check that RAF is indeed the data source
+    # Data source seems to be tbl_Acc_EssenUse in data.xlsx
+    # (it has production and import).
+    # TODO: this looks like RAF, but how are these production & import derived?
+    # Just a sum of everything?
     essential_uses_production = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
@@ -152,25 +156,26 @@ class ProdCons(models.Model):
     )
 
     # BDN prod limit
-    # TODO: data fucking sources !!!!
+    # TODO: populate from control.Limit
     bdn_prod_limit = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
     # Prod transfer
-    # TODO: data sources !!!!
+    # Data source seems to be ProdTransfers table in data.xlsx.
+    # TODO: use data.Transfer table to populate this; fixtures are also needed.
     prod_transfer = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
     # EssenCrit exempted amount
-    # TODO: data source
+    # TODO: this also looks like RAF
     essen_crit_exempted_amount = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
     # Limits
-    # TODO: A.M. will clarify usage with secretariat; for now they are empty
+    # TODO: to clarify usage with secretariat; for now these are empty
     limit_prod = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
