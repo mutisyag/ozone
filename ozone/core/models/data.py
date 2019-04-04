@@ -194,6 +194,8 @@ class AggregationMixin:
         def zero_if_none(value):
             return value if value is not None else 0
 
+        # This works both faster and more correctly than using Django's
+        # aggregations!
         return sum(
             [
                 zero_if_none(qty) * odp
