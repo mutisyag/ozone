@@ -9,6 +9,9 @@ const sumBiggerThanParts = (state, tab, partyField) => {
 	})
 	Object.keys(multipleSubstances).forEach(key => {
 		if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
+			state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+				field.skipValidation = 0
+			})
 			delete multipleSubstances[key]
 		}
 	})
@@ -28,9 +31,16 @@ const sumBiggerThanParts = (state, tab, partyField) => {
 		})
 	})
 	Object.keys(finalError).forEach(key => {
+		// This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
+		let multiValidationState = 1
 		if (finalError[key].left >= finalError[key].right) {
 			delete finalError[key]
+		} else {
+			multiValidationState = 2
 		}
+		state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+			field.skipValidation = multiValidationState
+		})
 	})
 	return finalError
 }
