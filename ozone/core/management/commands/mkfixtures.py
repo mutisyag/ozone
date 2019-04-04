@@ -9,6 +9,7 @@ from openpyxl import load_workbook
 
 from ozone.core.models.utils import RatificationTypes
 from ozone.core.models.substance import Blend
+from ozone.core.models.party import Party
 
 
 class Command(BaseCommand):
@@ -74,6 +75,14 @@ class Command(BaseCommand):
             'min_id': 120,
             'fixture': 'substances_edw.json',
             'sheet': 'SubstEDW',
+        },
+        'baselinetype': {
+            'fixture': 'baseline_types.json'
+        },
+        'baseline': {
+            'fixture': 'baselines.json',
+            'sheet': 'Sheet1',
+            'additional_data': {}
         },
     }
     EXCLUDED = (
@@ -438,3 +447,159 @@ class Command(BaseCommand):
             }
         ]
         return objs
+
+    def baseline_map(self, f, row):
+        additional_periods = ['1989', '1995', '1996', '1997', '1998', '1999', '2000']
+        baseline_periods = ['BaseA5', 'BaseNA5']
+        if row['PeriodID'] in additional_periods:
+            self.store_baseline_additional_data(
+                row['CntryID'],
+                row['PeriodID'],
+                row['Anx'] + row['Grp'],
+                row['CalcProd'] if row['CalcProd'] else 0,
+                row['CalcCons'] if row['CalcCons'] else 0
+            )
+        elif row['PeriodID'] in baseline_periods:
+            entries = []
+            party = self.lookup_id('party', 'abbr', row['CntryID'])
+            parent_party = Party.objects.get(id=party).parent_party
+            if (
+                parent_party is not None
+                and parent_party.id != party
+            ):
+                return
+            annex = row['Anx']
+            group = annex + row['Grp']
+            group = self.lookup_id('group', 'group_id', group)
+            party_type = row['PeriodID'][4:]
+
+            f['party'] = party
+            f['group'] = group
+            f['baseline_type_id'] = self.lookup_id(
+                'baselinetype',
+                'name',
+                party_type + 'Prod'
+            )
+            f['baseline'] = row['CalcProd']
+            entries.append(f)
+
+            f = {}
+            f['party'] = party
+            f['group'] = group
+            f['baseline_type_id'] = self.lookup_id(
+                'baselinetype',
+                'name',
+                party_type + 'Cons'
+            )
+            f['baseline'] = row['CalcCons']
+            entries.append(f)
+
+            return entries
+        else:
+            return
+
+    def store_baseline_additional_data(self, party, period, group, prod, cons):
+        """
+        Returns a dictionary in the following format:
+        {
+            'CntryID': {
+                'GroupID': {
+                    'PeriodID': {
+                        {
+                            'CalcProd': val1,
+                            'CalcCons': val2
+                        }
+                    }
+                }
+            }
+        }
+        """
+        if not self.MODELS['baseline']['additional_data'].get(party):
+            self.MODELS['baseline']['additional_data'][party] = {}
+        if not self.MODELS['baseline']['additional_data'][party].get(group):
+            self.MODELS['baseline']['additional_data'][party][group] = {}
+        self.MODELS['baseline']['additional_data'][party][group][period] = {
+            'CalcProd': prod,
+            'CalcCons': cons
+        }
+
+    def baseline_additional_data(self, idx):
+        entries = []
+        for party in self.MODELS['baseline']['additional_data'].keys():
+            groups = self.MODELS['baseline']['additional_data'][party].keys()
+            for group in groups:
+                if group == 'CII' or group == 'CIII':
+                    continue
+                obj = {}
+                obj['model'] = "core.baseline"
+                obj['fields'] = {}
+                obj['fields']['party'] = self.lookup_id('party', 'abbr', party)
+                obj['fields']['group'] = self.lookup_id('group', 'group_id', group)
+                obj['fields']['baseline_type_id'] = self.lookup_id('baselinetype', 'name', 'BDN_NA5')
+                obj['fields']['baseline'] = getattr(self, 'get_bdn_' + group)(
+                    party,
+                    self.MODELS['baseline']['additional_data'][party][group]
+                )
+                obj['pk'] = idx
+                entries.append(obj)
+                idx += 1
+
+        return entries
+
+    def get_bdn_AI(self, party, data):
+        periods = ['1995', '1996', '1997']
+        return self.calc_avg(data, periods)
+
+    def get_bdn_AII(self, party, data):
+        periods = ['1995', '1996', '1997']
+        return self.calc_avg(data, periods)
+
+    def get_bdn_BI(self, party, data):
+        periods = ['1998', '1999', '2000']
+        return self.calc_avg(data, periods)
+
+    def get_bdn_BII(self, party, data):
+        if not data.get('1989'):
+            return
+        return data['1989']['CalcProd']
+
+    def get_bdn_BIII(self, party, data):
+        # Same as BII
+        if not data.get('1989'):
+            return
+        return data['1989']['CalcProd']
+
+    def get_bdn_CI(self, party, data):
+        """
+        Here we have a more complicated formula:
+        Average of (1989 HCFC production + 2.8 per cent of 1989 CFC production)
+        and (1989 HCFC consumption +2.8 per cent of 1989 CFC consumption)
+        """
+
+        HCFC = 'CI'
+        CFC = 'AI'
+
+        if not data.get('1989') or not self.MODELS['baseline']['additional_data'][party][CFC].get('1989'):
+            return
+
+        prod_hcfc = self.MODELS['baseline']['additional_data'][party][HCFC]['1989']['CalcProd']
+        prod_cfc = self.MODELS['baseline']['additional_data'][party][CFC]['1989']['CalcProd']
+        prod = prod_hcfc + 0.028 * prod_cfc
+
+        cons_hcfc = self.MODELS['baseline']['additional_data'][party][HCFC]['1989']['CalcCons']
+        cons_cfc = self.MODELS['baseline']['additional_data'][party][CFC]['1989']['CalcCons']
+        cons = cons_hcfc + 0.028 * cons_cfc
+
+        return round((prod + cons) / 2, 2)
+
+    def get_bdn_EI(self, party, data):
+        periods = ['1995', '1996', '1997', '1998']
+        return self.calc_avg(data, periods)
+
+    def calc_avg(self, data, periods):
+        s = 0
+        for period in periods:
+            if not data.get(period):
+                return
+            s += data[period]['CalcProd']
+        return round(s / len(periods), 2)
