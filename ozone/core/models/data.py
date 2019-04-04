@@ -192,7 +192,7 @@ class AggregationMixin:
         certain submission.
         """
         def zero_if_none(value):
-            return value if value is not None else 0
+            return value if value is not None else 0.0
 
         # This works both faster and more correctly than using Django's
         # aggregations!
