@@ -12,6 +12,7 @@ from .legal import ReportingPeriod
 from .party import Party, PartyRatification
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend, Group
+from .aggregation import ProdCons
 from .utils import model_to_dict
 
 __all__ = [
@@ -233,6 +234,22 @@ class AggregationMixin:
                 'id', 'name'
             )
         }
+
+    @classmethod
+    def fill_aggregated_data(cls, submission=None, reported_groups=[]):
+        # Aggregations are unique per Party/Period/AnnexGroup. We need to
+        # iterate over the substance groups in this submission.
+
+        for group in reported_groups:
+            # Find an aggregation if one is already created
+            aggregation = ProdCons.objects.get_or_create(
+                party=submission.party,
+                reporting_period=submission.reporting_period,
+                group=group
+            )
+            # TODO: populate aggregation
+
+            aggregation.save()
 
 
 class BaseReport(models.Model):

@@ -1191,23 +1191,24 @@ class Submission(models.Model):
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
-        #TODO: check that this is Article 7 (&RAF?)
-        # Other types of submissions might have different aggregations
-
-        # Aggregations are unique per Party/Period/AnnexGroup. We need to
-        # iterate over the substance groups in this submission.
+        # Find the substance groups in this submission.
+        # TODO: for non-Art 7 these may not be populated right!
         reported_groups = [
             value for key, value in self.GROUP_FLAGS_MAPPING.items()
-            if getattr(self, key, False) == True
+            if getattr(self, key, False) is True
         ]
-        for group in Group.objects.filter(group_id__in=reported_groups):
-            # Find an aggregation if one is already created
-            aggregation = ProdCons.objects.get_or_create(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                group=group
-            )
-            aggregation.populate_data()
+        groups = Group.objects.filter(group_id__in=reported_groups)
+
+        # TODO: do this only for the needed related fields (e.g. art 7).
+        # RELATED_DATA might have a submission type mapping
+        # TODO: maybe also do this based on questionnaire?
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'fill_aggregated_data'):
+                    related_manager.model.fill_aggregated_data(
+                        submission=self, reported_groups=groups
+                    )
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
