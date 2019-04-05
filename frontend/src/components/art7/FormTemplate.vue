@@ -156,7 +156,7 @@
 		v-if="tabName === 'has_produced'"
 		class="table-wrapper">
 		<div class="table-title">
-			<h4> {{tab_info.formNumber}}.1.1 <span v-translate>Substances - captured</span></h4>
+			<h4> {{tab_info.formNumber}}.1.1 <span v-translate>Substances - annex group F/II</span></h4>
 			<div v-show="tableFII.tableFilters" class="table-filters">
 				<b-input-group :prepend="$gettext('Search')">
 					<b-form-input v-model="tableFII.filters.search"/>
