@@ -463,12 +463,6 @@ class Command(BaseCommand):
         elif row['PeriodID'] in baseline_periods:
             entries = []
             party = self.lookup_id('party', 'abbr', row['CntryID'])
-            parent_party = Party.objects.get(id=party).parent_party
-            if (
-                parent_party is not None
-                and parent_party.id != party
-            ):
-                return
             group = self.lookup_id('group', 'group_id', group)
             party_type = row['PeriodID'][4:]
 
