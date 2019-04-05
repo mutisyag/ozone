@@ -71,6 +71,8 @@ const getters = {
 		}
 	},
 
+	getCapturedSubstance: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.is_captured),
+
 	getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
 		(sub) => sub.obligation === data.obligation
 			&& sub.party === data.party

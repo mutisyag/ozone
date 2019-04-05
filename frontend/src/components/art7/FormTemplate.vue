@@ -156,7 +156,7 @@
 		v-if="tabName === 'has_produced'"
 		class="table-wrapper">
 		<div class="table-title">
-			<h4> {{tab_info.formNumber}}.1.1 <span v-translate>Substances - group FII</span></h4>
+			<h4> {{tab_info.formNumber}}.1.1 <span v-translate>Substances - captured</span></h4>
 			<div v-show="tableFII.tableFilters" class="table-filters">
 				<b-input-group :prepend="$gettext('Search')">
 					<b-form-input v-model="tableFII.filters.search"/>
@@ -702,7 +702,7 @@ export default {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
 					if (this.tabName === 'has_produced') {
-						if (element.group.selected === 'FII') {
+						if (this.$store.getters.getCapturedSubstance(element.substance.selected)) {
 							return
 						}
 					}
@@ -733,7 +733,8 @@ export default {
 			this.tab_info.form_fields.forEach((element) => {
 				const tableRow = {}
 				Object.keys(element).forEach(key => {
-					if (this.tabName === 'has_produced' && element.substance.selected && element.group.selected === 'FII') {
+					console.log('element', element)
+					if (this.tabName === 'has_produced' && element.substance.selected && this.$store.getters.getCapturedSubstance(element.substance.selected)) {
 						tableRow[key] = this.typeOfDisplayObj[key]
 							? this.$store.state.initialData.display[
 								this.typeOfDisplayObj[key]

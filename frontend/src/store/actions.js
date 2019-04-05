@@ -405,7 +405,8 @@ const actions = {
 						text: substance.name,
 						group,
 						is_qps: substance.is_qps,
-						is_contained_in_polyols: substance.is_contained_in_polyols
+						is_contained_in_polyols: substance.is_contained_in_polyols,
+						is_captured: substance.is_captured
 					})
 					substancesDisplay[substance.id] = substance.name
 				})
