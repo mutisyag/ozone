@@ -6,13 +6,13 @@
 				class="validation-item"
 				v-for="(error,error_index) in field.validation"
 				:key="error_index">
-				<span class="btn-link" @click="$emit('fillSearch', {substance: `${display.substances[field.substance]} invalid`})" v-if="display.substances[field.substance]">
+				<span class="btn-link" @click="$emit('fillSearch', { substance: display.substances[field.substance] })" v-if="display.substances[field.substance]">
 					{{display.substances[field.substance]}}
 				</span>
-				<span class="btn-link"  @click="$emit('fillSearch', {blend: `${display.blends[field.blend].name} invallid`})" v-if="display.blends[field.blend]">
+				<span class="btn-link"  @click="$emit('fillSearch', { blend: display.blends[field.blend].name })" v-if="display.blends[field.blend]">
 					{{display.blends[field.blend].name}}
 				</span>
-				<span class="btn-link"  @click="$emit('fillSearch', {facility: field.facility_name})" v-if="field.facility_name">
+				<span class="btn-link"  @click="$emit('fillSearch', { facility: field.facility_name })" v-if="field.facility_name">
 					{{field.facility_name}}
 				</span>
 				<span v-if="countryField(field)"> - {{countryField(field)}}</span>
