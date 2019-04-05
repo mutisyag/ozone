@@ -208,6 +208,13 @@ export default {
 				}
 			})
 		}
+	},
+	watch: {
+		'$store.state.current_submission.current_state': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
+		}
 	}
 }
 

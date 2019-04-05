@@ -224,6 +224,11 @@ export default {
 			handler() {
 				this.updateBreadcrumbs()
 			}
+		},
+		'$store.state.current_submission.current_state': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
 		}
 	},
 	data() {
