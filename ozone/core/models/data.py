@@ -172,6 +172,9 @@ class AggregationMixin:
     Used by all data-report classes that need to generate aggregated data.
     """
 
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
+
     @classmethod
     def get_quantity_fields(cls):
         """
@@ -186,7 +189,7 @@ class AggregationMixin:
         ]
 
     @classmethod
-    def get_field_sum_by_group(cls, submission, group_id, field_name):
+    def get_fields_sum_by_group(cls, submission, group_id, field_names):
         """
         Returns ODP-based sum of quantities reported for given group_id, for a
         certain submission.
@@ -196,14 +199,21 @@ class AggregationMixin:
 
         # This works both faster and more correctly than using Django's
         # aggregations!
-        return sum(
-            [
-                zero_if_none(qty) * odp
-                for qty, odp in cls.objects.filter(
-                    submission=submission, substance__group__id=group_id
-                ).values_list(field_name, 'substance__odp')
-            ]
-        )
+        # One SQL query for all fields
+        fields_values = cls.objects.filter(
+            submission=submission, substance__group__id=group_id
+        ).values('substance__odp', *field_names)
+
+        # TODO: horrible, improve
+        return {
+            field_name: sum(
+                [
+                    zero_if_none(value[field_name]) * value['substance__odp']
+                    for value in fields_values
+                ]
+            )
+            for field_name in field_names
+        }
 
     @classmethod
     def get_aggregated_data(cls, submission):
@@ -215,10 +225,11 @@ class AggregationMixin:
 
         return {
             group_name: {
-                field_name: cls.get_field_sum_by_group(
-                    submission, group_id, field_name
+                cls.get_fields_sum_by_group(
+                    submission,
+                    group_id,
+                    [field_name for field_name in cls.get_quantity_fields()]
                 )
-                for field_name in cls.get_quantity_fields()
             }
             for group_id, group_name in Group.objects.all().values_list(
                 'id', 'name'

@@ -130,9 +130,13 @@ class DefaultArticle7Workflow(BaseWorkflow):
 
     @xworkflows.transition('submit')
     def submit(self):
+        # Make submission current
         self.model_instance.make_current()
+        # Set submitted_at flag
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+        # Populate submission-specific aggregated data
+        self.model_instance.fill_aggregated_data()
 
     @xworkflows.transition('unrecall_to_submitted')
     def unrecall_to_submitted(self):

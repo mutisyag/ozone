@@ -4,7 +4,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from .party import Party, PartyType
-from .reporting import ReportingPeriod
+from .legal import ReportingPeriod
 from .substance import Group
 
 

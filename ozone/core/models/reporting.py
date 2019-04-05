@@ -9,8 +9,17 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
+from .aggregation import ProdCons
+#from .data import (
+#    Article7Export,
+#    Article7Import,
+#    Article7Production,
+#    Article7Destruction,
+#    Article7NonPartyTrade,
+#)
 from .legal import ReportingPeriod
 from .party import Party
+from .substance import Group
 from .utils import model_to_dict
 from .workflows.base import BaseWorkflow
 from .workflows.default import DefaultArticle7Workflow
@@ -205,13 +214,13 @@ class Submission(models.Model):
 
     # This keeps a mapping between the DB-persisted workflow and
     # its actual implementation class.
-    WORKFLOW_MAP = {
+    WORKFLOW_MAPPING = {
         'empty': None,
         'base': BaseWorkflow,
         'default': DefaultArticle7Workflow,
         'accelerated': AcceleratedArticle7Workflow,
         'default_exemption': DefaultExemptionWorkflow,
-        'accelerated_exemption': AcceleratedExemptionWorkflow
+        'accelerated_exemption': AcceleratedExemptionWorkflow,
     }
 
     RELATED_DATA = [
@@ -229,6 +238,19 @@ class Submission(models.Model):
         'exemptionapproveds',
         'rafreports',
     ]
+
+    GROUP_FLAGS_MAPPING = {
+        'flag_has_reported_a1': 'AI',
+        'flag_has_reported_a2': 'AII',
+        'flag_has_reported_b1': 'BI',
+        'flag_has_reported_b2': 'BII',
+        'flag_has_reported_b3': 'BIII',
+        'flag_has_reported_c1': 'CI',
+        'flag_has_reported_c2': 'CII',
+        'flag_has_reported_c3': 'CIII',
+        'flag_has_reported_e': 'E',
+        'flag_has_reported_f': 'F',
+    }
 
     # TODO: this implements the `submission_type` field from the
     # Ozone Business Data Tables. Analyze how Party-to-Obligation/Version
@@ -285,7 +307,7 @@ class Submission(models.Model):
     # at submission creation, so it will have no setter implementation.
     _workflow_class = models.CharField(
         max_length=32,
-        choices=((w, w.capitalize()) for w in WORKFLOW_MAP.keys()),
+        choices=((w, w.capitalize()) for w in WORKFLOW_MAPPING.keys()),
         default='empty',
         db_column='workflow_class'
     )
@@ -522,7 +544,7 @@ class Submission(models.Model):
         """
         Creates workflow instance and set last *persisted* state on it
         """
-        wf = self.WORKFLOW_MAP[self._workflow_class](
+        wf = self.WORKFLOW_MAPPING[self._workflow_class](
             model_instance=self,
             user=user
         )
@@ -1169,6 +1191,39 @@ class Submission(models.Model):
         if 'submitted_at' in self.tracker.changed().keys():
             return True
         return False
+
+    @transaction.atomic
+    def fill_aggregated_data(self):
+        """
+        Fill aggregated data from this submission into the corresponding
+        aggregation model instance.
+        """
+        #TODO: check that this is Article 7
+
+        # Aggregations are unique per Party/Period/AnnexGroup. We need to
+        # iterate over the substance groups in this submission.
+        reported_groups = [
+            value for key, value in self.GROUP_FLAGS_MAPPING.items()
+            if getattr(self, key, False) == True
+        ]
+        for group in Group.objects.filter(group_id__in=reported_groups):
+            # Find an aggregation if one is already created
+            aggregation = ProdCons.objects.get_or_create(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                group=group
+            )
+
+            # Also take into account questionnaire flags!
+            questionnaire = self.article7questionnaire
+            if questionnaire.has_imports:
+                aggregation.import_new = Article7Import.get_field_sum_by_group(
+                    self, group.id, 'quantity_total_new'
+                )
+
+            aggregation.save()
+
+
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

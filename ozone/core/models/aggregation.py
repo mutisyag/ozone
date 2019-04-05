@@ -1,9 +1,14 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 
-from .reporting import ReportingPeriod
+from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group
+
+
+__all__ = [
+    'ProdCons',
+]
 
 
 class ProdCons(models.Model):
