@@ -1,3 +1,50 @@
+import { doSum } from '@/components/common/services/utilsService'
+
+const sumBiggerThanParts = (state, tab, partyField) => {
+	if (!state.form.tabs[tab].form_fields.length) return {}
+	const multipleSubstances = {}
+	const finalError = {}
+	state.form.tabs[tab].form_fields.forEach(row => {
+		multipleSubstances[row.substance.selected] = [...state.form.tabs[tab].form_fields.filter(substance => row.substance.selected === substance.substance.selected)]
+	})
+	Object.keys(multipleSubstances).forEach(key => {
+		if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
+			state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+				field.skipValidation = 0
+			})
+			delete multipleSubstances[key]
+		}
+	})
+	if (Object.keys(multipleSubstances).length < 1) {
+		return {}
+	}
+	Object.keys(multipleSubstances).forEach(key => {
+		console.log(key)
+		finalError[key] = {
+			left: 0,
+			right: 0
+		}
+
+		multipleSubstances[key].forEach(entry => {
+			finalError[key].left += doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected])
+			finalError[key].right += doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment])
+		})
+	})
+	Object.keys(finalError).forEach(key => {
+		// This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
+		let multiValidationState = 1
+		if (finalError[key].left >= finalError[key].right) {
+			delete finalError[key]
+		} else {
+			multiValidationState = 2
+		}
+		state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+			field.skipValidation = multiValidationState
+		})
+	})
+	return finalError
+}
+
 const getters = {
 	// TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
 	getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields
@@ -12,6 +59,19 @@ const getters = {
 				facility_name: field.facility_name ? field.facility_name.selected : null
 			}
 			: null)),
+
+	multiRowValidation: (state) => (tab) => {
+		switch (tab) {
+		case 'has_imports':
+			return sumBiggerThanParts(state, tab, 'source_party')
+		case 'has_exports':
+			return sumBiggerThanParts(state, tab, 'destination_party')
+		default:
+			return {}
+		}
+	},
+
+	getCapturedSubstance: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.is_captured),
 
 	getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
 		(sub) => sub.obligation === data.obligation

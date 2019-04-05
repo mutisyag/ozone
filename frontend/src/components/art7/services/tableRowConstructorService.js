@@ -1,5 +1,5 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
-import { fromExponential, isNumber } from '@/components/common/services/utilsService'
+import { fromExponential, isNumber, valueConverter, doSum } from '@/components/common/services/utilsService'
 
 const getCountryField = (currentSection) => {
 	switch (currentSection) {
@@ -48,15 +48,6 @@ const quantityCalculator = (fields, parent, section, $gettext) => {
 
 	return returnObj
 }
-
-const valueConverter = (item) => {
-	if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
-		return 0
-	}
-	return parseFloat(item)
-}
-
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
 
 const decisionGenerator = (fields, parent, section, $gettext) => {
 	const decisions = []
@@ -335,9 +326,14 @@ export default {
 				if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
 					errors.push($gettext('Total quantity imported for all uses is required'))
 				}
+				if (!this.skipValidation) {
+					if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+						errors.push($gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
+					}
+				}
 
-				if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
-					errors.push($gettext('Total quantity imported for all uses must be >= to the sum of individual components'))
+				if (this.skipValidation === 2) {
+					errors.push($gettext('Total quantity imported for all uses must be >= to the sum of individual components for all cumulated rows regarding this substance'))
 				}
 
 				const returnObj = {
@@ -346,7 +342,9 @@ export default {
 				}
 
 				return returnObj
-			}
+			},
+			// This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
+			skipValidation: 0
 		}
 
 		baseInnerFields[countryFieldName] = {

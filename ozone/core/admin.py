@@ -369,7 +369,7 @@ class BaselineAdmin(admin.ModelAdmin):
     list_display = (
         'party', 'group', 'baseline_type', 'baseline',
     )
-    list_filter = ('group', 'baseline_type')
+    list_filter = ('group', 'baseline_type', 'party')
     resource_class = BaselineResource
 
 

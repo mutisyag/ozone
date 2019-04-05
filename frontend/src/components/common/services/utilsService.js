@@ -109,6 +109,15 @@ const getObjectLevel1PropertyValuesAsArray = (obj, addedPropNameForKey) => {
 	return result
 }
 
+const valueConverter = (item) => {
+	if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
+		return 0
+	}
+	return parseFloat(item)
+}
+
+const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
+
 export {
 	getLevel2PropertyValue,
 	isObject,
@@ -119,5 +128,7 @@ export {
 	fromExponential,
 	sortAscending,
 	sortDescending,
-	getObjectLevel1PropertyValuesAsArray
+	getObjectLevel1PropertyValuesAsArray,
+	valueConverter,
+	doSum
 }

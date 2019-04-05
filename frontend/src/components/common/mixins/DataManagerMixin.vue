@@ -52,10 +52,8 @@ export default {
 				}
 				if (!propValue) return false
 			}
-			console.log('herererere')
 
 			const { dataNeeded } = this.form.formDetails
-			console.log(dataNeeded)
 			Object.values(this.form.tabs).forEach(tab => {
 				if (isObject(tab.form_fields)) {
 					for (const formFieldPropName in tab.form_fields) {
@@ -179,6 +177,9 @@ export default {
 					}
 				})
 				this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+				console.log(tabName, 'lululu')
+				console.log(this.$store.state.form.tabs[tabName].form_fields)
+				console.log(this.$store.getters.multiRowValidation(tabName))
 			}
 			if (isObject(this.form.tabs[tabName].form_fields)) {
 				const [prefillData] = data

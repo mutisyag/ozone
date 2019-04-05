@@ -283,6 +283,11 @@ export default {
 				this.labels = getLabels(this.$gettext).common
 				this.updateBreadcrumbs()
 			}
+		},
+		'$store.state.current_submission.current_state': {
+			handler() {
+				this.updateBreadcrumbs()
+			}
 		}
 	},
 	data() {
