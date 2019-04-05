@@ -1,7 +1,7 @@
 from django.db import models
 
 from .party import Party
-from .reporting import ReportingPeriod
+from .legal import ReportingPeriod
 
 __all__ = [
     'ProcessAgentContainTechnology',

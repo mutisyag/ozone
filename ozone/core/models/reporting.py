@@ -10,13 +10,6 @@ from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
 from .aggregation import ProdCons
-#from .data import (
-#    Article7Export,
-#    Article7Import,
-#    Article7Production,
-#    Article7Destruction,
-#    Article7NonPartyTrade,
-#)
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
