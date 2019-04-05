@@ -1191,7 +1191,8 @@ class Submission(models.Model):
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
-        #TODO: check that this is Article 7
+        #TODO: check that this is Article 7 (&RAF?)
+        # Other types of submissions might have different aggregations
 
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
@@ -1206,17 +1207,7 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period,
                 group=group
             )
-
-            # Also take into account questionnaire flags!
-            questionnaire = self.article7questionnaire
-            if questionnaire.has_imports:
-                aggregation.import_new = Article7Import.get_field_sum_by_group(
-                    self, group.id, 'quantity_total_new'
-                )
-
-            aggregation.save()
-
-
+            aggregation.populate_data()
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

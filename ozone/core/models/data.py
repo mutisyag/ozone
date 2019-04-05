@@ -224,13 +224,11 @@ class AggregationMixin:
         # Aggregate
 
         return {
-            group_name: {
-                cls.get_fields_sum_by_group(
-                    submission,
-                    group_id,
-                    [field_name for field_name in cls.get_quantity_fields()]
-                )
-            }
+            group_name: cls.get_fields_sum_by_group(
+                submission,
+                group_id,
+                cls.get_quantity_fields()
+            )
             for group_id, group_name in Group.objects.all().values_list(
                 'id', 'name'
             )
