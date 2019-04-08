@@ -5,24 +5,33 @@
 				:class="{hovered: (section.indexOf(field)) === hovered }"
 				class="validation-item"
 				v-for="(error,error_index) in field.validation"
-				:key="error_index">
-				<span class="btn-link" @click="$emit('fillSearch', { substance: display.substances[field.substance] })" v-if="display.substances[field.substance]">
-					{{display.substances[field.substance]}}
-				</span>
-				<span class="btn-link"  @click="$emit('fillSearch', { blend: display.blends[field.blend].name })" v-if="display.blends[field.blend]">
-					{{display.blends[field.blend].name}}
-				</span>
-				<span class="btn-link"  @click="$emit('fillSearch', { facility: field.facility_name })" v-if="field.facility_name">
-					{{field.facility_name}}
-				</span>
-				<span v-if="countryField(field)"> - {{countryField(field)}}</span>
-				- <span style="color: red">{{error}}</span>
+				:key="error_index"
+			>
+				<span
+					class="btn-link"
+					@click="$emit('fillSearch', { substance: display.substances[field.substance] })"
+					v-if="display.substances[field.substance]"
+				>{{display.substances[field.substance]}}</span>
+				<span
+					class="btn-link"
+					@click="$emit('fillSearch', { blend: display.blends[field.blend].name })"
+					v-if="display.blends[field.blend]"
+				>{{display.blends[field.blend].name}}</span>
+				<span
+					class="btn-link"
+					@click="$emit('fillSearch', { facility: field.facility_name })"
+					v-if="field.facility_name"
+				>{{field.facility_name}}</span>
+				<span v-if="countryField(field)">- {{countryField(field)}}</span>
+				-
+				<span style="color: red">{{error}}</span>
 			</div>
 		</div>
 		<div v-if="multiRowValidation && Object.keys(multiRowValidation).length">
-			<div v-for="(substance, index) in multiRowValidation" :key="index">
-				Error for {{ display.substances[index] }}
-			</div>
+			<div
+				v-for="(substance, index) in multiRowValidation"
+				:key="index"
+			>Error for {{ display.substances[index] }}</div>
 		</div>
 	</div>
 </template>
@@ -30,31 +39,31 @@
 <script>
 export default {
 
-	props: {
-		tabName: String,
-		hovered: null
-	},
+  props: {
+    tabName: String,
+    hovered: null
+  },
 
-	computed: {
-		section() { return this.$store.getters.getValidationForCurrentTab(this.tabName) },
-		multiRowValidation() {
-			return this.$store.getters.multiRowValidation(this.tabName)
-		},
-		display() { return this.$store.state.initialData.display }
-	},
+  computed: {
+    section() { return this.$store.getters.getValidationForCurrentTab(this.tabName) },
+    multiRowValidation() {
+      return this.$store.getters.multiRowValidation(this.tabName)
+    },
+    display() { return this.$store.state.initialData.display }
+  },
 
-	methods: {
-		countryField(field) {
-			const countryFields = ['source_party', 'destination_party', 'trade_party']
-			const currentCountryField = Object.keys(field).find(f => field[f] && countryFields.includes(f))
-			return this.display.countries[field[currentCountryField]]
-		}
-	},
+  methods: {
+    countryField(field) {
+      const countryFields = ['source_party', 'destination_party', 'trade_party']
+      const currentCountryField = Object.keys(field).find(f => field[f] && countryFields.includes(f))
+      return this.display.countries[field[currentCountryField]]
+    }
+  },
 
-	data() {
-		return {
-		}
-	}
+  data() {
+    return {
+    }
+  }
 }
 </script>
 

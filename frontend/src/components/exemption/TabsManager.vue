@@ -118,104 +118,104 @@ import FormTemplate from '@/components/exemption/FormTemplate.vue'
 import TransitionQuestions from '@/components/exemption/TransitionQuestions'
 
 export default {
-	components: {
-		SubmissionInfo,
-		Files,
-		Footer,
-		Save,
-		SubmissionHistory,
-		TabTitleWithLoader,
-		FormTemplate,
-		TransitionQuestions
-	},
-	props: {
-		data: null,
-		submission: String
-	},
-	data() {
-		return {
-			tabIndex: 0,
-			modal_data: null,
-			labels: getLabels(this.$gettext).common,
-			currentTransition: null
-		}
-	},
-	created() {
-		this.$store.commit('updateBreadcrumbs',
-			[this.$gettext('Dashboard'),
-				this.$store.state.current_submission.obligation,
-				this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-				this.$store.state.current_submission.reporting_period,
-				`${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
-	},
-	computed: {
-		availableTransitions() {
-			return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
-		},
-		selectedTab() {
-			const { form } = this.$store.state
-			const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
-			const body = document.querySelector('body')
-			if (tab.hasAssideMenu && !this.$store.getters.isReadOnly) {
-				body.classList.add('aside-menu-lg-show')
-			} else {
-				body.classList.remove('aside-menu-lg-show')
-			}
-			return tab
-		},
-		tabsIdsForSecretariat() {
-			const { form } = this.$store.state
-			const tabIds = form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
-			tabIds.forEach(tabId => {
-				if (!this.is_secretariat) {
-					this.$store.state.form.tabs[tabId].skipSave = true
-				}
-			})
-			return tabIds
-		},
-		is_secretariat() {
-			return this.$store.state.currentUser.is_secretariat
-		}
-	},
-	methods: {
-		createModalData() {
-			const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
-			const formName = this.$route.name
-			getInstructions(formName, tabName).then((response) => {
-				this.modal_data = response.data
-				this.$refs.instructions_modal.show()
-			})
-		},
-		checkBeforeSubmitting() {
-			const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
-			if (unsavedTabs.length) {
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { __all__: [this.$gettext('Please save before submitting')] },
-					variant: 'danger'
-				})
-				return
-			}
-			this.currentTransition = 'submit'
-		},
-		removeSubmission() {
-			this.$store.dispatch('removeSubmission', {
-				$gettext: this.$gettext,
-				submissionUrl: this.submission
-			}).then((result) => {
-				if (result) {
-					this.$router.push({ name: 'Dashboard' })
-				}
-			})
-		}
-	},
-	watch: {
-		'$store.state.current_submission.current_state': {
-			handler() {
-				this.updateBreadcrumbs()
-			}
-		}
-	}
+  components: {
+    SubmissionInfo,
+    Files,
+    Footer,
+    Save,
+    SubmissionHistory,
+    TabTitleWithLoader,
+    FormTemplate,
+    TransitionQuestions
+  },
+  props: {
+    data: null,
+    submission: String
+  },
+  data() {
+    return {
+      tabIndex: 0,
+      modal_data: null,
+      labels: getLabels(this.$gettext).common,
+      currentTransition: null
+    }
+  },
+  created() {
+    this.$store.commit('updateBreadcrumbs',
+      [this.$gettext('Dashboard'),
+        this.$store.state.current_submission.obligation,
+        this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
+        this.$store.state.current_submission.reporting_period,
+        `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+  },
+  computed: {
+    availableTransitions() {
+      return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
+    },
+    selectedTab() {
+      const { form } = this.$store.state
+      const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
+      const body = document.querySelector('body')
+      if (tab.hasAssideMenu && !this.$store.getters.isReadOnly) {
+        body.classList.add('aside-menu-lg-show')
+      } else {
+        body.classList.remove('aside-menu-lg-show')
+      }
+      return tab
+    },
+    tabsIdsForSecretariat() {
+      const { form } = this.$store.state
+      const tabIds = form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
+      tabIds.forEach(tabId => {
+        if (!this.is_secretariat) {
+          this.$store.state.form.tabs[tabId].skipSave = true
+        }
+      })
+      return tabIds
+    },
+    is_secretariat() {
+      return this.$store.state.currentUser.is_secretariat
+    }
+  },
+  methods: {
+    createModalData() {
+      const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
+      const formName = this.$route.name
+      getInstructions(formName, tabName).then((response) => {
+        this.modal_data = response.data
+        this.$refs.instructions_modal.show()
+      })
+    },
+    checkBeforeSubmitting() {
+      const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
+      if (unsavedTabs.length) {
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { __all__: [this.$gettext('Please save before submitting')] },
+          variant: 'danger'
+        })
+        return
+      }
+      this.currentTransition = 'submit'
+    },
+    removeSubmission() {
+      this.$store.dispatch('removeSubmission', {
+        $gettext: this.$gettext,
+        submissionUrl: this.submission
+      }).then((result) => {
+        if (result) {
+          this.$router.push({ name: 'Dashboard' })
+        }
+      })
+    }
+  },
+  watch: {
+    '$store.state.current_submission.current_state': {
+      handler() {
+        this.updateBreadcrumbs()
+      }
+    }
+  }
 }
 
 </script>

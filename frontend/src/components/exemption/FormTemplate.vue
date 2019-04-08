@@ -145,87 +145,87 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import { getLabels } from '@/components/exemption/dataDefinitions/labels'
 
 export default {
-	mixins: [FormTemplateMixin],
-	components: {
-		ValidationLabel
-	},
-	data() {
-		return {
-			tableRows: null,
-			labels: null
-		}
-	},
+  mixins: [FormTemplateMixin],
+  components: {
+    ValidationLabel
+  },
+  data() {
+    return {
+      tableRows: null,
+      labels: null
+    }
+  },
 
-	props: {
-		hasDisabledFields: Boolean
-	},
+  props: {
+    hasDisabledFields: Boolean
+  },
 
-	created() {
-		const labels = getLabels(this.$gettext)
-		this.labels = {
-			...labels[this.tab_info.name]
-		}
-		this.setTableRows()
-	},
-	methods: {
-		fillTableSearch(data) {
-			if (data.substance) {
-				this.table.filters.search = data.substance
-				this.table.tableFilters = true
-			}
-		},
-		setTableRows() {
-			const tableRows = []
-			this.tab_info.form_fields.forEach((element) => {
-				const tableRow = {}
-				Object.keys(element).forEach(key => {
-					if (element.substance.selected) {
-						tableRow[key] = this.typeOfDisplayObj[key]
-							? this.$store.state.initialData.display[
-								this.typeOfDisplayObj[key]
-							][element[key].selected]
-							: (tableRow[key] = element[key].selected)
-					}
-				})
-				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = element
-					tableRow.index = this.tab_info.form_fields.indexOf(element)
-					if (tableRow.originalObj.validation.selected.length) {
-						tableRow.validation = 'invalid'
-					} else {
-						tableRow.validation = 'valid'
-					}
-					tableRows.push(tableRow)
-				}
-			})
-			this.tableRows = tableRows
-		}
-	},
-	watch: {
-		'$language.current': {
-			handler() {
-				this.setLabels()
-			}
-		},
-		'tab_info.form_fields': {
-			handler() {
-				if (this.$refs.edit_modal.is_show) {
-					this.tableRows = []
-					setTimeout(() => this.setTableRows(), 200)
-				} else {
-					this.setTableRows()
-				}
-				if (parseInt(this.tabId) === this.tabIndex) {
-					if (this.tab_info.status !== 'edited') {
-						this.$store.commit('setTabStatus', {
-							tab: this.tabName,
-							value: 'edited'
-						})
-					}
-				}
-			},
-			deep: true
-		}
-	}
+  created() {
+    const labels = getLabels(this.$gettext)
+    this.labels = {
+      ...labels[this.tab_info.name]
+    }
+    this.setTableRows()
+  },
+  methods: {
+    fillTableSearch(data) {
+      if (data.substance) {
+        this.table.filters.search = data.substance
+        this.table.tableFilters = true
+      }
+    },
+    setTableRows() {
+      const tableRows = []
+      this.tab_info.form_fields.forEach((element) => {
+        const tableRow = {}
+        Object.keys(element).forEach(key => {
+          if (element.substance.selected) {
+            tableRow[key] = this.typeOfDisplayObj[key]
+              ? this.$store.state.initialData.display[
+                this.typeOfDisplayObj[key]
+              ][element[key].selected]
+              : (tableRow[key] = element[key].selected)
+          }
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = element
+          tableRow.index = this.tab_info.form_fields.indexOf(element)
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableRows.push(tableRow)
+        }
+      })
+      this.tableRows = tableRows
+    }
+  },
+  watch: {
+    '$language.current': {
+      handler() {
+        this.setLabels()
+      }
+    },
+    'tab_info.form_fields': {
+      handler() {
+        if (this.$refs.edit_modal.is_show) {
+          this.tableRows = []
+          setTimeout(() => this.setTableRows(), 200)
+        } else {
+          this.setTableRows()
+        }
+        if (parseInt(this.tabId) === this.tabIndex) {
+          if (this.tab_info.status !== 'edited') {
+            this.$store.commit('setTabStatus', {
+              tab: this.tabName,
+              value: 'edited'
+            })
+          }
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>

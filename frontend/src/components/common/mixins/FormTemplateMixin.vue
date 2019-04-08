@@ -5,314 +5,314 @@ import DefaultAside from '@/components/common/form-components/DefaultAside'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
-	props: {
-		tabName: String,
-		tabId: Number,
-		tabIndex: Number
-	},
+  props: {
+    tabName: String,
+    tabId: Number,
+    tabIndex: Number
+  },
 
-	components: {
-		fieldGenerator,
-		AppAside,
-		DefaultAside,
-		Multiselect
-	},
+  components: {
+    fieldGenerator,
+    AppAside,
+    DefaultAside,
+    Multiselect
+  },
 
-	data() {
-		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends',
-				trade_party: 'countries',
-				source_party: 'countries',
-				destination_party: 'countries'
-			},
-			table: {
-				tableFilters: false,
-				pageOptions: [5, 25, 100],
-				filters: {
-					search: null,
-					period_start: null,
-					period_end: null,
-					obligation: null,
-					party: null,
-					isCurrent: null
-				}
-			},
+  data() {
+    return {
+      typeOfDisplayObj: {
+        substance: 'substances',
+        blend: 'blends',
+        trade_party: 'countries',
+        source_party: 'countries',
+        destination_party: 'countries'
+      },
+      table: {
+        tableFilters: false,
+        pageOptions: [5, 25, 100],
+        filters: {
+          search: null,
+          period_start: null,
+          period_end: null,
+          obligation: null,
+          party: null,
+          isCurrent: null
+        }
+      },
 
-			tableBlends: {
-				tableFilters: false,
-				pageOptions: [5, 25, 100],
-				filters: {
-					search: null,
-					period_start: null,
-					period_end: null,
-					obligation: null,
-					party: null,
-					isCurrent: null
-				}
-			},
+      tableBlends: {
+        tableFilters: false,
+        pageOptions: [5, 25, 100],
+        filters: {
+          search: null,
+          period_start: null,
+          period_end: null,
+          obligation: null,
+          party: null,
+          isCurrent: null
+        }
+      },
 
-			modal_data: null,
-			labels: null,
-			hovered: null,
-			sidebarTabIndex: 0
-		}
-	},
+      modal_data: null,
+      labels: null,
+      hovered: null,
+      sidebarTabIndex: 0
+    }
+  },
 
-	computed: {
-		blendSubstanceHeaders() {
-			return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
-		},
+  computed: {
+    blendSubstanceHeaders() {
+      return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
+    },
 
-		tableItems() {
-			const tableFields = []
-			console.log(this.tab_info.form_fields)
-			this.tab_info.form_fields.forEach(form_field => {
-				const tableRow = {}
-				Object.keys(form_field).forEach(key => {
-					if (form_field.substance.selected) {
-						tableRow[key] = this.typeOfDisplayObj[key]
-							? this.$store.state.initialData.display[
-								this.typeOfDisplayObj[key]
-							][form_field[key].selected]
-							: (tableRow[key] = form_field[key].selected)
-					}
-				})
-				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = form_field
-					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
-					tableRow._showDetails = true
-					if (tableRow.originalObj.validation.selected.length) {
-						tableRow.validation = 'invalid'
-					} else {
-						tableRow.validation = 'valid'
-					}
-					tableFields.push(tableRow)
-				}
-			})
-			return tableFields
-		},
-		tableEmptyText() {
-			if (this.isReadOnly) {
-				return this.$gettext('There are no records to show')
-			}
-			return this.$gettext('Please use the form on the right sidebar to add substances')
-		},
-		tableItemsBlends() {
-			const tableFields = []
-			this.tab_info.form_fields.forEach(form_field => {
-				const tableRow = {}
-				Object.keys(form_field).forEach(key => {
-					if (form_field.blend.selected) {
-						if (this.typeOfDisplayObj[key]) {
-							if (this.typeOfDisplayObj[key] === 'blends') {
-								tableRow[key] = this.tab_data.display[
-									this.typeOfDisplayObj[key]
-								][form_field[key].selected].name
-							} else {
-								tableRow[key] = this.tab_data.display[
-									this.typeOfDisplayObj[key]
-								][form_field[key].selected]
-							}
-						} else {
-							tableRow[key] = form_field[key].selected
-						}
-					}
-				})
-				if (Object.keys(tableRow).length) {
-					tableRow.originalObj = form_field
-					tableRow._showDetails = false
-					tableRow.index = this.tab_info.form_fields.indexOf(form_field)
-					if (tableRow.originalObj.validation.selected.length) {
-						tableRow.validation = 'invalid'
-					} else {
-						tableRow.validation = 'valid'
-					}
-					tableFields.push(tableRow)
-				}
-			})
-			return tableFields
-		},
-		tableBlendsEmptyText() {
-			if (this.isReadOnly) {
-				return this.$gettext('There are no records to show')
-			}
-			return this.$gettext('Please use the form on the right sidebar to add blends')
-		},
-		tableFields() {
-			const tableHeaders = []
-			const options = {}
-			this.tab_info.section_subheaders.forEach((form_field) => {
-				tableHeaders.push({
-					key: form_field.name,
-					label: form_field.label,
-					...options
-				})
-			})
-			return tableHeaders
-		},
+    tableItems() {
+      const tableFields = []
+      console.log(this.tab_info.form_fields)
+      this.tab_info.form_fields.forEach(form_field => {
+        const tableRow = {}
+        Object.keys(form_field).forEach(key => {
+          if (form_field.substance.selected) {
+            tableRow[key] = this.typeOfDisplayObj[key]
+              ? this.$store.state.initialData.display[
+                this.typeOfDisplayObj[key]
+              ][form_field[key].selected]
+              : (tableRow[key] = form_field[key].selected)
+          }
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = form_field
+          tableRow.index = this.tab_info.form_fields.indexOf(form_field)
+          tableRow._showDetails = true
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableFields.push(tableRow)
+        }
+      })
+      return tableFields
+    },
+    tableEmptyText() {
+      if (this.isReadOnly) {
+        return this.$gettext('There are no records to show')
+      }
+      return this.$gettext('Please use the form on the right sidebar to add substances')
+    },
+    tableItemsBlends() {
+      const tableFields = []
+      this.tab_info.form_fields.forEach(form_field => {
+        const tableRow = {}
+        Object.keys(form_field).forEach(key => {
+          if (form_field.blend.selected) {
+            if (this.typeOfDisplayObj[key]) {
+              if (this.typeOfDisplayObj[key] === 'blends') {
+                tableRow[key] = this.tab_data.display[
+                  this.typeOfDisplayObj[key]
+                ][form_field[key].selected].name
+              } else {
+                tableRow[key] = this.tab_data.display[
+                  this.typeOfDisplayObj[key]
+                ][form_field[key].selected]
+              }
+            } else {
+              tableRow[key] = form_field[key].selected
+            }
+          }
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = form_field
+          tableRow._showDetails = false
+          tableRow.index = this.tab_info.form_fields.indexOf(form_field)
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableFields.push(tableRow)
+        }
+      })
+      return tableFields
+    },
+    tableBlendsEmptyText() {
+      if (this.isReadOnly) {
+        return this.$gettext('There are no records to show')
+      }
+      return this.$gettext('Please use the form on the right sidebar to add blends')
+    },
+    tableFields() {
+      const tableHeaders = []
+      const options = {}
+      this.tab_info.section_subheaders.forEach((form_field) => {
+        tableHeaders.push({
+          key: form_field.name,
+          label: form_field.label,
+          ...options
+        })
+      })
+      return tableHeaders
+    },
 
-		tableFieldsBlends() {
-			const tableHeaders = []
-			const options = {}
-			this.tab_info.section_subheaders.forEach((form_field) => {
-				if (form_field.name === 'substance') {
-					if (this.tabName === 'has_imports' && this.$route.name === 'art7') {
-						tableHeaders.push({ key: 'blend', label: `(2a) <br> ${this.$gettext('Blend')}`, ...options })
-					} else if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
-						tableHeaders.push({ key: 'blend', label: `(1b) <br> ${this.$gettext('Blend')}`, ...options })
-					} else {
-						tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
-					}
-				} else if (form_field.name === 'group') {
-					if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
-						tableHeaders.push({
-							key: 'type',
-							label: `(1a) <br> ${this.$gettext('Type')}`,
-							...options
-						})
-					} else {
-						tableHeaders.push({
-							key: 'type',
-							label: `(1) <br> ${this.$gettext('Type')}`,
-							...options
-						})
-					}
-				} else {
-					tableHeaders.push({
-						key: form_field.name,
-						label: form_field.label,
-						...options
-					})
-				}
-			})
-			return tableHeaders
-		},
-		tab_info() {
-			return this.$store.state.form.tabs[this.tabName]
-		},
-		tab_data() {
-			return this.$store.state.initialData
-		},
+    tableFieldsBlends() {
+      const tableHeaders = []
+      const options = {}
+      this.tab_info.section_subheaders.forEach((form_field) => {
+        if (form_field.name === 'substance') {
+          if (this.tabName === 'has_imports' && this.$route.name === 'art7') {
+            tableHeaders.push({ key: 'blend', label: `(2a) <br> ${this.$gettext('Blend')}`, ...options })
+          } else if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
+            tableHeaders.push({ key: 'blend', label: `(1b) <br> ${this.$gettext('Blend')}`, ...options })
+          } else {
+            tableHeaders.push({ key: 'blend', label: `(2) <br> ${this.$gettext('Blend')}`, ...options })
+          }
+        } else if (form_field.name === 'group') {
+          if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
+            tableHeaders.push({
+              key: 'type',
+              label: `(1a) <br> ${this.$gettext('Type')}`,
+              ...options
+            })
+          } else {
+            tableHeaders.push({
+              key: 'type',
+              label: `(1) <br> ${this.$gettext('Type')}`,
+              ...options
+            })
+          }
+        } else {
+          tableHeaders.push({
+            key: form_field.name,
+            label: form_field.label,
+            ...options
+          })
+        }
+      })
+      return tableHeaders
+    },
+    tab_info() {
+      return this.$store.state.form.tabs[this.tabName]
+    },
+    tab_data() {
+      return this.$store.state.initialData
+    },
 
-		isReadOnly() {
-			const { isReadOnly } = this.$store.getters
-			return isReadOnly
-		}
-	},
+    isReadOnly() {
+      const { isReadOnly } = this.$store.getters
+      return isReadOnly
+    }
+  },
 
-	methods: {
-		fillTableSearch(data) {
-			if (data.substance) {
-				this.table.filters.search = data.substance
-				this.table.tableFilters = true
-			}
-			if (data.blend) {
-				this.tableBlends.filters.search = data.blend
-				this.tableBlends.tableFilters = true
-			}
-		},
-		updateFormField(value, fieldInfo) {
-			this.$store.commit('updateFormField', {
-				value,
-				fieldInfo
-			})
-			if (fieldInfo.field === 'substance') {
-				this.$store.commit('updateFormField', {
-					value: this.getGroupBySubstance(value),
-					fieldInfo: { index: fieldInfo.index, tabName: fieldInfo.tabName, field: 'group' }
-				})
-			}
-		},
+  methods: {
+    fillTableSearch(data) {
+      if (data.substance) {
+        this.table.filters.search = data.substance
+        this.table.tableFilters = true
+      }
+      if (data.blend) {
+        this.tableBlends.filters.search = data.blend
+        this.tableBlends.tableFilters = true
+      }
+    },
+    updateFormField(value, fieldInfo) {
+      this.$store.commit('updateFormField', {
+        value,
+        fieldInfo
+      })
+      if (fieldInfo.field === 'substance') {
+        this.$store.commit('updateFormField', {
+          value: this.getGroupBySubstance(value),
+          fieldInfo: { index: fieldInfo.index, tabName: fieldInfo.tabName, field: 'group' }
+        })
+      }
+    },
 
-		getCommentFieldPermission(fieldName) {
-			let type = fieldName.split('_')
-			type = type[type.length - 1]
-			if (type === 'party') {
-				return !this.$store.getters.can_change_remarks_party
-			}
-			if (['secretariat', 'os'].includes(type)) {
-				return !this.$store.getters.can_change_remarks_secretariat
-			}
-		},
+    getCommentFieldPermission(fieldName) {
+      let type = fieldName.split('_')
+      type = type[type.length - 1]
+      if (type === 'party') {
+        return !this.$store.getters.can_change_remarks_party
+      }
+      if (['secretariat', 'os'].includes(type)) {
+        return !this.$store.getters.can_change_remarks_secretariat
+      }
+    },
 
-		getGroupBySubstance(value) {
-			return this.tab_data.substances.find(g => value === g.value).group.group_id
-		},
+    getGroupBySubstance(value) {
+      return this.tab_data.substances.find(g => value === g.value).group.group_id
+    },
 
-		expandedStatus(status) {
-			if (status) return 'down'
-			return 'right'
-		},
-		rowHovered(item) {
-			this.hovered = item.index
-		},
+    expandedStatus(status) {
+      if (status) return 'down'
+      return 'right'
+    },
+    rowHovered(item) {
+      this.hovered = item.index
+    },
 
-		openValidation() {
-			const body = document.querySelector('body')
-			if (this.tabName !== 'has_produced') {
-				this.sidebarTabIndex = 2
-			} else {
-				this.sidebarTabIndex = 1
-			}
+    openValidation() {
+      const body = document.querySelector('body')
+      if (this.tabName !== 'has_produced') {
+        this.sidebarTabIndex = 2
+      } else {
+        this.sidebarTabIndex = 1
+      }
 
-			body.classList.add('aside-menu-lg-show')
-		},
+      body.classList.add('aside-menu-lg-show')
+    },
 
-		pushUnique(array, item) {
-			if (array.indexOf(item) === -1) {
-				array.push(item)
-			}
-		},
+    pushUnique(array, item) {
+      if (array.indexOf(item) === -1) {
+        array.push(item)
+      }
+    },
 
-		remove_field(index, noAlert) {
-			this.$store.dispatch('removeField', {
-				tab: this.tabName,
-				index,
-				$gettext: this.$gettext,
-				noAlert
-			})
-		},
+    remove_field(index, noAlert) {
+      this.$store.dispatch('removeField', {
+        tab: this.tabName,
+        index,
+        $gettext: this.$gettext,
+        noAlert
+      })
+    },
 
-		splitBlend(value, percent) {
-			percent *= 100
-			if (value && value !== 0 && percent) {
-				const count = (parseFloat(value) * parseFloat(percent)) / 100
-				if (count === 0) {
-					return ''
-				} if (count < 0) {
-					return count.toPrecision(3)
-				} if (count > 999) {
-					return parseInt(count)
-				}
-				return count.toPrecision(3)
-			}
-			return ''
-		},
+    splitBlend(value, percent) {
+      percent *= 100
+      if (value && value !== 0 && percent) {
+        const count = (parseFloat(value) * parseFloat(percent)) / 100
+        if (count === 0) {
+          return ''
+        } if (count < 0) {
+          return count.toPrecision(3)
+        } if (count > 999) {
+          return parseInt(count)
+        }
+        return count.toPrecision(3)
+      }
+      return ''
+    },
 
-		createModalData(field, index) {
-			this.modal_data = { field, index }
-			this.$refs.edit_modal.show()
-		}
+    createModalData(field, index) {
+      this.modal_data = { field, index }
+      this.$refs.edit_modal.show()
+    }
 
-	},
+  },
 
-	watch: {
-		'tab_info.form_fields': {
-			handler() {
-				if (parseInt(this.tabId) === this.tabIndex) {
-					if (this.tab_info.status !== 'edited') {
-						this.$store.commit('setTabStatus', {
-							tab: this.tabName,
-							value: 'edited'
-						})
-					}
-				}
-			},
-			deep: true
-		}
-	}
+  watch: {
+    'tab_info.form_fields': {
+      handler() {
+        if (parseInt(this.tabId) === this.tabIndex) {
+          if (this.tab_info.status !== 'edited') {
+            this.$store.commit('setTabStatus', {
+              tab: this.tabName,
+              value: 'edited'
+            })
+          }
+        }
+      },
+      deep: true
+    }
+  }
 }
 
 </script>

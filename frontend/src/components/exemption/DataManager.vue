@@ -11,10 +11,10 @@ import tabsManager from '@/components/exemption/TabsManager'
 import dataManagerMixin from '@/components/common/mixins/DataManagerMixin'
 
 export default {
-	name: 'DataManager',
-	components: {
-		tabsmanager: tabsManager
-	},
-	mixins: [dataManagerMixin]
+  name: 'DataManager',
+  components: {
+    tabsmanager: tabsManager
+  },
+  mixins: [dataManagerMixin]
 }
 </script>

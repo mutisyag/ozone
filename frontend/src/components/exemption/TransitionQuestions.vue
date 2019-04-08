@@ -24,21 +24,21 @@
 import TransitionQuestions from '@/components/common/TransitionQuestions'
 
 export default {
-	mixins: [TransitionQuestions],
-	methods: {
-		doTransition() {
-			this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true } })
-			this.$refs.transition_modal.hide()
-		}
-	},
-	computed: {
-		disableOkButton() {
-			if (this.transition === 'finalize' && this.$store.state.form.tabs.flags.form_fields.flag_approved.selected === null) {
-				return true
-			}
-			return false
-		}
-	}
+  mixins: [TransitionQuestions],
+  methods: {
+    doTransition() {
+      this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true } })
+      this.$refs.transition_modal.hide()
+    }
+  },
+  computed: {
+    disableOkButton() {
+      if (this.transition === 'finalize' && this.$store.state.form.tabs.flags.form_fields.flag_approved.selected === null) {
+        return true
+      }
+      return false
+    }
+  }
 }
 </script>
 

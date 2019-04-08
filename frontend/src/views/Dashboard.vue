@@ -1,192 +1,258 @@
 <template>
-  <div class="animated fadeIn">
-    <b-row>
-    <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
-        <b-card>
-			<div slot="header">
-				<strong><span v-translate>Create submission</span></strong>
-			</div>
-			<small><span v-translate>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span></small>
-			<div class="create-submission mt-2">
-				<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						v-model="submissionNew.obligation"
-						:options="obligations" />
-				</b-input-group>
-
-				<b-input-group id="period_selector"  class="mb-2" :prepend="$gettext('Period')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
-						customTemplate="is_reporting_open"
-						v-model="submissionNew.reporting_period"
-						:options="periods" />
-				</b-input-group>
-
-				<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
-					<multiselect
-						:placeholder="$gettext('Select option')"
-						trackBy="value"
-						label="text"
-						:disabled="Boolean(currentUser.party)"
-						v-model="submissionNew.party"
-						:options="parties" />
-				</b-input-group>
-
-				<b-btn v-if="basicDataReady" :disabled="!(submissionNew.obligation && submissionNew.reporting_period && submissionNew.party)" variant="primary" @click="addSubmission"><span v-translate>Create</span></b-btn>
-			</div>
-        </b-card>
-      </b-col>
-
-        <b-col>
-          <b-card v-if="basicDataReady">
-				<div slot="header">
-					<strong><span v-translate='{totalRows: dataEntryTable.totalRows}'>Data entry submissions (%{totalRows} records)</span></strong>
-				</div>
-				<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
-					<div class="filter-group mb-2">
-						<b-input-group :prepend="$gettext('Search')">
-							<b-form-input v-model="dataEntryTable.search"/>
-						</b-input-group>
-						<b-input-group :prepend="$gettext('Obligation')">
-							<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-						</b-input-group>
+	<div class="animated fadeIn">
+		<b-row>
+			<b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
+				<b-card>
+					<div slot="header">
+						<strong>
+							<span v-translate>Create submission</span>
+						</strong>
 					</div>
-					<div class="filter-group">
-						<b-input-group :prepend="$gettext('Party')">
-							<b-form-select :disabled="Boolean(currentUser.party)" v-model="dataEntryTable.filters.party" :options="sortOptionsParties"></b-form-select>
+					<small>
+						<span
+							v-translate
+						>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span>
+					</small>
+					<div class="create-submission mt-2">
+						<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								v-model="submissionNew.obligation"
+								:options="obligations"
+							/>
 						</b-input-group>
-						<b-input-group class="w120" :prepend="$gettext('From')">
-							<b-form-select v-model="dataEntryTable.filters.period_start" :options="sortOptionsPeriodFrom">
-							</b-form-select>
+
+						<b-input-group id="period_selector" class="mb-2" :prepend="$gettext('Period')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
+								customTemplate="is_reporting_open"
+								v-model="submissionNew.reporting_period"
+								:options="periods"
+							/>
 						</b-input-group>
-						<b-input-group class="w120" :prepend="$gettext('To')">
-							<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo">
-							</b-form-select>
+
+						<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
+							<multiselect
+								:placeholder="$gettext('Select option')"
+								trackBy="value"
+								label="text"
+								:disabled="Boolean(currentUser.party)"
+								v-model="submissionNew.party"
+								:options="parties"
+							/>
 						</b-input-group>
-						<b-btn @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"><span v-translate>Clear</span></b-btn>
+
+						<b-btn
+							v-if="basicDataReady"
+							:disabled="!(submissionNew.obligation && submissionNew.reporting_period && submissionNew.party)"
+							variant="primary"
+							@click="addSubmission"
+						>
+							<span v-translate>Create</span>
+						</b-btn>
 					</div>
-				</div>
-				<b-table id="data-entry-submissions-table"
-					show-empty
-					outlined
-					bordered
-					hover
-					head-variant="light"
-					stacked="md"
-					:filter="dataEntryTable.search"
-					:items="dataEntryTableItems"
-					:fields="dataEntryTableFields"
-					:per-page="dataEntryTable.perPage"
-					:current-page="dataEntryTable.currentPage"
-					ref="dataEntryTable"
-					@filtered="onFiltered">
+				</b-card>
+			</b-col>
+
+			<b-col>
+				<b-card v-if="basicDataReady">
+					<div slot="header">
+						<strong>
+							<span
+								v-translate="{totalRows: dataEntryTable.totalRows}"
+							>Data entry submissions (%{totalRows} records)</span>
+						</strong>
+					</div>
+					<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
+						<div class="filter-group mb-2">
+							<b-input-group :prepend="$gettext('Search')">
+								<b-form-input v-model="dataEntryTable.search"/>
+							</b-input-group>
+							<b-input-group :prepend="$gettext('Obligation')">
+								<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
+							</b-input-group>
+						</div>
+						<div class="filter-group">
+							<b-input-group :prepend="$gettext('Party')">
+								<b-form-select
+									:disabled="Boolean(currentUser.party)"
+									v-model="dataEntryTable.filters.party"
+									:options="sortOptionsParties"
+								></b-form-select>
+							</b-input-group>
+							<b-input-group class="w120" :prepend="$gettext('From')">
+								<b-form-select
+									v-model="dataEntryTable.filters.period_start"
+									:options="sortOptionsPeriodFrom"
+								></b-form-select>
+							</b-input-group>
+							<b-input-group class="w120" :prepend="$gettext('To')">
+								<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo"></b-form-select>
+							</b-input-group>
+							<b-btn
+								@click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"
+							>
+								<span v-translate>Clear</span>
+							</b-btn>
+						</div>
+					</div>
+					<b-table
+						id="data-entry-submissions-table"
+						show-empty
+						outlined
+						bordered
+						hover
+						head-variant="light"
+						stacked="md"
+						:filter="dataEntryTable.search"
+						:items="dataEntryTableItems"
+						:fields="dataEntryTableFields"
+						:per-page="dataEntryTable.perPage"
+						:current-page="dataEntryTable.currentPage"
+						ref="dataEntryTable"
+						@filtered="onFiltered"
+					>
 						<template slot="actions" slot-scope="row">
 							<router-link
-									class="btn btn-outline-primary btn-sm"
-									:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-								<span v-if="row.item.details.can_edit_data">
-													{{labels['edit']}}
-								</span>
-								<span v-else>
-													{{labels['view']}}
-								</span>
+								class="btn btn-outline-primary btn-sm"
+								:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
+							>
+								<span v-if="row.item.details.can_edit_data">{{labels['edit']}}</span>
+								<span v-else>{{labels['view']}}</span>
 							</router-link>
 						</template>
-				</b-table>
-				<b-row v-if="currentUser.is_secretariat">
-					<b-col md="9" class="my-1">
-						<b-pagination :total-rows="dataEntryTable.totalRows" :per-page="dataEntryTable.perPage" v-model="dataEntryTable.currentPage" class="my-0" />
-					</b-col>
-					<b-col md="3">
-						<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
-							<b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage" />
-						</b-input-group>
-					</b-col>
-				</b-row>
-			</b-card>
-    </b-col>
-  </b-row>
-    <b-row>
-      <b-col sm="12">
-          <b-card no-body v-if="basicDataReady">
-            <template slot="header">
-              <b-row>
-				<b-col><b><span v-translate='{totalRows: tableOptions.totalRows}'>All submissions (%{totalRows} records)</span></b></b-col>
-				<b-col style="text-align: right"><b-form-checkbox type="checkbox" v-model="tableOptions.filters.is_superseded"><span v-translate>Show all versions</span></b-form-checkbox></b-col>
-              </b-row>
-            </template>
-            <b-container fluid>
-              <div  class="mt-2 mb-2 dashboard-filters">
-					<b-input-group :prepend="$gettext('Search')">
-						<b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
-					</b-input-group>
-					<b-input-group :prepend="$gettext('Obligation')">
-						<b-form-select id="submission_obligation_filter" v-model="tableOptions.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-					</b-input-group>
-					<b-input-group :prepend="$gettext('Party')">
-						<b-form-select id="submission_party_filter" :disabled="Boolean(currentUser.party)" v-model="tableOptions.filters.party" :options="sortOptionsParties"></b-form-select>
-					</b-input-group>
-					<b-input-group class="w120" :prepend="$gettext('From')">
-						<b-form-select id="submission_from_filter" v-model="tableOptions.filters.period_start" :options="sortOptionsPeriodFrom">
-						</b-form-select>
-					</b-input-group>
-					<b-input-group class="w120" :prepend="$gettext('To')">
-						<b-form-select id="submission_to_filter" v-model="tableOptions.filters.period_end" :options="sortOptionsPeriodTo">
-						</b-form-select>
-					</b-input-group>
-					<b-btn id="submission_clear_button" @click="clearFilters"><span v-translate>Clear</span></b-btn>
-              </div>
-              <b-table id="all-submissions-table"
-								show-empty
-								outlined
-								bordered
-								hover
-								head-variant="light"
-								stacked="md"
-								:items="tableItems"
-								:fields="tableFields"
-								:per-page="tableOptions.perPage"
-								:sort-by.sync="tableOptions.sorting.sortBy"
-								:sort-desc.sync="tableOptions.sorting.sortDesc"
-								:sort-direction="tableOptions.sorting.sortDirection"
-								ref="table">
-                <template slot="actions" slot-scope="row">
-                  <b-button-group>
-                    <router-link
-                        class="btn btn-outline-primary btn-sm"
-                        :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}">
-                      <span v-if="row.item.details.can_edit_data && !currentUser.is_read_only">
-													{{labels['edit']}}
-                      </span>
-                      <span v-else>
-													{{labels['view']}}
-                      </span>
-                    </router-link>
-                  </b-button-group>
-                  </template>
-              </b-table>
+					</b-table>
+					<b-row v-if="currentUser.is_secretariat">
+						<b-col md="9" class="my-1">
+							<b-pagination
+								:total-rows="dataEntryTable.totalRows"
+								:per-page="dataEntryTable.perPage"
+								v-model="dataEntryTable.currentPage"
+								class="my-0"
+							/>
+						</b-col>
+						<b-col md="3">
+							<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
+								<b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage"/>
+							</b-input-group>
+						</b-col>
+					</b-row>
+				</b-card>
+			</b-col>
+		</b-row>
+		<b-row>
+			<b-col sm="12">
+				<b-card no-body v-if="basicDataReady">
+					<template slot="header">
+						<b-row>
+							<b-col>
+								<b>
+									<span
+										v-translate="{totalRows: tableOptions.totalRows}"
+									>All submissions (%{totalRows} records)</span>
+								</b>
+							</b-col>
+							<b-col style="text-align: right">
+								<b-form-checkbox type="checkbox" v-model="tableOptions.filters.is_superseded">
+									<span v-translate>Show all versions</span>
+								</b-form-checkbox>
+							</b-col>
+						</b-row>
+					</template>
+					<b-container fluid>
+						<div class="mt-2 mb-2 dashboard-filters">
+							<b-input-group :prepend="$gettext('Search')">
+								<b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
+							</b-input-group>
+							<b-input-group :prepend="$gettext('Obligation')">
+								<b-form-select
+									id="submission_obligation_filter"
+									v-model="tableOptions.filters.obligation"
+									:options="sortOptionsObligation"
+								></b-form-select>
+							</b-input-group>
+							<b-input-group :prepend="$gettext('Party')">
+								<b-form-select
+									id="submission_party_filter"
+									:disabled="Boolean(currentUser.party)"
+									v-model="tableOptions.filters.party"
+									:options="sortOptionsParties"
+								></b-form-select>
+							</b-input-group>
+							<b-input-group class="w120" :prepend="$gettext('From')">
+								<b-form-select
+									id="submission_from_filter"
+									v-model="tableOptions.filters.period_start"
+									:options="sortOptionsPeriodFrom"
+								></b-form-select>
+							</b-input-group>
+							<b-input-group class="w120" :prepend="$gettext('To')">
+								<b-form-select
+									id="submission_to_filter"
+									v-model="tableOptions.filters.period_end"
+									:options="sortOptionsPeriodTo"
+								></b-form-select>
+							</b-input-group>
+							<b-btn id="submission_clear_button" @click="clearFilters">
+								<span v-translate>Clear</span>
+							</b-btn>
+						</div>
+						<b-table
+							id="all-submissions-table"
+							show-empty
+							outlined
+							bordered
+							hover
+							head-variant="light"
+							stacked="md"
+							:items="tableItems"
+							:fields="tableFields"
+							:per-page="tableOptions.perPage"
+							:sort-by.sync="tableOptions.sorting.sortBy"
+							:sort-desc.sync="tableOptions.sorting.sortDesc"
+							:sort-direction="tableOptions.sorting.sortDirection"
+							ref="table"
+						>
+							<template slot="actions" slot-scope="row">
+								<b-button-group>
+									<router-link
+										class="btn btn-outline-primary btn-sm"
+										:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
+									>
+										<span
+											v-if="row.item.details.can_edit_data && !currentUser.is_read_only"
+										>{{labels['edit']}}</span>
+										<span v-else>{{labels['view']}}</span>
+									</router-link>
+								</b-button-group>
+							</template>
+						</b-table>
 
-              <b-row>
-                <b-col md="10" class="my-1">
-                  <b-pagination :total-rows="tableOptions.totalRows" :per-page="tableOptions.perPage" v-model="tableOptions.currentPage" class="my-0" />
-                </b-col>
-								<b-col md="2">
-                  <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
-                    <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage" />
-                  </b-input-group>
-								</b-col>
-              </b-row>
-            </b-container>
-          </b-card>
-      </b-col>
-    </b-row>
-  </div>
+						<b-row>
+							<b-col md="10" class="my-1">
+								<b-pagination
+									:total-rows="tableOptions.totalRows"
+									:per-page="tableOptions.perPage"
+									v-model="tableOptions.currentPage"
+									class="my-0"
+								/>
+							</b-col>
+							<b-col md="2">
+								<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
+									<b-form-select :options="table.pageOptions" v-model="tableOptions.perPage"/>
+								</b-input-group>
+							</b-col>
+						</b-row>
+					</b-container>
+				</b-card>
+			</b-col>
+		</b-row>
+	</div>
 </template>
 
 <script>
@@ -196,79 +262,79 @@ import Multiselect from '@/components/common/ModifiedMultiselect'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 
 export default {
-	name: 'Dashboard',
-	data() {
-		return {
-			dataLoaded: false,
-			submissionNew: {
-				obligation: null,
-				reporting_period: null,
-				party: null
-			},
-			table: {
-				pageOptions: [10, 25, 100]
-			},
-			tableOptionsCurrentPageWasSetFromWatcher: false,
-			dataEntryTable: {
-				currentPage: 1,
-				perPage: 10,
-				totalRows: 0,
-				sorting: {
-					sortBy: 'updated_at',
-					sortDesc: true,
-					sortDirection: 'asc'
-				},
-				search: null,
-				filters: {
-					period_start: null,
-					period_end: null,
-					obligation: null,
-					party: null
-				},
-				pageOptions: [10, 25, 100]
-			}
-		}
-	},
+  name: 'Dashboard',
+  data() {
+    return {
+      dataLoaded: false,
+      submissionNew: {
+        obligation: null,
+        reporting_period: null,
+        party: null
+      },
+      table: {
+        pageOptions: [10, 25, 100]
+      },
+      tableOptionsCurrentPageWasSetFromWatcher: false,
+      dataEntryTable: {
+        currentPage: 1,
+        perPage: 10,
+        totalRows: 0,
+        sorting: {
+          sortBy: 'updated_at',
+          sortDesc: true,
+          sortDirection: 'asc'
+        },
+        search: null,
+        filters: {
+          period_start: null,
+          period_end: null,
+          obligation: null,
+          party: null
+        },
+        pageOptions: [10, 25, 100]
+      }
+    }
+  },
 
-	async created() {
-		document.querySelector('body').classList.remove('aside-menu-lg-show')
-		this.$store.dispatch('getDashboardParties')
-		this.$store.dispatch('getDashboardObligations')
-		this.$store.dispatch('getMyCurrentUser')
+  async created() {
+    document.querySelector('body').classList.remove('aside-menu-lg-show')
+    this.$store.dispatch('getDashboardParties')
+    this.$store.dispatch('getDashboardObligations')
+    this.$store.dispatch('getMyCurrentUser')
 
-		const dashboardPeriods = await this.$store.dispatch('getDashboardPeriods')
-		const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
-		const defaultPeriod = this.$store.getters.defaultPeriod(submissionDefaultValues)
-		const reporting_period = defaultPeriod.value
-		let defaultObligation = null
-		if (submissionDefaultValues.obligation) {
-			defaultObligation = this.$store.getters.defaultObligation(submissionDefaultValues)
-			if (this.currentUser.is_secretariat) {
-				this.tableOptions.filters.obligation = defaultObligation
-				this.tableOptions.filters.period_start = defaultPeriod.start_date
-			}
-		}
+    await this.$store.dispatch('getDashboardPeriods')
+    const submissionDefaultValues = await this.$store.dispatch('getSubmissionDefaultValues')
+    const defaultPeriod = this.$store.getters.defaultPeriod(submissionDefaultValues)
+    const reporting_period = defaultPeriod.value
+    let defaultObligation = null
+    if (submissionDefaultValues.obligation) {
+      defaultObligation = this.$store.getters.defaultObligation(submissionDefaultValues)
+      if (this.currentUser.is_secretariat) {
+        this.tableOptions.filters.obligation = defaultObligation
+        this.tableOptions.filters.period_start = defaultPeriod.start_date
+      }
+    }
 
-		this.submissionNew = {
-			...this.submissionNew,
-			...submissionDefaultValues,
-			reporting_period,
-			obligation: defaultObligation
-		}
-		this.$store.dispatch('getCurrentSubmissions')
+    this.submissionNew = {
+      ...this.submissionNew,
+      ...submissionDefaultValues,
+      reporting_period,
+      obligation: defaultObligation
+    }
+    this.$store.dispatch('getCurrentSubmissions')
 
-		this.updateBreadcrumbs()
-	},
+    this.updateBreadcrumbs()
+  },
 
-	components: {
-		Multiselect
-	},
+  components: {
+    Multiselect
+  },
 
-	computed: {
+  computed: {
 
-		...mapGetters(['getSubmissionInfo']),
+    ...mapGetters(['getSubmissionInfo']),
 
-		/* The problem
+    /* The problem
 
 		Using item provider function as indicated in the documentation (https://bootstrap-vue.js.org/docs/components/table)
 		for async pagination and filtering raises a few problems if the provider function or the function that fetches the data,
@@ -286,304 +352,304 @@ export default {
 		3.Because the data is provided via computed, the table data also updates in the interface every time we get a new list of submissions,
 			after doing actions like deleting, cloning or changing the state of a submission. */
 
-		tableItems() {
-			const tableFields = []
-			if (this.submissions && this.submissions.length) {
-				this.submissions.forEach((element) => {
-					tableFields.push({
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						party: this.getSubmissionInfo(element).party(),
-						current_state: element.current_state,
-						version: element.version,
-						updated_at: element.updated_at,
-						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
-						details: element
-					})
-				})
-			}
-			return tableFields
-		},
-		labels() {
-			return getCommonLabels(this.$gettext)
-		},
-		tableFields() {
-			return [{
-				key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-			}, {
-				key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'current_state', label: this.$gettext('State'), sortable: true
-			}, {
-				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-			}, {
-				key: 'created_by', label: this.$gettext('Created by')
-			}, {
-				key: 'actions', label: this.$gettext('Actions')
-			}]
-		},
-		dataEntryTableItems() {
-			const tableFields = []
-			const { filters } = this.dataEntryTable
-			const filtersExist = Object.keys(filters).some(f => filters[f])
-			if (this.mySubmissions && this.mySubmissions.length) {
-				this.mySubmissions.forEach((element) => {
-					if (filtersExist && this.checkFilters(filters, element)) {
-						return
-					}
-					const row = {
-						obligation: this.getSubmissionInfo(element).obligation(),
-						reporting_period: this.getSubmissionInfo(element).period(),
-						party: this.getSubmissionInfo(element).party(),
-						version: element.version,
-						updated_at: element.updated_at,
-						created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
-						details: element
-					}
-					tableFields.push(row)
-				})
-			}
-			this.dataEntryTable.totalRows = tableFields.length
-			return tableFields
-		},
-		dataEntryTableFields() {
-			return [{
-				key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'reporting_period', label: this.$gettext('Period'), sortable: true
-			}, {
-				key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
-			}, {
-				key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
-			}, {
-				key: 'created_by', label: this.$gettext('Created by')
-			}, {
-				key: 'actions', label: this.$gettext('Actions')
-			}]
-		},
-		sortOptionsPeriodFrom() {
-			return 	Array.from(new Set(this.periods.map(f => {
-				if (this.tableOptions.filters.period_end !== null
+    tableItems() {
+      const tableFields = []
+      if (this.submissions && this.submissions.length) {
+        this.submissions.forEach((element) => {
+          tableFields.push({
+            obligation: this.getSubmissionInfo(element).obligation(),
+            reporting_period: this.getSubmissionInfo(element).period(),
+            party: this.getSubmissionInfo(element).party(),
+            current_state: element.current_state,
+            version: element.version,
+            updated_at: element.updated_at,
+            created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
+            details: element
+          })
+        })
+      }
+      return tableFields
+    },
+    labels() {
+      return getCommonLabels(this.$gettext)
+    },
+    tableFields() {
+      return [{
+        key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+      }, {
+        key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'current_state', label: this.$gettext('State'), sortable: true
+      }, {
+        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+      }, {
+        key: 'created_by', label: this.$gettext('Created by')
+      }, {
+        key: 'actions', label: this.$gettext('Actions')
+      }]
+    },
+    dataEntryTableItems() {
+      const tableFields = []
+      const { filters } = this.dataEntryTable
+      const filtersExist = Object.keys(filters).some(f => filters[f])
+      if (this.mySubmissions && this.mySubmissions.length) {
+        this.mySubmissions.forEach((element) => {
+          if (filtersExist && this.checkFilters(filters, element)) {
+            return
+          }
+          const row = {
+            obligation: this.getSubmissionInfo(element).obligation(),
+            reporting_period: this.getSubmissionInfo(element).period(),
+            party: this.getSubmissionInfo(element).party(),
+            version: element.version,
+            updated_at: element.updated_at,
+            created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
+            details: element
+          }
+          tableFields.push(row)
+        })
+      }
+      this.dataEntryTable.totalRows = tableFields.length
+      return tableFields
+    },
+    dataEntryTableFields() {
+      return [{
+        key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+      }, {
+        key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
+      }, {
+        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+      }, {
+        key: 'created_by', label: this.$gettext('Created by')
+      }, {
+        key: 'actions', label: this.$gettext('Actions')
+      }]
+    },
+    sortOptionsPeriodFrom() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_end !== null
 				&& f.start_date > this.tableOptions.filters.period_end) {
-					return null
-				}
-				return {
-					text: f.start_date.split('-')[0],
-					value: this.getStartDateOfYear(f.start_date)
-				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
-		},
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getStartDateOfYear(f.start_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
 
-		sortOptionsPeriodTo() {
-			return 	Array.from(new Set(this.periods.map(f => {
-				if (this.tableOptions.filters.period_start !== null
+    sortOptionsPeriodTo() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_start !== null
 				&& f.end_date < this.tableOptions.filters.period_start) {
-					return null
-				}
-				return {
-					text: f.start_date.split('-')[0],
-					value: this.getEndDateOfYear(f.end_date)
-				}
-			}).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
-		},
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getEndDateOfYear(f.end_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
 
-		sortOptionsObligation() {
-			return this.obligations
-		},
+    sortOptionsObligation() {
+      return this.obligations
+    },
 
-		sortOptionsParties() {
-			return this.parties
-		},
+    sortOptionsParties() {
+      return this.parties
+    },
 
-		dataReady() {
-			if (this.submissions
+    dataReady() {
+      if (this.submissions
 				&& this.periods
 				&& this.currentUser
 				&& this.obligations
 				&& this.parties
 				&& this.submissions.length
 				// && Object.values(this.submissionNew).some(value => value)
-			) {
-				return true
-			}
-			return false
-		},
-		tableOptions() {
-			return this.$store.state.dashboard.table
-		},
-		currentUser() {
-			const { currentUser } = this.$store.state
-			if (currentUser) {
-				this.submissionNew.party = currentUser.party
-			}
-			return currentUser
-		},
-		periods() {
-			return this.$store.state.dashboard.periods
-		},
-		parties() {
-			return this.$store.state.dashboard.parties
-		},
-		obligations() {
-			return this.$store.state.dashboard.obligations
-		},
-		submissions() {
-			return this.$store.state.dashboard.submissions
-		},
-		mySubmissions() {
-			return this.$store.state.dashboard.mySubmissions
-		},
+      ) {
+        return true
+      }
+      return false
+    },
+    tableOptions() {
+      return this.$store.state.dashboard.table
+    },
+    currentUser() {
+      const { currentUser } = this.$store.state
+      if (currentUser) {
+        this.submissionNew.party = currentUser.party
+      }
+      return currentUser
+    },
+    periods() {
+      return this.$store.state.dashboard.periods
+    },
+    parties() {
+      return this.$store.state.dashboard.parties
+    },
+    obligations() {
+      return this.$store.state.dashboard.obligations
+    },
+    submissions() {
+      return this.$store.state.dashboard.submissions
+    },
+    mySubmissions() {
+      return this.$store.state.dashboard.mySubmissions
+    },
 
-		basicDataReady() {
-			if (this.periods
+    basicDataReady() {
+      if (this.periods
 				&& this.obligations
 				&& this.currentUser
 				&& this.parties) {
-				this.dataLoaded = true
-				return true
-			}
-			return false
-		},
-		tableOptionsExceptFilters() {
-			const { sorting, currentPage, perPage } = this.$store.state.dashboard.table
-			const tableOptions = {
-				sorting,
-				currentPage,
-				perPage
-			}
-			return tableOptions
-		}
-	},
+        this.dataLoaded = true
+        return true
+      }
+      return false
+    },
+    tableOptionsExceptFilters() {
+      const { sorting, currentPage, perPage } = this.$store.state.dashboard.table
+      const tableOptions = {
+        sorting,
+        currentPage,
+        perPage
+      }
+      return tableOptions
+    }
+  },
 
-	methods: {
+  methods: {
 
-		getStartDateOfYear(year) {
-			const currentYear = year.split('-')
-			currentYear[1] = '01'
-			currentYear[2] = '01'
-			return currentYear.join('-')
-		},
+    getStartDateOfYear(year) {
+      const currentYear = year.split('-')
+      currentYear[1] = '01'
+      currentYear[2] = '01'
+      return currentYear.join('-')
+    },
 
-		getEndDateOfYear(year) {
-			const currentYear = year.split('-')
-			currentYear[1] = '12'
-			currentYear[2] = '31'
-			return currentYear.join('-')
-		},
+    getEndDateOfYear(year) {
+      const currentYear = year.split('-')
+      currentYear[1] = '12'
+      currentYear[2] = '31'
+      return currentYear.join('-')
+    },
 
-		updateBreadcrumbs() {
-			this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
-		},
-		addSubmission() {
-			this.$store.dispatch('addSubmission', {
-				$gettext: this.$gettext,
-				submission: this.submissionNew
-			}).then(r => {
-				this.$store.dispatch('getMyCurrentSubmissions').then(() => {
-					const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)
-					this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
-				})
-			})
-		},
-		clearFilters() {
-			Object.keys(this.tableOptions.filters).forEach(key => {
-				if (this.currentUser.party && key === 'party') {
-					return
-				}
-				this.tableOptions.filters[key] = null
-			})
-		},
-		clone(url, obligation) {
-			cloneSubmission(url).then((response) => {
-				this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { __all__: [this.$gettext('New version created')] },
-					variant: 'success'
-				})
-				this.$destroy()
-			}).catch(error => {
-				this.$store.dispatch('setAlert', {
-					$gettext: this.$gettext,
-					message: { ...error.response.data },
-					variant: 'danger' })
-				console.log(error)
-			})
-		},
+    updateBreadcrumbs() {
+      this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
+    },
+    addSubmission() {
+      this.$store.dispatch('addSubmission', {
+        $gettext: this.$gettext,
+        submission: this.submissionNew
+      }).then(r => {
+        this.$store.dispatch('getMyCurrentSubmissions').then(() => {
+          const currentSubmission = this.mySubmissions.find(sub => sub.id === r.id)
+          this.$router.push({ name: this.getFormName(r.obligation), query: { submission: currentSubmission.url } })
+        })
+      })
+    },
+    clearFilters() {
+      Object.keys(this.tableOptions.filters).forEach(key => {
+        if (this.currentUser.party && key === 'party') {
+          return
+        }
+        this.tableOptions.filters[key] = null
+      })
+    },
+    clone(url, obligation) {
+      cloneSubmission(url).then((response) => {
+        this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { __all__: [this.$gettext('New version created')] },
+          variant: 'success'
+        })
+        this.$destroy()
+      }).catch(error => {
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { ...error.response.data },
+          variant: 'danger' })
+        console.log(error)
+      })
+    },
 
-		checkFilters(filters, element) {
-			if (filters.obligation && element.obligation !== filters.obligation) {
-				return true
-			}
-			if (filters.party && element.party !== filters.party) {
-				return true
-			}
-			if (filters.period_start && parseInt(this.getSubmissionInfo(element).period()) < parseInt(filters.period_start.split('-')[0])) {
-				return true
-			}
-			if (filters.period_end && parseInt(this.getSubmissionInfo(element).period()) > parseInt(filters.period_end.split('-')[0])) {
-				return true
-			}
-			return false
-		},
+    checkFilters(filters, element) {
+      if (filters.obligation && element.obligation !== filters.obligation) {
+        return true
+      }
+      if (filters.party && element.party !== filters.party) {
+        return true
+      }
+      if (filters.period_start && parseInt(this.getSubmissionInfo(element).period()) < parseInt(filters.period_start.split('-')[0])) {
+        return true
+      }
+      if (filters.period_end && parseInt(this.getSubmissionInfo(element).period()) > parseInt(filters.period_end.split('-')[0])) {
+        return true
+      }
+      return false
+    },
 
-		removeSubmission(url) {
-			this.$store.dispatch('removeSubmission', {
-				$gettext: this.$gettext,
-				submissionUrl: url
-			})
-		},
-		getFormName(obligation) {
-			return this.obligations.find(o => o.value === obligation).form_type
-		},
-		onFiltered(filteredItems) {
-			this.dataEntryTable.totalRows = filteredItems.length
-			this.dataEntryTable.currentPage = 1
-		}
-	},
+    removeSubmission(url) {
+      this.$store.dispatch('removeSubmission', {
+        $gettext: this.$gettext,
+        submissionUrl: url
+      })
+    },
+    getFormName(obligation) {
+      return this.obligations.find(o => o.value === obligation).form_type
+    },
+    onFiltered(filteredItems) {
+      this.dataEntryTable.totalRows = filteredItems.length
+      this.dataEntryTable.currentPage = 1
+    }
+  },
 
-	watch: {
-		'$language.current': {
-			handler() {
-				this.updateBreadcrumbs()
-			}
-		},
-		'tableOptions.filters': {
-			handler() {
-				console.log(this.dataLoaded)
-				if (this.dataLoaded) {
-					if (this.tableOptions.currentPage !== 1) {
-						this.tableOptions.currentPage = 1
-						this.tableOptionsCurrentPageWasSetFromWatcher = true
-					}
-					this.$store.dispatch('getCurrentSubmissions')
-					if (!this.$refs.table) return
-					this.$refs.table.refresh()
-				}
-			},
-			deep: true
-		},
-		tableOptionsExceptFilters: {
-			handler() {
-				console.log(this.dataLoaded)
+  watch: {
+    '$language.current': {
+      handler() {
+        this.updateBreadcrumbs()
+      }
+    },
+    'tableOptions.filters': {
+      handler() {
+        console.log(this.dataLoaded)
+        if (this.dataLoaded) {
+          if (this.tableOptions.currentPage !== 1) {
+            this.tableOptions.currentPage = 1
+            this.tableOptionsCurrentPageWasSetFromWatcher = true
+          }
+          this.$store.dispatch('getCurrentSubmissions')
+          if (!this.$refs.table) return
+          this.$refs.table.refresh()
+        }
+      },
+      deep: true
+    },
+    tableOptionsExceptFilters: {
+      handler() {
+        console.log(this.dataLoaded)
 
-				if (this.dataLoaded) {
-					if (this.tableOptionsCurrentPageWasSetFromWatcher) {
-						this.tableOptionsCurrentPageWasSetFromWatcher = false
-						return
-					}
-					this.$store.dispatch('getCurrentSubmissions')
-				}
-			},
-			deep: true
-		}
-	}
+        if (this.dataLoaded) {
+          if (this.tableOptionsCurrentPageWasSetFromWatcher) {
+            this.tableOptionsCurrentPageWasSetFromWatcher = false
+            return
+          }
+          this.$store.dispatch('getCurrentSubmissions')
+        }
+      },
+      deep: true
+    }
+  }
 }
 </script>
 

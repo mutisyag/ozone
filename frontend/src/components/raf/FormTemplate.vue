@@ -245,44 +245,44 @@ import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import addParties from '@/components/raf/AddParties'
 
 export default {
-	mixins: [FormTemplateMxin],
-	components: {
-		ValidationLabel,
-		addParties
-	},
-	data() {
-		return {
-			typeOfDisplayObj: {
-				substance: 'substances',
-				blend: 'blends'
-			}
-		}
-	},
-	created() {
-		const labels = getLabels(this.$gettext)
-		this.labels = {
-			...labels.common,
-			...labels[this.tab_info.name]
-		}
-	},
-	methods: {
-	},
-	computed: {
-		getTabInputFields() {
-			return this.tab_info.input_fields
-		},
-		hasSubstances() {
-			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
-		},
-		hasBlends() {
-			return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
-		},
-		tableCounter() {
-			const counter = []
-			if (this.hasSubstances) counter.push(1)
-			if (this.hasBlends) counter.push(1)
-			return counter.length
-		}
-	}
+  mixins: [FormTemplateMxin],
+  components: {
+    ValidationLabel,
+    addParties
+  },
+  data() {
+    return {
+      typeOfDisplayObj: {
+        substance: 'substances',
+        blend: 'blends'
+      }
+    }
+  },
+  created() {
+    const labels = getLabels(this.$gettext)
+    this.labels = {
+      ...labels.common,
+      ...labels[this.tab_info.name]
+    }
+  },
+  methods: {
+  },
+  computed: {
+    getTabInputFields() {
+      return this.tab_info.input_fields
+    },
+    hasSubstances() {
+      return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('substance')
+    },
+    hasBlends() {
+      return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+    },
+    tableCounter() {
+      const counter = []
+      if (this.hasSubstances) counter.push(1)
+      if (this.hasBlends) counter.push(1)
+      return counter.length
+    }
+  }
 }
 </script>

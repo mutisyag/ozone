@@ -33,45 +33,45 @@ import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
 
-	props: {
-		tabName: String,
-		index: Number,
-		parties: Array
-	},
+  props: {
+    tabName: String,
+    index: Number,
+    parties: Array
+  },
 
-	components: {
-		Multiselect
-	},
+  components: {
+    Multiselect
+  },
 
-	computed: {
-		countries() {
-			return this.$store.state.initialData.countryOptions.filter(o => !this.parties.find(p => parseInt(p.party) === parseInt(o.value)))
-		}
-	},
+  computed: {
+    countries() {
+      return this.$store.state.initialData.countryOptions.filter(o => !this.parties.find(p => parseInt(p.party) === parseInt(o.value)))
+    }
+  },
 
-	mounted() {
-	},
+  mounted() {
+  },
 
-	data() {
-		return {
-			selected_countries: {
-				selected: []
-			}
-		}
-	},
+  data() {
+    return {
+      selected_countries: {
+        selected: []
+      }
+    }
+  },
 
-	created() {
-	},
+  created() {
+  },
 
-	methods: {
-		resetData() {
-			this.selected_countries.selected = []
-		},
-		addEntries() {
-			this.$store.commit('addCountryEntries', { tabName: this.tabName, index: this.index, countryList: this.selected_countries.selected })
-			this.resetData()
-		}
-	}
+  methods: {
+    resetData() {
+      this.selected_countries.selected = []
+    },
+    addEntries() {
+      this.$store.commit('addCountryEntries', { tabName: this.tabName, index: this.index, countryList: this.selected_countries.selected })
+      this.resetData()
+    }
+  }
 }
 </script>
 

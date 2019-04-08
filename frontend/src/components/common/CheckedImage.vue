@@ -5,8 +5,8 @@
 
 <script>
 export default {
-	props: {
-		item: [Object, Boolean]
-	}
+  props: {
+    item: [Object, Boolean]
+  }
 }
 </script>
