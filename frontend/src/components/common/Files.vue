@@ -18,7 +18,7 @@
 							fileName:file.name
 						})"
             v-b-tooltip
-            :title="file.upload_succesfull ? 'Download' : ''"
+            :title="file.upload_succesfull ? uploadLabel : downloadLabel"
             >
               <i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
               <i v-else class="fa fa-upload" aria-hidden="true"></i>
@@ -93,7 +93,9 @@ export default {
     return {
       selectedFiles: [],
       loadingInitialFiles: true,
-      placeholder: this.$gettext('Click to browse files')
+      placeholder: this.$gettext('Click to browse files'),
+      uploadLabel: this.$gettext('File not uploaded yet'),
+      downloadLabel: this.$$gettext('Download')
     }
   },
   async created() {
