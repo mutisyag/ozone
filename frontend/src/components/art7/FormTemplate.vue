@@ -132,18 +132,27 @@
               v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
             >
-              <hr>
-              <span
-                v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}"
-              >Quantity of new %{substance} %{qps_word} to be used for QPS applications</span>
-              <hr>
-              <span>
+              <b-input-group>
+                <b-input-group-prepend>
+                  <span
+                    class="input-group-text"
+                    :id="`qps_tooltip_${cell.item.index}`"
+                  >
+                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                  </span>
+                    <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
+                      <span
+                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications
+                      </span>
+                    </b-tooltip>
+                </b-input-group-prepend>
                 <fieldGenerator
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
                   :disabled="!$store.getters.can_edit_data"
                   :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
                 />
-              </span>
+              </b-input-group>
             </div>
 
             <div
@@ -286,18 +295,27 @@
               v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
             >
-              <hr>
-              <span
-                v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.substance.selected]}"
-              >Quantity of new %{substance} %{qps_word} to be used for QPS applications</span>
-              <hr>
-              <span>
+              <b-input-group>
+                <b-input-group-prepend>
+                  <span
+                    class="input-group-text"
+                    :id="`qps_tooltip_${cell.item.index}`"
+                  >
+                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                  </span>
+                    <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
+                      <span
+                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications
+                      </span>
+                    </b-tooltip>
+                </b-input-group-prepend>
                 <fieldGenerator
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
                   :disabled="!$store.getters.can_edit_data"
                   :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
                 />
-              </span>
+              </b-input-group>
             </div>
             <div
               style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"

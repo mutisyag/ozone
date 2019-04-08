@@ -115,7 +115,7 @@ const getFormArt7 = ($gettext) => {
             name: 'quantity_total_recovered'
           },
           {
-            label: `(5) <br> ${$gettext('Quantity of new substances exported as feedstock')}`,
+            label: `(5) <br> ${$gettext('Export for feedstock')}`,
             name: 'quantity_feedstock'
           },
           {
@@ -148,7 +148,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           label: '',
-          tooltip: $gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')
+          tooltip: `${$gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')} \n ${$gettext('Quantity of new substances exported as feedstock')}`
         },
         {
           label: $gettext('Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses'),
@@ -252,7 +252,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           name: 'quantity_feedstock',
-          label: `(5) <br> ${$gettext('Quantity of new substances imported as feedstock')}`
+          label: `(5) <br> ${$gettext('Import for feedstock')}`
         },
         {
           label: `(6) <br> ${$gettext('Quantity')}`,
@@ -284,7 +284,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           label: '',
-          tooltip: $gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')
+          tooltip: `${$gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')} \n ${$gettext('Quantity of new substances imported as feedstock')}`
         },
         {
           label: $gettext('Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses'),
