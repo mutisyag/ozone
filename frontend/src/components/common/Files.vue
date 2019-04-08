@@ -1,8 +1,14 @@
 <template>
   <div>
-    <div>
+    <div v-if="!files.length">
+      <h5 class="ml-2" v-translate>No files uploaded</h5>
+    </div>
+    <div v-else>
       <b-input-group class="mb-2" v-for="(file, index) in files" :key="index">
-        <b-input-group-text slot="prepend">
+        <b-input-group-text
+          slot="prepend"
+          style="padding: 0;"
+        >
           <span>
             <b-btn
               variant="link"
@@ -11,10 +17,11 @@
 							url: file.file_url,
 							fileName:file.name
 						})"
+            v-b-tooltip
+            :title="file.upload_succesfull ? 'Download' : ''"
             >
               <i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
               <i v-else class="fa fa-upload" aria-hidden="true"></i>
-              &nbsp;
               {{file.name}}
               <span
                 v-if="file.upload_successful"
@@ -26,26 +33,33 @@
           class="d-inline"
           placeholder="Optional description"
           :value="file.description"
+          style="height: unset"
           @input="onFileDescriptionChanged($event, file)"
         />
         <b-input-group-append>
           <b-button variant="danger" class="pull-right" @click="deleteFile($event, file)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <div style="width:200px" v-show="file.percentage">
-            <b-progress :value="file.percentage" :max="100" animated></b-progress>
+          <div style="width:200px" v-if="file.percentage">
+            <b-progress :value="file.percentage" :max="100">
+              <b-progress-bar :value="file.percentage">
+                Uploading: <strong>{{ file.percentage.toFixed(3) }}%</strong>
+              </b-progress-bar>
+            </b-progress>
           </div>
         </b-input-group-append>
       </b-input-group>
     </div>
+    <hr>
     <div class="row">
-      <div class="col-12">
+      <div class="col-4">
         <b-form-file
           id="choose-files-button"
           :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
           :multiple="true"
           ref="filesInput"
           v-model="selectedFiles"
+          :placeholder="placeholder"
           @input="onSelectedFilesChanged"
         />
       </div>
@@ -71,7 +85,8 @@ export default {
   data() {
     return {
       selectedFiles: [],
-      loadingInitialFiles: true
+      loadingInitialFiles: true,
+      placeholder: this.$gettext('Click to browse files')
     }
   },
   async created() {
@@ -131,5 +146,8 @@ a {
 }
 .progress {
   height: 100%;
+}
+.btn-link:hover {
+  text-decoration: none;
 }
 </style>
