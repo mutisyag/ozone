@@ -575,6 +575,16 @@ class Article7Production(
     All quantities expressed in metric tonnes.
     """
 
+    AGGREGATION_MAPPING = {
+        'quantity_total_produced': 'production_all_new',
+        'quantity_feedstock': 'production_feedstock',
+        'quantity_essential_uses': 'production_essential_uses',
+        'quantity_laboratory_analytical_uses': 'production_laboratory_analytical_uses',
+        'quantity_article_5': 'production_article_5',
+        'quantity_quarantine_pre_shipment': 'production_quarantine',
+        'quantity_process_agent_uses': 'production_process_agent',
+    }
+
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
     quantity_total_produced = models.FloatField(
@@ -614,6 +624,10 @@ class Article7Destruction(
     QUANTITY_FIELDS = [
         'quantity_destroyed',
     ]
+
+    AGGREGATION_MAPPING = {
+        'quantity_destroyed': 'destroyed',
+    }
 
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True

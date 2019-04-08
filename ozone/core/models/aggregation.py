@@ -137,8 +137,9 @@ class ProdCons(models.Model):
     )
 
     # Non-party
-    # TODO are values an aggregation of art7 non-party trade?
+    # TODO: are these values an aggregation of art7 non-party trade?
     # ([import/export]_[new/recovered])
+    # From the existing data, it does not look like it!
     non_party_import = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
@@ -150,8 +151,8 @@ class ProdCons(models.Model):
     # Essential Uses
     # Data source seems to be tbl_Acc_EssenUse in data.xlsx
     # (it has production and import).
-    # TODO: this looks like RAF, but how are these production & import derived?
-    # Just a sum of everything?
+    # Production.quantity_essential_uses is already aggregated somewhere else
+    # TODO: Clarify
     essential_uses_production = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
@@ -174,7 +175,6 @@ class ProdCons(models.Model):
     )
 
     # EssenCrit exempted amount
-    # TODO: this also looks like RAF
     essen_crit_exempted_amount = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
