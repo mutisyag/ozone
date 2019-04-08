@@ -23,10 +23,13 @@
               <i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
               <i v-else class="fa fa-upload" aria-hidden="true"></i>
               {{file.name}}
-              <span
-                v-if="file.upload_successful"
-              >- {{file.updated}}</span>
             </b-btn>
+            <div v-if="file.upload_successful">
+              <small>
+              Uploaded at:
+                {{formatDate(file.updated)}}
+              </small>
+            </div>
           </span>
         </b-input-group-text>
         <b-form-input
@@ -74,6 +77,7 @@
 
 <script>
 import FilesMixin from '@/components/common/mixins/FilesMixin'
+import { dateFormatToDisplay } from '@/components/common/services/languageService.js'
 
 export default {
   mixins: [FilesMixin],
@@ -94,6 +98,9 @@ export default {
     this.loadingInitialFiles = false
   },
   methods: {
+    formatDate(date) {
+      return dateFormatToDisplay(date)
+    },
     async deleteFile(e, file) {
       const confirmed = await this.$store.dispatch('openConfirmModal', { $gettext: this.$gettext })
       if (!confirmed) {
