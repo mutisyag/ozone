@@ -1,114 +1,146 @@
 <template>
   <div>
-  <div class="breadcrumb custom">
-    <small style="width: 30%;">
-      <b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton"> <i class="fa fa-info fa-lg"></i></b-btn>
-      <div v-html="selectedTab.detailsHtml"></div>
-    </small>
-    <div class="tab-title">
-      <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
-        <span v-html="selectedTab.titleHtml"></span>
-         <i style='margin-left: 5px' class="fa fa-info-circle fa-lg"></i>
+    <div class="breadcrumb custom">
+      <small style="width: 30%;">
+        <b-btn
+          style="margin-right:.5rem"
+          variant="info-outline"
+          @click="createModalData"
+          v-show="!selectedTab.hideInfoButton"
+        >
+          <i class="fa fa-info fa-lg"></i>
+        </b-btn>
+        <div v-html="selectedTab.detailsHtml"></div>
+      </small>
+      <div class="tab-title">
+        <div v-if="selectedTab.tooltipHtml" v-b-tooltip :title="selectedTab.tooltipHtml">
+          <span v-html="selectedTab.titleHtml"></span>
+          <i style="margin-left: 5px" class="fa fa-info-circle fa-lg"></i>
+        </div>
+        <div v-else v-html="selectedTab.titleHtml"></div>
       </div>
-      <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-  </div>
 
     <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
-		<div v-if="modal_data" v-html="modal_data"></div>
-		<div slot="modal-footer">
-			<b-btn @click="$refs.instructions_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
-		</div>
-	</b-modal>
+      <div v-if="modal_data" v-html="modal_data"></div>
+      <div slot="modal-footer">
+        <b-btn @click="$refs.instructions_modal.hide()" variant="success">
+          <span v-translate>Close</span>
+        </b-btn>
+      </div>
+    </b-modal>
 
-  <div class="form-wrapper" style="position: relative">
-    <b-card style="margin-bottom: 5rem;" no-body>
-			<b-tabs v-model="tabIndex" card>
+    <div class="form-wrapper" style="position: relative">
+      <b-card style="margin-bottom: 5rem;" no-body>
+        <b-tabs v-model="tabIndex" card>
+          <b-tab active>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.sub_info"/>
+            </template>
+            <SubmissionInfo
+              ref="sub_info"
+              :flags_info="$store.state.form.tabs.flags"
+              :info="$store.state.form.tabs.sub_info"
+              :tabId="0"
+            />
+          </b-tab>
 
-			<b-tab active>
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
-				</template>
-					<SubmissionInfo ref="sub_info" :flags_info="$store.state.form.tabs.flags" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-			</b-tab>
+          <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
+            </template>
+            <FormTemplate
+              :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)"
+              :tabIndex="tabIndex"
+              :tabName="tabId"
+            />
+          </b-tab>
 
-			<b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-				</template>
-				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-			</b-tab>
-
-				<b-tab>
-					<template slot="title">
-						<tab-title-with-loader :tab="$store.state.form.tabs.files" />
-					</template>
-					<Files :tabId="2" :tabIndex="tabIndex" />
-				</b-tab>
-			</b-tabs>
-    </b-card>
+          <b-tab>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabId="2" :tabIndex="tabIndex"/>
+          </b-tab>
+        </b-tabs>
+      </b-card>
     </div>
     <Footer style="display:inline">
-		<b-button-group class="actions mt-2 mb-2">
-			<Save v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
-		</b-button-group>
+      <b-button-group class="actions mt-2 mb-2">
+        <Save
+          v-if="$store.getters.can_save_form"
+          :data="$store.state.form"
+          :submission="submission"
+        ></Save>
+      </b-button-group>
 
-		<router-link
-					class="btn btn-primary ml-2"
-					:to="{name: 'Dashboard'}"
-					v-translate
-		>
-				Close
-		</router-link>
+      <router-link class="btn btn-primary ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
 
-		<b-button-group class="pull-right actions mt-2 mb-2">
-			<b-btn
-				v-if="$store.state.current_submission.available_transitions.includes('submit')"
-				@click="checkBeforeSubmitting"
-				variant="outline-success">
-				<span v-translate>Submit</span>
-			</b-btn>
-			<b-btn
-				variant="outline-primary"
-				v-for="transition in availableTransitions"
-				:key="transition"
-				@click="currentTransition = transition">
-				<span>{{labels[transition]}}</span>
-			</b-btn>
-			<b-btn
-					variant="outline-primary"
-					@click="clone($route.query.submission)"
-					size="sm"
-					v-if="$store.state.current_submission.is_cloneable"
-					:disabled="$store.state.currentUser.is_read_only">
-				Revise
-			</b-btn>
-			<b-btn variant="outline-primary"
-				@click="$store.dispatch('downloadStuff',
+      <b-button-group class="pull-right actions mt-2 mb-2">
+        <b-btn
+          v-if="$store.state.current_submission.available_transitions.includes('submit')"
+          @click="checkBeforeSubmitting"
+          variant="outline-success"
+        >
+          <span v-translate>Submit</span>
+        </b-btn>
+        <b-btn
+          variant="outline-primary"
+          v-for="transition in availableTransitions"
+          :key="transition"
+          @click="currentTransition = transition"
+        >
+          <span>{{labels[transition]}}</span>
+        </b-btn>
+        <b-btn
+          variant="outline-primary"
+          @click="clone($route.query.submission)"
+          size="sm"
+          v-if="$store.state.current_submission.is_cloneable"
+          :disabled="$store.state.currentUser.is_read_only"
+        >Revise</b-btn>
+        <b-btn
+          variant="outline-primary"
+          @click="$store.dispatch('downloadStuff',
 					{
 						url: `${submission}export_pdf/`,
 						fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-					})">
-					Export as PDF
-			</b-btn>
-			<b-btn @click="$refs.history_modal.show()" variant="outline-info">
-				<span v-translate>Versions</span>
-			</b-btn>
-			<b-btn @click="removeSubmission" v-if="$store.getters.can_edit_data"  variant="outline-danger">
-				<span v-translate>Delete Submission</span>
-			</b-btn>
-		</b-button-group>
+					})"
+        >Export as PDF</b-btn>
+        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
+          <span v-translate>Versions</span>
+        </b-btn>
+        <b-btn
+          @click="removeSubmission"
+          v-if="$store.getters.can_edit_data"
+          variant="outline-danger"
+        >
+          <span v-translate>Delete Submission</span>
+        </b-btn>
+      </b-button-group>
     </Footer>
 
-	<b-modal size="lg" ref="history_modal" id="history_modal" :title="$gettext('Submission versions')">
-        <SubmissionHistory :history="$store.state.currentSubmissionHistory"
-							:currentVersion="$store.state.current_submission.version">
-		</SubmissionHistory>
-		<div slot="modal-footer">
-          <b-btn @click="$refs.history_modal.hide()" variant="success"><span v-translate>Close</span></b-btn>
-		</div>
-	</b-modal>
-	<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="submission" :transition="currentTransition"></TransitionQuestions>
+    <b-modal
+      size="lg"
+      ref="history_modal"
+      id="history_modal"
+      :title="$gettext('Submission versions')"
+    >
+      <SubmissionHistory
+        :history="$store.state.currentSubmissionHistory"
+        :currentVersion="$store.state.current_submission.version"
+      ></SubmissionHistory>
+      <div slot="modal-footer">
+        <b-btn @click="$refs.history_modal.hide()" variant="success">
+          <span v-translate>Close</span>
+        </b-btn>
+      </div>
+    </b-modal>
+    <TransitionQuestions
+      v-on:removeTransition="currentTransition = null"
+      :submission="submission"
+      :transition="currentTransition"
+    ></TransitionQuestions>
   </div>
 </template>
 
@@ -247,7 +279,7 @@ export default {
 
 <style lang="css" scoped>
 .legend {
-  padding: .2rem 2rem;
+  padding: 0.2rem 2rem;
   background: #f0f3f5;
 }
 

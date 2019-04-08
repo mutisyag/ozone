@@ -1,25 +1,25 @@
 <template>
-	<multiselect
-		v-bind="$attrs"
-		v-on="forwardListeners"
-		v-model="completeValue"
-		:options="options"
-		:track-by="trackBy"
-	>
-		<template v-if="customTemplate" slot="singleLabel" slot-scope="props">
-			<div :class="{highlighted: props.option[customTemplate]}">
-				<span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
-				<span class="option__title">{{ props.option.text }}</span>
-			</div>
-		</template>
+  <multiselect
+    v-bind="$attrs"
+    v-on="forwardListeners"
+    v-model="completeValue"
+    :options="options"
+    :track-by="trackBy"
+  >
+    <template v-if="customTemplate" slot="singleLabel" slot-scope="props">
+      <div :class="{highlighted: props.option[customTemplate]}">
+        <span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
+        <span class="option__title">{{ props.option.text }}</span>
+      </div>
+    </template>
 
-		<template v-if="customTemplate" slot="option" slot-scope="props">
-			<div :class="{highlighted: props.option[customTemplate]}">
-				<span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
-				<span class="option__title">{{ props.option.text }}</span>
-			</div>
-		</template>
-	</multiselect>
+    <template v-if="customTemplate" slot="option" slot-scope="props">
+      <div :class="{highlighted: props.option[customTemplate]}">
+        <span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
+        <span class="option__title">{{ props.option.text }}</span>
+      </div>
+    </template>
+  </multiselect>
 </template>
 <script>
 import Multiselect from 'vue-multiselect'
@@ -57,8 +57,8 @@ export default {
 </script>
 
 <style type="text/css">
-  .highlighted {
-    color: #e6b222;
-    font-weight: bold;
-  }
+.highlighted {
+  color: #e6b222;
+  font-weight: bold;
+}
 </style>

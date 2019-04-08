@@ -1,39 +1,39 @@
 <template>
-	<div v-if="section && tabName" class="validation-tab">
-		<div v-for="(field, field_index) in section" :key="field_index">
-			<div
-				:class="{hovered: (section.indexOf(field)) === hovered }"
-				class="validation-item"
-				v-for="(error,error_index) in field.validation"
-				:key="error_index"
-			>
-				<span
-					class="btn-link"
-					@click="$emit('fillSearch', { substance: display.substances[field.substance] })"
-					v-if="display.substances[field.substance]"
-				>{{display.substances[field.substance]}}</span>
-				<span
-					class="btn-link"
-					@click="$emit('fillSearch', { blend: display.blends[field.blend].name })"
-					v-if="display.blends[field.blend]"
-				>{{display.blends[field.blend].name}}</span>
-				<span
-					class="btn-link"
-					@click="$emit('fillSearch', { facility: field.facility_name })"
-					v-if="field.facility_name"
-				>{{field.facility_name}}</span>
-				<span v-if="countryField(field)">- {{countryField(field)}}</span>
-				-
-				<span style="color: red">{{error}}</span>
-			</div>
-		</div>
-		<div v-if="multiRowValidation && Object.keys(multiRowValidation).length">
-			<div
-				v-for="(substance, index) in multiRowValidation"
-				:key="index"
-			>Error for {{ display.substances[index] }}</div>
-		</div>
-	</div>
+  <div v-if="section && tabName" class="validation-tab">
+    <div v-for="(field, field_index) in section" :key="field_index">
+      <div
+        :class="{hovered: (section.indexOf(field)) === hovered }"
+        class="validation-item"
+        v-for="(error,error_index) in field.validation"
+        :key="error_index"
+      >
+        <span
+          class="btn-link"
+          @click="$emit('fillSearch', { substance: display.substances[field.substance] })"
+          v-if="display.substances[field.substance]"
+        >{{display.substances[field.substance]}}</span>
+        <span
+          class="btn-link"
+          @click="$emit('fillSearch', { blend: display.blends[field.blend].name })"
+          v-if="display.blends[field.blend]"
+        >{{display.blends[field.blend].name}}</span>
+        <span
+          class="btn-link"
+          @click="$emit('fillSearch', { facility: field.facility_name })"
+          v-if="field.facility_name"
+        >{{field.facility_name}}</span>
+        <span v-if="countryField(field)">- {{countryField(field)}}</span>
+        -
+        <span style="color: red">{{error}}</span>
+      </div>
+    </div>
+    <div v-if="multiRowValidation && Object.keys(multiRowValidation).length">
+      <div
+        v-for="(substance, index) in multiRowValidation"
+        :key="index"
+      >Error for {{ display.substances[index] }}</div>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -69,18 +69,18 @@ export default {
 
 <style lang="css" scoped>
 .validation-tab {
-	padding: 1rem;
+  padding: 1rem;
 }
 
 .validation-item {
-	border: 1px solid transparent;
-	padding: .5rem;
+  border: 1px solid transparent;
+  padding: 0.5rem;
 }
 
 .hovered {
-	border-color: red;
+  border-color: red;
 }
 .btn-link {
-	cursor: pointer;
+  cursor: pointer;
 }
 </style>

@@ -1,13 +1,13 @@
 <template>
-	<b-btn
-		:disabled="isFilesUploadInProgress"
-		@click="validation"
-		id="save-button"
-		ref="save_button"
-		variant="primary"
-	>
-		<span v-translate>Save and continue</span>
-	</b-btn>
+  <b-btn
+    :disabled="isFilesUploadInProgress"
+    @click="validation"
+    id="save-button"
+    ref="save_button"
+    variant="primary"
+  >
+    <span v-translate>Save and continue</span>
+  </b-btn>
 </template>
 
 <script>

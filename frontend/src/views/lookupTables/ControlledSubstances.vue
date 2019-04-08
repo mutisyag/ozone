@@ -1,59 +1,59 @@
 <template>
-	<div class="app flex-row align-items-top">
-		<b-container fluid>
-			<b-card>
-				<template slot="header">
-					<b-row>
-						<b-col>
-							<b-input-group :prepend="$gettext('Group')">
-								<b-form-input id="substances-group-filter" v-model="table.filters.searchGroup"/>
-							</b-input-group>
-						</b-col>
-						<b-col>
-							<b-input-group :prepend="$gettext('Name')">
-								<b-form-input id="substances-name-filter" v-model="table.filters.searchName"/>
-							</b-input-group>
-						</b-col>
-						<b-col>
-							<b-input-group :prepend="$gettext('Formula')">
-								<b-form-input id="substances-formula-filter" v-model="table.filters.searchFormula"/>
-							</b-input-group>
-						</b-col>
-						<b-col>
-							<b-input-group-append>
-								<b-btn
-									id="substances-clear-button"
-									variant="primary"
-									:disabled="isDisabledClearFilters"
-									@click="clearFilters"
-								>
-									<span v-translate>Clear</span>
-								</b-btn>
-							</b-input-group-append>
-						</b-col>
-					</b-row>
-				</template>
-				<b-table
-					show-empty
-					outlined
-					striped
-					bordered
-					hover
-					head-variant="light"
-					stacked="md"
-					:items="substances"
-					:fields="tableFields"
-					:current-page="table.currentPage"
-					:per-page="table.perPage"
-					:filter="filterCallback"
-					:sort-by.sync="table.sortBy"
-					:sort-desc.sync="table.sortDesc"
-					@filtered="onFiltered"
-					ref="table"
-				></b-table>
-			</b-card>
-		</b-container>
-	</div>
+  <div class="app flex-row align-items-top">
+    <b-container fluid>
+      <b-card>
+        <template slot="header">
+          <b-row>
+            <b-col>
+              <b-input-group :prepend="$gettext('Group')">
+                <b-form-input id="substances-group-filter" v-model="table.filters.searchGroup"/>
+              </b-input-group>
+            </b-col>
+            <b-col>
+              <b-input-group :prepend="$gettext('Name')">
+                <b-form-input id="substances-name-filter" v-model="table.filters.searchName"/>
+              </b-input-group>
+            </b-col>
+            <b-col>
+              <b-input-group :prepend="$gettext('Formula')">
+                <b-form-input id="substances-formula-filter" v-model="table.filters.searchFormula"/>
+              </b-input-group>
+            </b-col>
+            <b-col>
+              <b-input-group-append>
+                <b-btn
+                  id="substances-clear-button"
+                  variant="primary"
+                  :disabled="isDisabledClearFilters"
+                  @click="clearFilters"
+                >
+                  <span v-translate>Clear</span>
+                </b-btn>
+              </b-input-group-append>
+            </b-col>
+          </b-row>
+        </template>
+        <b-table
+          show-empty
+          outlined
+          striped
+          bordered
+          hover
+          head-variant="light"
+          stacked="md"
+          :items="substances"
+          :fields="tableFields"
+          :current-page="table.currentPage"
+          :per-page="table.perPage"
+          :filter="filterCallback"
+          :sort-by.sync="table.sortBy"
+          :sort-desc.sync="table.sortDesc"
+          @filtered="onFiltered"
+          ref="table"
+        ></b-table>
+      </b-card>
+    </b-container>
+  </div>
 </template>
 
 <script>

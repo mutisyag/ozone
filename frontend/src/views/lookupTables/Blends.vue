@@ -1,104 +1,104 @@
 <template>
-	<div class="app blends-lookup-table flex-row align-items-top">
-		<b-container fluid>
-			<b-card>
-				<template slot="header">
-					<b-row>
-						<b-col>
-							<b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
-								<b-form-input id="blends-name-filter" v-model="table.filters.searchName"/>
-							</b-input-group>
-						</b-col>
-						<b-col>
-							<b-input-group id="blends-component-filter">
-								<multiselect
-									:max-height="250"
-									:multiple="true"
-									:clear-on-select="false"
-									:hide-selected="true"
-									:close-on-select="false"
-									label="text"
-									trackBy="value"
-									:placeholder="$gettext('Components')"
-									v-model="table.filters.selectedComponentsNames"
-									:options="searchComponentOptions"
-								/>
-								<b-input-group-append>
-									<b-btn
-										variant="primary"
-										:disabled="!table.filters.selectedComponentsNames.length"
-										@click="toggleIsComponentsSortDirectionDesc"
-									>
-										<span v-translate>Sort</span>
-										<i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
-										<i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
-									</b-btn>
-								</b-input-group-append>
-							</b-input-group>
-						</b-col>
-						<b-col>
-							<b-input-group-append>
-								<b-btn
-									id="blends-clear-button"
-									variant="primary"
-									:disabled="isDisabledClearFilters"
-									@click="clearFilters"
-								>
-									<span v-translate>Clear</span>
-								</b-btn>
-							</b-input-group-append>
-						</b-col>
-					</b-row>
-				</template>
-				<b-table
-					show-empty
-					outlined
-					bordered
-					hover
-					head-variant="light"
-					stacked="md"
-					:items="visibleBlends"
-					:fields="tableFields"
-					:current-page="table.currentPage"
-					:per-page="table.perPage"
-					:sort-by.sync="table.sortBy"
-					:sort-desc.sync="table.sortDesc"
-					:sort-direction="table.sortDirection"
-					:filter="filterCallback"
-					@filtered="onFiltered"
-					ref="table"
-				>
-					<template slot="other_names" slot-scope="data">
-						<span v-if="data.item.other_names">{{data.item.other_names}}</span>
-						<span v-else>
-							<i class="fa fa-ellipsis-h"></i>
-						</span>
-					</template>
+  <div class="app blends-lookup-table flex-row align-items-top">
+    <b-container fluid>
+      <b-card>
+        <template slot="header">
+          <b-row>
+            <b-col>
+              <b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
+                <b-form-input id="blends-name-filter" v-model="table.filters.searchName"/>
+              </b-input-group>
+            </b-col>
+            <b-col>
+              <b-input-group id="blends-component-filter">
+                <multiselect
+                  :max-height="250"
+                  :multiple="true"
+                  :clear-on-select="false"
+                  :hide-selected="true"
+                  :close-on-select="false"
+                  label="text"
+                  trackBy="value"
+                  :placeholder="$gettext('Components')"
+                  v-model="table.filters.selectedComponentsNames"
+                  :options="searchComponentOptions"
+                />
+                <b-input-group-append>
+                  <b-btn
+                    variant="primary"
+                    :disabled="!table.filters.selectedComponentsNames.length"
+                    @click="toggleIsComponentsSortDirectionDesc"
+                  >
+                    <span v-translate>Sort</span>
+                    <i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
+                    <i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
+                  </b-btn>
+                </b-input-group-append>
+              </b-input-group>
+            </b-col>
+            <b-col>
+              <b-input-group-append>
+                <b-btn
+                  id="blends-clear-button"
+                  variant="primary"
+                  :disabled="isDisabledClearFilters"
+                  @click="clearFilters"
+                >
+                  <span v-translate>Clear</span>
+                </b-btn>
+              </b-input-group-append>
+            </b-col>
+          </b-row>
+        </template>
+        <b-table
+          show-empty
+          outlined
+          bordered
+          hover
+          head-variant="light"
+          stacked="md"
+          :items="visibleBlends"
+          :fields="tableFields"
+          :current-page="table.currentPage"
+          :per-page="table.perPage"
+          :sort-by.sync="table.sortBy"
+          :sort-desc.sync="table.sortDesc"
+          :sort-direction="table.sortDirection"
+          :filter="filterCallback"
+          @filtered="onFiltered"
+          ref="table"
+        >
+          <template slot="other_names" slot-scope="data">
+            <span v-if="data.item.other_names">{{data.item.other_names}}</span>
+            <span v-else>
+              <i class="fa fa-ellipsis-h"></i>
+            </span>
+          </template>
 
-					<template slot="components" slot-scope="row">
-						<b-table
-							show-empty
-							outlined
-							bordered
-							hover
-							small
-							head-variant="light"
-							stacked="md"
-							:items="row.item.components"
-							:fields="tableComponentsFields"
-							:current-page="tableComponents.currentPage"
-							:per-page="tableComponents.perPage"
-							ref="table"
-						>
-							<template slot="component_name" slot-scope="data">
-								<div>{{data.item.component_name}}</div>
-							</template>
-						</b-table>
-					</template>
-				</b-table>
-			</b-card>
-		</b-container>
-	</div>
+          <template slot="components" slot-scope="row">
+            <b-table
+              show-empty
+              outlined
+              bordered
+              hover
+              small
+              head-variant="light"
+              stacked="md"
+              :items="row.item.components"
+              :fields="tableComponentsFields"
+              :current-page="tableComponents.currentPage"
+              :per-page="tableComponents.perPage"
+              ref="table"
+            >
+              <template slot="component_name" slot-scope="data">
+                <div>{{data.item.component_name}}</div>
+              </template>
+            </b-table>
+          </template>
+        </b-table>
+      </b-card>
+    </b-container>
+  </div>
 </template>
 
 <script>

@@ -1,107 +1,140 @@
 <template>
   <div>
-  <div class="breadcrumb custom">
-    <small style="width: 30%;">
-		<b-btn style="margin-right:.5rem" variant="info-outline" @click="createModalData" v-show="!selectedTab.hideInfoButton">
-			<i class="fa fa-info fa-lg"></i>
-		</b-btn>
-		<div v-html="selectedTab.detailsHtml"></div>
-    </small>
-    <div class="tab-title">
-      <div  v-if='selectedTab.tooltipHtml' v-b-tooltip :title="selectedTab.tooltipHtml" >
-        <span v-html="selectedTab.titleHtml"></span>
-         <i style='margin-left: 5px' class="fa fa-info-circle fa-lg"></i>
+    <div class="breadcrumb custom">
+      <small style="width: 30%;">
+        <b-btn
+          style="margin-right:.5rem"
+          variant="info-outline"
+          @click="createModalData"
+          v-show="!selectedTab.hideInfoButton"
+        >
+          <i class="fa fa-info fa-lg"></i>
+        </b-btn>
+        <div v-html="selectedTab.detailsHtml"></div>
+      </small>
+      <div class="tab-title">
+        <div v-if="selectedTab.tooltipHtml" v-b-tooltip :title="selectedTab.tooltipHtml">
+          <span v-html="selectedTab.titleHtml"></span>
+          <i style="margin-left: 5px" class="fa fa-info-circle fa-lg"></i>
+        </div>
+        <div v-else v-html="selectedTab.titleHtml"></div>
       </div>
-      <div v-else v-html="selectedTab.titleHtml"></div>
     </div>
-  </div>
 
-  <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
-    <div v-if="modal_data" v-html="modal_data"></div>
-  </b-modal>
+    <b-modal size="lg" ref="instructions_modal" id="instructions_modal">
+      <div v-if="modal_data" v-html="modal_data"></div>
+    </b-modal>
 
-  <div class="form-wrapper" style="position: relative">
-    <b-card style="margin-bottom: 5rem;" no-body>
-		<b-tabs v-model="tabIndex" card>
-			<b-tab active>
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.sub_info" />
-				</template>
-				<SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0" />
-			</b-tab>
-			<b-tab>
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs.files" />
-				</template>
-				<Files :tabId="3" :tabIndex="tabIndex" />
-			</b-tab>
-			<b-tab v-if="is_secretariat" v-for="tabId in tabsIdsForSecretariat" :key="tabId">
-				<template slot="title">
-					<tab-title-with-loader :tab="$store.state.form.tabs[tabId]" />
-				</template>
-				<FormTemplate :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)" :tabIndex="tabIndex" :tabName="tabId" />
-			</b-tab>
-    </b-tabs>
+    <div class="form-wrapper" style="position: relative">
+      <b-card style="margin-bottom: 5rem;" no-body>
+        <b-tabs v-model="tabIndex" card>
+          <b-tab active>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.sub_info"/>
+            </template>
+            <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0"/>
+          </b-tab>
+          <b-tab>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabId="3" :tabIndex="tabIndex"/>
+          </b-tab>
+          <b-tab v-for="tabId in tabsIdsForSecretariat" :key="tabId">
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
+            </template>
+            <FormTemplate
+              :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)"
+              :tabIndex="tabIndex"
+              :tabName="tabId"
+            />
+          </b-tab>
+        </b-tabs>
 
         <div class="legend">
-            <b><span v-translate>Legend:</span></b>
-            <div>
-              <div class="spinner">
-                <div class="loader"></div>
-              </div> - <span v-translate>Form is curently being saved</span>
-            </div>
-            <div>
-              <i style="color: red;" class="fa fa-times-circle fa-lg"></i> - <span v-translate>Form save failed. Please check the validation</span>
-            </div>
-            <div>
-              <i style="color: green;" class="fa fa-check-circle fa-lg"></i> - <span v-translate>Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
-            </div>
-            <div>
-              <i class="fa fa-edit fa-lg"></i> - <span v-translate>The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
-            </div>
+          <b>
+            <span v-translate>Legend:</span>
+          </b>
+          <div>
+            <div class="spinner">
+              <div class="loader"></div>
+            </div>-
+            <span v-translate>Form is curently being saved</span>
+          </div>
+          <div>
+            <i style="color: red;" class="fa fa-times-circle fa-lg"></i> -
+            <span v-translate>Form save failed. Please check the validation</span>
+          </div>
+          <div>
+            <i style="color: green;" class="fa fa-check-circle fa-lg"></i> -
+            <span
+              v-translate
+            >Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
+          </div>
+          <div>
+            <i class="fa fa-edit fa-lg"></i> -
+            <span
+              v-translate
+            >The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
+          </div>
         </div>
-    </b-card>
+      </b-card>
     </div>
     <Footer style="display:inline">
-			<Save class="actions mt-2 mb-2"  v-if="$store.getters.can_save_form" :data="$store.state.form" :submission="submission"></Save>
-			<router-link
-						class="btn btn-primary ml-2"
-						:to="{name: 'Dashboard'}"
-						v-translate
-			>
-					Close
-			</router-link>
-			<b-button-group class="pull-right actions mt-2 mb-2">
-				<b-btn
-					v-if="$store.state.current_submission.available_transitions.includes('submit')"
-					@click="checkBeforeSubmitting"
-					variant="outline-success">
-						<span v-translate>Submit</span>
-				</b-btn>
-				<b-btn
-					variant="outline-primary"
-					v-for="transition in availableTransitions"
-					:key="transition"
-					@click="currentTransition = transition">
-						<span>{{labels[transition]}}</span>
-				</b-btn>
-				<!-- <b-btn @click="$refs.history_modal.show()" variant="outline-info">
+      <Save
+        class="actions mt-2 mb-2"
+        v-if="$store.getters.can_save_form"
+        :data="$store.state.form"
+        :submission="submission"
+      ></Save>
+      <router-link class="btn btn-primary ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
+      <b-button-group class="pull-right actions mt-2 mb-2">
+        <b-btn
+          v-if="$store.state.current_submission.available_transitions.includes('submit')"
+          @click="checkBeforeSubmitting"
+          variant="outline-success"
+        >
+          <span v-translate>Submit</span>
+        </b-btn>
+        <b-btn
+          variant="outline-primary"
+          v-for="transition in availableTransitions"
+          :key="transition"
+          @click="currentTransition = transition"
+        >
+          <span>{{labels[transition]}}</span>
+        </b-btn>
+        <!-- <b-btn @click="$refs.history_modal.show()" variant="outline-info">
 					<span>{{labels['versions']}}</span>
-				</b-btn> -->
-				<!-- <a class="btn btn-outline-primary" :href="`${submission}export_pdf`">Export as PDF</a> -->
-				<b-btn @click="removeSubmission" v-if="$store.state.current_submission.can_delete_data"  variant="outline-danger">
-					<span>{{labels['delete_submission']}}</span>
-				</b-btn>
-			</b-button-group>
+        </b-btn>-->
+        <!-- <a class="btn btn-outline-primary" :href="`${submission}export_pdf`">Export as PDF</a> -->
+        <b-btn
+          @click="removeSubmission"
+          v-if="$store.state.current_submission.can_delete_data"
+          variant="outline-danger"
+        >
+          <span>{{labels['delete_submission']}}</span>
+        </b-btn>
+      </b-button-group>
     </Footer>
 
-    <b-modal size="lg" ref="history_modal" id="history_modal"
-             :title="$gettext('Submission versions')">
-        <SubmissionHistory :history="$store.state.currentSubmissionHistory"
-                           :currentVersion="$store.state.current_submission.version">
-        </SubmissionHistory>
+    <b-modal
+      size="lg"
+      ref="history_modal"
+      id="history_modal"
+      :title="$gettext('Submission versions')"
+    >
+      <SubmissionHistory
+        :history="$store.state.currentSubmissionHistory"
+        :currentVersion="$store.state.current_submission.version"
+      ></SubmissionHistory>
     </b-modal>
-		<TransitionQuestions v-on:removeTransition="currentTransition = null" :submission="submission" :transition="currentTransition"></TransitionQuestions>
+    <TransitionQuestions
+      v-on:removeTransition="currentTransition = null"
+      :submission="submission"
+      :transition="currentTransition"
+    ></TransitionQuestions>
   </div>
 </template>
 
@@ -222,7 +255,7 @@ export default {
 
 <style lang="css" scoped>
 .legend {
-  padding: .2rem 2rem;
+  padding: 0.2rem 2rem;
   background: #f0f3f5;
 }
 

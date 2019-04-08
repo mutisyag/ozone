@@ -1,29 +1,29 @@
 <template>
-	<div v-if="history && obligations">
-		<b-table
-			show-empty
-			outlined
-			bordered
-			hover
-			head-variant="light"
-			stacked="md"
-			:items="tableItems"
-			:fields="tableFields"
-			:sort-by.sync="table.sortBy"
-			:sort-desc.sync="table.sortDesc"
-			:sort-direction="table.sortDirection"
-			ref="table"
-		>
-			<template slot="actions" slot-scope="cell">
-				<a
-					@click="changeRoute({ name: getFormName(cell.item.details.obligation), query: {submission: cell.item.actions}})"
-					class="btn btn-outline-primary btn-sm"
-				>
-					<span v-translate>View</span>
-				</a>
-			</template>
-		</b-table>
-	</div>
+  <div v-if="history && obligations">
+    <b-table
+      show-empty
+      outlined
+      bordered
+      hover
+      head-variant="light"
+      stacked="md"
+      :items="tableItems"
+      :fields="tableFields"
+      :sort-by.sync="table.sortBy"
+      :sort-desc.sync="table.sortDesc"
+      :sort-direction="table.sortDirection"
+      ref="table"
+    >
+      <template slot="actions" slot-scope="cell">
+        <a
+          @click="changeRoute({ name: getFormName(cell.item.details.obligation), query: {submission: cell.item.actions}})"
+          class="btn btn-outline-primary btn-sm"
+        >
+          <span v-translate>View</span>
+        </a>
+      </template>
+    </b-table>
+  </div>
 </template>
 
 <script>
@@ -127,6 +127,3 @@ export default {
   }
 }
 </script>
-
-<style lang="css" scoped>
-</style>

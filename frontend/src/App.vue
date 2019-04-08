@@ -1,66 +1,66 @@
 <template>
-	<div class="app">
-		<div class="api-action-display" v-if="isLoading">
-			<div class="lds-ellipsis">
-				<div></div>
-				<div></div>
-				<div></div>
-				<div></div>
-			</div>
-		</div>
-		<AppHeader fixed>
-			<SidebarToggler class="d-lg-none" display="md" mobile/>
-			<!-- <b-link class="navbar-brand" to="#"> -->
-			<!-- <img class="navbar-brand-full" width="89" height="25" alt="Logo"> -->
-			<!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
-			<!-- </b-link> -->
-			<SidebarToggler class="d-md-down-none" display="lg"/>
-			<h3>
-				<span v-translate>ORS (Ozone online reporting system)</span>
-			</h3>
+  <div class="app">
+    <div class="api-action-display" v-if="isLoading">
+      <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+    <AppHeader fixed>
+      <SidebarToggler class="d-lg-none" display="md" mobile/>
+      <!-- <b-link class="navbar-brand" to="#"> -->
+      <!-- <img class="navbar-brand-full" width="89" height="25" alt="Logo"> -->
+      <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
+      <!-- </b-link> -->
+      <SidebarToggler class="d-md-down-none" display="lg"/>
+      <h3>
+        <span v-translate>ORS (Ozone online reporting system)</span>
+      </h3>
 
-			<b-navbar-nav class="ml-auto">
-				<Header/>
-			</b-navbar-nav>
-			<!--<AsideToggler class="d-lg-none" mobile />-->
-		</AppHeader>
-		<div class="app-body">
-			<AppSidebar fixed>
-				<SidebarHeader/>
-				<SidebarForm/>
-				<SidebarNav :navItems="nav"></SidebarNav>
-				<SidebarFooter/>
-				<SidebarMinimizer/>
-			</AppSidebar>
+      <b-navbar-nav class="ml-auto">
+        <Header/>
+      </b-navbar-nav>
+      <!--<AsideToggler class="d-lg-none" mobile />-->
+    </AppHeader>
+    <div class="app-body">
+      <AppSidebar fixed>
+        <SidebarHeader/>
+        <SidebarForm/>
+        <SidebarNav :navItems="nav"></SidebarNav>
+        <SidebarFooter/>
+        <SidebarMinimizer/>
+      </AppSidebar>
 
-			<main class="main">
-				<div class="breadcrumb">{{list}}</div>
-				<div class="container-fluid">
-					<router-view></router-view>
-				</div>
+      <main class="main">
+        <div class="breadcrumb">{{list}}</div>
+        <div class="container-fluid">
+          <router-view></router-view>
+        </div>
 
-				<!-- Confirm Modal -->
-				<b-modal
-					id="confirm-modal"
-					centered
-					no-close-on-backdrop
-					hide-header-close
-					hide-header
-					:visible="$store.state.confirmModal.isVisible"
-					@ok="$store.state.confirmModal.okCallback"
-					@cancel="$store.state.confirmModal.cancelCallback"
-				>
-					<p class="my-2">
-						<b>{{$store.state.confirmModal.title}}</b>
-					</p>
-					<p
-						class="my-4"
-						v-if="$store.state.confirmModal.description"
-					>{{$store.state.confirmModal.description}}</p>
-				</b-modal>
-			</main>
-		</div>
-	</div>
+        <!-- Confirm Modal -->
+        <b-modal
+          id="confirm-modal"
+          centered
+          no-close-on-backdrop
+          hide-header-close
+          hide-header
+          :visible="$store.state.confirmModal.isVisible"
+          @ok="$store.state.confirmModal.okCallback"
+          @cancel="$store.state.confirmModal.cancelCallback"
+        >
+          <p class="my-2">
+            <b>{{$store.state.confirmModal.title}}</b>
+          </p>
+          <p
+            class="my-4"
+            v-if="$store.state.confirmModal.description"
+          >{{$store.state.confirmModal.description}}</p>
+        </b-modal>
+      </main>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -169,22 +169,22 @@ export default {
 </script>
 
 <style lang="scss">
-  // CoreUI Icons Set
-  @import '~@coreui/icons/css/coreui-icons.min.css';
-  /* Import Font Awesome Icons Set */
-  $fa-font-path: '~font-awesome/fonts/';
-  @import '~font-awesome/scss/font-awesome.scss';
-  /* Import Simple Line Icons Set */
-  $simple-line-font-path: '~simple-line-icons/fonts/';
-  @import '~simple-line-icons/scss/simple-line-icons.scss';
-  /* Import Flag Icons Set */
-  @import '~flag-icon-css/css/flag-icon.min.css';
-  /* Import Bootstrap Vue Styles */
-  @import '~bootstrap-vue/dist/bootstrap-vue.css';
-  // Import Main styles for this application
-  @import 'assets/scss/style';
+// CoreUI Icons Set
+@import "~@coreui/icons/css/coreui-icons.min.css";
+/* Import Font Awesome Icons Set */
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome.scss";
+/* Import Simple Line Icons Set */
+$simple-line-font-path: "~simple-line-icons/fonts/";
+@import "~simple-line-icons/scss/simple-line-icons.scss";
+/* Import Flag Icons Set */
+@import "~flag-icon-css/css/flag-icon.min.css";
+/* Import Bootstrap Vue Styles */
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
+// Import Main styles for this application
+@import "assets/scss/style";
 
-  .lds-ellipsis {
+.lds-ellipsis {
   display: inline-block;
   position: relative;
   width: 64px;
@@ -245,9 +245,9 @@ export default {
 
 .api-action-display {
   position: fixed;
-  top:50%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   z-index: 1000;
 }
 </style>

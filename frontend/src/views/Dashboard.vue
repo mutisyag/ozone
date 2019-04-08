@@ -1,258 +1,267 @@
 <template>
-	<div class="animated fadeIn">
-		<b-row>
-			<b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
-				<b-card>
-					<div slot="header">
-						<strong>
-							<span v-translate>Create submission</span>
-						</strong>
-					</div>
-					<small>
-						<span
-							v-translate
-						>Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span>
-					</small>
-					<div class="create-submission mt-2">
-						<b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
-							<multiselect
-								:placeholder="$gettext('Select option')"
-								trackBy="value"
-								label="text"
-								v-model="submissionNew.obligation"
-								:options="obligations"
-							/>
-						</b-input-group>
+  <div class="animated fadeIn">
+    <b-row>
+      <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
+        <b-card>
+          <div slot="header">
+            <strong>
+              <span v-translate>Create submission</span>
+            </strong>
+          </div>
+          <small>
+            <span
+              v-translate
+            >Create a submission by specifying the obligation, the reporting period and the party name. All fields are mandatory.</span>
+          </small>
+          <div class="create-submission mt-2">
+            <b-input-group id="obligation_selector" class="mb-2" :prepend="$gettext('Obligation')">
+              <multiselect
+                :placeholder="$gettext('Select option')"
+                trackBy="value"
+                label="text"
+                v-model="submissionNew.obligation"
+                :options="obligations"
+              />
+            </b-input-group>
 
-						<b-input-group id="period_selector" class="mb-2" :prepend="$gettext('Period')">
-							<multiselect
-								:placeholder="$gettext('Select option')"
-								trackBy="value"
-								label="text"
-								customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
-								customTemplate="is_reporting_open"
-								v-model="submissionNew.reporting_period"
-								:options="periods"
-							/>
-						</b-input-group>
+            <b-input-group id="period_selector" class="mb-2" :prepend="$gettext('Period')">
+              <multiselect
+                :placeholder="$gettext('Select option')"
+                trackBy="value"
+                label="text"
+                customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
+                customTemplate="is_reporting_open"
+                v-model="submissionNew.reporting_period"
+                :options="periods"
+              />
+            </b-input-group>
 
-						<b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
-							<multiselect
-								:placeholder="$gettext('Select option')"
-								trackBy="value"
-								label="text"
-								:disabled="Boolean(currentUser.party)"
-								v-model="submissionNew.party"
-								:options="parties"
-							/>
-						</b-input-group>
+            <b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
+              <multiselect
+                :placeholder="$gettext('Select option')"
+                trackBy="value"
+                label="text"
+                :disabled="Boolean(currentUser.party)"
+                v-model="submissionNew.party"
+                :options="parties"
+              />
+            </b-input-group>
 
-						<b-btn
-							v-if="basicDataReady"
-							:disabled="!(submissionNew.obligation && submissionNew.reporting_period && submissionNew.party)"
-							variant="primary"
-							@click="addSubmission"
-						>
-							<span v-translate>Create</span>
-						</b-btn>
-					</div>
-				</b-card>
-			</b-col>
+            <b-btn
+              v-if="basicDataReady"
+              :disabled="!(submissionNew.obligation && submissionNew.reporting_period && submissionNew.party)"
+              variant="primary"
+              @click="addSubmission"
+            >
+              <span v-translate>Create</span>
+            </b-btn>
+          </div>
+        </b-card>
+      </b-col>
 
-			<b-col>
-				<b-card v-if="basicDataReady">
-					<div slot="header">
-						<strong>
-							<span
-								v-translate="{totalRows: dataEntryTable.totalRows}"
-							>Data entry submissions (%{totalRows} records)</span>
-						</strong>
-					</div>
-					<div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
-						<div class="filter-group mb-2">
-							<b-input-group :prepend="$gettext('Search')">
-								<b-form-input v-model="dataEntryTable.search"/>
-							</b-input-group>
-							<b-input-group :prepend="$gettext('Obligation')">
-								<b-form-select v-model="dataEntryTable.filters.obligation" :options="sortOptionsObligation"></b-form-select>
-							</b-input-group>
-						</div>
-						<div class="filter-group">
-							<b-input-group :prepend="$gettext('Party')">
-								<b-form-select
-									:disabled="Boolean(currentUser.party)"
-									v-model="dataEntryTable.filters.party"
-									:options="sortOptionsParties"
-								></b-form-select>
-							</b-input-group>
-							<b-input-group class="w120" :prepend="$gettext('From')">
-								<b-form-select
-									v-model="dataEntryTable.filters.period_start"
-									:options="sortOptionsPeriodFrom"
-								></b-form-select>
-							</b-input-group>
-							<b-input-group class="w120" :prepend="$gettext('To')">
-								<b-form-select v-model="dataEntryTable.filters.period_end" :options="sortOptionsPeriodTo"></b-form-select>
-							</b-input-group>
-							<b-btn
-								@click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"
-							>
-								<span v-translate>Clear</span>
-							</b-btn>
-						</div>
-					</div>
-					<b-table
-						id="data-entry-submissions-table"
-						show-empty
-						outlined
-						bordered
-						hover
-						head-variant="light"
-						stacked="md"
-						:filter="dataEntryTable.search"
-						:items="dataEntryTableItems"
-						:fields="dataEntryTableFields"
-						:per-page="dataEntryTable.perPage"
-						:current-page="dataEntryTable.currentPage"
-						ref="dataEntryTable"
-						@filtered="onFiltered"
-					>
-						<template slot="actions" slot-scope="row">
-							<router-link
-								class="btn btn-outline-primary btn-sm"
-								:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
-							>
-								<span v-if="row.item.details.can_edit_data">{{labels['edit']}}</span>
-								<span v-else>{{labels['view']}}</span>
-							</router-link>
-						</template>
-					</b-table>
-					<b-row v-if="currentUser.is_secretariat">
-						<b-col md="9" class="my-1">
-							<b-pagination
-								:total-rows="dataEntryTable.totalRows"
-								:per-page="dataEntryTable.perPage"
-								v-model="dataEntryTable.currentPage"
-								class="my-0"
-							/>
-						</b-col>
-						<b-col md="3">
-							<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
-								<b-form-select :options="dataEntryTable.pageOptions" v-model="dataEntryTable.perPage"/>
-							</b-input-group>
-						</b-col>
-					</b-row>
-				</b-card>
-			</b-col>
-		</b-row>
-		<b-row>
-			<b-col sm="12">
-				<b-card no-body v-if="basicDataReady">
-					<template slot="header">
-						<b-row>
-							<b-col>
-								<b>
-									<span
-										v-translate="{totalRows: tableOptions.totalRows}"
-									>All submissions (%{totalRows} records)</span>
-								</b>
-							</b-col>
-							<b-col style="text-align: right">
-								<b-form-checkbox type="checkbox" v-model="tableOptions.filters.is_superseded">
-									<span v-translate>Show all versions</span>
-								</b-form-checkbox>
-							</b-col>
-						</b-row>
-					</template>
-					<b-container fluid>
-						<div class="mt-2 mb-2 dashboard-filters">
-							<b-input-group :prepend="$gettext('Search')">
-								<b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
-							</b-input-group>
-							<b-input-group :prepend="$gettext('Obligation')">
-								<b-form-select
-									id="submission_obligation_filter"
-									v-model="tableOptions.filters.obligation"
-									:options="sortOptionsObligation"
-								></b-form-select>
-							</b-input-group>
-							<b-input-group :prepend="$gettext('Party')">
-								<b-form-select
-									id="submission_party_filter"
-									:disabled="Boolean(currentUser.party)"
-									v-model="tableOptions.filters.party"
-									:options="sortOptionsParties"
-								></b-form-select>
-							</b-input-group>
-							<b-input-group class="w120" :prepend="$gettext('From')">
-								<b-form-select
-									id="submission_from_filter"
-									v-model="tableOptions.filters.period_start"
-									:options="sortOptionsPeriodFrom"
-								></b-form-select>
-							</b-input-group>
-							<b-input-group class="w120" :prepend="$gettext('To')">
-								<b-form-select
-									id="submission_to_filter"
-									v-model="tableOptions.filters.period_end"
-									:options="sortOptionsPeriodTo"
-								></b-form-select>
-							</b-input-group>
-							<b-btn id="submission_clear_button" @click="clearFilters">
-								<span v-translate>Clear</span>
-							</b-btn>
-						</div>
-						<b-table
-							id="all-submissions-table"
-							show-empty
-							outlined
-							bordered
-							hover
-							head-variant="light"
-							stacked="md"
-							:items="tableItems"
-							:fields="tableFields"
-							:per-page="tableOptions.perPage"
-							:sort-by.sync="tableOptions.sorting.sortBy"
-							:sort-desc.sync="tableOptions.sorting.sortDesc"
-							:sort-direction="tableOptions.sorting.sortDirection"
-							ref="table"
-						>
-							<template slot="actions" slot-scope="row">
-								<b-button-group>
-									<router-link
-										class="btn btn-outline-primary btn-sm"
-										:to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
-									>
-										<span
-											v-if="row.item.details.can_edit_data && !currentUser.is_read_only"
-										>{{labels['edit']}}</span>
-										<span v-else>{{labels['view']}}</span>
-									</router-link>
-								</b-button-group>
-							</template>
-						</b-table>
+      <b-col>
+        <b-card v-if="basicDataReady">
+          <div slot="header">
+            <strong>
+              <span
+                v-translate="{totalRows: dataEntryTable.totalRows}"
+              >Data entry submissions (%{totalRows} records)</span>
+            </strong>
+          </div>
+          <div v-if="currentUser.is_secretariat" class="mt-2 mb-2">
+            <div class="filter-group mb-2">
+              <b-input-group :prepend="$gettext('Search')">
+                <b-form-input v-model="dataEntryTable.search"/>
+              </b-input-group>
+              <b-input-group :prepend="$gettext('Obligation')">
+                <b-form-select
+                  v-model="dataEntryTable.filters.obligation"
+                  :options="sortOptionsObligation"
+                ></b-form-select>
+              </b-input-group>
+            </div>
+            <div class="filter-group">
+              <b-input-group :prepend="$gettext('Party')">
+                <b-form-select
+                  :disabled="Boolean(currentUser.party)"
+                  v-model="dataEntryTable.filters.party"
+                  :options="sortOptionsParties"
+                ></b-form-select>
+              </b-input-group>
+              <b-input-group class="w120" :prepend="$gettext('From')">
+                <b-form-select
+                  v-model="dataEntryTable.filters.period_start"
+                  :options="sortOptionsPeriodFrom"
+                ></b-form-select>
+              </b-input-group>
+              <b-input-group class="w120" :prepend="$gettext('To')">
+                <b-form-select
+                  v-model="dataEntryTable.filters.period_end"
+                  :options="sortOptionsPeriodTo"
+                ></b-form-select>
+              </b-input-group>
+              <b-btn
+                @click="Object.keys(dataEntryTable.filters).forEach(key => dataEntryTable.filters[key] = null)"
+              >
+                <span v-translate>Clear</span>
+              </b-btn>
+            </div>
+          </div>
+          <b-table
+            id="data-entry-submissions-table"
+            show-empty
+            outlined
+            bordered
+            hover
+            head-variant="light"
+            stacked="md"
+            :filter="dataEntryTable.search"
+            :items="dataEntryTableItems"
+            :fields="dataEntryTableFields"
+            :per-page="dataEntryTable.perPage"
+            :current-page="dataEntryTable.currentPage"
+            ref="dataEntryTable"
+            @filtered="onFiltered"
+          >
+            <template slot="actions" slot-scope="row">
+              <router-link
+                class="btn btn-outline-primary btn-sm"
+                :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
+              >
+                <span v-if="row.item.details.can_edit_data">{{labels['edit']}}</span>
+                <span v-else>{{labels['view']}}</span>
+              </router-link>
+            </template>
+          </b-table>
+          <b-row v-if="currentUser.is_secretariat">
+            <b-col md="9" class="my-1">
+              <b-pagination
+                :total-rows="dataEntryTable.totalRows"
+                :per-page="dataEntryTable.perPage"
+                v-model="dataEntryTable.currentPage"
+                class="my-0"
+              />
+            </b-col>
+            <b-col md="3">
+              <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
+                <b-form-select
+                  :options="dataEntryTable.pageOptions"
+                  v-model="dataEntryTable.perPage"
+                />
+              </b-input-group>
+            </b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col sm="12">
+        <b-card no-body v-if="basicDataReady">
+          <template slot="header">
+            <b-row>
+              <b-col>
+                <b>
+                  <span
+                    v-translate="{totalRows: tableOptions.totalRows}"
+                  >All submissions (%{totalRows} records)</span>
+                </b>
+              </b-col>
+              <b-col style="text-align: right">
+                <b-form-checkbox type="checkbox" v-model="tableOptions.filters.is_superseded">
+                  <span v-translate>Show all versions</span>
+                </b-form-checkbox>
+              </b-col>
+            </b-row>
+          </template>
+          <b-container fluid>
+            <div class="mt-2 mb-2 dashboard-filters">
+              <b-input-group :prepend="$gettext('Search')">
+                <b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
+              </b-input-group>
+              <b-input-group :prepend="$gettext('Obligation')">
+                <b-form-select
+                  id="submission_obligation_filter"
+                  v-model="tableOptions.filters.obligation"
+                  :options="sortOptionsObligation"
+                ></b-form-select>
+              </b-input-group>
+              <b-input-group :prepend="$gettext('Party')">
+                <b-form-select
+                  id="submission_party_filter"
+                  :disabled="Boolean(currentUser.party)"
+                  v-model="tableOptions.filters.party"
+                  :options="sortOptionsParties"
+                ></b-form-select>
+              </b-input-group>
+              <b-input-group class="w120" :prepend="$gettext('From')">
+                <b-form-select
+                  id="submission_from_filter"
+                  v-model="tableOptions.filters.period_start"
+                  :options="sortOptionsPeriodFrom"
+                ></b-form-select>
+              </b-input-group>
+              <b-input-group class="w120" :prepend="$gettext('To')">
+                <b-form-select
+                  id="submission_to_filter"
+                  v-model="tableOptions.filters.period_end"
+                  :options="sortOptionsPeriodTo"
+                ></b-form-select>
+              </b-input-group>
+              <b-btn id="submission_clear_button" @click="clearFilters">
+                <span v-translate>Clear</span>
+              </b-btn>
+            </div>
+            <b-table
+              id="all-submissions-table"
+              show-empty
+              outlined
+              bordered
+              hover
+              head-variant="light"
+              stacked="md"
+              :items="tableItems"
+              :fields="tableFields"
+              :per-page="tableOptions.perPage"
+              :sort-by.sync="tableOptions.sorting.sortBy"
+              :sort-desc.sync="tableOptions.sorting.sortDesc"
+              :sort-direction="tableOptions.sorting.sortDirection"
+              ref="table"
+            >
+              <template slot="actions" slot-scope="row">
+                <b-button-group>
+                  <router-link
+                    class="btn btn-outline-primary btn-sm"
+                    :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
+                  >
+                    <span
+                      v-if="row.item.details.can_edit_data && !currentUser.is_read_only"
+                    >{{labels['edit']}}</span>
+                    <span v-else>{{labels['view']}}</span>
+                  </router-link>
+                </b-button-group>
+              </template>
+            </b-table>
 
-						<b-row>
-							<b-col md="10" class="my-1">
-								<b-pagination
-									:total-rows="tableOptions.totalRows"
-									:per-page="tableOptions.perPage"
-									v-model="tableOptions.currentPage"
-									class="my-0"
-								/>
-							</b-col>
-							<b-col md="2">
-								<b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
-									<b-form-select :options="table.pageOptions" v-model="tableOptions.perPage"/>
-								</b-input-group>
-							</b-col>
-						</b-row>
-					</b-container>
-				</b-card>
-			</b-col>
-		</b-row>
-	</div>
+            <b-row>
+              <b-col md="10" class="my-1">
+                <b-pagination
+                  :total-rows="tableOptions.totalRows"
+                  :per-page="tableOptions.perPage"
+                  v-model="tableOptions.currentPage"
+                  class="my-0"
+                />
+              </b-col>
+              <b-col md="2">
+                <b-input-group horizontal :prepend="$gettext('Per page')" class="mb-0">
+                  <b-form-select :options="table.pageOptions" v-model="tableOptions.perPage"/>
+                </b-input-group>
+              </b-col>
+            </b-row>
+          </b-container>
+        </b-card>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
@@ -664,21 +673,21 @@ export default {
 }
 
 .detail-header {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 .dashboard-filters {
-	display: flex;
+  display: flex;
 }
 .dashboard-filters > div,
 .filter-group > div {
-	margin-right: 5px;
-	min-width: 130px;
+  margin-right: 5px;
+  min-width: 130px;
 }
 
 .filter-group {
-	display: flex;
+  display: flex;
 }
 .w120 {
- width: 120px;
+  width: 120px;
 }
 </style>
