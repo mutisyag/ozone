@@ -1185,12 +1185,12 @@ class Submission(models.Model):
             return True
         return False
 
-    @transaction.atomic
     def fill_aggregated_data(self):
         """
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
+
         # Find the substance groups in this submission.
         # TODO: for non-Art 7 these may not be populated right!
         reported_groups = [
