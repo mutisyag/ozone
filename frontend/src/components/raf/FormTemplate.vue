@@ -329,3 +329,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  table {
+    .multiselect__content-wrapper {
+      min-width: 300px;
+    }
+  }
+</style>
