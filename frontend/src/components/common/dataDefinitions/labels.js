@@ -31,6 +31,7 @@ const getCommonLabels = ($gettext) => {
     designation: $gettext('Designation'),
     organization: $gettext('Organization'),
     postal_code: $gettext('Postal code'),
+    essencrit: $gettext('Essential and critical uses'),
     postal_address: $gettext('Postal address'),
     country: $gettext('Country'),
     phone: $gettext('Phone'),
