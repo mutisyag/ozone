@@ -15,6 +15,10 @@
             <span v-translate>Account</span>
           </strong>
         </b-dropdown-header>
+        <b-dropdown-item v-if="isAdmin" :href="`${apiBase}/admin`">
+          <i class="fa fa-user-plus"></i>
+          <span v-translate>Admin</span>
+        </b-dropdown-item>
         <b-dropdown-item @click="goToUserProfile">
           <i class="fa fa-user"/>
           <span v-translate>User profile</span>
@@ -55,6 +59,9 @@ export default {
         return this.$store.state.currentUser.username
       }
       return `${this.$store.state.currentUser.impersonated_by} (as ${this.$store.state.currentUser.username})`
+    },
+    isAdmin() {
+      return this.$store.state.currentUser.is_secretariat
     },
     currentCountryIso() {
       return this.$store.getters.currentCountryIso
