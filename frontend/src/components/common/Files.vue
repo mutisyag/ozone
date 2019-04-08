@@ -43,10 +43,10 @@
           <b-button variant="danger" class="pull-right" @click="deleteFile($event, file)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <div style="width:200px" v-if="file.percentage">
+          <div class="ml-2" style="width:200px" v-if="file.percentage">
             <b-progress :value="file.percentage" :max="100">
               <b-progress-bar :value="file.percentage">
-                Uploading: <strong>{{ file.percentage.toFixed(3) }}%</strong>
+                Uploading: <strong>{{ parseInt(file.percentage) }}%</strong>
               </b-progress-bar>
             </b-progress>
           </div>
