@@ -28,6 +28,7 @@ class Command(BaseCommand):
         'essen_crit_types',
         'baseline_types',
         'control_measures',
+        'baselines',
     )
 
     def handle(self, *args, **options):

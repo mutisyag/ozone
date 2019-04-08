@@ -1,19 +1,26 @@
 <template>
   <div class="app">
     <div class="api-action-display" v-if="isLoading">
-      <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
+      <div class="lds-ellipsis">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
     </div>
     <AppHeader fixed>
-      <SidebarToggler class="d-lg-none" display="md" mobile />
+      <SidebarToggler class="d-lg-none" display="md" mobile/>
       <!-- <b-link class="navbar-brand" to="#"> -->
-        <!-- <img class="navbar-brand-full" width="89" height="25" alt="Logo"> -->
-        <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
+      <!-- <img class="navbar-brand-full" width="89" height="25" alt="Logo"> -->
+      <!-- <img class="navbar-brand-minimized" width="30" height="30" alt="MobileLogo"> -->
       <!-- </b-link> -->
-      <SidebarToggler class="d-md-down-none" display="lg" />
-      <h3><span v-translate>ORS (Ozone online reporting system)</span></h3>
+      <SidebarToggler class="d-md-down-none" display="lg"/>
+      <h3>
+        <span v-translate>ORS (Ozone online reporting system)</span>
+      </h3>
 
       <b-navbar-nav class="ml-auto">
-		<Header/>
+        <Header/>
       </b-navbar-nav>
       <!--<AsideToggler class="d-lg-none" mobile />-->
     </AppHeader>
@@ -26,30 +33,31 @@
         <SidebarMinimizer/>
       </AppSidebar>
 
-    <main class="main">
-		<div class="breadcrumb">
-			{{list}}
-		</div>
-		<div class="container-fluid">
-			<router-view></router-view>
-		</div>
+      <main class="main">
+        <div class="breadcrumb">{{list}}</div>
+        <div class="container-fluid">
+          <router-view></router-view>
+        </div>
 
-		<!-- Confirm Modal -->
-		<b-modal
-			id="confirm-modal"
-			centered
-			no-close-on-backdrop
-			hide-header-close
-			hide-header
-			:visible="$store.state.confirmModal.isVisible"
-			@ok="$store.state.confirmModal.okCallback"
-			@cancel="$store.state.confirmModal.cancelCallback"
-		>
-			<p class="my-2"><b>{{$store.state.confirmModal.title}}</b></p>
-			<p class="my-4" v-if="$store.state.confirmModal.description">
-				{{$store.state.confirmModal.description}}
-			</p>
-		</b-modal>
+        <!-- Confirm Modal -->
+        <b-modal
+          id="confirm-modal"
+          centered
+          no-close-on-backdrop
+          hide-header-close
+          hide-header
+          :visible="$store.state.confirmModal.isVisible"
+          @ok="$store.state.confirmModal.okCallback"
+          @cancel="$store.state.confirmModal.cancelCallback"
+        >
+          <p class="my-2">
+            <b>{{$store.state.confirmModal.title}}</b>
+          </p>
+          <p
+            class="my-4"
+            v-if="$store.state.confirmModal.description"
+          >{{$store.state.confirmModal.description}}</p>
+        </b-modal>
       </main>
     </div>
   </div>
@@ -59,7 +67,7 @@
 
 import { getNav } from '@/_nav'
 import {
-	Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
+  Header as AppHeader, SidebarToggler, Sidebar as AppSidebar, SidebarFooter, SidebarForm, SidebarHeader, SidebarMinimizer, SidebarNav
 } from '@coreui/vue'
 import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
@@ -67,116 +75,116 @@ import auth from '@/components/common/mixins/auth'
 import { setLanguage } from '@/components/common/services/languageService'
 
 export default {
-	name: 'app',
-	components: {
-		AppHeader,
-		AppSidebar,
-		Header,
-		SidebarForm,
-		SidebarFooter,
-		SidebarToggler,
-		SidebarHeader,
-		SidebarNav,
-		SidebarMinimizer
-	},
+  name: 'app',
+  components: {
+    AppHeader,
+    AppSidebar,
+    Header,
+    SidebarForm,
+    SidebarFooter,
+    SidebarToggler,
+    SidebarHeader,
+    SidebarNav,
+    SidebarMinimizer
+  },
 
-	mixins: [auth],
+  mixins: [auth],
 
-	data() {
-		return {
-			refCount: 0,
-			isLoading: false,
-			nav: getNav(this.$gettext)
+  data() {
+    return {
+      refCount: 0,
+      isLoading: false,
+      nav: getNav(this.$gettext)
 
-		}
-	},
+    }
+  },
 
-	computed: {
-		name() {
-			return this.$route.name
-		},
-		list() {
-			return this.$store.state.route
-		}
-	},
-	methods: {
-		setLoading(isLoading) {
-			if (isLoading) {
-				this.refCount += 1
-				this.isLoading = true
-			} else if (this.refCount > 0) {
-				this.refCount -= 1
-				this.isLoading = (this.refCount > 0)
-			}
-		}
-	},
-	watch: {
-		'$language.current': {
-			handler() {
-				this.nav = getNav(this.$gettext)
-			}
-		},
-		'$store.state.currentUser': {
-			handler(newValue) {
-				if (newValue) {
-					setLanguage(newValue.language, this)
-				}
-			}
-		}
-	},
-	created() {
-		api.interceptors.request.use((config) => {
-			if (!config.hideLoader) {
-				this.setLoading(true)
-			}
-			return config
-		}, (error) => {
-			this.setLoading(false)
-			this.$store.dispatch('setAlert', {
-				$gettext: this.$gettext,
-				message: { ...error.response.data },
-				variant: 'danger'
-			})
-			return Promise.reject(error)
-		})
+  computed: {
+    name() {
+      return this.$route.name
+    },
+    list() {
+      return this.$store.state.route
+    }
+  },
+  methods: {
+    setLoading(isLoading) {
+      if (isLoading) {
+        this.refCount += 1
+        this.isLoading = true
+      } else if (this.refCount > 0) {
+        this.refCount -= 1
+        this.isLoading = (this.refCount > 0)
+      }
+    }
+  },
+  watch: {
+    '$language.current': {
+      handler() {
+        this.nav = getNav(this.$gettext)
+      }
+    },
+    '$store.state.currentUser': {
+      handler(newValue) {
+        if (newValue) {
+          setLanguage(newValue.language, this)
+        }
+      }
+    }
+  },
+  created() {
+    api.interceptors.request.use((config) => {
+      if (!config.hideLoader) {
+        this.setLoading(true)
+      }
+      return config
+    }, (error) => {
+      this.setLoading(false)
+      this.$store.dispatch('setAlert', {
+        $gettext: this.$gettext,
+        message: { ...error.response.data },
+        variant: 'danger'
+      })
+      return Promise.reject(error)
+    })
 
-		api.interceptors.response.use((response) => {
-			this.setLoading(false)
-			return response
-		}, (error) => {
-			this.setLoading(false)
-			this.$store.dispatch('setAlert', {
-				$gettext: this.$gettext,
-				message: { ...error.response.data },
-				variant: 'danger'
-			})
-			if (error.response.status === 401) {
-				this.logout('cookie')
-			}
+    api.interceptors.response.use((response) => {
+      this.setLoading(false)
+      return response
+    }, (error) => {
+      this.setLoading(false)
+      this.$store.dispatch('setAlert', {
+        $gettext: this.$gettext,
+        message: { ...error.response.data },
+        variant: 'danger'
+      })
+      if (error.response.status === 401) {
+        this.logout('cookie')
+      }
 
-			return Promise.reject(error)
-		})
-	}
+      return Promise.reject(error)
+    })
+  }
 }
 </script>
 
 <style lang="scss">
-  // CoreUI Icons Set
-  @import '~@coreui/icons/css/coreui-icons.min.css';
-  /* Import Font Awesome Icons Set */
-  $fa-font-path: '~font-awesome/fonts/';
-  @import '~font-awesome/scss/font-awesome.scss';
-  /* Import Simple Line Icons Set */
-  $simple-line-font-path: '~simple-line-icons/fonts/';
-  @import '~simple-line-icons/scss/simple-line-icons.scss';
-  /* Import Flag Icons Set */
-  @import '~flag-icon-css/css/flag-icon.min.css';
-  /* Import Bootstrap Vue Styles */
-  @import '~bootstrap-vue/dist/bootstrap-vue.css';
-  // Import Main styles for this application
-  @import 'assets/scss/style';
+// CoreUI Icons Set
+@import "~@coreui/icons/css/coreui-icons.min.css";
+/* Import Font Awesome Icons Set */
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome.scss";
+/* Import Simple Line Icons Set */
+$simple-line-font-path: "~simple-line-icons/fonts/";
+@import "~simple-line-icons/scss/simple-line-icons.scss";
+/* Import Flag Icons Set */
+@import "~flag-icon-css/css/flag-icon.min.css";
+/* Import Bootstrap Vue Styles */
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
+// Import Main styles for this application
+@import "assets/scss/style";
 
-  .lds-ellipsis {
+.lds-ellipsis {
   display: inline-block;
   position: relative;
   width: 64px;
@@ -237,9 +245,9 @@ export default {
 
 .api-action-display {
   position: fixed;
-  top:50%;
+  top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   z-index: 1000;
 }
 </style>
