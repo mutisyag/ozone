@@ -72,6 +72,9 @@
       <hr>
       <b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
     </div>
+    <small class="ml-2 muted">
+      <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
+    </small>
   </div>
 </template>
 
