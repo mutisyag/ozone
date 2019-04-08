@@ -1,48 +1,48 @@
 <template>
-<div class="tab-title">
-	<span class="formNumber" v-if="tab.formNumber">({{tab.formNumber}})</span>
-		{{$store.getters.getTabTitle(tab.name)}}
-	<div v-if="tabStatus === 'saving'" class="spinner">
-		<div class="loader"></div>
-	</div>
-	<i v-if="tabStatus === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-	<i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-	<i v-if="tabStatus === 'edited'" class="fa fa-edit fa-lg"></i>
-</div>
+  <div class="tab-title">
+    <span class="formNumber" v-if="tab.formNumber">({{tab.formNumber}})</span>
+    {{$store.getters.getTabTitle(tab.name)}}
+    <div v-if="tabStatus === 'saving'" class="spinner">
+      <div class="loader"></div>
+    </div>
+    <i v-if="tabStatus === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
+    <i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
+    <i v-if="tabStatus === 'edited'" class="fa fa-edit fa-lg"></i>
+  </div>
 </template>
 
 <script>
 
 export default {
-	props: {
-		tab: Object
-	},
-	computed: {
-		tabStatus() {
-			return this.$store.getters.getTabStatus(this.tab.name)
-		}
-	}
+  props: {
+    tab: Object
+  },
+  computed: {
+    tabStatus() {
+      return this.$store.getters.getTabStatus(this.tab.name)
+    }
+  }
 }
 </script>
 
 <style>
 .spinner {
-    z-index: 1;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: 5px;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 5px;
 }
 .formNumber {
-	margin-right: .3rem;
+  margin-right: 0.3rem;
 }
 .loader {
   border: 3px solid #f3f3f3;
   border-radius: 50%;
-   border-top: 3px solid blue;
-   border-right: 3px solid green;
-   border-bottom: 3px solid red;
-   border-left: 3px solid pink;
+  border-top: 3px solid blue;
+  border-right: 3px solid green;
+  border-bottom: 3px solid red;
+  border-left: 3px solid pink;
   width: 15px;
   height: 15px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
@@ -57,12 +57,20 @@ export default {
 }
 /* Safari */
 @-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>
