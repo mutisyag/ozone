@@ -250,7 +250,7 @@ class ProdCons(models.Model):
         """
         # Get the party's characteristics for this specific reporting period
         party = PartyHistory.objects.get(
-            party=self.party, party_reporting_period=self.reporting_period
+            party=self.party, reporting_period=self.reporting_period
         )
 
         # Production

@@ -205,7 +205,6 @@ class AggregationMixin:
             submission=submission, substance__group__id=group_id
         ).values('substance__odp', *field_names)
 
-        # TODO: horrible, improve
         return {
             field_name: sum(
                 [
@@ -240,15 +239,24 @@ class AggregationMixin:
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
 
+        if not hasattr(cls, 'AGGREGATION_MAPPING'):
+            return
+
         for group in reported_groups:
             # Find an aggregation if one is already created
-            aggregation = ProdCons.objects.get_or_create(
+            aggregation, created = ProdCons.objects.get_or_create(
                 party=submission.party,
                 reporting_period=submission.reporting_period,
                 group=group
             )
-            # TODO: populate aggregation
 
+            values = cls.get_fields_sum_by_group(
+                submission, group.id, cls.AGGREGATION_MAPPING.keys()
+            )
+            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                setattr(aggregation, aggr_field, values[model_field])
+
+            # This will automatically trigger the calculation of computed values
             aggregation.save()
 
 
@@ -481,6 +489,16 @@ class Article7Export(
         'quantity_other_uses',
     ]
 
+    # {aggregation_field: data_field_1, ...}
+    AGGREGATION_MAPPING = {
+        'quantity_total_new': 'export_new',
+        'quantity_total_recovered': 'export_recovered',
+        'quantity_feedstock': 'export_feedstock',
+        'quantity_essential_uses': 'export_essential_uses',
+        'quantity_quarantine_pre_shipment': 'export_quarantine',
+        'quantity_process_agent_uses': 'export_process_agent'
+    }
+
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
 
@@ -520,6 +538,17 @@ class Article7Import(
         'quantity_feedstock',
         'quantity_other_uses',
     ]
+
+    # {aggregation_field: data_field_1, ...}
+    AGGREGATION_MAPPING = {
+        'quantity_total_new': 'import_new',
+        'quantity_total_recovered': 'import_recovered',
+        'quantity_feedstock': 'import_feedstock',
+        'quantity_essential_uses': 'import_essential_uses',
+        'quantity_laboratory_analytical_uses': 'import_laboratory_uses',
+        'quantity_quarantine_pre_shipment': 'import_quarantine',
+        'quantity_process_agent_uses': 'import_process_agent'
+    }
 
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
