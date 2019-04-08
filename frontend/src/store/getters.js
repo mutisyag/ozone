@@ -1,97 +1,99 @@
 import { doSum } from '@/components/common/services/utilsService'
 
 const sumBiggerThanParts = (state, tab, partyField) => {
-	if (!state.form.tabs[tab].form_fields.length) return {}
-	const multipleSubstances = {}
-	const finalError = {}
-	state.form.tabs[tab].form_fields.forEach(row => {
-		multipleSubstances[row.substance.selected] = [...state.form.tabs[tab].form_fields.filter(substance => row.substance.selected === substance.substance.selected)]
-	})
-	Object.keys(multipleSubstances).forEach(key => {
-		if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
-			state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
-				field.skipValidation = 0
-			})
-			delete multipleSubstances[key]
-		}
-	})
-	if (Object.keys(multipleSubstances).length < 1) {
-		return {}
-	}
-	Object.keys(multipleSubstances).forEach(key => {
-		console.log(key)
-		finalError[key] = {
-			left: 0,
-			right: 0
-		}
+  if (!state.form.tabs[tab].form_fields.length) return {}
+  const multipleSubstances = {}
+  const finalError = {}
+  state.form.tabs[tab].form_fields.forEach(row => {
+    multipleSubstances[row.substance.selected] = [...state.form.tabs[tab].form_fields.filter(substance => row.substance.selected === substance.substance.selected)]
+  })
+  Object.keys(multipleSubstances).forEach(key => {
+    if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
+      // eslint-disable-next-line eqeqeq
+      state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+        field.skipValidation = 0
+      })
+      delete multipleSubstances[key]
+    }
+  })
+  if (Object.keys(multipleSubstances).length < 1) {
+    return {}
+  }
+  Object.keys(multipleSubstances).forEach(key => {
+    console.log(key)
+    finalError[key] = {
+      left: 0,
+      right: 0
+    }
 
-		multipleSubstances[key].forEach(entry => {
-			finalError[key].left += doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected])
-			finalError[key].right += doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment])
-		})
-	})
-	Object.keys(finalError).forEach(key => {
-		// This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
-		let multiValidationState = 1
-		if (finalError[key].left >= finalError[key].right) {
-			delete finalError[key]
-		} else {
-			multiValidationState = 2
-		}
-		state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
-			field.skipValidation = multiValidationState
-		})
-	})
-	return finalError
+    multipleSubstances[key].forEach(entry => {
+      finalError[key].left += doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected])
+      finalError[key].right += doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment])
+    })
+  })
+  Object.keys(finalError).forEach(key => {
+    // This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
+    let multiValidationState = 1
+    if (finalError[key].left >= finalError[key].right) {
+      delete finalError[key]
+    } else {
+      multiValidationState = 2
+    }
+    // eslint-disable-next-line eqeqeq
+    state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
+      field.skipValidation = multiValidationState
+    })
+  })
+  return finalError
 }
 
 const getters = {
-	// TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
-	getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields
-		.map(field => (field.validation.selected
-			? {
-				validation: field.validation.selected,
-				substance: field.substance ? field.substance.selected : null,
-				source_party: field.source_party ? field.source_party.selected : null,
-				destination_party: field.destination_party ? field.destination_party.selected : null,
-				trade_party: field.trade_party ? field.trade_party.selected : null,
-				blend: field.blend ? field.blend.selected : null,
-				facility_name: field.facility_name ? field.facility_name.selected : null
-			}
-			: null)),
+  // TODO: if there are errors caused by validation, check this first. There was a invalid, edited check for tab before getting validations
+  getValidationForCurrentTab: (state) => (tab) => state.form.tabs[tab].form_fields
+    .map(field => (field.validation.selected
+      ? {
+        validation: field.validation.selected,
+        substance: field.substance ? field.substance.selected : null,
+        source_party: field.source_party ? field.source_party.selected : null,
+        destination_party: field.destination_party ? field.destination_party.selected : null,
+        trade_party: field.trade_party ? field.trade_party.selected : null,
+        blend: field.blend ? field.blend.selected : null,
+        facility_name: field.facility_name ? field.facility_name.selected : null
+      }
+      : null)),
 
-	multiRowValidation: (state) => (tab) => {
-		switch (tab) {
-		case 'has_imports':
-			return sumBiggerThanParts(state, tab, 'source_party')
-		case 'has_exports':
-			return sumBiggerThanParts(state, tab, 'destination_party')
-		default:
-			return {}
-		}
-	},
+  multiRowValidation: (state) => (tab) => {
+    switch (tab) {
+    case 'has_imports':
+      return sumBiggerThanParts(state, tab, 'source_party')
+    case 'has_exports':
+      return sumBiggerThanParts(state, tab, 'destination_party')
+    default:
+      return {}
+    }
+  },
 
-	getCapturedSubstance: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.is_captured),
+  getCapturedSubstance: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.is_captured),
 
-	getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
-		(sub) => sub.obligation === data.obligation
+  getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
+    (sub) => sub.obligation === data.obligation
 			&& sub.party === data.party
 			&& sub.reporting_period === data.reporting_period
 			&& sub.current_state === 'data_entry'
-	),
+  ),
 
-	defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
-	defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
+  defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
+  defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
 
-	getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
-	getTabStatus: (state) => (tabName) => state.form.tabs[tabName].status,
+  getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
+  getTabStatus: (state) => (tabName) => state.form.tabs[tabName].status,
 
-	can_edit_data: (state) => state.permissions.form && state.permissions.form.can_edit_data,
-	can_change_remarks_party: (state) => state.permissions.form && state.permissions.form.can_change_remarks_party,
-	can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,
-	can_change_reporting_channel: (state) => state.permissions.form && state.permissions.form.can_change_reporting_channel,
-	can_upload_files: (state) => state.permissions.form && state.permissions.form.can_upload_files,
-	can_save_form: (state) => state.permissions.form
+  can_edit_data: (state) => state.permissions.form && state.permissions.form.can_edit_data,
+  can_change_remarks_party: (state) => state.permissions.form && state.permissions.form.can_change_remarks_party,
+  can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,
+  can_change_reporting_channel: (state) => state.permissions.form && state.permissions.form.can_change_reporting_channel,
+  can_upload_files: (state) => state.permissions.form && state.permissions.form.can_upload_files,
+  can_save_form: (state) => state.permissions.form
 	&& (state.permissions.form.can_edit_data
 		|| state.permissions.form.can_change_remarks_secretariat
 		|| state.permissions.form.can_change_reporting_channel
@@ -99,40 +101,40 @@ const getters = {
 		|| state.permissions.form.can_upload_files
 		|| (state.current_submission && state.current_submission.changeable_flags.length)),
 
-	currentCountryIso: (state) => {
-		const { currentUser } = state
-		let currentCountry = null
-		if (!currentUser || !currentUser.party) return
-		if (state.initialData.countryOptions) {
-			currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
-		}
-		if (state.dashboard.parties && state.dashboard.parties.length) {
-			currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
-		}
-		if (!currentCountry) return
-		return currentCountry && currentCountry.iso.toLowerCase()
-	},
+  currentCountryIso: (state) => {
+    const { currentUser } = state
+    let currentCountry = null
+    if (!currentUser || !currentUser.party) return
+    if (state.initialData.countryOptions) {
+      currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
+    }
+    if (state.dashboard.parties && state.dashboard.parties.length) {
+      currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
+    }
+    if (!currentCountry) return
+    return currentCountry && currentCountry.iso.toLowerCase()
+  },
 
-	getSubmissionInfo: (state) => (submission) => {
-		const submissionInfo = {
-			obligation: () => state.dashboard.obligations.find(a => a.value === submission.obligation).text,
-			period: () => {
-				// TODO: find a better way to do this
-				const period = state.dashboard.periods.find(a => a.value === submission.reporting_period)
-				if (period && period.hasOwnProperty('text')) {
-					return period.text
-				}
-			},
-			party: () => state.dashboard.parties.find(a => a.value === submission.party).text,
-			period_start: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).start_date.split('-')[0],
-			period_end: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).end_date.split('-')[0]
-		}
-		return submissionInfo
-	},
+  getSubmissionInfo: (state) => (submission) => {
+    const submissionInfo = {
+      obligation: () => state.dashboard.obligations.find(a => a.value === submission.obligation).text,
+      period: () => {
+        // TODO: find a better way to do this
+        const period = state.dashboard.periods.find(a => a.value === submission.reporting_period)
+        if (period && period.hasOwnProperty('text')) {
+          return period.text
+        }
+      },
+      party: () => state.dashboard.parties.find(a => a.value === submission.party).text,
+      period_start: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).start_date.split('-')[0],
+      period_end: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).end_date.split('-')[0]
+    }
+    return submissionInfo
+  },
 
-	getPeriodStatus: (state) => (periodId) => state.dashboard.periods.find((period) => period.value === periodId).is_reporting_open,
+  getPeriodStatus: (state) => (periodId) => state.dashboard.periods.find((period) => period.value === periodId).is_reporting_open,
 
-	checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName)
+  checkIfBlendAlreadyEists: (state) => (blendName) => state.initialData.blends.find((blend) => blend.blend_id === blendName)
 
 }
 

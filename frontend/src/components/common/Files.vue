@@ -95,7 +95,7 @@ export default {
       loadingInitialFiles: true,
       placeholder: this.$gettext('Click to browse files'),
       uploadLabel: this.$gettext('File not uploaded yet'),
-      downloadLabel: this.$$gettext('Download')
+      downloadLabel: this.$gettext('Download')
     }
   },
   async created() {

@@ -212,10 +212,13 @@ export default {
           variant: 'danger' })
       }
       this.tabsToSave = this.tabsToSave.filter(t => t !== tab.name)
-      if (this.tabsToSave.length === 0 && this.$store.state.actionToDispatch) {
-        this.$store.dispatch('saveCallback', { actionToDispatch: this.$store.state.actionToDispatch, data: this.$store.state.dataForAction })
-        this.$store.commit('setActionToDispatch', null)
-        this.$store.commit('setDataForAction', null)
+      if (this.tabsToSave.length === 0) {
+        this.$store.dispatch('clearEdited')
+        if (this.$store.state.actionToDispatch) {
+          this.$store.dispatch('saveCallback', { actionToDispatch: this.$store.state.actionToDispatch, data: this.$store.state.dataForAction })
+          this.$store.commit('setActionToDispatch', null)
+          this.$store.commit('setDataForAction', null)
+        }
       }
     }
   }
