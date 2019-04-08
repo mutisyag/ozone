@@ -369,7 +369,7 @@ export default {
             obligation: this.getSubmissionInfo(element).obligation(),
             reporting_period: this.getSubmissionInfo(element).period(),
             party: this.getSubmissionInfo(element).party(),
-            current_state: element.current_state,
+            current_state: element.flag_superseded ? `${this.labels[element.current_state]} (${this.labels.flags.flag_superseded})` : this.labels[element.current_state],
             version: element.version,
             updated_at: element.updated_at,
             created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
