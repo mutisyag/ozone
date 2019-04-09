@@ -293,7 +293,7 @@ const actions = {
   },
 
   async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
-    const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the submission? All data will be deleted irreversibly.' , $gettext })
+    const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the submission? All data will be deleted irreversibly.', $gettext })
     if (!confirmed) {
       return confirmed
     }

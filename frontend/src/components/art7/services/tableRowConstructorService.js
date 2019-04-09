@@ -15,7 +15,7 @@ const createTooltip = (fields, section, $gettext) => {
   let tooltip_title = ''
   if (Object.keys(fields).length) {
     Object.keys(fields).forEach(field => {
-      tooltip_title += `${getLabels($gettext)[section][field]}: ${fields[field]}\n`
+      tooltip_title += `${getLabels($gettext)[section][field]}: ${fromExponential(fields[field])}\n`
     })
   }
   tooltip_title += `\n ${$gettext('Click to edit')}`

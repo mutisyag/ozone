@@ -96,15 +96,18 @@ const getFormArt7 = ($gettext) => {
         section_subheaders: [
           {
             label: `(1a) \r\n ${$gettext('Annex/Group')}`,
-            name: 'group'
+            name: 'group',
+            width: 72
           },
           {
             label: `(1b) <br> ${$gettext('Substances')}`,
-            name: 'substance'
+            name: 'substance',
+            width: 95
           },
           {
             label: `(2) &#13; ${$gettext('Country of destination of exports')}`,
-            name: 'destination_party'
+            name: 'destination_party',
+            width: 180
           },
           {
             label: `(3) <br> ${$gettext('New')}`,
@@ -232,15 +235,18 @@ const getFormArt7 = ($gettext) => {
         blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
         section_subheaders: [{
           name: 'group',
-          label: `(1) ${$gettext('Annex/Group')}`
+          label: `(1) ${$gettext('Annex/Group')}`,
+          width: 72
         },
         {
           name: 'substance',
-          label: `(2a) ${$gettext('Substance')}`
+          label: `(2a) ${$gettext('Substance')}`,
+          width: 95
         },
         {
           name: 'source_party',
-          label: `(2b) <br> ${$gettext('Exporting party for quantities reported as imports')}`
+          label: `(2b) <br> ${$gettext('Exporting party for quantities reported as imports')}`,
+          width: 180
         },
         {
           label: `(3) <br> ${$gettext('New')}`,
@@ -352,15 +358,18 @@ const getFormArt7 = ($gettext) => {
         section_subheaders: [
           {
             name: 'group',
-            label: `(1) <br> ${$gettext('Annex/Group')}`
+            label: `(1) <br> ${$gettext('Annex/Group')}`,
+            width: 72
           },
           {
             label: `(2) <br> ${$gettext('Substance')}`,
-            name: 'substance'
+            name: 'substance',
+            width: 95
           },
           {
             label: `(3) <br> ${$gettext('Total production for all uses')}`,
-            name: 'quantity_total_produced'
+            name: 'quantity_total_produced',
+            width: 180
           },
           {
             label: `(4) <br> ${$gettext('Production for feedstock uses within your country')}`,
@@ -551,25 +560,6 @@ const getFormArt7 = ($gettext) => {
         }
         ],
 
-        section_headers: [{
-          label: ''
-        },
-        {
-          label: ''
-        },
-        {
-          label: ''
-        },
-        {
-          label: ''
-        },
-        {
-          label: ''
-        },
-        {
-          label: ''
-        }
-        ],
         default_properties: {
           remarks_party: '',
           remarks_os: '',

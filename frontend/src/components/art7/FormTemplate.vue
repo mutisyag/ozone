@@ -38,7 +38,7 @@
           ref="table"
         >
           <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
-            <div v-html="field.label" :key="field.key"></div>
+            <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
           <template slot="thead-top">
             <tr class="first-header">
@@ -66,15 +66,15 @@
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
             <b-btn-group class="row-controls">
-              <span @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>
@@ -161,16 +161,26 @@
               v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyols`"
             >
-              <hr>
-              <span v-translate>Polyols quantity</span>
-              <hr>
-              <span>
+              <b-input-group>
+                <b-input-group-prepend>
+                  <span
+                    class="input-group-text"
+                    :id="`polyols_tooltip_${cell.item.index}`"
+                  >
+                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                  </span>
+                    <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
+                      <span v-translate>
+                        Amounts contained in pre-blended polyols
+                      </span>
+                    </b-tooltip>
+                </b-input-group-prepend>
                 <fieldGenerator
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
                   :disabled="!$store.getters.can_edit_data"
                   :field="cell.item.originalObj.quantity_polyols"
                 />
-              </span>
+              </b-input-group>
             </div>
           </template>
         </b-table>
@@ -207,7 +217,7 @@
           ref="tableFII"
         >
           <template v-for="field in tableFieldsFII" :slot="`HEAD_${field.key}`">
-            <div v-html="field.label" :key="field.key"></div>
+            <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
           <template slot="thead-top">
             <tr class="first-header">
@@ -236,7 +246,7 @@
             <div class="group-cell">{{cell.item.group}}</div>
             <b-btn-group class="row-controls">
               <span variant="link" @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
+                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
@@ -244,7 +254,7 @@
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>
@@ -323,16 +333,26 @@
               v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyol`"
             >
-              <hr>
-              <span v-translate>Quantity of Polyols</span>
-              <hr>
-              <span>
+              <b-input-group>
+                <b-input-group-prepend>
+                  <span
+                    class="input-group-text"
+                    :id="`polyols_tooltip_${cell.item.index}`"
+                  >
+                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                  </span>
+                    <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
+                      <span v-translate>
+                        Amounts contained in pre-blended polyols
+                      </span>
+                    </b-tooltip>
+                </b-input-group-prepend>
                 <fieldGenerator
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
                   :disabled="!$store.getters.can_edit_data"
                   :field="cell.item.originalObj.quantity_polyols"
                 />
-              </span>
+              </b-input-group>
             </div>
           </template>
         </b-table>
@@ -373,7 +393,7 @@
           ref="tableBlends"
         >
           <template v-for="field in tableFieldsBlends" :slot="`HEAD_${field.key}`">
-            <div v-html="field.label" :key="field.key"></div>
+            <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
           <template slot="thead-top">
             <tr class="first-header">
@@ -415,14 +435,14 @@
             >{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}</div>
             <b-btn-group class="row-controls">
               <span @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
+                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>
@@ -615,7 +635,7 @@
             <b-col lg="3" class="mb-2">
               <span>{{labels[`decision_${order}`]}}</span>
             </b-col>
-            <b-col lg="6">
+            <b-col lg="4">
               <b-input-group class="modal-group" :prepend="labels['quantity']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`quantity_${order}`}"
@@ -624,7 +644,7 @@
                 />
               </b-input-group>
             </b-col>
-            <b-col lg="3">
+            <b-col lg="5">
               <b-input-group class="modal-group" :prepend="labels['decision']">
                 <fieldGenerator
                   :fieldInfo="{index:modal_data.index,tabName: tabName, field:`decision_${order}`}"

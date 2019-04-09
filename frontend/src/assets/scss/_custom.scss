@@ -1208,3 +1208,15 @@ body .vdp-datepicker__calendar {
 .floating-error.danger {
 	color: red;
 }
+
+.submission-table {
+	.input-group {
+		.form-control {
+			height: 35px;
+		}
+	}
+}
+
+.app-footer {
+	z-index: 1;
+}
