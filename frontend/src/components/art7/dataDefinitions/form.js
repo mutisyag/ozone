@@ -95,7 +95,7 @@ const getFormArt7 = ($gettext) => {
         isInvalid: false,
         section_subheaders: [
           {
-            label: `(1a) \r\n ${$gettext('Annex/Group')}`,
+            label: `(1a) <br> ${$gettext('Annex/Group')}`,
             name: 'group',
             width: 72
           },
@@ -105,7 +105,7 @@ const getFormArt7 = ($gettext) => {
             width: 95
           },
           {
-            label: `(2) &#13; ${$gettext('Country of destination of exports')}`,
+            label: `(2) <br> ${$gettext('Country of destination of exports')}`,
             name: 'destination_party',
             width: 180
           },
