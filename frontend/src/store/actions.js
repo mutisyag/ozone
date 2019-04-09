@@ -136,7 +136,7 @@ const actions = {
 
   async downloadStuff(context, { url, fileName }) {
     try {
-      const downloaded = await fetch(url)
+      const downloaded = await fetch(url, { responseType: 'arraybuffer' })
       const download_url = window.URL.createObjectURL(new Blob([downloaded.data]))
       const link = document.createElement('a')
       link.href = download_url
