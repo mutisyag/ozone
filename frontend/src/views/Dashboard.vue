@@ -1,5 +1,5 @@
 <template>
-  <div class="animated fadeIn">
+  <div class="dashboard-page animated fadeIn">
     <b-row>
       <b-col v-if="basicDataReady && !currentUser.is_read_only" sm="6">
         <b-card>
@@ -125,7 +125,7 @@
           >
             <template slot="actions" slot-scope="row">
               <router-link
-                class="btn btn-outline-primary btn-sm"
+                class="btn btn-light btn-sm"
                 :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
               >
                 <span v-if="row.item.details.can_edit_data">{{labels['edit']}}</span>
@@ -207,7 +207,7 @@
                   :options="sortOptionsPeriodTo"
                 ></b-form-select>
               </b-input-group>
-              <b-btn id="submission_clear_button" @click="clearFilters">
+              <b-btn variant="light" id="submission_clear_button" @click="clearFilters">
                 <span v-translate>Clear</span>
               </b-btn>
             </div>
@@ -230,7 +230,7 @@
               <template slot="actions" slot-scope="row">
                 <b-button-group>
                   <router-link
-                    class="btn btn-outline-primary btn-sm"
+                    class="btn btn-light btn-sm"
                     :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
                   >
                     <span
@@ -662,32 +662,51 @@ export default {
 }
 </script>
 
-<style scoped>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
+<style lang="scss">
+.dashboard-page {
+  .fade-enter-active,
+  .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter,
+  .fade-leave-to {
+    opacity: 0;
+  }
 
-.detail-header {
-  margin-bottom: 0.5rem;
-}
-.dashboard-filters {
-  display: flex;
-}
-.dashboard-filters > div,
-.filter-group > div {
-  margin-right: 5px;
-  min-width: 130px;
-}
+  .detail-header {
+    margin-bottom: 0.5rem;
+  }
+  .dashboard-filters {
+    display: flex;
+  }
+  .dashboard-filters > div,
+  .filter-group > div {
+    margin-right: 5px;
+    min-width: 130px;
+  }
 
-.filter-group {
-  display: flex;
-}
-.w120 {
-  width: 120px;
+  .filter-group {
+    display: flex;
+  }
+  .w120 {
+    width: 120px;
+  }
+  .card-header {
+    background-color: white;
+  }
+  tr:hover a.btn {
+    color: black;
+    background: #ddd;
+  }
+  .table-hover tbody tr:hover {
+    background-color: transparent;
+    td {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+  }
+
+  .card-header {
+    border-bottom: none;
+  }
 }
 </style>

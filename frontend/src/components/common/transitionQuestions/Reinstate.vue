@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>You are about to reinstate this submission, which will supersede (replace) any previous version.</p>
-    <p>Press OK to continue.</p>
+    <p v-translate>You are about to reinstate this submission, which will supersede (replace) any previous version.</p>
+    <p v-translate>Press OK to continue.</p>
   </div>
 </template>
 

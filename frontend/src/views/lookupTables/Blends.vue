@@ -1,55 +1,55 @@
 <template>
   <div class="app blends-lookup-table flex-row align-items-top">
-    <b-container fluid>
-      <b-card>
+      <b-card style="width: 100%">
         <template slot="header">
-          <b-row>
-            <b-col>
-              <b-input-group :prepend="$gettext('Name') + '/' + $gettext('Other Names')">
-                <b-form-input id="blends-name-filter" v-model="table.filters.searchName"/>
-              </b-input-group>
-            </b-col>
-            <b-col>
-              <b-input-group id="blends-component-filter">
-                <multiselect
-                  :max-height="250"
-                  :multiple="true"
-                  :clear-on-select="false"
-                  :hide-selected="true"
-                  :close-on-select="false"
-                  label="text"
-                  trackBy="value"
-                  :placeholder="$gettext('Components')"
-                  v-model="table.filters.selectedComponentsNames"
-                  :options="searchComponentOptions"
-                />
-                <b-input-group-append>
-                  <b-btn
-                    variant="primary"
-                    :disabled="!table.filters.selectedComponentsNames.length"
-                    @click="toggleIsComponentsSortDirectionDesc"
-                  >
-                    <span v-translate>Sort</span>
-                    <i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
-                    <i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
-                  </b-btn>
-                </b-input-group-append>
-              </b-input-group>
-            </b-col>
-            <b-col>
+          <strong v-translate>Blends</strong>
+        </template>
+        <b-row class="mb-2">
+          <b-col>
+            <b-input-group :prepend="$gettext('Search')">
+              <b-form-input id="blends-name-filter" v-model="table.filters.searchName"/>
+            </b-input-group>
+          </b-col>
+          <b-col>
+            <b-input-group id="blends-component-filter">
+              <multiselect
+                :max-height="250"
+                :multiple="true"
+                :clear-on-select="false"
+                :hide-selected="true"
+                :close-on-select="true"
+                label="text"
+                trackBy="value"
+                :placeholder="$gettext('Components')"
+                v-model="table.filters.selectedComponentsNames"
+                :options="searchComponentOptions"
+              />
               <b-input-group-append>
                 <b-btn
-                  id="blends-clear-button"
-                  variant="primary"
-                  :disabled="isDisabledClearFilters"
-                  @click="clearFilters"
+                  variant="light"
+                  :disabled="!table.filters.selectedComponentsNames.length"
+                  @click="toggleIsComponentsSortDirectionDesc"
                 >
-                  <span v-translate>Clear</span>
+                  <span v-translate>Sort</span>&nbsp;
+                  <i v-if="!table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-up"></i>
+                  <i v-if="table.filters.isComponentsSortDirectionDesc" class="fa fa-arrow-down"></i>
                 </b-btn>
               </b-input-group-append>
-            </b-col>
-          </b-row>
-        </template>
+            </b-input-group>
+          </b-col>
+          <b-col>
+            <b-input-group-append>
+              <b-btn
+                id="blends-clear-button"
+                variant="light"
+                :disabled="isDisabledClearFilters"
+                @click="clearFilters"
+              >
+                <span v-translate>Clear</span>
+              </b-btn>
+            </b-input-group-append>
+          </b-col>
+        </b-row>
         <b-table
           show-empty
           outlined
@@ -64,7 +64,7 @@
           :sort-by.sync="table.sortBy"
           :sort-desc.sync="table.sortDesc"
           :sort-direction="table.sortDirection"
-          :filter="filterCallback"
+          :filter="table.filters.searchName"
           @filtered="onFiltered"
           ref="table"
         >
@@ -97,7 +97,6 @@
           </template>
         </b-table>
       </b-card>
-    </b-container>
   </div>
 </template>
 

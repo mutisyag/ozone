@@ -9,7 +9,7 @@ const getNav = ($gettext) => [
     name: $gettext('Lookup tables'),
     icon: 'icon-list',
     children: [{
-      name: $gettext('Controlled substances'),
+      name: $gettext('Substances'),
       url: '/lookup-tables/controlled-substances'
     }, {
       name: $gettext('Blends'),

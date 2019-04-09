@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-if="validField">
-      <p>You are about to finalize this submission. Please check one of the options below</p>
+      <p v-translate>You are about to finalize this submission. Please check one of the options below</p>
       <hr>
       <fieldGenerator
         :fieldInfo="{index:final_flag, tabName: 'flags', field:final_flag}"
@@ -11,7 +11,7 @@
       ></fieldGenerator>
       <hr>
     </div>
-    <p>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
+    <p v-translate>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
   </div>
 </template>
 

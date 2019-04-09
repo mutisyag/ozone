@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p>You are about to begin processing this submission.</p>
-    <p>In case changes are necessary, another version will need to be submitted.</p>
-    <p>Press OK to continue.</p>
+    <p v-translate>You are about to begin processing this submission.</p>
+    <p v-translate>In case changes are necessary, another version will need to be submitted.</p>
+    <p v-translate>Press OK to continue.</p>
   </div>
 </template>
 

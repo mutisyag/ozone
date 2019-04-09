@@ -28,29 +28,30 @@
     </b-tabs>
     <div class="legend">
       <b>
-        <span v-translate>Legend:</span>
+        <span v-translate>Legend</span>
       </b>
+      <hr>
       <div>
         <div class="spinner">
           <div class="loader"></div>
-        </div>-
-        <span v-translate>Form is curently being saved</span>
+        </div> &nbsp;
+        <span v-translate>Operation in progress</span>
       </div>
       <div>
-        <i style="color: red;" class="fa fa-times-circle fa-lg"></i> -
-        <span v-translate>Form save failed. Please check the validation</span>
+        <i style="color: red;" class="fa fa-times-circle fa-lg"></i> &nbsp;
+        <span v-translate>Validation errors</span>
       </div>
       <div>
-        <i style="color: green;" class="fa fa-check-circle fa-lg"></i> -
+        <i style="color: green;" class="fa fa-check-circle fa-lg"></i> &nbsp;
         <span
           v-translate
-        >Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
+        >Data is valid and saved</span>
       </div>
       <div>
-        <i class="fa fa-edit fa-lg"></i> -
+        <i class="fa fa-edit fa-lg"></i> &nbsp;
         <span
           v-translate
-        >The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
+        >Submission edited. Please save before closing the form </span>
       </div>
     </div>
   </div>
@@ -119,7 +120,7 @@ export default {
 <style scoped>
 .legend {
   padding: .2rem 2rem;
-  background: #f0f3f5;
+  background: white;
 }
 
 .legend .loader {

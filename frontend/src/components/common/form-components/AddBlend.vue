@@ -71,7 +71,7 @@
         >
           <span v-translate="{length: selected_blends.selected.length}">Add %{length} rows</span>
         </b-btn>
-        <b-btn v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
+        <b-btn variant="light" v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
       </b-btn-group>
       <hr>
 
@@ -141,7 +141,7 @@
         >
           <span v-translate>Add row</span>
         </b-btn>
-        <b-btn v-if="new_blend" @click="resetData">
+        <b-btn variant="light" v-if="new_blend" @click="resetData">
           <span v-translate>Cancel</span>
         </b-btn>
       </b-btn-group>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p>You are about to recall/revoke/delete this submission. Another report will need to be submitted.</p>
-    <p>Press OK to continue.</p>
+    <p v-translate>You are about to recall/revoke/delete this submission. Another report will need to be submitted.</p>
+    <p v-translate>Press OK to continue.</p>
   </div>
 </template>
 

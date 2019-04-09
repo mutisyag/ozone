@@ -1,20 +1,21 @@
 <template>
   <div>
     <b-modal size="lg" ref="transition_modal" id="transition_modal">
+      <div slot="modal-title"><i class="fa fa-exclamation-circle"></i>&nbsp; <span v-translate>Please confirm</span></div>
       <Submit v-if="transition === 'submit'"/>
       <Process v-else-if="transition === 'process'"/>
       <Recall v-else-if="transition === 'recall'"/>
       <Finalize v-else-if="transition === 'finalize'"/>
       <Reinstate v-else-if="transition === 'unrecall_to_finalized'"/>
       <div v-else>
-        <p>You are about to change the state of the submission.</p>
-        <p>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
+        <p v-translate>You are about to change the state of the submission.</p>
+        <p v-translate>Press OK to continue with the submission. Press Cancel to make further changes or corrections.</p>
       </div>
       <div slot="modal-footer">
-        <b-btn class="mr-2" @click="$refs.transition_modal.hide()" variant="danger">
-          <span v-translate>Close</span>
+        <b-btn class="mr-2" @click="$refs.transition_modal.hide()" variant="light">
+          <span v-translate>Cancel</span>
         </b-btn>
-        <b-btn :disabled="disableOkButton" @click="doTransition" variant="success">Ok</b-btn>
+        <b-btn :disabled="disableOkButton" @click="doTransition" variant="primary">Ok</b-btn>
       </div>
     </b-modal>
   </div>

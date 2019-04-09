@@ -3,20 +3,16 @@
     <div>
       <div v-if="provisional">
         <p>Kindly note that the data being submitted is marked as provisional. Another report will need to be submitted with the final data.</p>
-        <hr>
       </div>
       <div v-else>
         <p>You are about to submit your report.</p>
-        <hr>
       </div>
       <div v-if="questionnaireStatus.length">
         <p>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</p>
-        <hr>
       </div>
       <div v-if="uncheckedFlags.length">
-        <p>Kindly note that all substances not included in the reporting forms are considered zero.</p>
-        <p>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
-        <hr>
+        <p>Kindly note that all substances not included in the reporting forms are considered zero. <br>
+        You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">

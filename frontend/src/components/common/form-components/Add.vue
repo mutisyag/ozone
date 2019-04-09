@@ -15,6 +15,7 @@
           @input="prepareSubstances"
           :multiple="true"
           label="text"
+          :close-on-select="true"
           trackBy="value"
           v-model="selected_groups.selected"
           :options="selected_groups.options"
@@ -25,7 +26,7 @@
           :placeholder="$gettext('Select option')"
           :clear-on-select="false"
           :hide-selected="true"
-          :close-on-select="false"
+          :close-on-select="true"
           label="text"
           trackBy="value"
           :multiple="true"
@@ -46,7 +47,7 @@
             v-translate="selected_substance.selected.length ? {length: selected_substance.selected.length} : {length: ''}"
           >Add %{length} rows</span>
         </b-btn>
-        <b-btn v-if="selected_substance.selected" @click="resetData">
+        <b-btn variant="light" v-if="selected_substance.selected" @click="resetData">
           <span v-translate>Cancel</span>
         </b-btn>
       </b-btn-group>

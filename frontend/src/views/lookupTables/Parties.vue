@@ -1,66 +1,65 @@
 <template>
   <div class="app flex-row align-items-top">
-    <b-container fluid>
-      <b-card>
-        <template slot="header">
-          <b-row>
-            <b-col cols="4">
-              <b-input-group :prepend="$gettext('Name')">
-                <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
-              </b-input-group>
-            </b-col>
-          </b-row>
+    <b-card>
+      <template slot="header">
+        <strong v-translate>Parties</strong>
+      </template>
+        <b-row class="mb-2">
+          <b-col cols="4">
+            <b-input-group :prepend="$gettext('Search by name')">
+              <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
+            </b-input-group>
+          </b-col>
+        </b-row>
+      <b-table
+        show-empty
+        outlined
+        striped
+        bordered
+        hover
+        head-variant="light"
+        stacked="md"
+        :items="parties"
+        :fields="tableFields"
+        :current-page="table.currentPage"
+        :per-page="table.perPage"
+        :filter="filterCallback"
+        :sort-by.sync="table.sortBy"
+        @filtered="onFiltered"
+        ref="table"
+      >
+        <template slot="is_eu_member" slot-scope="data">
+          <CheckedImage :item="data.item.is_eu_member"/>
         </template>
-        <b-table
-          show-empty
-          outlined
-          striped
-          bordered
-          hover
-          head-variant="light"
-          stacked="md"
-          :items="parties"
-          :fields="tableFields"
-          :current-page="table.currentPage"
-          :per-page="table.perPage"
-          :filter="filterCallback"
-          :sort-by.sync="table.sortBy"
-          @filtered="onFiltered"
-          ref="table"
-        >
-          <template slot="is_eu_member" slot-scope="data">
-            <CheckedImage :item="data.item.is_eu_member"/>
-          </template>
-          <template slot="is_article5" slot-scope="data">
-            <CheckedImage :item="data.item.is_article5"/>
-          </template>
-          <template slot="is_high_ambient_temperature" slot-scope="data">
-            <CheckedImage :item="data.item.is_high_ambient_temperature"/>
-          </template>
-          <template slot="vienna_convention" slot-scope="data">
-            <div v-html="data.item.vienna_convention"></div>
-          </template>
-          <template slot="montreal_protocol" slot-scope="data">
-            <div v-html="data.item.montreal_protocol"></div>
-          </template>
-          <template slot="london_amendment" slot-scope="data">
-            <div v-html="data.item.london_amendment"></div>
-          </template>
-          <template slot="copenhagen_amendment" slot-scope="data">
-            <div v-html="data.item.copenhagen_amendment"></div>
-          </template>
-          <template slot="montreal_amendment" slot-scope="data">
-            <div v-html="data.item.montreal_amendment"></div>
-          </template>
-          <template slot="beijing_amendment" slot-scope="data">
-            <div v-html="data.item.beijing_amendment"></div>
-          </template>
-          <template slot="kigali_amendment" slot-scope="data">
-            <div v-html="data.item.kigali_amendment"></div>
-          </template>
-        </b-table>
-      </b-card>
-    </b-container>
+        <template slot="is_article5" slot-scope="data">
+          <CheckedImage :item="data.item.is_article5"/>
+        </template>
+        <template slot="is_high_ambient_temperature" slot-scope="data">
+          <CheckedImage :item="data.item.is_high_ambient_temperature"/>
+        </template>
+        <template slot="vienna_convention" slot-scope="data">
+          <div v-html="data.item.vienna_convention"></div>
+        </template>
+        <template slot="montreal_protocol" slot-scope="data">
+          <div v-html="data.item.montreal_protocol"></div>
+        </template>
+        <template slot="london_amendment" slot-scope="data">
+          <div v-html="data.item.london_amendment"></div>
+        </template>
+        <template slot="copenhagen_amendment" slot-scope="data">
+          <div v-html="data.item.copenhagen_amendment"></div>
+        </template>
+        <template slot="montreal_amendment" slot-scope="data">
+          <div v-html="data.item.montreal_amendment"></div>
+        </template>
+        <template slot="beijing_amendment" slot-scope="data">
+          <div v-html="data.item.beijing_amendment"></div>
+        </template>
+        <template slot="kigali_amendment" slot-scope="data">
+          <div v-html="data.item.kigali_amendment"></div>
+        </template>
+      </b-table>
+    </b-card>
   </div>
 </template>
 
