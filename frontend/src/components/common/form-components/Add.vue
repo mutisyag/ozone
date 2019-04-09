@@ -57,6 +57,7 @@
 <script>
 
 import Multiselect from '@/components/common/ModifiedMultiselect'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
 
@@ -83,7 +84,8 @@ export default {
       selected_substance: {
         selected: null,
         group: null,
-        options: []
+        options: [],
+        alerts: getAlerts(this.$gettext)
       },
 
       selected_groups: {
@@ -186,7 +188,7 @@ export default {
       })
       willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
-        message: { __all__: [`${this.$gettext('The following substances were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${currentTypeOfCountryField ? this.$gettext('select at least one country for each substance before adding it again') : ''}`] },
+        message: { __all__: [`${this.alerts.substance_already_exists} : ${willNotAddSubstanceNames.join(', ')}, <br> ${currentTypeOfCountryField ? this.alerts.select_country_before_adding_again : ''}`] },
         variant: 'danger'
       })
       this.resetData()

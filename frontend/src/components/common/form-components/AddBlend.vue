@@ -153,6 +153,7 @@
 
 import { createBlend } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
 
@@ -192,6 +193,7 @@ export default {
 
   data() {
     return {
+      alerts: getAlerts(this.$gettext),
       new_blend: null,
       submit_blend: {
         components: null,
@@ -243,7 +245,7 @@ export default {
       if (this.$store.getters.checkIfBlendAlreadyEists(this.new_blend.text)) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettext('A blend with this name already exists!')} - ${this.new_blend.text}`] },
+          message: { __all__: [`${this.alets.blend_already_exists} - ${this.new_blend.text}`] },
           variant: 'danger'
         })
       }
@@ -335,7 +337,7 @@ export default {
         })
         willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettext('The following blends were not added because they already exist')} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('select at least one country for each substance before adding it again')}`] },
+          message: { __all__: [`${this.alerts.blend_not_added} : ${willNotAddSubstanceNames.join(', ')}, <br> ${this.alerts.select_country_before_adding_again_blend}`] },
           variant: 'danger'
         })
         this.resetData()
@@ -365,7 +367,7 @@ export default {
           })
           this.$store.dispatch('setAlert', {
             $gettext: this.$gettext,
-            message: { __all__: [this.$gettext('Blend created')] },
+            message: { __all__: [this.alerts.blend_created] },
             variant: 'success' })
           this.resetData()
         }).catch((error) => {

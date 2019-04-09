@@ -181,6 +181,7 @@ import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import TransitionQuestions from '@/components/common/TransitionQuestions'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
   components: {
@@ -245,7 +246,7 @@ export default {
         this.$router.go(this.$router.currentRoute)
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('New version created')] },
+          message: { __all__: [this.alerts.clone_success] },
           variant: 'success'
         })
         this.$destroy()
@@ -277,7 +278,7 @@ export default {
           console.log(error)
           this.$store.dispatch('setAlert', {
             $gettext: this.$gettext,
-            message: { __all__: [this.$gettext('Can\'t find instructions for current form')] },
+            message: { __all__: [this.alerts.cant_find_instructions] },
             variant: 'danger'
           })
         })
@@ -289,7 +290,7 @@ export default {
       if (unsavedTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('Please save before submitting')] },
+          message: { __all__: [this.alerts.save_before_submit] },
           variant: 'danger'
         })
         return
@@ -297,7 +298,7 @@ export default {
       if (incompleteQuestionnaire) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('Please complete the questionnaire submitting')] },
+          message: { __all__: [this.alerts.questionaire_beforeSubmit] },
           variant: 'danger'
         })
         return
@@ -334,6 +335,7 @@ export default {
       tabIndex: 0,
       modal_data: null,
       labels: getLabels(this.$gettext).common,
+      alerts: getAlerts(this.$gettext),
       currentTransition: null
     }
   }
