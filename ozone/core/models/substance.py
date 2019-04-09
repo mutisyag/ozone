@@ -295,7 +295,7 @@ class Blend(models.Model):
         if self.pk:
             if self.custom is False:
                 raise MethodNotAllowed(
-                    _("Non custom blends cannot be modified.")
+                    _("Predefined blends composition cannot be changed.")
                 )
         self.full_clean()
         return super().save(*args, **kwargs)

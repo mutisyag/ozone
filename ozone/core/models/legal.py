@@ -69,7 +69,7 @@ class ReportingPeriod(models.Model):
             raise ValidationError(
                 {
                     'end_date': [_(
-                        "End date has to be temporally after start date."
+                        "The end date must be greater than the start date."
                     )]
                 }
             )

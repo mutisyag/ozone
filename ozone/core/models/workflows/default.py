@@ -125,7 +125,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
         """
         if self.model_instance.article7questionnaire.is_filled is False:
             raise TransitionFailed(
-                _('All questionnaire answers must be filled before submitting!')
+                _('Questionnaire form must be completed before submitting.')
             )
 
     @xworkflows.transition('submit')

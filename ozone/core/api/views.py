@@ -1225,7 +1225,7 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
             return Response(
                 {
                     'error': _(
-                        'You are not allowed to upload files on this submission'
+                        'You do not have permission to upload files for this submission'
                     )
                 },
                 status=status.HTTP_403_FORBIDDEN

@@ -56,7 +56,7 @@ class ModifyPreventionMixin:
             and not self.submission.data_changes_allowed
         ):
             raise ValidationError(
-                _("Submitted submissions cannot be modified.")
+                _("Unable to change submission because it is already submitted.")
             )
         super().clean()
 
@@ -133,7 +133,7 @@ class Obligation(models.Model):
             and self not in default_obligation_qs
         ):
             raise ValidationError(
-                _('Only one obligation can be set as default.')
+                _('Unable to set default obligation. Another obligation is already set as default.')
             )
 
     class Meta:
@@ -186,7 +186,7 @@ class ReportingChannel(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        f'Only one reporting channel can be set as default for '
+                        f'Unable to set reporting channel. Another reporting channel is already set as default for '
                         f'{unique_fields[field]}.'
                     )
                 )
@@ -618,14 +618,14 @@ class Submission(models.Model):
         # This is a `TransitionList` and supports the `in` operator
         if trans_name not in workflow.state.workflow.transitions:
             raise TransitionDoesNotExist(
-                _(f'Transition {trans_name} does not exist in this workflow')
+                _(f'Workflow error. Transition {trans_name} does not exist in this workflow')
             )
 
         # This is a list of `Transition`s and doesn't support the `in` operator
         # without explicitly referencing `name`
         if trans_name not in [t.name for t in workflow.state.transitions()]:
             raise TransitionNotAvailable(
-                _(f'Transition {trans_name} does not start from current state')
+                _(f'Workflow error. Transition {trans_name} does not start from current state')
             )
 
         # Transition names are available as attributes on the workflow object
@@ -634,7 +634,7 @@ class Submission(models.Model):
         if not transition.is_available():
             raise TransitionNotAvailable(
                 _(
-                    "Transition checks not satisfied or "
+                    "Workflow error. Transition checks not satisfied or "
                     "you may not have the necessary permissions"
                 )
             )
@@ -736,7 +736,7 @@ class Submission(models.Model):
         ]
         if len(wrongly_modified_flags) > 0:
             raise ValidationError({
-                field: [_('User is not allowed to change this flag')]
+                field: [_('User do not have permission to change this flag.')]
                 for field in wrongly_modified_flags
             })
         return True
@@ -793,7 +793,7 @@ class Submission(models.Model):
 
         if len(wrongly_modified_remarks) > 0:
             raise ValidationError({
-                field: [_('User is not allowed to change this remark')]
+                field: [_('User do not have permission to change this remark.')]
                 for field in wrongly_modified_remarks
             })
         return True
@@ -949,9 +949,10 @@ class Submission(models.Model):
         """
         actor = "Secretariat" if user.is_secretariat else "party"
         message = _(
-            f"There is already a Data Entry submission created by {actor} for "
-            f"this party/period/obligation combination."
+            f"Another submission created by {actor} for "
+            f"this party/obligation/year already exists in Data Entry."
         )
+
         for sub in peers:
             if sub.in_initial_state:
                 if sub.filled_by_secretariat and user.is_secretariat:
@@ -982,7 +983,7 @@ class Submission(models.Model):
                 False,
                 ValidationError(
                     _(
-                        "You can't clone a submission with this type of "
+                        "You cannot create a new version of this submission with this type of "
                         "obligation"
                     )
                 )
@@ -995,7 +996,7 @@ class Submission(models.Model):
                     False,
                     ValidationError(
                         _(
-                            "You can't clone a submission from a previous "
+                            "You cannot create a new version of this submission from a previous "
                             "period if it's superseded."
                         )
                     )
@@ -1188,7 +1189,7 @@ class Submission(models.Model):
     def delete(self, *args, **kwargs):
         if not self.deletion_allowed:
             raise MethodNotAllowed(
-                _("Submitted submissions cannot be deleted.")
+                _("Unable to delete submission because it is submitted.")
             )
         # We need to delete all related data entries before being able to
         # delete the submission. We leave it to the interface to ask "are you
@@ -1203,14 +1204,14 @@ class Submission(models.Model):
     def clean(self):
         if not self.reporting_period.is_reporting_allowed:
             raise ValidationError(
-                _("Reporting cannot be performed for this reporting period.")
+                _("Unable to start reporting for this period.")
             )
         if (
             Submission.non_exempted_fields_modified(self)
             and not self.data_changes_allowed
         ):
             raise ValidationError(
-                _("Submitted submissions cannot be modified.")
+                _("Unable to change submission because it is already submitted.")
             )
         super().clean()
 
@@ -1339,7 +1340,7 @@ class SubmissionFormat(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        f'Only one submission format can be set as default for '
+                        f'Unable to set default submission format. Another submission format is already set as default for '
                         f'{unique_fields[field]}.'
                     )
                 )
