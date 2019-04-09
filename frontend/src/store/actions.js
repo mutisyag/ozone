@@ -58,7 +58,7 @@ const actions = {
       if (duplicatesAll.length >= 2 || duplicatesByCurrentUser.length) {
         dispatch('setAlert', {
           $gettext,
-          message: { __all__: [$gettext('Another submission already exists in Data Entry stage.')] },
+          message: { __all__: [$gettext('Unable to add submission. Another submission for this obligation/year already exists. Please resume work on the existing one.')] },
           variant: 'danger'
         })
         // TODO: should this be a thing ?
@@ -69,7 +69,7 @@ const actions = {
         createSubmission(submission).then((response) => {
           dispatch('setAlert', {
             $gettext,
-            message: { __all__: [$gettext('Submission created')] },
+            message: { __all__: [$gettext('Submission added successfully.')] },
             variant: 'success'
           })
           dispatch('getCurrentSubmissions').then(() => {
@@ -78,7 +78,7 @@ const actions = {
         }).catch((error) => {
           dispatch('setAlert', {
             $gettext,
-            message: { __all__: [$gettext('Failed to create submission')] },
+            message: { __all__: [$gettext('Unable to add submission.')] },
             variant: 'danger'
           })
           reject(error.response)
@@ -269,13 +269,13 @@ const actions = {
       }
       dispatch('setAlert', {
         $gettext,
-        message: { __all__: [$gettext('Submission state updated')] },
+        message: { __all__: [$gettext('Submission status updated successfully.')] },
         variant: 'success'
       })
     }).catch(error => {
       dispatch('setAlert', {
         $gettext,
-        message: { __all__: [$gettext('Unable to change the state of this submission')] },
+        message: { __all__: [$gettext('Unable to update submission status.')] },
         variant: 'danger'
       })
       console.log(error)
@@ -284,7 +284,7 @@ const actions = {
 
   async removeField({ dispatch, commit }, { tab, index, $gettext, noAlert }) {
     if (!noAlert) {
-      const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the row is ireversible.', $gettext })
+      const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the selected row?', $gettext })
       if (!confirmed) {
         return confirmed
       }
@@ -293,7 +293,7 @@ const actions = {
   },
 
   async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
-    const confirmed = await dispatch('openConfirmModal', { title: 'Are you sure ?', description: 'Deleting the submission is ireversible.', $gettext })
+    const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the submission? All data will be deleted irreversibly.' , $gettext })
     if (!confirmed) {
       return confirmed
     }
@@ -301,14 +301,14 @@ const actions = {
       dispatch('getCurrentSubmissions')
       dispatch('setAlert', {
         $gettext,
-        message: { __all__: [$gettext('Submission deleted')] },
+        message: { __all__: [$gettext('Submission deleted successfully.')] },
         variant: 'success'
       })
     }).catch(() => {
       dispatch('getCurrentSubmissions')
       dispatch('setAlert', {
         $gettext,
-        message: { __all__: [$gettext('Failed to delete submission')] },
+        message: { __all__: [$gettext('Unable to delete submission.')] },
         variant: 'danger'
       })
     })

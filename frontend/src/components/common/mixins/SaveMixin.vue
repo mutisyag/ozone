@@ -79,7 +79,7 @@ export default {
       if (this.invalidTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
+          message: { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] },
           variant: 'danger'
         })
       } else {
