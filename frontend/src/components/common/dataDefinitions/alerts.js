@@ -10,7 +10,11 @@ const getAlerts = ($gettext) => {
     blend_already_exists: $gettext('A blend with this name already exists!'),
     blend_not_added: $gettext('The following blends were not added because they already exist'),
     select_country_before_adding_again_blend: $gettext('select at least one country for each blend before adding it again'),
-    blend_created: $gettext('Blend created')
+    blend_created: $gettext('Blend created'),
+    field_already_exists: $gettext('The fields for these countries were not added because they already exist'),
+    save_failed: $gettext('Save failed'),
+    save_before_submitting: $gettext('Please save before submitting'),
+    new_version_created: $gettext('New version created')
   }
   return alerts
 }

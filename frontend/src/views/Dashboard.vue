@@ -269,12 +269,14 @@ import { mapGetters } from 'vuex'
 import { cloneSubmission } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
   name: 'Dashboard',
   data() {
     return {
       dataLoaded: false,
+      alerts: getAlerts(this.$gettext),
       submissionNew: {
         obligation: null,
         reporting_period: null,
@@ -579,7 +581,7 @@ export default {
         this.$router.push({ name: this.getFormName(obligation), query: { submission: response.data.url } })
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('New version created')] },
+          message: { __all__: [this.alerts.new_version_created] },
           variant: 'success'
         })
         this.$destroy()

@@ -155,6 +155,7 @@ import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import FormTemplate from '@/components/raf/FormTemplate.vue'
 import TransitionQuestions from '@/components/common/TransitionQuestions'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
   components: {
@@ -202,7 +203,7 @@ export default {
         this.$router.go(this.$router.currentRoute)
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('New version created')] },
+          message: { __all__: [this.alerts.new_version_created] },
           variant: 'success'
         })
         this.$destroy()
@@ -234,7 +235,7 @@ export default {
       if (unsavedTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('Please save before submitting')] },
+          message: { __all__: [this.alerts.save_before_submitting] },
           variant: 'danger'
         })
         return
@@ -270,7 +271,8 @@ export default {
       tabIndex: 0,
       modal_data: null,
       labels: getLabels(this.$gettext).common,
-      currentTransition: null
+      currentTransition: null,
+      alerts: getAlerts(this.$gettext)
     }
   }
 }

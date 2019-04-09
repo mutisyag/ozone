@@ -17,6 +17,7 @@ import { isObject } from '@/components/common/services/utilsService'
 import { dateFormatToYYYYMMDD } from '@/components/common/services/languageService'
 import FilesMixin from './FilesMixin'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
   mixins: [FilesMixin],
@@ -28,7 +29,8 @@ export default {
     return {
       invalidTabs: [],
       tabsToSave: [],
-      labels: null
+      labels: null,
+      alerts: getAlerts(this.$gettext)
     }
   },
 
@@ -77,7 +79,7 @@ export default {
       if (this.invalidTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check the %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
+          message: { __all__: [`${this.$gettextInterpolate('Save failed  because of validation problems. Please check %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })}  <i data-v-676ba8cf="" class="fa fa-times-circle fa-lg ml-2 mr-2"></i> form`] },
           variant: 'danger'
         })
       } else {
@@ -208,7 +210,7 @@ export default {
         console.log(error)
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('Save failed')] },
+          message: { __all__: [this.alerts.save_failed] },
           variant: 'danger' })
       }
       this.tabsToSave = this.tabsToSave.filter(t => t !== tab.name)

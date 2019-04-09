@@ -149,6 +149,7 @@ import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import FormTemplate from '@/components/exemption/FormTemplate.vue'
 import TransitionQuestions from '@/components/exemption/TransitionQuestions'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
   components: {
@@ -170,7 +171,8 @@ export default {
       tabIndex: 0,
       modal_data: null,
       labels: getLabels(this.$gettext).common,
-      currentTransition: null
+      currentTransition: null,
+      alerts: getAlerts(this.$gettext)
     }
   },
   created() {
@@ -224,7 +226,7 @@ export default {
       if (unsavedTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [this.$gettext('Please save before submitting')] },
+          message: { __all__: [this.alerts.save_before_submitting] },
           variant: 'danger'
         })
         return

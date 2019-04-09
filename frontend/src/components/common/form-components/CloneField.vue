@@ -31,12 +31,14 @@
 <script>
 
 import Multiselect from '@/components/common/ModifiedMultiselect'
+import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
 export default {
 
   props: {
     tabName: String,
     current_field: Object,
+    alerts: getAlerts(this.$gettext),
     disabled: Boolean
   },
 
@@ -117,7 +119,7 @@ export default {
       })
       willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
-        message: { __all__: [`${this.$gettext('The fields for these countries were not added because they already exist')} : ${willNotAddCountryNames.join(', ')}}`] },
+        message: { __all__: [`${this.alerts.field_already_exists} : ${willNotAddCountryNames.join(', ')}}`] },
         variant: 'danger'
       })
       this.$emit('removeThisField')
