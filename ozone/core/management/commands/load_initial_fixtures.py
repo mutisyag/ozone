@@ -28,6 +28,7 @@ class Command(BaseCommand):
         'baseline_types',
         'control_measures',
         'baselines',
+        'limits',
     )
 
     def handle(self, *args, **options):
