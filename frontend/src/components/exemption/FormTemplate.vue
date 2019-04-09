@@ -40,14 +40,14 @@
             <div class="group-cell">{{cell.item.group}}</div>
             <b-btn-group class="row-controls">
               <span @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg"></i>
+                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>

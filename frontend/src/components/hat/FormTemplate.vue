@@ -37,7 +37,7 @@
           ref="table"
         >
           <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
-            <div v-html="field.label" :key="field.key"></div>
+            <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
           <template slot="thead-top">
             <tr class="first-header">
@@ -70,7 +70,7 @@
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>
@@ -167,7 +167,7 @@
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
-                <i class="fa fa-trash fa-lg"></i>
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
               </span>
             </b-btn-group>
           </template>

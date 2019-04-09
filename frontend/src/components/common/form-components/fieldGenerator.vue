@@ -25,6 +25,7 @@
       :clear-button="!disabled"
       @input="updateFormField"
       v-model="currentTyping"
+      :highlighted="{dates:[new Date()]}"
       format="d MMMM yyyy"
       v-else-if="field.type === 'date'"
     ></Datepicker>
