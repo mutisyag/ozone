@@ -38,7 +38,6 @@ export default {
   props: {
     tabName: String,
     current_field: Object,
-    alerts: getAlerts(this.$gettext),
     disabled: Boolean
   },
 
@@ -62,6 +61,7 @@ export default {
   data() {
     return {
       field: null,
+      alerts: getAlerts(this.$gettext),
       selected_countries: {
         selected: []
       }
