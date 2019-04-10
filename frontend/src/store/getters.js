@@ -2,6 +2,7 @@ import { doSum } from '@/components/common/services/utilsService'
 
 const sumBiggerThanParts = (state, tab, partyField) => {
   if (!state.form.tabs[tab].form_fields.length) return {}
+  if (!state.form.tabs[tab].form_fields[0].hasOwnProperty(partyField)) return {}
   const multipleSubstances = {}
   const finalError = {}
   state.form.tabs[tab].form_fields.forEach(row => {
