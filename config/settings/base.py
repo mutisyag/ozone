@@ -101,7 +101,6 @@ THIRD_PARTY_APPS = [
     'crispy_forms',
     'rest_framework',
     'rest_framework.authtoken',
-    'bootstrap_admin',
     'webpack_loader',
     'import_export',
     'guardian',
