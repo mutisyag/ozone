@@ -15,6 +15,25 @@ const getLevel2PropertyValue = (obj, level2PropertyKey) => {
   return undefined
 }
 
+const debounce = (func, wait, immediate) => {
+  let timeout
+  // eslint-disable-next-line func-names
+  return function () {
+    const context = this
+    // eslint-disable-next-line prefer-rest-params
+    const args = arguments
+    // eslint-disable-next-line func-names
+    const later = function () {
+      timeout = null
+      if (!immediate) func.apply(context, args)
+    }
+    const callNow = immediate && !timeout
+    clearTimeout(timeout)
+    timeout = setTimeout(later, wait)
+    if (callNow) func.apply(context, args)
+  }
+}
+
 const isObject = (value) => !!(value && typeof value === 'object' && value.constructor === Object)
 
 const pushUnique = (array, item) => {
@@ -130,5 +149,6 @@ export {
   sortDescending,
   getObjectLevel1PropertyValuesAsArray,
   valueConverter,
-  doSum
+  doSum,
+  debounce
 }
