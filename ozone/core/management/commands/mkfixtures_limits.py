@@ -21,6 +21,12 @@ class Command(BaseCommand):
     OUTPUT_DIR = settings.FIXTURE_DIRS[0]
 
     def handle(self, *args, **options):
+        if not ControlMeasure.objects.exists():
+            print(
+                "Control measures not found. Please, "
+                "import control measure fixtures."
+            )
+            return
         data = []
         idx = 1
         for party_history in PartyHistory.objects.all():
@@ -33,7 +39,7 @@ class Command(BaseCommand):
                     party_type=party_type,
                     end_date__gte=period.start_date,
                     start_date__lte=period.end_date
-                )
+                ).order_by('start_date')
                 for limit_type in LimitTypes:
                     cm_queryset_by_limit_type = cm_queryset.filter(
                         limit_type=limit_type.value
