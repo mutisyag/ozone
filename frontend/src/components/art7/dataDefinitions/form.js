@@ -769,7 +769,7 @@ const getFormArt7 = ($gettext) => {
           tooltip: $gettext('Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3')
         },
         {
-          label: `(3) ${$gettext('Amout generated and captured')}`,
+          label: `(3) ${$gettext('Amount generated and captured')}`,
           tooltip: $gettext('Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3'),
           colspan: 3
         },
