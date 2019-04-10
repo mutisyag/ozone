@@ -130,7 +130,7 @@ export default {
       get validation() {
         const errors = []
         if (this.on_hand_end_year.selected === null) {
-          errors.push($gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
+          errors.push($gettext('Please fill-in column On hand end of year (13)'))
         }
 
         const returnObj = {
