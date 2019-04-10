@@ -82,11 +82,11 @@ export default {
 
   data() {
     return {
+      alerts: getAlerts(this.$gettext),
       selected_substance: {
         selected: null,
         group: null,
-        options: [],
-        alerts: getAlerts(this.$gettext)
+        options: []
       },
 
       selected_groups: {

@@ -67,7 +67,6 @@ export default {
 
     tableItems() {
       const tableFields = []
-      console.log(this.tab_info.form_fields)
       this.tab_info.form_fields.forEach(form_field => {
         const tableRow = {}
         Object.keys(form_field).forEach(key => {

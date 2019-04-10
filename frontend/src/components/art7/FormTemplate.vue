@@ -850,7 +850,6 @@ export default {
       this.tab_info.form_fields.forEach((element) => {
         const tableRow = {}
         Object.keys(element).forEach(key => {
-          console.log('element', element)
           if (this.tabName === 'has_produced' && element.substance.selected && this.$store.getters.getCapturedSubstance(element.substance.selected)) {
             tableRow[key] = this.typeOfDisplayObj[key]
               ? this.$store.state.initialData.display[
