@@ -57,7 +57,7 @@ export default {
         get validation() {
           const errors = []
           if (this.quantity_msac.selected === null) {
-            errors.push($gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
+            errors.push($gettext('Please fill-in column New imports for use in multi-split air conditioners (3)'))
           }
 
           const returnObj = {
@@ -108,7 +108,7 @@ export default {
         get validation() {
           const errors = []
           if (this.quantity_msac.selected === null) {
-            errors.push($gettext('Column (3) should not be empty (total production for all uses / captured for all uses for FII)'))
+            errors.push($gettext('Please fill-in column New imports for use in multi-split air conditioners (3)'))
           }
 
           const returnObj = {
