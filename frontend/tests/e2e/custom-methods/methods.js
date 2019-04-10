@@ -237,7 +237,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
  *	Use this before calling clickQuestionnaireRadios(args)
  */
 const saveAndFail = (browser, submissionInfo) => {
-	logMessage('Save and fail')
+	logMessage(browser, 'Save and fail')
 
   fillSubmissionInfo(browser, submissionInfo)
 
