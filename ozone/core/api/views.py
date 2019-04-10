@@ -1242,7 +1242,7 @@ class UploadTokenViewSet(viewsets.ModelViewSet):
 
     def list(self, request, submission_pk):
         """
-        Returns the tokens issued for a given envelope.
+        Returns the tokens issued for a given submission.
         """
         queryset = UploadToken.objects.filter(submission=submission_pk)
         serializer = self.serializer_class(

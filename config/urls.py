@@ -62,9 +62,7 @@ urlpatterns = [
         "api/",
         include("ozone.core.api.urls",namespace="core")
     ),
-] + static(
-    settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-)
+]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
