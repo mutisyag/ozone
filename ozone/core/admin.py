@@ -150,27 +150,35 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
 
 # Meeting-related models
 @admin.register(Meeting)
-class MeetingAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class MeetingAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('meeting_id', 'description', 'location', 'start_date', 'end_date')
     search_fields = ["meeting_id", "description"]
     resource_class = MeetingResource
 
 
 @admin.register(Treaty)
-class TreatyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class TreatyAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'meeting_id', 'date', 'entry_into_force_date')
     resource_class = TreatyResource
 
 
 # Party-related models
 @admin.register(Region)
-class RegionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class RegionAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'abbr')
     resource_class = RegionResource
 
 
 @admin.register(Subregion)
-class SubregionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class SubregionAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'abbr')
     list_filter = ('region',)
     search_fields = ["abbr", "name"]
@@ -178,7 +186,9 @@ class SubregionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.Mode
 
 
 @admin.register(Party)
-class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class PartyAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'abbr', 'subregion')
     list_filter = ('subregion',)
     search_fields = ['name', 'abbr']
@@ -197,20 +207,26 @@ class PartyHistoryAdmin(
 
 # Substance-related models
 @admin.register(Annex)
-class AnnexAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class AnnexAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'description')
     resource_class = AnnexResource
 
 
 @admin.register(Group)
-class GroupAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class GroupAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('group_id', 'name', 'description')
     list_filter = ('annex', 'control_treaty', 'report_treaty')
     resource_class = GroupResource
 
 
 @admin.register(Substance)
-class SubstanceAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class SubstanceAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'group', 'description')
     list_filter = ('group',)
     search_fields = ['name', 'description']
@@ -218,7 +234,9 @@ class SubstanceAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.Mode
 
 
 @admin.register(Blend)
-class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+class BlendAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('blend_id', 'composition', 'type')
     list_filter = ('type',)
     search_fields = ['blend_id']
@@ -254,7 +272,9 @@ class ObligationAdmin(
 
 
 @admin.register(User)
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     base_list_display = (
         "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
     )
@@ -317,7 +337,9 @@ class UserAdmin(admin.ModelAdmin):
 
 
 @admin.register(Submission)
-class SubmissionAdmin(admin.ModelAdmin):
+class SubmissionAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('__str__', 'party', 'reporting_period', 'obligation')
     list_filter = ('obligation', 'reporting_period', 'party')
     search_fields = ['party__name']
@@ -332,7 +354,9 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubmissionInfo)
-class SubmissionInfoAdmin(admin.ModelAdmin):
+class SubmissionInfoAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('__str__', 'reporting_officer', 'country', 'date')
     list_filter = (
         'submission_format',
@@ -345,7 +369,9 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
 
 
 @admin.register(ReportingChannel)
-class ReportingChannelAdmin(admin.ModelAdmin):
+class ReportingChannelAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = (
         'name', 'description',
         'is_default_party', 'is_default_secretariat', 'is_default_for_cloning',
@@ -354,18 +380,24 @@ class ReportingChannelAdmin(admin.ModelAdmin):
 
 
 @admin.register(SubmissionFormat)
-class SubmissionFormatAdmin(admin.ModelAdmin):
+class SubmissionFormatAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     resource_class = SubmissionFormatResource
 
 
 @admin.register(BaselineType)
-class BaselineTypeAdmin(admin.ModelAdmin):
+class BaselineTypeAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = ('name', 'remarks')
     resource_class = BaselineTypeResource
 
 
 @admin.register(ControlMeasure)
-class ControlMeasureAdmin(admin.ModelAdmin):
+class ControlMeasureAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = (
         'group', 'party_type', 'limit_type', 'baseline_type', 'start_date', 'end_date', 'allowed',
     )
@@ -374,7 +406,9 @@ class ControlMeasureAdmin(admin.ModelAdmin):
 
 
 @admin.register(Baseline)
-class BaselineAdmin(admin.ModelAdmin):
+class BaselineAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = (
         'party', 'group', 'baseline_type', 'baseline',
     )
@@ -384,7 +418,9 @@ class BaselineAdmin(admin.ModelAdmin):
 
 
 @admin.register(Limit)
-class LimitAdmin(admin.ModelAdmin):
+class LimitAdmin(
+    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
+):
     list_display = (
         'party', 'group', 'reporting_period', 'limit_type', 'limit',
     )
