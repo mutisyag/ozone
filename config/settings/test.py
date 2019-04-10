@@ -42,6 +42,11 @@ TEMPLATES[0]["OPTIONS"]["loaders"] = [  # noqa F405
     )
 ]
 
+# MEDIA
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_ROOT = str(APPS_DIR / 'media')
+
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-backend
