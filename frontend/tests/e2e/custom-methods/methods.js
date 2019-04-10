@@ -1,4 +1,15 @@
+const logMessage = (browser, message) => {
+	browser.perform((done) => {
+		console.log('==================================================================')
+		console.log(message)
+		console.log('==================================================================')
+		done()
+	})
+}
+
 const login = (browser, username, password) => {
+	logMessage(browser, "Log in with " + username + ":" + password)
+
   browser.url(process.env.VUE_DEV_SERVER_URL)
     .useCss()
     .waitForElementVisible('#id_username', 20000)
@@ -12,6 +23,7 @@ const login = (browser, username, password) => {
 }
 
 const logout = (browser) => {
+	logMessage(browser, 'Log out')
   browser.useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
@@ -57,6 +69,8 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
 }
 
 const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
+	logMessage(browser, 'Creating submission \'' + obligation + '\' for \'' + period + '\'')
+
   const submission = {
     obligation_selector: { option: obligation, read_write: true, singleSelectWithText: true },
     period_selector: { option: period, read_write: true, singleSelectWithText: false },
@@ -78,7 +92,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
     .waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
     .click('//div[contains(@class,"create-submission")]//button')
     .pause(5000)
-    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission created')]", 5000)
+    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 5000)
 
   if (back_to_dashboard === true) {
     browser.useXpath()
@@ -113,6 +127,8 @@ const handleModal = (browser, accept = true) => {
 }
 
 const deleteSubmissionFake = (browser) => {
+	logMessage(browser, 'Fake delete')
+
   browser
     .useXpath()
     .waitForElementVisible("//button[@id='delete-button']", 10000)
@@ -135,6 +151,8 @@ const deleteSubmission = (browser) => {
 }
 
 const saveSubmission = (browser, tabs = []) => {
+	logMessage(browser, 'Saving submission')
+
   browser.useXpath()
     /* Click Save and continue button */
     .execute('window.scrollTo(0,document.body.scrollHeight);')
@@ -171,6 +189,8 @@ const datePickerValue = (browser) => {
 }
 
 const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) => {
+	logMessage(browser, 'Filling submission info')
+
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
   /* Open Submission Info tab */
   selectTab(browser, 'Submission Info')
@@ -217,6 +237,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
  *	Use this before calling clickQuestionnaireRadios(args)
  */
 const saveAndFail = (browser, submissionInfo) => {
+	logMessage('Save and fail')
 
   fillSubmissionInfo(browser, submissionInfo)
 
@@ -310,6 +331,8 @@ const closeAsideMenu = (browser, tab) => {
 }
 
 const filterSubmission = (browser, table, options, first_row_expected, rows_number_expected) => {
+	logMessage(browser, 'Filtering submissions')
+
   const filters = {
     submission_search_filter: options[0],
     submission_obligation_filter: options[1],
@@ -368,6 +391,8 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 }
 
 const filterEntity = (browser, tab, filters) => {
+	logMessage(browser, 'Filtering entities')
+
   const tabs = {
     controlled_substances: {
       fields: ['substances-group-filter', 'substances-name-filter', 'substances-formula-filter'],
@@ -441,6 +466,8 @@ const checkSumbissionInfoFlags = (browser) => {
 }
 
 const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
+	logMessage(browser, 'Clicking questionnaire radios: ' + fields)
+
   let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
   const tabs = {
     has_imports: 'Imports',
@@ -488,6 +515,8 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 }
 
 const addEntity = (browser, tab, entity, options, order = undefined, check = false) => {
+	logMessage(browser, 'Adding entity ' + entity + ': [\'' + options[0] + '\', \'' + options[1] + '\']')
+
   const selectors = []
   /**
    * 	Entity structure
@@ -500,7 +529,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
   /* Special case */
   // TODO: find a dynamic way
-  if (options[0] === 'FII') {
+  if (options[0] === 'F') {
     entities.substance.pop()
     entities.substance.push('fii-table')
   }
@@ -537,7 +566,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
       .click(selector)
       .pause(500)
       .waitForElementVisible(`${selector}//div[@class='multiselect__content-wrapper']`, 5000)
-      .click(`${selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${options[index]}')]`)
+      .click(`${selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[text() = '${options[index]}']`)
       /* Close selector */
       .pause(100)
       .keys(browser.Keys.ESCAPE)
@@ -606,6 +635,8 @@ const addFacility = (browser, table, tab, row, row_values, start_column, check =
 }
 
 const addValues = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
+	logMessage(browser, 'Adding values to entity')
+
   browser
     .useXpath()
     /* Hide app-footer	*/
@@ -660,6 +691,8 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
 }
 
 const addComment = (browser, tab, comment) => {
+	logMessage(browser, 'Adding comment')
+
   browser
     .useCss()
     .setValue(`#${tab} .comments-input textarea`, comment)
@@ -719,6 +752,8 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
 }
 
 const uploadeFile = (browser, filename, filepath) => {
+	logMessage(browser, 'Uploading file')
+
   const path = require('path')
   const find_root = require('find-root')
   const root = find_root(path.resolve(__dirname))
