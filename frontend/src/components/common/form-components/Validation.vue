@@ -27,12 +27,7 @@
         <span style="color: red">{{error}}</span>
       </div>
     </div>
-    <div v-if="multiRowValidation && Object.keys(multiRowValidation).length">
-      <div
-        v-for="(substance, index) in multiRowValidation"
-        :key="index"
-      >Error for {{ display.substances[index] }}</div>
-    </div>
+    <div v-if="multiRowValidation && Object.keys(multiRowValidation).length"> </div>
   </div>
 </template>
 
