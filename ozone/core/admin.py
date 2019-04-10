@@ -151,39 +151,37 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
 # Meeting-related models
 @admin.register(Meeting)
 class MeetingAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    list_display = ('meeting_id', 'description', 'location', 'start_date', 'end_date')
     search_fields = ["meeting_id", "description"]
     resource_class = MeetingResource
 
 
 @admin.register(Treaty)
 class TreatyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["name"]
+    list_display = ('name', 'meeting_id', 'date', 'entry_into_force_date')
     resource_class = TreatyResource
-
-
-@admin.register(Decision)
-class DecisionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["decision_id", "name"]
-    resource_class = DecisionResource
 
 
 # Party-related models
 @admin.register(Region)
 class RegionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["abbr", "name"]
+    list_display = ('name', 'abbr')
     resource_class = RegionResource
 
 
 @admin.register(Subregion)
 class SubregionAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
+    list_display = ('name', 'abbr')
+    list_filter = ('region',)
     search_fields = ["abbr", "name"]
     resource_class = SubregionResource
 
 
 @admin.register(Party)
 class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    list_display = ('name', 'subregion')
-    search_fields = ["name"]
+    list_display = ('name', 'abbr', 'subregion')
+    list_filter = ('subregion',)
+    search_fields = ['name', 'abbr']
     resource_class = PartyResource
 
 
@@ -191,41 +189,39 @@ class PartyAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 class PartyHistoryAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    list_display = ('party', 'reporting_period')
+    list_display = ('party', 'reporting_period', 'party_type')
+    list_filter = ('party_type', 'reporting_period')
     search_fields = ["party__name"]
     resource_class = PartyHistoryResource
-
-
-@admin.register(Language)
-class Language(ImportExportModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["name"]
-    resource_class = LanguageResource
 
 
 # Substance-related models
 @admin.register(Annex)
 class AnnexAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
     list_display = ('name', 'description')
-    search_fields = ["name"]
     resource_class = AnnexResource
 
 
 @admin.register(Group)
 class GroupAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["group_id", "annex__name"]
+    list_display = ('group_id', 'name', 'description')
+    list_filter = ('annex', 'control_treaty', 'report_treaty')
     resource_class = GroupResource
 
 
 @admin.register(Substance)
 class SubstanceAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    list_display = ('name', 'group')
-    search_fields = ["name"]
+    list_display = ('name', 'group', 'description')
+    list_filter = ('group',)
+    search_fields = ['name', 'description']
     resource_class = SubstanceResource
 
 
 @admin.register(Blend)
 class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin):
-    search_fields = ["blend_id"]
+    list_display = ('blend_id', 'composition', 'type')
+    list_filter = ('type',)
+    search_fields = ['blend_id']
     resource_class = BlendResource
 
 
@@ -233,7 +229,8 @@ class BlendAdmin(ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdm
 class BlendComponentAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    search_fields = ["blend__blend_id", "substance__name"]
+    list_display = ('blend', 'substance', 'percentage')
+    search_fields = ['blend__blend_id', 'substance__name']
     resource_class = BlendComponentResource
 
 
@@ -242,6 +239,7 @@ class BlendComponentAdmin(
 class ReportingPeriodAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
+    list_display = ('name', 'start_date', 'end_date')
     search_fields = ["name"]
     resource_class = ReportingPeriodResource
 
@@ -250,8 +248,8 @@ class ReportingPeriodAdmin(
 class ObligationAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
-    search_fields = ["name"]
-    readonly_fields = ["_form_type"]
+    list_display = ('name',)
+    readonly_fields = ['_form_type']
     resource_class = ObligationResource
 
 
@@ -320,6 +318,9 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'party', 'reporting_period', 'obligation')
+    list_filter = ('obligation', 'reporting_period', 'party')
+    search_fields = ['party__name']
     resource_class = SubmissionResource
 
     def get_readonly_fields(self, request, obj=None):
@@ -332,6 +333,14 @@ class SubmissionAdmin(admin.ModelAdmin):
 
 @admin.register(SubmissionInfo)
 class SubmissionInfoAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'reporting_officer', 'country', 'date')
+    list_filter = (
+        'submission_format',
+        'submission__obligation',
+        'submission__reporting_period',
+        'submission__party'
+    )
+    search_fields = ('submission__party__name',)
     resource_class = SubmissionInfoResource
 
 
@@ -370,6 +379,7 @@ class BaselineAdmin(admin.ModelAdmin):
         'party', 'group', 'baseline_type', 'baseline',
     )
     list_filter = ('group', 'baseline_type', 'party')
+    search_fields = ["party__name"]
     resource_class = BaselineResource
 
 
@@ -378,5 +388,6 @@ class LimitAdmin(admin.ModelAdmin):
     list_display = (
         'party', 'group', 'reporting_period', 'limit_type', 'limit',
     )
-    list_filter = ('group', 'reporting_period', 'limit_type')
+    list_filter = ('group', 'limit_type', 'reporting_period', 'party')
+    search_fields = ['party__name', 'party__abbr']
     resource_class = LimitResource
