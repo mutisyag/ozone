@@ -232,6 +232,8 @@ export default {
           message: { __all__: [this.alerts.save_before_submitting] },
           variant: 'danger'
         })
+        this.$store.commit('setActionToDispatch', null)
+        this.$store.commit('setDataForAction', null)
         return
       }
       this.currentTransition = 'submit'

@@ -51,6 +51,10 @@ export default {
   },
 
   methods: {
+    resetActionToDispatch() {
+      this.$store.commit('setActionToDispatch', null)
+      this.$store.commit('setDataForAction', null)
+    },
     validation() {
       this.invalidTabs = []
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
@@ -59,12 +63,14 @@ export default {
         if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
           this.invalidTabs.push(this.form.tabs[tab].name)
           this.$store.commit('setTabStatus', { tab, value: false })
+          this.resetActionToDispatch()
         }
         if (Array.isArray(this.form.tabs[tab].form_fields)) {
           for (const field of this.form.tabs[tab].form_fields) {
             if (field.validation.selected.length) {
               this.invalidTabs.push(this.form.tabs[tab].name)
               this.$store.commit('setTabStatus', { tab, value: false })
+              this.resetActionToDispatch()
               break
             }
           }
@@ -73,6 +79,7 @@ export default {
           if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
             this.invalidTabs.push(this.form.tabs[tab].name)
             this.$store.commit('setTabStatus', { tab, value: false })
+            this.resetActionToDispatch()
           }
         }
       }
@@ -82,6 +89,7 @@ export default {
           message: { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] },
           variant: 'danger'
         })
+        this.resetActionToDispatch()
       } else {
         this.prepareCommentsForSave()
         this.prepareDataForSave()
@@ -110,6 +118,7 @@ export default {
           message: error,
           variant: 'danger'
         })
+        this.resetActionToDispatch()
       }
     },
 
@@ -208,6 +217,7 @@ export default {
       } catch (error) {
         this.$store.commit('setTabStatus', { tab: tab.name, value: false })
         console.log(error)
+        this.resetActionToDispatch()
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
           message: { __all__: [this.alerts.save_failed] },
@@ -218,8 +228,7 @@ export default {
         this.$store.dispatch('clearEdited')
         if (this.$store.state.actionToDispatch) {
           this.$store.dispatch('saveCallback', { actionToDispatch: this.$store.state.actionToDispatch, data: this.$store.state.dataForAction })
-          this.$store.commit('setActionToDispatch', null)
-          this.$store.commit('setDataForAction', null)
+          this.resetActionToDispatch()
         }
       }
     }
