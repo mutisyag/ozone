@@ -290,7 +290,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           label: '',
-          tooltip: `${$gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')} \n ${$gettext('Quantity of new substances imported as feedstock')}`
+          tooltip: `${$gettext('Do not deduct from total production in column 3 of data form 3 (data on production).')} \n ${$gettext('Quantity of new substance imported for feedstock uses')}`
         },
         {
           label: $gettext('Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses'),
