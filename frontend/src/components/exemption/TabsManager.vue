@@ -176,12 +176,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit('updateBreadcrumbs',
-      [this.$gettext('Dashboard'),
-        this.$store.state.current_submission.obligation,
-        this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-        this.$store.state.current_submission.reporting_period,
-        `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+    this.updateBreadcrumbs()
   },
   computed: {
     availableTransitions() {
@@ -213,6 +208,14 @@ export default {
     }
   },
   methods: {
+    updateBreadcrumbs() {
+      this.$store.commit('updateBreadcrumbs',
+        [this.$gettext('Dashboard'),
+          this.$store.state.current_submission.obligation,
+          this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
+          this.$store.state.current_submission.reporting_period,
+          `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+    },
     createModalData() {
       const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
       const formName = this.$route.name
