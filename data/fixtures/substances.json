@@ -13,7 +13,7 @@
       "gwp_error_plus_minus": null,
       "hydrogens": "",
       "is_captured": false,
-      "is_contained_in_polyols": true,
+      "is_contained_in_polyols": false,
       "has_critical_uses": false,
       "max_odp": 1,
       "min_odp": 1,
