@@ -1227,3 +1227,8 @@ body .vdp-datepicker__calendar {
 .breadcrumb.custom {
 	border-bottom: none;
 }
+
+input[type="text"].highlighted {
+	background: #ffffc8;
+	color: #444;
+}

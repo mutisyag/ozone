@@ -12,8 +12,8 @@
             <span v-translate>Substances</span>
           </h4>
           <div v-show="table.tableFilters" class="table-filters">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input v-model="table.filters.search"/>
+            <b-input-group :prepend="$gettext('Filter')">
+              <b-form-input :class="{ highlighted: table.filters.search && table.filters.search.length }"  v-model="table.filters.search"/>
             </b-input-group>
           </div>
           <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -191,8 +191,8 @@
             <span v-translate>Substances - annex group F/II</span>
           </h4>
           <div v-show="tableFII.tableFilters" class="table-filters">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input v-model="tableFII.filters.search"/>
+            <b-input-group :prepend="$gettext('Filter')">
+              <b-form-input :class="{ highlighted: tableFII.filters.search && tableFII.filters.search.length }" v-model="tableFII.filters.search"/>
             </b-input-group>
           </div>
           <i @click="tableFII.tableFilters = !tableFII.tableFilters" class="fa fa-filter fa-lg"></i>
@@ -364,8 +364,8 @@
             <span v-translate>Blends</span>
           </h4>
           <div v-show="tableBlends.tableFilters" class="table-filters">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input v-model="tableBlends.filters.search"/>
+            <b-input-group :prepend="$gettext('Filter')">
+              <b-form-input :class="{ highlighted: tableBlends.filters.search && tableBlends.filters.search.length }" v-model="tableBlends.filters.search"/>
             </b-input-group>
           </div>
           <i
