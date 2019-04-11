@@ -79,7 +79,7 @@ const getLabels = ($gettext) => {
       decision_other_uses: $gettext('Other/Unspecified'),
       quantity_total_produced: $gettext('Total production for all uses'),
       quantity_feedstock: $gettext('Production for feedstock uses within your country'),
-      quantity_article_5: $gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5'),
+      quantity_article_5: $gettext('Production for BDN for A5 Parties'),
       substance: $gettext('Substances'),
       quantity_exempted: $gettext('Production for exempted essential, critical or other uses within your country'),
       decision: $gettext('Decision'),

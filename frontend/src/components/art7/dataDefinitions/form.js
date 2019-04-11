@@ -384,7 +384,7 @@ const getFormArt7 = ($gettext) => {
             name: 'decision_exempted'
           },
           {
-            label: `(7) <br> ${$gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5')}`,
+            label: `(7) <br> ${$gettext('Production for BDN for A5 Parties')}`,
             name: 'quantity_article_5'
           },
           {
