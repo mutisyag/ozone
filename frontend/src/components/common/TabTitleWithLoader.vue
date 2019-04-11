@@ -5,9 +5,9 @@
     <div v-if="tabStatus === 'saving'" class="spinner">
       <div class="loader"></div>
     </div>
-    <i v-if="tabStatus === false" style="color: red;" class="fa fa-times-circle fa-lg"></i>
-    <i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle fa-lg"></i>
-    <i v-if="tabStatus === 'edited'" class="fa fa-edit fa-lg"></i>
+    <i v-if="tabStatus === false" style="color: red;" class="fa fa-exclamation-circle"></i>
+    <i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle"></i>
+    <i v-if="tabStatus === 'edited'" class="fa fa-edit"></i>
   </div>
 </template>
 
@@ -54,6 +54,7 @@ export default {
 
 .tab-title i {
   margin-left: 5px;
+  margin-top: 5px;
 }
 /* Safari */
 @-webkit-keyframes spin {

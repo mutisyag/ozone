@@ -38,7 +38,7 @@
         <span v-translate>Operation in progress</span>
       </div>
       <div>
-        <i style="color: red;" class="fa fa-times-circle fa-lg"></i> &nbsp;
+        <i style="color: red;" class="fa fa-exclamation-circle fa-lg"></i> &nbsp;
         <span v-translate>Validation errors</span>
       </div>
       <div>
