@@ -1193,16 +1193,12 @@ class Submission(models.Model):
         """
 
         # Find the substance groups in this submission.
-        # TODO: for non-Art 7 these may not be populated right!
         reported_groups = [
             value for key, value in self.GROUP_FLAGS_MAPPING.items()
             if getattr(self, key, False) is True
         ]
         groups = Group.objects.filter(group_id__in=reported_groups)
 
-        # TODO: do this only for the needed related fields (e.g. art 7).
-        # RELATED_DATA might have a submission type mapping
-        # TODO: maybe also do this based on questionnaire?
         for related in self.RELATED_DATA:
             related_manager = getattr(self, related)
             if related_manager.count() > 0:
