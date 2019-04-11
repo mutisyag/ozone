@@ -81,12 +81,15 @@ class Command(BaseCommand):
                             or baseline2.baseline is None
                         ):
                             continue
-                        days1 = (cm1.end_date - period.start_date).days
-                        days2 = (period.end_date - cm2.start_date).days
-                        limit = (
-                            baseline1.baseline * cm1.allowed * days1
-                            + baseline2.baseline * cm2.allowed * days2
-                        ) / (period.end_date - period.start_date).days
+                        days1 = (cm1.end_date - period.start_date).days + 1
+                        days2 = (period.end_date - cm2.start_date).days + 1
+                        limit = round(
+                            (
+                                baseline1.baseline * cm1.allowed * days1
+                                + baseline2.baseline * cm2.allowed * days2
+                            ) / ((period.end_date - period.start_date).days + 1),
+                            2
+                        )
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
