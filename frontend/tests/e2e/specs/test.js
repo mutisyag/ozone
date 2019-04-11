@@ -216,7 +216,7 @@ module.exports = {
     addEntity(browser, 'has_produced_tab', 'substance', ['AI', 'CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_produced_tab', 1, row_values_e1, modal_values, start_column)
 
-    addEntity(browser, 'has_produced_tab', 'substance', ['FII', 'HFC-23'], 1, true)
+    addEntity(browser, 'has_produced_tab', 'substance', ['F', 'HFC-23'], 1, true)
     addValues(browser, 'fii-table', 'has_produced_tab', 1, row_values_e2, modal_values, start_column)
 
     addComment(browser, 'has_produced_tab', 'Hakuna Matata')
@@ -367,7 +367,7 @@ module.exports = {
     const formula = 'CFCl3'
 
     login(browser, 'party', 'party')
-    openLookupTable(browser, 'Controlled substances')
+    openLookupTable(browser, 'Substances')
     filterEntity(browser, 'controlled_substances', [group, name, formula])
     logout(browser)
     browser.end()
