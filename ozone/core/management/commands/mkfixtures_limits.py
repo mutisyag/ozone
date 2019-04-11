@@ -4,6 +4,7 @@ import os
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 
 from ozone.core.models import (
     Baseline,
@@ -39,8 +40,9 @@ class Command(BaseCommand):
                 cm_queryset = ControlMeasure.objects.filter(
                     group=group,
                     party_type=party_type,
-                    end_date__gte=period.start_date,
                     start_date__lte=period.end_date
+                ).filter(
+                    Q(end_date__gte=period.start_date) | Q(end_date__isnull=True)
                 ).order_by('start_date')
                 for limit_type in LimitTypes:
                     cm_queryset_by_limit_type = cm_queryset.filter(
