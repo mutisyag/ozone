@@ -259,7 +259,11 @@ class AggregationMixin:
                 submission, group, cls.AGGREGATION_MAPPING.keys()
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                setattr(aggregation, aggr_field, values[model_field])
+                # Add with existing value, as a field in the aggregation table
+                # may be populated by aggregating values from several other
+                # fields in the data models.
+                value = getattr(aggregation, aggr_field) + values[model_field]
+                setattr(aggregation, aggr_field, value)
 
             # This will automatically trigger the calculation of computed values
             aggregation.save()
@@ -660,6 +664,13 @@ class Article7NonPartyTrade(
         'quantity_export_new',
         'quantity_export_recovered',
     ]
+
+    AGGREGATION_MAPPING = {
+        'quantity_import_new': 'non_party_import',
+        'quantity_import_recovered': 'non_party_import',
+        'quantity_export_new': 'non_party_export',
+        'quantity_export_recovered': 'non_party_export',
+    }
 
     trade_party = models.ForeignKey(
         Party, blank=True, null=True, on_delete=models.PROTECT
