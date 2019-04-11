@@ -71,12 +71,6 @@ class ProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
-    # Consumption
-    # TODO: what is the data source for this??? Is there a formula???
-    consumption_lab_uses = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
     # Destruction
     destroyed = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
@@ -136,56 +130,13 @@ class ProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
-    # Non-party
-    # TODO: are these values an aggregation of art7 non-party trade?
+    # Non-party: these values are an aggregation of art7 non-party trade
     # ([import/export]_[new/recovered])
-    # From the existing data, it does not look like it!
     non_party_import = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
     non_party_export = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    # Essential Uses
-    # Data source seems to be tbl_Acc_EssenUse in data.xlsx
-    # (it has production and import).
-    # Production.quantity_essential_uses is already aggregated somewhere else
-    # TODO: Clarify
-    essential_uses_production = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    essential_uses_import = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    # BDN prod limit
-    # TODO: populate from control.Limit
-    bdn_prod_limit = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    # Prod transfer
-    # Data source seems to be ProdTransfers table in data.xlsx.
-    # TODO: use data.Transfer table to populate this; fixtures are also needed.
-    prod_transfer = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    # EssenCrit exempted amount
-    essen_crit_exempted_amount = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    # Limits
-    # TODO: to clarify usage with secretariat; for now these are empty
-    limit_prod = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
-
-    limit_cons = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
