@@ -127,7 +127,7 @@
 }
 .table-hover > tbody > tr:hover > td,
 .table-hover > tbody > tr:hover > th {
-  background-color: rgba(0, 0, 0, 0.12);
+  // background-color: rgba(0, 0, 0, 0.12);
 }
 @media screen and (max-width: 768px) {
   .table-responsive-vertical > .table {
@@ -1002,7 +1002,7 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 }
 
 body {
-	background: #eee;
+	background: white;
 }
 .muted {
 	color: #aaa;
@@ -1219,9 +1219,15 @@ body .vdp-datepicker__calendar {
 
 .app-footer {
 	z-index: 1;
+	box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.34);
+	border-top: none;
 }
 
 
 .table-title-index {
 	color: #03A9F4;
+}
+
+.breadcrumb.custom {
+	border-bottom: none;
 }

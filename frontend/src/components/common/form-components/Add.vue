@@ -1,9 +1,9 @@
 <template>
   <div v-if="tabName">
     <div class="container">
-      <h3>
+      <h5 class="mt-2">
         <span v-translate>Add substances</span>
-      </h3>
+      </h5>
       <small>
         <span
           v-translate
