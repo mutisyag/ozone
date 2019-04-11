@@ -121,8 +121,7 @@ class Command(BaseCommand):
                 row["EssenUse"],
                 row["Exported"],
                 row["Destroyed"],
-                self.get_essen_crit_type_raf(
-                    row["SubstID"],
+                self.get_is_emergency_raf(
                     row["Remark"] if row["Remark"] else ""
                 )
             )
@@ -149,17 +148,10 @@ class Command(BaseCommand):
 
         return results
 
-    def get_essen_crit_type_raf(self, substance_id, remark):
-        if substance_id == 194:
-            if re.search('emergency', remark, re.IGNORECASE):
-                return "Emergency Critical"
-            else:
-                return "Critical"
-        else:
-            if re.search('emergency', remark, re.IGNORECASE):
-                return "Emergency Essential"
-            else:
-                return "Essential"
+    def get_is_emergency_raf(self, remark):
+        if re.search('emergency', remark, re.IGNORECASE):
+            return True
+        return False
 
     def load_exemption_sheets(self, filename):
         """
@@ -523,7 +515,7 @@ class Command(BaseCommand):
                     "quantity_used": pk[3],
                     "quantity_exported": pk[4],
                     "quantity_destroyed": pk[5],
-                    "essen_crit_type": EssentialCriticalType.objects.get(name=pk[6]),
+                    "is_emergency": pk[6],
                     "remarks_os": self.get_raf_remarks(entries),
                     "remarks_party": ""
                 },
@@ -618,7 +610,6 @@ class Command(BaseCommand):
                 logger.error("Reporting new unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
 
-            essen_crit_type_id = self.get_essen_crit_type(row["TypeEssenCrit"], row["IsEmergency"])
 
             approved_exemptions.append({
                 "substance_id": substance_id,
@@ -626,22 +617,7 @@ class Command(BaseCommand):
                 "approved_teap_amount": row['ApprTEAP'],
                 "quantity": row["ApprAmt"],
                 "remarks_os": row['Remark'] if row['Remark'] else "",
-                "essen_crit_type_id":  essen_crit_type_id
+                "is_emergency": row["IsEmergency"]
             })
 
         return approved_exemptions
-
-    def get_essen_crit_type(self, essen_crit_type, is_emergency):
-        if essen_crit_type == 'E':
-            if is_emergency:
-                return EssentialCriticalType.objects.get(name="Emergency Essential").pk
-            else:
-                return EssentialCriticalType.objects.get(name="Essential").pk
-        elif essen_crit_type == 'C':
-            if is_emergency:
-                return EssentialCriticalType.objects.get(name="Emergency Critical").pk
-            else:
-                return EssentialCriticalType.objects.get(name="Critical").pk
-
-        # Default
-        return EssentialCriticalType.objects.get(name="Essential").pk

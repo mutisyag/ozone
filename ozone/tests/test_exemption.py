@@ -287,8 +287,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
-        # Default value for EssentialCriticalType is Essential with pk=1.
-        expected_data["essen_crit_type"] = 1
+        # Default value for emergency is False
+        expected_data["is_emergency"] = False
         self.assertEqual(result.json(), [expected_data])
 
     def test_get_reporter(self):
@@ -312,8 +312,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
-        # Default value for EssentialCriticalType is Essential with pk=1.
-        expected_data["essen_crit_type"] = 1
+        # Default value for is_emergency is False
+        expected_data["is_emergency"] = False
         self.assertEqual(result.json(), [expected_data])
 
     def test_update_secretariat(self):
