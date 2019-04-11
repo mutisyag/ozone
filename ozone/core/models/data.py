@@ -191,7 +191,7 @@ class AggregationMixin:
 
     @classmethod
     def get_fields_sum_by_group(
-        cls, submission, group_id, is_odp, is_gwp, field_names
+        cls, submission, group, field_names
     ):
         """
         Returns ODP-based sum of quantities reported for given group_id, for a
@@ -200,16 +200,16 @@ class AggregationMixin:
         def zero_if_none(value):
             return value if value is not None else 0.0
 
-        if is_gwp:
+        if group.is_gwp:
             potential_field = 'substance__gwp'
-        elif is_odp:
+        elif group.is_odp:
             potential_field = 'substance__odp'
 
         # This works both faster and more correctly than using Django's
         # aggregations!
         # One SQL query for all fields.
         fields_values = cls.objects.filter(
-            submission=submission, substance__group__id=group_id
+            submission=submission, substance__group__id=group.id
         ).values(potential_field, *field_names)
 
         return {
@@ -231,17 +231,12 @@ class AggregationMixin:
         # Aggregate
 
         return {
-            group_name: cls.get_fields_sum_by_group(
+            group.name: cls.get_fields_sum_by_group(
                 submission,
-                group_id,
-                is_odp,
-                is_gwp,
+                group,
                 cls.get_quantity_fields()
             )
-            for group_id, group_name, is_odp, is_gwp in
-            Group.objects.all().values_list(
-                'id', 'name', 'is_odp', 'is_gwp'
-            )
+            for group in Group.objects.all()
         }
 
     @classmethod
@@ -261,7 +256,7 @@ class AggregationMixin:
             )
 
             values = cls.get_fields_sum_by_group(
-                submission, group.id, cls.AGGREGATION_MAPPING.keys()
+                submission, group, cls.AGGREGATION_MAPPING.keys()
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
                 setattr(aggregation, aggr_field, values[model_field])
