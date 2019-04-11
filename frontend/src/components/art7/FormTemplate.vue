@@ -6,9 +6,9 @@
     >The data in this form will not be saved because you have selected in the questionnarie "no" for this section</h5>
     <div class="form-sections">
       <div class="table-wrapper">
-        <div class="table-title">
+        <div class="table-title mb-3">
           <h4>
-            {{tab_info.formNumber}}.1
+            <span class="table-title-index mr-1">{{tab_info.formNumber}}.1</span>
             <span v-translate>Substances</span>
           </h4>
           <div v-show="table.tableFilters" class="table-filters">
@@ -18,7 +18,6 @@
           </div>
           <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
-        <hr>
 
         <b-table
           show-empty
@@ -186,9 +185,9 @@
         </b-table>
       </div>
       <div v-if="tabName === 'has_produced'" class="table-wrapper">
-        <div class="table-title">
+        <div class="table-title mb-3">
           <h4>
-            {{tab_info.formNumber}}.1.1
+            <span class="table-title-index mr-1">{{tab_info.formNumber}}.1.1</span>
             <span v-translate>Substances - annex group F/II</span>
           </h4>
           <div v-show="tableFII.tableFilters" class="table-filters">
@@ -198,7 +197,6 @@
           </div>
           <i @click="tableFII.tableFilters = !tableFII.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
-        <hr>
 
         <b-table
           id="fii-table"
@@ -358,9 +356,11 @@
         </b-table>
       </div>
       <div v-if="hasBlends" class="table-wrapper">
-        <div class="table-title">
+        <div class="table-title mb-3">
           <h4 id="blends-table-title">
-            {{tab_info.formNumber}}.2
+            <span class="table-title-index">
+              {{tab_info.formNumber}}.2
+            </span>
             <span v-translate>Blends</span>
           </h4>
           <div v-show="tableBlends.tableFilters" class="table-filters">
@@ -373,7 +373,6 @@
             class="fa fa-filter fa-lg"
           ></i>
         </div>
-        <hr>
 
         <b-table
           show-empty
@@ -527,11 +526,12 @@
       </div>
     </div>
     <div id="tab-comments" class="table-wrapper">
-      <h4>
-        {{tab_info.formNumber}}.{{tableCounter + 1}}
+      <h4 class="mb-3">
+        <span class="table-title-index">
+          {{tab_info.formNumber}}.{{tableCounter + 1}}
+        </span>
         <span v-translate>Comments</span>
       </h4>
-      <hr>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"
@@ -549,7 +549,6 @@
         ></textarea>
       </div>
     </div>
-    <hr>
     <AppAside fixed>
       <DefaultAside
         v-on:fillSearch="fillTableSearch($event)"

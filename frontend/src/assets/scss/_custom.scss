@@ -817,7 +817,7 @@ main.main {
 
 .comments-input {
     margin-bottom: 1rem;
-    background: #eee;
+    // background: #eee;
     border-radius: 0.25em;
     label {
       padding: .5rem;
@@ -922,8 +922,8 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 }
 .table-wrapper {
 	padding:1rem;
-	box-shadow: 1px 1px 3px #aaa;
-	margin-bottom: 1rem;
+	// box-shadow: 1px 1px 3px #aaa;
+	// margin-bottom: 1rem;
 }
 .table-wrapper table {
 	margin-bottom: 0;
@@ -1219,4 +1219,9 @@ body .vdp-datepicker__calendar {
 
 .app-footer {
 	z-index: 1;
+}
+
+
+.table-title-index {
+	color: #03A9F4;
 }
