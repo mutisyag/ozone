@@ -57,8 +57,13 @@ class Command(BaseCommand):
                             baseline_type=cm.baseline_type
                         ).first()
                         if not baseline or baseline.baseline is None:
-                            continue
-                        limit = baseline.baseline * cm.allowed
+                            if group.group_id == 'CII' or group.group_id == 'CIII':
+                                baseline = 0
+                            else:
+                                continue
+                        else:
+                            baseline = baseline.baseline
+                        limit = baseline * cm.allowed
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
@@ -82,13 +87,20 @@ class Command(BaseCommand):
                             or not baseline2
                             or baseline2.baseline is None
                         ):
-                            continue
+                            if group.group_id == 'CII' or group.group_id == 'CIII':
+                                baseline1 = 0
+                                baseline2 = 0
+                            else:
+                                continue
+                        else:
+                            baseline1 = baseline1.baseline
+                            baseline2 = baseline2.baseline
                         days1 = (cm1.end_date - period.start_date).days + 1
                         days2 = (period.end_date - cm2.start_date).days + 1
                         limit = round(
                             (
-                                baseline1.baseline * cm1.allowed * days1
-                                + baseline2.baseline * cm2.allowed * days2
+                                baseline1 * cm1.allowed * days1
+                                + baseline2 * cm2.allowed * days2
                             ) / ((period.end_date - period.start_date).days + 1),
                             2
                         )
