@@ -9,6 +9,8 @@
             "description": "Chlorofluorocarbons (CFCs)",
             "control_treaty": 2,
             "report_treaty": 2,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
             "exemption": "Essential use"
@@ -24,6 +26,8 @@
             "description": "Halons",
             "control_treaty": 2,
             "report_treaty": 2,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1994-01-01",
             "exemption": "Essential use"
@@ -39,6 +43,8 @@
             "description": "Other Fully Halogenated CFCs",
             "control_treaty": 3,
             "report_treaty": 3,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
             "exemption": "Essential use"
@@ -54,6 +60,8 @@
             "description": "Carbon Tetrachloride (CTC)",
             "control_treaty": 3,
             "report_treaty": 3,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
             "exemption": "Essential use"
@@ -69,6 +77,8 @@
             "description": "Methyl Chloroform (MC)",
             "control_treaty": 3,
             "report_treaty": 3,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2015-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
             "exemption": "Essential use"
@@ -84,6 +94,8 @@
             "description": "Hydrochlorofluorocarbons (HCFCs)",
             "control_treaty": 4,
             "report_treaty": 3,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2030-01-01",
             "phase_out_year_non_article_5": "2020-01-01",
             "exemption": "Other"
@@ -99,6 +111,8 @@
             "description": "Hydrobromofluorocarbons (HBFCs)",
             "control_treaty": 4,
             "report_treaty": 4,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "1996-01-01",
             "phase_out_year_non_article_5": "1996-01-01",
             "exemption": "Essential use"
@@ -114,6 +128,8 @@
             "description": "Bromochloromethane (BCM)",
             "control_treaty": 6,
             "report_treaty": 6,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2002-01-01",
             "phase_out_year_non_article_5": "2002-01-01",
             "exemption": "Essential use"
@@ -129,6 +145,8 @@
             "description": "Methyl Bromide (MB)",
             "control_treaty": 4,
             "report_treaty": 4,
+            "is_odp": true,
+            "is_gwp": false,
             "phase_out_year_article_5": "2015-01-01",
             "phase_out_year_non_article_5": "2005-01-01",
             "exemption": "Critical use"
@@ -144,6 +162,8 @@
             "description": "Hydrofluorocarbons (HFCs)",
             "control_treaty": 7,
             "report_treaty": 7,
+            "is_odp": false,
+            "is_gwp": true,
             "phase_out_year_article_5": null,
             "phase_out_year_non_article_5": null,
             "exemption": ""

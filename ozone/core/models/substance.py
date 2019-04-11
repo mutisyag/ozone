@@ -64,6 +64,9 @@ class Group(models.Model):
         on_delete=models.PROTECT
     )
 
+    is_odp = models.BooleanField(default=True)
+    is_gwp = models.BooleanField(default=False)
+
     phase_out_year_article_5 = models.DateField(blank=True, null=True)
     phase_out_year_non_article_5 = models.DateField(blank=True, null=True)
 

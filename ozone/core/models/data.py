@@ -11,7 +11,8 @@ from model_utils import FieldTracker
 from .legal import ReportingPeriod
 from .party import Party, PartyRatification
 from .reporting import ModifyPreventionMixin, Submission
-from .substance import BlendComponent, Substance, Blend, Annex, Group
+from .substance import BlendComponent, Substance, Blend, Group
+from .aggregation import ProdCons
 from .utils import model_to_dict
 
 __all__ = [
@@ -167,6 +168,103 @@ class PolyolsMixin:
         super().save(*args, **kwargs)
 
 
+class AggregationMixin:
+    """
+    Used by all data-report classes that need to generate aggregated data.
+    """
+
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
+
+    @classmethod
+    def get_quantity_fields(cls):
+        """
+        Returns list of field names belonging to this model which are used
+        for quantities.
+        Assumes for now that all quantity fields are <FloatField>s
+        """
+        return [
+            field.name
+            for field in cls._meta.get_fields()
+            if field.get_internal_type() == 'FloatField'
+        ]
+
+    @classmethod
+    def get_fields_sum_by_group(
+        cls, submission, group, field_names
+    ):
+        """
+        Returns ODP-based sum of quantities reported for given group_id, for a
+        certain submission.
+        """
+        def zero_if_none(value):
+            return value if value is not None else 0.0
+
+        if group.is_gwp:
+            potential_field = 'substance__gwp'
+        elif group.is_odp:
+            potential_field = 'substance__odp'
+
+        # This works both faster and more correctly than using Django's
+        # aggregations!
+        # One SQL query for all fields.
+        fields_values = cls.objects.filter(
+            submission=submission, substance__group__id=group.id
+        ).values(potential_field, *field_names)
+
+        return {
+            field_name: sum(
+                [
+                    zero_if_none(value[field_name]) * value[potential_field]
+                    for value in fields_values
+                ]
+            )
+            for field_name in field_names
+        }
+
+    @classmethod
+    def get_aggregated_data(cls, submission):
+        """
+        Calculates aggregated ODP values, for all the model's quantity fields,
+        on the specified submission, broken down by annex group.
+        """
+        # Aggregate
+
+        return {
+            group.name: cls.get_fields_sum_by_group(
+                submission,
+                group,
+                cls.get_quantity_fields()
+            )
+            for group in Group.objects.all()
+        }
+
+    @classmethod
+    def fill_aggregated_data(cls, submission=None, reported_groups=[]):
+        # Aggregations are unique per Party/Period/AnnexGroup. We need to
+        # iterate over the substance groups in this submission.
+
+        if not hasattr(cls, 'AGGREGATION_MAPPING'):
+            return
+
+        for group in reported_groups:
+            # Find an aggregation if one is already created
+            aggregation, created = ProdCons.objects.get_or_create(
+                party=submission.party,
+                reporting_period=submission.reporting_period,
+                group=group
+            )
+
+            values = cls.get_fields_sum_by_group(
+                submission, group, cls.AGGREGATION_MAPPING.keys()
+            )
+            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                setattr(aggregation, aggr_field, values[model_field])
+
+            # This will automatically trigger the calculation of computed values
+            aggregation.save()
+
+
 class BaseReport(models.Model):
     """
     This will be used as a base for all reporting models.
@@ -192,8 +290,8 @@ class BaseReport(models.Model):
 
     ordering_id = models.IntegerField(
         default=0,
-        help_text="This allows the interface to keep the data entries in their original "
-                  "order, as given by the user."
+        help_text="This allows the interface to keep the data entries in their "
+                  "original order, as given by the user."
     )
 
     class Meta:
@@ -372,8 +470,8 @@ class Article7Questionnaire(ModifyPreventionMixin, models.Model):
 
 
 class Article7Export(
-    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
-    BaseImportExportReport, BaseUses
+    AggregationMixin, ModifyPreventionMixin, PolyolsMixin,
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on exports.
@@ -396,6 +494,16 @@ class Article7Export(
         'quantity_other_uses',
     ]
 
+    # {aggregation_field: data_field_1, ...}
+    AGGREGATION_MAPPING = {
+        'quantity_total_new': 'export_new',
+        'quantity_total_recovered': 'export_recovered',
+        'quantity_feedstock': 'export_feedstock',
+        'quantity_essential_uses': 'export_essential_uses',
+        'quantity_quarantine_pre_shipment': 'export_quarantine',
+        'quantity_process_agent_uses': 'export_process_agent'
+    }
+
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
 
@@ -412,8 +520,8 @@ class Article7Export(
 
 
 class Article7Import(
-    ModifyPreventionMixin, PolyolsMixin, BaseBlendCompositionReport,
-    BaseImportExportReport, BaseUses
+    AggregationMixin, ModifyPreventionMixin, PolyolsMixin,
+    BaseBlendCompositionReport, BaseImportExportReport, BaseUses
 ):
     """
     Model for a simple Article 7 data report on imports.
@@ -436,6 +544,17 @@ class Article7Import(
         'quantity_other_uses',
     ]
 
+    # {aggregation_field: data_field_1, ...}
+    AGGREGATION_MAPPING = {
+        'quantity_total_new': 'import_new',
+        'quantity_total_recovered': 'import_recovered',
+        'quantity_feedstock': 'import_feedstock',
+        'quantity_essential_uses': 'import_essential_uses',
+        'quantity_laboratory_analytical_uses': 'import_laboratory_uses',
+        'quantity_quarantine_pre_shipment': 'import_quarantine',
+        'quantity_process_agent_uses': 'import_process_agent'
+    }
+
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()
 
@@ -451,12 +570,25 @@ class Article7Import(
         db_table = 'reporting_art7_imports'
 
 
-class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
+class Article7Production(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseReport, BaseUses
+):
     """
     Model for a simple Article 7 data report on production.
 
     All quantities expressed in metric tonnes.
     """
+
+    AGGREGATION_MAPPING = {
+        'quantity_total_produced': 'production_all_new',
+        'quantity_feedstock': 'production_feedstock',
+        'quantity_essential_uses': 'production_essential_uses',
+        'quantity_laboratory_analytical_uses': 'production_laboratory_analytical_uses',
+        'quantity_article_5': 'production_article_5',
+        'quantity_quarantine_pre_shipment': 'production_quarantine',
+        'quantity_process_agent_uses': 'production_process_agent',
+    }
 
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
@@ -481,7 +613,10 @@ class Article7Production(ModifyPreventionMixin, BaseReport, BaseUses):
         db_table = 'reporting_art7_production'
 
 
-class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
+class Article7Destruction(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseBlendCompositionReport
+):
     """
     Model for a simple Article 7 data report on destruction.
 
@@ -495,6 +630,10 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
         'quantity_destroyed',
     ]
 
+    AGGREGATION_MAPPING = {
+        'quantity_destroyed': 'destroyed',
+    }
+
     quantity_destroyed = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -503,7 +642,10 @@ class Article7Destruction(ModifyPreventionMixin, BaseBlendCompositionReport):
         db_table = 'reporting_art7_destruction'
 
 
-class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
+class Article7NonPartyTrade(
+    AggregationMixin, ModifyPreventionMixin,
+    BaseBlendCompositionReport
+):
     """
     Model for a simple Article 7 data report on non-party trade.
 
@@ -519,7 +661,9 @@ class Article7NonPartyTrade(ModifyPreventionMixin, BaseBlendCompositionReport):
         'quantity_export_recovered',
     ]
 
-    trade_party = models.ForeignKey(Party, blank=True, null=True, on_delete=models.PROTECT)
+    trade_party = models.ForeignKey(
+        Party, blank=True, null=True, on_delete=models.PROTECT
+    )
 
     quantity_import_new = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
