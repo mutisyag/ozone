@@ -24,7 +24,7 @@ case "$1" in
     run)
         exec uwsgi uwsgi.ini
         ;;
-    runsever)
+    runserver)
         exec python manage.py runserver 0.0.0.0:${REPORTEK_GUNICORN_PORT:-8000}
         ;;
     *)
