@@ -2,7 +2,7 @@ import uuid
 
 import adminactions.actions as actions
 
-from django_admin_listfilter_dropdown.filters import DropdownFilter
+from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.admin.forms import AdminAuthenticationForm
@@ -11,6 +11,7 @@ from django.contrib.admin import AdminSite
 from django.contrib.admin import site
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
+from django.db.models import F, Subquery
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.html import format_html
@@ -122,6 +123,14 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
         return request.user.is_active
 
 
+def custom_title_dropdown_filter(title):
+    class Wrapper(DropdownFilter):
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.title = title
+    return Wrapper
+
+
 # Meeting-related models
 @admin.register(Meeting)
 class MeetingAdmin(admin.ModelAdmin):
@@ -142,22 +151,47 @@ class RegionAdmin(admin.ModelAdmin):
 
 @admin.register(Subregion)
 class SubregionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'abbr')
+    list_display = ('name', 'abbr', 'region')
     list_filter = ('region',)
     search_fields = ["abbr", "name"]
 
 
+class MainPartyFilter(RelatedDropdownFilter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.lookup_choices = Party.objects.filter(
+            parent_party__id=F('id'),
+        ).order_by('name').values_list('id', 'name')
+
+
+class ParentPartyFilter(RelatedDropdownFilter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.lookup_choices = Party.objects.filter(
+            id__in=Subquery(Party.objects.exclude(
+                parent_party__id=F('id'),
+            ).values('parent_party_id'))
+        ).order_by('name').values_list('id', 'name')
+
+
 @admin.register(Party)
 class PartyAdmin(admin.ModelAdmin):
-    list_display = ('name', 'abbr', 'subregion')
-    list_filter = ('subregion',)
+    list_display = ('name', 'abbr', 'subregion', 'parent_party')
+    list_filter = (
+        'subregion__region', 'subregion',
+        ('parent_party', ParentPartyFilter)
+    )
     search_fields = ['name', 'abbr']
 
 
 @admin.register(PartyHistory)
 class PartyHistoryAdmin(admin.ModelAdmin):
     list_display = ('party', 'reporting_period', 'party_type')
-    list_filter = ('party_type', ('reporting_period__name', DropdownFilter))
+    list_filter = (
+        'party_type',
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter),
+    )
     search_fields = ["party__name"]
 
 
@@ -182,8 +216,11 @@ class SubstanceAdmin(admin.ModelAdmin):
 
 @admin.register(Blend)
 class BlendAdmin(admin.ModelAdmin):
-    list_display = ('blend_id', 'composition', 'type')
-    list_filter = ('type',)
+    list_display = ('blend_id', 'composition', 'type', 'party')
+    list_filter = (
+        'type',
+        ('party', MainPartyFilter),
+    )
     search_fields = ['blend_id']
 
 
@@ -191,6 +228,10 @@ class BlendAdmin(admin.ModelAdmin):
 class BlendComponentAdmin(admin.ModelAdmin):
     list_display = ('blend', 'substance', 'percentage')
     search_fields = ['blend__blend_id', 'substance__name']
+    list_filter = (
+        ('blend__blend_id', DropdownFilter),
+        'blend__type',
+    )
 
 
 # Reporting-related models
@@ -198,6 +239,10 @@ class BlendComponentAdmin(admin.ModelAdmin):
 class ReportingPeriodAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_date', 'end_date')
     search_fields = ["name"]
+    list_filter = (
+        'is_reporting_open',
+    )
+    ordering = ('-end_date',)
 
 
 @admin.register(Obligation)
@@ -274,8 +319,8 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'party', 'reporting_period', 'obligation')
     list_filter = (
         'obligation',
-        ('reporting_period__name', DropdownFilter),
-        ('party__name', DropdownFilter)
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter)
     )
     search_fields = ['party__name']
 
@@ -293,8 +338,8 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
     list_filter = (
         'submission_format',
         'submission__obligation',
-        ('submission__reporting_period__name', DropdownFilter),
-        ('submission__party__name', DropdownFilter)
+        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__party__name',)
 
@@ -310,6 +355,7 @@ class ReportingChannelAdmin(admin.ModelAdmin):
 @admin.register(SubmissionFormat)
 class SubmissionFormatAdmin(admin.ModelAdmin):
     pass
+
 
 @admin.register(BaselineType)
 class BaselineTypeAdmin(admin.ModelAdmin):
@@ -329,7 +375,7 @@ class BaselineAdmin(admin.ModelAdmin):
     list_display = (
         'party', 'group', 'baseline_type', 'baseline',
     )
-    list_filter = ('group', 'baseline_type', ('party__name', DropdownFilter))
+    list_filter = ('group', 'baseline_type', ('party', MainPartyFilter))
     search_fields = ["party__name"]
 
 
@@ -340,10 +386,11 @@ class LimitAdmin(admin.ModelAdmin):
     )
     list_filter = (
         'group', 'limit_type',
-        ('reporting_period__name', DropdownFilter),
-        ('party__name', DropdownFilter)
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter)
     )
     search_fields = ['party__name', 'party__abbr']
+
 
 # register all adminactions
 actions.add_to_site(site)
