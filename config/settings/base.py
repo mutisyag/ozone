@@ -107,6 +107,7 @@ THIRD_PARTY_APPS = [
     'django_filters',
     'simple_history',
     'oauth2_provider',
+    'django_admin_listfilter_dropdown',
 ]
 LOCAL_APPS = [
     # Your stuff: custom apps go here

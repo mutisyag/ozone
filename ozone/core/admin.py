@@ -1,5 +1,6 @@
 import uuid
 
+from django_admin_listfilter_dropdown.filters import DropdownFilter
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.admin.forms import AdminAuthenticationForm
@@ -200,7 +201,7 @@ class PartyHistoryAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
     list_display = ('party', 'reporting_period', 'party_type')
-    list_filter = ('party_type', 'reporting_period')
+    list_filter = ('party_type', ('reporting_period__name', DropdownFilter))
     search_fields = ["party__name"]
     resource_class = PartyHistoryResource
 
@@ -341,7 +342,11 @@ class SubmissionAdmin(
     ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
 ):
     list_display = ('__str__', 'party', 'reporting_period', 'obligation')
-    list_filter = ('obligation', 'reporting_period', 'party')
+    list_filter = (
+        'obligation',
+        ('reporting_period__name', DropdownFilter),
+        ('party__name', DropdownFilter)
+    )
     search_fields = ['party__name']
     resource_class = SubmissionResource
 
@@ -361,8 +366,8 @@ class SubmissionInfoAdmin(
     list_filter = (
         'submission_format',
         'submission__obligation',
-        'submission__reporting_period',
-        'submission__party'
+        ('submission__reporting_period__name', DropdownFilter),
+        ('submission__party__name', DropdownFilter)
     )
     search_fields = ('submission__party__name',)
     resource_class = SubmissionInfoResource
@@ -412,7 +417,7 @@ class BaselineAdmin(
     list_display = (
         'party', 'group', 'baseline_type', 'baseline',
     )
-    list_filter = ('group', 'baseline_type', 'party')
+    list_filter = ('group', 'baseline_type', ('party__name', DropdownFilter))
     search_fields = ["party__name"]
     resource_class = BaselineResource
 
@@ -424,6 +429,10 @@ class LimitAdmin(
     list_display = (
         'party', 'group', 'reporting_period', 'limit_type', 'limit',
     )
-    list_filter = ('group', 'limit_type', 'reporting_period', 'party')
+    list_filter = (
+        'group', 'limit_type',
+        ('reporting_period__name', DropdownFilter),
+        ('party__name', DropdownFilter)
+    )
     search_fields = ['party__name', 'party__abbr']
     resource_class = LimitResource
