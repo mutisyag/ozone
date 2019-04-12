@@ -30,7 +30,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.viewsets import GenericViewSet
 
-from ..exceptions import InvalidRequest, Forbidden
+from ..exceptions import InvalidRequest
 
 from ..models import (
     Region,
@@ -39,7 +39,6 @@ from ..models import (
     ReportingPeriod,
     ReportingChannel,
     Obligation,
-    SubmissionFormat,
     Submission,
     SubmissionInfo,
     SubmissionFile,
@@ -61,6 +60,7 @@ from ..models import (
     ExemptionApproved,
     RAFReport,
     SubmissionFormat,
+    ProdCons
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -73,6 +73,7 @@ from ..permissions import (
     IsCorrectObligation,
     IsSecretariatOrSamePartyUser,
     IsSecretariatOrSafeMethod,
+    IsSecretariatOrSamePartyAggregation,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -113,6 +114,7 @@ from ..serializers import (
     ExemptionApprovedSerializer,
     RAFSerializer,
     SubmissionFormatSerializer,
+    AggregationSerializer,
 )
 
 
@@ -175,7 +177,7 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             return queryset
         else:
             # Party user
-            if queryset is not None and queryset.model == Submission:
+            if queryset is not None and queryset.model in (Submission, ProdCons):
                 return queryset.filter(party=request.user.party)
             elif queryset is not None:
                 return queryset.filter(submission__party=request.user.party)
@@ -346,6 +348,57 @@ class UserViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
+
+
+class AggregationPaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class AggregationViewFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    group = filters.NumberFilter(
+        "group", help_text="Filter by Annex Group ID"
+    )
+
+
+class AggregationViewSet(viewsets.ModelViewSet):
+    # Will only allow GET for now on this view
+    http_method_names = ['get']
+
+    queryset = ProdCons.objects.all().prefetch_related(
+        "reporting_period", "party", "group"
+    )
+    serializer_class = AggregationSerializer
+
+    filter_backends = (
+        IsOwnerFilterBackend,
+        filters.DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    )
+    filterset_class = AggregationViewFilterSet
+    search_fields = (
+        "party__name", "reporting_period__name"
+    )
+    ordering_fields = {
+        "party": "party",
+        "reporting_period": "reporting_period",
+        "group": "group",
+    }
+    ordering = ("-reporting_period", "party", "group")
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSamePartyAggregation,
+    )
+    pagination_class = AggregationPaginator
+
+    def get_queryset(self):
+        return ProdCons.objects.all().prefetch_related(
+            "reporting_period", "party", "group"
+        )
 
 
 class SubmissionPaginator(PageNumberPagination):

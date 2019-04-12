@@ -140,6 +140,38 @@ class ProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
+    # Prod transfer
+    prod_transfer = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    # Baselines
+    baseline_prod = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    baseline_cons = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    baseline_bdn = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    # Limits
+    # TODO: to clarify usage with secretariat; for now these are empty
+    limit_prod = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    limit_cons = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
+    limit_bdn = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+
     # Totals computed based on the above fields.
     # Though these could have been implemented as properties (as they can be
     # deterministically derived from the values of the above fields), having
@@ -152,6 +184,18 @@ class ProdCons(models.Model):
     calculated_consumption = models.FloatField(
         null=True, blank=True, default=None
     )
+
+    @staticmethod
+    def has_read_rights_for_party(party, user):
+        if (
+            user.is_secretariat
+            or user.party is not None and user.party == party
+        ):
+            return True
+        return False
+
+    def has_read_rights(self, user):
+        return self.has_read_rights_for_party(self.party, user)
 
     @property
     def is_european_union(self):

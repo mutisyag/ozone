@@ -3,7 +3,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Blend, Submission, Party
+from .models import Blend, Submission, Party, ProdCons
 
 
 User = get_user_model()
@@ -232,3 +232,20 @@ class IsSecretariatOrSafeMethod(BasePermission):
             return True
 
         return request.user.is_secretariat
+
+
+class IsSecretariatOrSamePartyAggregation(BasePermission):
+    """
+    This is used for evaluating permissions on aggregation views.
+
+    For now at least, aggregation views are read-only.
+    """
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        if request.method not in SAFE_METHODS:
+            return False
+        return obj.has_read_rights(request.user)

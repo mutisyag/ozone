@@ -43,6 +43,7 @@ from .models import (
     RAFReport,
     RAFImport,
     SubmissionFormat,
+    ProdCons,
 )
 
 User = get_user_model()
@@ -1631,3 +1632,10 @@ class AuthTokenByValueSerializer(serializers.ModelSerializer):
     @staticmethod
     def get_expires(obj):
         return obj.created + settings.TOKEN_EXPIRE_INTERVAL
+
+
+class AggregationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdCons
+        fields = "__all__"
