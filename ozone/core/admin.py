@@ -1,11 +1,14 @@
 import uuid
 
+import adminactions.actions as actions
+
 from django_admin_listfilter_dropdown.filters import DropdownFilter
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import AdminSite
+from django.contrib.admin import site
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.shortcuts import redirect
@@ -14,12 +17,6 @@ from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
-
-from import_export.admin import (
-    ImportExportActionModelAdmin,
-    ImportExportModelAdmin,
-    ImportExportMixin,
-)
 
 # Register your models here.
 from .models import (
@@ -47,31 +44,7 @@ from .models import (
     Baseline,
     Limit,
 )
-from .resources import (
-    MeetingResource,
-    TreatyResource,
-    SubstanceResource,
-    PartyResource,
-    DecisionResource,
-    RegionResource,
-    SubregionResource,
-    PartyHistoryResource,
-    AnnexResource,
-    GroupResource,
-    BlendResource,
-    BlendComponentResource,
-    ReportingPeriodResource,
-    ObligationResource,
-    LanguageResource,
-    SubmissionResource,
-    SubmissionInfoResource,
-    ReportingChannelResource,
-    SubmissionFormatResource,
-    BaselineTypeResource,
-    ControlMeasureResource,
-    BaselineResource,
-    LimitResource,
-)
+
 
 User = get_user_model()
 
@@ -151,131 +124,90 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
 
 # Meeting-related models
 @admin.register(Meeting)
-class MeetingAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class MeetingAdmin(admin.ModelAdmin):
     list_display = ('meeting_id', 'description', 'location', 'start_date', 'end_date')
     search_fields = ["meeting_id", "description"]
-    resource_class = MeetingResource
 
 
 @admin.register(Treaty)
-class TreatyAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class TreatyAdmin(admin.ModelAdmin):
     list_display = ('name', 'meeting_id', 'date', 'entry_into_force_date')
-    resource_class = TreatyResource
 
 
 # Party-related models
 @admin.register(Region)
-class RegionAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class RegionAdmin(admin.ModelAdmin):
     list_display = ('name', 'abbr')
-    resource_class = RegionResource
 
 
 @admin.register(Subregion)
-class SubregionAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class SubregionAdmin(admin.ModelAdmin):
     list_display = ('name', 'abbr')
     list_filter = ('region',)
     search_fields = ["abbr", "name"]
-    resource_class = SubregionResource
 
 
 @admin.register(Party)
-class PartyAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class PartyAdmin(admin.ModelAdmin):
     list_display = ('name', 'abbr', 'subregion')
     list_filter = ('subregion',)
     search_fields = ['name', 'abbr']
-    resource_class = PartyResource
 
 
 @admin.register(PartyHistory)
-class PartyHistoryAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class PartyHistoryAdmin(admin.ModelAdmin):
     list_display = ('party', 'reporting_period', 'party_type')
     list_filter = ('party_type', ('reporting_period__name', DropdownFilter))
     search_fields = ["party__name"]
-    resource_class = PartyHistoryResource
 
 
 # Substance-related models
 @admin.register(Annex)
-class AnnexAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class AnnexAdmin(admin.ModelAdmin):
     list_display = ('name', 'description')
-    resource_class = AnnexResource
 
 
 @admin.register(Group)
-class GroupAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class GroupAdmin(admin.ModelAdmin):
     list_display = ('group_id', 'name', 'description')
     list_filter = ('annex', 'control_treaty', 'report_treaty')
-    resource_class = GroupResource
 
 
 @admin.register(Substance)
-class SubstanceAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class SubstanceAdmin(admin.ModelAdmin):
     list_display = ('name', 'group', 'description')
     list_filter = ('group',)
     search_fields = ['name', 'description']
-    resource_class = SubstanceResource
 
 
 @admin.register(Blend)
-class BlendAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class BlendAdmin(admin.ModelAdmin):
     list_display = ('blend_id', 'composition', 'type')
     list_filter = ('type',)
     search_fields = ['blend_id']
-    resource_class = BlendResource
 
 
 @admin.register(BlendComponent)
-class BlendComponentAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class BlendComponentAdmin(admin.ModelAdmin):
     list_display = ('blend', 'substance', 'percentage')
     search_fields = ['blend__blend_id', 'substance__name']
-    resource_class = BlendComponentResource
 
 
 # Reporting-related models
 @admin.register(ReportingPeriod)
-class ReportingPeriodAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class ReportingPeriodAdmin(admin.ModelAdmin):
     list_display = ('name', 'start_date', 'end_date')
     search_fields = ["name"]
-    resource_class = ReportingPeriodResource
 
 
 @admin.register(Obligation)
-class ObligationAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class ObligationAdmin(admin.ModelAdmin):
     list_display = ('name',)
     readonly_fields = ['_form_type']
-    resource_class = ObligationResource
 
 
 @admin.register(User)
-class UserAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class UserAdmin(admin.ModelAdmin):
     base_list_display = (
         "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
     )
@@ -338,9 +270,7 @@ class UserAdmin(
 
 
 @admin.register(Submission)
-class SubmissionAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class SubmissionAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'party', 'reporting_period', 'obligation')
     list_filter = (
         'obligation',
@@ -348,7 +278,6 @@ class SubmissionAdmin(
         ('party__name', DropdownFilter)
     )
     search_fields = ['party__name']
-    resource_class = SubmissionResource
 
     def get_readonly_fields(self, request, obj=None):
         self.readonly_fields = []
@@ -359,9 +288,7 @@ class SubmissionAdmin(
 
 
 @admin.register(SubmissionInfo)
-class SubmissionInfoAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class SubmissionInfoAdmin(admin.ModelAdmin):
     list_display = ('__str__', 'reporting_officer', 'country', 'date')
     list_filter = (
         'submission_format',
@@ -370,62 +297,44 @@ class SubmissionInfoAdmin(
         ('submission__party__name', DropdownFilter)
     )
     search_fields = ('submission__party__name',)
-    resource_class = SubmissionInfoResource
 
 
 @admin.register(ReportingChannel)
-class ReportingChannelAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class ReportingChannelAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'description',
         'is_default_party', 'is_default_secretariat', 'is_default_for_cloning',
     )
-    resource_class = ReportingChannelResource
 
 
 @admin.register(SubmissionFormat)
-class SubmissionFormatAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
-    resource_class = SubmissionFormatResource
-
+class SubmissionFormatAdmin(admin.ModelAdmin):
+    pass
 
 @admin.register(BaselineType)
-class BaselineTypeAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class BaselineTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'remarks')
-    resource_class = BaselineTypeResource
 
 
 @admin.register(ControlMeasure)
-class ControlMeasureAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class ControlMeasureAdmin(admin.ModelAdmin):
     list_display = (
         'group', 'party_type', 'limit_type', 'baseline_type', 'start_date', 'end_date', 'allowed',
     )
     list_filter = ('group', 'party_type', 'limit_type', 'baseline_type')
-    resource_class = ControlMeasureResource
 
 
 @admin.register(Baseline)
-class BaselineAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class BaselineAdmin(admin.ModelAdmin):
     list_display = (
         'party', 'group', 'baseline_type', 'baseline',
     )
     list_filter = ('group', 'baseline_type', ('party__name', DropdownFilter))
     search_fields = ["party__name"]
-    resource_class = BaselineResource
 
 
 @admin.register(Limit)
-class LimitAdmin(
-    ImportExportActionModelAdmin, ImportExportMixin, admin.ModelAdmin
-):
+class LimitAdmin(admin.ModelAdmin):
     list_display = (
         'party', 'group', 'reporting_period', 'limit_type', 'limit',
     )
@@ -435,4 +344,6 @@ class LimitAdmin(
         ('party__name', DropdownFilter)
     )
     search_fields = ['party__name', 'party__abbr']
-    resource_class = LimitResource
+
+# register all adminactions
+actions.add_to_site(site)
