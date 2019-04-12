@@ -34,6 +34,7 @@ class Command(BaseCommand):
             party = party_history.party
             party_type = party_history.party_type
             period = party_history.reporting_period
+            print('Processing country {} and period {}'.format(party.name, period.name))
             if period.name == 'BaseA5' or period.name == 'BaseNA5':
                 continue
             for group in Group.objects.all():
