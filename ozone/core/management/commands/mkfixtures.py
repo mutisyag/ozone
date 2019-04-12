@@ -81,8 +81,9 @@ class Command(BaseCommand):
         },
         'baseline': {
             'fixture': 'baselines.json',
-            'sheet': 'Sheet1',
-            'additional_data': {}
+            'sheet': 'tbl_prodcons',
+            'additional_data': {},
+            'prod_transfers': {},
         },
     }
     EXCLUDED = (
@@ -101,6 +102,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         wb = load_workbook(filename=options['file'])
+        print('Excel file loaded.')
 
         # preload existing fixtures for dependent models
         for model in self.MODELS.keys():
@@ -454,6 +456,10 @@ class Command(BaseCommand):
         bdn_groups = ['AI', 'AII', 'BI', 'EI']
         group = row['Anx'] + row['Grp']
         if row['PeriodID'] in additional_periods and group in bdn_groups:
+            if not self.MODELS['baseline']['additional_data'].get(row['CntryID']):
+                self.MODELS['baseline']['additional_data'][row['CntryID']] = {}
+                for bdn_group in bdn_groups:
+                    self.MODELS['baseline']['additional_data'][row['CntryID']][bdn_group] = {}
             self.store_baseline_additional_data(
                 row['CntryID'],
                 row['PeriodID'],
@@ -461,6 +467,12 @@ class Command(BaseCommand):
                 row['ProdArt5'] if row['ProdArt5'] else 0,
             )
         elif row['PeriodID'] in baseline_periods:
+            if row['PeriodID'] == 'BaseNA5' and row['ProdTransfer']:
+                self.store_baseline_prod_transfers(
+                    row['CntryID'],
+                    group,
+                    row['ProdTransfer']
+                )
             entries = []
             party = self.lookup_id('party', 'abbr', row['CntryID'])
             group = self.lookup_id('group', 'group_id', group)
@@ -487,6 +499,8 @@ class Command(BaseCommand):
             f['baseline'] = row['CalcCons']
             entries.append(f)
 
+            print('Procces country {} for group {}'.format(row['CntryID'], row['Anx'] + row['Grp']))
+
             return entries
         else:
             return
@@ -506,33 +520,31 @@ class Command(BaseCommand):
         }
         """
 
-        if not self.MODELS['baseline']['additional_data'].get(party):
-            self.MODELS['baseline']['additional_data'][party] = {}
-        if not self.MODELS['baseline']['additional_data'][party].get(group):
-            self.MODELS['baseline']['additional_data'][party][group] = {}
         self.MODELS['baseline']['additional_data'][party][group][period] = {
             'ProdArt5': prod,
         }
+
+    def store_baseline_prod_transfers(self, party, group, prod_transfer):
+        self.MODELS['baseline']['prod_transfers'][(party, group)] = prod_transfer
 
     def baseline_additional_data(self, idx):
         entries = []
         bdn_groups = ['AI', 'AII', 'BI', 'EI']
         for party in self.MODELS['baseline']['additional_data'].keys():
-            for group in self.MODELS['baseline']['additional_data'][party].keys():
-                if group not in bdn_groups:
-                    continue
+            for group in bdn_groups:
                 obj = {}
                 obj['model'] = "core.baseline"
                 obj['fields'] = {}
                 obj['fields']['party'] = self.lookup_id('party', 'abbr', party)
                 obj['fields']['group'] = self.lookup_id('group', 'group_id', group)
                 obj['fields']['baseline_type_id'] = self.lookup_id('baselinetype', 'name', 'BDN_NA5')
-                obj['fields']['baseline'] = getattr(self, 'get_bdn_' + group)(
-                    self.MODELS['baseline']['additional_data'][party][group]
-                )
+                data = self.MODELS['baseline']['additional_data'][party][group]
+                data['prod_transfers'] = self.MODELS['baseline']['prod_transfers'].get((party, group))
+                obj['fields']['baseline'] = getattr(self, 'get_bdn_' + group)(data)
                 obj['pk'] = idx
                 entries.append(obj)
                 idx += 1
+                print('Procces additional data country {} for group {}'.format(party, group))
 
         return entries
 
@@ -558,4 +570,7 @@ class Command(BaseCommand):
             if not data.get(period):
                 return
             s += data[period]['ProdArt5']
-        return round(s / len(periods), 2)
+        baseline = round(s / len(periods), 2)
+        if data['prod_transfers']:
+            baseline += data['prod_transfers']
+        return baseline
