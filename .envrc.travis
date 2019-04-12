@@ -1,6 +1,6 @@
-# Test environment settings for direnv [ https://direnv.net/ ]
+# Development environment settings for direnv [ https://direnv.net/ ]
 
-export DJANGO_SETTINGS_MODULE=config.settings.test
+export DJANGO_SETTINGS_MODULE=config.settings.local
 export DJANGO_SECRET_KEY='secret-key'
 export ALLOWED_HOSTS=*
 export DEBUG=yes
