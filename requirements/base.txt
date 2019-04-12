@@ -3,7 +3,6 @@ python-slugify==1.2.5  # https://github.com/un33k/python-slugify
 Pillow==5.1.0  # https://github.com/python-pillow/Pillow
 argon2-cffi==18.1.0  # https://github.com/hynek/argon2_cffi
 redis>=2.10.5  # https://github.com/antirez/redis
-bootstrap-admin==0.4.2
 openpyxl==2.4.9
 xworkflows==1.0.4
 sentry-sdk==0.6.7
@@ -20,7 +19,6 @@ django-environ==0.4.4  # https://github.com/joke2k/django-environ
 django-model-utils==3.1.2  # https://github.com/jazzband/django-model-utils
 django-crispy-forms==1.7.2  # https://github.com/django-crispy-forms/django-crispy-forms
 django-redis==4.9.0  # https://github.com/niwinz/django-redis
-django-import-export==1.1.0
 django-webpack-loader==0.6.0
 django-guardian==1.4.9
 django-filter==2.0.0
@@ -28,6 +26,8 @@ django-oauth-toolkit==1.2.0
 django-simple-history==2.5.1
 django-impersonate==1.4
 django-cors-headers==2.4.0
+django-admin-list-filter-dropdown==1.0.2
+django-adminactions==1.6.0
 
 # Django REST Framework
 djangorestframework==3.8.2  # https://github.com/encode/django-rest-framework

@@ -134,3 +134,6 @@ celerybeat*
 translations
 frontend/public/translations.json
 ozone/media/
+
+# Excel files
+*.xlsx
