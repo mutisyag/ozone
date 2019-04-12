@@ -36,6 +36,8 @@ router.register(r"periods", views.ReportingPeriodViewSet)
 router.register(r"users", views.UserViewSet)
 router.register(r"obligations", views.ObligationViewSet)
 
+router.register(r"aggregations", views.AggregationViewSet)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
