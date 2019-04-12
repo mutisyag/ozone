@@ -43,7 +43,6 @@ from .models import (
     RAFReport,
     RAFImport,
     SubmissionFormat,
-    EssentialCriticalType,
 )
 
 User = get_user_model()
@@ -1013,13 +1012,6 @@ class SubmissionFormatSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SubmissionFormat
-        fields = ('name', )
-
-
-class EssentialCriticalTypeSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = EssentialCriticalType
         fields = ('name', )
 
 

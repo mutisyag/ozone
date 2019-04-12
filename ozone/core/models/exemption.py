@@ -1,8 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 
-from .data import EssentialCriticalType
-from .party import Party
 from .reporting import Submission
 from .substance import Substance
 
@@ -62,11 +60,7 @@ class ExemptionApproved(BaseExemption):
         blank=True, null=True
     )
 
-    essen_crit_type = models.ForeignKey(
-        EssentialCriticalType,
-        default=1,
-        on_delete=models.PROTECT
-    )
+    is_emergency = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'exemption_approved'

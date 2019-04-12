@@ -149,6 +149,8 @@ class Substance(models.Model):
 
     is_captured = models.BooleanField(default=False)
 
+    has_critical_uses = models.BooleanField(default=False)
+
     @property
     def is_qps(self):
         """

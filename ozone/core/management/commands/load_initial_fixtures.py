@@ -25,7 +25,6 @@ class Command(BaseCommand):
         'partiesratification',
         'reporting_channels',
         'submission_formats',
-        'essen_crit_types',
         'baseline_types',
         'control_measures',
         'baselines',

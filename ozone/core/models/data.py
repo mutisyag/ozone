@@ -29,7 +29,6 @@ __all__ = [
     'DataOther',
     'RAFReport',
     'RAFImport',
-    'EssentialCriticalType',
 ]
 
 
@@ -905,18 +904,6 @@ class DataOther(ModifyPreventionMixin, BaseReport):
         db_table = 'reporting_other'
 
 
-class EssentialCriticalType(models.Model):
-    """
-    Describes types of essential and critical uses.
-    """
-
-    name = models.CharField(unique=True, max_length=256)
-    description = models.CharField(max_length=256, blank=True)
-
-    class Meta:
-        db_table = "essen_crit_type"
-
-
 class RAFReport(ModifyPreventionMixin, BaseReport):
     """
     Model for RAF reports.
@@ -928,11 +915,8 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
     # These reports only refer to substances
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
-    essen_crit_type = models.ForeignKey(
-        EssentialCriticalType,
-        default=1,
-        on_delete=models.PROTECT
-    )
+    # criticality is inferred from substance, only emergency flag is needed
+    is_emergency = models.BooleanField(default=False)
 
     quantity_exempted = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True

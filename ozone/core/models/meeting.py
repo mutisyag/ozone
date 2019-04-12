@@ -20,6 +20,7 @@ class ExemptionTypes(enum.Enum):
     HIGH_AMBIENT = 'High ambient'
     PROCESS_AGENT = 'Process agent'
     LABORATORY = 'Laboratory'
+    PRE_96_STOCK = 'Pre 96 Stock'
     OTHER = 'Other'
 
 
