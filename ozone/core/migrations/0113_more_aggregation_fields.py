@@ -7,7 +7,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0111_removing_essen_crit_type'),
+        ('core', '0112_uses_type_table_name'),
     ]
 
     operations = [
