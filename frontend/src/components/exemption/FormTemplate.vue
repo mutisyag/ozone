@@ -8,8 +8,8 @@
             <span v-translate>Substances</span>
           </h4>
           <div v-show="table.tableFilters" class="table-filters">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input v-model="table.filters.search"/>
+            <b-input-group :prepend="$gettext('Filter')">
+              <b-form-input :class="{ highlighted: table.filters.search && table.filters.search.length }" v-model="table.filters.search"/>
             </b-input-group>
           </div>
           <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>

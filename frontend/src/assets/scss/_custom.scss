@@ -1224,10 +1224,11 @@ body .vdp-datepicker__calendar {
 }
 
 
-.table-title-index {
-	color: #03A9F4;
-}
-
 .breadcrumb.custom {
 	border-bottom: none;
+}
+
+input[type="text"].highlighted {
+	background: #ffffc8;
+	color: #444;
 }
