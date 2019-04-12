@@ -403,4 +403,4 @@ class UsesType(models.Model):
 
     class Meta:
         ordering = ('name',)
-        db_table = "user_type"
+        db_table = "uses_type"
