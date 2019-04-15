@@ -247,7 +247,7 @@ const saveAndFail = (browser, submissionInfo) => {
     .click("//footer[@class='app-footer']//button[@id='save-button']")
     .pause(500)
     .execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-times-circle')]", 20000)
+    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-check-circle')]", 20000)
 }
 /**
  * 	editSubmission(browser)
