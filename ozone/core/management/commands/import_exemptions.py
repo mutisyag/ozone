@@ -13,7 +13,6 @@ from ozone.core.models import (
     ReportingChannel,
     RAFReport,
     RAFImport,
-    EssentialCriticalType,
     Obligation,
     Nomination,
     ExemptionApproved,
