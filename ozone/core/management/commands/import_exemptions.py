@@ -543,11 +543,11 @@ class Command(BaseCommand):
                 try:
                     party = self.parties[entry["ImpSrcCntryID"]]
                 except KeyError as e:
-                    logger.error(
-                        "Trying to import from a new unknown party %s: %s/%s for RAFs",
-                        e,
+                    logger.warning(
+                        "RAF (imports): Unknown source party for %s/%s: %s",
+                        entry["CntryID"],
+                        entry["PeriodID"],
                         entry["ImpSrcCntryID"],
-                        entry["PeriodID"]
                     )
                     party = None
                 raf_imports.append({
