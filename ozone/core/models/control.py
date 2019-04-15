@@ -136,7 +136,7 @@ class Limit(models.Model):
     )
 
     class Meta:
-        db_table = 'limit'
+        db_table = 'limit_prod_cons'
 
 
 class ProcessAgentEmissionLimit(models.Model):
@@ -159,4 +159,4 @@ class ProcessAgentEmissionLimit(models.Model):
     remark = models.CharField(max_length=9999, blank=True)
 
     class Meta:
-        db_table = 'pa_emission_limit'
+        db_table = 'limit_pa_emission'
