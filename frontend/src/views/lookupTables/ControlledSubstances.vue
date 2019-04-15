@@ -172,7 +172,6 @@ export default {
       this.table.currentPage = 1
     },
     filterCallback(substance) {
-      console.log(substance)
       const { filters } = this.table
       if (filters.searchGroup) {
         if (
