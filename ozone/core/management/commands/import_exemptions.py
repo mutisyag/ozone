@@ -609,14 +609,13 @@ class Command(BaseCommand):
                 logger.error("Reporting new unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
 
-
             approved_exemptions.append({
                 "substance_id": substance_id,
                 "decision_approved": row['ApprDec'],
                 "approved_teap_amount": row['ApprTEAP'],
                 "quantity": row["ApprAmt"],
                 "remarks_os": row['Remark'] if row['Remark'] else "",
-                "is_emergency": row["IsEmergency"]
+                "is_emergency": row["IsEmergency"] if row["IsEmergency"] else False
             })
 
         return approved_exemptions
