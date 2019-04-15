@@ -175,7 +175,8 @@ export default {
             groupName: this.group_field.name,
             country: null,
             blendList: null,
-            prefillData: null
+            prefillData: null,
+            critical: this.$store.getters.getCriticalSubstances(subst)
           })
         }
       }

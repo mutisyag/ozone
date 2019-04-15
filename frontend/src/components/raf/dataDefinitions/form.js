@@ -18,7 +18,6 @@ const getFormRaf = ($gettext) => {
         'initialData.submissionFormats',
         'currentUser',
         'permissions.form',
-        'initialData.essenCritTypes',
         'submissionDefaultValues.submission_format'
       ],
       comments_default_properties: {
@@ -62,57 +61,57 @@ const getFormRaf = ($gettext) => {
           return this.section_subheaders.map(x => x.name).filter(x => !['group', 'substance', 'validation', 'imports'].includes(x))
         },
         section_subheaders: [{
-          label: `(1)<br>${$gettext('Annex/group')}`,
+          label: `<br>${$gettext('Annex/group')}`,
           name: 'group',
           colspan: 2
         }, {
-          label: `(2)<br>${$gettext('Ozone depletig substances')}`,
+          label: `B<br>${$gettext('Ozone depletig substances')}`,
           name: 'substance',
           colspan: 2
         }, {
-          label: 'Type of use',
-          name: 'essen_crit_type',
-          isInput: true
-        }, {
-          label: `(3)<br>${$gettext('Amount exempted')}`,
+          label: `C<br>${$gettext('Amount exempted')}`,
           name: 'quantity_exempted',
           isInput: true
         }, {
-          label: `(4)<br>${$gettext('Amount acquired by production')}`,
+          label: `D<br>${$gettext('Amount acquired by production')}`,
           name: 'quantity_production',
           isInput: true
         }, {
-          label: `(5)<br>${$gettext('Amount acquired by import & countries of manufacture')}`,
+          label: `E<br>${$gettext('Amount acquired by import & countries of manufacture')}`,
           name: 'quantity_import'
         }, {
-          label: `(6)<br>${$gettext('Total acquired')}`,
+          label: `F<br>${$gettext('Total acquired')} <br> (D+E)`,
           name: 'quantity_acquired'
         }, {
-          label: `(7)<br>${$gettext('Authorized but not acquired')}`,
+          label: `G<br>${$gettext('Authorized but not acquired')} <br> (C-F)`,
           name: 'quantity_authorized_not_acquired'
         }, {
-          label: `(8)<br>${$gettext('On hand start of the year')}`,
+          label: `H<br>${$gettext('On hand start of the year')}`,
           name: 'on_hand_start_year',
           isInput: true
         }, {
-          label: `(9)<br>${$gettext('Available for use')}`,
+          label: `I<br>${$gettext('Available for use')}<br> (H+F)`,
           name: 'available_for_use',
           isInput: true
         }, {
-          label: `(10)<br>${$gettext('Used')}`,
+          label: `J<br>${$gettext('Used')}`,
           name: 'quantity_used',
           isInput: true
         }, {
-          label: `(11)<br>${$gettext('Amount exported')}`,
+          label: `K<br>${$gettext('Amount exported')}`,
           name: 'quantity_exported',
           isInput: true
         }, {
-          label: `(12)<br>${$gettext('Amount destroyed')}`,
+          label: `L<br>${$gettext('Amount destroyed')}`,
           name: 'quantity_destroyed',
           isInput: true
         }, {
-          label: `(13)<br>${$gettext('On hand end of year')}`,
+          label: `M<br>${$gettext('On hand end of year')}<br>(I-J-L)`,
           name: 'on_hand_end_year'
+        }, {
+          label: `<br>${$gettext('Emergency')}`,
+          name: 'is_emergency',
+          isInput: true
         }, {
           label: `<br>${$gettext('Status')}`,
           name: 'validation'
@@ -140,14 +139,14 @@ const getFormRaf = ($gettext) => {
           'remarks_party': '',
           'remarks_os': '',
           'ordering_id': null,
-          'essen_crit_type': null,
           'quantity_exempted': null,
           'quantity_production': null,
           'quantity_used': null,
           'quantity_exported': null,
           'quantity_destroyed': null,
           'on_hand_start_year': null,
-          'substance': null
+          'substance': null,
+          'is_emergency': null
         }
       },
       flags: {

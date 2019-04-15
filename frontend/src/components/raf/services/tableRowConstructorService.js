@@ -50,7 +50,7 @@ const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) 
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, essen_crit_type
+    $gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, critical
   }) {
     const	baseInnerFields = {
       ordering_id: { selected: ordering_id || 0 },
@@ -73,11 +73,6 @@ export default {
       quantity_exempted: {
         type: 'number',
         selected: null
-      },
-      essen_crit_type: {
-        type: 'select',
-        selected: null,
-        options: essen_crit_type
       },
       quantity_production: {
         type: 'number',
@@ -109,6 +104,10 @@ export default {
           selected: valueConverter(doSum([this.on_hand_start_year.selected], [this.quantity_acquired.selected]))
         }
       },
+      is_emergency: {
+        type: 'checkbox',
+        selected: false
+      },
       quantity_used: {
         type: 'number',
         selected: null
@@ -122,9 +121,10 @@ export default {
         selected: null
       },
       get on_hand_end_year() {
+        const criticalValue = critical ? valueConverter(this.quantity_exported.selected) : 0
         return {
           type: 'nonInput',
-          selected: valueConverter(this.available_for_use.selected) - valueConverter(this.quantity_used.selected) - valueConverter(this.quantity_destroyed.selected)
+          selected: valueConverter(this.available_for_use.selected) - valueConverter(this.quantity_used.selected) - criticalValue - valueConverter(this.quantity_destroyed.selected)
         }
       },
       get validation() {
