@@ -37,6 +37,7 @@ router.register(r"users", views.UserViewSet)
 router.register(r"obligations", views.ObligationViewSet)
 
 router.register(r"aggregations", views.AggregationViewSet)
+router.register(r"limits", views.LimitViewSet)
 
 # Submissions
 submissions_router = routers.SimpleRouter()

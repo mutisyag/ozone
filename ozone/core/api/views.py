@@ -60,7 +60,8 @@ from ..models import (
     ExemptionApproved,
     RAFReport,
     SubmissionFormat,
-    ProdCons
+    ProdCons,
+    Limit,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -74,6 +75,7 @@ from ..permissions import (
     IsSecretariatOrSamePartyUser,
     IsSecretariatOrSafeMethod,
     IsSecretariatOrSamePartyAggregation,
+    IsSecretariatOrSamePartyLimit,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -115,6 +117,7 @@ from ..serializers import (
     RAFSerializer,
     SubmissionFormatSerializer,
     AggregationSerializer,
+    LimitSerializer,
 )
 
 
@@ -397,6 +400,57 @@ class AggregationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ProdCons.objects.all().prefetch_related(
+            "reporting_period", "party", "group"
+        )
+
+
+class LimitPaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class LimitViewFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    group = filters.NumberFilter(
+        "group", help_text="Filter by Annex Group ID"
+    )
+
+
+class LimitViewSet(viewsets.ModelViewSet):
+    # Will only allow GET for now on this view
+    http_method_names = ['get']
+
+    queryset = Limit.objects.all().prefetch_related(
+        "reporting_period", "party", "group"
+    )
+    serializer_class = LimitSerializer
+
+    filter_backends = (
+        IsOwnerFilterBackend,
+        filters.DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
+    )
+    filterset_class = LimitViewFilterSet
+    search_fields = (
+        "party__name", "reporting_period__name"
+    )
+    ordering_fields = {
+        "party": "party",
+        "reporting_period": "reporting_period",
+        "group": "group",
+    }
+    ordering = ("-reporting_period", "party", "group")
+    permission_classes = (
+        IsAuthenticated, IsSecretariatOrSamePartyLimit,
+    )
+    pagination_class = LimitPaginator
+
+    def get_queryset(self):
+        return Limit.objects.all().prefetch_related(
             "reporting_period", "party", "group"
         )
 
