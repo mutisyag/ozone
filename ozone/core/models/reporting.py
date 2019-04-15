@@ -1242,6 +1242,7 @@ class Submission(models.Model):
             raise ValidationError(
                 _("Unable to start reporting for this period.")
             )
+
         if (
             Submission.non_exempted_fields_modified(self)
             and not self.data_changes_allowed
@@ -1249,6 +1250,15 @@ class Submission(models.Model):
             raise ValidationError(
                 _("Unable to change submission because it is already submitted.")
             )
+
+        if (
+            self.flag_confirmed_blanks is True
+            and self.flag_checked_blanks is False
+        ):
+            raise ValidationError(
+                _("Unable to confirm blanks if blanks are not checked first")
+            )
+
         super().clean()
 
     @transaction.atomic
