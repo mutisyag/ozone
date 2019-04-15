@@ -315,6 +315,7 @@ class SubstanceSerializer(serializers.ModelSerializer):
             'id', 'name', 'description', 'sort_order',
             'odp', 'formula', 'number_of_isomers', 'min_odp', 'max_odp',
             'is_qps', 'is_contained_in_polyols', 'is_captured',
+            'has_critical_uses',
         )
 
 
