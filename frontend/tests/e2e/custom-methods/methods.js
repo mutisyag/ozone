@@ -15,9 +15,9 @@ const login = (browser, username, password) => {
     .waitForElementVisible('#id_username', 20000)
     .setValue('#id_username', username)
     .setValue('#id_password', password)
-    .waitForElementVisible('button[type="submit"]', 10000)
+    .waitForElementVisible('input[type="submit"]', 10000)
     .pause(1000)
-    .click('button[type="submit"]')
+    .click('input[type="submit"]')
     .waitForElementVisible('h3', 8000)
     .assert.urlContains('/reporting/dashboard')
 }
