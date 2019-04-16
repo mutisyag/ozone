@@ -738,7 +738,7 @@ class Article7NonPartyTrade(
         return Party.objects.exclude(id__in=signing_party_ids)
 
     def clean(self):
-        if not (
+        if self.submission.schema_version != 'legacy' and not (
             self.quantity_import_new
             or self.quantity_import_recovered
             or self.quantity_export_new
@@ -753,7 +753,10 @@ class Article7NonPartyTrade(
             )
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
-        if not self.blend and self.substance and self.trade_party:
+        if (
+            not self.blend and self.substance and self.trade_party
+            and self.submission.schema_version != 'legacy'
+        ):
             non_parties = self.get_non_parties(self.substance.group_id)
             if self.trade_party not in non_parties:
                 raise ValidationError(
