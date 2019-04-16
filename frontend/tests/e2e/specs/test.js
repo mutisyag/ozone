@@ -36,12 +36,12 @@ module.exports = {
   beforeEach: (browser) => {
     browser.resizeWindow(1480, 900)
     console.log('running backend')
-    // execSync('bash ../utility/setup_backend.sh', { env: process.env })
+    execSync('bash ../utility/setup_backend.sh', { env: process.env })
     console.log('done running backend')
   },
   afterEach: () => {
     console.log('running cleanup')
-    // execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
+    execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
     console.log('done running cleanup')
   },
   BU_001: browser => {
