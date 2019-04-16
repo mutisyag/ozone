@@ -1,7 +1,7 @@
 <template>
   <div>
-    <b-btn @click="getAggregations()" variant="outline-primary">Aggregations</b-btn>
-    <b-modal size="xl" ref="aggregationModal">
+    <b-btn class="square-right" @click="getAggregations()" variant="outline-primary">Aggregations</b-btn>
+    <b-modal :title="$gettext('Aggregation')" id="aggregationModal" size="xl" ref="aggregationModal">
       <AggregationsTable :standalone="false" :aggregations="aggregations"></AggregationsTable>
     </b-modal>
   </div>
@@ -32,3 +32,13 @@ export default {
   }
 }
 </script>
+<style>
+  .square-right {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  #aggregationModal.modal.show .modal-dialog {
+    margin-top: 5rem;
+  }
+</style>
+
