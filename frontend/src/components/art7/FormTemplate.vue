@@ -745,14 +745,14 @@ export default {
 
     fillTableSearch(data) {
       if (data.substance && data.substance === 'HFC-23' && this.tabName === 'has_produced') {
-        this.tableFII.filters.search = `${data.substance} invalid`
+        this.tableFII.filters.search = data.substance
         this.tableFII.tableFilters = true
       } else if (data.substance) {
-        this.table.filters.search = `${data.substance} invalid`
+        this.table.filters.search = data.substance
         this.table.tableFilters = true
       }
       if (data.blend) {
-        this.tableBlends.filters.search = `${data.blend} invalid`
+        this.tableBlends.filters.search = data.blend
         this.tableBlends.tableFilters = true
       }
     },
