@@ -52,10 +52,10 @@ export default {
         { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_prod', label: this.$gettext('Limit') },
         { key: 'baseline_cons', label: this.$gettext('Baseline') },
-        { key: 'calculated_consumption',  label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
+        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_cons', label: this.$gettext('Limit') },
         { key: 'baseline_bdn', label: this.$gettext('Baseline') },
-        { key: 'production_article_5',  label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
+        { key: 'production_article_5', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_bdn', label: this.$gettext('Limit') }
       ]
       return fields
