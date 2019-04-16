@@ -9,7 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
-from .aggregation import ProdCons
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
@@ -241,7 +240,7 @@ class Submission(models.Model):
         'flag_has_reported_c1': 'CI',
         'flag_has_reported_c2': 'CII',
         'flag_has_reported_c3': 'CIII',
-        'flag_has_reported_e': 'E',
+        'flag_has_reported_e': 'EI',
         'flag_has_reported_f': 'F',
     }
 

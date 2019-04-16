@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 f"Run with --confirm to process {Submission.objects.count()} "
                 f"submissions, delete {ProdCons.objects.count()} aggregations "
                 f"and create from scratch around "
-                f"{8 *Submission.objects.count()} aggregations."
+                f"{9*Submission.objects.count()} aggregations."
             )
         else:
             ProdCons.objects.all().delete()
