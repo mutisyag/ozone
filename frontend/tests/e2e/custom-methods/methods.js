@@ -202,7 +202,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   fields.forEach(field => {
     /* Check if submissionInfo has missing fields */
     if (!submissionInfo.hasOwnProperty(field) && autocomplet) {
-      submissionInfo[field] = ''
+      submissionInfo[field] = 'test'
     } 
 
     if (submissionInfo.hasOwnProperty(field)) {
