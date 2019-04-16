@@ -180,7 +180,7 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             return queryset
         else:
             # Party user
-            if queryset is not None and queryset.model in (Submission, ProdCons):
+            if queryset is not None and queryset.model in (Submission, ProdCons, Limit):
                 return queryset.filter(party=request.user.party)
             elif queryset is not None:
                 return queryset.filter(submission__party=request.user.party)
