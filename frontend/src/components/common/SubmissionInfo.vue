@@ -1,29 +1,5 @@
 <template>
   <div v-if="info" class="submission-info-tab">
-    <b-row>
-      <b-col>
-        <b-input-group size="sm" :prepend="info.party.label">
-          <b-form-input
-            :name="info.party.name"
-            :value="$store.state.initialData.display.countries[$store.state.current_submission.party]"
-            :type="info.party.type"
-            :disabled="info.party.disabled"
-          ></b-form-input>
-        </b-input-group>
-      </b-col>
-
-      <b-col>
-        <b-input-group size="sm" :prepend="info.reporting_year.label">
-          <b-form-input
-            :name="info.reporting_year.name"
-            :value="$store.state.current_submission.reporting_period"
-            :type="info.reporting_year.type"
-            :disabled="info.reporting_year.disabled"
-          ></b-form-input>
-        </b-input-group>
-      </b-col>
-    </b-row>
-    <hr>
     <form class="form-sections">
       <b-row>
         <b-col md="7" lg="7">

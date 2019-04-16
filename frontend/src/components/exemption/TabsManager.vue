@@ -4,7 +4,7 @@
       <small style="width: 30%;">
         <b-btn
           style="margin-right:.5rem"
-          variant="info-outline"
+          variant="outline-info"
           @click="createModalData"
           v-show="!selectedTab.hideInfoButton"
         >

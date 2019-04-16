@@ -2,7 +2,7 @@
   <div v-if="tab_info">
     <div class="form-sections">
       <div class="table-wrapper">
-        <div class="table-title">
+        <div class="table-title mb-2">
           <h4>
             {{tab_info.formNumber}}.1
             <span v-translate>Essential use</span>
@@ -14,7 +14,6 @@
           </div>
           <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
-        <hr>
 
         <b-table
           show-empty
@@ -97,7 +96,6 @@
           </div>
           <i @click="tableCritical.tableFilters = !tableCritical.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
-        <hr>
 
         <b-table
           show-empty
@@ -170,11 +168,10 @@
     </div>
 
     <div class="table-wrapper">
-      <h4>
+      <h4 class="mb-2">
         {{tab_info.formNumber}}.{{tableCounter + 1}}
         <span v-translate>Comments</span>
       </h4>
-      <hr>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"

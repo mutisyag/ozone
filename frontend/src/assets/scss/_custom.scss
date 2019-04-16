@@ -940,7 +940,7 @@ body:not(.aside-menu-lg-show) .form-wrapper {
 
 .aside-menu {
 	> div {
-		    display: flex;
+		display: flex;
     flex-direction: column;
     height: 100%;
 	}
@@ -1215,7 +1215,7 @@ body .vdp-datepicker__calendar {
 }
 
 .app-footer {
-	z-index: 1;
+  z-index: 10000;
 	box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.34);
 	border-top: none;
 }
@@ -1240,7 +1240,18 @@ input[type="text"].highlighted {
 	border-collapse: collapse;
 }
 
-  .card-header {
-    border-bottom: none;
-    background-color: white;
-  }
+
+.card-header {
+	border-bottom: none;
+	background-color: white;
+}
+
+.tabs .card-header {
+	background-color: #f0f3f5;
+	border-bottom: 1px solid #c8ced3;
+}
+
+html:not([dir="rtl"]) .aside-menu {
+	margin-right: -300px;
+}
+
