@@ -1186,18 +1186,22 @@ class Submission(models.Model):
             return True
         return False
 
+    def get_reported_groups(self):
+        """
+        Returns the substance groups reported in this submission.
+        """
+        reported_groups = [
+            value for key, value in self.GROUP_FLAGS_MAPPING.items()
+            if getattr(self, key, False) is True
+        ]
+        return Group.objects.filter(group_id__in=reported_groups)
+
     def fill_aggregated_data(self):
         """
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
-
-        # Find the substance groups in this submission.
-        reported_groups = [
-            value for key, value in self.GROUP_FLAGS_MAPPING.items()
-            if getattr(self, key, False) is True
-        ]
-        groups = Group.objects.filter(group_id__in=reported_groups)
+        groups = self.get_reported_groups()
 
         for related in self.RELATED_DATA:
             related_manager = getattr(self, related)
@@ -1206,6 +1210,25 @@ class Submission(models.Model):
                     related_manager.model.fill_aggregated_data(
                         submission=self, reported_groups=groups
                     )
+
+    def get_aggregated_data(self):
+        """
+        Returns list of non-persistent calculated aggregated data for this
+        submission, without touching the database.
+        """
+
+        group_mapping = {group: None for group in self.get_reported_groups()}
+
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'get_aggregated_data'):
+                    related_manager.model.get_aggregated_data(
+                        submission=self, reported_groups=group_mapping
+                    )
+
+        return group_mapping
+
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

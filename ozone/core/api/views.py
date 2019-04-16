@@ -581,18 +581,12 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=["get"])
     def aggregations(self, request, submission_pk=None, pk=None):
-        aggregates = {
-            "article7-imports": Article7Import,
-            "article7-exports": Article7Export,
-            "article7-productions": Article7Production,
-            "article7-destructions": Article7Destruction,
-            "article7-nonpartytrades": Article7NonPartyTrade
-        }
+        sub = Submission.objects.get(pk=pk)
         return Response(
-            {
-                name: klass.get_aggregated_data(Submission.objects.get(pk=pk))
-                for name, klass in aggregates.items()
-            }
+            [
+                AggregationSerializer(aggregation).data
+                for group, aggregation in sub.get_aggregated_data().items()
+            ]
         )
 
 
