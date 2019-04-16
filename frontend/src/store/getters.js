@@ -5,11 +5,16 @@ const sumBiggerThanParts = (state, tab, partyField) => {
   if (!state.form.tabs[tab].form_fields[0].hasOwnProperty(partyField)) return {}
   const multipleSubstances = {}
   const finalError = {}
+
   state.form.tabs[tab].form_fields.forEach(row => {
     multipleSubstances[row.substance.selected] = [...state.form.tabs[tab].form_fields.filter(substance => row.substance.selected === substance.substance.selected)]
   })
+
   Object.keys(multipleSubstances).forEach(key => {
-    if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
+    if (multipleSubstances[key].length <= 1) {
+      delete multipleSubstances[key]
+    }
+    if (multipleSubstances[key] && multipleSubstances[key].length && multipleSubstances[key].every(entry => entry[partyField].selected)) {
       // eslint-disable-next-line eqeqeq
       state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
         field.skipValidation = 0
