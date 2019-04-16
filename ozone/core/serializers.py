@@ -327,7 +327,7 @@ class GroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('group_id', 'substances')
+        fields = ('id', 'group_id', 'substances')
 
 
 class BlendComponentSerializer(serializers.ModelSerializer):
