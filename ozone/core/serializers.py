@@ -874,6 +874,22 @@ class RAFListSerializer(
     substance_blend_fields = ['substance', ]
     unique_with = None
 
+    imports = RAFImportSerializer(many=True)
+
+    def create_single(self, data, instance, submission):
+        """
+        Creates a single entry taking into account the special "imports" case
+        """
+        imports = data.pop('imports')
+        res = super().create_single(data, instance, submission)
+
+        for value_entry in imports:
+            RAFImport.objects.create(
+                report=res, **value_entry
+            )
+
+        return res
+
     def update_single(self, existing_entry, entry):
         """
         Updates a single entry taking into account the special "imports" case
