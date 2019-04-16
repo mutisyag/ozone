@@ -221,23 +221,6 @@ class AggregationMixin:
         }
 
     @classmethod
-    def get_aggregated_data(cls, submission):
-        """
-        Calculates aggregated ODP values, for all the model's quantity fields,
-        on the specified submission, broken down by annex group.
-        """
-        # Aggregate
-
-        return {
-            group.name: cls.get_fields_sum_by_group(
-                submission,
-                group,
-                cls.get_quantity_fields()
-            )
-            for group in Group.objects.all()
-        }
-
-    @classmethod
     def fill_aggregated_data(cls, submission=None, reported_groups=[]):
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
@@ -265,6 +248,43 @@ class AggregationMixin:
 
             # This will automatically trigger the calculation of computed values
             aggregation.save()
+
+    @classmethod
+    def get_aggregated_data(cls, submission, reported_groups):
+        """
+        reported_groups: mapping of form:
+        {
+            group: ProdCons instance,
+            ...
+        }
+        """
+        if not hasattr(cls, 'AGGREGATION_MAPPING'):
+            return
+
+        # Aggregations are unique per Party/Period/AnnexGroup. We need to
+        # iterate over the substance groups in this submission.
+        for group, aggregation in reported_groups.items():
+            # Initiate a model instance if needed but *do not save* it to the DB
+            # This still initiates the fields with the correct default values.
+            if aggregation is None:
+                aggregation = ProdCons(
+                    party=submission.party,
+                    reporting_period=submission.reporting_period,
+                    group=group
+                )
+                reported_groups[group] = aggregation
+
+            values = cls.get_fields_sum_by_group(
+                submission, group, cls.AGGREGATION_MAPPING.keys()
+            )
+            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                # Add with existing value, as a field in the aggregation table
+                # may be populated by aggregating values from several other
+                # fields in the data models.
+                value = getattr(aggregation, aggr_field) + values[model_field]
+                setattr(aggregation, aggr_field, value)
+
+            aggregation.calculate_totals()
 
 
 class BaseReport(models.Model):
