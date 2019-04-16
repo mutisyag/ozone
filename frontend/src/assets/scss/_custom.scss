@@ -1230,12 +1230,17 @@ input[type="text"].highlighted {
 	color: #444;
 }
 
-.table-bordered > thead > tr > th,
-.table-bordered > tbody > tr > th,
-.table-bordered > tfoot > tr > th,
-.table-bordered > thead > tr > td,
-.table-bordered > tbody > tr > td,
-.table-bordered > tfoot > tr > td {
+.table-bordered.full-bordered > thead > tr > th,
+.table-bordered.full-bordered > tbody > tr > th,
+.table-bordered.full-bordered > tfoot > tr > th,
+.table-bordered.full-bordered > thead > tr > td,
+.table-bordered.full-bordered > tbody > tr > td,
+.table-bordered.full-bordered > tfoot > tr > td {
 	border: 1px solid #e0e0e0!important;
 	border-collapse: collapse;
 }
+
+  .card-header {
+    border-bottom: none;
+    background-color: white;
+  }

@@ -16,7 +16,7 @@
       <!-- </b-link> -->
       <SidebarToggler class="d-md-down-none" display="lg"/>
       <h3>
-        <span v-translate>ORS (Ozone online reporting system)</span>
+        <span>{{list}}</span>
       </h3>
 
       <b-navbar-nav class="ml-auto">
@@ -34,7 +34,6 @@
       </AppSidebar>
 
       <main class="main">
-        <div class="breadcrumb">{{list}}</div>
         <div class="container-fluid">
           <router-view></router-view>
         </div>

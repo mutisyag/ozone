@@ -7,6 +7,7 @@
     hover
     :items="items"
     :fields="fields"
+    class="full-bordered"
     bordered
   >
     <template slot="thead-top">

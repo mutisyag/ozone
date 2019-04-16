@@ -555,7 +555,7 @@ export default {
     },
 
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Dashboard'))
     },
     addSubmission() {
       this.$store.dispatch('addSubmission', {
@@ -693,9 +693,7 @@ export default {
   .w120 {
     width: 120px;
   }
-  .card-header {
-    background-color: white;
-  }
+
   tr:hover a.btn {
     color: black;
     background: #ddd;
@@ -707,8 +705,5 @@ export default {
     }
   }
 
-  .card-header {
-    border-bottom: none;
-  }
 }
 </style>

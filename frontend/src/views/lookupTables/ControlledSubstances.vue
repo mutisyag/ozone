@@ -2,7 +2,7 @@
   <div class="app flex-row align-items-top">
     <b-card style="width: 100%">
       <template slot="header">
-        <strong v-translate>Blends</strong>
+        <strong v-translate>Controlled substances</strong>
       </template>
       <b-row class="mb-2">
         <b-col>
@@ -162,10 +162,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', [
-        this.$gettext('Lookup tables'),
-        this.$gettext('Controlled substances')
-      ])
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for controlled substances'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length

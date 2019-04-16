@@ -190,7 +190,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Parties')])
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for parties'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length

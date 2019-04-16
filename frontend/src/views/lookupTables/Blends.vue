@@ -1,6 +1,6 @@
 <template>
-  <div class="app blends-lookup-table flex-row align-items-top">
-      <b-card style="width: 100%">
+  <div class="container">
+      <b-card>
         <template slot="header">
           <strong v-translate>Blends</strong>
         </template>
@@ -71,7 +71,6 @@
           <template slot="other_names" slot-scope="data">
             <span v-if="data.item.other_names">{{data.item.other_names}}</span>
             <span v-else>
-              <i class="fa fa-ellipsis-h"></i>
             </span>
           </template>
 
@@ -139,9 +138,9 @@ export default {
       return [{
         key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
       }, {
-        key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center'
-      }, {
         key: 'components', label: this.$gettext('Components'), class: 'text-center'
+      }, {
+        key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center w-10'
       }]
     },
     tableComponentsFields() {
@@ -207,7 +206,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', [this.$gettext('Lookup tables'), this.$gettext('Blends')])
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for blends'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length
@@ -251,3 +250,9 @@ export default {
   }
 }
 </script>
+<style>
+  .w-10 {
+    width: 10%;
+    min-width: 150px;
+  }
+</style>

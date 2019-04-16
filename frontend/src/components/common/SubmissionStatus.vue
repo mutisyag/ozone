@@ -1,5 +1,9 @@
 <template>
   <div>
+    <b>
+      {{` ${$gettext('Version')} ${$store.state.current_submission.version} (${labels[$store.state.current_submission.current_state]}) `}}
+    </b>
+    <hr>
     <div v-if="flag_approved_field === undefined">
       <div
         class="mb-2"
@@ -68,10 +72,13 @@
 </template>
 
 <script>
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+
 export default {
   data() {
     return {
-      superseded_tooltip: this.$gettext('Another version has been submitted, overriding this one')
+      superseded_tooltip: this.$gettext('Another version has been submitted, overriding this one'),
+      labels: getCommonLabels(this.$gettext)
     }
   },
   computed: {

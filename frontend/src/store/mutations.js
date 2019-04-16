@@ -35,7 +35,7 @@ const mutations = {
     }
   },
   updateBreadcrumbs(state, data) {
-    state.route = data.join(' / ')
+    state.route = data
   },
 
   addComment(state, { data, tab, field }) {
