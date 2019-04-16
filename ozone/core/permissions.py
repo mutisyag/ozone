@@ -249,3 +249,20 @@ class IsSecretariatOrSamePartyAggregation(BasePermission):
         if request.method not in SAFE_METHODS:
             return False
         return obj.has_read_rights(request.user)
+
+
+class IsSecretariatOrSamePartyLimit(BasePermission):
+    """
+    This is used for evaluating permissions on limits views.
+
+    For now at least, limits views are read-only.
+    """
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+        return False
+
+    def has_object_permission(self, request, view, obj):
+        if request.method not in SAFE_METHODS:
+            return False
+        return obj.has_read_rights(request.user)

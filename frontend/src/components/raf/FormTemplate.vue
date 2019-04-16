@@ -5,7 +5,7 @@
         <div class="table-title">
           <h4>
             {{tab_info.formNumber}}.1
-            <span v-translate>Substances</span>
+            <span v-translate>Essential use</span>
           </h4>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
@@ -38,29 +38,11 @@
           <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <!-- TODO: might be needed later -->
-          <!-- <template slot="thead-top">
-							<tr class="first-header">
-							<th
-								v-for="(header, header_index) in tab_info.section_headers"
-								:colspan="header.colspan"
-								:key="header_index">
-								<div v-if="header.tooltip" v-b-tooltip.hover placement="left" :title="header.tooltip">
-									<span v-html="header.label"></span>
-									<i class="fa fa-info-circle fa-lg"></i>
-								</div>
-								<div v-else>
-									<span v-html="header.label"></span>
-								</div>
-							</th>
-						</tr>
-          </template>-->
-
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
             <b-btn-group class="row-controls">
               <span variant="link" @click="createModalData(cell.item.originalObj, cell.item.index)">
-                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
@@ -102,24 +84,88 @@
           </template>
         </b-table>
       </div>
-
-      <div v-if="hasBlends" class="table-wrapper">
+      <div class="table-wrapper">
         <div class="table-title">
           <h4>
             {{tab_info.formNumber}}.2
-            <span v-translate>Blends</span>
+            <span v-translate>Critical use</span>
           </h4>
-          <div v-show="tableBlends.tableFilters" class="table-filters">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input v-model="tableBlends.filters.search"/>
+          <div v-show="tableCritical.tableFilters" class="table-filters">
+            <b-input-group :prepend="$gettext('Filter')">
+              <b-form-input :class="{ highlighted: tableCritical.filters.search && tableCritical.filters.search.length }" v-model="tableCritical.filters.search"/>
             </b-input-group>
           </div>
-          <i
-            @click="tableBlends.tableFilters = !tableBlends.tableFilters"
-            class="fa fa-filter fa-lg"
-          ></i>
+          <i @click="tableCritical.tableFilters = !tableCritical.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
         <hr>
+
+        <b-table
+          show-empty
+          outlined
+          bordered
+          @row-clicked="rowHovered"
+          hover
+          head-variant="light"
+          class="submission-table"
+          :items="tableItemsCritical"
+          :fields="tableFieldsCritical"
+          :current-page="tableCritical.currentPage"
+          :per-page="tableCritical.perPage"
+          :sort-by.sync="tableCritical.sortBy"
+          :sort-desc.sync="tableCritical.sortDesc"
+          :sort-direction="tableCritical.sortDirection"
+          :empty-text="tableEmptyText"
+          :filter="tableCritical.filters.search"
+          ref="tableCritical"
+        >
+          <template v-for="field in tableFieldsCritical" :slot="`HEAD_${field.key}`">
+            <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
+          </template>
+          <template slot="group" slot-scope="cell">
+            <div class="group-cell">{{cell.item.group}}</div>
+            <b-btn-group class="row-controls">
+              <span variant="link" @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+            </b-btn-group>
+          </template>
+          <template slot="substance" slot-scope="cell">
+            <div class="substance-blend-cell">{{cell.item.substance}}</div>
+          </template>
+          <template slot="quantity_import" slot-scope="cell">
+            <span
+              class="edit-trigger"
+              v-b-tooltip.hover="cell.item.originalObj.quantity_import.tooltip ? true : false"
+              :title="cell.item.originalObj.quantity_import.tooltip"
+              @click="createModalData(cell.item.originalObj, cell.item.index)"
+            >
+              {{(cell.item.quantity_import)}}
+              <i class="fa fa-info-circle fa-lg"></i>
+            </span>
+          </template>
+
+          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+            <fieldGenerator
+              :key="`${cell.item.index}_${inputField}_${tabName}`"
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
+              :disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
+              :field="cell.item.originalObj[inputField]"
+            ></fieldGenerator>
+          </template>
+          <template slot="validation" slot-scope="cell">
+            <ValidationLabel
+              :open-validation-callback="openValidation"
+              :validation="cell.item.originalObj.validation.selected"
+            />
+          </template>
+        </b-table>
       </div>
     </div>
 
@@ -298,6 +344,18 @@ export default {
       typeOfDisplayObj: {
         substance: 'substances',
         blend: 'blends'
+      },
+      tableCritical: {
+        tableFilters: false,
+        pageOptions: [5, 25, 100],
+        filters: {
+          search: null,
+          period_start: null,
+          period_end: null,
+          obligation: null,
+          party: null,
+          isCurrent: null
+        }
       }
     }
   },
@@ -311,6 +369,79 @@ export default {
   methods: {
   },
   computed: {
+    tableItems() {
+      const tableFields = []
+      this.tab_info.form_fields.forEach(form_field => {
+        const tableRow = {}
+        Object.keys(form_field).forEach(key => {
+          if (form_field.substance.selected && !this.$store.getters.getCriticalSubstances(form_field.substance.selected)) {
+            tableRow[key] = this.typeOfDisplayObj[key]
+              ? this.$store.state.initialData.display[
+                this.typeOfDisplayObj[key]
+              ][form_field[key].selected]
+              : (tableRow[key] = form_field[key].selected)
+          }
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = form_field
+          tableRow.index = this.tab_info.form_fields.indexOf(form_field)
+          tableRow._showDetails = true
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableFields.push(tableRow)
+        }
+      })
+      return tableFields
+    },
+
+    tableItemsCritical() {
+      const tableFields = []
+      this.tab_info.form_fields.forEach((element) => {
+        const tableRow = {}
+        Object.keys(element).forEach(key => {
+          if (element.substance.selected && this.$store.getters.getCriticalSubstances(element.substance.selected)) {
+            tableRow[key] = this.typeOfDisplayObj[key]
+              ? this.$store.state.initialData.display[
+                this.typeOfDisplayObj[key]
+              ][element[key].selected]
+              : (tableRow[key] = element[key].selected)
+          }
+        })
+        if (Object.keys(tableRow).length) {
+          tableRow.originalObj = element
+          tableRow.index = this.tab_info.form_fields.indexOf(element)
+          if (tableRow.originalObj.validation.selected.length) {
+            tableRow.validation = 'invalid'
+          } else {
+            tableRow.validation = 'valid'
+          }
+          tableFields.push(tableRow)
+        }
+      })
+      return tableFields
+    },
+
+    tableFieldsCritical() {
+      const tableHeaders = []
+      const options = {}
+      this.tab_info.section_subheaders.forEach((form_field) => {
+        const header = {
+          key: form_field.name,
+          label: form_field.label,
+          width: form_field.width || null,
+          ...options
+        }
+        if (form_field.name === 'on_hand_end_year') {
+          header.label = `M<br>${this.$gettext('On hand end of year')}<br>(I-J-K-L)`
+        }
+        tableHeaders.push(header)
+      })
+      return tableHeaders
+    },
+
     getTabInputFields() {
       return this.tab_info.input_fields
     },

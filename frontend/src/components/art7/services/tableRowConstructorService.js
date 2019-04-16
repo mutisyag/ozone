@@ -319,10 +319,10 @@ export default {
       },
       get validation() {
         const errors = []
-        if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
-          errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
-        }
         if (!this.skipValidation) {
+          if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
+            errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
+          }
           if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components (6)'))
           }

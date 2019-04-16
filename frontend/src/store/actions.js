@@ -20,8 +20,7 @@ import {
   uploadFile,
   getSubmissionDefaultValues,
   getTransitions,
-  getSubmissionFormat,
-  getEssenCritTypes
+  getSubmissionFormat
 } from '@/components/common/services/api'
 
 import {
@@ -91,13 +90,6 @@ const actions = {
     Object.keys(context.state.form.tabs)
       .filter(tab => context.state.form.tabs[tab].comments)
       .forEach(tab => context.commit('addComment', { data, tab }))
-  },
-
-  async getEssenCritTypes(context) {
-    const types = await getEssenCritTypes()
-    if (types.data && types.data.length) {
-      context.commit('setEssenCritTypes', types.data.map(t => ({ text: t.name, value: types.data.indexOf(t) })))
-    }
   },
 
   getCurrentSubmissions(context) {
@@ -406,7 +398,8 @@ const actions = {
             group,
             is_qps: substance.is_qps,
             is_contained_in_polyols: substance.is_contained_in_polyols,
-            is_captured: substance.is_captured
+            is_captured: substance.is_captured,
+            has_critical_uses: substance.has_critical_uses
           })
           substancesDisplay[substance.id] = substance.name
         })
@@ -446,8 +439,6 @@ const actions = {
           context.commit('incrementOrderingId', { tabName: data.currentSectionName });
           ({ ordering_id } = context.state.form.tabs[data.currentSectionName])
         }
-        const essenCritType = context.state.initialData.essenCritTypes
-
         // section, substance, group, country, blend, prefillData, ordering_id
         const inner_fields = context.state.tableRowConstructor.substanceRows({
           $gettext: data.$gettext,
@@ -459,7 +450,7 @@ const actions = {
           prefillData: data.prefillData,
           ordering_id,
           countries: context.state.initialData.display.countries,
-          essen_crit_type: essenCritType
+          critical: data.critical || null
         })
         context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
       })

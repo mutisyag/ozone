@@ -101,6 +101,11 @@ BLANKS_FLAGS = (
     'flag_confirmed_blanks',
 )
 
+# flag_confirmed_blanks can only be True if flag_checked_blanks is True
+FLAGS_DEPENDENCY = {
+    'flag_confirmed_blanks': 'flag_checked_blanks'
+}
+
 HAS_REPORTED_FLAGS = (
     'flag_has_reported_a1', 'flag_has_reported_a2',
     'flag_has_reported_b1', 'flag_has_reported_b2',
@@ -158,6 +163,42 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
         for field in fields_to_check:
             with self.subTest("Test update %s" % field):
+                if field in FLAGS_DEPENDENCY.keys():
+                    # Flag has a dependency; should not update without it, error
+                    # should be 422 if success was expected, fail_code otherwise
+
+                    # Set dependency flag to False just to be sure
+                    self.client.put(
+                        reverse(
+                            "core:submission-submission-flags-list",
+                            kwargs={"submission_pk": submission.pk},
+                        ),
+                        {FLAGS_DEPENDENCY[field]: False},
+                    )
+
+                    # Try to set dependent flag
+                    result = self.client.put(
+                        reverse(
+                            "core:submission-submission-flags-list",
+                            kwargs={"submission_pk": submission.pk},
+                        ),
+                        {field: NEW_VALUE},
+                    )
+                    self._check_result(
+                        result, False, submission, field,
+                        422 if expect_success else fail_code
+                    )
+
+                    # Now try to first set flag it depends on to True, then
+                    # result should be as expected.
+                    self.client.put(
+                        reverse(
+                            "core:submission-submission-flags-list",
+                            kwargs={"submission_pk": submission.pk},
+                        ),
+                        {FLAGS_DEPENDENCY[field]: True},
+                    )
+
                 result = self.client.put(
                     reverse(
                         "core:submission-submission-flags-list",

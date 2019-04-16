@@ -6,7 +6,7 @@
       </template>
         <b-row class="mb-2">
           <b-col cols="4">
-            <b-input-group :prepend="$gettext('Search by name')">
+            <b-input-group :prepend="$gettext('Search')">
               <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
             </b-input-group>
           </b-col>
@@ -23,7 +23,7 @@
         :fields="tableFields"
         :current-page="table.currentPage"
         :per-page="table.perPage"
-        :filter="filterCallback"
+        :filter="table.filters.searchName"
         :sort-by.sync="table.sortBy"
         @filtered="onFiltered"
         ref="table"
@@ -195,12 +195,6 @@ export default {
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length
       this.table.currentPage = 1
-    },
-    filterCallback(party) {
-      if (!this.table.filters.searchName) {
-        return true
-      }
-      return party.name && party.name.toLowerCase().includes(this.table.filters.searchName.toLowerCase())
     }
   },
   watch: {

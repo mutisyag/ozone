@@ -76,6 +76,8 @@ const getters = {
 
   getCapturedSubstance: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.is_captured),
 
+  getCriticalSubstances: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.has_critical_uses),
+
   getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
     (sub) => sub.obligation === data.obligation
 			&& sub.party === data.party

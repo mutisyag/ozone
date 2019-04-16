@@ -72,7 +72,8 @@ export default {
 
   computed: {
     substances() {
-      return this.$store.state.initialData.substances
+      // TODO: REMOVE IF IN 2033
+      return this.tabName === 'has_nonparty' ? this.$store.state.initialData.substances.filter(s => s.group.group_id !== 'F') : this.$store.state.initialData.substances
     }
   },
 
@@ -175,7 +176,8 @@ export default {
             groupName: this.group_field.name,
             country: null,
             blendList: null,
-            prefillData: null
+            prefillData: null,
+            critical: this.$store.getters.getCriticalSubstances(subst)
           })
         }
       }
