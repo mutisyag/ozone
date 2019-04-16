@@ -60,6 +60,7 @@ p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 
 page_title = partial(_p, 'Heading1', TA_CENTER)
 
+
 def page_title_section(title, explanatory):
     return (
         page_title(title),
@@ -134,7 +135,7 @@ def to_precision(nr, decimals):
                     add_with = '1'
                 else:
                     # Rounding with the correct value depending of the decimals
-                    add_with = '0.' + '0' * len(n[n.find('.') + 1 : -1])+'1'
+                    add_with = '0.' + '0' * len(n[n.find('.') + 1: -1])+'1'
 
                 n = str(round(float(n) + float(add_with), 10))
 
@@ -169,8 +170,9 @@ def get_quantity_cell(q_list, extra_q):
     else:
         return ''
 
+
 def makeBulletList(list, fontSize):
-    bullets=ListFlowable(
+    bullets = ListFlowable(
         [
             ListItem(
                 _p('BodyText', TA_LEFT, x, fontSize=fontSize),
@@ -183,17 +185,20 @@ def makeBulletList(list, fontSize):
 
     return bullets
 
+
 def get_substance_label(q_list, type, list_font_size=7):
     # Adding the extra pre-shipment decision
-    if type=='decision':
+    if type == 'decision':
         pairs = tuple(zip(
             ('Quarantine and pre-shipment applications', ) + BASIC_Q_TYPES,
-            map(get_big_float, q_list)
+            q_list
         ))
     else:
-        pairs = tuple(zip(BASIC_Q_TYPES, map(get_big_float, q_list)))
+        pairs = tuple(zip(
+            BASIC_Q_TYPES, map(get_big_float, q_list)
+        ))
 
-    if type=='quantity':
+    if type == 'quantity':
         _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))
     else:
         _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
@@ -235,8 +240,8 @@ def get_preship_or_polyols_q(obj):
         substance = obj.substance
         return (
             p_l(f'<b>Quantity of new {substance.name} '
-                 'imported to be used for QPS applications</b>'),
-        p_l(str(_q_pre_ship)),
+                'imported to be used for QPS applications</b>'),
+            p_l(str(_q_pre_ship)),
         )
 
     if _q_polyols:
@@ -301,6 +306,7 @@ def mk_table_substances(grouping, row_fct):
     row = partial(row_fct, isBlend=False)
     return map(row, objs)
 
+
 def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
     objs = grouping.filter(substance=None)
     row = partial(row_fct, isBlend=True)
@@ -320,7 +326,6 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
 def get_comments_section(submission, type):
     r_party = getattr(submission, type + '_remarks_party')
     r_secretariat = getattr(submission, type + '_remarks_secretariat')
-
 
     return (
         Paragraph(_('Comments (Party)'), STYLES['Heading3']),
