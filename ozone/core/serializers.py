@@ -44,6 +44,7 @@ from .models import (
     RAFImport,
     SubmissionFormat,
     ProdCons,
+    Limit,
 )
 
 User = get_user_model()
@@ -1639,4 +1640,11 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
+        fields = "__all__"
+
+
+class LimitSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Limit
         fields = "__all__"
