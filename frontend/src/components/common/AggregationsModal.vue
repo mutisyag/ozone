@@ -1,8 +1,11 @@
 <template>
   <div>
-    <b-btn class="square-right" @click="getAggregations()" variant="outline-primary">Aggregations</b-btn>
-    <b-modal :title="$gettext('Aggregation')" id="aggregationModal" size="xl" ref="aggregationModal">
+    <b-btn class="square-right" @click="getAggregations()" variant="outline-primary" v-translate>Calculated amounts</b-btn>
+    <b-modal :title="$gettext('Calculated production and consumption')" id="aggregationModal" size="xl" ref="aggregationModal">
       <AggregationsTable :standalone="false" :aggregations="aggregations"></AggregationsTable>
+      <div slot="modal-footer">
+        <b-btn @click="$refs.aggregationModal.hide()" variant="success" v-translate>Close</b-btn>
+      </div>
     </b-modal>
   </div>
 </template>

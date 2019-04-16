@@ -7,6 +7,7 @@
     hover
     :items="items"
     :fields="fields"
+    bordered
   >
     <template slot="thead-top">
       <tr>
@@ -47,14 +48,14 @@ export default {
     fields() {
       const fields = [
         { key: 'group', label: this.$gettext('Annex/Group') },
-        { key: 'calculated_production', label: this.$gettext('Calculated') },
         { key: 'baseline_prod', label: this.$gettext('Baseline') },
+        { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_prod', label: this.$gettext('Limit') },
-        { key: 'calculated_consumption', label: this.$gettext('Calculated') },
         { key: 'baseline_cons', label: this.$gettext('Baseline') },
+        { key: 'calculated_consumption',  label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_cons', label: this.$gettext('Limit') },
-        { key: 'production_article_5', label: this.$gettext('Calculated') },
         { key: 'baseline_bdn', label: this.$gettext('Baseline') },
+        { key: 'production_article_5',  label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period})` },
         { key: 'limit_bdn', label: this.$gettext('Limit') }
       ]
       return fields
