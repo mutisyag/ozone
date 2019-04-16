@@ -99,6 +99,7 @@
       ></Save>
       <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
       <b-button-group class="pull-right actions mt-2 mb-2">
+        <AggregationsModal :submission="submission"></AggregationsModal>
         <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
@@ -182,6 +183,7 @@ import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import TransitionQuestions from '@/components/common/TransitionQuestions'
 import { getAlerts } from '@/components/common/dataDefinitions/alerts'
+import AggregationsModal from '@/components/common/AggregationsModal'
 
 export default {
   components: {
@@ -194,7 +196,8 @@ export default {
     Save,
     SubmissionHistory,
     TabTitleWithLoader,
-    TransitionQuestions
+    TransitionQuestions,
+    AggregationsModal
   },
   props: {
     data: null,

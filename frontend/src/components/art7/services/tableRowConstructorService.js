@@ -319,7 +319,7 @@ export default {
       },
       get validation() {
         const errors = []
-        if (!this.skipValidation) {
+        if (this.skipValidation === 0) {
           if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
             errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
           }

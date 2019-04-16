@@ -147,6 +147,8 @@ const getSubmissionsVersions = () => fetch('submission-versions/')
 
 const getSubmission = (url) => fetch(url)
 
+const getSubmissionAggregations = (url) => fetch(`${url}aggregations/`)
+
 const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, { hideLoader: true })
 
 const deleteSubmission = (url) => remove(url)
@@ -226,5 +228,6 @@ export {
   uploadFile,
   getTransitions,
   getSubmissionFormat,
-  getEssenCritTypes
+  getEssenCritTypes,
+  getSubmissionAggregations
 }
