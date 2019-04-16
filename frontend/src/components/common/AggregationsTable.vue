@@ -18,7 +18,7 @@
       </tr>
     </template>
     <template slot="group" slot-scope="cell">
-        {{$store.state.initialData.groupSubstances[cell.item.group].group_id}}
+        {{$store.state.initialData.groupSubstances.find(g => g.id === cell.item.group).group_id}}
     </template>
   </b-table>
 </div>
