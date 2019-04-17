@@ -23,7 +23,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItems"
           :fields="tableFields"
           :current-page="table.currentPage"
@@ -116,7 +116,7 @@
           bordered
           hover
           head-variant="light"
-          class="submission-table"
+          class="submission-table full-bordered"
           @row-clicked="rowHovered"
           stacked="md"
           :items="tableItemsBlends"

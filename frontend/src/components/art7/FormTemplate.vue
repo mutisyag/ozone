@@ -28,7 +28,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           id="substance-table"
           :items="tableItems"
           :fields="tableFields"
@@ -126,7 +126,7 @@
               <i class="fa fa-info-circle fa-lg"></i>
             </span>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
@@ -155,7 +155,7 @@
             </div>
 
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyols`"
@@ -207,7 +207,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItemsFII"
           :fields="tableFieldsFII"
           :empty-text="tableFIIEmptyText"
@@ -298,7 +298,7 @@
               <i class="fa fa-info-circle fa-lg"></i>
             </span>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
@@ -326,7 +326,7 @@
               </b-input-group>
             </div>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyol`"
@@ -381,7 +381,7 @@
           bordered
           hover
           head-variant="light"
-          class="submission-table"
+          class="submission-table full-bordered"
           @row-clicked="rowHovered"
           stacked="md"
           id="blend-table"

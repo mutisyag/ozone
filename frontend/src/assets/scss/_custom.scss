@@ -1013,10 +1013,7 @@ body {
 }
 
 .app-header .nav-item {
-	  border: 1px solid #eee;
     padding: .5rem;
-    border-radius: .25em;
-    background: #fafafa;
 }
 
 
@@ -1255,3 +1252,12 @@ html:not([dir="rtl"]) .aside-menu {
 	margin-right: -300px;
 }
 
+.form-wrapper > .card > .tabs > .tab-content {
+	border-left: none;
+	border-right: none;
+	border-bottom: none;
+}
+
+.submission-table th > div {
+	margin: 0 auto;
+}

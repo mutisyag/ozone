@@ -25,7 +25,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           id="substance-table"
           :items="tableRows"
           :fields="tableFields"

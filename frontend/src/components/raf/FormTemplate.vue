@@ -22,7 +22,7 @@
           @row-clicked="rowHovered"
           hover
           head-variant="light"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItems"
           :fields="tableFields"
           :current-page="table.currentPage"
@@ -85,7 +85,7 @@
       </div>
       <div class="table-wrapper">
         <div class="table-title">
-          <h4>
+          <h4 class="mb-2">
             {{tab_info.formNumber}}.2
             <span v-translate>Critical use</span>
           </h4>
@@ -104,7 +104,7 @@
           @row-clicked="rowHovered"
           hover
           head-variant="light"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItemsCritical"
           :fields="tableFieldsCritical"
           :current-page="tableCritical.currentPage"
@@ -189,8 +189,6 @@
         ></textarea>
       </div>
     </div>
-
-    <hr>
 
     <div class="footnotes">
       <p v-for="(footnote, footnote_index) in tab_info.footnotes" :key="footnote_index">

@@ -28,7 +28,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItems"
           @row-clicked="rowHovered"
           :fields="tableFields"
