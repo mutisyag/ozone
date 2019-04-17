@@ -1,9 +1,7 @@
 <template>
   <div class="app flex-row align-items-top">
     <b-card style="width: 100%">
-      <template slot="header">
-        <strong v-translate>Controlled substances</strong>
-      </template>
+
       <b-row class="mb-2">
         <b-col>
           <b-input-group :prepend="$gettext('Group')">
@@ -162,7 +160,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for controlled substances'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Controlled substances'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length
@@ -209,6 +207,7 @@ export default {
       document.querySelector('body').classList.remove('aside-menu-lg-show')
     }
     this.$store.dispatch('getSubstances')
+    this.updateBreadcrumbs()
   }
 }
 </script>

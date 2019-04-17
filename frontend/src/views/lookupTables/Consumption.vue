@@ -1,9 +1,6 @@
 <template>
   <div class="app blends-lookup-table flex-row align-items-top">
     <b-card style="width: 100%">
-      <template slot="header">
-        <strong v-translate>Consumption</strong>
-      </template>
 
       <!-- Filters -->
       <b-row>
@@ -163,12 +160,16 @@ export default {
       this.selectedFilters = currentFilters
       this.sortBy = null
       this.tableOptions.params.ordering = null
+    },
+    updateBreadcrumbs() {
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Consumption'))
     }
   },
 
   created() {
     this.getItems()
     this.makeFilters()
+    this.updateBreadcrumbs()
   },
 
   watch: {
@@ -189,6 +190,11 @@ export default {
       handler() {
         this.tableOptions.params.page = null
         this.getItems()
+      }
+    },
+    '$language.current': {
+      handler() {
+        this.updateBreadcrumbs()
       }
     }
   }

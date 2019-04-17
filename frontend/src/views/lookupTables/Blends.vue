@@ -1,9 +1,7 @@
 <template>
   <div class="container">
       <b-card>
-        <template slot="header">
-          <strong v-translate>Blends</strong>
-        </template>
+
         <b-row class="mb-2">
           <b-col>
             <b-input-group :prepend="$gettext('Search')">
@@ -206,7 +204,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for blends'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Blends'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length

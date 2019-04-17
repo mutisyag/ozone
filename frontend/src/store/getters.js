@@ -95,7 +95,7 @@ const getters = {
 
   getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
   getTabStatus: (state) => (tabName) => state.form.tabs[tabName].status,
-
+  pageTitle: (state) => state.route,
   can_edit_data: (state) => state.permissions.form && state.permissions.form.can_edit_data,
   can_change_remarks_party: (state) => state.permissions.form && state.permissions.form.can_change_remarks_party,
   can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,

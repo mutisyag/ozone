@@ -1,9 +1,7 @@
 <template>
   <div class="app flex-row align-items-top">
     <b-card>
-      <template slot="header">
-        <strong v-translate>Parties</strong>
-      </template>
+
         <b-row class="mb-2">
           <b-col cols="4">
             <b-input-group :prepend="$gettext('Search')">
@@ -190,7 +188,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for parties'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Parties'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length
@@ -210,6 +208,7 @@ export default {
       document.querySelector('body').classList.remove('aside-menu-lg-show')
     }
     this.$store.dispatch('getPartyRatifications')
+    this.updateBreadcrumbs()
   }
 }
 </script>

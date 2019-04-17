@@ -103,7 +103,7 @@ export default {
       return this.$route.name
     },
     list() {
-      return this.$store.state.route
+      return this.$store.getters.pageTitle
     }
   },
   methods: {
