@@ -12,16 +12,14 @@
           <span>
             <b-btn
               variant="link"
-              @click="$store.dispatch('downloadStuff',
-						{
-							url: file.file_url,
-							fileName:file.name
-						})"
+              @click="file.upload_succesfull ? $store.dispatch('downloadStuff', { url: file.file_url, fileName:file.name }) : ''"
             v-b-tooltip
-            :title="file.upload_succesfull ? uploadLabel : downloadLabel"
+            :title="file.upload_succesfull ? downloadLabel : uploadLabel"
             >
               <i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
-              <i v-else class="fa fa-upload" aria-hidden="true"></i>
+              <span v-else>
+                <span v-translate>Selected for upload:</span> &nbsp;<i class="fa fa-upload" aria-hidden="true"></i>
+              </span>
               {{file.name}}
             </b-btn>
             <div v-if="file.upload_successful">
