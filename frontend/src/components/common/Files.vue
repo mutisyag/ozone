@@ -107,7 +107,7 @@ export default {
       return dateFormatToDisplay(date)
     },
     async deleteFile(e, file) {
-      const confirmed = await this.$store.dispatch({ title: 'Please confirm', description: 'Are you sure you want to delete the selected file?', $gettext: this.$gettext })
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the selected file?', $gettext: this.$gettext })
       if (!confirmed) {
         return
       }
