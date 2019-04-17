@@ -1,16 +1,14 @@
 <template>
   <div class="app flex-row align-items-top">
-    <b-card>
-      <template slot="header">
-        <strong v-translate>Parties</strong>
-      </template>
-        <b-row class="mb-2">
-          <b-col cols="4">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
-            </b-input-group>
-          </b-col>
-        </b-row>
+    <div class="w-100 pt-3">
+
+      <b-row class="mb-2">
+        <b-col cols="4">
+          <b-input-group :prepend="$gettext('Search')">
+            <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
+          </b-input-group>
+        </b-col>
+      </b-row>
       <b-table
         show-empty
         outlined
@@ -59,7 +57,7 @@
           <div v-html="data.item.kigali_amendment"></div>
         </template>
       </b-table>
-    </b-card>
+    </div>
   </div>
 </template>
 
@@ -190,7 +188,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Lookup tables for parties'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Parties'))
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length
@@ -210,6 +208,7 @@ export default {
       document.querySelector('body').classList.remove('aside-menu-lg-show')
     }
     this.$store.dispatch('getPartyRatifications')
+    this.updateBreadcrumbs()
   }
 }
 </script>
