@@ -1040,7 +1040,7 @@ body {
 
 
 .submission-table .form-control {
-	padding: .2rem;
+	padding: .4rem;
   height: initial;
   min-height: initial;
 }
@@ -1260,4 +1260,8 @@ html:not([dir="rtl"]) .aside-menu {
 
 .submission-table th > div {
 	margin: 0 auto;
+}
+
+.submission-table .input-group input {
+	min-width: 80px;
 }
