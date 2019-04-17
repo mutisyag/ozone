@@ -1,6 +1,6 @@
 <template>
   <div class="app blends-lookup-table flex-row align-items-top">
-    <b-card style="width: 100%">
+    <div class="w-100 pt-3">
 
       <!-- Filters -->
       <b-row>
@@ -59,7 +59,7 @@
           </b-input-group>
         </b-col>
       </b-row>
-    </b-card>
+    </div>
   </div>
 </template>
 

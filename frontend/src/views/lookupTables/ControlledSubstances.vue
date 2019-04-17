@@ -1,6 +1,6 @@
 <template>
   <div class="app flex-row align-items-top">
-    <b-card style="width: 100%">
+    <div class="w-100 pt-3">
 
       <b-row class="mb-2">
         <b-col>
@@ -50,7 +50,7 @@
         @filtered="onFiltered"
         ref="table"
       ></b-table>
-    </b-card>
+    </div>
   </div>
 </template>
 

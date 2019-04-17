@@ -1,14 +1,14 @@
 <template>
   <div class="app flex-row align-items-top">
-    <b-card>
+    <div class="w-100 pt-3">
 
-        <b-row class="mb-2">
-          <b-col cols="4">
-            <b-input-group :prepend="$gettext('Search')">
-              <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
-            </b-input-group>
-          </b-col>
-        </b-row>
+      <b-row class="mb-2">
+        <b-col cols="4">
+          <b-input-group :prepend="$gettext('Search')">
+            <b-form-input id="parties-name-filter" v-model="table.filters.searchName"/>
+          </b-input-group>
+        </b-col>
+      </b-row>
       <b-table
         show-empty
         outlined
@@ -57,7 +57,7 @@
           <div v-html="data.item.kigali_amendment"></div>
         </template>
       </b-table>
-    </b-card>
+    </div>
   </div>
 </template>
 
