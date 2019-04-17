@@ -15,7 +15,7 @@
             <span v-translate>Account</span>
           </strong>
         </b-dropdown-header>
-        <b-dropdown-item v-if="isAdmin" :href="`${apiBase}/admin`">
+        <b-dropdown-item v-if="isAdmin" :href="`${apiBase}/admin/`">
           <i class="fa fa-user-plus"></i>
           <span v-translate>Admin</span>
         </b-dropdown-item>
