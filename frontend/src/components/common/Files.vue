@@ -53,7 +53,7 @@
         </b-input-group-append>
       </b-input-group>
     </div>
-    <hr>
+    <br>
     <div class="row">
       <div class="col-4">
         <b-form-file
@@ -69,7 +69,7 @@
     </div>
     <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
     <div v-if="files.length">
-      <hr>
+      <br>
       <b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
     </div>
     <small class="ml-2 muted">
