@@ -261,14 +261,14 @@ class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
     renderer_classes = (JSONRenderer,)
 
-    def get(self, request, reporting_period):
+    def get(self, request, period_name):
         groups = Group.objects.all()
         all_non_parties = {}
 
         for group in groups:
             queryset = Article7NonPartyTrade.get_non_parties(
                 group.pk,
-                reporting_period
+                ReportingPeriod.objects.get(name=period_name).pk if period_name else None,
             )
             non_parties_per_group = {
                 id: True for id in queryset.values_list('id', flat=True)

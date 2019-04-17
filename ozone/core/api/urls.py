@@ -268,7 +268,7 @@ urlpatterns = (
     + [url for router in nested_routers for url in router.urls]
     + [
         re_path(
-            '^get-non-parties/(?P<reporting_period>[0-9]+|)',
+            '^get-non-parties/(?P<period_name>[0-9]+|)',
             views.GetNonPartiesViewSet.as_view(),
             name='get_non_parties',
         ),
