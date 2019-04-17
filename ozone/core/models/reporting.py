@@ -104,7 +104,12 @@ class Obligation(models.Model):
         help_text="Used to generate the correct form, based on this obligation."
     )
 
-    other = models.BooleanField(default=False)
+    other = models.BooleanField(
+        default=False,
+        help_text="Indicates whether this obligation is a main one. The main "
+                  "ones are: Article 7, Essential and Critical uses (RAF) and "
+                  "Transfer or addition of production or consumption."
+    )
 
     is_default = models.NullBooleanField(
         default=None,
@@ -1386,7 +1391,10 @@ class SubmissionFormat(models.Model):
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
 
-    is_default_party = models.BooleanField(default=False)
+    is_default_party = models.BooleanField(
+        default=False,
+        help_text="Indicates whether this submission format is default for party."
+    )
 
     @classmethod
     def get_default(cls, user):
