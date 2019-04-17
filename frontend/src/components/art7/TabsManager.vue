@@ -101,9 +101,22 @@
       <b-button-group class="pull-right actions mt-2 mb-2">
         <AggregationsModal :submission="submission"></AggregationsModal>
         <b-btn
+          variant="outline-dark"
+          @click="$store.dispatch('downloadStuff',
+						{
+							url: `${submission}export_pdf/`,
+							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
+						})"
+        >Export as PDF</b-btn>
+        <b-btn @click="$refs.history_modal.show()" variant="outline-dark">
+          <span v-translate>Versions</span>
+        </b-btn>
+      </b-button-group>
+      <b-button-group class="pull-right actions mt-2 mb-2 mr-5">
+        <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
-          variant="outline-success"
+          variant="outline-primary"
         >
           <span v-translate>Submit</span>
         </b-btn>
@@ -119,21 +132,9 @@
         <b-btn
           variant="outline-primary"
           @click="clone($route.query.submission)"
-          size="sm"
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
-        <b-btn
-          variant="outline-primary"
-          @click="$store.dispatch('downloadStuff',
-						{
-							url: `${submission}export_pdf/`,
-							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-						})"
-        >Export as PDF</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          <span v-translate>Versions</span>
-        </b-btn>
         <b-btn
           @click="removeSubmission"
           id="delete-button"

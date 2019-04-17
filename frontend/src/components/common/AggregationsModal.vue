@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-btn class="square-right" @click="getAggregations()" variant="outline-primary" v-translate>Calculated amounts</b-btn>
+    <b-btn class="square-right" @click="getAggregations()" variant="outline-dark" v-translate>Calculated amounts</b-btn>
     <b-modal id="aggregationModal" size="xl" ref="aggregationModal">
       <div slot="modal-title">
         <span v-translate>Calculated production and consumption</span> - {{ $store.state.initialData.display.countries[$store.state.current_submission.party] }} - {{ $store.state.current_submission.reporting_period }}
