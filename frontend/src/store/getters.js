@@ -90,8 +90,8 @@ const getters = {
 			&& sub.current_state === 'data_entry'
   ),
 
-  defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
-  defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
+  defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods && state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
+  defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations && state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
 
   getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
   getTabStatus: (state) => (tabName) => state.form.tabs[tabName].status,
