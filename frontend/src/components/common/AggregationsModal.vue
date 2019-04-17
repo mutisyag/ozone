@@ -1,7 +1,10 @@
 <template>
   <div>
     <b-btn class="square-right" @click="getAggregations()" variant="outline-primary" v-translate>Calculated amounts</b-btn>
-    <b-modal :title="$gettext('Calculated production and consumption')" id="aggregationModal" size="xl" ref="aggregationModal">
+    <b-modal id="aggregationModal" size="xl" ref="aggregationModal">
+      <div slot="modal-title">
+        <span v-translate>Calculated production and consumption</span> - {{ $store.state.initialData.display.countries[$store.state.current_submission.party] }} - {{ $store.state.current_submission.reporting_period }}
+      </div>
       <AggregationsTable :standalone="false" :aggregations="aggregations"></AggregationsTable>
       <div slot="modal-footer">
         <b-btn @click="$refs.aggregationModal.hide()" variant="success" v-translate>Close</b-btn>

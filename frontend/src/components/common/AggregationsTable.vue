@@ -39,7 +39,7 @@ export default {
           label: this.$gettext('Consumption'),
           colspan: 3
         }, {
-          label: this.$gettext('BDN Article 5'),
+          label: this.$gettext('Production allowance for BDN of Article 5 Parties'),
           colspan: 3
         }
       ]
