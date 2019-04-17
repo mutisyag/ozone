@@ -227,6 +227,10 @@ export default {
 
     is_secretariat() {
       return this.$store.state.currentUser.is_secretariat
+    },
+    is_data_entry() {
+      this.info.form_fields.current_state.selected = this.$store.state.current_submission.current_state === 'data_entry'
+      return this.$store.state.current_submission.current_state === 'data_entry'
     }
   },
 
@@ -243,6 +247,9 @@ export default {
         submitted_at.validation = null
       } else {
         submitted_at.validation = this.$gettext('Required')
+      }
+      if (!this.is_data_entry) {
+        submitted_at.validation = null
       }
       this.$forceUpdate()
     },

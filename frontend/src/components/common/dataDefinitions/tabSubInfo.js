@@ -33,6 +33,9 @@ const getTabSubInfo = ($gettext) => {
       id: {
         selected: null
       },
+      current_state: {
+        selected: null
+      },
       reporting_channel: {
         type: 'select',
         options: [
@@ -92,29 +95,32 @@ const getTabSubInfo = ($gettext) => {
       },
       submitted_at: {
         type: 'date',
-        selected: ''
+        selected: '',
+        validation: null
       },
       get validation() {
         const invalid = []
-        if (!this.reporting_officer.selected) {
-          this.reporting_officer.validation = $gettext('Required')
-          invalid.push($gettext('Reporting officer'))
-        } else {
-          this.reporting_officer.validation = null
-        }
+        if (this.current_state.selected === true) {
+          if (!this.reporting_officer.selected) {
+            this.reporting_officer.validation = $gettext('Required')
+            invalid.push($gettext('Reporting officer'))
+          } else {
+            this.reporting_officer.validation = null
+          }
 
-        if (!this.postal_address.selected && !this.email.selected) {
-          this.postal_address.validation = $gettext('Required')
-          this.email.validation = $gettext('Required')
-          invalid.push($gettext('Email/Address'))
-        } else {
-          this.postal_address.validation = null
-          this.email.validation = null
-        }
+          if (!this.postal_address.selected && !this.email.selected) {
+            this.postal_address.validation = $gettext('Required')
+            this.email.validation = $gettext('Required')
+            invalid.push($gettext('Email/Address'))
+          } else {
+            this.postal_address.validation = null
+            this.email.validation = null
+          }
 
-        if (this.submitted_at.validation) {
-          // This is a special case because this field is required only for secretariat users and validation property is set from outside
-          invalid.push($gettext('Date of submission'))
+          if (this.submitted_at.validation) {
+            // This is a special case because this field is required only for secretariat users and validation property is set from outside
+            invalid.push($gettext('Date of submission'))
+          }
         }
 
         return {
