@@ -266,7 +266,7 @@ class UserAdmin(admin.ModelAdmin):
     actions = ["reset_password"]
     exclude = ["password"]
     readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
-    list_filter = (("party", MainPartyFilter), "is_secretariat", "is_read_only")
+    list_filter = (("party", MainPartyFilter), "is_secretariat", "is_read_only", "is_staff", "is_superuser")
 
     def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
@@ -318,18 +318,26 @@ class UserAdmin(admin.ModelAdmin):
             self.reset_password(request, [obj], template="account_created")
 
 
+def _build_getter(prefix, name):
+    def get_boolean(obj):
+        return getattr(obj, prefix + name)
+    get_boolean.short_description = name.upper()
+    get_boolean.boolean = True
+    return get_boolean
+
+
 @admin.register(Submission)
 class SubmissionAdmin(admin.ModelAdmin):
+
+    def __getattr__(self, name):
+        return _build_getter('flag_has_reported_', name)
+
     list_display = (
         '__str__', 'party', 'reporting_period', 'obligation', '_current_state',
         'flag_provisional', 'flag_valid', 'flag_superseded',
         'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
         'flag_emergency', 'flag_approved',
-        'flag_has_reported_a1', 'flag_has_reported_a2',
-        'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
-        'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',
-        'flag_has_reported_e',
-        'flag_has_reported_f'
+        'a1', 'a2', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3', 'e', 'f',
     )
     list_filter = (
         'obligation',
@@ -365,6 +373,7 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
         ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__party__name',)
+    readonly_fields = ('submission', )
 
 
 @admin.register(ReportingChannel)

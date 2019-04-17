@@ -106,7 +106,7 @@ class Obligation(models.Model):
 
     other = models.BooleanField(
         default=False,
-        help_text="Indicates whether this obligation is a main one. The main "
+        help_text="Unset when this obligation is a main one. The main "
                   "ones are: Article 7, Essential and Critical uses (RAF) and "
                   "Transfer or addition of production or consumption."
     )
@@ -324,71 +324,93 @@ class Submission(models.Model):
     # Flags
     flag_provisional = models.BooleanField(
         default=False,
+        verbose_name='Provisional',
         help_text="If set to true it signals that future changes are foreseen."
     )
     flag_valid = models.NullBooleanField(
         default=None,
+        verbose_name='Valid',
         help_text="If set to true it signals that the data in the current "
         "version is considered correct. Can be set by the Secretariat during "
         "Processing or at the transition between the Processing or Finalized states."
     )
     flag_superseded = models.BooleanField(
         default=False,
+        verbose_name='Superseded',
         help_text="If set to true it means that the current version is not "
         "relevant anymore. When a newer version of data is Submitted, "
         "the current one is automatically flagged as Superseded."
     )
-    flag_checked_blanks = models.BooleanField(default=True)
-    flag_has_blanks = models.BooleanField(default=False)
-    flag_confirmed_blanks = models.BooleanField(default=False)
+    flag_checked_blanks = models.BooleanField(
+        default=True,
+        verbose_name='Checked blanks',
+    )
+    flag_has_blanks = models.BooleanField(
+        default=False,
+        verbose_name='Has blanks',
+    )
+    flag_confirmed_blanks = models.BooleanField(
+        default=False,
+        verbose_name='Confirmed blanks',
+    )
     flag_has_reported_a1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
         default=True,
+        verbose_name='Has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
     # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
+        verbose_name='Has reported F',
         help_text="If set to true it means that substances under "
                   "Annex F were reported."
     )
@@ -515,11 +537,13 @@ class Submission(models.Model):
     # Exemption related flags
     flag_emergency = models.BooleanField(
         default=False,
+        verbose_name='Emergency',
         help_text="If set to true it means that ozone secretariat "
                   "can fill out only the Approved form directly."
     )
     flag_approved = models.NullBooleanField(
         default=None,
+        verbose_name='Approved',
         help_text="If set to true it means that the nomination was approved."
     )
 
@@ -1393,6 +1417,7 @@ class SubmissionFormat(models.Model):
 
     is_default_party = models.BooleanField(
         default=False,
+        verbose_name='Is default for parties',
         help_text="Indicates whether this submission format is default for party."
     )
 
