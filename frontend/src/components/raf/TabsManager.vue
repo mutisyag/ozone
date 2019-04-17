@@ -197,7 +197,11 @@ export default {
     }
   },
   methods: {
-    clone(url) {
+    async clone(url) {
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'Revising is ireversible', $gettext: this.$gettext })
+      if (!confirmed) {
+        return
+      }
       cloneSubmission(url).then((response) => {
         this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
         this.$router.go(this.$router.currentRoute)
