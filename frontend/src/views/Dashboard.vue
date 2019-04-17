@@ -91,13 +91,13 @@
               <b-input-group class="w120" :prepend="$gettext('From')">
                 <b-form-select
                   v-model="dataEntryTable.filters.period_start"
-                  :options="sortOptionsPeriodFrom"
+                  :options="sortOptionsPeriodFromDataEntry"
                 ></b-form-select>
               </b-input-group>
               <b-input-group class="w120" :prepend="$gettext('To')">
                 <b-form-select
                   v-model="dataEntryTable.filters.period_end"
-                  :options="sortOptionsPeriodTo"
+                  :options="sortOptionsPeriodToDataEntry"
                 ></b-form-select>
               </b-input-group>
               <b-btn
@@ -470,6 +470,31 @@ export default {
       }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
     },
 
+    sortOptionsPeriodFromDataEntry() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_end !== null
+				&& f.start_date > this.tableOptions.filters.period_end) {
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getStartDateOfYear(f.start_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
+
+    sortOptionsPeriodToDataEntry() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_start !== null
+				&& f.end_date < this.tableOptions.filters.period_start) {
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getEndDateOfYear(f.end_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
     sortOptionsObligation() {
       return this.obligations
     },
