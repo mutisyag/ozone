@@ -411,7 +411,8 @@ const getFormArt7 = ($gettext) => {
             tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
           },
           {
-            label: ''
+            label: '',
+            tooltip: $gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5')
           },
           {
             label: ''
