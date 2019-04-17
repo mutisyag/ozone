@@ -174,7 +174,7 @@ const callTransition = (url, transition) => post(`${url}call-transition/`, {
   transition
 })
 
-const getNonParties = () => fetch('get-non-parties/')
+const getNonParties = (reporting_period) => fetch(`get-non-parties/?reporting_period=${reporting_period}`)
 
 const getSubmissionDefaultValues = () => fetch('default-values/')
 
