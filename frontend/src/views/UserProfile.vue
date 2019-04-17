@@ -61,7 +61,7 @@ export default {
     }
   },
   async created() {
-    this.$store.commit('updateBreadcrumbs', [this.$gettext('User profile')])
+    this.$store.commit('updateBreadcrumbs', this.$gettext('User profile'))
     if (!this.$store.state.currentUser) {
       await this.$store.dispatch('getMyCurrentUser')
     }
