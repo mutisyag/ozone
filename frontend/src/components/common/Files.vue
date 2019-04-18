@@ -24,7 +24,7 @@
         <template slot="actions" slot-scope="cell">
           <b-btn
             variant="primary"
-            @click="$store.dispatch('downloadStuff', { url: file.file_url, fileName:file.name })"
+            @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"
             v-b-tooltip
             :title="downloadLabel"
           ><i class="fa fa-download"></i></b-btn>
