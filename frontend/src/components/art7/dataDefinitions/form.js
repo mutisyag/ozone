@@ -51,7 +51,7 @@ const getFormArt7 = ($gettext) => {
         endpoint_url: 'article7questionnaire_url',
         intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
         title: $gettext('Questionnaire'),
-        titleHtml: `<b>${$gettext('QUESTIONNAIRE')}</b> <br> <small>${$gettext('All fields are manadatory')}</small>`,
+        titleHtml: `<b>${$gettext('QUESTIONNAIRE')}</b> <br> <small>${$gettext('All fields are mandatory')}</small>`,
         detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
         status: null,
         isInvalid: false,

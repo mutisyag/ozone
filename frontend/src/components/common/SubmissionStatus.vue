@@ -9,14 +9,14 @@
           class="color-green mr-3"
           v-if="$store.state.current_submission.current_state === 'finalized' && $store.state.current_submission.flag_valid"
         >
-          <i class="fa fa-check-square fa-lg mr-2"></i>
+          <i class="fa fa-check-circle fa-sm mr-2"></i>
           <span v-translate>Valid</span>
         </span>
         <span
           class="color-red mr-3"
           v-if="$store.state.current_submission.current_state === 'finalized' && !$store.state.current_submission.flag_valid"
         >
-          <i class="fa fa-window-close fa-lg mr-2"></i>
+          <i class="fa fa-exclamation-circle fa-sm mr-2"></i>
           <span v-translate>Not valid</span>
         </span>
         <span
@@ -25,7 +25,7 @@
           class="color-red mb-2"
           v-if="$store.state.current_submission.flag_superseded"
         >
-          <i class="fa fa-window-close fa-lg mr-2"></i>
+          <i class="fa fa-exclamation-circle fa-sm mr-2"></i>
           <span v-translate>Superseded</span>
           &nbsp;
           <i style="color: black" class="fa fa-info-circle fa-sm"></i>
@@ -37,14 +37,14 @@
         class="color-green mr-3"
         v-if="$store.state.current_submission.current_state === 'finalized' && flag_approved_field.selected"
       >
-        <i class="fa fa-check-square fa-lg mr-2"></i>
+        <i class="fa fa-check-circle fa-sm mr-2"></i>
         <span v-translate>Approved</span>
       </span>
       <span
         class="color-red mr-3"
         v-if="$store.state.current_submission.current_state === 'finalized' && !flag_approved_field.selected"
       >
-        <i class="fa fa-window-close fa-lg mr-2"></i>
+        <i class="fa fa-window-close fa-sm mr-2"></i>
         <span v-translate>Not approved</span>
       </span>
     </div>

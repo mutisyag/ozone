@@ -1,7 +1,6 @@
 <template>
   <div v-if="info">
-    <form class="form-sections">
-      <b-card>
+    <form class="form-sections table-wrapper">
         <div class="form-fields" v-for="field in info.form_fields" :key="field.name">
           <div class="field-wrapper">
             <label>{{field.label}}</label>
@@ -12,11 +11,8 @@
             />
           </div>
         </div>
-      </b-card>
     </form>
     <div id="tab-comments" class="table-wrapper">
-      <h4>Comments</h4>
-      <hr>
       <div
         v-for="(comment, comment_key) in info.comments"
         :key="comment_key"

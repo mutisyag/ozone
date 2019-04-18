@@ -526,12 +526,6 @@
       </div>
     </div>
     <div id="tab-comments" class="table-wrapper">
-      <h4 class="mb-3">
-        <span class="table-title-index">
-          {{tab_info.formNumber}}.{{tableCounter + 1}}
-        </span>
-        <span v-translate>Comments</span>
-      </h4>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"

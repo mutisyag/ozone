@@ -1,12 +1,8 @@
 <template>
   <div v-if="info" class="submission-info-tab">
-    <form class="form-sections">
+    <form class="form-sections table-wrapper">
       <b-row>
         <b-col md="7" lg="7">
-          <h5>
-            <span v-translate>Submission Info</span>
-          </h5>
-          <b-card>
             <div class="form-fields">
               <b-row
                 :id="order"
@@ -21,8 +17,8 @@
                     placement="left"
                     :title="info.form_fields[order].tooltip"
                   >
-                    <i class="fa fa-info-circle fa-lg"></i>&nbsp;
-                    <label>{{labels[order]}}</label>
+                    <label>{{labels[order]}}</label>&nbsp;
+                    <i class="fa fa-info-circle fa-sm"></i>
                   </span>
                   <span v-else>
                     <label>
@@ -69,7 +65,6 @@
                 </b-col>
               </b-row>
             </div>
-          </b-card>
         </b-col>
 
         <b-col>
@@ -97,7 +92,7 @@
                         :title="flags_info.form_fields[order].tooltip"
                       >
                         {{labels.flags[order]}}
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
                     </label>
@@ -122,7 +117,7 @@
                         placement="left"
                         :title="flags_info.form_fields[order].tooltip"
                       >
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                         {{labels.flags[order]}}
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
@@ -133,8 +128,8 @@
             </b-row>
           </b-card>
 
+          <h5 v-if="flags_info" class="mb-3" v-translate>Annex groups reported in full</h5>
           <b-card v-if="flags_info">
-            <h5 class="mb-3" v-translate>Annex group reported in full</h5>
             <div id="annex-flags">
               <div class="flags-row" v-for="column in specific_flags_columns" :key="column">
                 <div
@@ -158,7 +153,7 @@
                         placement="left"
                         :title="flags_info.form_fields[order].tooltip"
                       >
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                         {{labels.flags[order]}}
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>

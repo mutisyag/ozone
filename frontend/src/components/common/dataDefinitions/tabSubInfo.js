@@ -9,7 +9,7 @@ const getTabSubInfo = ($gettext) => {
     fields_order: ['reporting_channel', 'submission_format', 'reporting_officer', 'designation', 'organization', 'postal_address', 'country', 'phone', 'email', 'date'],
     intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
     title: $gettext('Submission Info'),
-    titleHtml: `<b>${$gettext('SUBMISSION INFO')}</b>`,
+    titleHtml: `<b>${$gettext('SUBMISSION INFO')}</b><br><small>${$gettext('Please fill-in mandatory fields')}</small>`,
     detailsHtml: '',
     isInvalid: false,
     party: {

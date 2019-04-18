@@ -15,7 +15,7 @@
       <div class="tab-title">
         <div v-if="selectedTab.tooltipHtml" v-b-tooltip :title="selectedTab.tooltipHtml">
           <span v-html="selectedTab.titleHtml"></span>
-          <i style="margin-left: 5px" class="fa fa-info-circle fa-lg"></i>
+          <i style="margin-left: 5px" class="fa fa-info-circle fa-sm"></i>
         </div>
         <div v-else v-html="selectedTab.titleHtml"></div>
       </div>
