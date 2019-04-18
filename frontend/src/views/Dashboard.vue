@@ -288,7 +288,7 @@ export default {
       tableOptionsCurrentPageWasSetFromWatcher: false,
       dataEntryTable: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         sorting: {
           sortBy: 'updated_at',
@@ -302,7 +302,7 @@ export default {
           obligation: null,
           party: null
         },
-        pageOptions: [10, 25, 100]
+        pageOptions: [5, 10, 25, 100]
       }
     }
   },
