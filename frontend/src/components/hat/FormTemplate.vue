@@ -233,10 +233,6 @@
     </div>
 
     <div class="table-wrapper">
-      <h4 class="mb-2">
-        {{tab_info.formNumber}}.{{tableCounter + 1}}
-        <span v-translate>Comments</span>
-      </h4>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"

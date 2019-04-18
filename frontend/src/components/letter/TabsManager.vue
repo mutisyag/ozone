@@ -44,34 +44,6 @@
             <Files/>
           </b-tab>
         </b-tabs>
-
-        <div class="legend">
-          <b>
-            <span v-translate>Legend:</span>
-          </b>
-          <div>
-            <div class="spinner">
-              <div class="loader"></div>
-            </div>-
-            <span v-translate>Form is curently being saved</span>
-          </div>
-          <div>
-            <i style="color: red;" class="fa fa-times-circle fa-lg"></i> -
-            <span v-translate>Form save failed. Please check the validation</span>
-          </div>
-          <div>
-            <i style="color: green;" class="fa fa-check-circle fa-lg"></i> -
-            <span
-              v-translate
-            >Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
-          </div>
-          <div>
-            <i class="fa fa-edit fa-lg"></i> -
-            <span
-              v-translate
-            >The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
-          </div>
-        </div>
       </b-card>
     </div>
     <Footer style="display:inline">

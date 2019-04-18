@@ -78,10 +78,6 @@
       </div>
     </div>
     <div id="tab-comments" class="table-wrapper" v-if="tab_info.comments">
-      <h4>
-        {{tab_info.formNumber}}.2
-        <span v-translate>Comments</span>
-      </h4>
       <hr>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
