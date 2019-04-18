@@ -619,6 +619,10 @@ class Submission(models.Model):
         return self.workflow().in_initial_state
 
     @property
+    def in_final_state(self):
+        return self.workflow().finished
+
+    @property
     def is_current(self):
         if self.flag_superseded or self.in_initial_state:
             return False
@@ -1187,6 +1191,10 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
+        if self.obligation.form_type == 'exemption':
+            if user.is_secretariat and not self.in_final_state:
+                return True
+
         return (
             not user.is_read_only
             and user.is_secretariat
