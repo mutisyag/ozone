@@ -1,12 +1,10 @@
 <template>
   <div>
-    <b-card>
       <b-card-header>
-        <h5 class="text-right" v-translate>Uploaded files</h5>
+        <h5 class="mb-4" v-translate>Uploaded files</h5>
       </b-card-header>
       <b-table
             show-empty
-            bordered
             :empty-text="$gettext('No files uploaded')"
             hover
             :items="tableItemsUploaded"
@@ -33,14 +31,12 @@
           <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <b-btn variant="primary" @click="$store.dispatch('triggerSave')"><i class="fa fa-upload"></i></b-btn>
         </template>
       </b-table>
-    </b-card>
     <br>
-    <b-card>
       <b-card-header>
         <div class="row">
+          <h5 class="col-8" v-translate>Files to be uploaded</h5>
           <div class="col-4 mb-2">
             <b-form-file
               id="choose-files-button"
@@ -52,12 +48,10 @@
               @input="onSelectedFilesChanged"
             />
           </div>
-          <h5 class="col-8 text-right" v-translate>Files to be uploaded</h5>
         </div>
       </b-card-header>
       <b-table
             show-empty
-            bordered
             :empty-text="$gettext('No files uploaded')"
             hover
             :items="tableItemsToUpload"
@@ -97,7 +91,6 @@
       <small class="muted">
         <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
     </small>
-    </b-card>
 
   </div>
 </template>
