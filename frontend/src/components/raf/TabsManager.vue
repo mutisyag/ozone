@@ -198,7 +198,7 @@ export default {
   },
   methods: {
     async clone(url) {
-      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'Revising is ireversible', $gettext: this.$gettext })
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You are about to create a new version for data entry. The current version will be superseded once the new version is submitted.', $gettext: this.$gettext })
       if (!confirmed) {
         return
       }

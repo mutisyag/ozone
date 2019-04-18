@@ -123,7 +123,7 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
@@ -133,11 +133,10 @@
             >
               <b-input-group>
                 <b-input-group-prepend>
-                  <span
-                    class="input-group-text"
+                  <span class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                    QPS <i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
@@ -166,7 +165,7 @@
                     class="input-group-text"
                     :id="`polyols_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                    Contained in polyols<i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
@@ -295,7 +294,7 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
@@ -309,7 +308,7 @@
                     class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                    QPS<i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
@@ -337,7 +336,7 @@
                     class="input-group-text"
                     :id="`polyols_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                    Contained in polyols<i class="mr-1 fa fa-info-circle-sm"></i>
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
@@ -487,7 +486,7 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
           </template>
 
