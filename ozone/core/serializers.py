@@ -560,19 +560,31 @@ def validate_import_export_data(
     # Find all entries in self.initial_data that do not have a src/dst country
     # (actually, there should only be one such entry, but this cannot be
     # guaranteed at this stage of the request processing).
-    # Then find all substances relating to those entries (could be blends)
-    related_substances = []
+    # Then find all substances relating to those entries (could be blends).
+    # From these substances, keep only the ones that are also in at least one
+    # entry with a src/dst country.
+    partyless_substances = set()
+    partyful_substances = set()
     for entry in initial_data:
         if entry.get(party_field, None) is None:
             if entry.get('substance', None):
-                related_substances.append(entry.get('substance'))
+                partyless_substances.add(entry.get('substance'))
             elif entry.get('blend', None):
-                related_substances.extend(
+                partyless_substances.update(
                     Blend.objects.get(
                         id=entry.get('blend')
-                    )
-                    .get_substance_ids()
+                    ).get_substance_ids()
                 )
+        else:
+            if entry.get('substance', None):
+                partyful_substances.add(entry.get('substance'))
+            elif entry.get('blend', None):
+                partyful_substances.update(
+                    Blend.objects.get(
+                        id=entry.get('blend')
+                    ).get_substance_ids()
+                )
+    related_substances = partyless_substances.intersection(partyful_substances)
 
     # Calculate the sums of quantities and totals for each substance
     if related_substances:
