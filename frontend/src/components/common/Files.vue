@@ -30,16 +30,10 @@
             v-b-tooltip
             :title="downloadLabel"
           ><i class="fa fa-download"></i></b-btn>
-          <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
+          <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <div class="ml-2" style="width:200px" v-if="cell.item.details.percentage">
-            <b-progress :value="cell.item.details.percentage" :max="100">
-              <b-progress-bar :value="cell.item.details.percentage">
-                Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
-              </b-progress-bar>
-            </b-progress>
-          </div>
+          <b-btn variant="primary" @click="$store.dispatch('triggerSave')"><i class="fa fa-download"></i></b-btn>
         </template>
       </b-table>
     </b-card>
@@ -81,7 +75,8 @@
         </template>
 
         <template slot="actions" slot-scope="cell">
-          <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
+          <div style="wite-space: nowrap">
+            <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
               <i class="fa fa-trash" aria-hidden="true"></i>
             </b-button>
             <div class="ml-2" style="width:200px" v-if="cell.item.details.percentage">
@@ -91,6 +86,7 @@
                 </b-progress-bar>
               </b-progress>
             </div>
+          </div>
         </template>
       </b-table>
       <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
