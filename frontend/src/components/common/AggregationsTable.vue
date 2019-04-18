@@ -3,11 +3,11 @@
   <!-- {{aggregations}} -->
   <b-table
     show-empty
-    striped
     hover
     :items="items"
     :fields="fields"
     class="full-bordered"
+    head-variant="light"
     bordered
   >
     <template slot="thead-top">
@@ -39,7 +39,7 @@ export default {
           label: this.$gettext('Consumption'),
           colspan: 3
         }, {
-          label: this.$gettext('Production allowance for BDN of Article 5 Parties'),
+          label: this.$gettext('Production allowance for BDN of Article 5 parties'),
           colspan: 3
         }
       ]
