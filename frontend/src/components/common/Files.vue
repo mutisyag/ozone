@@ -33,7 +33,7 @@
           <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <b-btn variant="primary" @click="$store.dispatch('triggerSave')"><i class="fa fa-download"></i></b-btn>
+          <b-btn variant="primary" @click="$store.dispatch('triggerSave')"><i class="fa fa-upload"></i></b-btn>
         </template>
       </b-table>
     </b-card>
