@@ -1,78 +1,108 @@
 <template>
   <div>
-    <div v-if="!files.length">
-      <h5 class="ml-2" v-translate>No files uploaded</h5>
-    </div>
-    <div v-else>
-      <b-input-group class="mb-2" v-for="(file, index) in files" :key="index">
-        <b-input-group-text
-          slot="prepend"
-          style="padding: 0;"
-        >
-          <span>
-            <b-btn
-              variant="link"
-              @click="file.upload_succesfull ? $store.dispatch('downloadStuff', { url: file.file_url, fileName:file.name }) : ''"
+    <b-card>
+      <b-card-header>
+        <h5 class="text-right" v-translate>Uploaded files</h5>
+      </b-card-header>
+      <b-table
+            show-empty
+            bordered
+            :empty-text="$gettext('No files uploaded')"
+            hover
+            :items="tableItemsUploaded"
+            :fields="tableFieldsUploaded"
+          >
+
+        <template slot="description" slot-scope="cell">
+          <b-form-input
+            class="d-inline"
+            placeholder="Optional description"
+            :value="cell.value"
+            style="height: unset"
+            @input="onFileDescriptionChanged($event, cell.item.details)"
+          />
+        </template>
+
+        <template slot="actions" slot-scope="cell">
+          <b-btn
+            variant="primary"
+            @click="$store.dispatch('downloadStuff', { url: file.file_url, fileName:file.name })"
             v-b-tooltip
-            :title="file.upload_succesfull ? downloadLabel : uploadLabel"
-            >
-              <i v-if="file.upload_successful" class="fa fa-download" aria-hidden="true"></i>
-              <span v-else>
-                <span v-translate>Selected for upload:</span> &nbsp;<i class="fa fa-upload" aria-hidden="true"></i>
-              </span>
-              {{file.name}}
-            </b-btn>
-            <div v-if="file.upload_successful">
-              <small>
-              Uploaded at:
-                {{formatDate(file.updated)}}
-              </small>
-            </div>
-          </span>
-        </b-input-group-text>
-        <b-form-input
-          class="d-inline"
-          placeholder="Optional description"
-          :value="file.description"
-          style="height: unset"
-          @input="onFileDescriptionChanged($event, file)"
-        />
-        <b-input-group-append>
-          <b-button variant="danger" class="pull-right" @click="deleteFile($event, file)">
+            :title="downloadLabel"
+          ><i class="fa fa-download"></i></b-btn>
+          <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
-          <div class="ml-2" style="width:200px" v-if="file.percentage">
-            <b-progress :value="file.percentage" :max="100">
-              <b-progress-bar :value="file.percentage">
-                Uploading: <strong>{{ parseInt(file.percentage) }}%</strong>
+          <div class="ml-2" style="width:200px" v-if="cell.item.details.percentage">
+            <b-progress :value="cell.item.details.percentage" :max="100">
+              <b-progress-bar :value="cell.item.details.percentage">
+                Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
               </b-progress-bar>
             </b-progress>
           </div>
-        </b-input-group-append>
-      </b-input-group>
-    </div>
+        </template>
+      </b-table>
+    </b-card>
     <br>
-    <div class="row">
-      <div class="col-4">
-        <b-form-file
-          id="choose-files-button"
-          :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
-          :multiple="true"
-          ref="filesInput"
-          v-model="selectedFiles"
-          :placeholder="placeholder"
-          @input="onSelectedFilesChanged"
-        />
+    <b-card>
+      <b-card-header>
+        <div class="row">
+          <div class="col-4 mb-2">
+            <b-form-file
+              id="choose-files-button"
+              :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
+              :multiple="true"
+              ref="filesInput"
+              v-model="selectedFiles"
+              :placeholder="placeholder"
+              @input="onSelectedFilesChanged"
+            />
+          </div>
+          <h5 class="col-8 text-right" v-translate>Files to be uploaded</h5>
+        </div>
+      </b-card-header>
+      <b-table
+            show-empty
+            bordered
+            :empty-text="$gettext('No files uploaded')"
+            hover
+            :items="tableItemsToUpload"
+            :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
+          >
+
+        <template slot="description" slot-scope="cell">
+          <b-form-input
+            class="d-inline"
+            placeholder="Optional description"
+            :value="cell.value"
+            style="height: unset"
+            @input="onFileDescriptionChanged($event, cell.item.details)"
+          />
+        </template>
+
+        <template slot="actions" slot-scope="cell">
+          <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
+              <i class="fa fa-trash" aria-hidden="true"></i>
+            </b-button>
+            <div class="ml-2" style="width:200px" v-if="cell.item.details.percentage">
+              <b-progress :value="cell.item.details.percentage" :max="100">
+                <b-progress-bar :value="cell.item.details.percentage">
+                  Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
+                </b-progress-bar>
+              </b-progress>
+            </div>
+        </template>
+      </b-table>
+      <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
+      <div v-if="files.length">
+        <br>
+        <b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
       </div>
-    </div>
-    <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
-    <div v-if="files.length">
-      <br>
-      <b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
-    </div>
-    <small class="ml-2 muted">
-      <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
+      <small class="muted">
+        <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
     </small>
+    </b-card>
+
   </div>
 </template>
 
@@ -93,12 +123,35 @@ export default {
       loadingInitialFiles: true,
       placeholder: this.$gettext('Click to browse files'),
       uploadLabel: this.$gettext('File not uploaded yet'),
-      downloadLabel: this.$gettext('Download')
+      downloadLabel: this.$gettext('Download'),
+      tableFieldsUploaded: [
+        { key: 'fileName', label: this.$gettext('File Name') },
+        { key: 'description', label: this.$gettext('Description') },
+        { key: 'date', label: this.$gettext('Date') },
+        { key: 'actions', label: this.$gettext('Actions') }
+      ]
     }
   },
   async created() {
     await this.getSubmissionFiles()
     this.loadingInitialFiles = false
+  },
+  computed: {
+    tableItemsUploaded() {
+      return this.files.filter(file => file.upload_successful).map(file => ({
+        fileName: file.name,
+        description: file.description,
+        date: this.formatDate(file.updated),
+        details: file
+      }))
+    },
+    tableItemsToUpload() {
+      return this.files.filter(file => !file.upload_successful).map(file => ({
+        fileName: file.name,
+        description: file.description,
+        details: file
+      }))
+    }
   },
   methods: {
     formatDate(date) {
@@ -159,5 +212,13 @@ a {
 }
 .btn-link:hover {
   text-decoration: none;
+}
+.uploadedFiles {
+  display: flex;
+}
+.card-header {
+  background: white;
+  padding: 0;
+  margin-bottom: 1rem;
 }
 </style>
