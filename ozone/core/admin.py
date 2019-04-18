@@ -362,6 +362,24 @@ class SubmissionAdmin(admin.ModelAdmin):
                 self.readonly_fields.append(field.name)
         return self.readonly_fields
 
+    def get_deleted_objects(self, objs, request):
+        deletable_objects, model_count, perms_needed, protected = super(
+            SubmissionAdmin, self
+        ).get_deleted_objects(objs, request)
+        protected = False
+        return deletable_objects, model_count, perms_needed, protected
+
+    def delete_queryset(self, request, queryset):
+        for obj in queryset:
+            obj._current_state = 'data_entry'
+            obj.save()
+            obj.delete()
+
+    def delete_model(self, request, obj):
+        obj._current_state = 'data_entry'
+        obj.save()
+        obj.delete()
+
 
 @admin.register(SubmissionInfo)
 class SubmissionInfoAdmin(admin.ModelAdmin):
