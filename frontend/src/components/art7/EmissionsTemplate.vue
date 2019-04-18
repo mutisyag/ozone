@@ -66,7 +66,7 @@
               style="left: -35px;top: -10px;"
               :key="`${cell.item.index}_${inputField}_${tabName}_button`"
             >
-              <b-btn variant="link" @click="remove_field(cell.item.index)" class="table-btn">
+              <b-btn variant="default" size="sm" @click="remove_field(cell.item.index)" class="table-btn">
                 <i class="fa fa-trash"></i>
               </b-btn>
             </div>
