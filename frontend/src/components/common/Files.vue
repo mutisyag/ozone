@@ -58,11 +58,11 @@
         </template>
 
         <template slot="actions" slot-scope="cell">
-          <div style="wite-space: nowrap">
+          <div class="d-flex">
             <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
               <i class="fa fa-trash" aria-hidden="true"></i>
             </b-button>
-            <div class="ml-2" style="width:200px" v-if="cell.item.details.percentage">
+            <div class="ml-2" style="min-width:300px" v-if="cell.item.details.percentage">
               <b-progress :value="cell.item.details.percentage" :max="100">
                 <b-progress-bar :value="cell.item.details.percentage">
                   Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
