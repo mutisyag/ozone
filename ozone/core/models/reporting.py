@@ -1374,7 +1374,9 @@ class Submission(models.Model):
             # and party.
             # The prefill will be skipped if it's a clone action.
             if not hasattr(self, 'info'):
-                latest_submission = submissions.order_by('-updated_at').first()
+                latest_submission = submissions.exclude(
+                    pk=self.pk
+                ).order_by('-updated_at').first()
                 if latest_submission and hasattr(latest_submission, 'info'):
                     latest_info = latest_submission.info
                     info = SubmissionInfo.objects.create(
