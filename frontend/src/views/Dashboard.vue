@@ -394,7 +394,7 @@ export default {
       }, {
         key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
       }, {
-        key: 'current_state', label: this.$gettext('State'), sortable: true
+        key: 'current_state', label: this.$gettext('Status'), sortable: true
       }, {
         key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
       }, {
