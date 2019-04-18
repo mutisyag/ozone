@@ -104,9 +104,9 @@ const getFormArt7 = ($gettext) => {
             width: 95
           },
           {
-            label: `(2) <br> ${$gettext('Country of destination of exports')}`,
+            label: `(2) <br> ${$gettext('Destination country/region/territory')}`,
             name: 'destination_party',
-            width: 180
+            width: 190
           },
           {
             label: `(3) <br> ${$gettext('New')}`,
@@ -244,7 +244,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           name: 'source_party',
-          label: `(2b) <br> ${$gettext('Exporting party for quantities reported as imports')}`,
+          label: `(2b) <br> ${$gettext('Exporting country/region/territory')}`,
           width: 180
         },
         {
@@ -608,7 +608,7 @@ const getFormArt7 = ($gettext) => {
           name: 'substance'
         },
         {
-          label: `(3) <br> ${$gettext('Exporting party for quantities reported as imports <br> <b>OR</b> <br> Country of destination of exports')}`,
+          label: `(3) <br> ${$gettext('Exporting or destination country/region/territory')}`,
           name: 'trade_party'
         },
         {
@@ -649,7 +649,8 @@ const getFormArt7 = ($gettext) => {
             label: ''
           },
           {
-            label: ''
+            label: '',
+            tooltip: 'Exporting country/party/territory for quantities reported as imports OR country/party/territory of destination of exports'
           },
           {
             label: $gettext('Quantity of imports from non-parties'),
