@@ -10,17 +10,6 @@
             :items="tableItemsUploaded"
             :fields="tableFieldsUploaded"
           >
-
-        <template slot="description" slot-scope="cell">
-          <b-form-input
-            class="d-inline"
-            placeholder="Optional description"
-            :value="cell.value"
-            style="height: unset"
-            @input="onFileDescriptionChanged($event, cell.item.details)"
-          />
-        </template>
-
         <template slot="actions" slot-scope="cell">
           <b-btn
             variant="primary"
