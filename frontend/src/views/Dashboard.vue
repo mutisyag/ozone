@@ -709,7 +709,7 @@ export default {
   .dashboard-filters > div,
   .filter-group > div {
     margin-right: 5px;
-    min-width: 130px;
+    min-width: 140px;
   }
 
   .filter-group {
