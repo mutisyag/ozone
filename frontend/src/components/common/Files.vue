@@ -2,8 +2,7 @@
   <div class="col-8 files-upload-wrapper">
       <div>
         <div class="row">
-          <h5 class="col-8" v-translate>Files to be uploaded</h5>
-          <div class="col-4 mb-2">
+          <div class="col-7 mb-2">
             <b-form-file
               id="choose-files-button"
               :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
@@ -15,10 +14,17 @@
             />
           </div>
         </div>
+        <small class="ml-1 muted">
+           <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
+        </small>
+        <div v-if="files.length">
+          <h5 class="mt-3 ml-1" v-translate>Files to be upoaded</h5>
+        </div>
       </div>
       <b-table
             show-empty
-            :empty-text="$gettext('No files uploaded')"
+            class="no-header"
+            :empty-text="$gettext('Click the Browse button to add files')"
             :items="tableItemsToUpload"
             :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
           >
@@ -49,16 +55,10 @@
         </template>
       </b-table>
       <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
-      <div v-if="files.length">
-        <br>
-        <b-btn variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Upload files</b-btn>
-      </div>
-      <small class="muted">
-        <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
-    </small>
+    <b-btn class="mb-4" v-if="files.length" variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Start upload</b-btn>
     <br>
     <div>
-      <h5 class="mb-4" v-translate>Uploaded files</h5>
+      <h5 class="mb-4 ml-1" v-translate>Uploaded files</h5>
     </div>
     <b-table
           show-empty
@@ -180,10 +180,6 @@ export default {
 
 <style lang="css" scoped>
 .files-upload-wrapper {
-  background:#eee;
-  padding:1rem;
-  border-radius:6px;
-  margin:auto;
 }
 a {
   margin-bottom: 1rem;

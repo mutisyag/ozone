@@ -1264,3 +1264,13 @@ html:not([dir="rtl"]) .aside-menu {
 .submission-table .input-group input {
 	min-width: 80px;
 }
+
+.no-header thead {
+  display: none;
+}
+
+.no-header .b-table-empty-row {
+  .text-center {
+    text-align: left!important;
+  }
+}

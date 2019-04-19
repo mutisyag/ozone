@@ -47,7 +47,7 @@ const dateFormat = (value, language, formatString) => {
 
 const dateFormatToYYYYMMDD = (value, language) => (dateFormat(value, language, 'YYYY-MM-DD') === 'Invalid date' ? null : dateFormat(value, language, 'YYYY-MM-DD'))
 const dateFormatToSeconds = (value, language) => dateFormat(value, language, 'YYYY-MM-DD HH:mm:ss')
-const dateFormatToDisplay = (value, language) => dateFormat(value, language, 'DD-MMMM-YYYY HH:mm:ss')
+const dateFormatToDisplay = (value, language) => dateFormat(value, language, 'DD MMMM YYYY HH:mm:ss')
 
 export {
   initLanguages,
