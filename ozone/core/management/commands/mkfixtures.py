@@ -486,7 +486,7 @@ class Command(BaseCommand):
                 party_type + 'Prod'
             )
             # Don't need to call get_decimals for 'BaseA5' and 'BaseNA5' periods
-            # because is not a special case and we will round to 2 decimal places.
+            # because is not a special case and we will round to 1 decimal.
             baseline_prod = row['CalcProd']
             if baseline_prod:
                 baseline_prod = round(row['CalcProd'], 1)
@@ -583,5 +583,5 @@ class Command(BaseCommand):
             baseline += data['prod_transfers']
 
         # Periods will always be between '1995' and '2000'
-        # so we round to 2 decimal places.
+        # so we round to 1 decimal.
         return round(baseline, 1)
