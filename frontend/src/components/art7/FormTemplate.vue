@@ -169,7 +169,7 @@
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
-                        Amounts contained in pre-blended polyols
+                        Amounts contained in pre-blended polyols, not to be included in the amount of total imports
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -340,7 +340,7 @@
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
-                        Amounts contained in pre-blended polyols
+                        Amounts contained in pre-blended polyols, not to be included in the amount of total imports
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
