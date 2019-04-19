@@ -427,9 +427,7 @@ class LimitViewSet(viewsets.ModelViewSet):
     # Will only allow GET for now on this view
     http_method_names = ['get']
 
-    queryset = Limit.objects.all().prefetch_related(
-        "reporting_period", "party", "group"
-    )
+    queryset = Limit.objects.all()
     serializer_class = LimitSerializer
 
     filter_backends = (
@@ -454,9 +452,7 @@ class LimitViewSet(viewsets.ModelViewSet):
     pagination_class = LimitPaginator
 
     def get_queryset(self):
-        return Limit.objects.all().prefetch_related(
-            "reporting_period", "party", "group"
-        )
+        return Limit.objects.all()
 
 
 class SubmissionPaginator(PageNumberPagination):

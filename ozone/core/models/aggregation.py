@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group
+from .control import Limit, LimitTypes, Baseline, BaselineType
 
 
 __all__ = [
@@ -145,18 +146,12 @@ class ProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
-    # Baselines
-    baseline_prod = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    # Baselines - they can be null!
+    baseline_prod = models.FloatField(blank=True, null=True)
 
-    baseline_cons = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    baseline_cons = models.FloatField(blank=True, null=True)
 
-    baseline_bdn = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    baseline_bdn = models.FloatField(blank=True, null=True)
 
     # Limits
     # TODO: to clarify usage with secretariat; for now these are empty
@@ -281,13 +276,78 @@ class ProdCons(models.Model):
                 - self.import_quarantine
             )
 
-    def save(self, *args, **kwargs):
+    def populate_limits_and_baselines(self):
+        """
+        At first save we fetch the limits/baselines from the corresponding
+        tables.
+
+        This assumes that said tables are pre-populated, which should happen
+        in practice. Otherwise, this method might be triggered by other means.
+        """
+        # Get the party's characteristics for this specific reporting period
+        party = PartyHistory.objects.get(
+            party=self.party, reporting_period=self.reporting_period
+        )
+
+        # Populate limits
+        for limit in Limit.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            group=self.group
+        ):
+            if limit.limit_type == LimitTypes.PRODUCTION.value:
+                self.limit_prod = limit.limit
+            elif limit.limit_type == LimitTypes.CONSUMPTION.value:
+                self.limit_cons = limit.limit
+            elif limit.limit_type == LimitTypes.BDN.value:
+                self.limit_bdn = limit.limit
+
+        # Populate baselines; first get appropriate baseline types
+        if party.is_article5:
+            prod_bt_name = 'A5Prod'
+            cons_bt_name = 'A5Cons'
+            # Non-existent name
+            bdn_bt_name = ''
+        else:
+            prod_bt_name = 'NA5Prod'
+            cons_bt_name = 'NA5Cons'
+            bdn_bt_name = 'BDN_NA5'
+
+        baselines = Baseline.objects.filter(
+            party=self.party,
+            group=self.group
+        )
+        prod = baselines.filter(
+            baseline_type=BaselineType.objects.get(name=prod_bt_name)
+        ).first()
+        cons = baselines.filter(
+            baseline_type=BaselineType.objects.get(name=cons_bt_name)
+        ).first()
+        bdn = baselines.filter(
+            baseline_type=BaselineType.objects.get(name=bdn_bt_name)
+        ).first()
+
+        if prod:
+            self.baseline_prod = prod.baseline
+        if cons:
+            self.baseline_cons = cons.baseline
+        if bdn:
+            self.baseline_bdn = bdn.baseline
+
+    def save(
+        self,
+        force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         """
         At each save, we need to recalculate the totals.
         """
         self.calculate_totals()
 
-        super().save(*args, **kwargs)
+        # If this is first save, also populate baselines and limits.
+        if not self.pk or force_insert:
+            self.populate_limits_and_baselines()
+
+        super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
         db_table = "aggregation_prod_cons"
