@@ -12,7 +12,8 @@ from ozone.core.models import (
     Group,
     LimitTypes,
     Party,
-    PartyHistory
+    PartyHistory,
+    ProdCons,
 )
 
 
@@ -100,13 +101,10 @@ class Command(BaseCommand):
                             baseline2 = baseline2.baseline
                         days1 = (cm1.end_date - period.start_date).days + 1
                         days2 = (period.end_date - cm2.start_date).days + 1
-                        limit = round(
-                            (
-                                baseline1 * cm1.allowed * days1
-                                + baseline2 * cm2.allowed * days2
-                            ) / ((period.end_date - period.start_date).days + 1),
-                            2
-                        )
+                        limit = (
+                            baseline1 * cm1.allowed * days1
+                            + baseline2 * cm2.allowed * days2
+                        ) / ((period.end_date - period.start_date).days + 1)
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
@@ -130,6 +128,9 @@ class Command(BaseCommand):
                 'reporting_period': period.pk,
                 'group': group.pk,
                 'limit_type': limit_type,
-                'limit': limit
+                'limit': round(
+                    limit,
+                    ProdCons.get_decimals(period, group, party)
+                )
             }
         }

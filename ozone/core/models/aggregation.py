@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.core.validators import MinValueValidator
 
@@ -184,6 +186,29 @@ class ProdCons(models.Model):
     calculated_consumption = models.FloatField(
         null=True, blank=True, default=None
     )
+
+    @classmethod
+    def get_decimals(cls, period, group, party):
+        """
+        Returns the number of decimals according to the following rounding rules.
+        """
+
+        special_cases_2009 = [
+            'CD', 'CG', 'DZ', 'EC', 'ER', 'GQ', 'GW', 'HT', 'LC', 'MA', 'MK',
+            'MZ', 'NE', 'NG', 'SZ', 'FJ', 'PK', 'PH'
+        ]
+        special_cases_2010 = [
+            'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
+            'YE', 'FJ', 'PK', 'PH'
+        ]
+        if group.group_id == 'CI':
+            if (
+                period.start_date >= datetime.strptime('2011-01-01', "%Y-%m-%d").date()
+                or period.name == '2009' and party.abbr in special_cases_2009
+                or period.name == '2010' and party.abbr in special_cases_2010
+            ):
+                return 2
+        return 1
 
     @staticmethod
     def has_read_rights_for_party(party, user):

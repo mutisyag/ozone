@@ -485,7 +485,12 @@ class Command(BaseCommand):
                 'name',
                 party_type + 'Prod'
             )
-            f['baseline'] = row['CalcProd']
+            # Don't need to call get_decimals for 'BaseA5' and 'BaseNA5' periods
+            # because is not a special case and we will round to 2 decimal places.
+            baseline_prod = row['CalcProd']
+            if baseline_prod:
+                baseline_prod = round(row['CalcProd'], 1)
+            f['baseline'] = baseline_prod
             entries.append(f)
 
             f = {}
@@ -496,7 +501,10 @@ class Command(BaseCommand):
                 'name',
                 party_type + 'Cons'
             )
-            f['baseline'] = row['CalcCons']
+            baseline_cons = row['CalcCons']
+            if baseline_cons:
+                baseline_cons = round(row['CalcCons'], 1)
+            f['baseline'] = baseline_cons
             entries.append(f)
 
             print('Procces country {} for group {}'.format(row['CntryID'], row['Anx'] + row['Grp']))
@@ -570,7 +578,10 @@ class Command(BaseCommand):
             if not data.get(period):
                 return
             s += data[period]['ProdArt5']
-        baseline = round(s / len(periods), 2)
+        baseline = s / len(periods)
         if data['prod_transfers']:
             baseline += data['prod_transfers']
-        return baseline
+
+        # Periods will always be between '1995' and '2000'
+        # so we round to 2 decimal places.
+        return round(baseline, 1)

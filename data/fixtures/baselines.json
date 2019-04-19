@@ -7951,7 +7951,7 @@
   },
   {
     "fields": {
-      "baseline": 66.21,
+      "baseline": 66.2,
       "baseline_type_id": 2,
       "group": 6,
       "party": 41
@@ -8511,7 +8511,7 @@
   },
   {
     "fields": {
-      "baseline": 10.14,
+      "baseline": 10.1,
       "baseline_type_id": 2,
       "group": 6,
       "party": 43
@@ -13531,7 +13531,7 @@
   },
   {
     "fields": {
-      "baseline": 62.12,
+      "baseline": 62.1,
       "baseline_type_id": 2,
       "group": 6,
       "party": 63
@@ -13811,7 +13811,7 @@
   },
   {
     "fields": {
-      "baseline": 23.49,
+      "baseline": 23.5,
       "baseline_type_id": 2,
       "group": 6,
       "party": 64
@@ -14931,7 +14931,7 @@
   },
   {
     "fields": {
-      "baseline": 1.09,
+      "baseline": 1.1,
       "baseline_type_id": 2,
       "group": 6,
       "party": 69
@@ -16051,7 +16051,7 @@
   },
   {
     "fields": {
-      "baseline": 5.73,
+      "baseline": 5.7,
       "baseline_type_id": 2,
       "group": 6,
       "party": 73
@@ -18831,7 +18831,7 @@
   },
   {
     "fields": {
-      "baseline": 6.31,
+      "baseline": 6.3,
       "baseline_type_id": 2,
       "group": 6,
       "party": 90
@@ -19671,7 +19671,7 @@
   },
   {
     "fields": {
-      "baseline": 2.83,
+      "baseline": 2.8,
       "baseline_type_id": 2,
       "group": 6,
       "party": 95
@@ -20791,7 +20791,7 @@
   },
   {
     "fields": {
-      "baseline": 3.63,
+      "baseline": 3.6,
       "baseline_type_id": 2,
       "group": 6,
       "party": 101
@@ -27651,7 +27651,7 @@
   },
   {
     "fields": {
-      "baseline": 1.09,
+      "baseline": 1.1,
       "baseline_type_id": 2,
       "group": 6,
       "party": 130
@@ -29871,7 +29871,7 @@
   },
   {
     "fields": {
-      "baseline": 118.38,
+      "baseline": 118.4,
       "baseline_type_id": 2,
       "group": 6,
       "party": 138
@@ -30151,7 +30151,7 @@
   },
   {
     "fields": {
-      "baseline": 51.35,
+      "baseline": 51.4,
       "baseline_type_id": 2,
       "group": 6,
       "party": 139
@@ -34831,7 +34831,7 @@
   },
   {
     "fields": {
-      "baseline": 8.69,
+      "baseline": 8.7,
       "baseline_type_id": 2,
       "group": 6,
       "party": 161
@@ -35391,7 +35391,7 @@
   },
   {
     "fields": {
-      "baseline": 15.98,
+      "baseline": 16.0,
       "baseline_type_id": 2,
       "group": 6,
       "party": 164
@@ -35671,7 +35671,7 @@
   },
   {
     "fields": {
-      "baseline": 344.88,
+      "baseline": 344.9,
       "baseline_type_id": 2,
       "group": 6,
       "party": 166
@@ -38451,7 +38451,7 @@
   },
   {
     "fields": {
-      "baseline": 26.88,
+      "baseline": 26.9,
       "baseline_type_id": 2,
       "group": 6,
       "party": 176
@@ -38991,7 +38991,7 @@
   },
   {
     "fields": {
-      "baseline": 161.98,
+      "baseline": 162.0,
       "baseline_type_id": 2,
       "group": 6,
       "party": 179
@@ -39271,7 +39271,7 @@
   },
   {
     "fields": {
-      "baseline": 248.11,
+      "baseline": 248.1,
       "baseline_type_id": 2,
       "group": 6,
       "party": 180
@@ -46551,7 +46551,7 @@
   },
   {
     "fields": {
-      "baseline": 1.73,
+      "baseline": 1.7,
       "baseline_type_id": 2,
       "group": 6,
       "party": 215
@@ -49051,7 +49051,7 @@
   },
   {
     "fields": {
-      "baseline": 551.47,
+      "baseline": 551.5,
       "baseline_type_id": 2,
       "group": 6,
       "party": 227
@@ -54341,7 +54341,7 @@
   },
   {
     "fields": {
-      "baseline": 555.67,
+      "baseline": 555.7,
       "baseline_type_id": 5,
       "group": 1,
       "party": 11
@@ -56101,7 +56101,7 @@
   },
   {
     "fields": {
-      "baseline": 8432.67,
+      "baseline": 8432.7,
       "baseline_type_id": 5,
       "group": 1,
       "party": 65
@@ -56461,7 +56461,7 @@
   },
   {
     "fields": {
-      "baseline": 3463.33333,
+      "baseline": 3463.3,
       "baseline_type_id": 5,
       "group": 1,
       "party": 77
@@ -56541,7 +56541,7 @@
   },
   {
     "fields": {
-      "baseline": 7697.53333,
+      "baseline": 7697.5,
       "baseline_type_id": 5,
       "group": 1,
       "party": 79
@@ -57251,7 +57251,7 @@
   },
   {
     "fields": {
-      "baseline": 4103.85,
+      "baseline": 4103.9,
       "baseline_type_id": 5,
       "group": 9,
       "party": 105
@@ -57421,7 +57421,7 @@
   },
   {
     "fields": {
-      "baseline": 6411.47,
+      "baseline": 6411.5,
       "baseline_type_id": 5,
       "group": 1,
       "party": 112
@@ -57541,7 +57541,7 @@
   },
   {
     "fields": {
-      "baseline": 2119.93,
+      "baseline": 2119.9,
       "baseline_type_id": 5,
       "group": 1,
       "party": 116
@@ -59301,7 +59301,7 @@
   },
   {
     "fields": {
-      "baseline": 6431.53,
+      "baseline": 6431.5,
       "baseline_type_id": 5,
       "group": 1,
       "party": 168
@@ -60061,7 +60061,7 @@
   },
   {
     "fields": {
-      "baseline": 1297.57,
+      "baseline": 1297.6,
       "baseline_type_id": 5,
       "group": 1,
       "party": 193
@@ -61381,7 +61381,7 @@
   },
   {
     "fields": {
-      "baseline": 5479.469999999999,
+      "baseline": 5479.5,
       "baseline_type_id": 5,
       "group": 1,
       "party": 235
@@ -61541,7 +61541,7 @@
   },
   {
     "fields": {
-      "baseline": 48.83,
+      "baseline": 48.8,
       "baseline_type_id": 5,
       "group": 1,
       "party": 240
