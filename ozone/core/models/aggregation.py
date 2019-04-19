@@ -306,11 +306,33 @@ class ProdCons(models.Model):
                 - self.import_quarantine
             )
 
+    def get_quantity_fields(self):
+        """
+        Returns list of field names belonging to this model which are used
+        for quantities.
+        Assumes for now that all quantity fields are <FloatField>s
+        """
+        return [
+            field.name
+            for field in self._meta.get_fields()
+            if field.get_internal_type() == 'FloatField'
+        ]
+
     def save(self, *args, **kwargs):
         """
         At each save, we need to recalculate the totals.
         """
         self.calculate_totals()
+
+        for field_name in self.get_quantity_fields():
+            setattr(
+                self,
+                field_name,
+                round(
+                    getattr(self, field_name),
+                    ProdCons.get_decimals(self.reporting_period, self.group, self.party)
+                )
+            )
 
         super().save(*args, **kwargs)
 
