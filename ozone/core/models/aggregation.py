@@ -325,15 +325,15 @@ class ProdCons(models.Model):
         self.calculate_totals()
 
         for field_name in self.get_quantity_fields():
-            setattr(
-                self,
-                field_name,
-                round(
-                    getattr(self, field_name),
-                    ProdCons.get_decimals(self.reporting_period, self.group, self.party)
+            if getattr(self, field_name) is not None and getattr(self, field_name) != '':
+                setattr(
+                    self,
+                    field_name,
+                    round(
+                        getattr(self, field_name),
+                        ProdCons.get_decimals(self.reporting_period, self.group, self.party)
+                    )
                 )
-            )
-
         super().save(*args, **kwargs)
 
     class Meta:
