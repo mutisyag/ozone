@@ -15,6 +15,7 @@ from ozone.core.models import (
     PartyHistory,
     ProdCons,
 )
+from ozone.core.models.utils import round_half_up
 
 
 class Command(BaseCommand):
@@ -128,7 +129,7 @@ class Command(BaseCommand):
                 'reporting_period': period.pk,
                 'group': group.pk,
                 'limit_type': limit_type,
-                'limit': round(
+                'limit': round_half_up(
                     limit,
                     ProdCons.get_decimals(period, group, party)
                 )

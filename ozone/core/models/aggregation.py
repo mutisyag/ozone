@@ -6,6 +6,7 @@ from django.core.validators import MinValueValidator
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group
+from .utils import round_half_up
 
 
 __all__ = [
@@ -333,7 +334,7 @@ class ProdCons(models.Model):
                 decimals = ProdCons.get_decimals(
                     self.reporting_period, self.group, self.party
                 )
-                setattr(self, field_name, round(field_value, decimals))
+                setattr(self, field_name, round_half_up(field_value, decimals))
 
         super().save(*args, **kwargs)
 

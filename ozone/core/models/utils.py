@@ -1,4 +1,5 @@
 import enum
+import math
 
 
 @enum.unique
@@ -25,3 +26,8 @@ def model_to_dict(instance, fields=None, exclude=None):
             continue
         attributes[key] = data[key]
     return attributes
+
+
+def round_half_up(x, decimals=0):
+    multiplier = 10 ** decimals
+    return math.floor(x*multiplier + 0.5) / multiplier

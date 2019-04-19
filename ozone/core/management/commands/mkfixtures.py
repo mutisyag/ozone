@@ -10,6 +10,7 @@ from openpyxl import load_workbook
 from ozone.core.models.utils import RatificationTypes
 from ozone.core.models.substance import Blend
 from ozone.core.models.party import Party
+from ozone.core.models.utils import round_half_up
 
 
 class Command(BaseCommand):
@@ -489,7 +490,7 @@ class Command(BaseCommand):
             # because is not a special case and we will round to 1 decimal.
             baseline_prod = row['CalcProd']
             if baseline_prod:
-                baseline_prod = round(row['CalcProd'], 1)
+                baseline_prod = round_half_up(row['CalcProd'], 1)
             f['baseline'] = baseline_prod
             entries.append(f)
 
@@ -503,7 +504,7 @@ class Command(BaseCommand):
             )
             baseline_cons = row['CalcCons']
             if baseline_cons:
-                baseline_cons = round(row['CalcCons'], 1)
+                baseline_cons = round_half_up(row['CalcCons'], 1)
             f['baseline'] = baseline_cons
             entries.append(f)
 
@@ -584,4 +585,4 @@ class Command(BaseCommand):
 
         # Periods will always be between '1995' and '2000'
         # so we round to 1 decimal.
-        return round(baseline, 1)
+        return round_half_up(baseline, 1)
