@@ -147,25 +147,18 @@ class ProdCons(models.Model):
     )
 
     # Baselines - they can be null!
-    baseline_prod = models.FloatField(blank=True, null=True)
+    baseline_prod = models.FloatField(blank=True, null=True, default=None)
 
-    baseline_cons = models.FloatField(blank=True, null=True)
+    baseline_cons = models.FloatField(blank=True, null=True, default=None)
 
-    baseline_bdn = models.FloatField(blank=True, null=True)
+    baseline_bdn = models.FloatField(blank=True, null=True, default=None)
 
     # Limits
-    # TODO: to clarify usage with secretariat; for now these are empty
-    limit_prod = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    limit_prod = models.FloatField(blank=True, null=True, default=None)
 
-    limit_cons = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    limit_cons = models.FloatField(blank=True, null=True, default=None)
 
-    limit_bdn = models.FloatField(
-        default=0.0, validators=[MinValueValidator(0.0)]
-    )
+    limit_bdn = models.FloatField(blank=True, null=True, default=None)
 
     # Totals computed based on the above fields.
     # Though these could have been implemented as properties (as they can be
