@@ -18,7 +18,9 @@
            <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
         </small>
         <div v-if="files.length">
-          <h5 class="mt-3 ml-1" v-translate>Files to be upoaded</h5>
+          <h5 class="mt-3 mb-3 ml-1" v-translate>Files to be upoaded</h5>
+          <b-btn class="mb-4" v-if="files.length" variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Start upload</b-btn>
+
         </div>
       </div>
       <b-table
@@ -55,7 +57,6 @@
         </template>
       </b-table>
       <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
-    <b-btn class="mb-4" v-if="files.length" variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Start upload</b-btn>
     <br>
     <div>
       <h5 class="mb-4 ml-1" v-translate>Uploaded files</h5>

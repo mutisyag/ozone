@@ -5,7 +5,7 @@ import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 const getFormRaf = ($gettext) => {
   const form = {
     formDetails: {
-      tabsDisplay: ['sub_info', 'essencrit', 'files'],
+      tabsDisplay: ['sub_info', 'files', 'essencrit'],
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',

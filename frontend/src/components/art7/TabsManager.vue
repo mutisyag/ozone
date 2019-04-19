@@ -47,6 +47,12 @@
 
           <b-tab>
             <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabId="1" :tabIndex="tabIndex"/>
+          </b-tab>
+          <b-tab>
+            <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions"/>
             </template>
             <Questionnaire :tabId="1" :info="$store.state.form.tabs.questionaire_questions"/>
@@ -74,18 +80,11 @@
             </template>
             <EmissionsTemplate
               :hasDisabledFields="!selectedDisplayTabs.has_emissions"
-              :tabId="7"
+              :tabId="8"
               ref="has_emissions"
               :tabIndex="tabIndex"
               tabName="has_emissions"
             />
-          </b-tab>
-
-          <b-tab>
-            <template slot="title">
-              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
-            </template>
-            <Files :tabId="8" :tabIndex="tabIndex"/>
           </b-tab>
         </b-tabs>
       </b-card>

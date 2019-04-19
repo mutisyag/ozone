@@ -44,6 +44,12 @@
               :tabId="0"
             />
           </b-tab>
+          <b-tab>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabIndex="tabIndex" :tabId="1"/>
+          </b-tab>
           <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
             <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
@@ -53,12 +59,6 @@
               :tabIndex="tabIndex"
               :tabName="tabId"
             />
-          </b-tab>
-          <b-tab>
-            <template slot="title">
-              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
-            </template>
-            <Files :tabIndex="tabIndex" :tabId="3"/>
           </b-tab>
         </b-tabs>
       </b-card>
