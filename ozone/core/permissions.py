@@ -248,7 +248,7 @@ class IsSecretariatOrSamePartyAggregation(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in SAFE_METHODS:
             return False
-        return obj.has_read_rights(request.user)
+        return True
 
 
 class IsSecretariatOrSamePartyLimit(BasePermission):
@@ -265,4 +265,4 @@ class IsSecretariatOrSamePartyLimit(BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method not in SAFE_METHODS:
             return False
-        return obj.has_read_rights(request.user)
+        return True
