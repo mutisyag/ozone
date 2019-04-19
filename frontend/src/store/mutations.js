@@ -254,6 +254,7 @@ const mutations = {
         state.form.tabs[tabName].form_fields[field].selected = data[field]
       }
     })
+    this.commit('setTabStatus', { tab: tabName, value: true })
   },
   // addRow
   addRow(state, { sectionName, row }) {

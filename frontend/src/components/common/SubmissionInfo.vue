@@ -199,6 +199,9 @@ export default {
   },
 
   computed: {
+    onlySelectedValue() {
+      return Object.keys(this.info.form_fields).filter(field => field !== 'current_state').map(field => this.info.form_fields[field].selected)
+    },
     error_danger() {
       return this.info.status === false
     },
@@ -268,8 +271,17 @@ export default {
       handler() {
         this.setSubmitted_atValidation()
       }
+    },
+    'onlySelectedValue': {
+      handler(old_val, new_val) {
+        if (this.info.status !== 'edited' && JSON.stringify(old_val) !== JSON.stringify(new_val)) {
+          this.$store.commit('setTabStatus', {
+            tab: 'sub_info',
+            value: 'edited'
+          })
+        }
+      }
     }
   }
-
 }
 </script>
