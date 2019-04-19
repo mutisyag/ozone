@@ -306,16 +306,19 @@ class ProdCons(models.Model):
                 - self.import_quarantine
             )
 
-    def get_quantity_fields(self):
+    def get_roundable_fields(self):
         """
-        Returns list of field names belonging to this model which are used
-        for quantities.
-        Assumes for now that all quantity fields are <FloatField>s
+        Returns list of field names which need to be rounded.
         """
         return [
-            field.name
-            for field in self._meta.get_fields()
-            if field.get_internal_type() == 'FloatField'
+            'baseline_prod',
+            'baseline_cons',
+            'baseline_bdn',
+            'limit_prod',
+            'limit_cons',
+            'limit_bdn',
+            'calculated_production',
+            'calculated_consumption',
         ]
 
     def save(self, *args, **kwargs):
@@ -324,7 +327,7 @@ class ProdCons(models.Model):
         """
         self.calculate_totals()
 
-        for field_name in self.get_quantity_fields():
+        for field_name in self.get_roundable_fields():
             field_value = getattr(self, field_name)
             if field_value is not None and field_value != '':
                 decimals = ProdCons.get_decimals(
