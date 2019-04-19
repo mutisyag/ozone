@@ -205,7 +205,7 @@ const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async
   upload.start()
 })
 
-const getLimits = params => fetch('limits/', {
+const getLimits = params => fetch('aggregations/', {
   params
 })
 

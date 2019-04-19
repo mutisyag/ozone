@@ -3,7 +3,7 @@
     <div class="w-100 pt-3">
 
       <!-- Filters -->
-      <b-row>
+      <b-row v-if="tableReady">
         <b-col v-for="(filterValue, filterKey) in filters" :key="filterKey">
           <b-input-group horizontal :prepend="$gettext(filterValue.name)" class="mb-1">
             <b-form-select v-model="selectedFilters[filterKey]">
@@ -32,6 +32,7 @@
         bordered
         hover
         head-variant="light"
+        class="full-bordered"
         stacked="md"
         :items="filteredItems"
         :fields="fields"
@@ -39,7 +40,15 @@
         :per-page="tableOptions.params.page_size"
         ref="table"
         @sort-changed="sortings"
-      ></b-table>
+      >
+        <template slot="thead-top">
+          <tr>
+            <th v-for="(category, index) in tableTop" :key="index" :colspan="category.colspan">
+              {{category.label}}
+            </th>
+          </tr>
+        </template>
+      </b-table>
 
       <b-row>
         <b-col md="10" class="my-1">
@@ -73,10 +82,15 @@ export default {
         { key: 'party', label: `${this.$gettext('Party')}`, sortable: true },
         { key: 'group', label: `${this.$gettext('Annex/Group')}`, sortable: true },
         { key: 'reporting_period', label: `${this.$gettext('Reporting period')}`, sortable: true },
-        { key: 'limit_type', label: `${this.$gettext('Limit type')}`, sortable: false },
-        { key: 'limit', label: `${this.$gettext('Limit')}`, sortable: false },
-        { key: 'reported_value', label: `${this.$gettext('Reported')}`, sortable: false },
-        { key: 'baseline_value', label: `${this.$gettext('Baseline')}`, sortable: false }
+        { key: 'baseline_prod', label: this.$gettext('Baseline') },
+        { key: 'calculated_production', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_prod', label: this.$gettext('Limit') },
+        { key: 'baseline_cons', label: this.$gettext('Baseline') },
+        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_cons', label: this.$gettext('Limit') },
+        { key: 'baseline_bdn', label: this.$gettext('Baseline') },
+        { key: 'production_article_5', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_bdn', label: this.$gettext('Limit') }
       ],
       items: [],
       filters: {
@@ -101,7 +115,30 @@ export default {
           group: null,
           ordering: null
         }
-      }
+      },
+      tableTop: [
+        {
+          label: ''
+        },
+        {
+          label: ''
+        },
+        {
+          label: ''
+        },
+        {
+          label: this.$gettext('Production'),
+          colspan: 3
+        }, {
+          label: this.$gettext('Consumption'),
+          colspan: 3
+        }, {
+          label: this.$gettext('Production allowance for BDN of Article 5 Parties'),
+          colspan: 3
+        }
+      ],
+      tableReady: false,
+      isUpdateFromWatcher: false
     }
   },
   computed: {
@@ -146,6 +183,7 @@ export default {
       getLimits(this.tableOptions.params).then((response) => {
         this.items = response.data.results.slice()
         this.tableOptions.totalRows = response.data.count
+        this.tableReady = true
       })
     },
     sortings(el) {
@@ -175,6 +213,7 @@ export default {
   watch: {
     'selectedFilters': {
       handler() {
+        this.isUpdateFromWatcher = true
         this.tableOptions.params = { ...this.tableOptions.params, ...this.selectedFilters }
         this.tableOptions.params.page = null
         this.getItems()
@@ -183,11 +222,16 @@ export default {
     },
     'tableOptions.params.page': {
       handler() {
-        this.getItems()
+        if (!this.isUpdateFromWatcher) {
+          this.tableOptions.params.page = null
+          this.getItems()
+        }
+        this.isUpdateFromWatcher = false
       }
     },
     'tableOptions.params.page_size': {
       handler() {
+        this.isUpdateFromWatcher = true
         this.tableOptions.params.page = null
         this.getItems()
       }
@@ -201,5 +245,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  table thead tr:first-of-type th{
+    text-align: center;
+  }
 </style>
