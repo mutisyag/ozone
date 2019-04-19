@@ -1,29 +1,6 @@
 <template>
-  <div>
-      <b-card-header>
-        <h5 class="mb-4" v-translate>Uploaded files</h5>
-      </b-card-header>
-      <b-table
-            show-empty
-            :empty-text="$gettext('No files uploaded')"
-            hover
-            :items="tableItemsUploaded"
-            :fields="tableFieldsUploaded"
-          >
-        <template slot="actions" slot-scope="cell">
-          <b-btn
-            variant="primary"
-            @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"
-            v-b-tooltip
-            :title="downloadLabel"
-          ><i class="fa fa-download"></i></b-btn>
-          <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </b-button>
-        </template>
-      </b-table>
-    <br>
-      <b-card-header>
+  <div class="col-8 files-upload-wrapper">
+      <div>
         <div class="row">
           <h5 class="col-8" v-translate>Files to be uploaded</h5>
           <div class="col-4 mb-2">
@@ -38,11 +15,10 @@
             />
           </div>
         </div>
-      </b-card-header>
+      </div>
       <b-table
             show-empty
             :empty-text="$gettext('No files uploaded')"
-            hover
             :items="tableItemsToUpload"
             :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
           >
@@ -80,7 +56,28 @@
       <small class="muted">
         <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
     </small>
-
+    <br>
+    <div>
+      <h5 class="mb-4" v-translate>Uploaded files</h5>
+    </div>
+    <b-table
+          show-empty
+          :empty-text="$gettext('No files uploaded')"
+          :items="tableItemsUploaded"
+          :fields="tableFieldsUploaded"
+        >
+      <template slot="actions" slot-scope="cell">
+        <b-btn
+          variant="primary"
+          @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"
+          v-b-tooltip
+          :title="downloadLabel"
+        ><i class="fa fa-download"></i></b-btn>
+        <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </b-button>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -182,6 +179,12 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.files-upload-wrapper {
+  background:#eee;
+  padding:1rem;
+  border-radius:6px;
+  margin:auto;
+}
 a {
   margin-bottom: 1rem;
 }
