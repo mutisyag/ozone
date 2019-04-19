@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models.query import QuerySet
+from django.db.models.query import QuerySet, F
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
@@ -376,9 +376,7 @@ class AggregationViewSet(viewsets.ModelViewSet):
     # Will only allow GET for now on this view
     http_method_names = ['get']
 
-    queryset = ProdCons.objects.all().prefetch_related(
-        "reporting_period", "party", "group"
-    )
+    queryset = ProdCons.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationSerializer
 
     filter_backends = (
@@ -403,9 +401,7 @@ class AggregationViewSet(viewsets.ModelViewSet):
     pagination_class = AggregationPaginator
 
     def get_queryset(self):
-        return ProdCons.objects.all().prefetch_related(
-            "reporting_period", "party", "group"
-        )
+        return ProdCons.objects.filter(party=F('party__parent_party'))
 
 
 class LimitPaginator(PageNumberPagination):
@@ -427,7 +423,7 @@ class LimitViewSet(viewsets.ModelViewSet):
     # Will only allow GET for now on this view
     http_method_names = ['get']
 
-    queryset = Limit.objects.all()
+    queryset = Limit.objects.filter(party=F('party__parent_party'))
     serializer_class = LimitSerializer
 
     filter_backends = (
@@ -452,7 +448,7 @@ class LimitViewSet(viewsets.ModelViewSet):
     pagination_class = LimitPaginator
 
     def get_queryset(self):
-        return Limit.objects.all()
+        return Limit.objects.filter(party=F('party__parent_party'))
 
 
 class SubmissionPaginator(PageNumberPagination):
