@@ -80,6 +80,10 @@ export default {
     switch (currentSectionName) {
     case 'has_emissions':
       row = {
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         id: {
           selected: null
         },
@@ -210,6 +214,10 @@ export default {
     const countryFieldName = getCountryField(section)
 
     let baseInnerFields = {
+      checkForDelete: {
+        selected: false,
+        type: 'checkbox'
+      },
       ordering_id: { selected: ordering_id || 0 },
       substance: {
         type: 'select',
@@ -351,6 +359,10 @@ export default {
     switch (section) {
     case 'has_produced':
       baseInnerFields = {
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         ordering_id: { selected: ordering_id || 0 },
         remarks_party: {
           type: 'textarea',
@@ -489,6 +501,10 @@ export default {
       break
     case 'has_destroyed':
       baseInnerFields = {
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         ordering_id: { selected: ordering_id || 0 },
         substance: {
           type: 'select',
@@ -532,6 +548,10 @@ export default {
       break
     case 'has_nonparty':
       baseInnerFields = {
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         ordering_id: { selected: ordering_id || 0 },
         remarks_party: {
           type: 'textarea',

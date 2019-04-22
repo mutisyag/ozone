@@ -61,6 +61,10 @@ export default {
   },
 
   computed: {
+    selectedForDelete() {
+      return this.tab_info.form_fields.filter(field => field.checkForDelete.selected).map(field => this.tab_info.form_fields.indexOf(field))
+    },
+
     blendSubstanceHeaders() {
       return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
     },
@@ -150,6 +154,10 @@ export default {
           ...options
         })
       })
+      tableHeaders.unshift({
+        key: 'checkForDelete',
+        label: ''
+      })
       return tableHeaders
     },
 
@@ -205,6 +213,10 @@ export default {
           })
         }
       })
+      tableHeaders.unshift({
+        key: 'checkForDelete',
+        label: ''
+      })
       return tableHeaders
     },
     tab_info() {
@@ -221,6 +233,13 @@ export default {
   },
 
   methods: {
+    bulkRemove() {
+      this.$store.commit('removeBulkFields', {
+        tab: this.tabName,
+        indexList: this.selectedForDelete,
+        $gettext: this.$gettext
+      })
+    },
     fillTableSearch(data) {
       if (data.substance) {
         this.table.filters.search = data.substance

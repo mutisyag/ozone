@@ -159,6 +159,9 @@ const getFormArt7 = ($gettext) => {
         },
         {
           label: ''
+        },
+        {
+          label: ''
         }
         ],
 
@@ -298,6 +301,9 @@ const getFormArt7 = ($gettext) => {
         },
         {
           label: ''
+        },
+        {
+          label: ''
         }
         ],
         fields_order: ['substance', 'blend', 'source_party', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'validation'],
@@ -416,6 +422,9 @@ const getFormArt7 = ($gettext) => {
           },
           {
             label: ''
+          },
+          {
+            label: ''
           }
         ],
 
@@ -441,6 +450,9 @@ const getFormArt7 = ($gettext) => {
               label: $gettext('Production for exempted essential, critical or other uses within your country'),
               colspan: 2,
               tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+            },
+            {
+              label: ''
             },
             {
               label: ''
@@ -670,6 +682,9 @@ const getFormArt7 = ($gettext) => {
           },
           {
             label: ''
+          },
+          {
+            label: ''
           }
         ],
 
@@ -781,6 +796,9 @@ const getFormArt7 = ($gettext) => {
         {
           label: '',
           tooltip: $gettext('Amount destroyed in the facility')
+        },
+        {
+          label: ''
         },
         {
           label: ''
