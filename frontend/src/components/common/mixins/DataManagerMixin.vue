@@ -36,6 +36,7 @@ export default {
   },
 
   created() {
+    this.$store.commit('resetStuff')
     this.doInitialStuff()
   },
 

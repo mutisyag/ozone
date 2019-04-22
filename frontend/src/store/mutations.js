@@ -70,6 +70,26 @@ const mutations = {
     state.currentSubmissionHistory = data
   },
 
+  resetStuff(state) {
+    state.form = null
+    state.initialData = {
+      countryOptions: null,
+      countryOptionsSubInfo: null,
+      groupSubstances: null,
+      substances: null,
+      partyRatifications: null,
+      essenCritTypes: null,
+      submissionFormats: null,
+      blends: null,
+      nonParties: null,
+      display: {
+        substances: null,
+        blends: null,
+        countries: null
+      }
+    }
+  },
+
   setForm(state, { formName, $gettext }) {
     let currentFormStructure = null
     let tableRowConstructor = null
