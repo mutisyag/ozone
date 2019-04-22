@@ -33,6 +33,11 @@ class Command(BaseCommand):
 
     FIXTURES_NOT_IN_TEST = (
         'limits',
+        'partieshistory',
+        'baseline_types',
+        'control_measures',
+        'baselines',
+        'partiesratification'
     )
 
     def add_arguments(self, parser):
