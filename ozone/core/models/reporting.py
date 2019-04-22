@@ -1170,6 +1170,34 @@ class Submission(models.Model):
         self.flag_superseded = False
         self.save()
 
+    @transaction.atomic()
+    def make_previous_current(self):
+        """
+        When current submission is set to recalled, a different one should be
+        set as current (not invalid & non-superseded) if available.
+
+        Please note that a submission that has flag_valid set to None
+        (which means that it has not yet been fully checked by OS) can become
+        current.
+        However, an invalid submission cannot become current.
+        """
+        versions = (
+            Submission.objects.select_for_update()
+            .filter(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                obligation=self.obligation,
+            )
+            .exclude(flag_valid=False)
+            .exclude(pk=self.pk)
+            .exclude(_current_state__in=self.editable_states)
+            .order_by('-version')
+        )
+        latest = versions.first()
+        if latest:
+            latest.flag_superseded = False
+            latest.save()
+
     @property
     def versions(self):
         return Submission.objects.filter(
