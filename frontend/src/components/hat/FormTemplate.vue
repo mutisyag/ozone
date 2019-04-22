@@ -63,15 +63,6 @@
 
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
-            <b-btn-group class="row-controls">
-              <span
-                v-if="$store.getters.can_edit_data"
-                @click="remove_field(cell.item.index)"
-                class="table-btn"
-              >
-                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
-              </span>
-            </b-btn-group>
           </template>
           <template slot="substance" slot-scope="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
@@ -85,10 +76,22 @@
             ></fieldGenerator>
           </template>
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.originalObj.validation.selected"
-            />
+            <b-btn-group class="row-controls">
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.originalObj.validation.selected"
+              />
+            </b-btn-group>
           </template>
         </b-table>
       </div>
@@ -159,15 +162,6 @@
             <div
               class="group-cell"
             >{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}</div>
-            <b-btn-group class="row-controls">
-              <span
-                v-if="$store.getters.can_edit_data"
-                @click="remove_field(cell.item.index)"
-                class="table-btn"
-              >
-                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
-              </span>
-            </b-btn-group>
           </template>
           <template slot="blend" slot-scope="cell">
             <span
@@ -191,10 +185,22 @@
           </template>
 
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.originalObj.validation.selected"
-            />
+            <b-btn-group class="row-controls">
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.originalObj.validation.selected"
+              />
+            </b-btn-group>
           </template>
 
           <template slot="row-details" slot-scope="row">

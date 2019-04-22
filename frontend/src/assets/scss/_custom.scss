@@ -1174,29 +1174,16 @@ body {
   padding: .5rem;
 }
 
-
-.row-controls {
-  display: none;
-}
-
 .group-cell {
   width: 59px;
   text-align: center;
 }
 
-.table tr:hover,
-.table tr.hovered {
-  .row-controls {
-    display: block;
-    white-space: nowrap;
-    width: 59px;
-  }
-
-  .group-cell {
-    display: none;
-  }
+.row-controls {
+  display: block;
+  white-space: nowrap;
+  width: 59px;
 }
-
 
 .submission-table .form-control {
   padding: .4rem;
