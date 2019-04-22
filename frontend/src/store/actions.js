@@ -129,7 +129,14 @@ const actions = {
   async downloadStuff(context, { url, fileName }) {
     try {
       const downloaded = await fetch(url, { responseType: 'arraybuffer' })
-      const download_url = window.URL.createObjectURL(new Blob([downloaded.data]))
+      const blob = new Blob([downloaded.data])
+      /**
+       * [ie11 doesn't support download attribute. we use msSaveBlob instead]
+       */
+      if (navigator.msSaveBlob) {
+        return navigator.msSaveBlob(blob, fileName)
+      }
+      const download_url = window.URL.createObjectURL(blob)
       const link = document.createElement('a')
       link.href = download_url
       link.setAttribute('download', fileName)
