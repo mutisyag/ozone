@@ -531,7 +531,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
   /* Special case */
   // TODO: find a dynamic way
-  if (options[0] === 'F') {
+  if (options[0] === 'F I/II Hydrofluorocarbons') {
     entities.substance.pop()
     entities.substance.push('fii-table')
   }

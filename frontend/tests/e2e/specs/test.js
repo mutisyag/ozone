@@ -146,9 +146,9 @@ module.exports = {
     }
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_imports'])
     fillSubmissionInfo(browser, submissionInfo)
-    addEntity(browser, 'has_imports_tab', 'substance', ['AI', 'CFC-11'])
+    clickQuestionnaireRadios(browser, ['has_imports'])
+    addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'])
     addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
     addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
@@ -177,10 +177,10 @@ module.exports = {
 
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_exports'])
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_exports'])
 
-    addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
 
     addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
@@ -210,13 +210,13 @@ module.exports = {
 
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_produced'])
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_produced'])
 
-    addEntity(browser, 'has_produced_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_produced_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_produced_tab', 1, row_values_e1, modal_values, start_column)
 
-    addEntity(browser, 'has_produced_tab', 'substance', ['F', 'HFC-23'], 1, true)
+    addEntity(browser, 'has_produced_tab', 'substance', ['F I/II Hydrofluorocarbons', 'HFC-23'], 1, true)
     addValues(browser, 'fii-table', 'has_produced_tab', 1, row_values_e2, modal_values, start_column)
 
     addComment(browser, 'has_produced_tab', 'Hakuna Matata')
@@ -242,10 +242,10 @@ module.exports = {
 
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_destroyed'])
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_destroyed'])
 
-    addEntity(browser, 'has_destroyed_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_destroyed_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_destroyed_tab', 1, row_values_e1, modal_values, start_column)
 
     addEntity(browser, 'has_destroyed_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
@@ -274,10 +274,10 @@ module.exports = {
 
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_nonparty'])
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_nonparty'])
 
-    addEntity(browser, 'has_nonparty_tab', 'substance', ['AI', 'CFC-11'], 1, true)
+    addEntity(browser, 'has_nonparty_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'], 1, true)
     addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values, start_column)
 
     addEntity(browser, 'has_nonparty_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
@@ -302,8 +302,8 @@ module.exports = {
 
     login(browser, 'party', 'party')    
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser, ['has_emissions'])
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_emissions'])
 
     addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, start_column, true)
 
@@ -323,8 +323,8 @@ module.exports = {
     }
     login(browser, 'party', 'party')
     createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser)
     fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser)
     selectTab(browser, 'Files')
     uploadeFile(browser, 'hello.pdf', '../../../../')
     saveSubmission(browser, ['Submission Info', 'Questionnaire'])
@@ -363,7 +363,7 @@ module.exports = {
     browser.end()
   },
   BU_019: browser => {
-    const group = 'AI'
+    const group = 'A/I Chlorofluorocarbons'
     const name = 'CFC-11'
     const formula = 'CFCl3'
 
@@ -497,10 +497,10 @@ module.exports = {
     createSubmission(browser, 'Article 7', '2018')
     clickQuestionnaireRadios(browser, ['has_exports'])
 
-    addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-11'], 1)
+    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-11'], 1)
     addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
 
-    addEntity(browser, 'has_exports_tab', 'substance', ['AI', 'CFC-12'], 1)
+    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons', 'CFC-12'], 1)
     rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values, start_column)
 
     logout(browser)
