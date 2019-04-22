@@ -44,152 +44,152 @@ module.exports = {
     execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
     console.log('done running cleanup')
   },
-  BU_001: browser => {
-    login(browser, 'party', 'party')
-    logout(browser)
-    browser.end()
-  },
-  BU_002: browser => {
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    deleteSubmissionFake(browser)
-    deleteSubmission(browser)
-    logout(browser)
-    browser.end()
-  },
-  BU_003: browser => {
-    const data = {
-      submissionInfo: {
-        designation: 'test designation',
-        organization: 'test organisation',
-        postal_address: 'test address',
-        country: 'France',
-        phone: '+490000000',
-        email: 'john.doe@gmail.com'
-      },
-      reporting_officer: 'test name'
-    }
+  // BU_001: browser => {
+  //   login(browser, 'party', 'party')
+  //   logout(browser)
+  //   browser.end()
+  // },
+  // BU_002: browser => {
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   deleteSubmissionFake(browser)
+  //   deleteSubmission(browser)
+  //   logout(browser)
+  //   browser.end()
+  // },
+  // BU_003: browser => {
+  //   const data = {
+  //     submissionInfo: {
+  //       designation: 'test designation',
+  //       organization: 'test organisation',
+  //       postal_address: 'test address',
+  //       country: 'France',
+  //       phone: '+490000000',
+  //       email: 'john.doe@gmail.com'
+  //     },
+  //     reporting_officer: 'test name'
+  //   }
 
-    const autocomplet = false;
+  //   const autocomplet = false;
 
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    openDashboard(browser)
-    editSubmission(browser, 1)
-    saveAndFail(browser, data.submissionInfo)
-    fillSubmissionInfo(browser, data, autocomplet)
-    clickQuestionnaireRadios(browser)
-    saveSubmission(browser, ['Questionnaire'])
-    logout(browser)
-    browser.end()
-  },
-  BU_004: browser => {
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   openDashboard(browser)
+  //   editSubmission(browser, 1)
+  //   saveAndFail(browser, data.submissionInfo)
+  //   fillSubmissionInfo(browser, data, autocomplet)
+  //   clickQuestionnaireRadios(browser)
+  //   saveSubmission(browser, ['Questionnaire'])
+  //   logout(browser)
+  //   browser.end()
+  // },
+  // BU_004: browser => {
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    clickQuestionnaireRadios(browser)
-    fillSubmissionInfo(browser, submissionInfo)
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
-    checkSumbissionInfoFlags(browser)
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
-    openGeneralInstructions(browser)
-    logout(browser)
-    browser.end()
-  },
-  BU_005: browser => {
-    const data = {
-      submissionInfo: {
-        designation: 'test designation',
-        organization: 'test organisation',
-        postal_address: 'test address',
-        country: 'France',
-        phone: '+490000000',
-        email: 'john.doe@gmail.com'
-      },
-      reporting_officer: 'test name'
-    }
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   clickQuestionnaireRadios(browser)
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+  //   checkSumbissionInfoFlags(browser)
+  //   saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+  //   openGeneralInstructions(browser)
+  //   logout(browser)
+  //   browser.end()
+  // },
+  // BU_005: browser => {
+  //   const data = {
+  //     submissionInfo: {
+  //       designation: 'test designation',
+  //       organization: 'test organisation',
+  //       postal_address: 'test address',
+  //       country: 'France',
+  //       phone: '+490000000',
+  //       email: 'john.doe@gmail.com'
+  //     },
+  //     reporting_officer: 'test name'
+  //   }
 
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    saveAndFail(browser, data.submissionInfo)
-    fillSubmissionInfo(browser, data, false)
-    clickQuestionnaireRadios(browser, [], false)
-    saveSubmission(browser, ['Questionnaire'])
-    logout(browser)
-    browser.end()
-  },
-  BU_006: browser => {
-    const row_values = [0.0123, 0.12]
-    const modal_values = {
-      quantity_feedstock: 0.10,
-      quantity_critical_uses: 0.02,
-      decision_critical_uses: 'Do that'
-    }
-    const start_column = 4
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser, ['has_imports'])
-    addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
-    addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   saveAndFail(browser, data.submissionInfo)
+  //   fillSubmissionInfo(browser, data, false)
+  //   clickQuestionnaireRadios(browser, [], false)
+  //   saveSubmission(browser, ['Questionnaire'])
+  //   logout(browser)
+  //   browser.end()
+  // },
+  // BU_006: browser => {
+  //   const row_values = [0.0123, 0.12]
+  //   const modal_values = {
+  //     quantity_feedstock: 0.10,
+  //     quantity_critical_uses: 0.02,
+  //     decision_critical_uses: 'Do that'
+  //   }
+  //   const start_column = 4
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   clickQuestionnaireRadios(browser, ['has_imports'])
+  //   addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
+  //   addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
-    addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
-    addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
+  //   addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
+  //   addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values, start_column)
 
-    saveSubmission(browser, ['Questionnaire', 'Imports'])
-    browser.end()
-  },
-  BU_007: browser => {
-    const row_values = [0.0123, 0.12]
-    const modal_values = {
-      quantity_feedstock: 0.10,
-      quantity_critical_uses: 0.02,
-      decision_critical_uses: 'Do that'
-    }
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
-    const start_column = 4
+  //   saveSubmission(browser, ['Questionnaire', 'Imports'])
+  //   browser.end()
+  // },
+  // BU_007: browser => {
+  //   const row_values = [0.0123, 0.12]
+  //   const modal_values = {
+  //     quantity_feedstock: 0.10,
+  //     quantity_critical_uses: 0.02,
+  //     decision_critical_uses: 'Do that'
+  //   }
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
+  //   const start_column = 4
 
-    login(browser, 'party', 'party')
-    createSubmission(browser, 'Article 7', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser, ['has_exports'])
+  //   login(browser, 'party', 'party')
+  //   createSubmission(browser, 'Article 7', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   clickQuestionnaireRadios(browser, ['has_exports'])
 
-    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
-    addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
+  //   addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
+  //   addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
 
-    addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
-    addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
+  //   addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+  //   addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values, start_column)
 
-    addComment(browser, 'has_exports_tab', 'Hakuna Matata')
-    saveSubmission(browser, ['Questionnaire', 'Exports'])
-    browser.end()
-  },
+  //   addComment(browser, 'has_exports_tab', 'Hakuna Matata')
+  //   saveSubmission(browser, ['Questionnaire', 'Exports'])
+  //   browser.end()
+  // },
   BU_008: browser => {
     const row_values_e1 = [5, 3]
     const row_values_e2 = [10]

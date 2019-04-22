@@ -531,7 +531,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
   /* Special case */
   // TODO: find a dynamic way
-  if (options[0] === 'F I/II Hydrofluorocarbons') {
+  if (options[0] === 'F I/II Hydrofluorocarbons (HFCs)') {
     entities.substance.pop()
     entities.substance.push('fii-table')
   }
@@ -585,13 +585,13 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   if (check === true) {
     browser
       /* Check if entity was added and status is invalid */
-      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`, 5000)
+      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//i[contains(@class, 'fa-exclamation-circle')]`, 5000)
       .moveTo(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]`)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
       .pause(500)
 
-      .click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`)
+      .click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//i[contains(@class, 'fa-exclamation-circle')]`)
       .pause(500)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
@@ -617,7 +617,7 @@ const addFacility = (browser, table, tab, row, row_values, start_column, check =
   if (check === true) {
     browser
       .useXpath()
-      .click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//td[11]//span[contains(text(), 'invalid')]`)
+      .click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//td[11]//i[contains(@class, 'fa-exclamation-circle')]`)
       .pause(500)
 
     closeAsideMenu(browser, 'has_emissions_tab')
@@ -662,14 +662,14 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
   })
   /* Check if valid */
   browser
-    .click(`#${tab} #${table}  tbody tr:nth-child(${row}) td:nth-child(2)`)
-    .assert.containsText(`#${tab} #${table} .validation-wrapper > span`, 'valid')
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(2)`)
+    .expect.element(`#${tab} #${table} tbody tr:nth-child(${row}) .fa-exclamation-circle`).to.not.be.present
   /* Open edit modal */
-  browser.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.add("hovered")`, () => {
-    browser
-      .pause(500)
-      .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
-  })
+  browser
+    .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
+    .pause(500)
+
   browser
     .waitForElementVisible(`#${tab} .modal-body`, 5000)
     .pause(500)
@@ -684,10 +684,8 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
   /* Close modal */
   browser
     .pause(500)
-    .click(`#${tab} .modal-dialog .close`)
+    .click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
     .pause(500)
-    .execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
-    /* Show app-footer */
     .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
     .pause(500)
 }
