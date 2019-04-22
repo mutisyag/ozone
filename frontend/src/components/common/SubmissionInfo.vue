@@ -26,10 +26,8 @@
                       <div
                         class="floating-error"
                         :class="{danger: error_danger}"
-                        v-if="info.form_fields[order].validation"
-                        variant="danger"
-                        v-translate
-                      >(required)</div>
+                        v-if="info.form_fields[order].description"
+                      >({{ info.form_fields[order].description }})</div>
                     </label>
                   </span>
                 </b-col>
@@ -50,10 +48,9 @@
                     <div
                       :class="{danger: error_danger}"
                       class="floating-error"
-                      v-if="info.form_fields['submitted_at'].validation"
+                      v-if="info.form_fields['submitted_at'].description"
                       variant="danger"
-                      v-translate
-                    >({{info.form_fields['submitted_at'].validation}})</div>
+                    >({{ info.form_fields['submitted_at'].description }})</div>
                   </label>
                 </b-col>
                 <b-col>
@@ -200,7 +197,7 @@ export default {
 
   computed: {
     onlySelectedValue() {
-      return Object.keys(this.info.form_fields).filter(field => field !== 'current_state').map(field => this.info.form_fields[field].selected)
+      return Object.keys(this.info.form_fields).filter(field => !['current_state', 'validation'].includes(field)).map(field => this.info.form_fields[field].selected)
     },
     error_danger() {
       return this.info.status === false
