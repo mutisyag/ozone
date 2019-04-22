@@ -1,16 +1,13 @@
 <template>
-  <span class="validation-wrapper">
-    <b-badge
-      pill
-      style="cursor:pointer"
+    <i
+      style="cursor:pointer; color:red;"
       variant="danger"
+      class="fa fa-exclamation-circle fa-lg"
       @click="openValidationCallback"
       v-if="validation.length"
       v-b-tooltip.hover
       title="Click here to see the validation problems"
-    >{{labels.invalid}}</b-badge>
-    <b-badge v-else pill variant="success">{{labels.valid}}</b-badge>
-  </span>
+    ></i>
 </template>
 
 <script>

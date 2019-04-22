@@ -64,18 +64,6 @@
 
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
-            <b-btn-group class="row-controls">
-              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
-              </span>
-              <span
-                v-if="$store.getters.can_edit_data"
-                @click="remove_field(cell.item.index)"
-                class="table-btn"
-              >
-                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
-              </span>
-            </b-btn-group>
           </template>
           <template slot="substance" slot-scope="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
@@ -103,10 +91,22 @@
           </template>
 
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.originalObj.validation.selected"
-            />
+            <b-btn-group class="row-controls">
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.originalObj.validation.selected"
+              />
+            </b-btn-group>
           </template>
 
           <template
@@ -114,17 +114,20 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
+
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
@@ -180,6 +183,7 @@
                 />
               </b-input-group>
             </div>
+
           </template>
         </b-table>
       </div>
@@ -241,19 +245,6 @@
 
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
-            <b-btn-group class="row-controls">
-              <span variant="link" @click="createModalData(cell.item.originalObj, cell.item.index)">
-                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
-              </span>
-              <span
-                v-if="$store.getters.can_edit_data"
-                variant="link"
-                @click="remove_field(cell.item.index)"
-                class="table-btn"
-              >
-                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
-              </span>
-            </b-btn-group>
           </template>
 
           <template slot="substance" slot-scope="cell">
@@ -274,10 +265,22 @@
           </template>
 
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.originalObj.validation.selected"
-            />
+            <b-btn-group class="row-controls">
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.originalObj.validation.selected"
+              />
+            </b-btn-group>
           </template>
 
           <template
@@ -285,17 +288,19 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
@@ -431,18 +436,6 @@
             <div
               class="group-cell"
             >{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}</div>
-            <b-btn-group class="row-controls">
-              <span @click="createModalData(cell.item.originalObj, cell.item.index)">
-                 <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
-              </span>
-              <span
-                v-if="$store.getters.can_edit_data"
-                @click="remove_field(cell.item.index)"
-                class="table-btn"
-              >
-                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
-              </span>
-            </b-btn-group>
           </template>
           <template :slot="getCountrySlot" slot-scope="cell">
             <CloneField
@@ -466,10 +459,22 @@
           </template>
 
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.originalObj.validation.selected"
-            />
+            <b-btn-group class="row-controls">
+              <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
+                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+              </span>
+              <span
+                v-if="$store.getters.can_edit_data"
+                @click="remove_field(cell.item.index)"
+                class="table-btn"
+              >
+                <i class="fa fa-trash fa-lg" v-b-tooltip :title="$gettext('Delete')"></i>
+              </span>
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.originalObj.validation.selected"
+              />
+            </b-btn-group>
           </template>
 
           <template
@@ -477,17 +482,19 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
           </template>
 
           <template slot="row-details" slot-scope="row">
