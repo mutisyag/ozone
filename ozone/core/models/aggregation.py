@@ -307,6 +307,17 @@ class ProdCons(models.Model):
                 - self.import_quarantine
             )
 
+        self.apply_rounding()
+
+    def apply_rounding(self):
+        for field_name in self.get_roundable_fields():
+            field_value = getattr(self, field_name)
+            if field_value is not None and field_value != '':
+                decimals = ProdCons.get_decimals(
+                    self.reporting_period, self.group, self.party
+                )
+                setattr(self, field_name, round_half_up(field_value, decimals))
+
     def get_roundable_fields(self):
         """
         Returns list of field names which need to be rounded.
@@ -327,14 +338,6 @@ class ProdCons(models.Model):
         At each save, we need to recalculate the totals.
         """
         self.calculate_totals()
-
-        for field_name in self.get_roundable_fields():
-            field_value = getattr(self, field_name)
-            if field_value is not None and field_value != '':
-                decimals = ProdCons.get_decimals(
-                    self.reporting_period, self.group, self.party
-                )
-                setattr(self, field_name, round_half_up(field_value, decimals))
 
         super().save(*args, **kwargs)
 
