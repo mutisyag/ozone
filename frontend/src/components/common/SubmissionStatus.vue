@@ -9,15 +9,15 @@
           class="color-green mr-3"
           v-if="$store.state.current_submission.current_state === 'finalized' && $store.state.current_submission.flag_valid"
         >
-          <i class="fa fa-check-square fa-lg mr-2"></i>
-          <span v-translate>valid</span>
+          <i class="fa fa-check-circle fa-sm mr-2"></i>
+          <span v-translate>Valid</span>
         </span>
         <span
           class="color-red mr-3"
           v-if="$store.state.current_submission.current_state === 'finalized' && !$store.state.current_submission.flag_valid"
         >
-          <i class="fa fa-window-close fa-lg mr-2"></i>
-          <span v-translate>not valid</span>
+          <i class="fa fa-exclamation-circle fa-sm mr-2"></i>
+          <span v-translate>Not valid</span>
         </span>
         <span
           v-b-tooltip.hover
@@ -25,8 +25,8 @@
           class="color-red mb-2"
           v-if="$store.state.current_submission.flag_superseded"
         >
-          <i class="fa fa-window-close fa-lg mr-2"></i>
-          <span v-translate>superseded</span>
+          <i class="fa fa-exclamation-circle fa-sm mr-2"></i>
+          <span v-translate>Superseded</span>
           &nbsp;
           <i style="color: black" class="fa fa-info-circle fa-sm"></i>
         </span>
@@ -37,41 +37,48 @@
         class="color-green mr-3"
         v-if="$store.state.current_submission.current_state === 'finalized' && flag_approved_field.selected"
       >
-        <i class="fa fa-check-square fa-lg mr-2"></i>
+        <i class="fa fa-check-circle fa-sm mr-2"></i>
         <span v-translate>Approved</span>
       </span>
       <span
         class="color-red mr-3"
         v-if="$store.state.current_submission.current_state === 'finalized' && !flag_approved_field.selected"
       >
-        <i class="fa fa-window-close fa-lg mr-2"></i>
+        <i class="fa fa-window-close fa-sm mr-2"></i>
         <span v-translate>Not approved</span>
       </span>
     </div>
-    <div>
-      <span v-translate>Created by</span>
-      {{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}
-      <span
-        v-translate
-      >at</span>
-      {{$store.state.current_submission.created_at}}
+    <div class="mt-2">
+      <span v-translate>Status</span>&#8239;
+      <em>{{ labels[$store.state.current_submission.current_state] }}</em>
     </div>
     <div class="mt-2">
-      <span v-translate>Last changed by</span>
-      {{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}
-      <span
-        v-translate
-      >at</span>
-      {{$store.state.current_submission.updated_at}}
+      <span v-translate>Version</span>&#8239;
+      <em>{{$store.state.current_submission.version}}</em>
+    </div>
+    <div class="mt-2">
+      <span v-translate>Created by</span>&#8239;
+      <em>{{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}</em>&#8239;
+      <span v-translate>at</span>&#8239;
+      <em>{{$store.state.current_submission.created_at}}</em>
+    </div>
+    <div class="mt-2">
+      <span v-translate>Last changed by</span>&#8239;
+      <em>{{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}</em>&#8239;
+      <span v-translate>at</span>&#8239;
+      <em>{{$store.state.current_submission.updated_at}}</em>
     </div>
   </div>
 </template>
 
 <script>
+import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+
 export default {
   data() {
     return {
-      superseded_tooltip: this.$gettext('Another version has been submitted, overriding this one')
+      superseded_tooltip: this.$gettext('Another version has been submitted, overriding this one'),
+      labels: getCommonLabels(this.$gettext)
     }
   },
   computed: {

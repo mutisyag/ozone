@@ -5,7 +5,7 @@ import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 const getFormHat = ($gettext) => {
   const form = {
     formDetails: {
-      tabsDisplay: ['sub_info', 'has_imports', 'has_produced', 'files'],
+      tabsDisplay: ['sub_info', 'files', 'has_imports', 'has_produced'],
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',

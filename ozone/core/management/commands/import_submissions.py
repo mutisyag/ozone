@@ -232,6 +232,7 @@ class Command(BaseCommand):
         double_check_new = collections.defaultdict(decimal.Decimal)
         double_check_old = collections.defaultdict(decimal.Decimal)
 
+        nonparty_remarks_secretariat = []
         for nonparty_row in row["NonPartyTradeNew"]:
             pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
             double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpNew"] or 0)
@@ -248,6 +249,10 @@ class Command(BaseCommand):
 
             if not any(nonparty_row[_npt_type]
                        for _npt_type in ("NPTImpNew", "NPTImpRecov", "NPTExpNew", "NPTExpRecov")):
+                if nonparty_row['Remark']:
+                    remark = self.substances[nonparty_row["SubstID"]].name + ': ' + nonparty_row['Remark']
+                    if remark not in nonparty_remarks_secretariat:
+                        nonparty_remarks_secretariat.append(remark)
                 logger.warning("NonPartyTradeNew no quantity specified: %s/%s/%s", party.abbr,
                                period.name, nonparty_row["SubstID"])
 
@@ -289,7 +294,11 @@ class Command(BaseCommand):
 
         self.double_check(double_check_old, double_check_new, "NonPartyTrade")
 
-        return nonparty
+        if nonparty_remarks_secretariat:
+            nonparty_remarks_secretariat = '\n'.join(nonparty_remarks_secretariat)
+        else:
+            nonparty_remarks_secretariat = ''
+        return nonparty, nonparty_remarks_secretariat
 
     def double_check(self, old, new, tag):
         """Compare the data from the 'Import' sheet with the data from
@@ -512,6 +521,9 @@ class Command(BaseCommand):
         if not created_at or not updated_at or not date_reported:
             logger.warning("No date available %s/%s", party.abbr, period.name)
 
+        nonparty, nonparty_remarks_secretariat = self.get_nonparty(
+            row, party, period
+        )
         return {
             "submission": {
                 "schema_version": "legacy",
@@ -548,6 +560,7 @@ class Command(BaseCommand):
                 "reporting_channel": ReportingChannel.objects.get(name="Legacy"),
                 "questionnaire_remarks_party": "",
                 "questionnaire_remarks_secretariat": overall["Remark"] or "",
+                "nonparty_remarks_secretariat": nonparty_remarks_secretariat
             },
             "submission_info": {
                 "reporting_officer": "",
@@ -572,7 +585,7 @@ class Command(BaseCommand):
             "exports": self.get_exports(row, party, period),
             "produced": self.get_produced(row, party, period),
             "destroyed": self.get_destroyed(row, party, period),
-            "nonparty": self.get_nonparty(row, party, period),
+            "nonparty": nonparty,
         }
 
     def check_consistency(self, data, party, period):

@@ -4,7 +4,7 @@
       <small style="width: 30%;">
         <b-btn
           style="margin-right:.5rem"
-          variant="info-outline"
+          variant="outline-info"
           @click="createModalData"
           v-show="!selectedTab.hideInfoButton"
         >
@@ -44,34 +44,6 @@
             <Files/>
           </b-tab>
         </b-tabs>
-
-        <div class="legend">
-          <b>
-            <span v-translate>Legend:</span>
-          </b>
-          <div>
-            <div class="spinner">
-              <div class="loader"></div>
-            </div>-
-            <span v-translate>Form is curently being saved</span>
-          </div>
-          <div>
-            <i style="color: red;" class="fa fa-times-circle fa-lg"></i> -
-            <span v-translate>Form save failed. Please check the validation</span>
-          </div>
-          <div>
-            <i style="color: green;" class="fa fa-check-circle fa-lg"></i> -
-            <span
-              v-translate
-            >Form was saved or no modifications were made. Current form data is synced with the data on the server</span>
-          </div>
-          <div>
-            <i class="fa fa-edit fa-lg"></i> -
-            <span
-              v-translate
-            >The form was edited and the data is not yet saved on the server. Please save before closing the form</span>
-          </div>
-        </div>
       </b-card>
     </div>
     <Footer style="display:inline">
@@ -173,11 +145,7 @@ export default {
     }
   },
   created() {
-    this.$store.commit('updateBreadcrumbs',
-      [this.$gettext('Dashboard'),
-        this.$store.state.current_submission.obligation,
-        this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-        this.$store.state.current_submission.reporting_period, `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+    this.$store.commit('updateBreadcrumbs', `${this.$store.state.current_submission.reporting_period} ${this.$store.state.current_submission.obligation} ${this.$gettext('data submission for')} ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]}`)
   },
   computed: {
     availableTransitions() {
@@ -196,7 +164,11 @@ export default {
     }
   },
   methods: {
-    clone(url) {
+    async clone(url) {
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You are about to create a new version for data entry. The current version will be superseded once the new version is submitted.', $gettext: this.$gettext })
+      if (!confirmed) {
+        return
+      }
       cloneSubmission(url).then((response) => {
         this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
         this.$router.go(this.$router.currentRoute)

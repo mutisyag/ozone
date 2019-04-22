@@ -180,7 +180,7 @@ class IsOwnerFilterBackend(BaseFilterBackend):
             return queryset
         else:
             # Party user
-            if queryset is not None and queryset.model in (Submission, ProdCons):
+            if queryset is not None and queryset.model in (Submission, ProdCons, Limit):
                 return queryset.filter(party=request.user.party)
             elif queryset is not None:
                 return queryset.filter(submission__party=request.user.party)
@@ -261,11 +261,15 @@ class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
     permission_classes = (IsAuthenticated,)
     renderer_classes = (JSONRenderer,)
 
-    def get(self, request):
+    def get(self, request, period_name):
         groups = Group.objects.all()
         all_non_parties = {}
+
         for group in groups:
-            queryset = Article7NonPartyTrade.get_non_parties(group.pk)
+            queryset = Article7NonPartyTrade.get_non_parties(
+                group.pk,
+                ReportingPeriod.objects.get(name=period_name).pk if period_name else None,
+            )
             non_parties_per_group = {
                 id: True for id in queryset.values_list('id', flat=True)
             }

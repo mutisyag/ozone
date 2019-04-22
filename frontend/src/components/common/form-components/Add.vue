@@ -131,7 +131,7 @@ export default {
     prepareGroups() {
       this.substances.forEach(substance => {
         if (!this.selected_groups.options.find(option => option && option.value === substance.group.group_id)) {
-          this.selected_groups.options.push({ text: substance.group.group_id, value: substance.group.group_id })
+          this.selected_groups.options.push({ text: `${substance.group.name} ${substance.group.description}`, value: substance.group.group_id })
         }
       })
       this.prepareSubstances()

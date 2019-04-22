@@ -5,11 +5,16 @@ const sumBiggerThanParts = (state, tab, partyField) => {
   if (!state.form.tabs[tab].form_fields[0].hasOwnProperty(partyField)) return {}
   const multipleSubstances = {}
   const finalError = {}
+
   state.form.tabs[tab].form_fields.forEach(row => {
     multipleSubstances[row.substance.selected] = [...state.form.tabs[tab].form_fields.filter(substance => row.substance.selected === substance.substance.selected)]
   })
+
   Object.keys(multipleSubstances).forEach(key => {
-    if (multipleSubstances[key].every(entry => entry[partyField].selected)) {
+    if (multipleSubstances[key].length <= 1) {
+      delete multipleSubstances[key]
+    }
+    if (multipleSubstances[key] && multipleSubstances[key].length && multipleSubstances[key].every(entry => entry[partyField].selected)) {
       // eslint-disable-next-line eqeqeq
       state.form.tabs[tab].form_fields.filter(field => field.substance.selected == key).forEach(field => {
         field.skipValidation = 0
@@ -85,12 +90,12 @@ const getters = {
 			&& sub.current_state === 'data_entry'
   ),
 
-  defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
-  defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
+  defaultPeriod: (state) => (submissionDefaultValues) => state.dashboard.periods && state.dashboard.periods.find(period => period.text.trim() === submissionDefaultValues.reporting_period),
+  defaultObligation: (state) => (submissionDefaultValues) => state.dashboard.obligations && state.dashboard.obligations.find(o => o.text === submissionDefaultValues.obligation).value,
 
   getTabTitle: (state) => (tabName) => state.form.tabs[tabName].title,
   getTabStatus: (state) => (tabName) => state.form.tabs[tabName].status,
-
+  pageTitle: (state) => state.route,
   can_edit_data: (state) => state.permissions.form && state.permissions.form.can_edit_data,
   can_change_remarks_party: (state) => state.permissions.form && state.permissions.form.can_change_remarks_party,
   can_change_remarks_secretariat: (state) => state.permissions.form && state.permissions.form.can_change_remarks_secretariat,

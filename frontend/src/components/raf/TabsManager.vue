@@ -4,7 +4,7 @@
       <small style="width: 30%;">
         <b-btn
           style="margin-right:.5rem"
-          variant="info-outline"
+          variant="outline-info"
           @click="createModalData"
           v-show="!selectedTab.hideInfoButton"
         >
@@ -44,7 +44,12 @@
               :tabId="0"
             />
           </b-tab>
-
+          <b-tab>
+            <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabId="1" :tabIndex="tabIndex"/>
+          </b-tab>
           <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
             <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
@@ -54,13 +59,6 @@
               :tabIndex="tabIndex"
               :tabName="tabId"
             />
-          </b-tab>
-
-          <b-tab>
-            <template slot="title">
-              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
-            </template>
-            <Files :tabId="2" :tabIndex="tabIndex"/>
           </b-tab>
         </b-tabs>
       </b-card>
@@ -197,7 +195,11 @@ export default {
     }
   },
   methods: {
-    clone(url) {
+    async clone(url) {
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You are about to create a new version for data entry. The current version will be superseded once the new version is submitted.', $gettext: this.$gettext })
+      if (!confirmed) {
+        return
+      }
       cloneSubmission(url).then((response) => {
         this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
         this.$router.go(this.$router.currentRoute)
@@ -216,11 +218,7 @@ export default {
       })
     },
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs',
-        [this.$gettext('Dashboard'), this.labels[this.$route.name],
-          this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-          this.$store.state.current_submission.reporting_period,
-          `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+      this.$store.commit('updateBreadcrumbs', `${this.$store.state.current_submission.reporting_period} ${this.$store.state.current_submission.obligation} ${this.$gettext('data submission for')} ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]}`)
     },
     createModalData() {
       const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]

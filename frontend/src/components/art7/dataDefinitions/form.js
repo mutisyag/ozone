@@ -6,7 +6,7 @@ import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 const getFormArt7 = ($gettext) => {
   const form = {
     formDetails: {
-      tabsDisplay: ['sub_info', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'files', 'flags'],
+      tabsDisplay: ['sub_info', 'files', 'questionaire_questions', 'has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions', 'flags'],
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.substances',
@@ -51,11 +51,10 @@ const getFormArt7 = ($gettext) => {
         endpoint_url: 'article7questionnaire_url',
         intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
         title: $gettext('Questionnaire'),
-        titleHtml: `<b>${$gettext('Questionnaire')}</b>`,
+        titleHtml: `<b>${$gettext('QUESTIONNAIRE')}</b> <br> <small>${$gettext('All fields are mandatory')}</small>`,
         detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
         status: null,
         isInvalid: false,
-        description: '',
         form_fields: getQuestionnaireFields($gettext),
         comments: {
           questionnaire_remarks_party: {
@@ -105,9 +104,9 @@ const getFormArt7 = ($gettext) => {
             width: 95
           },
           {
-            label: `(2) <br> ${$gettext('Country of destination of exports')}`,
+            label: `(2) <br> ${$gettext('Destination country/region/territory')}`,
             name: 'destination_party',
-            width: 180
+            width: 190
           },
           {
             label: `(3) <br> ${$gettext('New')}`,
@@ -245,7 +244,7 @@ const getFormArt7 = ($gettext) => {
         },
         {
           name: 'source_party',
-          label: `(2b) <br> ${$gettext('Exporting party for quantities reported as imports')}`,
+          label: `(2b) <br> ${$gettext('Exporting country/region/territory')}`,
           width: 180
         },
         {
@@ -412,7 +411,8 @@ const getFormArt7 = ($gettext) => {
             tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
           },
           {
-            label: ''
+            label: '',
+            tooltip: $gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5')
           },
           {
             label: ''
@@ -596,7 +596,7 @@ const getFormArt7 = ($gettext) => {
         description: $gettext('Annexes A, B, C and E substances'),
         isInvalid: false,
         fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
-        modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'validation'],
+        modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
         blend_substance_headers: ['substance', 'percent', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
         form_fields: [],
         section_subheaders: [{
@@ -608,7 +608,7 @@ const getFormArt7 = ($gettext) => {
           name: 'substance'
         },
         {
-          label: `(3) <br> ${$gettext('Exporting party for quantities reported as imports <br> <b>OR</b> <br> Country of destination of exports')}`,
+          label: `(3) <br> ${$gettext('Exporting or destination country/region/territory')}`,
           name: 'trade_party'
         },
         {
@@ -649,7 +649,8 @@ const getFormArt7 = ($gettext) => {
             label: ''
           },
           {
-            label: ''
+            label: '',
+            tooltip: 'Exporting country/party/territory for quantities reported as imports OR country/party/territory of destination of exports'
           },
           {
             label: $gettext('Quantity of imports from non-parties'),

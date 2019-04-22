@@ -9,7 +9,7 @@ const getTabSubInfo = ($gettext) => {
     fields_order: ['reporting_channel', 'submission_format', 'reporting_officer', 'designation', 'organization', 'postal_address', 'country', 'phone', 'email', 'date'],
     intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
     title: $gettext('Submission Info'),
-    titleHtml: `<b>${$gettext('Submission Info')}</b>`,
+    titleHtml: `<b>${$gettext('SUBMISSION INFO')}</b><br><small>${$gettext('Please fill-in mandatory fields')}</small>`,
     detailsHtml: '',
     isInvalid: false,
     party: {
@@ -31,6 +31,9 @@ const getTabSubInfo = ($gettext) => {
     description: '',
     form_fields: {
       id: {
+        selected: null
+      },
+      current_state: {
         selected: null
       },
       reporting_channel: {
@@ -92,29 +95,32 @@ const getTabSubInfo = ($gettext) => {
       },
       submitted_at: {
         type: 'date',
-        selected: ''
+        selected: '',
+        validation: null
       },
       get validation() {
         const invalid = []
-        if (!this.reporting_officer.selected) {
-          this.reporting_officer.validation = $gettext('Required')
-          invalid.push($gettext('Reporting officer'))
-        } else {
-          this.reporting_officer.validation = null
-        }
+        if (this.current_state.selected === true) {
+          if (!this.reporting_officer.selected) {
+            this.reporting_officer.validation = $gettext('Required')
+            invalid.push($gettext('Reporting officer'))
+          } else {
+            this.reporting_officer.validation = null
+          }
 
-        if (!this.postal_address.selected && !this.email.selected) {
-          this.postal_address.validation = $gettext('Required')
-          this.email.validation = $gettext('Required')
-          invalid.push($gettext('Email/Address'))
-        } else {
-          this.postal_address.validation = null
-          this.email.validation = null
-        }
+          if (!this.postal_address.selected && !this.email.selected) {
+            this.postal_address.validation = $gettext('Required')
+            this.email.validation = $gettext('Required')
+            invalid.push($gettext('Email/Address'))
+          } else {
+            this.postal_address.validation = null
+            this.email.validation = null
+          }
 
-        if (this.submitted_at.validation) {
-          // This is a special case because this field is required only for secretariat users and validation property is set from outside
-          invalid.push($gettext('Date of submission'))
+          if (this.submitted_at.validation) {
+            // This is a special case because this field is required only for secretariat users and validation property is set from outside
+            invalid.push($gettext('Date of submission'))
+          }
         }
 
         return {

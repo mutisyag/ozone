@@ -52,7 +52,7 @@ MIDDLEWARE += ['debug_toolbar.middleware.DebugToolbarMiddleware', 'corsheaders.m
 # https://django-debug-toolbar.readthedocs.io/en/latest/configuration.html#debug-toolbar-config
 
 if DEBUG:
-    CORS_ORIGIN_WHITELIST += ("localhost", "localhost:8080")
+    CORS_ORIGIN_WHITELIST += ("localhost", "localhost:8080", "localhost:8000", "localhost:8081")
 
 DEBUG_TOOLBAR_CONFIG = {
     'DISABLE_PANELS': [

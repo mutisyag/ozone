@@ -111,7 +111,11 @@ const createBlend = (blend) => post('blends/', blend)
 
 const cloneSubmission = (url) => post(`${url}clone/`)
 
-const getCustomBlends = (party) => fetch('blends/', { params: { party } })
+const getCustomBlends = (party) => fetch('blends/', {
+  params: {
+    party
+  }
+})
 
 const getInstructions = (formName, tabName) => {
   if (isTestSession) {
@@ -132,13 +136,17 @@ const getSubmissions = (tableOptions) => {
     params.obligation = tableOptions.filters.obligation
     params.from_period = tableOptions.filters.period_start
     params.to_period = tableOptions.filters.period_end
-    if (tableOptions.filters.is_superseded !== true) { params.is_superseded = false }
+    if (tableOptions.filters.is_superseded !== true) {
+      params.is_superseded = false
+    }
   }
   if (tableOptions.sorting && tableOptions.sorting.sortBy) {
     params.ordering = (tableOptions.sorting.sortDesc ? '-' : '') + tableOptions.sorting.sortBy
   }
 
-  return fetch('submissions/', { params })
+  return fetch('submissions/', {
+    params
+  })
 }
 
 const getSubmissionHistory = (url) => fetch(`${url}versions/`)
@@ -147,46 +155,58 @@ const getSubmissionsVersions = () => fetch('submission-versions/')
 
 const getSubmission = (url) => fetch(url)
 
-const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, { hideLoader: true })
+const getSubmissionAggregations = (url) => fetch(`${url}aggregations/`)
+
+const getSubmissionFiles = (submissionId) => fetch(`submissions/${submissionId}/files/`, {
+  hideLoader: true
+})
 
 const deleteSubmission = (url) => remove(url)
 
 const getEssenCritTypes = () => fetch('get-essen-crit-types/')
 
-const deleteSubmissionFile = ({ file, submissionId }) => remove(`submissions/${submissionId}/files/${file.id}/`)
+const deleteSubmissionFile = ({
+  file,
+  submissionId
+}) => remove(`submissions/${submissionId}/files/${file.id}/`)
 
-const callTransition = (url, transition) => post(`${url}call-transition/`, { transition })
+const callTransition = (url, transition) => post(`${url}call-transition/`, {
+  transition
+})
 
-const getNonParties = () => fetch('get-non-parties/')
+const getNonParties = (reporting_period) => fetch(`get-non-parties/?reporting_period=${reporting_period}`)
 
 const getSubmissionDefaultValues = () => fetch('default-values/')
 
 const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
   const responseToken = await post(`submissions/${submissionId}/token/`)
-  const upload = new tus.Upload(file,
-    {
-      endpoint: filesURL,
-      metadata: {
-        token: responseToken.data.token,
-        filename: file.name,
-        description: file.description
-      },
-      retryDelays: [0, 1000, 3000, 5000],
-      onError: function onError(error) {
-        console.log('File upload failed because: ', error)
-        reject(error)
-      },
-      onProgress: function onProgress(bytesUploaded, bytesTotal) {
-        if (onProgressCallback) {
-          const percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
-          onProgressCallback(file, percentage)
-        }
-      },
-      onSuccess: function onSuccess() {
-        resolve(upload)
+  const upload = new tus.Upload(file, {
+    endpoint: filesURL,
+    metadata: {
+      token: responseToken.data.token,
+      filename: file.name,
+      description: file.description
+    },
+    retryDelays: [0, 1000, 3000, 5000],
+    onError: function onError(error) {
+      console.log('File upload failed because: ', error)
+      reject(error)
+    },
+    onProgress: function onProgress(bytesUploaded, bytesTotal) {
+      if (onProgressCallback) {
+        const percentage = parseInt(((bytesUploaded / bytesTotal) * 100).toFixed(2), 10)
+        onProgressCallback(file, percentage)
       }
-    })
+    },
+    onSuccess: function onSuccess() {
+      resolve(upload)
+    }
+  })
   upload.start()
+})
+
+const getLimits = params => fetch('limits/', {
+  params
 })
 
 export {
@@ -226,5 +246,7 @@ export {
   uploadFile,
   getTransitions,
   getSubmissionFormat,
-  getEssenCritTypes
+  getEssenCritTypes,
+  getSubmissionAggregations,
+  getLimits
 }

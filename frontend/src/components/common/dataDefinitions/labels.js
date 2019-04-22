@@ -33,7 +33,7 @@ const getCommonLabels = ($gettext) => {
     postal_code: $gettext('Postal code'),
     essencrit: $gettext('Essential and critical uses'),
     postal_address: $gettext('Postal address'),
-    country: $gettext('Country'),
+    country: $gettext('Address country'),
     phone: $gettext('Phone'),
     reporting_channel: $gettext('Reporting channel'),
     email: $gettext('E-mail'),

@@ -9,7 +9,6 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
-from .aggregation import ProdCons
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
@@ -105,7 +104,12 @@ class Obligation(models.Model):
         help_text="Used to generate the correct form, based on this obligation."
     )
 
-    other = models.BooleanField(default=False)
+    other = models.BooleanField(
+        default=False,
+        help_text="Unset when this obligation is a main one. The main "
+                  "ones are: Article 7, Essential and Critical uses (RAF) and "
+                  "Transfer or addition of production or consumption."
+    )
 
     is_default = models.NullBooleanField(
         default=None,
@@ -241,7 +245,7 @@ class Submission(models.Model):
         'flag_has_reported_c1': 'CI',
         'flag_has_reported_c2': 'CII',
         'flag_has_reported_c3': 'CIII',
-        'flag_has_reported_e': 'E',
+        'flag_has_reported_e': 'EI',
         'flag_has_reported_f': 'F',
     }
 
@@ -320,71 +324,93 @@ class Submission(models.Model):
     # Flags
     flag_provisional = models.BooleanField(
         default=False,
+        verbose_name='Provisional',
         help_text="If set to true it signals that future changes are foreseen."
     )
     flag_valid = models.NullBooleanField(
         default=None,
+        verbose_name='Valid',
         help_text="If set to true it signals that the data in the current "
         "version is considered correct. Can be set by the Secretariat during "
         "Processing or at the transition between the Processing or Finalized states."
     )
     flag_superseded = models.BooleanField(
         default=False,
+        verbose_name='Superseded',
         help_text="If set to true it means that the current version is not "
         "relevant anymore. When a newer version of data is Submitted, "
         "the current one is automatically flagged as Superseded."
     )
-    flag_checked_blanks = models.BooleanField(default=True)
-    flag_has_blanks = models.BooleanField(default=False)
-    flag_confirmed_blanks = models.BooleanField(default=False)
+    flag_checked_blanks = models.BooleanField(
+        default=True,
+        verbose_name='Checked blanks',
+    )
+    flag_has_blanks = models.BooleanField(
+        default=False,
+        verbose_name='Has blanks',
+    )
+    flag_confirmed_blanks = models.BooleanField(
+        default=False,
+        verbose_name='Confirmed blanks',
+    )
     flag_has_reported_a1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
         default=True,
+        verbose_name='Has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
         default=True,
+        verbose_name='Has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
         default=True,
+        verbose_name='Has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
     # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
+        verbose_name='Has reported F',
         help_text="If set to true it means that substances under "
                   "Annex F were reported."
     )
@@ -511,11 +537,13 @@ class Submission(models.Model):
     # Exemption related flags
     flag_emergency = models.BooleanField(
         default=False,
+        verbose_name='Emergency',
         help_text="If set to true it means that ozone secretariat "
                   "can fill out only the Approved form directly."
     )
     flag_approved = models.NullBooleanField(
         default=None,
+        verbose_name='Approved',
         help_text="If set to true it means that the nomination was approved."
     )
 
@@ -589,6 +617,10 @@ class Submission(models.Model):
     @property
     def in_initial_state(self):
         return self.workflow().in_initial_state
+
+    @property
+    def in_final_state(self):
+        return self.workflow().finished
 
     @property
     def is_current(self):
@@ -1159,6 +1191,10 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
+        if self.obligation.form_type == 'exemption':
+            if user.is_secretariat and not self.in_final_state:
+                return True
+
         return (
             not user.is_read_only
             and user.is_secretariat
@@ -1346,7 +1382,9 @@ class Submission(models.Model):
             # and party.
             # The prefill will be skipped if it's a clone action.
             if not hasattr(self, 'info'):
-                latest_submission = submissions.order_by('-updated_at').first()
+                latest_submission = submissions.exclude(
+                    pk=self.pk
+                ).order_by('-updated_at').first()
                 if latest_submission and hasattr(latest_submission, 'info'):
                     latest_info = latest_submission.info
                     info = SubmissionInfo.objects.create(
@@ -1387,7 +1425,11 @@ class SubmissionFormat(models.Model):
     name = models.CharField(unique=True, max_length=256)
     description = models.CharField(max_length=256, blank=True)
 
-    is_default_party = models.BooleanField(default=False)
+    is_default_party = models.BooleanField(
+        default=False,
+        verbose_name='Is default for parties',
+        help_text="Indicates whether this submission format is default for party."
+    )
 
     @classmethod
     def get_default(cls, user):

@@ -5,7 +5,7 @@ const getLabels = ($gettext) => {
       blend: $gettext('Blend'),
       group: $gettext('Group'),
       percent: $gettext('Percentage'),
-      source_party: $gettext('Exporting party for quantities reported as imports'),
+      source_party: $gettext('Exporting country/region/territory'),
       quantity_total_new: $gettext('Total Quantity Imported for All Uses (new)'),
       quantity_total_recovered: $gettext('Total Quantity Imported for All Uses (recovered and reclaimed)'),
       quantity_feedstock: $gettext('Quantity of new substance imported for feedstock uses'),
@@ -34,7 +34,7 @@ const getLabels = ($gettext) => {
       blend: $gettext('Blend'),
       percent: $gettext('Percentage'),
       group: $gettext('Group'),
-      destination_party: $gettext('Country of Destination of Exports'),
+      destination_party: $gettext('Destination country/region/territory'),
       quantity_total_new: $gettext('Total Quantity Imported for All Uses (new)'),
       quantity_total_recovered: $gettext('Total Quantity Imported for All Uses (recovered and reclaimed)'),
       quantity_feedstock: $gettext('Quantity of new substance imported for feedstock uses'),
@@ -103,7 +103,7 @@ const getLabels = ($gettext) => {
       quantity_export_recovered: $gettext('Quantity of exports to non-parties (recovered)'),
       substance: $gettext('Substance'),
       blend: $gettext('Blend'),
-      trade_party: $gettext('Exporting party for quantities reported as imports OR Country of destination of exports')
+      trade_party: $gettext('Exporting or destination country/region/territory')
     },
     has_emissions: {
       facility_name: $gettext('Facility name or identifier'),
@@ -128,7 +128,7 @@ const getLabels = ($gettext) => {
       organization: $gettext('Organization'),
       postal_code: $gettext('Postal code'),
       postal_address: $gettext('Postal address'),
-      country: $gettext('Country'),
+      country: $gettext('Address country'),
       phone: $gettext('Phone'),
       email: $gettext('E-mail'),
       date: $gettext('Date')

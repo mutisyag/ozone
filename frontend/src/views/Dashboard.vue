@@ -91,13 +91,13 @@
               <b-input-group class="w120" :prepend="$gettext('From')">
                 <b-form-select
                   v-model="dataEntryTable.filters.period_start"
-                  :options="sortOptionsPeriodFrom"
+                  :options="sortOptionsPeriodFromDataEntry"
                 ></b-form-select>
               </b-input-group>
               <b-input-group class="w120" :prepend="$gettext('To')">
                 <b-form-select
                   v-model="dataEntryTable.filters.period_end"
-                  :options="sortOptionsPeriodTo"
+                  :options="sortOptionsPeriodToDataEntry"
                 ></b-form-select>
               </b-input-group>
               <b-btn
@@ -288,7 +288,7 @@ export default {
       tableOptionsCurrentPageWasSetFromWatcher: false,
       dataEntryTable: {
         currentPage: 1,
-        perPage: 10,
+        perPage: 5,
         totalRows: 0,
         sorting: {
           sortBy: 'updated_at',
@@ -302,7 +302,7 @@ export default {
           obligation: null,
           party: null
         },
-        pageOptions: [10, 25, 100]
+        pageOptions: [5, 10, 25, 100]
       }
     }
   },
@@ -394,7 +394,7 @@ export default {
       }, {
         key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
       }, {
-        key: 'current_state', label: this.$gettext('State'), sortable: true
+        key: 'current_state', label: this.$gettext('Status'), sortable: true
       }, {
         key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
       }, {
@@ -470,6 +470,31 @@ export default {
       }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
     },
 
+    sortOptionsPeriodFromDataEntry() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_end !== null
+				&& f.start_date > this.tableOptions.filters.period_end) {
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getStartDateOfYear(f.start_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
+
+    sortOptionsPeriodToDataEntry() {
+      return 	Array.from(new Set(this.periods.map(f => {
+        if (this.tableOptions.filters.period_start !== null
+				&& f.end_date < this.tableOptions.filters.period_start) {
+          return null
+        }
+        return {
+          text: f.start_date.split('-')[0],
+          value: this.getEndDateOfYear(f.end_date)
+        }
+      }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
+    },
     sortOptionsObligation() {
       return this.obligations
     },
@@ -555,7 +580,7 @@ export default {
     },
 
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', [this.$gettext('Dashboard')])
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Dashboard'))
     },
     addSubmission() {
       this.$store.dispatch('addSubmission', {
@@ -684,7 +709,7 @@ export default {
   .dashboard-filters > div,
   .filter-group > div {
     margin-right: 5px;
-    min-width: 130px;
+    min-width: 140px;
   }
 
   .filter-group {
@@ -693,9 +718,7 @@ export default {
   .w120 {
     width: 120px;
   }
-  .card-header {
-    background-color: white;
-  }
+
   tr:hover a.btn {
     color: black;
     background: #ddd;
@@ -707,8 +730,5 @@ export default {
     }
   }
 
-  .card-header {
-    border-bottom: none;
-  }
 }
 </style>

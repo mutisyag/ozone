@@ -6,7 +6,7 @@
     >The data in this form will not be saved because you have selected in the questionnarie "no" for this section</h5>
     <div class="form-sections">
       <div class="table-wrapper">
-        <div class="table-title">
+        <div class="table-title mb-3">
           <h4>{{tab_info.formNumber}}.1 Facilities</h4>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Search all columns')">
@@ -17,7 +17,6 @@
             <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
           </span>
         </div>
-        <hr>
 
         <b-table
           id="facility-table"
@@ -28,7 +27,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItems"
           @row-clicked="rowHovered"
           :fields="tableFields"
@@ -67,7 +66,7 @@
               style="left: -35px;top: -10px;"
               :key="`${cell.item.index}_${inputField}_${tabName}_button`"
             >
-              <b-btn variant="link" @click="remove_field(cell.item.index)" class="table-btn">
+              <b-btn variant="default" size="sm" @click="remove_field(cell.item.index)" class="table-btn">
                 <i class="fa fa-trash"></i>
               </b-btn>
             </div>
@@ -92,12 +91,8 @@
         <span v-translate>Add facility</span>
       </b-btn>
     </div>
+
     <div class="table-wapper">
-      <h4>
-        {{tab_info.formNumber}}.2
-        <span v-translate>Comments</span>
-      </h4>
-      <hr>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"
@@ -113,7 +108,7 @@
         ></textarea>
       </div>
     </div>
-    <hr>
+
     <AppAside fixed>
       <DefaultAside
         v-on:fillSearch="table.tableFilters = true; table.filters.search = $event.facility"

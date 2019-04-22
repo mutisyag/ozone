@@ -1,36 +1,8 @@
 <template>
   <div v-if="info" class="submission-info-tab">
-    <b-row>
-      <b-col>
-        <b-input-group size="sm" :prepend="info.party.label">
-          <b-form-input
-            :name="info.party.name"
-            :value="$store.state.initialData.display.countries[$store.state.current_submission.party]"
-            :type="info.party.type"
-            :disabled="info.party.disabled"
-          ></b-form-input>
-        </b-input-group>
-      </b-col>
-
-      <b-col>
-        <b-input-group size="sm" :prepend="info.reporting_year.label">
-          <b-form-input
-            :name="info.reporting_year.name"
-            :value="$store.state.current_submission.reporting_period"
-            :type="info.reporting_year.type"
-            :disabled="info.reporting_year.disabled"
-          ></b-form-input>
-        </b-input-group>
-      </b-col>
-    </b-row>
-    <hr>
-    <form class="form-sections">
+    <form class="form-sections table-wrapper">
       <b-row>
         <b-col md="7" lg="7">
-          <h5>
-            <span v-translate>Submission Info</span>
-          </h5>
-          <b-card>
             <div class="form-fields">
               <b-row
                 :id="order"
@@ -45,8 +17,8 @@
                     placement="left"
                     :title="info.form_fields[order].tooltip"
                   >
-                    <i class="fa fa-info-circle fa-lg"></i>&nbsp;
-                    <label>{{labels[order]}}</label>
+                    <label>{{labels[order]}}</label>&nbsp;
+                    <i class="fa fa-info-circle fa-sm"></i>
                   </span>
                   <span v-else>
                     <label>
@@ -93,7 +65,6 @@
                 </b-col>
               </b-row>
             </div>
-          </b-card>
         </b-col>
 
         <b-col>
@@ -121,7 +92,7 @@
                         :title="flags_info.form_fields[order].tooltip"
                       >
                         {{labels.flags[order]}}
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
                     </label>
@@ -146,7 +117,7 @@
                         placement="left"
                         :title="flags_info.form_fields[order].tooltip"
                       >
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                         {{labels.flags[order]}}
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
@@ -157,8 +128,8 @@
             </b-row>
           </b-card>
 
+          <h5 v-if="flags_info" class="mb-3" v-translate>Annex groups reported in full</h5>
           <b-card v-if="flags_info">
-            <h5 class="mb-3" v-translate>Annex group reported in full</h5>
             <div id="annex-flags">
               <div class="flags-row" v-for="column in specific_flags_columns" :key="column">
                 <div
@@ -182,7 +153,7 @@
                         placement="left"
                         :title="flags_info.form_fields[order].tooltip"
                       >
-                        <i class="fa fa-info-circle fa-lg"></i>
+                        <i class="fa fa-info-circle fa-sm"></i>
                         {{labels.flags[order]}}
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
@@ -228,6 +199,9 @@ export default {
   },
 
   computed: {
+    onlySelectedValue() {
+      return Object.keys(this.info.form_fields).filter(field => field !== 'current_state').map(field => this.info.form_fields[field].selected)
+    },
     error_danger() {
       return this.info.status === false
     },
@@ -251,6 +225,10 @@ export default {
 
     is_secretariat() {
       return this.$store.state.currentUser.is_secretariat
+    },
+    is_data_entry() {
+      this.info.form_fields.current_state.selected = this.$store.state.current_submission.current_state === 'data_entry'
+      return this.$store.state.current_submission.current_state === 'data_entry'
     }
   },
 
@@ -267,6 +245,9 @@ export default {
         submitted_at.validation = null
       } else {
         submitted_at.validation = this.$gettext('Required')
+      }
+      if (!this.is_data_entry) {
+        submitted_at.validation = null
       }
       this.$forceUpdate()
     },
@@ -290,8 +271,17 @@ export default {
       handler() {
         this.setSubmitted_atValidation()
       }
+    },
+    'onlySelectedValue': {
+      handler(old_val, new_val) {
+        if (this.info.status !== 'edited' && JSON.stringify(old_val) !== JSON.stringify(new_val)) {
+          this.$store.commit('setTabStatus', {
+            tab: 'sub_info',
+            value: 'edited'
+          })
+        }
+      }
     }
   }
-
 }
 </script>

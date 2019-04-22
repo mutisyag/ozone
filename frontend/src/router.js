@@ -19,123 +19,144 @@ const UserProfile = () => import(/* webpackChunkName: "userProfile" */ '@/views/
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
 const LookupTablesParties = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Parties')
+const LookupTablesConsumption = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Consumption')
 
 Vue.use(Router)
 
-const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    redirect: '/dashboard'
+const routes = [{
+  path: '/',
+  name: 'Home',
+  redirect: '/dashboard'
+},
+{
+  path: '/dashboard',
+  name: 'Dashboard',
+  meta: {
+    requiresAuth: true
   },
-  {
-    path: '/dashboard',
-    name: 'Dashboard',
-    meta: { requiresAuth: true },
-    component: Dashboard
+  component: Dashboard
+},
+{
+  path: '/user-profile',
+  name: 'UserProfile',
+  meta: {
+    requiresAuth: true
   },
-  {
-    path: '/user-profile',
-    name: 'UserProfile',
-    meta: { requiresAuth: true },
-    component: UserProfile
+  component: UserProfile
+},
+{
+  path: '/login',
+  beforeEnter() {
+    window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.href)}`
   },
-  {
-    path: '/login',
-    beforeEnter() {
-      window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.href)}`
+  name: 'Login'
+},
+{
+  path: '/submission',
+  name: 'Submission',
+  component: {
+    render(c) {
+      return c('router-view')
+    }
+  },
+  children: [{
+    path: 'art7',
+    name: 'art7',
+    meta: {
+      requiresAuth: true,
+      title: 'Article 7'
     },
-    name: 'Login'
+    component: Art7DataManager
   },
   {
-    path: '/submission',
-    name: 'Submission',
-    component: {
-      render(c) { return c('router-view') }
+    path: 'essencrit',
+    name: 'essencrit',
+    meta: {
+      requiresAuth: true
     },
-    children: [
-      {
-        path: 'art7',
-        name: 'art7',
-        meta: {
-          requiresAuth: true,
-          title: 'Article 7'
-        },
-        component: Art7DataManager
-      },
-      {
-        path: 'essencrit',
-        name: 'essencrit',
-        meta: { requiresAuth: true },
-        component: RafDataManager
-      },
-      {
-        path: 'hat',
-        name: 'hat',
-        meta: { requiresAuth: true },
-        component: HatDataManager
-      },
-      {
-        path: 'other',
-        name: 'other',
-        meta: { requiresAuth: true },
-        component: LetterDataManager
-      },
-      {
-        path: 'exemption',
-        name: 'exemption',
-        meta: { requiresAuth: true },
-        component: ExemptionDataManager
-      }
-    ]
+    component: RafDataManager
   },
   {
-    path: '/pages',
-    redirect: '/pages/404',
-    name: 'Pages',
-    component: {
-      render(c) { return c('router-view') }
+    path: 'hat',
+    name: 'hat',
+    meta: {
+      requiresAuth: true
     },
-    children: [
-      {
-        path: '404',
-        name: 'Page404',
-        component: Page404
-      }
-    ]
+    component: HatDataManager
   },
   {
-    path: '/lookup-tables',
-    redirect: '/pages/404',
-    name: 'Lookup tables',
-    component: {
-      render(c) { return c('router-view') }
+    path: 'other',
+    name: 'other',
+    meta: {
+      requiresAuth: true
     },
-    children: [
-      {
-        path: 'controlled-substances',
-        name: 'Controlled Substances',
-        component: LookupTablesControlledSubstances
-      },
-      {
-        path: 'blends',
-        name: 'Blends',
-        component: LookupTablesBlends
-      },
-      {
-        path: 'parties',
-        name: 'Parties',
-        component: LookupTablesParties
-      }
-    ]
+    component: LetterDataManager
+  },
+  {
+    path: 'exemption',
+    name: 'exemption',
+    meta: {
+      requiresAuth: true
+    },
+    component: ExemptionDataManager
   }
+  ]
+},
+{
+  path: '/pages',
+  redirect: '/pages/404',
+  name: 'Pages',
+  component: {
+    render(c) {
+      return c('router-view')
+    }
+  },
+  children: [{
+    path: '404',
+    name: 'Page404',
+    component: Page404
+  }]
+},
+{
+  path: '/lookup-tables',
+  redirect: '/pages/404',
+  name: 'Lookup tables',
+  component: {
+    render(c) {
+      return c('router-view')
+    }
+  },
+  children: [{
+    path: 'controlled-substances',
+    name: 'Controlled Substances',
+    component: LookupTablesControlledSubstances
+  },
+  {
+    path: 'blends',
+    name: 'Blends',
+    component: LookupTablesBlends
+  },
+  {
+    path: 'parties',
+    name: 'Parties',
+    component: LookupTablesParties
+  },
+  {
+    path: 'consumption',
+    name: 'Consumption',
+    component: LookupTablesConsumption
+  }
+  ]
+}
 ]
 
 const routerOptions = {
   routes,
   linkActiveClass: 'open active',
   mode: 'history',
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({
+    y: 0
+  }),
   base: '/reporting'
 }
 
@@ -146,7 +167,9 @@ router.beforeEach((to, from, next) => {
     const authToken = window.$cookies.get('authToken')
 
     if (!authToken) {
-      next({ name: 'Login' })
+      next({
+        name: 'Login'
+      })
     } else {
       next()
     }

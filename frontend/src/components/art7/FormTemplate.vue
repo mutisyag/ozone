@@ -28,7 +28,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           id="substance-table"
           :items="tableItems"
           :fields="tableFields"
@@ -123,21 +123,20 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
             >
               <b-input-group>
                 <b-input-group-prepend>
-                  <span
-                    class="input-group-text"
+                  <span class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                    QPS <i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
@@ -155,7 +154,7 @@
             </div>
 
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyols`"
@@ -166,11 +165,11 @@
                     class="input-group-text"
                     :id="`polyols_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                    Contained in polyols<i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
-                        Amounts contained in pre-blended polyols
+                        Amounts contained in pre-blended polyols, not to be included in the amount of total imports
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -207,7 +206,7 @@
           hover
           head-variant="light"
           stacked="md"
-          class="submission-table"
+          class="submission-table full-bordered"
           :items="tableItemsFII"
           :fields="tableFieldsFII"
           :empty-text="tableFIIEmptyText"
@@ -295,10 +294,10 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_qps`"
@@ -309,7 +308,7 @@
                     class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> QPS
+                    QPS<i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
@@ -326,7 +325,7 @@
               </b-input-group>
             </div>
             <div
-              style="position: relative;z-index: 1;margin-right: -4rem; margin-top: 2rem"
+              style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
               v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
               :key="`${tooltipField}_polyol`"
@@ -337,11 +336,11 @@
                     class="input-group-text"
                     :id="`polyols_tooltip_${cell.item.index}`"
                   >
-                    <i class="mr-1 fa fa-info-circle"></i> Contained in polyols
+                    Contained in polyols<i class="mr-1 fa fa-info-circle-sm"></i>
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
-                        Amounts contained in pre-blended polyols
+                        Amounts contained in pre-blended polyols, not to be included in the amount of total imports
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -381,7 +380,7 @@
           bordered
           hover
           head-variant="light"
-          class="submission-table"
+          class="submission-table full-bordered"
           @row-clicked="rowHovered"
           stacked="md"
           id="blend-table"
@@ -487,7 +486,7 @@
               v-if="cell.item[tooltipField]"
             >
               {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <i class="fa fa-info-circle fa-sm"></i>
             </span>
           </template>
 
@@ -526,12 +525,6 @@
       </div>
     </div>
     <div id="tab-comments" class="table-wrapper">
-      <h4 class="mb-3">
-        <span class="table-title-index">
-          {{tab_info.formNumber}}.{{tableCounter + 1}}
-        </span>
-        <span v-translate>Comments</span>
-      </h4>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"
@@ -745,14 +738,14 @@ export default {
 
     fillTableSearch(data) {
       if (data.substance && data.substance === 'HFC-23' && this.tabName === 'has_produced') {
-        this.tableFII.filters.search = `${data.substance} invalid`
+        this.tableFII.filters.search = data.substance
         this.tableFII.tableFilters = true
       } else if (data.substance) {
-        this.table.filters.search = `${data.substance} invalid`
+        this.table.filters.search = data.substance
         this.table.tableFilters = true
       }
       if (data.blend) {
-        this.tableBlends.filters.search = `${data.blend} invalid`
+        this.tableBlends.filters.search = data.blend
         this.tableBlends.tableFilters = true
       }
     },

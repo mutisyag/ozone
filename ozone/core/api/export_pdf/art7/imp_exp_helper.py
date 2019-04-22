@@ -36,6 +36,7 @@ def big_table_row(obj, isBlend):
         (d_label,)
     )
 
+
 def component_row(component, blend):
     ptg = component.percentage
     q_sum = sum(get_quantities(blend)) * ptg
@@ -43,8 +44,8 @@ def component_row(component, blend):
     return (
         p_c(_(component.component_name)),
         p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        p_c(to_precision(blend.quantity_total_new * ptg, 3)),
-        p_c(to_precision(blend.quantity_total_recovered * ptg, 3)),
-        p_c(to_precision(blend.quantity_feedstock * ptg, 3)),
+        p_c(to_precision(blend.quantity_total_new * ptg, 3) if blend.quantity_total_new else ''),
+        p_c(to_precision(blend.quantity_total_recovered * ptg, 3) if blend.quantity_total_recovered else ''),
+        p_c(to_precision(blend.quantity_feedstock * ptg, 3) if blend.quantity_feedstock else ''),
         p_c(get_big_float(q_sum)) if q_sum != 0.0 else ''
     )

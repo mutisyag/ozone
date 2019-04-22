@@ -15,13 +15,13 @@ Optionally clone the translations as well in `translations` folder inside the oz
    
 2. Customize the Docker environment files:
 
-       cp docker/app.env.example docker/demo.env
+       cp docker/app.env.example docker/app.env
        cp docker/weblate.env.example docker/weblate.env
        cp frontend/.env.example frontend/.env.local
    
    Depending on the installation mode, create the docker-compose.override.yml file:
    
-       cp docker-compose.override.[local|staging|prod].yml docker-compose.override.yml
+       cp docker-compose.override.yml.[local|staging|prod] docker-compose.override.yml
    
    (when installing on a development machine, docker-compose.override.local.yml should be used)
    

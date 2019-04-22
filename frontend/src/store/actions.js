@@ -310,7 +310,7 @@ const actions = {
   getInitialData(context, { submission, formName, $gettext, additionalAction }) {
     context.commit('setForm', { formName, $gettext })
     return new Promise((resolve) => {
-      context.dispatch('getSubmissionData', { submission, $gettext }).then(() => {
+      context.dispatch('getSubmissionData', { submission, $gettext }).then((reporting_period) => {
         context.dispatch('getCurrentUserForm')
         context.dispatch('getCountries')
         context.dispatch('getSubstances')
@@ -320,7 +320,7 @@ const actions = {
         // This way, even secretariat users will only see the correct available
         // custom blends.
         context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
-        context.dispatch('getNonParties')
+        context.dispatch('getNonParties', reporting_period)
         context.dispatch('getSubmissionFormatOptions')
         if (additionalAction) {
           context.dispatch(additionalAction)
@@ -348,7 +348,7 @@ const actions = {
           can_upload_files: response.data.can_upload_files,
           can_edit_data: response.data.can_edit_data
         })
-        resolve()
+        resolve(response.data.reporting_period)
       })
     })
   },
@@ -423,8 +423,8 @@ const actions = {
     })
   },
 
-  getNonParties(context) {
-    getNonParties().then((response) => {
+  getNonParties(context, reporting_period) {
+    getNonParties(reporting_period).then((response) => {
       context.commit('updateNonParties', response.data)
     })
   },

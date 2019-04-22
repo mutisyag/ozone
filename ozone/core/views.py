@@ -6,6 +6,7 @@ from django.views.i18n import set_language as set_language_django
 from ozone.core.email import send_mail_from_template
 from ozone.core.models import Language
 
+
 # Create your views here.
 def spabundle(request):
     return render(request, 'bundle.html')
@@ -44,6 +45,6 @@ class ActivateUserPasswordResetConfirmView(PasswordResetConfirmView):
                         "account": self.user,
                         "site_name": self.request.META.get("HTTP_HOST")
                     },
-                    to_email=self.user.created_by
+                    to_email=self.user.created_by.email
                 )
         return result

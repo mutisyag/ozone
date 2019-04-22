@@ -121,6 +121,7 @@ export default {
 .legend {
   padding: .2rem 2rem;
   background: white;
+  margin-bottom: 3.5rem;
 }
 
 .legend .loader {

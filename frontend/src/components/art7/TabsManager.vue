@@ -3,7 +3,7 @@
     <div class="breadcrumb custom">
       <small style="width: 30%;">
         <b-btn
-          variant="info-outline"
+          variant="outline-info"
           @click="createModalData"
           v-show="!selectedTab.hideInfoButton"
           style="margin-right:.5rem"
@@ -15,7 +15,7 @@
       <div class="tab-title">
         <div v-if="selectedTab.tooltipHtml" v-b-tooltip :title="selectedTab.tooltipHtml">
           <span v-html="selectedTab.titleHtml"></span>
-          <i style="margin-left: 5px" class="fa fa-info-circle fa-lg"></i>
+          <i style="margin-left: 5px" class="fa fa-info-circle fa-sm"></i>
         </div>
         <div v-else v-html="selectedTab.titleHtml"></div>
       </div>
@@ -47,6 +47,12 @@
 
           <b-tab>
             <template slot="title">
+              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
+            </template>
+            <Files :tabId="1" :tabIndex="tabIndex"/>
+          </b-tab>
+          <b-tab>
+            <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs.questionaire_questions"/>
             </template>
             <Questionnaire :tabId="1" :info="$store.state.form.tabs.questionaire_questions"/>
@@ -74,18 +80,11 @@
             </template>
             <EmissionsTemplate
               :hasDisabledFields="!selectedDisplayTabs.has_emissions"
-              :tabId="7"
+              :tabId="8"
               ref="has_emissions"
               :tabIndex="tabIndex"
               tabName="has_emissions"
             />
-          </b-tab>
-
-          <b-tab>
-            <template slot="title">
-              <tab-title-with-loader :tab="$store.state.form.tabs.files"/>
-            </template>
-            <Files :tabId="8" :tabIndex="tabIndex"/>
           </b-tab>
         </b-tabs>
       </b-card>
@@ -99,10 +98,24 @@
       ></Save>
       <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
       <b-button-group class="pull-right actions mt-2 mb-2">
+        <AggregationsModal :submission="submission"></AggregationsModal>
+        <b-btn
+          variant="outline-dark"
+          @click="$store.dispatch('downloadStuff',
+						{
+							url: `${submission}export_pdf/`,
+							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
+						})"
+        >Export as PDF</b-btn>
+        <b-btn @click="$refs.history_modal.show()" variant="outline-dark">
+          <span v-translate>Versions</span>
+        </b-btn>
+      </b-button-group>
+      <b-button-group class="pull-right actions mt-2 mb-2 mr-5">
         <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
-          variant="outline-success"
+          variant="outline-primary"
         >
           <span v-translate>Submit</span>
         </b-btn>
@@ -118,21 +131,9 @@
         <b-btn
           variant="outline-primary"
           @click="clone($route.query.submission)"
-          size="sm"
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
-        <b-btn
-          variant="outline-primary"
-          @click="$store.dispatch('downloadStuff',
-						{
-							url: `${submission}export_pdf/`,
-							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-						})"
-        >Export as PDF</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          <span v-translate>Versions</span>
-        </b-btn>
         <b-btn
           @click="removeSubmission"
           id="delete-button"
@@ -182,6 +183,7 @@ import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
 import TransitionQuestions from '@/components/common/TransitionQuestions'
 import { getAlerts } from '@/components/common/dataDefinitions/alerts'
+import AggregationsModal from '@/components/common/AggregationsModal'
 
 export default {
   components: {
@@ -194,7 +196,8 @@ export default {
     Save,
     SubmissionHistory,
     TabTitleWithLoader,
-    TransitionQuestions
+    TransitionQuestions,
+    AggregationsModal
   },
   props: {
     data: null,
@@ -227,11 +230,7 @@ export default {
       const { form } = this.$store.state
       const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
       const body = document.querySelector('body')
-      if (tab.hasAssideMenu && !this.$store.getters.isReadOnly && this.selectedDisplayTabs[tab.name]) {
-        body.classList.add('aside-menu-lg-show')
-      } else {
-        body.classList.remove('aside-menu-lg-show')
-      }
+      body.classList.remove('aside-menu-lg-show')
       return tab
     },
     tabsIdsWithAssideMenu() {
@@ -240,7 +239,11 @@ export default {
     }
   },
   methods: {
-    clone(url) {
+    async clone(url) {
+      const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You are about to create a new version for data entry. The current version will be superseded once the new version is submitted.', $gettext: this.$gettext })
+      if (!confirmed) {
+        return
+      }
       cloneSubmission(url).then((response) => {
         this.$router.push({ name: this.$route.name, query: { submission: response.data.url } })
         this.$router.go(this.$router.currentRoute)
@@ -258,14 +261,8 @@ export default {
         console.log(error)
       })
     },
-
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs',
-        [this.$gettext('Dashboard'),
-          this.$store.state.current_submission.obligation,
-          this.$store.state.initialData.display.countries[this.$store.state.current_submission.party],
-          this.$store.state.current_submission.reporting_period,
-          `${this.$gettext('Version')} ${this.$store.state.current_submission.version} (${this.labels[this.$store.state.current_submission.current_state]})`])
+      this.$store.commit('updateBreadcrumbs', `${this.$store.state.current_submission.reporting_period} ${this.$store.state.current_submission.obligation} ${this.$gettext('data submission for')} ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]}`)
     },
     createModalData() {
       const tabName = this.$store.state.form.formDetails.tabsDisplay[this.tabIndex]
