@@ -31,6 +31,17 @@ class Command(BaseCommand):
         'limits',
     )
 
+    FIXTURES_NOT_IN_TEST = (
+        'limits',
+    )
+
+    def add_arguments(self, parser):
+        parser.add_argument("--test", default=False, action="store_true",
+                            help="Load test fixtures instead of the normal fixtures.")
+
     def handle(self, *args, **options):
-        for fixture in Command.FIXTURES:
+        for fixture in self.FIXTURES:
+            if options["test"] and fixture in self.FIXTURES_NOT_IN_TEST:
+                continue
+            print("Loading", fixture)
             call_command('loaddata', fixture)
