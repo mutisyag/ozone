@@ -34,7 +34,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
         isInput: true
       },
       {
-        label: `<br> ${$gettext('Status')}`,
+        label: `<br> ${$gettext('Actions')}`,
         name: 'validation'
       }
     ],

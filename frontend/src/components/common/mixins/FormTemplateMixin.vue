@@ -263,11 +263,12 @@ export default {
       if (status) return 'down'
       return 'right'
     },
-    rowHovered(item) {
-      this.hovered = item.index
+    rowHovered(index) {
+      this.hovered = index
     },
 
-    openValidation() {
+    openValidation(index) {
+      this.rowHovered(index)
       const body = document.querySelector('body')
       if (this.tabName !== 'has_produced') {
         this.sidebarTabIndex = 2

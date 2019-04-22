@@ -27,7 +27,7 @@ const getLabels = ($gettext) => {
       quantity_exported: $gettext('Amount exported'),
       quantity_destroyed: $gettext('Amount destroyed'),
       on_hand_end_year: $gettext('On hand end of year'),
-      validation: $gettext('Status')
+      validation: $gettext('Actions')
     }
   }
   return labels

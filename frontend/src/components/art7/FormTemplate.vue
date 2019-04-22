@@ -24,7 +24,6 @@
           outlined
           v-if="getTabInputFields && getTabDecisionQuantityFields"
           bordered
-          @row-clicked="rowHovered"
           hover
           head-variant="light"
           stacked="md"
@@ -78,7 +77,7 @@
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
-            <div v-else>{{cell.item[getCountrySlot]}}</div>
+            <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
@@ -105,6 +104,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -123,8 +123,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
 
@@ -279,6 +281,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -297,8 +300,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
             <div
@@ -446,7 +451,7 @@
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
-            <div v-else>{{cell.item[getCountrySlot]}}</div>
+            <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
@@ -473,6 +478,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -491,8 +497,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
           </template>

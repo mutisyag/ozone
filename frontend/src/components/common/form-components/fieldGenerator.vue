@@ -15,6 +15,7 @@
         @change="updateFormField"
         :disabled="disabled"
         class="form-control"
+        :actual_type="field.type"
         v-model="currentTyping"
         :type="field.type ==='number' ? 'text' : field.type"
       >

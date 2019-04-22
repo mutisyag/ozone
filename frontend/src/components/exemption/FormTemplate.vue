@@ -71,6 +71,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>

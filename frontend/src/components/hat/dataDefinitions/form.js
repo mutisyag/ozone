@@ -89,7 +89,7 @@ const getFormHat = ($gettext) => {
           name: 'remarks_os',
           isInput: true
         }, {
-          label: `<br>${$gettext('Status')}`,
+          label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -179,7 +179,7 @@ const getFormHat = ($gettext) => {
           name: 'remarks_os',
           isInput: true
         }, {
-          label: `<br>${$gettext('Status')}`,
+          label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }],
 

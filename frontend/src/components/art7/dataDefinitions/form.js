@@ -129,7 +129,7 @@ const getFormArt7 = ($gettext) => {
             name: 'decision_exempted'
           },
           {
-            label: `<br> ${$gettext('Status')}`,
+            label: `<br> ${$gettext('Actions')}`,
             name: 'validation'
           }
         ],
@@ -268,7 +268,7 @@ const getFormArt7 = ($gettext) => {
           name: 'decision_exempted'
         },
         {
-          label: `<br> ${$gettext('Status')}`,
+          label: `<br> ${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -387,7 +387,7 @@ const getFormArt7 = ($gettext) => {
             name: 'quantity_article_5'
           },
           {
-            label: `<br> ${$gettext('Status')}`,
+            label: `<br> ${$gettext('Actions')}`,
             name: 'validation'
           }
         ],
@@ -477,7 +477,7 @@ const getFormArt7 = ($gettext) => {
               name: 'decision_exempted'
             },
             {
-              label: `(8) <br> ${$gettext('Status')}`,
+              label: `(8) <br> ${$gettext('Actions')}`,
               name: 'validation'
             }
           ]
@@ -555,7 +555,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `${$gettext('Status')}`,
+          label: `${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -636,7 +636,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `<br> ${$gettext('Status')}`,
+          label: `<br> ${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -757,7 +757,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `${$gettext('Status')}`,
+          label: `${$gettext('Actions')}`,
           name: 'validation'
         }
         ],

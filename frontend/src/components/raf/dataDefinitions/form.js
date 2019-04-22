@@ -113,7 +113,7 @@ const getFormRaf = ($gettext) => {
           name: 'is_emergency',
           isInput: true
         }, {
-          label: `<br>${$gettext('Status')}`,
+          label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }],
 

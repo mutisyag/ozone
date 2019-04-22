@@ -50,7 +50,7 @@
               :title="cell.item.originalObj.quantity_import.tooltip"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
             >
-              <span class="input">
+              <span class="input text-right">
                 <i v-if="cell.item.quantity_import" class="fa fa-info-circle fa-lg"></i>
                 {{(cell.item.quantity_import)}}
               </span>
@@ -80,6 +80,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -162,6 +163,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
