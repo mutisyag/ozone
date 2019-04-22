@@ -62,8 +62,10 @@
               :title="cell.item.originalObj.quantity_import.tooltip"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
             >
-              {{(cell.item.quantity_import)}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <span class="input">
+                <i v-if="cell.item.quantity_import" class="fa fa-info-circle fa-lg"></i>
+                {{(cell.item.quantity_import)}}
+              </span>
             </span>
           </template>
 

@@ -114,17 +114,20 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
+
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
@@ -180,6 +183,7 @@
                 />
               </b-input-group>
             </div>
+
           </template>
         </b-table>
       </div>
@@ -285,17 +289,19 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
@@ -477,17 +483,19 @@
             :slot="tooltipField"
             slot-scope="cell"
           >
-            <span
+            <div
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj[tooltipField].tooltip ? true : false"
               :title="cell.item.originalObj[tooltipField].tooltip"
               :key="tooltipField"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
-              v-if="cell.item[tooltipField]"
             >
-              {{formatQuantity(cell.item[tooltipField])}}
-              <i class="fa fa-info-circle fa-sm"></i>
-            </span>
+              <span
+                class="input"
+              >
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+              </span>
+            </div>
           </template>
 
           <template slot="row-details" slot-scope="row">
