@@ -6,13 +6,13 @@
       </div>
       <div v-else>
         <p>You are about to submit your report.</p>
+        <p>By clicking the OK button, you confirm that all blank cells and all substances not included are considered to have zero values.</p>
       </div>
       <div v-if="questionnaireStatus.length">
         <p>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</p>
       </div>
       <div v-if="uncheckedFlags.length">
-        <p>Kindly note that all substances not included in the reporting forms are considered zero. <br>
-        You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
+        <p>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">

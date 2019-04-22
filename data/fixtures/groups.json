@@ -5,7 +5,7 @@
         "fields": {
             "group_id": "AI",
             "annex": 1,
-            "name": "Annex A Group I",
+            "name": "A/I",
             "description": "Chlorofluorocarbons (CFCs)",
             "control_treaty": 2,
             "report_treaty": 2,
@@ -22,7 +22,7 @@
         "fields": {
             "group_id": "AII",
             "annex": 1,
-            "name": "Annex A Group II",
+            "name": "A/II",
             "description": "Halons",
             "control_treaty": 2,
             "report_treaty": 2,
@@ -39,7 +39,7 @@
         "fields": {
             "group_id": "BI",
             "annex": 2,
-            "name": "Annex B Group I",
+            "name": "B/I",
             "description": "Other Fully Halogenated CFCs",
             "control_treaty": 3,
             "report_treaty": 3,
@@ -56,7 +56,7 @@
         "fields": {
             "group_id": "BII",
             "annex": 2,
-            "name": "Annex B Group II",
+            "name": "B/II",
             "description": "Carbon Tetrachloride (CTC)",
             "control_treaty": 3,
             "report_treaty": 3,
@@ -73,7 +73,7 @@
         "fields": {
             "group_id": "BIII",
             "annex": 2,
-            "name": "Annex B Group III",
+            "name": "B/III",
             "description": "Methyl Chloroform (MC)",
             "control_treaty": 3,
             "report_treaty": 3,
@@ -90,7 +90,7 @@
         "fields": {
             "group_id": "CI",
             "annex": 3,
-            "name": "Annex C Group I",
+            "name": "C/I",
             "description": "Hydrochlorofluorocarbons (HCFCs)",
             "control_treaty": 4,
             "report_treaty": 3,
@@ -107,7 +107,7 @@
         "fields": {
             "group_id": "CII",
             "annex": 3,
-            "name": "Annex C Group II",
+            "name": "C/II",
             "description": "Hydrobromofluorocarbons (HBFCs)",
             "control_treaty": 4,
             "report_treaty": 4,
@@ -124,7 +124,7 @@
         "fields": {
             "group_id": "CIII",
             "annex": 3,
-            "name": "Annex C Group III",
+            "name": "C/III",
             "description": "Bromochloromethane (BCM)",
             "control_treaty": 6,
             "report_treaty": 6,
@@ -141,7 +141,7 @@
         "fields": {
             "group_id": "EI",
             "annex": 4,
-            "name": "Annex E Group I",
+            "name": "E/I",
             "description": "Methyl Bromide (MB)",
             "control_treaty": 4,
             "report_treaty": 4,
@@ -158,7 +158,7 @@
         "fields": {
             "group_id": "F",
             "annex": 5,
-            "name": "Annex F Group I/II",
+            "name": "F I/II",
             "description": "Hydrofluorocarbons (HFCs)",
             "control_treaty": 7,
             "report_treaty": 7,

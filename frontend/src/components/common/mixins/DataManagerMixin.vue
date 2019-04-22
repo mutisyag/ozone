@@ -21,7 +21,7 @@ export default {
   beforeRouteLeave(to, from, next) {
     if (process.env.NODE_ENV !== 'development') {
       if (this.alertUnsavedData()) {
-        const answer = window.confirm(this.$gettext('Do you really want to leave? you have unsaved changes!'))
+        const answer = window.confirm(this.$gettext('Do you really want to leave this page? You have unsaved changes!'))
         if (answer) {
           next()
         } else {
@@ -71,7 +71,9 @@ export default {
               for (const propertyPath of dataNeeded) {
                 if (formField.selectedPropertyPath === propertyPath) {
                   const propValue = getPropertyValue(this.$store.state, propertyPath)
-                  formField.selected = propValue
+                  if (formField.selected !== propValue) {
+                    formField.selected = propValue
+                  }
                   break
                 }
               }

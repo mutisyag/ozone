@@ -45,7 +45,10 @@ export default {
     info: Object
   },
 
-  created() {
+  computed: {
+    onlySelectedValue() {
+      return Object.keys(this.info.form_fields).map(field => this.info.form_fields[field].selected)
+    }
   },
 
   components: { fieldGenerator },
@@ -67,7 +70,19 @@ export default {
     return {
       labels: getCommonLabels(this.$gettext)
     }
-  }
+  },
 
+  watch: {
+    'onlySelectedValue': {
+      handler(old_val, new_val) {
+        if (this.info.status !== 'edited' && JSON.stringify(old_val) !== JSON.stringify(new_val)) {
+          this.$store.commit('setTabStatus', {
+            tab: 'questionaire_questions',
+            value: 'edited'
+          })
+        }
+      }
+    }
+  }
 }
 </script>
