@@ -1,84 +1,84 @@
 <template>
   <div class="col-8 files-upload-wrapper">
-      <div>
-        <div class="row">
-          <div class="col-7 mb-2">
-            <b-form-file
-              id="choose-files-button"
-              :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
-              :multiple="true"
-              ref="filesInput"
-              v-model="selectedFiles"
-              :placeholder="placeholder"
-              @input="onSelectedFilesChanged"
-            />
-          </div>
-        </div>
-        <small class="ml-1 muted">
-           <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
-        </small>
-        <div v-if="files.length">
-          <h5 class="mt-3 mb-3 ml-1" v-translate>Files to be upoaded</h5>
-          <b-btn class="mb-4" v-if="files.length" variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Start upload</b-btn>
-
+    <div>
+      <div class="row">
+        <div class="col-7 mb-2">
+          <b-form-file
+            id="choose-files-button"
+            :disabled="!$store.getters.can_upload_files || loadingInitialFiles"
+            :multiple="true"
+            ref="filesInput"
+            v-model="selectedFiles"
+            :placeholder="placeholder"
+            @input="onSelectedFilesChanged"
+          />
         </div>
       </div>
-      <b-table
-            show-empty
-            class="no-header"
-            :empty-text="$gettext('Click the Browse button to add files')"
-            :items="tableItemsToUpload"
-            :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
-          >
-
-        <template slot="description" slot-scope="cell">
-          <b-form-input
-            class="d-inline"
-            placeholder="Optional description"
-            :value="cell.value"
-            style="height: unset"
-            @input="onFileDescriptionChanged($event, cell.item.details)"
-          />
-        </template>
-
-        <template slot="actions" slot-scope="cell">
-          <div class="d-flex">
-            <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
-              <i class="fa fa-trash" aria-hidden="true"></i>
-            </b-button>
-            <div class="ml-2" style="min-width:300px" v-if="cell.item.details.percentage">
-              <b-progress :value="cell.item.details.percentage" :max="100">
-                <b-progress-bar :value="cell.item.details.percentage">
-                  Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
-                </b-progress-bar>
-              </b-progress>
-            </div>
-          </div>
-        </template>
-      </b-table>
-      <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
-    <br>
-    <div>
-      <h5 class="mb-4 ml-1" v-translate>Uploaded files</h5>
+      <small class="ml-1 muted">
+         <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
+      </small>
+      <div v-if="tableItemsToUpload.length">
+        <h5 class="mt-3 mb-3 ml-1" v-translate>Files ready for upload:</h5>
+      </div>
     </div>
     <b-table
           show-empty
-          :empty-text="$gettext('No files uploaded')"
-          :items="tableItemsUploaded"
-          :fields="tableFieldsUploaded"
-        >
+          class="no-header"
+          :empty-text="$gettext('Click the Browse button to add files')"
+          :items="tableItemsToUpload"
+          :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
+    >
+
+      <template slot="description" slot-scope="cell">
+        <b-form-input
+          class="d-inline"
+          placeholder="Optional description"
+          :value="cell.value"
+          style="height: unset"
+          @input="onFileDescriptionChanged($event, cell.item.details)"
+        />
+      </template>
+
       <template slot="actions" slot-scope="cell">
-        <b-btn
-          variant="primary"
-          @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"
-          v-b-tooltip
-          :title="downloadLabel"
-        ><i class="fa fa-download"></i></b-btn>
-        <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
-          <i class="fa fa-trash" aria-hidden="true"></i>
-        </b-button>
+        <div class="d-flex">
+          <b-button variant="danger" @click="deleteFile($event, cell.item.details)">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </b-button>
+          <div class="ml-2" style="min-width:300px" v-if="cell.item.details.percentage">
+            <b-progress :value="cell.item.details.percentage" :max="100">
+              <b-progress-bar :value="cell.item.details.percentage">
+                Uploading: <strong>{{ parseInt(cell.item.details.percentage) }}%</strong>
+              </b-progress-bar>
+            </b-progress>
+          </div>
+        </div>
       </template>
     </b-table>
+    <b-btn v-if="tableItemsToUpload.length" class="mb-4" variant="primary" @click="$store.dispatch('triggerSave')" v-translate>Start upload</b-btn>
+
+      <!-- TODO: there needs to be a method for just saving files. This is a dirty workaround -->
+    <br>
+    <div v-if="tableItemsUploaded.length">
+      <h5 class="mb-4 ml-1" v-translate>Uploaded files</h5>
+      <b-table
+            show-empty
+            :empty-text="$gettext('No files uploaded')"
+            :items="tableItemsUploaded"
+            :fields="tableFieldsUploaded"
+          >
+        <template slot="actions" slot-scope="cell">
+          <b-btn
+            variant="primary"
+            @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"
+            v-b-tooltip
+            :title="downloadLabel"
+          ><i class="fa fa-download"></i></b-btn>
+          <b-button class="ml-2 mr-2" variant="danger" @click="deleteFile($event, cell.item.details)">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </b-button>
+        </template>
+      </b-table>
+    </div>
   </div>
 </template>
 
