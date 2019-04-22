@@ -219,8 +219,8 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   /* Add country name (special case) */
   if (submissionInfo.country !== undefined) {
     browser
-      .waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
-      .click("//form[@class='form-sections']//div[@class='multiselect']")
+      .waitForElementVisible("//form[contains(@class,'form-sections')]//div[@class='multiselect']", 10000)
+      .click("//form[contains(@class,'form-sections')]//div[@class='multiselect']")
       .pause(500)
       .moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
       .waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
@@ -291,8 +291,8 @@ const openDashboard = (browser) => {
 
 const openGeneralInstructions = (browser) => {
   browser.useXpath()
-    .waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
-    .click("//button[contains(@class, 'btn-info-outline')]")
+    .waitForElementVisible("//button[contains(@class, 'btn-outline-info')]", 10000)
+    .click("//button[contains(@class, 'btn-outline-info')]")
     .pause(500)
     .execute('window.scrollTo(0,0)')
     .pause(500)
@@ -439,6 +439,8 @@ const filterEntity = (browser, tab, filters) => {
 }
 
 const checkSumbissionInfoFlags = (browser) => {
+  logMessage(browser, 'Checking submission info flags')
+
   const flags = [
     'flag_has_reported_a1', 'flag_has_reported_a2',
     'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',

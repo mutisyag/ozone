@@ -300,7 +300,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party', 'party')
+    login(browser, 'party', 'party')    
     createSubmission(browser, 'Article 7', '2018', '')
     clickQuestionnaireRadios(browser, ['has_emissions'])
     fillSubmissionInfo(browser, submissionInfo)
