@@ -60,25 +60,31 @@
       <span v-translate>Created by</span>&#8239;
       <em>{{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}</em>&#8239;
       <span v-translate>at</span>&#8239;
-      <em>{{$store.state.current_submission.created_at}}</em>
+      <em>{{dateFormat($store.state.current_submission.created_at)}}</em>
     </div>
     <div class="mt-2">
       <span v-translate>Last changed by</span>&#8239;
       <em>{{$store.state.current_submission.filled_by_secretariat ? $gettext('secretariat'): $gettext('party')}}</em>&#8239;
       <span v-translate>at</span>&#8239;
-      <em>{{$store.state.current_submission.updated_at}}</em>
+      <em>{{dateFormat($store.state.current_submission.updated_at)}}</em>
     </div>
   </div>
 </template>
 
 <script>
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { dateFormatToDisplay } from '@/components/common/services/languageService.js'
 
 export default {
   data() {
     return {
       superseded_tooltip: this.$gettext('Another version has been submitted, overriding this one'),
       labels: getCommonLabels(this.$gettext)
+    }
+  },
+  methods: {
+    dateFormat(date) {
+      return dateFormatToDisplay(date)
     }
   },
   computed: {
