@@ -14,21 +14,18 @@ export default {
     return {
       currentFormName: this.$route.name,
       submission: this.$route.query.submission,
-      prefilled: false
+      prefilled: false,
+      preventMessage: this.$gettext('Do you really want to leave this page? You have unsaved changes!')
     }
   },
 
-  beforeRouteLeave(to, from, next) {
-    if (process.env.NODE_ENV !== 'development') {
-      if (this.alertUnsavedData()) {
-        const answer = window.confirm(this.$gettext('Do you really want to leave this page? You have unsaved changes!'))
-        if (answer) {
-          next()
-        } else {
-          next(false)
-        }
-      } else {
+  async beforeRouteLeave(to, from, next) {
+    if (this.alertUnsavedData()) {
+      const answer = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'Do you really want to leave this page? You have unsaved changes!', $gettext: this.$gettext })
+      if (answer) {
         next()
+      } else {
+        next(false)
       }
     } else {
       next()
@@ -96,9 +93,7 @@ export default {
       if (!this.submission) {
         this.$router.push({ name: 'Dashboard' })
       } else {
-        if (process.env.NODE_ENV !== 'development') {
-          window.addEventListener('beforeunload', this.alertUnsavedData)
-        }
+        window.addEventListener('beforeunload', this.alertUnsavedData)
         this.$store.dispatch('getInitialData', {
           $gettext: this.$gettext,
           submission: this.submission,
@@ -115,13 +110,13 @@ export default {
       Object.values(this.form.tabs).forEach((tab) => {
         [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)
       })
-
       if (tabsWithData.length && e) {
         // Cancel the event as stated by the standard.
         e.preventDefault()
         // Chrome requires returnValue to be set.
-        e.returnValue = ''
-      } else if (tabsWithData.length) {
+        e.returnValue = this.preventMessage
+        return this.preventMessage
+      } if (tabsWithData.length) {
         return tabsWithData.length
       }
       return null
