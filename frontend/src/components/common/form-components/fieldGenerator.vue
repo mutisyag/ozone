@@ -42,7 +42,7 @@
     <b-form-checkbox
       :id="id"
       @change="updateFormFieldWithTabs"
-      :disabled="field.disabled"
+      :disabled="field.disabled || disabled"
       v-else-if="field.type === 'checkbox'"
       v-model="currentTyping"
     ></b-form-checkbox>
