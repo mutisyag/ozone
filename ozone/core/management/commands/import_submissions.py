@@ -662,6 +662,9 @@ class Command(BaseCommand):
         submission._current_state = "finalized"
         submission.save()
 
+        # Fill aggregated data on submission import
+        submission.fill_aggregated_data()
+
         if values["submission"]["created_at"]:
             Submission.objects.filter(pk=submission.pk).update(
                 created_at=values["submission"]["created_at"]
