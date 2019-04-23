@@ -40,6 +40,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
     """
     final_states = []
     editable_data_states = ['data_entry']
+    incorrect_data_states = ['recalled']
 
     state = DefaultArticle7WorkflowStateDescription()
 
@@ -135,8 +136,6 @@ class DefaultArticle7Workflow(BaseWorkflow):
         # Set submitted_at flag
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
-        # Populate submission-specific aggregated data
-        self.model_instance.fill_aggregated_data()
 
     @xworkflows.transition('recall')
     def recall(self):

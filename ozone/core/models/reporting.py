@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
+from .aggregation import ProdCons
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
@@ -615,6 +616,10 @@ class Submission(models.Model):
         return self.workflow().editable_data_states
 
     @property
+    def incorrect_states(self):
+        return self.workflow().incorrect_data_states
+
+    @property
     def in_initial_state(self):
         return self.workflow().in_initial_state
 
@@ -1152,25 +1157,29 @@ class Submission(models.Model):
         except FileNotFoundError:
             pass
 
-    @transaction.atomic()
     def make_current(self):
-        versions = (
-            Submission.objects.select_for_update()
-            .filter(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                obligation=self.obligation,
+        # Avoid race conditions
+        with transaction.atomic():
+            # Find all other non-editable versions and make them superseded
+            versions = (
+                Submission.objects.select_for_update()
+                .filter(
+                    party=self.party,
+                    reporting_period=self.reporting_period,
+                    obligation=self.obligation,
+                )
+                .exclude(pk=self.pk)
+                .exclude(_current_state__in=self.editable_states)
             )
-            .exclude(pk=self.pk)
-            .exclude(_current_state__in=self.editable_states)
-        )
-        for version in versions:
-            version.flag_superseded = True
-            version.save()
-        self.flag_superseded = False
-        self.save()
+            for version in versions:
+                version.flag_superseded = True
+                version.save()
+            self.flag_superseded = False
+            self.save()
 
-    @transaction.atomic()
+        # Populate submission-specific aggregated data
+        self.fill_aggregated_data()
+
     def make_previous_current(self):
         """
         When current submission is set to recalled, a different one should be
@@ -1179,24 +1188,34 @@ class Submission(models.Model):
         Please note that a submission that has flag_valid set to None
         (which means that it has not yet been fully checked by OS) can become
         current.
-        However, an invalid submission cannot become current.
+        However, an invalid or recalled submission cannot become current.
         """
-        versions = (
-            Submission.objects.select_for_update()
-            .filter(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                obligation=self.obligation,
+        # Avoid race conditions
+        with transaction.atomic():
+            versions = (
+                Submission.objects.select_for_update()
+                .filter(
+                    party=self.party,
+                    reporting_period=self.reporting_period,
+                    obligation=self.obligation,
+                )
+                .exclude(flag_valid=False)
+                .exclude(pk=self.pk)
+                .exclude(_current_state__in=self.editable_states)
+                .exclude(_current_state__in=self.incorrect_states)
+                .order_by('-version')
             )
-            .exclude(flag_valid=False)
-            .exclude(pk=self.pk)
-            .exclude(_current_state__in=self.editable_states)
-            .order_by('-version')
-        )
-        latest = versions.first()
+            latest = versions.first()
+            if latest:
+                latest.flag_superseded = False
+                latest.save()
+
+        # Populate submission-specific aggregated data
         if latest:
-            latest.flag_superseded = False
-            latest.save()
+            latest.fill_aggregated_data()
+        else:
+            # If no submission is now current, purge all related aggregated data
+            self.purge_aggregated_data()
 
     @property
     def versions(self):
@@ -1260,11 +1279,21 @@ class Submission(models.Model):
         ]
         return Group.objects.filter(group_id__in=reported_groups)
 
+    def purge_aggregated_data(self):
+        """
+        This might need to become smarter if other data sources than Article 7
+        are added to populate some of the fields in the ProdCons model.
+        """
+        ProdCons.cleanup_aggregations(self.party, self.reporting_period)
+
     def fill_aggregated_data(self):
         """
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
+        # Cleanup aggregated data that's become stale
+        self.purge_aggregated_data()
+
         groups = self.get_reported_groups()
 
         for related in self.RELATED_DATA:
