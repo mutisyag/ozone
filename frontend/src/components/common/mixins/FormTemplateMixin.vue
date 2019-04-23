@@ -61,6 +61,14 @@ export default {
   },
 
   computed: {
+    selectedForDelete() {
+      return this.tableItems.length && this.tableItems.filter(field => field.checkForDelete).map(field => field.index)
+    },
+
+    selectedForDeleteBlends() {
+      return this.tableItemsBlends.length && this.tableItemsBlends.filter(field => field.checkForDelete).map(field => field.index)
+    },
+
     blendSubstanceHeaders() {
       return this.tab_info.blend_substance_headers.filter(header => !['substance', 'percent'].includes(header))
     },
@@ -150,6 +158,10 @@ export default {
           ...options
         })
       })
+      tableHeaders.unshift({
+        key: 'checkForDelete',
+        label: ''
+      })
       return tableHeaders
     },
 
@@ -205,6 +217,10 @@ export default {
           })
         }
       })
+      tableHeaders.unshift({
+        key: 'checkForDelete',
+        label: ''
+      })
       return tableHeaders
     },
     tab_info() {
@@ -221,6 +237,13 @@ export default {
   },
 
   methods: {
+    bulkRemove(indexList) {
+      this.$store.commit('removeBulkFields', {
+        tab: this.tabName,
+        indexList,
+        $gettext: this.$gettext
+      })
+    },
     fillTableSearch(data) {
       if (data.substance) {
         this.table.filters.search = data.substance
@@ -263,11 +286,12 @@ export default {
       if (status) return 'down'
       return 'right'
     },
-    rowHovered(item) {
-      this.hovered = item.index
+    rowHovered(index) {
+      this.hovered = index
     },
 
-    openValidation() {
+    openValidation(index) {
+      this.rowHovered(index)
       const body = document.querySelector('body')
       if (this.tabName !== 'has_produced') {
         this.sidebarTabIndex = 2

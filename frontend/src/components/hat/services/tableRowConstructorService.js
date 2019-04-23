@@ -21,6 +21,10 @@ export default {
     case 'has_produced':
       baseInnerFields = {
         ordering_id: { selected: ordering_id || 0 },
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         remarks_party: {
           type: 'textarea',
           selected: ''
@@ -72,6 +76,10 @@ export default {
     case 'has_imports':
       baseInnerFields = {
         ordering_id: { selected: ordering_id || 0 },
+        checkForDelete: {
+          selected: false,
+          type: 'checkbox'
+        },
         remarks_party: {
           type: 'textarea',
           selected: ''

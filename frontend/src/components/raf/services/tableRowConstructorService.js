@@ -54,6 +54,10 @@ export default {
   }) {
     const	baseInnerFields = {
       ordering_id: { selected: ordering_id || 0 },
+      checkForDelete: {
+        selected: false,
+        type: 'checkbox'
+      },
       remarks_party: {
         type: 'textarea',
         selected: ''

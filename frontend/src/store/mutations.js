@@ -70,6 +70,26 @@ const mutations = {
     state.currentSubmissionHistory = data
   },
 
+  resetStuff(state) {
+    state.form = null
+    state.initialData = {
+      countryOptions: null,
+      countryOptionsSubInfo: null,
+      groupSubstances: null,
+      substances: null,
+      partyRatifications: null,
+      essenCritTypes: null,
+      submissionFormats: null,
+      blends: null,
+      nonParties: null,
+      display: {
+        substances: null,
+        blends: null,
+        countries: null
+      }
+    }
+  },
+
   setForm(state, { formName, $gettext }) {
     let currentFormStructure = null
     let tableRowConstructor = null
@@ -311,6 +331,11 @@ const mutations = {
   removeField(state, { tab, index }) {
     state.form.tabs[tab].form_fields.splice(index, 1)
   },
+
+  removeBulkFields(state, { tab, indexList }) {
+    state.form.tabs[tab].form_fields = state.form.tabs[tab].form_fields.filter(field => !indexList.includes(state.form.tabs[tab].form_fields.indexOf(field)))
+  },
+
   addTabFiles(state, { files }) {
     if (!files) {
       return

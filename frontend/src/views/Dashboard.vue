@@ -65,7 +65,7 @@
             <strong>
               <span
                 v-translate="{totalRows: dataEntryTable.totalRows}"
-              >Data entry submissions (%{totalRows} records)</span>
+              >Data entry in progress submissions (%{totalRows} records)</span>
             </strong>
           </div>
           <div v-if="currentUser.is_secretariat" class="mt-2 mb-2">

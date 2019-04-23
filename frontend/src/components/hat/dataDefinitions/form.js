@@ -89,7 +89,7 @@ const getFormHat = ($gettext) => {
           name: 'remarks_os',
           isInput: true
         }, {
-          label: `<br>${$gettext('Status')}`,
+          label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -103,7 +103,7 @@ const getFormHat = ($gettext) => {
           tooltip: $gettext('Only bulk gases for servicing of exempted equipment should be reported here, not gases imported inside pre-charged equipment.')
         }, {
           label: '',
-          colspan: 3
+          colspan: 4
         }
         ],
         comments: {
@@ -179,7 +179,7 @@ const getFormHat = ($gettext) => {
           name: 'remarks_os',
           isInput: true
         }, {
-          label: `<br>${$gettext('Status')}`,
+          label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }],
 
@@ -192,7 +192,7 @@ const getFormHat = ($gettext) => {
           tooltip: $gettext('For each substance produced for use in subsectors that may be approved after the assessments under paragraphs 32 and 33 of decision XXVIII/2, please specify the approved subsector. Should the column space be insufficient, further information can be provided in the “comments” box above.')
         }, {
           label: '',
-          colspan: 3
+          colspan: 4
         }
         ],
         comments: {

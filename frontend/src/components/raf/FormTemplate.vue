@@ -7,6 +7,9 @@
             {{tab_info.formNumber}}.1
             <span v-translate>Essential use</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input :class="{ highlighted: table.filters.search && table.filters.search.length }" v-model="table.filters.search"/>
@@ -19,7 +22,6 @@
           show-empty
           outlined
           bordered
-          @row-clicked="rowHovered"
           hover
           head-variant="light"
           class="submission-table full-bordered"
@@ -37,6 +39,13 @@
           <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
+            />
+          </template>
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
@@ -50,9 +59,9 @@
               :title="cell.item.originalObj.quantity_import.tooltip"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
             >
-              <span class="input">
-                <i v-if="cell.item.quantity_import" class="fa fa-info-circle fa-lg"></i>
+              <span class="input text-right">
                 {{(cell.item.quantity_import)}}
+                <i v-if="cell.item.quantity_import" class="fa fa-info-circle fa-lg"></i>
               </span>
             </span>
           </template>
@@ -80,6 +89,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -103,7 +113,6 @@
           show-empty
           outlined
           bordered
-          @row-clicked="rowHovered"
           hover
           head-variant="light"
           class="submission-table full-bordered"
@@ -134,8 +143,10 @@
               :title="cell.item.originalObj.quantity_import.tooltip"
               @click="createModalData(cell.item.originalObj, cell.item.index)"
             >
-              {{(cell.item.quantity_import)}}
-              <i class="fa fa-info-circle fa-lg"></i>
+              <span class="input text-right">
+                {{(cell.item.quantity_import)}}
+                <i v-if="cell.item.quantity_import" class="fa fa-info-circle fa-lg"></i>
+              </span>
             </span>
           </template>
 
@@ -162,6 +173,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>

@@ -129,7 +129,7 @@ const getFormArt7 = ($gettext) => {
             name: 'decision_exempted'
           },
           {
-            label: `<br> ${$gettext('Status')}`,
+            label: `<br> ${$gettext('Actions')}`,
             name: 'validation'
           }
         ],
@@ -156,6 +156,9 @@ const getFormArt7 = ($gettext) => {
           label: $gettext('Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
           tooltip: $gettext('Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+        },
+        {
+          label: ''
         },
         {
           label: ''
@@ -268,7 +271,7 @@ const getFormArt7 = ($gettext) => {
           name: 'decision_exempted'
         },
         {
-          label: `<br> ${$gettext('Status')}`,
+          label: `<br> ${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -295,6 +298,9 @@ const getFormArt7 = ($gettext) => {
           label: $gettext('Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
           tooltip: $gettext('Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+        },
+        {
+          label: ''
         },
         {
           label: ''
@@ -387,7 +393,7 @@ const getFormArt7 = ($gettext) => {
             name: 'quantity_article_5'
           },
           {
-            label: `<br> ${$gettext('Status')}`,
+            label: `<br> ${$gettext('Actions')}`,
             name: 'validation'
           }
         ],
@@ -413,6 +419,9 @@ const getFormArt7 = ($gettext) => {
           {
             label: '',
             tooltip: $gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5')
+          },
+          {
+            label: ''
           },
           {
             label: ''
@@ -477,7 +486,7 @@ const getFormArt7 = ($gettext) => {
               name: 'decision_exempted'
             },
             {
-              label: `(8) <br> ${$gettext('Status')}`,
+              label: `(8) <br> ${$gettext('Actions')}`,
               name: 'validation'
             }
           ]
@@ -555,7 +564,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `${$gettext('Status')}`,
+          label: `${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -636,7 +645,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `<br> ${$gettext('Status')}`,
+          label: `<br> ${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -661,6 +670,9 @@ const getFormArt7 = ($gettext) => {
             label: $gettext('Quantity of exports to non-parties'),
             colspan: 2,
             tooltip: $gettext('See definition of “non parties” in Instruction V.')
+          },
+          {
+            label: ''
           },
           {
             label: ''
@@ -757,7 +769,7 @@ const getFormArt7 = ($gettext) => {
           name: 'remarks_os'
         },
         {
-          label: `${$gettext('Status')}`,
+          label: `${$gettext('Actions')}`,
           name: 'validation'
         }
         ],
@@ -781,6 +793,9 @@ const getFormArt7 = ($gettext) => {
         {
           label: '',
           tooltip: $gettext('Amount destroyed in the facility')
+        },
+        {
+          label: ''
         },
         {
           label: ''

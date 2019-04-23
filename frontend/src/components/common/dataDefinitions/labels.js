@@ -8,7 +8,7 @@ const getCommonLabels = ($gettext) => {
     finalize: $gettext('Finalize'),
     submit: $gettext('Submit'),
     other: $gettext('Other'),
-    data_entry: $gettext('Data entry'),
+    data_entry: $gettext('Data entry in progress'),
     has_exports: $gettext('Exports'),
     has_produced: $gettext('Production'),
     has_destroyed: $gettext('Destruction'),

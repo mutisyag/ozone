@@ -18,7 +18,7 @@
          <span v-translate>Allowed files extensions: </span> {{allowedExtensions.join(', ')}}
       </small>
       <div v-if="tableItemsToUpload.length">
-        <h5 class="mt-3 mb-3 ml-1" v-translate>Files ready for upload:</h5>
+        <h5 class="mt-3 mb-3 ml-1"> {{tableItemsToUpload.length}} <span v-translate>files ready for upload:</span></h5>
       </div>
     </div>
     <b-table

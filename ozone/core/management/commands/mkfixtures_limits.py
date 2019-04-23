@@ -12,8 +12,10 @@ from ozone.core.models import (
     Group,
     LimitTypes,
     Party,
-    PartyHistory
+    PartyHistory,
+    ProdCons,
 )
+from ozone.core.models.utils import round_half_up
 
 
 class Command(BaseCommand):
@@ -28,6 +30,7 @@ class Command(BaseCommand):
                 "import control measure fixtures."
             )
             return
+
         data = []
         idx = 1
         for party_history in PartyHistory.objects.all():
@@ -66,7 +69,7 @@ class Command(BaseCommand):
                                 continue
                         else:
                             baseline = baseline.baseline
-                        limit = baseline * cm.allowed
+                        limit = (100 * cm.allowed * baseline) / 100
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
@@ -100,13 +103,10 @@ class Command(BaseCommand):
                             baseline2 = baseline2.baseline
                         days1 = (cm1.end_date - period.start_date).days + 1
                         days2 = (period.end_date - cm2.start_date).days + 1
-                        limit = round(
-                            (
-                                baseline1 * cm1.allowed * days1
-                                + baseline2 * cm2.allowed * days2
-                            ) / ((period.end_date - period.start_date).days + 1),
-                            2
-                        )
+                        limit = (
+                            (100 * cm1.allowed * days1 * baseline1) / 100
+                            + (100 * cm2.allowed * days2 * baseline2) / 100
+                        ) / ((period.end_date - period.start_date).days + 1)
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
@@ -130,6 +130,9 @@ class Command(BaseCommand):
                 'reporting_period': period.pk,
                 'group': group.pk,
                 'limit_type': limit_type,
-                'limit': limit
+                'limit': round_half_up(
+                    limit,
+                    ProdCons.get_decimals(period, group, party)
+                )
             }
         }

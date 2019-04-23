@@ -3,9 +3,10 @@
       style="cursor:pointer; color:red;"
       variant="danger"
       class="fa fa-exclamation-circle fa-lg"
-      @click="openValidationCallback"
+      @click="openValidationCallback(index)"
       v-if="validation.length"
       v-b-tooltip.hover
+      tabindex="0"
       title="Click here to see the validation problems"
     ></i>
 </template>
@@ -16,7 +17,8 @@ import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 export default {
   props: {
     openValidationCallback: Function,
-    validation: Array
+    validation: Array,
+    index: Number
   },
 
   created() {

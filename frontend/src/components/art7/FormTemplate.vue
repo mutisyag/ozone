@@ -11,6 +11,9 @@
             <span class="table-title-index mr-1">{{tab_info.formNumber}}.1</span>
             <span v-translate>Substances</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input :class="{ highlighted: table.filters.search && table.filters.search.length }"  v-model="table.filters.search"/>
@@ -24,7 +27,6 @@
           outlined
           v-if="getTabInputFields && getTabDecisionQuantityFields"
           bordered
-          @row-clicked="rowHovered"
           hover
           head-variant="light"
           stacked="md"
@@ -78,7 +80,7 @@
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
-            <div v-else>{{cell.item[getCountrySlot]}}</div>
+            <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
@@ -87,6 +89,14 @@
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
               :disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
               :field="cell.item.originalObj[inputField]"
+            />
+          </template>
+
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
             />
           </template>
 
@@ -105,6 +115,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -123,8 +134,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
 
@@ -193,6 +206,10 @@
             <span class="table-title-index mr-1">{{tab_info.formNumber}}.1.1</span>
             <span v-translate>Substances - annex group F/II</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteFII)" v-if="selectedForDeleteFII.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteFII.length}}&nbsp;<span v-translate>selected rows</span></span>
+
+          </b-btn>
           <div v-show="tableFII.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input :class="{ highlighted: tableFII.filters.search && tableFII.filters.search.length }" v-model="tableFII.filters.search"/>
@@ -206,7 +223,7 @@
           show-empty
           outlined
           bordered
-          @row-clicked="rowHovered"
+
           hover
           head-variant="light"
           stacked="md"
@@ -251,6 +268,14 @@
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
 
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
+            />
+          </template>
+
           <template
             v-for="inputField in getTabSpecialInputFields"
             :slot="inputField"
@@ -279,6 +304,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -297,8 +323,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
             <div
@@ -367,6 +395,9 @@
             </span>
             <span v-translate>Blends</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="tableBlends.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input :class="{ highlighted: tableBlends.filters.search && tableBlends.filters.search.length }" v-model="tableBlends.filters.search"/>
@@ -386,7 +417,6 @@
           hover
           head-variant="light"
           class="submission-table full-bordered"
-          @row-clicked="rowHovered"
           stacked="md"
           id="blend-table"
           :items="tableItemsBlends"
@@ -446,7 +476,7 @@
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
-            <div v-else>{{cell.item[getCountrySlot]}}</div>
+            <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
@@ -455,6 +485,14 @@
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
               :disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
               :field="cell.item.originalObj[inputField]"
+            />
+          </template>
+
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
             />
           </template>
 
@@ -473,6 +511,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -491,8 +530,10 @@
             >
               <span
                 class="input"
+                :class="{'text-right': tooltipField === 'quantity_exempted'}"
               >
-                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i> {{formatQuantity(cell.item[tooltipField])}}
+                {{formatQuantity(cell.item[tooltipField])}}
+                <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
           </template>
@@ -778,6 +819,9 @@ export default {
     }
   },
   computed: {
+    selectedForDeleteFII() {
+      return this.tableItemsFII.filter(field => field.checkForDelete).map(field => field.index)
+    },
     getTabInputFields() {
       return intersect(inputFields, this.tab_info.fields_order)
     },

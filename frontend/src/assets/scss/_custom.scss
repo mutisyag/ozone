@@ -76,6 +76,14 @@
   transition: all 0.3s ease;
 }
 
+.submission-table.table>thead>tr>th,
+.submission-table.table>tbody>tr>th,
+.submission-table.table>tfoot>tr>th,
+.submission-table.table>thead>tr>td,
+.submission-table.table>tbody>tr>td,
+.submission-table.table>tfoot>tr>td {
+  padding: .3rem;
+}
 .table>thead>tr>th {
   font-weight: 400;
   color: #757575;
@@ -738,6 +746,10 @@
   background: #eee;
 }
 
+// .submission-table tr:focus {
+//   outline: none;
+// }
+
 .submission-table tr:hover .table-btn-group {
   display: flex;
 }
@@ -1179,6 +1191,8 @@ body {
   text-align: center;
 }
 
+
+
 .row-controls {
   display: block;
   white-space: nowrap;
@@ -1201,6 +1215,12 @@ body {
 .substance-blend-cell {
   display: block;
   min-width: 65px;
+}
+
+.substance-blend-cell,
+.group-cell,
+.country-cell {
+  padding-top: 5px;
 }
 
 .specific-flags-wrapper {
@@ -1443,5 +1463,19 @@ html:not([dir="rtl"]) .aside-menu {
   border-radius: 0.25rem;
   @extend .form-control;
   min-height: 35px!important;
+  min-width: 100px;
   padding: .4rem;  
+}
+
+
+input[actual_type="number"] {
+  text-align: right;
+}
+
+
+.submission-table {
+  .custom-control,
+  .row-controls  {
+    padding-top: .1rem;
+  }
 }

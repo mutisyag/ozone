@@ -7,6 +7,9 @@
             {{tab_info.formNumber}}.1
             <span v-translate>Substances</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input  :class="{ highlighted: table.filters.search && table.filters.search.length }"  v-model="table.filters.search"/>
@@ -19,7 +22,6 @@
           show-empty
           outlined
           bordered
-          @row-clicked="rowHovered"
           hover
           head-variant="light"
           stacked="md"
@@ -60,7 +62,13 @@
               </th>
             </tr>
           </template>
-
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
+            />
+          </template>
           <template slot="group" slot-scope="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
@@ -90,6 +98,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>
@@ -102,6 +111,9 @@
             {{tab_info.formNumber}}.2
             <span v-translate>Blends</span>
           </h4>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="tableBlends.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input  :class="{ highlighted: tableBlends.filters.search && tableBlends.filters.search.length }"  v-model="tableBlends.filters.search"/>
@@ -120,7 +132,6 @@
           hover
           head-variant="light"
           class="submission-table full-bordered"
-          @row-clicked="rowHovered"
           stacked="md"
           :items="tableItemsBlends"
           :fields="tableFieldsBlends"
@@ -163,6 +174,13 @@
               class="group-cell"
             >{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}</div>
           </template>
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
+            />
+          </template>
           <template slot="blend" slot-scope="cell">
             <span
               style="cursor:pointer;"
@@ -199,6 +217,7 @@
               <ValidationLabel
                 :open-validation-callback="openValidation"
                 :validation="cell.item.originalObj.validation.selected"
+                :index="cell.item.index"
               />
             </b-btn-group>
           </template>

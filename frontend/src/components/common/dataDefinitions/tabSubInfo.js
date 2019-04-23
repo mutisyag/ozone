@@ -50,7 +50,8 @@ const getTabSubInfo = ($gettext) => {
       reporting_officer: {
         type: 'text',
         selected: '',
-        validation: null
+        validation: null,
+        description: $gettext('required')
       },
       designation: {
         type: 'text',
@@ -62,8 +63,7 @@ const getTabSubInfo = ($gettext) => {
       },
       postal_address: {
         type: 'textarea',
-        selected: '',
-        validation: null
+        selected: ''
       },
       country: {
         type: 'select',
@@ -86,7 +86,8 @@ const getTabSubInfo = ($gettext) => {
       email: {
         type: 'email',
         selected: '',
-        validation: null
+        validation: null,
+        description: $gettext('required')
       },
       date: {
         type: 'date',
@@ -96,7 +97,8 @@ const getTabSubInfo = ($gettext) => {
       submitted_at: {
         type: 'date',
         selected: '',
-        validation: null
+        validation: null,
+        description: $gettext('required')
       },
       get validation() {
         const invalid = []
@@ -108,12 +110,10 @@ const getTabSubInfo = ($gettext) => {
             this.reporting_officer.validation = null
           }
 
-          if (!this.postal_address.selected && !this.email.selected) {
-            this.postal_address.validation = $gettext('Required')
+          if (!this.email.selected) {
             this.email.validation = $gettext('Required')
-            invalid.push($gettext('Email/Address'))
+            invalid.push($gettext('Email'))
           } else {
-            this.postal_address.validation = null
             this.email.validation = null
           }
 

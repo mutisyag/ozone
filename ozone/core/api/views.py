@@ -1066,7 +1066,7 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
             obj.file.read(), content_type="application/octet-stream"
         )
         file_name = urllib.parse.quote(obj.name)
-        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{file_name}"
+        response['Content-Disposition'] = f"attachment; filename*=UTF-8''{file_name}; filename=\"{file_name}\""
         return response
 
 

@@ -13,6 +13,10 @@ export default {
   }) {
     const baseInnerFields = {
       ordering_id: { selected: ordering_id || 0 },
+      checkForDelete: {
+        selected: false,
+        type: 'checkbox'
+      },
       substance: {
         type: 'select',
         selected: substance || null

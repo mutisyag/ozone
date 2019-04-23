@@ -8,6 +8,9 @@
       <div class="table-wrapper">
         <div class="table-title mb-3">
           <h4>{{tab_info.formNumber}}.1 Facilities</h4>
+          <b-btn class="mr-3" variant="outline-primary" @click="bulkRemove" v-if="selectedForDelete.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
+          </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Search all columns')">
               <b-form-input v-model="table.filters.search"/>
@@ -29,7 +32,7 @@
           stacked="md"
           class="submission-table full-bordered"
           :items="tableItems"
-          @row-clicked="rowHovered"
+
           :fields="tableFields"
           :filter="table.filters.search"
           ref="table"
@@ -59,17 +62,16 @@
               </th>
             </tr>
           </template>
+
+          <template slot="checkForDelete" slot-scope="cell">
+            <fieldGenerator
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
+              :disabled="!$store.getters.can_edit_data"
+              :field="cell.item.originalObj.checkForDelete"
+            />
+          </template>
+
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
-            <div
-              v-if="inputField === 'facility_name'"
-              class="row-controls"
-              style="left: -35px;top: -10px;"
-              :key="`${cell.item.index}_${inputField}_${tabName}_button`"
-            >
-              <b-btn variant="default" size="sm" @click="remove_field(cell.item.index)" class="table-btn">
-                <i class="fa fa-trash"></i>
-              </b-btn>
-            </div>
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
@@ -79,10 +81,17 @@
           </template>
 
           <template slot="validation" slot-scope="cell">
-            <ValidationLabel
-              :open-validation-callback="openValidation"
-              :validation="cell.item.validation"
-            />
+            <span
+              class="row-controls"
+              :key="`${cell.item.index}_validation_${tabName}_button`"
+            >
+              <i class="fa fa-trash fa-lg" @click="remove_field(cell.item.index)" ></i>&nbsp;
+              <ValidationLabel
+                :open-validation-callback="openValidation"
+                :validation="cell.item.validation"
+                :index="cell.item.index"
+              />
+            </span>
           </template>
         </b-table>
       </div>
@@ -170,6 +179,9 @@ export default {
   },
 
   computed: {
+    selectedForDelete() {
+      return this.tab_info.form_fields.filter(field => field.checkForDelete.selected).map(field => this.tab_info.form_fields.indexOf(field))
+    },
     tableItems() {
       const tableFields = []
       this.tab_info.form_fields.forEach(form_field => {
@@ -196,6 +208,10 @@ export default {
           ...options
         })
       })
+      tableHeaders.unshift({
+        key: 'checkForDelete',
+        label: ''
+      })
       return tableHeaders
     },
     tab_info() {
@@ -220,6 +236,14 @@ export default {
   methods: {
     remove_field(index) {
       this.$store.dispatch('removeField', { tab: this.tabName, index, $gettext: this.$gettext })
+    },
+
+    bulkRemove() {
+      this.$store.commit('removeBulkFields', {
+        tab: this.tabName,
+        indexList: this.selectedForDelete,
+        $gettext: this.$gettext
+      })
     },
 
     getCommentFieldPermission(fieldName) {
@@ -319,22 +343,6 @@ tr.small th {
 .fa-info-circle {
   margin-left: 5px;
 }
-
-.row-controls {
-  margin-top: 15px;
-  position: absolute;
-  left: 17px;
-  width: 30px;
-  background: none !important;
-  padding: 0;
-}
-
-.row-controls i {
-  font-size: 1.5rem;
-  cursor: pointer;
-  margin-bottom: 5px;
-}
-
 .first-header th:first-of-type {
   padding-left: 2rem;
 }
