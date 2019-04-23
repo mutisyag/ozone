@@ -181,7 +181,7 @@ class Command(BaseCommand):
                 diff = quantity_essen_uses - quantity_lab_uses
                 if diff > 0.0001:
                     decision_lab_uses = remark
-                    if substance_id != 194:
+                    if substance.substance_id != 194:
                         quantity_essen_uses = diff
                         decision_essen_uses = remark
                     else:
@@ -403,7 +403,7 @@ class Command(BaseCommand):
                                period.name, exports_row["SubstID"])
 
             critical = False
-            if substance_id == 194:
+            if substance.substance_id == 194:
                 critical = True
 
             exports.append({
