@@ -8,7 +8,7 @@
       <div class="table-wrapper">
         <div class="table-title mb-3">
           <h4>{{tab_info.formNumber}}.1 Facilities</h4>
-          <b-btn class="mr-3" variant="primary" @click="bulkRemove" v-if="selectedForDelete.length">
+          <b-btn class="mr-3" variant="outline-primary" @click="bulkRemove" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
@@ -32,7 +32,7 @@
           stacked="md"
           class="submission-table full-bordered"
           :items="tableItems"
-          @row-clicked="rowHovered"
+
           :fields="tableFields"
           :filter="table.filters.search"
           ref="table"

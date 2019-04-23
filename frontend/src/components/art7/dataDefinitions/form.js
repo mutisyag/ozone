@@ -453,9 +453,6 @@ const getFormArt7 = ($gettext) => {
             },
             {
               label: ''
-            },
-            {
-              label: ''
             }
           ],
 

@@ -62,7 +62,11 @@ export default {
 
   computed: {
     selectedForDelete() {
-      return this.tab_info.form_fields.filter(field => field.checkForDelete.selected).map(field => this.tab_info.form_fields.indexOf(field))
+      return this.tableItems.length && this.tableItems.filter(field => field.checkForDelete).map(field => field.index)
+    },
+
+    selectedForDeleteBlends() {
+      return this.tableItemsBlends.length && this.tableItemsBlends.filter(field => field.checkForDelete).map(field => field.index)
     },
 
     blendSubstanceHeaders() {
@@ -233,10 +237,10 @@ export default {
   },
 
   methods: {
-    bulkRemove() {
+    bulkRemove(indexList) {
       this.$store.commit('removeBulkFields', {
         tab: this.tabName,
-        indexList: this.selectedForDelete,
+        indexList,
         $gettext: this.$gettext
       })
     },

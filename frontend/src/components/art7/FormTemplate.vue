@@ -11,9 +11,8 @@
             <span class="table-title-index mr-1">{{tab_info.formNumber}}.1</span>
             <span v-translate>Substances</span>
           </h4>
-          <b-btn class="mr-3" variant="primary" @click="bulkRemove" v-if="selectedForDelete.length">
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
-
           </b-btn>
           <div v-show="table.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
@@ -207,8 +206,8 @@
             <span class="table-title-index mr-1">{{tab_info.formNumber}}.1.1</span>
             <span v-translate>Substances - annex group F/II</span>
           </h4>
-          <b-btn class="mr-3" variant="primary" @click="bulkRemove" v-if="selectedForDelete.length">
-            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteFII)" v-if="selectedForDeleteFII.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteFII.length}}&nbsp;<span v-translate>selected rows</span></span>
 
           </b-btn>
           <div v-show="tableFII.tableFilters" class="table-filters">
@@ -224,7 +223,7 @@
           show-empty
           outlined
           bordered
-          @row-clicked="rowHovered"
+
           hover
           head-variant="light"
           stacked="md"
@@ -396,9 +395,8 @@
             </span>
             <span v-translate>Blends</span>
           </h4>
-          <b-btn class="mr-3" variant="primary" @click="bulkRemove" v-if="selectedForDelete.length">
-            <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
-
+          <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
+            <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
           <div v-show="tableBlends.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
@@ -419,7 +417,6 @@
           hover
           head-variant="light"
           class="submission-table full-bordered"
-          @row-clicked="rowHovered"
           stacked="md"
           id="blend-table"
           :items="tableItemsBlends"
@@ -822,6 +819,9 @@ export default {
     }
   },
   computed: {
+    selectedForDeleteFII() {
+      return this.tableItemsFII.filter(field => field.checkForDelete).map(field => field.index)
+    },
     getTabInputFields() {
       return intersect(inputFields, this.tab_info.fields_order)
     },
