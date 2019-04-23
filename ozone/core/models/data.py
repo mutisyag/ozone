@@ -175,19 +175,6 @@ class AggregationMixin:
     # field on the Group model.
 
     @classmethod
-    def get_quantity_fields(cls):
-        """
-        Returns list of field names belonging to this model which are used
-        for quantities.
-        Assumes for now that all quantity fields are <FloatField>s
-        """
-        return [
-            field.name
-            for field in cls._meta.get_fields()
-            if field.get_internal_type() == 'FloatField'
-        ]
-
-    @classmethod
     def get_fields_sum_by_group(
         cls, submission, group, field_names
     ):

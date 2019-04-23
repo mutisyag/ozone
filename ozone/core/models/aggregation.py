@@ -1,9 +1,12 @@
+from datetime import datetime
+
 from django.db import models
 from django.core.validators import MinValueValidator
 
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group
+from .utils import round_half_up
 from .control import Limit, LimitTypes, Baseline, BaselineType
 
 
@@ -173,6 +176,29 @@ class ProdCons(models.Model):
         null=True, blank=True, default=None
     )
 
+    @classmethod
+    def get_decimals(cls, period, group, party):
+        """
+        Returns the number of decimals according to the following rounding rules.
+        """
+
+        special_cases_2009 = [
+            'CD', 'CG', 'DZ', 'EC', 'ER', 'GQ', 'GW', 'HT', 'LC', 'MA', 'MK',
+            'MZ', 'NE', 'NG', 'SZ', 'FJ', 'PK', 'PH'
+        ]
+        special_cases_2010 = [
+            'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
+            'YE', 'FJ', 'PK', 'PH'
+        ]
+        if group.group_id == 'CI':
+            if (
+                period.start_date >= datetime.strptime('2011-01-01', "%Y-%m-%d").date()
+                or period.name == '2009' and party.abbr in special_cases_2009
+                or period.name == '2010' and party.abbr in special_cases_2010
+            ):
+                return 2
+        return 1
+
     @staticmethod
     def has_read_rights_for_party(party, user):
         if (
@@ -268,6 +294,31 @@ class ProdCons(models.Model):
                 - self.get_import_process_agent(party.is_article5)
                 - self.import_quarantine
             )
+        self.apply_rounding()
+
+    def apply_rounding(self):
+        for field_name in self.get_roundable_fields():
+            field_value = getattr(self, field_name)
+            if field_value is not None and field_value != '':
+                decimals = ProdCons.get_decimals(
+                    self.reporting_period, self.group, self.party
+                )
+                setattr(self, field_name, round_half_up(field_value, decimals))
+
+    def get_roundable_fields(self):
+        """
+        Returns list of field names which need to be rounded.
+        """
+        return [
+            'baseline_prod',
+            'baseline_cons',
+            'baseline_bdn',
+            'limit_prod',
+            'limit_cons',
+            'limit_bdn',
+            'calculated_production',
+            'calculated_consumption',
+        ]
 
     def populate_limits_and_baselines(self):
         """
