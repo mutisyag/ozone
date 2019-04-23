@@ -138,6 +138,11 @@ class DefaultArticle7Workflow(BaseWorkflow):
         # Populate submission-specific aggregated data
         self.model_instance.fill_aggregated_data()
 
+    @xworkflows.transition('recall')
+    def recall(self):
+        # Make previous submission current, if available
+        self.model_instance.make_previous_current()
+
     @xworkflows.transition('unrecall_to_submitted')
     def unrecall_to_submitted(self):
         self.model_instance.make_current()
