@@ -1471,3 +1471,11 @@ html:not([dir="rtl"]) .aside-menu {
 input[actual_type="number"] {
   text-align: right;
 }
+
+
+.submission-table {
+  .custom-control,
+  .row-controls  {
+    padding-top: .1rem;
+  }
+}
