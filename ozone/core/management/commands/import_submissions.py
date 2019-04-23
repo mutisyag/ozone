@@ -170,6 +170,33 @@ class Command(BaseCommand):
                     logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
                     continue
 
+            quantity_lab_uses = import_row["ImpLabUse"]
+            quantity_essen_uses = import_row["ImpEssenUse"]
+            quantity_crit_uses = None
+            decision_lab_uses = ""
+            decision_essen_uses = ""
+            decision_crit_uses = ""
+            remark = import_row["Remark"] if import_row["Remark"] is not None else ''
+            if quantity_lab_uses and quantity_essen_uses:
+                diff = quantity_essen_uses - quantity_lab_uses
+                if diff > 0.0001:
+                    decision_lab_uses = remark
+                    if substance_id != 194:
+                        quantity_essen_uses = diff
+                        decision_essen_uses = remark
+                    else:
+                        quantity_crit_uses = diff
+                        decision_crit_uses = remark
+                elif -0.0001 <= diff <= 0.0001:
+                    quantity_lab_uses = quantity_essen_uses if diff >= 0 else quantity_lab_uses
+                    quantity_essen_uses = None
+                    decision_lab_uses = remark
+                else:
+                    logger.warning(
+                        "Import: ImpLabUse is greater than ImpEssenUse for %s/%s/%s",
+                        party.abbr, period.name, substance.substance_id
+                    )
+
             imports.append({
                 "remarks_party": import_row["Remark"] or "",
                 # "remarks_os": "",
@@ -177,18 +204,18 @@ class Command(BaseCommand):
                 "quantity_total_new": import_row["ImpNew"],
                 "quantity_total_recovered": import_row["ImpRecov"],
                 "quantity_feedstock": import_row["ImpFeedstock"],
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": import_row["ImpEssenUse"],
+                "quantity_critical_uses": quantity_crit_uses,
+                "quantity_essential_uses": quantity_essen_uses,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": import_row["ImpLabUse"],
+                "quantity_laboratory_analytical_uses": quantity_lab_uses,
                 "quantity_process_agent_uses": import_row["ImpProcAgent"],
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
                 "quantity_polyols": import_row["ImpPolyol"],
                 "quantity_other_uses": None,
-                "decision_critical_uses": "",
-                "decision_essential_uses": "",
+                "decision_critical_uses": decision_crit_uses,
+                "decision_essential_uses": decision_essen_uses,
                 "decision_high_ambient_temperature": "",
-                "decision_laboratory_analytical_uses": "",
+                "decision_laboratory_analytical_uses": decision_lab_uses,
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
