@@ -402,6 +402,10 @@ class Command(BaseCommand):
                 logger.warning("Export no quantity specified: %s/%s/%s", party.abbr,
                                period.name, exports_row["SubstID"])
 
+            critical = False
+            if substance_id == 194:
+                critical = True
+
             exports.append({
                 "remarks_party": exports_row["Remark"] or "",
                 # "remarks_os": "",
@@ -409,8 +413,8 @@ class Command(BaseCommand):
                 "quantity_total_new": exports_row["ExpNew"],
                 "quantity_total_recovered": exports_row["ExpRecov"],
                 "quantity_feedstock": exports_row["ExpFeedstock"],
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": exports_row["ExpEssenUse"],
+                "quantity_critical_uses": exports_row["ExpEssenUse"] if critical else None,
+                "quantity_essential_uses": exports_row["ExpEssenUse"] if not critical else None,
                 "quantity_high_ambient_temperature": None,
                 "quantity_laboratory_analytical_uses": None,
                 "quantity_process_agent_uses": exports_row["ExpProcAgent"],
