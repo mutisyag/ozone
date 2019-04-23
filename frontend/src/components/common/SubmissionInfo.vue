@@ -46,7 +46,7 @@
                   <label>
                     {{labels.submitted_at}}
                     <div
-                      :class="{danger: info.form_fields[order].validation && error_danger}"
+                      :class="{danger: info.form_fields['submitted_at'].validation && error_danger}"
                       class="floating-error"
                       v-if="info.form_fields['submitted_at'].description"
                       variant="danger"
