@@ -76,6 +76,14 @@
   transition: all 0.3s ease;
 }
 
+.submission-table.table>thead>tr>th,
+.submission-table.table>tbody>tr>th,
+.submission-table.table>tfoot>tr>th,
+.submission-table.table>thead>tr>td,
+.submission-table.table>tbody>tr>td,
+.submission-table.table>tfoot>tr>td {
+  padding: .3rem;
+}
 .table>thead>tr>th {
   font-weight: 400;
   color: #757575;
