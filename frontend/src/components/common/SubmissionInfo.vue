@@ -25,7 +25,7 @@
                       {{labels[order]}}
                       <div
                         class="floating-error"
-                        :class="{danger: error_danger}"
+                        :class="{danger: info.form_fields[order].validation && error_danger}"
                         v-if="info.form_fields[order].description"
                       >({{ info.form_fields[order].description }})</div>
                     </label>
@@ -46,7 +46,7 @@
                   <label>
                     {{labels.submitted_at}}
                     <div
-                      :class="{danger: error_danger}"
+                      :class="{danger: info.form_fields[order].validation && error_danger}"
                       class="floating-error"
                       v-if="info.form_fields['submitted_at'].description"
                       variant="danger"
