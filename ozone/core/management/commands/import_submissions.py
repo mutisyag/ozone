@@ -170,7 +170,7 @@ class Command(BaseCommand):
                     logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
                     continue
 
-            if substance.substance_id != 194:
+            if substance and substance.substance_id != 194:
                 quantity_essen_uses = import_row["ImpEssenUse"]
                 quantity_crit_uses = None
             else:
