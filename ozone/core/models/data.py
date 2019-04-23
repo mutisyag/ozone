@@ -271,6 +271,8 @@ class AggregationMixin:
                 value = getattr(aggregation, aggr_field) + values[model_field]
                 setattr(aggregation, aggr_field, value)
 
+            # Populate limits and baselines; calculate totals
+            aggregation.populate_limits_and_baselines()
             aggregation.calculate_totals()
 
 
