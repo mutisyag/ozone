@@ -505,14 +505,46 @@ class Command(BaseCommand):
                 logger.warning("Produce no quantity specified: %s/%s/%s", party.abbr,
                                period.name, produce_row["SubstID"])
 
+            if substance.substance_id != 194:
+                quantity_essen_uses = produce_row["ProdEssenUse"]
+                quantity_crit_uses = None
+            else:
+                quantity_essen_uses = None
+                quantity_crit_uses = produce_row["ProdEssenUse"]
+
+            quantity_lab_uses = produce_row["ProdLabUse"]
+            decision_lab_uses = ""
+            decision_essen_uses = ""
+            decision_crit_uses = ""
+            remark = produce_row["Remark"] if produce_row["Remark"] is not None else ''
+            if quantity_lab_uses and produce_row["ProdEssenUse"]:
+                diff = produce_row["ProdEssenUse"] - quantity_lab_uses
+                if diff > 0.0001:
+                    decision_lab_uses = remark
+                    if substance.substance_id != 194:
+                        quantity_essen_uses = diff
+                        decision_essen_uses = remark
+                    else:
+                        quantity_crit_uses = diff
+                        decision_crit_uses = remark
+                elif -0.0001 <= diff <= 0.0001:
+                    quantity_lab_uses = quantity_essen_uses if diff >= 0 else quantity_lab_uses
+                    quantity_essen_uses = None
+                    decision_lab_uses = remark
+                else:
+                    logger.warning(
+                        "Produce: ProdLabUse is greater than ProdEssenUse for %s/%s/%s",
+                        party.abbr, period.name, substance.substance_id
+                    )
+
             produce.append({
                 "remarks_party": produce_row["Remark"] or "",
                 "substance_id": substance_id,
                 # "remarks_os": "",
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": None,
+                "quantity_critical_uses": quantity_crit_uses,
+                "quantity_essential_uses": quantity_essen_uses,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": produce_row["ProdLabUse"],
+                "quantity_laboratory_analytical_uses": quantity_lab_uses,
                 "quantity_process_agent_uses": produce_row["ProdProcAgent"],
                 "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
                 "quantity_total_produced": produce_row["ProdAllNew"],
@@ -520,10 +552,10 @@ class Command(BaseCommand):
                 "quantity_feedstock": produce_row["ProdFeedstock"],
                 "quantity_article_5": produce_row["ProdArt5"],
                 "quantity_for_destruction": None,
-                "decision_critical_uses": "",
-                "decision_essential_uses": "",
+                "decision_critical_uses": decision_crit_uses,
+                "decision_essential_uses": decision_essen_uses,
                 "decision_high_ambient_temperature": "",
-                "decision_laboratory_analytical_uses": "",
+                "decision_laboratory_analytical_uses": decision_lab_uses,
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
