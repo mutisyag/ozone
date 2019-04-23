@@ -177,6 +177,18 @@ class ProdCons(models.Model):
     )
 
     @classmethod
+    def cleanup_aggregations(cls, party, reporting_period):
+        """
+        This resets all aggregation data for the given party/period.
+
+        For now this simply means deleting all corresponding rows, but this might
+        change in the future if more data sources (besides Art7) are added
+        """
+        cls.objects.filter(
+            party=party, reporting_period=reporting_period
+        ).delete()
+
+    @classmethod
     def get_decimals(cls, period, group, party):
         """
         Returns the number of decimals according to the following rounding rules.

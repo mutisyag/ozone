@@ -32,6 +32,7 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
     # No states are truly final in this workflow
     final_states = []
     editable_data_states = ['data_entry']
+    incorrect_data_states = ['recalled']
 
     state = AcceleratedArticle7WorkflowStateDescription()
 
@@ -56,6 +57,11 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
         self.model_instance.make_current()
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+
+    @xworkflows.transition('recall')
+    def recall(self):
+        # Make previous submission current, if available
+        self.model_instance.make_previous_current()
 
     @xworkflows.transition('unrecall')
     def unrecall(self):
