@@ -12,11 +12,11 @@ const getCountryField = (currentSection) => {
   }
 }
 
-const createTooltip = (fields, section, $gettext) => {
+const createTooltip = (fields, section, $gettext, textOnly) => {
   let tooltip_title = ''
   if (Object.keys(fields).length) {
     tooltipOrder.forEach(field => {
-      if (Object.keys(fields).includes(field)) { tooltip_title += `${getLabels($gettext)[section][field]}: ${fromExponential(fields[field])}\n` }
+      if (Object.keys(fields).includes(field)) { tooltip_title += `${getLabels($gettext)[section][field]}: ${textOnly ? fields[field] : fromExponential(fields[field])}\n` }
     })
   }
   tooltip_title += `\n ${$gettext('Click to edit')}`
@@ -66,7 +66,7 @@ const decisionGenerator = (fields, parent, section, $gettext) => {
       forTooltip[item] = parent[item].selected
     })
 
-  const tooltip = createTooltip(forTooltip, section, $gettext)
+  const tooltip = createTooltip(forTooltip, section, $gettext, true)
   returnObj.tooltip = tooltip
 
   returnObj.selected = decisions.join(', ')
