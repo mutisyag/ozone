@@ -177,6 +177,18 @@ class ProdCons(models.Model):
     )
 
     @classmethod
+    def cleanup_aggregations(cls, party, reporting_period):
+        """
+        This resets all aggregation data for the given party/period.
+
+        For now this simply means deleting all corresponding rows, but this might
+        change in the future if more data sources (besides Art7) are added
+        """
+        cls.objects.filter(
+            party=party, reporting_period=reporting_period
+        ).delete()
+
+    @classmethod
     def get_decimals(cls, period, group, party):
         """
         Returns the number of decimals according to the following rounding rules.
@@ -348,28 +360,22 @@ class ProdCons(models.Model):
 
         # Populate baselines; first get appropriate baseline types
         if party.is_article5:
-            prod_bt_name = 'A5Prod'
-            cons_bt_name = 'A5Cons'
+            prod_bt = BaselineType.objects.get(name='A5Prod')
+            cons_bt = BaselineType.objects.get(name='A5Cons')
             # Non-existent name
-            bdn_bt_name = ''
+            bdn_bt = None
         else:
-            prod_bt_name = 'NA5Prod'
-            cons_bt_name = 'NA5Cons'
-            bdn_bt_name = 'BDN_NA5'
+            prod_bt = BaselineType.objects.get(name='NA5Prod')
+            cons_bt = BaselineType.objects.get(name='NA5Cons')
+            bdn_bt = BaselineType.objects.get(name='BDN_NA5')
 
         baselines = Baseline.objects.filter(
             party=self.party,
             group=self.group
         )
-        prod = baselines.filter(
-            baseline_type=BaselineType.objects.get(name=prod_bt_name)
-        ).first()
-        cons = baselines.filter(
-            baseline_type=BaselineType.objects.get(name=cons_bt_name)
-        ).first()
-        bdn = baselines.filter(
-            baseline_type=BaselineType.objects.get(name=bdn_bt_name)
-        ).first()
+        prod = baselines.filter(baseline_type=prod_bt).first()
+        cons = baselines.filter(baseline_type=cons_bt).first()
+        bdn = baselines.filter(baseline_type=bdn_bt).first()
 
         if prod:
             self.baseline_prod = prod.baseline

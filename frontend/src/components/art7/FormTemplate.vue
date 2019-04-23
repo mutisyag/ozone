@@ -140,14 +140,13 @@
                 <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
             </div>
-
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
-              v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
+              v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected))"
               :key="`${tooltipField}_qps`"
             >
-              <b-input-group>
+              <b-input-group v-if="tooltipField === 'quantity_exempted'">
                 <b-input-group-prepend>
                   <span class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
@@ -167,15 +166,27 @@
                   :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
                 />
               </b-input-group>
+              <b-input-group v-if="tooltipField === 'decision_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text" v-translate>
+                    QPS decision
+                  </span>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'decision_quarantine_pre_shipment'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.decision_quarantine_pre_shipment"
+                />
+              </b-input-group>
             </div>
 
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
-              v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected)) && tooltipField === 'quantity_exempted'"
+              v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected))"
               :key="`${tooltipField}_polyols`"
             >
-              <b-input-group>
+              <b-input-group v-if="tooltipField === 'quantity_exempted'">
                 <b-input-group-prepend>
                   <span
                     class="input-group-text"
@@ -193,6 +204,18 @@
                   :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_polyols'}"
                   :disabled="!$store.getters.can_edit_data"
                   :field="cell.item.originalObj.quantity_polyols"
+                />
+              </b-input-group>
+              <b-input-group v-if="tooltipField === 'decision_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text" v-translate>
+                    Polyols decision
+                  </span>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'decision_polyols'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.decision_polyols"
                 />
               </b-input-group>
             </div>
@@ -332,16 +355,15 @@
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
-              v-if="isQps.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
+              v-if="isQps.includes(parseInt(cell.item.originalObj.substance.selected))"
               :key="`${tooltipField}_qps`"
             >
-              <b-input-group>
+              <b-input-group v-if="tooltipField === 'quantity_exempted'">
                 <b-input-group-prepend>
-                  <span
-                    class="input-group-text"
+                  <span class="input-group-text"
                     :id="`qps_tooltip_${cell.item.index}`"
                   >
-                    QPS<i class="fa fa-info-circle fa-sm"></i>
+                    QPS <i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
@@ -356,20 +378,33 @@
                   :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
                 />
               </b-input-group>
+              <b-input-group v-if="tooltipField === 'decision_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text" v-translate>
+                    QPS decision
+                  </span>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'decision_quarantine_pre_shipment'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.decision_quarantine_pre_shipment"
+                />
+              </b-input-group>
             </div>
+
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
-              v-if="isPolyols.includes(parseInt(cell.item.substance.selected)) && tooltipField === 'quantity_exempted'"
-              :key="`${tooltipField}_polyol`"
+              v-if="isPolyols.includes(parseInt(cell.item.originalObj.substance.selected))"
+              :key="`${tooltipField}_polyols`"
             >
-              <b-input-group>
+              <b-input-group v-if="tooltipField === 'quantity_exempted'">
                 <b-input-group-prepend>
                   <span
                     class="input-group-text"
                     :id="`polyols_tooltip_${cell.item.index}`"
                   >
-                    Contained in polyols<i class="mr-1 fa fa-info-circle-sm"></i>
+                    Contained in polyols<i class="fa fa-info-circle fa-sm"></i>
                   </span>
                     <b-tooltip :target="`polyols_tooltip_${cell.item.index}`" placement="bottom">
                       <span v-translate>
@@ -383,7 +418,20 @@
                   :field="cell.item.originalObj.quantity_polyols"
                 />
               </b-input-group>
+              <b-input-group v-if="tooltipField === 'decision_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text" v-translate>
+                    Polyols decision
+                  </span>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'decision_polyols'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.decision_polyols"
+                />
+              </b-input-group>
             </div>
+
           </template>
         </b-table>
       </div>

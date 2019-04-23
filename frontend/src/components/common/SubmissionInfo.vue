@@ -25,7 +25,7 @@
                       {{labels[order]}}
                       <div
                         class="floating-error"
-                        :class="{danger: error_danger}"
+                        :class="{danger: info.form_fields[order].validation && error_danger}"
                         v-if="info.form_fields[order].description"
                       >({{ info.form_fields[order].description }})</div>
                     </label>
@@ -46,7 +46,7 @@
                   <label>
                     {{labels.submitted_at}}
                     <div
-                      :class="{danger: error_danger}"
+                      :class="{danger: info.form_fields[order].validation && error_danger}"
                       class="floating-error"
                       v-if="info.form_fields['submitted_at'].description"
                       variant="danger"
@@ -68,7 +68,7 @@
           <h5>
             <span v-if="flags_info" v-translate>Flags</span>
           </h5>
-          <b-card v-if="flags_info && $store.state.currentUser.is_secretariat" id="flags">
+          <b-card v-if="flags_info" id="flags">
             <b-row class="mb-2">
               <b-col>
                 <b-row v-for="order in general_flags" :key="order">
@@ -96,7 +96,7 @@
                   </b-col>
                 </b-row>
               </b-col>
-              <b-col>
+              <b-col v-if="$store.state.currentUser.is_secretariat" >
                 <b-row v-for="order in blank_flags" :key="order">
                   <b-col cols="1">
                     <fieldGenerator

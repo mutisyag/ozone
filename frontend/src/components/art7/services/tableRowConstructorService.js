@@ -1,5 +1,6 @@
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 import { fromExponential, isNumber, valueConverter, doSum } from '@/components/common/services/utilsService'
+import tooltipOrder from '@/components/art7/dataDefinitions/modalFieldsOrder'
 
 const getCountryField = (currentSection) => {
   switch (currentSection) {
@@ -11,11 +12,11 @@ const getCountryField = (currentSection) => {
   }
 }
 
-const createTooltip = (fields, section, $gettext) => {
+const createTooltip = (fields, section, $gettext, textOnly) => {
   let tooltip_title = ''
   if (Object.keys(fields).length) {
-    Object.keys(fields).forEach(field => {
-      tooltip_title += `${getLabels($gettext)[section][field]}: ${fromExponential(fields[field])}\n`
+    tooltipOrder.forEach(field => {
+      if (Object.keys(fields).includes(field)) { tooltip_title += `${getLabels($gettext)[section][field]}: ${textOnly ? fields[field] : fromExponential(fields[field])}\n` }
     })
   }
   tooltip_title += `\n ${$gettext('Click to edit')}`
@@ -65,7 +66,7 @@ const decisionGenerator = (fields, parent, section, $gettext) => {
       forTooltip[item] = parent[item].selected
     })
 
-  const tooltip = createTooltip(forTooltip, section, $gettext)
+  const tooltip = createTooltip(forTooltip, section, $gettext, true)
   returnObj.tooltip = tooltip
 
   returnObj.selected = decisions.join(', ')
@@ -250,7 +251,7 @@ export default {
       },
 
       get decision_exempted() {
-        const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_quarantine_pre_shipment', 'decision_polyols', 'decision_other_uses']
+        const fields = ['decision_essential_uses', 'decision_critical_uses', 'decision_high_ambient_temperature', 'decision_process_agent_uses', 'decision_laboratory_analytical_uses', 'decision_other_uses']
         return decisionGenerator(fields, this, section, $gettext)
       },
       quantity_essential_uses: {

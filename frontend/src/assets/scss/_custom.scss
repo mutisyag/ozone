@@ -1479,3 +1479,18 @@ input[actual_type="number"] {
     padding-top: .1rem;
   }
 }
+
+/**
+ * not proud about this
+ */
+.submission-table .input-group {
+  > div:not(.input-group-prepend) {
+    width: 100%;
+    > div {
+      width: 100;
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
