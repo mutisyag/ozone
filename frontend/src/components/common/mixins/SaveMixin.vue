@@ -86,7 +86,7 @@ export default {
       if (this.invalidTabs.length) {
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: this.invalidTabs.map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] },
+          message: { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: Array.from(new Set(this.invalidTabs)).map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] },
           variant: 'danger'
         })
         this.resetActionToDispatch()
