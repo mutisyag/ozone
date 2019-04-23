@@ -170,18 +170,23 @@ class Command(BaseCommand):
                     logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
                     continue
 
+            if substance.substance_id != 194:
+                quantity_essen_uses = import_row["ImpEssenUse"]
+                quantity_crit_uses = None
+            else:
+                quantity_essen_uses = None
+                quantity_crit_uses = import_row["ImpEssenUse"]
+
             quantity_lab_uses = import_row["ImpLabUse"]
-            quantity_essen_uses = import_row["ImpEssenUse"]
-            quantity_crit_uses = None
             decision_lab_uses = ""
             decision_essen_uses = ""
             decision_crit_uses = ""
             remark = import_row["Remark"] if import_row["Remark"] is not None else ''
-            if quantity_lab_uses and quantity_essen_uses:
-                diff = quantity_essen_uses - quantity_lab_uses
+            if quantity_lab_uses and import_row["ImpEssenUse"]:
+                diff = import_row["ImpEssenUse"] - quantity_lab_uses
                 if diff > 0.0001:
                     decision_lab_uses = remark
-                    if substance.substance_id != 194:
+                    if substance and substance.substance_id != 194:
                         quantity_essen_uses = diff
                         decision_essen_uses = remark
                     else:
@@ -194,7 +199,7 @@ class Command(BaseCommand):
                 else:
                     logger.warning(
                         "Import: ImpLabUse is greater than ImpEssenUse for %s/%s/%s",
-                        party.abbr, period.name, substance.substance_id
+                        party.abbr, period.name, substance.substance_id if substance else 'Unknown substance'
                     )
 
             imports.append({
@@ -403,7 +408,7 @@ class Command(BaseCommand):
                                period.name, exports_row["SubstID"])
 
             critical = False
-            if substance.substance_id == 194:
+            if substance and substance.substance_id == 194:
                 critical = True
 
             exports.append({
@@ -489,8 +494,9 @@ class Command(BaseCommand):
         produce = []
 
         for produce_row in row["Produce"]:
+            substance = self.substances[produce_row["SubstID"]]
             try:
-                substance_id = self.substances[produce_row["SubstID"]].id
+                substance_id = substance.id
             except KeyError as e:
                 logger.error("Produce unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
