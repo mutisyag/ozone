@@ -71,43 +71,36 @@
           <b-card v-if="flags_info" id="flags">
             <b-row class="mb-2">
               <b-col>
-                <b-row v-for="order in general_flags" :key="order">
-                  <b-col cols="1">
-                    <fieldGenerator
-                      :fieldInfo="{index:order, tabName: flags_info.name, field:order}"
-                      :disabled="$store.getters.transitionState"
-                      :field="flags_info.form_fields[order]"
-                      :id="order"
-                    ></fieldGenerator>
-                  </b-col>
-                  <b-col>
-                    <label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
-                      <div
-                        v-if="flags_info.form_fields[order].tooltip"
-                        v-b-tooltip.hover
-                        placement="left"
-                        :title="flags_info.form_fields[order].tooltip"
-                      >
-                        {{labels.flags[order]}}
-                        <i class="fa fa-info-circle fa-sm"></i>
-                      </div>
-                      <div v-else>{{labels.flags[order]}}</div>
-                    </label>
-                  </b-col>
-                </b-row>
+                <div class="d-flex" v-for="order in general_flags" :key="order">
+                  <fieldGenerator
+                    :fieldInfo="{index:order, tabName: flags_info.name, field:order}"
+                    :disabled="$store.getters.transitionState"
+                    :field="flags_info.form_fields[order]"
+                    :id="order"
+                  ></fieldGenerator>
+                  <label style="margin-left: -3px" :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+                    <div
+                      v-if="flags_info.form_fields[order].tooltip"
+                      v-b-tooltip.hover
+                      placement="left"
+                      :title="flags_info.form_fields[order].tooltip"
+                    >
+                      {{labels.flags[order]}}
+                      <i class="fa fa-info-circle fa-sm"></i>
+                    </div>
+                    <div v-else>{{labels.flags[order]}}</div>
+                  </label>
+                </div>
               </b-col>
               <b-col v-if="$store.state.currentUser.is_secretariat" >
-                <b-row v-for="order in blank_flags" :key="order">
-                  <b-col cols="1">
+                <div class="d-flex" v-for="order in blank_flags" :key="order">
                     <fieldGenerator
                       :fieldInfo="{index:order, tabName: flags_info.name, field:order}"
                       :disabled="$store.getters.transitionState"
                       :field="flags_info.form_fields[order]"
                       :id="order"
                     ></fieldGenerator>
-                  </b-col>
-                  <b-col>
-                    <label :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
+                    <label style="margin-left: -3px" :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
                       <div
                         v-if="flags_info.form_fields[order].tooltip"
                         v-b-tooltip.hover
@@ -119,8 +112,7 @@
                       </div>
                       <div v-else>{{labels.flags[order]}}</div>
                     </label>
-                  </b-col>
-                </b-row>
+                </div>
               </b-col>
             </b-row>
           </b-card>
