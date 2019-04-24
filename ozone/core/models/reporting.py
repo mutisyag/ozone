@@ -821,6 +821,15 @@ class Submission(models.Model):
         if not self.can_edit_remarks(user):
             return False
 
+        # If in initial state, do not allow party to modify OS-filled
+        # submissions (and vice-versa)
+        if self.in_initial_state:
+            if (
+                (user.is_secretariat and not self.filled_by_secretariat)
+                or (not user.is_secretariat and self.filled_by_secretariat)
+            ):
+                return False
+
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
             # submission isn't in an editable state (e.g. `data_entry`)
