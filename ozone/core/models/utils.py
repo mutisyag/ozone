@@ -30,4 +30,4 @@ def model_to_dict(instance, fields=None, exclude=None):
 
 def round_half_up(x, decimals=0):
     multiplier = 10 ** decimals
-    return math.floor(x * multiplier + 0.5 * multiplier) / multiplier
+    return math.floor(x*multiplier + 0.5) / multiplier
