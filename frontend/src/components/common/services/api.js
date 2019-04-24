@@ -1,5 +1,6 @@
 import axios from 'axios'
 import tus from 'tus-js-client'
+import { sortDescending } from '@/components/common/services/utilsService'
 
 const logRequests = process.env.NODE_ENV === 'development'
 
@@ -76,6 +77,16 @@ const remove = (path) => {
 
 const getSubstances = () => fetch('group-substances/')
 
+const getFilteredSubstances = () => new Promise(async (resolve, reject) => {
+  try {
+    const responseSubstances = await fetch('group-substances/')
+    const result = { data: responseSubstances.data.filter(country => country.group_id !== 'uncontrolled') }
+    resolve(result)
+  } catch (error) { //  here goes if someAsyncPromise() rejected}
+    reject(error) //  this will result in a resolved promise.
+  }
+})
+
 const getUsers = () => fetch('users/')
 
 const getCurrentUser = () => fetch('current-user/')
@@ -112,6 +123,16 @@ const getExportBlends = () => {
 const getSubmissionFormat = () => fetch('get-submission-formats/')
 
 const getPeriods = () => fetch('periods/')
+
+const getFilteredPeriods = () => new Promise(async (resolve, reject) => {
+  try {
+    const responsePeriods = await fetch('periods/')
+    const result = { data: sortDescending(responsePeriods.data, 'name') }
+    resolve(result)
+  } catch (error) { //  here goes if someAsyncPromise() rejected}
+    reject(error) //  this will result in a resolved promise.
+  }
+})
 
 const getObligations = () => fetch('obligations/')
 
@@ -232,12 +253,14 @@ export {
   remove,
   getCookie,
   getSubstances,
+  getFilteredSubstances,
   getExportBlends,
   getInstructions,
   getUsers,
   getParties,
   getPartyRatifications,
   getPeriods,
+  getFilteredPeriods,
   getObligations,
   createSubmission,
   getSubmissions,
