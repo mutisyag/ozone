@@ -746,10 +746,16 @@ class Submission(models.Model):
 
         flags_list = []
         if user.is_secretariat:
+            if not self.filled_by_secretariat and self.in_initial_state:
+                # Secretariat cannot change anything on party submission while
+                # it is in Data Entry!
+                return []
+
             flags_list.extend([
                 'flag_provisional', 'flag_checked_blanks',
                 'flag_has_blanks', 'flag_confirmed_blanks',
             ])
+
             if self.in_initial_state:
                 flags_list.extend([
                     'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -764,6 +770,9 @@ class Submission(models.Model):
         else:
             # Party user
             if self.in_initial_state:
+                if self.filled_by_secretariat:
+                    return []
+
                 flags_list.extend([
                     'flag_provisional',
                     'flag_has_reported_a1', 'flag_has_reported_a2',
