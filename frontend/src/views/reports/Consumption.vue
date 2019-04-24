@@ -3,11 +3,7 @@
     <div class="w-100 pt-3">
 
       <!-- Filters -->
-<<<<<<< HEAD:frontend/src/views/reports/Consumption.vue
       <b-row v-if="tableReady && currentUser">
-=======
-      <b-row v-if="tableReady">
->>>>>>> eea86cc0d88c6d26f31192d270a8f5c42bca6b64:frontend/src/views/lookupTables/Consumption.vue
         <b-col v-for="(filterValue, filterKey) in filters" :key="filterKey">
           <b-input-group horizontal :prepend="$gettext(filterValue.name)" class="mb-1">
             <b-form-select v-model="selectedFilters[filterKey]">
@@ -144,7 +140,7 @@ export default {
         }
       ],
       tableReady: false,
-      isUpdateFromWatcher: false
+      canRequest: false
     }
   },
   computed: {
@@ -223,6 +219,8 @@ export default {
       })
     },
     sortings(el) {
+      this.tableOptions.params.page = null
+      this.canRequest = false
       this.tableOptions.params.ordering = el.sortDesc ? `-${el.sortBy}` : el.sortBy
       this.getItems()
     },
@@ -257,7 +255,7 @@ export default {
   watch: {
     'selectedFilters': {
       handler() {
-        this.isUpdateFromWatcher = true
+        this.canRequest = false
         this.tableOptions.params = { ...this.tableOptions.params, ...this.selectedFilters }
         this.tableOptions.params.page = null
         this.getItems()
@@ -266,19 +264,15 @@ export default {
     },
     'tableOptions.params.page': {
       handler() {
-        if (!this.isUpdateFromWatcher) {
-<<<<<<< HEAD:frontend/src/views/reports/Consumption.vue
-=======
-          this.tableOptions.params.page = null
->>>>>>> eea86cc0d88c6d26f31192d270a8f5c42bca6b64:frontend/src/views/lookupTables/Consumption.vue
+        if (this.canRequest) {
           this.getItems()
         }
-        this.isUpdateFromWatcher = false
+        this.canRequest = true
       }
     },
     'tableOptions.params.page_size': {
       handler() {
-        this.isUpdateFromWatcher = true
+        this.canRequest = false
         this.tableOptions.params.page = null
         this.getItems()
       }
