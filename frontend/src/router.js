@@ -19,7 +19,7 @@ const UserProfile = () => import(/* webpackChunkName: "userProfile" */ '@/views/
 const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/ControlledSubstances')
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
 const LookupTablesParties = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Parties')
-const LookupTablesConsumption = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Consumption')
+const ReportsProductionConsumption = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/reports/Consumption')
 
 Vue.use(Router)
 
@@ -140,11 +140,22 @@ const routes = [{
     path: 'parties',
     name: 'Parties',
     component: LookupTablesParties
+  }
+  ]
+},
+{
+  path: '/reports',
+  redirect: '/pages/404',
+  name: 'Reports',
+  component: {
+    render(c) {
+      return c('router-view')
+    }
   },
-  {
-    path: 'consumption',
-    name: 'Consumption',
-    component: LookupTablesConsumption
+  children: [{
+    path: 'production-consumption',
+    name: 'Production and consumption',
+    component: ReportsProductionConsumption
   }
   ]
 }
