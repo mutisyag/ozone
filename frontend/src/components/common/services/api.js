@@ -84,6 +84,19 @@ const updateCurrentUser = (user) => update(`current-user/${user.id}/`, user)
 
 const getParties = () => fetch('parties/')
 
+/**
+ * will return the filtered list of parties that doesn't include islands
+ */
+const getFilteredParties = () => new Promise(async (resolve, reject) => {
+  try {
+    const responseParties = await fetch('parties/')
+    const result = { data: responseParties.data.filter(country => country.id === country.parent_party) }
+    resolve(result)
+  } catch (error) { //  here goes if someAsyncPromise() rejected}
+    reject(error) //  this will result in a resolved promise.
+  }
+})
+
 const getTransitions = (url) => fetch(url)
 
 const getPartyRatifications = () => fetch('get-party-ratifications/')
@@ -248,5 +261,6 @@ export {
   getSubmissionFormat,
   getEssenCritTypes,
   getSubmissionAggregations,
-  getLimits
+  getLimits,
+  getFilteredParties
 }

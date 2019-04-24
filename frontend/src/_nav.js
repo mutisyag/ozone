@@ -16,10 +16,13 @@ const getNav = ($gettext) => [{
   }, {
     name: $gettext('Parties'),
     url: '/lookup-tables/parties'
-  }, {
-    name: $gettext('Consumption'),
-    url: '/lookup-tables/consumption'
   }]
+},
+
+{
+  name: $gettext('Production and consumption'),
+  icon: 'icon-graph',
+  url: '/reports/production-consumption'
 }
 ]
 

@@ -3,7 +3,11 @@
     <div class="w-100 pt-3">
 
       <!-- Filters -->
+<<<<<<< HEAD:frontend/src/views/reports/Consumption.vue
+      <b-row v-if="tableReady && currentUser">
+=======
       <b-row v-if="tableReady">
+>>>>>>> eea86cc0d88c6d26f31192d270a8f5c42bca6b64:frontend/src/views/lookupTables/Consumption.vue
         <b-col v-for="(filterValue, filterKey) in filters" :key="filterKey">
           <b-input-group horizontal :prepend="$gettext(filterValue.name)" class="mb-1">
             <b-form-select v-model="selectedFilters[filterKey]">
@@ -73,9 +77,11 @@
 </template>
 
 <script>
-import { getLimits, getPeriods, getSubstances, getParties } from '@/components/common/services/api.js'
+import { getLimits, getPeriods, getSubstances, getFilteredParties } from '@/components/common/services/api.js'
+import authMixin from '@/components/common/mixins/auth'
 
 export default {
+  mixins: [authMixin],
   data() {
     return {
       fields: [
@@ -94,7 +100,7 @@ export default {
       ],
       items: [],
       filters: {
-        party: { name: 'Party', options: [], call: getParties },
+        party: { name: 'Party', options: [], call: getFilteredParties },
         group: { name: 'Annex/Group', options: [], call: getSubstances },
         reporting_period: { name: 'Reporting period', options: [], call: getPeriods }
       },
@@ -142,6 +148,14 @@ export default {
     }
   },
   computed: {
+    currentUser() {
+      const { currentUser } = this.$store.state
+      if (currentUser && !this.selectedFilters.party) {
+        this.selectedFilters.party = currentUser.party
+      }
+
+      return currentUser
+    },
     filteredItems: function filterItems() {
       const tempItems = this.items.slice()
       const result = tempItems.map(item => {
@@ -162,22 +176,44 @@ export default {
   },
   methods: {
     makeFilters() {
+      const allPromises = this.makeArrayOfPromises()
+      this.assignOptionsToFilters(allPromises).then(() => this.preselectUserCountry())
+    },
+    assignOptionsToFilters(promises) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          Promise.all(promises).then((responses) => {
+            for (const responseItem of responses) {
+              this.filters[responseItem.filterName].options = responseItem.response.data.slice()
+            }
+          })
+
+          resolve()
+        } catch (error) { //  here goes if someAsyncPromise() rejected}
+          reject(error) //  this will result in a resolved promise.
+        }
+      })
+    },
+    preselectUserCountry() {
+      if (this.filters.party.options.length > 0) {
+        this.selectedFilters.party = this.filters.party.options.find((party) => party.abbr.toLowerCase() === this.$store.getters.currentCountryIso.toLowerCase()).id
+      }
+    },
+    makeArrayOfPromises() {
       const allPromises = []
 
       for (const filterName in this.filters) {
         const p = new Promise((resolve, reject) => {
-          this.filters[filterName].call().then((response) => {
-            resolve({ filterName, response })
-          })
+          this.filters[filterName].call()
+            .then((response) => {
+              console.log(response)
+              resolve({ filterName, response })
+            })
+            .catch((error) => reject(error))
         })
         allPromises.push(p)
       }
-
-      Promise.all(allPromises).then((responses) => {
-        for (const responseItem of responses) {
-          this.filters[responseItem.filterName].options = responseItem.response.data.slice()
-        }
-      })
+      return allPromises
     },
     getItems() {
       getLimits(this.tableOptions.params).then((response) => {
@@ -192,22 +228,30 @@ export default {
     },
     onResetFilters() {
       const currentFilters = JSON.parse(JSON.stringify(this.selectedFilters))
+      const tableOptionsParams = JSON.parse(JSON.stringify(this.tableOptions.params))
+
       for (const filter in currentFilters) {
         currentFilters[filter] = null
       }
-      this.selectedFilters = currentFilters
+      for (const option in tableOptionsParams) {
+        tableOptionsParams[option] = null
+      }
+      [tableOptionsParams.page_size] = this.tableOptions.pageOptions // this will take the first value
+
+      this.selectedFilters = { ...currentFilters }
+      this.tableOptions.params = { ...tableOptionsParams }
       this.sortBy = null
-      this.tableOptions.params.ordering = null
     },
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Consumption'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Production and consumption'))
     }
   },
 
   created() {
     this.getItems()
-    this.makeFilters()
     this.updateBreadcrumbs()
+    this.$store.dispatch('getMyCurrentUser')
+    this.$store.dispatch('getDashboardParties').then(() => this.makeFilters())
   },
 
   watch: {
@@ -223,7 +267,10 @@ export default {
     'tableOptions.params.page': {
       handler() {
         if (!this.isUpdateFromWatcher) {
+<<<<<<< HEAD:frontend/src/views/reports/Consumption.vue
+=======
           this.tableOptions.params.page = null
+>>>>>>> eea86cc0d88c6d26f31192d270a8f5c42bca6b64:frontend/src/views/lookupTables/Consumption.vue
           this.getItems()
         }
         this.isUpdateFromWatcher = false
