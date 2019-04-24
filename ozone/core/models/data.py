@@ -271,6 +271,8 @@ class AggregationMixin:
                 value = getattr(aggregation, aggr_field) + values[model_field]
                 setattr(aggregation, aggr_field, value)
 
+            # Populate limits and baselines; calculate totals
+            aggregation.populate_limits_and_baselines()
             aggregation.calculate_totals()
 
 
@@ -382,44 +384,44 @@ class BaseUses(models.Model):
     quantity_critical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_critical_uses = models.CharField(max_length=256, blank=True)
+    decision_critical_uses = models.CharField(max_length=512, blank=True)
 
     quantity_essential_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_essential_uses = models.CharField(max_length=256, blank=True)
+    decision_essential_uses = models.CharField(max_length=512, blank=True)
 
     quantity_high_ambient_temperature = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_high_ambient_temperature = models.CharField(
-        max_length=256, blank=True
+        max_length=512, blank=True
     )
 
     quantity_laboratory_analytical_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_laboratory_analytical_uses = models.CharField(
-        max_length=256, blank=True
+        max_length=512, blank=True
     )
 
     quantity_process_agent_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    decision_process_agent_uses = models.CharField(max_length=256, blank=True)
+    decision_process_agent_uses = models.CharField(max_length=512, blank=True)
 
     quantity_quarantine_pre_shipment = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_quarantine_pre_shipment = models.CharField(
-        max_length=256, blank=True
+        max_length=512, blank=True
     )
 
     quantity_other_uses = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_other_uses = models.CharField(
-        max_length=256, blank=True
+        max_length=512, blank=True
     )
 
     class Meta:

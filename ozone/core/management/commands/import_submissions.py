@@ -170,6 +170,38 @@ class Command(BaseCommand):
                     logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
                     continue
 
+            if substance and substance.substance_id != 194:
+                quantity_essen_uses = import_row["ImpEssenUse"]
+                quantity_crit_uses = None
+            else:
+                quantity_essen_uses = None
+                quantity_crit_uses = import_row["ImpEssenUse"]
+
+            quantity_lab_uses = import_row["ImpLabUse"]
+            decision_lab_uses = ""
+            decision_essen_uses = ""
+            decision_crit_uses = ""
+            remark = import_row["Remark"] if import_row["Remark"] is not None else ''
+            if quantity_lab_uses and import_row["ImpEssenUse"]:
+                diff = import_row["ImpEssenUse"] - quantity_lab_uses
+                if diff > 0.0001:
+                    decision_lab_uses = remark
+                    if substance and substance.substance_id != 194:
+                        quantity_essen_uses = diff
+                        decision_essen_uses = remark
+                    else:
+                        quantity_crit_uses = diff
+                        decision_crit_uses = remark
+                elif -0.0001 <= diff <= 0.0001:
+                    quantity_lab_uses = quantity_essen_uses if diff >= 0 else quantity_lab_uses
+                    quantity_essen_uses = None
+                    decision_lab_uses = remark
+                else:
+                    logger.warning(
+                        "Import: ImpLabUse is greater than ImpEssenUse for %s/%s/%s",
+                        party.abbr, period.name, substance.substance_id if substance else 'Unknown substance'
+                    )
+
             imports.append({
                 "remarks_party": import_row["Remark"] or "",
                 # "remarks_os": "",
@@ -177,18 +209,18 @@ class Command(BaseCommand):
                 "quantity_total_new": import_row["ImpNew"],
                 "quantity_total_recovered": import_row["ImpRecov"],
                 "quantity_feedstock": import_row["ImpFeedstock"],
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": import_row["ImpEssenUse"],
+                "quantity_critical_uses": quantity_crit_uses,
+                "quantity_essential_uses": quantity_essen_uses,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": import_row["ImpLabUse"],
+                "quantity_laboratory_analytical_uses": quantity_lab_uses,
                 "quantity_process_agent_uses": import_row["ImpProcAgent"],
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
                 "quantity_polyols": import_row["ImpPolyol"],
                 "quantity_other_uses": None,
-                "decision_critical_uses": "",
-                "decision_essential_uses": "",
+                "decision_critical_uses": decision_crit_uses,
+                "decision_essential_uses": decision_essen_uses,
                 "decision_high_ambient_temperature": "",
-                "decision_laboratory_analytical_uses": "",
+                "decision_laboratory_analytical_uses": decision_lab_uses,
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
@@ -375,6 +407,10 @@ class Command(BaseCommand):
                 logger.warning("Export no quantity specified: %s/%s/%s", party.abbr,
                                period.name, exports_row["SubstID"])
 
+            critical = False
+            if substance and substance.substance_id == 194:
+                critical = True
+
             exports.append({
                 "remarks_party": exports_row["Remark"] or "",
                 # "remarks_os": "",
@@ -382,8 +418,8 @@ class Command(BaseCommand):
                 "quantity_total_new": exports_row["ExpNew"],
                 "quantity_total_recovered": exports_row["ExpRecov"],
                 "quantity_feedstock": exports_row["ExpFeedstock"],
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": exports_row["ExpEssenUse"],
+                "quantity_critical_uses": exports_row["ExpEssenUse"] if critical else None,
+                "quantity_essential_uses": exports_row["ExpEssenUse"] if not critical else None,
                 "quantity_high_ambient_temperature": None,
                 "quantity_laboratory_analytical_uses": None,
                 "quantity_process_agent_uses": exports_row["ExpProcAgent"],
@@ -458,8 +494,9 @@ class Command(BaseCommand):
         produce = []
 
         for produce_row in row["Produce"]:
+            substance = self.substances[produce_row["SubstID"]]
             try:
-                substance_id = self.substances[produce_row["SubstID"]].id
+                substance_id = substance.id
             except KeyError as e:
                 logger.error("Produce unknown substance %s: %s/%s", e, party.abbr, period.name)
                 continue
@@ -468,14 +505,46 @@ class Command(BaseCommand):
                 logger.warning("Produce no quantity specified: %s/%s/%s", party.abbr,
                                period.name, produce_row["SubstID"])
 
+            if substance.substance_id != 194:
+                quantity_essen_uses = produce_row["ProdEssenUse"]
+                quantity_crit_uses = None
+            else:
+                quantity_essen_uses = None
+                quantity_crit_uses = produce_row["ProdEssenUse"]
+
+            quantity_lab_uses = produce_row["ProdLabUse"]
+            decision_lab_uses = ""
+            decision_essen_uses = ""
+            decision_crit_uses = ""
+            remark = produce_row["Remark"] if produce_row["Remark"] is not None else ''
+            if quantity_lab_uses and produce_row["ProdEssenUse"]:
+                diff = produce_row["ProdEssenUse"] - quantity_lab_uses
+                if diff > 0.0001:
+                    decision_lab_uses = remark
+                    if substance.substance_id != 194:
+                        quantity_essen_uses = diff
+                        decision_essen_uses = remark
+                    else:
+                        quantity_crit_uses = diff
+                        decision_crit_uses = remark
+                elif -0.0001 <= diff <= 0.0001:
+                    quantity_lab_uses = quantity_essen_uses if diff >= 0 else quantity_lab_uses
+                    quantity_essen_uses = None
+                    decision_lab_uses = remark
+                else:
+                    logger.warning(
+                        "Produce: ProdLabUse is greater than ProdEssenUse for %s/%s/%s",
+                        party.abbr, period.name, substance.substance_id
+                    )
+
             produce.append({
                 "remarks_party": produce_row["Remark"] or "",
                 "substance_id": substance_id,
                 # "remarks_os": "",
-                "quantity_critical_uses": None,
-                "quantity_essential_uses": None,
+                "quantity_critical_uses": quantity_crit_uses,
+                "quantity_essential_uses": quantity_essen_uses,
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": produce_row["ProdLabUse"],
+                "quantity_laboratory_analytical_uses": quantity_lab_uses,
                 "quantity_process_agent_uses": produce_row["ProdProcAgent"],
                 "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
                 "quantity_total_produced": produce_row["ProdAllNew"],
@@ -483,10 +552,10 @@ class Command(BaseCommand):
                 "quantity_feedstock": produce_row["ProdFeedstock"],
                 "quantity_article_5": produce_row["ProdArt5"],
                 "quantity_for_destruction": None,
-                "decision_critical_uses": "",
-                "decision_essential_uses": "",
+                "decision_critical_uses": decision_crit_uses,
+                "decision_essential_uses": decision_essen_uses,
                 "decision_high_ambient_temperature": "",
-                "decision_laboratory_analytical_uses": "",
+                "decision_laboratory_analytical_uses": decision_lab_uses,
                 "decision_process_agent_uses": "",
                 "decision_quarantine_pre_shipment": "",
                 "decision_other_uses": "",
@@ -661,6 +730,9 @@ class Command(BaseCommand):
         # Extra tidy
         submission._current_state = "finalized"
         submission.save()
+
+        # Fill aggregated data on submission import
+        submission.fill_aggregated_data()
 
         if values["submission"]["created_at"]:
             Submission.objects.filter(pk=submission.pk).update(

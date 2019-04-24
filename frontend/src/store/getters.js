@@ -109,6 +109,10 @@ const getters = {
 		|| state.permissions.form.can_upload_files
 		|| (state.current_submission && state.current_submission.changeable_flags.length)),
 
+  /**
+   * this getter needs state.initialData.countryOptions or state.dashboard.parties
+   * TODO: maybe change this ?
+   */
   currentCountryIso: (state) => {
     const { currentUser } = state
     let currentCountry = null

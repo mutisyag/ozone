@@ -3,7 +3,7 @@
     <div class="w-100 pt-3">
 
       <!-- Filters -->
-      <b-row>
+      <b-row v-if="tableReady && currentUser">
         <b-col v-for="(filterValue, filterKey) in filters" :key="filterKey">
           <b-input-group horizontal :prepend="$gettext(filterValue.name)" class="mb-1">
             <b-form-select v-model="selectedFilters[filterKey]">
@@ -32,6 +32,7 @@
         bordered
         hover
         head-variant="light"
+        class="full-bordered"
         stacked="md"
         :items="filteredItems"
         :fields="fields"
@@ -39,7 +40,15 @@
         :per-page="tableOptions.params.page_size"
         ref="table"
         @sort-changed="sortings"
-      ></b-table>
+      >
+        <template slot="thead-top">
+          <tr>
+            <th v-for="(category, index) in tableTop" :key="index" :colspan="category.colspan">
+              {{category.label}}
+            </th>
+          </tr>
+        </template>
+      </b-table>
 
       <b-row>
         <b-col md="10" class="my-1">
@@ -64,23 +73,30 @@
 </template>
 
 <script>
-import { getLimits, getPeriods, getSubstances, getParties } from '@/components/common/services/api.js'
+import { getLimits, getPeriods, getSubstances, getFilteredParties } from '@/components/common/services/api.js'
+import authMixin from '@/components/common/mixins/auth'
 
 export default {
+  mixins: [authMixin],
   data() {
     return {
       fields: [
         { key: 'party', label: `${this.$gettext('Party')}`, sortable: true },
         { key: 'group', label: `${this.$gettext('Annex/Group')}`, sortable: true },
         { key: 'reporting_period', label: `${this.$gettext('Reporting period')}`, sortable: true },
-        { key: 'limit_type', label: `${this.$gettext('Limit type')}`, sortable: false },
-        { key: 'limit', label: `${this.$gettext('Limit')}`, sortable: false },
-        { key: 'reported_value', label: `${this.$gettext('Reported')}`, sortable: false },
-        { key: 'baseline_value', label: `${this.$gettext('Baseline')}`, sortable: false }
+        { key: 'baseline_prod', label: this.$gettext('Baseline') },
+        { key: 'calculated_production', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_prod', label: this.$gettext('Limit') },
+        { key: 'baseline_cons', label: this.$gettext('Baseline') },
+        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_cons', label: this.$gettext('Limit') },
+        { key: 'baseline_bdn', label: this.$gettext('Baseline') },
+        { key: 'production_article_5', label: `${this.$gettext('Calculated')}` },
+        { key: 'limit_bdn', label: this.$gettext('Limit') }
       ],
       items: [],
       filters: {
-        party: { name: 'Party', options: [], call: getParties },
+        party: { name: 'Party', options: [], call: getFilteredParties },
         group: { name: 'Annex/Group', options: [], call: getSubstances },
         reporting_period: { name: 'Reporting period', options: [], call: getPeriods }
       },
@@ -101,10 +117,41 @@ export default {
           group: null,
           ordering: null
         }
-      }
+      },
+      tableTop: [
+        {
+          label: ''
+        },
+        {
+          label: ''
+        },
+        {
+          label: ''
+        },
+        {
+          label: this.$gettext('Production'),
+          colspan: 3
+        }, {
+          label: this.$gettext('Consumption'),
+          colspan: 3
+        }, {
+          label: this.$gettext('Production allowance for BDN of Article 5 Parties'),
+          colspan: 3
+        }
+      ],
+      tableReady: false,
+      canRequest: false
     }
   },
   computed: {
+    currentUser() {
+      const { currentUser } = this.$store.state
+      if (currentUser && !this.selectedFilters.party) {
+        this.selectedFilters.party = currentUser.party
+      }
+
+      return currentUser
+    },
     filteredItems: function filterItems() {
       const tempItems = this.items.slice()
       const result = tempItems.map(item => {
@@ -113,9 +160,9 @@ export default {
 
           if (filter) {
             const optionItem = filter.options.find(option => option.id === item[itemKey])
-            const optionName = optionItem.name || optionItem.group_id
-
-            item[itemKey] = optionName
+            if (optionItem) {
+              item[itemKey] = optionItem.name || optionItem.group_id
+            }
           }
         }
         return item
@@ -125,56 +172,90 @@ export default {
   },
   methods: {
     makeFilters() {
+      const allPromises = this.makeArrayOfPromises()
+      this.assignOptionsToFilters(allPromises).then(() => this.preselectUserCountry())
+    },
+    assignOptionsToFilters(promises) {
+      return new Promise(async (resolve, reject) => {
+        try {
+          Promise.all(promises).then((responses) => {
+            for (const responseItem of responses) {
+              this.filters[responseItem.filterName].options = responseItem.response.data.slice()
+            }
+          })
+
+          resolve()
+        } catch (error) { //  here goes if someAsyncPromise() rejected}
+          reject(error) //  this will result in a resolved promise.
+        }
+      })
+    },
+    preselectUserCountry() {
+      if (this.filters.party.options.length > 0) {
+        this.selectedFilters.party = this.filters.party.options.find((party) => party.abbr.toLowerCase() === this.$store.getters.currentCountryIso.toLowerCase()).id
+      }
+    },
+    makeArrayOfPromises() {
       const allPromises = []
 
       for (const filterName in this.filters) {
         const p = new Promise((resolve, reject) => {
-          this.filters[filterName].call().then((response) => {
-            resolve({ filterName, response })
-          })
+          this.filters[filterName].call()
+            .then((response) => {
+              console.log(response)
+              resolve({ filterName, response })
+            })
+            .catch((error) => reject(error))
         })
         allPromises.push(p)
       }
-
-      Promise.all(allPromises).then((responses) => {
-        for (const responseItem of responses) {
-          this.filters[responseItem.filterName].options = responseItem.response.data.slice()
-        }
-      })
+      return allPromises
     },
     getItems() {
       getLimits(this.tableOptions.params).then((response) => {
         this.items = response.data.results.slice()
         this.tableOptions.totalRows = response.data.count
+        this.tableReady = true
       })
     },
     sortings(el) {
+      this.tableOptions.params.page = null
+      this.canRequest = false
       this.tableOptions.params.ordering = el.sortDesc ? `-${el.sortBy}` : el.sortBy
       this.getItems()
     },
     onResetFilters() {
       const currentFilters = JSON.parse(JSON.stringify(this.selectedFilters))
+      const tableOptionsParams = JSON.parse(JSON.stringify(this.tableOptions.params))
+
       for (const filter in currentFilters) {
         currentFilters[filter] = null
       }
-      this.selectedFilters = currentFilters
+      for (const option in tableOptionsParams) {
+        tableOptionsParams[option] = null
+      }
+      [tableOptionsParams.page_size] = this.tableOptions.pageOptions // this will take the first value
+
+      this.selectedFilters = { ...currentFilters }
+      this.tableOptions.params = { ...tableOptionsParams }
       this.sortBy = null
-      this.tableOptions.params.ordering = null
     },
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Consumption'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Production and consumption'))
     }
   },
 
   created() {
     this.getItems()
-    this.makeFilters()
     this.updateBreadcrumbs()
+    this.$store.dispatch('getMyCurrentUser')
+    this.$store.dispatch('getDashboardParties').then(() => this.makeFilters())
   },
 
   watch: {
     'selectedFilters': {
       handler() {
+        this.canRequest = false
         this.tableOptions.params = { ...this.tableOptions.params, ...this.selectedFilters }
         this.tableOptions.params.page = null
         this.getItems()
@@ -183,11 +264,15 @@ export default {
     },
     'tableOptions.params.page': {
       handler() {
-        this.getItems()
+        if (this.canRequest) {
+          this.getItems()
+        }
+        this.canRequest = true
       }
     },
     'tableOptions.params.page_size': {
       handler() {
+        this.canRequest = false
         this.tableOptions.params.page = null
         this.getItems()
       }
@@ -201,5 +286,8 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+  table thead tr:first-of-type th{
+    text-align: center;
+  }
 </style>

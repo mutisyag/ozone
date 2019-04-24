@@ -58,13 +58,13 @@ const decisionGenerator = (fields, parent, section, $gettext) => {
   }
   const forTooltip = {}
 
-  const decision_fields = fields
-
-  decision_fields.filter(item => parent[item].selected)
-    .forEach(item => {
+  const decision_fields = fields.filter(item => parent[item].selected)
+  tooltipOrder.forEach(item => {
+    if (decision_fields.includes(item)) {
       decisions.push(parent[item].selected)
       forTooltip[item] = parent[item].selected
-    })
+    }
+  })
 
   const tooltip = createTooltip(forTooltip, section, $gettext, true)
   returnObj.tooltip = tooltip
