@@ -264,7 +264,7 @@ class UserAdmin(admin.ModelAdmin):
     )
     search_fields = ["username", "first_name", "last_name"]
     actions = ["reset_password"]
-    exclude = ["password"]
+    exclude = ["password", "user_permissions"]
     readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
     list_filter = (("party", MainPartyFilter), "is_secretariat", "is_read_only", "is_staff", "is_superuser")
 
