@@ -160,9 +160,9 @@ export default {
 
           if (filter) {
             const optionItem = filter.options.find(option => option.id === item[itemKey])
-            const optionName = optionItem.name || optionItem.group_id
-
-            item[itemKey] = optionName
+            if (optionItem) {
+              item[itemKey] = optionItem.name || optionItem.group_id
+            }
           }
         }
         return item
