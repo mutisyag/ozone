@@ -926,9 +926,18 @@ class Submission(models.Model):
         return False
 
     def can_upload_files(self, user):
-        if self.has_edit_rights(user):
-            return True
-        return False
+        """
+        Party cannot upload files to secretariat-filled submissions.
+        Secretariat cannot upload files on party submissions if they are in
+        data entry
+        """
+        if user.is_secretariat:
+            if not self.filled_by_secretariat and self.in_initial_state:
+                return False
+        else:
+            if self.filled_by_secretariat or self.party != user.party:
+                return False
+        return not user.is_read_only
 
     @staticmethod
     def get_exempted_fields():
