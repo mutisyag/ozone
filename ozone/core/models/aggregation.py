@@ -258,8 +258,8 @@ class ProdCons(models.Model):
         return self.export_process_agent if self.production_all_new > 0.0 \
             else 0.0
 
-    def get_production_quarantine(self):
-        return self.production_quarantine if self.export_quarantine > 0.0 \
+    def get_export_quarantine(self):
+        return self.export_quarantine if self.production_quarantine > 0.0 \
             else 0.0
 
     def calculate_totals(self):
@@ -299,7 +299,7 @@ class ProdCons(models.Model):
                 - self.get_production_process_agent(party.is_article5)
                 - self.destroyed
                 - self.export_new
-                - self.get_production_quarantine()
+                + self.get_export_quarantine()
                 + self.non_party_export
                 + self.import_new
                 - self.import_feedstock
