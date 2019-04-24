@@ -5,6 +5,7 @@ import socket
 import unittest
 
 from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
 from django.core.servers.basehttp import ThreadedWSGIServer, WSGIRequestHandler
 from django.test.testcases import LiveServerThread
@@ -45,6 +46,7 @@ TUSD_AVAILABLE = socket.socket(
 class BaseSubmissionTest(object):
     def setUp(self):
         super().setUp()
+        ContentType.objects.clear_cache()
         self.workflow_class = "default"
 
         self.region = RegionFactory.create()
@@ -155,6 +157,7 @@ class TestUpload(BaseSubmissionTest, LiveServerTestCase):
 
     def tearDown(self):
         super().tearDown()
+        ContentType.objects.clear_cache()
         for filename in os.listdir(settings.TUSD_UPLOADS_DIR):
             try:
                 os.remove(os.path.join(settings.TUSD_UPLOADS_DIR, filename))
