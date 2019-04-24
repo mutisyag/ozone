@@ -42,11 +42,13 @@ class Command(BaseCommand):
             "party": None,
             "is_secretariat": True,
             "is_read_only": False,
+            "is_staff": True,
         },
         "secretariat_ro": {
             "party": None,
             "is_secretariat": True,
             "is_read_only": True,
+            "is_staff": True,
         },
         "eu": {
             "party": "ECE",
