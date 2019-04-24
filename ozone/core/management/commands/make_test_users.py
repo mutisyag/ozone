@@ -6,6 +6,7 @@ import copy
 import random
 import logging
 
+from django.contrib.auth.models import Group, Permission
 from django.core.management.base import BaseCommand
 from django.db import IntegrityError
 from django.db.models import F
@@ -112,3 +113,21 @@ class Command(BaseCommand):
                 except IntegrityError:
                     logger.warning("%s already existed, skipping.", user)
                     continue
+
+            # Create Secretariat group and assign secretariat and secretariat_ro
+            # to this group.
+            if not Group.objects.filter(name='Secretariat'):
+                group = Group.objects.create(name='Secretariat')
+                group.permissions.set(
+                    Permission.objects.filter(
+                        content_type__app_label='core'
+                    ).exclude(name__startswith='Can chart')
+                )
+                group.user_set.add(User.objects.get(username='secretariat'))
+                group.user_set.add(User.objects.get(username='secretariat_ro'))
+                logger.info(
+                    "Created group Secretariat and "
+                    "added secretariat and secretariat_ro users"
+                )
+            else:
+                logger.warning("Group Secretariat already exists, skipping.")
