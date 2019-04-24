@@ -12,7 +12,7 @@
                 v-for="option in filterValue.options"
                 :value="option.id"
                 :key="option.id"
-              >{{option.name || option.group_id}}</option>
+              >{{option.name}}</option>
             </b-form-select>
           </b-input-group>
         </b-col>
@@ -73,7 +73,7 @@
 </template>
 
 <script>
-import { getLimits, getPeriods, getSubstances, getFilteredParties } from '@/components/common/services/api.js'
+import { getLimits, getFilteredPeriods, getFilteredSubstances, getFilteredParties } from '@/components/common/services/api.js'
 import authMixin from '@/components/common/mixins/auth'
 
 export default {
@@ -97,8 +97,8 @@ export default {
       items: [],
       filters: {
         party: { name: 'Party', options: [], call: getFilteredParties },
-        group: { name: 'Annex/Group', options: [], call: getSubstances },
-        reporting_period: { name: 'Reporting period', options: [], call: getPeriods }
+        group: { name: 'Annex/Group', options: [], call: getFilteredSubstances },
+        reporting_period: { name: 'Reporting period', options: [], call: getFilteredPeriods }
       },
       selectedFilters: {
         party: null,
@@ -144,10 +144,15 @@ export default {
     }
   },
   computed: {
+    /**
+     * use this computed to assign default party and open period for user
+     */
     currentUser() {
-      const { currentUser } = this.$store.state
-      if (currentUser && !this.selectedFilters.party) {
+      const { currentUser, submissionDefaultValues } = this.$store.state
+
+      if (currentUser && this.filters.reporting_period.options.length > 0 && !this.selectedFilters.party && !this.selectedFilters.reporting_period) {
         this.selectedFilters.party = currentUser.party
+        this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
       }
 
       return currentUser
@@ -161,7 +166,7 @@ export default {
           if (filter) {
             const optionItem = filter.options.find(option => option.id === item[itemKey])
             if (optionItem) {
-              item[itemKey] = optionItem.name || optionItem.group_id
+              item[itemKey] = optionItem.name
             }
           }
         }
@@ -173,27 +178,14 @@ export default {
   methods: {
     makeFilters() {
       const allPromises = this.makeArrayOfPromises()
-      this.assignOptionsToFilters(allPromises).then(() => this.preselectUserCountry())
+      this.assignOptionsToFilters(allPromises)
     },
     assignOptionsToFilters(promises) {
-      return new Promise(async (resolve, reject) => {
-        try {
-          Promise.all(promises).then((responses) => {
-            for (const responseItem of responses) {
-              this.filters[responseItem.filterName].options = responseItem.response.data.slice()
-            }
-          })
-
-          resolve()
-        } catch (error) { //  here goes if someAsyncPromise() rejected}
-          reject(error) //  this will result in a resolved promise.
+      Promise.all(promises).then((responses) => {
+        for (const responseItem of responses) {
+          this.filters[responseItem.filterName].options = responseItem.response.data.slice()
         }
       })
-    },
-    preselectUserCountry() {
-      if (this.filters.party.options.length > 0) {
-        this.selectedFilters.party = this.filters.party.options.find((party) => party.abbr.toLowerCase() === this.$store.getters.currentCountryIso.toLowerCase()).id
-      }
     },
     makeArrayOfPromises() {
       const allPromises = []
@@ -202,7 +194,6 @@ export default {
         const p = new Promise((resolve, reject) => {
           this.filters[filterName].call()
             .then((response) => {
-              console.log(response)
               resolve({ filterName, response })
             })
             .catch((error) => reject(error))
@@ -250,6 +241,7 @@ export default {
     this.updateBreadcrumbs()
     this.$store.dispatch('getMyCurrentUser')
     this.$store.dispatch('getDashboardParties').then(() => this.makeFilters())
+    this.$store.dispatch('getSubmissionDefaultValues')
   },
 
   watch: {
