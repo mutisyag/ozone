@@ -144,6 +144,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * use this computed to assign default party and open period for user
+     */
     currentUser() {
       const { currentUser, submissionDefaultValues } = this.$store.state
 

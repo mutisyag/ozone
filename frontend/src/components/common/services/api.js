@@ -77,6 +77,9 @@ const remove = (path) => {
 
 const getSubstances = () => fetch('group-substances/')
 
+/**
+ * filter out 'uncontrolled'
+ */
 const getFilteredSubstances = () => new Promise(async (resolve, reject) => {
   try {
     const responseSubstances = await fetch('group-substances/')
@@ -124,6 +127,9 @@ const getSubmissionFormat = () => fetch('get-submission-formats/')
 
 const getPeriods = () => fetch('periods/')
 
+/**
+ * sort reporting periods in descending order
+ */
 const getFilteredPeriods = () => new Promise(async (resolve, reject) => {
   try {
     const responsePeriods = await fetch('periods/')
