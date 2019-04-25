@@ -29,6 +29,7 @@
 <script>
 import { getObligations } from '@/components/common/services/api'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import { dateFormatToDisplay } from '@/components/common/services/languageService.js'
 
 export default {
   props: {
@@ -96,7 +97,7 @@ export default {
         tableFields.push({
           version: element.version,
           created_by: element.filled_by_secretariat ? 'Secretariat' : 'Party',
-          updated_at: element.updated_at,
+          updated_at: dateFormatToDisplay(element.updated_at),
           current_state: `${this.labels[element.current_state]} ${this.getStatus(element)}`,
           actions: element.url,
           details: element,

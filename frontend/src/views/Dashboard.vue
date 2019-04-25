@@ -270,6 +270,7 @@ import { cloneSubmission } from '@/components/common/services/api'
 import Multiselect from '@/components/common/ModifiedMultiselect'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
 import { getAlerts } from '@/components/common/dataDefinitions/alerts'
+import { dateFormatToDisplay } from '@/components/common/services/languageService.js'
 
 export default {
   name: 'Dashboard',
@@ -373,7 +374,7 @@ export default {
             party: this.getSubmissionInfo(element).party(),
             current_state: element.flag_superseded ? `${this.labels[element.current_state]} (${this.labels.flags.flag_superseded})` : this.labels[element.current_state],
             version: element.version,
-            updated_at: element.updated_at,
+            updated_at: dateFormatToDisplay(element.updated_at),
             created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
             details: element
           })
@@ -417,7 +418,7 @@ export default {
             reporting_period: this.getSubmissionInfo(element).period(),
             party: this.getSubmissionInfo(element).party(),
             version: element.version,
-            updated_at: element.updated_at,
+            updated_at: dateFormatToDisplay(element.updated_at),
             created_by: element.filled_by_secretariat ? this.$gettext('Secretariat') : this.$gettext('Party'),
             details: element
           }
