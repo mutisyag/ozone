@@ -807,9 +807,9 @@ class Submission(models.Model):
         Returns True if user can edit at least one remark on this submission.
         This is based purely on submission ownership!
         """
-        # Party users should be able to change party remarks even on
+        # Party users should not be able to change party remarks on
         # secretariat-filled submissions
-        if user.is_secretariat or user.party == self.party:
+        if user.is_secretariat or (user.party == self.party and not self.filled_by_secretariat):
             return not user.is_read_only
         return False
 
