@@ -188,7 +188,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
 
     def test_party_user_party_field_secretariat_reporter(self):
         self._check_remark_update_permission(
-            self.party_user, "party", self.secretariat_user, True
+            self.party_user, "party", self.secretariat_user, False
         )
 
     def test_party_user_secretariat_field_party_reporter(self):
@@ -213,7 +213,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
 
     def test_secretariat_user_secretariat_field_party_reporter(self):
         self._check_remark_update_permission(
-            self.secretariat_user, "secretariat", self.party_user, True
+            self.secretariat_user, "secretariat", self.party_user, False
         )
 
     def test_secretariat_user_secretariat_field_secretariat_reporter(self):
@@ -316,7 +316,7 @@ class SubmissionRemarksPermissionWorkflowTests(
             self.party_user,
             None,
             "data_entry",
-            True,
+            False,
         )
 
     def test_modify_secretariat_field_in_submitted_by_secretariat_user(self):
@@ -414,11 +414,13 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     remarks_data = ART7_REMARKS_DATA
     fail_on_wrong_field = True
 
-    def _check_remark_update_permission(self, user, field_type, owner, expect_success):
+    def _check_remark_update_permission(self, user, field_type, owner, expect_success, fail_code=None):
+        if fail_code is None:
+            fail_code = self.fail_code
         submission = self.create_submission(owner)
         self.client.login(username=user.username, password='qwe123qwe')
 
-        for field in ALL_REMARK_DATA.keys():
+        for field in self.remarks_data.keys():
             if not field.endswith(field_type):
                 continue
 
@@ -430,7 +432,9 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
                     ),
                     {field: REMARK_VALUE}
                 )
-                self._check_result(result, expect_success, submission, field)
+                self._check_result(
+                    result, expect_success, submission, field, fail_code
+                )
 
     def _check_remark_retrieve_data(self, user, owner, expect_success):
         submission = self.create_submission(owner, **ALL_REMARK_DATA)
@@ -473,8 +477,10 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
         )
 
     def test_update_secretariat(self):
+        # These should not work as submission is in data entry
         self._check_remark_update_permission(
-            self.secretariat_user, "secretariat", self.party_user, True
+            self.secretariat_user, "secretariat", self.party_user, False,
+            fail_code=422
         )
 
 
