@@ -62,6 +62,13 @@ class ModifyPreventionMixin:
             )
         super().clean()
 
+    def delete(self, *args, **kwargs):
+        if not self.submission.deletion_allowed:
+            raise MethodNotAllowed(
+                _("Unable to delete submission because it is submitted.")
+            )
+        super().delete()
+
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
