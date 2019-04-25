@@ -811,6 +811,7 @@ class Submission(models.Model):
         # secretariat-filled submissions
         if user.is_secretariat or user.party == self.party:
             return not user.is_read_only
+        return False
 
     def can_change_remark(self, user, field_name):
         """

@@ -34,6 +34,7 @@ class DefaultExemptionWorkflow(BaseWorkflow):
 
     final_states = ['finalized']
     editable_data_states = ['data_entry', 'submitted', 'nomination_filled']
+    incorrect_data_states = []
 
     state = DefaultExemptionWorkflowStateDescription()
 
