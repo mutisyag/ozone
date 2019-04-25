@@ -122,6 +122,10 @@ VALID_FLAGS = (
 SUPERSEDED_FLAGS = (
     'flag_superseded',
 )
+EXEMPTION_FLAGS = (
+    'flag_approved',
+    'flag_emergency',
+)
 
 ALL_FLAGS = BLANKS_FLAGS + HAS_REPORTED_FLAGS + PROVISIONAL_FLAGS + VALID_FLAGS + SUPERSEDED_FLAGS
 ALL_FLAGS_DATA = {
@@ -138,6 +142,9 @@ HAS_REPORTED_FLAGS_DATA = {
 }
 ESSENCRIT_FLAGS_DATA = {
     _flag: OLD_VALUE for _flag in PROVISIONAL_FLAGS + VALID_FLAGS + SUPERSEDED_FLAGS
+}
+EXEMPTION_FLAGS_DATA = {
+    _flag: OLD_VALUE for _flag in EXEMPTION_FLAGS
 }
 
 
@@ -352,6 +359,11 @@ class OtherSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     _form_type = "other"
 
 
+class ExemptionSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
+    flag_data = EXEMPTION_FLAGS_DATA
+    _form_type = "exemption"
+
+
 class SubmissionRetrieveTest(BaseFlagsTests):
     flag_data = ALL_FLAGS_DATA
 
@@ -395,3 +407,8 @@ class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
 class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = BASE_FLAG_DATA
     _form_type = "other"
+
+
+class ExemptionSubmissionRetrieveTest(SubmissionRetrieveTest):
+    flag_data = EXEMPTION_FLAGS_DATA
+    _form_type = "exemption"

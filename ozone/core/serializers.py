@@ -1086,7 +1086,8 @@ class PerTypeFieldsMixIn(object):
 
 
 class SubmissionFlagsSerializer(
-    PerTypeFieldsMixIn, PartialUpdateSerializerMixin, serializers.ModelSerializer,
+    PerTypeFieldsMixIn, PartialUpdateSerializerMixin,
+    serializers.ModelSerializer,
 ):
     """
     Specific serializer used to present all submission flags as a nested
@@ -1119,7 +1120,7 @@ class SubmissionFlagsSerializer(
             ),
             'essencrit': base_fields,
             'other': base_fields,
-            'exemption': base_fields + (
+            'exemption': (
                 'flag_approved', 'flag_emergency',
             ),
         }

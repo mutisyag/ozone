@@ -744,7 +744,18 @@ class Submission(models.Model):
         if not self.can_edit_flags(user):
             return []
 
+        # Treat exemption case separately
+        if self.obligation.form_type == 'exemption':
+            if user.is_secretariat:
+                if self.in_initial_state:
+                    return ['flag_emergency',]
+                else:
+                    # Approved flag can only be set after submitting
+                    return ['flag_approved',]
+            return []
+
         flags_list = []
+        # For all other forms, flags are similar to Article 7
         if user.is_secretariat:
             if not self.filled_by_secretariat and self.in_initial_state:
                 # Secretariat cannot change anything on party submission while
@@ -766,7 +777,7 @@ class Submission(models.Model):
                 ])
             else:
                 # valid & approved flags can only be set after submitting
-                flags_list.extend(['flag_valid', 'flag_approved',])
+                flags_list.extend(['flag_valid',])
         else:
             # Party user
             if self.in_initial_state:
@@ -974,7 +985,10 @@ class Submission(models.Model):
             "flag_has_reported_c3",
             "flag_has_reported_e",
             "flag_has_reported_f",
-            # Remarks, secretariat remarks can be change
+            # Exemption flags
+            "flag_approved",
+            "flag_emergency",
+            # Remarks, secretariat remarks can be changed
             # at any time, while the party remarks cannot.
             # "questionnaire_remarks_party",
             "questionnaire_remarks_secretariat",
@@ -999,7 +1013,6 @@ class Submission(models.Model):
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
-            "flag_approved",
             "submitted_at",
         ]
 
