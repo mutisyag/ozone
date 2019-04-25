@@ -39,7 +39,7 @@ matrix:
       services:
       addons:
       node_js:
-        - node
+        - 8.12
       install:
         - cd frontend && npm install
       before_script:
@@ -70,7 +70,7 @@ matrix:
         - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
         - source ~/.bashrc
         # Install node
-        - nvm install node
+        - nvm install 8.12
         - node --version
         - npm --version
         # Install tusd
@@ -134,7 +134,7 @@ matrix:
         - wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.0/install.sh | bash
         - source ~/.bashrc
         # Install node
-        - nvm install node
+        - nvm install 8.12
         - node --version
         - npm --version
       install:
