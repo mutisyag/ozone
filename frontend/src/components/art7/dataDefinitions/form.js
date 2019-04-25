@@ -141,6 +141,9 @@ const getFormArt7 = ($gettext) => {
           label: ''
         },
         {
+          label: ''
+        },
+        {
           label: '',
           tooltip: $gettext('Applicable to all substances, including those contained in mixtures and blends.')
         },
@@ -156,9 +159,6 @@ const getFormArt7 = ($gettext) => {
           label: $gettext('Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
           tooltip: $gettext('Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
-        },
-        {
-          label: ''
         },
         {
           label: ''
@@ -283,6 +283,9 @@ const getFormArt7 = ($gettext) => {
           label: ''
         },
         {
+          label: ''
+        },
+        {
           label: '',
           tooltip: $gettext('Applicable to all substances, including those contained in mixtures and blends.')
         },
@@ -298,9 +301,6 @@ const getFormArt7 = ($gettext) => {
           label: $gettext('Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
           tooltip: $gettext('Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
-        },
-        {
-          label: ''
         },
         {
           label: ''
@@ -412,6 +412,9 @@ const getFormArt7 = ($gettext) => {
             label: ''
           },
           {
+            label: ''
+          },
+          {
             label: $gettext('Production for exempted essential, critical or other uses within your country'),
             colspan: 2,
             tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
@@ -419,9 +422,6 @@ const getFormArt7 = ($gettext) => {
           {
             label: '',
             tooltip: $gettext('Production for supply to Article 5 countries in accordance with Articles 2A 2H and 5')
-          },
-          {
-            label: ''
           },
           {
             label: ''
@@ -658,6 +658,9 @@ const getFormArt7 = ($gettext) => {
             label: ''
           },
           {
+            label: ''
+          },
+          {
             label: '',
             tooltip: 'Exporting country/party/territory for quantities reported as imports OR country/party/territory of destination of exports'
           },
@@ -670,9 +673,6 @@ const getFormArt7 = ($gettext) => {
             label: $gettext('Quantity of exports to non-parties'),
             colspan: 2,
             tooltip: $gettext('See definition of “non parties” in Instruction V.')
-          },
-          {
-            label: ''
           },
           {
             label: ''
@@ -778,6 +778,9 @@ const getFormArt7 = ($gettext) => {
           label: ''
         },
         {
+          label: ''
+        },
+        {
           label: '',
           tooltip: $gettext('Refers to the total amount whether captured or not. The sum of these amounts is not to be reported under data form 3')
         },
@@ -793,9 +796,6 @@ const getFormArt7 = ($gettext) => {
         {
           label: '',
           tooltip: $gettext('Amount destroyed in the facility')
-        },
-        {
-          label: ''
         },
         {
           label: ''

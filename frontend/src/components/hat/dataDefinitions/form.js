@@ -96,14 +96,14 @@ const getFormHat = ($gettext) => {
 
         section_headers: [{
           label: '',
-          colspan: 2
+          colspan: 3
         }, {
           label: $gettext('Quantity of new substances imported for approved subsectors to which the high-ambient-temperature exemption applies'),
           colspan: 3,
           tooltip: $gettext('Only bulk gases for servicing of exempted equipment should be reported here, not gases imported inside pre-charged equipment.')
         }, {
           label: '',
-          colspan: 4
+          colspan: 3
         }
         ],
         comments: {
@@ -185,14 +185,14 @@ const getFormHat = ($gettext) => {
 
         section_headers: [{
           label: '',
-          colspan: 2
+          colspan: 3
         }, {
           label: $gettext('Quantity of new substances produced for approved subsectors to which the high-ambient-temperature exemption applies (production should be for use within the producing country)'),
           colspan: 3,
           tooltip: $gettext('For each substance produced for use in subsectors that may be approved after the assessments under paragraphs 32 and 33 of decision XXVIII/2, please specify the approved subsector. Should the column space be insufficient, further information can be provided in the “comments” box above.')
         }, {
           label: '',
-          colspan: 4
+          colspan: 3
         }
         ],
         comments: {
