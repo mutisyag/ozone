@@ -31,6 +31,7 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
 
     final_states = ['finalized']
     editable_data_states = ['data_entry']
+    incorrect_data_states = []
 
     state = AcceleratedExemptionWorkflowStateDescription()
 

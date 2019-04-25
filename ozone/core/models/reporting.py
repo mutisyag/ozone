@@ -751,12 +751,29 @@ class Submission(models.Model):
         if not self.can_edit_flags(user):
             return []
 
+        # Treat exemption case separately
+        if self.obligation.form_type == 'exemption':
+            if user.is_secretariat:
+                if self.in_initial_state:
+                    return ['flag_emergency',]
+                else:
+                    # Approved flag can only be set after submitting
+                    return ['flag_approved',]
+            return []
+
         flags_list = []
+        # For all other forms, flags are similar to Article 7
         if user.is_secretariat:
+            if not self.filled_by_secretariat and self.in_initial_state:
+                # Secretariat cannot change anything on party submission while
+                # it is in Data Entry!
+                return []
+
             flags_list.extend([
                 'flag_provisional', 'flag_checked_blanks',
                 'flag_has_blanks', 'flag_confirmed_blanks',
             ])
+
             if self.in_initial_state:
                 flags_list.extend([
                     'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -767,10 +784,13 @@ class Submission(models.Model):
                 ])
             else:
                 # valid & approved flags can only be set after submitting
-                flags_list.extend(['flag_valid', 'flag_approved',])
+                flags_list.extend(['flag_valid',])
         else:
             # Party user
             if self.in_initial_state:
+                if self.filled_by_secretariat:
+                    return []
+
                 flags_list.extend([
                     'flag_provisional',
                     'flag_has_reported_a1', 'flag_has_reported_a2',
@@ -805,10 +825,11 @@ class Submission(models.Model):
         Returns True if user can edit at least one remark on this submission.
         This is based purely on submission ownership!
         """
-        # Party users should be able to change party remarks even on
+        # Party users should not be able to change party remarks on
         # secretariat-filled submissions
-        if user.is_secretariat or user.party == self.party:
+        if user.is_secretariat or (user.party == self.party and not self.filled_by_secretariat):
             return not user.is_read_only
+        return False
 
     def can_change_remark(self, user, field_name):
         """
@@ -818,6 +839,15 @@ class Submission(models.Model):
         # First do a quick check based purely on ownership
         if not self.can_edit_remarks(user):
             return False
+
+        # If in initial state, do not allow party to modify OS-filled
+        # submissions (and vice-versa)
+        if self.in_initial_state:
+            if (
+                (user.is_secretariat and not self.filled_by_secretariat)
+                or (not user.is_secretariat and self.filled_by_secretariat)
+            ):
+                return False
 
         if self.current_state not in self.editable_states and field_name.endswith("_party"):
             # The user cannot modify any of the party fields, if the
@@ -924,9 +954,18 @@ class Submission(models.Model):
         return False
 
     def can_upload_files(self, user):
-        if self.has_edit_rights(user):
-            return True
-        return False
+        """
+        Party cannot upload files to secretariat-filled submissions.
+        Secretariat cannot upload files on party submissions if they are in
+        data entry
+        """
+        if user.is_secretariat:
+            if not self.filled_by_secretariat and self.in_initial_state:
+                return False
+        else:
+            if self.filled_by_secretariat or self.party != user.party:
+                return False
+        return not user.is_read_only
 
     @staticmethod
     def get_exempted_fields():
@@ -953,7 +992,10 @@ class Submission(models.Model):
             "flag_has_reported_c3",
             "flag_has_reported_e",
             "flag_has_reported_f",
-            # Remarks, secretariat remarks can be change
+            # Exemption flags
+            "flag_approved",
+            "flag_emergency",
+            # Remarks, secretariat remarks can be changed
             # at any time, while the party remarks cannot.
             # "questionnaire_remarks_party",
             "questionnaire_remarks_secretariat",
@@ -978,7 +1020,6 @@ class Submission(models.Model):
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
-            "flag_approved",
             "submitted_at",
         ]
 
