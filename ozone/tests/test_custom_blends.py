@@ -53,8 +53,8 @@ class BaseCustomBlendsTests(BaseTests):
         submission = SubmissionFactory.create(
             party=self.party,
             obligation=self.obligation,
-            created_by=self.secretariat_user,
-            last_edited_by=self.secretariat_user,
+            created_by=self.party_user,
+            last_edited_by=self.party_user,
             **kwargs,
         )
         return submission
