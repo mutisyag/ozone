@@ -7,7 +7,44 @@ const logMessage = (browser, message) => {
 	})
 }
 
-const login = (browser, username, password) => {
+const showMouse = (browser) => {
+  browser.execute(function() {
+    let app    = document.getElementsByClassName('app')
+    let cursor  = document.createElement('div')
+
+    cursor.setAttribute('id', 'cursor')
+    app[0].appendChild(cursor)
+
+    cursor.style.position = 'absolute'
+    cursor.style.width = '20px'
+    cursor.style.height = '20px'
+    cursor.style.border = '2px solid #000'
+    cursor.style.borderRadius = '50%'
+    cursor.style.boxSizing = 'border-box'
+    cursor.style.transform = 'translate(-50%, -50%)'
+    cursor.style.pointerEvents = 'none'
+    cursor.style.zIndex = '9999'
+
+    document.addEventListener('mousemove', function(e) {
+      let x = e.clientX
+      let y = e.clientY
+
+      cursor.style.left = x + 'px'
+      cursor.style.top = y + 'px'
+      cursor.style.borderColor = '#000'
+    })
+
+    document.addEventListener('click', function(e) {
+      cursor.style.borderColor = 'red'
+    })
+
+    return true;
+  });
+
+  browser.pause(1000)
+}
+
+const login = (browser, username, password, mouse = false) => {
 	logMessage(browser, "Log in with " + username + ":" + password)
 
   browser.url(process.env.VUE_DEV_SERVER_URL)
@@ -15,20 +52,28 @@ const login = (browser, username, password) => {
     .waitForElementVisible('#id_username', 20000)
     .setValue('#id_username', username)
     .setValue('#id_password', password)
-    .waitForElementVisible('button[type="submit"]', 10000)
+    .waitForElementVisible('input[type="submit"]', 10000)
     .pause(1000)
-    .click('button[type="submit"]')
-    .waitForElementVisible('h3', 8000)
+    .click('input[type="submit"]')
+    .waitForElementVisible('#obligation_selector', 8000)
     .assert.urlContains('/reporting/dashboard')
+  
+  if (mouse === true) {
+    showMouse(browser)
+  }
 }
 
 const logout = (browser) => {
 	logMessage(browser, 'Log out')
   browser.useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
+    .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
+    .pause(500)
     .waitForElementVisible('#logout_button', 5000)
+    .moveToElement('#logout_button', undefined, undefined)
     .click('#logout_button')
+    .pause(500)
     .waitForElementVisible('#id_username', 5000)
     .assert.urlContains('/admin/login')
 }
@@ -52,6 +97,7 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
       if (result.status === -1) {
         browser
           /* Open multiselect */
+          .moveToElement(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, undefined, undefined)
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
           .pause(1000)
           /* Check if multiselect is opened */
@@ -59,6 +105,7 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
           /* Check if desired option is visible */
           .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, time)
           /* Select option */
+          .moveToElement(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, undefined, undefined)
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
           .pause(1000)
           /* Press escape if necessary */
@@ -90,6 +137,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
   browser
     .useXpath()
     .waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
+    .moveToElement('//div[contains(@class,"create-submission")]//button', undefined, undefined)
     .click('//div[contains(@class,"create-submission")]//button')
     .pause(5000)
     .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 5000)
@@ -98,6 +146,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
     browser.useXpath()
       .pause(500)
       .waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
+      .moveToElement("//a[@href='/reporting/dashboard']", undefined, undefined)
       .click("//a[@href='/reporting/dashboard']")
       .pause(500)
   } else {
@@ -184,6 +233,7 @@ const datePickerValue = (browser) => {
     .click("//div[@id='date']//input")
     .pause(1000)
     .waitForElementVisible(day, 10000)
+    .moveToElement(day, undefined, undefined)
     .click(day)
     .pause(1000)
 }
@@ -219,11 +269,11 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   /* Add country name (special case) */
   if (submissionInfo.country !== undefined) {
     browser
-      .waitForElementVisible("//form[@class='form-sections']//div[@class='multiselect']", 10000)
-      .click("//form[@class='form-sections']//div[@class='multiselect']")
+      .waitForElementVisible("//form[contains(@class,'form-sections')]//div[@class='multiselect']", 10000)
+      .click("//form[contains(@class,'form-sections')]//div[@class='multiselect']")
       .pause(500)
-      .moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 0, 0)
       .waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+      .moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, undefined, undefined)
       .pause(500)
       .click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
       .pause(500)
@@ -247,7 +297,7 @@ const saveAndFail = (browser, submissionInfo) => {
     .click("//footer[@class='app-footer']//button[@id='save-button']")
     .pause(500)
     .execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-times-circle')]", 20000)
+    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-exclamation-circle')]", 20000)
 }
 /**
  * 	editSubmission(browser)
@@ -280,8 +330,8 @@ const openLookupTable = (browser, page) => {
 
 const openDashboard = (browser) => {
   browser.useXpath()
-    .waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
-    .click("//a[@href='/reporting/dashboard']")
+    .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 10000)
+    .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']")
     .pause(3000)
     .waitForElementVisible('//div[@id="obligation_selector"]', 10000)
     .pause(3000)
@@ -291,8 +341,8 @@ const openDashboard = (browser) => {
 
 const openGeneralInstructions = (browser) => {
   browser.useXpath()
-    .waitForElementVisible("//button[contains(@class, 'btn-info-outline')]", 10000)
-    .click("//button[contains(@class, 'btn-info-outline')]")
+    .waitForElementVisible("//button[contains(@class, 'btn-outline-info')]", 10000)
+    .click("//button[contains(@class, 'btn-outline-info')]")
     .pause(500)
     .execute('window.scrollTo(0,0)')
     .pause(500)
@@ -439,6 +489,8 @@ const filterEntity = (browser, tab, filters) => {
 }
 
 const checkSumbissionInfoFlags = (browser) => {
+  logMessage(browser, 'Checking submission info flags')
+
   const flags = [
     'flag_has_reported_a1', 'flag_has_reported_a2',
     'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
@@ -505,11 +557,13 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
   /* Set fields to 'yes' */
   for (const field of fields) {
     browser
+      .moveToElement(`.field-wrapper #${field} .custom-control:first-of-type label`, undefined, undefined)
       .click(`.field-wrapper #${field} .custom-control:first-of-type label`)
   }
   /* Set restrictedFields to 'no' */
   for (const restrictedField of restrictedFields) {
     browser
+      .moveToElement(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`, undefined, undefined)
       .click(`.field-wrapper #${restrictedField} .custom-control:nth-of-type(2) label`)
   }
 }
@@ -529,17 +583,17 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
   /* Special case */
   // TODO: find a dynamic way
-  if (options[0] === 'F') {
+  if (options[0] === 'F I/II Hydrofluorocarbons (HFCs)') {
     entities.substance.pop()
     entities.substance.push('fii-table')
   }
   /* Correlate tabs with nav names and status column */
   const tabs_header = {
-    has_imports_tab: { name: 'Imports', status_column: 9 },
-    has_exports_tab: { name: 'Exports', status_column: 9 },
-    has_produced_tab: { name: 'Production', status_column: 8 },
-    has_destroyed_tab: { name: 'Destruction', status_column: 6 },
-    has_nonparty_tab: { name: 'Nonparty', status_column: 10 }
+    has_imports_tab: { name: 'Imports' },
+    has_exports_tab: { name: 'Exports' },
+    has_produced_tab: { name: 'Production' },
+    has_destroyed_tab: { name: 'Destruction' },
+    has_nonparty_tab: { name: 'Nonparty' }
   }
   /* Get XPath of aside menu components	*/
   const aside_menu = `//div[@id='${tab}']//aside[@class='aside-menu']`
@@ -583,13 +637,13 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   if (check === true) {
     browser
       /* Check if entity was added and status is invalid */
-      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`, 5000)
-      .moveTo(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]`)
+      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, 5000)
+      .moveTo(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
       .pause(500)
 
-      .click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//td[${tabs_header[tab].status_column}]//span[contains(text(), 'invalid')]`)
+      .click(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`)
       .pause(500)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
@@ -603,7 +657,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   }
 }
 
-const addFacility = (browser, table, tab, row, row_values, start_column, check = false) => {
+const addFacility = (browser, table, tab, row, row_values, check = false) => {
   /* Open desired tab */
   selectTab(browser, 'Emissions')
   browser
@@ -615,18 +669,26 @@ const addFacility = (browser, table, tab, row, row_values, start_column, check =
   if (check === true) {
     browser
       .useXpath()
-      .click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//td[11]//span[contains(text(), 'invalid')]`)
+      .click(`//div[@id='has_emissions_tab']//table[@id='facility-table']//tbody//tr[${row}]//i[contains(@class, 'fa-exclamation-circle')]`)
       .pause(500)
 
     closeAsideMenu(browser, 'has_emissions_tab')
   }
 
   /* Add values to facility */
-  row_values.forEach((value, key) => {
+  for (const field_id of Object.keys(row_values)) {
     browser
       .useCss()
-      .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
-  })
+      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
+        if (result.status !== -1) {
+          browser
+            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
+        } else {
+          browser
+            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
+        }
+      })
+  }
 
   browser
     .pause(500)
@@ -634,7 +696,7 @@ const addFacility = (browser, table, tab, row, row_values, start_column, check =
     .pause(500)
 }
 
-const addValues = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
+const addValues = (browser, table, tab, row, row_values, modal_values) => {
 	logMessage(browser, 'Adding values to entity')
 
   browser
@@ -645,29 +707,28 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
     .useCss()
     .moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
   /* Add values to entity */
-  row_values.forEach((value, key) => {
-    // TODO: find a way to add in textarea also
+  for (const field_id of Object.keys(row_values)) {
     browser
-      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (result) => {
+      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
         if (result.status !== -1) {
           browser
-            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, value)
+            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
         } else {
           browser
-            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, value)
+            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
         }
       })
-  })
+  }
   /* Check if valid */
   browser
-    .click(`#${tab} #${table}  tbody tr:nth-child(${row}) td:nth-child(2)`)
-    .assert.containsText(`#${tab} #${table} .validation-wrapper > span`, 'valid')
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(2)`)
+    .expect.element(`#${tab} #${table} tbody tr:nth-child(${row}) .fa-exclamation-circle`).to.not.be.present
   /* Open edit modal */
-  browser.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.add("hovered")`, () => {
-    browser
-      .pause(500)
-      .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
-  })
+  browser
+    .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
+    .pause(500)
+
   browser
     .waitForElementVisible(`#${tab} .modal-body`, 5000)
     .pause(500)
@@ -682,10 +743,8 @@ const addValues = (browser, table, tab, row, row_values, modal_values, start_col
   /* Close modal */
   browser
     .pause(500)
-    .click(`#${tab} .modal-dialog .close`)
+    .click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
     .pause(500)
-    .execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
-    /* Show app-footer */
     .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
     .pause(500)
 }
@@ -708,22 +767,22 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
     .useCss()
     .moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
   /* Check if row is empty */
-  row_values.forEach((value, key) => {
+  for (const field_id of Object.keys(row_values)) {
     browser
-      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (result) => {
+      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
         if (result.status !== -1) {
           browser
-            .getValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) textarea`, (data) => {
+            .getValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (data) => {
               browser.assert.equal(data.value, '')
             })
         } else {
           browser
-            .getValue(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(${key + start_column}) input`, (data) => {
+            .getValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, (data) => {
               browser.assert.equal(data.value, '')
             })
         }
       })
-  })
+  }
   /* Open edit modal */
   browser.execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.add("hovered")`, () => {
     browser
@@ -771,6 +830,7 @@ const uploadeFile = (browser, filename, filepath) => {
 }
 
 module.exports = {
+  showMouse,
   login,
   logout,
   setMultiSelector,
