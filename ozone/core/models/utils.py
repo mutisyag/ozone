@@ -1,5 +1,5 @@
 import enum
-from decimal import Decimal, ROUND_HALF_UP
+import decimal
 
 
 @enum.unique
@@ -29,19 +29,10 @@ def model_to_dict(instance, fields=None, exclude=None):
 
 
 def round_half_up(x, decimals=0):
-    # First of all create a Decimal representation of x
-    d = Decimal.from_float(x)
-    # Be aware that at this point, for example, if:
-    # d = decimal.Decimal.from_float(9.075)
-    # then
-    # d is Decimal('9.074999999999999289457264239899814128875732421875').
-    #
-    # This means that the smart thing to do is to quantize it to decimals + 1
-    # to obtain Decimal('9.075') *and then* apply the half-up rounding to the
-    # desired number of decimals to obtain 9.08
-    # (in the above example, decimals == 2)
-    exp1 = Decimal(f'1.{"0" * (decimals + 1)}')
-    exp2 = Decimal(f'1.{"0" * (decimals)}') if decimals > 0 else Decimal('1')
-    d = d.quantize(exp1 ,ROUND_HALF_UP).quantize(exp2, ROUND_HALF_UP)
+    # Be aware that some floats are represented with extra decimals, e.g.
+    # 9.075 => Decimal('9.074999999999999289457264239899814128875732421875')
+    # 1171.545 => Decimal('1171.545000000000072759576141834259033203125')
+    # 49.95 => Decimal('49.9500000000000028421709430404007434844970703125')
 
-    return float(d)
+    decimal.getcontext().rounding = decimal.ROUND_HALF_UP
+    return float(round(decimal.Decimal(str(x)), decimals))
