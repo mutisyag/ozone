@@ -34,6 +34,7 @@ export default {
 
   created() {
     this.$store.commit('resetStuff')
+    this.$store.commit('resetDashboardFilters')
     this.doInitialStuff()
   },
 

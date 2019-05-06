@@ -174,6 +174,29 @@ const mutations = {
   setDashboardMySubmissions(state, data) {
     state.dashboard.mySubmissions = data
   },
+
+  resetDashboardFilters(state) {
+    state.dashboard.table = {
+      currentPage: 1,
+      perPage: 10,
+      totalRows: 0,
+      sorting: {
+        sortBy: null,
+        sortDesc: null,
+        sortDirection: 'desc'
+      },
+      filters: {
+        search: null,
+        period_start: null,
+        is_superseded: null,
+        period_end: null,
+        obligation: null,
+        party: null,
+        isCurrent: null
+      }
+    }
+  },
+
   // alerts
 
   setCurrentAlertMessage(state, message) {

@@ -465,7 +465,7 @@ export default {
           return null
         }
         return {
-          text: f.start_date.split('-')[0],
+          text: f.end_date.split('-')[0],
           value: this.getEndDateOfYear(f.end_date)
         }
       }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
@@ -491,7 +491,7 @@ export default {
           return null
         }
         return {
-          text: f.start_date.split('-')[0],
+          text: f.end_date.split('-')[0],
           value: this.getEndDateOfYear(f.end_date)
         }
       }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
