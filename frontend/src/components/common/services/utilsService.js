@@ -1,4 +1,5 @@
 import fromExponential from 'from-exponential/dist/index.min.js'
+import { Decimal } from 'decimal.js'
 
 const getLevel2PropertyValue = (obj, level2PropertyKey) => {
   if (!obj || !level2PropertyKey) {
@@ -135,7 +136,7 @@ const valueConverter = (item) => {
   return parseFloat(item)
 }
 
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
+const doSum = (sumItems) => sumItems.reduce((sum, item) => Decimal.add(valueConverter(item), valueConverter(sum)).toNumber())
 
 export {
   getLevel2PropertyValue,

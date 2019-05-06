@@ -30,6 +30,7 @@
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0-rc.14",
     "core-js": "^2.6.5",
+    "decimal.js": "^10.1.1",
     "flag-icon-css": "^3.3.0",
     "font-awesome": "^4.7.0",
     "from-exponential": "^1.0.0",
