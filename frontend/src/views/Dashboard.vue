@@ -473,8 +473,8 @@ export default {
 
     sortOptionsPeriodFromDataEntry() {
       return 	Array.from(new Set(this.periods.map(f => {
-        if (this.tableOptions.filters.period_end !== null
-				&& f.start_date > this.tableOptions.filters.period_end) {
+        if (this.dataEntryTable.filters.period_end !== null
+				&& f.start_date > this.dataEntryTable.filters.period_end) {
           return null
         }
         return {
@@ -486,8 +486,8 @@ export default {
 
     sortOptionsPeriodToDataEntry() {
       return 	Array.from(new Set(this.periods.map(f => {
-        if (this.tableOptions.filters.period_start !== null
-				&& f.end_date < this.tableOptions.filters.period_start) {
+        if (this.dataEntryTable.filters.period_start !== null
+				&& f.end_date < this.dataEntryTable.filters.period_start) {
           return null
         }
         return {
@@ -496,6 +496,7 @@ export default {
         }
       }).filter(f => f !== null).map(JSON.stringify))).map(JSON.parse).sort((a, b) => parseInt(b.text) - parseInt(a.text))
     },
+
     sortOptionsObligation() {
       return this.obligations
     },
