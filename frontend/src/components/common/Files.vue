@@ -41,7 +41,7 @@
 
       <template slot="actions" slot-scope="cell">
         <div class="d-flex">
-          <b-button variant="outline-danger" @click="deleteFile($event, cell.item.details)">
+          <b-button variant="outline-danger" v-if="$store.getters.can_upload_files" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
           <div class="ml-2" style="min-width:300px" v-if="cell.item.details.percentage">
@@ -73,7 +73,7 @@
             v-b-tooltip
             :title="downloadLabel"
           ><i class="fa fa-download"></i></b-btn>
-          <b-button class="ml-2 mr-2" variant="outline-danger" @click="deleteFile($event, cell.item.details)">
+          <b-button class="ml-2 mr-2" variant="outline-danger" v-if="$store.getters.can_upload_files" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </b-button>
         </template>
