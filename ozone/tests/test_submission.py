@@ -170,7 +170,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_list_all_versions(self):
         submission = self.create_submission()
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         submission.clone(self.secretariat_user)
 
         result = self.client.get(
@@ -184,7 +184,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_list_current_only(self):
         submission = self.create_submission()
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
         clone.info.reporting_officer = 'Test Officer'
         clone.info.postal_address = 'Test Address'
@@ -193,7 +193,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
         clone.save()
         # This should make the first one superseded
-        clone.call_transition("submit", self.secretariat_user)
+        clone.call_transition("finalize", self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -205,7 +205,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_list_superseded_only(self):
         submission = self.create_submission()
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         clone = submission.clone(self.secretariat_user)
         clone.info.reporting_officer = 'Test Officer'
         clone.info.postal_address = 'Test Address'
@@ -214,7 +214,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         clone.submitted_at = datetime.strptime('2019-01-01', "%Y-%m-%d")
         clone.save()
         # This should make the first one superseded
-        clone.call_transition("submit", self.secretariat_user)
+        clone.call_transition("finalize", self.secretariat_user)
 
         result = self.client.get(
             reverse("core:submission-list"),
@@ -265,7 +265,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_clone_versions(self):
         submission = self.create_submission()
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         submission.save()
         new_submission = submission.clone(self.secretariat_user)
 
@@ -282,7 +282,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
     def test_history(self):
         submission = self.create_submission()
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         submission.save()
         for obj in submission.history.all():
             obj.history_user = self.secretariat_user
@@ -295,10 +295,10 @@ class TestSubmissionMethods(BaseSubmissionTest):
         submission.refresh_from_db()
         # Apparently there should be 4 history items; the extra one appears
         # because SubmissionFactory.create() actually does change attributes
-        # on the submission to make "Submit" available!
+        # on the submission to make "Finalize" available!
         self.assertEqual(len(result.json()), 5)
         self.assertEqual(result.json()[-1]['current_state'], 'data_entry')
-        self.assertEqual(result.json()[0]['current_state'], 'submitted')
+        self.assertEqual(result.json()[0]['current_state'], 'finalized')
 
 
 class HATSubmissionMethods(TestSubmissionMethods):

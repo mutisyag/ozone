@@ -164,7 +164,7 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
             self.secretariat_user, **ALL_FLAGS_DATA
         )
         if finalized:
-            submission.call_transition("submit", self.secretariat_user)
+            submission.call_transition("finalize", self.secretariat_user)
             submission.save()
         self.client.login(username=user.username, password='qwe123qwe')
 

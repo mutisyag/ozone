@@ -91,10 +91,10 @@ class SubmissionReportingChannelTests(BaseTests):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['reporting_channel'], 'API')
 
-    def test_secretariat_owner_submitted_submission_and_submission_info(self):
+    def test_secretariat_owner_finalized_submission_and_submission_info(self):
         submission = self.create_submission(
             owner=self.secretariat_user,
-            current_state='submitted',
+            current_state='finalized',
             previous_state='data_entry'
         )
         self.client.login(
@@ -124,10 +124,10 @@ class SubmissionReportingChannelTests(BaseTests):
         self.assertEqual(submission.reporting_channel.name, 'Email')
         self.assertEqual(resp.status_code, 422)
 
-    def test_secretariat_owner_submitted_submission(self):
+    def test_secretariat_owner_finalized_submission(self):
         submission = self.create_submission(
             owner=self.secretariat_user,
-            current_state='submitted',
+            current_state='finalized',
             previous_state='data_entry'
         )
         self.client.login(

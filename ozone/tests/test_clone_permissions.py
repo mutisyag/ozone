@@ -65,7 +65,7 @@ class ClonePermissionsTests(BaseTests):
             created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user,
         )
-        submission._current_state = 'submitted'
+        submission._current_state = 'finalized'
         submission.save()
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.client.post(

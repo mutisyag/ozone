@@ -371,7 +371,7 @@ class TestArt7Import(BaseArt7ImportTest):
             submission=submission, substance=self.substance,
             **ART7_IMPORT_DATA
         )
-        submission.call_transition("submit", self.secretariat_user)
+        submission.call_transition("finalize", self.secretariat_user)
         submission.save()
 
         data = dict(ART7_IMPORT_DATA)
