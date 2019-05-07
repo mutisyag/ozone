@@ -82,6 +82,7 @@ class UserAccountTests(BaseTests):
         expected_data['id'] = self.reporter.pk
         expected_data['username'] = self.reporter.username
         expected_data['party'] = self.reporter.party.pk
+        expected_data['party_name'] = self.reporter.party.name
         expected_data['language'] = self.reporter.language.iso
         expected_data['impersonated_by'] = None
         self.assertEqual(result.json(), expected_data)
