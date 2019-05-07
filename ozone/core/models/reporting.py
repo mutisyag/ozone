@@ -759,7 +759,7 @@ class Submission(models.Model):
             if not user.is_secretariat:
                 return []
             if self.in_initial_state:
-                if self.filled_by_secretariat:
+                if self.workflow_class == 'accelerated_exemption':
                     # For accelerated workflow flag_approved can be set in
                     # initial state.
                     return ['flag_emergency', 'flag_approved']
