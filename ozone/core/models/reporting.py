@@ -573,6 +573,7 @@ class Submission(models.Model):
         """
         Creates workflow instance and set last *persisted* state on it
         """
+
         wf = self.WORKFLOW_MAPPING[self._workflow_class](
             model_instance=self,
             user=user
@@ -1370,7 +1371,6 @@ class Submission(models.Model):
 
         return group_mapping
 
-
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -1455,15 +1455,13 @@ class Submission(models.Model):
             if current_submissions:
                 self.version = current_submissions.latest('version').version + 1
 
-            # On first save we need to instantiate the submission's workflow
-            # TODO: get the proper workflow based on obligation and context
-            # (e.g. fast-tracked secretariat submissions).
-            # For now we will naively instantiate all submissions with
-            # the default article 7 workflow.
+            workflow_class = 'default'
+            if self.filled_by_secretariat:
+                workflow_class = 'accelerated'
             if self.obligation.form_type == 'exemption':
-                self._workflow_class = 'default_exemption'
-            else:
-                self._workflow_class = 'default'
+                workflow_class = workflow_class + '_exemption'
+            self._workflow_class = workflow_class
+
             self._current_state = \
                 self.workflow().state.workflow.initial_state.name
 
