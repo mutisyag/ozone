@@ -754,13 +754,19 @@ class Submission(models.Model):
 
         # Treat exemption case separately
         if self.obligation.form_type == 'exemption':
-            if user.is_secretariat:
-                if self.in_initial_state:
-                    return ['flag_emergency',]
+            if not user.is_secretariat:
+                return []
+            if self.in_initial_state:
+                if self.filled_by_secretariat:
+                    # For accelerated workflow flag_approved can be set in
+                    # initial state.
+                    return ['flag_emergency', 'flag_approved']
                 else:
-                    # Approved flag can only be set after submitting
-                    return ['flag_approved',]
-            return []
+                    return ['flag_emergency',]
+            else:
+                # Approved flag can only be set after submitting (for
+                # default workflow).
+                return ['flag_approved',]
 
         flags_list = []
         # For all other forms, flags are similar to Article 7
