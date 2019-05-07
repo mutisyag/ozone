@@ -52,7 +52,7 @@ module.exports = {
   },
   BU_002: browser => {
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Imports and Production', '2017', '')
+    createSubmission(browser, 'HAT Exemption: Imports and Production', '2017', '')
     deleteSubmissionFake(browser)
     deleteSubmission(browser)
     logout(browser)
@@ -74,7 +74,7 @@ module.exports = {
     const autocomplet = false;
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     openDashboard(browser)
     editSubmission(browser, 1)
     saveAndFail(browser, data.submissionInfo)
@@ -96,7 +96,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     clickQuestionnaireRadios(browser)
     fillSubmissionInfo(browser, submissionInfo)
     saveSubmission(browser, ['Submission Info', 'Questionnaire'])
@@ -120,7 +120,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     saveAndFail(browser, data.submissionInfo)
     fillSubmissionInfo(browser, data, false)
     clickQuestionnaireRadios(browser, [], false)
@@ -150,7 +150,7 @@ module.exports = {
     
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_imports'])
     addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
@@ -182,7 +182,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
 
@@ -216,7 +216,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_produced'])
 
@@ -246,7 +246,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_destroyed'])
 
@@ -280,7 +280,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_nonparty'])
 
@@ -312,7 +312,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')    
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_emissions'])
 
@@ -333,7 +333,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7', '2018', '')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser)
     selectTab(browser, 'Files')
@@ -343,13 +343,13 @@ module.exports = {
   },
   BU_013: browser => {
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Imports and Production', '2018')
+    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
     deleteSubmission(browser)
     browser.end()
   },
   BU_014: browser => {
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Imports and Production', '2018')
+    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
     deleteSubmission(browser)
     browser.end()
   },
@@ -365,7 +365,7 @@ module.exports = {
     }
 
     login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Imports and Production', '2018', '')
+    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     saveSubmission(browser, ['Submission Info'])
     checkSumbissionInfoFlags(browser)
