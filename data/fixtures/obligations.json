@@ -3,97 +3,106 @@
     "model": "core.obligation",
     "pk": 1,
     "fields": {
-      "name": "Article 7",
+      "name": "Article 7 - Data Reporting",
       "description": "Data forms 1-6",
       "_form_type": "art7",
       "has_reporting_periods": true,
-      "is_default": true
+      "is_default": true,
+      "sort_order": 10
     }
   },
   {
     "model": "core.obligation",
     "pk": 2,
     "fields": {
-      "name": "Essential and Critical uses (RAF)",
+      "name": "Accounting for Essential and Critical uses (RAF)",
       "description": "Reporting account format",
       "_form_type": "essencrit",
-      "has_reporting_periods": true
+      "has_reporting_periods": true,
+      "sort_order": 50
     }
   },
   {
     "model": "core.obligation",
     "pk": 3,
     "fields": {
-      "name": "HAT Imports and Production",
+      "name": "HAT Exemption: Imports and Production",
       "description": "Data forms 7 and 8",
       "_form_type": "hat",
-      "has_reporting_periods": true
+      "has_reporting_periods": true,
+      "sort_order": 70
     }
   },
   {
     "model": "core.obligation",
     "pk": 4,
     "fields": {
-      "name": "Transfer or addition of production or consumption",
+      "name": "Article 2 (p. 5, 5 bis, 7) - Transfer of production/consumption rights",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 40
     }
   },
   {
     "model": "core.obligation",
     "pk": 5,
     "fields": {
-      "name": "Laboratory and analytical uses",
+      "name": "Laboratory and analytical uses (dec. VI/9(p. 3) and annex II of 6th MOP report)",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 80
     }
   },
   {
     "model": "core.obligation",
     "pk": 6,
     "fields": {
-      "name": "Process agent uses",
+      "name": "Process agent uses (dec. X/14)",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 60
     }
   },
   {
     "model": "core.obligation",
     "pk": 7,
     "fields": {
-      "name": "Licensing information",
+      "name": "Article 4B - Licensing information",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 30
     }
   },
   {
     "model": "core.obligation",
     "pk": 8,
     "fields": {
-      "name": "Research, development, public awareness and exchange of information",
+      "name": "Article 9 - Research, development, public awareness and exchange of information",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 20
     }
   },
   {
     "model": "core.obligation",
     "pk": 9,
     "fields": {
-      "name": "Requests for changes in reported baseline data",
+      "name": "Requests for changes in baseline data (decs. XIII/15(p. 5) and XV/19)",
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 90
     }
   },
   {
@@ -104,18 +113,20 @@
       "description": "",
       "_form_type": "other",
       "has_reporting_periods": true,
-      "other": true
+      "other": true,
+      "sort_order": 110
     }
   },
   {
     "model": "core.obligation",
     "pk": 11,
     "fields": {
-      "name": "Exemption",
+      "name": "Nominations for Essential- and Critical-use Exemptions (EUN/CUN)",
       "description": "",
       "_form_type": "exemption",
       "has_reporting_periods": true,
-      "other": false
+      "other": false,
+      "sort_order": 100
     }
   }
 ]

@@ -45,7 +45,7 @@ class Command(BaseCommand):
     }
 
     def add_arguments(self, parser):
-        parser.add_argument('user', nargs="?",
+        parser.add_argument('--user', nargs="?",
                             help="Only add this user instead of the default list")
         parser.add_argument('--remove', action="store_true", default=False,
                             help="Remove the users instead of adding them")
@@ -56,6 +56,27 @@ class Command(BaseCommand):
                             help="Create the user as a secretariat, when adding a single user")
         parser.add_argument('-RO', '--is-read-only', action="store_true", default=False,
                             help="Create the user as read-only, when adding a single user")
+        parser.add_argument('--random-passwords', action="store_true", default=False,
+                            help="Set random user passwords")
+        parser.add_argument('--reset-passwords', action="store_true", default=False,
+                            help="Reset all passwords instead of create users")
+        parser.add_argument('--exclude-users', nargs="+",
+                            help="Exclude these users")
+
+    def reset_passwords(self, args, options):
+        all_users = User.objects.exclude(
+            is_superuser=True
+        ).order_by('username')
+        if options['exclude_users']:
+            all_users = all_users.exclude(
+                username__in=options['exclude_users']
+            )
+        for user in all_users:
+            password = user.username if not options['random_passwords'] else (
+                User.objects.make_random_password())
+            user.password = password
+            logger.info("Password reset for user %s/%s", user, password)
+            user.save()
 
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
@@ -68,22 +89,27 @@ class Command(BaseCommand):
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
 
+        if options['reset_passwords']:
+            self.reset_passwords(args, options)
+            return
+
         all_parties = Party.objects.exclude(
             ~Q(parent_party_id=F('id'))
         )
 
         if not options["user"]:
             to_create = copy.deepcopy(self.default_users)
-            for party in all_parties:
-                user = 'party_' + party.abbr.lower()
-                to_create[user] = {}
-                to_create[user]['party'] = party
-                to_create[user]['is_read_only'] = False
-                # And read-only user
-                user_ro = 'party_' + party.abbr.lower() + '_ro'
-                to_create[user_ro] = {}
-                to_create[user_ro]['party'] = party
-                to_create[user_ro]['is_read_only'] = True
+            if not options["is_secretariat"]:
+                for party in all_parties:
+                    user = 'p_' + party.abbr.lower()
+                    to_create[user] = {}
+                    to_create[user]['party'] = party
+                    to_create[user]['is_read_only'] = False
+                    # And read-only user
+                    user_ro = 'p_' + party.abbr.lower() + '_ro'
+                    to_create[user_ro] = {}
+                    to_create[user_ro]['party'] = party
+                    to_create[user_ro]['is_read_only'] = True
         else:
             party = random.choice(all_parties)
             if options['party']:
@@ -102,14 +128,17 @@ class Command(BaseCommand):
         else:
             for user, details in to_create.items():
                 try:
+                    password = user if not options['random_passwords'] else (
+                        User.objects.make_random_password())
+
                     obj = User.objects.create_user(
                         user,
                         email="%s@example.com" % user,
-                        password=user,
+                        password=password,
                         **details,
                     )
                     obj.save()
-                    logger.info("Created user %s %s", user, details)
+                    logger.info("Created user %s/%s", user, password)
                 except IntegrityError:
                     logger.warning("%s already existed, skipping.", user)
                     continue
@@ -122,6 +151,11 @@ class Command(BaseCommand):
                     Permission.objects.filter(
                         content_type__app_label='core'
                     ).exclude(name__startswith='Can chart')
+                    .union(
+                        Permission.objects.filter(
+                            codename='delete_token'
+                        )
+                    )
                 )
                 group.user_set.add(User.objects.get(username='secretariat'))
                 group.user_set.add(User.objects.get(username='secretariat_ro'))

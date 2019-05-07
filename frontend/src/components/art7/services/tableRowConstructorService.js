@@ -339,6 +339,15 @@ export default {
 
         if (this.skipValidation === 2) {
           errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components for all exporting parties'))
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+            errors.push($gettext('The row cannot be empty. Please fill in any column'))
+          }
+        }
+
+        if (this.skipValidation === 1) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+            errors.push($gettext('The row cannot be empty. Please fill in any column'))
+          }
         }
 
         const returnObj = {

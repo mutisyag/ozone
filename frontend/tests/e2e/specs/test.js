@@ -46,12 +46,12 @@ module.exports = {
     console.log('done running cleanup')
   },
   BU_001: browser => {
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     logout(browser)
     browser.end()
   },
   BU_002: browser => {
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'HAT Imports and Production', '2017', '')
     deleteSubmissionFake(browser)
     deleteSubmission(browser)
@@ -73,7 +73,7 @@ module.exports = {
 
     const autocomplet = false;
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     openDashboard(browser)
     editSubmission(browser, 1)
@@ -95,7 +95,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     clickQuestionnaireRadios(browser)
     fillSubmissionInfo(browser, submissionInfo)
@@ -119,7 +119,7 @@ module.exports = {
       reporting_officer: 'test name'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     saveAndFail(browser, data.submissionInfo)
     fillSubmissionInfo(browser, data, false)
@@ -149,7 +149,7 @@ module.exports = {
     }
     
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_imports'])
@@ -181,7 +181,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
@@ -215,7 +215,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_produced'])
@@ -245,7 +245,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_destroyed'])
@@ -279,7 +279,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_nonparty'])
@@ -311,7 +311,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')    
+    login(browser, 'p_ro', 'p_ro')    
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_emissions'])
@@ -332,7 +332,7 @@ module.exports = {
       phone: '+490000000',
       email: 'john.doe@gmail.com'
     }
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser)
@@ -342,13 +342,13 @@ module.exports = {
     browser.end()
   },
   BU_013: browser => {
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'HAT Imports and Production', '2018')
     deleteSubmission(browser)
     browser.end()
   },
   BU_014: browser => {
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'HAT Imports and Production', '2018')
     deleteSubmission(browser)
     browser.end()
@@ -364,7 +364,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'HAT Imports and Production', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     saveSubmission(browser, ['Submission Info'])
@@ -378,7 +378,7 @@ module.exports = {
     const name = 'CFC-11'
     const formula = 'CFCl3'
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     openLookupTable(browser, 'Substances')
     filterEntity(browser, 'controlled_substances', [group, name, formula])
     logout(browser)
@@ -388,7 +388,7 @@ module.exports = {
     const name = 'R-411B'
     const components = 'HCFC-22'
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     openLookupTable(browser, 'Blends')
     filterEntity(browser, 'blends', [name, components])
     logout(browser)
@@ -397,7 +397,7 @@ module.exports = {
   BU_021: browser => {
     const name = 'Afghanistan'
 
-    login(browser, 'party_ro', 'party_ro')
+    login(browser, 'p_ro', 'p_ro')
     openLookupTable(browser, 'Parties')
     filterEntity(browser, 'parties', [name])
     logout(browser)
@@ -505,7 +505,7 @@ module.exports = {
   //     decision_critical_uses: 'Do that'
   //   }
 
-  //   login(browser, 'party_ro', 'party_ro')
+  //   login(browser, 'p_ro', 'p_ro')
   //   createSubmission(browser, 'Article 7', '2018')
   //   clickQuestionnaireRadios(browser, ['has_exports'])
 

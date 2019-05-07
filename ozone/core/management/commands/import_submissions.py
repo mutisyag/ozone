@@ -808,6 +808,8 @@ class Command(BaseCommand):
 
             for row in values[1:]:
                 row = dict(zip(headers, row))
+                if not row["CntryID"]:
+                    continue
                 pk = row["CntryID"].upper(), row["PeriodID"].upper()
                 results[pk][sheet.title].append(row)
 

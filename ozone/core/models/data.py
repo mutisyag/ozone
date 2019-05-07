@@ -1,5 +1,6 @@
 import datetime
 
+from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
@@ -183,7 +184,7 @@ class AggregationMixin:
         certain submission.
         """
         def zero_if_none(value):
-            return value if value is not None else 0.0
+            return Decimal(repr(value)) if value is not None else Decimal(0.0)
 
         if group.is_gwp:
             potential_field = 'substance__gwp'
@@ -198,12 +199,13 @@ class AggregationMixin:
         ).values(potential_field, *field_names)
 
         return {
-            field_name: sum(
+            field_name: float(sum(
                 [
-                    zero_if_none(value[field_name]) * value[potential_field]
+                    zero_if_none(value[field_name]) *
+                    Decimal(repr(value[potential_field]))
                     for value in fields_values
                 ]
-            )
+            ))
             for field_name in field_names
         }
 

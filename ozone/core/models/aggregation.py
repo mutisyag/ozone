@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from django.db import models
 from django.core.validators import MinValueValidator
@@ -278,33 +279,33 @@ class ProdCons(models.Model):
         if self.is_european_union:
             self.calculated_production = None
         else:
-            self.calculated_production = (
-                self.production_all_new
-                - self.production_feedstock
-                - self.production_quarantine
-                - self.get_production_process_agent(party.is_article5)
-                - self.destroyed
-                - self.get_export_feedstock()
-                - self.get_export_process_agent()
+            self.calculated_production = float(
+                Decimal(repr(self.production_all_new))
+                - Decimal(repr(self.production_feedstock))
+                - Decimal(repr(self.production_quarantine))
+                - Decimal(repr(self.get_production_process_agent(party.is_article5)))
+                - Decimal(repr(self.destroyed))
+                - Decimal(repr(self.get_export_feedstock()))
+                - Decimal(repr(self.get_export_process_agent()))
             )
 
         # Consumption
         if party.is_eu_member:
             self.calculated_consumption = None
         else:
-            self.calculated_consumption = (
-                self.production_all_new
-                - self.production_feedstock
-                - self.production_quarantine
-                - self.get_production_process_agent(party.is_article5)
-                - self.destroyed
-                - self.export_new
-                + self.get_export_quarantine()
-                + self.non_party_export
-                + self.import_new
-                - self.import_feedstock
-                - self.get_import_process_agent(party.is_article5)
-                - self.import_quarantine
+            self.calculated_consumption = float(
+                Decimal(repr(self.production_all_new))
+                - Decimal(repr(self.production_feedstock))
+                - Decimal(repr(self.production_quarantine))
+                - Decimal(repr(self.get_production_process_agent(party.is_article5)))
+                - Decimal(repr(self.destroyed))
+                - Decimal(repr(self.export_new))
+                + Decimal(repr(self.get_export_quarantine()))
+                + Decimal(repr(self.non_party_export))
+                + Decimal(repr(self.import_new))
+                - Decimal(repr(self.import_feedstock))
+                - Decimal(repr(self.get_import_process_agent(party.is_article5)))
+                - Decimal(repr(self.import_quarantine))
             )
         self.apply_rounding()
 

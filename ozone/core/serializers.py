@@ -200,11 +200,12 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         many=False,
         slug_field='iso'
     )
+    party_name = serializers.StringRelatedField(source='party', read_only=True)
 
     class Meta:
         model = User
         fields = (
-            'id', 'username', 'is_secretariat', 'is_read_only', 'party',
+            'id', 'username', 'is_secretariat', 'is_read_only', 'party', 'party_name',
             'first_name', 'last_name', 'email', 'language', 'role',
             'impersonated_by',
         )
@@ -413,7 +414,7 @@ class ReportingPeriodSerializer(serializers.ModelSerializer):
 class ObligationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obligation
-        fields = ('id', 'name', 'form_type')
+        fields = ('id', 'name', 'form_type', 'sort_order')
 
 
 class UserSerializer(serializers.ModelSerializer):

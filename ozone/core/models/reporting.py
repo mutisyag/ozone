@@ -112,6 +112,8 @@ class Obligation(models.Model):
         help_text="Used to generate the correct form, based on this obligation."
     )
 
+    sort_order = models.IntegerField(null=True)
+
     other = models.BooleanField(
         default=False,
         help_text="Unset when this obligation is a main one. The main "
