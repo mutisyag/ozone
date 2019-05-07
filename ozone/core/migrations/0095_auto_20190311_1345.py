@@ -24,5 +24,6 @@ class Migration(migrations.Migration):
             name='_form_type',
             field=models.CharField(choices=[('art7', 'ART7'), ('essencrit', 'ESSENCRIT'), ('hat', 'HAT'), ('other', 'OTHER'), ('exemption', 'EXEMPTION')], help_text='Used to generate the correct form, based on this obligation.', max_length=64, null=True),
         ),
-        migrations.RunPython(refresh_obligations),
+        # No need to run this anymore, obligations have been updated in 0019 anyway
+        # migrations.RunPython(refresh_obligations),
     ]

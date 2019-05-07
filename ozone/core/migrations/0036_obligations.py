@@ -49,5 +49,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(refresh_obligations),
+        # No need to run this anymore, obligations have been updated in 0019 anyway
+        # migrations.RunPython(refresh_obligations),
     ]
