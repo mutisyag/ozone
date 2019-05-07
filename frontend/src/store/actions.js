@@ -236,7 +236,7 @@ const actions = {
 
   getDashboardObligations(context) {
     getObligations().then(response => {
-      const obligations_temp = response.data.sort((a, b) => parseInt(a.id) > parseInt(b.id)).map(obligation => ({ value: obligation.id, text: obligation.name, form_type: obligation.form_type }))
+      const obligations_temp = response.data.sort((a, b) => parseInt(a.sort_order) > parseInt(b.sort_order)).map(obligation => ({ value: obligation.id, text: obligation.name, form_type: obligation.form_type }))
       context.commit('setDashboardObligations', obligations_temp)
     })
   },
