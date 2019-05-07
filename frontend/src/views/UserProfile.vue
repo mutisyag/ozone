@@ -27,7 +27,7 @@
       <b-input-group class="mb-2" v-if="!userProfile.is_secretariat">
         <span v-translate>Party:</span>&nbsp;
         <b>
-          <span>{{userProfile.party}}</span>
+          <span>{{userProfile.party_name}}</span>
         </b>
       </b-input-group>
       <b-input-group class="mb-2">
