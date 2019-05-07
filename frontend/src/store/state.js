@@ -14,9 +14,9 @@ const state = {
       perPage: 10,
       totalRows: 0,
       sorting: {
-        sortBy: null,
-        sortDesc: null,
-        sortDirection: 'desc'
+        sortBy: 'updated_at',
+        sortDesc: true,
+        sortDirection: 'asc'
       },
       filters: {
         search: null,

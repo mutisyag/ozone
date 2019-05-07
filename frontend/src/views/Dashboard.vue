@@ -120,6 +120,9 @@
             :fields="dataEntryTableFields"
             :per-page="dataEntryTable.perPage"
             :current-page="dataEntryTable.currentPage"
+            :sort-by.sync="dataEntryTable.sorting.sortBy"
+            :sort-desc.sync="dataEntryTable.sorting.sortDesc"
+            :sort-direction="dataEntryTable.sorting.sortDirection"
             ref="dataEntryTable"
             @filtered="onFiltered"
           >
