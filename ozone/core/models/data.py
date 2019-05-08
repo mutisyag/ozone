@@ -745,7 +745,7 @@ class Article7NonPartyTrade(
             not self.blend and self.substance and self.trade_party
             and self.submission.schema_version != 'legacy'
         ):
-            non_parties = self.get_non_parties(self.substance.group_id)
+            non_parties = self.get_non_parties(self.substance.group)
             if self.trade_party not in non_parties:
                 raise ValidationError(
                     {
