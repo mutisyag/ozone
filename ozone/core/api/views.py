@@ -380,7 +380,8 @@ class AggregationViewSet(viewsets.ModelViewSet):
     serializer_class = AggregationSerializer
 
     filter_backends = (
-        IsOwnerFilterBackend,
+        # Aggregations are public information, no need to enforce filtering
+        # IsOwnerFilterBackend,
         filters.DjangoFilterBackend,
         OrderingFilter,
         SearchFilter,
