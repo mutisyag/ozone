@@ -394,5 +394,41 @@
             "location": "Kigali",
             "description": "Twenty-Eighth Meeting of the Parties - Kigali Amendment"
         }
+    },
+    {
+        "pk": 34,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXIX",
+            "treaty_flag": true,
+            "start_date": "2017-11-20",
+            "end_date": "2016-11-24",
+            "location": "Montreal",
+            "description": "29th Meeting of the Parties and 11th COP Vienna Convention"
+        }
+    },
+    {
+        "pk": 35,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXX",
+            "treaty_flag": true,
+            "start_date": "2018-11-05",
+            "end_date": "2016-11-09",
+            "location": "Quito",
+            "description": "30th Meeting of the Parties"
+        }
+    },
+    {
+        "pk": 36,
+        "model": "core.meeting",
+        "fields": {
+            "meeting_id": "XXXI",
+            "treaty_flag": true,
+            "start_date": "2019-11-04",
+            "end_date": "2019-11-08",
+            "location": "Rome",
+            "description": "31th Meeting of the Parties"
+        }
     }
 ]
