@@ -702,20 +702,17 @@ class Article7NonPartyTrade(
         db_table = 'reporting_art7_npt'
 
     @staticmethod
-    def get_non_parties(group_pk, reporting_period_pk=None):
+    def get_non_parties(group, reporting_period=None):
         """
         Returns qs of Parties for which the group identified by group_pk
         is not a controlled group of substances (i.e. Party had not ratified
         the Treaty that defines the Group as controlled at the date on which
         the given reporting period started).
         """
-        group = Group.objects.get(pk=group_pk)
-        if not reporting_period_pk:
+        if not reporting_period:
             max_date = datetime.date.today()
         else:
-            max_date = ReportingPeriod.objects.get(
-                pk=reporting_period_pk
-            ).start_date
+            max_date = reporting_period.start_date
 
         # Get all the Parties that had ratified the control treaty at that date
         current_ratifications = PartyRatification.objects.filter(
