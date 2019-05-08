@@ -2,7 +2,7 @@ import json
 import os
 
 from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 
@@ -11,7 +11,6 @@ from ozone.core.models import (
     ControlMeasure,
     Group,
     LimitTypes,
-    Party,
     PartyHistory,
     ProdCons,
 )
@@ -37,6 +36,9 @@ class Command(BaseCommand):
             party = party_history.party
             party_type = party_history.party_type
             period = party_history.reporting_period
+            if period.name in ["C1999", "C2000", "C2001"]:
+                # No limits for control periods
+                continue
             print('Processing country {} and period {}'.format(party.name, period.name))
             if period.name == 'BaseA5' or period.name == 'BaseNA5':
                 continue
@@ -49,6 +51,12 @@ class Command(BaseCommand):
                     Q(end_date__gte=period.start_date) | Q(end_date__isnull=True)
                 ).order_by('start_date')
                 for limit_type in LimitTypes:
+                    if limit_type.value in [
+                        LimitTypes.BDN.value,
+                        LimitTypes.PRODUCTION.value
+                    ] and party.abbr == 'ECE':
+                        # No BDN or Prod limits for ECE
+                        continue
                     cm_queryset_by_limit_type = cm_queryset.filter(
                         limit_type=limit_type.value
                     )
@@ -75,6 +83,7 @@ class Command(BaseCommand):
                         )
                         idx += 1
                     elif length == 2:
+                        # This happens for BDN limits, A/I and E/I, Non-A5 parties
                         cm1 = cm_queryset_by_limit_type[0]
                         cm2 = cm_queryset_by_limit_type[1]
                         baseline1 = Baseline.objects.filter(
@@ -132,7 +141,8 @@ class Command(BaseCommand):
                 'limit_type': limit_type,
                 'limit': round_half_up(
                     limit,
-                    ProdCons.get_decimals(period, group, party)
+                    1 if limit_type == LimitTypes.BDN.value
+                    else ProdCons.get_decimals(period, group, party)
                 )
             }
         }

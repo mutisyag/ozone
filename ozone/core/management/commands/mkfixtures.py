@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
 from django.core.serializers.json import DjangoJSONEncoder
@@ -9,7 +9,6 @@ from openpyxl import load_workbook
 
 from ozone.core.models.utils import RatificationTypes
 from ozone.core.models.substance import Blend
-from ozone.core.models.party import Party
 from ozone.core.models.utils import round_half_up
 
 
@@ -583,6 +582,5 @@ class Command(BaseCommand):
         if data['prod_transfers']:
             baseline += data['prod_transfers']
 
-        # Periods will always be between '1995' and '2000'
-        # so we round to 1 decimal.
-        return round_half_up(baseline, 1)
+        # BDN new baselines are rounded to 5 decimals
+        return round_half_up(baseline, 5)
