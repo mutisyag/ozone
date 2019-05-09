@@ -119,6 +119,29 @@ class Group(models.Model):
             id__in=self.get_signing_parties_ids(reporting_period)
         )
 
+    @classmethod
+    def get_groups(cls, party, reporting_period=None):
+        """
+        Returns queryset of all substance Groups that party should report in
+        given reporting_period.
+        """
+        if not reporting_period:
+            max_date = datetime.date.today()
+        else:
+            max_date = reporting_period.start_date
+
+        # Get all the current ratifications of this Party
+        current_ratifications = PartyRatification.objects.filter(
+            entry_into_force_date__lte=max_date,
+            party=party
+        )
+
+        return Group.objects.filter(
+            report_treaty_id__in=current_ratifications.values_list(
+                'treaty_id', flat=True
+            )
+        )
+
     def __str__(self):
         return f'Group {self.group_id}'
 
