@@ -65,7 +65,7 @@ const getFormRaf = ($gettext) => {
           name: 'group',
           colspan: 2
         }, {
-          label: `B<br>${$gettext('Ozone depletig substances')}`,
+          label: `B<br>${$gettext('Ozone depleting substances')}`,
           name: 'substance',
           colspan: 2
         }, {

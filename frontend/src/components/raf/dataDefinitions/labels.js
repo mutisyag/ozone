@@ -15,7 +15,7 @@ const getLabels = ($gettext) => {
       hat_production_remarks_secretariat: $gettext('Comments (Secretariat)'),
       hat_production_remarks_party: $gettext('Comments (Party)'),
       group: $gettext('Annex/group'),
-      substance: $gettext('Ozone depletig substances'),
+      substance: $gettext('Ozone depleting substances'),
       quantity_exempted: $gettext('Amount exempted'),
       quantity_production: $gettext('Amount acquired by production'),
       quantity_import: $gettext('Amount acquired by import & countries of manufacture'),
