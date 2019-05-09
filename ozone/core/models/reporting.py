@@ -536,6 +536,12 @@ class Submission(models.Model):
         help_text="General RAF remarks added by the ozone secretariat"
     )
 
+    # Transfers Remarks
+    transfers_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Transfers remarks added by the ozone secretariat"
+    )
+
     reporting_channel = models.ForeignKey(
         ReportingChannel,
         related_name="submission",
