@@ -125,7 +125,9 @@ class Group(models.Model):
         Returns queryset of all substance Groups that party should report in
         given reporting_period.
         """
-        if not reporting_period:
+        if party is None:
+            return []
+        if reporting_period is None:
             max_date = datetime.date.today()
         else:
             max_date = reporting_period.start_date

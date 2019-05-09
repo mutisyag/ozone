@@ -243,6 +243,13 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
+    @action(detail=True, methods=["get"])
+    def reporting_groups(self, request, pk=None):
+        groups = Group.get_groups(Party.objects.filter(pk=pk).first())
+        if groups:
+            groups = groups.values_list('group_id', flat=True)
+        return Response(groups)
+
 
 class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
     serializer_class = PartyRatificationSerializer
