@@ -1346,6 +1346,14 @@ class Submission(models.Model):
 
         groups = self.get_reported_groups()
 
+        # Create all-zero rows for all reported groups
+        for group in groups:
+            ProdCons.objects.create(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                group=group
+            )
+
         for related in self.RELATED_DATA:
             related_manager = getattr(self, related)
             if related_manager.count() > 0:
