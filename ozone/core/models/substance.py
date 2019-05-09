@@ -78,12 +78,10 @@ class Group(models.Model):
         blank=True
     )
 
-    def get_non_parties(self, reporting_period=None):
+    def get_signing_parties_ids(self, reporting_period=None):
         """
-        Returns qs of Parties for which the group identified by group_pk
-        is not a controlled group of substances (i.e. Party had not ratified
-        the Treaty that defines the Group as controlled at the date on which
-        the given reporting period started).
+        Get list of id's of parties that had ratified, at the start of the given
+        reporting_period, the control treaty for this group.
         """
         if not reporting_period:
             max_date = datetime.date.today()
@@ -95,11 +93,31 @@ class Group(models.Model):
             entry_into_force_date__lte=max_date,
             treaty=self.control_treaty
         )
-        signing_party_ids = set(
+        return set(
             current_ratifications.values_list('party__id', flat=True)
         )
 
-        return Party.objects.exclude(id__in=signing_party_ids)
+    def get_parties(self, reporting_period=None):
+        """
+        Returns qs of Parties for which the group is controlled
+        (i.e. Party had ratified, at the date on which the given
+        reporting_period started, the Treaty that defines the Group as
+        controlled ).
+        """
+        return Party.objects.filter(
+            id__in=self.get_signing_parties_ids(reporting_period)
+        )
+
+    def get_non_parties(self, reporting_period=None):
+        """
+        Returns qs of Parties for which the group is not controlled
+        (i.e. Party had not ratified, at the date on which the given
+        reporting_period started, the Treaty that defines the Group as
+        controlled ).
+        """
+        return Party.objects.exclude(
+            id__in=self.get_signing_parties_ids(reporting_period)
+        )
 
     def __str__(self):
         return f'Group {self.group_id}'
