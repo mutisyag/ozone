@@ -1,3 +1,4 @@
+import datetime
 import enum
 
 from django.core.exceptions import ValidationError
@@ -7,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..exceptions import MethodNotAllowed
 from .meeting import ExemptionTypes, Treaty
-from .party import Party
+from .party import Party, PartyRatification
 
 __all__ = [
     'Annex',
@@ -76,6 +77,29 @@ class Group(models.Model):
         choices=((e.value, e.name) for e in ExemptionTypes),
         blank=True
     )
+
+    def get_non_parties(self, reporting_period=None):
+        """
+        Returns qs of Parties for which the group identified by group_pk
+        is not a controlled group of substances (i.e. Party had not ratified
+        the Treaty that defines the Group as controlled at the date on which
+        the given reporting period started).
+        """
+        if not reporting_period:
+            max_date = datetime.date.today()
+        else:
+            max_date = reporting_period.start_date
+
+        # Get all the Parties that had ratified the control treaty at that date
+        current_ratifications = PartyRatification.objects.filter(
+            entry_into_force_date__lte=max_date,
+            treaty=self.control_treaty
+        )
+        signing_party_ids = set(
+            current_ratifications.values_list('party__id', flat=True)
+        )
+
+        return Party.objects.exclude(id__in=signing_party_ids)
 
     def __str__(self):
         return f'Group {self.group_id}'

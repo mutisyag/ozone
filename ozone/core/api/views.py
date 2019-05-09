@@ -269,10 +269,7 @@ class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
             if period_name else None
 
         for group in groups:
-            queryset = Article7NonPartyTrade.get_non_parties(
-                group,
-                period
-            )
+            queryset = group.get_non_parties(period)
             non_parties_per_group = {
                 id: True for id in queryset.values_list('id', flat=True)
             }
