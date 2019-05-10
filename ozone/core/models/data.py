@@ -1,5 +1,3 @@
-import datetime
-
 from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
@@ -8,10 +6,9 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
-from .legal import ReportingPeriod
-from .party import Party, PartyRatification
+from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
-from .substance import BlendComponent, Substance, Blend, Group
+from .substance import BlendComponent, Substance, Blend
 from .aggregation import ProdCons
 from .utils import model_to_dict
 
@@ -701,33 +698,6 @@ class Article7NonPartyTrade(
     class Meta:
         db_table = 'reporting_art7_npt'
 
-    @staticmethod
-    def get_non_parties(group_pk, reporting_period_pk=None):
-        """
-        Returns qs of Parties for which the group identified by group_pk
-        is not a controlled group of substances (i.e. Party had not ratified
-        the Treaty that defines the Group as controlled at the date on which
-        the given reporting period started).
-        """
-        group = Group.objects.get(pk=group_pk)
-        if not reporting_period_pk:
-            max_date = datetime.date.today()
-        else:
-            max_date = ReportingPeriod.objects.get(
-                pk=reporting_period_pk
-            ).start_date
-
-        # Get all the Parties that had ratified the control treaty at that date
-        current_ratifications = PartyRatification.objects.filter(
-            entry_into_force_date__lte=max_date,
-            treaty=group.control_treaty
-        )
-        signing_party_ids = set(
-            current_ratifications.values_list('party__id', flat=True)
-        )
-
-        return Party.objects.exclude(id__in=signing_party_ids)
-
     def clean(self):
         if self.submission.schema_version != 'legacy' and not (
             self.quantity_import_new
@@ -748,7 +718,7 @@ class Article7NonPartyTrade(
             not self.blend and self.substance and self.trade_party
             and self.submission.schema_version != 'legacy'
         ):
-            non_parties = self.get_non_parties(self.substance.group_id)
+            non_parties = self.substance.group.get_non_parties()
             if self.trade_party not in non_parties:
                 raise ValidationError(
                     {
