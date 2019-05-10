@@ -24,6 +24,17 @@ class ProdCons(models.Model):
     becomes current for that party & reporting period, the values in the entry
     will be automatically updated.
     """
+    # Fields that need to be rounded
+    ROUNDABLE_FIELDS = [
+        'baseline_prod',
+        'baseline_cons',
+        'baseline_bdn',
+        'limit_prod',
+        'limit_cons',
+        'limit_bdn',
+        'calculated_production',
+        'calculated_consumption',
+    ]
 
     party = models.ForeignKey(
         Party,
@@ -177,6 +188,17 @@ class ProdCons(models.Model):
         null=True, blank=True, default=None
     )
 
+    def is_empty(self):
+        """Returns True if aggregation has all-zero values"""
+        for field in self.__class__._meta.get_fields():
+            if (
+                isinstance(field, models.FloatField)
+                and field.name not in self.ROUNDABLE_FIELDS
+                and field.value_from_object(self) != 0.0
+            ):
+                return False
+        return True
+
     @classmethod
     def cleanup_aggregations(cls, party, reporting_period):
         """
@@ -185,9 +207,12 @@ class ProdCons(models.Model):
         For now this simply means deleting all corresponding rows, but this might
         change in the future if more data sources (besides Art7) are added
         """
-        cls.objects.filter(
+        aggregations = cls.objects.filter(
             party=party, reporting_period=reporting_period
-        ).delete()
+        )
+        for aggregation in aggregations:
+            if aggregation.is_empty():
+                aggregation.delete()
 
     @classmethod
     def get_decimals(cls, period, group, party):
@@ -310,28 +335,13 @@ class ProdCons(models.Model):
         self.apply_rounding()
 
     def apply_rounding(self):
-        for field_name in self.get_roundable_fields():
+        for field_name in self.ROUNDABLE_FIELDS:
             field_value = getattr(self, field_name)
             if field_value is not None and field_value != '':
                 decimals = ProdCons.get_decimals(
                     self.reporting_period, self.group, self.party
                 )
                 setattr(self, field_name, round_half_up(field_value, decimals))
-
-    def get_roundable_fields(self):
-        """
-        Returns list of field names which need to be rounded.
-        """
-        return [
-            'baseline_prod',
-            'baseline_cons',
-            'baseline_bdn',
-            'limit_prod',
-            'limit_cons',
-            'limit_bdn',
-            'calculated_production',
-            'calculated_consumption',
-        ]
 
     def populate_limits_and_baselines(self):
         """
