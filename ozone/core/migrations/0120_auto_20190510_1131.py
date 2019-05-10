@@ -41,11 +41,6 @@ class Migration(migrations.Migration):
             name='name_alt',
             field=models.CharField(blank=True, max_length=256),
         ),
-        migrations.AlterField(
-            model_name='submissionfile',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory),
-        ),
         migrations.AddField(
             model_name='party',
             name='mdg_region',
