@@ -1,0 +1,3448 @@
+[
+  {
+    "fields": {
+      "code": "514",
+      "income_type": null,
+      "name": "Developed regions",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "514"
+  },
+  {
+    "fields": {
+      "code": "746",
+      "income_type": null,
+      "name": "Northern Africa",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "746"
+  },
+  {
+    "fields": {
+      "code": "738",
+      "income_type": null,
+      "name": "Sub-Saharan Africa",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "738"
+  },
+  {
+    "fields": {
+      "code": "34",
+      "income_type": null,
+      "name": "Southern Asia",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "34"
+  },
+  {
+    "fields": {
+      "code": "300",
+      "income_type": "High",
+      "name": "Greece",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "300"
+  },
+  {
+    "fields": {
+      "code": "372",
+      "income_type": "High",
+      "name": "Ireland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "372"
+  },
+  {
+    "fields": {
+      "code": "440",
+      "income_type": "Upper-middle",
+      "name": "Lithuania",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "440"
+  },
+  {
+    "fields": {
+      "code": "620",
+      "income_type": "High",
+      "name": "Portugal",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "620"
+  },
+  {
+    "fields": {
+      "code": "705",
+      "income_type": "High",
+      "name": "Slovenia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "705"
+  },
+  {
+    "fields": {
+      "code": "31",
+      "income_type": "Low",
+      "name": "Azerbaijan",
+      "parent_regions": [
+        "172",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "31"
+  },
+  {
+    "fields": {
+      "code": "504",
+      "income_type": "Lower-middle",
+      "name": "Morocco",
+      "parent_regions": [
+        "746",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "504"
+  },
+  {
+    "fields": {
+      "code": "732",
+      "income_type": null,
+      "name": "Western Sahara",
+      "parent_regions": [
+        "746"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "732"
+  },
+  {
+    "fields": {
+      "code": "204",
+      "income_type": "Low",
+      "name": "Benin",
+      "parent_regions": [
+        "738",
+        "199",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "204"
+  },
+  {
+    "fields": {
+      "code": "108",
+      "income_type": "Low",
+      "name": "Burundi",
+      "parent_regions": [
+        "738",
+        "199",
+        "432",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "108"
+  },
+  {
+    "fields": {
+      "code": "140",
+      "income_type": "Low",
+      "name": "Central African Republic",
+      "parent_regions": [
+        "738",
+        "199",
+        "432",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "140"
+  },
+  {
+    "fields": {
+      "code": "178",
+      "income_type": "Low",
+      "name": "Congo",
+      "parent_regions": [
+        "738",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "178"
+  },
+  {
+    "fields": {
+      "code": "226",
+      "income_type": "Low",
+      "name": "Equatorial Guinea",
+      "parent_regions": [
+        "738",
+        "199",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "226"
+  },
+  {
+    "fields": {
+      "code": "426",
+      "income_type": "Low",
+      "name": "Lesotho",
+      "parent_regions": [
+        "738",
+        "199",
+        "432",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "426"
+  },
+  {
+    "fields": {
+      "code": "430",
+      "income_type": "Low",
+      "name": "Liberia",
+      "parent_regions": [
+        "738",
+        "199",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "430"
+  },
+  {
+    "fields": {
+      "code": "729",
+      "income_type": "Low",
+      "name": "Sudan",
+      "parent_regions": [
+        "738",
+        "199",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "729"
+  },
+  {
+    "fields": {
+      "code": "894",
+      "income_type": "Low",
+      "name": "Zambia",
+      "parent_regions": [
+        "738",
+        "199",
+        "432",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "894"
+  },
+  {
+    "fields": {
+      "code": "29",
+      "income_type": null,
+      "name": "Caribbean",
+      "parent_regions": [
+        "419"
+      ],
+      "remark": "Caribbean may be shown as a separate group when feasible and appropriate."
+    },
+    "model": "core.mdgregion",
+    "pk": "29"
+  },
+  {
+    "fields": {
+      "code": "533",
+      "income_type": "High",
+      "name": "Aruba",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "533"
+  },
+  {
+    "fields": {
+      "code": "44",
+      "income_type": "High",
+      "name": "Bahamas",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "44"
+  },
+  {
+    "fields": {
+      "code": "136",
+      "income_type": "High",
+      "name": "Cayman Islands",
+      "parent_regions": [
+        "29"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "136"
+  },
+  {
+    "fields": {
+      "code": "308",
+      "income_type": "Upper-middle",
+      "name": "Grenada",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "308"
+  },
+  {
+    "fields": {
+      "code": "420",
+      "income_type": null,
+      "name": "Latin America",
+      "parent_regions": [
+        "419"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "420"
+  },
+  {
+    "fields": {
+      "code": "340",
+      "income_type": "Lower-middle",
+      "name": "Honduras",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "340"
+  },
+  {
+    "fields": {
+      "code": "484",
+      "income_type": "Upper-middle",
+      "name": "Mexico",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "484"
+  },
+  {
+    "fields": {
+      "code": "408",
+      "income_type": "Low",
+      "name": "Korea, Dem People's Rep of",
+      "parent_regions": [
+        "223"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "408"
+  },
+  {
+    "fields": {
+      "code": "410",
+      "income_type": "High",
+      "name": "Korea, Rep of",
+      "parent_regions": [
+        "223"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "410"
+  },
+  {
+    "fields": {
+      "code": "496",
+      "income_type": "Low",
+      "name": "Mongolia",
+      "parent_regions": [
+        "223",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "496"
+  },
+  {
+    "fields": {
+      "code": "4",
+      "income_type": "Low",
+      "name": "Afghanistan",
+      "parent_regions": [
+        "127",
+        "199",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "4"
+  },
+  {
+    "fields": {
+      "code": "50",
+      "income_type": "Low",
+      "name": "Bangladesh",
+      "parent_regions": [
+        "127",
+        "199"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "50"
+  },
+  {
+    "fields": {
+      "code": "64",
+      "income_type": "Low",
+      "name": "Bhutan",
+      "parent_regions": [
+        "127",
+        "199",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "64"
+  },
+  {
+    "fields": {
+      "code": "356",
+      "income_type": "Low",
+      "name": "India",
+      "parent_regions": [
+        "34"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "356"
+  },
+  {
+    "fields": {
+      "code": "364",
+      "income_type": "Lower-middle",
+      "name": "Iran (Islamic Republic of)",
+      "parent_regions": [
+        "127"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "364"
+  },
+  {
+    "fields": {
+      "code": "462",
+      "income_type": "Lower-middle",
+      "name": "Maldives",
+      "parent_regions": [
+        "127",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "462"
+  },
+  {
+    "fields": {
+      "code": "524",
+      "income_type": "Low",
+      "name": "Nepal",
+      "parent_regions": [
+        "127",
+        "199",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "524"
+  },
+  {
+    "fields": {
+      "code": "586",
+      "income_type": "Low",
+      "name": "Pakistan",
+      "parent_regions": [
+        "127"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "586"
+  },
+  {
+    "fields": {
+      "code": "144",
+      "income_type": "Lower-middle",
+      "name": "Sri Lanka",
+      "parent_regions": [
+        "127"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "144"
+  },
+  {
+    "fields": {
+      "code": "96",
+      "income_type": "High",
+      "name": "Brunei Darussalam",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "96"
+  },
+  {
+    "fields": {
+      "code": "116",
+      "income_type": "Low",
+      "name": "Cambodia",
+      "parent_regions": [
+        "35",
+        "199"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "116"
+  },
+  {
+    "fields": {
+      "code": "360",
+      "income_type": "Low",
+      "name": "Indonesia",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "360"
+  },
+  {
+    "fields": {
+      "code": "418",
+      "income_type": "Low",
+      "name": "Lao People's Democratic Republic",
+      "parent_regions": [
+        "35",
+        "199",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "418"
+  },
+  {
+    "fields": {
+      "code": "458",
+      "income_type": "Upper-middle",
+      "name": "Malaysia",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "458"
+  },
+  {
+    "fields": {
+      "code": "104",
+      "income_type": "Low",
+      "name": "Myanmar",
+      "parent_regions": [
+        "35",
+        "199"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "104"
+  },
+  {
+    "fields": {
+      "code": "608",
+      "income_type": "Lower-middle",
+      "name": "Philippines",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "608"
+  },
+  {
+    "fields": {
+      "code": "702",
+      "income_type": "High",
+      "name": "Singapore",
+      "parent_regions": [
+        "35",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "702"
+  },
+  {
+    "fields": {
+      "code": "764",
+      "income_type": "Lower-middle",
+      "name": "Thailand",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "764"
+  },
+  {
+    "fields": {
+      "code": "626",
+      "income_type": "Low",
+      "name": "Timor-Leste",
+      "parent_regions": [
+        "35",
+        "199",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "626"
+  },
+  {
+    "fields": {
+      "code": "704",
+      "income_type": "Low",
+      "name": "Viet Nam",
+      "parent_regions": [
+        "35"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "704"
+  },
+  {
+    "fields": {
+      "code": "48",
+      "income_type": "High",
+      "name": "Bahrain",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "48"
+  },
+  {
+    "fields": {
+      "code": "196",
+      "income_type": "High",
+      "name": "Cyprus",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "196"
+  },
+  {
+    "fields": {
+      "code": "368",
+      "income_type": "Lower-middle",
+      "name": "Iraq",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "368"
+  },
+  {
+    "fields": {
+      "code": "376",
+      "income_type": "High",
+      "name": "Israel",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "376"
+  },
+  {
+    "fields": {
+      "code": "400",
+      "income_type": "Lower-middle",
+      "name": "Jordan",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "400"
+  },
+  {
+    "fields": {
+      "code": "414",
+      "income_type": "High",
+      "name": "Kuwait",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "414"
+  },
+  {
+    "fields": {
+      "code": "422",
+      "income_type": "Upper-middle",
+      "name": "Lebanon",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "422"
+  },
+  {
+    "fields": {
+      "code": "275",
+      "income_type": "Lower-middle",
+      "name": "Occupied Palestinian Territory",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "275"
+  },
+  {
+    "fields": {
+      "code": "512",
+      "income_type": "Upper-middle",
+      "name": "Oman",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "512"
+  },
+  {
+    "fields": {
+      "code": "634",
+      "income_type": "High",
+      "name": "Qatar",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "634"
+  },
+  {
+    "fields": {
+      "code": "682",
+      "income_type": "Upper-middle",
+      "name": "Saudi Arabia",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "682"
+  },
+  {
+    "fields": {
+      "code": "760",
+      "income_type": "Lower-middle",
+      "name": "Syrian Arab Republic",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "760"
+  },
+  {
+    "fields": {
+      "code": "792",
+      "income_type": "Lower-middle",
+      "name": "Turkey",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "792"
+  },
+  {
+    "fields": {
+      "code": "784",
+      "income_type": "High",
+      "name": "United Arab Emirates",
+      "parent_regions": [
+        "145"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "784"
+  },
+  {
+    "fields": {
+      "code": "887",
+      "income_type": "Low",
+      "name": "Yemen",
+      "parent_regions": [
+        "145",
+        "199"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "887"
+  },
+  {
+    "fields": {
+      "code": "16",
+      "income_type": "Upper-middle",
+      "name": "American Samoa",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "16"
+  },
+  {
+    "fields": {
+      "code": "184",
+      "income_type": null,
+      "name": "Cook Islands",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "184"
+  },
+  {
+    "fields": {
+      "code": "242",
+      "income_type": "Lower-middle",
+      "name": "Fiji",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "242"
+  },
+  {
+    "fields": {
+      "code": "258",
+      "income_type": "High",
+      "name": "French Polynesia",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "258"
+  },
+  {
+    "fields": {
+      "code": "316",
+      "income_type": "High",
+      "name": "Guam",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "316"
+  },
+  {
+    "fields": {
+      "code": "296",
+      "income_type": "Lower-middle",
+      "name": "Kiribati",
+      "parent_regions": [
+        "9",
+        "199",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "296"
+  },
+  {
+    "fields": {
+      "code": "584",
+      "income_type": "Lower-middle",
+      "name": "Marshall Islands",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "584"
+  },
+  {
+    "fields": {
+      "code": "583",
+      "income_type": "Lower-middle",
+      "name": "Micronesia (Fed States of)",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "583"
+  },
+  {
+    "fields": {
+      "code": "520",
+      "income_type": null,
+      "name": "Nauru",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "520"
+  },
+  {
+    "fields": {
+      "code": "570",
+      "income_type": null,
+      "name": "Niue",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "570"
+  },
+  {
+    "fields": {
+      "code": "540",
+      "income_type": "High",
+      "name": "New Caledonia",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "540"
+  },
+  {
+    "fields": {
+      "code": "580",
+      "income_type": "High",
+      "name": "Northern Mariana Islands",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "580"
+  },
+  {
+    "fields": {
+      "code": "585",
+      "income_type": "Upper-middle",
+      "name": "Palau",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "585"
+  },
+  {
+    "fields": {
+      "code": "598",
+      "income_type": "Low",
+      "name": "Papua New Guinea",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "598"
+  },
+  {
+    "fields": {
+      "code": "882",
+      "income_type": "Lower-middle",
+      "name": "Samoa",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "882"
+  },
+  {
+    "fields": {
+      "code": "90",
+      "income_type": "Low",
+      "name": "Solomon Islands",
+      "parent_regions": [
+        "9",
+        "199",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "90"
+  },
+  {
+    "fields": {
+      "code": "772",
+      "income_type": null,
+      "name": "Tokelau",
+      "parent_regions": [
+        "9"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "772"
+  },
+  {
+    "fields": {
+      "code": "776",
+      "income_type": "Lower-middle",
+      "name": "Tonga",
+      "parent_regions": [
+        "9",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "776"
+  },
+  {
+    "fields": {
+      "code": "798",
+      "income_type": null,
+      "name": "Tuvalu",
+      "parent_regions": [
+        "9",
+        "199",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "798"
+  },
+  {
+    "fields": {
+      "code": "548",
+      "income_type": "Lower-middle",
+      "name": "Vanuatu",
+      "parent_regions": [
+        "9",
+        "199",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "548"
+  },
+  {
+    "fields": {
+      "code": "24",
+      "income_type": null,
+      "name": "Angola",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "24"
+  },
+  {
+    "fields": {
+      "code": "854",
+      "income_type": null,
+      "name": "Burkina Faso",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "854"
+  },
+  {
+    "fields": {
+      "code": "148",
+      "income_type": null,
+      "name": "Chad",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "148"
+  },
+  {
+    "fields": {
+      "code": "174",
+      "income_type": null,
+      "name": "Comoros",
+      "parent_regions": [
+        "199",
+        "738",
+        "722",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "174"
+  },
+  {
+    "fields": {
+      "code": "180",
+      "income_type": null,
+      "name": "Democratic Republic of the Congo",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "180"
+  },
+  {
+    "fields": {
+      "code": "262",
+      "income_type": null,
+      "name": "Djibouti",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "262"
+  },
+  {
+    "fields": {
+      "code": "232",
+      "income_type": null,
+      "name": "Eritrea",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "232"
+  },
+  {
+    "fields": {
+      "code": "231",
+      "income_type": null,
+      "name": "Ethiopia",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "231"
+  },
+  {
+    "fields": {
+      "code": "270",
+      "income_type": null,
+      "name": "Gambia",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "270"
+  },
+  {
+    "fields": {
+      "code": "324",
+      "income_type": null,
+      "name": "Guinea",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "324"
+  },
+  {
+    "fields": {
+      "code": "624",
+      "income_type": null,
+      "name": "Guinea-Bissau",
+      "parent_regions": [
+        "199",
+        "738",
+        "722",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "624"
+  },
+  {
+    "fields": {
+      "code": "332",
+      "income_type": null,
+      "name": "Haiti",
+      "parent_regions": [
+        "199",
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "332"
+  },
+  {
+    "fields": {
+      "code": "450",
+      "income_type": null,
+      "name": "Madagascar",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "450"
+  },
+  {
+    "fields": {
+      "code": "454",
+      "income_type": null,
+      "name": "Malawi",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "454"
+  },
+  {
+    "fields": {
+      "code": "466",
+      "income_type": null,
+      "name": "Mali",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "466"
+  },
+  {
+    "fields": {
+      "code": "478",
+      "income_type": null,
+      "name": "Mauritania",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "478"
+  },
+  {
+    "fields": {
+      "code": "508",
+      "income_type": null,
+      "name": "Mozambique",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "508"
+  },
+  {
+    "fields": {
+      "code": "562",
+      "income_type": null,
+      "name": "Niger",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "562"
+  },
+  {
+    "fields": {
+      "code": "646",
+      "income_type": null,
+      "name": "Rwanda",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "646"
+  },
+  {
+    "fields": {
+      "code": "678",
+      "income_type": null,
+      "name": "Sao Tome and Principe",
+      "parent_regions": [
+        "199",
+        "738",
+        "722",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "678"
+  },
+  {
+    "fields": {
+      "code": "686",
+      "income_type": null,
+      "name": "Senegal",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "686"
+  },
+  {
+    "fields": {
+      "code": "694",
+      "income_type": null,
+      "name": "Sierra Leone",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "694"
+  },
+  {
+    "fields": {
+      "code": "706",
+      "income_type": null,
+      "name": "Somalia",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "706"
+  },
+  {
+    "fields": {
+      "code": "768",
+      "income_type": null,
+      "name": "Togo",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "768"
+  },
+  {
+    "fields": {
+      "code": "800",
+      "income_type": null,
+      "name": "Uganda",
+      "parent_regions": [
+        "199",
+        "432",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "800"
+  },
+  {
+    "fields": {
+      "code": "834",
+      "income_type": null,
+      "name": "United Republic of Tanzania",
+      "parent_regions": [
+        "199",
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "834"
+  },
+  {
+    "fields": {
+      "code": "51",
+      "income_type": null,
+      "name": "Armenia",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "51"
+  },
+  {
+    "fields": {
+      "code": "68",
+      "income_type": null,
+      "name": "Bolivia",
+      "parent_regions": [
+        "432",
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "68"
+  },
+  {
+    "fields": {
+      "code": "72",
+      "income_type": null,
+      "name": "Botswana",
+      "parent_regions": [
+        "432",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "72"
+  },
+  {
+    "fields": {
+      "code": "398",
+      "income_type": null,
+      "name": "Kazakhstan",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "398"
+  },
+  {
+    "fields": {
+      "code": "417",
+      "income_type": null,
+      "name": "Kyrgyzstan",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "417"
+  },
+  {
+    "fields": {
+      "code": "600",
+      "income_type": null,
+      "name": "Paraguay",
+      "parent_regions": [
+        "432",
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "600"
+  },
+  {
+    "fields": {
+      "code": "498",
+      "income_type": null,
+      "name": "Republic of Moldova",
+      "parent_regions": [
+        "432",
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "498"
+  },
+  {
+    "fields": {
+      "code": "748",
+      "income_type": null,
+      "name": "Swaziland",
+      "parent_regions": [
+        "432",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "748"
+  },
+  {
+    "fields": {
+      "code": "762",
+      "income_type": null,
+      "name": "Tajikistan",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "762"
+  },
+  {
+    "fields": {
+      "code": "807",
+      "income_type": null,
+      "name": "TFYR of Macedonia",
+      "parent_regions": [
+        "432",
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "807"
+  },
+  {
+    "fields": {
+      "code": "795",
+      "income_type": null,
+      "name": "Turkmenistan",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "795"
+  },
+  {
+    "fields": {
+      "code": "860",
+      "income_type": null,
+      "name": "Uzbekistan",
+      "parent_regions": [
+        "432",
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "860"
+  },
+  {
+    "fields": {
+      "code": "716",
+      "income_type": null,
+      "name": "Zimbabwe",
+      "parent_regions": [
+        "432",
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "716"
+  },
+  {
+    "fields": {
+      "code": "28",
+      "income_type": null,
+      "name": "Antigua and Barbuda",
+      "parent_regions": [
+        "722",
+        "29"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "28"
+  },
+  {
+    "fields": {
+      "code": "515",
+      "income_type": null,
+      "name": "Developing regions",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "515"
+  },
+  {
+    "fields": {
+      "code": "419",
+      "income_type": null,
+      "name": "Latin America and the Caribbean",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "419"
+  },
+  {
+    "fields": {
+      "code": "30",
+      "income_type": null,
+      "name": "Eastern Asia",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "30"
+  },
+  {
+    "fields": {
+      "code": "223",
+      "income_type": null,
+      "name": "Eastern Asia excluding China",
+      "parent_regions": [
+        "30"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "223"
+  },
+  {
+    "fields": {
+      "code": "35",
+      "income_type": null,
+      "name": "South-eastern Asia",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "35"
+  },
+  {
+    "fields": {
+      "code": "145",
+      "income_type": null,
+      "name": "Western Asia",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "145"
+  },
+  {
+    "fields": {
+      "code": "9",
+      "income_type": null,
+      "name": "Oceania",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "9"
+  },
+  {
+    "fields": {
+      "code": "432",
+      "income_type": null,
+      "name": "Landlocked developing countries (LLDCs)",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "432"
+  },
+  {
+    "fields": {
+      "code": "722",
+      "income_type": null,
+      "name": "Small island developing States (SIDS)",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "722"
+  },
+  {
+    "fields": {
+      "code": "199",
+      "income_type": null,
+      "name": "Least developed countries (LDCs)",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "199"
+  },
+  {
+    "fields": {
+      "code": "20",
+      "income_type": "High",
+      "name": "Andorra",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "20"
+  },
+  {
+    "fields": {
+      "code": "36",
+      "income_type": "High",
+      "name": "Australia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "36"
+  },
+  {
+    "fields": {
+      "code": "40",
+      "income_type": "High",
+      "name": "Austria",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "40"
+  },
+  {
+    "fields": {
+      "code": "56",
+      "income_type": "High",
+      "name": "Belgium",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "56"
+  },
+  {
+    "fields": {
+      "code": "60",
+      "income_type": "High",
+      "name": "Bermuda",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "60"
+  },
+  {
+    "fields": {
+      "code": "124",
+      "income_type": "High",
+      "name": "Canada",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "124"
+  },
+  {
+    "fields": {
+      "code": "191",
+      "income_type": "Upper-middle",
+      "name": "Croatia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "191"
+  },
+  {
+    "fields": {
+      "code": "203",
+      "income_type": "Upper-middle",
+      "name": "Czech Republic",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "203"
+  },
+  {
+    "fields": {
+      "code": "208",
+      "income_type": "High",
+      "name": "Denmark",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "208"
+  },
+  {
+    "fields": {
+      "code": "233",
+      "income_type": "Upper-middle",
+      "name": "Estonia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "233"
+  },
+  {
+    "fields": {
+      "code": "234",
+      "income_type": "High",
+      "name": "Faeroe Islands",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "234"
+  },
+  {
+    "fields": {
+      "code": "246",
+      "income_type": "High",
+      "name": "Finland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "246"
+  },
+  {
+    "fields": {
+      "code": "250",
+      "income_type": "High",
+      "name": "France",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "250"
+  },
+  {
+    "fields": {
+      "code": "276",
+      "income_type": "High",
+      "name": "Germany",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "276"
+  },
+  {
+    "fields": {
+      "code": "304",
+      "income_type": "High",
+      "name": "Greenland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "304"
+  },
+  {
+    "fields": {
+      "code": "348",
+      "income_type": "Upper-middle",
+      "name": "Hungary",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "348"
+  },
+  {
+    "fields": {
+      "code": "352",
+      "income_type": "High",
+      "name": "Iceland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "352"
+  },
+  {
+    "fields": {
+      "code": "833",
+      "income_type": "Upper-middle",
+      "name": "Isle of Man",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "833"
+  },
+  {
+    "fields": {
+      "code": "380",
+      "income_type": "High",
+      "name": "Italy",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "380"
+  },
+  {
+    "fields": {
+      "code": "392",
+      "income_type": "High",
+      "name": "Japan",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "392"
+  },
+  {
+    "fields": {
+      "code": "428",
+      "income_type": "Upper-middle",
+      "name": "Latvia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "428"
+  },
+  {
+    "fields": {
+      "code": "438",
+      "income_type": "High",
+      "name": "Liechtenstein",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "438"
+  },
+  {
+    "fields": {
+      "code": "442",
+      "income_type": "High",
+      "name": "Luxembourg",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "442"
+  },
+  {
+    "fields": {
+      "code": "470",
+      "income_type": "Upper-middle",
+      "name": "Malta",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "470"
+  },
+  {
+    "fields": {
+      "code": "492",
+      "income_type": "High",
+      "name": "Monaco",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "492"
+  },
+  {
+    "fields": {
+      "code": "528",
+      "income_type": "High",
+      "name": "Netherlands",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "528"
+  },
+  {
+    "fields": {
+      "code": "554",
+      "income_type": "High",
+      "name": "New Zealand",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "554"
+  },
+  {
+    "fields": {
+      "code": "578",
+      "income_type": "High",
+      "name": "Norway",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "578"
+  },
+  {
+    "fields": {
+      "code": "616",
+      "income_type": "Upper-middle",
+      "name": "Poland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "616"
+  },
+  {
+    "fields": {
+      "code": "674",
+      "income_type": "High",
+      "name": "San Marino",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "674"
+  },
+  {
+    "fields": {
+      "code": "703",
+      "income_type": "Upper-middle",
+      "name": "Slovakia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "703"
+  },
+  {
+    "fields": {
+      "code": "724",
+      "income_type": "High",
+      "name": "Spain",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "724"
+  },
+  {
+    "fields": {
+      "code": "752",
+      "income_type": "High",
+      "name": "Sweden",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "752"
+  },
+  {
+    "fields": {
+      "code": "756",
+      "income_type": "High",
+      "name": "Switzerland",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "756"
+  },
+  {
+    "fields": {
+      "code": "826",
+      "income_type": "High",
+      "name": "United Kingdom",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "826"
+  },
+  {
+    "fields": {
+      "code": "840",
+      "income_type": "High",
+      "name": "United States",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "840"
+  },
+  {
+    "fields": {
+      "code": "97",
+      "income_type": null,
+      "name": "European community",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "97"
+  },
+  {
+    "fields": {
+      "code": "8",
+      "income_type": "Lower-middle",
+      "name": "Albania",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "8"
+  },
+  {
+    "fields": {
+      "code": "70",
+      "income_type": "Lower-middle",
+      "name": "Bosnia and Herzegovina",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "70"
+  },
+  {
+    "fields": {
+      "code": "100",
+      "income_type": "Lower-middle",
+      "name": "Bulgaria",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "100"
+  },
+  {
+    "fields": {
+      "code": "642",
+      "income_type": "Lower-middle",
+      "name": "Romania",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "642"
+  },
+  {
+    "fields": {
+      "code": "112",
+      "income_type": "Lower-middle",
+      "name": "Belarus",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "112"
+  },
+  {
+    "fields": {
+      "code": "643",
+      "income_type": "Lower-middle",
+      "name": "Russian Federation",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "643"
+  },
+  {
+    "fields": {
+      "code": "804",
+      "income_type": "Low",
+      "name": "Ukraine",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "804"
+  },
+  {
+    "fields": {
+      "code": "172",
+      "income_type": null,
+      "name": "Caucasus and Central Asia",
+      "parent_regions": [
+        "0"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "172"
+  },
+  {
+    "fields": {
+      "code": "268",
+      "income_type": "Low",
+      "name": "Georgia",
+      "parent_regions": [
+        "172"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "268"
+  },
+  {
+    "fields": {
+      "code": "12",
+      "income_type": "Lower-middle",
+      "name": "Algeria",
+      "parent_regions": [
+        "746",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "12"
+  },
+  {
+    "fields": {
+      "code": "818",
+      "income_type": "Lower-middle",
+      "name": "Egypt",
+      "parent_regions": [
+        "746",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "818"
+  },
+  {
+    "fields": {
+      "code": "434",
+      "income_type": "Upper-middle",
+      "name": "Libyan Arab Jamahiriya",
+      "parent_regions": [
+        "746",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "434"
+  },
+  {
+    "fields": {
+      "code": "788",
+      "income_type": "Lower-middle",
+      "name": "Tunisia",
+      "parent_regions": [
+        "746",
+        "ECA-NA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "788"
+  },
+  {
+    "fields": {
+      "code": "120",
+      "income_type": "Low",
+      "name": "Cameroon",
+      "parent_regions": [
+        "738",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "120"
+  },
+  {
+    "fields": {
+      "code": "132",
+      "income_type": "Lower-middle",
+      "name": "Cape Verde",
+      "parent_regions": [
+        "738",
+        "722",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "132"
+  },
+  {
+    "fields": {
+      "code": "384",
+      "income_type": "Low",
+      "name": "Cote d'Ivoire",
+      "parent_regions": [
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "384"
+  },
+  {
+    "fields": {
+      "code": "266",
+      "income_type": "Upper-middle",
+      "name": "Gabon",
+      "parent_regions": [
+        "738",
+        "ECA-CA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "266"
+  },
+  {
+    "fields": {
+      "code": "288",
+      "income_type": "Low",
+      "name": "Ghana",
+      "parent_regions": [
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "288"
+  },
+  {
+    "fields": {
+      "code": "404",
+      "income_type": "Low",
+      "name": "Kenya",
+      "parent_regions": [
+        "738",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "404"
+  },
+  {
+    "fields": {
+      "code": "480",
+      "income_type": "Upper-middle",
+      "name": "Mauritius",
+      "parent_regions": [
+        "738",
+        "722",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "480"
+  },
+  {
+    "fields": {
+      "code": "175",
+      "income_type": "Upper-middle",
+      "name": "Mayotte",
+      "parent_regions": [
+        "738"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "175"
+  },
+  {
+    "fields": {
+      "code": "516",
+      "income_type": "Lower-middle",
+      "name": "Namibia",
+      "parent_regions": [
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "516"
+  },
+  {
+    "fields": {
+      "code": "566",
+      "income_type": "Low",
+      "name": "Nigeria",
+      "parent_regions": [
+        "738",
+        "ECA-WA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "566"
+  },
+  {
+    "fields": {
+      "code": "638",
+      "income_type": null,
+      "name": "Réunion",
+      "parent_regions": [
+        "738"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "638"
+  },
+  {
+    "fields": {
+      "code": "690",
+      "income_type": "Upper-middle",
+      "name": "Seychelles",
+      "parent_regions": [
+        "738",
+        "722",
+        "ECA-EA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "690"
+  },
+  {
+    "fields": {
+      "code": "710",
+      "income_type": "Lower-middle",
+      "name": "South Africa",
+      "parent_regions": [
+        "738",
+        "ECA-SA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "710"
+  },
+  {
+    "fields": {
+      "code": "660",
+      "income_type": null,
+      "name": "Anguilla",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "660"
+  },
+  {
+    "fields": {
+      "code": "52",
+      "income_type": "Upper-middle",
+      "name": "Barbados",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "52"
+  },
+  {
+    "fields": {
+      "code": "92",
+      "income_type": null,
+      "name": "British Virgin Islands",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "92"
+  },
+  {
+    "fields": {
+      "code": "192",
+      "income_type": "Lower-middle",
+      "name": "Cuba",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "192"
+  },
+  {
+    "fields": {
+      "code": "212",
+      "income_type": "Upper-middle",
+      "name": "Dominica",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "212"
+  },
+  {
+    "fields": {
+      "code": "214",
+      "income_type": "Lower-middle",
+      "name": "Dominican Republic",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "214"
+  },
+  {
+    "fields": {
+      "code": "312",
+      "income_type": null,
+      "name": "Guadeloupe",
+      "parent_regions": [
+        "29"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "312"
+  },
+  {
+    "fields": {
+      "code": "388",
+      "income_type": "Lower-middle",
+      "name": "Jamaica",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "388"
+  },
+  {
+    "fields": {
+      "code": "474",
+      "income_type": null,
+      "name": "Martinique",
+      "parent_regions": [
+        "29"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "474"
+  },
+  {
+    "fields": {
+      "code": "500",
+      "income_type": null,
+      "name": "Montserrat",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "500"
+  },
+  {
+    "fields": {
+      "code": "530",
+      "income_type": "High",
+      "name": "Netherlands Antilles",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "530"
+  },
+  {
+    "fields": {
+      "code": "630",
+      "income_type": "Upper-middle",
+      "name": "Puerto Rico",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "630"
+  },
+  {
+    "fields": {
+      "code": "659",
+      "income_type": "Upper-middle",
+      "name": "Saint Kitts and Nevis",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "659"
+  },
+  {
+    "fields": {
+      "code": "662",
+      "income_type": "Upper-middle",
+      "name": "Saint Lucia",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "662"
+  },
+  {
+    "fields": {
+      "code": "670",
+      "income_type": "Lower-middle",
+      "name": "St Vincent & the Grenadines",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "670"
+  },
+  {
+    "fields": {
+      "code": "780",
+      "income_type": "Upper-middle",
+      "name": "Trinidad and Tobago",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "780"
+  },
+  {
+    "fields": {
+      "code": "796",
+      "income_type": null,
+      "name": "Turks and Caicos Islands",
+      "parent_regions": [
+        "29"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "796"
+  },
+  {
+    "fields": {
+      "code": "850",
+      "income_type": "High",
+      "name": "US Virgin Islands",
+      "parent_regions": [
+        "29",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "850"
+  },
+  {
+    "fields": {
+      "code": "32",
+      "income_type": "Upper-middle",
+      "name": "Argentina",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "32"
+  },
+  {
+    "fields": {
+      "code": "84",
+      "income_type": "Lower-middle",
+      "name": "Belize",
+      "parent_regions": [
+        "420",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "84"
+  },
+  {
+    "fields": {
+      "code": "76",
+      "income_type": "Upper-middle",
+      "name": "Brazil",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "76"
+  },
+  {
+    "fields": {
+      "code": "152",
+      "income_type": "Upper-middle",
+      "name": "Chile",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "152"
+  },
+  {
+    "fields": {
+      "code": "170",
+      "income_type": "Lower-middle",
+      "name": "Colombia",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "170"
+  },
+  {
+    "fields": {
+      "code": "188",
+      "income_type": "Upper-middle",
+      "name": "Costa Rica",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "188"
+  },
+  {
+    "fields": {
+      "code": "218",
+      "income_type": "Lower-middle",
+      "name": "Ecuador",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "218"
+  },
+  {
+    "fields": {
+      "code": "222",
+      "income_type": "Lower-middle",
+      "name": "El Salvador",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "222"
+  },
+  {
+    "fields": {
+      "code": "238",
+      "income_type": null,
+      "name": "Falkland Islands (Malvinas)",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "238"
+  },
+  {
+    "fields": {
+      "code": "254",
+      "income_type": null,
+      "name": "French Guiana",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "254"
+  },
+  {
+    "fields": {
+      "code": "320",
+      "income_type": "Lower-middle",
+      "name": "Guatemala",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "320"
+  },
+  {
+    "fields": {
+      "code": "328",
+      "income_type": "Lower-middle",
+      "name": "Guyana",
+      "parent_regions": [
+        "420",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "328"
+  },
+  {
+    "fields": {
+      "code": "558",
+      "income_type": "Low",
+      "name": "Nicaragua",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "558"
+  },
+  {
+    "fields": {
+      "code": "591",
+      "income_type": "Upper-middle",
+      "name": "Panama",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "591"
+  },
+  {
+    "fields": {
+      "code": "604",
+      "income_type": "Lower-middle",
+      "name": "Peru",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "604"
+  },
+  {
+    "fields": {
+      "code": "740",
+      "income_type": "Lower-middle",
+      "name": "Suriname",
+      "parent_regions": [
+        "420",
+        "722"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "740"
+  },
+  {
+    "fields": {
+      "code": "858",
+      "income_type": "Upper-middle",
+      "name": "Uruguay",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "858"
+  },
+  {
+    "fields": {
+      "code": "862",
+      "income_type": "Upper-middle",
+      "name": "Venezuela",
+      "parent_regions": [
+        "420"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "862"
+  },
+  {
+    "fields": {
+      "code": "156",
+      "income_type": "Lower-middle",
+      "name": "China",
+      "parent_regions": [
+        "30"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "156"
+  },
+  {
+    "fields": {
+      "code": "344",
+      "income_type": "High",
+      "name": "Hong Kong SAR of China",
+      "parent_regions": [
+        "223"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "344"
+  },
+  {
+    "fields": {
+      "code": "446",
+      "income_type": "High",
+      "name": "Macao SAR of China",
+      "parent_regions": [
+        "223"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "446"
+  },
+  {
+    "fields": {
+      "code": "499",
+      "income_type": null,
+      "name": "Montenegro",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "499"
+  },
+  {
+    "fields": {
+      "code": "688",
+      "income_type": null,
+      "name": "Serbia",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "688"
+  },
+  {
+    "fields": {
+      "code": "127",
+      "income_type": null,
+      "name": "Southern Asia excluding India",
+      "parent_regions": [
+        "34"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "127"
+  },
+  {
+    "fields": {
+      "code": "336",
+      "income_type": "High",
+      "name": "Holy See",
+      "parent_regions": [
+        "514"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "336"
+  },
+  {
+    "fields": {
+      "code": "0",
+      "income_type": null,
+      "name": "WORLD",
+      "parent_regions": [],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "0"
+  },
+  {
+    "fields": {
+      "code": "ECA",
+      "income_type": null,
+      "name": "ECA Regions",
+      "parent_regions": [
+        "515"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA"
+  },
+  {
+    "fields": {
+      "code": "ECA-CA",
+      "income_type": null,
+      "name": "ECA Regions - Central Africa",
+      "parent_regions": [
+        "ECA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA-CA"
+  },
+  {
+    "fields": {
+      "code": "ECA-EA",
+      "income_type": null,
+      "name": "ECA Regions - Eastern Africa",
+      "parent_regions": [
+        "ECA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA-EA"
+  },
+  {
+    "fields": {
+      "code": "ECA-NA",
+      "income_type": null,
+      "name": "ECA Regions - North Africa",
+      "parent_regions": [
+        "ECA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA-NA"
+  },
+  {
+    "fields": {
+      "code": "ECA-SA",
+      "income_type": null,
+      "name": "ECA Regions - Southern Africa",
+      "parent_regions": [
+        "ECA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA-SA"
+  },
+  {
+    "fields": {
+      "code": "ECA-WA",
+      "income_type": null,
+      "name": "ECA Regions - West Africa",
+      "parent_regions": [
+        "ECA"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "ECA-WA"
+  },
+  {
+    "fields": {
+      "code": "728",
+      "income_type": null,
+      "name": "South Sudan",
+      "parent_regions": [
+        "738",
+        "ECA-EA",
+        "199",
+        "432"
+      ],
+      "remark": ""
+    },
+    "model": "core.mdgregion",
+    "pk": "728"
+  }
+]

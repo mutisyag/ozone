@@ -1,4 +1,5 @@
 import datetime
+import enum
 
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
@@ -9,6 +10,7 @@ from .utils import RatificationTypes
 
 
 __all__ = [
+    'MDGRegion',
     'Region',
     'Subregion',
     'Party',
@@ -18,6 +20,47 @@ __all__ = [
     'PartyType',
     'Language',
 ]
+
+
+class MDGRegion(models.Model):
+    """
+    Another classification of countries.
+
+    Seems a bit overkill to create a model for these, but it offers more
+    flexibility and easier maintenance.
+    """
+
+    @enum.unique
+    class IncomeTypes(enum.Enum):
+        HIGH = 'High'
+        LOW = 'Low'
+        LOWER_MIDDLE = 'Lower-middle'
+        UPPER_MIDDLE = 'Upper-middle'
+
+    code = models.CharField(max_length=32, primary_key=True)
+    name = models.CharField(max_length=256, unique=True)
+
+    parent_regions = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        related_name='child_regions',
+    )
+
+    income_type = models.CharField(
+        max_length=128, choices=((x.value, x.name) for x in IncomeTypes),
+        null=True, blank=True,
+        help_text=", ".join(x.value for x in IncomeTypes)
+    )
+
+    remark = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return f'{self.name} ({self.code})'
+
+    class Meta:
+        ordering = ('name',)
+        db_table = 'mdg_region'
+        verbose_name = 'MDG Region'
 
 
 class PartyType(models.Model):
@@ -114,6 +157,17 @@ class Party(models.Model):
     )
 
     remark = models.CharField(max_length=9999, blank=True)
+
+    mdg_region = models.ForeignKey(
+        MDGRegion,
+        null=True, blank=True,
+        related_name='party',
+        on_delete=models.PROTECT
+    )
+
+    iso_alpha3_code = models.CharField(max_length=3, blank=True)
+    abbr_alt = models.CharField(max_length=6, blank=True)
+    name_alt = models.CharField(max_length=256, blank=True)
 
     @classmethod
     def get_main_parties(cls):

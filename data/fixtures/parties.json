@@ -2,7 +2,11 @@
   {
     "fields": {
       "abbr": "AD",
+      "abbr_alt": "AND",
+      "iso_alpha3_code": "AND",
+      "mdg_region": "20",
       "name": "Andorra",
+      "name_alt": "Andorra",
       "parent_party": 1,
       "remark": "",
       "subregion": 18
@@ -13,7 +17,11 @@
   {
     "fields": {
       "abbr": "AE",
+      "abbr_alt": "UNA",
+      "iso_alpha3_code": "ARE",
+      "mdg_region": "784",
       "name": "United Arab Emirates",
+      "name_alt": "United Arab Emirates",
       "parent_party": 2,
       "remark": "",
       "subregion": 5
@@ -24,7 +32,11 @@
   {
     "fields": {
       "abbr": "AF",
+      "abbr_alt": "AFG",
+      "iso_alpha3_code": "AFG",
+      "mdg_region": "4",
       "name": "Afghanistan",
+      "name_alt": "Afghanistan",
       "parent_party": 3,
       "remark": "",
       "subregion": 4
@@ -35,7 +47,11 @@
   {
     "fields": {
       "abbr": "AG",
+      "abbr_alt": "ANT",
+      "iso_alpha3_code": "ATG",
+      "mdg_region": "28",
       "name": "Antigua and Barbuda",
+      "name_alt": "Antigua & Barbuda",
       "parent_party": 4,
       "remark": "",
       "subregion": 9
@@ -46,7 +62,11 @@
   {
     "fields": {
       "abbr": "AI",
+      "abbr_alt": "ANGU",
+      "iso_alpha3_code": "AIA",
+      "mdg_region": "660",
       "name": "Anguilla",
+      "name_alt": "Anguilla",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -57,7 +77,11 @@
   {
     "fields": {
       "abbr": "AL",
+      "abbr_alt": "ALB",
+      "iso_alpha3_code": "ALB",
+      "mdg_region": "8",
       "name": "Albania",
+      "name_alt": "Albania",
       "parent_party": 6,
       "remark": "",
       "subregion": 7
@@ -68,7 +92,11 @@
   {
     "fields": {
       "abbr": "AM",
+      "abbr_alt": "ARM",
+      "iso_alpha3_code": "ARM",
+      "mdg_region": "51",
       "name": "Armenia",
+      "name_alt": "Armenia",
       "parent_party": 7,
       "remark": "",
       "subregion": 7
@@ -79,7 +107,11 @@
   {
     "fields": {
       "abbr": "AN",
+      "abbr_alt": "NETA",
+      "iso_alpha3_code": "ANT",
+      "mdg_region": "530",
       "name": "Netherlands Antilles",
+      "name_alt": "Netherlands Antilles",
       "parent_party": 168,
       "remark": "",
       "subregion": 17
@@ -90,7 +122,11 @@
   {
     "fields": {
       "abbr": "AO",
+      "abbr_alt": "ANG",
+      "iso_alpha3_code": "AGO",
+      "mdg_region": "24",
       "name": "Angola",
+      "name_alt": "Angola",
       "parent_party": 9,
       "remark": "",
       "subregion": 1
@@ -101,7 +137,10 @@
   {
     "fields": {
       "abbr": "AQ",
+      "abbr_alt": "ANTA",
+      "iso_alpha3_code": "ATA",
       "name": "Antarctica",
+      "name_alt": "Antarctica",
       "parent_party": null,
       "remark": "",
       "subregion": 17
@@ -112,7 +151,11 @@
   {
     "fields": {
       "abbr": "AR",
+      "abbr_alt": "ARG",
+      "iso_alpha3_code": "ARG",
+      "mdg_region": "32",
       "name": "Argentina",
+      "name_alt": "Argentina",
       "parent_party": 11,
       "remark": "",
       "subregion": 11
@@ -123,7 +166,11 @@
   {
     "fields": {
       "abbr": "AS",
+      "abbr_alt": "ASAM",
+      "iso_alpha3_code": "ASM",
+      "mdg_region": "16",
       "name": "American Samoa",
+      "name_alt": "American Samoa",
       "parent_party": 235,
       "remark": "",
       "subregion": 17
@@ -134,7 +181,11 @@
   {
     "fields": {
       "abbr": "AT",
+      "abbr_alt": "AUS",
+      "iso_alpha3_code": "AUT",
+      "mdg_region": "40",
       "name": "Austria",
+      "name_alt": "Austria",
       "parent_party": 13,
       "remark": "",
       "subregion": 18
@@ -145,7 +196,11 @@
   {
     "fields": {
       "abbr": "AU",
+      "abbr_alt": "AUL",
+      "iso_alpha3_code": "AUS",
+      "mdg_region": "36",
       "name": "Australia",
+      "name_alt": "Australia",
       "parent_party": 14,
       "remark": "",
       "subregion": 18
@@ -156,7 +211,11 @@
   {
     "fields": {
       "abbr": "AW",
+      "abbr_alt": "ARU",
+      "iso_alpha3_code": "ABW",
+      "mdg_region": "533",
       "name": "Aruba",
+      "name_alt": "Aruba",
       "parent_party": 168,
       "remark": "",
       "subregion": 17
@@ -167,7 +226,10 @@
   {
     "fields": {
       "abbr": "AX",
+      "abbr_alt": "",
+      "iso_alpha3_code": "ALA",
       "name": "Åland Islands",
+      "name_alt": "Åland Islands",
       "parent_party": 72,
       "remark": "",
       "subregion": 17
@@ -178,7 +240,11 @@
   {
     "fields": {
       "abbr": "AZ",
+      "abbr_alt": "AZE",
+      "iso_alpha3_code": "AZE",
+      "mdg_region": "31",
       "name": "Azerbaijan",
+      "name_alt": "Azerbaijan",
       "parent_party": 17,
       "remark": "",
       "subregion": 7
@@ -189,7 +255,11 @@
   {
     "fields": {
       "abbr": "BA",
+      "abbr_alt": "BOS",
+      "iso_alpha3_code": "BIH",
+      "mdg_region": "70",
       "name": "Bosnia and Herzegovina",
+      "name_alt": "Bosnia & Herzegovina",
       "parent_party": 18,
       "remark": "",
       "subregion": 7
@@ -200,7 +270,11 @@
   {
     "fields": {
       "abbr": "BB",
+      "abbr_alt": "BAR",
+      "iso_alpha3_code": "BRB",
+      "mdg_region": "52",
       "name": "Barbados",
+      "name_alt": "Barbados",
       "parent_party": 19,
       "remark": "",
       "subregion": 9
@@ -211,7 +285,11 @@
   {
     "fields": {
       "abbr": "BD",
+      "abbr_alt": "BAN",
+      "iso_alpha3_code": "BGD",
+      "mdg_region": "50",
       "name": "Bangladesh",
+      "name_alt": "Bangladesh",
       "parent_party": 20,
       "remark": "",
       "subregion": 4
@@ -222,7 +300,11 @@
   {
     "fields": {
       "abbr": "BE",
+      "abbr_alt": "BEG",
+      "iso_alpha3_code": "BEL",
+      "mdg_region": "56",
       "name": "Belgium",
+      "name_alt": "Belgium",
       "parent_party": 21,
       "remark": "",
       "subregion": 18
@@ -233,7 +315,11 @@
   {
     "fields": {
       "abbr": "BF",
+      "abbr_alt": "BUK",
+      "iso_alpha3_code": "BFA",
+      "mdg_region": "854",
       "name": "Burkina Faso",
+      "name_alt": "Burkina Faso",
       "parent_party": 22,
       "remark": "",
       "subregion": 2
@@ -244,7 +330,11 @@
   {
     "fields": {
       "abbr": "BG",
+      "abbr_alt": "BUG",
+      "iso_alpha3_code": "BGR",
+      "mdg_region": "100",
       "name": "Bulgaria",
+      "name_alt": "Bulgaria",
       "parent_party": 23,
       "remark": "",
       "subregion": 15
@@ -255,7 +345,11 @@
   {
     "fields": {
       "abbr": "BH",
+      "abbr_alt": "BAI",
+      "iso_alpha3_code": "BHR",
+      "mdg_region": "48",
       "name": "Bahrain",
+      "name_alt": "Bahrain",
       "parent_party": 24,
       "remark": "",
       "subregion": 5
@@ -266,7 +360,11 @@
   {
     "fields": {
       "abbr": "BI",
+      "abbr_alt": "BUR",
+      "iso_alpha3_code": "BDI",
+      "mdg_region": "108",
       "name": "Burundi",
+      "name_alt": "Burundi",
       "parent_party": 25,
       "remark": "",
       "subregion": 2
@@ -277,7 +375,11 @@
   {
     "fields": {
       "abbr": "BJ",
+      "abbr_alt": "BEN",
+      "iso_alpha3_code": "BEN",
+      "mdg_region": "204",
       "name": "Benin",
+      "name_alt": "Benin",
       "parent_party": 26,
       "remark": "",
       "subregion": 2
@@ -288,7 +390,10 @@
   {
     "fields": {
       "abbr": "BL",
+      "abbr_alt": "",
+      "iso_alpha3_code": "BLM",
       "name": "Saint Barthélemy",
+      "name_alt": "Saint Barthélemy",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -299,7 +404,11 @@
   {
     "fields": {
       "abbr": "BM",
+      "abbr_alt": "BER",
+      "iso_alpha3_code": "BMU",
+      "mdg_region": "60",
       "name": "Bermuda",
+      "name_alt": "Bermuda",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -310,7 +419,11 @@
   {
     "fields": {
       "abbr": "BN",
+      "abbr_alt": "BRU",
+      "iso_alpha3_code": "BRN",
+      "mdg_region": "96",
       "name": "Brunei Darussalam",
+      "name_alt": "Brunei Darussalam",
       "parent_party": 29,
       "remark": "",
       "subregion": 3
@@ -321,7 +434,11 @@
   {
     "fields": {
       "abbr": "BO",
+      "abbr_alt": "BOL",
+      "iso_alpha3_code": "BOL",
+      "mdg_region": "68",
       "name": "Bolivia (Plurinational State of)",
+      "name_alt": "Bolivia",
       "parent_party": 30,
       "remark": "",
       "subregion": 11
@@ -332,7 +449,10 @@
   {
     "fields": {
       "abbr": "BQ",
+      "abbr_alt": "",
+      "iso_alpha3_code": "BES",
       "name": "Bonaire, Sint Eustatius and Saba",
+      "name_alt": "Bonaire,StEust&Saba",
       "parent_party": 168,
       "remark": "",
       "subregion": 17
@@ -343,7 +463,11 @@
   {
     "fields": {
       "abbr": "BR",
+      "abbr_alt": "BRA",
+      "iso_alpha3_code": "BRA",
+      "mdg_region": "76",
       "name": "Brazil",
+      "name_alt": "Brazil",
       "parent_party": 32,
       "remark": "",
       "subregion": 11
@@ -354,7 +478,11 @@
   {
     "fields": {
       "abbr": "BS",
+      "abbr_alt": "BAH",
+      "iso_alpha3_code": "BHS",
+      "mdg_region": "44",
       "name": "Bahamas",
+      "name_alt": "Bahamas",
       "parent_party": 33,
       "remark": "",
       "subregion": 9
@@ -365,7 +493,11 @@
   {
     "fields": {
       "abbr": "BT",
+      "abbr_alt": "BHU",
+      "iso_alpha3_code": "BTN",
+      "mdg_region": "64",
       "name": "Bhutan",
+      "name_alt": "Bhutan",
       "parent_party": 34,
       "remark": "",
       "subregion": 4
@@ -376,7 +508,10 @@
   {
     "fields": {
       "abbr": "BV",
+      "abbr_alt": "BOU",
+      "iso_alpha3_code": "BVT",
       "name": "Bouvet Island",
+      "name_alt": "Bouvet Island",
       "parent_party": 169,
       "remark": "",
       "subregion": 17
@@ -387,7 +522,11 @@
   {
     "fields": {
       "abbr": "BW",
+      "abbr_alt": "BOT",
+      "iso_alpha3_code": "BWA",
+      "mdg_region": "72",
       "name": "Botswana",
+      "name_alt": "Botswana",
       "parent_party": 36,
       "remark": "",
       "subregion": 1
@@ -398,7 +537,11 @@
   {
     "fields": {
       "abbr": "BY",
+      "abbr_alt": "BEA",
+      "iso_alpha3_code": "BLR",
+      "mdg_region": "112",
       "name": "Belarus",
+      "name_alt": "Belarus",
       "parent_party": 37,
       "remark": "",
       "subregion": 7
@@ -409,7 +552,11 @@
   {
     "fields": {
       "abbr": "BZ",
+      "abbr_alt": "BEL",
+      "iso_alpha3_code": "BLZ",
+      "mdg_region": "84",
       "name": "Belize",
+      "name_alt": "Belize",
       "parent_party": 38,
       "remark": "",
       "subregion": 9
@@ -420,7 +567,11 @@
   {
     "fields": {
       "abbr": "CA",
+      "abbr_alt": "CAN",
+      "iso_alpha3_code": "CAN",
+      "mdg_region": "124",
       "name": "Canada",
+      "name_alt": "Canada",
       "parent_party": 39,
       "remark": "",
       "subregion": 18
@@ -431,7 +582,10 @@
   {
     "fields": {
       "abbr": "CC",
+      "abbr_alt": "COC",
+      "iso_alpha3_code": "CCK",
       "name": "Cocos (Keeling) Islands",
+      "name_alt": "Cocos (Keeling) Is",
       "parent_party": 14,
       "remark": "",
       "subregion": 17
@@ -442,7 +596,11 @@
   {
     "fields": {
       "abbr": "CD",
+      "abbr_alt": "COR",
+      "iso_alpha3_code": "COD",
+      "mdg_region": "180",
       "name": "Democratic Republic of the Congo",
+      "name_alt": "Congo, DR",
       "parent_party": 41,
       "remark": "",
       "subregion": 2
@@ -453,7 +611,11 @@
   {
     "fields": {
       "abbr": "CF",
+      "abbr_alt": "CAR",
+      "iso_alpha3_code": "CAF",
+      "mdg_region": "140",
       "name": "Central African Republic",
+      "name_alt": "Central African Rep.",
       "parent_party": 42,
       "remark": "",
       "subregion": 2
@@ -464,7 +626,11 @@
   {
     "fields": {
       "abbr": "CG",
+      "abbr_alt": "CON",
+      "iso_alpha3_code": "COG",
+      "mdg_region": "178",
       "name": "Congo",
+      "name_alt": "Congo",
       "parent_party": 43,
       "remark": "",
       "subregion": 2
@@ -475,7 +641,11 @@
   {
     "fields": {
       "abbr": "CH",
+      "abbr_alt": "SWI",
+      "iso_alpha3_code": "CHE",
+      "mdg_region": "756",
       "name": "Switzerland",
+      "name_alt": "Switzerland",
       "parent_party": 44,
       "remark": "",
       "subregion": 18
@@ -486,7 +656,11 @@
   {
     "fields": {
       "abbr": "CI",
+      "abbr_alt": "COV",
+      "iso_alpha3_code": "CIV",
+      "mdg_region": "384",
       "name": "Côte d'Ivoire",
+      "name_alt": "Cote d'Ivoire",
       "parent_party": 45,
       "remark": "",
       "subregion": 2
@@ -497,7 +671,11 @@
   {
     "fields": {
       "abbr": "CK",
+      "abbr_alt": "COO",
+      "iso_alpha3_code": "COK",
+      "mdg_region": "184",
       "name": "Cook Islands",
+      "name_alt": "Cook Islands",
       "parent_party": 46,
       "remark": "",
       "subregion": 12
@@ -508,7 +686,11 @@
   {
     "fields": {
       "abbr": "CL",
+      "abbr_alt": "CHE",
+      "iso_alpha3_code": "CHL",
+      "mdg_region": "152",
       "name": "Chile",
+      "name_alt": "Chile",
       "parent_party": 47,
       "remark": "",
       "subregion": 11
@@ -519,7 +701,11 @@
   {
     "fields": {
       "abbr": "CM",
+      "abbr_alt": "CAM",
+      "iso_alpha3_code": "CMR",
+      "mdg_region": "120",
       "name": "Cameroon",
+      "name_alt": "Cameroon",
       "parent_party": 48,
       "remark": "",
       "subregion": 2
@@ -530,7 +716,11 @@
   {
     "fields": {
       "abbr": "CN",
+      "abbr_alt": "CHI",
+      "iso_alpha3_code": "CHN",
+      "mdg_region": "156",
       "name": "China",
+      "name_alt": "China",
       "parent_party": 49,
       "remark": "",
       "subregion": 4
@@ -541,7 +731,11 @@
   {
     "fields": {
       "abbr": "CO",
+      "abbr_alt": "COL",
+      "iso_alpha3_code": "COL",
+      "mdg_region": "170",
       "name": "Colombia",
+      "name_alt": "Colombia",
       "parent_party": 50,
       "remark": "",
       "subregion": 11
@@ -552,7 +746,11 @@
   {
     "fields": {
       "abbr": "CR",
+      "abbr_alt": "COS",
+      "iso_alpha3_code": "CRI",
+      "mdg_region": "188",
       "name": "Costa Rica",
+      "name_alt": "Costa Rica",
       "parent_party": 51,
       "remark": "",
       "subregion": 10
@@ -563,7 +761,11 @@
   {
     "fields": {
       "abbr": "CU",
+      "abbr_alt": "CUB",
+      "iso_alpha3_code": "CUB",
+      "mdg_region": "192",
       "name": "Cuba",
+      "name_alt": "Cuba",
       "parent_party": 52,
       "remark": "",
       "subregion": 10
@@ -574,7 +776,11 @@
   {
     "fields": {
       "abbr": "CV",
+      "abbr_alt": "CAP",
+      "iso_alpha3_code": "CPV",
+      "mdg_region": "132",
       "name": "Cabo Verde",
+      "name_alt": "Cape Verde",
       "parent_party": 53,
       "remark": "",
       "subregion": 2
@@ -585,7 +791,10 @@
   {
     "fields": {
       "abbr": "CW",
+      "abbr_alt": "",
+      "iso_alpha3_code": "CUW",
       "name": "Curaçao",
+      "name_alt": "Curaçao",
       "parent_party": 168,
       "remark": "",
       "subregion": 17
@@ -596,7 +805,10 @@
   {
     "fields": {
       "abbr": "CX",
+      "abbr_alt": "CHR",
+      "iso_alpha3_code": "CXR",
       "name": "Christmas Island",
+      "name_alt": "Christmas Is",
       "parent_party": 14,
       "remark": "",
       "subregion": 17
@@ -607,7 +819,11 @@
   {
     "fields": {
       "abbr": "CY",
+      "abbr_alt": "CYP",
+      "iso_alpha3_code": "CYP",
+      "mdg_region": "196",
       "name": "Cyprus",
+      "name_alt": "Cyprus",
       "parent_party": 56,
       "remark": "",
       "subregion": 14
@@ -618,7 +834,11 @@
   {
     "fields": {
       "abbr": "CZ",
+      "abbr_alt": "CZE",
+      "iso_alpha3_code": "CZE",
+      "mdg_region": "203",
       "name": "Czech Republic",
+      "name_alt": "Czech Republic",
       "parent_party": 57,
       "remark": "",
       "subregion": 15
@@ -629,7 +849,11 @@
   {
     "fields": {
       "abbr": "DE",
+      "abbr_alt": "GER",
+      "iso_alpha3_code": "DEU",
+      "mdg_region": "276",
       "name": "Germany",
+      "name_alt": "Germany",
       "parent_party": 58,
       "remark": "",
       "subregion": 18
@@ -640,7 +864,11 @@
   {
     "fields": {
       "abbr": "DJ",
+      "abbr_alt": "DJI",
+      "iso_alpha3_code": "DJI",
+      "mdg_region": "262",
       "name": "Djibouti",
+      "name_alt": "Djibouti",
       "parent_party": 59,
       "remark": "",
       "subregion": 2
@@ -651,7 +879,11 @@
   {
     "fields": {
       "abbr": "DK",
+      "abbr_alt": "DEN",
+      "iso_alpha3_code": "DNK",
+      "mdg_region": "208",
       "name": "Denmark",
+      "name_alt": "Denmark",
       "parent_party": 60,
       "remark": "",
       "subregion": 18
@@ -662,7 +894,11 @@
   {
     "fields": {
       "abbr": "DM",
+      "abbr_alt": "DMI",
+      "iso_alpha3_code": "DMA",
+      "mdg_region": "212",
       "name": "Dominica",
+      "name_alt": "Dominica",
       "parent_party": 61,
       "remark": "",
       "subregion": 9
@@ -673,7 +909,11 @@
   {
     "fields": {
       "abbr": "DO",
+      "abbr_alt": "DOM",
+      "iso_alpha3_code": "DOM",
+      "mdg_region": "214",
       "name": "Dominican Republic",
+      "name_alt": "Dominican Republic",
       "parent_party": 62,
       "remark": "",
       "subregion": 10
@@ -684,7 +924,11 @@
   {
     "fields": {
       "abbr": "DZ",
+      "abbr_alt": "ALG",
+      "iso_alpha3_code": "DZA",
+      "mdg_region": "12",
       "name": "Algeria",
+      "name_alt": "Algeria",
       "parent_party": 63,
       "remark": "",
       "subregion": 2
@@ -695,7 +939,11 @@
   {
     "fields": {
       "abbr": "EC",
+      "abbr_alt": "ECU",
+      "iso_alpha3_code": "ECU",
+      "mdg_region": "218",
       "name": "Ecuador",
+      "name_alt": "Ecuador",
       "parent_party": 64,
       "remark": "",
       "subregion": 11
@@ -706,7 +954,11 @@
   {
     "fields": {
       "abbr": "ECE",
+      "abbr_alt": "ECE",
+      "iso_alpha3_code": "EC",
+      "mdg_region": "97",
       "name": "European Union",
+      "name_alt": "European Union",
       "parent_party": 65,
       "remark": "",
       "subregion": 18
@@ -717,7 +969,11 @@
   {
     "fields": {
       "abbr": "EE",
+      "abbr_alt": "EST",
+      "iso_alpha3_code": "EST",
+      "mdg_region": "233",
       "name": "Estonia",
+      "name_alt": "Estonia",
       "parent_party": 66,
       "remark": "",
       "subregion": 15
@@ -728,7 +984,11 @@
   {
     "fields": {
       "abbr": "EG",
+      "abbr_alt": "EGY",
+      "iso_alpha3_code": "EGY",
+      "mdg_region": "818",
       "name": "Egypt",
+      "name_alt": "Egypt",
       "parent_party": 67,
       "remark": "",
       "subregion": 1
@@ -739,7 +999,11 @@
   {
     "fields": {
       "abbr": "EH",
+      "abbr_alt": "WS",
+      "iso_alpha3_code": "ESH",
+      "mdg_region": "732",
       "name": "Western Sahara",
+      "name_alt": "Western Sahara",
       "parent_party": null,
       "remark": "",
       "subregion": 17
@@ -750,7 +1014,11 @@
   {
     "fields": {
       "abbr": "ER",
+      "abbr_alt": "ERI",
+      "iso_alpha3_code": "ERI",
+      "mdg_region": "232",
       "name": "Eritrea",
+      "name_alt": "Eritrea",
       "parent_party": 69,
       "remark": "",
       "subregion": 1
@@ -761,7 +1029,11 @@
   {
     "fields": {
       "abbr": "ES",
+      "abbr_alt": "SPA",
+      "iso_alpha3_code": "ESP",
+      "mdg_region": "724",
       "name": "Spain",
+      "name_alt": "Spain",
       "parent_party": 70,
       "remark": "",
       "subregion": 18
@@ -772,7 +1044,11 @@
   {
     "fields": {
       "abbr": "ET",
+      "abbr_alt": "ETH",
+      "iso_alpha3_code": "ETH",
+      "mdg_region": "231",
       "name": "Ethiopia",
+      "name_alt": "Ethiopia",
       "parent_party": 71,
       "remark": "",
       "subregion": 1
@@ -783,7 +1059,11 @@
   {
     "fields": {
       "abbr": "FI",
+      "abbr_alt": "FIN",
+      "iso_alpha3_code": "FIN",
+      "mdg_region": "246",
       "name": "Finland",
+      "name_alt": "Finland",
       "parent_party": 72,
       "remark": "",
       "subregion": 18
@@ -794,7 +1074,11 @@
   {
     "fields": {
       "abbr": "FJ",
+      "abbr_alt": "FIJ",
+      "iso_alpha3_code": "FJI",
+      "mdg_region": "242",
       "name": "Fiji",
+      "name_alt": "Fiji",
       "parent_party": 73,
       "remark": "",
       "subregion": 12
@@ -805,7 +1089,11 @@
   {
     "fields": {
       "abbr": "FK",
+      "abbr_alt": "FAL",
+      "iso_alpha3_code": "FLK",
+      "mdg_region": "238",
       "name": "Falkland Islands (Malvinas)",
+      "name_alt": "Falkland Is",
       "parent_party": 79,
       "remark": "South Pacific",
       "subregion": 17
@@ -816,7 +1104,11 @@
   {
     "fields": {
       "abbr": "FM",
+      "abbr_alt": "MIC",
+      "iso_alpha3_code": "FSM",
+      "mdg_region": "583",
       "name": "Micronesia (Federated States of)",
+      "name_alt": "Micronesia, FS",
       "parent_party": 75,
       "remark": "",
       "subregion": 12
@@ -827,7 +1119,11 @@
   {
     "fields": {
       "abbr": "FO",
+      "abbr_alt": "FAR",
+      "iso_alpha3_code": "FRO",
+      "mdg_region": "234",
       "name": "Faroe Islands",
+      "name_alt": "Faroe Islands",
       "parent_party": 60,
       "remark": "",
       "subregion": 17
@@ -838,7 +1134,11 @@
   {
     "fields": {
       "abbr": "FR",
+      "abbr_alt": "FRA",
+      "iso_alpha3_code": "FRA",
+      "mdg_region": "250",
       "name": "France",
+      "name_alt": "France",
       "parent_party": 77,
       "remark": "",
       "subregion": 18
@@ -849,7 +1149,11 @@
   {
     "fields": {
       "abbr": "GA",
+      "abbr_alt": "GAB",
+      "iso_alpha3_code": "GAB",
+      "mdg_region": "266",
       "name": "Gabon",
+      "name_alt": "Gabon",
       "parent_party": 78,
       "remark": "",
       "subregion": 2
@@ -860,7 +1164,11 @@
   {
     "fields": {
       "abbr": "GB",
+      "abbr_alt": "UAK",
+      "iso_alpha3_code": "GBR",
+      "mdg_region": "826",
       "name": "United Kingdom of Great Britain and Northern Ireland",
+      "name_alt": "United Kingdom",
       "parent_party": 79,
       "remark": "",
       "subregion": 18
@@ -871,7 +1179,11 @@
   {
     "fields": {
       "abbr": "GD",
+      "abbr_alt": "GRN",
+      "iso_alpha3_code": "GRD",
+      "mdg_region": "308",
       "name": "Grenada",
+      "name_alt": "Grenada",
       "parent_party": 80,
       "remark": "",
       "subregion": 9
@@ -882,7 +1194,11 @@
   {
     "fields": {
       "abbr": "GE",
+      "abbr_alt": "GEO",
+      "iso_alpha3_code": "GEO",
+      "mdg_region": "268",
       "name": "Georgia",
+      "name_alt": "Georgia",
       "parent_party": 81,
       "remark": "",
       "subregion": 7
@@ -893,7 +1209,11 @@
   {
     "fields": {
       "abbr": "GF",
+      "abbr_alt": "FRG",
+      "iso_alpha3_code": "GUF",
+      "mdg_region": "254",
       "name": "French Guiana",
+      "name_alt": "French Guiana",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -904,7 +1224,10 @@
   {
     "fields": {
       "abbr": "GG",
+      "abbr_alt": "GUE",
+      "iso_alpha3_code": "GGY",
       "name": "Guernsey",
+      "name_alt": "Guernsey",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -915,7 +1238,11 @@
   {
     "fields": {
       "abbr": "GH",
+      "abbr_alt": "GHA",
+      "iso_alpha3_code": "GHA",
+      "mdg_region": "288",
       "name": "Ghana",
+      "name_alt": "Ghana",
       "parent_party": 84,
       "remark": "",
       "subregion": 1
@@ -926,7 +1253,10 @@
   {
     "fields": {
       "abbr": "GI",
+      "abbr_alt": "GIB",
+      "iso_alpha3_code": "GIB",
       "name": "Gibraltar",
+      "name_alt": "Gibraltar",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -937,7 +1267,11 @@
   {
     "fields": {
       "abbr": "GL",
+      "abbr_alt": "GRLD",
+      "iso_alpha3_code": "GRL",
+      "mdg_region": "304",
       "name": "Greenland",
+      "name_alt": "Greenland",
       "parent_party": 60,
       "remark": "",
       "subregion": 17
@@ -948,7 +1282,11 @@
   {
     "fields": {
       "abbr": "GM",
+      "abbr_alt": "GAM",
+      "iso_alpha3_code": "GMB",
+      "mdg_region": "270",
       "name": "Gambia",
+      "name_alt": "Gambia",
       "parent_party": 87,
       "remark": "",
       "subregion": 1
@@ -959,7 +1297,11 @@
   {
     "fields": {
       "abbr": "GN",
+      "abbr_alt": "GUI",
+      "iso_alpha3_code": "GIN",
+      "mdg_region": "324",
       "name": "Guinea",
+      "name_alt": "Guinea",
       "parent_party": 88,
       "remark": "",
       "subregion": 2
@@ -970,7 +1312,11 @@
   {
     "fields": {
       "abbr": "GP",
+      "abbr_alt": "GUAD",
+      "iso_alpha3_code": "GLP",
+      "mdg_region": "312",
       "name": "Guadeloupe",
+      "name_alt": "Guadeloupe",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -981,7 +1327,11 @@
   {
     "fields": {
       "abbr": "GQ",
+      "abbr_alt": "EQG",
+      "iso_alpha3_code": "GNQ",
+      "mdg_region": "226",
       "name": "Equatorial Guinea",
+      "name_alt": "Equatorial Guinea",
       "parent_party": 90,
       "remark": "",
       "subregion": 2
@@ -992,7 +1342,11 @@
   {
     "fields": {
       "abbr": "GR",
+      "abbr_alt": "GRE",
+      "iso_alpha3_code": "GRC",
+      "mdg_region": "300",
       "name": "Greece",
+      "name_alt": "Greece",
       "parent_party": 91,
       "remark": "",
       "subregion": 18
@@ -1003,7 +1357,10 @@
   {
     "fields": {
       "abbr": "GS",
+      "abbr_alt": "SGSS",
+      "iso_alpha3_code": "SGS",
       "name": "South Georgia and the South Sandwich Islands",
+      "name_alt": "Sth Georgia &  Sth Sandwi",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1014,7 +1371,11 @@
   {
     "fields": {
       "abbr": "GT",
+      "abbr_alt": "GUA",
+      "iso_alpha3_code": "GTM",
+      "mdg_region": "320",
       "name": "Guatemala",
+      "name_alt": "Guatemala",
       "parent_party": 93,
       "remark": "",
       "subregion": 10
@@ -1025,7 +1386,11 @@
   {
     "fields": {
       "abbr": "GU",
+      "abbr_alt": "GUAM",
+      "iso_alpha3_code": "GUM",
+      "mdg_region": "316",
       "name": "Guam",
+      "name_alt": "Guam",
       "parent_party": 235,
       "remark": "",
       "subregion": 17
@@ -1036,7 +1401,11 @@
   {
     "fields": {
       "abbr": "GW",
+      "abbr_alt": "GUS",
+      "iso_alpha3_code": "GNB",
+      "mdg_region": "624",
       "name": "Guinea Bissau",
+      "name_alt": "Guinea Bissau",
       "parent_party": 95,
       "remark": "",
       "subregion": 2
@@ -1047,7 +1416,11 @@
   {
     "fields": {
       "abbr": "GY",
+      "abbr_alt": "GUY",
+      "iso_alpha3_code": "GUY",
+      "mdg_region": "328",
       "name": "Guyana",
+      "name_alt": "Guyana",
       "parent_party": 96,
       "remark": "",
       "subregion": 9
@@ -1058,7 +1431,11 @@
   {
     "fields": {
       "abbr": "HK",
+      "abbr_alt": "CHH",
+      "iso_alpha3_code": "HKG",
+      "mdg_region": "344",
       "name": "Hong Kong",
+      "name_alt": "Hong Kong",
       "parent_party": 49,
       "remark": "",
       "subregion": 4
@@ -1069,7 +1446,10 @@
   {
     "fields": {
       "abbr": "HM",
+      "abbr_alt": "HMI",
+      "iso_alpha3_code": "HMD",
       "name": "Heard Island and McDonald Islands",
+      "name_alt": "Heard Is & McDonald Is",
       "parent_party": 14,
       "remark": "",
       "subregion": 17
@@ -1080,7 +1460,11 @@
   {
     "fields": {
       "abbr": "HN",
+      "abbr_alt": "HON",
+      "iso_alpha3_code": "HND",
+      "mdg_region": "340",
       "name": "Honduras",
+      "name_alt": "Honduras",
       "parent_party": 99,
       "remark": "",
       "subregion": 10
@@ -1091,7 +1475,11 @@
   {
     "fields": {
       "abbr": "HR",
+      "abbr_alt": "CRO",
+      "iso_alpha3_code": "HRV",
+      "mdg_region": "191",
       "name": "Croatia",
+      "name_alt": "Croatia",
       "parent_party": 100,
       "remark": "Hrvatska",
       "subregion": 7
@@ -1102,7 +1490,11 @@
   {
     "fields": {
       "abbr": "HT",
+      "abbr_alt": "HAI",
+      "iso_alpha3_code": "HTI",
+      "mdg_region": "332",
       "name": "Haiti",
+      "name_alt": "Haiti",
       "parent_party": 101,
       "remark": "",
       "subregion": 10
@@ -1113,7 +1505,11 @@
   {
     "fields": {
       "abbr": "HU",
+      "abbr_alt": "HUN",
+      "iso_alpha3_code": "HUN",
+      "mdg_region": "348",
       "name": "Hungary",
+      "name_alt": "Hungary",
       "parent_party": 102,
       "remark": "",
       "subregion": 15
@@ -1124,7 +1520,11 @@
   {
     "fields": {
       "abbr": "ID",
+      "abbr_alt": "INS",
+      "iso_alpha3_code": "IDN",
+      "mdg_region": "360",
       "name": "Indonesia",
+      "name_alt": "Indonesia",
       "parent_party": 103,
       "remark": "",
       "subregion": 3
@@ -1135,7 +1535,11 @@
   {
     "fields": {
       "abbr": "IE",
+      "abbr_alt": "IRS",
+      "iso_alpha3_code": "IRL",
+      "mdg_region": "372",
       "name": "Ireland",
+      "name_alt": "Ireland",
       "parent_party": 104,
       "remark": "",
       "subregion": 18
@@ -1146,7 +1550,11 @@
   {
     "fields": {
       "abbr": "IL",
+      "abbr_alt": "ISR",
+      "iso_alpha3_code": "ISR",
+      "mdg_region": "376",
       "name": "Israel",
+      "name_alt": "Israel",
       "parent_party": 105,
       "remark": "",
       "subregion": 18
@@ -1157,7 +1565,11 @@
   {
     "fields": {
       "abbr": "IM",
+      "abbr_alt": "ISM",
+      "iso_alpha3_code": "IMN",
+      "mdg_region": "833",
       "name": "Isle of Man",
+      "name_alt": "Isle of Man",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1168,7 +1580,11 @@
   {
     "fields": {
       "abbr": "IN",
+      "abbr_alt": "IND",
+      "iso_alpha3_code": "IND",
+      "mdg_region": "356",
       "name": "India",
+      "name_alt": "India",
       "parent_party": 107,
       "remark": "",
       "subregion": 4
@@ -1179,7 +1595,10 @@
   {
     "fields": {
       "abbr": "IO",
+      "abbr_alt": "BIOT",
+      "iso_alpha3_code": "IOT",
       "name": "British Indian Ocean Territory",
+      "name_alt": "Brit Indn Ocean Terr",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1190,7 +1609,11 @@
   {
     "fields": {
       "abbr": "IQ",
+      "abbr_alt": "IRQ",
+      "iso_alpha3_code": "IRQ",
+      "mdg_region": "368",
       "name": "Iraq",
+      "name_alt": "Iraq",
       "parent_party": 109,
       "remark": "",
       "subregion": 5
@@ -1201,7 +1624,11 @@
   {
     "fields": {
       "abbr": "IR",
+      "abbr_alt": "IRA",
+      "iso_alpha3_code": "IRN",
+      "mdg_region": "364",
       "name": "Iran (Islamic Republic of)",
+      "name_alt": "Iran",
       "parent_party": 110,
       "remark": "",
       "subregion": 4
@@ -1212,7 +1639,11 @@
   {
     "fields": {
       "abbr": "IS",
+      "abbr_alt": "ICE",
+      "iso_alpha3_code": "ISL",
+      "mdg_region": "352",
       "name": "Iceland",
+      "name_alt": "Iceland",
       "parent_party": 111,
       "remark": "",
       "subregion": 18
@@ -1223,7 +1654,11 @@
   {
     "fields": {
       "abbr": "IT",
+      "abbr_alt": "ITA",
+      "iso_alpha3_code": "ITA",
+      "mdg_region": "380",
       "name": "Italy",
+      "name_alt": "Italy",
       "parent_party": 112,
       "remark": "",
       "subregion": 18
@@ -1234,7 +1669,10 @@
   {
     "fields": {
       "abbr": "JE",
+      "abbr_alt": "JER",
+      "iso_alpha3_code": "JEY",
       "name": "Jersey",
+      "name_alt": "Jersey",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1245,7 +1683,11 @@
   {
     "fields": {
       "abbr": "JM",
+      "abbr_alt": "JAM",
+      "iso_alpha3_code": "JAM",
+      "mdg_region": "388",
       "name": "Jamaica",
+      "name_alt": "Jamaica",
       "parent_party": 114,
       "remark": "",
       "subregion": 9
@@ -1256,7 +1698,11 @@
   {
     "fields": {
       "abbr": "JO",
+      "abbr_alt": "JOR",
+      "iso_alpha3_code": "JOR",
+      "mdg_region": "400",
       "name": "Jordan",
+      "name_alt": "Jordan",
       "parent_party": 115,
       "remark": "",
       "subregion": 5
@@ -1267,7 +1713,11 @@
   {
     "fields": {
       "abbr": "JP",
+      "abbr_alt": "JAP",
+      "iso_alpha3_code": "JPN",
+      "mdg_region": "392",
       "name": "Japan",
+      "name_alt": "Japan",
       "parent_party": 116,
       "remark": "",
       "subregion": 14
@@ -1278,7 +1728,11 @@
   {
     "fields": {
       "abbr": "KE",
+      "abbr_alt": "KEN",
+      "iso_alpha3_code": "KEN",
+      "mdg_region": "404",
       "name": "Kenya",
+      "name_alt": "Kenya",
       "parent_party": 117,
       "remark": "",
       "subregion": 1
@@ -1289,7 +1743,11 @@
   {
     "fields": {
       "abbr": "KG",
+      "abbr_alt": "KYR",
+      "iso_alpha3_code": "KGZ",
+      "mdg_region": "417",
       "name": "Kyrgyzstan",
+      "name_alt": "Kyrgyzstan",
       "parent_party": 118,
       "remark": "",
       "subregion": 6
@@ -1300,7 +1758,11 @@
   {
     "fields": {
       "abbr": "KH",
+      "abbr_alt": "CAB",
+      "iso_alpha3_code": "KHM",
+      "mdg_region": "116",
       "name": "Cambodia",
+      "name_alt": "Cambodia",
       "parent_party": 119,
       "remark": "",
       "subregion": 3
@@ -1311,7 +1773,11 @@
   {
     "fields": {
       "abbr": "KI",
+      "abbr_alt": "KIR",
+      "iso_alpha3_code": "KIR",
+      "mdg_region": "296",
       "name": "Kiribati",
+      "name_alt": "Kiribati",
       "parent_party": 120,
       "remark": "",
       "subregion": 12
@@ -1322,7 +1788,11 @@
   {
     "fields": {
       "abbr": "KM",
+      "abbr_alt": "COM",
+      "iso_alpha3_code": "COM",
+      "mdg_region": "174",
       "name": "Comoros",
+      "name_alt": "Comoros",
       "parent_party": 121,
       "remark": "",
       "subregion": 2
@@ -1333,7 +1803,11 @@
   {
     "fields": {
       "abbr": "KN",
+      "abbr_alt": "SAA",
+      "iso_alpha3_code": "KNA",
+      "mdg_region": "659",
       "name": "Saint Kitts and Nevis",
+      "name_alt": "St Kitts & Nevis",
       "parent_party": 122,
       "remark": "",
       "subregion": 9
@@ -1344,7 +1818,11 @@
   {
     "fields": {
       "abbr": "KP",
+      "abbr_alt": "KOD",
+      "iso_alpha3_code": "PRK",
+      "mdg_region": "408",
       "name": "Democratic People's Republic of Korea",
+      "name_alt": "Korea, DPR",
       "parent_party": 123,
       "remark": "",
       "subregion": 4
@@ -1355,7 +1833,11 @@
   {
     "fields": {
       "abbr": "KR",
+      "abbr_alt": "KOR",
+      "iso_alpha3_code": "KOR",
+      "mdg_region": "410",
       "name": "Republic of Korea",
+      "name_alt": "Korea, Republic of",
       "parent_party": 124,
       "remark": "",
       "subregion": 4
@@ -1366,7 +1848,11 @@
   {
     "fields": {
       "abbr": "KW",
+      "abbr_alt": "KUW",
+      "iso_alpha3_code": "KWT",
+      "mdg_region": "414",
       "name": "Kuwait",
+      "name_alt": "Kuwait",
       "parent_party": 125,
       "remark": "",
       "subregion": 5
@@ -1377,7 +1863,11 @@
   {
     "fields": {
       "abbr": "KY",
+      "abbr_alt": "CAY",
+      "iso_alpha3_code": "CYM",
+      "mdg_region": "136",
       "name": "Cayman Islands",
+      "name_alt": "Cayman Islands",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1388,7 +1878,11 @@
   {
     "fields": {
       "abbr": "KZ",
+      "abbr_alt": "KAZ",
+      "iso_alpha3_code": "KAZ",
+      "mdg_region": "398",
       "name": "Kazakhstan",
+      "name_alt": "Kazakhstan",
       "parent_party": 127,
       "remark": "",
       "subregion": 6
@@ -1399,7 +1893,11 @@
   {
     "fields": {
       "abbr": "LA",
+      "abbr_alt": "LAO",
+      "iso_alpha3_code": "LAO",
+      "mdg_region": "418",
       "name": "Lao People's Democratic Republic",
+      "name_alt": "Lao PDR",
       "parent_party": 128,
       "remark": "",
       "subregion": 3
@@ -1410,7 +1908,11 @@
   {
     "fields": {
       "abbr": "LB",
+      "abbr_alt": "LEB",
+      "iso_alpha3_code": "LBN",
+      "mdg_region": "422",
       "name": "Lebanon",
+      "name_alt": "Lebanon",
       "parent_party": 129,
       "remark": "",
       "subregion": 5
@@ -1421,7 +1923,11 @@
   {
     "fields": {
       "abbr": "LC",
+      "abbr_alt": "SAC",
+      "iso_alpha3_code": "LCA",
+      "mdg_region": "662",
       "name": "Saint Lucia",
+      "name_alt": "St Lucia",
       "parent_party": 130,
       "remark": "",
       "subregion": 9
@@ -1432,7 +1938,11 @@
   {
     "fields": {
       "abbr": "LI",
+      "abbr_alt": "LIN",
+      "iso_alpha3_code": "LIE",
+      "mdg_region": "438",
       "name": "Liechtenstein",
+      "name_alt": "Liechtenstein",
       "parent_party": 131,
       "remark": "",
       "subregion": 18
@@ -1443,7 +1953,11 @@
   {
     "fields": {
       "abbr": "LK",
+      "abbr_alt": "SRL",
+      "iso_alpha3_code": "LKA",
+      "mdg_region": "144",
       "name": "Sri Lanka",
+      "name_alt": "Sri Lanka",
       "parent_party": 132,
       "remark": "",
       "subregion": 4
@@ -1454,7 +1968,11 @@
   {
     "fields": {
       "abbr": "LR",
+      "abbr_alt": "LIB",
+      "iso_alpha3_code": "LBR",
+      "mdg_region": "430",
       "name": "Liberia",
+      "name_alt": "Liberia",
       "parent_party": 133,
       "remark": "",
       "subregion": 1
@@ -1465,7 +1983,11 @@
   {
     "fields": {
       "abbr": "LS",
+      "abbr_alt": "LES",
+      "iso_alpha3_code": "LSO",
+      "mdg_region": "426",
       "name": "Lesotho",
+      "name_alt": "Lesotho",
       "parent_party": 134,
       "remark": "",
       "subregion": 1
@@ -1476,7 +1998,11 @@
   {
     "fields": {
       "abbr": "LT",
+      "abbr_alt": "LIT",
+      "iso_alpha3_code": "LTU",
+      "mdg_region": "440",
       "name": "Lithuania",
+      "name_alt": "Lithuania",
       "parent_party": 135,
       "remark": "",
       "subregion": 15
@@ -1487,7 +2013,11 @@
   {
     "fields": {
       "abbr": "LU",
+      "abbr_alt": "LUX",
+      "iso_alpha3_code": "LUX",
+      "mdg_region": "442",
       "name": "Luxembourg",
+      "name_alt": "Luxembourg",
       "parent_party": 136,
       "remark": "",
       "subregion": 18
@@ -1498,7 +2028,11 @@
   {
     "fields": {
       "abbr": "LV",
+      "abbr_alt": "LAT",
+      "iso_alpha3_code": "LVA",
+      "mdg_region": "428",
       "name": "Latvia",
+      "name_alt": "Latvia",
       "parent_party": 137,
       "remark": "",
       "subregion": 15
@@ -1509,7 +2043,11 @@
   {
     "fields": {
       "abbr": "LY",
+      "abbr_alt": "LIJ",
+      "iso_alpha3_code": "LBY",
+      "mdg_region": "434",
       "name": "Libya",
+      "name_alt": "Libya",
       "parent_party": 138,
       "remark": "",
       "subregion": 1
@@ -1520,7 +2058,11 @@
   {
     "fields": {
       "abbr": "MA",
+      "abbr_alt": "MOR",
+      "iso_alpha3_code": "MAR",
+      "mdg_region": "504",
       "name": "Morocco",
+      "name_alt": "Morocco",
       "parent_party": 139,
       "remark": "",
       "subregion": 2
@@ -1531,7 +2073,11 @@
   {
     "fields": {
       "abbr": "MC",
+      "abbr_alt": "MOC",
+      "iso_alpha3_code": "MCO",
+      "mdg_region": "492",
       "name": "Monaco",
+      "name_alt": "Monaco",
       "parent_party": 140,
       "remark": "",
       "subregion": 18
@@ -1542,7 +2088,11 @@
   {
     "fields": {
       "abbr": "MD",
+      "abbr_alt": "MOA",
+      "iso_alpha3_code": "MDA",
+      "mdg_region": "498",
       "name": "Republic of Moldova",
+      "name_alt": "Moldova",
       "parent_party": 141,
       "remark": "",
       "subregion": 7
@@ -1553,7 +2103,11 @@
   {
     "fields": {
       "abbr": "ME",
+      "abbr_alt": "MNT",
+      "iso_alpha3_code": "MNE",
+      "mdg_region": "499",
       "name": "Montenegro",
+      "name_alt": "Montenegro",
       "parent_party": 142,
       "remark": "",
       "subregion": 7
@@ -1564,7 +2118,10 @@
   {
     "fields": {
       "abbr": "MF",
+      "abbr_alt": "",
+      "iso_alpha3_code": "MAF",
       "name": "Saint Martin",
+      "name_alt": "Saint Martin",
       "parent_party": 77,
       "remark": "French part/partie française",
       "subregion": 17
@@ -1575,7 +2132,11 @@
   {
     "fields": {
       "abbr": "MG",
+      "abbr_alt": "MAD",
+      "iso_alpha3_code": "MDG",
+      "mdg_region": "450",
       "name": "Madagascar",
+      "name_alt": "Madagascar",
       "parent_party": 144,
       "remark": "",
       "subregion": 2
@@ -1586,7 +2147,11 @@
   {
     "fields": {
       "abbr": "MH",
+      "abbr_alt": "MAR",
+      "iso_alpha3_code": "MHL",
+      "mdg_region": "584",
       "name": "Marshall Islands",
+      "name_alt": "Marshall Is",
       "parent_party": 145,
       "remark": "",
       "subregion": 12
@@ -1597,7 +2162,11 @@
   {
     "fields": {
       "abbr": "MK",
+      "abbr_alt": "MAC",
+      "iso_alpha3_code": "MKD",
+      "mdg_region": "807",
       "name": "North Macedonia",
+      "name_alt": "North Macedonia",
       "parent_party": 146,
       "remark": "",
       "subregion": 7
@@ -1608,7 +2177,11 @@
   {
     "fields": {
       "abbr": "ML",
+      "abbr_alt": "MAN",
+      "iso_alpha3_code": "MLI",
+      "mdg_region": "466",
       "name": "Mali",
+      "name_alt": "Mali",
       "parent_party": 147,
       "remark": "",
       "subregion": 2
@@ -1619,7 +2192,11 @@
   {
     "fields": {
       "abbr": "MM",
+      "abbr_alt": "MYA",
+      "iso_alpha3_code": "MMR",
+      "mdg_region": "104",
       "name": "Myanmar",
+      "name_alt": "Myanmar",
       "parent_party": 148,
       "remark": "",
       "subregion": 3
@@ -1630,7 +2207,11 @@
   {
     "fields": {
       "abbr": "MN",
+      "abbr_alt": "MON",
+      "iso_alpha3_code": "MNG",
+      "mdg_region": "496",
       "name": "Mongolia",
+      "name_alt": "Mongolia",
       "parent_party": 149,
       "remark": "",
       "subregion": 4
@@ -1641,7 +2222,11 @@
   {
     "fields": {
       "abbr": "MO",
+      "abbr_alt": "MACA",
+      "iso_alpha3_code": "MAC",
+      "mdg_region": "446",
       "name": "Macao",
+      "name_alt": "Macao",
       "parent_party": 49,
       "remark": "",
       "subregion": 17
@@ -1652,7 +2237,11 @@
   {
     "fields": {
       "abbr": "MP",
+      "abbr_alt": "NMI",
+      "iso_alpha3_code": "MNP",
+      "mdg_region": "580",
       "name": "Northern Mariana Islands",
+      "name_alt": "Northern Mariana Is",
       "parent_party": 235,
       "remark": "",
       "subregion": 17
@@ -1663,7 +2252,11 @@
   {
     "fields": {
       "abbr": "MQ",
+      "abbr_alt": "FRM",
+      "iso_alpha3_code": "MTQ",
+      "mdg_region": "474",
       "name": "Martinique",
+      "name_alt": "Martinique",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -1674,7 +2267,11 @@
   {
     "fields": {
       "abbr": "MR",
+      "abbr_alt": "MAT",
+      "iso_alpha3_code": "MRT",
+      "mdg_region": "478",
       "name": "Mauritania",
+      "name_alt": "Mauritania",
       "parent_party": 153,
       "remark": "",
       "subregion": 2
@@ -1685,7 +2282,11 @@
   {
     "fields": {
       "abbr": "MS",
+      "abbr_alt": "MONT",
+      "iso_alpha3_code": "MSR",
+      "mdg_region": "500",
       "name": "Montserrat",
+      "name_alt": "Montserrat",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -1696,7 +2297,11 @@
   {
     "fields": {
       "abbr": "MT",
+      "abbr_alt": "MAO",
+      "iso_alpha3_code": "MLT",
+      "mdg_region": "470",
       "name": "Malta",
+      "name_alt": "Malta",
       "parent_party": 155,
       "remark": "",
       "subregion": 18
@@ -1707,7 +2312,11 @@
   {
     "fields": {
       "abbr": "MU",
+      "abbr_alt": "MAU",
+      "iso_alpha3_code": "MUS",
+      "mdg_region": "480",
       "name": "Mauritius",
+      "name_alt": "Mauritius",
       "parent_party": 156,
       "remark": "",
       "subregion": 1
@@ -1718,7 +2327,11 @@
   {
     "fields": {
       "abbr": "MV",
+      "abbr_alt": "MAM",
+      "iso_alpha3_code": "MDV",
+      "mdg_region": "462",
       "name": "Maldives",
+      "name_alt": "Maldives",
       "parent_party": 157,
       "remark": "",
       "subregion": 4
@@ -1729,7 +2342,11 @@
   {
     "fields": {
       "abbr": "MW",
+      "abbr_alt": "MAI",
+      "iso_alpha3_code": "MWI",
+      "mdg_region": "454",
       "name": "Malawi",
+      "name_alt": "Malawi",
       "parent_party": 158,
       "remark": "",
       "subregion": 1
@@ -1740,7 +2357,11 @@
   {
     "fields": {
       "abbr": "MX",
+      "abbr_alt": "MEX",
+      "iso_alpha3_code": "MEX",
+      "mdg_region": "484",
       "name": "Mexico",
+      "name_alt": "Mexico",
       "parent_party": 159,
       "remark": "",
       "subregion": 10
@@ -1751,7 +2372,11 @@
   {
     "fields": {
       "abbr": "MY",
+      "abbr_alt": "MAL",
+      "iso_alpha3_code": "MYS",
+      "mdg_region": "458",
       "name": "Malaysia",
+      "name_alt": "Malaysia",
       "parent_party": 160,
       "remark": "",
       "subregion": 3
@@ -1762,7 +2387,11 @@
   {
     "fields": {
       "abbr": "MZ",
+      "abbr_alt": "MOZ",
+      "iso_alpha3_code": "MOZ",
+      "mdg_region": "508",
       "name": "Mozambique",
+      "name_alt": "Mozambique",
       "parent_party": 161,
       "remark": "",
       "subregion": 1
@@ -1773,7 +2402,11 @@
   {
     "fields": {
       "abbr": "NA",
+      "abbr_alt": "NAM",
+      "iso_alpha3_code": "NAM",
+      "mdg_region": "516",
       "name": "Namibia",
+      "name_alt": "Namibia",
       "parent_party": 162,
       "remark": "",
       "subregion": 1
@@ -1784,7 +2417,11 @@
   {
     "fields": {
       "abbr": "NC",
+      "abbr_alt": "CAL",
+      "iso_alpha3_code": "NCL",
+      "mdg_region": "540",
       "name": "New Caledonia",
+      "name_alt": "New Caledonia",
       "parent_party": 77,
       "remark": "Nouméa / Noumea",
       "subregion": 17
@@ -1795,7 +2432,11 @@
   {
     "fields": {
       "abbr": "NE",
+      "abbr_alt": "NIG",
+      "iso_alpha3_code": "NER",
+      "mdg_region": "562",
       "name": "Niger",
+      "name_alt": "Niger",
       "parent_party": 164,
       "remark": "",
       "subregion": 2
@@ -1806,7 +2447,10 @@
   {
     "fields": {
       "abbr": "NF",
+      "abbr_alt": "NORF",
+      "iso_alpha3_code": "NFK",
       "name": "Norfolk Island",
+      "name_alt": "Norfolk Island",
       "parent_party": 14,
       "remark": "",
       "subregion": 17
@@ -1817,7 +2461,11 @@
   {
     "fields": {
       "abbr": "NG",
+      "abbr_alt": "NIR",
+      "iso_alpha3_code": "NGA",
+      "mdg_region": "566",
       "name": "Nigeria",
+      "name_alt": "Nigeria",
       "parent_party": 166,
       "remark": "",
       "subregion": 1
@@ -1828,7 +2476,11 @@
   {
     "fields": {
       "abbr": "NI",
+      "abbr_alt": "NIC",
+      "iso_alpha3_code": "NIC",
+      "mdg_region": "558",
       "name": "Nicaragua",
+      "name_alt": "Nicaragua",
       "parent_party": 167,
       "remark": "",
       "subregion": 10
@@ -1839,7 +2491,11 @@
   {
     "fields": {
       "abbr": "NL",
+      "abbr_alt": "NET",
+      "iso_alpha3_code": "NLD",
+      "mdg_region": "528",
       "name": "Netherlands",
+      "name_alt": "Netherlands",
       "parent_party": 168,
       "remark": "",
       "subregion": 18
@@ -1850,7 +2506,11 @@
   {
     "fields": {
       "abbr": "NO",
+      "abbr_alt": "NOR",
+      "iso_alpha3_code": "NOR",
+      "mdg_region": "578",
       "name": "Norway",
+      "name_alt": "Norway",
       "parent_party": 169,
       "remark": "",
       "subregion": 18
@@ -1861,7 +2521,11 @@
   {
     "fields": {
       "abbr": "NP",
+      "abbr_alt": "NEP",
+      "iso_alpha3_code": "NPL",
+      "mdg_region": "524",
       "name": "Nepal",
+      "name_alt": "Nepal",
       "parent_party": 170,
       "remark": "",
       "subregion": 4
@@ -1872,7 +2536,11 @@
   {
     "fields": {
       "abbr": "NR",
+      "abbr_alt": "NAU",
+      "iso_alpha3_code": "NRU",
+      "mdg_region": "520",
       "name": "Nauru",
+      "name_alt": "Nauru",
       "parent_party": 171,
       "remark": "",
       "subregion": 12
@@ -1883,7 +2551,11 @@
   {
     "fields": {
       "abbr": "NU",
+      "abbr_alt": "NIU",
+      "iso_alpha3_code": "NIU",
+      "mdg_region": "570",
       "name": "Niue",
+      "name_alt": "Niue",
       "parent_party": 172,
       "remark": "",
       "subregion": 12
@@ -1894,7 +2566,11 @@
   {
     "fields": {
       "abbr": "NZ",
+      "abbr_alt": "NEZ",
+      "iso_alpha3_code": "NZL",
+      "mdg_region": "554",
       "name": "New Zealand",
+      "name_alt": "New Zealand",
       "parent_party": 173,
       "remark": "",
       "subregion": 18
@@ -1905,7 +2581,11 @@
   {
     "fields": {
       "abbr": "OM",
+      "abbr_alt": "OMA",
+      "iso_alpha3_code": "OMN",
+      "mdg_region": "512",
       "name": "Oman",
+      "name_alt": "Oman",
       "parent_party": 174,
       "remark": "",
       "subregion": 5
@@ -1916,7 +2596,11 @@
   {
     "fields": {
       "abbr": "PA",
+      "abbr_alt": "PAN",
+      "iso_alpha3_code": "PAN",
+      "mdg_region": "591",
       "name": "Panama",
+      "name_alt": "Panama",
       "parent_party": 175,
       "remark": "",
       "subregion": 10
@@ -1927,7 +2611,11 @@
   {
     "fields": {
       "abbr": "PE",
+      "abbr_alt": "PER",
+      "iso_alpha3_code": "PER",
+      "mdg_region": "604",
       "name": "Peru",
+      "name_alt": "Peru",
       "parent_party": 176,
       "remark": "",
       "subregion": 11
@@ -1938,7 +2626,11 @@
   {
     "fields": {
       "abbr": "PF",
+      "abbr_alt": "FRP",
+      "iso_alpha3_code": "PYF",
+      "mdg_region": "258",
       "name": "French Polynesia",
+      "name_alt": "French Polynesia",
       "parent_party": 77,
       "remark": "Includes Austral Islands , Gambier Islands, Marquesas Islands , Society Archipelago , Tahiti, Tuamotu Islands",
       "subregion": 17
@@ -1949,7 +2641,11 @@
   {
     "fields": {
       "abbr": "PG",
+      "abbr_alt": "PAP",
+      "iso_alpha3_code": "PNG",
+      "mdg_region": "598",
       "name": "Papua New Guinea",
+      "name_alt": "Papua New Guinea",
       "parent_party": 178,
       "remark": "",
       "subregion": 12
@@ -1960,7 +2656,11 @@
   {
     "fields": {
       "abbr": "PH",
+      "abbr_alt": "PHI",
+      "iso_alpha3_code": "PHL",
+      "mdg_region": "608",
       "name": "Philippines",
+      "name_alt": "Philippines",
       "parent_party": 179,
       "remark": "",
       "subregion": 3
@@ -1971,7 +2671,11 @@
   {
     "fields": {
       "abbr": "PK",
+      "abbr_alt": "PAK",
+      "iso_alpha3_code": "PAK",
+      "mdg_region": "586",
       "name": "Pakistan",
+      "name_alt": "Pakistan",
       "parent_party": 180,
       "remark": "",
       "subregion": 4
@@ -1982,7 +2686,11 @@
   {
     "fields": {
       "abbr": "PL",
+      "abbr_alt": "POL",
+      "iso_alpha3_code": "POL",
+      "mdg_region": "616",
       "name": "Poland",
+      "name_alt": "Poland",
       "parent_party": 181,
       "remark": "",
       "subregion": 15
@@ -1993,7 +2701,10 @@
   {
     "fields": {
       "abbr": "PM",
+      "abbr_alt": "SPM",
+      "iso_alpha3_code": "SPM",
       "name": "Saint Pierre and Miquelon",
+      "name_alt": "St Pierre & Miquelon",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -2004,7 +2715,10 @@
   {
     "fields": {
       "abbr": "PN",
+      "abbr_alt": "PIT",
+      "iso_alpha3_code": "PCN",
       "name": "Pitcairn",
+      "name_alt": "Pitcairn",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -2015,7 +2729,11 @@
   {
     "fields": {
       "abbr": "PR",
+      "abbr_alt": "PUE",
+      "iso_alpha3_code": "PRI",
+      "mdg_region": "630",
       "name": "Puerto Rico",
+      "name_alt": "Puerto Rico",
       "parent_party": 235,
       "remark": "",
       "subregion": 16
@@ -2026,7 +2744,11 @@
   {
     "fields": {
       "abbr": "PS",
+      "abbr_alt": "PAS",
+      "iso_alpha3_code": "PSE",
+      "mdg_region": "275",
       "name": "State of Palestine",
+      "name_alt": "Palestine",
       "parent_party": null,
       "remark": "",
       "subregion": 5
@@ -2037,7 +2759,11 @@
   {
     "fields": {
       "abbr": "PT",
+      "abbr_alt": "POR",
+      "iso_alpha3_code": "PRT",
+      "mdg_region": "620",
       "name": "Portugal",
+      "name_alt": "Portugal",
       "parent_party": 186,
       "remark": "",
       "subregion": 18
@@ -2048,7 +2774,11 @@
   {
     "fields": {
       "abbr": "PW",
+      "abbr_alt": "PAL",
+      "iso_alpha3_code": "PLW",
+      "mdg_region": "585",
       "name": "Palau",
+      "name_alt": "Palau",
       "parent_party": 187,
       "remark": "",
       "subregion": 12
@@ -2059,7 +2789,11 @@
   {
     "fields": {
       "abbr": "PY",
+      "abbr_alt": "PAR",
+      "iso_alpha3_code": "PRY",
+      "mdg_region": "600",
       "name": "Paraguay",
+      "name_alt": "Paraguay",
       "parent_party": 188,
       "remark": "",
       "subregion": 11
@@ -2070,7 +2804,11 @@
   {
     "fields": {
       "abbr": "QA",
+      "abbr_alt": "QAT",
+      "iso_alpha3_code": "QAT",
+      "mdg_region": "634",
       "name": "Qatar",
+      "name_alt": "Qatar",
       "parent_party": 189,
       "remark": "",
       "subregion": 5
@@ -2081,7 +2819,11 @@
   {
     "fields": {
       "abbr": "RE",
+      "abbr_alt": "REU",
+      "iso_alpha3_code": "REU",
+      "mdg_region": "638",
       "name": "Réunion",
+      "name_alt": "Réunion",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -2092,7 +2834,11 @@
   {
     "fields": {
       "abbr": "RO",
+      "abbr_alt": "ROM",
+      "iso_alpha3_code": "ROU",
+      "mdg_region": "642",
       "name": "Romania",
+      "name_alt": "Romania",
       "parent_party": 191,
       "remark": "",
       "subregion": 15
@@ -2103,7 +2849,11 @@
   {
     "fields": {
       "abbr": "RS",
+      "abbr_alt": "YUG",
+      "iso_alpha3_code": "SRB",
+      "mdg_region": "688",
       "name": "Serbia",
+      "name_alt": "Serbia",
       "parent_party": 192,
       "remark": "",
       "subregion": 7
@@ -2114,7 +2864,11 @@
   {
     "fields": {
       "abbr": "RU",
+      "abbr_alt": "RUS",
+      "iso_alpha3_code": "RUS",
+      "mdg_region": "643",
       "name": "Russian Federation",
+      "name_alt": "Russian Federation",
       "parent_party": 193,
       "remark": "",
       "subregion": 7
@@ -2125,7 +2879,11 @@
   {
     "fields": {
       "abbr": "RW",
+      "abbr_alt": "RWA",
+      "iso_alpha3_code": "RWA",
+      "mdg_region": "646",
       "name": "Rwanda",
+      "name_alt": "Rwanda",
       "parent_party": 194,
       "remark": "",
       "subregion": 1
@@ -2136,7 +2894,11 @@
   {
     "fields": {
       "abbr": "SA",
+      "abbr_alt": "SAU",
+      "iso_alpha3_code": "SAU",
+      "mdg_region": "682",
       "name": "Saudi Arabia",
+      "name_alt": "Saudi Arabia",
       "parent_party": 195,
       "remark": "",
       "subregion": 5
@@ -2147,7 +2909,11 @@
   {
     "fields": {
       "abbr": "SB",
+      "abbr_alt": "SOI",
+      "iso_alpha3_code": "SLB",
+      "mdg_region": "90",
       "name": "Solomon Islands",
+      "name_alt": "Solomon Islands",
       "parent_party": 196,
       "remark": "",
       "subregion": 12
@@ -2158,7 +2924,11 @@
   {
     "fields": {
       "abbr": "SC",
+      "abbr_alt": "SEY",
+      "iso_alpha3_code": "SYC",
+      "mdg_region": "690",
       "name": "Seychelles",
+      "name_alt": "Seychelles",
       "parent_party": 197,
       "remark": "",
       "subregion": 1
@@ -2169,7 +2939,11 @@
   {
     "fields": {
       "abbr": "SD",
+      "abbr_alt": "SUD",
+      "iso_alpha3_code": "SDN",
+      "mdg_region": "729",
       "name": "Sudan",
+      "name_alt": "Sudan",
       "parent_party": 198,
       "remark": "",
       "subregion": 1
@@ -2180,7 +2954,11 @@
   {
     "fields": {
       "abbr": "SE",
+      "abbr_alt": "SWE",
+      "iso_alpha3_code": "SWE",
+      "mdg_region": "752",
       "name": "Sweden",
+      "name_alt": "Sweden",
       "parent_party": 199,
       "remark": "",
       "subregion": 18
@@ -2191,7 +2969,11 @@
   {
     "fields": {
       "abbr": "SG",
+      "abbr_alt": "SIN",
+      "iso_alpha3_code": "SGP",
+      "mdg_region": "702",
       "name": "Singapore",
+      "name_alt": "Singapore",
       "parent_party": 200,
       "remark": "",
       "subregion": 3
@@ -2202,7 +2984,10 @@
   {
     "fields": {
       "abbr": "SH",
+      "abbr_alt": "SH",
+      "iso_alpha3_code": "SHN",
       "name": "Saint Helena, Ascension and Tristan da Cunha",
+      "name_alt": "Saint Helena",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -2213,7 +2998,11 @@
   {
     "fields": {
       "abbr": "SI",
+      "abbr_alt": "SLN",
+      "iso_alpha3_code": "SVN",
+      "mdg_region": "705",
       "name": "Slovenia",
+      "name_alt": "Slovenia",
       "parent_party": 202,
       "remark": "",
       "subregion": 15
@@ -2224,7 +3013,10 @@
   {
     "fields": {
       "abbr": "SJ",
+      "abbr_alt": "SJM",
+      "iso_alpha3_code": "SJM",
       "name": "Svalbard and Jan Mayen",
+      "name_alt": "Svalbard & Jan Mayen",
       "parent_party": 169,
       "remark": "",
       "subregion": 17
@@ -2235,7 +3027,11 @@
   {
     "fields": {
       "abbr": "SK",
+      "abbr_alt": "SLO",
+      "iso_alpha3_code": "SVK",
+      "mdg_region": "703",
       "name": "Slovakia",
+      "name_alt": "Slovakia",
       "parent_party": 204,
       "remark": "",
       "subregion": 15
@@ -2246,7 +3042,11 @@
   {
     "fields": {
       "abbr": "SL",
+      "abbr_alt": "SIL",
+      "iso_alpha3_code": "SLE",
+      "mdg_region": "694",
       "name": "Sierra Leone",
+      "name_alt": "Sierra Leone",
       "parent_party": 205,
       "remark": "",
       "subregion": 1
@@ -2257,7 +3057,11 @@
   {
     "fields": {
       "abbr": "SM",
+      "abbr_alt": "SAN",
+      "iso_alpha3_code": "SMR",
+      "mdg_region": "674",
       "name": "San Marino",
+      "name_alt": "San Marino",
       "parent_party": 206,
       "remark": "",
       "subregion": 18
@@ -2268,7 +3072,11 @@
   {
     "fields": {
       "abbr": "SN",
+      "abbr_alt": "SEN",
+      "iso_alpha3_code": "SEN",
+      "mdg_region": "686",
       "name": "Senegal",
+      "name_alt": "Senegal",
       "parent_party": 207,
       "remark": "",
       "subregion": 2
@@ -2279,7 +3087,11 @@
   {
     "fields": {
       "abbr": "SO",
+      "abbr_alt": "SOM",
+      "iso_alpha3_code": "SOM",
+      "mdg_region": "706",
       "name": "Somalia",
+      "name_alt": "Somalia",
       "parent_party": 208,
       "remark": "",
       "subregion": 1
@@ -2290,7 +3102,11 @@
   {
     "fields": {
       "abbr": "SR",
+      "abbr_alt": "SUR",
+      "iso_alpha3_code": "SUR",
+      "mdg_region": "740",
       "name": "Suriname",
+      "name_alt": "Suriname",
       "parent_party": 209,
       "remark": "",
       "subregion": 9
@@ -2301,7 +3117,11 @@
   {
     "fields": {
       "abbr": "SS",
+      "abbr_alt": "",
+      "iso_alpha3_code": "SSD",
+      "mdg_region": "728",
       "name": "South Sudan",
+      "name_alt": "South Sudan",
       "parent_party": 210,
       "remark": "",
       "subregion": 1
@@ -2312,7 +3132,11 @@
   {
     "fields": {
       "abbr": "ST",
+      "abbr_alt": "SAO",
+      "iso_alpha3_code": "STP",
+      "mdg_region": "678",
       "name": "Sao Tome and Principe",
+      "name_alt": "Sao Tome & Principe",
       "parent_party": 211,
       "remark": "",
       "subregion": 2
@@ -2323,7 +3147,11 @@
   {
     "fields": {
       "abbr": "SV",
+      "abbr_alt": "ELS",
+      "iso_alpha3_code": "SLV",
+      "mdg_region": "222",
       "name": "El Salvador",
+      "name_alt": "El Salvador",
       "parent_party": 212,
       "remark": "",
       "subregion": 10
@@ -2334,7 +3162,10 @@
   {
     "fields": {
       "abbr": "SX",
+      "abbr_alt": "",
+      "iso_alpha3_code": "SXM",
       "name": "Sint Maarten",
+      "name_alt": "Sint Maarten",
       "parent_party": 168,
       "remark": "Dutch part/partie néerlandaise",
       "subregion": 17
@@ -2345,7 +3176,11 @@
   {
     "fields": {
       "abbr": "SY",
+      "abbr_alt": "SYR",
+      "iso_alpha3_code": "SYR",
+      "mdg_region": "760",
       "name": "Syrian Arab Republic",
+      "name_alt": "Syrian Arab Republic",
       "parent_party": 214,
       "remark": "",
       "subregion": 5
@@ -2356,7 +3191,11 @@
   {
     "fields": {
       "abbr": "SZ",
+      "abbr_alt": "SWA",
+      "iso_alpha3_code": "SWZ",
+      "mdg_region": "748",
       "name": "Eswatini",
+      "name_alt": "Swaziland",
       "parent_party": 215,
       "remark": "",
       "subregion": 1
@@ -2367,7 +3206,11 @@
   {
     "fields": {
       "abbr": "TC",
+      "abbr_alt": "TCI",
+      "iso_alpha3_code": "TCA",
+      "mdg_region": "796",
       "name": "Turks and Caicos Islands",
+      "name_alt": "Turks & Caicos Is",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -2378,7 +3221,11 @@
   {
     "fields": {
       "abbr": "TD",
+      "abbr_alt": "CHD",
+      "iso_alpha3_code": "TCD",
+      "mdg_region": "148",
       "name": "Chad",
+      "name_alt": "Chad",
       "parent_party": 217,
       "remark": "",
       "subregion": 2
@@ -2389,7 +3236,10 @@
   {
     "fields": {
       "abbr": "TF",
+      "abbr_alt": "FRST",
+      "iso_alpha3_code": "ATF",
       "name": "French Southern Territories",
+      "name_alt": "French Sthern Terrs",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -2400,7 +3250,11 @@
   {
     "fields": {
       "abbr": "TG",
+      "abbr_alt": "TOG",
+      "iso_alpha3_code": "TGO",
+      "mdg_region": "768",
       "name": "Togo",
+      "name_alt": "Togo",
       "parent_party": 219,
       "remark": "",
       "subregion": 2
@@ -2411,7 +3265,11 @@
   {
     "fields": {
       "abbr": "TH",
+      "abbr_alt": "THA",
+      "iso_alpha3_code": "THA",
+      "mdg_region": "764",
       "name": "Thailand",
+      "name_alt": "Thailand",
       "parent_party": 220,
       "remark": "",
       "subregion": 3
@@ -2422,7 +3280,11 @@
   {
     "fields": {
       "abbr": "TJ",
+      "abbr_alt": "TAJ",
+      "iso_alpha3_code": "TJK",
+      "mdg_region": "762",
       "name": "Tajikistan",
+      "name_alt": "Tajikistan",
       "parent_party": 221,
       "remark": "",
       "subregion": 6
@@ -2433,7 +3295,11 @@
   {
     "fields": {
       "abbr": "TK",
+      "abbr_alt": "TOK",
+      "iso_alpha3_code": "TKL",
+      "mdg_region": "772",
       "name": "Tokelau",
+      "name_alt": "Tokelau",
       "parent_party": 173,
       "remark": "",
       "subregion": 17
@@ -2444,7 +3310,11 @@
   {
     "fields": {
       "abbr": "TL",
+      "abbr_alt": "EAS",
+      "iso_alpha3_code": "TLS",
+      "mdg_region": "626",
       "name": "Timor-Leste",
+      "name_alt": "Timor-Leste",
       "parent_party": 223,
       "remark": "",
       "subregion": 3
@@ -2455,7 +3325,11 @@
   {
     "fields": {
       "abbr": "TM",
+      "abbr_alt": "TUS",
+      "iso_alpha3_code": "TKM",
+      "mdg_region": "795",
       "name": "Turkmenistan",
+      "name_alt": "Turkmenistan",
       "parent_party": 224,
       "remark": "",
       "subregion": 6
@@ -2466,7 +3340,11 @@
   {
     "fields": {
       "abbr": "TN",
+      "abbr_alt": "TUN",
+      "iso_alpha3_code": "TUN",
+      "mdg_region": "788",
       "name": "Tunisia",
+      "name_alt": "Tunisia",
       "parent_party": 225,
       "remark": "",
       "subregion": 2
@@ -2477,7 +3355,11 @@
   {
     "fields": {
       "abbr": "TO",
+      "abbr_alt": "TON",
+      "iso_alpha3_code": "TON",
+      "mdg_region": "776",
       "name": "Tonga",
+      "name_alt": "Tonga",
       "parent_party": 226,
       "remark": "",
       "subregion": 12
@@ -2488,7 +3370,11 @@
   {
     "fields": {
       "abbr": "TR",
+      "abbr_alt": "TUR",
+      "iso_alpha3_code": "TUR",
+      "mdg_region": "792",
       "name": "Turkey",
+      "name_alt": "Turkey",
       "parent_party": 227,
       "remark": "Turkey, participates fully in both WEOG and Asian Group, but for electoral purposes is considered a member of WEOG only.",
       "subregion": 8
@@ -2499,7 +3385,11 @@
   {
     "fields": {
       "abbr": "TT",
+      "abbr_alt": "TRI",
+      "iso_alpha3_code": "TTO",
+      "mdg_region": "780",
       "name": "Trinidad and Tobago",
+      "name_alt": "Trinidad & Tobago",
       "parent_party": 228,
       "remark": "",
       "subregion": 9
@@ -2510,7 +3400,11 @@
   {
     "fields": {
       "abbr": "TV",
+      "abbr_alt": "TUV",
+      "iso_alpha3_code": "TUV",
+      "mdg_region": "798",
       "name": "Tuvalu",
+      "name_alt": "Tuvalu",
       "parent_party": 229,
       "remark": "",
       "subregion": 12
@@ -2521,7 +3415,10 @@
   {
     "fields": {
       "abbr": "TW",
+      "abbr_alt": "CHT",
+      "iso_alpha3_code": "TWN",
       "name": "Taiwan, Province of China",
+      "name_alt": "Taiwan, China",
       "parent_party": 49,
       "remark": "",
       "subregion": 4
@@ -2532,7 +3429,11 @@
   {
     "fields": {
       "abbr": "TZ",
+      "abbr_alt": "TAN",
+      "iso_alpha3_code": "TZA",
+      "mdg_region": "834",
       "name": "United Republic of Tanzania",
+      "name_alt": "Tanzania",
       "parent_party": 231,
       "remark": "",
       "subregion": 1
@@ -2543,7 +3444,11 @@
   {
     "fields": {
       "abbr": "UA",
+      "abbr_alt": "UKR",
+      "iso_alpha3_code": "UKR",
+      "mdg_region": "804",
       "name": "Ukraine",
+      "name_alt": "Ukraine",
       "parent_party": 232,
       "remark": "",
       "subregion": 7
@@ -2554,7 +3459,11 @@
   {
     "fields": {
       "abbr": "UG",
+      "abbr_alt": "UGN",
+      "iso_alpha3_code": "UGA",
+      "mdg_region": "800",
       "name": "Uganda",
+      "name_alt": "Uganda",
       "parent_party": 233,
       "remark": "",
       "subregion": 1
@@ -2565,7 +3474,10 @@
   {
     "fields": {
       "abbr": "UM",
+      "abbr_alt": "UASM",
+      "iso_alpha3_code": "UMI",
       "name": "United States Minor Outlying Islands",
+      "name_alt": "US Minor Outlying Is",
       "parent_party": 235,
       "remark": "",
       "subregion": 17
@@ -2576,7 +3488,11 @@
   {
     "fields": {
       "abbr": "US",
+      "abbr_alt": "UAS",
+      "iso_alpha3_code": "USA",
+      "mdg_region": "840",
       "name": "United States of America",
+      "name_alt": "United States",
       "parent_party": 235,
       "remark": "",
       "subregion": 18
@@ -2587,7 +3503,11 @@
   {
     "fields": {
       "abbr": "UY",
+      "abbr_alt": "URU",
+      "iso_alpha3_code": "URY",
+      "mdg_region": "858",
       "name": "Uruguay",
+      "name_alt": "Uruguay",
       "parent_party": 236,
       "remark": "",
       "subregion": 11
@@ -2598,7 +3518,11 @@
   {
     "fields": {
       "abbr": "UZ",
+      "abbr_alt": "UZB",
+      "iso_alpha3_code": "UZB",
+      "mdg_region": "860",
       "name": "Uzbekistan",
+      "name_alt": "Uzbekistan",
       "parent_party": 237,
       "remark": "",
       "subregion": 6
@@ -2609,7 +3533,11 @@
   {
     "fields": {
       "abbr": "VA",
+      "abbr_alt": "HOLV",
+      "iso_alpha3_code": "VAT",
+      "mdg_region": "336",
       "name": "Holy See",
+      "name_alt": "Holy See",
       "parent_party": 238,
       "remark": "Vatican City",
       "subregion": 18
@@ -2620,7 +3548,11 @@
   {
     "fields": {
       "abbr": "VC",
+      "abbr_alt": "SAG",
+      "iso_alpha3_code": "VCT",
+      "mdg_region": "670",
       "name": "Saint Vincent and the Grenadines",
+      "name_alt": "St Vincent/Grenadines",
       "parent_party": 239,
       "remark": "",
       "subregion": 9
@@ -2631,7 +3563,11 @@
   {
     "fields": {
       "abbr": "VE",
+      "abbr_alt": "VEN",
+      "iso_alpha3_code": "VEN",
+      "mdg_region": "862",
       "name": "Venezuela (Bolivarian Republic of)",
+      "name_alt": "Venezuela",
       "parent_party": 240,
       "remark": "",
       "subregion": 11
@@ -2642,7 +3578,11 @@
   {
     "fields": {
       "abbr": "VG",
+      "abbr_alt": "UAKV",
+      "iso_alpha3_code": "VGB",
+      "mdg_region": "92",
       "name": "Virgin Islands, British",
+      "name_alt": "Virgin Is, British",
       "parent_party": 79,
       "remark": "",
       "subregion": 17
@@ -2653,7 +3593,11 @@
   {
     "fields": {
       "abbr": "VI",
+      "abbr_alt": "UASV",
+      "iso_alpha3_code": "VIR",
+      "mdg_region": "850",
       "name": "Virgin Islands, USA",
+      "name_alt": "Virgin Islands, USA",
       "parent_party": 235,
       "remark": "",
       "subregion": 17
@@ -2664,7 +3608,11 @@
   {
     "fields": {
       "abbr": "VN",
+      "abbr_alt": "VIE",
+      "iso_alpha3_code": "VNM",
+      "mdg_region": "704",
       "name": "Viet Nam",
+      "name_alt": "Viet Nam",
       "parent_party": 243,
       "remark": "",
       "subregion": 3
@@ -2675,7 +3623,11 @@
   {
     "fields": {
       "abbr": "VU",
+      "abbr_alt": "VAN",
+      "iso_alpha3_code": "VUT",
+      "mdg_region": "548",
       "name": "Vanuatu",
+      "name_alt": "Vanuatu",
       "parent_party": 244,
       "remark": "",
       "subregion": 12
@@ -2686,7 +3638,10 @@
   {
     "fields": {
       "abbr": "WF",
+      "abbr_alt": "WAL",
+      "iso_alpha3_code": "WLF",
       "name": "Wallis and Futuna",
+      "name_alt": "Wallis & Futuna",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -2697,7 +3652,11 @@
   {
     "fields": {
       "abbr": "WS",
+      "abbr_alt": "SAM",
+      "iso_alpha3_code": "WSM",
+      "mdg_region": "882",
       "name": "Samoa",
+      "name_alt": "Samoa",
       "parent_party": 246,
       "remark": "",
       "subregion": 12
@@ -2708,7 +3667,11 @@
   {
     "fields": {
       "abbr": "YE",
+      "abbr_alt": "YEM",
+      "iso_alpha3_code": "YEM",
+      "mdg_region": "887",
       "name": "Yemen",
+      "name_alt": "Yemen",
       "parent_party": 247,
       "remark": "",
       "subregion": 5
@@ -2719,7 +3682,11 @@
   {
     "fields": {
       "abbr": "YT",
+      "abbr_alt": "MAY",
+      "iso_alpha3_code": "MYT",
+      "mdg_region": "175",
       "name": "Mayotte",
+      "name_alt": "Mayotte",
       "parent_party": 77,
       "remark": "",
       "subregion": 17
@@ -2730,7 +3697,11 @@
   {
     "fields": {
       "abbr": "ZA",
+      "abbr_alt": "SOU",
+      "iso_alpha3_code": "ZAF",
+      "mdg_region": "710",
       "name": "South Africa",
+      "name_alt": "South Africa",
       "parent_party": 249,
       "remark": "",
       "subregion": 1
@@ -2741,7 +3712,11 @@
   {
     "fields": {
       "abbr": "ZM",
+      "abbr_alt": "ZAM",
+      "iso_alpha3_code": "ZMB",
+      "mdg_region": "894",
       "name": "Zambia",
+      "name_alt": "Zambia",
       "parent_party": 250,
       "remark": "",
       "subregion": 1
@@ -2752,7 +3727,11 @@
   {
     "fields": {
       "abbr": "ZW",
+      "abbr_alt": "ZIM",
+      "iso_alpha3_code": "ZWE",
+      "mdg_region": "716",
       "name": "Zimbabwe",
+      "name_alt": "Zimbabwe",
       "parent_party": 251,
       "remark": "",
       "subregion": 1
