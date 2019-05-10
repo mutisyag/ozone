@@ -871,23 +871,11 @@ class Transfer(AggregationMixin, ModifyPreventionMixin, BaseReport):
         'transferred_amount': 'prod_transfer'
     }
 
-    TRANSFER_TYPE = (
-        ('P', 'Production'),
-        ('C', 'Consumption')
-    )
-    transfer_type = models.CharField(
-        max_length=1,
-        choices=TRANSFER_TYPE
-    )
-
     substance = models.ForeignKey(
         Substance, on_delete=models.PROTECT
     )
 
     transferred_amount = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-    used_amount = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
