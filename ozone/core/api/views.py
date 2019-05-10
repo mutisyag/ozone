@@ -244,8 +244,16 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
 
     @action(detail=True, methods=["get"])
-    def reporting_groups(self, request, pk=None):
-        groups = Group.get_groups(Party.objects.filter(pk=pk).first())
+    def controlled_groups(self, request, pk=None, **kwargs):
+        """
+        Returns the list of substance groups (Group.group_id) that the party
+        must report on for the reporting period given as param (`period`).
+        If no param is given, it returns the list for the current date.
+        """
+        period = ReportingPeriod.objects.filter(
+            id=int(request.query_params.get('period', 0))
+        ).first()
+        groups = Group.get_groups(Party.objects.filter(pk=pk).first(), period)
         if groups:
             groups = groups.values_list('group_id', flat=True)
         return Response(groups)
