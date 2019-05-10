@@ -23,9 +23,9 @@ from django.utils.translation import gettext_lazy as _
 from .models import (
     Meeting,
     Treaty,
-    Decision,
     Region,
     Subregion,
+    MDGRegion,
     Party,
     PartyHistory,
     ReportingPeriod,
@@ -35,7 +35,6 @@ from .models import (
     Substance,
     Blend,
     BlendComponent,
-    Language,
     Submission,
     SubmissionInfo,
     ReportingChannel,
@@ -149,6 +148,20 @@ class TreatyAdmin(admin.ModelAdmin):
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
     list_display = ('name', 'abbr')
+
+
+@admin.register(MDGRegion)
+class MDGRegionAdmin(admin.ModelAdmin):
+    list_display = ('code', 'name', 'income_type', 'get_parent_regions', 'get_child_regions')
+    search_fields = ['code', 'name']
+
+    def get_parent_regions(self, obj):
+        return ', '.join(x.name for x in obj.parent_regions.all())
+    get_parent_regions.short_description = 'Parents'
+
+    def get_child_regions(self, obj):
+        return ', '.join(x.name for x in obj.child_regions.all())
+    get_child_regions.short_description = 'Children'
 
 
 @admin.register(Subregion)
