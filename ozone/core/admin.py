@@ -44,6 +44,7 @@ from .models import (
     Baseline,
     Limit,
     PartyRatification,
+    CriticalUseCategory,
 )
 
 
@@ -460,6 +461,12 @@ class PartyRatificationAdmin(admin.ModelAdmin):
     list_display = ('party', 'treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
     list_filter = (('party', MainPartyFilter), 'treaty', 'ratification_type')
     search_fields = ['party', 'treaty']
+
+
+@admin.register(CriticalUseCategory)
+class CriticalUseCategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ['name']
 
 
 # register all adminactions

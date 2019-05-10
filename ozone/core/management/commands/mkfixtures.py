@@ -8,8 +8,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from openpyxl import load_workbook
 
-from ozone.core.models.utils import RatificationTypes
+from ozone.core.models.exemption import CriticalUseCategory
 from ozone.core.models.substance import Blend
+from ozone.core.models.utils import RatificationTypes
 from ozone.core.models.utils import round_half_up
 
 
@@ -90,6 +91,10 @@ class Command(BaseCommand):
             'additional_data': {},
             'prod_transfers': {},
         },
+        'criticalusecategory': {
+            'fixture': 'critical_use_categories.json',
+            'sheet': ['MeBrAgreedCriticalUseCategories', 'MeBrActualCriticalUsebyCategory']
+        }
     }
     EXCLUDED = (
         'UNK',
@@ -161,32 +166,37 @@ class Command(BaseCommand):
         if not self.MODELS.get(model) or not self.MODELS[model].get('sheet'):
             raise CommandError(
                 'Import for model "%s" is not implemented' % model)
-        sheet = workbook[self.MODELS[model]['sheet']]
+        sheet_names = self.MODELS[model]['sheet']
+        if type(sheet_names) == str:
+            # To support multiple sheets
+            sheet_names = [sheet_names]
 
-        for idx in range(1, sheet.max_row):
-            row = self.row2dict(sheet, sheet[idx + 1], idx)
-            model_class = 'core.' + (self.MODELS[model].get('model') or model)
-            obj = {
-                'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
-                'model': model_class,
-                'fields': {},
-            }
-            fields = getattr(self, model + "_map")(obj['fields'], row)
-            if isinstance(fields, dict):
-                obj['fields'] = fields
-                data.append(obj)
-            elif isinstance(fields, list):
-                # multiple objects returned
-                for idx, f in enumerate(fields):
-                    data.append({
-                        'pk': obj['pk'] + idx,
-                        'model': obj['model'],
-                        'fields': f,
-                    })
-                pass
-            else:
-                # Probably None was returned, don't add to list
-                continue
+        for sheet_name in sheet_names:
+            sheet = workbook[sheet_name]
+            for idx in range(1, sheet.max_row):
+                row = self.row2dict(sheet, sheet[idx + 1], idx)
+                model_class = 'core.' + (self.MODELS[model].get('model') or model)
+                obj = {
+                    'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
+                    'model': model_class,
+                    'fields': {},
+                }
+                fields = getattr(self, model + "_map")(obj['fields'], row)
+                if isinstance(fields, dict):
+                    obj['fields'] = fields
+                    data.append(obj)
+                elif isinstance(fields, list):
+                    # multiple objects returned
+                    for idx, f in enumerate(fields):
+                        data.append({
+                            'pk': obj['pk'] + idx,
+                            'model': obj['model'],
+                            'fields': f,
+                        })
+                    pass
+                else:
+                    # Probably None was returned, don't add to list
+                    continue
 
         if hasattr(self, model + "_additional_data"):
             data += getattr(self, model + "_additional_data")(len(data) + 1)
@@ -628,3 +638,34 @@ class Command(BaseCommand):
 
         # BDN new baselines are rounded to 5 decimals
         return round_half_up(baseline, 5)
+
+    def criticalusecategory_map(self, f, row):
+        columns = [
+            'Categories of permitted critical uses',
+            'CU_Title',
+        ]
+        for col in columns:
+            if col in row:
+                f['name'] = row[col]
+        return f
+
+    def criticalusecategory_aggregate(self, data):
+        # Cleanup some duplicates
+        data.sort(key=lambda x: x['fields']['name'].strip().lower())
+        # sort first just to get rid of some derived names
+        newdata = {}
+        for obj in data:
+            name = obj['fields']['name']
+            key = CriticalUseCategory.get_alt_name(name)
+            if key not in newdata:
+                name = name.strip()
+                obj['fields']['name'] = name[0].upper() + name[1:]
+                obj['fields']['code'] = key
+                obj['pk'] = len(newdata) + 1
+                newdata[key] = obj
+            # else continue
+
+        return sorted(
+            list(newdata.values()),
+            key=lambda x: x['pk']
+        )

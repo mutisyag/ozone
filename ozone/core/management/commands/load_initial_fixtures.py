@@ -30,6 +30,7 @@ class Command(BaseCommand):
         'control_measures',
         'baselines',
         'limits',
+        'critical_use_categories',
     )
 
     FIXTURES_NOT_IN_TEST = (

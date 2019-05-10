@@ -1,0 +1,1682 @@
+[
+  {
+    "fields": {
+      "code": "MILLS",
+      "name": "13 Mills"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 1
+  },
+  {
+    "fields": {
+      "code": "AIRCRAFT",
+      "name": "Aircraft"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 2
+  },
+  {
+    "fields": {
+      "code": "ALMONDS",
+      "name": "Almonds"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 3
+  },
+  {
+    "fields": {
+      "code": "ANTIQUESTRUCTURESANDFURNITURE",
+      "name": "Antique structures and furniture"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 4
+  },
+  {
+    "fields": {
+      "code": "ARTEFACTS",
+      "name": "Artefacts"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 5
+  },
+  {
+    "fields": {
+      "code": "ARTEFACTSANDLIBRARIES",
+      "name": "Artefacts and libraries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 6
+  },
+  {
+    "fields": {
+      "code": "ARTEFACTSANDSTRUCTURES",
+      "name": "Artefacts and structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 7
+  },
+  {
+    "fields": {
+      "code": "ARTIFACTS",
+      "name": "Artifacts"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 8
+  },
+  {
+    "fields": {
+      "code": "ASPARAGUS",
+      "name": "Asparagus"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 9
+  },
+  {
+    "fields": {
+      "code": "ASPARAGUSPLANTINGMATERIAL",
+      "name": "Asparagus (planting material)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 10
+  },
+  {
+    "fields": {
+      "code": "BERRYFRUIT",
+      "name": "Berry fruit"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 11
+  },
+  {
+    "fields": {
+      "code": "BROOMRAPE",
+      "name": "Broomrape"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 12
+  },
+  {
+    "fields": {
+      "code": "BROOMRAPEPROTECTED",
+      "name": "Broomrape protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 13
+  },
+  {
+    "fields": {
+      "code": "CARROTS",
+      "name": "Carrots"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "code": "CEREALPROCESSINGPLANTS",
+      "name": "Cereal processing plants"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "code": "CHEESESTORES",
+      "name": "Cheese stores"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "code": "CHEESESTORESTRADITIONAL",
+      "name": "Cheese stores (traditional)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "code": "CHESTNUT",
+      "name": "Chestnut"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "code": "CHESTNUTS",
+      "name": "Chestnuts"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "code": "CHICORY",
+      "name": "Chicory"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "code": "CHRYSANTHEMUMCUTTINGSROSEPLANTSNURSERY",
+      "name": "Chrysanthemum cuttings – rose plants (nursery)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "code": "CHURCHESMONUMENTSANDSHIPSQUARTERS",
+      "name": "Churches, monuments and ships quarters"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "code": "COCOABEANSNPMASUBSET",
+      "name": "Cocoa beans (NPMA subset)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "code": "COFFEEANDCOCOABEANS",
+      "name": "Coffee & cocoa beans"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "code": "COFFEECOCOABEANS",
+      "name": "Coffee, cocoa beans"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "code": "COMMODITIES",
+      "name": "Commodities"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "code": "CUCUMBER",
+      "name": "Cucumber"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 27
+  },
+  {
+    "fields": {
+      "code": "CUCUMBERPROTECTED",
+      "name": "Cucumber – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "code": "CUCUMBERS",
+      "name": "Cucumbers"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 29
+  },
+  {
+    "fields": {
+      "code": "CUCURBITS",
+      "name": "Cucurbits"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 30
+  },
+  {
+    "fields": {
+      "code": "CUCURBITSFIELD",
+      "name": "Cucurbits – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 31
+  },
+  {
+    "fields": {
+      "code": "CUCURBITSPROTECTED",
+      "name": "Cucurbits – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 32
+  },
+  {
+    "fields": {
+      "code": "CUREDPORK",
+      "name": "Cured pork"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 33
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERBULBSPROTECTED",
+      "name": "Cut Flower - bulbs protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 34
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWEROPENFIELD",
+      "name": "Cut flower open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 35
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERS",
+      "name": "Cut flowers"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 36
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSANDBULBSPROTECTED",
+      "name": "Cut flowers & bulbs protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 37
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSANDALUCIAANDCATALUNIA",
+      "name": "Cut flowers (Andalucia & Catalunia)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 38
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSANDALUCIAANDCATALONIA",
+      "name": "Cut flowers (Andalucia and Catalonia)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 39
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSANDALUSIAPROTECTED",
+      "name": "Cut flowers (Andalusia) – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 40
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSCATALONIACARNATIONPROTECTEDANDOPENFIELD",
+      "name": "Cut flowers (Catalonia) – carnation, protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 41
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSCHRYSANTHEMUM",
+      "name": "Cut flowers (chrysanthemum)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 42
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSEXCLUDINGROSESANDCHRYSANTHEMUM",
+      "name": "Cut flowers (excluding roses and chrysanthemum)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 43
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSANDBULBS",
+      "name": "Cut Flowers and bulbs"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 44
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSBULBS",
+      "name": "Cut flowers bulbs"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 45
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSBULBSPROTECTED",
+      "name": "Cut flowers bulbs protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 46
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSOPENFIELD",
+      "name": "Cut flowers open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 47
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSPROTECTED",
+      "name": "Cut flowers protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 48
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSPROTECTEDANDOPENFIELD",
+      "name": "Cut flowers protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 49
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSFIELD",
+      "name": "Cut flowers – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 50
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSFIELDANDCUTFLOWERSPROTECTED",
+      "name": "Cut flowers –field;and Cut flowers –protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 51
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSBULBSPROTECTEDANDOPENFIELD",
+      "name": "Cut flowers, bulbs – protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 52
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSOPENFIELDS",
+      "name": "Cut flowers, open fields"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 53
+  },
+  {
+    "fields": {
+      "code": "CUTFLOWERSBULBPROTECTED",
+      "name": "Cut-flowers-bulb-protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 54
+  },
+  {
+    "fields": {
+      "code": "DATES",
+      "name": "Dates"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 55
+  },
+  {
+    "fields": {
+      "code": "DATESPOSTHARVEST",
+      "name": "Dates - Post harvest"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 56
+  },
+  {
+    "fields": {
+      "code": "DRIEDBEANS",
+      "name": "Dried beans"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 57
+  },
+  {
+    "fields": {
+      "code": "DRIEDCOMMODITIESRICEFRUITSANDNUTSWHITWORTHS",
+      "name": "Dried commodities (rice, fruits and nuts) Whitworths"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 58
+  },
+  {
+    "fields": {
+      "code": "DRIEDCUREDPORK",
+      "name": "Dried cured pork"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 59
+  },
+  {
+    "fields": {
+      "code": "DRIEDFRUIT",
+      "name": "Dried fruit"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 60
+  },
+  {
+    "fields": {
+      "code": "DRIEDFRUITANDNUTS",
+      "name": "Dried fruit and nuts"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 61
+  },
+  {
+    "fields": {
+      "code": "DRIEDFRUITBEANSANDNUTS",
+      "name": "Dried fruit, beans and nuts"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 62
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIES",
+      "name": "Dry commodities"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 63
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESCOCOABEANS",
+      "name": "Dry commodities cocoa beans"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 64
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESSTRUCTURESCOCOA",
+      "name": "Dry commodities structures (cocoa)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 65
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESPROCESSEDFOODSHERBSSPICESDRIEDMILK",
+      "name": "Dry commodities – processed foods, herbs, spices, dried milk"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 66
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESSTRUCTURES",
+      "name": "Dry commodities/structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 67
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESSTRUCTURESCOCOABEANS",
+      "name": "Dry commodities/structures (cocoa beans)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 68
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESSTRUCTURESPROCESSEDFOODSHERBSANDSPICESDRIEDMILKANDCHEESEPROCESSINGFACILITIESNPMA",
+      "name": "Dry commodities/structures (processed foods, herbs & spices, dried milk and cheese processing facilities) NPMA"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 69
+  },
+  {
+    "fields": {
+      "code": "DRYCOMMODITIESSTRUCTURESPROCESSEDFOODSHERBSANDSPICESDRIEDMILKANDCHEESEPROCESSINGFACILITIES",
+      "name": "Dry commodities/structures (processed foods, herbs and spices, dried milk and cheese processing facilities)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 70
+  },
+  {
+    "fields": {
+      "code": "DRYCUREPORKPRODUCTSBUILDINGANDPRODUCT",
+      "name": "Dry cure pork products (building and product)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 71
+  },
+  {
+    "fields": {
+      "code": "DRYCUREDHAM",
+      "name": "Dry-cured ham"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 72
+  },
+  {
+    "fields": {
+      "code": "EGGPLANT",
+      "name": "Eggplant"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 73
+  },
+  {
+    "fields": {
+      "code": "EGGPLANTFIELD",
+      "name": "Eggplant field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 74
+  },
+  {
+    "fields": {
+      "code": "EGGPLANTPROTECTED",
+      "name": "Eggplant protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 75
+  },
+  {
+    "fields": {
+      "code": "EGGPLANTFIELDFORRESEARCHONLY",
+      "name": "Eggplant – field, for research only"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 76
+  },
+  {
+    "fields": {
+      "code": "EGGPLANTPEPPERTOMATOPROTECTEDANDFIELD",
+      "name": "Eggplant, pepper, tomato – protected and field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 77
+  },
+  {
+    "fields": {
+      "code": "ELECTRONICEQUIPMENT",
+      "name": "Electronic equipment"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 78
+  },
+  {
+    "fields": {
+      "code": "EMPTYSILO",
+      "name": "Empty silo"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 79
+  },
+  {
+    "fields": {
+      "code": "ENDIVE",
+      "name": "Endive"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 80
+  },
+  {
+    "fields": {
+      "code": "FLOURMILL",
+      "name": "Flour mill"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 81
+  },
+  {
+    "fields": {
+      "code": "FLOURMILLS",
+      "name": "Flour mills"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 82
+  },
+  {
+    "fields": {
+      "code": "FLOURMILLSMACHINERYANDSTORAGES",
+      "name": "Flour mills machinery and storages"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 83
+  },
+  {
+    "fields": {
+      "code": "FOODPREMISES",
+      "name": "Food premises"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 84
+  },
+  {
+    "fields": {
+      "code": "FOODPROCESSINGPREMISES",
+      "name": "Food processing premises"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 85
+  },
+  {
+    "fields": {
+      "code": "FOODSTORAGEDRYGOODSSTRUCTURE",
+      "name": "Food storage (dry goods) – structure"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 86
+  },
+  {
+    "fields": {
+      "code": "FOODSTORAGEDRYSTRUCTURE",
+      "name": "Food storage dry structure"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 87
+  },
+  {
+    "fields": {
+      "code": "FORESTNURSERIES",
+      "name": "Forest nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 88
+  },
+  {
+    "fields": {
+      "code": "FORESTNURSERY",
+      "name": "Forest nursery"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 89
+  },
+  {
+    "fields": {
+      "code": "FORESTNURSERYSEEDLINGS",
+      "name": "Forest nursery seedlings"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 90
+  },
+  {
+    "fields": {
+      "code": "FRUITTREENURSERIES",
+      "name": "Fruit tree nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 91
+  },
+  {
+    "fields": {
+      "code": "FURNITUREIMPORTED",
+      "name": "Furniture imported"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 92
+  },
+  {
+    "fields": {
+      "code": "GINGER",
+      "name": "Ginger"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 93
+  },
+  {
+    "fields": {
+      "code": "GINGERFIELD",
+      "name": "Ginger - field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 94
+  },
+  {
+    "fields": {
+      "code": "GINGEROPENFIELD",
+      "name": "Ginger open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 95
+  },
+  {
+    "fields": {
+      "code": "GINGERPRODUCTIONFIELD",
+      "name": "Ginger production – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 96
+  },
+  {
+    "fields": {
+      "code": "GINGERPROTECTED",
+      "name": "Ginger protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 97
+  },
+  {
+    "fields": {
+      "code": "GRAINS",
+      "name": "Grains"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 98
+  },
+  {
+    "fields": {
+      "code": "GREENPEPPERTOMATO",
+      "name": "Green pepper/tomato"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 99
+  },
+  {
+    "fields": {
+      "code": "HERBSANDSPICES",
+      "name": "Herbs and spices"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 100
+  },
+  {
+    "fields": {
+      "code": "HOUSES",
+      "name": "Houses"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 101
+  },
+  {
+    "fields": {
+      "code": "LEEKSANDONIONSPLANTINGSTOCK",
+      "name": "Leeks and onions – planting stock"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 102
+  },
+  {
+    "fields": {
+      "code": "LETTUCEANDENDIVEPROTECTED",
+      "name": "Lettuce and endive – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 103
+  },
+  {
+    "fields": {
+      "code": "MEDICINALHERBSANDMUSHROOMS",
+      "name": "Medicinal herbs and mushrooms"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 104
+  },
+  {
+    "fields": {
+      "code": "MELON",
+      "name": "Melon"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 105
+  },
+  {
+    "fields": {
+      "code": "MELONPROTECTED",
+      "name": "Melon protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 106
+  },
+  {
+    "fields": {
+      "code": "MELONPROTECTEDANDOPENFIELD",
+      "name": "Melon protected & open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 107
+  },
+  {
+    "fields": {
+      "code": "MELONPROTECTEDANDFIELD",
+      "name": "Melon – protected and field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 108
+  },
+  {
+    "fields": {
+      "code": "MELONS",
+      "name": "Melons"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 109
+  },
+  {
+    "fields": {
+      "code": "MELONSPROTECTEDANDOPENFIELD",
+      "name": "Melons – protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 110
+  },
+  {
+    "fields": {
+      "code": "MILLSANDPROCESSOR",
+      "name": "Mills & Processor"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 111
+  },
+  {
+    "fields": {
+      "code": "MILLSANDPROCESSORS",
+      "name": "Mills & Processors"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 112
+  },
+  {
+    "fields": {
+      "code": "MILLSNABIM",
+      "name": "Mills (Nabim)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 113
+  },
+  {
+    "fields": {
+      "code": "MILLSANDFOODPROCESSINGSTRUCTURES",
+      "name": "Mills and food processing structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 114
+  },
+  {
+    "fields": {
+      "code": "MILLSANDPROCESSORSBISCUITS",
+      "name": "Mills and processors (biscuits)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 115
+  },
+  {
+    "fields": {
+      "code": "MILLSFOODPROCESSINGBISCUITS",
+      "name": "Mills-Food processing (Biscuits)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 116
+  },
+  {
+    "fields": {
+      "code": "MISCELLANEOUSDRYNUTSFRUITBEANSCEREALSSEEDS",
+      "name": "Miscellaneous dry nuts, fruit, beans, cereals, seeds"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 117
+  },
+  {
+    "fields": {
+      "code": "NATIONALPESTMANAGEMENTASSOCIATIONFOODPROCESSINGSTRUCTURES",
+      "name": "National Pest Management Association food?processing structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 118
+  },
+  {
+    "fields": {
+      "code": "NPMAFOODPROCESSINGSTRUCTURES",
+      "name": "NPMA food processing structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 119
+  },
+  {
+    "fields": {
+      "code": "NPMAFOODPROCESSINGSTRUCTURESCOCOABEANSREMOVED",
+      "name": "NPMA food processing structures (cocoa beans removed)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 120
+  },
+  {
+    "fields": {
+      "code": "NURSERY",
+      "name": "Nursery"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 121
+  },
+  {
+    "fields": {
+      "code": "NURSERYSTOCKFRUITNUTFLOWER",
+      "name": "Nursery stock – fruit nut flower"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 122
+  },
+  {
+    "fields": {
+      "code": "NURSERYSTOCKFRUITTREESRASPBERRIESROSES",
+      "name": "Nursery stock – fruit trees, raspberries, roses"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 123
+  },
+  {
+    "fields": {
+      "code": "NURSERYSTOCKFRUITNUTSFLOWER",
+      "name": "Nursery stock – fruit, nuts, Flower"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 124
+  },
+  {
+    "fields": {
+      "code": "NURSERYSTOCKFRUITNUTSFLOWERS",
+      "name": "Nursery stock – fruit, nuts, flowers"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 125
+  },
+  {
+    "fields": {
+      "code": "OLDBUILDINGS",
+      "name": "Old buildings"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 126
+  },
+  {
+    "fields": {
+      "code": "ORCHARDANDRASPBERRYNURSERIES",
+      "name": "Orchard & raspberry nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 127
+  },
+  {
+    "fields": {
+      "code": "ORCHARDANDRASPBERRYREPLANT",
+      "name": "Orchard and raspberry replant"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 128
+  },
+  {
+    "fields": {
+      "code": "ORCHARDREPLANT",
+      "name": "Orchard replant"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 129
+  },
+  {
+    "fields": {
+      "code": "ORCHARDREPLANTS",
+      "name": "Orchard replants"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 130
+  },
+  {
+    "fields": {
+      "code": "ORCHARDPOMEFRUITANDBERRIESREPLANT",
+      "name": "Orchard – pome fruit and berries – replant"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 131
+  },
+  {
+    "fields": {
+      "code": "ORNAMENTALTREENURSERIES",
+      "name": "Ornamental tree nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 132
+  },
+  {
+    "fields": {
+      "code": "ORNAMENTALS",
+      "name": "Ornamentals"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 133
+  },
+  {
+    "fields": {
+      "code": "OTHERNONQPSUSE",
+      "name": "Other non-QPS use"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 134
+  },
+  {
+    "fields": {
+      "code": "PASTA",
+      "name": "Pasta"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 135
+  },
+  {
+    "fields": {
+      "code": "PASTAANDFLOURMILLS",
+      "name": "Pasta and flour mills"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 136
+  },
+  {
+    "fields": {
+      "code": "PASTAMANUFACTURING",
+      "name": "Pasta Manufacturing"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 137
+  },
+  {
+    "fields": {
+      "code": "PASTAMANUFACTURINGFACILITIES",
+      "name": "Pasta manufacturing facilities"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 138
+  },
+  {
+    "fields": {
+      "code": "PEPPER",
+      "name": "Pepper"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 139
+  },
+  {
+    "fields": {
+      "code": "PEPPERGREENANDHOT",
+      "name": "Pepper - green and hot"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 140
+  },
+  {
+    "fields": {
+      "code": "PEPPERANDEGGPLANT",
+      "name": "Pepper and eggplant"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 141
+  },
+  {
+    "fields": {
+      "code": "PEPPERPROTECTED",
+      "name": "Pepper protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 142
+  },
+  {
+    "fields": {
+      "code": "PEPPEREGGPLANTPROTECTED",
+      "name": "Pepper, eggplant – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 143
+  },
+  {
+    "fields": {
+      "code": "PEPPERS",
+      "name": "Peppers"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 144
+  },
+  {
+    "fields": {
+      "code": "PEPPERSGREENANDHOT",
+      "name": "Peppers (green & hot)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 145
+  },
+  {
+    "fields": {
+      "code": "PEPPERSGREEN",
+      "name": "Peppers (green)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 146
+  },
+  {
+    "fields": {
+      "code": "PEPPERSHOT",
+      "name": "Peppers (hot)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 147
+  },
+  {
+    "fields": {
+      "code": "PEPPERSFIELD",
+      "name": "Peppers field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 148
+  },
+  {
+    "fields": {
+      "code": "PEPPERSPROTECTED",
+      "name": "Peppers protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 149
+  },
+  {
+    "fields": {
+      "code": "POTATO",
+      "name": "Potato"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 150
+  },
+  {
+    "fields": {
+      "code": "RASPBERRYNURSERIES",
+      "name": "Raspberry nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 151
+  },
+  {
+    "fields": {
+      "code": "RASPBERRYNURSERY",
+      "name": "Raspberry nursery"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 152
+  },
+  {
+    "fields": {
+      "code": "RICE",
+      "name": "Rice"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 153
+  },
+  {
+    "fields": {
+      "code": "RICECONSUMERPACKS",
+      "name": "Rice (consumer packs)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 154
+  },
+  {
+    "fields": {
+      "code": "RICECUNSUMERPACKS",
+      "name": "Rice (Cunsumer packs)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 155
+  },
+  {
+    "fields": {
+      "code": "RICEANDLEGUMES",
+      "name": "Rice and legumes"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 156
+  },
+  {
+    "fields": {
+      "code": "SEEDPRODUCTION",
+      "name": "Seed production"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 157
+  },
+  {
+    "fields": {
+      "code": "SEEDS",
+      "name": "Seeds"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 158
+  },
+  {
+    "fields": {
+      "code": "SEEDSPOSTHARVEST",
+      "name": "Seeds post harvest"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 159
+  },
+  {
+    "fields": {
+      "code": "SMOKEHOUSEHAM",
+      "name": "Smokehouse ham"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 160
+  },
+  {
+    "fields": {
+      "code": "SMOKEHOUSEHAMBUILDINGANDPRODUCT",
+      "name": "Smokehouse ham – (building and product)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 161
+  },
+  {
+    "fields": {
+      "code": "SPICESBUILDING",
+      "name": "Spices (building)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 162
+  },
+  {
+    "fields": {
+      "code": "SPICESSTRUCTURALEQUIPMENT",
+      "name": "Spices (structural/equipment)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 163
+  },
+  {
+    "fields": {
+      "code": "SPICESANDPAPPADUM",
+      "name": "Spices and pappadum"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 164
+  },
+  {
+    "fields": {
+      "code": "STOREDSPICES",
+      "name": "Stored spices"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 165
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRIESANDRASPBERRIESFRUIT",
+      "name": "Strawberries and raspberries – fruit"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 166
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRIESFIELD",
+      "name": "Strawberries – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 167
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRIESFRUIT",
+      "name": "Strawberries-fruit"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 168
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRIESFRUITPROTECTEDANDOPENFIELD",
+      "name": "Strawberries-fruit, protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 169
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRY",
+      "name": "Strawberry"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 170
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFIELD",
+      "name": "Strawberry - field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 171
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYANDPEPPERRESEARCH",
+      "name": "Strawberry and pepper – research"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 172
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUIT",
+      "name": "Strawberry fruit"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 173
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITFIELD",
+      "name": "Strawberry fruit field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 174
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITPROTECTED",
+      "name": "Strawberry fruit protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 175
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITSOIL",
+      "name": "Strawberry fruit soil"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 176
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITPROTECTEDSHARONANDGAZA",
+      "name": "Strawberry fruit – protected (Sharon and Gaza)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 177
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITPROTECTEDANDOPENFIELD",
+      "name": "Strawberry fruit – protected and open field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 178
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYFRUITSHARONANDGAZA",
+      "name": "Strawberry fruit – Sharon and Gaza"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 179
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYNURSERIES",
+      "name": "Strawberry nurseries"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 180
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYNURSERY",
+      "name": "Strawberry nursery"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 181
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSOIL",
+      "name": "Strawberry runner soil"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 182
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERS",
+      "name": "Strawberry runners"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 183
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSONTARIO",
+      "name": "Strawberry runners (Ontario)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 184
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSPRICEEDWARDISLAND",
+      "name": "Strawberry runners (Price Edward Island)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 185
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSPRINCEEDWARDISLAND",
+      "name": "Strawberry runners (Prince Edward Island )"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 186
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSSHARONANDGAZA",
+      "name": "Strawberry runners (Sharon and Gaza)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 187
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSPEI",
+      "name": "Strawberry runners PEI"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 188
+  },
+  {
+    "fields": {
+      "code": "STRAWBERRYRUNNERSQUEBEC",
+      "name": "Strawberry runners Quebec"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 189
+  },
+  {
+    "fields": {
+      "code": "STRUCTURES",
+      "name": "Structures"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 190
+  },
+  {
+    "fields": {
+      "code": "STRUCTURESHERBSANDSPICES",
+      "name": "Structures (Herbs & spices)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 191
+  },
+  {
+    "fields": {
+      "code": "STRUCTURESWHITWORTH",
+      "name": "Structures (Whitworth)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 192
+  },
+  {
+    "fields": {
+      "code": "STRUCTURESPROCESSORSANDSTORAGEWHITWORTHS",
+      "name": "Structures, processors and storage Whitworths"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 193
+  },
+  {
+    "fields": {
+      "code": "SWEETPOTATOSLIPS",
+      "name": "Sweet potato slips"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 194
+  },
+  {
+    "fields": {
+      "code": "SWEETPOTATOFIELD",
+      "name": "Sweet potato – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 195
+  },
+  {
+    "fields": {
+      "code": "SWEETPOTATOES",
+      "name": "Sweet potatoes"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 196
+  },
+  {
+    "fields": {
+      "code": "TOBACCOPRODUCTMACHINERY",
+      "name": "Tobacco (product/machinery)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 197
+  },
+  {
+    "fields": {
+      "code": "TOMATO",
+      "name": "Tomato"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 198
+  },
+  {
+    "fields": {
+      "code": "TOMATOPROTECTED",
+      "name": "Tomato (protected)"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 199
+  },
+  {
+    "fields": {
+      "code": "TOMATOFIELD",
+      "name": "Tomato field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 200
+  },
+  {
+    "fields": {
+      "code": "TOMATOEESFIELD",
+      "name": "Tomatoees-field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 201
+  },
+  {
+    "fields": {
+      "code": "TOMATOES",
+      "name": "Tomatoes"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 202
+  },
+  {
+    "fields": {
+      "code": "TOMATOESFIELD",
+      "name": "Tomatoes – field"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 203
+  },
+  {
+    "fields": {
+      "code": "TOMATOESPROTECTED",
+      "name": "Tomatoes – protected"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 204
+  },
+  {
+    "fields": {
+      "code": "TREENURSERY",
+      "name": "Tree nursery"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 205
+  },
+  {
+    "fields": {
+      "code": "TURFGRASS",
+      "name": "Turf grass"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 206
+  },
+  {
+    "fields": {
+      "code": "WATERMELON",
+      "name": "Watermelon"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 207
+  },
+  {
+    "fields": {
+      "code": "WATERMELONS",
+      "name": "Watermelons"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 208
+  },
+  {
+    "fields": {
+      "code": "WOODWORKINGPREMISES",
+      "name": "Woodworking premises"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 209
+  },
+  {
+    "fields": {
+      "code": "WOVENBASKETS",
+      "name": "Woven baskets"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 210
+  }
+]

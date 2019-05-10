@@ -1,3 +1,5 @@
+import re
+
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -8,6 +10,7 @@ from .substance import Substance
 __all__ = [
     'Nomination',
     'ExemptionApproved',
+    'CriticalUseCategory',
 ]
 
 
@@ -64,3 +67,25 @@ class ExemptionApproved(BaseExemption):
 
     class Meta:
         db_table = 'exemption_approved'
+
+
+class CriticalUseCategory(models.Model):
+    """
+    Used when recording agreed and actual critical uses (exemptions) of MeBr
+    """
+
+    code = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, unique=True)
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def get_alt_name(cls, name):
+        # Used to cleanup values during import of legacy data
+        return re.sub('[^A-Z]+', '', name.replace('&', 'AND').upper())
+
+    class Meta:
+        ordering = ('name',)
+        db_table = 'critical_use_category'
+        verbose_name_plural = 'Critical use categories'
