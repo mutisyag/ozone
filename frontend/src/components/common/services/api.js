@@ -133,7 +133,7 @@ const getPeriods = () => fetch('periods/')
 const getFilteredPeriods = () => new Promise(async (resolve, reject) => {
   try {
     const responsePeriods = await fetch('periods/')
-    const result = { data: sortDescending(responsePeriods.data, 'name') }
+    const result = { data: sortDescending(responsePeriods.data.filter(period => period['is_reporting_allowed']), 'name') }
     resolve(result)
   } catch (error) { //  here goes if someAsyncPromise() rejected}
     reject(error) //  this will result in a resolved promise.
