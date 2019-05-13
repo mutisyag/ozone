@@ -1025,6 +1025,7 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
             # "raf_remarks_party",
             "raf_remarks_secretariat",
+            "transfers_remarks_secretariat",
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",
