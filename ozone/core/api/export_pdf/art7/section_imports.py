@@ -32,7 +32,7 @@ def export_imports(submission):
 
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
     table_blends = tuple(mk_table_blends(
-        grouping, big_table_row, component_row, TABLE_BLENDS_COMP_HEADER,
+        grouping, big_table_row, component_row, TABLE_BLENDS_COMP_HEADER('import'),
         TABLE_BLENDS_COMP_STYLE, TABLE_BLENDS_COMP_WIDTHS
     ))
 

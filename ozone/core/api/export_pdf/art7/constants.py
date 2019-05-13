@@ -7,13 +7,12 @@ from reportlab.lib import colors
 
 TABLE_IMPORTS_EXPORTS_HEADER = lambda isBlend, type: (
     (
-        p_c(_('Type' if isBlend else 'Group')),
+        p_c(_('Type' if isBlend else 'Annex/Group')),
         p_c(_('Blend' if isBlend else 'Substance')),
-        p_c(_(f'{type.capitalize()}ing party for quantities reported as '
-              f'{type}s')),
+        p_c(_(f'{"Exporting" if type=="import" else "Destination"} country/region/territory')),
         p_c(_(f'Total Quantity {type.capitalize()}ed for All Uses')),
         '',
-        p_c(_(f'Quantity of new substances {type}ed as feedstock')),
+        p_c(_(f'{type.capitalize()} for feedstock')),
         p_c(_(f'Quantity of new substance {type}ed for exempted essential,'
                 'critical, high-ambient-temperature or other uses')),
         ''
@@ -66,14 +65,14 @@ TABLE_BLENDS_COMP_STYLE = (
 
 TABLE_BLENDS_COMP_WIDTHS = col_widths([4, 4, 4, 4, 4, 6])
 
-TABLE_BLENDS_COMP_HEADER = (
+TABLE_BLENDS_COMP_HEADER = lambda type: (
     (
         p_c(_('Substances')),
         p_c(_('Percentage')),
         p_c(_('Total quantity imported for all uses (new)')),
         p_c(_('Total quantity imported for all uses (recovered and reclaimed)')),
-        p_c(_('Quantity of new substances imported as feedstock')),
-        p_c(_('Quantity of new substance imported for exempted essential,'
+        p_c(_('Quantity of new substance imported for feedstock uses')),
+        p_c(_(f'Quantity of new substance {type}ed for exempted essential,'
               'critical, high-ambient-temperature or other uses')),
     ),
 )
@@ -83,7 +82,7 @@ TABLE_ROW_EMPTY_PROD = ((_('No data.'), '', '', '', '', '', '',),)
 
 TABLE_PROD_HEADER = (
     (
-        p_c(_('Group')),
+        p_c(_('Annex/Group')),
         p_c(_('Substance')),
         p_c(_('Total production for all uses')),
         p_c(_('Production for feedstock uses within your country')),
@@ -106,7 +105,7 @@ TABLE_PROD_HEADER = (
 
 TABLE_PROD_HEADER_FII = (
     (
-        p_c(_('Group')),
+        p_c(_('Annex/Group')),
         p_c(_('Substance')),
         p_c(_('Captured for all uses')),
         p_c(_('Captured for feedstock uses within your country')),
@@ -127,7 +126,7 @@ TABLE_PROD_HEADER_FII = (
 )
 
 TABLE_PROD_WIDTH = col_widths([1.3, 4, 2, 2, 7, 7, 4])
-    
+
 TABLE_PROD_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
     ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
@@ -181,7 +180,7 @@ TABLE_DEST_COMP_HEADER = (
 
 TABLE_DEST_HEADER = lambda isBlend: (
     (
-        p_c(_('Type' if isBlend else 'Group')),
+        p_c(_('Type' if isBlend else 'Annex/Group')),
         p_c(_('Blend' if isBlend else 'Substance')),
         p_c(_('Quantity destroyed')),
         p_c(_('Remarks (party)')),
@@ -207,10 +206,9 @@ TABLE_DEST_COMP_WIDTH = col_widths([6, 5, 6])
 
 TABLE_NONP_HEADER = lambda isBlend: (
         (
-            p_c(_('Type' if isBlend else 'Group')),
+            p_c(_('Type' if isBlend else 'Annex/Group')),
             p_c(_('Blend' if isBlend else 'Substance')),
-            p_c(_('Exporting party for quantities reported as imports '
-                  '<b>OR</b> Country of destination of exports')),
+            p_c(_('Exporting or destination country/region/territory')),
             p_c(_('Quantity of imports from non-parties')),
             '',
             p_c(_('Quantity of exports from non-parties')),
@@ -270,7 +268,7 @@ TABLE_EMISSIONS_HEADER = (
         '',
         p_c(_('For all uses')),
         p_c(_('For feedstock use in your country')),
-        p_c(_('For Destruction')),
+        p_c(_('For destruction')),
         '',
         '',
         '',
