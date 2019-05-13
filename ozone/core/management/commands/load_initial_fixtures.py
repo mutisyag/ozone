@@ -8,6 +8,7 @@ class Command(BaseCommand):
     FIXTURES = (
         'regions',
         'subregions',
+        'mdg_regions',
         'parties',
         'meetings',
         'treaties',
@@ -29,6 +30,7 @@ class Command(BaseCommand):
         'control_measures',
         'baselines',
         'limits',
+        'critical_use_categories',
     )
 
     FIXTURES_NOT_IN_TEST = (

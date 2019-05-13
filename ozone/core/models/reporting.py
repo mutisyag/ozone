@@ -1340,6 +1340,17 @@ class Submission(models.Model):
         This might need to become smarter if other data sources than Article 7
         are added to populate some of the fields in the ProdCons model.
         """
+        groups = self.get_reported_groups()
+
+        # Set to 0 all values that had been populated by this submission
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if hasattr(related_manager.model, 'clear_aggregated_data'):
+                related_manager.model.clear_aggregated_data(
+                    submission=self, reported_groups=groups
+                )
+
+        # And delete all remaining full-zero rows
         ProdCons.cleanup_aggregations(self.party, self.reporting_period)
 
     def fill_aggregated_data(self):
@@ -1351,6 +1362,14 @@ class Submission(models.Model):
         self.purge_aggregated_data()
 
         groups = self.get_reported_groups()
+
+        # Create all-zero rows for all reported groups
+        for group in groups:
+            ProdCons.objects.get_or_create(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                group=group
+            )
 
         for related in self.RELATED_DATA:
             related_manager = getattr(self, related)

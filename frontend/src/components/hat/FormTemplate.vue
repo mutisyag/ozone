@@ -64,8 +64,8 @@
           </template>
           <template slot="checkForDelete" slot-scope="cell">
             <fieldGenerator
+              v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
-              :disabled="!$store.getters.can_edit_data"
               :field="cell.item.originalObj.checkForDelete"
             />
           </template>
@@ -176,8 +176,8 @@
           </template>
           <template slot="checkForDelete" slot-scope="cell">
             <fieldGenerator
+              v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
-              :disabled="!$store.getters.can_edit_data"
               :field="cell.item.originalObj.checkForDelete"
             />
           </template>

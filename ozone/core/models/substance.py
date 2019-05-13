@@ -1,3 +1,4 @@
+import datetime
 import enum
 
 from django.core.exceptions import ValidationError
@@ -7,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..exceptions import MethodNotAllowed
 from .meeting import ExemptionTypes, Treaty
-from .party import Party
+from .party import Party, PartyRatification
 
 __all__ = [
     'Annex',
@@ -76,6 +77,72 @@ class Group(models.Model):
         choices=((e.value, e.name) for e in ExemptionTypes),
         blank=True
     )
+
+    def get_signing_parties_ids(self, reporting_period=None):
+        """
+        Get list of id's of parties that had ratified, at the start of the given
+        reporting_period, the control treaty for this group.
+        """
+        if not reporting_period:
+            max_date = datetime.date.today()
+        else:
+            max_date = reporting_period.start_date
+
+        # Get all the Parties that had ratified the control treaty at that date
+        current_ratifications = PartyRatification.objects.filter(
+            entry_into_force_date__lte=max_date,
+            treaty=self.control_treaty
+        )
+        return set(
+            current_ratifications.values_list('party__id', flat=True)
+        )
+
+    def get_parties(self, reporting_period=None):
+        """
+        Returns qs of Parties for which the group is controlled
+        (i.e. Party had ratified, at the date on which the given
+        reporting_period started, the Treaty that defines the Group as
+        controlled ).
+        """
+        return Party.objects.filter(
+            id__in=self.get_signing_parties_ids(reporting_period)
+        )
+
+    def get_non_parties(self, reporting_period=None):
+        """
+        Returns qs of Parties for which the group is not controlled
+        (i.e. Party had not ratified, at the date on which the given
+        reporting_period started, the Treaty that defines the Group as
+        controlled ).
+        """
+        return Party.objects.exclude(
+            id__in=self.get_signing_parties_ids(reporting_period)
+        )
+
+    @classmethod
+    def get_groups(cls, party, reporting_period=None):
+        """
+        Returns queryset of all substance Groups that party should report in
+        given reporting_period.
+        """
+        if party is None:
+            return []
+        if reporting_period is None:
+            max_date = datetime.date.today()
+        else:
+            max_date = reporting_period.start_date
+
+        # Get all the current ratifications of this Party
+        current_ratifications = PartyRatification.objects.filter(
+            entry_into_force_date__lte=max_date,
+            party=party
+        )
+
+        return Group.objects.filter(
+            report_treaty_id__in=current_ratifications.values_list(
+                'treaty_id', flat=True
+            )
+        )
 
     def __str__(self):
         return f'Group {self.group_id}'

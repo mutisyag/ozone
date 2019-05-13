@@ -243,6 +243,21 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
+    @action(detail=True, methods=["get"])
+    def controlled_groups(self, request, pk=None, **kwargs):
+        """
+        Returns the list of substance groups (Group.group_id) that the party
+        must report on for the reporting period given as param (`period`).
+        If no param is given, it returns the list for the current date.
+        """
+        period = ReportingPeriod.objects.filter(
+            id=int(request.query_params.get('period', 0))
+        ).first()
+        groups = Group.get_groups(Party.objects.filter(pk=pk).first(), period)
+        if groups:
+            groups = groups.values_list('group_id', flat=True)
+        return Response(groups)
+
 
 class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
     serializer_class = PartyRatificationSerializer
@@ -265,11 +280,11 @@ class GetNonPartiesViewSet(ReadOnlyMixin, views.APIView):
         groups = Group.objects.all()
         all_non_parties = {}
 
+        period = ReportingPeriod.objects.get(name=period_name) \
+            if period_name else None
+
         for group in groups:
-            queryset = Article7NonPartyTrade.get_non_parties(
-                group.pk,
-                ReportingPeriod.objects.get(name=period_name).pk if period_name else None,
-            )
+            queryset = group.get_non_parties(period)
             non_parties_per_group = {
                 id: True for id in queryset.values_list('id', flat=True)
             }

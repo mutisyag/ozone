@@ -1,5 +1,6 @@
 import json
 import os
+from copy import deepcopy
 from datetime import datetime
 
 from django.core.management.base import BaseCommand, CommandError
@@ -7,8 +8,9 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from openpyxl import load_workbook
 
-from ozone.core.models.utils import RatificationTypes
+from ozone.core.models.exemption import CriticalUseCategory
 from ozone.core.models.substance import Blend
+from ozone.core.models.utils import RatificationTypes
 from ozone.core.models.utils import round_half_up
 
 
@@ -42,6 +44,10 @@ class Command(BaseCommand):
         'partyratification': {
             'fixture': 'partiesratification.json',
             'sheet': 'Cntry',
+        },
+        'mdgregion': {
+            'sheet': 'MDG_RegionsCntryArea',
+            'fixture': 'mdg_regions.json',
         },
         'region': {
             'sheet': 'Regions',
@@ -85,6 +91,10 @@ class Command(BaseCommand):
             'additional_data': {},
             'prod_transfers': {},
         },
+        'criticalusecategory': {
+            'fixture': 'critical_use_categories.json',
+            'sheet': ['MeBrAgreedCriticalUseCategories', 'MeBrActualCriticalUsebyCategory']
+        }
     }
     EXCLUDED = (
         'UNK',
@@ -156,32 +166,37 @@ class Command(BaseCommand):
         if not self.MODELS.get(model) or not self.MODELS[model].get('sheet'):
             raise CommandError(
                 'Import for model "%s" is not implemented' % model)
-        sheet = workbook[self.MODELS[model]['sheet']]
+        sheet_names = self.MODELS[model]['sheet']
+        if type(sheet_names) == str:
+            # To support multiple sheets
+            sheet_names = [sheet_names]
 
-        for idx in range(1, sheet.max_row):
-            row = self.row2dict(sheet, sheet[idx + 1], idx)
-            model_class = 'core.' + (self.MODELS[model].get('model') or model)
-            obj = {
-                'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
-                'model': model_class,
-                'fields': {},
-            }
-            fields = getattr(self, model + "_map")(obj['fields'], row)
-            if isinstance(fields, dict):
-                obj['fields'] = fields
-                data.append(obj)
-            elif isinstance(fields, list):
-                # multiple objects returned
-                for idx, f in enumerate(fields):
-                    data.append({
-                        'pk': obj['pk'] + idx,
-                        'model': obj['model'],
-                        'fields': f,
-                    })
-                pass
-            else:
-                # Probably None was returned, don't add to list
-                continue
+        for sheet_name in sheet_names:
+            sheet = workbook[sheet_name]
+            for idx in range(1, sheet.max_row):
+                row = self.row2dict(sheet, sheet[idx + 1], idx)
+                model_class = 'core.' + (self.MODELS[model].get('model') or model)
+                obj = {
+                    'pk': len(data) + 1 + (self.MODELS[model].get('min_id') or 0),
+                    'model': model_class,
+                    'fields': {},
+                }
+                fields = getattr(self, model + "_map")(obj['fields'], row)
+                if isinstance(fields, dict):
+                    obj['fields'] = fields
+                    data.append(obj)
+                elif isinstance(fields, list):
+                    # multiple objects returned
+                    for idx, f in enumerate(fields):
+                        data.append({
+                            'pk': obj['pk'] + idx,
+                            'model': obj['model'],
+                            'fields': f,
+                        })
+                    pass
+                else:
+                    # Probably None was returned, don't add to list
+                    continue
 
         if hasattr(self, model + "_additional_data"):
             data += getattr(self, model + "_additional_data")(len(data) + 1)
@@ -190,10 +205,38 @@ class Command(BaseCommand):
         if hasattr(self, model + "_postprocess"):
             for obj in data:
                 getattr(self, model + "_postprocess")(obj['fields'])
-        # Hack alert: Remove rows having a pseudo-field called "_deleted"
-        # return list(filter(lambda obj: obj['fields'].get('_deleted') is not
-        # True, data))
+
+        if hasattr(self, model + "_aggregate"):
+            data = getattr(self, model + "_aggregate")(data)
         return data
+
+    def mdgregion_map(self, f, row):
+        f['code'] = row['M49Codes']
+        f['name'] = row['RegionCountryArea']
+        f['income_type'] = row['IncomeGroup']
+        f['remark'] = row['Remark'] or ''
+        if 'parent_regions' not in f:
+            f['parent_regions'] = list()
+        if row['Group_Code'] != '-1':
+            f['parent_regions'].append(row['Group_Code'])
+        return f
+
+    def mdgregion_aggregate(self, data):
+        # pass 1: join the regions with the same code
+        newdata = {}
+        for obj in data:
+            # use code as pk
+            code = obj['fields']['code']
+            if code in newdata:
+                newdata[code]['fields']['parent_regions'] += (
+                    obj['fields']['parent_regions']
+                )
+            else:
+                newdata[code] = deepcopy(obj)
+                # override the pk
+                newdata[code]['pk'] = code
+
+        return list(newdata.values())
 
     def region_map(self, f, row):
         f['name'] = row['RegionName']
@@ -215,7 +258,10 @@ class Command(BaseCommand):
             # Remove "All countries" and "Some countries"
             # f['_deleted'] = True
             return None
-        f['name'] = row['CntryName']
+        if row['CntryName'] == 'Taiwan Province':
+            f['name'] = 'Taiwan, Province of China'
+        else:
+            f['name'] = row['CntryName']
         # Skipped fields: CntryNameFr, CntryNameSp, PrgApprDate, CntryID_org,
         # CntryName20, MDG_CntryCode, ISO_Alpha3Code, www_country_id
 
@@ -229,8 +275,16 @@ class Command(BaseCommand):
         f['subregion'] = subregion
 
         f['remark'] = row['Remark'] or ""
-        # This will be replaced in party_postprocess
+        # parent_party will be replaced in party_postprocess
         f['parent_party'] = row['MainCntryID']
+        f['iso_alpha3_code'] = row['ISO_Alpha3Code'] or ''
+        f['abbr_alt'] = row['CntryID_org'] or ''
+        f['name_alt'] = row['CntryName20'] or ''
+        try:
+            f['mdg_region'] = self.lookup_id('mdgregion', 'code', str(row['MDG_CntryCode']))
+        except CommandError:
+            # MDG region for Antarctica does not exist
+            pass
         return f
 
     def party_postprocess(self, f):
@@ -584,3 +638,34 @@ class Command(BaseCommand):
 
         # BDN new baselines are rounded to 5 decimals
         return round_half_up(baseline, 5)
+
+    def criticalusecategory_map(self, f, row):
+        columns = [
+            'Categories of permitted critical uses',
+            'CU_Title',
+        ]
+        for col in columns:
+            if col in row:
+                f['name'] = row[col]
+        return f
+
+    def criticalusecategory_aggregate(self, data):
+        # Cleanup some duplicates
+        data.sort(key=lambda x: x['fields']['name'].strip().lower())
+        # sort first just to get rid of some derived names
+        newdata = {}
+        for obj in data:
+            name = obj['fields']['name']
+            key = CriticalUseCategory.get_alt_name(name)
+            if key not in newdata:
+                name = name.strip()
+                obj['fields']['name'] = name[0].upper() + name[1:]
+                obj['fields']['code'] = key
+                obj['pk'] = len(newdata) + 1
+                newdata[key] = obj
+            # else continue
+
+        return sorted(
+            list(newdata.values()),
+            key=lambda x: x['pk']
+        )
