@@ -96,6 +96,10 @@ export default {
       }
     },
 
+    prepareDataForSave() {
+      //  TODO: will be reimplemented in every component
+    },
+
     prepareCommentsForSave() {
       if (!this.form.formDetails.comments_default_properties) return
       const commentsObj = JSON.parse(JSON.stringify(this.form.formDetails.comments_default_properties))
