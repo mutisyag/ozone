@@ -29,6 +29,8 @@ import {
 
 import { getLabels } from '@/components/art7/dataDefinitions/labels'
 
+import router from '@/router'
+
 const actions = {
   openConfirmModal({ commit }, { title, description, $gettext }) {
     return new Promise(resolve => {
@@ -266,6 +268,7 @@ const actions = {
       } else {
         dispatch('getSubmissionData', { submission, $gettext })
       }
+      router.push({ path: '/dashboard' })
       dispatch('setAlert', {
         $gettext,
         message: { __all__: [$gettext('Submission status updated successfully.')] },
