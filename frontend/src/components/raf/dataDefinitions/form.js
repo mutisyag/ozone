@@ -58,11 +58,11 @@ const getFormRaf = ($gettext) => {
         },
 
         get modal_order() {
-          return this.section_subheaders.map(x => x.name).filter(x => !['group', 'substance', 'validation', 'imports'].includes(x))
+          return this.section_subheaders.map(x => x.name).filter(x => !['year', 'substance', 'validation', 'imports'].includes(x))
         },
         section_subheaders: [{
-          label: `<br>${$gettext('Annex/group')}`,
-          name: 'group',
+          label: `A<br>${$gettext('Year')}`,
+          name: 'year',
           colspan: 2
         }, {
           label: `B<br>${$gettext('Ozone depleting substances')}`,

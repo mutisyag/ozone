@@ -374,6 +374,9 @@ export default {
   methods: {
   },
   computed: {
+    currentPeriod() {
+      return this.$store.state.current_submission.reporting_period
+    },
     tableItems() {
       const tableFields = []
       this.tab_info.form_fields.forEach(form_field => {
@@ -385,6 +388,7 @@ export default {
                 this.typeOfDisplayObj[key]
               ][form_field[key].selected]
               : (tableRow[key] = form_field[key].selected)
+            tableRow.year = this.currentPeriod
           }
         })
         if (Object.keys(tableRow).length) {
@@ -413,6 +417,7 @@ export default {
                 this.typeOfDisplayObj[key]
               ][element[key].selected]
               : (tableRow[key] = element[key].selected)
+            tableRow.year = this.currentPeriod
           }
         })
         if (Object.keys(tableRow).length) {
