@@ -8,7 +8,7 @@ class Command(BaseCommand):
     FIXTURES = (
         'regions',
         'subregions',
-        'mdgregions',
+        'mdg_regions',
         'parties',
         'meetings',
         'treaties',
