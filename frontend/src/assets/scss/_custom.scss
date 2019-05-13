@@ -1571,7 +1571,8 @@ html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer 
 }
 
 .sidebar .nav-link {
-  opacity: 0.5;
+  // opacity: 0.5;
+  mix-blend-mode: overlay;
   font-size: 1rem;
   i {
     color: white!important;
@@ -1580,6 +1581,7 @@ html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer 
 
 .sidebar .nav-link.active {
   opacity: 1;
+  mix-blend-mode: normal;
   background: rgba(0,0,0,0.2);
   border-left: 8px solid $blue;
 }
