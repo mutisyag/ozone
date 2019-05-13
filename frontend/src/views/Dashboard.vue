@@ -585,7 +585,7 @@ export default {
     },
 
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Dashboard'))
+      this.$store.commit('updateBreadcrumbs', this.$gettext('Online Reporting Tool'))
     },
     addSubmission() {
       this.$store.dispatch('addSubmission', {
