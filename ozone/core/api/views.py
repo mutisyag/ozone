@@ -651,7 +651,17 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return Response(
             [
                 AggregationSerializer(aggregation).data
-                for group, aggregation in sub.get_aggregated_data().items()
+                for group, aggregation in sub.get_aggregated_data(use_mt=False).items()
+            ]
+        )
+
+    @action(detail=True, methods=["get"])
+    def aggregations_mt(self, request, submission_pk=None, pk=None):
+        sub = Submission.objects.get(pk=pk)
+        return Response(
+            [
+                AggregationSerializer(aggregation).data
+                for group, aggregation in sub.get_aggregated_data(use_mt=True).items()
             ]
         )
 

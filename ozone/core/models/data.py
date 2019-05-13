@@ -9,7 +9,7 @@ from model_utils import FieldTracker
 from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend
-from .aggregation import ProdCons
+from .aggregation import ProdCons, ProdConsMT
 from .utils import model_to_dict
 
 __all__ = [
@@ -169,42 +169,62 @@ class AggregationMixin:
     Used by all data-report classes that need to generate aggregated data.
     """
 
-    # Maps flags names to group IDs, as group IDs are the closest to immutable
-    # field on the Group model.
+    # Models used for populating aggregations. Entries are of the form:
+    # (model_name, use_mt).
+    AGGREGATION_CLASSES = [
+        (ProdCons, False),
+        (ProdConsMT, True),
+    ]
 
     @classmethod
     def get_fields_sum_by_group(
-        cls, submission, group, field_names
+        cls, submission, group, field_names, use_mt=False
     ):
         """
-        Returns ODP-based sum of quantities reported for given group_id, for a
-        certain submission.
+        Returns sum of quantities reported for given group_id, for a certain
+        submission. If `use_mt` is set to True, sum is in metric tonnes; else,
+        quantities are multiplied by either the ODP or GWP of each substance.
         """
         def zero_if_none(value):
             return Decimal(repr(value)) if value is not None else Decimal(0.0)
 
-        if group.is_gwp:
-            potential_field = 'substance__gwp'
-        elif group.is_odp:
-            potential_field = 'substance__odp'
+        if not use_mt:
+            if group.is_gwp:
+                potential_field = 'substance__gwp'
+            elif group.is_odp:
+                potential_field = 'substance__odp'
 
-        # This works both faster and more correctly than using Django's
-        # aggregations!
-        # One SQL query for all fields.
-        fields_values = cls.objects.filter(
-            submission=submission, substance__group__id=group.id
-        ).values(potential_field, *field_names)
+            # This works both faster and more correctly than using Django's
+            # aggregations!
+            # One SQL query for all fields.
+            fields_values = cls.objects.filter(
+                submission=submission, substance__group__id=group.id
+            ).values(potential_field, *field_names)
 
-        return {
-            field_name: float(sum(
-                [
-                    zero_if_none(value[field_name]) *
-                    Decimal(repr(value[potential_field]))
-                    for value in fields_values
-                ]
-            ))
-            for field_name in field_names
-        }
+            return {
+                field_name: float(sum(
+                    [
+                        zero_if_none(value[field_name]) *
+                        Decimal(repr(value[potential_field]) if value[potential_field] else 0)
+                        for value in fields_values
+                    ]
+                ))
+                for field_name in field_names
+            }
+        else:
+            # Just sum the metric tonnes quantities per group
+            fields_values = cls.objects.filter(
+                submission=submission, substance__group__id=group.id
+            ).values(*field_names)
+            return {
+                field_name: float(sum(
+                    [
+                        zero_if_none(value[field_name])
+                        for value in fields_values
+                    ]
+                ))
+                for field_name in field_names
+            }
 
     @classmethod
     def fill_aggregated_data(cls, submission=None, reported_groups=[]):
@@ -214,26 +234,29 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
-        for group in reported_groups:
-            # Find an aggregation if one is already created
-            aggregation, created = ProdCons.objects.get_or_create(
-                party=submission.party,
-                reporting_period=submission.reporting_period,
-                group=group
-            )
+        for klass, use_mt in cls.AGGREGATION_CLASSES:
+            for group in reported_groups:
+                # Find an aggregation if one is already created
+                aggregation, created = klass.objects.get_or_create(
+                    party=submission.party,
+                    reporting_period=submission.reporting_period,
+                    group=group
+                )
 
-            values = cls.get_fields_sum_by_group(
-                submission, group, cls.AGGREGATION_MAPPING.keys()
-            )
-            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                # Add with existing value, as a field in the aggregation table
-                # may be populated by aggregating values from several other
-                # fields in the data models.
-                value = getattr(aggregation, aggr_field) + values[model_field]
-                setattr(aggregation, aggr_field, value)
+                values = cls.get_fields_sum_by_group(
+                    submission, group, cls.AGGREGATION_MAPPING.keys(), use_mt
+                )
+                for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                    # Add with existing value, as a field in the aggregation
+                    # table may be populated by aggregating values from several
+                    # other fields in the data models.
+                    value = getattr(aggregation, aggr_field) \
+                            + values[model_field]
+                    setattr(aggregation, aggr_field, value)
 
-            # This will automatically trigger the calculation of computed values
-            aggregation.save()
+                # This will automatically trigger the calculation of computed
+                # values
+                aggregation.save()
 
     @classmethod
     def clear_aggregated_data(cls, submission=None, reported_groups=[]):
@@ -243,25 +266,26 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
-        for group in reported_groups:
-            # Find an aggregation if one is already created
-            # This will return None if there is no aggregation
-            aggregation = ProdCons.objects.filter(
-                party=submission.party,
-                reporting_period=submission.reporting_period,
-                group=group
-            ).first()
-            if aggregation is None:
-                continue
+        for klass, use_mt in cls.AGGREGATION_CLASSES:
+            for group in reported_groups:
+                # Find an aggregation if one is already created
+                # This will return None if there is no aggregation
+                aggregation = klass.objects.filter(
+                    party=submission.party,
+                    reporting_period=submission.reporting_period,
+                    group=group
+                ).first()
+                if aggregation is None:
+                    continue
 
-            # Set all aggregation fields coming from this model to zero
-            for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                setattr(aggregation, aggr_field, 0.0)
+                # Set all aggregation fields coming from this model to zero
+                for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
+                    setattr(aggregation, aggr_field, 0.0)
 
-            aggregation.save()
+                aggregation.save()
 
     @classmethod
-    def get_aggregated_data(cls, submission, reported_groups):
+    def get_aggregated_data(cls, submission, reported_groups, use_mt=False):
         """
         reported_groups: mapping of form:
         {
@@ -272,13 +296,15 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
+        klass = ProdConsMT if use_mt else ProdCons
+
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
         for group, aggregation in reported_groups.items():
             # Initiate a model instance if needed but *do not save* it to the DB
             # This still initiates the fields with the correct default values.
             if aggregation is None:
-                aggregation = ProdCons(
+                aggregation = klass(
                     party=submission.party,
                     reporting_period=submission.reporting_period,
                     group=group
@@ -286,7 +312,7 @@ class AggregationMixin:
                 reported_groups[group] = aggregation
 
             values = cls.get_fields_sum_by_group(
-                submission, group, cls.AGGREGATION_MAPPING.keys()
+                submission, group, cls.AGGREGATION_MAPPING.keys(), use_mt
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
                 # Add with existing value, as a field in the aggregation table

@@ -13,12 +13,13 @@ from .control import Limit, LimitTypes, Baseline, BaselineType
 
 __all__ = [
     'ProdCons',
+    'ProdConsMT'
 ]
 
 
-class ProdCons(models.Model):
+class BaseProdCons(models.Model):
     """
-    Aggregation for Production/consumption data reports.
+    Base *abstract* aggregation model for Production/consumption data reports.
 
     Only one entry per party/reporting_period/group - when a new submission
     becomes current for that party & reporting period, the values in the entry
@@ -38,21 +39,21 @@ class ProdCons(models.Model):
 
     party = models.ForeignKey(
         Party,
-        related_name="prod_cons_aggregations",
+        related_name="%(class)s_aggregations",
         on_delete=models.PROTECT,
         help_text="Party for which this aggregation was calculated",
     )
 
     reporting_period = models.ForeignKey(
         ReportingPeriod,
-        related_name="prod_cons_aggregations",
+        related_name="%(class)s_aggregations",
         on_delete=models.PROTECT,
         help_text="Reporting Period for which this aggregation was calculated",
     )
 
     group = models.ForeignKey(
         Group,
-        related_name="prod_cons_aggregations",
+        related_name="%(class)s_aggregations",
         on_delete=models.PROTECT,
         help_text="Annex Group for which this aggregation was calculated",
     )
@@ -411,5 +412,21 @@ class ProdCons(models.Model):
         super().save(force_insert, force_update, using, update_fields)
 
     class Meta:
-        db_table = "aggregation_prod_cons"
+        abstract = True
         unique_together = ("party", "reporting_period", "group")
+
+
+class ProdCons(BaseProdCons):
+    """
+    Concrete model for ODP-based aggregations
+    """
+    class Meta(BaseProdCons.Meta):
+        db_table = "aggregation_prod_cons"
+
+
+class ProdConsMT(BaseProdCons):
+    """
+    Concrete model for ODP-based aggregations
+    """
+    class Meta(BaseProdCons.Meta):
+        db_table = "aggregation_prod_cons_mt"

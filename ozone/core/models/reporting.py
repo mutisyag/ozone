@@ -246,6 +246,8 @@ class Submission(models.Model):
         'rafreports',
     ]
 
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
     GROUP_FLAGS_MAPPING = {
         'flag_has_reported_a1': 'AI',
         'flag_has_reported_a2': 'AII',
@@ -1376,9 +1378,9 @@ class Submission(models.Model):
                         submission=self, reported_groups=groups
                     )
 
-    def get_aggregated_data(self):
+    def get_aggregated_data(self, use_mt=False):
         """
-        Returns list of non-persistent calculated aggregated data for this
+        Returns dict of non-persistent calculated aggregated data for this
         submission, without touching the database.
         """
 
@@ -1389,7 +1391,9 @@ class Submission(models.Model):
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_data'):
                     related_manager.model.get_aggregated_data(
-                        submission=self, reported_groups=group_mapping
+                        submission=self,
+                        reported_groups=group_mapping,
+                        use_mt=use_mt
                     )
 
         return group_mapping
