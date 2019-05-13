@@ -9,10 +9,10 @@
         <p>By clicking the OK button, you confirm that all blank cells and all substances not included are considered to have zero values.</p>
       </div>
       <div v-if="questionnaireStatus.length">
-        <p>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</p>
+        <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</b></p>
       </div>
       <div v-if="uncheckedFlags.length">
-        <p>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
+        <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</b></p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">
@@ -48,11 +48,13 @@
 <script>
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import flagMapping from '@/components/common/dataDefinitions/flagsMapping'
 
 export default {
   data() {
     return {
-      labels: null
+      labels: null,
+      flagMapping
     }
   },
   created() {
@@ -86,7 +88,11 @@ export default {
       if (!this.$store.state.form.tabs.flags) {
         return []
       }
-      return Object.keys(this.formTabs.flags.form_fields).filter(flag => flag.includes('flag_has_reported') && !this.formTabs.flags.form_fields[flag].selected).map(flag => this.labels.flags[flag])
+      return Object.keys(this.formTabs.flags.form_fields).filter(
+        flag => flag.includes('flag_has_reported')
+        && !this.formTabs.flags.form_fields[flag].selected
+        && this.$store.state.initialData.controlledGroups.includes(this.flagMapping[flag])
+      ).map(flag => this.labels.flags[flag])
     }
   },
   methods: {

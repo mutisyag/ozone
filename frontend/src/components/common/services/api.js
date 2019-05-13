@@ -249,6 +249,8 @@ const getLimits = params => fetch('aggregations/', {
   params
 })
 
+const getControlledGroups = (party, period) => fetch(`parties/${party}/controlled_groups/?period=${period}`)
+
 export {
   apiURL,
   apiBase,
@@ -291,5 +293,6 @@ export {
   getEssenCritTypes,
   getSubmissionAggregations,
   getLimits,
-  getFilteredParties
+  getFilteredParties,
+  getControlledGroups
 }

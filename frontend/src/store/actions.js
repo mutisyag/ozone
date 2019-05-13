@@ -20,7 +20,8 @@ import {
   uploadFile,
   getSubmissionDefaultValues,
   getTransitions,
-  getSubmissionFormat
+  getSubmissionFormat,
+  getControlledGroups
 } from '@/components/common/services/api'
 
 import {
@@ -332,12 +333,18 @@ const actions = {
         context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
         context.dispatch('getNonParties', reporting_period)
         context.dispatch('getSubmissionFormatOptions')
+        context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
         if (additionalAction) {
           context.dispatch(additionalAction)
         }
         resolve()
       })
     })
+  },
+
+  async getControlledGroups(context, { party, period }) {
+    const controlledGroups = await getControlledGroups(party, period)
+    context.commit('setControlledGroups', controlledGroups.data)
   },
 
   async getSubmissionFormatOptions(context) {
