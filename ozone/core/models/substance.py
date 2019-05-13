@@ -179,7 +179,7 @@ class Substance(models.Model):
     max_odp = models.FloatField()
 
     # Global warming potential
-    gwp = models.IntegerField(null=True)
+    gwp = models.IntegerField(null=True, blank=True)
 
     formula = models.CharField(max_length=256)
 
