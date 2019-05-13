@@ -247,11 +247,11 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     def controlled_groups(self, request, pk=None, **kwargs):
         """
         Returns the list of substance groups (Group.group_id) that the party
-        must report on for the reporting period given as param (`period`).
+        must report on for the reporting period given as param by name (`period`).
         If no param is given, it returns the list for the current date.
         """
         period = ReportingPeriod.objects.filter(
-            id=int(request.query_params.get('period', 0))
+            name=int(request.query_params.get('period', 0))
         ).first()
         groups = Group.get_groups(Party.objects.filter(pk=pk).first(), period)
         if groups:
