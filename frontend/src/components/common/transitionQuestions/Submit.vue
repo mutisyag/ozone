@@ -9,10 +9,10 @@
         <p>By clicking the OK button, you confirm that all blank cells and all substances not included are considered to have zero values.</p>
       </div>
       <div v-if="questionnaireStatus.length">
-        <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</b></p>
+        <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form.</b></p>
       </div>
       <div v-if="uncheckedFlags.length">
-        <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</b></p>
+        <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">
