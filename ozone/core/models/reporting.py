@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
-from .aggregation import ProdCons, ProdConsMT
+from .aggregation import ProdCons
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
@@ -1265,7 +1265,8 @@ class Submission(models.Model):
                 latest.flag_superseded = False
                 latest.save()
 
-        # Populate submission-specific aggregated data
+        # Populate submission-specific aggregated data. Kept out of the atomic
+        # block due to execution time.
         if latest:
             latest.fill_aggregated_data()
         else:

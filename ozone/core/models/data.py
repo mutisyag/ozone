@@ -241,7 +241,7 @@ class AggregationMixin:
 
         for entry in queryset:
             # Add entry to dictionary if necessary
-            aggregation = ProdConsMT.objects.get_or_create(
+            aggregation, created = ProdConsMT.objects.get_or_create(
                 party=submission.party,
                 reporting_period=submission.reporting_period,
                 substance=entry.substance
