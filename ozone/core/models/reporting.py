@@ -258,6 +258,10 @@ class Submission(models.Model):
         'flag_has_reported_e': 'EI',
         'flag_has_reported_f': 'F',
     }
+    FLAG_GROUPS_MAPPING = {
+        value: key
+        for key, value in GROUP_FLAGS_MAPPING.items()
+    }
 
     # TODO: this implements the `submission_type` field from the
     # Ozone Business Data Tables. Analyze how Party-to-Obligation/Version
@@ -364,60 +368,59 @@ class Submission(models.Model):
         verbose_name='Confirmed blanks',
     )
     flag_has_reported_a1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
-    # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
         verbose_name='Has reported F',
@@ -1391,7 +1394,6 @@ class Submission(models.Model):
 
         return group_mapping
 
-
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
                f'for {self.reporting_period.name} - version {self.version}'
@@ -1481,7 +1483,7 @@ class Submission(models.Model):
             # (e.g. fast-tracked secretariat submissions).
             # For now we will naively instantiate all submissions with
             # the default article 7 workflow.
-            if self.obligation.form_type == 'exemption':
+            if self.obligation.form_type == FormTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
             else:
                 self._workflow_class = 'default'
@@ -1496,6 +1498,16 @@ class Submission(models.Model):
                 self.reporting_channel = ReportingChannel.get_default(
                     self.created_by
                 )
+
+            # Prefill Art 7 has_reported flags
+            if self.obligation.form_type == FormTypes.ART7.value:
+                if self.cloned_from:
+                    for flag in self.GROUP_FLAGS_MAPPING.keys():
+                        setattr(self, flag, getattr(self.cloned_from, flag))
+                else:
+                    groups = Group.get_groups(self.party, self.reporting_period)
+                    for g in groups:
+                        setattr(self, self.FLAG_GROUPS_MAPPING[g.group_id], True)
 
             self.clean()
             ret = super().save(
