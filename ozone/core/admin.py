@@ -460,7 +460,7 @@ class LimitAdmin(admin.ModelAdmin):
 class PartyRatificationAdmin(admin.ModelAdmin):
     list_display = ('party', 'treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
     list_filter = (('party', MainPartyFilter), 'treaty', 'ratification_type')
-    search_fields = ['party', 'treaty']
+    search_fields = ['party__name', 'treaty__name']
 
 
 @admin.register(CriticalUseCategory)
