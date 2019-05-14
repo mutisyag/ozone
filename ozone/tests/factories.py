@@ -10,6 +10,8 @@ from ozone.core.models import (
     Meeting,
     Obligation,
     Party,
+    PartyType,
+    PartyHistory,
     Region,
     ReportingChannel,
     ReportingPeriod,
@@ -182,6 +184,27 @@ class ReportingPeriodFactory(DjangoModelFactory):
 
     class Meta:
         model = ReportingPeriod
+
+
+class PartyTypeFactory(DjangoModelFactory):
+    abbr = 'A5'
+    name = 'Article 5'
+
+    class Meta:
+        model = PartyType
+        django_get_or_create = ('abbr', 'name',)
+
+
+class PartyHistoryFactory(DjangoModelFactory):
+    population = 10
+    is_high_ambient_temperature = False
+    is_ceit = False
+    is_article5 = True
+    is_eu_member = True
+    party_type = SubFactory(PartyTypeFactory)
+
+    class Meta:
+        model = PartyHistory
 
 
 class ReportingChannelFactory(DjangoModelFactory):

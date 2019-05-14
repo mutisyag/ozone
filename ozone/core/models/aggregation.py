@@ -200,7 +200,7 @@ class BaseProdCons(models.Model):
             'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
             'YE', 'FJ', 'PK', 'PH'
         ]
-        if group.group_id == 'CI':
+        if group and group.group_id == 'CI':
             if (
                 period.start_date >= datetime.strptime('2011-01-01', "%Y-%m-%d").date()
                 or period.name == '2009' and party.abbr in special_cases_2009
@@ -230,7 +230,7 @@ class BaseProdCons(models.Model):
 
     @property
     def is_european_union(self):
-        return self.party == Party.objects.get(abbr="ECE")
+        return self.party == Party.objects.filter(abbr="ECE").first()
 
     @property
     def is_after_2010(self):
@@ -242,8 +242,8 @@ class BaseProdCons(models.Model):
     @property
     def is_china_or_brazil(self):
         return (
-            self.party == Party.objects.get(abbr="CN")
-            or self.party == Party.objects.get(abbr="BR")
+            self.party == Party.objects.filter(abbr="CN").first()
+            or self.party == Party.objects.filter(abbr="BR").first()
         )
 
     def get_production_process_agent(self, is_article_5):

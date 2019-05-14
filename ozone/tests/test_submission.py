@@ -8,6 +8,7 @@ from ozone.core.models import Submission, SubmissionInfo
 from .base import BaseTests
 from .factories import (
     PartyFactory,
+    PartyHistoryFactory,
     RegionFactory,
     ReportingPeriodFactory,
     ObligationFactory,
@@ -50,6 +51,8 @@ class BaseSubmissionTest(BaseTests):
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
         self.language = LanguageEnFactory()
+
+        PartyHistoryFactory(party=self.party, reporting_period=self.period)
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
