@@ -4,6 +4,7 @@ import enum
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from ..exceptions import MethodNotAllowed
@@ -130,16 +131,18 @@ class Group(models.Model):
         if reporting_period is None:
             max_date = datetime.date.today()
         else:
-            max_date = reporting_period.start_date
+            max_date = reporting_period.end_date
 
         # Get all the current ratifications of this Party
         current_ratifications = PartyRatification.objects.filter(
-            entry_into_force_date__lte=max_date,
-            party=party
+            Q(entry_into_force_date__lte=max_date) |
+            Q(entry_into_force_date__isnull=True) & Q(ratification_date__lte=max_date),
+            party=party,
+            treaty__entry_into_force_date__lte=max_date,
         )
-
+        # When the entry into force date is empty, the field has simply not been updated
         return Group.objects.filter(
-            report_treaty_id__in=current_ratifications.values_list(
+            control_treaty_id__in=current_ratifications.values_list(
                 'treaty_id', flat=True
             )
         )
