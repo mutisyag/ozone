@@ -25,7 +25,10 @@ class IsSecretariatOrSamePartySubmission(BasePermission):
             return submission.has_edit_rights(request.user)
         else:
             # It's a create
-            party = Party.objects.get(id=request.data.get('party', None))
+            party_id = request.data.get('party', None)
+            if not party_id:
+                return False
+            party = Party.objects.get(id=party_id)
             return Submission.has_create_rights_for_party(party, request.user)
 
     def has_object_permission(self, request, view, obj):
@@ -41,9 +44,10 @@ class IsSecretariatOrSamePartySubmissionRemarks(BasePermission):
     `submission_pk` will *always* be set to something in this case.
     """
     def has_permission(self, request, view):
-        submission = Submission.objects.get(
-            pk=view.kwargs.get('submission_pk', None)
-        )
+        submission_id = view.kwargs.get('submission_pk', None)
+        if not submission_id:
+            return False
+        submission = Submission.objects.get(pk=submission_id)
         if request.method not in SAFE_METHODS:
             # The serializer will look more closely at the modified fields
             return submission.can_edit_remarks(request.user)
@@ -65,9 +69,10 @@ class IsSecretariatOrSamePartySubmissionFlags(BasePermission):
     """
     def has_permission(self, request, view):
         if request.method not in SAFE_METHODS:
-            submission = Submission.objects.get(
-                pk=view.kwargs.get('submission_pk', None)
-            )
+            submission_id = view.kwargs.get('submission_pk', None)
+            if not submission_id:
+                return False
+            submission = Submission.objects.get(pk=submission_id)
             # The serializer will look more closely at the modified fields
             # and also reject some changes based on state and flag-user mapping
             return submission.can_edit_flags(request.user)
@@ -98,7 +103,10 @@ class IsSecretariatOrSamePartySubmissionClone(BasePermission):
         if request.user.is_read_only:
             return False
 
-        submission = Submission.objects.get(pk=view.kwargs.get('pk', None))
+        submission_id = view.kwargs.get('pk', None)
+        if not submission_id:
+            return False
+        submission = Submission.objects.get(pk=submission_id)
         return submission.has_read_rights(request.user)
 
     def has_object_permission(self, request, view, obj):
@@ -126,7 +134,10 @@ class IsSecretariatOrSamePartySubmissionTransition(BasePermission):
         if request.user.is_read_only:
             return False
 
-        submission = Submission.objects.get(pk=view.kwargs.get('pk', None))
+        submission_id = view.kwargs.get('pk', None)
+        if not submission_id:
+            return False
+        submission = Submission.objects.get(pk=submission_id)
         return submission.has_read_rights(request.user)
 
     def has_object_permission(self, request, view, obj):
@@ -141,9 +152,10 @@ class IsSecretariatOrSamePartySubmissionRelated(BasePermission):
     """
     def has_permission(self, request, view):
         if request.method not in SAFE_METHODS:
-            submission = Submission.objects.get(
-                pk=view.kwargs.get('submission_pk', None)
-            )
+            submission_id = view.kwargs.get('submission_pk', None)
+            if not submission_id:
+                return False
+            submission = Submission.objects.get(pk=submission_id)
             # All Submission-related fields have remarks!
             # It is up to the serializer/model to further check whether
             # remarks or data have been changed by someone who shouldn't have
@@ -179,7 +191,10 @@ class IsSecretariatOrSamePartyBlend(BasePermission):
                 return blend.has_edit_rights(request.user)
             else:
                 # It's a create
-                party = Party.objects.get(id=request.data.get('party', None))
+                party_id = request.data.get('party', None)
+                if not party_id:
+                    return False
+                party = Party.objects.get(id=party_id)
                 return Blend.has_create_rights_for_party(party, request.user)
 
         return True
@@ -197,9 +212,10 @@ class IsCorrectObligation(BasePermission):
         # Explicit is better than implicit.
         if view.form_types is None:
             return True
-        form_type = Submission.objects.get(
-            pk=view.kwargs.get('submission_pk', None)
-        ).obligation.form_type
+        submission_id = view.kwargs.get('submission_pk', None)
+        if not submission_id:
+            return False
+        form_type = Submission.objects.get(pk=submission_id).obligation.form_type
         return form_type in view.form_types
 
 
