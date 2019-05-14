@@ -1388,7 +1388,10 @@ class Submission(models.Model):
                     )
                 if hasattr(related_manager.model, 'fill_aggregated_mt_data'):
                     related_manager.model.fill_aggregated_mt_data(
-                        submission=self
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
                     )
 
     def get_aggregated_data(self):
