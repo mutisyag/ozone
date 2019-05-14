@@ -246,6 +246,8 @@ class Submission(models.Model):
         'rafreports',
     ]
 
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
     GROUP_FLAGS_MAPPING = {
         'flag_has_reported_a1': 'AI',
         'flag_has_reported_a2': 'AII',
@@ -1263,7 +1265,8 @@ class Submission(models.Model):
                 latest.flag_superseded = False
                 latest.save()
 
-        # Populate submission-specific aggregated data
+        # Populate submission-specific aggregated data. Kept out of the atomic
+        # block due to execution time.
         if latest:
             latest.fill_aggregated_data()
         else:
@@ -1339,16 +1342,24 @@ class Submission(models.Model):
         """
         groups = self.get_reported_groups()
 
-        # Set to 0 all values that had been populated by this submission
+        # Set to 0 all values that had been populated by this submission.
+        # Any aggregation row that becomes full-zero after that is deleted.
         for related in self.RELATED_DATA:
+            # Clear ODP aggregations
             related_manager = getattr(self, related)
             if hasattr(related_manager.model, 'clear_aggregated_data'):
                 related_manager.model.clear_aggregated_data(
                     submission=self, reported_groups=groups
                 )
-
-        # And delete all remaining full-zero rows
-        ProdCons.cleanup_aggregations(self.party, self.reporting_period)
+            # Clear MT aggregations
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'clear_aggregated_mt_data'):
+                    related_manager.model.clear_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def fill_aggregated_data(self):
         """
@@ -1360,7 +1371,8 @@ class Submission(models.Model):
 
         groups = self.get_reported_groups()
 
-        # Create all-zero rows for all reported groups
+        # Create all-zero ProdCons rows for all reported groups.
+        # For ProdConsMT this is not necessary.
         for group in groups:
             ProdCons.objects.get_or_create(
                 party=self.party,
@@ -1375,10 +1387,17 @@ class Submission(models.Model):
                     related_manager.model.fill_aggregated_data(
                         submission=self, reported_groups=groups
                     )
+                if hasattr(related_manager.model, 'fill_aggregated_mt_data'):
+                    related_manager.model.fill_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def get_aggregated_data(self):
         """
-        Returns list of non-persistent calculated aggregated data for this
+        Returns dict of non-persistent calculated aggregated data for this
         submission, without touching the database.
         """
 
@@ -1389,10 +1408,33 @@ class Submission(models.Model):
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_data'):
                     related_manager.model.get_aggregated_data(
-                        submission=self, reported_groups=group_mapping
+                        submission=self,
+                        reported_groups=group_mapping,
                     )
 
         return group_mapping
+
+    def get_aggregated_mt_data(self):
+        """
+        Returns dict of non-persistent calculated MT aggregated data for this
+        submission, without touching the database.
+        """
+
+        subst_mapping = {}
+
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'get_aggregated_mt_data'):
+                    related_manager.model.get_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        ),
+                        reported_substances=subst_mapping,
+                    )
+
+        return subst_mapping
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \

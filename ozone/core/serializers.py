@@ -44,6 +44,7 @@ from .models import (
     RAFImport,
     SubmissionFormat,
     ProdCons,
+    ProdConsMT,
     Limit,
 )
 
@@ -1669,6 +1670,13 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
+        fields = "__all__"
+
+
+class AggregationMTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdConsMT
         fields = "__all__"
 
 

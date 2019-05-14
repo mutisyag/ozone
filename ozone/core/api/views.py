@@ -117,6 +117,7 @@ from ..serializers import (
     RAFSerializer,
     SubmissionFormatSerializer,
     AggregationSerializer,
+    AggregationMTSerializer,
     LimitSerializer,
 )
 
@@ -652,6 +653,16 @@ class SubmissionViewSet(viewsets.ModelViewSet):
             [
                 AggregationSerializer(aggregation).data
                 for group, aggregation in sub.get_aggregated_data().items()
+            ]
+        )
+
+    @action(detail=True, methods=["get"])
+    def aggregations_mt(self, request, submission_pk=None, pk=None):
+        sub = Submission.objects.get(pk=pk)
+        return Response(
+            [
+                AggregationMTSerializer(aggregation).data
+                for subst, aggregation in sub.get_aggregated_mt_data().items()
             ]
         )
 
