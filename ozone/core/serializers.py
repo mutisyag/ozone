@@ -1561,7 +1561,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
             validated_data['created_by'] = self.context['request'].user
         if 'last_edited_by' not in validated_data:
             validated_data['last_edited_by'] = self.context['request'].user
-
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
