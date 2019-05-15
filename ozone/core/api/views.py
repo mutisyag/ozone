@@ -422,12 +422,8 @@ class AggregationViewSet(viewsets.ModelViewSet):
     search_fields = (
         "party__name", "reporting_period__name"
     )
-    ordering_fields = {
-        "party": "party",
-        "reporting_period": "reporting_period",
-        "group": "group",
-    }
-    ordering = ("-reporting_period", "party", "group")
+    ordering_fields = ("reporting_period", "party", "group")
+    ordering = ("-reporting_period__start_date", "party", "group")
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartyAggregation,
     )
