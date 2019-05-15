@@ -31,8 +31,7 @@ TABLE_IMPORTS_EXPORTS_HEADER = lambda isBlend, type: (
 
 TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-    ('VALIGN', (0, 0), (-1, 1), 'MIDDLE'),
-    ('VALIGN', (0, 2), (7, -1), 'MIDDLE'),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
     ('ALIGN', (0, 2), (5, -1), 'CENTER'),
     ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('SPAN', (0, 0), (0, 1)),
@@ -43,7 +42,7 @@ TABLE_IMPORTS_EXPORTS_HEADER_STYLE = (
     ('SPAN', (6, 0), (7, 0)),
 )
 
-TABLE_ROW_EMPTY_IMP_EXP = ((_('No data.'), '', '', '', '', '', '', '',),)
+# TABLE_ROW_EMPTY_IMP_EXP = ((_('No data.'), '', '', '', '', '', '', '',),)
 
 TABLE_ROW_EMPTY_STYLE_IMP_EXP = (
     ('SPAN', (0, 2), (-1, 2)),

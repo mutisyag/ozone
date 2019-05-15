@@ -1,17 +1,18 @@
 import re
 
+from copy import deepcopy
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
-from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
+from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
@@ -27,12 +28,18 @@ __all__ = [
     'page_title_section',
     'p_c',
     'p_l',
+    'p_r',
+    'p_bullet',
     'STYLES'
 ]
 
 
 STYLES = getSampleStyleSheet()
-FONTSIZE_TABLE = 8
+
+FONTSIZE_DEFAULT = 8
+FONTSIZE_TABLE = FONTSIZE_DEFAULT
+FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT-1
+FONTSIZE_TITLE = FONTSIZE_DEFAULT+2
 
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
@@ -40,14 +47,14 @@ TABLE_STYLES = (
 )
 
 
-def _p(style_name, align, txt, fontSize=None, fontName=None):
-    style = STYLES[style_name]
+def _style(style_name, align, fontSize=None, fontName=None):
+    style = deepcopy(STYLES[style_name])
     style.alignment = align
     if fontSize:
         style.fontSize = fontSize
     if fontName:
         style.fontName = fontName
-    return Paragraph(txt, style)
+    return style
 
 
 hr = HRFlowable(
@@ -55,17 +62,27 @@ hr = HRFlowable(
     spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None
 )
 
-p_c = partial(_p, 'Normal', TA_CENTER, fontSize=FONTSIZE_TABLE)
-p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 
-page_title = partial(_p, 'Heading1', TA_CENTER)
+centered_paragraph_style = _style('BodyText', TA_CENTER, fontSize=FONTSIZE_DEFAULT)
+left_paragraph_style = _style('BodyText', TA_LEFT, fontSize=FONTSIZE_DEFAULT)
+right_paragraph_style = _style('BodyText', TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
+bullet_paragraph_style = _style('BodyText', TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
 
 
-def page_title_section(title, explanatory):
+page_title_style = _style('Heading3', TA_LEFT, fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold')
+
+p_c = partial(Paragraph, style=centered_paragraph_style)
+p_l = partial(Paragraph, style=left_paragraph_style)
+p_r = partial(Paragraph, style=right_paragraph_style)
+p_bullet = partial(Paragraph, style=bullet_paragraph_style)
+page_title = partial(Paragraph, style=page_title_style)
+
+
+def page_title_section(title, explanatory=None):
     return (
         page_title(title),
-        p_c(explanatory, fontSize=10),
-        Spacer(1, cm),
+        # p_c(explanatory, fontSize=10),
+        # Spacer(1, cm),
     )
 
 
@@ -171,11 +188,11 @@ def get_quantity_cell(q_list, extra_q):
         return ''
 
 
-def makeBulletList(list, fontSize):
+def makeBulletList(list):
     bullets = ListFlowable(
         [
             ListItem(
-                _p('BodyText', TA_LEFT, x, fontSize=fontSize),
+                p_bullet(x),
                 leftIndent=10, bulletColor='black', value='circle',
                 bulletOffsetY=-2.88
             ) for x in list
@@ -186,7 +203,7 @@ def makeBulletList(list, fontSize):
     return bullets
 
 
-def get_substance_label(q_list, type, list_font_size=7):
+def get_substance_label(q_list, type):
     # Adding the extra pre-shipment decision
     if type == 'decision':
         pairs = tuple(zip(
@@ -205,7 +222,7 @@ def get_substance_label(q_list, type, list_font_size=7):
 
     filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
 
-    return makeBulletList(filtered_pairs, list_font_size)
+    return makeBulletList(filtered_pairs)
 
 
 def get_quantities(obj):
@@ -254,9 +271,15 @@ def get_preship_or_polyols_q(obj):
 
 
 def table_from_data(
-    data, isBlend, header, colWidths, style, repeatRows, emptyData
+    data, isBlend, header, colWidths, style, repeatRows, emptyData=None
 ):
 
+    if not data and not emptyData:
+        # nothing at all unless explicitly requested
+        return ()
+    if not data:
+        # Just a text, without a table heading
+        return (p_l(emptyData))
     # Spanning all columns for the blend components rows
     if isBlend:
         rows = len(data) + repeatRows
@@ -267,7 +290,7 @@ def table_from_data(
             )
 
     return Table(
-        header + (data or emptyData),
+        header + data,
         colWidths=colWidths,
         style=style,
         repeatRows=2  # repeat header on page break
@@ -287,13 +310,9 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
         result.append(
             (
                 (Spacer(7, mm),
-                 Table(
-                     header + data,
-                     style=style,
-                     colWidths=widths,
-                 ),
-                 Spacer(7, mm))
-                ,)
+                 Table(header + data, style=style, colWidths=widths),
+                 Spacer(7, mm)),
+                )
         )
 
     return result
@@ -327,13 +346,13 @@ def get_comments_section(submission, type):
     r_party = getattr(submission, type + '_remarks_party')
     r_secretariat = getattr(submission, type + '_remarks_secretariat')
 
+    remarks_party = p_l('%s (%s): %s' % (
+        _('Comments'), _('party'), r_party
+    ))
+    remarks_secretariat = p_l('%s (%s): %s' % (
+        _('Comments'), _('secretariat'), r_secretariat
+    ))
     return (
-        Paragraph(_('Comments (Party)'), STYLES['Heading3']),
-        hr,
-        p_l(_(r_party if r_party else 'No comments (party)')),
-        Spacer(1, cm),
-        Paragraph(_('Comments (Secretariat)'), STYLES['Heading3']),
-        hr,
-        p_l(_(r_secretariat if r_secretariat else 'No comments (secretariat)')),
-        PageBreak()
+        remarks_party if r_party else None,
+        remarks_secretariat if r_secretariat else None,
     )

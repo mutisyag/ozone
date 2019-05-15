@@ -13,7 +13,14 @@ PG_SIZE = pagesizes.landscape(pagesizes.A4)
 def export_submission(submission):
     buff = BytesIO()
 
-    doc = SimpleDocTemplate(buff, pagesize=PG_SIZE)
+    doc = SimpleDocTemplate(
+        buff,
+        pagesize=PG_SIZE,
+        leftMargin=1,
+        rightMargin=1,
+        topMargin=1,
+        bottomMargin=1,
+    )
     # TODO: add front page, extra information (country, year?)
 
     obligation = submission.obligation.form_type

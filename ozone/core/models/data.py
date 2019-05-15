@@ -419,6 +419,7 @@ class BaseReport(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['ordering_id']
 
 
 class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
