@@ -931,6 +931,7 @@ class RAFSerializer(
         source='substance.group.group_id', default='', read_only=True
     )
 
+    quantity_exempted = serializers.SerializerMethodField()
     imports = RAFImportSerializer(many=True)
 
     def create(self, validated_data):
@@ -944,6 +945,9 @@ class RAFSerializer(
                 RAFImport.objects.create(report=instance, **data)
 
         return instance
+
+    def get_quantity_exempted(self, obj):
+        return obj.quantity_exempted
 
     class Meta:
         list_serializer_class = RAFListSerializer
