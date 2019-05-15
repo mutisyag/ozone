@@ -1,26 +1,23 @@
 const getNav = ($gettext) => [{
   name: $gettext('Dashboard'),
   url: '/dashboard',
-  icon: 'icon-calculator'
+  icon: 'icon-screen-desktop'
 },
-
 {
-  name: $gettext('Lookup tables'),
-  icon: 'icon-list',
-  children: [{
-    name: $gettext('Substances'),
-    url: '/lookup-tables/controlled-substances'
-  }, {
-    name: $gettext('Blends'),
-    url: '/lookup-tables/blends'
-  }, {
-    name: $gettext('Parties'),
-    url: '/lookup-tables/parties'
-  }]
+  name: $gettext('Substances'),
+  url: '/lookup-tables/controlled-substances',
+  icon: 'icon-chemistry'
+}, {
+  name: $gettext('Blends'),
+  url: '/lookup-tables/blends',
+  icon: 'icon-layers'
+}, {
+  name: $gettext('Parties'),
+  url: '/lookup-tables/parties',
+  icon: 'icon-people'
 },
-
 {
-  name: $gettext('Production and consumption'),
+  name: $gettext('Limits'),
   icon: 'icon-graph',
   url: '/reports/production-consumption'
 }

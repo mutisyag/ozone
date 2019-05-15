@@ -6,55 +6,41 @@ from django.core.validators import MinValueValidator
 
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
-from .substance import Group
+from .substance import Group, Substance
 from .utils import round_half_up
 from .control import Limit, LimitTypes, Baseline, BaselineType
 
 
 __all__ = [
     'ProdCons',
+    'ProdConsMT'
 ]
 
 
-class ProdCons(models.Model):
+class BaseProdCons(models.Model):
     """
-    Aggregation for Production/consumption data reports.
+    Base *abstract* aggregation model for Production/consumption data reports.
 
     Only one entry per party/reporting_period/group - when a new submission
     becomes current for that party & reporting period, the values in the entry
     will be automatically updated.
     """
-    # Fields that need to be rounded
-    ROUNDABLE_FIELDS = [
-        'baseline_prod',
-        'baseline_cons',
-        'baseline_bdn',
-        'limit_prod',
-        'limit_cons',
-        'limit_bdn',
-        'calculated_production',
-        'calculated_consumption',
-    ]
+    # Fields that need to be rounded. Kept empty here; each subclass will set
+    # them accordingly.
+    ROUNDABLE_FIELDS = []
 
     party = models.ForeignKey(
         Party,
-        related_name="prod_cons_aggregations",
+        related_name="%(class)s_aggregations",
         on_delete=models.PROTECT,
         help_text="Party for which this aggregation was calculated",
     )
 
     reporting_period = models.ForeignKey(
         ReportingPeriod,
-        related_name="prod_cons_aggregations",
+        related_name="%(class)s_aggregations",
         on_delete=models.PROTECT,
         help_text="Reporting Period for which this aggregation was calculated",
-    )
-
-    group = models.ForeignKey(
-        Group,
-        related_name="prod_cons_aggregations",
-        on_delete=models.PROTECT,
-        help_text="Annex Group for which this aggregation was calculated",
     )
 
     # Aggregated quantity fields (derived from data reports)
@@ -161,20 +147,6 @@ class ProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
-    # Baselines - they can be null!
-    baseline_prod = models.FloatField(blank=True, null=True, default=None)
-
-    baseline_cons = models.FloatField(blank=True, null=True, default=None)
-
-    baseline_bdn = models.FloatField(blank=True, null=True, default=None)
-
-    # Limits
-    limit_prod = models.FloatField(blank=True, null=True, default=None)
-
-    limit_cons = models.FloatField(blank=True, null=True, default=None)
-
-    limit_bdn = models.FloatField(blank=True, null=True, default=None)
-
     # Totals computed based on the above fields.
     # Though these could have been implemented as properties (as they can be
     # deterministically derived from the values of the above fields), having
@@ -228,7 +200,7 @@ class ProdCons(models.Model):
             'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
             'YE', 'FJ', 'PK', 'PH'
         ]
-        if group.group_id == 'CI':
+        if group and group.group_id == 'CI':
             if (
                 period.start_date >= datetime.strptime('2011-01-01', "%Y-%m-%d").date()
                 or period.name == '2009' and party.abbr in special_cases_2009
@@ -236,6 +208,13 @@ class ProdCons(models.Model):
             ):
                 return 2
         return 1
+
+    @property
+    def decimals(self):
+        """
+        Needs to be implemented in concrete classes for save() to work properly
+        """
+        raise NotImplementedError
 
     @staticmethod
     def has_read_rights_for_party(party, user):
@@ -251,7 +230,7 @@ class ProdCons(models.Model):
 
     @property
     def is_european_union(self):
-        return self.party == Party.objects.get(abbr="ECE")
+        return self.party == Party.objects.filter(abbr="ECE").first()
 
     @property
     def is_after_2010(self):
@@ -263,8 +242,8 @@ class ProdCons(models.Model):
     @property
     def is_china_or_brazil(self):
         return (
-            self.party == Party.objects.get(abbr="CN")
-            or self.party == Party.objects.get(abbr="BR")
+            self.party == Party.objects.filter(abbr="CN").first()
+            or self.party == Party.objects.filter(abbr="BR").first()
         )
 
     def get_production_process_agent(self, is_article_5):
@@ -287,6 +266,14 @@ class ProdCons(models.Model):
     def get_export_quarantine(self):
         return self.export_quarantine if self.production_quarantine > 0.0 \
             else 0.0
+
+    def apply_rounding(self):
+        for field_name in self.ROUNDABLE_FIELDS:
+            field_value = getattr(self, field_name)
+            if field_value is not None and field_value != '':
+                setattr(
+                    self, field_name, round_half_up(field_value, self.decimals)
+                )
 
     def calculate_totals(self):
         """
@@ -334,14 +321,52 @@ class ProdCons(models.Model):
             )
         self.apply_rounding()
 
-    def apply_rounding(self):
-        for field_name in self.ROUNDABLE_FIELDS:
-            field_value = getattr(self, field_name)
-            if field_value is not None and field_value != '':
-                decimals = ProdCons.get_decimals(
-                    self.reporting_period, self.group, self.party
-                )
-                setattr(self, field_name, round_half_up(field_value, decimals))
+    class Meta:
+        abstract = True
+
+
+class ProdCons(BaseProdCons):
+    """
+    Concrete model for ODP-based aggregations.
+    These aggregate totals per substance group.
+    """
+    ROUNDABLE_FIELDS = [
+        'baseline_prod',
+        'baseline_cons',
+        'baseline_bdn',
+        'limit_prod',
+        'limit_cons',
+        'limit_bdn',
+        'calculated_production',
+        'calculated_consumption',
+    ]
+
+    group = models.ForeignKey(
+        Group,
+        related_name="%(class)s_aggregations",
+        on_delete=models.PROTECT,
+        help_text="Annex Group for which this aggregation was calculated",
+    )
+
+    # Baselines - they can be null!
+    baseline_prod = models.FloatField(blank=True, null=True, default=None)
+
+    baseline_cons = models.FloatField(blank=True, null=True, default=None)
+
+    baseline_bdn = models.FloatField(blank=True, null=True, default=None)
+
+    # Limits
+    limit_prod = models.FloatField(blank=True, null=True, default=None)
+
+    limit_cons = models.FloatField(blank=True, null=True, default=None)
+
+    limit_bdn = models.FloatField(blank=True, null=True, default=None)
+
+    @property
+    def decimals(self):
+        return BaseProdCons.get_decimals(
+            self.reporting_period, self.group, self.party
+        )
 
     def populate_limits_and_baselines(self):
         """
@@ -410,6 +435,41 @@ class ProdCons(models.Model):
 
         super().save(force_insert, force_update, using, update_fields)
 
-    class Meta:
+    class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
         unique_together = ("party", "reporting_period", "group")
+
+
+class ProdConsMT(BaseProdCons):
+    """
+    Concrete model for ODP-based aggregations.
+    These aggregate totals per substance.
+    """
+    ROUNDABLE_FIELDS = [
+        'calculated_production',
+        'calculated_consumption',
+    ]
+
+    substance = models.ForeignKey(
+        Substance,
+        related_name="%(class)s_aggregations",
+        on_delete=models.PROTECT,
+        help_text="Substance for which this aggregation was calculated",
+    )
+
+    @property
+    def decimals(self):
+        return BaseProdCons.get_decimals(
+            self.reporting_period, self.substance.group, self.party
+        )
+
+    def save(self, *args, **kwargs):
+        """
+        At each save, we need to recalculate the totals.
+        """
+        self.calculate_totals()
+        super().save(*args, **kwargs)
+
+    class Meta(BaseProdCons.Meta):
+        db_table = "aggregation_prod_cons_mt"
+        unique_together = ("party", "reporting_period", "substance")

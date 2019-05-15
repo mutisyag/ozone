@@ -26,6 +26,8 @@
     </AppHeader>
     <div class="app-body">
       <AppSidebar fixed>
+        <img class="logo" src="/img/logo.png" />
+
         <SidebarHeader/>
         <SidebarForm/>
         <SidebarNav :navItems="nav"></SidebarNav>

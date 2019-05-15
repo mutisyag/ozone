@@ -246,6 +246,8 @@ class Submission(models.Model):
         'rafreports',
     ]
 
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
     GROUP_FLAGS_MAPPING = {
         'flag_has_reported_a1': 'AI',
         'flag_has_reported_a2': 'AII',
@@ -257,6 +259,10 @@ class Submission(models.Model):
         'flag_has_reported_c3': 'CIII',
         'flag_has_reported_e': 'EI',
         'flag_has_reported_f': 'F',
+    }
+    FLAG_GROUPS_MAPPING = {
+        value: key
+        for key, value in GROUP_FLAGS_MAPPING.items()
     }
 
     # TODO: this implements the `submission_type` field from the
@@ -364,60 +370,59 @@ class Submission(models.Model):
         verbose_name='Confirmed blanks',
     )
     flag_has_reported_a1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
-    # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
         verbose_name='Has reported F',
@@ -1260,7 +1265,8 @@ class Submission(models.Model):
                 latest.flag_superseded = False
                 latest.save()
 
-        # Populate submission-specific aggregated data
+        # Populate submission-specific aggregated data. Kept out of the atomic
+        # block due to execution time.
         if latest:
             latest.fill_aggregated_data()
         else:
@@ -1336,16 +1342,24 @@ class Submission(models.Model):
         """
         groups = self.get_reported_groups()
 
-        # Set to 0 all values that had been populated by this submission
+        # Set to 0 all values that had been populated by this submission.
+        # Any aggregation row that becomes full-zero after that is deleted.
         for related in self.RELATED_DATA:
+            # Clear ODP aggregations
             related_manager = getattr(self, related)
             if hasattr(related_manager.model, 'clear_aggregated_data'):
                 related_manager.model.clear_aggregated_data(
                     submission=self, reported_groups=groups
                 )
-
-        # And delete all remaining full-zero rows
-        ProdCons.cleanup_aggregations(self.party, self.reporting_period)
+            # Clear MT aggregations
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'clear_aggregated_mt_data'):
+                    related_manager.model.clear_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def fill_aggregated_data(self):
         """
@@ -1357,7 +1371,8 @@ class Submission(models.Model):
 
         groups = self.get_reported_groups()
 
-        # Create all-zero rows for all reported groups
+        # Create all-zero ProdCons rows for all reported groups.
+        # For ProdConsMT this is not necessary.
         for group in groups:
             ProdCons.objects.get_or_create(
                 party=self.party,
@@ -1372,10 +1387,17 @@ class Submission(models.Model):
                     related_manager.model.fill_aggregated_data(
                         submission=self, reported_groups=groups
                     )
+                if hasattr(related_manager.model, 'fill_aggregated_mt_data'):
+                    related_manager.model.fill_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def get_aggregated_data(self):
         """
-        Returns list of non-persistent calculated aggregated data for this
+        Returns dict of non-persistent calculated aggregated data for this
         submission, without touching the database.
         """
 
@@ -1386,11 +1408,33 @@ class Submission(models.Model):
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_data'):
                     related_manager.model.get_aggregated_data(
-                        submission=self, reported_groups=group_mapping
+                        submission=self,
+                        reported_groups=group_mapping,
                     )
 
         return group_mapping
 
+    def get_aggregated_mt_data(self):
+        """
+        Returns dict of non-persistent calculated MT aggregated data for this
+        submission, without touching the database.
+        """
+
+        subst_mapping = {}
+
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'get_aggregated_mt_data'):
+                    related_manager.model.get_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        ),
+                        reported_substances=subst_mapping,
+                    )
+
+        return subst_mapping
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
@@ -1481,7 +1525,7 @@ class Submission(models.Model):
             # (e.g. fast-tracked secretariat submissions).
             # For now we will naively instantiate all submissions with
             # the default article 7 workflow.
-            if self.obligation.form_type == 'exemption':
+            if self.obligation.form_type == FormTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
             else:
                 self._workflow_class = 'default'
@@ -1496,6 +1540,16 @@ class Submission(models.Model):
                 self.reporting_channel = ReportingChannel.get_default(
                     self.created_by
                 )
+
+            # Prefill Art 7 has_reported flags
+            if self.obligation.form_type == FormTypes.ART7.value:
+                if self.cloned_from:
+                    for flag in self.GROUP_FLAGS_MAPPING.keys():
+                        setattr(self, flag, getattr(self.cloned_from, flag))
+                else:
+                    groups = Group.get_report_groups(self.party, self.reporting_period)
+                    for g in groups:
+                        setattr(self, self.FLAG_GROUPS_MAPPING[g.group_id], True)
 
             self.clean()
             ret = super().save(

@@ -44,6 +44,7 @@ from .models import (
     RAFImport,
     SubmissionFormat,
     ProdCons,
+    ProdConsMT,
     Limit,
 )
 
@@ -1561,7 +1562,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
             validated_data['created_by'] = self.context['request'].user
         if 'last_edited_by' not in validated_data:
             validated_data['last_edited_by'] = self.context['request'].user
-
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
@@ -1670,6 +1670,13 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
+        fields = "__all__"
+
+
+class AggregationMTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdConsMT
         fields = "__all__"
 
 

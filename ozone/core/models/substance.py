@@ -4,6 +4,7 @@ import enum
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from ..exceptions import MethodNotAllowed
@@ -51,8 +52,18 @@ class Group(models.Model):
     )
 
     name = models.CharField(max_length=64, unique=True, default="")
+    name_alt = models.CharField(
+        max_length=64,
+        blank=True, null=True,
+        verbose_name=_("Alternate name"),
+    )
 
     description = models.CharField(max_length=256)
+    description_alt = models.CharField(
+        max_length=1024,
+        blank=True, null=True,
+        verbose_name=_("Alternate description"),
+    )
 
     control_treaty = models.ForeignKey(
         Treaty,
@@ -70,13 +81,6 @@ class Group(models.Model):
 
     phase_out_year_article_5 = models.DateField(blank=True, null=True)
     phase_out_year_non_article_5 = models.DateField(blank=True, null=True)
-
-    # TODO: should this be a foreign key?
-    exemption = models.CharField(
-        max_length=64,
-        choices=((e.value, e.name) for e in ExemptionTypes),
-        blank=True
-    )
 
     def get_signing_parties_ids(self, reporting_period=None):
         """
@@ -119,30 +123,42 @@ class Group(models.Model):
             id__in=self.get_signing_parties_ids(reporting_period)
         )
 
-    @classmethod
-    def get_groups(cls, party, reporting_period=None):
-        """
-        Returns queryset of all substance Groups that party should report in
-        given reporting_period.
-        """
+    @staticmethod
+    def _get_ratifications(party, reporting_period=None):
+        # return all the current ratifications of this Party
         if party is None:
             return []
         if reporting_period is None:
             max_date = datetime.date.today()
         else:
-            max_date = reporting_period.start_date
+            max_date = reporting_period.end_date
 
         # Get all the current ratifications of this Party
-        current_ratifications = PartyRatification.objects.filter(
-            entry_into_force_date__lte=max_date,
-            party=party
-        )
+        # When the entry into force date is empty, the field has simply not been updated
+        return PartyRatification.objects.filter(
+            Q(entry_into_force_date__lte=max_date) |
+            Q(entry_into_force_date__isnull=True) & Q(ratification_date__lte=max_date),
+            party=party,
+            treaty__entry_into_force_date__lte=max_date,
+        ).values_list('treaty_id', flat=True)
 
-        return Group.objects.filter(
-            report_treaty_id__in=current_ratifications.values_list(
-                'treaty_id', flat=True
-            )
-        )
+    @staticmethod
+    def get_controlled_groups(party, reporting_period=None):
+        """
+        Returns queryset of all substance Groups for which control measures
+        apply for the given party and reporting_period.
+        """
+        current_ratifications = Group._get_ratifications(party, reporting_period)
+        return Group.objects.filter(control_treaty_id__in=current_ratifications)
+
+    @staticmethod
+    def get_report_groups(party, reporting_period=None):
+        """
+        Returns queryset of all substance Groups that party should report in
+        given reporting_period.
+        """
+        current_ratifications = Group._get_ratifications(party, reporting_period)
+        return Group.objects.filter(report_treaty_id__in=current_ratifications)
 
     def __str__(self):
         return f'Group {self.group_id}'

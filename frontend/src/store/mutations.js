@@ -268,6 +268,10 @@ const mutations = {
     data.component._rowVariant = data.value
   },
 
+  setControlledGroups(state, data) {
+    state.initialData.controlledGroups = data
+  },
+
   addAlertData(state, data) {
     const toastedOptions = {
       danger: 'error',
