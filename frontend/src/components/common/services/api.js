@@ -133,7 +133,6 @@ const getPeriods = () => fetch('periods/')
 const getFilteredPeriods = () => new Promise(async (resolve, reject) => {
   try {
     const responsePeriods = await fetch('periods/')
-    console.log(responsePeriods.data)
     let sortedPeriods = responsePeriods.data
       .filter(a => a.is_reporting_allowed)
       .sort((a, b) => ((parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
