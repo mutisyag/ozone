@@ -125,8 +125,8 @@ const getters = {
     const { currentUser } = state
     let currentCountry = null
     if (!currentUser || !currentUser.party) return
-    if (state.initialData.countryOptions) {
-      currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
+    if (state.initialData.countryOptionsSubInfo) {
+      currentCountry = state.initialData.countryOptionsSubInfo.find(c => currentUser.party === c.value)
     }
     if (state.dashboard.parties && state.dashboard.parties.length) {
       currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)
