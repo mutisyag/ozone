@@ -144,16 +144,8 @@ export default {
     }
   },
   computed: {
-    /**
-     * use this computed to assign default party and open period for user
-     */
     currentUser() {
-      const { currentUser, submissionDefaultValues } = this.$store.state
-
-      if (currentUser && this.filters.reporting_period.options.length > 0 && !this.selectedFilters.party && !this.selectedFilters.reporting_period) {
-        this.selectedFilters.party = currentUser.party
-        this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
-      }
+      const { currentUser } = this.$store.state
 
       return currentUser
     },
@@ -245,6 +237,19 @@ export default {
   },
 
   watch: {
+		'filters': {
+			handler() {
+				/**
+				 * Assign default party and open period for user only after filters object is populated with data
+				 */
+				const { currentUser, submissionDefaultValues } = this.$store.state
+				if (currentUser && this.filters.reporting_period.options.length > 0) {
+					this.selectedFilters.party = currentUser.party
+					this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
+				}
+			},
+			deep: true
+		},
     'selectedFilters': {
       handler() {
         this.canRequest = false
