@@ -36,7 +36,9 @@
         stacked="md"
         :items="filteredItems"
         :fields="fields"
-        :sort-by.sync="sortBy"
+        :sort-by.sync="sorting.sortBy"
+        :sort-desc.sync="sorting.sortDesc"
+        :sort-direction="sorting.sortDirection"
         :per-page="tableOptions.params.page_size"
         ref="table"
         @sort-changed="sortings"
@@ -81,8 +83,8 @@ export default {
   data() {
     return {
       fields: [
-        { key: 'party', label: `${this.$gettext('Party')}`, sortable: true },
-        { key: 'group', label: `${this.$gettext('Annex/Group')}`, sortable: true },
+        { key: 'party', label: `${this.$gettext('Party')}`, sortable: true, sortDirection: 'desc' },
+        { key: 'group', label: `${this.$gettext('Annex/Group')}`, sortable: true, sortDirection: 'desc' },
         { key: 'reporting_period', label: `${this.$gettext('Reporting period')}`, sortable: true },
         { key: 'baseline_prod', label: this.$gettext('Baseline') },
         { key: 'calculated_production', label: `${this.$gettext('Calculated')}` },
@@ -105,7 +107,11 @@ export default {
         group: null,
         reporting_period: null
       },
-      sortBy: null,
+      sorting: {
+        sortBy: 'reporting_period',
+        sortDesc: true,
+        sortDirection: 'desc'
+      },
       tableOptions: {
         pageOptions: [10, 25, 100],
         totalRows: 0,
@@ -204,7 +210,7 @@ export default {
     sortings(el) {
       this.tableOptions.params.page = null
       this.canRequest = false
-      this.tableOptions.params.ordering = el.sortDesc ? `-${el.sortBy}` : el.sortBy
+      this.tableOptions.params.ordering = el.sortDesc ? `-${el.sorting.sortBy}` : el.sorting.sortBy
       this.getItems()
     },
     onResetFilters() {
@@ -221,7 +227,11 @@ export default {
 
       this.selectedFilters = { ...currentFilters }
       this.tableOptions.params = { ...tableOptionsParams }
-      this.sortBy = null
+      this.sorting = {
+        sortBy: 'reporting_period',
+        sortDesc: true,
+        sortDirection: 'desc'
+      }
     },
     updateBreadcrumbs() {
       this.$store.commit('updateBreadcrumbs', this.$gettext('Production and consumption'))
@@ -237,19 +247,19 @@ export default {
   },
 
   watch: {
-		'filters': {
-			handler() {
-				/**
+    'filters': {
+      handler() {
+        /**
 				 * Assign default party and open period for user only after filters object is populated with data
 				 */
-				const { currentUser, submissionDefaultValues } = this.$store.state
-				if (currentUser && this.filters.reporting_period.options.length > 0) {
-					this.selectedFilters.party = currentUser.party
-					this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
-				}
-			},
-			deep: true
-		},
+        const { currentUser, submissionDefaultValues } = this.$store.state
+        if (currentUser && this.filters.reporting_period.options.length > 0) {
+          this.selectedFilters.party = currentUser.party
+          this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
+        }
+      },
+      deep: true
+    },
     'selectedFilters': {
       handler() {
         this.canRequest = false
