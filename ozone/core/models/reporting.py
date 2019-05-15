@@ -1547,7 +1547,7 @@ class Submission(models.Model):
                     for flag in self.GROUP_FLAGS_MAPPING.keys():
                         setattr(self, flag, getattr(self.cloned_from, flag))
                 else:
-                    groups = Group.get_groups(self.party, self.reporting_period)
+                    groups = Group.get_report_groups(self.party, self.reporting_period)
                     for g in groups:
                         setattr(self, self.FLAG_GROUPS_MAPPING[g.group_id], True)
 

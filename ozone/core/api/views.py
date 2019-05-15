@@ -247,6 +247,22 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def controlled_groups(self, request, pk=None, **kwargs):
         """
+        Returns the list of substance groups (Group.group_id) that must comply
+        with the applicable control measures for the party and the reporting period
+        given as param by name (`period`).
+        If no param is given, it returns the list for the current date.
+        """
+        period = ReportingPeriod.objects.filter(
+            name=int(request.query_params.get('period', 0))
+        ).first()
+        groups = Group.get_controlled_groups(Party.objects.filter(pk=pk).first(), period)
+        if groups:
+            groups = groups.values_list('group_id', flat=True)
+        return Response(groups)
+
+    @action(detail=True, methods=["get"])
+    def report_groups(self, request, pk=None, **kwargs):
+        """
         Returns the list of substance groups (Group.group_id) that the party
         must report on for the reporting period given as param by name (`period`).
         If no param is given, it returns the list for the current date.
@@ -254,7 +270,7 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
         period = ReportingPeriod.objects.filter(
             name=int(request.query_params.get('period', 0))
         ).first()
-        groups = Group.get_groups(Party.objects.filter(pk=pk).first(), period)
+        groups = Group.get_report_groups(Party.objects.filter(pk=pk).first(), period)
         if groups:
             groups = groups.values_list('group_id', flat=True)
         return Response(groups)
