@@ -98,6 +98,7 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
         browser
           /* Open multiselect */
           .moveToElement(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, undefined, undefined)
+					.pause(1000)
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
           .pause(1000)
           /* Check if multiselect is opened */
@@ -313,15 +314,15 @@ const editSubmission = (browser, table_order) => {
 
 const openLookupTable = (browser, page) => {
   browser
-    .useCss()
+    .useXpath()
     .execute('window.scrollTo(0,0)')
-    .waitForElementVisible('li.router-link-exact-active', 20000)
-    .moveToElement('li.router-link-exact-active', undefined, undefined, () => {
+    .waitForElementVisible(`//a[contains(@class, "nav-link") and contains(text(), '${page}')]`, 20000)
+    .moveToElement(`//a[contains(@class, "nav-link") and contains(text(), '${page}')]`, undefined, undefined, () => {
       browser
         .pause(500)
         .useXpath()
         .pause(500)
-        .click(`//li[contains(@class, 'router-link-exact-active')]//a[contains(text(), '${page}')]`)
+        .click(`//a[contains(@class, "nav-link") and contains(text(), '${page}')]`)
         .useCss()
         .moveToElement('.app-header h3', 0, 0)
         .pause(5000)

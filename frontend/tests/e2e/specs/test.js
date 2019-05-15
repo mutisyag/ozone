@@ -406,39 +406,39 @@ module.exports = {
   // BU_022: browser => {
   //   const submissions = [
   //     {
-  //       name: 'Article 7',
+  //       name: 'Article 7 - Data Reporting',
   //       data: [{ year: '2018', party: 'Romania' }]
   //     },
   //     {
-  //       name: 'Essential and Critical uses (RAF)',
+  //       name: 'Accounting for Essential and Critical uses (RAF)',
   //       data: [{ year: '2018', party: 'Algeria' }]
   //     },
   //     {
-  //       name: 'HAT Imports and Production',
+  //       name: 'HAT Exemption: Imports and Production',
   //       data: [{ year: '2018', party: 'Angola' }]
   //     },
   //     {
-  //       name: 'Transfer or addition of production or consumption',
+  //       name: 'Article 2 (p. 5, 5 bis, 7) - Transfer of production/consumption rights',
   //       data: [{ year: '2018', party: 'Argentina' }]
   //     },
   //     {
-  //       name: 'Laboratory and analytical uses',
+  //       name: 'Laboratory and analytical uses (dec. VI/9(p. 3) and annex II of 6th MOP report)',
   //       data: [{ year: '2017', party: 'Romania' }]
   //     },
   //     {
-  //       name: 'Process agent uses',
+  //       name: 'Process agent uses (dec. X/14)',
   //       data: [{ year: '2017', party: 'Belarus' }]
   //     },
   //     {
-  //       name: 'Licensing information',
+  //       name: 'Article 4B - Licensing information',
   //       data: [{ year: '2018', party: 'Brazil' }]
   //     },
   //     {
-  //       name: 'Research, development, public awareness and exchange of information',
+  //       name: 'Article 9 - Research, development, public awareness and exchange of information',
   //       data: [{ year: '2017', party: 'China' }]
   //     },
   //     {
-  //       name: 'Requests for changes in reported baseline data',
+  //       name: 'Requests for changes in baseline data (decs. XIII/15(p. 5) and XV/19)',
   //       data: [{ year: '2018', party: 'Romania' }]
   //     }
   //   ]
@@ -446,33 +446,33 @@ module.exports = {
   //   const scenarios = [
   //     {
   //       filters: ['', '', '', '2018', '2018'],
-  //       first_row_expected: ['Article 7', '2018', 'Romania'],
+  //       first_row_expected: ['Article 7 - Data Reporting', '2018', 'Romania'],
   //       rows_number_expected: 6
   //     },
   //     {
-  //       filters: ['', 'Essential and Critical uses (RAF)', 'Algeria', '2018', '2018'],
-  //       first_row_expected: ['Essential and Critical uses (RAF)', '2018', 'Algeria'],
+  //       filters: ['', 'Accounting for Essential and Critical uses (RAF)', 'Algeria', '2018', '2018'],
+  //       first_row_expected: ['Accounting for Essential and Critical uses (RAF)', '2018', 'Algeria'],
   //       rows_number_expected: 1
   //     },
   //     {
   //       filters: ['', '', 'Romania', '', ''],
-  //       first_row_expected: ['Article 7', '2018', 'Romania'],
+  //       first_row_expected: ['Article 7 - Data Reporting', '2018', 'Romania'],
   //       rows_number_expected: 3
   //     },
   //     {
   //       filters: ['', '', 'Romania', '2017', '2017'],
-  //       first_row_expected: ['Laboratory and analytical uses', '2017', 'Romania'],
+  //       first_row_expected: ['Laboratory and analytical uses (dec. VI/9(p. 3) and annex II of 6th MOP report)', '2017', 'Romania'],
   //       rows_number_expected: 1
   //     },
   //     {
-  //       filters: ['', 'Research, development, public awareness and exchange of information', '', '2017', '2018'],
-  //       first_row_expected: ['Research, development, public awareness and exchange of information', '2017', 'China'],
+  //       filters: ['', 'Article 9 - Research, development, public awareness and exchange of information', '', '2017', '2018'],
+  //       first_row_expected: ['Article 9 - Research, development, public awareness and exchange of information', '2017', 'China'],
   //       rows_number_expected: 1
   //     }
   //   ]
 
   //   login(browser, 'secretariat', 'secretariat')
-
+	// 	showMouse(browser)
   //   submissions.forEach(submission => {
   //     submission.data.forEach(data => {
   //       createSubmission(browser, submission.name, data.year, data.party, true, true)
@@ -506,7 +506,7 @@ module.exports = {
   //   }
 
   //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7', '2018')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018')
   //   clickQuestionnaireRadios(browser, ['has_exports'])
 
   //   addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1)
