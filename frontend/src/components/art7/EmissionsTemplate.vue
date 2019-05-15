@@ -95,8 +95,7 @@
           </template>
         </b-table>
       </div>
-
-      <b-btn id="add-facility-button" class="mb-2" variant="primary" @click="addField">
+      <b-btn v-if="$store.getters.can_edit_data" id="add-facility-button" class="mb-2" variant="primary" @click="addField">
         <span v-translate>Add facility</span>
       </b-btn>
     </div>
