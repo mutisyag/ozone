@@ -219,7 +219,7 @@ class AnnexAdmin(admin.ModelAdmin):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('group_id', 'name', 'description')
+    list_display = ('group_id', 'name', 'description', 'name_alt', 'description_alt', 'control_treaty', 'report_treaty')
     list_filter = ('annex', 'control_treaty', 'report_treaty')
 
 

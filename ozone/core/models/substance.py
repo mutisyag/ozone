@@ -52,8 +52,18 @@ class Group(models.Model):
     )
 
     name = models.CharField(max_length=64, unique=True, default="")
+    name_alt = models.CharField(
+        max_length=64,
+        blank=True, null=True,
+        verbose_name=_("Alternate name"),
+    )
 
     description = models.CharField(max_length=256)
+    description_alt = models.CharField(
+        max_length=1024,
+        blank=True, null=True,
+        verbose_name=_("Alternate description"),
+    )
 
     control_treaty = models.ForeignKey(
         Treaty,
@@ -71,13 +81,6 @@ class Group(models.Model):
 
     phase_out_year_article_5 = models.DateField(blank=True, null=True)
     phase_out_year_non_article_5 = models.DateField(blank=True, null=True)
-
-    # TODO: should this be a foreign key?
-    exemption = models.CharField(
-        max_length=64,
-        choices=((e.value, e.name) for e in ExemptionTypes),
-        blank=True
-    )
 
     def get_signing_parties_ids(self, reporting_period=None):
         """

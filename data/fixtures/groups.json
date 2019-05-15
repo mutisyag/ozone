@@ -6,14 +6,15 @@
             "group_id": "AI",
             "annex": 1,
             "name": "A/I",
+            "name_alt": "Annex A, Group I",
+            "description_alt": "Base for Article 5 parties is the average of 1995, 1996 and 1997. Base for non-Article 5 Parties is 1986.",
             "description": "Chlorofluorocarbons (CFCs)",
             "control_treaty": 2,
             "report_treaty": 2,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
-            "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1996-01-01"
         }
     },
     {
@@ -23,14 +24,15 @@
             "group_id": "AII",
             "annex": 1,
             "name": "A/II",
+            "name_alt": "Annex A, Group II",
+            "description_alt": "Base for Article 5 parties is the average of 1995, 1996 and 1997. Base for non-Article 5 Parties is 1986.",
             "description": "Halons",
             "control_treaty": 2,
             "report_treaty": 2,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
-            "phase_out_year_non_article_5": "1994-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1994-01-01"
         }
     },
     {
@@ -40,14 +42,15 @@
             "group_id": "BI",
             "annex": 2,
             "name": "B/I",
+            "name_alt": "Annex B, Group I",
+            "description_alt": "Base for Article 5 parties = average of 1998, 1999 and 2000. Base for non-Article 5 Parties is 1989.",
             "description": "Other Fully Halogenated CFCs",
             "control_treaty": 3,
             "report_treaty": 3,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
-            "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1996-01-01"
         }
     },
     {
@@ -57,14 +60,15 @@
             "group_id": "BII",
             "annex": 2,
             "name": "B/II",
+            "name_alt": "Annex B, Group II",
+            "description_alt": "Base for Article 5 parties is the average of 1998, 1999 and 2000. Base for non-Article 5 Parties is 1989.",
             "description": "Carbon Tetrachloride (CTC)",
             "control_treaty": 3,
             "report_treaty": 3,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2010-01-01",
-            "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1996-01-01"
         }
     },
     {
@@ -74,14 +78,15 @@
             "group_id": "BIII",
             "annex": 2,
             "name": "B/III",
+            "name_alt": "Annex B, Group III",
+            "description_alt": "Base for Article 5 parties is the average of 1998, 1999 and 2000. Base for non-Article 5 Parties is 1989.",
             "description": "Methyl Chloroform (MC)",
             "control_treaty": 3,
             "report_treaty": 3,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2015-01-01",
-            "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1996-01-01"
         }
     },
     {
@@ -91,14 +96,15 @@
             "group_id": "CI",
             "annex": 3,
             "name": "C/I",
+            "name_alt": "Annex C, Group I",
+            "description_alt": "Base for Article 5 parties is the average of 2009 and 2010. Base consumption for non-Article 5 Parties is 1989 consumption of HCFCs plus 2.8% of 1989 consumption of CFCs. Base production for non-Article 5 Parties is Average of 1989 HCFC production + 2.8% of 1989 CFC production and 1989 HCFC consumption + 2.8% of 1989 CFC consumption.",
             "description": "Hydrochlorofluorocarbons (HCFCs)",
             "control_treaty": 4,
             "report_treaty": 3,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2030-01-01",
-            "phase_out_year_non_article_5": "2020-01-01",
-            "exemption": "Other"
+            "phase_out_year_non_article_5": "2020-01-01"
         }
     },
     {
@@ -108,14 +114,15 @@
             "group_id": "CII",
             "annex": 3,
             "name": "C/II",
+            "name_alt": "Annex C, Group II",
+            "description_alt": "Phase-out requirement was in 1996.",
             "description": "Hydrobromofluorocarbons (HBFCs)",
             "control_treaty": 4,
             "report_treaty": 4,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "1996-01-01",
-            "phase_out_year_non_article_5": "1996-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "1996-01-01"
         }
     },
     {
@@ -125,14 +132,15 @@
             "group_id": "CIII",
             "annex": 3,
             "name": "C/III",
+            "name_alt": "Annex C, Group III",
+            "description_alt": "Phase-out requirement was in 2002.",
             "description": "Bromochloromethane (BCM)",
             "control_treaty": 6,
             "report_treaty": 6,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2002-01-01",
-            "phase_out_year_non_article_5": "2002-01-01",
-            "exemption": "Essential use"
+            "phase_out_year_non_article_5": "2002-01-01"
         }
     },
     {
@@ -142,14 +150,15 @@
             "group_id": "EI",
             "annex": 4,
             "name": "E/I",
+            "name_alt": "Annex E, Group I",
+            "description_alt": "Base for Article 5 parties is the average of 1995, 1996, 1997 and 1998. Base for non-Article 5 Parties is 1991.",
             "description": "Methyl Bromide (MB)",
             "control_treaty": 4,
             "report_treaty": 4,
             "is_odp": true,
             "is_gwp": false,
             "phase_out_year_article_5": "2015-01-01",
-            "phase_out_year_non_article_5": "2005-01-01",
-            "exemption": "Critical use"
+            "phase_out_year_non_article_5": "2005-01-01"
         }
     },
     {
@@ -159,14 +168,15 @@
             "group_id": "F",
             "annex": 5,
             "name": "F I/II",
+            "name_alt": "Annex F, Groups I and II",
+            "description_alt": "Base for Article 5 parties - Group 1 is the average HFC for 2020–2022 + 65% of HCFC baseline. Base for Article 5 parties- Group 2 is the average HFC for 2024-2026 + 65% of HCFC baseline. Base for non-Article 5 parties is the average HFC for 2011-2013 + 15% (25% for Belarus, Kazakhstan, the Russian Federation, Tajikistan and Uzbekistan) of HCFC baseline.",
             "description": "Hydrofluorocarbons (HFCs)",
             "control_treaty": 7,
             "report_treaty": 7,
             "is_odp": false,
             "is_gwp": true,
             "phase_out_year_article_5": null,
-            "phase_out_year_non_article_5": null,
-            "exemption": ""
+            "phase_out_year_non_article_5": null
         }
     }
 ]
