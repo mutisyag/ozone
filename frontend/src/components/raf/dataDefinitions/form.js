@@ -94,11 +94,11 @@ const getFormRaf = ($gettext) => {
           name: 'available_for_use',
           isInput: true
         }, {
-          label: `J<br>${$gettext('Used')}`,
+          label: `J<br>${$gettext('Used for essential use')}`,
           name: 'quantity_used',
           isInput: true
         }, {
-          label: `K<br>${$gettext('Amount exported')}`,
+          label: `K<br>${$gettext('Quantity contained in exported product')}`,
           name: 'quantity_exported',
           isInput: true
         }, {
@@ -116,7 +116,58 @@ const getFormRaf = ($gettext) => {
           label: `<br>${$gettext('Actions')}`,
           name: 'validation'
         }],
-
+        section_subheaders_critical: [{
+          label: `A<br>${$gettext('Year')}`,
+          name: 'year',
+          colspan: 2
+        }, {
+          label: `B<br>${$gettext('Amount exempted')}`,
+          name: 'quantity_exempted',
+          isInput: true
+        }, {
+          label: `C<br>${$gettext('Amount acquired by production')}`,
+          name: 'quantity_production',
+          isInput: true
+        }, {
+          label: `D<br>${$gettext('Amount acquired by import & countries of manufacture')}`,
+          name: 'quantity_import'
+        }, {
+          label: `E<br>${$gettext('Total acquired')} <br> (C+D)`,
+          name: 'quantity_acquired'
+        }, {
+          label: `F<br>${$gettext('Authorized but not acquired')} <br> (B-E)`,
+          name: 'quantity_authorized_not_acquired'
+        }, {
+          label: `G<br>${$gettext('On hand start of the year')}`,
+          name: 'on_hand_start_year',
+          isInput: true
+        }, {
+          label: `H<br>${$gettext('Available for use')}<br> (E+G)`,
+          name: 'available_for_use',
+          isInput: true
+        }, {
+          label: `I<br>${$gettext('Amount used for critical use')}`,
+          name: 'quantity_used',
+          isInput: true
+        }, {
+          label: `J<br>${$gettext('Amount exported')}`,
+          name: 'quantity_exported',
+          isInput: true
+        }, {
+          label: `K<br>${$gettext('Amount destroyed')}`,
+          name: 'quantity_destroyed',
+          isInput: true
+        }, {
+          label: `L<br>${$gettext('On hand end of year')}<br>(H-I-J-K)`,
+          name: 'on_hand_end_year'
+        }, {
+          label: `<br>${$gettext('Emergency')}`,
+          name: 'is_emergency',
+          isInput: true
+        }, {
+          label: `<br>${$gettext('Actions')}`,
+          name: 'validation'
+        }],
         section_headers: [{
           label: '',
           colspan: 17

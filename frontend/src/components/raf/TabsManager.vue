@@ -97,14 +97,6 @@
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
-        <b-btn
-          variant="outline-primary"
-          @click="$store.dispatch('downloadStuff',
-					{
-						url: `${submission}export_pdf/`,
-						fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-					})"
-        >Export as PDF</b-btn>
         <b-btn @click="$refs.history_modal.show()" variant="outline-info">
           <span v-translate>Versions</span>
         </b-btn>

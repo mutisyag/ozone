@@ -47,7 +47,7 @@
             v-translate="selected_substance.selected.length ? {length: selected_substance.selected.length} : {length: ''}"
           >Add %{length} rows</span>
         </b-btn>
-        <b-btn variant="light" v-if="selected_substance.selected" @click="resetData">
+        <b-btn variant="light" v-if="selected_substance.selected && selected_substance.selected.length" @click="resetData">
           <span v-translate>Cancel</span>
         </b-btn>
       </b-btn-group>
