@@ -26,9 +26,7 @@
     </AppHeader>
     <div class="app-body">
       <AppSidebar fixed>
-        <router-link
-            :to="{ name: 'Dashboard'}"
-          >
+        <router-link :to="{ name: 'Dashboard'}">
             <img class="logo" src="/img/logo.png" />
         </router-link>
 
