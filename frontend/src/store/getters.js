@@ -43,6 +43,7 @@ const sumBiggerThanParts = (state, tab, partyField) => {
 
     if (finalError[key].left >= finalError[key].right) {
       multiValidationState = 1
+      delete finalError[key]
     } else {
       multiValidationState = 2
     }
@@ -56,6 +57,7 @@ const sumBiggerThanParts = (state, tab, partyField) => {
       }
     })
   })
+  console.log('finalerror -----------', finalError)
   return finalError
 }
 
