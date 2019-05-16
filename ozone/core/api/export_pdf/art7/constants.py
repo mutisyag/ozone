@@ -1,9 +1,46 @@
 from ozone.core.api.export_pdf.util import p_c
 from ozone.core.api.export_pdf.util import col_widths
+from ozone.core.api.export_pdf.util import FONTSIZE_TABLE
 
 from django.utils.translation import gettext_lazy as _
 from reportlab.lib import colors
 
+
+TABLE_INFO_WIDTHS = col_widths([2.5] * 6 + [1]*10)
+TABLE_INFO_HEADER = (
+    (
+        p_c('Questionnaire'), '', '', '', '', '',
+        p_c(_('Annex/Group reported in full?')),
+    ),
+    (
+        p_c(_('Imports')),
+        p_c(_('Exports')),
+        p_c(_('Production')),
+        p_c(_('Destruction')),
+        p_c(_('Non-party trade')),
+        p_c(_('Emissions')),
+        p_c(_('A/I')),
+        p_c(_('A/II')),
+        p_c(_('B/I')),
+        p_c(_('B/II')),
+        p_c(_('B/III')),
+        p_c(_('C/I')),
+        p_c(_('C/II')),
+        p_c(_('C/III')),
+        p_c(_('E/I')),
+        p_c(_('F')),
+    ),
+)
+TABLE_INFO_STYLE = (
+    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
+    ('LINEBELOW', (0, 0), (-1, -1), 0.5, colors.grey),
+    ('BOX', (0, 0), (5, 2), 0.5, colors.grey),
+    ('BOX', (6, 0), (15, 2), 0.5, colors.grey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+    ('SPAN', (0, 0), (5, 0)),
+    ('SPAN', (6, 0), (15, 0)),
+)
 
 TABLE_IMPORTS_EXPORTS_HEADER = lambda isBlend, type: (
     (

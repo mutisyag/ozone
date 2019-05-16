@@ -1,5 +1,6 @@
 from itertools import chain
 
+from .section_info import export_info
 from .section_imports import export_imports
 from .section_exports import export_exports
 from .section_production import export_production
@@ -20,6 +21,7 @@ __all__ = [
 
 def export_submission(submission):
     return list(chain(
+        export_info(submission),
         export_imports(submission),
         export_exports(submission),
         export_production(submission),

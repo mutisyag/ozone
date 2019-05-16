@@ -16,10 +16,10 @@ def export_submission(submission):
     doc = SimpleDocTemplate(
         buff,
         pagesize=PG_SIZE,
-        leftMargin=1,
-        rightMargin=1,
-        topMargin=1,
-        bottomMargin=1,
+        leftMargin=20,
+        rightMargin=20,
+        topMargin=10,
+        bottomMargin=10,
     )
     # TODO: add front page, extra information (country, year?)
 

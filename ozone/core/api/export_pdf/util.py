@@ -69,7 +69,10 @@ right_paragraph_style = _style('BodyText', TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
 bullet_paragraph_style = _style('BodyText', TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
 
 
-page_title_style = _style('Heading3', TA_LEFT, fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold')
+page_title_style = _style(
+    'Heading3', TA_LEFT,
+    fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold',
+)
 
 p_c = partial(Paragraph, style=centered_paragraph_style)
 p_l = partial(Paragraph, style=left_paragraph_style)
@@ -293,6 +296,7 @@ def table_from_data(
         header + data,
         colWidths=colWidths,
         style=style,
+        hAlign='LEFT',
         repeatRows=2  # repeat header on page break
     )
 
