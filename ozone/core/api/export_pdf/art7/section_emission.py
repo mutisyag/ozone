@@ -1,18 +1,18 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
-
-from .constants import TABLE_EMISSIONS_HEADER
-from .constants import TABLE_EMISSIONS_HEADER_STYLE
+from reportlab.lib import colors
 
 from ..util import get_big_float
 from ..util import get_comments_section
-from ..util import p_c
+from ..util import get_remarks
+from ..util import rows_to_table
+from ..util import p_c, p_l, p_r
 from ..util import h2_style
-from ..util import table_from_data
 from ..util import TABLE_STYLES
+from ..util import col_widths
 
 
-def to_row_facility(obj):
+def table_row(obj):
     fields = (
         obj.quantity_generated,
         obj.quantity_captured_all_uses,
@@ -23,16 +23,19 @@ def to_row_facility(obj):
         obj.quantity_emitted,
     )
     return (
-        p_c(obj.facility_name),
+        p_l(obj.facility_name),
     ) + tuple(
-        p_c(get_big_float(field))
+        p_r(get_big_float(field))
         for field in fields
+    ) + (
+        p_l(get_remarks(obj)),
     )
 
 
 def export_emission(submission):
     data = submission.article7emissions.all()
-    if len(data) == 0:
+    comments = get_comments_section(submission, 'emissions')
+    if not data and not any(comments):
         return tuple()
 
     subtitle = Paragraph(
@@ -40,14 +43,48 @@ def export_emission(submission):
         h2_style
     )
 
-    table_facilities = tuple(map(to_row_facility, data))
-
-    facilities_table = table_from_data(
-        data=table_facilities, isBlend=False,
-        header=TABLE_EMISSIONS_HEADER,
-        colWidths=None, style=TABLE_EMISSIONS_HEADER_STYLE + TABLE_STYLES,
-        repeatRows=2, emptyData=_('No emissions.')
+    table_header = (
+        (
+            p_c(_('Facility name or identifier')),
+            p_c(_('Total amount generated')),
+            p_c(_('Amount generated and captured')),
+            '',
+            '',
+            p_c(_('Amount used for feedstock without prior capture')),
+            p_c(_('Amount destroyed without prior capture')),
+            p_c(_('Amount of generated emissions')),
+            p_c(_('Remarks')),
+        ),
+        (
+            '',
+            '',
+            p_c(_('For all uses')),
+            p_c(_('For feedstock use in your country')),
+            p_c(_('For destruction')),
+            '',
+            '',
+            '',
+            '',
+        )
+    )
+    table_style = TABLE_STYLES + (
+        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+        ('SPAN', (0, 0), (0, 1)),  # Facility
+        ('SPAN', (1, 0), (1, 1)),  # Total amount
+        ('SPAN', (2, 0), (4, 0)),  # Amount generated and captured
+        ('SPAN', (5, 0), (5, 1)),  # Feedstock
+        ('SPAN', (6, 0), (6, 1)),  # Destroyed
+        ('SPAN', (7, 0), (7, 1)),  # Emissions
+        ('SPAN', (8, 0), (8, 1)),  # Remarks
     )
 
-    return (subtitle, facilities_table,)
-    + get_comments_section(submission, 'emissions')
+    table = rows_to_table(
+        table_header,
+        tuple(map(table_row, data)),
+        col_widths([4, 2.5, 2.4, 2.8, 2.4, 2.7, 2.7, 2.4, 5.6]),
+        table_style
+    )
+
+    return (subtitle, table) + comments

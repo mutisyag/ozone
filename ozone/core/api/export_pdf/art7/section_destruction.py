@@ -24,17 +24,16 @@ def table_row(obj):
 
 
 def export_destruction(submission):
-
-    subtitle = Paragraph(
-        "%s (%s)" % (_('Destroyed'), _('metric tonnes')),
-        h2_style
-    )
-
     data = exclude_blend_items(submission.article7destructions)
     comments = get_comments_section(submission, 'destruction')
 
     if not data and not any(comments):
         return tuple()
+
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Destroyed'), _('metric tonnes')),
+        h2_style
+    )
 
     table_header = ((
         p_c(_('Annex/Group')),
@@ -53,7 +52,7 @@ def export_destruction(submission):
     table = rows_to_table(
         table_header,
         tuple(map(table_row, data)),
-        col_widths([3, 6, 4, 12]),
+        col_widths([2.1, 8, 4, 13.5]),
         table_style
     )
 

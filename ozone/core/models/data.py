@@ -827,9 +827,11 @@ class Article7NonPartyTrade(
             )
         # If it's a blend we skip the validation because we will check every
         # component substance particularly.
+        # Don't do any checks for uncontrolled substances (group is None)
         if (
             not self.blend and self.substance and self.trade_party
             and self.submission.schema_version != 'legacy'
+            and self.substance.group
         ):
             non_parties = self.substance.group.get_non_parties()
             if self.trade_party not in non_parties:

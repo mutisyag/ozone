@@ -204,9 +204,8 @@ def get_substance_or_blend_name(obj):
     return (
         obj.substance.name
         if obj.substance
-        else '%s (%s) - %s' % (
+        else '%s - %s' % (
             obj.blend.blend_id,
-            _('blend'),
             obj.blend.composition
         )
     )
