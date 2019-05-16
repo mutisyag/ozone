@@ -33,11 +33,15 @@ def get_prodcons_data(submission):
         party=party,
         reporting_period=period
     )
+    if submission.submitted_at:
+        date_reported = submission.submitted_at
+    else:
+        date_reported = submission.info.date
     data['party'] = {
         'name': party.name,
         'population': history.population,
         'party_type': history.party_type.abbr,
-        'date_reported': submission.submitted_at.strftime("%d-%b-%Y")
+        'date_reported': date_reported.strftime("%d-%b-%Y")
     }
 
     data['headers'] = {
@@ -60,7 +64,7 @@ def get_prodcons_data(submission):
             actual_prod = prodcons.calculated_production
             if prodcons.baseline_prod:
                 baseline_prod = prodcons.baseline_prod
-                if actual_prod <= 0:
+                if actual_prod <= 0 or baseline_prod == 0:
                     chng_prod = -100
                 else:
                     chng_prod = round(
@@ -73,7 +77,7 @@ def get_prodcons_data(submission):
             actual_cons = prodcons.calculated_consumption
             if prodcons.baseline_cons:
                 baseline_cons = prodcons.baseline_cons
-                if actual_cons <= 0:
+                if actual_cons <= 0 or baseline_cons == 0:
                     chng_cons = -100
                 else:
                     chng_cons = round(
