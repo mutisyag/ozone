@@ -57,8 +57,13 @@ Optionally clone the translations as well in `translations` folder inside the oz
 
     pip install -r requirements/production.txt
     env DJANGO_SETTINGS_MODULE=config.settings.production python manage.py collectstatic --no-input 
+    
+3. Build documentation
 
-3. Create tar file with all the static files. E.g.
+    pip install -r requirements/docs.txt
+    sphinx-build -b html docs/ frontend/dist/docs/    
+
+4. Create tar file with all the static files. E.g.
 
     touch build.tar
     tar -rf build.tar static/*
@@ -67,7 +72,7 @@ Optionally clone the translations as well in `translations` folder inside the oz
     cd ../../
     gzip build.tar
     
-4. Serve static files from a webserver. See `config/nginx/nginx.conf.example` for an example.
+5. Serve static files from a webserver. See `config/nginx/nginx.conf.example` for an example.
 
         
 ## Install directly on development machine
