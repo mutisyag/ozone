@@ -1,9 +1,10 @@
 from ..util import get_comments_section
 from ..util import p_l, p_c
-from ..util import page_title_section
+from ..util import h1_style
 from .constants import TABLE_INFO_WIDTHS, TABLE_INFO_HEADER, TABLE_INFO_STYLE
 
 from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph
 from reportlab.platypus import Table
 
 
@@ -72,15 +73,12 @@ def get_questionnaire_table(submission):
 
 def export_info(submission):
     return (
-        page_title_section(
-            title="%s %s - %s" % (
-                submission.reporting_period.name,
-                submission.obligation.name,
-                submission.party.name,
-            ),
-        ) +
-        get_date_of_reporting(submission) +
-        get_submission_info(submission.info) +
-        get_questionnaire_table(submission) +
-        get_comments_section(submission, 'questionnaire')
-    )
+        Paragraph("%s %s - %s" % (
+            submission.reporting_period.name,
+            submission.obligation.name,
+            submission.party.name,
+        ), h1_style),
+    ) + get_date_of_reporting(submission)
+    + get_submission_info(submission.info)
+    + get_questionnaire_table(submission)
+    + get_comments_section(submission, 'questionnaire')

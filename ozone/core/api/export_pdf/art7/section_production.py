@@ -9,10 +9,9 @@ from ..util import get_quantity_cell
 from ..util import get_quantities
 from ..util import get_substance_label
 from ..util import p_c
-from ..util import page_title_section
-from ..util import STYLES
 from ..util import TABLE_STYLES
 from ..util import table_from_data
+from ..util import h2_style
 
 from .constants import TABLE_PROD_HEADER
 from .constants import TABLE_PROD_HEADER_FII
@@ -61,6 +60,11 @@ def export_production(submission):
     table_substances = tuple(mk_table_substances(submission))
     table_substances_fii = tuple(mk_table_substances_fii(submission))
 
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Production'), _('metric tonnes')),
+        h2_style
+    )
+
     subst_table = table_from_data(
         data=table_substances, isBlend=False,
         header=TABLE_PROD_HEADER,
@@ -77,9 +81,5 @@ def export_production(submission):
         repeatRows=2, emptyData=_('No F/II substances produced.')
     )
 
-    return (
-        page_title_section(
-            title="%s (%s)" % (_('Production'), _('metric tonnes')),
-        ) + (subst_table, fii_table) +
-        get_comments_section(submission, 'production')
-    )
+    return (subtitle, subst_table, fii_table)
+    + get_comments_section(submission, 'production')

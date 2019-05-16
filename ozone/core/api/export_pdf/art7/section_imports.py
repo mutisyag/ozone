@@ -9,7 +9,7 @@ from .constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
 from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
-from ..util import page_title_section
+from ..util import h2_style
 from ..util import table_from_data
 from ..util import TABLE_STYLES
 
@@ -18,9 +18,17 @@ from .imp_exp_helper import component_row
 
 from django.utils.translation import gettext_lazy as _
 
+from reportlab.platypus import Paragraph
+
 
 def export_imports(submission):
+
     data = submission.article7imports
+
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Imports'), _('metric tonnes')),
+        h2_style
+    )
 
     table_substances = tuple(mk_table_substances(data, big_table_row))
     table_blends = tuple(mk_table_blends(
@@ -44,9 +52,5 @@ def export_imports(submission):
         repeatRows=2, emptyData=_('No imported blends.')
     )
 
-    return (
-        page_title_section(
-            title="%s (%s)" % (_('Imports'), _('metric tonnes')),
-        ) + (subst_table, blends_table) +
-        get_comments_section(submission, 'imports')
-    )
+    return (subtitle, subst_table, blends_table)
+    + get_comments_section(submission, 'imports')

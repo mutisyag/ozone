@@ -1,4 +1,5 @@
 from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph
 
 from .imp_exp_helper import big_table_row
 from .imp_exp_helper import component_row
@@ -6,7 +7,7 @@ from .imp_exp_helper import component_row
 from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
-from ..util import page_title_section
+from ..util import h2_style
 from ..util import table_from_data
 from ..util import TABLE_STYLES
 
@@ -20,6 +21,12 @@ from .constants import TABLE_IMPORTS_EXPORTS_SUBS_WIDTHS
 
 
 def export_exports(submission):
+
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Exports'), _('metric tonnes')),
+        h2_style
+    )
+
     grouping = submission.article7exports
 
     table_substances = tuple(mk_table_substances(grouping, big_table_row))
@@ -43,9 +50,5 @@ def export_exports(submission):
         repeatRows=2, emptyData=_('No exported blends.')
     )
 
-    return (
-        page_title_section(
-            title="%s (%s)" % (_('Exports'), _('metric tonnes')),
-        ) + (subst_table, blends_table) +
-        get_comments_section(submission, 'exports')
-    )
+    return (subtitle, subst_table, blends_table)
+    + get_comments_section(submission, 'exports')

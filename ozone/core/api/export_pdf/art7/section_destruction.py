@@ -1,4 +1,5 @@
 from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph
 
 from .constants import TABLE_DEST_HEADER
 from .constants import TABLE_DEST_HEADER_STYLE
@@ -12,7 +13,7 @@ from ..util import get_comments_section
 from ..util import mk_table_blends
 from ..util import mk_table_substances
 from ..util import p_c, p_r
-from ..util import page_title_section
+from ..util import h2_style
 from ..util import table_from_data
 from ..util import to_precision
 from ..util import TABLE_STYLES
@@ -32,16 +33,20 @@ def big_table_row(obj, isBlend):
 
 
 def component_row(component, blend):
-    percent = component.percentage
-
     return (
         p_c(_(component.substance.name)),
-        p_r('<b>{}%</b>'.format(round(percent * 100, 1))),
-        p_r(to_precision(blend.quantity_destroyed * percent, 3))
+        p_r('<b>{}%</b>'.format(round(component.percentage * 100, 1))),
+        p_r(to_precision(blend.quantity_destroyed * component.percentage, 3))
     )
 
 
 def export_destruction(submission):
+
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Destroyed'), _('metric tonnes')),
+        h2_style
+    )
+
     data = submission.article7destructions
 
     table_substances = tuple(mk_table_substances(data, big_table_row))
@@ -66,9 +71,5 @@ def export_destruction(submission):
         repeatRows=1, emptyData=_('No blends destroyed.')
     )
 
-    return (
-        page_title_section(
-            title="%s (%s)" % (_('Destroyed'), _('metric tonnes')),
-        ) + (subst_table, blends_table) +
-        get_comments_section(submission, 'destruction')
-    )
+    return (subtitle, subst_table, blends_table)
+    + get_comments_section(submission, 'destruction')

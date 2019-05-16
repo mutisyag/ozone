@@ -30,5 +30,4 @@ def export_submission(submission):
         export_destruction(submission),
         export_nonparty(submission),
         export_emission(submission),
-        export_prodcons(submission),
     ))

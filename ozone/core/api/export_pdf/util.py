@@ -26,6 +26,7 @@ __all__ = [
     'get_quantity_cell',
     'hr',
     'page_title_section',
+    'page_title',
     'p_c',
     'p_l',
     'p_r',
@@ -70,9 +71,25 @@ bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE
 
 left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
 
-page_h1_style = _style(
-    'Heading1', alignment=TA_CENTER,
-    fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold',
+h1_style = _style(
+    'Heading1',
+    alignment=TA_CENTER,
+    fontSize=FONTSIZE_DEFAULT+6,
+    fontName='Helvetica-Bold',
+)
+
+h2_style = _style(
+    'Heading3',
+    alignment=TA_LEFT,
+    fontSize=FONTSIZE_DEFAULT+4,
+    fontName='Helvetica-Bold',
+)
+
+h3_style = _style(
+    'Heading3',
+    alignment=TA_LEFT,
+    fontSize=FONTSIZE_DEFAULT+2,
+    fontName='Helvetica-Bold',
 )
 
 page_title_style = _style(
@@ -101,6 +118,8 @@ def col_widths(w_list):
 
 # Returning number as string to avoid 'E' notation
 def get_big_float(nr):
+    if not nr:
+        return ''
     if 'e' in str(nr):
         n, exp = str(nr).split('e')
         s_n = str(float(n)/10)
