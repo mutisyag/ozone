@@ -29,7 +29,7 @@ def to_row_substance(obj):
     q_cell = get_quantity_cell(quantities, extra_q)
 
     decisions = get_decisions(obj)
-    d_label = get_substance_label(decisions, type='decision', list_font_size=9)
+    d_label = get_substance_label(decisions, type='decision')
 
     return (
         substance.group.group_id,
@@ -43,14 +43,18 @@ def to_row_substance(obj):
 
 
 def mk_table_substances(submission):
-    production = submission.article7productions.all()
+    # Exclude annex F/II substances, shown separately
+    production = submission.article7productions.exclude(
+        substance__is_captured=True
+    )
     return map(to_row_substance, production)
 
 
 def mk_table_substances_fii(submission):
-    # TODO: Differentiation between FII and non-FII does
-    # not appear to be implemented yet.
-    return []
+    production = submission.article7productions.filter(
+        substance__is_captured=True
+    )
+    return map(to_row_substance, production)
 
 
 def export_production(submission):

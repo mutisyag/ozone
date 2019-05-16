@@ -35,7 +35,7 @@ def component_row(component, blend):
     percent = component.percentage
 
     return (
-        p_c(_(component.substance)),
+        p_c(_(component.substance.name)),
         p_r('<b>{}%</b>'.format(round(percent * 100, 1))),
         p_r(to_precision(blend.quantity_destroyed * percent, 3))
     )
