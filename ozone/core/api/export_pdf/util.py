@@ -46,6 +46,7 @@ FONTSIZE_TITLE = FONTSIZE_SUBTITLE + 6
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
     ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
 )
 
 

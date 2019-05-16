@@ -79,9 +79,7 @@ def export_nonparty(submission):
 
     table_style = TABLE_STYLES + (
         ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
-        ('ALIGN', (0, 1), (-1, -1), 'LEFT'),
         ('SPAN', (0, 0), (0, 1)),  # Annex group
         ('SPAN', (1, 0), (1, 1)),  # Substance
         ('SPAN', (2, 0), (2, 1)),  # Party

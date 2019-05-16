@@ -69,7 +69,6 @@ def export_emission(submission):
     )
     table_style = TABLE_STYLES + (
         ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-        ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
         ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
         ('SPAN', (0, 0), (0, 1)),  # Facility
         ('SPAN', (1, 0), (1, 1)),  # Total amount
