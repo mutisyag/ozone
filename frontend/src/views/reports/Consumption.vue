@@ -107,6 +107,7 @@ export default {
         group: null,
         reporting_period: null
       },
+      prefiledFilters: false,
       sorting: {
         sortBy: 'reporting_period',
         sortDesc: true,
@@ -151,7 +152,13 @@ export default {
   },
   computed: {
     currentUser() {
-      const { currentUser } = this.$store.state
+      const { currentUser, submissionDefaultValues } = this.$store.state
+
+      if (!this.prefiledFilters && currentUser && this.filters.reporting_period.options.length > 0) {
+        this.selectedFilters.party = currentUser.party
+        this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
+        this.prefiledFilters = true
+      }
 
       return currentUser
     },
@@ -247,19 +254,6 @@ export default {
   },
 
   watch: {
-    'filters': {
-      handler() {
-        /**
-				 * Assign default party and open period for user only after filters object is populated with data
-				 */
-        const { currentUser, submissionDefaultValues } = this.$store.state
-        if (currentUser && this.filters.reporting_period.options.length > 0) {
-          this.selectedFilters.party = currentUser.party
-          this.selectedFilters.reporting_period = this.filters.reporting_period.options.find((option) => option.name === submissionDefaultValues.reporting_period).id
-        }
-      },
-      deep: true
-    },
     'selectedFilters': {
       handler() {
         this.canRequest = false
