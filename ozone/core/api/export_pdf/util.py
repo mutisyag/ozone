@@ -38,8 +38,9 @@ STYLES = getSampleStyleSheet()
 
 FONTSIZE_DEFAULT = 8
 FONTSIZE_TABLE = FONTSIZE_DEFAULT
-FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT-1
-FONTSIZE_TITLE = FONTSIZE_DEFAULT+2
+FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT - 1
+FONTSIZE_SUBTITLE = FONTSIZE_DEFAULT + 2
+FONTSIZE_TITLE = FONTSIZE_SUBTITLE + 6
 
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
@@ -47,13 +48,11 @@ TABLE_STYLES = (
 )
 
 
-def _style(style_name, align, fontSize=None, fontName=None):
+def _style(style_name, **kwargs):
     style = deepcopy(STYLES[style_name])
-    style.alignment = align
-    if fontSize:
-        style.fontSize = fontSize
-    if fontName:
-        style.fontName = fontName
+    if kwargs is not None:
+        for k, v in kwargs.items():
+            setattr(style, k, v)
     return style
 
 
@@ -63,15 +62,22 @@ hr = HRFlowable(
 )
 
 
-centered_paragraph_style = _style('BodyText', TA_CENTER, fontSize=FONTSIZE_DEFAULT)
-left_paragraph_style = _style('BodyText', TA_LEFT, fontSize=FONTSIZE_DEFAULT)
-right_paragraph_style = _style('BodyText', TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
-bullet_paragraph_style = _style('BodyText', TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
+centered_paragraph_style = _style('BodyText', alignment=TA_CENTER, fontSize=FONTSIZE_DEFAULT)
+left_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT)
+right_paragraph_style = _style('BodyText', alignment=TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
+bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
 
+
+left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
+
+page_h1_style = _style(
+    'Heading1', alignment=TA_CENTER,
+    fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold',
+)
 
 page_title_style = _style(
-    'Heading3', TA_LEFT,
-    fontSize=FONTSIZE_TITLE, fontName='Helvetica-Bold',
+    'Heading3', alignment=TA_LEFT,
+    fontSize=FONTSIZE_SUBTITLE, fontName='Helvetica-Bold',
 )
 
 p_c = partial(Paragraph, style=centered_paragraph_style)
