@@ -19,6 +19,15 @@ class Transfer(models.Model):
     """
     Records amounts of production rights transferred between Parties.
     """
+    TRANSFER_TYPE = (
+        ('P', 'Production'),
+        ('C', 'Consumption')
+    )
+    transfer_type = models.CharField(
+        max_length=1,
+        choices=TRANSFER_TYPE
+    )
+
     source_party = models.ForeignKey(
         Party, related_name='sent_transfers', on_delete=models.PROTECT
     )
@@ -73,7 +82,10 @@ class Transfer(models.Model):
             reporting_period=self.reporting_period,
             group=self.substance.group,
         )
-        prod_cons.prod_transfer += self.transferred_amount * potential
+        if self.transfer_type == 'Production':
+            prod_cons.prod_transfer += self.transferred_amount * potential
+        else:
+            prod_cons.cons_transfer += self.transferred_amount * potential
         prod_cons.save()
 
         prod_cons_mt, created = ProdConsMT.objects.get_or_create(
@@ -81,7 +93,10 @@ class Transfer(models.Model):
             reporting_period=self.reporting_period,
             substance=self.substance
         )
-        prod_cons_mt.prod_transfer += self.transferred_amount
+        if self.transfer_type == 'Production':
+            prod_cons_mt.prod_transfer += self.transferred_amount
+        else:
+            prod_cons_mt.cons_transfer += self.transferred_amount
         prod_cons_mt.save()
 
     def clear_aggregated_data(self):
@@ -93,7 +108,10 @@ class Transfer(models.Model):
         if prod_cons:
             # Next line may be naive, what if we have 2 registered transfers
             # in the same reporting period?
-            prod_cons.prod_transfer = 0.0
+            if self.transfer_type == 'Production':
+                prod_cons.prod_transfer = 0.0
+            else:
+                prod_cons.cons_transfer = 0.0
             prod_cons.save()
             if prod_cons.is_empty():
                 prod_cons.delete()
@@ -106,7 +124,10 @@ class Transfer(models.Model):
         if prod_cons:
             # Next line may be naive, what if we have 2 registered transfers
             # in the same reporting period?
-            prod_cons.prod_transfer = 0.0
+            if self.transfer_type == 'Production':
+                prod_cons.prod_transfer = 0.0
+            else:
+                prod_cons.cons_transfer = 0.0
             prod_cons.save()
             if prod_cons.is_empty():
                 prod_cons.delete()
