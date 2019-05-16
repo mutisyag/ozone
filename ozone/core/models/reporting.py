@@ -81,12 +81,14 @@ class FormTypes(enum.Enum):
     HAT = 'hat'
     OTHER = 'other'
     EXEMPTION = 'exemption'
+    TRANSFER = 'transfer'
 
 
 class Obligation(models.Model):
 
     NOT_CLONEABLE = [
         'exemption',
+        'transfer',
     ]
 
     name = models.CharField(
