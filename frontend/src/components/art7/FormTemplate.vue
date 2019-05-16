@@ -156,7 +156,7 @@
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
                         v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
-                        Quantity of new %{substance} %{qps_word} to be used for QPS applications
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -368,7 +368,7 @@
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
                         v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
-                        Quantity of new %{substance} %{qps_word} to be used for QPS applications
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
