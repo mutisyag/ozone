@@ -239,7 +239,6 @@ class Submission(models.Model):
         'article7emissions',
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
-        'transfers',
         'dataothers',
         'nominations',
         'exemptionapproveds',
