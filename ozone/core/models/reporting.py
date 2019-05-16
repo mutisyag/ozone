@@ -1540,12 +1540,10 @@ class Submission(models.Model):
                 self.version = current_submissions.latest('version').version + 1
 
             # On first save we need to instantiate the submission's workflow
-            # TODO: get the proper workflow based on obligation and context
-            # (e.g. fast-tracked secretariat submissions).
-            # For now we will naively instantiate all submissions with
-            # the default article 7 workflow.
             if self.obligation.form_type == FormTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
+            elif self.obligation.form_type == FormTypes.TRANSFER.value:
+                self._workflow_class = 'default_transfer'
             else:
                 self._workflow_class = 'default'
             self._current_state = \
