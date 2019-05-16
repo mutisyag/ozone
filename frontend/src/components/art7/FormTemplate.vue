@@ -169,7 +169,7 @@
               <b-input-group v-if="tooltipField === 'decision_exempted'">
                 <b-input-group-prepend>
                   <span class="input-group-text" v-translate>
-                    QPS decision
+                    Remark
                   </span>
                 </b-input-group-prepend>
                 <fieldGenerator
@@ -209,7 +209,7 @@
               <b-input-group v-if="tooltipField === 'decision_exempted'">
                 <b-input-group-prepend>
                   <span class="input-group-text" v-translate>
-                    Polyols decision
+                    Remark
                   </span>
                 </b-input-group-prepend>
                 <fieldGenerator
@@ -381,7 +381,7 @@
               <b-input-group v-if="tooltipField === 'decision_exempted'">
                 <b-input-group-prepend>
                   <span class="input-group-text" v-translate>
-                    QPS decision
+                    Remark
                   </span>
                 </b-input-group-prepend>
                 <fieldGenerator
@@ -421,7 +421,7 @@
               <b-input-group v-if="tooltipField === 'decision_exempted'">
                 <b-input-group-prepend>
                   <span class="input-group-text" v-translate>
-                    Polyols decision
+                    Remark
                   </span>
                 </b-input-group-prepend>
                 <fieldGenerator
