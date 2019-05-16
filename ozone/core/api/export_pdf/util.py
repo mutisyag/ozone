@@ -200,6 +200,18 @@ BASIC_Q_TYPES = (
 )
 
 
+def get_substance_or_blend_name(obj):
+    return (
+        obj.substance.name
+        if obj.substance
+        else '%s (%s) - %s' % (
+            obj.blend.blend_id,
+            _('blend'),
+            obj.blend.composition
+        )
+    )
+
+
 def get_quantity_cell(q_list, extra_q):
     if sum(q_list) > 0:
         if extra_q:
@@ -298,6 +310,16 @@ def get_preship_or_polyols_q(obj):
     return None
 
 
+def rows_to_table(header, rows, colWidths, style):
+    return Table(
+        header + rows,
+        colWidths=colWidths,
+        style=style,
+        hAlign='LEFT',
+        repeatRows=len(header)  # repeat header on page break
+    ) if rows else None
+
+
 def table_from_data(
     data, isBlend, header, colWidths, style, repeatRows, emptyData=None
 ):
@@ -353,6 +375,20 @@ def mk_table_substances(grouping, row_fct):
     objs = grouping.exclude(substance=None).filter(blend_item=None)
     row = partial(row_fct, isBlend=False)
     return map(row, objs)
+
+
+def exclude_blend_items(data):
+    return data.exclude(blend_item__isnull=False)
+
+
+def get_remarks(item):
+    if not item.remarks_party:
+        return item.remarks_os or ''
+    else:
+        if not item.remarks_os:
+            return item.remarks_party
+        else:
+            return '%s<br/>%s' % (item.remarks_party, item.remarks_os)
 
 
 def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
