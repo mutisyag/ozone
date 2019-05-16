@@ -419,6 +419,7 @@ class BaseReport(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['ordering_id']
 
 
 class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
@@ -638,7 +639,7 @@ class Article7Export(
         on_delete=models.PROTECT
     )
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_exports'
 
 
@@ -689,7 +690,7 @@ class Article7Import(
         on_delete=models.PROTECT
     )
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_imports'
 
 
@@ -732,7 +733,7 @@ class Article7Production(
 
     tracker = FieldTracker()
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_production'
 
 
@@ -761,7 +762,7 @@ class Article7Destruction(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_destruction'
 
 
@@ -808,7 +809,7 @@ class Article7NonPartyTrade(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_npt'
 
     def clean(self):
@@ -889,7 +890,7 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
     tracker = FieldTracker()
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_emissions'
 
 
@@ -924,7 +925,7 @@ class HighAmbientTemperatureProduction(
 
     tracker = FieldTracker()
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_hat_production'
 
 
@@ -947,7 +948,7 @@ class HighAmbientTemperatureImport(
         'quantity_dcpac',
     ]
 
-    class Meta:
+    class Meta(BaseReport.Meta):
         db_table = 'reporting_hat_import'
 
 
