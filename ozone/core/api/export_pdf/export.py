@@ -31,3 +31,13 @@ def export_submission(submission):
 
     buff.seek(0)
     return buff
+
+
+def export_prodcons(submission):
+    buf = BytesIO()
+
+    doc = SimpleDocTemplate(buf, pagesize=PG_SIZE)
+    doc.build(art7.export_prodcons(submission))
+
+    buf.seek(0)
+    return buf

@@ -7,6 +7,7 @@ from .section_production import export_production
 from .section_destruction import export_destruction
 from .section_nonparty import export_nonparty
 from .section_emission import export_emission
+from .others import export_prodcons
 
 __all__ = [
     'export_submission',
@@ -15,7 +16,8 @@ __all__ = [
     'export_production',
     'export_destruction',
     'export_nonparty',
-    'export_emission'
+    'export_emission',
+    'export_prodcons',
 ]
 
 
@@ -27,5 +29,6 @@ def export_submission(submission):
         export_production(submission),
         export_destruction(submission),
         export_nonparty(submission),
-        export_emission(submission)
+        export_emission(submission),
+        export_prodcons(submission),
     ))

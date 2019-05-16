@@ -122,7 +122,7 @@ from ..serializers import (
 )
 
 
-from .export_pdf import export_submission
+from .export_pdf import export_submission, export_prodcons
 
 
 User = get_user_model()
@@ -654,6 +654,16 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
         filename = f'submission_{pk}_{timestamp}.pdf'
         buf_pdf = export_submission(submission)
+        resp = HttpResponse(buf_pdf, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return resp
+
+    @action(detail=True, methods=["get"])
+    def export_prodcons_pdf(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        timestamp = datetime.now().strftime('%Y-%m-%d')
+        filename = f'prodcons_{timestamp}.pdf'
+        buf_pdf = export_prodcons(submission)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
