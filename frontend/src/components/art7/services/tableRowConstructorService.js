@@ -141,16 +141,6 @@ export default {
             errors.push($gettext('Please fill-in column Amount of generated emissions (6)'))
           }
 
-          if (valueConverter(this.quantity_generated.selected) < doSum([
-            this.quantity_captured_all_uses.selected,
-            this.quantity_captured_feedstock.selected,
-            this.quantity_captured_for_destruction.selected,
-            this.quantity_feedstock.selected,
-            this.quantity_destroyed.selected
-          ])) {
-            errors.push($gettext('Total amount generated (2) must be greater than the sum of Amount generated and captured (3), Amount used for feedstock without prior capture (4) and Amount destroyed without prior capture (5)'))
-          }
-
           if (valueConverter(this.quantity_captured_all_uses.selected)
 					|| valueConverter(this.quantity_captured_feedstock.selected)
 					|| valueConverter(this.quantity_captured_for_destruction.selected)) {
