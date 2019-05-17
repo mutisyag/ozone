@@ -176,8 +176,6 @@ export default {
           }
         })
         this.$store.commit('setTabOrderingId', { tabName, ordering_id })
-        console.log(this.$store.state.form.tabs[tabName].form_fields)
-        console.log(this.$store.getters.multiRowValidation(tabName))
       }
       if (isObject(this.form.tabs[tabName].form_fields)) {
         const [prefillData] = data
