@@ -1,6 +1,7 @@
 import re
 
 from copy import deepcopy
+from collections import OrderedDict
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
@@ -199,6 +200,29 @@ BASIC_Q_TYPES = (
     'Process agent uses',
     'Other/unspecified'
 )
+
+EXEMPTED_FIELDS = OrderedDict([
+    ('laboratory_analytical_uses', _('Laboratory and analytical uses')),
+    ('essential_uses', _('Essential uses, other than L&A')),
+    ('critical_uses', _('Critical uses')),
+    ('high_ambient_temperature', _('High ambient temperature')),
+    ('process_agent_uses', _('Process agent uses')),
+    ('other_uses', _('Other/unspecified uses')),
+])
+
+
+def get_quantity(obj, field):
+    """
+    field is a key in EXEMPTED_FIELDS
+    """
+    return getattr(obj, 'quantity_' + field) if field else None
+
+
+def get_decision(obj, field):
+    """
+    field is a key in EXEMPTED_FIELDS
+    """
+    return getattr(obj, 'decision_' + field) if field else None
 
 
 def get_substance_or_blend_name(obj):
