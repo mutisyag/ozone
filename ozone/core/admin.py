@@ -471,14 +471,6 @@ class CriticalUseCategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
-class TransferSubmissionFilter(RelatedDropdownFilter):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.lookup_choices = Party.objects.filter(
-            parent_party__id=F('id'),
-        ).order_by('name').values_list('id', 'name')
-
-
 @admin.register(Transfer)
 class TransferAdmin(admin.ModelAdmin):
     list_display = (
