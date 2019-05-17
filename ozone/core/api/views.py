@@ -664,9 +664,15 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def export_prodcons_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
+        parties = [submission.party.pk]
+        if request.data.get('parties'):
+            parties += request.data.get('parties')
+        parties = [
+            Party.objects.get(pk=party_pk) for party_pk in parties
+        ]
         timestamp = datetime.now().strftime('%Y-%m-%d')
         filename = f'prodcons_{timestamp}.pdf'
-        buf_pdf = export_prodcons(submission)
+        buf_pdf = export_prodcons(submission.reporting_period, parties)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp

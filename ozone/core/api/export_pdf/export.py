@@ -33,11 +33,11 @@ def export_submission(submission):
     return buff
 
 
-def export_prodcons(submission):
+def export_prodcons(reporting_period, parties):
     buf = BytesIO()
 
     doc = SimpleDocTemplate(buf, pagesize=PG_SIZE)
-    doc.build(art7.export_prodcons(submission))
+    doc.build(art7.export_prodcons(reporting_period, parties))
 
     buf.seek(0)
     return buf
