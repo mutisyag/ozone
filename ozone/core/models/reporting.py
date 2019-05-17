@@ -28,6 +28,7 @@ from ..exceptions import (
 
 __all__ = [
     'ModifyPreventionMixin',
+    'FormTypes',
     'Obligation',
     'Submission',
     'SubmissionInfo',
