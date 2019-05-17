@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .aggregation import ProdCons, ProdConsMT
 from .legal import ReportingPeriod
 from .party import Party
-from .reporting import Submission
+from .reporting import Submission, FormTypes
 from .substance import Substance
 
 
@@ -133,30 +133,46 @@ class Transfer(models.Model):
                 prod_cons.delete()
 
     def clean(self):
-        if (
-            self.destination_party_submission and
-            self.destination_party_submission.party != self.destination_party
-        ):
-            raise ValidationError(
-                {
-                    'destination_party_submission': [_(
-                        "Destination party submission should belong to the "
-                        "transfer's destination party"
-                    )],
-                }
-            )
-        if (
-            self.source_party_submission and
-            self.source_party_submission.party != self.source_party
-        ):
-            raise ValidationError(
-                {
-                    'source_party_submission': [_(
-                        "Source party submission should belong to the "
-                        "transfer's source party"
-                    )],
-                }
-            )
+        if self.destination_party_submission:
+            if self.destination_party_submission.party != self.destination_party:
+                raise ValidationError(
+                    {
+                        'destination_party_submission': [_(
+                            "Destination party submission should belong to the "
+                            "transfer's destination party."
+                        )],
+                    }
+                )
+            if self.destination_party_submission.obligation.form_type != FormTypes.TRANSFER.value:
+                raise ValidationError(
+                    {
+                        'destination_party_submission': [_(
+                            "Destination party submission should be a Transfer"
+                            "submission."
+                        )],
+                    }
+                )
+
+        if self.source_party_submission:
+            if self.source_party_submission.party != self.source_party:
+                raise ValidationError(
+                    {
+                        'source_party_submission': [_(
+                            "Source party submission should belong to the "
+                            "transfer's source party"
+                        )],
+                    }
+                )
+            if self.source_party_submission.obligation.form_type != FormTypes.TRANSFER.value:
+                raise ValidationError(
+                    {
+                        'source_party_submission': [_(
+                            "Source party submission should be a Transfer"
+                            "submission."
+                        )],
+                    }
+                )
+
         super().clean()
 
     def delete(self, *args, **kwargs):

@@ -45,6 +45,8 @@ from .models import (
     Limit,
     PartyRatification,
     CriticalUseCategory,
+    FormTypes,
+    Transfer,
 )
 
 
@@ -467,6 +469,38 @@ class PartyRatificationAdmin(admin.ModelAdmin):
 class CriticalUseCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', )
     search_fields = ['name']
+
+
+class TransferSubmissionFilter(RelatedDropdownFilter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.lookup_choices = Party.objects.filter(
+            parent_party__id=F('id'),
+        ).order_by('name').values_list('id', 'name')
+
+
+@admin.register(Transfer)
+class TransferAdmin(admin.ModelAdmin):
+    list_display = (
+        'source_party', 'destination_party', 'substance', 'transferred_amount',
+    )
+    search_fields = ('source_party', 'destination_party', 'substance',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
+            obligation___form_type=FormTypes.TRANSFER.value
+        )
+        if obj is not None:
+            source_sub_queryset = source_sub_queryset.filter(
+                party=obj.source_party
+            )
+            dest_sub_queryset = dest_sub_queryset.filter(
+                party=obj.destination_party
+            )
+        form.base_fields['source_party_submission'].queryset = source_sub_queryset
+        form.base_fields['destination_party_submission'].queryset = dest_sub_queryset
+        return form
 
 
 # register all adminactions
