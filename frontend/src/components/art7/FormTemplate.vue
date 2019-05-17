@@ -155,8 +155,8 @@
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
-                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
-                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country
+                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected], production: qps_production}">
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country %{production}
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -367,8 +367,8 @@
                   </span>
                     <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
                       <span
-                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected]}">
-                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country
+                        v-translate="{qps_word: qps_word, substance: tab_data.display.substances[cell.item.originalObj.substance.selected], production: qps_production}">
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country %{production}
                       </span>
                     </b-tooltip>
                 </b-input-group-prepend>
@@ -583,6 +583,47 @@
                 {{formatQuantity(cell.item[tooltipField])}}
                 <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
+
+            <div
+              style="position: relative;z-index: 1; margin-top: 1rem"
+              class="special-field"
+              v-if="isQps.includes(parseInt(cell.item.originalObj.blend.selected))"
+              :key="`${tooltipField}_qps`"
+            >
+              <b-input-group v-if="tooltipField === 'quantity_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text"
+                    :id="`qps_tooltip_${cell.item.index}`"
+                  >
+                    QPS <i class="fa fa-info-circle fa-sm"></i>
+                  </span>
+                    <b-tooltip :target="`qps_tooltip_${cell.item.index}`" placement="bottom">
+                      <span
+                        v-translate="{qps_word: qps_word, substance: tab_data.display.blends[cell.item.originalObj.blend.selected].name, production: qps_production}">
+                        Quantity of new %{substance} %{qps_word} to be used for QPS applications within your country %{production}
+                      </span>
+                    </b-tooltip>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'quantity_quarantine_pre_shipment'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.quantity_quarantine_pre_shipment"
+                />
+              </b-input-group>
+              <b-input-group v-if="tooltipField === 'decision_exempted'">
+                <b-input-group-prepend>
+                  <span class="input-group-text" v-translate>
+                    Remark
+                  </span>
+                </b-input-group-prepend>
+                <fieldGenerator
+                  :fieldInfo="{index:cell.item.index,tabName: tabName, field:'decision_quarantine_pre_shipment'}"
+                  :disabled="!$store.getters.can_edit_data"
+                  :field="cell.item.originalObj.decision_quarantine_pre_shipment"
+                />
+              </b-input-group>
+            </div>
+
             </div>
           </template>
 
@@ -895,6 +936,12 @@ export default {
         break
       }
       return word
+    },
+    qps_production() {
+      if (this.tabName === 'has_produced') {
+        return 'and for exports'
+      }
+      return ''
     },
     isPolyols() {
       return ['has_imports', 'has_exports'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
