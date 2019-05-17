@@ -142,8 +142,11 @@ class BaseProdCons(models.Model):
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
-    # Prod transfer
+    # Transfers
     prod_transfer = models.FloatField(
+        default=0.0, validators=[MinValueValidator(0.0)]
+    )
+    cons_transfer = models.FloatField(
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 

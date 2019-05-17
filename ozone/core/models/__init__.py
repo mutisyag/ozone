@@ -7,6 +7,7 @@ from .narrative import *
 from .party import *
 from .reporting import *
 from .substance import *
+from .transfer import *
 from .legal import *
 from .file import *
 from .aggregation import *

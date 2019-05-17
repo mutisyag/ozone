@@ -81,19 +81,25 @@ class FormTypes(enum.Enum):
     HAT = 'hat'
     OTHER = 'other'
     EXEMPTION = 'exemption'
+    TRANSFER = 'transfer'
 
 
 class Obligation(models.Model):
 
     NOT_CLONEABLE = [
-        'exemption',
+        FormTypes.EXEMPTION.value,
+        FormTypes.TRANSFER.value,
+    ]
+
+    AGGREGATABLE = [
+        FormTypes.ART7.value,
+        FormTypes.HAT.value,
     ]
 
     name = models.CharField(
         max_length=256, unique=True,
         help_text="A unique String value identifying this obligation."
     )
-    # TODO: obligation-party mapping!
 
     description = models.CharField(max_length=256, blank=True)
 
@@ -130,6 +136,14 @@ class Obligation(models.Model):
     @property
     def form_type(self):
         return self._form_type
+
+    @property
+    def is_not_cloneable(self):
+        return self.form_type in self.NOT_CLONEABLE
+
+    @property
+    def is_aggregateable(self):
+        return self.form_type in self.AGGREGATABLE
 
     def __str__(self):
         return self.name
@@ -202,7 +216,8 @@ class ReportingChannel(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        f'Unable to set reporting channel. Another reporting channel is already set as default for '
+                        f'Unable to set reporting channel. Another reporting '
+                        f'channel is already set as default for '
                         f'{unique_fields[field]}.'
                     )
                 )
@@ -239,7 +254,6 @@ class Submission(models.Model):
         'article7emissions',
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
-        'transfers',
         'dataothers',
         'nominations',
         'exemptionapproveds',
@@ -726,7 +740,7 @@ class Submission(models.Model):
         ):
             return False
 
-        if self.obligation.form_type == 'art7':
+        if self.obligation.form_type == FormTypes.ART7.value:
             if (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
@@ -759,7 +773,7 @@ class Submission(models.Model):
             return []
 
         # Treat exemption case separately
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if user.is_secretariat:
                 if self.in_initial_state:
                     return ['flag_emergency',]
@@ -930,7 +944,7 @@ class Submission(models.Model):
         Returns whether user has edit rights on this submission based on
         user type & who it was created by (state not taken into account).
         """
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if (
                 user.is_secretariat
                 or user.party == self.party and not self.filled_by_secretariat
@@ -947,7 +961,7 @@ class Submission(models.Model):
     def can_edit_data(self, user):
         if self.has_edit_rights(user):
             if (
-                self.obligation.form_type == 'exemption'
+                self.obligation.form_type == FormTypes.EXEMPTION.value
                 and not user.is_secretariat and user.party is not None
             ):
                 return self.in_initial_state
@@ -1085,13 +1099,13 @@ class Submission(models.Model):
                 )
             )
 
-        if self.obligation.form_type in self.obligation.NOT_CLONEABLE:
+        if self.obligation.is_not_cloneable:
             return (
                 False,
                 ValidationError(
                     _(
-                        "You cannot create a new version of this submission with this type of "
-                        "obligation"
+                        "You cannot create a new version of this submission "
+                        "with this type of obligation"
                     )
                 )
             )
@@ -1103,8 +1117,8 @@ class Submission(models.Model):
                     False,
                     ValidationError(
                         _(
-                            "You cannot create a new version of this submission from a previous "
-                            "period if it's superseded."
+                            "You cannot create a new version of this submission"
+                            " from a previous period if it's superseded."
                         )
                     )
                 )
@@ -1294,7 +1308,7 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if user.is_secretariat and not self.in_final_state:
                 return True
 
@@ -1337,9 +1351,11 @@ class Submission(models.Model):
 
     def purge_aggregated_data(self):
         """
-        This might need to become smarter if other data sources than Article 7
-        are added to populate some of the fields in the ProdCons model.
+        Deletes the aggregated data generated by this submission.
         """
+        if not self.obligation.is_aggregateable:
+            return
+
         groups = self.get_reported_groups()
 
         # Set to 0 all values that had been populated by this submission.
@@ -1366,6 +1382,9 @@ class Submission(models.Model):
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
+        if not self.obligation.is_aggregateable:
+            return
+
         # Cleanup aggregated data that's become stale
         self.purge_aggregated_data()
 
@@ -1521,12 +1540,10 @@ class Submission(models.Model):
                 self.version = current_submissions.latest('version').version + 1
 
             # On first save we need to instantiate the submission's workflow
-            # TODO: get the proper workflow based on obligation and context
-            # (e.g. fast-tracked secretariat submissions).
-            # For now we will naively instantiate all submissions with
-            # the default article 7 workflow.
             if self.obligation.form_type == FormTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
+            elif self.obligation.form_type == FormTypes.TRANSFER.value:
+                self._workflow_class = 'default_transfer'
             else:
                 self._workflow_class = 'default'
             self._current_state = \

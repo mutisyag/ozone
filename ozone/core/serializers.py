@@ -32,6 +32,7 @@ from .models import (
     Article7NonPartyTrade,
     Article7Emission,
     HighAmbientTemperatureProduction,
+    Transfer,
     DataOther,
     SubmissionFile,
     UploadToken,
@@ -952,6 +953,12 @@ class RAFSerializer(
     class Meta:
         list_serializer_class = RAFListSerializer
         model = RAFReport
+        exclude = ('submission',)
+
+
+class TransferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transfer
         exclude = ('submission',)
 
 

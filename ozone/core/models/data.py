@@ -23,7 +23,6 @@ __all__ = [
     'Article7Emission',
     'HighAmbientTemperatureProduction',
     'HighAmbientTemperatureImport',
-    'Transfer',
     'DataOther',
     'RAFReport',
     'RAFImport',
@@ -950,34 +949,6 @@ class HighAmbientTemperatureImport(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_hat_import'
-
-
-class Transfer(AggregationMixin, ModifyPreventionMixin, BaseReport):
-    """
-    Records amounts of production rights transferred between Parties.
-    """
-    AGGREGATION_MAPPING = {
-        'transferred_amount': 'prod_transfer'
-    }
-
-    substance = models.ForeignKey(
-        Substance, on_delete=models.PROTECT
-    )
-
-    transferred_amount = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
-
-    is_basic_domestic_need = models.BooleanField(default=False)
-
-    destination_party = models.ForeignKey(
-        Party, related_name='received_transfers', on_delete=models.PROTECT
-    )
-
-    tracker = FieldTracker()
-
-    class Meta:
-        db_table = 'reporting_transfer'
 
 
 class DataOther(ModifyPreventionMixin, BaseReport):
