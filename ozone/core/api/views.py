@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models.query import QuerySet, F
+from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
@@ -52,6 +52,7 @@ from ..models import (
     Article7Emission,
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
+    Transfer,
     DataOther,
     Group,
     Substance,
@@ -76,6 +77,7 @@ from ..permissions import (
     IsSecretariatOrSafeMethod,
     IsSecretariatOrSamePartyAggregation,
     IsSecretariatOrSamePartyLimit,
+    IsSecretariatOrSamePartyTransfer,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -99,6 +101,7 @@ from ..serializers import (
     Article7EmissionSerializer,
     HighAmbientTemperatureProductionSerializer,
     HighAmbientTemperatureImportSerializer,
+    TransferSerializer,
     DataOtherSerializer,
     GroupSerializer,
     SubstanceSerializer,
@@ -1074,6 +1077,26 @@ class RAFViewSet(
     def get_queryset(self):
         return RAFReport.objects.filter(
             submission=self.kwargs['submission_pk']
+        )
+
+
+class TransferViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This only needs to be read-only for now
+    """
+    form_types = ("transfer",)
+    serializer_class = TransferSerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariatOrSamePartyTransfer,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return Transfer.objects.filter(
+            Q(source_party_submission=self.kwargs['submission_pk']) |
+            Q(destination_party_submission=self.kwargs['submission_pk'])
         )
 
 

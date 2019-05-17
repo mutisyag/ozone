@@ -282,3 +282,26 @@ class IsSecretariatOrSamePartyLimit(BasePermission):
         if request.method not in SAFE_METHODS:
             return False
         return True
+
+
+class IsSecretariatOrSamePartyTransfer(BasePermission):
+    """
+    This is used for evaluating permissions on Transfer views.
+
+    For now at least, Transfer views are read-only.
+    """
+    def has_permission(self, request, view):
+        submission_id = view.kwargs.get('submission_pk', None)
+        if not submission_id:
+            return False
+        sub = Submission.objects.get(pk=submission_id)
+
+        return (
+            request.method in SAFE_METHODS
+            and sub.has_read_rights(self, request.user)
+        )
+
+    def has_object_permission(self, request, view, obj):
+        if request.method not in SAFE_METHODS:
+            return False
+        return True
