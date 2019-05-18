@@ -736,7 +736,7 @@ class Submission(models.Model):
         """
         if (
             self.info.reporting_officer is ''
-            or self.info.postal_address is '' and self.info.email is None
+            or self.info.email is None
             or self.filled_by_secretariat and self.submitted_at is None
         ):
             return False
