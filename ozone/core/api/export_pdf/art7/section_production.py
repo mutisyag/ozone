@@ -103,15 +103,15 @@ def export_production(submission):
     )
 
     styles = list(TABLE_STYLES) + [
-         ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-         ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
-         ('SPAN', (0, 0), (0, 1)),  # Annex/Group
-         ('SPAN', (1, 0), (1, 1)),  # Substance
-         ('SPAN', (2, 0), (2, 1)),  # Total production
-         ('SPAN', (3, 0), (3, 1)),  # Feedstock
-         ('SPAN', (5, 0), (6, 0)),  # Exempted
-         ('SPAN', (7, 0), (7, 1)),  # Art 5
-         ('SPAN', (8, 0), (8, 1)),  # Remarks
+        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+        ('SPAN', (0, 0), (0, 1)),  # Annex/Group
+        ('SPAN', (1, 0), (1, 1)),  # Substance
+        ('SPAN', (2, 0), (2, 1)),  # Total production
+        ('SPAN', (3, 0), (3, 1)),  # Feedstock
+        ('SPAN', (5, 0), (6, 0)),  # Exempted
+        ('SPAN', (7, 0), (7, 1)),  # Art 5
+        ('SPAN', (8, 0), (8, 1)),  # Remarks
     ]
     header_f1 = [
         (
