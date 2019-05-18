@@ -480,6 +480,9 @@ class BaseImportExportReport(models.Model):
     quantity_polyols = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
+    decision_polyols = models.CharField(
+        max_length=512, blank=True
+    )
 
     class Meta:
         abstract = True
