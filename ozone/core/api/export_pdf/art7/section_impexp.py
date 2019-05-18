@@ -16,7 +16,7 @@ from ..util import TABLE_STYLES
 from ..util import EXEMPTED_FIELDS
 
 
-def to_row(obj, row_index):
+def to_row(obj, row_index, party_field, text_qps):
     # row_index represents the current number of table rows, including header
     rows = list()
     styles = list()
@@ -25,12 +25,13 @@ def to_row(obj, row_index):
     # Check if there are any non-null exemption fields
     field_names = [f for f in EXEMPTED_FIELDS if getattr(obj, 'quantity_' + f)]
     first_field = field_names.pop(0) if field_names else None
+    party = getattr(obj, party_field)
 
     # Add base row
     rows.append((
         p_c(obj.substance.group.name if obj.substance else ''),  # Might be a blend
         p_l(get_substance_or_blend_name(obj)),
-        p_l(obj.source_party.name if obj.source_party else ''),
+        p_l(party.name if party else ''),
         p_r(get_big_float(obj.quantity_total_new)),
         p_r(get_big_float(obj.quantity_total_recovered)),
         p_r(get_big_float(obj.quantity_feedstock)),
@@ -60,7 +61,7 @@ def to_row(obj, row_index):
         rows.extend([
             (
                 '', '', '', '', '', '',
-                p_c(_('Amount exported for QPS applications within your country')),
+                p_c(text_qps),
                 '', '',
             ),
             (
@@ -83,7 +84,7 @@ def to_row(obj, row_index):
             #  Vertical span of common columns for all exempted rows
             ('SPAN', (0, row_index), (0, current_row)),  # Annex Group
             ('SPAN', (1, row_index), (1, current_row)),  # Substance
-            ('SPAN', (2, row_index), (2, current_row)),  # Source party
+            ('SPAN', (2, row_index), (2, current_row)),  # Party
             ('SPAN', (3, row_index), (3, current_row)),  # New amount
             ('SPAN', (4, row_index), (4, current_row)),  # Recovered amount
             ('SPAN', (5, row_index), (5, current_row)),  # Feedstock
@@ -96,7 +97,7 @@ def to_row(obj, row_index):
             (
                 '',
                 p_l('%s %s' % (_('Polyols containing'), obj.substance.name)),
-                p_l(obj.source_party.name if obj.source_party else ''),
+                p_l(party.name if party else ''),
                 '', '', '',
                 p_r(get_big_float(obj.quantity_polyols)),
                 get_decision(obj, 'polyols'),
@@ -107,17 +108,11 @@ def to_row(obj, row_index):
     return (rows, styles)
 
 
-def export_exports(submission):
-
-    data = exclude_blend_items(submission.article7exports)
-    comments = get_comments_section(submission, 'exports')
+def _export(data, comments, party_field, texts):
     if not data and not any(comments):
         return tuple()
 
-    subtitle = Paragraph(
-        "%s (%s)" % (_('Exports'), _('metric tonnes')),
-        h2_style
-    )
+    subtitle = Paragraph(texts['section_title'], h2_style)
 
     styles = list(TABLE_STYLES) + [
          ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
@@ -135,12 +130,11 @@ def export_exports(submission):
         (
             p_c(_('Annex/Group')),
             p_c(_('Substance')),
-            p_c(_('Exporting country/region/territory')),
-            p_c(_('Total quantity exported for all uses')),
+            p_c(texts['party']),
+            p_c(texts['total_quantity']),
             '',
-            p_c(_('Export for feedstock')),
-            p_c(_('Quantity of new substance exported for exempted essential,'
-                  'critical, high-ambient-temperature or other uses')),
+            p_c(texts['feedstock_quantity']),
+            p_c(texts['qps_quantity']),
             ''
         ),
         (
@@ -157,7 +151,12 @@ def export_exports(submission):
 
     rows = list()
     for item in data:
-        (_rows, _styles) = to_row(item, len(rows) + len(header))
+        (_rows, _styles) = to_row(
+            item,
+            len(rows) + len(header),
+            party_field,
+            texts['qps_quantity']
+        )
         rows.extend(_rows)
         styles.extend(_styles)
 
@@ -169,3 +168,33 @@ def export_exports(submission):
     )
 
     return (subtitle, table) + comments
+
+
+def export_imports(submission):
+    data = exclude_blend_items(submission.article7imports)
+    comments = get_comments_section(submission, 'imports')
+    texts = {
+        'section_title': "%s (%s)" % (_('Imports'), _('metric tonnes')),
+        'party': _('Exporting country/region/territory'),
+        'total_quantity': _('Total quantity imported for all uses'),
+        'new_quantity': _('Quantity of new substance imported for exempted essential,'
+                          'critical, high-ambient-temperature or other uses'),
+        'feedstock_quantity': _('Import for feedstock'),
+        'qps_quantity': _('Amount imported for QPS applications within your country'),
+    }
+    return _export(data, comments, 'source_party', texts)
+
+
+def export_exports(submission):
+    data = exclude_blend_items(submission.article7exports)
+    comments = get_comments_section(submission, 'exports')
+    texts = {
+        'section_title': "%s (%s)" % (_('Exports'), _('metric tonnes')),
+        'party': _('Importing country/region/territory'),
+        'total_quantity': _('Total quantity exported for all uses'),
+        'new_quantity': _('Quantity of new substance exported for exempted essential,'
+                          'critical, high-ambient-temperature or other uses'),
+        'feedstock_quantity': _('Export for feedstock'),
+        'qps_quantity': _('Amount exported for QPS applications within your country'),
+    }
+    return _export(data, comments, 'destination_party', texts)

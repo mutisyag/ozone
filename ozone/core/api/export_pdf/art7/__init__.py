@@ -1,22 +1,16 @@
 from itertools import chain
 
 from .section_info import export_info
-from .section_imports import export_imports
-from .section_exports import export_exports
+from .section_impexp import export_imports
+from .section_impexp import export_exports
 from .section_production import export_production
 from .section_destruction import export_destruction
 from .section_nonparty import export_nonparty
 from .section_emission import export_emission
-from .others import export_prodcons
+from .others import export_prodcons as cornel
 
 __all__ = [
     'export_submission',
-    'export_imports',
-    'export_exports',
-    'export_production',
-    'export_destruction',
-    'export_nonparty',
-    'export_emission',
     'export_prodcons',
 ]
 
@@ -31,3 +25,7 @@ def export_submission(submission):
         export_nonparty(submission),
         export_emission(submission),
     ))
+
+
+def export_prodcons(submission):
+    return list(cornel(submission))
