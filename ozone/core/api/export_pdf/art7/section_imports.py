@@ -124,8 +124,8 @@ def export_imports(submission):
          ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
          ('SPAN', (0, 0), (0, 1)),  # Annex/Group
          ('SPAN', (1, 0), (1, 1)),  # Substance
-         ('SPAN', (2, 0), (2, 1)),  # Source party
-         ('SPAN', (3, 0), (4, 0)),  # Total quantity imported
+         ('SPAN', (2, 0), (2, 1)),  # Party
+         ('SPAN', (3, 0), (4, 0)),  # Total quantity
          ('SPAN', (5, 0), (5, 1)),  # Feedstock
          ('SPAN', (6, 0), (7, 0)),  # Exempted
          ('SPAN', (8, 0), (8, 1)),  # Remarks
@@ -156,10 +156,10 @@ def export_imports(submission):
     ]
 
     rows = list()
-    for imp in data:
-        (imp_rows, imp_styles) = to_row(imp, len(rows) + len(header))
-        rows.extend(imp_rows)
-        styles.extend(imp_styles)
+    for item in data:
+        (_rows, _styles) = to_row(item, len(rows) + len(header))
+        rows.extend(_rows)
+        styles.extend(_styles)
 
     table = rows_to_table(
         header,
