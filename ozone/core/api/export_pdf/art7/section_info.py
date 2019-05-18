@@ -1,6 +1,6 @@
 from ..util import get_comments_section
 from ..util import p_l, p_c
-from ..util import h1_style, left_description_style
+from ..util import h1_style, no_spacing_style
 from ..util import col_widths
 from ..util import FONTSIZE_TABLE
 
@@ -59,11 +59,14 @@ def get_date_of_reporting(submission):
 
 
 def _kv(obj, label, prop):
+    """
+        Returns a paragraph in form "{label}: {field_value}"
+    """
     if not hasattr(obj, prop) or not getattr(obj, prop):
         return None
     return Paragraph(
         '%s: %s' % (_(label), getattr(obj, prop)),
-        style=left_description_style
+        style=no_spacing_style
     )
 
 

@@ -21,10 +21,6 @@ from reportlab.lib.units import mm
 
 
 __all__ = [
-    'get_decisions',
-    'get_preship_or_polyols_q',
-    'get_quantities',
-    'get_quantity_cell',
     'hr',
     'page_title_section',
     'page_title',
@@ -69,6 +65,7 @@ centered_paragraph_style = _style('BodyText', alignment=TA_CENTER, fontSize=FONT
 left_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT)
 right_paragraph_style = _style('BodyText', alignment=TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
 bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
+no_spacing_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
 
 
 left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
@@ -106,6 +103,7 @@ p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
 
 
+# TODO: remove this after revising HAT exports
 def page_title_section(title, explanatory=None):
     return (
         page_title(title),
@@ -192,15 +190,6 @@ def to_precision(nr, decimals):
             return n
 
 
-BASIC_Q_TYPES = (
-    'Essential use, other than L&amp;A',
-    'Critical use',
-    'High ambient temperature',
-    'Laboratory and analytical',
-    'Process agent uses',
-    'Other/unspecified'
-)
-
 EXEMPTED_FIELDS = OrderedDict([
     ('laboratory_analytical_uses', _('Laboratory and analytical uses')),
     ('essential_uses', _('Essential uses, other than L&A')),
@@ -236,22 +225,47 @@ def get_substance_or_blend_name(obj):
     )
 
 
-def get_quantity_cell(q_list, extra_q):
-    if sum(q_list) > 0:
-        if extra_q:
-            return (
-                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
-                get_substance_label(q_list, type='quantity'), hr, extra_q
-            )
-        else:
-            return (
-                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
-                get_substance_label(q_list, type='quantity')
-            )
+def rows_to_table(header, rows, colWidths, style):
+    return Table(
+        header + rows,
+        colWidths=colWidths,
+        style=style,
+        hAlign='LEFT',
+        repeatRows=len(header)  # repeat header on page break
+    ) if rows else None
+
+
+def exclude_blend_items(data):
+    return data.exclude(blend_item__isnull=False)
+
+
+def get_remarks(item):
+    if not item.remarks_party:
+        return item.remarks_os or ''
     else:
-        return ''
+        if not item.remarks_os:
+            return item.remarks_party
+        else:
+            return '%s<br/>%s' % (item.remarks_party, item.remarks_os)
 
 
+def get_comments_section(submission, type):
+    r_party = getattr(submission, type + '_remarks_party')
+    r_secretariat = getattr(submission, type + '_remarks_secretariat')
+
+    remarks_party = p_l('%s (%s): %s' % (
+        _('Comments'), _('party'), r_party
+    ))
+    remarks_secretariat = p_l('%s (%s): %s' % (
+        _('Comments'), _('secretariat'), r_secretariat
+    ))
+    return (
+        remarks_party if r_party else None,
+        remarks_secretariat if r_secretariat else None,
+    )
+
+
+#  Not used, but kept just in case we need bulleted lists
 def makeBulletList(list):
     bullets = ListFlowable(
         [
@@ -267,83 +281,7 @@ def makeBulletList(list):
     return bullets
 
 
-def get_substance_label(q_list, type):
-    # Adding the extra pre-shipment decision
-    if type == 'decision':
-        pairs = tuple(zip(
-            ('Quarantine and pre-shipment applications', ) + BASIC_Q_TYPES,
-            q_list
-        ))
-    else:
-        pairs = tuple(zip(
-            BASIC_Q_TYPES, map(get_big_float, q_list)
-        ))
-
-    if type == 'quantity':
-        _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))
-    else:
-        _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
-
-    filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
-
-    return makeBulletList(filtered_pairs)
-
-
-def get_quantities(obj):
-    return (
-        obj.quantity_essential_uses or 0,
-        obj.quantity_critical_uses or 0,
-        obj.quantity_high_ambient_temperature or 0,
-        obj.quantity_laboratory_analytical_uses or 0,
-        obj.quantity_process_agent_uses or 0,
-        obj.quantity_other_uses or 0,
-    )
-
-
-def get_decisions(obj):
-    return (
-        obj.decision_quarantine_pre_shipment,
-        obj.decision_essential_uses,
-        obj.decision_critical_uses,
-        obj.decision_high_ambient_temperature,
-        obj.decision_laboratory_analytical_uses,
-        obj.decision_process_agent_uses,
-        obj.decision_other_uses,
-    )
-
-
-def get_preship_or_polyols_q(obj):
-    _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    _q_polyols = obj.quantity_polyols if hasattr(
-        obj, 'quantity_polyols') else None
-
-    if _q_pre_ship:
-        substance = obj.substance
-        return (
-            p_l(f'<b>Quantity of new {substance.name} '
-                'imported to be used for QPS applications</b>'),
-            p_l(str(_q_pre_ship)),
-        )
-
-    if _q_polyols:
-        return (
-            p_l('<b>Polyols quantity</b>'),
-            p_l(str(_q_polyols)),
-        )
-
-    return None
-
-
-def rows_to_table(header, rows, colWidths, style):
-    return Table(
-        header + rows,
-        colWidths=colWidths,
-        style=style,
-        hAlign='LEFT',
-        repeatRows=len(header)  # repeat header on page break
-    ) if rows else None
-
-
+# TODO: remove this after revising HAT exports
 def table_from_data(
     data, isBlend, header, colWidths, style, repeatRows, emptyData=None
 ):
@@ -372,6 +310,7 @@ def table_from_data(
     )
 
 
+# TODO: remove this after revising HAT exports
 def table_with_blends(blends, grouping, make_component, header, style, widths):
     result = []
 
@@ -393,6 +332,7 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
     return result
 
 
+# TODO: remove this after revising HAT exports
 def mk_table_substances(grouping, row_fct):
     # Excluding items with no substance,
     # then getting the ones that are not a blend
@@ -401,20 +341,7 @@ def mk_table_substances(grouping, row_fct):
     return map(row, objs)
 
 
-def exclude_blend_items(data):
-    return data.exclude(blend_item__isnull=False)
-
-
-def get_remarks(item):
-    if not item.remarks_party:
-        return item.remarks_os or ''
-    else:
-        if not item.remarks_os:
-            return item.remarks_party
-        else:
-            return '%s<br/>%s' % (item.remarks_party, item.remarks_os)
-
-
+# TODO: remove this after revising HAT exports
 def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
     objs = grouping.filter(substance=None)
     row = partial(row_fct, isBlend=True)
@@ -428,20 +355,4 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
         header=c_header,
         style=c_style,
         widths=c_widths
-    )
-
-
-def get_comments_section(submission, type):
-    r_party = getattr(submission, type + '_remarks_party')
-    r_secretariat = getattr(submission, type + '_remarks_secretariat')
-
-    remarks_party = p_l('%s (%s): %s' % (
-        _('Comments'), _('party'), r_party
-    ))
-    remarks_secretariat = p_l('%s (%s): %s' % (
-        _('Comments'), _('secretariat'), r_secretariat
-    ))
-    return (
-        remarks_party if r_party else None,
-        remarks_secretariat if r_secretariat else None,
     )
