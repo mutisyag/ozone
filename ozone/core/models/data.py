@@ -417,7 +417,6 @@ class BaseReport(models.Model):
 
     class Meta:
         abstract = True
-        ordering = ['ordering_id']
 
 
 class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
@@ -642,6 +641,10 @@ class Article7Export(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_exports'
+        ordering = [
+            'substance__sort_order', 'substance__substance_id',
+            'blend__sort_order'
+        ]
 
 
 class Article7Import(
@@ -693,6 +696,10 @@ class Article7Import(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_imports'
+        ordering = [
+            'substance__sort_order', 'substance__substance_id',
+            'blend__sort_order'
+        ]
 
 
 class Article7Production(
@@ -736,6 +743,7 @@ class Article7Production(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_production'
+        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class Article7Destruction(
@@ -765,6 +773,7 @@ class Article7Destruction(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_destruction'
+        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class Article7NonPartyTrade(
@@ -812,6 +821,10 @@ class Article7NonPartyTrade(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_npt'
+        ordering = [
+            'substance__sort_order', 'substance__substance_id',
+            'blend__sort_order'
+        ]
 
     def clean(self):
         if self.submission.schema_version != 'legacy' and not (
@@ -895,6 +908,7 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_emissions'
+        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class BaseHighAmbientTemperature(models.Model):
@@ -930,6 +944,7 @@ class HighAmbientTemperatureProduction(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_hat_production'
+        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class HighAmbientTemperatureImport(
@@ -953,6 +968,10 @@ class HighAmbientTemperatureImport(
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_hat_import'
+        ordering = [
+            'substance__sort_order', 'substance__substance_id',
+            'blend__sort_order'
+        ]
 
 
 class DataOther(ModifyPreventionMixin, BaseReport):
@@ -1014,6 +1033,7 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
 
     class Meta:
         db_table = 'reporting_raf'
+        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class RAFImport(models.Model):
