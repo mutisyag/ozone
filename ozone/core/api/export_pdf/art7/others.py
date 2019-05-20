@@ -1,3 +1,7 @@
+from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph, Table
+from reportlab.lib import colors
+
 from ozone.core.models import (
     ProdCons,
     Group,
@@ -8,10 +12,118 @@ from ozone.core.models import (
     Obligation,
 )
 
+from ..util import p_l
+from ..util import h1_style, h2_style, h3_style, page_title_style, FONTSIZE_SMALL, TABLE_STYLES
+from ..util import left_description_style
+from ..util import col_widths
 
-def export_prodcons(period, parties):
+
+TABLE_CUSTOM_STYLES = (
+    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_SMALL),
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
+    ('SPAN', (0, 0), (0, 1)), # annex/group
+    ('SPAN', (1, 0), (4, 0)), # production
+    ('SPAN', (5, 0), (9, 0)), # consumption
+)
+
+TABLE_TOTAL_STYLE = (
+    ('FONT', (0, -1), (-1, -1), 'Helvetica-Bold'),
+)
+
+def get_header(data):
+    return Paragraph(
+        data['tables'][0]['party']['name'].upper(),
+        style=h1_style
+    )
+
+def get_subheader(data):
+    description = _("""Production and Consumption for {period}
+    - Comparison with Base Year""".format(
+        period=data['period']))
+    return Paragraph(
+        description,
+        style=h2_style
+    )
+
+def get_report_info(data):
+    party = data['tables'][0]['party']
+    info = _("""Date Reported: {date_reported}
+                    {party_type} {party_region} - Population*: {population}""".format(
+                        date_reported=party['date_reported'],
+                        party_type=party['party_type'],
+                        party_region=party['region'],
+                        population=party['population']))
+    return Paragraph(
+        info,
+        style=h3_style
+    )
+
+def get_description(groups):
+    return tuple(
+                p_l('{group} - {name} {description}. {description_alt}'.format(
+                    group=k,
+                    name=v['name'],
+                    description=v['description'],
+                    description_alt=v['description_alt']
+                ), style=left_description_style)
+                for k, v in groups.items()
+        )
+
+def get_ods_caption():
+    description = _("""Production and Consumption of ODSs -
+    Comparison with Base Year (ODP Tonnes)""")
+    return Paragraph(
+        description,
+        style=page_title_style
+    )
+
+def get_ods_table(data):
+    table_headers = data['headers']
+    table_data = tuple(data['tables'][0]['data'].values())[:-1] # get all except F Annex/Group
+    table_total = (data['total'],)
+    return Table(
+        table_headers + table_data + table_total,
+        colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
+        style=(TABLE_CUSTOM_STYLES + TABLE_STYLES + TABLE_TOTAL_STYLE),
+        hAlign='LEFT'
+    )
+
+def get_fgas_table(data):
+    table_headers = data['headers']
+    table_data = (tuple(data['tables'][0]['data'].values())[-1],)  # get F Annex/Group
+    return Table(
+        table_headers + table_data,
+        colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
+        style=(TABLE_CUSTOM_STYLES + TABLE_STYLES),
+        hAlign='LEFT'
+    )
+
+def get_fgas_caption():
+    description = _("""Production and Consumption of HFCs -
+    Comparison with Base Year (CO2-equivalent tonnes)""")
+    return Paragraph(
+        description,
+        style=page_title_style
+    )
+
+
+def get_prodcons_flowables(period, parties):
     data = get_prodcons_data(period, parties)
-    #TODO
+    return list(
+        (get_header(data),) +
+        (get_subheader(data),) +
+        (get_report_info(data),) +
+        get_description(data['groups']) +
+        (Paragraph("", style=page_title_style),) +
+        (get_ods_caption(),) +
+        (get_ods_table(data),) +
+        (Paragraph("", style=page_title_style),) +
+        (get_fgas_caption(),) +
+        (get_fgas_table(data),)
+    )
 
 
 def get_prodcons_data(period, parties):
@@ -25,10 +137,32 @@ def get_prodcons_data(period, parties):
             'description_alt': group.description_alt
         }
 
-    data['headers'] = {
-        'PRODUCTION': ['2016', 'Base', '% Chng'],
-        'CONSUMPTION': ['2016', 'Base', '% Chng', 'Per Cap. Cons.']
-    }
+    data['headers'] = (
+        (
+            _('Annex/Group'),
+            "{label}**".format(label=_('PRODUCTION')),
+            '',
+            '',
+            '',
+            "{label}**".format(label=_('CONSUMPTION')),
+            '',
+            '',
+            '',
+            ''
+        ),
+        (
+            '',
+            '2016',
+            _('Base'),
+            _('Limit'),
+            _('% Chng'),
+            '2016',
+            _('Base'),
+            _('Limit'),
+            _('% Chng'),
+            _('Per Cap. Cons.')
+        )
+    )
 
     data['period'] = period.name
 
@@ -61,7 +195,8 @@ def get_prodcons_data(period, parties):
             'name': party.name,
             'population': history.population,
             'party_type': history.party_type.abbr,
-            'date_reported': date_reported
+            'date_reported': date_reported,
+            'region':party.subregion.region.abbr
         }
 
         table_data['data'] = {}
@@ -139,18 +274,21 @@ def get_prodcons_data(period, parties):
             if limit_cons:
                 limit_cons = limit_cons.limit
 
-            table_data['data'][group.group_id] = {
-                'description': group.description,
-                'actual_prod': actual_prod,
-                'baseline_prod': baseline_prod,
-                'chng_prod': chng_prod,
-                'limit_prod': limit_prod,
-                'actual_cons': actual_cons,
-                'baseline_cons': baseline_cons,
-                'chng_cons': chng_cons,
-                'limit_cons': limit_cons,
-                'per_capita_cons': per_capita_cons
-            }
+            table_data['data'][group.group_id] = (
+                '{id}  - {descr}'.format(
+                    id=group.group_id,
+                    descr=group.description
+                ),
+                actual_prod,
+                baseline_prod,
+                chng_prod,
+                limit_prod,
+                actual_cons,
+                baseline_cons,
+                chng_cons,
+                limit_cons,
+                per_capita_cons
+            )
         data['tables'].append(table_data)
 
     total['actual_prod'] = round(total['actual_prod'], 2)
@@ -171,6 +309,18 @@ def get_prodcons_data(period, parties):
             -100 + total['actual_cons'] / total['baseline_cons'] * 100,
             2
         )
-    data['total'] = total
+
+    data['total'] = (
+        'Sub-Total',
+        total['actual_prod'],
+        total['baseline_prod'],
+        '',
+        total['chng_prod'],
+        total['actual_cons'],
+        total['baseline_cons'],
+        '',
+        total['chng_cons'],
+        ''
+    )
 
     return data

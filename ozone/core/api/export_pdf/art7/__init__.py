@@ -7,7 +7,7 @@ from .section_production import export_production
 from .section_destruction import export_destruction
 from .section_nonparty import export_nonparty
 from .section_emission import export_emission
-from .others import export_prodcons as cornel
+from .others import get_prodcons_flowables
 
 __all__ = [
     'export_submission',
@@ -28,4 +28,4 @@ def export_submission(submission):
 
 
 def export_prodcons(reporting_period, parties):
-    return list(cornel(reporting_period, parties))
+    return list(get_prodcons_flowables(reporting_period, parties))

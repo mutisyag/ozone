@@ -35,11 +35,13 @@ __all__ = [
 
 STYLES = getSampleStyleSheet()
 
+FONTSIZE_SMALL = 7
 FONTSIZE_DEFAULT = 8
 FONTSIZE_TABLE = FONTSIZE_DEFAULT
 FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT - 1
-FONTSIZE_SUBTITLE = FONTSIZE_DEFAULT + 2
-FONTSIZE_TITLE = FONTSIZE_SUBTITLE + 6
+FONTSIZE_H3 = FONTSIZE_DEFAULT + 2
+FONTSIZE_H2 = FONTSIZE_H3 + 3
+FONTSIZE_H1 = FONTSIZE_H2 + 3
 
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
@@ -69,7 +71,7 @@ bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE
 no_spacing_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
 
 
-left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
+left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=-1)
 
 h1_style = _style(
     'Heading1',
@@ -79,7 +81,7 @@ h1_style = _style(
 )
 
 h2_style = _style(
-    'Heading3',
+    'Heading2',
     alignment=TA_LEFT,
     fontSize=FONTSIZE_DEFAULT+4,
     fontName='Helvetica-Bold',
@@ -90,11 +92,12 @@ h3_style = _style(
     alignment=TA_LEFT,
     fontSize=FONTSIZE_DEFAULT+2,
     fontName='Helvetica-Bold',
+    spaceBefore=0
 )
 
 page_title_style = _style(
     'Heading3', alignment=TA_LEFT,
-    fontSize=FONTSIZE_SUBTITLE, fontName='Helvetica-Bold',
+    fontSize=FONTSIZE_H3, fontName='Helvetica-Bold',
 )
 
 p_c = partial(Paragraph, style=centered_paragraph_style)

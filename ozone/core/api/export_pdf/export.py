@@ -1,28 +1,49 @@
 from io import BytesIO
+from functools import partial
 from django.utils.translation import gettext_lazy as _
 
 from reportlab.platypus import SimpleDocTemplate
 from reportlab.platypus import Paragraph
 from reportlab.lib import pagesizes
 from reportlab.lib.units import cm
-from reportlab.lib.styles import ParagraphStyle
 
 from . import art7
 from . import hat
-from .util import right_paragraph_style
+from .util import right_paragraph_style, left_paragraph_style
 
 
 PG_SIZE = pagesizes.landscape(pagesizes.A4)
 
-
-def add_page_number(canvas, doc):
+def add_page_footer(canvas, doc, footnote=None):
     canvas.saveState()
+    if footnote:
+        footer = Paragraph(footnote, left_paragraph_style)
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.rightMargin, h/2)
 
     footer = Paragraph('%s %d' % (_('Page'), canvas._pageNumber), right_paragraph_style)
     w, h = footer.wrap(doc.width, doc.bottomMargin)
     footer.drawOn(canvas, doc.rightMargin, h)
 
     canvas.restoreState()
+
+add_page_footnotes = partial(
+    add_page_footer,
+    footnote=_("""* Population in thousands <br/>
+    ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
+    - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
+    N.R. = Data Not Reported but Party is required to have reported | 
+    DIV0 = Division was not evaluated due to a zero or negative base.
+    AFR = Africa | 
+    ASIA = Asia | 
+    EEUR = Eastern Europe | 
+    LAC = Latin America & the Caribbean | 
+    WEUR = Western Europe & others
+    A5 = Article 5 Party | 
+    CEIT = Country with Economy in Transition | 
+    EU = Member of the European Union | 
+    Non-A5 = Non-Article 5 Party""")
+)
 
 
 def export_submission(submission):
@@ -36,14 +57,13 @@ def export_submission(submission):
         topMargin=1*cm,
         bottomMargin=1*cm,
     )
-    # TODO: add front page, extra information (country, year?)
 
     obligation = submission.obligation.form_type
     if obligation == 'art7':
         doc.build(
             art7.export_submission(submission),
-            onFirstPage=add_page_number,
-            onLaterPages=add_page_number,
+            onFirstPage=add_page_footer,
+            onLaterPages=add_page_footer,
         )
     elif obligation == 'hat':
         doc.build(hat.export_submission(submission))
@@ -53,10 +73,22 @@ def export_submission(submission):
 
 
 def export_prodcons(reporting_period, parties):
-    buf = BytesIO()
+    buff = BytesIO()
 
-    doc = SimpleDocTemplate(buf, pagesize=PG_SIZE)
-    doc.build(art7.export_prodcons(reporting_period, parties))
+    doc = SimpleDocTemplate(
+        buff,
+        pagesize=pagesizes.A4,
+        leftMargin=0.8*cm,
+        rightMargin=0.8*cm,
+        topMargin=1*cm,
+        bottomMargin=1*cm,
+    )
 
-    buf.seek(0)
-    return buf
+    doc.build(
+        art7.export_prodcons(reporting_period, parties),
+        onFirstPage=add_page_footnotes,
+        onLaterPages=add_page_footnotes
+        )
+
+    buff.seek(0)
+    return buff
