@@ -135,8 +135,9 @@ def _export(data, comments, party_field, texts):
             p_c(texts['total_quantity']),
             '',
             p_c(texts['feedstock_quantity']),
-            p_c(texts['qps_quantity']),
-            ''
+            p_c(texts['exempted_quantity']),
+            '',
+            p_c(_('Remarks')),
         ),
         (
             '',
@@ -147,6 +148,7 @@ def _export(data, comments, party_field, texts):
             '',
             p_c(_('Quantity')),
             p_c(_('Decision / type of use or remark')),
+            '',
         ),
     ]
 
@@ -178,8 +180,8 @@ def export_imports(submission):
         'section_title': "%s (%s)" % (_('Imports'), _('metric tonnes')),
         'party': _('Exporting country/region/territory'),
         'total_quantity': _('Total quantity imported for all uses'),
-        'new_quantity': _('Quantity of new substance imported for exempted essential,'
-                          'critical, high-ambient-temperature or other uses'),
+        'exempted_quantity': _('Quantity of new substance imported for exempted essential,'
+                               'critical, high-ambient-temperature or other uses'),
         'feedstock_quantity': _('Import for feedstock'),
         'qps_quantity': _('Amount imported for QPS applications within your country'),
     }
@@ -193,8 +195,8 @@ def export_exports(submission):
         'section_title': "%s (%s)" % (_('Exports'), _('metric tonnes')),
         'party': _('Importing country/region/territory'),
         'total_quantity': _('Total quantity exported for all uses'),
-        'new_quantity': _('Quantity of new substance exported for exempted essential,'
-                          'critical, high-ambient-temperature or other uses'),
+        'exempted_quantity': _('Quantity of new substance exported for exempted essential,'
+                               'critical, high-ambient-temperature or other uses'),
         'feedstock_quantity': _('Export for feedstock'),
         'qps_quantity': _('Amount exported for QPS applications'),
     }
