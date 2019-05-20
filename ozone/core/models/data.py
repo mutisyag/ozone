@@ -6,7 +6,6 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
-from .exemption import ExemptionApproved
 from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend
@@ -981,6 +980,10 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
     # criticality is inferred from substance, only emergency flag is needed
     is_emergency = models.BooleanField(default=False)
 
+    quantity_exempted = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
     quantity_production = models.FloatField(
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
@@ -1008,15 +1011,6 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
         if self.imports:
             return sum([imp.get('quantity', 0) for imp in self.imports])
         return 0
-
-    @property
-    def quantity_exempted(self):
-        return ExemptionApproved.get_approved_amounts(
-            self.submission.party,
-            self.submission.reporting_period,
-            self.substance,
-            self.is_emergency
-        )
 
     class Meta:
         db_table = 'reporting_raf'

@@ -278,6 +278,19 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
             groups = groups.values_list('group_id', flat=True)
         return Response(groups)
 
+    @action(detail=True, methods=["get"])
+    def approved_exemptions(self, request, pk=None, **kwargs):
+        reporting_period = ReportingPeriod.objects.filter(
+            name=int(request.query_params.get('period', 0))
+        ).first()
+        party = Party.objects.filter(pk=pk).first()
+        return Response(
+            ExemptionApproved.get_approved_amounts(
+                party,
+                reporting_period,
+            )
+        )
+
 
 class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
     serializer_class = PartyRatificationSerializer
