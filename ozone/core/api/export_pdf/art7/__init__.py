@@ -27,5 +27,5 @@ def export_submission(submission):
     ))
 
 
-def export_prodcons(submission):
-    return list(cornel(submission))
+def export_prodcons(reporting_period, parties):
+    return list(cornel(reporting_period, parties))
