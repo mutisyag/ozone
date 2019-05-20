@@ -5,6 +5,7 @@ from reportlab.lib import colors
 from ..util import get_big_float
 from ..util import get_quantity, get_decision
 from ..util import get_comments_section
+from ..util import get_group_name
 from ..util import get_remarks
 from ..util import rows_to_table
 from ..util import p_c, p_l, p_r
@@ -26,7 +27,7 @@ def to_row(obj, row_index):
 
     # Add base row
     rows.append((
-        p_l(obj.substance.group.group_id),
+        p_c(get_group_name(obj)),
         p_l(obj.substance.name),
         p_r(get_big_float(obj.quantity_total_produced)),
         p_r(get_big_float(obj.quantity_feedstock)),

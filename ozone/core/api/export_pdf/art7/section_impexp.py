@@ -30,7 +30,7 @@ def to_row(obj, row_index, party_field, text_qps):
 
     # Add base row
     rows.append((
-        p_l(get_group_name(obj)),
+        p_c(get_group_name(obj)),
         p_l(get_substance_or_blend_name(obj)),
         p_l(party.name if party else ''),
         p_r(get_big_float(obj.quantity_total_new)),
