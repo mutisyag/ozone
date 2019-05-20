@@ -9,6 +9,7 @@ from ..util import get_comments_section
 from ..util import get_quantity, get_decision
 from ..util import get_remarks
 from ..util import get_substance_or_blend_name
+from ..util import get_group_name
 from ..util import h2_style
 from ..util import p_c, p_l, p_r
 from ..util import rows_to_table
@@ -29,7 +30,7 @@ def to_row(obj, row_index, party_field, text_qps):
 
     # Add base row
     rows.append((
-        p_c(obj.substance.group.name if obj.substance else ''),  # Might be a blend
+        p_l(get_group_name(obj)),
         p_l(get_substance_or_blend_name(obj)),
         p_l(party.name if party else ''),
         p_r(get_big_float(obj.quantity_total_new)),

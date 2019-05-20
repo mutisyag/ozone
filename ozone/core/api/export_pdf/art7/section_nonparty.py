@@ -7,6 +7,7 @@ from ..util import get_comments_section
 from ..util import to_precision
 
 from ..util import exclude_blend_items
+from ..util import get_group_name
 from ..util import get_substance_or_blend_name
 from ..util import rows_to_table
 from ..util import get_remarks
@@ -18,7 +19,7 @@ from ..util import col_widths
 
 def table_row(obj):
     return (
-        p_c(obj.substance.group.name if obj.substance else ''),
+        p_c(get_group_name(obj)),
         p_l(get_substance_or_blend_name(obj)),
         p_l(obj.trade_party.name if obj.trade_party else ''),
         p_r(get_big_float(obj.quantity_import_new)),

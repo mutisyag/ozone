@@ -6,6 +6,7 @@ from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import exclude_blend_items
 from ..util import get_substance_or_blend_name
+from ..util import get_group_name
 from ..util import rows_to_table
 from ..util import get_remarks
 from ..util import p_c, p_r, p_l
@@ -16,7 +17,7 @@ from ..util import col_widths
 
 def table_row(obj):
     return (
-        p_c(obj.substance.group.name if obj.substance else ''),
+        p_c(get_group_name(obj)),
         p_l(get_substance_or_blend_name(obj)),
         p_r(get_big_float(obj.quantity_destroyed)),
         p_l(get_remarks(obj)),

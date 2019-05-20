@@ -225,6 +225,14 @@ def get_substance_or_blend_name(obj):
     )
 
 
+def get_group_name(obj):
+    return (
+        obj.substance.group.name
+        if obj.substance and obj.substance.group
+        else ''
+    )
+
+
 def rows_to_table(header, rows, colWidths, style):
     return Table(
         header + rows,
