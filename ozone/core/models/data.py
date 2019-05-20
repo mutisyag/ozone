@@ -417,6 +417,7 @@ class BaseReport(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['ordering_id', ]
 
 
 class BaseBlendCompositionReport(BlendCompositionMixin, BaseReport):
@@ -908,7 +909,6 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
     class Meta(BaseReport.Meta):
         db_table = 'reporting_art7_emissions'
-        ordering = ['substance__sort_order', 'substance__substance_id']
 
 
 class BaseHighAmbientTemperature(models.Model):
