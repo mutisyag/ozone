@@ -335,7 +335,7 @@ export default {
         }
 
         if (this.skipValidation === 1) {
-          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
         }
