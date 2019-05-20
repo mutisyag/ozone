@@ -220,7 +220,7 @@ class PartyHistory(models.Model):
         blank=True,
     )
 
-    population = models.FloatField(validators=[MinValueValidator(0.0)])
+    population = models.IntegerField()
 
     is_high_ambient_temperature = models.BooleanField()
 
