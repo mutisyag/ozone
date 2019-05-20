@@ -158,7 +158,7 @@ const getFormArt7 = ($gettext) => {
         {
           label: $gettext('Quantity of new substance exported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
-          tooltip: $gettext('Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+          tooltip: $gettext('Against each substance exported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use.')
         },
         {
           label: ''
@@ -300,7 +300,7 @@ const getFormArt7 = ($gettext) => {
         {
           label: $gettext('Quantity of new substance imported for exempted essential, critical, high-ambient-temperature or other uses'),
           colspan: 2,
-          tooltip: $gettext('Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+          tooltip: $gettext('Against each substance imported for exempted essential, critical, high-ambient-temperature or other uses, please specify the Meeting of the Parties decision that approved the use.')
         },
         {
           label: ''
@@ -417,7 +417,7 @@ const getFormArt7 = ($gettext) => {
           {
             label: $gettext('Production for exempted essential, critical or other uses within your country'),
             colspan: 2,
-            tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+            tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use.')
           },
           {
             label: '',
@@ -449,7 +449,7 @@ const getFormArt7 = ($gettext) => {
             {
               label: $gettext('Production for exempted essential, critical or other uses within your country'),
               colspan: 2,
-              tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use. Should the column space be insufficient, further information can be provided in the “comments” box above.')
+              tooltip: $gettext('Against each substance produced for exempted essential, critical or other uses, please specify the Meeting of the Parties decision that approved the use.')
             },
             {
               label: ''

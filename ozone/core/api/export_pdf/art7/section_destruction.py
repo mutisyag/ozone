@@ -1,74 +1,57 @@
 from django.utils.translation import gettext_lazy as _
-
-from .constants import TABLE_DEST_HEADER
-from .constants import TABLE_DEST_HEADER_STYLE
-from .constants import TABLE_DEST_COMP_HEADER
-from .constants import TABLE_DEST_COMP_WIDTH
-from .constants import TABLE_DEST_WIDTH
-from .constants import TABLE_BLENDS_COMP_STYLE
+from reportlab.platypus import Paragraph
+from reportlab.lib import colors
 
 from ..util import get_big_float
 from ..util import get_comments_section
-from ..util import mk_table_blends
-from ..util import mk_table_substances
-from ..util import p_c, p_r
-from ..util import page_title_section
-from ..util import table_from_data
-from ..util import to_precision
+from ..util import exclude_blend_items
+from ..util import get_substance_or_blend_name
+from ..util import rows_to_table
+from ..util import get_remarks
+from ..util import p_c, p_r, p_l
+from ..util import h2_style
 from ..util import TABLE_STYLES
+from ..util import col_widths
 
 
-def big_table_row(obj, isBlend):
-    col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
-    col_2 = obj.blend.blend_id if isBlend else obj.substance.name
-
+def table_row(obj):
     return (
-        p_c(_(col_1)),
-        p_c(_(col_2)),
-        p_c(get_big_float(obj.quantity_destroyed or '')),
-        p_c(_(obj.remarks_party or '')),
-        p_c(_(obj.remarks_os or '')),
-    )
-
-
-def component_row(component, blend):
-    percent = component.percentage
-
-    return (
-        p_c(_(component.substance.name)),
-        p_r('<b>{}%</b>'.format(round(percent * 100, 1))),
-        p_r(to_precision(blend.quantity_destroyed * percent, 3))
+        p_c(obj.substance.group.name if obj.substance else ''),
+        p_l(get_substance_or_blend_name(obj)),
+        p_r(get_big_float(obj.quantity_destroyed)),
+        p_l(get_remarks(obj)),
     )
 
 
 def export_destruction(submission):
-    data = submission.article7destructions
+    data = exclude_blend_items(submission.article7destructions)
+    comments = get_comments_section(submission, 'destruction')
 
-    table_substances = tuple(mk_table_substances(data, big_table_row))
-    table_blends = tuple(mk_table_blends(
-        data, big_table_row, component_row, TABLE_DEST_COMP_HEADER,
-        TABLE_BLENDS_COMP_STYLE, TABLE_DEST_COMP_WIDTH
-    ))
+    if not data and not any(comments):
+        return tuple()
 
-    subst_table = table_from_data(
-        data=table_substances, isBlend=False,
-        header=TABLE_DEST_HEADER(False),
-        colWidths=TABLE_DEST_WIDTH,
-        style=TABLE_DEST_HEADER_STYLE + TABLE_STYLES,
-        repeatRows=1, emptyData=_('No controlled substances destroyed.')
+    subtitle = Paragraph(
+        "%s (%s)" % (_('Destroyed'), _('metric tonnes')),
+        h2_style
     )
 
-    blends_table = table_from_data(
-        data=table_blends, isBlend=True,
-        header=TABLE_DEST_HEADER(True),
-        colWidths=TABLE_DEST_WIDTH,
-        style=TABLE_DEST_HEADER_STYLE + TABLE_STYLES,
-        repeatRows=1, emptyData=_('No blends destroyed.')
+    table_header = ((
+        p_c(_('Annex/Group')),
+        p_c(_('Substance or mixture')),
+        p_c(_('Quantity destroyed')),
+        p_c(_('Remarks')),
+    ),)
+
+    table_style = TABLE_STYLES + (
+        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
+        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
     )
 
-    return (
-        page_title_section(
-            title="%s (%s)" % (_('Destroyed'), _('metric tonnes')),
-        ) + (subst_table, blends_table) +
-        get_comments_section(submission, 'destruction')
+    table = rows_to_table(
+        table_header,
+        tuple(map(table_row, data)),
+        col_widths([2.1, 8, 4, 13.5]),
+        table_style
     )
+
+    return (subtitle, table) + comments

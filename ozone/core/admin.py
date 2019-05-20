@@ -227,14 +227,14 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Substance)
 class SubstanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'description')
+    list_display = ('name', 'group', 'description', 'sort_order')
     list_filter = ('group',)
     search_fields = ['name', 'description']
 
 
 @admin.register(Blend)
 class BlendAdmin(admin.ModelAdmin):
-    list_display = ('blend_id', 'composition', 'type', 'party')
+    list_display = ('blend_id', 'composition', 'type', 'party', 'sort_order')
     list_filter = (
         'type',
         ('party', MainPartyFilter),

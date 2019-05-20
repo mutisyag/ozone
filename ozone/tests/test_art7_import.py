@@ -69,6 +69,7 @@ ART7_IMPORT_DATA = {
     'decision_high_ambient_temperature': '',
     'decision_laboratory_analytical_uses': '',
     'decision_other_uses': '',
+    'decision_polyols': '',
     'decision_process_agent_uses': '',
     'decision_quarantine_pre_shipment': '',
     'quantity_critical_uses': None,
