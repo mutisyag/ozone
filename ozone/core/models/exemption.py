@@ -83,9 +83,9 @@ class ExemptionApproved(BaseExemption):
                     ret['emergency'][substance] = amount if amount else 0
             else:
                 if substance in ret['emergency']:
-                    ret['non emergency'][substance] += amount if amount else 0
+                    ret['non_emergency'][substance] += amount if amount else 0
                 else:
-                    ret['non emergency'][substance] = amount if amount else 0
+                    ret['non_emergency'][substance] = amount if amount else 0
         return ret
 
     class Meta:
