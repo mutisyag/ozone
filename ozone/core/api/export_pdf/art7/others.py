@@ -211,10 +211,10 @@ def get_prodcons_data(period, parties):
             date_reported = ''
         table_data['party'] = {
             'name': party.name,
-            'population': history.population,
+            'population': "{:,}".format(history.population),
             'party_type': history.party_type.abbr,
             'date_reported': date_reported,
-            'region':party.subregion.region.abbr
+            'region': party.subregion.region.abbr
         }
 
         table_data['data'] = {}
