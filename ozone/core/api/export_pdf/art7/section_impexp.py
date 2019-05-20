@@ -196,6 +196,6 @@ def export_exports(submission):
         'new_quantity': _('Quantity of new substance exported for exempted essential,'
                           'critical, high-ambient-temperature or other uses'),
         'feedstock_quantity': _('Export for feedstock'),
-        'qps_quantity': _('Amount exported for QPS applications within your country'),
+        'qps_quantity': _('Amount exported for QPS applications'),
     }
     return _export(data, comments, 'destination_party', texts)
