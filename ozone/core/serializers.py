@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -548,7 +549,7 @@ def get_field_value(initial_data_entry, field_name):
     The UI can send None as a value in these fields.
     """
     ret = initial_data_entry.get(field_name, 0)
-    return ret if ret is not None else 0
+    return Decimal(repr(ret)) if ret is not None else Decimal(0)
 
 
 def validate_import_export_data(
@@ -592,7 +593,7 @@ def validate_import_export_data(
     # Calculate the sums of quantities and totals for each substance
     if related_substances:
         sums_dictionary = {
-            substance: {'totals_sum': 0, 'quantities_sum': 0}
+            substance: {'totals_sum': Decimal(0), 'quantities_sum': Decimal(0)}
             for substance in related_substances
         }
         for entry in initial_data:
@@ -604,6 +605,7 @@ def validate_import_export_data(
 
                 for substance, percentage in blend_subs:
                     if substance in related_substances:
+                        percentage = Decimal(repr(percentage))
                         sums_dictionary[substance]['totals_sum'] += sum(
                             [
                                 get_field_value(entry, field) * percentage
