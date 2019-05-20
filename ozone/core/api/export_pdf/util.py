@@ -2,6 +2,7 @@ import re
 
 from copy import deepcopy
 from collections import OrderedDict
+from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
@@ -120,14 +121,7 @@ def col_widths(w_list):
 def get_big_float(nr):
     if not nr:
         return ''
-    if 'e' in str(nr):
-        n, exp = str(nr).split('e')
-        s_n = str(float(n)/10)
-
-        idx = s_n.index('.')
-        return s_n[:idx+1] + '0' * (int(exp[-1])-1) + s_n[idx+1:]
-    else:
-        return str(nr)
+    return '{:f}'.format(Decimal(str(nr)))
 
 
 # Imitate JavaScript's toPrecision. Retunrning the number with 'decimals'
