@@ -322,20 +322,20 @@ export default {
           if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
             errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
           }
-          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components (6)'))
           }
         }
 
         if (this.skipValidation === 2) {
           errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components for all exporting parties'))
-          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
         }
 
         if (this.skipValidation === 1) {
-          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected])) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected, this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
         }
