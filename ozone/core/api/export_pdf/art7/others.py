@@ -82,7 +82,7 @@ def get_ods_caption():
 
 def get_ods_table(data):
     table_headers = data['headers']
-    table_data = tuple(data['tables'][0]['data'].values())[:-1] # get all except F Annex/Group
+    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F') # get all except F Annex/Group
     table_total = (data['total'],)
     return Table(
         table_headers + table_data + table_total,
@@ -93,7 +93,7 @@ def get_ods_table(data):
 
 def get_fgas_table(data):
     table_headers = data['headers']
-    table_data = (tuple(data['tables'][0]['data'].values())[-1],)  # get F Annex/Group
+    table_data = (tuple(data['tables'][0]['data']['F']),)  # get F Annex/Group
     return Table(
         table_headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
@@ -112,7 +112,8 @@ def get_fgas_caption():
 
 def get_prodcons_flowables(period, parties):
     data = get_prodcons_data(period, parties)
-    return list(
+
+    flowables = list(
         (get_header(data),) +
         (get_subheader(data),) +
         (get_report_info(data),) +
@@ -120,10 +121,14 @@ def get_prodcons_flowables(period, parties):
         (Paragraph("", style=page_title_style),) +
         (get_ods_caption(),) +
         (get_ods_table(data),) +
-        (Paragraph("", style=page_title_style),) +
-        (get_fgas_caption(),) +
-        (get_fgas_table(data),)
+        (Paragraph("", style=page_title_style),)
     )
+
+    if 'F' in data['tables'][0]['data'].keys():
+        flowables.append(get_fgas_caption())
+        flowables.append(get_fgas_table(data))
+
+    return flowables
 
 
 def get_prodcons_data(period, parties):
