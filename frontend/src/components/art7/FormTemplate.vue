@@ -583,7 +583,7 @@
                 {{formatQuantity(cell.item[tooltipField])}}
                 <i v-if="cell.item[tooltipField]" class="fa fa-info-circle fa-sm"></i>
               </span>
-
+            </div>
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
@@ -622,8 +622,6 @@
                   :field="cell.item.originalObj.decision_quarantine_pre_shipment"
                 />
               </b-input-group>
-            </div>
-
             </div>
           </template>
 
