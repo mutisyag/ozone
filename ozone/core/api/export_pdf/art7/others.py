@@ -33,11 +33,13 @@ TABLE_TOTAL_STYLE = (
     ('FONT', (0, -1), (-1, -1), 'Helvetica-Bold'),
 )
 
+
 def get_header(data):
     return Paragraph(
         data['tables'][0]['party']['name'].upper(),
         style=h1_style
     )
+
 
 def get_subheader(data):
     description = _("""Production and Consumption for {period}
@@ -47,6 +49,7 @@ def get_subheader(data):
         description,
         style=h2_style
     )
+
 
 def get_report_info(data):
     party = data['tables'][0]['party']
@@ -61,6 +64,7 @@ def get_report_info(data):
         style=h3_style
     )
 
+
 def get_description(groups):
     return tuple(
                 p_l('{group} - {name} {description}. {description_alt}'.format(
@@ -72,38 +76,47 @@ def get_description(groups):
                 for k, v in groups.items()
         )
 
+
 def get_ods_caption():
     description = _("""Production and Consumption of ODSs -
     Comparison with Base Year (ODP Tonnes)""")
+
     return Paragraph(
         description,
         style=page_title_style
     )
 
+
 def get_ods_table(data):
     table_headers = data['headers']
-    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F') # get all except F Annex/Group
+    # get all except F Annex/Group
+    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F') 
     table_total = (data['total'],)
+
     return Table(
         table_headers + table_data + table_total,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
-        style=(TABLE_CUSTOM_STYLES + TABLE_STYLES + TABLE_TOTAL_STYLE),
+        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES + TABLE_TOTAL_STYLE),
         hAlign='LEFT'
     )
+
 
 def get_fgas_table(data):
     table_headers = data['headers']
     table_data = (tuple(data['tables'][0]['data']['F']),)  # get F Annex/Group
+
     return Table(
         table_headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
-        style=(TABLE_CUSTOM_STYLES + TABLE_STYLES),
+        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
     )
+
 
 def get_fgas_caption():
     description = _("""Production and Consumption of HFCs -
     Comparison with Base Year (CO2-equivalent tonnes)""")
+
     return Paragraph(
         description,
         style=page_title_style
@@ -157,11 +170,11 @@ def get_prodcons_data(period, parties):
         ),
         (
             '',
-            '2016',
+            period.name,
             _('Base'),
             _('Limit'),
             _('% Chng'),
-            '2016',
+            period.name,
             _('Base'),
             _('Limit'),
             _('% Chng'),
