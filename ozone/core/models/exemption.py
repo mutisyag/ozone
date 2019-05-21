@@ -74,7 +74,7 @@ class ExemptionApproved(BaseExemption):
             submission__reporting_period=reporting_period,
         ).values_list('substance', 'quantity', 'is_emergency')
 
-        ret = {'emergency': {}, 'non emergency': {}}
+        ret = {'emergency': {}, 'non_emergency': {}}
         for substance, amount, emergency in approvals:
             if emergency:
                 if substance in ret['emergency']:
@@ -82,7 +82,7 @@ class ExemptionApproved(BaseExemption):
                 else:
                     ret['emergency'][substance] = amount if amount else 0
             else:
-                if substance in ret['emergency']:
+                if substance in ret['non_emergency']:
                     ret['non_emergency'][substance] += amount if amount else 0
                 else:
                     ret['non_emergency'][substance] = amount if amount else 0
