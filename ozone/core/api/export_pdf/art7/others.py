@@ -11,6 +11,7 @@ from ozone.core.models import (
     Submission,
     Obligation,
 )
+from ozone.core.models.utils import round_half_up
 
 from ..util import p_l
 from ..util import h1_style, h2_style, h3_style, page_title_style, FONTSIZE_SMALL, TABLE_STYLES
@@ -241,7 +242,7 @@ def get_prodcons_data(period, parties):
             if prodcons and prodcons.calculated_consumption:
                 actual_cons = prodcons.calculated_consumption
                 total['actual_cons'] += actual_cons
-                per_capita_cons = round(
+                per_capita_cons = round_half_up(
                     actual_cons / history.population,
                     4
                 )
@@ -255,7 +256,7 @@ def get_prodcons_data(period, parties):
             if prodcons and prodcons.baseline_prod:
                 baseline_prod = prodcons.baseline_prod
                 if not isinstance(actual_prod, str) and actual_prod > 0 and baseline_prod != 0:
-                    chng_prod = round(
+                    chng_prod = round_half_up(
                         -100 + actual_prod / baseline_prod*100,
                         ProdCons.get_decimals(period, group, party)
                     )
@@ -267,7 +268,7 @@ def get_prodcons_data(period, parties):
             if prodcons and prodcons.baseline_cons:
                 baseline_cons = prodcons.baseline_cons
                 if not isinstance(actual_cons, str) and actual_cons > 0 and baseline_cons != 0:
-                    chng_cons = round(
+                    chng_cons = round_half_up(
                         -100 + actual_cons / baseline_cons*100,
                         ProdCons.get_decimals(period, group, party)
                     )
@@ -309,21 +310,21 @@ def get_prodcons_data(period, parties):
             )
         data['tables'].append(table_data)
 
-    total['actual_prod'] = round(total['actual_prod'], 2)
-    total['baseline_prod'] = round(total['baseline_prod'], 2)
+    total['actual_prod'] = round_half_up(total['actual_prod'], 2)
+    total['baseline_prod'] = round_half_up(total['baseline_prod'], 2)
     if total['actual_prod'] <= 0 or total['baseline_prod'] == 0:
         total['chng_prod'] = - 100
     else:
-        total['chng_prod'] = round(
+        total['chng_prod'] = round_half_up(
             -100 + total['actual_prod'] / total['baseline_prod'] * 100,
             2
         )
-    total['actual_cons'] = round(total['actual_cons'], 2)
-    total['baseline_cons'] = round(total['baseline_cons'], 2)
+    total['actual_cons'] = round_half_up(total['actual_cons'], 2)
+    total['baseline_cons'] = round_half_up(total['baseline_cons'], 2)
     if total['actual_cons'] <= 0 or total['baseline_cons'] == 0:
         total['chng_cons'] = - 100
     else:
-        total['chng_cons'] = round(
+        total['chng_cons'] = round_half_up(
             -100 + total['actual_cons'] / total['baseline_cons'] * 100,
             2
         )
