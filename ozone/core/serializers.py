@@ -1405,6 +1405,9 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    # Frontend needs both reporting period name and id.
+    reporting_period_id = serializers.SerializerMethodField()
+
     in_initial_state = serializers.SerializerMethodField()
 
     # Permission-related fields
@@ -1497,6 +1500,9 @@ class SubmissionSerializer(
             'can_edit_data', 'can_delete_data',
             'created_by', 'last_edited_by',
         )
+
+    def get_reporting_period_id(self, obj):
+        return obj.reporting_period.id
 
     def get_in_initial_state(self, obj):
         return obj.in_initial_state
