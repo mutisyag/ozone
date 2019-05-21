@@ -93,12 +93,11 @@ def get_ods_table(data):
     table_headers = data['headers']
     # get all except F Annex/Group
     table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F') 
-    table_total = (data['total'],)
 
     return Table(
-        table_headers + table_data + table_total,
+        table_headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
-        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES + TABLE_TOTAL_STYLE),
+        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
     )
 
@@ -186,13 +185,6 @@ def get_prodcons_data(period, parties):
 
     data['period'] = period.name
 
-    total = {
-        'actual_prod': 0,
-        'baseline_prod': 0,
-        'actual_cons': 0,
-        'baseline_cons': 0,
-    }
-
     data['tables'] = []
     for party in parties:
         table_data = {}
@@ -246,7 +238,6 @@ def get_prodcons_data(period, parties):
 
             if prodcons and prodcons.calculated_production:
                 actual_prod = prodcons.calculated_production
-                total['actual_prod'] += actual_prod
                 if group not in to_report_groups:
                     limit_prod = '-'
             else:
@@ -258,7 +249,6 @@ def get_prodcons_data(period, parties):
             per_capita_cons = 0
             if prodcons and prodcons.calculated_consumption:
                 actual_cons = prodcons.calculated_consumption
-                total['actual_cons'] += actual_cons
                 per_capita_cons = round_half_up(
                     actual_cons / history.population,
                     4
@@ -279,7 +269,6 @@ def get_prodcons_data(period, parties):
                         -100 + actual_prod / baseline_prod*100,
                         ProdCons.get_decimals(period, group, party)
                     )
-                total['baseline_prod'] += baseline_prod
             else:
                 baseline_prod = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
 
@@ -291,7 +280,6 @@ def get_prodcons_data(period, parties):
                         -100 + actual_cons / baseline_cons*100,
                         ProdCons.get_decimals(period, group, party)
                     )
-                total['baseline_cons'] += baseline_cons
             else:
                 baseline_cons = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
 
@@ -311,37 +299,5 @@ def get_prodcons_data(period, parties):
                 per_capita_cons
             )
         data['tables'].append(table_data)
-
-    total['actual_prod'] = round_half_up(total['actual_prod'], 2)
-    total['baseline_prod'] = round_half_up(total['baseline_prod'], 2)
-    if total['actual_prod'] <= 0 or total['baseline_prod'] == 0:
-        total['chng_prod'] = - 100
-    else:
-        total['chng_prod'] = round_half_up(
-            -100 + total['actual_prod'] / total['baseline_prod'] * 100,
-            2
-        )
-    total['actual_cons'] = round_half_up(total['actual_cons'], 2)
-    total['baseline_cons'] = round_half_up(total['baseline_cons'], 2)
-    if total['actual_cons'] <= 0 or total['baseline_cons'] == 0:
-        total['chng_cons'] = - 100
-    else:
-        total['chng_cons'] = round_half_up(
-            -100 + total['actual_cons'] / total['baseline_cons'] * 100,
-            2
-        )
-
-    data['total'] = (
-        'Sub-Total',
-        total['actual_prod'],
-        total['baseline_prod'],
-        '',
-        total['chng_prod'],
-        total['actual_cons'],
-        total['baseline_cons'],
-        '',
-        total['chng_cons'],
-        ''
-    )
 
     return data
