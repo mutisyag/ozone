@@ -220,6 +220,21 @@ def get_prodcons_data(period, parties):
         table_data['data'] = {}
         to_report_groups = Group.get_report_groups(party, period)
         for group in all_groups:
+            limit_prod = Limit.objects.filter(
+                party=party,
+                reporting_period=period,
+                group=group,
+                limit_type=LimitTypes.PRODUCTION.value
+            ).first()
+            limit_prod = limit_prod.limit if limit_prod else '-'
+            limit_cons = Limit.objects.filter(
+                party=party,
+                reporting_period=period,
+                group=group,
+                limit_type=LimitTypes.CONSUMPTION.value
+            ).first()
+            limit_cons = limit_cons.limit if limit_cons else '-'
+
             try:
                 prodcons = ProdCons.objects.get(
                     party=party,
@@ -228,9 +243,12 @@ def get_prodcons_data(period, parties):
                 )
             except ProdCons.DoesNotExist:
                 prodcons = None
+
             if prodcons and prodcons.calculated_production:
                 actual_prod = prodcons.calculated_production
                 total['actual_prod'] += actual_prod
+                if group not in to_report_groups:
+                    limit_prod = '-'
             else:
                 if group in to_report_groups:
                     actual_prod = 'NR'
@@ -245,6 +263,8 @@ def get_prodcons_data(period, parties):
                     actual_cons / history.population,
                     4
                 )
+                if group not in to_report_groups:
+                    limit_cons = '-'
             else:
                 if group in to_report_groups:
                     actual_cons = 'NR'
@@ -274,23 +294,6 @@ def get_prodcons_data(period, parties):
                 total['baseline_cons'] += baseline_cons
             else:
                 baseline_cons = 'NR'
-
-            limit_prod = Limit.objects.filter(
-                party=party,
-                reporting_period=period,
-                group=group,
-                limit_type=LimitTypes.PRODUCTION.value
-            ).first()
-            if limit_prod:
-                limit_prod = limit_prod.limit
-            limit_cons = Limit.objects.filter(
-                party=party,
-                reporting_period=period,
-                group=group,
-                limit_type=LimitTypes.CONSUMPTION.value
-            ).first()
-            if limit_cons:
-                limit_cons = limit_cons.limit
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
