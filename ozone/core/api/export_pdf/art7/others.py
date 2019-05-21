@@ -174,12 +174,12 @@ def get_prodcons_data(period, parties):
             '',
             period.name,
             _('Base'),
-            _('Limit'),
             _('% Chng'),
+            _('Limit'),
             period.name,
             _('Base'),
-            _('Limit'),
             _('% Chng'),
+            _('Limit'),
             _('Per Cap. Cons.')
         )
     )
