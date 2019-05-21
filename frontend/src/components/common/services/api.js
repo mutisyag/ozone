@@ -258,6 +258,8 @@ const getLimits = params => fetch('aggregations/', {
 
 const getControlledGroups = (party, period) => fetch(`parties/${party}/report_groups/?period=${period}`)
 
+const getApprovedExemptionsList = (partyId, periodId) => fetch(`parties/${partyId}/approved_exemptions/?period=${periodId}`)
+
 export {
   apiURL,
   apiBase,
@@ -301,5 +303,6 @@ export {
   getSubmissionAggregations,
   getLimits,
   getFilteredParties,
-  getControlledGroups
+  getControlledGroups,
+  getApprovedExemptionsList
 }

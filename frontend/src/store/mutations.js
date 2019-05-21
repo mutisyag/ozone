@@ -138,6 +138,10 @@ const mutations = {
     state.initialData.essenCritTypes = data
   },
 
+  setApprovedExemptionsList(state, data) {
+    state.initialData.approvedExemptionsList = data
+  },
+
   incrementOrderingId(state, data) {
     state.form.tabs[data.tabName].ordering_id += 1
   },

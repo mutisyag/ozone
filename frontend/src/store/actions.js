@@ -21,7 +21,8 @@ import {
   getSubmissionDefaultValues,
   getTransitions,
   getSubmissionFormat,
-  getControlledGroups
+  getControlledGroups,
+  getApprovedExemptionsList
 } from '@/components/common/services/api'
 
 import {
@@ -318,9 +319,11 @@ const actions = {
     return confirmed
   },
 
+  // CHECK THIS IF formName CHANGES. It's hardcoded for optimization purpose
   getInitialData(context, { submission, formName, $gettext, additionalAction }) {
     context.commit('setForm', { formName, $gettext })
     return new Promise((resolve) => {
+      console.log('----------------', formName)
       context.dispatch('getSubmissionData', { submission, $gettext }).then((reporting_period) => {
         context.dispatch('getCurrentUserForm')
         context.dispatch('getCountries')
@@ -331,9 +334,14 @@ const actions = {
         // This way, even secretariat users will only see the correct available
         // custom blends.
         context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
-        context.dispatch('getNonParties', reporting_period)
         context.dispatch('getSubmissionFormatOptions')
-        context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
+        if (formName === 'art7') {
+          context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
+          context.dispatch('getNonParties', reporting_period)
+        }
+        if (formName === 'essencrit') {
+          context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, periodId: context.state.current_submission.reporting_period_id })
+        }
         if (additionalAction) {
           context.dispatch(additionalAction)
         }
@@ -341,10 +349,15 @@ const actions = {
       })
     })
   },
-
+  // party id, period name
   async getControlledGroups(context, { party, period }) {
     const controlledGroups = await getControlledGroups(party, period)
     context.commit('setControlledGroups', controlledGroups.data)
+  },
+
+  async getApprovedExemptionsList(context, { partyId, periodId }) {
+    const exemptionsList = await getApprovedExemptionsList(partyId, periodId)
+    context.commit('setApprovedExemptionsList', exemptionsList.data)
   },
 
   async getSubmissionFormatOptions(context) {
