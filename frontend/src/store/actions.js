@@ -270,7 +270,9 @@ const actions = {
       } else {
         dispatch('getSubmissionData', { submission, $gettext })
       }
-      router.push({ path: '/dashboard' })
+      if (process.env.NODE_ENV !== 'development') {
+        router.push({ path: '/dashboard' })
+      }
       dispatch('setAlert', {
         $gettext,
         message: { __all__: [$gettext('Submission status updated successfully.')] },
@@ -340,7 +342,7 @@ const actions = {
           context.dispatch('getNonParties', reporting_period)
         }
         if (formName === 'essencrit') {
-          context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, periodId: context.state.current_submission.reporting_period_id })
+          context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
         }
         if (additionalAction) {
           context.dispatch(additionalAction)
@@ -355,8 +357,8 @@ const actions = {
     context.commit('setControlledGroups', controlledGroups.data)
   },
 
-  async getApprovedExemptionsList(context, { partyId, periodId }) {
-    const exemptionsList = await getApprovedExemptionsList(partyId, periodId)
+  async getApprovedExemptionsList(context, { partyId, period }) {
+    const exemptionsList = await getApprovedExemptionsList(partyId, period)
     context.commit('setApprovedExemptionsList', exemptionsList.data)
   },
 

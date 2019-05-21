@@ -18,7 +18,8 @@ const getFormRaf = ($gettext) => {
         'initialData.submissionFormats',
         'currentUser',
         'permissions.form',
-        'submissionDefaultValues.submission_format'
+        'submissionDefaultValues.submission_format',
+        'initialData.approvedExemptionsList'
       ],
       comments_default_properties: {
         'hat_imports_remarks_party': '',

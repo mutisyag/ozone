@@ -337,12 +337,14 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import addParties from '@/components/raf/AddParties'
+import DefaultAside from '@/components/raf/form-components/DefaultAside'
 
 export default {
   mixins: [FormTemplateMxin],
   components: {
     ValidationLabel,
-    addParties
+    addParties,
+    DefaultAside
   },
   data() {
     return {
