@@ -199,11 +199,15 @@ def get_prodcons_data(period, parties):
             party=party,
             reporting_period=period
         )
-        submission = Submission.objects.filter(
+        submission_qs = Submission.objects.filter(
             party=party,
             reporting_period=period,
             obligation=Obligation.objects.get(name="Article 7 - Data Reporting")
-        ).first()
+        )
+        # There should only be one current submission.
+        # TODO This list will be empty for submissions in data_entry.
+        submission = [s for s in submission_qs if s.is_current is True][0]
+
         if submission.submitted_at:
             date_reported = submission.submitted_at.strftime("%d-%b-%Y")
         elif submission.info.date:
