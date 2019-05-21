@@ -68,10 +68,12 @@ const logout = (browser) => {
   browser.useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
     .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
+		.pause(200)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
     .pause(500)
     .waitForElementVisible('#logout_button', 5000)
     .moveToElement('#logout_button', undefined, undefined)
+		.pause(200)
     .click('#logout_button')
     .pause(500)
     .waitForElementVisible('#id_username', 5000)
@@ -639,7 +641,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
     browser
       /* Check if entity was added and status is invalid */
       .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, 5000)
-      .moveTo(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`)
+      .moveToElement(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, undefined, undefined)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
       .pause(500)
@@ -699,55 +701,58 @@ const addFacility = (browser, table, tab, row, row_values, check = false) => {
 
 const addValues = (browser, table, tab, row, row_values, modal_values) => {
 	logMessage(browser, 'Adding values to entity')
+	/* Hide app-footer */
+	browser
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+		.pause(500)
+	
+	if (Object.entries(row_values).length > 0) {
+		browser
+			.useCss()
+			.moveToElement(`#${tab} #${table} tbody tr:nth-child(${row})`, undefined, undefined)
+			/* Add values to entity */
+			for (const field_id of Object.keys(row_values)) {
+				browser
+					.element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
+						if (result.status !== -1) {
+							browser
+								.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
+						} else {
+							browser
+								.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
+						}
+					})
+			}
+	}
 
-  browser
-    .useXpath()
-    /* Hide app-footer	*/
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
-    .useCss()
-    .moveTo(`#${tab} #${table} tbody tr:nth-child(${row})`)
-  /* Add values to entity */
-  for (const field_id of Object.keys(row_values)) {
-    browser
-      .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
-        if (result.status !== -1) {
-          browser
-            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
-        } else {
-          browser
-            .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
-        }
-      })
-  }
-  /* Check if valid */
-  browser
-    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td:nth-child(2)`)
-    .expect.element(`#${tab} #${table} tbody tr:nth-child(${row}) .fa-exclamation-circle`).to.not.be.present
-  /* Open edit modal */
-  browser
-    .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
-    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
-    .pause(500)
+	if (Object.entries(modal_values).length > 0) {
+		/* Open edit modal */
+		browser
+			.waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
+			.click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
+			.pause(500)
 
-  browser
-    .waitForElementVisible(`#${tab} .modal-body`, 5000)
-    .pause(500)
-  /* Add values in modal */
-  for (const field_id of Object.keys(modal_values)) {
-    browser
-      .click(`#${tab} .modal-body #${field_id}`)
-      .pause(200)
-      .clearValue(`#${tab} .modal-body #${field_id}`)
-      .setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
-  }
-  /* Close modal */
-  browser
-    .pause(500)
-    .click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
-    .pause(500)
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-    .pause(500)
+		browser
+			.waitForElementVisible(`#${tab} .modal-body`, 5000)
+			.pause(500)
+		/* Add values in modal */
+		for (const field_id of Object.keys(modal_values)) {
+			browser
+				.click(`#${tab} .modal-body #${field_id}`)
+				.pause(200)
+				.clearValue(`#${tab} .modal-body #${field_id}`)
+				.setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
+		}
+		/* Close modal */
+		browser
+			.pause(500)
+			.click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
+			.pause(500)
+	}
+	/* Show app-footer */
+	browser
+		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+		.pause(500)
 }
 
 const addComment = (browser, tab, comment) => {

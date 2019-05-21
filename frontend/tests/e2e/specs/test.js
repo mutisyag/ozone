@@ -495,27 +495,39 @@ module.exports = {
   //   logout(browser)
   //   browser.end()
   // },
-  // BU_023: browser => {
-  //   const row_values = {
-  //     quantity_total_new: 0.12
-  //   }
-  //   const modal_values = {
-  //     quantity_feedstock: 0.10,
-  //     quantity_critical_uses: 0.01,
-  //     decision_critical_uses: 'Do that'
-  //   }
+  BU_023: browser => {
+    const row_values = {
+      quantity_total_new: 0.12
+    }
+    const modal_values = {
+      quantity_feedstock: 0.10,
+      quantity_critical_uses: 0.01,
+      decision_critical_uses: 'Do that'
+    }
+		const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
 
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018')
-  //   clickQuestionnaireRadios(browser, ['has_exports'])
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018')
+		fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_exports'])
 
-  //   addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1)
-  //   addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values)
+    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1)
+    addValues(browser, 'substance-table', 'has_exports_tab', 1, row_values, modal_values)
 
-  //   addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-12'], 1)
-  //   rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
+    addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-12'], 1)
+    rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
+		addValues(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
+		saveSubmission(browser, ['Submission Info'])
 
-  //   logout(browser)
-  //   browser.end()
-  // }
+    logout(browser)
+    browser.end()
+  }
 }
