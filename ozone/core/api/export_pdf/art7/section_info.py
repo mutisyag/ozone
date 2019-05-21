@@ -1,4 +1,4 @@
-from ..util import get_comments_section
+from ..util import get_comments_section, get_date_of_reporting_str
 from ..util import p_l, p_c
 from ..util import h1_style, no_spacing_style
 from ..util import col_widths
@@ -46,14 +46,14 @@ TABLE_INFO_STYLE = (
 
 
 def get_date_of_reporting(submission):
-    date_of_reporting = submission.submitted_at or submission.info.date
+    date_of_reporting = get_date_of_reporting_str(submission)
     if not date_of_reporting:
         return None
     else:
         return (
             p_l('%s: %s' % (
                 _('Date of reporting'),
-                date_of_reporting.strftime('%-d %B %Y'),
+                date_of_reporting,
             )),
         )
 

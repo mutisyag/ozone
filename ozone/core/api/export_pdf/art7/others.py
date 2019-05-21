@@ -17,6 +17,7 @@ from ..util import p_l
 from ..util import h1_style, h2_style, h3_style, page_title_style, FONTSIZE_SMALL, TABLE_STYLES
 from ..util import left_description_style
 from ..util import col_widths
+from ..util import get_date_of_reporting_str
 
 
 TABLE_CUSTOM_STYLES = (
@@ -208,17 +209,11 @@ def get_prodcons_data(period, parties):
         # TODO This list will be empty for submissions in data_entry.
         submission = [s for s in submission_qs if s.is_current is True][0]
 
-        if submission.submitted_at:
-            date_reported = submission.submitted_at.strftime("%d-%b-%Y")
-        elif submission.info.date:
-            date_reported = submission.info.date.strftime("%d-%b-%Y")
-        else:
-            date_reported = ''
         table_data['party'] = {
             'name': party.name,
             'population': "{:,}".format(history.population),
             'party_type': history.party_type.abbr,
-            'date_reported': date_reported,
+            'date_reported': get_date_of_reporting_str(submission),
             'region': party.subregion.region.abbr
         }
 

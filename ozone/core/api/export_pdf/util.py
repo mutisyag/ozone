@@ -361,3 +361,10 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
         style=c_style,
         widths=c_widths
     )
+
+
+def get_date_of_reporting_str(submission):
+    date_of_reporting = submission.submitted_at or submission.info.date
+    if date_of_reporting:
+        date_of_reporting = date_of_reporting.strftime('%d-%B-%Y')
+    return date_of_reporting
