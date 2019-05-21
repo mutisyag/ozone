@@ -72,7 +72,7 @@ class ExemptionApproved(BaseExemption):
         ).filter(
             submission__party=party,
             submission__reporting_period=reporting_period,
-        ).values_list('substance', 'approved_teap_amount', 'is_emergency')
+        ).values_list('substance', 'quantity', 'is_emergency')
 
         ret = {'emergency': {}, 'non emergency': {}}
         for substance, amount, emergency in approvals:
