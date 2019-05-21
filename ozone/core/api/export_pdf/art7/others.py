@@ -251,7 +251,7 @@ def get_prodcons_data(period, parties):
                     limit_prod = '-'
             else:
                 if group in to_report_groups:
-                    actual_prod = 'NR'
+                    actual_prod = 'N.R.'
                 else:
                     actual_prod = '-'
 
@@ -267,7 +267,7 @@ def get_prodcons_data(period, parties):
                     limit_cons = '-'
             else:
                 if group in to_report_groups:
-                    actual_cons = 'NR'
+                    actual_cons = 'N.R.'
                 else:
                     actual_cons = '-'
 
@@ -281,7 +281,7 @@ def get_prodcons_data(period, parties):
                     )
                 total['baseline_prod'] += baseline_prod
             else:
-                baseline_prod = 'NR'
+                baseline_prod = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
 
             chng_cons = -100
             if prodcons and prodcons.baseline_cons:
@@ -293,7 +293,7 @@ def get_prodcons_data(period, parties):
                     )
                 total['baseline_cons'] += baseline_cons
             else:
-                baseline_cons = 'NR'
+                baseline_cons = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
