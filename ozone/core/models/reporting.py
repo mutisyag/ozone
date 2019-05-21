@@ -104,10 +104,20 @@ class Obligation(models.Model):
 
     description = models.CharField(max_length=256, blank=True)
 
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Indicates whether reporting can be performed for this "
+                  "obligation."
+    )
+
     # Some obligations require immediate reporting each time an event happens,
     # instead of periodical reporting. This should get special treatment both
     # in backend and frontend.
-    has_reporting_periods = models.BooleanField(default=True)
+    has_reporting_periods = models.BooleanField(
+        default=True,
+        help_text="Indicates whether reporting is done periodically or upon "
+                  "certain events (e.g. transfers)"
+    )
 
     # The type of form used to submit data.
     # This will possibly get more complicated in the future
