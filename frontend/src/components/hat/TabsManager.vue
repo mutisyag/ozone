@@ -139,6 +139,7 @@
       v-on:removeTransition="currentTransition = null"
       :submission="submission"
       :transition="currentTransition"
+      :skipArt7Specific="true"
     ></TransitionQuestions>
   </div>
 </template>
