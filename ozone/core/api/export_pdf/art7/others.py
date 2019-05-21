@@ -9,7 +9,7 @@ from ozone.core.models import (
     Limit,
     LimitTypes,
     Submission,
-    Obligation,
+    FormTypes,
 )
 from ozone.core.models.utils import round_half_up
 
@@ -202,7 +202,7 @@ def get_prodcons_data(period, parties):
         submission_qs = Submission.objects.filter(
             party=party,
             reporting_period=period,
-            obligation=Obligation.objects.get(name="Article 7 - Data Reporting")
+            obligation___form_type=FormTypes.ART7.value
         )
         # There should only be one current submission.
         # TODO This list will be empty for submissions in data_entry.
