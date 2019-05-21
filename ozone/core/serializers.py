@@ -1445,6 +1445,7 @@ class SubmissionSerializer(
 
         base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
+            'reporting_period_id',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
