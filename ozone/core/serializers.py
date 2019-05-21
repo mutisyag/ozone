@@ -862,7 +862,7 @@ class ExemptionApprovedListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = ['is_emergency']
 
 
 class ExemptionApprovedSerializer(
@@ -889,7 +889,7 @@ class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = ['is_emergency']
 
     imports = RAFImportSerializer(many=True)
 
