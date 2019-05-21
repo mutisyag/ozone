@@ -8,14 +8,14 @@
         <p>You are about to submit your report.</p>
         <p>By clicking the OK button, you confirm that all blank cells and all substances not included are considered to have zero values.</p>
       </div>
-      <div v-if="questionnaireStatus.length">
+      <div v-if="questionnaireStatus.length && !skipArt7Specific">
         <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form.</b></p>
       </div>
-      <div v-if="uncheckedFlags.length">
+      <div v-if="uncheckedFlags.length && !skipArt7Specific">
         <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
       </div>
     </div>
-    <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">
+    <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags && !skipArt7Specific">
       <b-row v-for="order in blank_flags" :key="order">
         <b-col cols="1">
           <fieldGenerator
@@ -57,6 +57,9 @@ export default {
       flagMapping
     }
   },
+  props: {
+    skipArt7Specific: Boolean
+  },
   created() {
     this.labels = getCommonLabels(this.$gettext)
   },
@@ -85,7 +88,7 @@ export default {
       return anweredYesNoData.map(tab => this.labels[tab])
     },
     uncheckedFlags() {
-      if (!this.$store.state.form.tabs.flags) {
+      if (!this.$store.state.form.tabs.flags || this.skipArt7Specific) {
         return []
       }
       return Object.keys(this.formTabs.flags.form_fields).filter(

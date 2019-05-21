@@ -2,7 +2,7 @@
   <div>
     <b-modal size="lg" ref="transition_modal" id="transition_modal">
       <div slot="modal-title"><i class="fa fa-exclamation-circle"></i>&nbsp; <span v-translate>Please confirm</span></div>
-      <Submit v-if="transition === 'submit'"/>
+      <Submit :skipArt7Specific="skipArt7Specific" v-if="transition === 'submit'"/>
       <Process v-else-if="transition === 'process'"/>
       <Recall v-else-if="transition === 'recall'"/>
       <Finalize v-else-if="transition === 'finalize'"/>
@@ -31,7 +31,8 @@ import Reinstate from '@/components/common/transitionQuestions/Reinstate'
 export default {
   props: {
     transition: String,
-    submission: String
+    submission: String,
+    skipArt7Specific: Boolean
   },
   components: {
     Submit,
