@@ -383,6 +383,9 @@ export default {
     }
   },
   computed: {
+    emergency_field() {
+      return this.tab_info.form_fields.map((field, index) => ({ index, emergency: field.is_emergency.selected }))
+    },
     isCritical() {
       return this.modal_data.field.substance.selected && this.$store.state.initialData.substances.find(s => parseInt(s.value) === parseInt(this.modal_data.field.substance.selected)).has_critical_uses
     },
@@ -475,6 +478,20 @@ export default {
       if (this.hasSubstances) counter.push(1)
       if (this.hasBlends) counter.push(1)
       return counter.length
+    }
+  },
+  watch: {
+    emergency_field: {
+      handler(new_val, old_val) {
+        if (!old_val || !old_val.length) return
+        console.log(new_val, old_val)
+        Object.keys(new_val).forEach(key => {
+          if (new_val[key].emergency !== old_val[key].emergency) {
+            this.$store.commit('setExemptionBasedOnEmergency', { emergency: new_val[key].emergncy, index: new_val[key].index })
+          }
+        })
+      },
+      deep: true
     }
   }
 }

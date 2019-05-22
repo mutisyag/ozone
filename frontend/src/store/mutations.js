@@ -139,7 +139,26 @@ const mutations = {
   },
 
   setApprovedExemptionsList(state, data) {
-    state.initialData.approvedExemptionsList = data
+    // state.initialData.approvedExemptionsList = data
+    state.initialData.approvedExemptionsList = {
+      emergency: {
+        2: 2251,
+        3: 3242,
+        4: 432,
+        5: 51
+      },
+      non_emergency: {
+        5: 5213
+      }
+    }
+  },
+
+  setExemptionBasedOnEmergency(state, { emergency, index }) {
+    let emergency_mapping = 'emergency'
+    if (emergency === false) {
+      emergency_mapping = 'non_emergency'
+    }
+    state.form.tabs.essencrit.form_fields[index].quantity_exempted.selected = state.form.tabs.essencrit.form_fields[index].quantity_exempted.exemptionValue[emergency_mapping]
   },
 
   incrementOrderingId(state, data) {

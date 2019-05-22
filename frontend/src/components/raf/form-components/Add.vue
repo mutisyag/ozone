@@ -158,8 +158,7 @@ export default {
         const alreadyAdded = this.$store.state.form.tabs[this.tabName].form_fields.filter(field => (parseInt(field.substance.selected) === parseInt(subst)))
         if (alreadyAdded.length === 2) {
           willNotAdd.push(subst)
-        }
-        if (alreadyAdded.length === 1) {
+        } else if (alreadyAdded.length === 1) {
           // if both exemptions exist, check value of emergency in alreadyAdded and add the other one
           if (alreadyAdded[0].is_emergency.selected) {
             this.addSubstanceRaf(subst, { is_emergency: false, quantity_exempted: this.exemptions.non_emergency[parseInt(subst)] || null })
@@ -207,7 +206,7 @@ export default {
         blendList: null,
         prefillData: prefillData || null,
         critical: this.$store.getters.getCriticalSubstances(subst),
-        exemptionValue: prefillData && prefillData.quantity_exempted ? { is_emergency: prefillData.is_emergency, quantity_exempted: prefillData.quantity_exempted } : null
+        exemptionValue: { emergency: this.exemptions.emergency[parseInt(subst)], non_emergency: this.exemptions.non_emergency[parseInt(subst)] }
       })
     },
 

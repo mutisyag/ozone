@@ -29,7 +29,12 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
         isInput: true
       },
       {
-        label: `(4) <br> ${$gettext('Remarks')}`,
+        label: `(4) <br> ${$gettext('Emergency')}`,
+        name: 'is_emergency',
+        isInput: true
+      },
+      {
+        label: `(5) <br> ${$gettext('Remarks')}`,
         name: 'remarks_os',
         isInput: true
       },
@@ -54,6 +59,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
     default_properties: {
       substance: null,
       quantity: null,
+      is_emergency: null,
       remarks_os: null
     }
   }
