@@ -147,7 +147,7 @@ class Transfer(models.Model):
                 raise ValidationError(
                     {
                         'destination_party_submission': [_(
-                            "Destination party submission should be a Transfer"
+                            "Destination party submission should be a Transfer "
                             "submission."
                         )],
                     }
@@ -167,7 +167,7 @@ class Transfer(models.Model):
                 raise ValidationError(
                     {
                         'source_party_submission': [_(
-                            "Source party submission should be a Transfer"
+                            "Source party submission should be a Transfer "
                             "submission."
                         )],
                     }

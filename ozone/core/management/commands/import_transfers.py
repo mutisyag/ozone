@@ -5,12 +5,12 @@ from django.db import transaction
 from openpyxl import load_workbook
 
 from ozone.core.models import (
+    Obligation,
     Party,
     Substance,
     Submission,
     ReportingPeriod,
     Transfer,
-    Obligation,
     User,
 )
 
@@ -31,6 +31,7 @@ class Command(BaseCommand):
                            for _substance in Substance.objects.all()}
         self.wb = None
         self.submissions_letters_map = {}
+        self.transfers_map = {}
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
@@ -56,72 +57,89 @@ class Command(BaseCommand):
             logger.critical("Unable to find an admin: %s", e)
             return
 
-        transfers_letters = self.load_workbook(options["file"])
+        # Load all the data.
+        self.wb = load_workbook(filename=options["file"])
 
+        # Process & populate letters
+        letters_ws = self.wb['Letters']
+        values = list(letters_ws.values)
+        headers = values[0]
+        for row in values[1:]:
+            row = dict(zip(headers, row))
+            self.process_letter_data(row, options["purge"])
+
+        # Process & populate transfers
         transfers_ws = self.wb['ProdTransfers']
         values = list(transfers_ws.values)
         headers = values[0]
         for row in values[1:]:
             row = dict(zip(headers, row))
-            transfer_id = row['ProdTransferID']
-            if not transfers_letters.get(transfer_id):
-                logger.warning(
-                    "Letter not found in ProdTransfersLetters sheet "
-                    "for ProdTransferID=%s.",
-                    transfer_id
-                )
-            self.process_data(
-                row,
-                transfers_letters[transfer_id] if transfers_letters.get(transfer_id) else None,
-                options["purge"]
+            self.process_transfer_data(row, options["purge"])
+
+        # Process letters-transfers and populate relevant fields on transfers
+        letters_transfers_ws = self.wb['ProdTransfersLetters']
+        values = list(letters_transfers_ws.values)
+        headers = values[0]
+        for row in values[1:]:
+            row = dict(zip(headers, row))
+            self.process_letter_transfer_data(row, options["purge"])
+
+    def process_letter_data(self, letter, purge=False):
+        try:
+            return self._process_letter_data(letter, purge)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving transfer %s", e, letter['LetterID'],
+                exc_info=True
+            )
+            return 0
+
+    @transaction.atomic
+    def _delete_letter_instance(self, letter_id):
+        submission = self.submissions_letters_map.pop(letter_id, None)
+        if submission:
+            submission._current_state = 'data_entry'
+            submission.save()
+            submission.delete()
+
+    @transaction.atomic
+    def _process_letter_data(self, letter, purge=False):
+        letter_id = letter['LetterID'] if letter else None
+
+        if purge:
+            self._delete_letter_instance(letter_id)
+            return
+
+        if not letter or not self.submissions_letters_map.get(letter_id):
+            entry = self.get_submission_data(letter)
+            submission = Submission.objects.create(
+                **entry["submission"]
+            )
+            for key, value in entry["submission_info"].items():
+                setattr(submission.info, key, value)
+            submission.info.save()
+
+            submission._current_state = "submitted"
+            submission.save()
+
+            for obj in submission.history.all():
+                obj.history_user = self.admin
+                obj.save()
+
+            self.submissions_letters_map[letter_id] = submission
+
+            logger.info(
+                f"Submission for {submission.party}/"
+                f"{submission.reporting_period} created."
             )
 
-    def load_workbook(self, filename):
-        """
-        Load the Excel file, collating letters data by ProdTransferID.
-
-        Return a dictionary in the following format:
-        {
-            "ProdTransferID": {<letter-row>},
-                ...
-            }
-        }
-        """
-
-        self.wb = load_workbook(filename=filename)
-
-        ws_letters = self.wb['Letters']
-        letters = {}
-        values = list(ws_letters.values)
-        headers = values[0]
-        for row in values[1:]:
-            row = dict(zip(headers, row))
-            letters[row['LetterID']] = row
-
-        ws_transfers_letters = self.wb['ProdTransfersLetters']
-        result = {}
-        values = list(ws_transfers_letters.values)
-        headers = values[0]
-        for row in values[1:]:
-            row = dict(zip(headers, row))
-            letter_id = row['LetterID']
-            transfer_id = row['ProdTransferID']
-            if not letters.get(letter_id):
-                continue
-
-            # Save data from first letter we found for this ProdTransferID.
-            if not result.get(transfer_id):
-                result[transfer_id] = letters[letter_id]
-
-        return result
-
-    def process_data(self, transfer, letter, purge=False):
+    def process_transfer_data(self, transfer, purge=False):
         """
         Process the parsed data and insert it into the DB
-        Only a wrapper, see _process_data.
+        Only a wrapper, see _process_transfer_data.
         """
         try:
-            return self._process_data(transfer, letter, purge)
+            return self._process_transfer_data(transfer, purge)
         except Exception as e:
             logger.error(
                 "Error %s while saving transfer %s", e, transfer['ProdTransferID'],
@@ -130,69 +148,65 @@ class Command(BaseCommand):
             return 0
 
     @transaction.atomic
-    def _process_data(self, transfer, letter, purge=False):
-        party = self.parties[transfer['SrcCntryID']]
-        period = self.periods[transfer['PeriodID']]
-        obligation = Obligation.objects.get(id=4)
+    def _delete_transfer_instance(self, transfer_id):
+        transfer = self.transfers_map.pop(transfer_id, None)
+        if transfer:
+            transfer.delete()
+
+    @transaction.atomic
+    def _process_transfer_data(self, transfer, purge=False):
+        transfer_id = transfer['ProdTransferID']
 
         if purge:
-            self.delete_instance(party, period, obligation)
+            self._delete_transfer_instance(transfer_id)
             return
 
-        letter_id = letter['LetterID'] if letter else None
-        map_key = (letter_id, party.abbr, period.name, obligation.id)
-        if not letter or not self.submissions_letters_map.get(map_key):
-            entry = self.get_submission_data(party, period, letter)
-            submission = Submission.objects.create(
-                **entry["submission"]
+        if 'a':
+            transfer = self.get_transfer_data(transfer)
+            t = Transfer.objects.create(
+                **transfer
             )
-            for key, value in entry["submission_info"].items():
-                setattr(submission.info, key, value)
-            submission.info.save()
+            # Fill aggregated data based on this transfer
+            t.populate_aggregated_data()
 
-            submission._current_state = "finalized"
-            submission.save()
+            self.transfers_map[transfer_id] = t
 
-            # Fill aggregated data on submission import
-            submission.fill_aggregated_data()
+            logger.info(f"Transfer {transfer_id} added")
 
-            for obj in submission.history.all():
-                obj.history_user = self.admin
-                obj.save()
-
-            self.submissions_letters_map[map_key] = submission
-
-            logger.info(
-                "Submission %s/%s created.",
-                party.abbr,
-                period.name
+    def process_letter_transfer_data(self, entry, purge=False):
+        """
+        Process the parsed data and insert it into the DB
+        Only a wrapper, see _process_letter_transfer_data.
+        """
+        try:
+            return self._process_letter_transfer_data(entry, purge)
+        except Exception as e:
+            logger.error(
+                "Error %s while processing transfer-letter mapping %s %s", e,
+                entry['ProdTransferID'], entry['LetterID'],
+                exc_info=True
             )
-        submission = self.submissions_letters_map[map_key]
+            return 0
 
-        # Little hack to allow modifications on this submission
-        submission._current_state = "data_entry"
-        submission.save()
+    @transaction.atomic
+    def _process_letter_transfer_data(self, entry, purge=False):
+        transfer = self.transfers_map[entry['ProdTransferID']]
+        submission = self.submissions_letters_map[entry['LetterID']]
 
-        # Fill aggregated data on submission import
-        submission.fill_aggregated_data()
+        if purge:
+            value = None
+        else:
+            value = submission
 
-        transfer = self.get_transfer_data(transfer)
-        Transfer.objects.create(
-            submission=submission,
-            **transfer
-        )
+        # Set the submission on the transfer
+        if transfer.source_party == submission.party:
+            transfer.source_party_submission = value
+        elif transfer.destination_party == submission.party:
+            transfer.destination_party_submission = value
 
-        # Set current_state back to finalized
-        submission._current_state = "finalized"
-        submission.save()
+        transfer.save()
 
-        logger.info(
-            "Transfer added to %s/%s submission.",
-            party.abbr,
-            period.name
-        )
-
-    def get_submission_data(self, party, period, letter):
+    def get_submission_data(self, letter):
         letter_date = letter["LetterDate"] if letter else None
         if letter:
             transfers_remarks_secretariat = letter["LetterDate"].strftime("%m/%d/%Y") + "\n"
@@ -200,6 +214,9 @@ class Command(BaseCommand):
             transfers_remarks_secretariat += letter["Remarks"] if letter["Remarks"] else ""
         else:
             transfers_remarks_secretariat = ""
+        party = self.parties[letter['LetterSenderCntryID']]
+        period = self.periods[letter['LetterDate'].strftime("%Y")]
+
         return {
             "submission": {
                 "schema_version": "legacy",
@@ -207,8 +224,8 @@ class Command(BaseCommand):
                 "updated_at": letter_date,
                 "submitted_at": letter_date,
                 "version": 1,
-                "_workflow_class": "default",
-                "_current_state": "finalized",
+                "_workflow_class": "default_transfer",
+                "_current_state": "submitted",
                 "_previous_state": None,
                 "flag_provisional": False,
                 "flag_valid": True,
@@ -237,34 +254,18 @@ class Command(BaseCommand):
     def get_transfer_data(self, transfer):
         substance = self.substances.get(transfer["SubstID"])
         destination_party = self.parties[transfer['DestCntryID']]
+        source_party = self.parties[transfer['SrcCntryID']]
+        reporting_period = self.periods[transfer['PeriodID']]
 
         return {
+            "reporting_period_id": reporting_period.id,
             "substance_id": substance.id,
+            "transfer_type": "P",
             "transferred_amount": transfer["ProdTransfer"],
             "is_basic_domestic_need": transfer['IsBDN'],
+            "source_party_id": source_party.id,
             "destination_party_id": destination_party.id,
-            "remarks_os": transfer["Remark"] if transfer["Remark"] else ""
+            "source_party_submission": None,
+            "destination_party_submission": None,
+            #"remarks_os": transfer["Remark"] if transfer["Remark"] else ""
         }
-
-    def delete_instance(self, party, period, obligation):
-        """
-        Removes the submission identified by the party, period and obligation
-        and any related data.
-        """
-
-        qs = Submission.objects.filter(
-            party=party,
-            reporting_period=period,
-            obligation=obligation
-        ).all()
-
-        for sub in qs:
-            logger.info("Deleting submission %s/%s", party.abbr, period.name)
-            sub._current_state = 'data_entry'
-            sub.save()
-            for related_data in sub.RELATED_DATA:
-                for instance in getattr(sub, related_data).all():
-                    logger.debug("Deleting related data: %s", instance)
-                    instance.delete()
-            sub.__class__.data_changes_allowed = True
-            sub.delete()
