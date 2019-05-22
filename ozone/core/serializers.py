@@ -1134,6 +1134,7 @@ class SubmissionFlagsSerializer(
             'exemption': (
                 'flag_approved', 'flag_emergency',
             ),
+            'transfer': base_fields,
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
