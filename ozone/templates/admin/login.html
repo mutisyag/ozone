@@ -4,6 +4,14 @@
 {% block extrastyle %}
   {{ block.super }}
   <style type="text/css">
+    html {
+      height: 100%;
+    }
+    body {
+      /* background: url('{{ STATIC_URL }}images/background.jpg') !important; */
+      background-image: linear-gradient(to left, rgba(63,85,250,0.8), rgba(63,85,250,1))!important;
+      background-repeat: no-repeat;
+    }
     #content-main {
       background-color: unset;
       border: 0;
@@ -11,11 +19,92 @@
     #login-form legend {
       color: #000;
     }
+    /* TODO: eliminate duplicates */
     #login-form {
       background-color: #fff;
-      padding: 45px;
-      border: 1px solid #c8ced3;
-      border-radius: .25rem;
+      padding: 45px 20px;
+      border-radius: 0;
+      border: none;
+      -webkit-box-shadow: 0px 0px 10px 3px rgba(63,85,250,1);
+      -moz-box-shadow: 0px 0px 10px 3px rgba(63,85,250,1);
+      box-shadow: 0px 0px 10px 3px rgba(63,85,250,1);
+    }
+    .login .submit-row {
+      padding: 0 !important;
+    }
+    .login #container {
+      background: transparent;
+      border: none;
+    }
+    .login #content-main {
+      width: 100%;
+      max-width: 320px;
+      float: none;
+      display: block;
+      margin: 0 auto;
+    }
+    .login #header {
+      background: transparent;
+      color: #fff;
+      text-align: center;
+      padding: 5px 20px;
+      overflow: visible;
+      margin-bottom: 20px;
+    }
+    .login #header h1 {
+      font-size: 45px;
+    }
+    .login .form-row {
+      float: none;
+    }
+    .login .form-row input {
+      background: #FAFAFA;
+      border: 2px solid #EDEDED;
+    }
+    .login .form-row input:-webkit-autofill,
+    .login .form-row input:-webkit-autofill:hover, 
+    .login .form-row input:-webkit-autofill:focus {
+      -webkit-text-fill-color: inherit;
+      -webkit-box-shadow: 0 0 0px 1000px #FAFAFA inset;
+      transition: background-color 5000s ease-in-out 0s;
+    }
+    .login .form-row #id_username, .login .form-row #id_password {
+      padding: 12px;
+    }
+    .login .form-row label {
+      padding: 0;
+      padding-left: 10px;
+    }
+    .login .password-reset-link {
+      margin: 4px 0 30px 0;
+    }
+    .login .password-reset-link a:link, a:visited {
+      color: gray;
+    }
+    .login .submit-row label {
+      display: none;
+    }
+    .login .submit-row input[type="submit"] {
+      background-color: #3F56FA;
+      width: 60%;
+      padding: 15px 15px;
+      display: block;
+      margin: 0 auto;
+      text-transform: uppercase;
+    }
+    .login .submit-row input[type="submit"]:hover {
+      background-color: #011293;
+    }
+    #branding {
+      text-align: center;
+      width: 100%;
+      margin: 0 auto;
+      display: block;
+      float: none;
+    }
+    #branding h1, #branding h1 a:link, #branding h1 a:visited {
+      color: #fff;
+      margin: 0;
     }
   </style>
 {% endblock extrastyle %}
