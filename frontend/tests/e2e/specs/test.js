@@ -50,14 +50,14 @@ module.exports = {
     logout(browser)
     browser.end()
   },
-  BU_002: browser => {
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Exemption: Imports and Production', '2017', '')
-    deleteSubmissionFake(browser)
-    deleteSubmission(browser)
-    logout(browser)
-    browser.end()
-  },
+  // BU_002: browser => {
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2017', '')
+  //   deleteSubmissionFake(browser)
+  //   deleteSubmission(browser)
+  //   logout(browser)
+  //   browser.end()
+  // },
   BU_003: browser => {
     const data = {
       submissionInfo: {
@@ -71,7 +71,7 @@ module.exports = {
       reporting_officer: 'test name'
     }
 
-    const autocomplet = false;
+    const autocomplet = false
 
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
@@ -147,7 +147,6 @@ module.exports = {
       phone: '+490000000',
       email: 'john.doe@gmail.com'
     }
-    
 
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
@@ -267,7 +266,7 @@ module.exports = {
     }
     const modal_values = {
       quantity_export_new: 0.05,
-      quantity_export_recovered: 0.01 
+      quantity_export_recovered: 0.01
     }
     const submissionInfo = {
       reporting_officer: 'test name',
@@ -298,7 +297,7 @@ module.exports = {
     const row_values = {
       facility_name: 'CCT Facility',
       quantity_generated: 10,
-      quantity_emitted: 10,
+      quantity_emitted: 10
 
     }
     const submissionInfo = {
@@ -311,7 +310,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
-    login(browser, 'p_ro', 'p_ro')    
+    login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_emissions'])
@@ -320,7 +319,7 @@ module.exports = {
 
     addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Emissions'])
-	 	browser.end()
+    browser.end()
   },
   BU_012: browser => {
     const submissionInfo = {
@@ -341,38 +340,38 @@ module.exports = {
     saveSubmission(browser, ['Submission Info', 'Questionnaire'])
     browser.end()
   },
-  BU_013: browser => {
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
-    deleteSubmission(browser)
-    browser.end()
-  },
-  BU_014: browser => {
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
-    deleteSubmission(browser)
-    browser.end()
-  },
-  BU_015: browser => {
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  // BU_013: browser => {
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
+  //   deleteSubmission(browser)
+  //   browser.end()
+  // },
+  // BU_014: browser => {
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
+  //   deleteSubmission(browser)
+  //   browser.end()
+  // },
+  // BU_015: browser => {
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'HAT Exemption: Imports and Production', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    saveSubmission(browser, ['Submission Info'])
-    checkSumbissionInfoFlags(browser)
-    saveSubmission(browser, ['Submission Info'])
-    logout(browser)
-    browser.end()
-  },
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   saveSubmission(browser, ['Submission Info'])
+  //   checkSumbissionInfoFlags(browser)
+  //   saveSubmission(browser, ['Submission Info'])
+  //   logout(browser)
+  //   browser.end()
+  // },
   BU_019: browser => {
     const group = 'A/I Chlorofluorocarbons (CFCs)'
     const name = 'CFC-11'
@@ -472,7 +471,7 @@ module.exports = {
   //   ]
 
   //   login(browser, 'secretariat', 'secretariat')
-	// 	showMouse(browser)
+  // 	showMouse(browser)
   //   submissions.forEach(submission => {
   //     submission.data.forEach(data => {
   //       createSubmission(browser, submission.name, data.year, data.party, true, true)
@@ -504,7 +503,7 @@ module.exports = {
       quantity_critical_uses: 0.01,
       decision_critical_uses: 'Do that'
     }
-		const submissionInfo = {
+    const submissionInfo = {
       reporting_officer: 'test name',
       designation: 'test designation',
       organization: 'test organisation',
@@ -516,7 +515,7 @@ module.exports = {
 
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018')
-		fillSubmissionInfo(browser, submissionInfo)
+    fillSubmissionInfo(browser, submissionInfo)
     clickQuestionnaireRadios(browser, ['has_exports'])
 
     addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1)
@@ -524,8 +523,8 @@ module.exports = {
 
     addEntity(browser, 'has_exports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-12'], 1)
     rowIsEmpty(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
-		addValues(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
-		saveSubmission(browser, ['Submission Info'])
+    addValues(browser, 'substance-table', 'has_exports_tab', 2, row_values, modal_values)
+    saveSubmission(browser, ['Submission Info'])
 
     logout(browser)
     browser.end()
