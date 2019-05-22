@@ -236,7 +236,7 @@ def get_prodcons_data(period, parties):
             except ProdCons.DoesNotExist:
                 prodcons = None
 
-            if prodcons and prodcons.calculated_production:
+            if prodcons and prodcons.calculated_production is not None:
                 actual_prod = prodcons.calculated_production
                 if group not in to_report_groups:
                     limit_prod = '-'
@@ -247,7 +247,7 @@ def get_prodcons_data(period, parties):
                     actual_prod = '-'
 
             per_capita_cons = 0
-            if prodcons and prodcons.calculated_consumption:
+            if prodcons and prodcons.calculated_consumption is not None:
                 actual_cons = prodcons.calculated_consumption
                 per_capita_cons = round_half_up(
                     actual_cons / history.population,
@@ -262,7 +262,7 @@ def get_prodcons_data(period, parties):
                     actual_cons = '-'
 
             chng_prod = -100
-            if prodcons and prodcons.baseline_prod:
+            if prodcons and prodcons.baseline_prod is not None:
                 baseline_prod = prodcons.baseline_prod
                 if not isinstance(actual_prod, str) and actual_prod > 0 and baseline_prod != 0:
                     chng_prod = round_half_up(
@@ -273,7 +273,7 @@ def get_prodcons_data(period, parties):
                 baseline_prod = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
 
             chng_cons = -100
-            if prodcons and prodcons.baseline_cons:
+            if prodcons and prodcons.baseline_cons is not None:
                 baseline_cons = prodcons.baseline_cons
                 if not isinstance(actual_cons, str) and actual_cons > 0 and baseline_cons != 0:
                     chng_cons = round_half_up(
