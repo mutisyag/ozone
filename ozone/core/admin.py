@@ -265,7 +265,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
 
 @admin.register(Obligation)
 class ObligationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_default')
+    list_display = ('name', 'is_default', 'is_active')
     exclude = ('has_reporting_periods',)
     readonly_fields = ['_form_type']
 
