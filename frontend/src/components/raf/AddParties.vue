@@ -31,7 +31,7 @@
               v-translate="selected_countries.selected.length ? {length: selected_countries.selected.length} : {length: ''}"
             >Add %{length} countries</span>
           </b-btn>
-          <b-btn v-if="selected_countries.selected" @click="resetData">
+          <b-btn v-if="selected_countries.selected.length" @click="resetData">
             <span v-translate>Cancel</span>
           </b-btn>
         </b-btn-group>

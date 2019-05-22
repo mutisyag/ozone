@@ -8,14 +8,14 @@
         <p>You are about to submit your report.</p>
         <p>By clicking the OK button, you confirm that all blank cells and all substances not included are considered to have zero values.</p>
       </div>
-      <div v-if="questionnaireStatus.length">
-        <p>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form</p>
+      <div v-if="questionnaireStatus.length && !skipArt7Specific">
+        <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form.</b></p>
       </div>
-      <div v-if="uncheckedFlags.length">
-        <p>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}</p>
+      <div v-if="uncheckedFlags.length && !skipArt7Specific">
+        <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
       </div>
     </div>
-    <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags">
+    <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags && !skipArt7Specific">
       <b-row v-for="order in blank_flags" :key="order">
         <b-col cols="1">
           <fieldGenerator
@@ -48,12 +48,17 @@
 <script>
 import fieldGenerator from '@/components/common/form-components/fieldGenerator'
 import { getCommonLabels } from '@/components/common/dataDefinitions/labels'
+import flagMapping from '@/components/common/dataDefinitions/flagsMapping'
 
 export default {
   data() {
     return {
-      labels: null
+      labels: null,
+      flagMapping
     }
+  },
+  props: {
+    skipArt7Specific: Boolean
   },
   created() {
     this.labels = getCommonLabels(this.$gettext)
@@ -83,10 +88,14 @@ export default {
       return anweredYesNoData.map(tab => this.labels[tab])
     },
     uncheckedFlags() {
-      if (!this.$store.state.form.tabs.flags) {
+      if (!this.$store.state.form.tabs.flags || this.skipArt7Specific) {
         return []
       }
-      return Object.keys(this.formTabs.flags.form_fields).filter(flag => flag.includes('flag_has_reported') && !this.formTabs.flags.form_fields[flag].selected).map(flag => this.labels.flags[flag])
+      return Object.keys(this.formTabs.flags.form_fields).filter(
+        flag => flag.includes('flag_has_reported')
+        && !this.formTabs.flags.form_fields[flag].selected
+        && this.$store.state.initialData.controlledGroups.includes(this.flagMapping[flag])
+      ).map(flag => this.labels.flags[flag])
     }
   },
   methods: {

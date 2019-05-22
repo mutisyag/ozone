@@ -57,6 +57,8 @@ const state = {
     countryOptionsSubInfo: null,
     groupSubstances: null,
     substances: null,
+    controlledGroups: null,
+    approvedExemptionsList: null,
     partyRatifications: null,
     essenCritTypes: null,
     submissionFormats: null,

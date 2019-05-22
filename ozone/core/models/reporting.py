@@ -28,6 +28,7 @@ from ..exceptions import (
 
 __all__ = [
     'ModifyPreventionMixin',
+    'FormTypes',
     'Obligation',
     'Submission',
     'SubmissionInfo',
@@ -81,26 +82,42 @@ class FormTypes(enum.Enum):
     HAT = 'hat'
     OTHER = 'other'
     EXEMPTION = 'exemption'
+    TRANSFER = 'transfer'
 
 
 class Obligation(models.Model):
 
     NOT_CLONEABLE = [
-        'exemption',
+        FormTypes.EXEMPTION.value,
+        FormTypes.TRANSFER.value,
+    ]
+
+    AGGREGATABLE = [
+        FormTypes.ART7.value,
+        FormTypes.HAT.value,
     ]
 
     name = models.CharField(
         max_length=256, unique=True,
         help_text="A unique String value identifying this obligation."
     )
-    # TODO: obligation-party mapping!
 
     description = models.CharField(max_length=256, blank=True)
+
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Indicates whether reporting can be performed for this "
+                  "obligation."
+    )
 
     # Some obligations require immediate reporting each time an event happens,
     # instead of periodical reporting. This should get special treatment both
     # in backend and frontend.
-    has_reporting_periods = models.BooleanField(default=True)
+    has_reporting_periods = models.BooleanField(
+        default=True,
+        help_text="Indicates whether reporting is done periodically or upon "
+                  "certain events (e.g. transfers)"
+    )
 
     # The type of form used to submit data.
     # This will possibly get more complicated in the future
@@ -130,6 +147,14 @@ class Obligation(models.Model):
     @property
     def form_type(self):
         return self._form_type
+
+    @property
+    def is_not_cloneable(self):
+        return self.form_type in self.NOT_CLONEABLE
+
+    @property
+    def is_aggregateable(self):
+        return self.form_type in self.AGGREGATABLE
 
     def __str__(self):
         return self.name
@@ -202,7 +227,8 @@ class ReportingChannel(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        f'Unable to set reporting channel. Another reporting channel is already set as default for '
+                        f'Unable to set reporting channel. Another reporting '
+                        f'channel is already set as default for '
                         f'{unique_fields[field]}.'
                     )
                 )
@@ -239,13 +265,14 @@ class Submission(models.Model):
         'article7emissions',
         'highambienttemperatureproductions',
         'highambienttemperatureimports',
-        'transfers',
         'dataothers',
         'nominations',
         'exemptionapproveds',
         'rafreports',
     ]
 
+    # Maps flags names to group IDs, as group IDs are the closest to immutable
+    # field on the Group model.
     GROUP_FLAGS_MAPPING = {
         'flag_has_reported_a1': 'AI',
         'flag_has_reported_a2': 'AII',
@@ -257,6 +284,10 @@ class Submission(models.Model):
         'flag_has_reported_c3': 'CIII',
         'flag_has_reported_e': 'EI',
         'flag_has_reported_f': 'F',
+    }
+    FLAG_GROUPS_MAPPING = {
+        value: key
+        for key, value in GROUP_FLAGS_MAPPING.items()
     }
 
     # TODO: this implements the `submission_type` field from the
@@ -364,60 +395,59 @@ class Submission(models.Model):
         verbose_name='Confirmed blanks',
     )
     flag_has_reported_a1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='Has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
-    # TODO: why is the default here False? does it have other implications?
     flag_has_reported_f = models.BooleanField(
         default=False,
         verbose_name='Has reported F',
@@ -722,12 +752,12 @@ class Submission(models.Model):
         """
         if (
             self.info.reporting_officer is ''
-            or self.info.postal_address is '' and self.info.email is None
+            or self.info.email is None
             or self.filled_by_secretariat and self.submitted_at is None
         ):
             return False
 
-        if self.obligation.form_type == 'art7':
+        if self.obligation.form_type == FormTypes.ART7.value:
             if (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
@@ -760,7 +790,7 @@ class Submission(models.Model):
             return []
 
         # Treat exemption case separately
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if user.is_secretariat:
                 if self.in_initial_state:
                     return ['flag_emergency',]
@@ -931,7 +961,7 @@ class Submission(models.Model):
         Returns whether user has edit rights on this submission based on
         user type & who it was created by (state not taken into account).
         """
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if (
                 user.is_secretariat
                 or user.party == self.party and not self.filled_by_secretariat
@@ -948,7 +978,7 @@ class Submission(models.Model):
     def can_edit_data(self, user):
         if self.has_edit_rights(user):
             if (
-                self.obligation.form_type == 'exemption'
+                self.obligation.form_type == FormTypes.EXEMPTION.value
                 and not user.is_secretariat and user.party is not None
             ):
                 return self.in_initial_state
@@ -1087,13 +1117,13 @@ class Submission(models.Model):
                 )
             )
 
-        if self.obligation.form_type in self.obligation.NOT_CLONEABLE:
+        if self.obligation.is_not_cloneable:
             return (
                 False,
                 ValidationError(
                     _(
-                        "You cannot create a new version of this submission with this type of "
-                        "obligation"
+                        "You cannot create a new version of this submission "
+                        "with this type of obligation"
                     )
                 )
             )
@@ -1105,8 +1135,8 @@ class Submission(models.Model):
                     False,
                     ValidationError(
                         _(
-                            "You cannot create a new version of this submission from a previous "
-                            "period if it's superseded."
+                            "You cannot create a new version of this submission"
+                            " from a previous period if it's superseded."
                         )
                     )
                 )
@@ -1267,7 +1297,8 @@ class Submission(models.Model):
                 latest.flag_superseded = False
                 latest.save()
 
-        # Populate submission-specific aggregated data
+        # Populate submission-specific aggregated data. Kept out of the atomic
+        # block due to execution time.
         if latest:
             latest.fill_aggregated_data()
         else:
@@ -1295,7 +1326,7 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
-        if self.obligation.form_type == 'exemption':
+        if self.obligation.form_type == FormTypes.EXEMPTION.value:
             if user.is_secretariat and not self.in_final_state:
                 return True
 
@@ -1338,33 +1369,47 @@ class Submission(models.Model):
 
     def purge_aggregated_data(self):
         """
-        This might need to become smarter if other data sources than Article 7
-        are added to populate some of the fields in the ProdCons model.
+        Deletes the aggregated data generated by this submission.
         """
+        if not self.obligation.is_aggregateable:
+            return
+
         groups = self.get_reported_groups()
 
-        # Set to 0 all values that had been populated by this submission
+        # Set to 0 all values that had been populated by this submission.
+        # Any aggregation row that becomes full-zero after that is deleted.
         for related in self.RELATED_DATA:
+            # Clear ODP aggregations
             related_manager = getattr(self, related)
             if hasattr(related_manager.model, 'clear_aggregated_data'):
                 related_manager.model.clear_aggregated_data(
                     submission=self, reported_groups=groups
                 )
-
-        # And delete all remaining full-zero rows
-        ProdCons.cleanup_aggregations(self.party, self.reporting_period)
+            # Clear MT aggregations
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'clear_aggregated_mt_data'):
+                    related_manager.model.clear_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def fill_aggregated_data(self):
         """
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
         """
+        if not self.obligation.is_aggregateable:
+            return
+
         # Cleanup aggregated data that's become stale
         self.purge_aggregated_data()
 
         groups = self.get_reported_groups()
 
-        # Create all-zero rows for all reported groups
+        # Create all-zero ProdCons rows for all reported groups.
+        # For ProdConsMT this is not necessary.
         for group in groups:
             ProdCons.objects.get_or_create(
                 party=self.party,
@@ -1379,10 +1424,17 @@ class Submission(models.Model):
                     related_manager.model.fill_aggregated_data(
                         submission=self, reported_groups=groups
                     )
+                if hasattr(related_manager.model, 'fill_aggregated_mt_data'):
+                    related_manager.model.fill_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        )
+                    )
 
     def get_aggregated_data(self):
         """
-        Returns list of non-persistent calculated aggregated data for this
+        Returns dict of non-persistent calculated aggregated data for this
         submission, without touching the database.
         """
 
@@ -1393,11 +1445,33 @@ class Submission(models.Model):
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_data'):
                     related_manager.model.get_aggregated_data(
-                        submission=self, reported_groups=group_mapping
+                        submission=self,
+                        reported_groups=group_mapping,
                     )
 
         return group_mapping
 
+    def get_aggregated_mt_data(self):
+        """
+        Returns dict of non-persistent calculated MT aggregated data for this
+        submission, without touching the database.
+        """
+
+        subst_mapping = {}
+
+        for related in self.RELATED_DATA:
+            related_manager = getattr(self, related)
+            if related_manager.count() > 0:
+                if hasattr(related_manager.model, 'get_aggregated_mt_data'):
+                    related_manager.model.get_aggregated_mt_data(
+                        submission=self,
+                        queryset=related_manager.all().filter(
+                            substance__isnull=False
+                        ),
+                        reported_substances=subst_mapping,
+                    )
+
+        return subst_mapping
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
@@ -1484,12 +1558,10 @@ class Submission(models.Model):
                 self.version = current_submissions.latest('version').version + 1
 
             # On first save we need to instantiate the submission's workflow
-            # TODO: get the proper workflow based on obligation and context
-            # (e.g. fast-tracked secretariat submissions).
-            # For now we will naively instantiate all submissions with
-            # the default article 7 workflow.
-            if self.obligation.form_type == 'exemption':
+            if self.obligation.form_type == FormTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
+            elif self.obligation.form_type == FormTypes.TRANSFER.value:
+                self._workflow_class = 'default_transfer'
             else:
                 self._workflow_class = 'default'
             self._current_state = \
@@ -1503,6 +1575,16 @@ class Submission(models.Model):
                 self.reporting_channel = ReportingChannel.get_default(
                     self.created_by
                 )
+
+            # Prefill Art 7 has_reported flags
+            if self.obligation.form_type == FormTypes.ART7.value:
+                if self.cloned_from:
+                    for flag in self.GROUP_FLAGS_MAPPING.keys():
+                        setattr(self, flag, getattr(self.cloned_from, flag))
+                else:
+                    groups = Group.get_report_groups(self.party, self.reporting_period)
+                    for g in groups:
+                        setattr(self, self.FLAG_GROUPS_MAPPING[g.group_id], True)
 
             self.clean()
             ret = super().save(

@@ -11,10 +11,17 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   forms_others
    install
-   deploy
-   docker_ec2
-   tests
+   notifications
+   oauth
+   roles
+   stories
+   translations
+   usecases
+   wip
+   workflow
+
 
 
 
@@ -22,5 +29,4 @@ Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`

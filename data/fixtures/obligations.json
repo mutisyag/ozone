@@ -6,6 +6,7 @@
       "name": "Article 7 - Data Reporting",
       "description": "Data forms 1-6",
       "_form_type": "art7",
+      "is_active": true,
       "has_reporting_periods": true,
       "is_default": true,
       "sort_order": 10
@@ -18,6 +19,7 @@
       "name": "Accounting for Essential and Critical uses (RAF)",
       "description": "Reporting account format",
       "_form_type": "essencrit",
+      "is_active": true,
       "has_reporting_periods": true,
       "sort_order": 50
     }
@@ -29,6 +31,7 @@
       "name": "HAT Exemption: Imports and Production",
       "description": "Data forms 7 and 8",
       "_form_type": "hat",
+      "is_active": false,
       "has_reporting_periods": true,
       "sort_order": 70
     }
@@ -40,6 +43,7 @@
       "name": "Article 2 (p. 5, 5 bis, 7) - Transfer of production/consumption rights",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 40
@@ -52,6 +56,7 @@
       "name": "Laboratory and analytical uses (dec. VI/9(p. 3) and annex II of 6th MOP report)",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 80
@@ -64,6 +69,7 @@
       "name": "Process agent uses (dec. X/14)",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 60
@@ -76,6 +82,7 @@
       "name": "Article 4B - Licensing information",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 30
@@ -88,6 +95,7 @@
       "name": "Article 9 - Research, development, public awareness and exchange of information",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 20
@@ -100,6 +108,7 @@
       "name": "Requests for changes in baseline data (decs. XIII/15(p. 5) and XV/19)",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 90
@@ -112,6 +121,7 @@
       "name": "Other information",
       "description": "",
       "_form_type": "other",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 110
@@ -124,6 +134,7 @@
       "name": "Nominations for Essential- and Critical-use Exemptions (EUN/CUN)",
       "description": "",
       "_form_type": "exemption",
+      "is_active": true,
       "has_reporting_periods": true,
       "other": false,
       "sort_order": 100

@@ -3,11 +3,20 @@
     <HeaderDropdown v-if="$store.state.currentUser" class="mr-3" right>
       <template slot="header">
         {{currentUserName}}
+        <span class="cog"></span>
+        &nbsp;
+        &nbsp;
+        &nbsp;
         <span
-          style="font-size: 1.2rem;"
           v-if="currentCountryIso"
-          :class="`flag-icon flag-icon-${currentCountryIso}`"
+          :class="`header-flag flag-icon flag-icon-${currentCountryIso}`"
         ></span>
+        <span
+          v-if="currentCountryIso"
+          style="vertical-align: -1px"
+        >
+          {{this.$language.available[this.$language.current]}}
+        </span>
       </template>
       <template slot="dropdown">
         <b-dropdown-header tag="div" class="text-center">

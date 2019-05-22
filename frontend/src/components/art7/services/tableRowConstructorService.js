@@ -141,16 +141,6 @@ export default {
             errors.push($gettext('Please fill-in column Amount of generated emissions (6)'))
           }
 
-          if (valueConverter(this.quantity_generated.selected) < doSum([
-            this.quantity_captured_all_uses.selected,
-            this.quantity_captured_feedstock.selected,
-            this.quantity_captured_for_destruction.selected,
-            this.quantity_feedstock.selected,
-            this.quantity_destroyed.selected
-          ])) {
-            errors.push($gettext('Total amount generated (2) must be greater than the sum of Amount generated and captured (3), Amount used for feedstock without prior capture (4) and Amount destroyed without prior capture (5)'))
-          }
-
           if (valueConverter(this.quantity_captured_all_uses.selected)
 					|| valueConverter(this.quantity_captured_feedstock.selected)
 					|| valueConverter(this.quantity_captured_for_destruction.selected)) {
@@ -332,20 +322,20 @@ export default {
           if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
             errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
           }
-          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components (6)'))
           }
         }
 
         if (this.skipValidation === 2) {
           errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components for all exporting parties'))
-          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
         }
 
         if (this.skipValidation === 1) {
-          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
+          if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected, this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
         }

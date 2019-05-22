@@ -3,7 +3,7 @@
     <h5
       class="errorHeading"
       v-if="$store.state.form.tabs.questionaire_questions.form_fields[tabName].selected === false && tab_info.form_fields.length"
-    >The data in this form will not be saved because you have selected in the questionnarie "no" for this section</h5>
+    >The data in this form will not be saved because you have selected in the questionnaire "no" for this section</h5>
     <div class="form-sections">
       <div class="table-wrapper">
         <div class="table-title mb-3">
@@ -95,8 +95,7 @@
           </template>
         </b-table>
       </div>
-
-      <b-btn id="add-facility-button" class="mb-2" variant="primary" @click="addField">
+      <b-btn v-if="$store.getters.can_edit_data" id="add-facility-button" class="mb-2" variant="primary" @click="addField">
         <span v-translate>Add facility</span>
       </b-btn>
     </div>

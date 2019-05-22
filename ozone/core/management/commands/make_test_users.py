@@ -138,7 +138,7 @@ class Command(BaseCommand):
                         **details,
                     )
                     obj.save()
-                    logger.info("Created user %s/%s", user, password)
+                    logger.debug("Created user %s/%s", user, password)
                 except IntegrityError:
                     logger.warning("%s already existed, skipping.", user)
                     continue

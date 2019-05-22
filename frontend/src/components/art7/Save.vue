@@ -5,7 +5,7 @@ export default {
   mixins: [SaveMixin],
   methods: {
     alertUnsavedData(tabName, tab, url) {
-      const answer = window.confirm(`${tabName}: ${this.$gettext('You have unsaved data that will be deleted because of the "No" selected in questionnaire for that specific section. Are you sure yo want to save that form ?')}`)
+      const answer = window.confirm(`${this.$gettextInterpolate('Data in form "%{tab}" will be removed, because you have chosen "No" in the questionnaire for the corresponding question.', { tab: this.labels[tabName] })}`)
       if (answer) {
         this.$store.dispatch('removeDataFromTab', tabName).then(() => {
           this.submitData(tab, url)

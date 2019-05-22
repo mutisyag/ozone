@@ -1,4 +1,5 @@
 import { doSum } from '@/components/common/services/utilsService'
+import { Decimal } from 'decimal.js'
 
 const sumBiggerThanParts = (state, tab, partyField) => {
   if (!state.form.tabs[tab].form_fields.length) return {}
@@ -26,23 +27,23 @@ const sumBiggerThanParts = (state, tab, partyField) => {
     return {}
   }
   Object.keys(multipleSubstances).forEach(key => {
-    console.log(key)
     finalError[key] = {
       left: 0,
       right: 0
     }
 
     multipleSubstances[key].forEach(entry => {
-      finalError[key].left += doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected])
-      finalError[key].right += doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment.selected])
+      finalError[key].left = Decimal.add(doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected]), finalError[key].left).toNumber()
+      finalError[key].right = Decimal.add(doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment.selected]), finalError[key].right).toNumber()
     })
   })
   Object.keys(finalError).forEach(key => {
     // This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
     let multiValidationState = 1
-
+    console.log('finalerror', finalError[key].left, finalError[key].right)
     if (finalError[key].left >= finalError[key].right) {
       multiValidationState = 1
+      delete finalError[key]
     } else {
       multiValidationState = 2
     }
@@ -123,8 +124,8 @@ const getters = {
     const { currentUser } = state
     let currentCountry = null
     if (!currentUser || !currentUser.party) return
-    if (state.initialData.countryOptions) {
-      currentCountry = state.initialData.countryOptions.find(c => currentUser.party === c.value)
+    if (state.initialData.countryOptionsSubInfo) {
+      currentCountry = state.initialData.countryOptionsSubInfo.find(c => currentUser.party === c.value)
     }
     if (state.dashboard.parties && state.dashboard.parties.length) {
       currentCountry = state.dashboard.parties.find(c => currentUser.party === c.value)

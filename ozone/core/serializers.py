@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -32,6 +33,7 @@ from .models import (
     Article7NonPartyTrade,
     Article7Emission,
     HighAmbientTemperatureProduction,
+    Transfer,
     DataOther,
     SubmissionFile,
     UploadToken,
@@ -44,6 +46,7 @@ from .models import (
     RAFImport,
     SubmissionFormat,
     ProdCons,
+    ProdConsMT,
     Limit,
 )
 
@@ -546,7 +549,7 @@ def get_field_value(initial_data_entry, field_name):
     The UI can send None as a value in these fields.
     """
     ret = initial_data_entry.get(field_name, 0)
-    return ret if ret is not None else 0
+    return Decimal(repr(ret)) if ret is not None else Decimal(0)
 
 
 def validate_import_export_data(
@@ -590,7 +593,7 @@ def validate_import_export_data(
     # Calculate the sums of quantities and totals for each substance
     if related_substances:
         sums_dictionary = {
-            substance: {'totals_sum': 0, 'quantities_sum': 0}
+            substance: {'totals_sum': Decimal(0), 'quantities_sum': Decimal(0)}
             for substance in related_substances
         }
         for entry in initial_data:
@@ -602,6 +605,7 @@ def validate_import_export_data(
 
                 for substance, percentage in blend_subs:
                     if substance in related_substances:
+                        percentage = Decimal(repr(percentage))
                         sums_dictionary[substance]['totals_sum'] += sum(
                             [
                                 get_field_value(entry, field) * percentage
@@ -858,7 +862,7 @@ class ExemptionApprovedListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = ['is_emergency']
 
 
 class ExemptionApprovedSerializer(
@@ -885,7 +889,7 @@ class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = ['is_emergency']
 
     imports = RAFImportSerializer(many=True)
 
@@ -947,6 +951,12 @@ class RAFSerializer(
     class Meta:
         list_serializer_class = RAFListSerializer
         model = RAFReport
+        exclude = ('submission',)
+
+
+class TransferSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transfer
         exclude = ('submission',)
 
 
@@ -1395,6 +1405,9 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    # Frontend needs both reporting period name and id.
+    reporting_period_id = serializers.SerializerMethodField()
+
     in_initial_state = serializers.SerializerMethodField()
 
     # Permission-related fields
@@ -1432,6 +1445,7 @@ class SubmissionSerializer(
 
         base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
+            'reporting_period_id',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -1487,6 +1501,9 @@ class SubmissionSerializer(
             'can_edit_data', 'can_delete_data',
             'created_by', 'last_edited_by',
         )
+
+    def get_reporting_period_id(self, obj):
+        return obj.reporting_period.id
 
     def get_in_initial_state(self, obj):
         return obj.in_initial_state
@@ -1561,7 +1578,6 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
             validated_data['created_by'] = self.context['request'].user
         if 'last_edited_by' not in validated_data:
             validated_data['last_edited_by'] = self.context['request'].user
-
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
@@ -1670,6 +1686,13 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
+        fields = "__all__"
+
+
+class AggregationMTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdConsMT
         fields = "__all__"
 
 

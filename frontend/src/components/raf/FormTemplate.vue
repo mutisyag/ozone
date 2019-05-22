@@ -226,7 +226,7 @@
             <span v-translate>The values are saved automatically in the table, as you type.</span>
           </b>
         </p>
-        <b-row v-if="modal_data.field.substance.selected">
+        <b-row v-if="modal_data.field.substance.selected && !isCritical">
           <b-col>
             <span v-translate>Change substance</span>
           </b-col>
@@ -274,7 +274,7 @@
           :key="`modal_${order_index}`"
         >
           <b-row class="special">
-            <b-col cols="3">{{labels[order]}}</b-col>
+            <b-col cols="3">{{specialLabels(order, modal_data.field.substance.selected)}}</b-col>
             <b-col cols="6">
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -337,12 +337,14 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import addParties from '@/components/raf/AddParties'
+import DefaultAside from '@/components/raf/form-components/DefaultAside'
 
 export default {
   mixins: [FormTemplateMxin],
   components: {
     ValidationLabel,
-    addParties
+    addParties,
+    DefaultAside
   },
   data() {
     return {
@@ -372,8 +374,21 @@ export default {
     }
   },
   methods: {
+    specialLabels(field, substance) {
+      if (this.isCritical) {
+        console.log('substance - ', substance)
+        return this.labels.critical[field]
+      }
+      return this.labels[field]
+    }
   },
   computed: {
+    isCritical() {
+      return this.modal_data.field.substance.selected && this.$store.state.initialData.substances.find(s => parseInt(s.value) === parseInt(this.modal_data.field.substance.selected)).has_critical_uses
+    },
+    currentPeriod() {
+      return this.$store.state.current_submission.reporting_period
+    },
     tableItems() {
       const tableFields = []
       this.tab_info.form_fields.forEach(form_field => {
@@ -385,6 +400,7 @@ export default {
                 this.typeOfDisplayObj[key]
               ][form_field[key].selected]
               : (tableRow[key] = form_field[key].selected)
+            tableRow.year = this.currentPeriod
           }
         })
         if (Object.keys(tableRow).length) {
@@ -413,6 +429,7 @@ export default {
                 this.typeOfDisplayObj[key]
               ][element[key].selected]
               : (tableRow[key] = element[key].selected)
+            tableRow.year = this.currentPeriod
           }
         })
         if (Object.keys(tableRow).length) {
@@ -432,15 +449,12 @@ export default {
     tableFieldsCritical() {
       const tableHeaders = []
       const options = {}
-      this.tab_info.section_subheaders.forEach((form_field) => {
+      this.tab_info.section_subheaders_critical.forEach((form_field) => {
         const header = {
           key: form_field.name,
           label: form_field.label,
           width: form_field.width || null,
           ...options
-        }
-        if (form_field.name === 'on_hand_end_year') {
-          header.label = `M<br>${this.$gettext('On hand end of year')}<br>(I-J-K-L)`
         }
         tableHeaders.push(header)
       })
@@ -470,6 +484,9 @@ export default {
   table {
     .multiselect__content-wrapper {
       min-width: 300px;
+    }
+    td {
+      vertical-align: middle!important;
     }
   }
 </style>

@@ -76,6 +76,19 @@
 
       <b-button-group class="pull-right actions mt-2 mb-2">
         <b-btn
+          variant="outline-dark"
+          @click="$store.dispatch('downloadStuff',
+						{
+							url: `${submission}export_pdf/`,
+							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
+						})"
+        >Export as PDF</b-btn>
+        <b-btn @click="$refs.history_modal.show()" variant="outline-dark">
+          <span v-translate>Versions</span>
+        </b-btn>
+      </b-button-group>
+      <b-button-group class="pull-right actions mt-2 mb-2 mr-5">
+        <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
           variant="outline-success"
@@ -90,26 +103,18 @@
         >
           <span>{{labels[transition]}}</span>
         </b-btn>
+
         <b-btn
           variant="outline-primary"
           @click="clone($route.query.submission)"
           size="sm"
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
-        >Revise</b-btn>
-        <b-btn
-          variant="outline-primary"
-          @click="$store.dispatch('downloadStuff',
-					{
-						url: `${submission}export_pdf/`,
-						fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-					})"
-        >Export as PDF</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          <span v-translate>Versions</span>
+        >Revise
         </b-btn>
         <b-btn
           @click="removeSubmission"
+          id="delete-button"
           v-if="$store.getters.can_edit_data"
           variant="outline-danger"
         >
@@ -138,6 +143,7 @@
       v-on:removeTransition="currentTransition = null"
       :submission="submission"
       :transition="currentTransition"
+      :skipArt7Specific="true"
     ></TransitionQuestions>
   </div>
 </template>

@@ -1,67 +1,89 @@
 from django.utils.translation import gettext_lazy as _
-
 from reportlab.platypus import Paragraph
-from reportlab.platypus import PageBreak
-
-from .constants import TABLE_EMISSIONS_HEADER
-from .constants import TABLE_EMISSIONS_HEADER_STYLE
-from .constants import TABLE_ROW_EMPTY_EMISSIONS
-from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from reportlab.lib import colors
 
 from ..util import get_big_float
 from ..util import get_comments_section
-from ..util import p_c
-from ..util import page_title_section
-from ..util import table_from_data
-from ..util import STYLES
+from ..util import get_remarks
+from ..util import rows_to_table
+from ..util import p_c, p_l, p_r
+from ..util import h2_style
 from ..util import TABLE_STYLES
+from ..util import col_widths
 
 
-def to_row_facility(obj):
+def table_row(obj):
+    fields = (
+        obj.quantity_generated,
+        obj.quantity_captured_all_uses,
+        obj.quantity_captured_feedstock,
+        obj.quantity_captured_for_destruction,
+        obj.quantity_feedstock,
+        obj.quantity_destroyed,
+        obj.quantity_emitted,
+    )
     return (
-        p_c(_(obj.facility_name)),
-        p_c(_(get_big_float(obj.quantity_generated or ''))),
-        p_c(_(get_big_float(obj.quantity_captured_all_uses or ''))),
-        p_c(_(get_big_float(obj.quantity_captured_feedstock or ''))),
-        p_c(_(get_big_float(obj.quantity_captured_for_destruction or ''))),
-        p_c(_(get_big_float(obj.quantity_feedstock or ''))),
-        p_c(_(get_big_float(obj.quantity_destroyed or ''))),
-        p_c(_(get_big_float(obj.quantity_emitted or ''))),
+        p_l(obj.facility_name),
+    ) + tuple(
+        p_r(get_big_float(field))
+        for field in fields
+    ) + (
+        p_l(get_remarks(obj)),
     )
 
-def mk_table_facilities(submission):
-    emissions = submission.article7emissions.all()
-    return map(to_row_facility, emissions)
 
 def export_emission(submission):
-    table_facilities = tuple(mk_table_facilities(submission))
+    data = submission.article7emissions.all()
+    comments = get_comments_section(submission, 'emissions')
+    if not data and not any(comments):
+        return tuple()
 
-    comments_section = get_comments_section(submission, 'emissions')
+    subtitle = Paragraph(
+        "%s (%s)" % (_("Emissions of HFC-23"), _("metric tonnes")),
+        h2_style
+    )
 
-    style = (
-        TABLE_EMISSIONS_HEADER_STYLE + TABLE_STYLES + (
-            () if table_facilities else TABLE_ROW_EMPTY_STYLE_IMP_EXP
+    table_header = (
+        (
+            p_c(_('Facility name or identifier')),
+            p_c(_('Total amount generated')),
+            p_c(_('Amount generated and captured')),
+            '',
+            '',
+            p_c(_('Amount used for feedstock without prior capture')),
+            p_c(_('Amount destroyed without prior capture')),
+            p_c(_('Amount of generated emissions')),
+            p_c(_('Remarks')),
+        ),
+        (
+            '',
+            '',
+            p_c(_('For all uses')),
+            p_c(_('For feedstock use in your country')),
+            p_c(_('For destruction')),
+            '',
+            '',
+            '',
+            '',
         )
     )
-
-    facilities_table = table_from_data(
-        data=table_facilities, isBlend=False,
-        header=TABLE_EMISSIONS_HEADER,
-        colWidths=None, style=style, repeatRows=2,
-        emptyData=TABLE_ROW_EMPTY_EMISSIONS
+    table_style = TABLE_STYLES + (
+        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+        ('SPAN', (0, 0), (0, 1)),  # Facility
+        ('SPAN', (1, 0), (1, 1)),  # Total amount
+        ('SPAN', (2, 0), (4, 0)),  # Amount generated and captured
+        ('SPAN', (5, 0), (5, 1)),  # Feedstock
+        ('SPAN', (6, 0), (6, 1)),  # Destroyed
+        ('SPAN', (7, 0), (7, 1)),  # Emissions
+        ('SPAN', (8, 0), (8, 1)),  # Remarks
     )
 
-    emissions_page = (
-        Paragraph(_('6.1 Facilities'), STYLES['Heading2']),
-        facilities_table,
-        PageBreak(),
-        Paragraph(_('6.2 Comments'), STYLES['Heading2'])
+    table = rows_to_table(
+        table_header,
+        tuple(map(table_row, data)),
+        col_widths([4, 2.5, 2.4, 2.8, 2.4, 2.6, 2.6, 2.4, 5.6]),
+        table_style
     )
 
-    return page_title_section(
-        title=_('DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES '
-                'MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES'),
-        explanatory=_(
-            'In metric tons, not ODP or CO2-equivalent tonnes.'
-        )
-    ) + emissions_page + comments_section
+    return (subtitle, table) + comments

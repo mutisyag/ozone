@@ -1,44 +1,34 @@
 from django.utils.translation import gettext_lazy as _
-
 from reportlab.platypus import Paragraph
-from reportlab.platypus import PageBreak
-
-from .constants import TABLE_BLENDS_COMP_STYLE
-from .constants import TABLE_NONP_HEADER
-from .constants import TABLE_NONP_HEADER_STYLE
-from .constants import TABLE_NONP_SUBS_WIDTHS
-from .constants import TABLE_NONP_COMP_WIDTHS
-from .constants import TABLE_NONP_COMP_HEADER
-from .constants import TABLE_ROW_EMPTY_NONP
-from .constants import TABLE_ROW_EMPTY_STYLE_IMP_EXP
+from reportlab.lib import colors
 
 from ..util import get_big_float
 from ..util import get_comments_section
-from ..util import mk_table_blends
-from ..util import mk_table_substances
-from ..util import p_c
-from ..util import page_title_section
-from ..util import table_from_data
 from ..util import to_precision
-from ..util import STYLES
+
+from ..util import exclude_blend_items
+from ..util import get_group_name
+from ..util import get_substance_or_blend_name
+from ..util import rows_to_table
+from ..util import get_remarks
+from ..util import p_c, p_r, p_l
+from ..util import h2_style
 from ..util import TABLE_STYLES
+from ..util import col_widths
 
 
-def big_table_row(obj, isBlend):
-    col_1 = obj.blend.type if isBlend else obj.substance.group.group_id
-    col_2 = obj.blend.blend_id if isBlend else obj.substance.name
-
+def table_row(obj):
     return (
-        p_c(_(col_1)),
-        p_c(_(col_2)),
-        p_c(_(get_big_float(obj.trade_party.name))) if obj.trade_party else '',
-        p_c(_(get_big_float(obj.quantity_import_new or ''))),
-        p_c(_(get_big_float(obj.quantity_import_recovered or ''))),
-        p_c(_(get_big_float(obj.quantity_export_new or ''))),
-        p_c(_(get_big_float(obj.quantity_export_recovered or ''))),
-        p_c(_(get_big_float(obj.remarks_party or ''))),
-        p_c(_(get_big_float(obj.remarks_os or ''))),
+        p_c(get_group_name(obj)),
+        p_l(get_substance_or_blend_name(obj)),
+        p_l(obj.trade_party.name if obj.trade_party else ''),
+        p_r(get_big_float(obj.quantity_import_new)),
+        p_r(get_big_float(obj.quantity_import_recovered)),
+        p_r(get_big_float(obj.quantity_export_new)),
+        p_r(get_big_float(obj.quantity_export_recovered)),
+        p_l(get_remarks(obj)),
     )
+
 
 def component_row(component, blend):
     ptg = component.percentage
@@ -52,52 +42,58 @@ def component_row(component, blend):
         to_precision(blend.quantity_export_recovered * ptg, 3),
     )
 
+
 def export_nonparty(submission):
-    grouping = submission.article7nonpartytrades
+    data = exclude_blend_items(submission.article7nonpartytrades)
+    comments = get_comments_section(submission, 'nonparty')
 
-    comments_section = get_comments_section(submission, 'nonparty')
+    if not data and not any(comments):
+        return tuple()
 
-    table_substances = tuple(mk_table_substances(grouping, big_table_row))
-    table_blends = tuple(mk_table_blends(
-        grouping, big_table_row, component_row, TABLE_NONP_COMP_HEADER,
-        TABLE_BLENDS_COMP_STYLE, TABLE_NONP_COMP_WIDTHS
-    ))
+    subtitle = Paragraph(
+        _("Imports from and/or exports to non-parties"),
+        h2_style
+    )
 
-    style = lambda data: (
-        TABLE_NONP_HEADER_STYLE + TABLE_STYLES + (
-            () if data else TABLE_ROW_EMPTY_STYLE_IMP_EXP
+    table_header = (
+        (
+            p_c(_('Annex/Group')),
+            p_c(_('Substance or mixture')),
+            p_c(_('Exporting or destination country/region/territory')),
+            p_c(_('Quantity of imports from non-parties')),
+            '',
+            p_c(_('Quantity of exports from non-parties')),
+            '',
+            p_c(_('Remarks')),
+        ),
+        (
+            '',
+            '',
+            '',
+            p_c(_('New imports')),
+            p_c(_('Recovered and reclaimed imports')),
+            p_c(_('New exports')),
+            p_c(_('Recovered and reclaimed exports')),
+            '',
         )
     )
 
-    subst_table = table_from_data(
-        data=table_substances, isBlend=False,
-        header=TABLE_NONP_HEADER(False),
-        colWidths=TABLE_NONP_SUBS_WIDTHS,
-        style=style(table_substances),
-        repeatRows=2, emptyData=TABLE_ROW_EMPTY_NONP
+    table_style = TABLE_STYLES + (
+        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+        ('SPAN', (0, 0), (0, 1)),  # Annex group
+        ('SPAN', (1, 0), (1, 1)),  # Substance
+        ('SPAN', (2, 0), (2, 1)),  # Party
+        ('SPAN', (3, 0), (4, 0)),  # Imports
+        ('SPAN', (5, 0), (6, 0)),  # Exports
+        ('SPAN', (7, 0), (7, 1)),  # Remarks
     )
 
-    blends_table = table_from_data(
-        data=table_blends, isBlend=True,
-        header=TABLE_NONP_HEADER(True),
-        colWidths=TABLE_NONP_SUBS_WIDTHS,
-        style=style(table_blends),
-        repeatRows=2, emptyData=TABLE_ROW_EMPTY_NONP
+    table = rows_to_table(
+        table_header,
+        tuple(map(table_row, data)),
+        col_widths([2.1, 5, 4, 2.3, 2.6, 2.3, 2.6, 6.4]),
+        table_style
     )
 
-    nonp_page = (
-        Paragraph(_('5.1 Substances'), STYLES['Heading2']),
-        subst_table,
-        PageBreak(),
-        Paragraph(_('5.2 Blends'), STYLES['Heading2']),
-        blends_table,
-        PageBreak(),
-        Paragraph(_('5.3 Comments'), STYLES['Heading2'])
-    )
-
-    return page_title_section(
-        title=_('IMPORTS FROM AND/OR EXPORTS TO NON PARTIES'),
-        explanatory=_(
-            'in tonnes (not ODP or GWP tonnes) Annex A, B, C and E substances'
-        )
-    ) + nonp_page + comments_section
+    return (subtitle, table) + comments

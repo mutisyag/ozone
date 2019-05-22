@@ -45,6 +45,8 @@ from .models import (
     Limit,
     PartyRatification,
     CriticalUseCategory,
+    FormTypes,
+    Transfer,
 )
 
 
@@ -219,20 +221,20 @@ class AnnexAdmin(admin.ModelAdmin):
 
 @admin.register(Group)
 class GroupAdmin(admin.ModelAdmin):
-    list_display = ('group_id', 'name', 'description')
+    list_display = ('group_id', 'name', 'description', 'name_alt', 'description_alt', 'control_treaty', 'report_treaty')
     list_filter = ('annex', 'control_treaty', 'report_treaty')
 
 
 @admin.register(Substance)
 class SubstanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'description')
+    list_display = ('name', 'group', 'description', 'sort_order')
     list_filter = ('group',)
     search_fields = ['name', 'description']
 
 
 @admin.register(Blend)
 class BlendAdmin(admin.ModelAdmin):
-    list_display = ('blend_id', 'composition', 'type', 'party')
+    list_display = ('blend_id', 'composition', 'type', 'party', 'sort_order')
     list_filter = (
         'type',
         ('party', MainPartyFilter),
@@ -263,7 +265,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
 
 @admin.register(Obligation)
 class ObligationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'is_default')
+    list_display = ('name', 'is_default', 'is_active')
     exclude = ('has_reporting_periods',)
     readonly_fields = ['_form_type']
 
@@ -460,13 +462,37 @@ class LimitAdmin(admin.ModelAdmin):
 class PartyRatificationAdmin(admin.ModelAdmin):
     list_display = ('party', 'treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
     list_filter = (('party', MainPartyFilter), 'treaty', 'ratification_type')
-    search_fields = ['party', 'treaty']
+    search_fields = ['party__name', 'treaty__name']
 
 
 @admin.register(CriticalUseCategory)
 class CriticalUseCategoryAdmin(admin.ModelAdmin):
     list_display = ('name', )
     search_fields = ['name']
+
+
+@admin.register(Transfer)
+class TransferAdmin(admin.ModelAdmin):
+    list_display = (
+        'source_party', 'destination_party', 'substance', 'transferred_amount',
+    )
+    search_fields = ('source_party', 'destination_party', 'substance',)
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
+            obligation___form_type=FormTypes.TRANSFER.value
+        )
+        if obj is not None:
+            source_sub_queryset = source_sub_queryset.filter(
+                party=obj.source_party
+            )
+            dest_sub_queryset = dest_sub_queryset.filter(
+                party=obj.destination_party
+            )
+        form.base_fields['source_party_submission'].queryset = source_sub_queryset
+        form.base_fields['destination_party_submission'].queryset = dest_sub_queryset
+        return form
 
 
 # register all adminactions

@@ -1,17 +1,20 @@
 import re
 
+from copy import deepcopy
+from collections import OrderedDict
+from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 from functools import partial
 
 from reportlab.platypus import ListFlowable
 from reportlab.platypus import ListItem
-from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Spacer
 from reportlab.platypus import Table
 from reportlab.platypus.flowables import HRFlowable
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_LEFT
+from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import cm
@@ -19,35 +22,40 @@ from reportlab.lib.units import mm
 
 
 __all__ = [
-    'get_decisions',
-    'get_preship_or_polyols_q',
-    'get_quantities',
-    'get_quantity_cell',
     'hr',
     'page_title_section',
+    'page_title',
     'p_c',
     'p_l',
+    'p_r',
+    'p_bullet',
     'STYLES'
 ]
 
 
 STYLES = getSampleStyleSheet()
-FONTSIZE_TABLE = 8
+
+FONTSIZE_SMALL = 7
+FONTSIZE_DEFAULT = 8
+FONTSIZE_TABLE = FONTSIZE_DEFAULT
+FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT - 1
+FONTSIZE_H3 = FONTSIZE_DEFAULT + 2
+FONTSIZE_H2 = FONTSIZE_H3 + 3
+FONTSIZE_H1 = FONTSIZE_H2 + 3
 
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
     ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
 )
 
 
-def _p(style_name, align, txt, fontSize=None, fontName=None):
-    style = STYLES[style_name]
-    style.alignment = align
-    if fontSize:
-        style.fontSize = fontSize
-    if fontName:
-        style.fontName = fontName
-    return Paragraph(txt, style)
+def _style(style_name, **kwargs):
+    style = deepcopy(STYLES[style_name])
+    if kwargs is not None:
+        for k, v in kwargs.items():
+            setattr(style, k, v)
+    return style
 
 
 hr = HRFlowable(
@@ -55,17 +63,56 @@ hr = HRFlowable(
     spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None
 )
 
-p_c = partial(_p, 'Normal', TA_CENTER, fontSize=FONTSIZE_TABLE)
-p_l = partial(_p, 'BodyText', TA_LEFT, fontSize=FONTSIZE_TABLE)
 
-page_title = partial(_p, 'Heading1', TA_CENTER)
+centered_paragraph_style = _style('BodyText', alignment=TA_CENTER, fontSize=FONTSIZE_DEFAULT)
+left_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT)
+right_paragraph_style = _style('BodyText', alignment=TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
+bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
+no_spacing_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
 
 
-def page_title_section(title, explanatory):
+left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=-1)
+
+h1_style = _style(
+    'Heading1',
+    alignment=TA_CENTER,
+    fontSize=FONTSIZE_DEFAULT+6,
+    fontName='Helvetica-Bold',
+)
+
+h2_style = _style(
+    'Heading2',
+    alignment=TA_LEFT,
+    fontSize=FONTSIZE_DEFAULT+4,
+    fontName='Helvetica-Bold',
+)
+
+h3_style = _style(
+    'Heading3',
+    alignment=TA_LEFT,
+    fontSize=FONTSIZE_DEFAULT+2,
+    fontName='Helvetica-Bold',
+    spaceBefore=0
+)
+
+page_title_style = _style(
+    'Heading3', alignment=TA_LEFT,
+    fontSize=FONTSIZE_H3, fontName='Helvetica-Bold',
+)
+
+p_c = partial(Paragraph, style=centered_paragraph_style)
+p_l = partial(Paragraph, style=left_paragraph_style)
+p_r = partial(Paragraph, style=right_paragraph_style)
+p_bullet = partial(Paragraph, style=bullet_paragraph_style)
+page_title = partial(Paragraph, style=page_title_style)
+
+
+# TODO: remove this after revising HAT exports
+def page_title_section(title, explanatory=None):
     return (
         page_title(title),
-        p_c(explanatory, fontSize=10),
-        Spacer(1, cm),
+        # p_c(explanatory, fontSize=10),
+        # Spacer(1, cm),
     )
 
 
@@ -75,14 +122,9 @@ def col_widths(w_list):
 
 # Returning number as string to avoid 'E' notation
 def get_big_float(nr):
-    if 'e' in str(nr):
-        n, exp = str(nr).split('e')
-        s_n = str(float(n)/10)
-
-        idx = s_n.index('.')
-        return s_n[:idx+1] + '0' * (int(exp[-1])-1) + s_n[idx+1:]
-    else:
-        return str(nr)
+    if not nr:
+        return ''
+    return '{:f}'.format(Decimal(str(nr)))
 
 
 # Imitate JavaScript's toPrecision. Retunrning the number with 'decimals'
@@ -145,37 +187,95 @@ def to_precision(nr, decimals):
             return n
 
 
-BASIC_Q_TYPES = (
-    'Essential use, other than L&amp;A',
-    'Critical use',
-    'High ambient temperature',
-    'Laboratory and analytical',
-    'Process agent uses',
-    'Other/unspecified'
-)
+EXEMPTED_FIELDS = OrderedDict([
+    ('laboratory_analytical_uses', _('Laboratory and analytical uses')),
+    ('essential_uses', _('Essential uses, other than L&A')),
+    ('critical_uses', _('Critical uses')),
+    ('high_ambient_temperature', _('High ambient temperature')),
+    ('process_agent_uses', _('Process agent uses')),
+    ('other_uses', _('Other/unspecified uses')),
+])
 
 
-def get_quantity_cell(q_list, extra_q):
-    if sum(q_list) > 0:
-        if extra_q:
-            return (
-                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
-                get_substance_label(q_list, type='quantity'), hr, extra_q
-            )
-        else:
-            return (
-                p_l('<b>' + get_big_float(str(sum(q_list))) + '</b>'),
-                get_substance_label(q_list, type='quantity')
-            )
+def get_quantity(obj, field):
+    """
+    field is a key in EXEMPTED_FIELDS
+    """
+    return getattr(obj, 'quantity_' + field) if field else None
+
+
+def get_decision(obj, field):
+    """
+    field is a key in EXEMPTED_FIELDS
+    """
+    return getattr(obj, 'decision_' + field) if field else None
+
+
+def get_substance_or_blend_name(obj):
+    return (
+        obj.substance.name
+        if obj.substance
+        else '%s - %s' % (
+            obj.blend.blend_id,
+            obj.blend.composition
+        )
+    )
+
+
+def get_group_name(obj):
+    return (
+        obj.substance.group.name
+        if obj.substance and obj.substance.group
+        else ''
+    )
+
+
+def rows_to_table(header, rows, colWidths, style):
+    return Table(
+        header + rows,
+        colWidths=colWidths,
+        style=style,
+        hAlign='LEFT',
+        repeatRows=len(header)  # repeat header on page break
+    ) if rows else None
+
+
+def exclude_blend_items(data):
+    return data.exclude(blend_item__isnull=False)
+
+
+def get_remarks(item):
+    if not item.remarks_party:
+        return item.remarks_os or ''
     else:
-        return ''
+        if not item.remarks_os:
+            return item.remarks_party
+        else:
+            return '%s<br/>%s' % (item.remarks_party, item.remarks_os)
 
 
-def makeBulletList(list, fontSize):
+def get_comments_section(submission, type):
+    r_party = getattr(submission, type + '_remarks_party')
+    r_secretariat = getattr(submission, type + '_remarks_secretariat')
+
+    remarks_party = p_l('%s (%s): %s' % (
+        _('Comments'), _('party'), r_party
+    ))
+    remarks_secretariat = p_l('%s (%s): %s' % (
+        _('Comments'), _('secretariat'), r_secretariat
+    ))
+    return (
+        remarks_party if r_party else None,
+        remarks_secretariat if r_secretariat else None,
+    )
+
+
+#  Not used, but kept just in case we need bulleted lists
+def makeBulletList(list):
     bullets = ListFlowable(
         [
             ListItem(
-                _p('BodyText', TA_LEFT, x, fontSize=fontSize),
+                p_bullet(x),
                 leftIndent=10, bulletColor='black', value='circle',
                 bulletOffsetY=-2.88
             ) for x in list
@@ -186,77 +286,17 @@ def makeBulletList(list, fontSize):
     return bullets
 
 
-def get_substance_label(q_list, type, list_font_size=7):
-    # Adding the extra pre-shipment decision
-    if type == 'decision':
-        pairs = tuple(zip(
-            ('Quarantine and pre-shipment applications', ) + BASIC_Q_TYPES,
-            q_list
-        ))
-    else:
-        pairs = tuple(zip(
-            BASIC_Q_TYPES, map(get_big_float, q_list)
-        ))
-
-    if type == 'quantity':
-        _filtered_pairs = tuple(filter(lambda x: x[1] != '0', pairs))
-    else:
-        _filtered_pairs = tuple(filter(lambda x: x[1] != '', pairs))
-
-    filtered_pairs = tuple(': '.join(x) for x in _filtered_pairs)
-
-    return makeBulletList(filtered_pairs, list_font_size)
-
-
-def get_quantities(obj):
-    return (
-        obj.quantity_essential_uses or 0,
-        obj.quantity_critical_uses or 0,
-        obj.quantity_high_ambient_temperature or 0,
-        obj.quantity_laboratory_analytical_uses or 0,
-        obj.quantity_process_agent_uses or 0,
-        obj.quantity_other_uses or 0,
-    )
-
-
-def get_decisions(obj):
-    return (
-        obj.decision_quarantine_pre_shipment,
-        obj.decision_essential_uses,
-        obj.decision_critical_uses,
-        obj.decision_high_ambient_temperature,
-        obj.decision_laboratory_analytical_uses,
-        obj.decision_process_agent_uses,
-        obj.decision_other_uses,
-    )
-
-
-def get_preship_or_polyols_q(obj):
-    _q_pre_ship = obj.quantity_quarantine_pre_shipment
-    _q_polyols = obj.quantity_polyols if hasattr(
-        obj, 'quantity_polyols') else None
-
-    if _q_pre_ship:
-        substance = obj.substance
-        return (
-            p_l(f'<b>Quantity of new {substance.name} '
-                'imported to be used for QPS applications</b>'),
-            p_l(str(_q_pre_ship)),
-        )
-
-    if _q_polyols:
-        return (
-            p_l('<b>Polyols quantity</b>'),
-            p_l(str(_q_polyols)),
-        )
-
-    return None
-
-
+# TODO: remove this after revising HAT exports
 def table_from_data(
-    data, isBlend, header, colWidths, style, repeatRows, emptyData
+    data, isBlend, header, colWidths, style, repeatRows, emptyData=None
 ):
 
+    if not data and not emptyData:
+        # nothing at all unless explicitly requested
+        return ()
+    if not data:
+        # Just a text, without a table heading
+        return (p_l(emptyData))
     # Spanning all columns for the blend components rows
     if isBlend:
         rows = len(data) + repeatRows
@@ -267,13 +307,15 @@ def table_from_data(
             )
 
     return Table(
-        header + (data or emptyData),
+        header + data,
         colWidths=colWidths,
         style=style,
+        hAlign='LEFT',
         repeatRows=2  # repeat header on page break
     )
 
 
+# TODO: remove this after revising HAT exports
 def table_with_blends(blends, grouping, make_component, header, style, widths):
     result = []
 
@@ -287,18 +329,15 @@ def table_with_blends(blends, grouping, make_component, header, style, widths):
         result.append(
             (
                 (Spacer(7, mm),
-                 Table(
-                     header + data,
-                     style=style,
-                     colWidths=widths,
-                 ),
-                 Spacer(7, mm))
-                ,)
+                 Table(header + data, style=style, colWidths=widths),
+                 Spacer(7, mm)),
+                )
         )
 
     return result
 
 
+# TODO: remove this after revising HAT exports
 def mk_table_substances(grouping, row_fct):
     # Excluding items with no substance,
     # then getting the ones that are not a blend
@@ -307,6 +346,7 @@ def mk_table_substances(grouping, row_fct):
     return map(row, objs)
 
 
+# TODO: remove this after revising HAT exports
 def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
     objs = grouping.filter(substance=None)
     row = partial(row_fct, isBlend=True)
@@ -323,17 +363,8 @@ def mk_table_blends(grouping, row_fct, comp_fct, c_header, c_style, c_widths):
     )
 
 
-def get_comments_section(submission, type):
-    r_party = getattr(submission, type + '_remarks_party')
-    r_secretariat = getattr(submission, type + '_remarks_secretariat')
-
-    return (
-        Paragraph(_('Comments (Party)'), STYLES['Heading3']),
-        hr,
-        p_l(_(r_party if r_party else 'No comments (party)')),
-        Spacer(1, cm),
-        Paragraph(_('Comments (Secretariat)'), STYLES['Heading3']),
-        hr,
-        p_l(_(r_secretariat if r_secretariat else 'No comments (secretariat)')),
-        PageBreak()
-    )
+def get_date_of_reporting_str(submission):
+    date_of_reporting = submission.submitted_at or submission.info.date
+    if date_of_reporting:
+        date_of_reporting = date_of_reporting.strftime('%d-%B-%Y')
+    return date_of_reporting

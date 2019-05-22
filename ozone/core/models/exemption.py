@@ -65,6 +65,29 @@ class ExemptionApproved(BaseExemption):
 
     is_emergency = models.BooleanField(default=False)
 
+    @classmethod
+    def get_approved_amounts(cls, party, reporting_period):
+        approvals = cls.objects.prefetch_related(
+            'submission__party', 'submission__reporting_period'
+        ).filter(
+            submission__party=party,
+            submission__reporting_period=reporting_period,
+        ).values_list('substance', 'quantity', 'is_emergency')
+
+        ret = {'emergency': {}, 'non_emergency': {}}
+        for substance, amount, emergency in approvals:
+            if emergency:
+                if substance in ret['emergency']:
+                    ret['emergency'][substance] += amount if amount else 0
+                else:
+                    ret['emergency'][substance] = amount if amount else 0
+            else:
+                if substance in ret['non_emergency']:
+                    ret['non_emergency'][substance] += amount if amount else 0
+                else:
+                    ret['non_emergency'][substance] = amount if amount else 0
+        return ret
+
     class Meta:
         db_table = 'exemption_approved'
 

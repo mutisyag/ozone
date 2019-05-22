@@ -6,13 +6,13 @@
 
 Table of contents
 
-* [Installing the application](doc/install.md)
-* [User roles](doc/roles.md)
-* [Workflow](doc/workflow.md)
-* [User stories](doc/stories.md)
-* [Notifications](doc/notifications.md)
+* [Installing the application](docs/install.md)
+* [User roles](docs/roles.md)
+* [Workflow](docs/workflow.md)
+* [User stories](docs/stories.md)
+* [Notifications](docs/notifications.md)
 * Article 7 data forms
 * Non-article 7 data forms
-* [System requirements](doc/system.md)
-* [OAuth provider](doc/oauth.md)
-* [Continuous Translation](doc/translations.md)
+* [System requirements](docs/system.md)
+* [OAuth provider](docs/oauth.md)
+* [Continuous Translation](docs/translations.md)

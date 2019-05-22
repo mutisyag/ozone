@@ -9,10 +9,12 @@ from reportlab.lib import colors
 
 TABLE_IMPORTS_HEADER = lambda isBlend, type: (
     (
-        p_c(_('Type' if isBlend else 'Annex/group')),
+        p_c(_('Type' if isBlend else 'Annex/Group')),
         p_c(_('Blend' if isBlend else 'Substance')),
         p_c(_(f'Quantity of new substances {type}ed for approved subsectors to'
-              ' which the high-ambient-temperature exemption applies')),
+              ' which the high-ambient-temperature exemption applies'
+              f'{"  (production should be for use within the producing country)" if type=="produc" else ""}'
+        )),
         '',
         '',
         p_c(_('Remarks (party)')),
@@ -22,7 +24,7 @@ TABLE_IMPORTS_HEADER = lambda isBlend, type: (
         '',
         '',
         p_c(_(f'New {type+"s" if type=="import" else type+"tion"} for use in '
-              f'multi-split air conditioners')),
+              f'split ducted air conditioners')),
         p_c(_(f'New {type+"s" if type=="import" else type+"tion"} for use in '
               f'split ducted air conditioners')),
         p_c(_(f'New {type+"s" if type=="import" else type+"tion"} for use in '

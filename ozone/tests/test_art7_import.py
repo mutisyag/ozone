@@ -8,6 +8,7 @@ from ozone.core.models import Article7Import, Submission
 from .base import BaseTests
 from .factories import (
     PartyFactory,
+    PartyHistoryFactory,
     RegionFactory,
     LanguageEnFactory,
     ReportingChannelFactory,
@@ -54,6 +55,11 @@ class BaseArt7ImportTest(BaseTests):
             party=self.party, created_by=self.secretariat_user,
             last_edited_by=self.secretariat_user, **kwargs
         )
+        # Make sure the Party has a history & everything
+        PartyHistoryFactory(
+            party=submission.party, reporting_period=submission.reporting_period
+        )
+
         return submission
 
 
@@ -63,6 +69,7 @@ ART7_IMPORT_DATA = {
     'decision_high_ambient_temperature': '',
     'decision_laboratory_analytical_uses': '',
     'decision_other_uses': '',
+    'decision_polyols': '',
     'decision_process_agent_uses': '',
     'decision_quarantine_pre_shipment': '',
     'quantity_critical_uses': None,

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import tus from 'tus-js-client'
+// eslint-disable-next-line no-unused-vars
 import { sortDescending } from '@/components/common/services/utilsService'
 
 const logRequests = process.env.NODE_ENV === 'development'
@@ -133,7 +134,13 @@ const getPeriods = () => fetch('periods/')
 const getFilteredPeriods = () => new Promise(async (resolve, reject) => {
   try {
     const responsePeriods = await fetch('periods/')
-    const result = { data: sortDescending(responsePeriods.data, 'name') }
+    const sortedPeriods = responsePeriods.data
+      .filter(a => a.is_reporting_allowed)
+      .sort((a, b) => ((parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0])) === 0
+        ? (parseInt(b.start_date.split('-')[0]) - parseInt(a.start_date.split('-')[0]))
+        : (parseInt(b.end_date.split('-')[0]) - parseInt(a.end_date.split('-')[0]))))
+      .sort((a, b) => b.is_year - a.is_year)
+    const result = { data: sortedPeriods }
     resolve(result)
   } catch (error) { //  here goes if someAsyncPromise() rejected}
     reject(error) //  this will result in a resolved promise.
@@ -249,6 +256,10 @@ const getLimits = params => fetch('aggregations/', {
   params
 })
 
+const getControlledGroups = (party, period) => fetch(`parties/${party}/report_groups/?period=${period}`)
+
+const getApprovedExemptionsList = (partyId, period) => fetch(`parties/${partyId}/approved_exemptions/?period=${period}`)
+
 export {
   apiURL,
   apiBase,
@@ -291,5 +302,7 @@ export {
   getEssenCritTypes,
   getSubmissionAggregations,
   getLimits,
-  getFilteredParties
+  getFilteredParties,
+  getControlledGroups,
+  getApprovedExemptionsList
 }

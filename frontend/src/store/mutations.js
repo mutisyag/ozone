@@ -138,6 +138,10 @@ const mutations = {
     state.initialData.essenCritTypes = data
   },
 
+  setApprovedExemptionsList(state, data) {
+    state.initialData.approvedExemptionsList = data
+  },
+
   incrementOrderingId(state, data) {
     state.form.tabs[data.tabName].ordering_id += 1
   },
@@ -266,6 +270,10 @@ const mutations = {
 
   setBlendComponentRowVariant(state, data) {
     data.component._rowVariant = data.value
+  },
+
+  setControlledGroups(state, data) {
+    state.initialData.controlledGroups = data
   },
 
   addAlertData(state, data) {

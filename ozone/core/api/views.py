@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models.query import QuerySet, F
+from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
 from django.utils.translation import gettext_lazy as _
@@ -52,6 +52,7 @@ from ..models import (
     Article7Emission,
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
+    Transfer,
     DataOther,
     Group,
     Substance,
@@ -76,6 +77,7 @@ from ..permissions import (
     IsSecretariatOrSafeMethod,
     IsSecretariatOrSamePartyAggregation,
     IsSecretariatOrSamePartyLimit,
+    IsSecretariatOrSamePartyTransfer,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -99,6 +101,7 @@ from ..serializers import (
     Article7EmissionSerializer,
     HighAmbientTemperatureProductionSerializer,
     HighAmbientTemperatureImportSerializer,
+    TransferSerializer,
     DataOtherSerializer,
     GroupSerializer,
     SubstanceSerializer,
@@ -117,11 +120,12 @@ from ..serializers import (
     RAFSerializer,
     SubmissionFormatSerializer,
     AggregationSerializer,
+    AggregationMTSerializer,
     LimitSerializer,
 )
 
 
-from .export_pdf import export_submission
+from .export_pdf import export_submission, export_prodcons
 
 
 User = get_user_model()
@@ -246,17 +250,46 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def controlled_groups(self, request, pk=None, **kwargs):
         """
-        Returns the list of substance groups (Group.group_id) that the party
-        must report on for the reporting period given as param (`period`).
+        Returns the list of substance groups (Group.group_id) that must comply
+        with the applicable control measures for the party and the reporting period
+        given as param by name (`period`).
         If no param is given, it returns the list for the current date.
         """
         period = ReportingPeriod.objects.filter(
-            id=int(request.query_params.get('period', 0))
+            name=int(request.query_params.get('period', 0))
         ).first()
-        groups = Group.get_groups(Party.objects.filter(pk=pk).first(), period)
+        groups = Group.get_controlled_groups(Party.objects.filter(pk=pk).first(), period)
         if groups:
             groups = groups.values_list('group_id', flat=True)
         return Response(groups)
+
+    @action(detail=True, methods=["get"])
+    def report_groups(self, request, pk=None, **kwargs):
+        """
+        Returns the list of substance groups (Group.group_id) that the party
+        must report on for the reporting period given as param by name (`period`).
+        If no param is given, it returns the list for the current date.
+        """
+        period = ReportingPeriod.objects.filter(
+            name=int(request.query_params.get('period', 0))
+        ).first()
+        groups = Group.get_report_groups(Party.objects.filter(pk=pk).first(), period)
+        if groups:
+            groups = groups.values_list('group_id', flat=True)
+        return Response(groups)
+
+    @action(detail=True, methods=["get"])
+    def approved_exemptions(self, request, pk=None, **kwargs):
+        reporting_period = ReportingPeriod.objects.filter(
+            name=int(request.query_params.get('period', 0))
+        ).first()
+        party = Party.objects.filter(pk=pk).first()
+        return Response(
+            ExemptionApproved.get_approved_amounts(
+                party,
+                reporting_period,
+            )
+        )
 
 
 class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
@@ -299,7 +332,7 @@ class ReportingPeriodViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Obligation.objects.all()
+    queryset = Obligation.objects.filter(is_active=True)
     serializer_class = ObligationSerializer
     permission_classes = (IsAuthenticated,)
 
@@ -405,12 +438,8 @@ class AggregationViewSet(viewsets.ModelViewSet):
     search_fields = (
         "party__name", "reporting_period__name"
     )
-    ordering_fields = {
-        "party": "party",
-        "reporting_period": "reporting_period",
-        "group": "group",
-    }
-    ordering = ("-reporting_period", "party", "group")
+    ordering_fields = ("reporting_period", "party", "group")
+    ordering = ("-reporting_period__start_date", "party", "group")
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartyAggregation,
     )
@@ -646,12 +675,35 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return resp
 
     @action(detail=True, methods=["get"])
+    def export_prodcons_pdf(self, request, pk=None):
+        submission = Submission.objects.get(pk=pk)
+        timestamp = datetime.now().strftime('%Y-%m-%d')
+        filename = f'prodcons_{timestamp}.pdf'
+        buf_pdf = export_prodcons(
+            submission.reporting_period,
+            [submission.party]
+        )
+        resp = HttpResponse(buf_pdf, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return resp
+
+    @action(detail=True, methods=["get"])
     def aggregations(self, request, submission_pk=None, pk=None):
         sub = Submission.objects.get(pk=pk)
         return Response(
             [
                 AggregationSerializer(aggregation).data
                 for group, aggregation in sub.get_aggregated_data().items()
+            ]
+        )
+
+    @action(detail=True, methods=["get"])
+    def aggregations_mt(self, request, submission_pk=None, pk=None):
+        sub = Submission.objects.get(pk=pk)
+        return Response(
+            [
+                AggregationMTSerializer(aggregation).data
+                for subst, aggregation in sub.get_aggregated_mt_data().items()
             ]
         )
 
@@ -1051,6 +1103,26 @@ class RAFViewSet(
     def get_queryset(self):
         return RAFReport.objects.filter(
             submission=self.kwargs['submission_pk']
+        )
+
+
+class TransferViewSet(viewsets.ReadOnlyModelViewSet):
+    """
+    This only needs to be read-only for now
+    """
+    form_types = ("transfer",)
+    serializer_class = TransferSerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariatOrSamePartyTransfer,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return Transfer.objects.filter(
+            Q(source_party_submission=self.kwargs['submission_pk']) |
+            Q(destination_party_submission=self.kwargs['submission_pk'])
         )
 
 

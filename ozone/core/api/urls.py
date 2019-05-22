@@ -117,6 +117,15 @@ hat_imports_router.register(
     base_name="submission-hat-imports"
 )
 
+transfers_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+transfers_router.register(
+    "transfers",
+    views.TransferViewSet,
+    base_name="transfers"
+)
+
 submission_transitions_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )
@@ -228,6 +237,7 @@ nested_routers = [
     hat_imports_router,
     hat_productions_router,
     data_others_router,
+    transfers_router,
     submission_info_router,
     submission_transitions_router,
     submission_flags_router,
