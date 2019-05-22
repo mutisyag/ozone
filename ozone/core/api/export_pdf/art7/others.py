@@ -277,6 +277,7 @@ def get_prodcons_data(period, parties):
                     or actual_prod == '-'
                 ):
                     baseline_prod = ""
+                chng_prod = '-'
 
             chng_cons = -100
             if prodcons and prodcons.baseline_cons is not None:
@@ -294,6 +295,7 @@ def get_prodcons_data(period, parties):
                     or actual_cons == '-'
                 ):
                     baseline_cons = ""
+                chng_cons = '-'
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
