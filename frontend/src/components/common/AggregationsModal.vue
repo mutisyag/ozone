@@ -7,7 +7,15 @@
       </div>
       <AggregationsTable :standalone="false" :aggregations="aggregations"></AggregationsTable>
       <div slot="modal-footer">
-        <b-btn @click="$refs.aggregationModal.hide()" variant="success" v-translate>Close</b-btn>
+        <b-btn
+          variant="outline-dark mr-2"
+          @click="$store.dispatch('downloadStuff',
+						{
+							url: `${submission}export_prodcons_pdf/`,
+							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period} - production & consumption.pdf`
+						})"
+         v-translate>Export PDF</b-btn>
+        <b-btn @click="$refs.aggregationModal.hide()" variant="outline-danger" v-translate>Close</b-btn>
       </div>
     </b-modal>
   </div>
