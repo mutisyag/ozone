@@ -166,7 +166,7 @@ def _export(data, comments, party_field, texts):
     table = rows_to_table(
         header,
         rows,
-        col_widths([1.3, 4.3, 3.5, 3, 3, 3, 3, 3.5, 3.5]),
+        col_widths([1.3, 2.5, 3.5, 2.5, 2.5, 2.5, 2.5, 5, 5]),
         styles
     )
 

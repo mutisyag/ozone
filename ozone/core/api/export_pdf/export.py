@@ -12,8 +12,6 @@ from . import hat
 from .util import right_paragraph_style, left_paragraph_style
 
 
-PG_SIZE = pagesizes.landscape(pagesizes.A4)
-
 def add_page_footer(canvas, doc, footnote=None):
     canvas.saveState()
     if footnote:
@@ -26,6 +24,7 @@ def add_page_footer(canvas, doc, footnote=None):
     footer.drawOn(canvas, doc.rightMargin, h)
 
     canvas.restoreState()
+
 
 add_page_footnotes = partial(
     add_page_footer,
@@ -51,12 +50,13 @@ def export_submission(submission):
 
     doc = SimpleDocTemplate(
         buff,
-        pagesize=PG_SIZE,
+        pagesize=pagesizes.landscape(pagesizes.A4),
         leftMargin=1*cm,
         rightMargin=1*cm,
         topMargin=1*cm,
         bottomMargin=1*cm,
     )
+    # A4 size is 21cm x 29.7cm
 
     obligation = submission.obligation.form_type
     if obligation == 'art7':

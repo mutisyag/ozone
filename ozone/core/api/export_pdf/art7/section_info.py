@@ -108,7 +108,7 @@ def get_questionnaire_table(submission):
     return (
         Table(
                 TABLE_INFO_HEADER + (row,),
-                colWidths=col_widths([2.55] * 6 + [1.2]*10),
+                colWidths=col_widths([2.47] * 6 + [1.25]*10),
                 style=TABLE_INFO_STYLE,
                 hAlign='LEFT',
         ),

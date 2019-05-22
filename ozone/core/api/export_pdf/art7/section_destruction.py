@@ -51,7 +51,7 @@ def export_destruction(submission):
     table = rows_to_table(
         table_header,
         tuple(map(table_row, data)),
-        col_widths([2.1, 8, 4, 13.5]),
+        col_widths([2.1, 8, 4, 13.2]),
         table_style
     )
 

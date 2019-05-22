@@ -162,7 +162,7 @@ def export_production(submission):
     table_f1 = rows_to_table(
         header_f1,
         rows,
-        col_widths([1.3, 3.5, 2.5, 6, 0, 3, 4.8, 3, 3.5]),
+        col_widths([1.3, 2.5, 2.5, 5, 0, 2.5, 5, 2.5, 6]),  # 27.3
         styles
     )
 
@@ -188,7 +188,7 @@ def export_production(submission):
     table_f2 = rows_to_table(
         header_f2,
         rows,
-        col_widths([1.3, 3.5, 2.5, 3, 3, 3, 4.8, 3, 3.5]),
+        col_widths([1.3, 2.5, 2.5, 2.5, 2.5, 2.5, 5, 2.5, 6]),  # 27.3
         styles
     )
 

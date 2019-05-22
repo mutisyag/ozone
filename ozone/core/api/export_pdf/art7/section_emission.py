@@ -82,7 +82,7 @@ def export_emission(submission):
     table = rows_to_table(
         table_header,
         tuple(map(table_row, data)),
-        col_widths([4, 2.5, 2.4, 2.8, 2.4, 2.7, 2.7, 2.4, 5.6]),
+        col_widths([4, 2.5, 2.4, 2.8, 2.4, 2.6, 2.6, 2.4, 5.6]),
         table_style
     )
 

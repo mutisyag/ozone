@@ -92,7 +92,7 @@ def export_nonparty(submission):
     table = rows_to_table(
         table_header,
         tuple(map(table_row, data)),
-        col_widths([2.1, 5, 4, 2.3, 2.7, 2.3, 2.7, 6.5]),
+        col_widths([2.1, 5, 4, 2.3, 2.6, 2.3, 2.6, 6.4]),
         table_style
     )
 
