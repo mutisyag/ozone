@@ -2,7 +2,7 @@
   <div v-if="tabName">
     <div class="container">
       <h5 class="mt-2">
-        <span v-translate>Add substances</span>
+        <span v-translate>Add ssfasfsaubstances</span>
       </h5>
       <small>
         <span
@@ -74,6 +74,9 @@ export default {
     substances() {
       // TODO: REMOVE FIRST FILTER IN 2033
       return this.tabName === 'has_nonparty' ? this.$store.state.initialData.substances.filter(s => s.group.group_id !== 'F' && s.group.group_id !== 'uncontrolled') : this.$store.state.initialData.substances.filter(s => s.group.group_id !== 'uncontrolled')
+    },
+    exemptions() {
+      return this.$store.state.initialData.approvedExemptionsList
     }
   },
 
@@ -149,36 +152,30 @@ export default {
     addSubstance() {
       this.updateGroup(this.selected_substance.selected)
 
-      const { default_properties } = this.$store.state.form.tabs[this.tabName]
-      const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
-      let currentTypeOfCountryField = ''
       const willNotAdd = []
 
-      typeOfCountryFields.forEach(type => {
-        if (default_properties.hasOwnProperty(type)) currentTypeOfCountryField = type
-      })
-
       for (const subst of this.selected_substance.selected) {
-        let fieldExists = false
-        for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
-          if (parseInt(existing_field.substance.selected) === subst && (!currentTypeOfCountryField || existing_field[currentTypeOfCountryField].selected === null)) {
-            fieldExists = true
-            willNotAdd.push(subst)
-            break
-          }
+        const alreadyAdded = this.$store.state.form.tabs[this.tabName].form_fields.filter(field => (parseInt(field.substance.selected) === parseInt(subst)))
+        if (alreadyAdded.length === 2) {
+          willNotAdd.push(subst)
         }
-        // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
-        if (!fieldExists) {
-          this.$store.dispatch('createSubstance', {
-            $gettext: this.$gettext,
-            substanceList: [subst],
-            currentSectionName: this.tabName,
-            groupName: this.group_field.name,
-            country: null,
-            blendList: null,
-            prefillData: null,
-            critical: this.$store.getters.getCriticalSubstances(subst)
-          })
+        if (alreadyAdded.length === 1) {
+          // if both exemptions exist, check value of emergency in alreadyAdded and add the other one
+          if (alreadyAdded[0].is_emergency.selected) {
+            this.addSubstanceRaf(subst, { is_emergency: false, quantity_exempted: this.exemptions.non_emergency[parseInt(subst)] || null })
+          } else {
+            this.addSubstanceRaf(subst, { is_emergency: true, quantity_exempted: this.exemptions.emergency[parseInt(subst)] || null })
+          }
+        } else {
+          if (this.exemptions.non_emergency[parseInt(subst)]) {
+            this.addSubstanceRaf(subst, { is_emergency: false, quantity_exempted: this.exemptions.non_emergency[parseInt(subst)] })
+          }
+          if (this.exemptions.emergency[parseInt(subst)]) {
+            this.addSubstanceRaf(subst, { is_emergency: true, quantity_exempted: this.exemptions.emergency[parseInt(subst)] })
+          }
+          if (!this.exemptions.non_emergency[parseInt(subst)] && !this.exemptions.emergency[parseInt(subst)]) {
+            this.addSubstanceRaf(subst)
+          }
         }
       }
 
@@ -189,12 +186,29 @@ export default {
           willNotAddSubstanceNames.push(text)
         }
       })
+
       willNotAddSubstanceNames.length && this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
-        message: { __all__: [`${this.alerts.substance_already_exists} : ${willNotAddSubstanceNames.join(', ')}, <br> ${currentTypeOfCountryField ? this.alerts.select_country_before_adding_again : ''}`] },
+        message: { __all__: [`${willNotAddSubstanceNames.join(', ')}, <br> ${this.$gettext('not added because two entries already exist.')}`] },
         variant: 'danger'
       })
       this.resetData()
+    },
+
+    addSubstanceRaf(subst, prefillData) {
+      console.log('adding', prefillData, subst)
+      // substanceList, currentSectionName, groupName, currentSection, country, blend, prefillData
+      this.$store.dispatch('createSubstance', {
+        $gettext: this.$gettext,
+        substanceList: [subst],
+        currentSectionName: this.tabName,
+        groupName: this.group_field.name,
+        country: null,
+        blendList: null,
+        prefillData: prefillData || null,
+        critical: this.$store.getters.getCriticalSubstances(subst),
+        exemptionValue: prefillData && prefillData.quantity_exempted ? { is_emergency: prefillData.is_emergency, quantity_exempted: prefillData.quantity_exempted } : null
+      })
     },
 
     resetData() {

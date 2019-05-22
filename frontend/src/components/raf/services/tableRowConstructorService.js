@@ -50,7 +50,7 @@ const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) 
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, critical
+    $gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, critical, exemptionValue
   }) {
     const	baseInnerFields = {
       ordering_id: { selected: ordering_id || 0 },
@@ -76,7 +76,8 @@ export default {
       },
       quantity_exempted: {
         type: 'number',
-        selected: null
+        selected: null,
+        exemptionValue
       },
       quantity_production: {
         type: 'number',
@@ -151,6 +152,7 @@ export default {
         if (Array.isArray(prefillData[field]) && field === 'imports') {
           baseInnerFields[field] = prefillData[field]
         }
+        console.log(field)
         baseInnerFields[field]
           ?	baseInnerFields[field].selected = isNumber(prefillData[field])
             ? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
