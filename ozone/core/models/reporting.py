@@ -19,6 +19,7 @@ from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
 from .workflows.default_exemption import DefaultExemptionWorkflow
 from .workflows.accelerated_exemption import AcceleratedExemptionWorkflow
+from .workflows.default_transfer import DefaultTransferWorkflow
 from ..exceptions import (
     Forbidden,
     MethodNotAllowed,
@@ -254,6 +255,7 @@ class Submission(models.Model):
         'accelerated': AcceleratedArticle7Workflow,
         'default_exemption': DefaultExemptionWorkflow,
         'accelerated_exemption': AcceleratedExemptionWorkflow,
+        'default_transfer': DefaultTransferWorkflow,
     }
 
     RELATED_DATA = [
