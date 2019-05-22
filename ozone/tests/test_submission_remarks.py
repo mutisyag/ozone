@@ -53,12 +53,16 @@ EXEMPTION_REMARKS_DATA = {
     "exemption_nomination_remarks_secretariat": "Testing",
     "exemption_approved_remarks_secretariat": "Testing",
 }
+TRANSFERS_REMARKS_DATA = {
+    "transfers_remarks_secretariat": "Testing",
+}
 ALL_REMARK_DATA = dict(
     **ART7_REMARKS_DATA,
     **HAT7_REMARKS_DATA,
     **ESSENCRIT_REMARKS_DATA,
     **OTHER_REMARKS_DATA,
     **EXEMPTION_REMARKS_DATA,
+    **TRANSFERS_REMARKS_DATA,
 )
 
 
@@ -241,6 +245,13 @@ class ExemptionSubmissionRemarksPermissionTests(
 ):
     remarks_data = EXEMPTION_REMARKS_DATA
     _form_type = "exemption"
+
+
+class TransferSubmissionRemarksPermissionTests(
+    SubmissionRemarksPermissionTests
+):
+    remarks_data = TRANSFERS_REMARKS_DATA
+    _form_type = "transfer"
 
 
 class SubmissionRemarksPermissionWorkflowTests(
