@@ -1185,6 +1185,7 @@ class SubmissionRemarksSerializer(
                 'exemption_nomination_remarks_secretariat',
                 'exemption_approved_remarks_secretariat',
             ),
+            'transfer': ('transfers_remarks_secretariat',)
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1405,6 +1406,11 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    transfers_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-transfers-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     # Frontend needs both reporting period name and id.
     reporting_period_id = serializers.SerializerMethodField()
 
@@ -1488,6 +1494,9 @@ class SubmissionSerializer(
             ),
             'exemption': base_fields + (
                 'exemption_nomination_url', 'exemption_approved_url',
+            ),
+            'transfer': base_fields + (
+                'transfers_url',
             )
         }
         # All possible fields still need to be specified here.
