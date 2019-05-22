@@ -270,7 +270,13 @@ def get_prodcons_data(period, parties):
                         ProdCons.get_decimals(period, group, party)
                     )
             else:
-                baseline_prod = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
+                baseline_prod = 'N.R.'
+                if (
+                    group.group_id in ['CII', 'CIII']
+                    or (not isinstance(actual_prod, str) and actual_prod <= 0)
+                    or actual_prod == '-'
+                ):
+                    baseline_prod = ""
 
             chng_cons = -100
             if prodcons and prodcons.baseline_cons is not None:
@@ -281,7 +287,13 @@ def get_prodcons_data(period, parties):
                         ProdCons.get_decimals(period, group, party)
                     )
             else:
-                baseline_cons = 'N.R.' if group.group_id not in ['CII', 'CIII'] else None
+                baseline_cons = 'N.R.'
+                if (
+                    group.group_id in ['CII', 'CIII']
+                    or (not isinstance(actual_cons, str) and actual_cons <= 0)
+                    or actual_cons == '-'
+                ):
+                    baseline_cons = ""
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
