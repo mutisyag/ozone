@@ -355,7 +355,7 @@ def get_per_capita_cons(cons, population):
     if not isinstance(cons, str):
         return round_half_up(cons / population, 4)
     else:
-        return 0
+        return '-'
 
 
 def get_baseline(prodcons, field, actual_value, group):
