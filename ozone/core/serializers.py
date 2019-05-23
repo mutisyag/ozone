@@ -957,7 +957,7 @@ class RAFSerializer(
 class TransferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transfer
-        exclude = ('submission',)
+        exclude = ('source_party_submission', 'destination_party_submission')
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
