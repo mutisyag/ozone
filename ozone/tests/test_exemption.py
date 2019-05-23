@@ -143,6 +143,7 @@ class ExemptionNominationTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
+        expected_data["is_emergency"] = False
         self.assertEqual(result.json(), [expected_data])
 
     def test_get_reporter(self):
@@ -166,6 +167,7 @@ class ExemptionNominationTests(BaseExemptionTests):
         expected_data["substance"] = self.substance.id
         expected_data["ordering_id"] = 0
         expected_data["group"] = ''
+        expected_data["is_emergency"] = False
         self.assertEqual(result.json(), [expected_data])
 
     def test_update_secretariat(self):
