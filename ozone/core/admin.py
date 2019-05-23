@@ -476,7 +476,9 @@ class TransferAdmin(admin.ModelAdmin):
     list_display = (
         'source_party', 'destination_party', 'substance', 'transferred_amount',
     )
-    search_fields = ('source_party', 'destination_party', 'substance',)
+    search_fields = (
+        'source_party__name', 'destination_party__name', 'substance__name'
+    )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
