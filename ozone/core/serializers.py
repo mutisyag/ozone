@@ -889,7 +889,7 @@ class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = ['is_emergency']
+    unique_with = 'is_emergency'
 
     imports = RAFImportSerializer(many=True)
 
