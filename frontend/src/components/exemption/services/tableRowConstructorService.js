@@ -29,6 +29,10 @@ export default {
         type: 'number',
         selected: null
       },
+      is_emergency: {
+        type: 'checkbox',
+        selected: false
+      },
       remarks_os: {
         type: 'text',
         selected: ''

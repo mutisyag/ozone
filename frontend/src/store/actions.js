@@ -467,7 +467,7 @@ const actions = {
     if (substancesHere) {
       data.substanceList.forEach(substance => {
         let ordering_id = 0
-        if (!data.prefill) {
+        if (!data.prefillData) {
           context.commit('incrementOrderingId', { tabName: data.currentSectionName });
           ({ ordering_id } = context.state.form.tabs[data.currentSectionName])
         }
@@ -482,14 +482,15 @@ const actions = {
           prefillData: data.prefillData,
           ordering_id,
           countries: context.state.initialData.display.countries,
-          critical: data.critical || null
+          critical: data.critical || null,
+          exemptionValue: data.exemptionValue
         })
         context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
       })
     } else if (blendsHere) {
       data.blendList.forEach(blend => {
         let ordering_id = 0
-        if (!data.prefill) {
+        if (!data.prefillData) {
           context.commit('incrementOrderingId', { tabName: data.currentSectionName });
           ({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
         }
