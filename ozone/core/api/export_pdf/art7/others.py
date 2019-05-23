@@ -305,6 +305,11 @@ def get_prodcons_data(periods, parties):
             chng_prod = get_chng(main_prod, compared_prod)
             chng_cons = get_chng(main_cons, compared_cons)
 
+            if check_skip_group(
+                [main_prod, compared_prod, main_cons, compared_cons]
+            ):
+                continue
+
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
                     id=group.group_id,
@@ -377,3 +382,9 @@ def get_chng(actual_value, compared_value):
         )
     else:
         return -100
+
+
+def check_skip_group(values):
+    if all(val == '-' or val == "" for val in values):
+        return True
+    return False
