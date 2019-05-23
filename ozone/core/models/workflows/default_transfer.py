@@ -22,7 +22,7 @@ class DefaultTransferWorkflowStateDescription(xworkflows.Workflow):
     initial_state = 'data_entry'
 
 
-class DefaultArticle7Workflow(BaseWorkflow):
+class DefaultTransferWorkflow(BaseWorkflow):
 
     """
     Implements custom transition logic for the default article 7 workflow.
