@@ -27,6 +27,8 @@ class BaseExemption(models.Model):
         blank=True, null=True
     )
 
+    is_emergency = models.BooleanField(default=False)
+
     remarks_os = models.CharField(
         max_length=9999, blank=True,
         help_text="Remarks added by the ozone secretariat"
@@ -62,8 +64,6 @@ class ExemptionApproved(BaseExemption):
         validators=[MinValueValidator(0.0)],
         blank=True, null=True
     )
-
-    is_emergency = models.BooleanField(default=False)
 
     @classmethod
     def get_approved_amounts(cls, party, reporting_period):

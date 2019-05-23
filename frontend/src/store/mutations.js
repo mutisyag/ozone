@@ -142,6 +142,16 @@ const mutations = {
     state.initialData.approvedExemptionsList = data
   },
 
+  setExemptionBasedOnEmergency(state, { emergency, index }) {
+    let emergency_mapping = 'emergency'
+    if (emergency === false) {
+      emergency_mapping = 'non_emergency'
+    }
+    if (state.form.tabs.essencrit.form_fields[index].quantity_exempted.exemptionValue[emergency_mapping]) {
+      state.form.tabs.essencrit.form_fields[index].quantity_exempted.selected = state.form.tabs.essencrit.form_fields[index].quantity_exempted.exemptionValue[emergency_mapping]
+    }
+  },
+
   incrementOrderingId(state, data) {
     state.form.tabs[data.tabName].ordering_id += 1
   },

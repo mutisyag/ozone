@@ -9,10 +9,9 @@ const valueConverter = (item) => {
 
 export default {
   substanceRows({
-    $gettext, substance, group, ordering_id, prefillData
+    $gettext, substance, group, prefillData
   }) {
     const baseInnerFields = {
-      ordering_id: { selected: ordering_id || 0 },
       checkForDelete: {
         selected: false,
         type: 'checkbox'
@@ -28,6 +27,10 @@ export default {
       quantity: {
         type: 'number',
         selected: null
+      },
+      is_emergency: {
+        type: 'checkbox',
+        selected: false
       },
       remarks_os: {
         type: 'text',

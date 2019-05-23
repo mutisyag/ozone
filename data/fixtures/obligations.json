@@ -42,7 +42,7 @@
     "fields": {
       "name": "Article 2 (p. 5, 5 bis, 7) - Transfer of production/consumption rights",
       "description": "",
-      "_form_type": "other",
+      "_form_type": "transfer",
       "is_active": true,
       "has_reporting_periods": true,
       "other": true,

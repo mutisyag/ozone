@@ -298,7 +298,7 @@ class IsSecretariatOrSamePartyTransfer(BasePermission):
 
         return (
             request.method in SAFE_METHODS
-            and sub.has_read_rights(self, request.user)
+            and sub.has_read_rights(request.user)
         )
 
     def has_object_permission(self, request, view, obj):

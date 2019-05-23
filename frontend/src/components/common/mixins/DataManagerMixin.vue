@@ -155,7 +155,7 @@ export default {
       let ordering_id = 0
       if (Array.isArray(this.form.tabs[tabName].form_fields)) {
         ordering_id = Math.max(...data.map(row => row.ordering_id))
-        const sortedData = data.sort((a, b) => a.ordering_id - b.ordering_id)
+        const sortedData = tabName === 'has_emissions' ? data.sort((a, b) => a.ordering_id - b.ordering_id) : data
         sortedData.forEach(item => {
           if (item.substance || item.blend) {
             this.$store.dispatch('createSubstance', {
@@ -175,7 +175,9 @@ export default {
             })
           }
         })
-        this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+        if (tabName === 'has_emissions') {
+          this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+        }
       }
       if (isObject(this.form.tabs[tabName].form_fields)) {
         const [prefillData] = data

@@ -123,7 +123,7 @@ transfers_router = routers.NestedSimpleRouter(
 transfers_router.register(
     "transfers",
     views.TransferViewSet,
-    base_name="transfers"
+    base_name="submission-transfers"
 )
 
 submission_transitions_router = routers.NestedSimpleRouter(

@@ -19,6 +19,7 @@ from .workflows.default import DefaultArticle7Workflow
 from .workflows.accelerated import AcceleratedArticle7Workflow
 from .workflows.default_exemption import DefaultExemptionWorkflow
 from .workflows.accelerated_exemption import AcceleratedExemptionWorkflow
+from .workflows.default_transfer import DefaultTransferWorkflow
 from ..exceptions import (
     Forbidden,
     MethodNotAllowed,
@@ -254,6 +255,7 @@ class Submission(models.Model):
         'accelerated': AcceleratedArticle7Workflow,
         'default_exemption': DefaultExemptionWorkflow,
         'accelerated_exemption': AcceleratedExemptionWorkflow,
+        'default_transfer': DefaultTransferWorkflow,
     }
 
     RELATED_DATA = [
@@ -564,6 +566,12 @@ class Submission(models.Model):
     raf_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
         help_text="General RAF remarks added by the ozone secretariat"
+    )
+
+    # Transfers Remarks
+    transfers_remarks_secretariat = models.CharField(
+        max_length=9999, blank=True,
+        help_text="General Transfers remarks added by the ozone secretariat"
     )
 
     reporting_channel = models.ForeignKey(
@@ -1049,6 +1057,7 @@ class Submission(models.Model):
             "hat_imports_remarks_secretariat",
             # "raf_remarks_party",
             "raf_remarks_secretariat",
+            "transfers_remarks_secretariat",
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
             "reporting_channel_id",

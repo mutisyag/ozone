@@ -466,11 +466,11 @@ const actions = {
     const blendsHere = data.blendList && data.blendList.some((el) => el !== null)
     if (substancesHere) {
       data.substanceList.forEach(substance => {
-        let ordering_id = 0
-        if (!data.prefill) {
-          context.commit('incrementOrderingId', { tabName: data.currentSectionName });
-          ({ ordering_id } = context.state.form.tabs[data.currentSectionName])
-        }
+        // let ordering_id = 0
+        // if (!data.prefillData) {
+        //   context.commit('incrementOrderingId', { tabName: data.currentSectionName });
+        //   ({ ordering_id } = context.state.form.tabs[data.currentSectionName])
+        // }
         // section, substance, group, country, blend, prefillData, ordering_id
         const inner_fields = context.state.tableRowConstructor.substanceRows({
           $gettext: data.$gettext,
@@ -480,19 +480,20 @@ const actions = {
           country: data.country,
           blend: null,
           prefillData: data.prefillData,
-          ordering_id,
+          // ordering_id,
           countries: context.state.initialData.display.countries,
-          critical: data.critical || null
+          critical: data.critical || null,
+          exemptionValue: data.exemptionValue
         })
         context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
       })
     } else if (blendsHere) {
       data.blendList.forEach(blend => {
-        let ordering_id = 0
-        if (!data.prefill) {
-          context.commit('incrementOrderingId', { tabName: data.currentSectionName });
-          ({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
-        }
+        // let ordering_id = 0
+        // if (!data.prefillData) {
+        //   context.commit('incrementOrderingId', { tabName: data.currentSectionName });
+        //   ({ ordering_id } = context.state.form.tabs[data.currentSectionName].ordering_id)
+        // }
         const inner_fields = context.state.tableRowConstructor.substanceRows({
           $gettext: data.$gettext,
           section: data.currentSectionName,
@@ -500,8 +501,8 @@ const actions = {
           group: data.groupName,
           country: data.country,
           blend,
-          prefillData: data.prefillData,
-          ordering_id
+          prefillData: data.prefillData
+          // ordering_id
         })
         context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
       })

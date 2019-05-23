@@ -842,7 +842,7 @@ class ExemptionNominationListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = 'is_emergency'
 
 
 class ExemptionNominationSerializer(
@@ -889,7 +889,7 @@ class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = ['is_emergency']
+    unique_with = 'is_emergency'
 
     imports = RAFImportSerializer(many=True)
 
@@ -957,7 +957,7 @@ class RAFSerializer(
 class TransferSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transfer
-        exclude = ('submission',)
+        exclude = ('source_party_submission', 'destination_party_submission')
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
@@ -1134,6 +1134,7 @@ class SubmissionFlagsSerializer(
             'exemption': (
                 'flag_approved', 'flag_emergency',
             ),
+            'transfer': base_fields,
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1185,6 +1186,7 @@ class SubmissionRemarksSerializer(
                 'exemption_nomination_remarks_secretariat',
                 'exemption_approved_remarks_secretariat',
             ),
+            'transfer': ('transfers_remarks_secretariat',)
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1405,6 +1407,11 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    transfers_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-transfers-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     # Frontend needs both reporting period name and id.
     reporting_period_id = serializers.SerializerMethodField()
 
@@ -1488,6 +1495,9 @@ class SubmissionSerializer(
             ),
             'exemption': base_fields + (
                 'exemption_nomination_url', 'exemption_approved_url',
+            ),
+            'transfer': base_fields + (
+                'transfers_url',
             )
         }
         # All possible fields still need to be specified here.

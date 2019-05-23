@@ -39,7 +39,6 @@ const getFormHat = ($gettext) => {
         name: 'has_imports',
         hasAssideMenu: true,
         endpoint_url: 'hat_imports_url',
-        ordering_id: 0,
         status: null,
         validate: true,
         saving: false,
@@ -121,7 +120,6 @@ const getFormHat = ($gettext) => {
         default_properties: {
           'remarks_party': '',
           'remarks_os': '',
-          'ordering_id': null,
           'quantity_msac': null,
           'quantity_sdac': null,
           'quantity_dcpac': null,
@@ -133,7 +131,6 @@ const getFormHat = ($gettext) => {
         name: 'has_produced',
         hasAssideMenu: true,
         endpoint_url: 'hat_productions_url',
-        ordering_id: 0,
         status: null,
         validate: true,
         saving: false,
@@ -210,7 +207,6 @@ const getFormHat = ($gettext) => {
         default_properties: {
           'remarks_party': '',
           'remarks_os': '',
-          'ordering_id': null,
           'quantity_msac': null,
           'quantity_sdac': null,
           'quantity_dcpac': null,

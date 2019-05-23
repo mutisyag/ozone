@@ -5,7 +5,7 @@ import Add from '@/components/raf/form-components/Add'
 export default {
   mixins: [DefaultAside],
   components: {
-    Add
+    add: Add
   }
 }
 </script>

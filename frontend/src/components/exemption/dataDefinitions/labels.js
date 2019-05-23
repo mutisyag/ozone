@@ -4,6 +4,7 @@ const getLabels = ($gettext) => {
       exemption_nomination_remarks_secretariat: $gettext('Remarks (Secretariat)'),
       substance: $gettext('Substance'),
       group: $gettext('Group'),
+      is_emergency: $gettext('Emergency'),
       quantity: `${$gettext('Quantity')} (${$gettext('in metric tonnes')})`,
       remarks_os: $gettext('Remarks')
     },
@@ -11,6 +12,7 @@ const getLabels = ($gettext) => {
       exemption_approved_remarks_secretariat: $gettext('Remarks (Secretariat)'),
       substance: $gettext('Substance'),
       group: $gettext('Group'),
+      is_emergency: $gettext('Emergency'),
       quantity: `${$gettext('Quantity')} (${$gettext('in metric tonnes')})`,
       remarks_os: $gettext('Remarks')
     }

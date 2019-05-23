@@ -200,7 +200,7 @@ export default {
   },
 
   substanceRows({
-    $gettext, section, substance, group, country, blend, prefillData, ordering_id
+    $gettext, section, substance, group, country, blend, prefillData
   }) {
     const countryFieldName = getCountryField(section)
 
@@ -209,7 +209,6 @@ export default {
         selected: false,
         type: 'checkbox'
       },
-      ordering_id: { selected: ordering_id || 0 },
       substance: {
         type: 'select',
         selected: substance || null
@@ -363,7 +362,6 @@ export default {
           selected: false,
           type: 'checkbox'
         },
-        ordering_id: { selected: ordering_id || 0 },
         remarks_party: {
           type: 'textarea',
           selected: ''
@@ -505,7 +503,6 @@ export default {
           selected: false,
           type: 'checkbox'
         },
-        ordering_id: { selected: ordering_id || 0 },
         substance: {
           type: 'select',
           selected: substance || null
@@ -552,7 +549,6 @@ export default {
           selected: false,
           type: 'checkbox'
         },
-        ordering_id: { selected: ordering_id || 0 },
         remarks_party: {
           type: 'textarea',
           selected: ''
