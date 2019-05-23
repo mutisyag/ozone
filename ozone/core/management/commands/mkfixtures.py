@@ -393,6 +393,7 @@ class Command(BaseCommand):
         # Skipped fields: SubstNameFr, SubstNameSp
         annex = row['Anx']
         is_captured = False
+        group = None
         if annex and annex != '-':
             group = annex + row['Grp']
             if f['name'] == 'HFC-23':
@@ -403,7 +404,25 @@ class Command(BaseCommand):
             if group == 'FIII':
                 return
             f['group'] = self.lookup_id('group', 'group_id', group)
-        f['sort_order'] = row['AnxGrpSort'] or 9999
+
+        sort_order_extra = {
+            'AI': 0,
+            'AII': 10000,
+            'BI': 20000,
+            'BII': 30000,
+            'BIII': 40000,
+            'CI': 50000,
+            'CII': 60000,
+            'CIII': 70000,
+            'EI': 80000,
+            'F': 90000,
+            'X': 100000,
+        }
+        # Make sort_order global (for all groups)
+        f['sort_order'] = (
+            (row['AnxGrpSort'] or 9999) +
+            sort_order_extra[group or 'X']
+        )
         f['odp'] = row['SubstODP']
         f['gwp'] = row['SubstGWP']
         f['max_odp'] = row['MaxODP'] or 0
@@ -421,6 +440,7 @@ class Command(BaseCommand):
         f['bromines'] = row['Bromines'] or ""
         f['is_contained_in_polyols'] = f['name'] in ['CFC-11', 'HCFC-141B']
         f['is_captured'] = is_captured
+        f['has_critical_uses'] = (f['name'] == 'Methyl Bromide')
 
         # TODO: Not mapped: r_code, mp_control, main_usage
         return f
@@ -435,16 +455,16 @@ class Command(BaseCommand):
         f['legacy_blend_id'] = row['BlendID']
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
-            f['sort_order'] = 1000 + row['_index']
+            f['sort_order'] = 110000 + row['_index']
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
-            f['sort_order'] = 2000 + row['_index']
+            f['sort_order'] = 120000 + row['_index']
         elif f['blend_id'].startswith('MeBr'):
             f['type'] = Blend.BlendTypes.MeBr.value
-            f['sort_order'] = 4000 + row['_index']
+            f['sort_order'] = 140000 + row['_index']
         else:
             f['type'] = Blend.BlendTypes.OTHER.value
-            f['sort_order'] = 3000 + row['_index']
+            f['sort_order'] = 130000 + row['_index']
 
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""
