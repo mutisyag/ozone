@@ -87,10 +87,10 @@ const getFormArt7 = ($gettext) => {
         intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Exports'),
         detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
-        titleHtml: `<b>${$gettext('EXPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C and E substances')}</small> <br> <small>${$gettext('in metric tonnes (not ODP tonnes)')}</small>`,
+        titleHtml: `<b>${$gettext('EXPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tonnes (not ODP tonnes)')}</small>`,
         tooltipForTitleHtml: $gettext('Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'),
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         isInvalid: false,
         section_subheaders: [
           {
@@ -220,7 +220,7 @@ const getFormArt7 = ($gettext) => {
         formNumber: 1,
         intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Imports'),
-        titleHtml: `<b>${$gettext('IMPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C and E substances')}</small> <br> <small>${$gettext('in metric tonnes ( not ODP tonnes)')}</small>`,
+        titleHtml: `<b>${$gettext('IMPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tonnes ( not ODP tonnes)')}</small>`,
         detailsHtml: $gettext('Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
         comments: {
           imports_remarks_party: {
@@ -233,7 +233,7 @@ const getFormArt7 = ($gettext) => {
           }
         },
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
         section_subheaders: [{
           name: 'group',
@@ -353,7 +353,7 @@ const getFormArt7 = ($gettext) => {
         detailsHtml: $gettext('Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
         isInvalid: false,
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         form_fields: [],
         fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
         special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'validation'],
@@ -537,7 +537,7 @@ const getFormArt7 = ($gettext) => {
         titleHtml: `<b>${$gettext('QUANTITY OF SUBSTANCES DESTROYED')} </b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances')}</small>`,
         detailsHtml: $gettext('Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         fields_order: ['substance', 'quantity_destroyed', 'remarks_party', 'remarks_os', 'validation'],
         blend_substance_headers: ['substance', 'percent', 'quantity_destroyed'],
         modal_order: ['quantity_destroyed'],
@@ -602,7 +602,7 @@ const getFormArt7 = ($gettext) => {
         tooltipForTitleHtml: $gettext('See definition of “non parties” in Instruction V.'),
         detailsHtml: $gettext('Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties'),
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         isInvalid: false,
         fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
         modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
@@ -721,7 +721,7 @@ const getFormArt7 = ($gettext) => {
         tooltipHtml: $gettext('Information in columns 2 to 5 is excluded from the reporting requirements under Article 7 of the Protocol and is provided on a voluntary basis'),
         detailsHtml: $gettext('Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances'),
         subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C and E substances'),
+        description: $gettext('Annexes A, B, C, E and F substances'),
         isInvalid: false,
         // used for identification when adding labels
         form_fields: [],
