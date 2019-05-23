@@ -483,11 +483,10 @@ export default {
   watch: {
     emergency_field: {
       handler(new_val, old_val) {
-        if (!old_val || !old_val.length) return
-        console.log(new_val, old_val)
+        if (!old_val || !old_val.length || (old_val.length !== new_val.length)) return
         Object.keys(new_val).forEach(key => {
           if (new_val[key].emergency !== old_val[key].emergency) {
-            this.$store.commit('setExemptionBasedOnEmergency', { emergency: new_val[key].emergncy, index: new_val[key].index })
+            this.$store.commit('setExemptionBasedOnEmergency', { emergency: new_val[key].emergency, index: new_val[key].index })
           }
         })
       },
