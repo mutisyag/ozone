@@ -247,8 +247,6 @@ def get_prodcons_data(periods, parties):
                 main_period,
                 group,
                 LimitTypes.PRODUCTION.value,
-                main_prod,
-                to_report_groups_main_period
             )
 
             main_cons = get_actual_value(
@@ -262,8 +260,6 @@ def get_prodcons_data(periods, parties):
                 main_period,
                 group,
                 LimitTypes.CONSUMPTION.value,
-                main_cons,
-                to_report_groups_main_period
             )
             per_capita_cons = get_per_capita_cons(main_cons, history.population)
 
@@ -342,18 +338,14 @@ def get_actual_value(prodcons, field, group, to_report_groups):
     return actual_value
 
 
-def get_limit(party, period, group, limit_type, actual_value, to_report_groups):
-    if not isinstance(actual_value, str) and group not in to_report_groups:
-        limit = '-'
-    else:
-        limit = Limit.objects.filter(
-            party=party,
-            reporting_period=period,
-            group=group,
-            limit_type=limit_type,
-        ).first()
-        limit = limit.limit if limit else '-'
-    return limit
+def get_limit(party, period, group, limit_type):
+    limit = Limit.objects.filter(
+        party=party,
+        reporting_period=period,
+        group=group,
+        limit_type=limit_type,
+    ).first()
+    return limit.limit if limit else '-'
 
 
 def get_per_capita_cons(cons, population):
