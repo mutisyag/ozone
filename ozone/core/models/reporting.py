@@ -1477,7 +1477,7 @@ class Submission(models.Model):
 
     def __str__(self):
         return f'{self.party.name} report on {self.obligation.name} ' \
-               f'for {self.reporting_period.name} - version {self.version}'
+               f'for {self.reporting_period.name} - # {self.version}'
 
     class Meta:
         # TODO: this constraint may not be true in the corner case of
