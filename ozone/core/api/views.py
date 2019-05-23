@@ -680,7 +680,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         timestamp = datetime.now().strftime('%Y-%m-%d')
         filename = f'prodcons_{timestamp}.pdf'
         buf_pdf = export_prodcons(
-            submission.reporting_period,
+            [submission.reporting_period],
             [submission.party]
         )
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
