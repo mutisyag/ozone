@@ -1551,7 +1551,7 @@ class ReportsViewSet(viewsets.ViewSet):
     filter_backends = (IsOwnerFilterBackend,)
 
     @action(detail=False, methods=["get"])
-    def export_prodcons_pdf(self, request):
+    def prodcons(self, request):
         parties = request.data.get('parties')
         parties = [
             Party.objects.get(pk=party_pk) for party_pk in parties
