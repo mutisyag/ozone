@@ -476,12 +476,19 @@ class TransferAdmin(admin.ModelAdmin):
     list_display = (
         'source_party', 'destination_party', 'substance', 'transferred_amount',
     )
+    list_filter = (
+        ('source_party', MainPartyFilter),
+        ('destination_party', MainPartyFilter),
+    )
     search_fields = (
         'source_party__name', 'destination_party__name', 'substance__name'
     )
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
+        main_parties_queryset = Party.objects.filter(
+            parent_party__id=F('id'),
+        ).order_by('name')
         source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
             obligation___form_type=FormTypes.TRANSFER.value
         )
@@ -494,6 +501,8 @@ class TransferAdmin(admin.ModelAdmin):
             )
         form.base_fields['source_party_submission'].queryset = source_sub_queryset
         form.base_fields['destination_party_submission'].queryset = dest_sub_queryset
+        form.base_fields['source_party'].queryset = main_parties_queryset
+        form.base_fields['destination_party'].queryset = main_parties_queryset
         return form
 
 
