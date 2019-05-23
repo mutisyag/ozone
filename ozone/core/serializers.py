@@ -842,7 +842,7 @@ class ExemptionNominationListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
-    unique_with = None
+    unique_with = 'is_emergency'
 
 
 class ExemptionNominationSerializer(
