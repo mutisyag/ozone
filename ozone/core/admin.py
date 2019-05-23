@@ -491,7 +491,7 @@ class TransferAdmin(admin.ModelAdmin):
         ).order_by('name')
         source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
             obligation___form_type=FormTypes.TRANSFER.value
-        )
+        ).order_by('reporting_period__name')
         if obj is not None:
             source_sub_queryset = source_sub_queryset.filter(
                 party=obj.source_party
