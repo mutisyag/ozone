@@ -332,7 +332,7 @@ class ReportingPeriodViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Obligation.objects.filter(is_active=True)
+    queryset = Obligation.objects.all()
     serializer_class = ObligationSerializer
     permission_classes = (IsAuthenticated,)
 
