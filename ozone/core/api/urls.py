@@ -273,6 +273,15 @@ auth_tokens.register(
 )
 router.extend(auth_tokens)
 
+# PDF reports
+reports = routers.SimpleRouter()
+reports.register(
+    'reports',
+    views.ReportsViewSet,
+    base_name='reports'
+)
+router.extend(reports)
+
 urlpatterns = (
     router.urls
     + [url for router in nested_routers for url in router.urls]

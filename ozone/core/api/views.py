@@ -680,7 +680,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         timestamp = datetime.now().strftime('%Y-%m-%d')
         filename = f'prodcons_{timestamp}.pdf'
         buf_pdf = export_prodcons(
-            submission.reporting_period,
+            [submission.reporting_period],
             [submission.party]
         )
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
@@ -1544,3 +1544,25 @@ class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
             'reporting_channel': default_reporting_channel,
             'submission_format': default_submission_format,
         })
+
+
+class ReportsViewSet(viewsets.ViewSet):
+    serializer_class = ObligationSerializer
+    filter_backends = (IsOwnerFilterBackend,)
+
+    @action(detail=False, methods=["get"])
+    def prodcons(self, request):
+        parties = request.data.get('parties')
+        parties = [
+            Party.objects.get(pk=party_pk) for party_pk in parties
+        ]
+        reporting_periods = request.data.get('reporting_periods')
+        reporting_periods = [
+            ReportingPeriod.objects.get(pk=period_pk) for period_pk in reporting_periods
+        ]
+        timestamp = datetime.now().strftime('%Y-%m-%d')
+        filename = f'prodcons_{timestamp}.pdf'
+        buf_pdf = export_prodcons(reporting_periods, parties)
+        resp = HttpResponse(buf_pdf, content_type='application/pdf')
+        resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        return resp

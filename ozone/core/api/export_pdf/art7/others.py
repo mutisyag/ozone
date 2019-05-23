@@ -10,6 +10,7 @@ from ozone.core.models import (
     LimitTypes,
     Submission,
     FormTypes,
+    ReportingPeriod,
 )
 from ozone.core.models.utils import round_half_up
 
@@ -17,7 +18,10 @@ from ..util import p_l
 from ..util import h1_style, h2_style, h3_style, page_title_style, FONTSIZE_SMALL, TABLE_STYLES
 from ..util import left_description_style
 from ..util import col_widths
-from ..util import get_date_of_reporting_str
+from ..util import (
+    get_date_of_reporting_str,
+    get_compared_period,
+)
 
 
 TABLE_CUSTOM_STYLES = (
@@ -44,13 +48,14 @@ def get_header(data):
 
 
 def get_subheader(data):
-    description = _("""Production and Consumption for {period}
-    - Comparison with Base Year""".format(
-        period=data['period']))
-    return Paragraph(
-        description,
-        style=h2_style
+    description = _(
+        "Production and Consumption for {period1} - "
+        "Comparison with {period2} Year".format(
+            period1=data['periods'][0],
+            period2=data['periods'][1]
+        )
     )
+    return Paragraph(description, style=h2_style)
 
 
 def get_report_info(data):
@@ -79,9 +84,13 @@ def get_description(groups):
         )
 
 
-def get_ods_caption():
-    description = _("""Production and Consumption of ODSs -
-    Comparison with Base Year (ODP Tonnes)""")
+def get_ods_caption(compared_period):
+    description = _(
+        "Production and Consumption of ODSs - "
+        "Comparison with {compared_period} Year (ODP Tonnes)".format(
+            compared_period=compared_period
+        )
+    )
 
     return Paragraph(
         description,
@@ -114,9 +123,13 @@ def get_fgas_table(data):
     )
 
 
-def get_fgas_caption():
-    description = _("""Production and Consumption of HFCs -
-    Comparison with Base Year (CO2-equivalent tonnes)""")
+def get_fgas_caption(compared_period):
+    description = _(
+        "Production and Consumption of HFCs - "
+        "Comparison with {compared_period} Year (CO2-equivalent tonnes)".format(
+            compared_period=compared_period
+        )
+    )
 
     return Paragraph(
         description,
@@ -124,8 +137,8 @@ def get_fgas_caption():
     )
 
 
-def get_prodcons_flowables(period, parties):
-    data = get_prodcons_data(period, parties)
+def get_prodcons_flowables(periods, parties):
+    data = get_prodcons_data(periods, parties)
 
     flowables = list(
         (get_header(data),) +
@@ -133,19 +146,19 @@ def get_prodcons_flowables(period, parties):
         (get_report_info(data),) +
         get_description(data['groups']) +
         (Paragraph("", style=page_title_style),) +
-        (get_ods_caption(),) +
+        (get_ods_caption(periods[1].name),) +
         (get_ods_table(data),) +
         (Paragraph("", style=page_title_style),)
     )
 
     if 'F' in data['tables'][0]['data'].keys():
-        flowables.append(get_fgas_caption())
+        flowables.append(get_fgas_caption(periods[1].name))
         flowables.append(get_fgas_table(data))
 
     return flowables
 
 
-def get_prodcons_data(period, parties):
+def get_prodcons_data(periods, parties):
     data = {}
     all_groups = Group.objects.all()
     data['groups'] = {}
@@ -155,6 +168,10 @@ def get_prodcons_data(period, parties):
             'description': group.description,
             'description_alt': group.description_alt
         }
+
+    periods = get_compared_period(periods)
+    main_period = periods[0]
+    compared_period = periods[1]
 
     data['headers'] = (
         (
@@ -171,31 +188,31 @@ def get_prodcons_data(period, parties):
         ),
         (
             '',
-            period.name,
-            _('Base'),
+            main_period.name,
+            compared_period.name,
             _('% Chng'),
             _('Limit'),
-            period.name,
-            _('Base'),
+            main_period.name,
+            compared_period.name,
             _('% Chng'),
             _('Limit'),
             _('Per Cap. Cons.')
         )
     )
 
-    data['period'] = period.name
+    data['periods'] = [main_period.name, compared_period.name]
 
     data['tables'] = []
     for party in parties:
         table_data = {}
         history = PartyHistory.objects.get(
             party=party,
-            reporting_period=period
+            reporting_period=main_period
         )
         submission_qs = Submission.objects.filter(
             party=party,
-            reporting_period=period,
-            obligation___form_type=FormTypes.ART7.value
+            reporting_period=main_period,
+            obligation___form_type=FormTypes.ART7.value,
         )
         # There should only be one current submission.
         # TODO This list will be empty for submissions in data_entry.
@@ -210,104 +227,95 @@ def get_prodcons_data(period, parties):
         }
 
         table_data['data'] = {}
-        to_report_groups = Group.get_report_groups(party, period)
+        to_report_groups_main_period = Group.get_report_groups(party, main_period)
         for group in all_groups:
-            limit_prod = Limit.objects.filter(
-                party=party,
-                reporting_period=period,
-                group=group,
-                limit_type=LimitTypes.PRODUCTION.value
-            ).first()
-            limit_prod = limit_prod.limit if limit_prod else '-'
-            limit_cons = Limit.objects.filter(
-                party=party,
-                reporting_period=period,
-                group=group,
-                limit_type=LimitTypes.CONSUMPTION.value
-            ).first()
-            limit_cons = limit_cons.limit if limit_cons else '-'
-
             try:
-                prodcons = ProdCons.objects.get(
-                    party=party,
-                    reporting_period=period,
-                    group=group
+                main_prodcons = ProdCons.objects.get(
+                    party=party, reporting_period=main_period, group=group
                 )
             except ProdCons.DoesNotExist:
-                prodcons = None
+                main_prodcons = None
 
-            if prodcons and prodcons.calculated_production is not None:
-                actual_prod = prodcons.calculated_production
-                if group not in to_report_groups:
-                    limit_prod = '-'
-            else:
-                if group in to_report_groups:
-                    actual_prod = 'N.R.'
-                else:
-                    actual_prod = '-'
+            main_prod = get_actual_value(
+                main_prodcons,
+                'calculated_production',
+                group,
+                to_report_groups_main_period
+            )
+            limit_prod = get_limit(
+                party,
+                main_period,
+                group,
+                LimitTypes.PRODUCTION.value,
+            )
 
-            per_capita_cons = 0
-            if prodcons and prodcons.calculated_consumption is not None:
-                actual_cons = prodcons.calculated_consumption
-                per_capita_cons = round_half_up(
-                    actual_cons / history.population,
-                    4
+            main_cons = get_actual_value(
+                main_prodcons,
+                'calculated_consumption',
+                group,
+                to_report_groups_main_period
+            )
+            limit_cons = get_limit(
+                party,
+                main_period,
+                group,
+                LimitTypes.CONSUMPTION.value,
+            )
+            per_capita_cons = get_per_capita_cons(main_cons, history.population)
+
+            if isinstance(compared_period, ReportingPeriod):
+                to_report_groups_compared_period = Group.get_report_groups(
+                    party,
+                    compared_period
                 )
-                if group not in to_report_groups:
-                    limit_cons = '-'
-            else:
-                if group in to_report_groups:
-                    actual_cons = 'N.R.'
-                else:
-                    actual_cons = '-'
-
-            chng_prod = -100
-            if prodcons and prodcons.baseline_prod is not None:
-                baseline_prod = prodcons.baseline_prod
-                if not isinstance(actual_prod, str) and actual_prod > 0 and baseline_prod != 0:
-                    chng_prod = round_half_up(
-                        -100 + actual_prod / baseline_prod*100,
-                        ProdCons.get_decimals(period, group, party)
+                try:
+                    compared_prodcons = ProdCons.objects.get(
+                        party=party, reporting_period=compared_period, group=group
                     )
-            else:
-                baseline_prod = 'N.R.'
-                if (
-                    group.group_id in ['CII', 'CIII']
-                    or (not isinstance(actual_prod, str) and actual_prod <= 0)
-                    or actual_prod == '-'
-                ):
-                    baseline_prod = ""
-                chng_prod = '-'
+                except ProdCons.DoesNotExist:
+                    compared_prodcons = None
 
-            chng_cons = -100
-            if prodcons and prodcons.baseline_cons is not None:
-                baseline_cons = prodcons.baseline_cons
-                if not isinstance(actual_cons, str) and actual_cons > 0 and baseline_cons != 0:
-                    chng_cons = round_half_up(
-                        -100 + actual_cons / baseline_cons*100,
-                        ProdCons.get_decimals(period, group, party)
-                    )
+                compared_prod = get_actual_value(
+                    compared_prodcons,
+                    'calculated_production',
+                    group,
+                    to_report_groups_compared_period
+                )
+                compared_cons = get_actual_value(
+                    compared_prodcons,
+                    'calculated_consumption',
+                    group,
+                    to_report_groups_compared_period
+                )
             else:
-                baseline_cons = 'N.R.'
-                if (
-                    group.group_id in ['CII', 'CIII']
-                    or (not isinstance(actual_cons, str) and actual_cons <= 0)
-                    or actual_cons == '-'
-                ):
-                    baseline_cons = ""
-                chng_cons = '-'
+                # Comparison with Base year
+                compared_prod = get_baseline(
+                    main_prodcons,
+                    'baseline_prod',
+                    main_prod,
+                    group
+                )
+                compared_cons = get_baseline(
+                    main_prodcons,
+                    'baseline_cons',
+                    main_cons,
+                    group
+                )
+
+            chng_prod = get_chng(main_prod, compared_prod)
+            chng_cons = get_chng(main_cons, compared_cons)
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
                     id=group.group_id,
                     descr=group.description
                 ),
-                actual_prod,
-                baseline_prod,
+                main_prod,
+                compared_prod,
                 chng_prod,
                 limit_prod,
-                actual_cons,
-                baseline_cons,
+                main_cons,
+                compared_cons,
                 chng_cons,
                 limit_cons,
                 per_capita_cons
@@ -315,3 +323,57 @@ def get_prodcons_data(period, parties):
         data['tables'].append(table_data)
 
     return data
+
+
+def get_actual_value(prodcons, field, group, to_report_groups):
+    if prodcons and getattr(prodcons, field) is not None:
+        actual_value = getattr(prodcons, field)
+    else:
+        if group in to_report_groups:
+            actual_value = 'N.R.'
+        else:
+            actual_value = '-'
+    return actual_value
+
+
+def get_limit(party, period, group, limit_type):
+    limit = Limit.objects.filter(
+        party=party,
+        reporting_period=period,
+        group=group,
+        limit_type=limit_type,
+    ).first()
+    return limit.limit if limit else '-'
+
+
+def get_per_capita_cons(cons, population):
+    if not isinstance(cons, str):
+        return round_half_up(cons / population, 4)
+    else:
+        return 0
+
+
+def get_baseline(prodcons, field, actual_value, group):
+    if prodcons and getattr(prodcons, field) is not None:
+        baseline = getattr(prodcons, field)
+    else:
+        baseline = 'N.R.'
+        if (
+            group.group_id in ['CII', 'CIII']
+            or (not isinstance(actual_value, str) and actual_value <= 0)
+            or actual_value == '-'
+        ):
+            baseline = ""
+    return baseline
+
+
+def get_chng(actual_value, compared_value):
+    if isinstance(actual_value, str) or isinstance(compared_value, str):
+        return '-'
+    elif actual_value > 0 and compared_value != 0:
+        return round_half_up(
+            -100 + actual_value / compared_value * 100,
+            2
+        )
+    else:
+        return -100
