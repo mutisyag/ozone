@@ -178,7 +178,7 @@ class Transfer(models.Model):
     def delete(self, *args, **kwargs):
         self.clear_aggregated_data()
 
-        super().save(*args, **kwargs)
+        super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         self.full_clean()

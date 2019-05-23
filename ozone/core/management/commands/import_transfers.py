@@ -5,7 +5,6 @@ from django.db import transaction
 from openpyxl import load_workbook
 
 from ozone.core.models import (
-    Obligation,
     Party,
     Substance,
     Submission,
@@ -60,29 +59,22 @@ class Command(BaseCommand):
         # Load all the data.
         self.wb = load_workbook(filename=options["file"])
 
-        # Process & populate letters
-        letters_ws = self.wb['Letters']
-        values = list(letters_ws.values)
-        headers = values[0]
-        for row in values[1:]:
-            row = dict(zip(headers, row))
-            self.process_letter_data(row, options["purge"])
+        workbook_processors = [
+            ('Letters', self.process_letter_data),
+            ('ProdTransfers', self.process_transfer_data),
+            ('ProdTransfersLetters', self.process_letter_transfer_data),
+        ]
+        if options["purge"]:
+            workbook_processors = reversed(workbook_processors)
 
-        # Process & populate transfers
-        transfers_ws = self.wb['ProdTransfers']
-        values = list(transfers_ws.values)
-        headers = values[0]
-        for row in values[1:]:
-            row = dict(zip(headers, row))
-            self.process_transfer_data(row, options["purge"])
-
-        # Process letters-transfers and populate relevant fields on transfers
-        letters_transfers_ws = self.wb['ProdTransfersLetters']
-        values = list(letters_transfers_ws.values)
-        headers = values[0]
-        for row in values[1:]:
-            row = dict(zip(headers, row))
-            self.process_letter_transfer_data(row, options["purge"])
+        # Process & populate letters, transfers, and then transfer's letters
+        for workbook_name, workbook_processor in workbook_processors:
+            worksheet = self.wb[workbook_name]
+            values = list(worksheet.values)
+            headers = values[0]
+            for row in values[1:]:
+                row = dict(zip(headers, row))
+                workbook_processor(row, options["purge"])
 
     def process_letter_data(self, letter, purge=False):
         try:
@@ -95,23 +87,31 @@ class Command(BaseCommand):
             return 0
 
     @transaction.atomic
-    def _delete_letter_instance(self, letter_id):
-        submission = self.submissions_letters_map.pop(letter_id, None)
+    def _delete_letter_instance(self, letter_id, entry):
+        sub = entry["submission"]
+        submission = Submission.objects.filter(
+            party_id=sub["party_id"],
+            reporting_period_id=sub["reporting_period_id"],
+            obligation_id=sub["obligation_id"],
+        ).first()
         if submission:
+            logger.info(f"Deleting letter {letter_id}")
             submission._current_state = 'data_entry'
             submission.save()
             submission.delete()
+        else:
+            logger.info(f"Letter {letter_id} not found in database.")
 
     @transaction.atomic
     def _process_letter_data(self, letter, purge=False):
         letter_id = letter['LetterID'] if letter else None
+        entry = self.get_submission_data(letter)
 
         if purge:
-            self._delete_letter_instance(letter_id)
+            self._delete_letter_instance(letter_id, entry)
             return
 
-        if not letter or not self.submissions_letters_map.get(letter_id):
-            entry = self.get_submission_data(letter)
+        if not self.submissions_letters_map.get(letter_id):
             submission = Submission.objects.create(
                 **entry["submission"]
             )
@@ -142,29 +142,40 @@ class Command(BaseCommand):
             return self._process_transfer_data(transfer, purge)
         except Exception as e:
             logger.error(
-                "Error %s while saving transfer %s", e, transfer['ProdTransferID'],
+                f"Error {e} while saving transfer {transfer['ProdTransferID']}",
                 exc_info=True
             )
             return 0
 
     @transaction.atomic
-    def _delete_transfer_instance(self, transfer_id):
-        transfer = self.transfers_map.pop(transfer_id, None)
+    def _delete_transfer_instance(self, transfer_id, entry):
+        transfer = Transfer.objects.filter(
+            reporting_period__id=entry["reporting_period_id"],
+            substance_id=entry["substance_id"],
+            transfer_type="P",
+            transferred_amount=entry["transferred_amount"],
+            is_basic_domestic_need=entry["is_basic_domestic_need"],
+            source_party_id=entry["source_party_id"],
+            destination_party_id=entry["destination_party_id"]
+        ).first()
         if transfer:
+            logger.info(f"Deleting transfer {transfer_id}")
             transfer.delete()
+        else:
+            logger.info(f"Transfer {transfer_id} not found in database.")
 
     @transaction.atomic
     def _process_transfer_data(self, transfer, purge=False):
         transfer_id = transfer['ProdTransferID']
+        entry = self.get_transfer_data(transfer)
 
         if purge:
-            self._delete_transfer_instance(transfer_id)
+            self._delete_transfer_instance(transfer_id, entry)
             return
 
-        if 'a':
-            transfer = self.get_transfer_data(transfer)
+        if not self.transfers_map.get(transfer_id):
             t = Transfer.objects.create(
-                **transfer
+                **entry
             )
             # Fill aggregated data based on this transfer
             t.populate_aggregated_data()
@@ -190,19 +201,25 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def _process_letter_transfer_data(self, entry, purge=False):
-        transfer = self.transfers_map[entry['ProdTransferID']]
-        submission = self.submissions_letters_map[entry['LetterID']]
-
         if purge:
-            value = None
-        else:
-            value = submission
+            # Nothing to be done here
+            return
+
+        transfer = self.transfers_map.get(entry['ProdTransferID'], None)
+        submission = self.submissions_letters_map.get(entry['LetterID'], None)
+
+        if not transfer or not submission:
+            logger.info(
+                f"Could not process mapping of letter {entry['LetterID']} and "
+                f"transfer {entry['ProdTransferID']}"
+            )
+            return
 
         # Set the submission on the transfer
         if transfer.source_party == submission.party:
-            transfer.source_party_submission = value
+            transfer.source_party_submission = submission
         elif transfer.destination_party == submission.party:
-            transfer.destination_party_submission = value
+            transfer.destination_party_submission = submission
 
         transfer.save()
 
@@ -248,7 +265,6 @@ class Command(BaseCommand):
                 "email": "",
                 "date": letter_date,
             },
-            "transfers": []
         }
 
     def get_transfer_data(self, transfer):
