@@ -302,10 +302,8 @@ def get_prodcons_data(periods, parties):
                     group
                 )
 
-            #TODO check if Chng should be rounded depending on main or compared period
-            decimals = ProdCons.get_decimals(main_period, group, party)
-            chng_prod = get_chng(main_prod, compared_prod, decimals)
-            chng_cons = get_chng(main_cons, compared_cons, decimals)
+            chng_prod = get_chng(main_prod, compared_prod)
+            chng_cons = get_chng(main_cons, compared_cons)
 
             table_data['data'][group.group_id] = (
                 '{id}  - {descr}'.format(
@@ -369,13 +367,13 @@ def get_baseline(prodcons, field, actual_value, group):
     return baseline
 
 
-def get_chng(actual_value, compared_value, decimals):
+def get_chng(actual_value, compared_value):
     if isinstance(actual_value, str) or isinstance(compared_value, str):
         return '-'
     elif actual_value > 0 and compared_value != 0:
         return round_half_up(
             -100 + actual_value / compared_value * 100,
-            decimals
+            2
         )
     else:
         return -100
