@@ -201,6 +201,10 @@ MIDDLEWARE = [
 STATIC_ROOT = ROOT_DIR / 'static'
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = '/static/'
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-STATICFILES_DIRS
+STATICFILES_DIRS = (
+    ROOT_DIR / 'ozone' / 'static',
+)
 
 # MEDIA
 # ------------------------------------------------------------------------------
@@ -218,6 +222,7 @@ _WEBPACK_DIST_DIR = ROOT_DIR / 'frontend' / 'dist'
 
 if _WEBPACK_DIST_DIR.is_dir():
     STATICFILES_DIRS = (
+        *STATICFILES_DIRS,
         _WEBPACK_DIST_DIR,
     )
 
