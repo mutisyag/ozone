@@ -3,7 +3,6 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
     hasAssideMenu: true,
     hideInfoButton: true,
     endpoint_url: 'exemptionapproved_url',
-    ordering_id: 0,
     validate: true,
     status: null,
     saving: false,

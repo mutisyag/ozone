@@ -50,10 +50,9 @@ const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) 
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, ordering_id, countries, critical, exemptionValue
+    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue
   }) {
     const	baseInnerFields = {
-      ordering_id: { selected: ordering_id || 0 },
       checkForDelete: {
         selected: false,
         type: 'checkbox'
