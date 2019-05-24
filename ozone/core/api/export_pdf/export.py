@@ -9,6 +9,7 @@ from reportlab.lib.units import cm
 
 from . import art7
 from . import hat
+from . import reports
 from .util import right_paragraph_style, left_paragraph_style
 
 
@@ -85,7 +86,7 @@ def export_prodcons(reporting_period, parties):
     )
 
     doc.build(
-        art7.export_prodcons(reporting_period, parties),
+        reports.export_prodcons(reporting_period, parties),
         onFirstPage=add_page_footnotes,
         onLaterPages=add_page_footnotes
         )

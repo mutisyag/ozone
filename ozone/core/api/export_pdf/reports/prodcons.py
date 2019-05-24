@@ -101,7 +101,7 @@ def get_ods_caption(compared_period):
 def get_ods_table(data):
     table_headers = data['headers']
     # get all except F Annex/Group
-    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F') 
+    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F')
 
     return Table(
         table_headers + table_data,
