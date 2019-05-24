@@ -1555,11 +1555,11 @@ class ReportsViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"])
     def prodcons(self, request):
-        parties = request.data.get('parties')
+        parties = request.GET.getlist(key='party')
         parties = [
             Party.objects.get(pk=party_pk) for party_pk in parties
         ]
-        reporting_periods = request.data.get('reporting_periods')
+        reporting_periods = request.GET.getlist(key='period')
         reporting_periods = [
             ReportingPeriod.objects.get(pk=period_pk) for period_pk in reporting_periods
         ]
