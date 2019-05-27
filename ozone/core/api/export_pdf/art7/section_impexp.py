@@ -130,6 +130,7 @@ def to_row(obj, row_index, party_field, text_qps):
     # quantity_polyols
     if obj.quantity_polyols:
         # Add another row for polyols
+        current_row = row_index + len(rows)
         if is_subtotal:
             rows.extend([
                 (
@@ -138,6 +139,11 @@ def to_row(obj, row_index, party_field, text_qps):
                     p_r(get_big_float(obj.quantity_polyols)),
                     '', '',
                 )
+            ])
+            styles.extend([
+                #  Vertical span of common columns
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+                ('SPAN', (0, current_row), (2, current_row)),
             ])
         else:
             rows.extend([
@@ -151,12 +157,11 @@ def to_row(obj, row_index, party_field, text_qps):
                     '',
                 )
             ])
-        current_row = row_index + len(rows) - 1
-        styles.extend([
-            #  Vertical span of common columns
-            ('SPAN', (8, row_index), (8, current_row)),  # Remarks
-            ('SPAN', (0, current_row), (5, current_row)),
-        ])
+            styles.extend([
+                #  Vertical span of common columns
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+                ('SPAN', (0, current_row), (1, current_row)),
+            ])
     return (rows, styles)
 
 
@@ -165,6 +170,7 @@ def merge(items):
         return None
     sub_item = items[0].__class__()
     sub_item.substance = items[0].substance
+    sub_item.blend = items[0].blend
     sub_item.is_subtotal = True
     for x in items:
         for f in x.QUANTITY_FIELDS + ['quantity_polyols']:
@@ -177,23 +183,23 @@ def merge(items):
 
 def preprocess_subtotals(data):
     newdata = list()
-    substance = None
+    substance = None  # substance or blend
     subtotal_items = list()
     for item in data:
         # Add subtotal rows when multiple items for the same substance
         # assuming the list of items is pre-sorted by substance
-        if substance and item.substance_id != substance.pk:
+        if substance and item.substance_id != substance.pk and item.blend_id != substance.pk:
             # substance has changed
             sub_item = merge(subtotal_items)
             if sub_item:
                 newdata.append(sub_item)
             subtotal_items = list()
-            substance = item.substance
+            substance = item.substance or item.blend
         newdata.append(item)
         subtotal_items.append(item)
         if not substance:
             # First item
-            substance = item.substance
+            substance = item.substance or item.blend
     # Process last set of items
     sub_item = merge(subtotal_items)
     if sub_item:
