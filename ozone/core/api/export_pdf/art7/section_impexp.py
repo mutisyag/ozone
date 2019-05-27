@@ -2,19 +2,23 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.lib import colors
 from reportlab.platypus import Paragraph
 
-from ..util import col_widths
-from ..util import exclude_blend_items
-from ..util import get_big_float
-from ..util import get_comments_section
-from ..util import get_quantity, get_decision
-from ..util import get_remarks
-from ..util import get_substance_or_blend_name
-from ..util import get_group_name
-from ..util import h2_style
-from ..util import p_c, p_l, p_r
-from ..util import rows_to_table
-from ..util import TABLE_STYLES
-from ..util import EXEMPTED_FIELDS
+from ..util import (
+    col_widths,
+    sum_decimals,
+    exclude_blend_items,
+    get_big_float,
+    get_comments_section,
+    get_quantity,
+    get_decision,
+    get_remarks,
+    get_substance_or_blend_name,
+    get_group_name,
+    h2_style,
+    p_c, p_l, p_r,
+    rows_to_table,
+    TABLE_STYLES,
+    EXEMPTED_FIELDS
+)
 
 
 def to_row(obj, row_index, party_field, text_qps):
@@ -29,7 +33,7 @@ def to_row(obj, row_index, party_field, text_qps):
     party = getattr(obj, party_field)
 
     # Add base row
-    rows.append((
+    base_row = [
         p_c(get_group_name(obj)),
         p_l(get_substance_or_blend_name(obj)),
         p_l(party.name if party else ''),
@@ -44,7 +48,20 @@ def to_row(obj, row_index, party_field, text_qps):
             )
         ) if first_field else '',
         p_l(get_remarks(obj)),
-    ))
+    ]
+    is_subtotal = hasattr(obj, 'is_subtotal')
+    rows.append(base_row)
+    if is_subtotal:
+        base_row[0] = p_r(
+            '<b>%s %s</b> (%s)' % (_('Subtotal'), obj.substance.name, _('excluding polyols'))
+            if obj.quantity_polyols
+            else '<b>%s %s</b>' % (_('Subtotal'), obj.substance.name)
+        )
+        base_row[1] = ''  # Substance name
+        current_row = row_index + len(rows) - 1
+        styles.extend([
+            ('SPAN', (0, current_row), (2, current_row)),
+        ])
 
     # Add more rows if there are still fields in field_names
     for f in field_names:
@@ -58,7 +75,7 @@ def to_row(obj, row_index, party_field, text_qps):
 
     # quantity_quarantine_pre_shipment
     if obj.quantity_quarantine_pre_shipment:
-        # Add two rows for QPS
+        # Add two more rows for QPS
         rows.extend([
             (
                 '', '', '', '', '', '',
@@ -73,40 +90,121 @@ def to_row(obj, row_index, party_field, text_qps):
             )
         ])
         current_row = row_index + len(rows) - 1
-        styles.extend([
-            ('SPAN', (6, current_row-1), (7, current_row-1)),  # Quantity + Decision (heading)
-            ('BACKGROUND', (6, current_row-1), (7, current_row-1), colors.lightgrey),
-            ('ALIGN', (6, current_row-1), (7, current_row-1), 'CENTER'),
-        ])
+        # Merge heading with previous row (exempted amounts and decision) when empty
+        if not any((first_field, field_names)):
+            base_row[6] = p_c(text_qps)
+            styles.extend([
+                ('SPAN', (6, current_row-2), (7, current_row-1)),  # Quantity
+                ('BACKGROUND', (6, current_row-2), (7, current_row-1), colors.lightgrey),
+                ('ALIGN', (6, current_row-2), (7, current_row-2), 'CENTER'),
+            ])
+        else:
+            styles.extend([
+                ('SPAN', (6, current_row-1), (7, current_row-1)),  # Quantity + Decision (heading)
+                ('BACKGROUND', (6, current_row-1), (7, current_row-1), colors.lightgrey),
+                ('ALIGN', (6, current_row-1), (7, current_row-1), 'CENTER'),
+            ])
 
     if len(rows) > 1:
         current_row = row_index + len(rows) - 1
-        styles.extend([
-            #  Vertical span of common columns for all exempted rows
-            ('SPAN', (0, row_index), (0, current_row)),  # Annex Group
-            ('SPAN', (1, row_index), (1, current_row)),  # Substance
-            ('SPAN', (2, row_index), (2, current_row)),  # Party
-            ('SPAN', (3, row_index), (3, current_row)),  # New amount
-            ('SPAN', (4, row_index), (4, current_row)),  # Recovered amount
-            ('SPAN', (5, row_index), (5, current_row)),  # Feedstock
-            ('SPAN', (8, row_index), (8, current_row)),  # Remarks
-        ])
+        if is_subtotal:
+            styles.extend([
+                #  Vertical span of common columns for all exempted rows
+                ('SPAN', (0, row_index), (2, current_row)),  # Annex Group + Substance + Party
+                ('SPAN', (3, row_index), (3, current_row)),  # New amount
+                ('SPAN', (4, row_index), (4, current_row)),  # Recovered amount
+                ('SPAN', (5, row_index), (5, current_row)),  # Feedstock
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+            ])
+        else:
+            styles.extend([
+                #  Vertical span of common columns for all exempted rows
+                ('SPAN', (0, row_index), (0, current_row)),  # Annex Group
+                ('SPAN', (1, row_index), (1, current_row)),  # Substance
+                ('SPAN', (2, row_index), (2, current_row)),  # Party
+                ('SPAN', (3, row_index), (3, current_row)),  # New amount
+                ('SPAN', (4, row_index), (4, current_row)),  # Recovered amount
+                ('SPAN', (5, row_index), (5, current_row)),  # Feedstock
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+            ])
     # quantity_polyols
     if obj.quantity_polyols:
         # Add another row for polyols
-        rows.extend([
-            (
-                '',
-                p_l('%s %s' % (_('Polyols containing'), obj.substance.name)),
-                p_l(party.name if party else ''),
-                '', '', '',
-                p_r(get_big_float(obj.quantity_polyols)),
-                get_decision(obj, 'polyols'),
-                '',
-            )
-        ])
-        current_row = row_index + len(rows) - 1
+        current_row = row_index + len(rows)
+        if is_subtotal:
+            rows.extend([
+                (
+                    p_r('<b>%s %s</b>' % (_('Subtotal polyols containing'), obj.substance.name)),
+                    '', '', '', '', '',
+                    p_r(get_big_float(obj.quantity_polyols)),
+                    '', '',
+                )
+            ])
+            styles.extend([
+                #  Vertical span of common columns
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+                ('SPAN', (0, current_row), (2, current_row)),
+            ])
+        else:
+            rows.extend([
+                (
+                    p_r('%s %s' % (_('Polyols containing'), obj.substance.name)),
+                    '',
+                    p_l(party.name if party else ''),
+                    '', '', '',
+                    p_r(get_big_float(obj.quantity_polyols)),
+                    get_decision(obj, 'polyols'),
+                    '',
+                )
+            ])
+            styles.extend([
+                #  Vertical span of common columns
+                ('SPAN', (8, row_index), (8, current_row)),  # Remarks
+                ('SPAN', (0, current_row), (1, current_row)),
+            ])
     return (rows, styles)
+
+
+def merge(items):
+    if len(items) <= 1:
+        return None
+    sub_item = items[0].__class__()
+    sub_item.substance = items[0].substance
+    sub_item.blend = items[0].blend
+    sub_item.is_subtotal = True
+    for x in items:
+        for f in x.QUANTITY_FIELDS + ['quantity_polyols']:
+            setattr(sub_item, f, sum_decimals(
+                getattr(sub_item, f),
+                getattr(x, f)
+            ))
+    return sub_item
+
+
+def preprocess_subtotals(data):
+    newdata = list()
+    substance = None  # substance or blend
+    subtotal_items = list()
+    for item in data:
+        # Add subtotal rows when multiple items for the same substance
+        # assuming the list of items is pre-sorted by substance
+        if substance and item.substance_id != substance.pk and item.blend_id != substance.pk:
+            # substance has changed
+            sub_item = merge(subtotal_items)
+            if sub_item:
+                newdata.append(sub_item)
+            subtotal_items = list()
+            substance = item.substance or item.blend
+        newdata.append(item)
+        subtotal_items.append(item)
+        if not substance:
+            # First item
+            substance = item.substance or item.blend
+    # Process last set of items
+    sub_item = merge(subtotal_items)
+    if sub_item:
+        newdata.append(sub_item)
+    return newdata
 
 
 def _export(data, comments, party_field, texts):
@@ -151,6 +249,8 @@ def _export(data, comments, party_field, texts):
             '',
         ),
     ]
+
+    data = preprocess_subtotals(data)
 
     rows = list()
     for item in data:
