@@ -78,7 +78,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
         submission = self.create_submission()
 
         data = {
-            'country': 'Romania',
+            'country': self.party.pk,
             'date': None,
             'designation': '',
             'email': "test@example.com",
@@ -107,7 +107,7 @@ class TestSubmissionMethods(BaseSubmissionInfoTest):
         submission.save()
 
         data = {
-            'country': 'Romania',
+            'country': self.party.pk,
             'date': None,
             'designation': '',
             'email': "test@example.com",

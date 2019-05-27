@@ -106,7 +106,7 @@ class SubmissionReportingChannelTests(BaseTests):
             "designation": "test",
             "organization": "test",
             "postal_address": "test",
-            "country": "test",
+            "country": self.party.pk,
             "phone": "test",
             "email": None,
             "date": None,
