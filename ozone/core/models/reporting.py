@@ -1695,7 +1695,13 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
     designation = models.CharField(max_length=256, blank=True)
     organization = models.CharField(max_length=256, blank=True)
     postal_address = models.CharField(max_length=512, blank=True)
-    country = models.CharField(max_length=256, blank=True)
+    country = models.ForeignKey(
+        Party,
+        related_name='infos',
+        null=True,
+        blank=True,
+        on_delete=models.PROTECT
+    )
     phone = models.CharField(max_length=128, blank=True)
     email = models.EmailField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
