@@ -1,6 +1,7 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.lib import colors
+from reportlab.platypus import PageBreak
 
 from ozone.core.models import (
     ProdCons,
@@ -40,9 +41,9 @@ TABLE_TOTAL_STYLE = (
 )
 
 
-def get_header(data):
+def get_header(table):
     return Paragraph(
-        data['tables'][0]['party']['name'].upper(),
+        table['party']['name'].upper(),
         style=h1_style
     )
 
@@ -58,8 +59,8 @@ def get_subheader(data):
     return Paragraph(description, style=h2_style)
 
 
-def get_report_info(data):
-    party = data['tables'][0]['party']
+def get_report_info(table):
+    party = table['party']
     info = _("""Date Reported: {date_reported}
                     {party_type} {party_region} - Population*: {population}""".format(
                         date_reported=party['date_reported'],
@@ -98,10 +99,10 @@ def get_ods_caption(compared_period):
     )
 
 
-def get_ods_table(data):
-    table_headers = data['headers']
+def get_ods_table(headers, table):
+    table_headers = headers
     # get all except F Annex/Group
-    table_data = tuple(v for k, v in data['tables'][0]['data'].items() if k!='F')
+    table_data = tuple(v for k, v in table['data'].items() if k!='F')
 
     return Table(
         table_headers + table_data,
@@ -111,9 +112,9 @@ def get_ods_table(data):
     )
 
 
-def get_fgas_table(data):
-    table_headers = data['headers']
-    table_data = (tuple(data['tables'][0]['data']['F']),)  # get F Annex/Group
+def get_fgas_table(headers, table):
+    table_headers = headers
+    table_data = (tuple(table['data']['F']),)  # get F Annex/Group
 
     return Table(
         table_headers + table_data,
@@ -140,22 +141,25 @@ def get_fgas_caption(compared_period):
 def get_prodcons_flowables(periods, parties):
     data = get_prodcons_data(periods, parties)
 
-    flowables = list(
-        (get_header(data),) +
-        (get_subheader(data),) +
-        (get_report_info(data),) +
-        get_description(data['groups']) +
-        (Paragraph("", style=page_title_style),) +
-        (get_ods_caption(periods[1].name),) +
-        (get_ods_table(data),) +
-        (Paragraph("", style=page_title_style),)
-    )
+    pages = []
+    for table in data['tables']:
+        flowables = list(
+            (get_header(table),) +
+            (get_subheader(data),) +
+            (get_report_info(table),) +
+            get_description(data['groups']) +
+            (Paragraph("", style=page_title_style),) +
+            (get_ods_caption(periods[1].name),) +
+            (get_ods_table(data['headers'], table),) +
+            (Paragraph("", style=page_title_style),)
+        )
 
-    if 'F' in data['tables'][0]['data'].keys():
-        flowables.append(get_fgas_caption(periods[1].name))
-        flowables.append(get_fgas_table(data))
-
-    return flowables
+        if 'F' in table['data'].keys():
+            flowables.append(get_fgas_caption(periods[1].name))
+            flowables.append(get_fgas_table(data['headers'], table))
+        pages += flowables
+        pages.append(PageBreak(),)
+    return pages
 
 
 def get_prodcons_data(periods, parties):
