@@ -63,6 +63,7 @@ from ..models import (
     SubmissionFormat,
     ProdCons,
     Limit,
+    Reports,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -1547,16 +1548,18 @@ class DefaultValuesViewSet(ReadOnlyMixin, views.APIView):
 
 
 class ReportsViewSet(viewsets.ViewSet):
-    serializer_class = ObligationSerializer
-    filter_backends = (IsOwnerFilterBackend,)
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+        return Response(Reports.items())
 
     @action(detail=False, methods=["get"])
     def prodcons(self, request):
-        parties = request.data.get('parties')
+        parties = request.GET.getlist(key='party')
         parties = [
             Party.objects.get(pk=party_pk) for party_pk in parties
         ]
-        reporting_periods = request.data.get('reporting_periods')
+        reporting_periods = request.GET.getlist(key='period')
         reporting_periods = [
             ReportingPeriod.objects.get(pk=period_pk) for period_pk in reporting_periods
         ]

@@ -260,7 +260,7 @@ class Command(BaseCommand):
                 "designation": "",
                 "organization": "",
                 "postal_address": "",
-                "country": party.name,
+                "country_id": party.id,
                 "phone": "",
                 "email": "",
                 "date": letter_date,
