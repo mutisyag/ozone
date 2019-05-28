@@ -6,6 +6,15 @@
           <b-tab :title="$gettext('Send a message')">
             <b-row>
                 <b-col cols="8">
+                    <b-input-group class="mb-1" prepend="To">
+                      <b-input></b-input>
+                    </b-input-group>
+                    <b-input-group class="mb-1" prepend="Cc">
+                      <b-input></b-input>
+                    </b-input-group>
+                    <b-input-group class="mb-1" prepend="Subject">
+                      <b-input></b-input>
+                    </b-input-group>
                     <textarea style="height: 300px;" v-model="currentMessage" class="form-control mail-input"></textarea>
                     <b-btn variant="primary" class="mt-2">Send message</b-btn>
                 </b-col>
@@ -13,6 +22,8 @@
                   <h4>Templates</h4>
                   <b-list-group class="templates">
                     <b-list-group-item @click="currentMessage = template" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
+                      <b>Template {{ template_index }} </b>
+                      <br>
                       {{ template }}
                     </b-list-group-item>
                   </b-list-group>
@@ -20,9 +31,11 @@
             </b-row>
           </b-tab>
           <b-tab v-if="history" :title="$gettext('Conversation history')">
-            <div class="mt-4" v-for="(entry, index) in history" :key="index">
-                <div><b>From:</b> {{entry.sender}}</div>
-                <small><b>Date:</b> 10 May 2019</small>
+            <div class="mb-3" v-for="(entry, index) in history" :key="index">
+                <small style="float: right" class="muted">Date: 10 May 2019</small>
+                <h4>Mail subject here</h4>
+                <small><b>From:</b> {{entry.sender}}</small> <br>
+                <small><b>To:</b> {{entry.sender}} </small>
                 <div class="mt-2">{{entry.message}}</div>
                 <hr>
             </div>
