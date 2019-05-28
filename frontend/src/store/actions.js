@@ -207,6 +207,7 @@ const actions = {
       .filter(country => country.id === country.parent_party)
       .map(country => ({ value: country.id, text: country.name, iso: country.abbr }))
     context.commit('setDashboardParties', parties_temp)
+    return parties_temp
   },
 
   async getDashboardPeriods(context) {

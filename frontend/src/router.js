@@ -20,6 +20,7 @@ const LookupTablesControlledSubstances = () => import(/* webpackChunkName: "look
 const LookupTablesBlends = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Blends')
 const LookupTablesParties = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/lookupTables/Parties')
 const ReportsProductionConsumption = () => import(/* webpackChunkName: "lookup-tables" */ '@/views/reports/Consumption')
+const Reports = () => import(/* webpackChunkName: "reports" */ '@/views/Reports')
 
 Vue.use(Router)
 
@@ -145,13 +146,8 @@ const routes = [{
 },
 {
   path: '/reports',
-  redirect: '/pages/404',
   name: 'Reports',
-  component: {
-    render(c) {
-      return c('router-view')
-    }
-  },
+  component: Reports,
   children: [{
     path: 'production-consumption',
     name: 'Production and consumption',
