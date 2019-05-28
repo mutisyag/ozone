@@ -1,8 +1,9 @@
 from datetime import datetime
 from decimal import Decimal
 
-from django.db import models
+from django.contrib.postgres import fields
 from django.core.validators import MinValueValidator
+from django.db import models
 
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
@@ -42,6 +43,8 @@ class BaseProdCons(models.Model):
         on_delete=models.PROTECT,
         help_text="Reporting Period for which this aggregation was calculated",
     )
+
+    submissions = fields.JSONField(default=dict)
 
     # Aggregated quantity fields (derived from data reports)
     # Production
