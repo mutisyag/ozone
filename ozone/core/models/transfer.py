@@ -104,9 +104,9 @@ class Transfer(models.Model):
         for klass, params, potential in self.get_aggregation_classes():
             # Populate aggregation data
             aggregation, created = klass.objects.get_or_create(**params)
-            if self.transfer_type == 'Production':
+            if self.transfer_type == 'P':
                 aggregation.prod_transfer += self.transferred_amount * potential
-            else:
+            elif self.transfer_type == 'C':
                 aggregation.cons_transfer += self.transferred_amount * potential
 
             # Populate submissions list
