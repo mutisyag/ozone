@@ -61,6 +61,7 @@
 <script>
 // import Multiselect from '@/components/common/ModifiedMultiselect'
 import Multiselect from 'vue-multiselect'
+
 export default {
   data() {
     return {
@@ -75,16 +76,15 @@ export default {
     }
   },
   async created() {
-   this.parties = await this.$store.dispatch('getDashboardParties')
-   this.periods = await this.$store.dispatch('getDashboardPeriods')
-   this.reports = [{value: null, text: 'none'}]
+    this.parties = await this.$store.dispatch('getDashboardParties')
+    this.periods = await this.$store.dispatch('getDashboardPeriods')
+    this.reports = [{ value: null, text: 'none' }]
   },
   components: {
     Multiselect
   },
   methods: {
     generateReport() {
-      return
     }
   }
 }
