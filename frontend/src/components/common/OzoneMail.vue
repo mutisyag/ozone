@@ -1,7 +1,7 @@
 <template>
     <div>
       <b-btn class="square-right square-left" @click="getMail()" variant="outline-dark" v-translate>Ozone Mail</b-btn>
-      <b-modal id="ozoneMail" size="xl" ref="ozoneMailModal">
+      <b-modal title="OzoneMail" id="ozoneMail" size="xl" ref="ozoneMailModal">
         <b-tabs>
           <b-tab :title="$gettext('Send a message')">
             <b-row>
