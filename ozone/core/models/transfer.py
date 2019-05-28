@@ -128,12 +128,10 @@ class Transfer(models.Model):
             aggregation = klass.objects.filter(**params).first()
             if aggregation:
                 # Delete the transfer data from the aggregation
-                # Next line may be naive, what if we have 2 registered transfers
-                # in the same reporting period?
-                if self.transfer_type == 'Production':
-                    aggregation.prod_transfer = 0.0
-                else:
-                    aggregation.cons_transfer = 0.0
+                if self.transfer_type == 'P':
+                    aggregation.prod_transfer -= self.transferred_amount * potential
+                elif self.transfer_type == 'C':
+                    aggregation.cons_transfer -= self.transferred_amount * potential
                 aggregation.save()
 
                 # Clear submissions from list
