@@ -108,8 +108,8 @@ export default {
     },
     createUrlAndParams() {
       const params = {
-        period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value)[0] : this.selected.periods.value,
-        party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value)[0] : this.selected.parties.value
+        period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value) : this.selected.periods.value,
+        party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value) : this.selected.parties.value
       }
       const url = `reports/${this.selected.reports.value}/`
       this.generateReport(url, `${this.selected.reports.value}.pdf`, params)
