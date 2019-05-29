@@ -3,6 +3,12 @@ from django.db import models
 from .reporting import Submission
 
 
+__all__ = [
+    'Email',
+    'EmailTemplate',
+]
+
+
 class Email(models.Model):
     subject = models.CharField(max_length=255, blank=True, null=True)
     from_email = models.CharField(max_length=255)
@@ -13,3 +19,8 @@ class Email(models.Model):
     submission = models.ForeignKey(
         Submission, related_name='emails', on_delete=models.PROTECT
     )
+
+
+class EmailTemplate(models.Model):
+    name = models.CharField(max_length=256)
+    description = models.TextField(blank=True, null=True)

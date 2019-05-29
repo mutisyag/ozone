@@ -12,3 +12,4 @@ from .legal import *
 from .file import *
 from .aggregation import *
 from .report import *
+from .email import *

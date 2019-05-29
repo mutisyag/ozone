@@ -47,6 +47,7 @@ from .models import (
     CriticalUseCategory,
     FormTypes,
     Transfer,
+    EmailTemplate
 )
 
 
@@ -504,6 +505,12 @@ class TransferAdmin(admin.ModelAdmin):
         form.base_fields['source_party'].queryset = main_parties_queryset
         form.base_fields['destination_party'].queryset = main_parties_queryset
         return form
+
+
+@admin.register(EmailTemplate)
+class EmailTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', )
+    search_fields = ['name']
 
 
 # register all adminactions
