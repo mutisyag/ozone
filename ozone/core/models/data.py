@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from model_utils import FieldTracker
 
+from .exemption import CriticalUseCategory
 from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend
@@ -24,6 +25,7 @@ __all__ = [
     'HighAmbientTemperatureImport',
     'DataOther',
     'RAFReport',
+    'RAFReportUseCategory',
     'RAFImport',
 ]
 
@@ -1062,12 +1064,69 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
             return sum([imp.get('quantity', 0) for imp in self.imports])
         return 0
 
+    @property
+    def is_critical(self):
+        return self.substance.has_critical_uses
+
     class Meta:
         db_table = 'reporting_raf'
         ordering = ['substance__sort_order', 'substance__substance_id']
 
 
-class RAFImport(models.Model):
+class RAFReportUseCategory(ModifyPreventionMixin, models.Model):
+    """
+    Breakdown of `quantity_used` from a RAFReport, based on critical use
+    category.
+
+    Only allowed for critical use RAF reports.
+    """
+    report = models.ForeignKey(
+        RAFReport,
+        related_name='use_categories',
+        on_delete=models.CASCADE
+    )
+
+    critical_use_category = models.ForeignKey(
+        CriticalUseCategory,
+        related_name='use_categories',
+        on_delete=models.CASCADE
+    )
+
+    quantity = models.FloatField(
+        validators=[MinValueValidator(0.0)], blank=True, null=True
+    )
+
+    tracker = FieldTracker()
+
+    @property
+    def submission(self):
+        """
+        This is necessary for ModifyPreventionMixin to work properly.
+        """
+        return self.report.submission
+
+    def clean(self):
+        """
+        Ensure that use category breakdowns are only saved for critical uses.
+        """
+        if not self.report.is_critical:
+            raise ValidationError(
+                _(
+                    "Breakdown per critical use category can only be saved for "
+                    "critical reports!"
+                )
+            )
+        super().clean()
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
+
+    class Meta:
+        db_table = 'reporting_raf_use_category'
+
+
+class RAFImport(ModifyPreventionMixin, models.Model):
     """
     This is used for modelling multiple import quantities/country of origin
     pairs on each RAFReport row.
@@ -1088,6 +1147,15 @@ class RAFImport(models.Model):
 
     # This needs to have a quantity specified
     quantity = models.FloatField(validators=[MinValueValidator(0.0)])
+
+    tracker = FieldTracker()
+
+    @property
+    def submission(self):
+        """
+        This is necessary for ModifyPreventionMixin to work properly.
+        """
+        return self.report.submission
 
     class Meta:
         db_table = 'reporting_raf_import'

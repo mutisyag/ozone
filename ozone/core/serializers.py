@@ -43,6 +43,7 @@ from .models import (
     Nomination,
     ExemptionApproved,
     RAFReport,
+    RAFReportUseCategory,
     RAFImport,
     SubmissionFormat,
     ProdCons,
@@ -885,6 +886,13 @@ class RAFImportSerializer(serializers.ModelSerializer):
         exclude = ('report',)
 
 
+class RAFReportUseCategorySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RAFReportUseCategory
+        exclude = ('report',)
+
+
 class RAFListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
@@ -892,16 +900,24 @@ class RAFListSerializer(
     unique_with = 'is_emergency'
 
     imports = RAFImportSerializer(many=True)
+    use_categories = RAFReportUseCategorySerializer(many=True)
 
     def create_single(self, data, instance, submission):
         """
-        Creates a single entry taking into account the special "imports" case
+        Creates a single entry taking into account the special "imports" and
+        "use_categories" cases.
         """
-        imports = data.pop('imports')
+        imports = data.pop('imports', [])
+        use_categories = data.pop('use_categories', [])
         res = super().create_single(data, instance, submission)
 
         for value_entry in imports:
             RAFImport.objects.create(
+                report=res, **value_entry
+            )
+
+        for value_entry in use_categories:
+            RAFReportUseCategory.objects.create(
                 report=res, **value_entry
             )
 
@@ -914,10 +930,20 @@ class RAFListSerializer(
         changed = False
         for field, value in entry.items():
             if field == 'imports':
-                # Delete all existing imports and recreate them
+                # Delete all existing imports and recreate them, using the
+                # related manager.
                 existing_entry.imports.all().delete()
                 for value_entry in value:
                     RAFImport.objects.create(
+                        report=existing_entry, **value_entry
+                    )
+                changed = True
+            elif field == 'use_categories':
+                # Delete all existing use categories and recreate them, using
+                # the related manager.
+                existing_entry.use_categories.all().delete()
+                for value_entry in value:
+                    RAFReportUseCategory.objects.create(
                         report=existing_entry, **value_entry
                     )
                 changed = True
@@ -935,16 +961,20 @@ class RAFSerializer(
     )
 
     imports = RAFImportSerializer(many=True)
+    use_categories = RAFReportUseCategorySerializer(many=True)
 
     def create(self, validated_data):
 
-        imports_data = validated_data.pop("imports", None)
+        imports_data = validated_data.pop("imports", [])
+        use_categories_data = validated_data.pop("use_categories", [])
+
         instance = RAFReport.objects.create(
             submission=self.context['submission'], **validated_data
         )
-        if imports_data is not None:
-            for data in imports_data:
-                RAFImport.objects.create(report=instance, **data)
+        for data in imports_data:
+            RAFImport.objects.create(report=instance, **data)
+        for data in use_categories_data:
+            RAFReportUseCategory.objects.create(report=instance, **data)
 
         return instance
 

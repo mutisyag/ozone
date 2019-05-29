@@ -112,3 +112,28 @@ class CriticalUseCategory(models.Model):
         ordering = ('name',)
         db_table = 'critical_use_category'
         verbose_name_plural = 'Critical use categories'
+
+
+class ApprovedCriticalUse(models.Model):
+    """
+    Breakdown of Approved exempted amount per critical use category.
+    """
+    exemption = models.ForeignKey(
+        ExemptionApproved,
+        related_name='approved_uses',
+        on_delete=models.PROTECT
+    )
+
+    critical_use_category = models.ForeignKey(
+        CriticalUseCategory,
+        related_name='approved_uses',
+        on_delete=models.CASCADE
+    )
+
+    quantity = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+        blank=True, null=True
+    )
+
+    class Meta:
+        db_table = 'exemption_approved_critical_use'
