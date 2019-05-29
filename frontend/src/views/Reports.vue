@@ -30,6 +30,7 @@
                 trackBy="value"
                 :multiple="selected.parties.length > 1 ? false : true"
                 label="text"
+                :max="2"
                 v-model="selected.periods"
                 :options="periods"
               />
