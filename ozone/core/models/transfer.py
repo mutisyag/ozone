@@ -68,69 +68,93 @@ class Transfer(models.Model):
         on_delete=models.PROTECT,
     )
 
-    def populate_aggregated_data(self):
-        """
-        Populates relevant fields in aggregation tables based on this transfer.
-        """
+    def get_aggregation_classes(self):
+        potential = 1
         if self.substance.group.is_gwp:
             potential = self.substance.gwp
         elif self.substance.group.is_odp:
             potential = self.substance.odp
 
-        prod_cons, created = ProdCons.objects.get_or_create(
-            party=self.source_party,
-            reporting_period=self.reporting_period,
-            group=self.substance.group,
-        )
-        if self.transfer_type == 'Production':
-            prod_cons.prod_transfer += self.transferred_amount * potential
-        else:
-            prod_cons.cons_transfer += self.transferred_amount * potential
-        prod_cons.save()
+        data = [
+            (
+                ProdCons,
+                {
+                    'party': self.source_party,
+                    'reporting_period': self.reporting_period,
+                    'group': self.substance.group,
+                },
+                potential
+            ),
+            (
+                ProdConsMT,
+                {
+                    'party': self.source_party,
+                    'reporting_period': self.reporting_period,
+                    'substance': self.substance,
+                },
+                1
+            )
+        ]
+        return list(data)
 
-        prod_cons_mt, created = ProdConsMT.objects.get_or_create(
-            party=self.source_party,
-            reporting_period=self.reporting_period,
-            substance=self.substance
-        )
-        if self.transfer_type == 'Production':
-            prod_cons_mt.prod_transfer += self.transferred_amount
-        else:
-            prod_cons_mt.cons_transfer += self.transferred_amount
-        prod_cons_mt.save()
+    def populate_aggregated_data(self):
+        """
+        Populates relevant fields in aggregation tables based on this transfer.
+        """
+        for klass, params, potential in self.get_aggregation_classes():
+            # Populate aggregation data
+            aggregation, created = klass.objects.get_or_create(**params)
+            if self.transfer_type == 'P':
+                aggregation.prod_transfer += self.transferred_amount * potential
+            elif self.transfer_type == 'C':
+                aggregation.cons_transfer += self.transferred_amount * potential
+
+            # Populate submissions list
+            form_type = FormTypes.TRANSFER.value
+            if form_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[form_type])
+            else:
+                submissions_set = set()
+            if self.source_party_submission:
+                submissions_set.add(self.source_party_submission.id)
+            if self.destination_party_submission:
+                submissions_set.add(self.destination_party_submission.id)
+            aggregation.submissions[form_type] = list(submissions_set)
+
+            aggregation.save()
 
     def clear_aggregated_data(self):
-        prod_cons = ProdCons.objects.filter(
-            party=self.source_party,
-            reporting_period=self.reporting_period,
-            group=self.substance.group
-        ).first()
-        if prod_cons:
-            # Next line may be naive, what if we have 2 registered transfers
-            # in the same reporting period?
-            if self.transfer_type == 'Production':
-                prod_cons.prod_transfer = 0.0
-            else:
-                prod_cons.cons_transfer = 0.0
-            prod_cons.save()
-            if prod_cons.is_empty():
-                prod_cons.delete()
+        for klass, params, potential in self.get_aggregation_classes():
+            aggregation = klass.objects.filter(**params).first()
+            if aggregation:
+                # Delete the transfer data from the aggregation
+                if self.transfer_type == 'P':
+                    aggregation.prod_transfer -= self.transferred_amount * potential
+                elif self.transfer_type == 'C':
+                    aggregation.cons_transfer -= self.transferred_amount * potential
+                aggregation.save()
 
-        prod_cons = ProdConsMT.objects.filter(
-            party=self.source_party,
-            reporting_period=self.reporting_period,
-            substance=self.substance
-        ).first()
-        if prod_cons:
-            # Next line may be naive, what if we have 2 registered transfers
-            # in the same reporting period?
-            if self.transfer_type == 'Production':
-                prod_cons.prod_transfer = 0.0
-            else:
-                prod_cons.cons_transfer = 0.0
-            prod_cons.save()
-            if prod_cons.is_empty():
-                prod_cons.delete()
+                # Clear submissions from list
+                form_type = FormTypes.TRANSFER.value
+                if form_type in aggregation.submissions:
+                    submissions_set = set(aggregation.submissions[form_type])
+                else:
+                    submissions_set = set()
+                if (
+                    self.source_party_submission
+                    and self.source_party_submission.id in submissions_set
+                ):
+                    submissions_set.remove(self.source_party_submission.id)
+                if (
+                    self.destination_party_submission
+                    and self.destination_party_submission.id in submissions_set
+                ):
+                    submissions_set.remove(self.destination_party_submission.id)
+                aggregation.submissions[form_type] = list(submissions_set)
+
+                # Delete empty aggregations
+                if aggregation.is_empty():
+                    aggregation.delete()
 
     def clean(self):
         if self.destination_party_submission:

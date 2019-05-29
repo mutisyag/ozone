@@ -256,6 +256,8 @@ const getLimits = params => fetch('aggregations/', {
   params
 })
 
+const getReports = () => fetch('reports/')
+
 const getControlledGroups = (party, period) => fetch(`parties/${party}/report_groups/?period=${period}`)
 
 const getApprovedExemptionsList = (partyId, period) => fetch(`parties/${partyId}/approved_exemptions/?period=${period}`)
@@ -312,5 +314,6 @@ export {
   getFilteredParties,
   getControlledGroups,
   getApprovedExemptionsList,
-  getOzoneMail
+  getOzoneMail,
+  getReports
 }

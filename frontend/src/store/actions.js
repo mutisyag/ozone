@@ -22,7 +22,8 @@ import {
   getTransitions,
   getSubmissionFormat,
   getControlledGroups,
-  getApprovedExemptionsList
+  getApprovedExemptionsList,
+  getReports
 } from '@/components/common/services/api'
 
 import {
@@ -207,6 +208,7 @@ const actions = {
       .filter(country => country.id === country.parent_party)
       .map(country => ({ value: country.id, text: country.name, iso: country.abbr }))
     context.commit('setDashboardParties', parties_temp)
+    return parties_temp
   },
 
   async getDashboardPeriods(context) {
@@ -401,6 +403,11 @@ const actions = {
     getPartyRatifications().then(response => {
       context.commit('updatePartyRatifications', response.data)
     })
+  },
+
+  async getReportsList() {
+    const reports = await getReports()
+    return reports.data.map(r => ({ value: r.name, text: r.name, original: r }))
   },
 
   getCountries(context) {

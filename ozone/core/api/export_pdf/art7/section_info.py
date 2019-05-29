@@ -48,7 +48,7 @@ TABLE_INFO_STYLE = (
 def get_date_of_reporting(submission):
     date_of_reporting = get_date_of_reporting_str(submission)
     if not date_of_reporting:
-        return None
+        return (None,)
     else:
         return (
             p_l('%s: %s' % (
@@ -117,10 +117,11 @@ def get_questionnaire_table(submission):
 
 def export_info(submission):
     title = (
-        Paragraph("%s %s - %s" % (
+        Paragraph("%s %s - %s %s" % (
             submission.reporting_period.name,
             submission.obligation.name,
             submission.party.name,
+            ('(%s)' % (_('Provisional'),)) if submission.flag_provisional else '',
         ), h1_style),
     )
     return (
