@@ -147,13 +147,12 @@ const routes = [{
 {
   path: '/reports',
   name: 'Reports',
-  component: Reports,
-  children: [{
-    path: 'production-consumption',
-    name: 'Production and consumption',
-    component: ReportsProductionConsumption
-  }
-  ]
+  component: Reports
+},
+{
+  path: '/production-consumption',
+  name: 'Production and consumption',
+  component: ReportsProductionConsumption
 }
 ]
 

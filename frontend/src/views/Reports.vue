@@ -48,7 +48,7 @@
 
             <b-btn
               variant="primary"
-              @click="generateReport"
+              @click="createUrlAndParams"
             >
               <span v-translate>Generate report</span>
             </b-btn>
@@ -61,6 +61,7 @@
 <script>
 // import Multiselect from '@/components/common/ModifiedMultiselect'
 import Multiselect from 'vue-multiselect'
+import { fetch } from '@/components/common/services/api'
 
 export default {
   data() {
@@ -78,13 +79,59 @@ export default {
   async created() {
     this.parties = await this.$store.dispatch('getDashboardParties')
     this.periods = await this.$store.dispatch('getDashboardPeriods')
-    this.reports = [{ value: null, text: 'none' }]
+    this.reports = await this.$store.dispatch('getReportsList')
   },
   components: {
     Multiselect
   },
   methods: {
-    generateReport() {
+    parseParams(params) {
+      const keys = Object.keys(params)
+      let options = ''
+
+      keys.forEach((key) => {
+        const isParamTypeObject = typeof params[key] === 'object'
+        const isParamTypeArray = isParamTypeObject && (params[key].length >= 0)
+
+        if (!isParamTypeObject) {
+          options += `${key}=${params[key]}&`
+        }
+
+        if (isParamTypeObject && isParamTypeArray) {
+          params[key].forEach((element) => {
+            options += `${key}=${element}&`
+          })
+        }
+      })
+
+      return options ? options.slice(0, -1) : options
+    },
+    createUrlAndParams() {
+      const params = {
+        period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value)[0] : this.selected.periods.value,
+        party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value)[0] : this.selected.parties.value
+      }
+      const url = `reports/${this.selected.reports.value}/`
+      this.generateReport(url, `${this.selected.reports.value}.pdf`, params)
+    },
+    async generateReport(url, fileName, params) {
+      console.log(params)
+      try {
+        const downloaded = await fetch(url, { params, 'paramsSerializer': p => this.parseParams(p) }, { responseType: 'arraybuffer' })
+        const blob = new Blob([downloaded.data])
+        if (navigator.msSaveBlob) {
+          return navigator.msSaveBlob(blob, fileName)
+        }
+        const download_url = window.URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = download_url
+        link.setAttribute('download', fileName)
+        document.body.appendChild(link)
+        link.click()
+        link.parentNode.removeChild(link)
+      } catch (e) {
+        console.log('download error', e)
+      }
     }
   }
 }

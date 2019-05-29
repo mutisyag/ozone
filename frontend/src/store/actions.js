@@ -22,7 +22,8 @@ import {
   getTransitions,
   getSubmissionFormat,
   getControlledGroups,
-  getApprovedExemptionsList
+  getApprovedExemptionsList,
+  getReports
 } from '@/components/common/services/api'
 
 import {
@@ -402,6 +403,11 @@ const actions = {
     getPartyRatifications().then(response => {
       context.commit('updatePartyRatifications', response.data)
     })
+  },
+
+  async getReportsList() {
+    const reports = await getReports()
+    return reports.data.map(r => ({ value: r.name, text: r.name, original: r }))
   },
 
   getCountries(context) {
