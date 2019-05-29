@@ -1,8 +1,9 @@
 import enum
 
-__all__ = [
-    'Reports'
-]
+from django.utils.translation import gettext_lazy as _
+
+
+__all__ = ['Reports']
 
 
 @enum.unique
@@ -10,6 +11,7 @@ class Reports(enum.Enum):
     """
     Enum for describing different types of reports.
     """
+
     PRODCONS = 'prodcons'
 
     @staticmethod
@@ -20,12 +22,23 @@ class Reports(enum.Enum):
         }
 
     @staticmethod
-    def prodcons_args():
-        return Reports.args(has_party_param=True, has_period_param=True)
+    def prodcons_info():
+        return {
+            **Reports.args(has_party_param=True, has_period_param=True),
+            **{
+                "display_name": "Calculated production and consumption",
+                "description": _(
+                    "To compare the production and consumption of one year "
+                    "with the baseline period, select only one year and one or "
+                    "more parties. You can also select one party and two "
+                    "reporting periods for comparing to each other."
+                )
+            },
+        }
 
     @staticmethod
     def items():
         return [
-            {**{'name': e.value}, **getattr(Reports, e.value + "_args")()}
+            {**{'name': e.value}, **getattr(Reports, e.value + "_info")()}
             for e in Reports
         ]
