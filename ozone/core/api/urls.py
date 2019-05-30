@@ -225,6 +225,14 @@ raf_router.register(
     base_name="submission-raf"
 )
 
+email_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+email_router.register(
+    "email",
+    views.EmailViewSet,
+    base_name="submission-email"
+)
 
 nested_routers = [
     questionnaire_router,
@@ -247,6 +255,7 @@ nested_routers = [
     exemption_nomination_router,
     exemption_approved_router,
     raf_router,
+    email_router,
 ]
 
 # Groups
@@ -281,6 +290,15 @@ reports.register(
     base_name='reports'
 )
 router.extend(reports)
+
+
+email_templates = routers.SimpleRouter()
+email_templates.register(
+    'email-templates',
+    views.EmailTemplateViewSet,
+    base_name='email-templates'
+)
+router.extend(email_templates)
 
 urlpatterns = (
     router.urls

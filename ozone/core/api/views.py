@@ -64,6 +64,8 @@ from ..models import (
     ProdCons,
     Limit,
     Reports,
+    Email,
+    EmailTemplate,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -123,6 +125,8 @@ from ..serializers import (
     AggregationSerializer,
     AggregationMTSerializer,
     LimitSerializer,
+    EmailSerializer,
+    EmailTemplateSerializer,
 )
 
 
@@ -1157,6 +1161,27 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
         file_name = urllib.parse.quote(obj.name)
         response['Content-Disposition'] = f"attachment; filename*=UTF-8''{file_name}; filename=\"{file_name}\""
         return response
+
+
+class EmailViewSet(
+    SerializerDataContextMixIn,
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet
+):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = EmailSerializer
+
+    def get_queryset(self):
+        return Email.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+
+class EmailTemplateViewSet(mixins.ListModelMixin, GenericViewSet):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = EmailTemplateSerializer
+    queryset = EmailTemplate.objects.all()
 
 
 class UploadHookViewSet(viewsets.ViewSet):
