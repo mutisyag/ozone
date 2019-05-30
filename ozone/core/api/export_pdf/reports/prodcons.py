@@ -218,15 +218,19 @@ def get_prodcons_data(periods, parties):
             reporting_period=main_period,
             obligation___form_type=FormTypes.ART7.value,
         )
-        # There should only be one current submission.
-        # TODO This list will be empty for submissions in data_entry.
-        submission = [s for s in submission_qs if s.is_current is True][0]
+
+        if submission_qs:
+            # There should only be one current submission.
+            submission = [s for s in submission_qs if s.is_current is True][0]
+            date_reported = get_date_of_reporting_str(submission)
+        else:
+            date_reported = "-"
 
         table_data['party'] = {
             'name': party.name,
             'population': "{:,}".format(history.population),
             'party_type': history.party_type.abbr,
-            'date_reported': get_date_of_reporting_str(submission),
+            'date_reported': date_reported,
             'region': party.subregion.region.abbr
         }
 
