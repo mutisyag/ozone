@@ -49,6 +49,8 @@ from .models import (
     ProdCons,
     ProdConsMT,
     Limit,
+    Email,
+    EmailTemplate,
 )
 
 User = get_user_model()
@@ -1740,4 +1742,30 @@ class LimitSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Limit
+        fields = "__all__"
+
+
+class EmailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Email
+        exclude = ('submission',)
+
+    def create(self, validated_data):
+        email = Email(
+            subject=validated_data['subject'],
+            body=validated_data['body'],
+            to_email=validated_data['to_email'],
+            from_email=validated_data['from_email'],
+            cc=validated_data['cc'],
+            submission=self.context['submission']
+        )
+        email.send_email()
+        email.save()
+        return email
+
+
+class EmailTemplateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmailTemplate
         fields = "__all__"

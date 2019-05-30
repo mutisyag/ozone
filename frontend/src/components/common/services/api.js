@@ -262,6 +262,13 @@ const getControlledGroups = (party, period) => fetch(`parties/${party}/report_gr
 
 const getApprovedExemptionsList = (partyId, period) => fetch(`parties/${partyId}/approved_exemptions/?period=${period}`)
 
+const getOzoneMail = () => new Promise((resolve) => resolve(
+  { data: [
+    { sender: 'test', message: 'Halvah apple pie gummi bears apple pie dragée apple pie wafer chocolate. Toffee chupa chups candy donut chocolate cake. Jujubes icing sweet donut oat cake pudding cupcake. Chocolate cake cookie tart chocolate bar gingerbread chocolate bar macaroon icing lollipop. Toffee cake carrot cake wafer carrot cake tart wafer. Jelly wafer biscuit. Candy canes cupcake topping mar' },
+    { sender: 'test2', message: 'Tootsie roll carrot cake dessert soufflé. Brownie apple pie candy canes. Biscuit gingerbread icing jelly beans cupcake soufflé pie sweet roll. Toffee cotton candy croissant soufflé gingerbread danish. Pudding carrot cake muffin lemon drops cake jelly-o gummi bears.' }
+  ] }
+))
+
 export {
   apiURL,
   apiBase,
@@ -307,5 +314,6 @@ export {
   getFilteredParties,
   getControlledGroups,
   getApprovedExemptionsList,
+  getOzoneMail,
   getReports
 }
