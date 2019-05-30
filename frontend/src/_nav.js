@@ -19,7 +19,7 @@ const getNav = ($gettext) => [{
 {
   name: $gettext('Limits'),
   icon: 'icon-graph',
-  url: '/reports/production-consumption'
+  url: '/production-consumption'
 },
 {
   name: $gettext('Reports'),
