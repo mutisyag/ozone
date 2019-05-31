@@ -96,7 +96,7 @@ html_context = {
     "github_user": "eaudeweb",
     "github_repo": "ozone",
     "github_version": "develop",
-    "conf_py_path": "docs/",
+    "conf_py_path": "/docs/",
 }
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
