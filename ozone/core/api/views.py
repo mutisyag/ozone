@@ -81,6 +81,7 @@ from ..permissions import (
     IsSecretariatOrSamePartyAggregation,
     IsSecretariatOrSamePartyLimit,
     IsSecretariatOrSamePartyTransfer,
+    IsSecretariat,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -1169,7 +1170,7 @@ class EmailViewSet(
     mixins.ListModelMixin,
     GenericViewSet
 ):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsSecretariat)
     serializer_class = EmailSerializer
 
     def get_queryset(self):
@@ -1179,7 +1180,7 @@ class EmailViewSet(
 
 
 class EmailTemplateViewSet(mixins.ListModelMixin, GenericViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsSecretariat)
     serializer_class = EmailTemplateSerializer
     queryset = EmailTemplate.objects.all()
 

@@ -240,13 +240,22 @@ class IsSecretariatOrSamePartyUser(BasePermission):
 
 class IsSecretariatOrSafeMethod(BasePermission):
     """
-    Check if user is secretariat.
+    Check if user is secretariat or safe method.
     """
 
     def has_permission(self, request, view):
         if request.method in SAFE_METHODS:
             return True
 
+        return request.user.is_secretariat
+
+
+class IsSecretariat(BasePermission):
+    """
+    Check if user is secretariat.
+    """
+
+    def has_permission(self, request, view):
         return request.user.is_secretariat
 
 
