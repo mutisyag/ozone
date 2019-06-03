@@ -86,6 +86,7 @@ class FormTypes(enum.Enum):
     OTHER = 'other'
     EXEMPTION = 'exemption'
     TRANSFER = 'transfer'
+    PROCAGENT = 'procagent'
 
 
 class Obligation(models.Model):
