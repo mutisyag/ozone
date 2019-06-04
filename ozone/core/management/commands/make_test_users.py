@@ -62,6 +62,8 @@ class Command(BaseCommand):
                             help="Reset all passwords instead of create users")
         parser.add_argument('--exclude-users', nargs="+",
                             help="Exclude these users")
+        parser.add_argument('--user-prefix', default='p_',
+                            help="Prefix for usernames.")
 
     def reset_passwords(self, args, options):
         all_users = User.objects.exclude(
@@ -101,12 +103,12 @@ class Command(BaseCommand):
             to_create = copy.deepcopy(self.default_users)
             if not options["is_secretariat"]:
                 for party in all_parties:
-                    user = 'p_' + party.abbr.lower()
+                    user = options['user_prefix'] + party.abbr.lower()
                     to_create[user] = {}
                     to_create[user]['party'] = party
                     to_create[user]['is_read_only'] = False
                     # And read-only user
-                    user_ro = 'p_' + party.abbr.lower() + '_ro'
+                    user_ro = options['user_prefix'] + party.abbr.lower() + '_ro'
                     to_create[user_ro] = {}
                     to_create[user_ro]['party'] = party
                     to_create[user_ro]['is_read_only'] = True
