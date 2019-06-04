@@ -47,7 +47,11 @@ from .models import (
     CriticalUseCategory,
     FormTypes,
     Transfer,
-    EmailTemplate
+    EmailTemplate,
+    ProcessAgentApplication,
+    ProcessAgentContainTechnology,
+    ProcessAgentEmissionLimit,
+    ProcessAgentUsesReported,
 )
 
 
@@ -511,6 +515,65 @@ class TransferAdmin(admin.ModelAdmin):
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ('name', )
     search_fields = ['name']
+
+
+@admin.register(ProcessAgentApplication)
+class ProcessAgentApplicationAdmin(admin.ModelAdmin):
+    list_display = ('decision', 'counter', 'substance', 'application')
+    list_filter = (
+        ('substance__name', custom_title_dropdown_filter('Substance')),
+    )
+    search_fields = ('decision', 'substance__name')
+
+
+@admin.register(ProcessAgentEmissionLimit)
+class ProcessAgentEmissionLimitAdmin(admin.ModelAdmin):
+    list_display = ('party', 'decision', 'makeup_consumption', 'max_emissions')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
+    search_fields = ('party__name', 'decision')
+
+
+class ProcessAgentBaseAdmin:
+    def get_reporting_period(self, obj):
+        return obj.submission.reporting_period
+    get_reporting_period.short_description = 'Reporting Period'
+
+    def get_party(self, obj):
+        return obj.submission.party
+    get_party.short_description = 'Party'
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        submission_queryset = Submission.objects.filter(
+            obligation___form_type=FormTypes.PROCAGENT.value
+        ).order_by('reporting_period__name')
+        form.base_fields['submission'].queryset = submission_queryset
+        return form
+
+
+@admin.register(ProcessAgentContainTechnology)
+class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+    list_display = ('get_reporting_period', 'get_party', 'contain_technology')
+    list_filter = (
+        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('submission__party', MainPartyFilter)
+    )
+    search_fields = ('submission__party__name',)
+
+
+@admin.register(ProcessAgentUsesReported)
+class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+    list_display = (
+        'get_reporting_period', 'get_party', 'decision',
+        'process_number', 'makeup_quantity', 'emissions', 'units'
+    )
+    list_filter = (
+        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('submission__party', MainPartyFilter)
+    )
+    search_fields = ('submission__reporting_period__name', 'submission__party__name', 'decision')
 
 
 # register all adminactions

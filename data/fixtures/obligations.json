@@ -68,7 +68,7 @@
     "fields": {
       "name": "Process agent uses (dec. X/14)",
       "description": "",
-      "_form_type": "other",
+      "_form_type": "procagent",
       "is_active": true,
       "has_reporting_periods": true,
       "other": true,
