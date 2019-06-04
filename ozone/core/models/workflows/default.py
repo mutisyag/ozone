@@ -6,6 +6,11 @@ from .base import BaseWorkflow
 from ...exceptions import TransitionFailed
 
 
+__all__ = [
+    'DefaultArticle7Workflow',
+]
+
+
 class DefaultArticle7WorkflowStateDescription(xworkflows.Workflow):
     """
     These are the default submission states and transitions

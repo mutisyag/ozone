@@ -6,6 +6,11 @@ from .base import BaseWorkflow
 from ...exceptions import TransitionFailed
 
 
+__all__ = [
+    'AcceleratedExemptionWorkflow',
+]
+
+
 class AcceleratedExemptionWorkflowStateDescription(xworkflows.Workflow):
     """
     These are the submission states and transitions

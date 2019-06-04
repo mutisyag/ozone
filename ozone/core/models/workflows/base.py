@@ -1,6 +1,11 @@
 import xworkflows
 
 
+__all__ = [
+    'BaseWorkflow',
+]
+
+
 class BaseStateDescription(xworkflows.Workflow):
     """
     Placeholder class

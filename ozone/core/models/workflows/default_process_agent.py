@@ -4,14 +4,14 @@ from .base import BaseWorkflow
 
 
 __all__ = [
-    'DefaultTransferWorkflow',
+    'DefaultProcessAgentWorkflow',
 ]
 
 
-class DefaultTransferWorkflowStateDescription(xworkflows.Workflow):
+class DefaultProcessAgentWorkflowStateDescription(xworkflows.Workflow):
     """
     These are the default submission states and transitions
-    for Transfers reporting.
+    for Process Agents reporting.
     """
     states = (
         ('data_entry', 'Data Entry'),
@@ -25,16 +25,16 @@ class DefaultTransferWorkflowStateDescription(xworkflows.Workflow):
     initial_state = 'data_entry'
 
 
-class DefaultTransferWorkflow(BaseWorkflow):
+class DefaultProcessAgentWorkflow(BaseWorkflow):
 
     """
-    Implements custom transition logic for the default transfer workflow.
+    Implements custom transition logic for the default process agents workflow.
     """
     final_states = ['submitted']
     editable_data_states = ['data_entry']
     incorrect_data_states = []
 
-    state = DefaultTransferWorkflowStateDescription()
+    state = DefaultProcessAgentWorkflowStateDescription()
 
     @xworkflows.transition_check('submit')
     def check_submit(self):

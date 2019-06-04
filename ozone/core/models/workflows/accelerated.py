@@ -3,6 +3,11 @@ import xworkflows
 from .base import BaseWorkflow
 
 
+__all__ = [
+    'AcceleratedArticle7Workflow',
+]
+
+
 class AcceleratedArticle7WorkflowStateDescription(xworkflows.Workflow):
     """
     These are the "accelerated" submission states and transitions

@@ -15,12 +15,15 @@ from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
 from .utils import model_to_dict
-from .workflows.base import BaseWorkflow
-from .workflows.default import DefaultArticle7Workflow
-from .workflows.accelerated import AcceleratedArticle7Workflow
-from .workflows.default_exemption import DefaultExemptionWorkflow
-from .workflows.accelerated_exemption import AcceleratedExemptionWorkflow
-from .workflows.default_transfer import DefaultTransferWorkflow
+from .workflows import (
+    BaseWorkflow,
+    DefaultArticle7Workflow,
+    AcceleratedArticle7Workflow,
+    DefaultExemptionWorkflow,
+    AcceleratedExemptionWorkflow,
+    DefaultProcessAgentWorkflow,
+    DefaultTransferWorkflow,
+)
 from ..exceptions import (
     Forbidden,
     MethodNotAllowed,
@@ -259,6 +262,7 @@ class Submission(models.Model):
         'default_exemption': DefaultExemptionWorkflow,
         'accelerated_exemption': AcceleratedExemptionWorkflow,
         'default_transfer': DefaultTransferWorkflow,
+        'default_process_agent': DefaultProcessAgentWorkflow
     }
 
     RELATED_DATA = [
@@ -1567,6 +1571,8 @@ class Submission(models.Model):
                 self._workflow_class = 'default_exemption'
             elif self.obligation.form_type == FormTypes.TRANSFER.value:
                 self._workflow_class = 'default_transfer'
+            elif self.obligation.form_type == FormTypes.PROCAGENT.value:
+                self._workflow_class = 'default_process_agent'
             else:
                 self._workflow_class = 'default'
             self._current_state = \
