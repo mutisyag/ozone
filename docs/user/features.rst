@@ -194,13 +194,7 @@ The buttons allow to save, delete, submit or close the data entry screen, plus s
   Once this new version is submitted, the previous one becomes obsolete (`Superseded`).
 
 
-For more specific details of each form, see the detailed sections of each main reporting obligation:
-
-.. toctree::
-  :maxdepth: 2
-
-  art7
-  raf
+For more specific details of each form, see the detailed sections of each main reporting obligation.
 
 
 .. index:: Calculated production, Calculated consumption

@@ -24,7 +24,9 @@ import sys
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['recommonmark']
+extensions = [
+    'recommonmark',
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]
@@ -184,9 +186,9 @@ htmlhelp_basename = "ozonedoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    # 'papersize': 'letterpaper',
+    'papersize': 'a4paper',
     # The font size ('10pt', '11pt' or '12pt').
-    # 'pointsize': '10pt',
+    'pointsize': '14pt',
     # Additional stuff for the LaTeX preamble.
     # 'preamble': '',
 }
@@ -195,10 +197,10 @@ latex_elements = {
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
     (
-        "index",
+        "user/index",
         "ozone.tex",
-        "Ozone Documentation",
-        """Sorin Stelian""",
+        "Online Reporting Tool - User Manual",
+        """United Nations Environment Programme""",
         "manual",
     )
 ]

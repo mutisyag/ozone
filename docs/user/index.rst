@@ -11,9 +11,3 @@ Online Reporting Tool - User Manual
   raf
   faq
 
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`search`
