@@ -278,6 +278,8 @@ class Submission(models.Model):
         'nominations',
         'exemptionapproveds',
         'rafreports',
+        'pa_contain_technologies',
+        'pa_uses_reported',
     ]
 
     # Maps flags names to group IDs, as group IDs are the closest to immutable
