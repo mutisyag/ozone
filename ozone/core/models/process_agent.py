@@ -34,6 +34,15 @@ class ProcessAgentContainTechnology(models.Model):
         db_table = 'pa_contain_technology'
 
 
+class ProcessAgentUsesValidity(Decision):
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'process agent uses validity'
+        db_table = 'pa_uses_validity'
+
+
 class ProcessAgentApplication(models.Model):
     """
     Applications of controlled substances as process agents, as approved
@@ -41,7 +50,11 @@ class ProcessAgentApplication(models.Model):
     Parties.
     """
 
-    decision = models.CharField(max_length=256, blank=True)
+    decision = models.ForeignKey(
+        ProcessAgentUsesValidity,
+        related_name='pa_applications',
+        on_delete=models.PROTECT
+    )
 
     counter = models.PositiveIntegerField()
 
@@ -53,15 +66,6 @@ class ProcessAgentApplication(models.Model):
 
     class Meta:
         db_table = 'pa_application'
-
-
-class ProcessAgentUsesValidity(Decision):
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-
-    class Meta:
-        verbose_name_plural = 'process agent uses validity'
-        db_table = 'pa_uses_validity'
 
 
 class ProcessAgentUsesReported(models.Model):
@@ -79,7 +83,11 @@ class ProcessAgentUsesReported(models.Model):
         on_delete=models.PROTECT
     )
 
-    decision = models.CharField(max_length=256)
+    decision = models.ForeignKey(
+        ProcessAgentUsesValidity,
+        related_name='pa_uses_reported',
+        on_delete=models.PROTECT
+    )
 
     process_number = models.PositiveSmallIntegerField(null=True, blank=True)
 
@@ -109,6 +117,15 @@ class ProcessAgentUsesReported(models.Model):
         db_table = 'pa_uses_reported'
 
 
+class ProcessAgentEmissionLimitValidity(Decision):
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'process agent emission limits validity'
+        db_table = 'pa_emission_limit_validity'
+
+
 class ProcessAgentEmissionLimit(models.Model):
     """
     Emission limits for process agent uses, for non-Article 5 parties.
@@ -120,7 +137,11 @@ class ProcessAgentEmissionLimit(models.Model):
         on_delete=models.PROTECT
     )
 
-    decision = models.CharField(max_length=256)
+    decision = models.ForeignKey(
+        ProcessAgentEmissionLimitValidity,
+        related_name='pa_emission_limits',
+        on_delete=models.PROTECT
+    )
 
     makeup_consumption = models.FloatField(validators=[MinValueValidator(0.0)])
 
@@ -130,12 +151,3 @@ class ProcessAgentEmissionLimit(models.Model):
 
     class Meta:
         db_table = 'limit_pa_emission'
-
-
-class ProcessAgentEmissionLimitValidity(Decision):
-    start_date = models.DateField(null=True)
-    end_date = models.DateField(null=True)
-
-    class Meta:
-        verbose_name_plural = 'process agent emission limits validity'
-        db_table = 'pa_emission_limit_validity'
