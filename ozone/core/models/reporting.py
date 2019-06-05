@@ -585,6 +585,20 @@ class Submission(models.Model):
         help_text="General Transfers remarks added by the ozone secretariat"
     )
 
+    # Process agent Remarks
+    pa_uses_reported_remarks = models.CharField(
+        max_length=9999, blank=True,
+        verbose_name="process agent uses reported remarks",
+        help_text="General Process agent uses reported remarks added "
+                  "by the ozone secretariat"
+    )
+    pa_contain_technology_remarks = models.CharField(
+        max_length=9999, blank=True,
+        verbose_name="process agent contain technology remarks",
+        help_text="General Process agent contain technology remarks added "
+                  "by the ozone secretariat"
+    )
+
     reporting_channel = models.ForeignKey(
         ReportingChannel,
         related_name="submission",
@@ -1071,6 +1085,8 @@ class Submission(models.Model):
             "transfers_remarks_secretariat",
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
+            "pa_uses_reported_remarks",
+            "pa_contain_technology_remarks",
             "reporting_channel_id",
             "submitted_at",
         ]
@@ -1741,7 +1757,7 @@ class ProcessAgentUsesReported(models.Model):
     """
     UNITS = (
         ('MT', 'Metric Tonnes'),
-        ('ODP', 'ODP Tonnes')
+        ('ODP tonnes', 'ODP Tonnes')
     )
 
     submission = models.ForeignKey(
@@ -1754,12 +1770,20 @@ class ProcessAgentUsesReported(models.Model):
 
     process_number = models.PositiveSmallIntegerField(null=True, blank=True)
 
-    makeup_quantity = models.FloatField(validators=[MinValueValidator(0.0)])
+    makeup_quantity = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+        null=True,
+        blank=True
+    )
 
-    emissions = models.FloatField(validators=[MinValueValidator(0.0)])
+    emissions = models.FloatField(
+        validators=[MinValueValidator(0.0)],
+        null=True,
+        blank=True
+    )
 
     units = models.CharField(
-        max_length=4,
+        max_length=64,
         choices=UNITS,
         null=True,
         blank=True
