@@ -52,6 +52,8 @@ from .models import (
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
     ProcessAgentUsesReported,
+    ProcessAgentUsesValidity,
+    ProcessAgentEmissionLimitValidity,
 )
 
 
@@ -574,6 +576,18 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
         ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__reporting_period__name', 'submission__party__name', 'decision')
+
+
+@admin.register(ProcessAgentUsesValidity)
+class ProcessAgentUsesValidityAdmin(admin.ModelAdmin):
+    list_display = ('decision_id', 'start_date', 'end_date')
+    search_fields = ('decision_id', )
+
+
+@admin.register(ProcessAgentEmissionLimitValidity)
+class ProcessAgentEmissionLimitValidityAdmin(admin.ModelAdmin):
+    list_display = ('decision_id', 'start_date', 'end_date')
+    search_fields = ('decision_id', )
 
 
 # register all adminactions
