@@ -4,12 +4,15 @@ from django.db import models
 from .party import Party
 from .reporting import Submission
 from .substance import Substance
+from .meeting import Decision
 
 __all__ = [
     'ProcessAgentContainTechnology',
     'ProcessAgentApplication',
     'ProcessAgentUsesReported',
     'ProcessAgentEmissionLimit',
+    'ProcessAgentUsesValidity',
+    'ProcessAgentEmissionLimitValidity',
 ]
 
 
@@ -27,6 +30,7 @@ class ProcessAgentContainTechnology(models.Model):
     contain_technology = models.CharField(max_length=9999)
 
     class Meta:
+        verbose_name_plural = 'process agent contain technologies'
         db_table = 'pa_contain_technology'
 
 
@@ -49,6 +53,15 @@ class ProcessAgentApplication(models.Model):
 
     class Meta:
         db_table = 'pa_application'
+
+
+class ProcessAgentUsesValidity(Decision):
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'process agent uses validity'
+        db_table = 'pa_uses_validity'
 
 
 class ProcessAgentUsesReported(models.Model):
@@ -92,6 +105,7 @@ class ProcessAgentUsesReported(models.Model):
     remark = models.CharField(max_length=9999, blank=True)
 
     class Meta:
+        verbose_name_plural = 'process agent uses reported'
         db_table = 'pa_uses_reported'
 
 
@@ -116,3 +130,12 @@ class ProcessAgentEmissionLimit(models.Model):
 
     class Meta:
         db_table = 'limit_pa_emission'
+
+
+class ProcessAgentEmissionLimitValidity(Decision):
+    start_date = models.DateField(null=True)
+    end_date = models.DateField(null=True)
+
+    class Meta:
+        verbose_name_plural = 'process agent emission limits validity'
+        db_table = 'pa_emission_limit_validity'
