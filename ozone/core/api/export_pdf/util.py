@@ -21,8 +21,6 @@ from reportlab.lib.units import cm
 from reportlab.lib.units import mm
 
 
-from ozone.core.models import ReportingPeriod
-
 __all__ = [
     'hr',
     'page_title_section',
@@ -45,10 +43,32 @@ FONTSIZE_H3 = FONTSIZE_DEFAULT + 2
 FONTSIZE_H2 = FONTSIZE_H3 + 3
 FONTSIZE_H1 = FONTSIZE_H2 + 3
 
+grid_color = (0.4, 0.4, 0.4)
+soft_color = (0.8, 0.8, 0.8)
+
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('GRID', (0, 0), (-1, -1), 0.5, colors.grey),
+    ('GRID', (0, 0), (-1, 0), 0.5, grid_color),
+    ('BOX', (0, 0), (-1, -1), 0.5, grid_color),
+    ('LINEBEFORE', (0, 0), (-1, -1), 0.1, soft_color),
+    ('LINEABOVE', (0, 0), (-1, -1), 0.1, grid_color),
     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
+    ('TOPPADDING', (0, 0), (-1, -1), 0),
+    ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
+    ('LEFTPADDING', (0, 0), (-1, -1), 2),
+    ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_SMALL),
+)
+
+DOUBLE_HEADER_TABLE_STYLES = TABLE_STYLES + (
+    ('GRID', (0, 0), (-1, 1), 0.5, grid_color),
+    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
+)
+
+SINGLE_HEADER_TABLE_STYLES = TABLE_STYLES + (
+    ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
+    ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
 )
 
 
@@ -65,12 +85,13 @@ hr = HRFlowable(
     spaceBefore=1, spaceAfter=1, hAlign='CENTER', vAlign='BOTTOM', dash=None
 )
 
+_bodytext = partial(_style, 'BodyText', fontSize=FONTSIZE_DEFAULT, fontName='Helvetica')
 
-centered_paragraph_style = _style('BodyText', alignment=TA_CENTER, fontSize=FONTSIZE_DEFAULT)
-left_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT)
-right_paragraph_style = _style('BodyText', alignment=TA_RIGHT, fontSize=FONTSIZE_DEFAULT)
-bullet_paragraph_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_BULLET_LIST)
-no_spacing_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_DEFAULT, spaceBefore=0)
+centered_paragraph_style = _bodytext(alignment=TA_CENTER)
+left_paragraph_style = _bodytext(alignment=TA_LEFT)
+right_paragraph_style = _bodytext(alignment=TA_RIGHT)
+bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
+no_spacing_style = _bodytext(alignment=TA_LEFT)
 
 
 left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=-1)

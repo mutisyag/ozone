@@ -2,17 +2,23 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.lib import colors
 
-from ..util import get_big_float
-from ..util import get_quantity, get_decision
-from ..util import get_comments_section
-from ..util import get_group_name
-from ..util import get_remarks
-from ..util import rows_to_table
-from ..util import p_c, p_l, p_r
-from ..util import h2_style
-from ..util import col_widths
-from ..util import TABLE_STYLES
-from ..util import EXEMPTED_FIELDS
+from ..util import (
+    get_big_float,
+    get_quantity,
+    get_decision,
+    get_comments_section,
+    get_group_name,
+    get_remarks,
+    rows_to_table,
+    p_c,
+    p_l,
+    p_r,
+    h2_style,
+    col_widths,
+    SINGLE_HEADER_TABLE_STYLES,
+    DOUBLE_HEADER_TABLE_STYLES,
+    EXEMPTED_FIELDS,
+)
 
 
 def to_row(obj, row_index):
@@ -103,9 +109,7 @@ def export_production(submission):
         h2_style
     )
 
-    styles = list(TABLE_STYLES) + [
-        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    styles = list(DOUBLE_HEADER_TABLE_STYLES) + [
         ('SPAN', (0, 0), (0, 1)),  # Annex/Group
         ('SPAN', (1, 0), (1, 1)),  # Substance
         ('SPAN', (2, 0), (2, 1)),  # Total production
@@ -162,7 +166,7 @@ def export_production(submission):
     table_f1 = rows_to_table(
         header_f1,
         rows,
-        col_widths([1.3, 2.5, 2.5, 5, 0, 2.5, 5, 2.5, 6]),  # 27.3
+        col_widths([1.0, 2.8, 2.5, 5, 0, 2.5, 5, 2.5, 6]),  # 27.3
         styles
     )
 
@@ -177,10 +181,7 @@ def export_production(submission):
             '', '', '', ''
         ),
     ]
-    styles = list(TABLE_STYLES) + [
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-    ]
+    styles = list(SINGLE_HEADER_TABLE_STYLES)
     rows = list()
     for p in captured_items:
         prepare_item(p, len(header_f2))
@@ -188,7 +189,7 @@ def export_production(submission):
     table_f2 = rows_to_table(
         header_f2,
         rows,
-        col_widths([1.3, 2.5, 2.5, 2.5, 2.5, 2.5, 5, 2.5, 6]),  # 27.3
+        col_widths([1.0, 2.8, 2.5, 2.5, 2.5, 2.5, 5, 2.5, 6]),  # 27.3
         styles
     )
 

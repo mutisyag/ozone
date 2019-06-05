@@ -1,18 +1,21 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
-from reportlab.lib import colors
 
-from ..util import get_big_float
-from ..util import get_comments_section
-from ..util import exclude_blend_items
-from ..util import get_substance_or_blend_name
-from ..util import get_group_name
-from ..util import rows_to_table
-from ..util import get_remarks
-from ..util import p_c, p_r, p_l
-from ..util import h2_style
-from ..util import TABLE_STYLES
-from ..util import col_widths
+from ..util import (
+    get_big_float,
+    get_comments_section,
+    exclude_blend_items,
+    get_substance_or_blend_name,
+    get_group_name,
+    rows_to_table,
+    get_remarks,
+    p_c,
+    p_r,
+    p_l,
+    h2_style,
+    SINGLE_HEADER_TABLE_STYLES,
+    col_widths,
+)
 
 
 def table_row(obj):
@@ -43,16 +46,11 @@ def export_destruction(submission):
         p_c(_('Remarks')),
     ),)
 
-    table_style = TABLE_STYLES + (
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-    )
-
     table = rows_to_table(
         table_header,
         tuple(map(table_row, data)),
         col_widths([2.1, 8, 4, 13.2]),
-        table_style
+        SINGLE_HEADER_TABLE_STYLES
     )
 
     return (subtitle, table) + comments
