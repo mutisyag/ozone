@@ -40,7 +40,7 @@ class Command(BaseCommand):
                 logger.info("Deleting submission %s", s.id)
             else:
                 logger.debug("Found submission %s", s.id)
-            for related_data in s.RELATED_DATA:
+            for related_data, aggr_flag in s.RELATED_DATA:
                 for instance in getattr(s, related_data).all():
                     if options['confirm']:
                         instance.delete()
