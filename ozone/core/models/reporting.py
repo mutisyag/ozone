@@ -280,6 +280,8 @@ class Submission(models.Model):
         'rafreports',
         'pa_contain_technologies',
         'pa_uses_reported',
+        'transfers_from',
+        'transfers_to',
     ]
 
     # Maps flags names to group IDs, as group IDs are the closest to immutable
