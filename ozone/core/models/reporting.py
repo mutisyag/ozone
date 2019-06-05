@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 from model_utils import FieldTracker
@@ -39,7 +38,6 @@ __all__ = [
     'SubmissionInfo',
     'ReportingChannel',
     'SubmissionFormat',
-    'ProcessAgentUsesReported',
 ]
 
 SUBMISSION_ROOT_DIR = 'submissions'
@@ -1749,47 +1747,3 @@ class SubmissionInfo(ModifyPreventionMixin, models.Model):
 
     def __str__(self):
         return f'{self.submission} - Info'
-
-
-class ProcessAgentUsesReported(models.Model):
-    """
-    Records information on process agent uses reported.
-    """
-    UNITS = (
-        ('MT', 'Metric Tonnes'),
-        ('ODP tonnes', 'ODP Tonnes')
-    )
-
-    submission = models.ForeignKey(
-        Submission,
-        related_name='pa_uses_reported',
-        on_delete=models.PROTECT
-    )
-
-    decision = models.CharField(max_length=256)
-
-    process_number = models.PositiveSmallIntegerField(null=True, blank=True)
-
-    makeup_quantity = models.FloatField(
-        validators=[MinValueValidator(0.0)],
-        null=True,
-        blank=True
-    )
-
-    emissions = models.FloatField(
-        validators=[MinValueValidator(0.0)],
-        null=True,
-        blank=True
-    )
-
-    units = models.CharField(
-        max_length=64,
-        choices=UNITS,
-        null=True,
-        blank=True
-    )
-
-    remark = models.CharField(max_length=9999, blank=True)
-
-    class Meta:
-        db_table = 'pa_uses_reported'

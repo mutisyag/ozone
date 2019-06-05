@@ -14,7 +14,6 @@ __all__ = [
     'ControlMeasure',
     'Baseline',
     'Limit',
-    'ProcessAgentEmissionLimit',
 ]
 
 
@@ -137,26 +136,3 @@ class Limit(models.Model):
 
     class Meta:
         db_table = 'limit_prod_cons'
-
-
-class ProcessAgentEmissionLimit(models.Model):
-    """
-    Emission limits for process agent uses, for non-Article 5 parties.
-    """
-
-    party = models.ForeignKey(
-        Party,
-        related_name='process_agent_emission_limits',
-        on_delete=models.PROTECT
-    )
-
-    decision = models.CharField(max_length=256)
-
-    makeup_consumption = models.FloatField(validators=[MinValueValidator(0.0)])
-
-    max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
-
-    remark = models.CharField(max_length=9999, blank=True)
-
-    class Meta:
-        db_table = 'limit_pa_emission'

@@ -8,7 +8,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from ..exceptions import MethodNotAllowed
-from .meeting import ExemptionTypes, Treaty
+from .meeting import Treaty
 from .party import Party, PartyRatification
 
 __all__ = [
@@ -18,7 +18,6 @@ __all__ = [
     'Substance',
     'Blend',
     'BlendComponent',
-    'ProcessAgentApplication',
 ]
 
 
@@ -442,27 +441,6 @@ class BlendComponent(models.Model):
     class Meta:
         ordering = ('blend', 'substance')
         db_table = "blend_component"
-
-
-class ProcessAgentApplication(models.Model):
-    """
-    Applications of controlled substances as process agents, as approved
-    in table A of decision X/14 and updated periodically by the Meeting of the
-    Parties.
-    """
-
-    decision = models.CharField(max_length=256, blank=True)
-
-    counter = models.PositiveIntegerField()
-
-    substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
-
-    application = models.CharField(max_length=256)
-
-    remark = models.CharField(max_length=9999, blank=True)
-
-    class Meta:
-        db_table = 'pa_application'
 
 
 class UsesType(models.Model):
