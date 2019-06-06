@@ -90,9 +90,12 @@ class Decision(models.Model):
         Meeting, related_name='decisions', on_delete=models.PROTECT
     )
 
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, blank=True)
 
     remark = models.CharField(max_length=256, blank=True)
+
+    def __str__(self):
+        return self.decision_id
 
     class Meta:
         db_table = 'decision'
