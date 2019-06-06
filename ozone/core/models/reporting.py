@@ -63,14 +63,20 @@ class ModifyPreventionMixin:
             and not self.submission.data_changes_allowed
         ):
             raise ValidationError(
-                _("Unable to change submission because it is already submitted.")
+                _(
+                    "Unable to change submission because it is already "
+                    "submitted."
+                )
             )
         super().clean()
 
     def delete(self, *args, **kwargs):
         if not self.submission.deletion_allowed:
             raise MethodNotAllowed(
-                _("Unable to delete data because submission is already submitted.")
+                _(
+                    "Unable to delete data because submission is already "
+                    "submitted."
+                )
             )
         super().delete()
 
@@ -263,23 +269,30 @@ class Submission(models.Model):
         'default_process_agent': DefaultProcessAgentWorkflow
     }
 
+    # This describes all possible submission-related data; each item contains:
+    # (related_manager_name, is_aggregation_data_populated_from_submission).
+    # In cases where the OS inputs data via the Admin interface and *then*
+    # links a non-data submission (e.g. Transfers, Proc Agents), no aggregation
+    # calculations should be performed at Submission.save().
+    # Also, some submission-related data is not numerical; they will also have
+    # False as the second item in the tuple.
     RELATED_DATA = [
-        'article7exports',
-        'article7imports',
-        'article7productions',
-        'article7destructions',
-        'article7nonpartytrades',
-        'article7emissions',
-        'highambienttemperatureproductions',
-        'highambienttemperatureimports',
-        'dataothers',
-        'nominations',
-        'exemptionapproveds',
-        'rafreports',
-        'pa_contain_technologies',
-        'pa_uses_reported',
-        'transfers_from',
-        'transfers_to',
+        ('article7exports', True),
+        ('article7imports', True),
+        ('article7productions', True),
+        ('article7destructions', True),
+        ('article7nonpartytrades', True),
+        ('article7emissions', True),
+        ('highambienttemperatureproductions', True),
+        ('highambienttemperatureimports', True),
+        ('dataothers', True),
+        ('nominations', True),
+        ('exemptionapproveds', True),
+        ('rafreports', True),
+        ('pa_contain_technologies', False),
+        ('pa_uses_reported', False),
+        ('transfers_from', False),
+        ('transfers_to', False),
     ]
 
     # Maps flags names to group IDs, as group IDs are the closest to immutable
@@ -584,13 +597,13 @@ class Submission(models.Model):
     )
 
     # Process agent Remarks
-    pa_uses_reported_remarks = models.CharField(
+    pa_uses_reported_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
         verbose_name="process agent uses reported remarks",
         help_text="General Process agent uses reported remarks added "
                   "by the ozone secretariat"
     )
-    pa_contain_technology_remarks = models.CharField(
+    pa_contain_technology_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
         verbose_name="process agent contain technology remarks",
         help_text="General Process agent contain technology remarks added "
@@ -1083,8 +1096,8 @@ class Submission(models.Model):
             "transfers_remarks_secretariat",
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
-            "pa_uses_reported_remarks",
-            "pa_contain_technology_remarks",
+            "pa_uses_reported_remarks_secretariat",
+            "pa_contain_technology_remarks_secretariat",
             "reporting_channel_id",
             "submitted_at",
         ]
@@ -1235,7 +1248,7 @@ class Submission(models.Model):
             attributes['submission_id'] = clone.pk
             self.article7questionnaire.__class__.objects.create(**attributes)
 
-        for related_data in self.RELATED_DATA:
+        for related_data, aggr_flag in self.RELATED_DATA:
             for instance in getattr(self, related_data).all():
                 if hasattr(instance, 'blend_item') and instance.blend_item:
                     continue
@@ -1405,7 +1418,9 @@ class Submission(models.Model):
 
         # Set to 0 all values that had been populated by this submission.
         # Any aggregation row that becomes full-zero after that is deleted.
-        for related in self.RELATED_DATA:
+        for related, aggr_flag in self.RELATED_DATA:
+            if not aggr_flag:
+                continue
             # Clear ODP aggregations
             related_manager = getattr(self, related)
             if hasattr(related_manager.model, 'clear_aggregated_data'):
@@ -1444,7 +1459,9 @@ class Submission(models.Model):
                 group=group
             )
 
-        for related in self.RELATED_DATA:
+        for related, aggr_flag in self.RELATED_DATA:
+            if not aggr_flag:
+                continue
             related_manager = getattr(self, related)
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'fill_aggregated_data'):
@@ -1467,7 +1484,9 @@ class Submission(models.Model):
 
         group_mapping = {group: None for group in self.get_reported_groups()}
 
-        for related in self.RELATED_DATA:
+        for related, aggr_flag in self.RELATED_DATA:
+            if not aggr_flag:
+                continue
             related_manager = getattr(self, related)
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_data'):
@@ -1486,7 +1505,9 @@ class Submission(models.Model):
 
         subst_mapping = {}
 
-        for related in self.RELATED_DATA:
+        for related, aggr_flag in self.RELATED_DATA:
+            if not aggr_flag:
+                continue
             related_manager = getattr(self, related)
             if related_manager.count() > 0:
                 if hasattr(related_manager.model, 'get_aggregated_mt_data'):
@@ -1523,7 +1544,7 @@ class Submission(models.Model):
         # We need to delete all related data entries before being able to
         # delete the submission. We leave it to the interface to ask "are you
         # sure?" to the user.
-        for related_data in self.RELATED_DATA:
+        for related_data, aggr_flag in self.RELATED_DATA:
             related_qs = getattr(self, related_data).all()
             if related_qs:
                 related_qs.delete()

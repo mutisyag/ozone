@@ -16,7 +16,7 @@ from ..util import (
     h2_style,
     p_c, p_l, p_r,
     rows_to_table,
-    TABLE_STYLES,
+    DOUBLE_HEADER_TABLE_STYLES,
     EXEMPTED_FIELDS
 )
 
@@ -213,9 +213,7 @@ def _export(data, comments, party_field, texts):
 
     subtitle = Paragraph(texts['section_title'], h2_style)
 
-    styles = list(TABLE_STYLES) + [
-         ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-         ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    styles = list(DOUBLE_HEADER_TABLE_STYLES) + [
          ('SPAN', (0, 0), (0, 1)),  # Annex/Group
          ('SPAN', (1, 0), (1, 1)),  # Substance
          ('SPAN', (2, 0), (2, 1)),  # Party
@@ -242,7 +240,7 @@ def _export(data, comments, party_field, texts):
             '',
             '',
             p_c(_('New')),
-            p_c(_('Recovered and reclaimed')),
+            p_c(_('Recovered')),
             '',
             p_c(_('Quantity')),
             p_c(_('Decision / type of use or remark')),
@@ -266,7 +264,7 @@ def _export(data, comments, party_field, texts):
     table = rows_to_table(
         header,
         rows,
-        col_widths([1.3, 2.5, 3.5, 2.5, 2.5, 2.5, 2.5, 5, 5]),
+        col_widths([1.0, 2.8, 3.5, 2.5, 2.5, 2.5, 2.5, 5, 5]),
         styles
     )
 
@@ -280,7 +278,7 @@ def export_imports(submission):
         'section_title': "%s (%s)" % (_('Imports'), _('metric tonnes')),
         'party': _('Exporting country/region/territory'),
         'total_quantity': _('Total quantity imported for all uses'),
-        'exempted_quantity': _('Quantity of new substance imported for exempted essential,'
+        'exempted_quantity': _('Quantity of new substance imported for exempted essential, '
                                'critical, high-ambient-temperature or other uses'),
         'feedstock_quantity': _('Import for feedstock'),
         'qps_quantity': _('Amount imported for QPS applications within your country'),
@@ -295,7 +293,7 @@ def export_exports(submission):
         'section_title': "%s (%s)" % (_('Exports'), _('metric tonnes')),
         'party': _('Importing country/region/territory'),
         'total_quantity': _('Total quantity exported for all uses'),
-        'exempted_quantity': _('Quantity of new substance exported for exempted essential,'
+        'exempted_quantity': _('Quantity of new substance exported for exempted essential, '
                                'critical, high-ambient-temperature or other uses'),
         'feedstock_quantity': _('Export for feedstock'),
         'qps_quantity': _('Amount exported for QPS applications'),

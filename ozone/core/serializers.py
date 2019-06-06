@@ -1218,7 +1218,11 @@ class SubmissionRemarksSerializer(
                 'exemption_nomination_remarks_secretariat',
                 'exemption_approved_remarks_secretariat',
             ),
-            'transfer': ('transfers_remarks_secretariat',)
+            'transfer': ('transfers_remarks_secretariat',),
+            'procagent': (
+                'pa_uses_reported_remarks_secretariat',
+                'pa_contain_technology_remarks_secretariat'
+            ),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 

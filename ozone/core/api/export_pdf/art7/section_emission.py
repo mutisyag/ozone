@@ -1,15 +1,18 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
-from reportlab.lib import colors
 
-from ..util import get_big_float
-from ..util import get_comments_section
-from ..util import get_remarks
-from ..util import rows_to_table
-from ..util import p_c, p_l, p_r
-from ..util import h2_style
-from ..util import TABLE_STYLES
-from ..util import col_widths
+from ..util import (
+    get_big_float,
+    get_comments_section,
+    get_remarks,
+    rows_to_table,
+    p_c,
+    p_l,
+    p_r,
+    h2_style,
+    DOUBLE_HEADER_TABLE_STYLES,
+    col_widths,
+)
 
 
 def table_row(obj):
@@ -67,9 +70,7 @@ def export_emission(submission):
             '',
         )
     )
-    table_style = TABLE_STYLES + (
-        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    table_style = DOUBLE_HEADER_TABLE_STYLES + (
         ('SPAN', (0, 0), (0, 1)),  # Facility
         ('SPAN', (1, 0), (1, 1)),  # Total amount
         ('SPAN', (2, 0), (4, 0)),  # Amount generated and captured

@@ -1,20 +1,21 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
-from reportlab.lib import colors
 
 from ..util import get_big_float
 from ..util import get_comments_section
 from ..util import to_precision
 
-from ..util import exclude_blend_items
-from ..util import get_group_name
-from ..util import get_substance_or_blend_name
-from ..util import rows_to_table
-from ..util import get_remarks
-from ..util import p_c, p_r, p_l
-from ..util import h2_style
-from ..util import TABLE_STYLES
-from ..util import col_widths
+from ..util import (
+    exclude_blend_items,
+    get_group_name,
+    get_substance_or_blend_name,
+    rows_to_table,
+    get_remarks,
+    p_c, p_r, p_l,
+    h2_style,
+    DOUBLE_HEADER_TABLE_STYLES,
+    col_widths,
+)
 
 
 def table_row(obj):
@@ -78,9 +79,7 @@ def export_nonparty(submission):
         )
     )
 
-    table_style = TABLE_STYLES + (
-        ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-        ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
+    table_style = DOUBLE_HEADER_TABLE_STYLES + (
         ('SPAN', (0, 0), (0, 1)),  # Annex group
         ('SPAN', (1, 0), (1, 1)),  # Substance
         ('SPAN', (2, 0), (2, 1)),  # Party

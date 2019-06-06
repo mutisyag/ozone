@@ -240,7 +240,7 @@ class Command(BaseCommand):
             logger.info("Deleting submission %s/%s", party.abbr, period.name)
             sub._current_state = 'data_entry'
             sub.save()
-            for related_data in sub.RELATED_DATA:
+            for related_data, aggr_flag in sub.RELATED_DATA:
                 for instance in getattr(sub, related_data).all():
                     logger.debug("Deleting related data: %s", instance)
                     instance.delete()

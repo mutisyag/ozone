@@ -1,6 +1,5 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
-from reportlab.lib import colors
 from reportlab.platypus import PageBreak
 
 from ozone.core.models import (
@@ -15,25 +14,20 @@ from ozone.core.models import (
 )
 from ozone.core.models.utils import round_half_up
 
-from ..util import p_l
-from ..util import h1_style, h2_style, h3_style, page_title_style, FONTSIZE_SMALL, TABLE_STYLES
-from ..util import left_description_style
-from ..util import col_widths
 from ..util import (
+    p_l, h1_style, h2_style, h3_style, page_title_style,
+    DOUBLE_HEADER_TABLE_STYLES,
+    left_description_style, col_widths,
     get_date_of_reporting_str,
     get_compared_period,
 )
 
 
 TABLE_CUSTOM_STYLES = (
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_SMALL),
-    ('BACKGROUND', (0, 0), (-1, 1), colors.lightgrey),
-    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-    ('ALIGN', (0, 0), (-1, 1), 'CENTER'),
     ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
-    ('SPAN', (0, 0), (0, 1)), # annex/group
-    ('SPAN', (1, 0), (4, 0)), # production
-    ('SPAN', (5, 0), (9, 0)), # consumption
+    ('SPAN', (0, 0), (0, 1)),  # annex/group
+    ('SPAN', (1, 0), (4, 0)),  # production
+    ('SPAN', (5, 0), (9, 0)),  # consumption
 )
 
 TABLE_TOTAL_STYLE = (
@@ -107,7 +101,7 @@ def get_ods_table(headers, table):
     return Table(
         table_headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
-        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES),
+        style=(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
     )
 
@@ -119,7 +113,7 @@ def get_fgas_table(headers, table):
     return Table(
         table_headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
-        style=(TABLE_STYLES + TABLE_CUSTOM_STYLES),
+        style=(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
     )
 
