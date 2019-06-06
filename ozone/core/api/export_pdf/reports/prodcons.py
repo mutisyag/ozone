@@ -207,15 +207,22 @@ def get_prodcons_data(periods, parties):
             party=party,
             reporting_period=main_period
         )
-        submission_qs = Submission.objects.filter(
+        prodcons_qs = ProdCons.objects.filter(
             party=party,
-            reporting_period=main_period,
-            obligation___form_type=FormTypes.ART7.value,
+            reporting_period=main_period
         )
-        submissions = [s for s in submission_qs if s.is_current is True]
-        if submissions:
+
+        # Get the date reported from the Article 7 submission related to these
+        # aggregations.
+        submission_id = None
+        for subs in prodcons_qs.values_list('submissions', flat=True):
+            id_list = subs.get(FormTypes.ART7.value, [])
+            if id_list:
+                submission_id = id_list[0]
+        submission = Submission.objects.filter(id=submission_id).first()
+        if submission:
             # There should only be one current submission.
-            date_reported = get_date_of_reporting_str(submissions[0])
+            date_reported = get_date_of_reporting_str(submission)
         else:
             date_reported = "-"
 
@@ -231,9 +238,7 @@ def get_prodcons_data(periods, parties):
         to_report_groups_main_period = Group.get_report_groups(party, main_period)
         for group in all_groups:
             try:
-                main_prodcons = ProdCons.objects.get(
-                    party=party, reporting_period=main_period, group=group
-                )
+                main_prodcons = prodcons_qs.get(group=group)
             except ProdCons.DoesNotExist:
                 main_prodcons = None
 
