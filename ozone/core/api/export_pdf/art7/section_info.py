@@ -76,7 +76,10 @@ def get_submission_info(info):
         _kv(info, 'Designation', 'designation'),
         _kv(info, 'Organization', 'organization'),
         _kv(info, 'Postal address', 'postal_address'),
-        _kv(info, 'Address country', 'country'),
+        Paragraph(
+            '%s: %s' % (_('Address country'), info.country.name),
+            style=no_spacing_style
+        ) if info.country else '',
         _kv(info, 'Phone', 'phone'),
         _kv(info, 'E-mail', 'email'),
         p_l(''),

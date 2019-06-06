@@ -3,7 +3,6 @@ from reportlab.platypus import Paragraph
 
 from ..util import get_big_float
 from ..util import get_comments_section
-from ..util import to_precision
 
 from ..util import (
     exclude_blend_items,
@@ -11,7 +10,7 @@ from ..util import (
     get_substance_or_blend_name,
     rows_to_table,
     get_remarks,
-    p_c, p_r, p_l,
+    sm_c, sm_r, sm_l,
     h2_style,
     DOUBLE_HEADER_TABLE_STYLES,
     col_widths,
@@ -20,27 +19,14 @@ from ..util import (
 
 def table_row(obj):
     return (
-        p_c(get_group_name(obj)),
-        p_l(get_substance_or_blend_name(obj)),
-        p_l(obj.trade_party.name if obj.trade_party else ''),
-        p_r(get_big_float(obj.quantity_import_new)),
-        p_r(get_big_float(obj.quantity_import_recovered)),
-        p_r(get_big_float(obj.quantity_export_new)),
-        p_r(get_big_float(obj.quantity_export_recovered)),
-        p_l(get_remarks(obj)),
-    )
-
-
-def component_row(component, blend):
-    ptg = component.percentage
-
-    return (
-        component.substance,
-        p_c('<b>{}%</b>'.format(round(ptg * 100, 1))),
-        to_precision(blend.quantity_import_new * ptg, 3),
-        to_precision(blend.quantity_import_recovered * ptg, 3),
-        to_precision(blend.quantity_export_new * ptg, 3),
-        to_precision(blend.quantity_export_recovered * ptg, 3),
+        sm_c(get_group_name(obj)),
+        sm_l(get_substance_or_blend_name(obj)),
+        sm_l(obj.trade_party.name if obj.trade_party else ''),
+        sm_r(get_big_float(obj.quantity_import_new)),
+        sm_r(get_big_float(obj.quantity_import_recovered)),
+        sm_r(get_big_float(obj.quantity_export_new)),
+        sm_r(get_big_float(obj.quantity_export_recovered)),
+        sm_l(get_remarks(obj)),
     )
 
 
@@ -58,23 +44,23 @@ def export_nonparty(submission):
 
     table_header = (
         (
-            p_c(_('Annex/Group')),
-            p_c(_('Substance or mixture')),
-            p_c(_('Exporting or destination country/region/territory')),
-            p_c(_('Quantity of imports from non-parties')),
+            sm_c(_('Annex/Group')),
+            sm_c(_('Substance or mixture')),
+            sm_c(_('Exporting or destination country/region/territory')),
+            sm_c(_('Quantity of imports from non-parties')),
             '',
-            p_c(_('Quantity of exports from non-parties')),
+            sm_c(_('Quantity of exports from non-parties')),
             '',
-            p_c(_('Remarks')),
+            sm_c(_('Remarks')),
         ),
         (
             '',
             '',
             '',
-            p_c(_('New imports')),
-            p_c(_('Recovered and reclaimed imports')),
-            p_c(_('New exports')),
-            p_c(_('Recovered and reclaimed exports')),
+            sm_c(_('New imports')),
+            sm_c(_('Recovered and reclaimed imports')),
+            sm_c(_('New exports')),
+            sm_c(_('Recovered and reclaimed exports')),
             '',
         )
     )

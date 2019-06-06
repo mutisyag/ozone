@@ -1,6 +1,5 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
-from reportlab.lib import colors
 
 from ..util import (
     get_big_float,
@@ -10,11 +9,9 @@ from ..util import (
     get_group_name,
     get_remarks,
     rows_to_table,
-    p_c,
-    p_l,
-    p_r,
-    h2_style,
-    col_widths,
+    sm_c, sm_l, sm_r,
+    h2_style, col_widths,
+    lighter_grey,
     SINGLE_HEADER_TABLE_STYLES,
     DOUBLE_HEADER_TABLE_STYLES,
     EXEMPTED_FIELDS,
@@ -33,20 +30,20 @@ def to_row(obj, row_index):
 
     # Add base row
     rows.append((
-        p_c(get_group_name(obj)),
-        p_l(obj.substance.name),
-        p_r(get_big_float(obj.quantity_total_produced)),
-        p_r(get_big_float(obj.quantity_feedstock)),
-        p_r(get_big_float(obj.quantity_for_destruction)),
-        p_r(get_big_float(get_quantity(obj, first_field))) if first_field else '',
-        p_l(
+        sm_c(get_group_name(obj)),
+        sm_l(obj.substance.name),
+        sm_r(get_big_float(obj.quantity_total_produced)),
+        sm_r(get_big_float(obj.quantity_feedstock)),
+        sm_r(get_big_float(obj.quantity_for_destruction)),
+        sm_r(get_big_float(get_quantity(obj, first_field))) if first_field else '',
+        sm_l(
             '%s %s' % (
                 EXEMPTED_FIELDS[first_field],
                 get_decision(obj, first_field)
             )
         ) if first_field else '',
-        p_r(get_big_float(obj.quantity_article_5)),
-        p_l(get_remarks(obj)),
+        sm_r(get_big_float(obj.quantity_article_5)),
+        sm_l(get_remarks(obj)),
     ))
 
     # Add more rows if there are still fields in field_names
@@ -54,8 +51,8 @@ def to_row(obj, row_index):
         rows.append((
             # Don't repeat previously shown fields
             '', '', '', '', '',
-            p_r(get_big_float(get_quantity(obj, f))),
-            p_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
+            sm_r(get_big_float(get_quantity(obj, f))),
+            sm_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
             '', '',
         ))
 
@@ -65,12 +62,12 @@ def to_row(obj, row_index):
         rows.extend([
             (
                 '', '', '', '', '',
-                p_c(_('Amount produced for QPS applications within your country and for export')),
+                sm_c(_('Amount produced for QPS applications within your country and for export')),
                 '', '', '',
             ),
             (
                 '', '', '', '', '',
-                p_r(get_big_float(obj.quantity_quarantine_pre_shipment)),
+                sm_r(get_big_float(obj.quantity_quarantine_pre_shipment)),
                 get_decision(obj, 'quarantine_pre_shipment'),
                 '', '',
             )
@@ -78,7 +75,7 @@ def to_row(obj, row_index):
         current_row = row_index + len(rows) - 1
         styles.extend([
             ('SPAN', (5, current_row-1), (6, current_row-1)),  # Quantity + Decision (heading)
-            ('BACKGROUND', (5, current_row-1), (6, current_row-1), colors.lightgrey),
+            ('BACKGROUND', (5, current_row-1), (6, current_row-1), lighter_grey),
             ('ALIGN', (5, current_row-1), (6, current_row-1), 'CENTER'),
         ])
 
@@ -120,17 +117,17 @@ def export_production(submission):
     ]
     header_f1 = [
         (
-            p_c(_('Annex/Group')),
-            p_c(_('Substance')),
-            p_c(_('Total production for all uses')),
-            p_c(_('Production for feedstock uses within your country')),
+            sm_c(_('Annex/Group')),
+            sm_c(_('Substance')),
+            sm_c(_('Total production for all uses')),
+            sm_c(_('Production for feedstock uses within your country')),
             '',  # Destruction column is not needed for F/I but
                  # it's added (invisible) to have a single to_row function
-            p_c(_('Production for exempted essential, '
-                  'critical or other uses within your country')),
+            sm_c(_('Production for exempted essential, '
+                   'critical or other uses within your country')),
             '',
-            p_c(_('Production for supply to Article 5 countries')),
-            p_c(_('Remarks')),
+            sm_c(_('Production for supply to Article 5 countries')),
+            sm_c(_('Remarks')),
         ),
         (
             '',
@@ -138,8 +135,8 @@ def export_production(submission):
             '',
             '',
             '',
-            p_c(_('Quantity')),
-            p_c(_('Decision / type of use')),
+            sm_c(_('Quantity')),
+            sm_c(_('Decision / type of use')),
             '',
             '',
         ),
@@ -175,9 +172,9 @@ def export_production(submission):
         (
             # Table header for F/II substances
             '', '',
-            p_c(_('Captured for all uses')),
-            p_c(_('Captured for feedstock uses within your country')),
-            p_c(_('Captured for destruction')),
+            sm_c(_('Captured for all uses')),
+            sm_c(_('Captured for feedstock uses within your country')),
+            sm_c(_('Captured for destruction')),
             '', '', '', ''
         ),
     ]

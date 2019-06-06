@@ -1,5 +1,4 @@
 from django.utils.translation import gettext_lazy as _
-from reportlab.lib import colors
 from reportlab.platypus import Paragraph
 
 from ..util import (
@@ -14,10 +13,11 @@ from ..util import (
     get_substance_or_blend_name,
     get_group_name,
     h2_style,
-    p_c, p_l, p_r,
-    pb_c, pb_l, pb_r,
+    sm_c, sm_l, sm_r,
+    smb_l, smb_r,
     rows_to_table,
     grid_color,
+    lighter_grey,
     DOUBLE_HEADER_TABLE_STYLES,
     EXEMPTED_FIELDS
 )
@@ -37,26 +37,26 @@ def to_row(obj, row_index, party_field, text_qps):
     # Add base row
     substance_name = get_substance_or_blend_name(obj)
     is_subtotal = hasattr(obj, 'is_subtotal')
-    p_r_func = pb_r if is_subtotal else p_r
+    p_r_func = smb_r if is_subtotal else sm_r
     base_row = [
-        p_c(get_group_name(obj)),
-        p_l(substance_name),
-        p_l(party.name if party else ''),
+        sm_c(get_group_name(obj)),
+        sm_l(substance_name),
+        sm_l(party.name if party else ''),
         p_r_func(get_big_float(obj.quantity_total_new)),
         p_r_func(get_big_float(obj.quantity_total_recovered)),
         p_r_func(get_big_float(obj.quantity_feedstock)),
         p_r_func(get_big_float(get_quantity(obj, first_field)) if first_field else ''),
-        p_l(
+        sm_l(
             '%s %s' % (
                 EXEMPTED_FIELDS[first_field],
                 get_decision(obj, first_field)
             )
         ) if first_field else '',
-        p_l(get_remarks(obj)),
+        sm_l(get_remarks(obj)),
     ]
     rows.append(base_row)
     if is_subtotal:
-        base_row[0] = pb_l(
+        base_row[0] = smb_l(
             '%s %s (%s)' % (_('Subtotal'), substance_name, _('excluding polyols'))
             if obj.quantity_polyols
             else '%s %s' % (_('Subtotal'), substance_name)
@@ -74,7 +74,7 @@ def to_row(obj, row_index, party_field, text_qps):
             # Don't repeat previously shown fields
             '', '', '', '', '', '',
             p_r_func(get_big_float(get_quantity(obj, f))),
-            p_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
+            sm_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
             '',
         ))
 
@@ -84,29 +84,29 @@ def to_row(obj, row_index, party_field, text_qps):
         rows.extend([
             (
                 '', '', '', '', '', '',
-                p_c(text_qps),
+                sm_c(text_qps),
                 '', '',
             ),
             (
                 '', '', '', '', '', '',
                 p_r_func(get_big_float(obj.quantity_quarantine_pre_shipment)),
-                p_l(get_decision(obj, 'quarantine_pre_shipment')),
+                sm_l(get_decision(obj, 'quarantine_pre_shipment')),
                 '',
             )
         ])
         current_row = row_index + len(rows) - 1
         # Merge heading with previous row (exempted amounts and decision) when empty
         if not any((first_field, field_names)):
-            base_row[6] = p_c(text_qps)
+            base_row[6] = sm_c(text_qps)
             styles.extend([
                 ('SPAN', (6, current_row-2), (7, current_row-1)),  # Quantity
-                ('BACKGROUND', (6, current_row-2), (7, current_row-1), colors.lightgrey),
+                ('BACKGROUND', (6, current_row-2), (7, current_row-1), lighter_grey),
                 ('ALIGN', (6, current_row-2), (7, current_row-2), 'CENTER'),
             ])
         else:
             styles.extend([
                 ('SPAN', (6, current_row-1), (7, current_row-1)),  # Quantity + Decision (heading)
-                ('BACKGROUND', (6, current_row-1), (7, current_row-1), colors.lightgrey),
+                ('BACKGROUND', (6, current_row-1), (7, current_row-1), lighter_grey),
                 ('ALIGN', (6, current_row-1), (7, current_row-1), 'CENTER'),
             ])
 
@@ -139,9 +139,9 @@ def to_row(obj, row_index, party_field, text_qps):
         if is_subtotal:
             rows.extend([
                 (
-                    p_l('<b>%s %s</b>' % (_('Subtotal polyols containing'), obj.substance.name)),
+                    smb_l('%s %s' % (_('Subtotal polyols containing'), obj.substance.name)),
                     '', '', '', '', '',
-                    pb_r(get_big_float(obj.quantity_polyols)),
+                    smb_r(get_big_float(obj.quantity_polyols)),
                     '', '',
                 )
             ])
@@ -153,12 +153,12 @@ def to_row(obj, row_index, party_field, text_qps):
         else:
             rows.extend([
                 (
-                    p_r('%s %s' % (_('Polyols containing'), obj.substance.name)),
+                    sm_r('%s %s' % (_('Polyols containing'), obj.substance.name)),
                     '',
-                    p_l(party.name if party else ''),
+                    sm_l(party.name if party else ''),
                     '', '', '',
-                    p_r(get_big_float(obj.quantity_polyols)),
-                    p_l(get_decision(obj, 'polyols')),
+                    sm_r(get_big_float(obj.quantity_polyols)),
+                    sm_l(get_decision(obj, 'polyols')),
                     '',
                 )
             ])
@@ -230,25 +230,25 @@ def _export(data, comments, party_field, texts):
 
     header = [
         (
-            p_c(_('Annex/Group')),
-            p_c(_('Substance')),
-            p_c(texts['party']),
-            p_c(texts['total_quantity']),
+            sm_c(_('Annex/Group')),
+            sm_c(_('Substance')),
+            sm_c(texts['party']),
+            sm_c(texts['total_quantity']),
             '',
-            p_c(texts['feedstock_quantity']),
-            p_c(texts['exempted_quantity']),
+            sm_c(texts['feedstock_quantity']),
+            sm_c(texts['exempted_quantity']),
             '',
-            p_c(_('Remarks')),
+            sm_c(_('Remarks')),
         ),
         (
             '',
             '',
             '',
-            p_c(_('New')),
-            p_c(_('Recovered')),
+            sm_c(_('New')),
+            sm_c(_('Recovered')),
             '',
-            p_c(_('Quantity')),
-            p_c(_('Decision / type of use or remark')),
+            sm_c(_('Quantity')),
+            sm_c(_('Decision / type of use or remark')),
             '',
         ),
     ]

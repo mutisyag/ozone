@@ -9,9 +9,7 @@ from ..util import (
     get_group_name,
     rows_to_table,
     get_remarks,
-    p_c,
-    p_r,
-    p_l,
+    sm_c, sm_r, sm_l,
     h2_style,
     SINGLE_HEADER_TABLE_STYLES,
     col_widths,
@@ -20,10 +18,10 @@ from ..util import (
 
 def table_row(obj):
     return (
-        p_c(get_group_name(obj)),
-        p_l(get_substance_or_blend_name(obj)),
-        p_r(get_big_float(obj.quantity_destroyed)),
-        p_l(get_remarks(obj)),
+        sm_c(get_group_name(obj)),
+        sm_l(get_substance_or_blend_name(obj)),
+        sm_r(get_big_float(obj.quantity_destroyed)),
+        sm_l(get_remarks(obj)),
     )
 
 
@@ -40,10 +38,10 @@ def export_destruction(submission):
     )
 
     table_header = ((
-        p_c(_('Annex/Group')),
-        p_c(_('Substance or mixture')),
-        p_c(_('Quantity destroyed')),
-        p_c(_('Remarks')),
+        sm_c(_('Annex/Group')),
+        sm_c(_('Substance or mixture')),
+        sm_c(_('Quantity destroyed')),
+        sm_c(_('Remarks')),
     ),)
 
     table = rows_to_table(

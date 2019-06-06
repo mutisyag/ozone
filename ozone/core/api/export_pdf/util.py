@@ -28,9 +28,15 @@ __all__ = [
     'p_c',
     'p_l',
     'p_r',
-    'pb_c',
-    'pb_l',
-    'pb_r',
+    'b_c',
+    'b_l',
+    'b_r',
+    'sm_c',
+    'sm_l',
+    'sm_r',
+    'smb_c',
+    'smb_l',
+    'smb_r',
     'p_bullet',
 ]
 
@@ -47,6 +53,8 @@ FONTSIZE_H1 = FONTSIZE_H2 + 3
 
 grid_color = (0.4, 0.4, 0.4)
 soft_color = (0.8, 0.8, 0.8)
+lighter_grey = (0.95, 0.95, 0.95)
+
 
 TABLE_STYLES = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
@@ -94,8 +102,14 @@ right_paragraph_style = _bodytext(alignment=TA_RIGHT)
 bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontName='Helvetica-Bold')
 bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontName='Helvetica-Bold')
 bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontName='Helvetica-Bold')
+small_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL)
+small_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL)
+small_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL)
+small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
-no_spacing_style = _bodytext(alignment=TA_LEFT)
+no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
 
 
 left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=-1)
@@ -130,9 +144,19 @@ page_title_style = _style(
 p_c = partial(Paragraph, style=centered_paragraph_style)
 p_l = partial(Paragraph, style=left_paragraph_style)
 p_r = partial(Paragraph, style=right_paragraph_style)
-pb_c = partial(Paragraph, style=bold_centered_paragraph_style)
-pb_l = partial(Paragraph, style=bold_left_paragraph_style)
-pb_r = partial(Paragraph, style=bold_right_paragraph_style)
+
+b_c = partial(Paragraph, style=bold_centered_paragraph_style)
+b_l = partial(Paragraph, style=bold_left_paragraph_style)
+b_r = partial(Paragraph, style=bold_right_paragraph_style)
+
+sm_c = partial(Paragraph, style=small_centered_paragraph_style)
+sm_l = partial(Paragraph, style=small_left_paragraph_style)
+sm_r = partial(Paragraph, style=small_right_paragraph_style)
+
+smb_c = partial(Paragraph, style=small_bold_centered_paragraph_style)
+smb_l = partial(Paragraph, style=small_bold_left_paragraph_style)
+smb_r = partial(Paragraph, style=small_bold_right_paragraph_style)
+
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
 

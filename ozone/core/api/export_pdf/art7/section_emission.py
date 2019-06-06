@@ -6,9 +6,7 @@ from ..util import (
     get_comments_section,
     get_remarks,
     rows_to_table,
-    p_c,
-    p_l,
-    p_r,
+    sm_c, sm_l, sm_r,
     h2_style,
     DOUBLE_HEADER_TABLE_STYLES,
     col_widths,
@@ -26,12 +24,12 @@ def table_row(obj):
         obj.quantity_emitted,
     )
     return (
-        p_l(obj.facility_name),
+        sm_l(obj.facility_name),
     ) + tuple(
-        p_r(get_big_float(field))
+        sm_r(get_big_float(field))
         for field in fields
     ) + (
-        p_l(get_remarks(obj)),
+        sm_l(get_remarks(obj)),
     )
 
 
@@ -48,22 +46,22 @@ def export_emission(submission):
 
     table_header = (
         (
-            p_c(_('Facility name or identifier')),
-            p_c(_('Total amount generated')),
-            p_c(_('Amount generated and captured')),
+            sm_c(_('Facility name or identifier')),
+            sm_c(_('Total amount generated')),
+            sm_c(_('Amount generated and captured')),
             '',
             '',
-            p_c(_('Amount used for feedstock without prior capture')),
-            p_c(_('Amount destroyed without prior capture')),
-            p_c(_('Amount of generated emissions')),
-            p_c(_('Remarks')),
+            sm_c(_('Amount used for feedstock without prior capture')),
+            sm_c(_('Amount destroyed without prior capture')),
+            sm_c(_('Amount of generated emissions')),
+            sm_c(_('Remarks')),
         ),
         (
             '',
             '',
-            p_c(_('For all uses')),
-            p_c(_('For feedstock use in your country')),
-            p_c(_('For destruction')),
+            sm_c(_('For all uses')),
+            sm_c(_('For feedstock use in your country')),
+            sm_c(_('For destruction')),
             '',
             '',
             '',
