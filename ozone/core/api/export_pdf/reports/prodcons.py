@@ -212,11 +212,10 @@ def get_prodcons_data(periods, parties):
             reporting_period=main_period,
             obligation___form_type=FormTypes.ART7.value,
         )
-
-        if submission_qs:
+        submissions = [s for s in submission_qs if s.is_current is True]
+        if submissions:
             # There should only be one current submission.
-            submission = [s for s in submission_qs if s.is_current is True][0]
-            date_reported = get_date_of_reporting_str(submission)
+            date_reported = get_date_of_reporting_str(submissions[0])
         else:
             date_reported = "-"
 
