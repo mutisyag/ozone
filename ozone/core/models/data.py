@@ -333,7 +333,7 @@ class AggregationMixin:
 
             # Clear this submission from the list of submissions for this aggr
             form_type = submission.obligation.form_type
-            if submission.id in aggregation.submissions[form_type]:
+            if submission.id in aggregation.submissions.get(form_type, []):
                 submissions_set = set(aggregation.submissions[form_type])
                 submissions_set.remove(submission.id)
                 aggregation.submissions[form_type] = list(submissions_set)
