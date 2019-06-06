@@ -15,7 +15,9 @@ from ..util import (
     get_group_name,
     h2_style,
     p_c, p_l, p_r,
+    pb_c, pb_l, pb_r,
     rows_to_table,
+    grid_color,
     DOUBLE_HEADER_TABLE_STYLES,
     EXEMPTED_FIELDS
 )
@@ -33,14 +35,17 @@ def to_row(obj, row_index, party_field, text_qps):
     party = getattr(obj, party_field)
 
     # Add base row
+    substance_name = get_substance_or_blend_name(obj)
+    is_subtotal = hasattr(obj, 'is_subtotal')
+    p_r_func = pb_r if is_subtotal else p_r
     base_row = [
         p_c(get_group_name(obj)),
-        p_l(get_substance_or_blend_name(obj)),
+        p_l(substance_name),
         p_l(party.name if party else ''),
-        p_r(get_big_float(obj.quantity_total_new)),
-        p_r(get_big_float(obj.quantity_total_recovered)),
-        p_r(get_big_float(obj.quantity_feedstock)),
-        p_r(get_big_float(get_quantity(obj, first_field))) if first_field else '',
+        p_r_func(get_big_float(obj.quantity_total_new)),
+        p_r_func(get_big_float(obj.quantity_total_recovered)),
+        p_r_func(get_big_float(obj.quantity_feedstock)),
+        p_r_func(get_big_float(get_quantity(obj, first_field)) if first_field else ''),
         p_l(
             '%s %s' % (
                 EXEMPTED_FIELDS[first_field],
@@ -49,18 +54,18 @@ def to_row(obj, row_index, party_field, text_qps):
         ) if first_field else '',
         p_l(get_remarks(obj)),
     ]
-    is_subtotal = hasattr(obj, 'is_subtotal')
     rows.append(base_row)
     if is_subtotal:
-        base_row[0] = p_r(
-            '<b>%s %s</b> (%s)' % (_('Subtotal'), obj.substance.name, _('excluding polyols'))
+        base_row[0] = pb_l(
+            '%s %s (%s)' % (_('Subtotal'), substance_name, _('excluding polyols'))
             if obj.quantity_polyols
-            else '<b>%s %s</b>' % (_('Subtotal'), obj.substance.name)
+            else '%s %s' % (_('Subtotal'), substance_name)
         )
         base_row[1] = ''  # Substance name
         current_row = row_index + len(rows) - 1
         styles.extend([
             ('SPAN', (0, current_row), (2, current_row)),
+            ('LINEABOVE', (0, current_row), (-1, current_row), 0.5, grid_color),
         ])
 
     # Add more rows if there are still fields in field_names
@@ -68,7 +73,7 @@ def to_row(obj, row_index, party_field, text_qps):
         rows.append((
             # Don't repeat previously shown fields
             '', '', '', '', '', '',
-            p_r(get_big_float(get_quantity(obj, f))),
+            p_r_func(get_big_float(get_quantity(obj, f))),
             p_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
             '',
         ))
@@ -84,8 +89,8 @@ def to_row(obj, row_index, party_field, text_qps):
             ),
             (
                 '', '', '', '', '', '',
-                p_r(get_big_float(obj.quantity_quarantine_pre_shipment)),
-                get_decision(obj, 'quarantine_pre_shipment'),
+                p_r_func(get_big_float(obj.quantity_quarantine_pre_shipment)),
+                p_l(get_decision(obj, 'quarantine_pre_shipment')),
                 '',
             )
         ])
@@ -134,9 +139,9 @@ def to_row(obj, row_index, party_field, text_qps):
         if is_subtotal:
             rows.extend([
                 (
-                    p_r('<b>%s %s</b>' % (_('Subtotal polyols containing'), obj.substance.name)),
+                    p_l('<b>%s %s</b>' % (_('Subtotal polyols containing'), obj.substance.name)),
                     '', '', '', '', '',
-                    p_r(get_big_float(obj.quantity_polyols)),
+                    pb_r(get_big_float(obj.quantity_polyols)),
                     '', '',
                 )
             ])
@@ -153,7 +158,7 @@ def to_row(obj, row_index, party_field, text_qps):
                     p_l(party.name if party else ''),
                     '', '', '',
                     p_r(get_big_float(obj.quantity_polyols)),
-                    get_decision(obj, 'polyols'),
+                    p_l(get_decision(obj, 'polyols')),
                     '',
                 )
             ])

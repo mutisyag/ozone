@@ -28,8 +28,10 @@ __all__ = [
     'p_c',
     'p_l',
     'p_r',
+    'pb_c',
+    'pb_l',
+    'pb_r',
     'p_bullet',
-    'STYLES'
 ]
 
 
@@ -37,7 +39,7 @@ STYLES = getSampleStyleSheet()
 
 FONTSIZE_SMALL = 7
 FONTSIZE_DEFAULT = 8
-FONTSIZE_TABLE = FONTSIZE_DEFAULT
+FONTSIZE_TABLE = FONTSIZE_SMALL
 FONTSIZE_BULLET_LIST = FONTSIZE_DEFAULT - 1
 FONTSIZE_H3 = FONTSIZE_DEFAULT + 2
 FONTSIZE_H2 = FONTSIZE_H3 + 3
@@ -57,7 +59,6 @@ TABLE_STYLES = (
     ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
     ('LEFTPADDING', (0, 0), (-1, -1), 2),
     ('RIGHTPADDING', (0, 0), (-1, -1), 2),
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_SMALL),
 )
 
 DOUBLE_HEADER_TABLE_STYLES = TABLE_STYLES + (
@@ -90,6 +91,9 @@ _bodytext = partial(_style, 'BodyText', fontSize=FONTSIZE_DEFAULT, fontName='Hel
 centered_paragraph_style = _bodytext(alignment=TA_CENTER)
 left_paragraph_style = _bodytext(alignment=TA_LEFT)
 right_paragraph_style = _bodytext(alignment=TA_RIGHT)
+bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontName='Helvetica-Bold')
+bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontName='Helvetica-Bold')
+bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontName='Helvetica-Bold')
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT)
 
@@ -126,6 +130,9 @@ page_title_style = _style(
 p_c = partial(Paragraph, style=centered_paragraph_style)
 p_l = partial(Paragraph, style=left_paragraph_style)
 p_r = partial(Paragraph, style=right_paragraph_style)
+pb_c = partial(Paragraph, style=bold_centered_paragraph_style)
+pb_l = partial(Paragraph, style=bold_left_paragraph_style)
+pb_r = partial(Paragraph, style=bold_right_paragraph_style)
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
 
