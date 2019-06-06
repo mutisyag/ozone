@@ -54,6 +54,7 @@ from .models import (
     ProcessAgentUsesReported,
     ProcessAgentUsesValidity,
     ProcessAgentEmissionLimitValidity,
+    Decision,
 )
 
 
@@ -521,20 +522,20 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(ProcessAgentApplication)
 class ProcessAgentApplicationAdmin(admin.ModelAdmin):
-    list_display = ('decision', 'counter', 'substance', 'application')
+    list_display = ('validity', 'counter', 'substance', 'application')
     list_filter = (
         ('substance__name', custom_title_dropdown_filter('Substance')),
     )
-    search_fields = ('decision', 'substance__name')
+    search_fields = ('validity', 'substance__name')
 
 
 @admin.register(ProcessAgentEmissionLimit)
 class ProcessAgentEmissionLimitAdmin(admin.ModelAdmin):
-    list_display = ('party', 'decision', 'makeup_consumption', 'max_emissions')
+    list_display = ('party', 'validity', 'makeup_consumption', 'max_emissions')
     list_filter = (
         ('party', MainPartyFilter),
     )
-    search_fields = ('party__name', 'decision')
+    search_fields = ('party__name', 'validity')
 
 
 class ProcessAgentBaseAdmin:
@@ -568,26 +569,35 @@ class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin
 @admin.register(ProcessAgentUsesReported)
 class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
     list_display = (
-        'get_reporting_period', 'get_party', 'decision',
+        'get_reporting_period', 'get_party', 'validity',
         'process_number', 'makeup_quantity', 'emissions', 'units'
     )
     list_filter = (
         ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
         ('submission__party', MainPartyFilter)
     )
-    search_fields = ('submission__reporting_period__name', 'submission__party__name', 'decision')
+    search_fields = ('submission__reporting_period__name', 'submission__party__name', 'validity')
 
 
 @admin.register(ProcessAgentUsesValidity)
 class ProcessAgentUsesValidityAdmin(admin.ModelAdmin):
-    list_display = ('decision_id', 'start_date', 'end_date')
-    search_fields = ('decision_id', )
+    list_display = ('decision', 'start_date', 'end_date')
+    search_fields = ('decision', )
 
 
 @admin.register(ProcessAgentEmissionLimitValidity)
 class ProcessAgentEmissionLimitValidityAdmin(admin.ModelAdmin):
-    list_display = ('decision_id', 'start_date', 'end_date')
-    search_fields = ('decision_id', )
+    list_display = ('decision', 'start_date', 'end_date')
+    search_fields = ('decision', )
+
+
+@admin.register(Decision)
+class DecisionAdmin(admin.ModelAdmin):
+    list_display = ('decision_id', 'name', 'meeting')
+    search_fields = ('decision_id', 'name')
+    list_filter = (
+        ('meeting__description', custom_title_dropdown_filter('Meeting')),
+    )
 
 
 # register all adminactions

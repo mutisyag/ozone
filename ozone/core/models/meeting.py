@@ -87,12 +87,15 @@ class Decision(models.Model):
     decision_id = models.CharField(max_length=16, unique=True)
 
     meeting = models.ForeignKey(
-        Meeting, related_name='%(class)ss', on_delete=models.PROTECT
+        Meeting, related_name='decisions', on_delete=models.PROTECT
     )
 
-    name = models.CharField(max_length=256, unique=True)
+    name = models.CharField(max_length=256, blank=True)
 
     remark = models.CharField(max_length=256, blank=True)
 
+    def __str__(self):
+        return self.decision_id
+
     class Meta:
-        abstract = True
+        db_table = 'decision'

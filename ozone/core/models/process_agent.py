@@ -34,9 +34,15 @@ class ProcessAgentContainTechnology(models.Model):
         db_table = 'pa_contain_technology'
 
 
-class ProcessAgentUsesValidity(Decision):
+class ProcessAgentUsesValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+    decision = models.ForeignKey(
+        Decision, related_name='uses_validity', on_delete=models.PROTECT
+    )
+
+    def __str__(self):
+        return f"{self.decision.decision_id} {self.start_date.year}-{self.end_date.year}"
 
     class Meta:
         verbose_name_plural = 'process agent uses validity'
@@ -50,7 +56,7 @@ class ProcessAgentApplication(models.Model):
     Parties.
     """
 
-    decision = models.ForeignKey(
+    validity = models.ForeignKey(
         ProcessAgentUsesValidity,
         related_name='pa_applications',
         on_delete=models.PROTECT
@@ -83,7 +89,7 @@ class ProcessAgentUsesReported(models.Model):
         on_delete=models.PROTECT
     )
 
-    decision = models.ForeignKey(
+    validity = models.ForeignKey(
         ProcessAgentUsesValidity,
         related_name='pa_uses_reported',
         on_delete=models.PROTECT
@@ -117,9 +123,15 @@ class ProcessAgentUsesReported(models.Model):
         db_table = 'pa_uses_reported'
 
 
-class ProcessAgentEmissionLimitValidity(Decision):
+class ProcessAgentEmissionLimitValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
+    decision = models.ForeignKey(
+        Decision, related_name='limits_validity', on_delete=models.PROTECT
+    )
+
+    def __str__(self):
+        return f"{self.decision.decision_id} {self.start_date.year}-{self.end_date.year}"
 
     class Meta:
         verbose_name_plural = 'process agent emission limits validity'
@@ -137,7 +149,7 @@ class ProcessAgentEmissionLimit(models.Model):
         on_delete=models.PROTECT
     )
 
-    decision = models.ForeignKey(
+    validity = models.ForeignKey(
         ProcessAgentEmissionLimitValidity,
         related_name='pa_emission_limits',
         on_delete=models.PROTECT
