@@ -599,13 +599,13 @@ class Submission(models.Model):
     )
 
     # Process agent Remarks
-    pa_uses_reported_remarks = models.CharField(
+    pa_uses_reported_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
         verbose_name="process agent uses reported remarks",
         help_text="General Process agent uses reported remarks added "
                   "by the ozone secretariat"
     )
-    pa_contain_technology_remarks = models.CharField(
+    pa_contain_technology_remarks_secretariat = models.CharField(
         max_length=9999, blank=True,
         verbose_name="process agent contain technology remarks",
         help_text="General Process agent contain technology remarks added "
