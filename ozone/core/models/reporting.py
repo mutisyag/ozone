@@ -1098,8 +1098,8 @@ class Submission(models.Model):
             "transfers_remarks_secretariat",
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
-            "pa_uses_reported_remarks",
-            "pa_contain_technology_remarks",
+            "pa_uses_reported_remarks_secretariat",
+            "pa_contain_technology_remarks_secretariat",
             "reporting_channel_id",
             "submitted_at",
         ]
