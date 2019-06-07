@@ -1,9 +1,13 @@
-from ..util import get_comments_section, get_date_of_reporting_str
-from ..util import p_l, p_c
-from ..util import h1_style, no_spacing_style
-from ..util import col_widths
-from ..util import FONTSIZE_TABLE
+from ..util import (
+    get_comments_section,
+    get_date_of_reporting_str,
+    p_l, p_c,
+    h1_style, no_spacing_style,
+    col_widths,
+    FONTSIZE_TABLE
+)
 
+from datetime import datetime
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 from reportlab.platypus import Table
@@ -129,6 +133,7 @@ def export_info(submission):
     )
     return (
         title
+        + (p_l('%s: %s' % (_('Printed at'), datetime.now().strftime('%d %B %Y %H:%M:%S'))),)
         + get_date_of_reporting(submission)
         + get_submission_info(submission.info)
         + get_questionnaire_table(submission)
