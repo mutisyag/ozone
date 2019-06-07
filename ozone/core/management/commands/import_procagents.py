@@ -296,29 +296,36 @@ class Command(BaseCommand):
             "pa_uses_reported_remarks_secretariat"
         )
 
-        decision = self.get_or_create_decision(row['Decision'])
-        if getattr(decision, 'uses_validity', None):
-            validity = decision.uses_validity
-        else:
-            logger.error(f"Uses validity does not exists decision {decision}")
-            return
+        # There is a special case in ProcAgentUsesReported sheet, where there
+        # are two decisions instead of one.
+        for decision_id in row['Decision'].split(' AND '):
+            decision = self.get_or_create_decision(decision_id)
+            if getattr(decision, 'uses_validity', None):
+                validity = decision.uses_validity
+            else:
+                logger.error(
+                    f"Uses validity does not exists decision {decision}"
+                )
+                return
 
-        ProcessAgentUsesReported.objects.create(
-            submission=submission,
-            validity=validity,
-            process_number=row['ProcessNumber'],
-            makeup_quantity=row['MakeUpQuantity'],
-            emissions=row['Emissions'],
-            units=row['Units'],
-            remark=row['Remarks'] if row['Remarks'] else "",
-        )
-        logger.info(
-            f"Process agent uses reported for {party.abbr}/{period.name} "
-            f"and decision {decision} added."
-        )
+            ProcessAgentUsesReported.objects.create(
+                submission=submission,
+                validity=validity,
+                process_number=row['ProcessNumber'],
+                makeup_quantity=row['MakeUpQuantity'],
+                emissions=row['Emissions'],
+                units=row['Units'],
+                remark=row['Remarks'] if row['Remarks'] else "",
+            )
+            logger.info(
+                f"Process agent uses reported for "
+                f"{party.abbr}/{period.name} and decision {decision} added."
+            )
 
     @transaction.atomic
     def get_or_create_decision(self, decision_id):
+        if decision_id.endswith('-'):
+            decision_id = decision_id[:-1]
         decision = Decision.objects.filter(decision_id=decision_id).first()
         if not decision:
             meeting_id = decision_id.split('/')[0]
