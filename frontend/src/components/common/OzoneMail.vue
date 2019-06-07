@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="templates && sender">
       <b-btn class="square-right square-left" @click="getMail()" variant="outline-dark" v-translate>Ozone Mail</b-btn>
       <b-modal title="OzoneMail" id="ozoneMail" size="xl" ref="ozoneMailModal">
         <b-tabs>
@@ -7,24 +7,35 @@
             <b-row>
                 <b-col cols="8">
                     <b-input-group class="mb-1" prepend="To">
-                      <b-input></b-input>
+                      <b-input v-model="mail.to_email"></b-input>
                     </b-input-group>
                     <b-input-group class="mb-1" prepend="Cc">
-                      <b-input></b-input>
+                      <multiselect
+                            label="text"
+                            @tag="addTag($event)"
+                            :taggable="true"
+                            trackBy="value"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :tag-placeholder="$gettext('Press enter to add an email')"
+                            :placeholder="$gettext('CC')"
+                            v-model="mail.cc"
+                            :options="ccList"
+                            />
                     </b-input-group>
                     <b-input-group class="mb-1" prepend="Subject">
-                      <b-input></b-input>
+                      <b-input v-model="mail.subject"></b-input>
                     </b-input-group>
-                    <textarea style="height: 300px;" v-model="currentMessage" class="form-control mail-input"></textarea>
-                    <b-btn variant="primary" class="mt-2">Send message</b-btn>
+                    <textarea style="height: 300px;" v-model="mail.body" class="form-control mail-input"></textarea>
+                    <b-btn @click="sendMail" variant="primary" class="mt-2">Send message</b-btn>
                 </b-col>
                 <b-col>
                   <h4>Templates</h4>
                   <b-list-group class="templates">
-                    <b-list-group-item @click="currentMessage = template" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
-                      <b>Template {{ template_index }} </b>
+                    <b-list-group-item @click="mail.body = template.description" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
+                      <b>Template {{ template.name }} </b>
                       <br>
-                      {{ template }}
+                      {{ template.description }}
                     </b-list-group-item>
                   </b-list-group>
                 </b-col>
@@ -33,10 +44,11 @@
           <b-tab v-if="history" :title="$gettext('Conversation history')">
             <div class="mb-3" v-for="(entry, index) in history" :key="index">
                 <small style="float: right" class="muted">Date: 10 May 2019</small>
-                <h4>Mail subject here</h4>
-                <small><b>From:</b> {{entry.sender}}</small> <br>
-                <small><b>To:</b> {{entry.sender}} </small>
-                <div class="mt-2">{{entry.message}}</div>
+                <h4>{{ entry.subject }}</h4>
+                <small><b>From:</b> {{entry.from_email}}</small> <br>
+                <small><b>To:</b> {{entry.to_email}} </small><br>
+                <small><b>Cc:</b> {{entry.cc.join(', ')}}</small>
+                <div class="mt-2">{{entry.body}}</div>
                 <hr>
             </div>
           </b-tab>
@@ -48,30 +60,66 @@
     </div>
 </template>
 <script>
-import { getOzoneMail } from '@/components/common/services/api'
+import { getEmails, sendEmail } from '@/components/common/services/api'
+import Multiselect from '@/components/common/ModifiedMultiselect'
 
 export default {
   props: {
     submission: String
   },
+  components: {
+    Multiselect
+  },
   data() {
     return {
-      currentMessage: '',
-      templates: [
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis eveniet eaque iusto perspiciatis autem ex eum',
-        'Halvah apple pie gummi bears apple pie dragée apple pie wafer chocolate. Toffee chupa chups candy donut chocolate cake. Jujubes icing sweet donut oat cake pudding cupcake. Chocolate cake cookie tart chocolate bar gingerbread chocolate bar macaroon icing lollipop. Toffee cake carrot cake wafer carrot cake tart wafer. Jelly wafer biscuit. Candy canes cupcake topping mar',
-        'Bear claw lemon drops muffin chupa chups candy wafer marshmallow halvah. Tiramisu gummies sweet roll gummi bears sesame snaps dragée wafer liquorice croissant. Gummies candy lollipop donut cotton candy cotton candy cotton candy halvah jelly. Fruitcake brownie carrot cake muffin sugar plum',
-        'Tootsie roll carrot cake dessert soufflé. Brownie apple pie candy canes. Biscuit gingerbread icing jelly beans cupcake soufflé pie sweet roll. Toffee cotton candy croissant soufflé gingerbread danish. Pudding carrot cake muffin lemon drops cake jelly-o gummi bears. Donut toffee tootsie roll',
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Commodi tenetur officia labore consequatur quidem necessitatibus, qui nisi. Quisquam dignissimos nemo asperiores veritatis? Sed unde molestias atque eos perspiciatis maxime ipsam.'
-      ],
+      ccList: [],
+      mail: {
+        to_email: null,
+        cc: [],
+        subject: null,
+        body: null
+      },
+      templates: this.$store.state.emailTemplates,
       history: null
+    }
+  },
+  computed: {
+    sender() {
+      return this.$store.state.form.tabs.sub_info.form_fields.email.selected
     }
   },
   methods: {
     async getMail() {
-      const mail = await getOzoneMail(this.submission)
+      const mail = await getEmails(this.$store.state.current_submission.id)
       this.history = mail.data
       this.$refs.ozoneMailModal.show()
+    },
+
+    addTag(newTag) {
+      const tag = {
+        text: newTag,
+        value: newTag
+      }
+      this.ccList.push(tag)
+      this.mail.cc.push(tag.value)
+    },
+
+    async sendMail() {
+      const currentMail = this.mail
+      currentMail.from_email = this.sender
+      await sendEmail(this.$store.state.current_submission.id, currentMail)
+      this.$store.dispatch('setAlert', {
+        $gettext: this.$gettext,
+        message: { __all__: [this.$gettext('Mail sent')] },
+        variant: 'success'
+      })
+      this.mail = {
+        to_email: null,
+        cc: [],
+        subject: null,
+        body: null
+      }
+      this.getMail()
     }
   }
 }

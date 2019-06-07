@@ -23,7 +23,8 @@ import {
   getSubmissionFormat,
   getControlledGroups,
   getApprovedExemptionsList,
-  getReports
+  getReports,
+  getEmailTemplates
 } from '@/components/common/services/api'
 
 import {
@@ -337,6 +338,7 @@ const actions = {
         // by default show all custom blends for secretariat users.
         // This way, even secretariat users will only see the correct available
         // custom blends.
+        context.dispatch('getEmailTemplates')
         context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
         context.dispatch('getSubmissionFormatOptions')
         if (formName === 'art7') {
@@ -357,6 +359,11 @@ const actions = {
   async getControlledGroups(context, { party, period }) {
     const controlledGroups = await getControlledGroups(party, period)
     context.commit('setControlledGroups', controlledGroups.data)
+  },
+
+  async getEmailTemplates(context) {
+    const templates = await getEmailTemplates()
+    context.commit('setEmailTemplates', templates.data)
   },
 
   async getApprovedExemptionsList(context, { partyId, period }) {

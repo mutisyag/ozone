@@ -99,7 +99,7 @@
       <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
       <b-button-group class="pull-right actions mt-2 mb-2">
         <AggregationsModal :submission="submission"></AggregationsModal>
-        <OzoneMail :submission="submission"></OzoneMail>
+        <OzoneMail v-if="$store.state.currentUser.is_secretariat" :submission="submission"></OzoneMail>
         <b-btn
           variant="outline-dark"
           @click="$store.dispatch('downloadStuff',

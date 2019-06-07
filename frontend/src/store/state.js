@@ -3,6 +3,7 @@ const state = {
   actionToDispatch: null,
   submissionDefaultValues: null,
   dataForAction: null,
+  emailTemplates: null,
   dashboard: {
     mySubmissions: null,
     submissions: null,

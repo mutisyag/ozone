@@ -134,6 +134,10 @@ const mutations = {
     state.current_submission.available_transitions = data
   },
 
+  setEmailTemplates(state, data) {
+    state.emailTemplates = data
+  },
+
   setEssenCritTypes(state, data) {
     state.initialData.essenCritTypes = data
   },
