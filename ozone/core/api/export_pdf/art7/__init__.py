@@ -7,6 +7,7 @@ from .section_production import export_production
 from .section_destruction import export_destruction
 from .section_nonparty import export_nonparty
 from .section_emission import export_emission
+from .section_labuses import export_labuses
 
 __all__ = [
     'export_submission',
@@ -22,4 +23,5 @@ def export_submission(submission):
         export_destruction(submission),
         export_nonparty(submission),
         export_emission(submission),
+        export_labuses(submission),
     ))

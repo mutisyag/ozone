@@ -314,6 +314,14 @@ def exclude_blend_items(data):
     return data.exclude(blend_item__isnull=False)
 
 
+def filter_lab_uses(data):
+    return data.exclude(
+        quantity_laboratory_analytical_uses__isnull=True
+    ).exclude(
+        quantity_laboratory_analytical_uses=0
+    )
+
+
 def get_remarks(item):
     if not item.remarks_party:
         return item.remarks_os or ''
