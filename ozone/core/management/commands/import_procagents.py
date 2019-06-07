@@ -1,3 +1,4 @@
+from datetime import date
 import logging
 
 from django.core.management.base import BaseCommand
@@ -13,7 +14,14 @@ from ozone.core.models import (
     User,
     Obligation,
     FormTypes,
+    Meeting,
+    Decision,
     ProcessAgentUsesReported,
+    ProcessAgentUsesValidity,
+    ProcessAgentEmissionLimitValidity,
+    ProcessAgentApplication,
+    ProcessAgentContainTechnology,
+    ProcessAgentEmissionLimit,
 )
 
 logger = logging.getLogger(__name__)
@@ -33,6 +41,8 @@ class Command(BaseCommand):
                         for _party in Party.objects.all()}
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
+        self.meetings = {_meeting.meeting_id: _meeting
+                         for _meeting in Meeting.objects.all()}
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
@@ -62,11 +72,23 @@ class Command(BaseCommand):
         self.wb = load_workbook(filename=options["file"])
 
         workbook_processors = [
+            ('ProcAgentUsesValidity', self.process_pa_uses_validity),
+            ('ProcAgentUses', self.process_pa_application),
+            ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
+            ('ProcAgentEmitLimits', self.process_pa_emission_limit),
             ('ProcAgentUsesDateReported', self.process_submission_data),
-            ('ProcAgentUsesReported', self.process_pa_uses_reported_data)
+            ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
+            ('ProcAgentContanTechnology', self.process_pa_contain_technology)
         ]
+        if options["purge"]:
+            workbook_processors = [
+                ('ProcAgentUsesDateReported', self.process_submission_data),
+                ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
+                ('ProcAgentContanTechnology', self.process_pa_contain_technology),
+                ('ProcAgentUsesValidity', self.process_pa_uses_validity),
+                ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
+            ]
 
-        # First populated submissions using ProcAgentUsesDateReported sheet
         for workbook_name, workbook_processor in workbook_processors:
             worksheet = self.wb[workbook_name]
             values = list(worksheet.values)
@@ -83,33 +105,166 @@ class Command(BaseCommand):
                 "Error %s while saving submission %s/%s", e, row['CntryID'], row['PeriodID'],
                 exc_info=True
             )
-            return 0
+            return
 
+    @transaction.atomic
     def _process_submission_data(self, row, purge):
         party = self.parties[row['CntryID']]
         period = self.periods[row['PeriodID']]
+
+        if purge:
+            self.delete_submission(
+                party,
+                period,
+                Obligation.objects.filter(
+                    _form_type=FormTypes.PROCAGENT.value
+                ).first()
+            )
+            return
+
         submission = Submission.objects.filter(
             party_id=party,
             reporting_period_id=period,
             obligation___form_type=FormTypes.PROCAGENT.value,
         ).first()
-
-        if purge:
-            self.delete_instance(
-                party,
-                period,
-                Obligation.objects.filter(_form_type=FormTypes.PROCAGENT.value).first()
-            )
-        elif not submission:
+        if not submission:
             entry = self.get_submission_data(
                 party,
                 period,
                 row['DateReported'],
+                "pa_uses_reported_remarks_secretariat",
                 row['Remark']
             )
             self.insert_submission(entry)
 
-    def process_pa_uses_reported_data(self, row, purge):
+    def process_pa_uses_validity(self, row, purge=False):
+        try:
+            return self._process_pa_uses_validity(row, purge)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving process agent uses validity for decision %",
+                e, row['Decision']
+            )
+
+    @transaction.atomic
+    def _process_pa_uses_validity(self, row, purge):
+        decision = self.get_or_create_decision(row['Decision'])
+
+        if purge:
+            self.delete_pa_uses_validity(row)
+            return
+
+        if not getattr(decision, 'uses_validity', None):
+            ProcessAgentUsesValidity.objects.create(
+                decision=decision,
+                start_date=date(row['StartYear'], 1, 1) if row['StartYear'] else None,
+                end_date=date(row['EndYear'], 12, 31) if row['EndYear'] else None
+            )
+            logger.info(
+                f"Process agent uses validity for decision {decision} added."
+            )
+        else:
+            logger.info(
+                f"Process agent uses validity for decision {decision} already exists."
+            )
+
+    def process_pa_application(self, row, purge=False):
+        try:
+            return self._process_pa_application(row)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving process agent application for decision %s",
+                e, row['Decision']
+            )
+
+    @transaction.atomic
+    def _process_pa_application(self, row):
+        decision = self.get_or_create_decision(row['Decision'])
+        if getattr(decision, 'uses_validity', None):
+            validity = decision.uses_validity
+        else:
+            logger.error(f"Uses validity does not exists decision {decision}")
+            return
+
+        ProcessAgentApplication.objects.create(
+            validity=validity,
+            counter=int(row['Counter']),
+            substance=self.substances[row['SubstID']],
+            application=row['Application'],
+            remark=row['Remark'] if row['Remark'] else ""
+        )
+        logger.info(f"Process agent application for decision {decision} added.")
+
+    def process_pa_emission_limit_validity(self, row, purge=False):
+        try:
+            return self._process_pa_emission_limit_validity(row, purge)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving process agent emission limits validity for decision %s",
+                e, row['Decision']
+            )
+
+    @transaction.atomic
+    def _process_pa_emission_limit_validity(self, row, purge):
+        if purge:
+            self.delete_pa_emission_limit_validity(row)
+            return
+
+        decision = self.get_or_create_decision(row['Decision'])
+
+        if not getattr(decision, 'limits_validity', None):
+            ProcessAgentEmissionLimitValidity.objects.create(
+                decision=decision,
+                start_date=date(row['StartYear'], 1, 1) if row['StartYear'] else None,
+                end_date=date(row['EndYear'], 12, 31) if row['EndYear'] else None
+            )
+            logger.info(
+                f"Process agent emission limits validity "
+                f"for decision {decision} added."
+            )
+        else:
+            logger.info(
+                f"Process agent emission limits validity "
+                f"for decision {decision} already exists."
+            )
+
+    def process_pa_emission_limit(self, row, purge=False):
+        try:
+            return self._process_pa_emission_limit(row)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving process agent emission limit "
+                "for party %s and decision %s",
+                e, row['CntryID'], row['Decision'],
+                exc_info=True
+            )
+            return
+
+    @transaction.atomic
+    def _process_pa_emission_limit(self, row):
+        decision = self.get_or_create_decision(row['Decision'])
+        if getattr(decision, 'limits_validity', None):
+            validity = decision.limits_validity
+        else:
+            logger.error(f"Limits validity does not exists decision {decision}")
+            return
+
+        party = self.parties[row['CntryID']]
+
+        ProcessAgentEmissionLimit.objects.create(
+            party=party,
+            validity=validity,
+            makeup_consumption=row['MakeupOrCons'],
+            max_emissions=row['MaxEmissions'],
+            remark=row['Remark'] if row['Remark'] else ""
+        )
+
+        logger.info(
+            f"Process agent emission limit for decision {decision} "
+            f"and party {party.abbr} added."
+        )
+
+    def process_pa_uses_reported_data(self, row, purge=False):
         try:
             return self._process_pa_uses_reported_data(row, purge)
         except Exception as e:
@@ -118,44 +273,120 @@ class Command(BaseCommand):
                 e, row['Party'], row['PeriodID'],
                 exc_info=True
             )
-            return 0
+            return
 
     @transaction.atomic
     def _process_pa_uses_reported_data(self, row, purge):
         party = self.parties[row['Party']]
         period = self.periods[row['PeriodID']]
+
+        if purge:
+            self.delete_submission(
+                party,
+                period,
+                Obligation.objects.filter(
+                    _form_type=FormTypes.PROCAGENT.value
+                ).first()
+            )
+            return
+
+        submission = self.get_or_create_submission(
+            party,
+            period,
+            "pa_uses_reported_remarks_secretariat"
+        )
+
+        decision = self.get_or_create_decision(row['Decision'])
+        if getattr(decision, 'uses_validity', None):
+            validity = decision.uses_validity
+        else:
+            logger.error(f"Uses validity does not exists decision {decision}")
+            return
+
+        ProcessAgentUsesReported.objects.create(
+            submission=submission,
+            validity=validity,
+            process_number=row['ProcessNumber'],
+            makeup_quantity=row['MakeUpQuantity'],
+            emissions=row['Emissions'],
+            units=row['Units'],
+            remark=row['Remarks'] if row['Remarks'] else "",
+        )
+        logger.info(
+            f"Process agent uses reported for {party.abbr}/{period.name} "
+            f"and decision {decision} added."
+        )
+
+    @transaction.atomic
+    def get_or_create_decision(self, decision_id):
+        decision = Decision.objects.filter(decision_id=decision_id).first()
+        if not decision:
+            meeting_id = decision_id.split('/')[0]
+            meeting = self.meetings[meeting_id]
+            decision = Decision.objects.create(
+                decision_id=decision_id,
+                meeting=meeting
+            )
+            logger.info(f"Decision {decision_id} added.")
+        return decision
+
+    def process_pa_contain_technology(self, row, purge=False):
+        try:
+            return self._process_pa_contain_technology(row, purge)
+        except Exception as e:
+            logger.error(
+                "Error %s while saving process agent contain technology for %s/%s",
+                e, row['CntryID'], row['PeriodID'],
+                exc_info=True
+            )
+            return
+
+    def _process_pa_contain_technology(self, row, purge):
+        party = self.parties[row['CntryID']]
+        period = self.periods[row['PeriodID']]
+
+        if purge:
+            self.delete_submission(
+                party,
+                period,
+                Obligation.objects.filter(
+                    _form_type=FormTypes.PROCAGENT.value
+                ).first()
+            )
+            return
+
+        submission = self.get_or_create_submission(
+            party,
+            period,
+            "pa_contain_technology_remarks_secretariat"
+        )
+
+        ProcessAgentContainTechnology.objects.create(
+            submission=submission,
+            contain_technology=row['ContainTechnology']
+        )
+        logger.info(f"Process agent contain technology added.")
+
+    @transaction.atomic
+    def get_or_create_submission(self, party, period, remark_name):
         submission = Submission.objects.filter(
             party_id=party,
             reporting_period_id=period,
             obligation___form_type=FormTypes.PROCAGENT.value,
         ).first()
-
-        if purge:
-            self.delete_instance(
-                party,
-                period,
-                Obligation.objects.filter(_form_type=FormTypes.PROCAGENT.value).first()
-            )
-            return
-
         if not submission:
             entry = self.get_submission_data(
                 party,
                 period,
                 None,
+                remark_name,
                 _(
                     "Submission for this party and period "
                     "not found in ProcAgentUsesDateReported"
                 )
             )
             submission = self.insert_submission(entry)
-
-        entry = self.get_pa_uses_reported_data(row)
-        ProcessAgentUsesReported.objects.create(
-            **entry,
-            submission=submission
-        )
-        logger.info(f"Process agent uses reported added.")
+        return submission
 
     @transaction.atomic
     def insert_submission(self, entry):
@@ -180,7 +411,7 @@ class Command(BaseCommand):
 
         return submission
 
-    def get_submission_data(self, party, period, date_reported, remark):
+    def get_submission_data(self, party, period, date_reported, remark_name, remark_val):
         return {
             "submission": {
                 "schema_version": "legacy",
@@ -200,7 +431,7 @@ class Command(BaseCommand):
                 "party_id": party.id,
                 "reporting_period_id": period.id,
                 "cloned_from_id": None,
-                "pa_uses_reported_remarks": remark,
+                remark_name: remark_val,
             },
             "submission_info": {
                 "reporting_officer": "",
@@ -214,18 +445,8 @@ class Command(BaseCommand):
             },
         }
 
-    def get_pa_uses_reported_data(self, row):
-        return {
-            "decision": row['Decision'],
-            "process_number": row['ProcessNumber'],
-            "makeup_quantity": row['MakeUpQuantity'],
-            "emissions": row['Emissions'],
-            "units": row['Units'],
-            "remark": row['Remarks'] if row['Remarks'] else ""
-        }
-
     @transaction.atomic
-    def delete_instance(self, party, period, obligation):
+    def delete_submission(self, party, period, obligation):
         """
         Removes the submission identified by the party, period and obligation
         and any related data.
@@ -242,7 +463,51 @@ class Command(BaseCommand):
             sub.save()
             for related_data, aggr_flag in sub.RELATED_DATA:
                 for instance in getattr(sub, related_data).all():
-                    logger.debug("Deleting related data: %s", instance)
+                    logger.info("Deleting related data: %s", instance)
                     instance.delete()
             sub.__class__.data_changes_allowed = True
             sub.delete()
+
+    @transaction.atomic
+    def delete_pa_uses_validity(self, entry):
+        obj = ProcessAgentUsesValidity.objects.filter(
+            decision__decision_id=entry['Decision'],
+            start_date__year=entry['StartYear'],
+            end_date__year=entry['EndYear']
+        ).first()
+        if obj:
+            for related_data in ['pa_applications', 'pa_uses_reported']:
+                for instance in getattr(obj, related_data).all():
+                    logger.info("Deleting related data: %s", instance)
+                    instance.delete()
+            obj.delete()
+            logger.info(
+                f"Process agent uses validity for {entry['Decision']} deleted."
+            )
+        else:
+            logger.info(
+                f"Process agent uses validity for {entry['Decision']} "
+                f"not found in database."
+            )
+
+    @transaction.atomic
+    def delete_pa_emission_limit_validity(self, entry):
+        obj = ProcessAgentEmissionLimitValidity.objects.filter(
+            decision__decision_id=entry['Decision'],
+            start_date__year=entry['StartYear'],
+            end_date__year=entry['EndYear']
+        ).first()
+        if obj:
+            for instance in getattr(obj, 'pa_emission_limits').all():
+                logger.info("Deleting related data: %s", instance)
+                instance.delete()
+            obj.delete()
+            logger.info(
+                f"Process agent emission limit validity "
+                f"for {entry['Decision']} deleted."
+            )
+        else:
+            logger.info(
+                f"Process agent emission limit validity "
+                f"for {entry['Decision']} not found in database."
+            )
