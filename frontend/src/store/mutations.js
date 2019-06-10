@@ -13,6 +13,8 @@ import { getFormRaf } from '@/components/raf/dataDefinitions/form'
 import rafTableRowConstructor from '@/components/raf/services/tableRowConstructorService'
 import { getFormExemption } from '@/components/exemption/dataDefinitions/form'
 import exemptionTableRowConstructor from '@/components/exemption/services/tableRowConstructorService'
+import { getFormOtherRo } from '@/components/otherRo/dataDefinitions/form'
+import otherRoTableRowConstructor from '@/components/otherRo/services/tableRowConstructorService'
 
 const options = {
   position: 'bottom-left',
@@ -108,6 +110,10 @@ const mutations = {
       break
     case 'other':
       currentFormStructure = getFormLetter($gettext)
+      break
+    case 'transfer':
+      currentFormStructure = getFormOtherRo($gettext)
+      tableRowConstructor = otherRoTableRowConstructor
       break
     case 'essencrit':
       currentFormStructure = getFormRaf($gettext)
