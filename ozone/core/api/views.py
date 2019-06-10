@@ -1600,5 +1600,6 @@ class ReportsViewSet(viewsets.ViewSet):
 
 
 class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = (IsAuthenticated,)
     serializer_class = CriticalUseCategorySerializer
     queryset = CriticalUseCategory.objects.all()
