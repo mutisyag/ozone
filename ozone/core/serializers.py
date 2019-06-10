@@ -51,6 +51,7 @@ from .models import (
     Limit,
     Email,
     EmailTemplate,
+    CriticalUseCategory,
 )
 
 User = get_user_model()
@@ -984,6 +985,12 @@ class RAFSerializer(
         list_serializer_class = RAFListSerializer
         model = RAFReport
         exclude = ('submission',)
+
+
+class CriticalUseCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CriticalUseCategory
+        fields = '__all__'
 
 
 class TransferSerializer(serializers.ModelSerializer):

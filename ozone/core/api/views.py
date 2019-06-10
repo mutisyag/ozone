@@ -66,6 +66,7 @@ from ..models import (
     Reports,
     Email,
     EmailTemplate,
+    CriticalUseCategory,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -128,6 +129,7 @@ from ..serializers import (
     LimitSerializer,
     EmailSerializer,
     EmailTemplateSerializer,
+    CriticalUseCategorySerializer,
 )
 
 
@@ -1595,3 +1597,8 @@ class ReportsViewSet(viewsets.ViewSet):
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
+
+
+class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = CriticalUseCategorySerializer
+    queryset = CriticalUseCategory.objects.all()
