@@ -134,8 +134,9 @@ const actions = {
 
   async downloadStuff(context, { url, fileName }) {
     try {
-      const downloaded = await fetch(url, { responseType: 'arraybuffer' })
+      const downloaded = await fetch(url, { responseType: 'arraybuffer', exposedHeaders: ['Content-Disposition'] })
       const blob = new Blob([downloaded.data])
+      console.log(downloaded, '-----------')
       /**
        * [ie11 doesn't support download attribute. we use msSaveBlob instead]
        */

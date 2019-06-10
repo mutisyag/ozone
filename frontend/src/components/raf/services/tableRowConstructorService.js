@@ -1,5 +1,5 @@
 import fromExponential from 'from-exponential/dist/index.min.js'
-import { isNumber } from '@/components/common/services/utilsService'
+import { isNumber, doSum } from '@/components/common/services/utilsService'
 
 const valueConverter = (item) => {
   if (item === null || item === undefined || Number.isNaN(parseFloat(item))) {
@@ -28,7 +28,7 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 
   const forTooltip = {}
   fields.forEach(field => {
-    count += valueConverter(field.quantity)
+    count = doSum([count, field.quantity])
     forTooltip[field.party] = valueConverter(field.quantity)
   })
 
@@ -45,7 +45,6 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 }
 
 // eslint-disable-next-line no-unused-vars
-const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
 
 export default {
   substanceRows({
