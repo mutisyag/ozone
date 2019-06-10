@@ -34,6 +34,8 @@ from .models import (
     Article7Emission,
     HighAmbientTemperatureProduction,
     Transfer,
+    ProcessAgentUsesReported,
+    ProcessAgentContainTechnology,
     DataOther,
     SubmissionFile,
     UploadToken,
@@ -999,6 +1001,18 @@ class TransferSerializer(serializers.ModelSerializer):
         exclude = ('source_party_submission', 'destination_party_submission')
 
 
+class ProcessAgentContainTechnologySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProcessAgentContainTechnology
+        exclude = ('submission',)
+
+
+class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProcessAgentUsesReported
+        exclude = ('submission',)
+
+
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
     reporting_channel = serializers.SerializerMethodField()
     submitted_at = serializers.SerializerMethodField()
@@ -1174,6 +1188,7 @@ class SubmissionFlagsSerializer(
                 'flag_approved', 'flag_emergency',
             ),
             'transfer': base_fields,
+            'procagent': base_fields,
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1455,6 +1470,15 @@ class SubmissionSerializer(
         lookup_url_kwarg='submission_pk',
     )
 
+    pa_uses_reported_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-pa-uses-reported-list',
+        lookup_url_kwarg='submission_pk',
+    )
+    pa_contain_technologies_url = serializers.HyperlinkedIdentityField(
+        view_name='core:submission-pa-contain-technologies-list',
+        lookup_url_kwarg='submission_pk',
+    )
+
     # Frontend needs both reporting period name and id.
     reporting_period_id = serializers.SerializerMethodField()
 
@@ -1541,7 +1565,11 @@ class SubmissionSerializer(
             ),
             'transfer': base_fields + (
                 'transfers_url',
-            )
+            ),
+            'procagent': base_fields + (
+                'pa_uses_reported_url',
+                'pa_contain_technologies_url',
+            ),
         }
         # All possible fields still need to be specified here.
         # Otherwise DRF won't load them.

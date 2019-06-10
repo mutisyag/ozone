@@ -1,9 +1,8 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework.permissions import BasePermission, SAFE_METHODS
 
-from .models import Blend, Submission, Party, ProdCons
+from .models import Blend, Submission, Party
 
 
 User = get_user_model()
@@ -293,7 +292,7 @@ class IsSecretariatOrSamePartyLimit(BasePermission):
         return True
 
 
-class IsSecretariatOrSamePartyTransfer(BasePermission):
+class IsSecretariatOrSamePartySubmissionRelatedRO(BasePermission):
     """
     This is used for evaluating permissions on Transfer views.
 

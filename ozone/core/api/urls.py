@@ -128,6 +128,24 @@ transfers_router.register(
     base_name="submission-transfers"
 )
 
+procagent_uses_reported_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+procagent_uses_reported_router.register(
+    "pa-uses-reported",
+    views.ProcessAgentUsesReportedViewSet,
+    base_name="submission-pa-uses-reported"
+)
+
+procagent_contain_technologies_router = routers.NestedSimpleRouter(
+    submissions_router, "submissions", lookup="submission"
+)
+procagent_contain_technologies_router.register(
+    "pa-contain-technologies",
+    views.ProcessAgentContainTechnologyViewSet,
+    base_name="submission-pa-contain-technologies"
+)
+
 submission_transitions_router = routers.NestedSimpleRouter(
     submissions_router, "submissions", lookup="submission"
 )
@@ -248,6 +266,8 @@ nested_routers = [
     hat_productions_router,
     data_others_router,
     transfers_router,
+    procagent_uses_reported_router,
+    procagent_contain_technologies_router,
     submission_info_router,
     submission_transitions_router,
     submission_flags_router,

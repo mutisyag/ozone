@@ -53,6 +53,8 @@ from ..models import (
     HighAmbientTemperatureProduction,
     HighAmbientTemperatureImport,
     Transfer,
+    ProcessAgentContainTechnology,
+    ProcessAgentUsesReported,
     DataOther,
     Group,
     Substance,
@@ -81,7 +83,7 @@ from ..permissions import (
     IsSecretariatOrSafeMethod,
     IsSecretariatOrSamePartyAggregation,
     IsSecretariatOrSamePartyLimit,
-    IsSecretariatOrSamePartyTransfer,
+    IsSecretariatOrSamePartySubmissionRelatedRO,
     IsSecretariat,
 )
 from ..serializers import (
@@ -107,6 +109,8 @@ from ..serializers import (
     HighAmbientTemperatureProductionSerializer,
     HighAmbientTemperatureImportSerializer,
     TransferSerializer,
+    ProcessAgentUsesReportedSerializer,
+    ProcessAgentContainTechnologySerializer,
     DataOtherSerializer,
     GroupSerializer,
     SubstanceSerializer,
@@ -1122,7 +1126,7 @@ class TransferViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TransferSerializer
     permission_classes = (
         IsAuthenticated,
-        IsSecretariatOrSamePartyTransfer,
+        IsSecretariatOrSamePartySubmissionRelatedRO,
         IsCorrectObligation,
     )
     filter_backends = (IsOwnerFilterBackend,)
@@ -1131,6 +1135,38 @@ class TransferViewSet(viewsets.ReadOnlyModelViewSet):
         return Transfer.objects.filter(
             Q(source_party_submission=self.kwargs['submission_pk']) |
             Q(destination_party_submission=self.kwargs['submission_pk'])
+        )
+
+
+class ProcessAgentContainTechnologyViewSet(viewsets.ReadOnlyModelViewSet):
+    form_types = ("procagent",)
+    serializer_class = ProcessAgentContainTechnologySerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariatOrSamePartySubmissionRelatedRO,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return ProcessAgentContainTechnology.objects.filter(
+            submission=self.kwargs['submission_pk']
+        )
+
+
+class ProcessAgentUsesReportedViewSet(viewsets.ReadOnlyModelViewSet):
+    form_types = ("procagent",)
+    serializer_class = ProcessAgentUsesReportedSerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariatOrSamePartySubmissionRelatedRO,
+        IsCorrectObligation,
+    )
+    filter_backends = (IsOwnerFilterBackend,)
+
+    def get_queryset(self):
+        return ProcessAgentContainTechnology.objects.filter(
+            submission=self.kwargs['submission_pk']
         )
 
 
