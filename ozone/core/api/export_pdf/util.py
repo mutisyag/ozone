@@ -446,20 +446,3 @@ def get_date_of_reporting_str(submission):
     if date_of_reporting:
         date_of_reporting = date_of_reporting.strftime('%d %B %Y')
     return date_of_reporting
-
-
-def get_compared_period(periods):
-    if len(periods) == 1:
-        # Comparison with Base year
-        periods.append(
-            DottedDict({'name': 'Base'})
-        )
-    return periods
-
-
-class DottedDict(object):
-    """
-    Helper class for accessing dictionary items as object attributes.
-    """
-    def __init__(self, d):
-        self.__dict__ = d

@@ -29,37 +29,34 @@ def add_page_footer(canvas, doc, footnote=None):
     canvas.restoreState()
 
 
-add_page_footnotes = partial(
-    add_page_footer,
-    footnote=_("""* Population in thousands <br/>
-    ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
-    - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
-    N.R. = Data Not Reported but Party is required to have reported | 
-    DIV0 = Division was not evaluated due to a zero or negative base.
-    AFR = Africa | 
-    ASIA = Asia | 
-    EEUR = Eastern Europe | 
-    LAC = Latin America & the Caribbean | 
-    WEUR = Western Europe & others
-    A5 = Article 5 Party | 
-    CEIT = Country with Economy in Transition | 
-    EU = Member of the European Union | 
-    Non-A5 = Non-Article 5 Party""")
-)
+def get_doc_template(landscape=False):
+    buff = BytesIO()
+    # A4 size is 21cm x 29.7cm
+    if landscape:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.landscape(pagesizes.A4),
+            leftMargin=1*cm,
+            rightMargin=1*cm,
+            topMargin=1*cm,
+            bottomMargin=1*cm,
+        )
+    else:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.A4,
+            leftMargin=0.8*cm,
+            rightMargin=0.8*cm,
+            topMargin=1*cm,
+            bottomMargin=1*cm,
+        )
+    return buff, doc
 
 
 def export_submissions(submissions):
-    buff = BytesIO()
 
-    doc = SimpleDocTemplate(
-        buff,
-        pagesize=pagesizes.landscape(pagesizes.A4),
-        leftMargin=1*cm,
-        rightMargin=1*cm,
-        topMargin=1*cm,
-        bottomMargin=1*cm,
-    )
-    # A4 size is 21cm x 29.7cm
+    buff, doc = get_doc_template(landscape=True)
+
     flowables = [Paragraph('No data', left_paragraph_style)]
     if submissions:
         obligation = submissions[0].obligation.form_type
@@ -75,15 +72,11 @@ def export_submissions(submissions):
 
 
 def export_prodcons(submission, periods, parties):
-    buff = BytesIO()
+    buff, doc = get_doc_template(landscape=False)
 
-    doc = SimpleDocTemplate(
-        buff,
-        pagesize=pagesizes.A4,
-        leftMargin=0.8*cm,
-        rightMargin=0.8*cm,
-        topMargin=1*cm,
-        bottomMargin=1*cm,
+    add_page_footnotes = partial(
+        add_page_footer,
+        footnote=prodcons.get_footnote()
     )
 
     doc.build(

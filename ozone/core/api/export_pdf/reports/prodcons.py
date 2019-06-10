@@ -10,7 +10,6 @@ from ozone.core.models import (
     LimitTypes,
     Submission,
     FormTypes,
-    ReportingPeriod,
 )
 from ozone.core.models.utils import round_half_up
 
@@ -19,12 +18,12 @@ from ..util import (
     DOUBLE_HEADER_TABLE_STYLES,
     left_description_style, col_widths,
     get_date_of_reporting_str,
-    get_compared_period,
 )
 
 
 __all__ = [
     'get_prodcons_flowables',
+    'get_footnote',
 ]
 
 TABLE_CUSTOM_STYLES = (
@@ -39,6 +38,25 @@ TABLE_TOTAL_STYLE = (
 )
 
 
+def get_footnote():
+    return _(
+        """* Population in thousands <br/>
+        ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
+        - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
+        N.R. = Data Not Reported but Party is required to have reported | 
+        DIV0 = Division was not evaluated due to a zero or negative base.
+        AFR = Africa | 
+        ASIA = Asia | 
+        EEUR = Eastern Europe | 
+        LAC = Latin America & the Caribbean | 
+        WEUR = Western Europe & others
+        A5 = Article 5 Party | 
+        CEIT = Country with Economy in Transition | 
+        EU = Member of the European Union | 
+        Non-A5 = Non-Article 5 Party"""
+    )
+
+
 def get_header(table):
     return Paragraph(
         table['party']['name'].upper(),
@@ -46,12 +64,11 @@ def get_header(table):
     )
 
 
-def get_subheader(data):
+def get_subheader(period):
     description = _(
-        "Production and Consumption for {period1} - "
-        "Comparison with {period2} Year".format(
-            period1=data['periods'][0],
-            period2=data['periods'][1]
+        "Production and Consumption for {period} - "
+        "Comparison with Base Year".format(
+            period=period,
         )
     )
     return Paragraph(description, style=h2_style)
@@ -83,11 +100,11 @@ def get_description(groups):
         )
 
 
-def get_ods_caption(compared_period):
+def get_ods_caption(period):
     description = _(
-        "Production and Consumption of ODSs - "
-        "Comparison with {compared_period} Year (ODP Tonnes)".format(
-            compared_period=compared_period
+        "Production and Consumption of ODSs for {period} - "
+        "Comparison with Base Year (ODP Tonnes)".format(
+            period=period
         )
     )
 
@@ -141,17 +158,17 @@ def get_prodcons_flowables(submission, periods, parties):
     for table in data['tables']:
         flowables = list(
             (get_header(table),) +
-            (get_subheader(data),) +
+            (get_subheader(data['period']),) +
             (get_report_info(table),) +
             get_description(data['groups']) +
             (Paragraph("", style=page_title_style),) +
-            (get_ods_caption(data['periods'][1]),) +
+            (get_ods_caption(data['period']),) +
             (get_ods_table(data['headers'], table),) +
             (Paragraph("", style=page_title_style),)
         )
 
         if 'F' in table['data'].keys():
-            flowables.append(get_fgas_caption(periods[1].name))
+            flowables.append(get_fgas_caption(data['period']))
             flowables.append(get_fgas_table(data['headers'], table))
         pages += flowables
         pages.append(PageBreak(),)
@@ -171,9 +188,8 @@ def get_prodcons_data(submission, periods, parties):
 
     parties = [submission.party] if submission else parties
     periods = [submission.reporting_period] if submission else periods
-    periods = get_compared_period(periods)
     main_period = periods[0]
-    compared_period = periods[1]
+    data['period'] = main_period.name
 
     data['headers'] = (
         (
@@ -190,19 +206,17 @@ def get_prodcons_data(submission, periods, parties):
         ),
         (
             '',
-            main_period.name,
-            compared_period.name,
+            data['period'],
+            _('Base'),
             _('% Chng'),
             _('Limit'),
-            main_period.name,
-            compared_period.name,
+            data['period'],
+            _('Base'),
             _('% Chng'),
             _('Limit'),
             _('Per Cap. Cons.')
         )
     )
-
-    data['periods'] = [main_period.name, compared_period.name]
 
     data['tables'] = []
     for party in parties:
@@ -236,25 +250,6 @@ def get_prodcons_data(submission, periods, parties):
                 date_reported = "-"
         else:
             date_reported = get_date_of_reporting_str(submission)
-
-#        prodcons_qs = ProdCons.objects.filter(
-#            party=party,
-#            reporting_period=main_period
-#        )
-#
-#        # Get the date reported from the Article 7 submission related to these
-#        # aggregations.
-#        submission_id = None
-#        for subs in prodcons_qs.values_list('submissions', flat=True):
-#            id_list = subs.get(FormTypes.ART7.value, [])
-#            if id_list:
-#                submission_id = id_list[0]
-#        submission = Submission.objects.filter(id=submission_id).first()
-#        if submission:
-#            # There should only be one current submission.
-#            date_reported = get_date_of_reporting_str(submission)
-#        else:
-#            date_reported = "-"
 
         table_data['party'] = {
             'name': party.name,
@@ -303,44 +298,19 @@ def get_prodcons_data(submission, periods, parties):
             )
             per_capita_cons = get_per_capita_cons(main_cons, history.population)
 
-            if isinstance(compared_period, ReportingPeriod):
-                to_report_groups_compared_period = Group.get_report_groups(
-                    party,
-                    compared_period
-                )
-                try:
-                    compared_prodcons = ProdCons.objects.get(
-                        party=party, reporting_period=compared_period, group=group
-                    )
-                except ProdCons.DoesNotExist:
-                    compared_prodcons = None
-
-                compared_prod = get_actual_value(
-                    compared_prodcons,
-                    'calculated_production',
-                    group,
-                    to_report_groups_compared_period
-                )
-                compared_cons = get_actual_value(
-                    compared_prodcons,
-                    'calculated_consumption',
-                    group,
-                    to_report_groups_compared_period
-                )
-            else:
-                # Comparison with Base year
-                compared_prod = get_baseline(
-                    main_prodcons,
-                    'baseline_prod',
-                    main_prod,
-                    group
-                )
-                compared_cons = get_baseline(
-                    main_prodcons,
-                    'baseline_cons',
-                    main_cons,
-                    group
-                )
+            # Comparison with Base year
+            compared_prod = get_baseline(
+                main_prodcons,
+                'baseline_prod',
+                main_prod,
+                group
+            )
+            compared_cons = get_baseline(
+                main_prodcons,
+                'baseline_cons',
+                main_cons,
+                group
+            )
 
             chng_prod = get_chng(main_prod, compared_prod)
             chng_cons = get_chng(main_cons, compared_cons)
