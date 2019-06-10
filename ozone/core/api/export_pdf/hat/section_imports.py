@@ -8,15 +8,17 @@ from .hat_helper import TABLE_IMPORTS_HEADER_STYLE
 from .hat_helper import TABLE_ROW_EMPTY_STYLE_IMP
 from .hat_helper import TABLE_ROW_EMPTY_IMP
 
-from ..util import get_comments_section
-from ..util import mk_table_blends
-from ..util import mk_table_substances
-from ..util import page_title_section
-from ..util import p_c
-from ..util import table_from_data
-from ..util import to_precision
-from ..util import STYLES
-from ..util import TABLE_STYLES
+from ..util import (
+    get_comments_section,
+    mk_table_blends,
+    mk_table_substances,
+    page_title,
+    p_c,
+    table_from_data,
+    to_precision,
+    STYLES,
+    TABLE_STYLES
+)
 
 
 from reportlab.platypus import PageBreak
@@ -35,6 +37,7 @@ def component_row(component, blend):
         p_c(to_precision(blend.quantity_sdac * ptg, 3)),
         p_c(to_precision(blend.quantity_dcpac * ptg, 3)),
     )
+
 
 def export_imports(submission):
     comments_section = get_comments_section(submission, 'hat_imports')
@@ -79,10 +82,4 @@ def export_imports(submission):
         Paragraph(_('1.3 Comments'), STYLES['Heading2']),
     )
 
-    return page_title_section(
-        title=_('Consumption (imports)'),
-        explanatory= _(
-            'Annex F substances for exempted subsectors in metric tonnes'
-            ' (not ODP or CO2-equivalent tonnes)'
-        )
-    ) + imports_page + comments_section
+    return (page_title(_('Consumption (imports)')),) + imports_page + comments_section
