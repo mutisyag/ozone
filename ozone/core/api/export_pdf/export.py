@@ -1,5 +1,4 @@
 from io import BytesIO
-from functools import partial
 from django.utils.translation import gettext_lazy as _
 
 from reportlab.platypus import SimpleDocTemplate
@@ -74,15 +73,10 @@ def export_submissions(submissions):
 def export_prodcons(submission, periods, parties):
     buff, doc = get_doc_template(landscape=False)
 
-    add_page_footnotes = partial(
-        add_page_footer,
-        footnote=prodcons.get_footnote()
-    )
-
     doc.build(
         list(prodcons.get_prodcons_flowables(submission, periods, parties)),
-        onFirstPage=add_page_footnotes,
-        onLaterPages=add_page_footnotes
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
     )
 
     buff.seek(0)
