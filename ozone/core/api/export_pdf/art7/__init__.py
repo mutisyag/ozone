@@ -18,9 +18,7 @@ __all__ = [
 
 def export_submissions(submissions):
     flowables = list()
-    for idx, submission in enumerate(submissions):
-        if idx > 0:
-            flowables.append(PageBreak())
+    for submission in submissions:
         flowables += list(chain(
             export_info(submission),
             export_imports(submission),
@@ -31,4 +29,5 @@ def export_submissions(submissions):
             export_emission(submission),
             export_labuses(submission),
         ))
+        flowables.append(PageBreak())
     return flowables
