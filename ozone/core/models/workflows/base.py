@@ -24,6 +24,8 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
     final_states = []
     # States in which changing submission data is allowed
     editable_data_states = []
+    # States which signify incorrect data has been entered
+    incorrect_data_states = []
 
     state = BaseStateDescription()
 
@@ -49,6 +51,10 @@ class BaseWorkflow(xworkflows.WorkflowEnabled):
     @property
     def in_initial_state(self):
         return self.state == self.state.workflow.initial_state
+
+    @property
+    def in_incorrect_data_state(self):
+        return self.state in self.incorrect_data_states
 
     def is_secretariat_or_same_party_owner(self, submission):
         owner = submission.created_by

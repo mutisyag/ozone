@@ -703,6 +703,10 @@ class Submission(models.Model):
         return self.workflow().incorrect_data_states
 
     @property
+    def in_incorrect_state(self):
+        return self.workflow().in_incorrect_data_state
+
+    @property
     def in_initial_state(self):
         return self.workflow().in_initial_state
 
@@ -1344,6 +1348,29 @@ class Submission(models.Model):
         else:
             # If no submission is now current, purge all related aggregated data
             self.purge_aggregated_data()
+
+    @classmethod
+    def latest_submitted(cls, obligation, party, reporting_period):
+        with transaction.atomic():
+            versions = (
+                Submission.objects.select_for_update()
+                .filter(
+                    party=party,
+                    reporting_period=reporting_period,
+                    obligation=obligation,
+                )
+                .exclude(flag_valid=False)
+                .order_by('-version')
+            )
+
+            for submission in versions:
+                if (
+                    not submission.data_changes_allowed
+                    and not submission.in_incorrect_state
+                ):
+                    return submission
+            # Will return None if no submission satisfies conditions
+            return None
 
     @property
     def versions(self):
