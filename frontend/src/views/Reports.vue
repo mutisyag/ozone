@@ -14,6 +14,7 @@
             >Generate report by selecting the report type and filtering by party and period. Only one filter can have multiple values.</span>
           </small>
           <div class="create-submission mt-2">
+            <small class="color-red" v-if="showValidation && !selected.reports" v-translate>Please chose a report</small>
             <b-input-group id="reports_selector" class="mb-2" :prepend="$gettext('Reports')">
               <multiselect
                 :placeholder="$gettext('Select option')"
@@ -24,11 +25,12 @@
               />
             </b-input-group>
 
+            <small class="color-red" v-if="showValidation && !selected.periods.length" v-translate>At least one period is required</small>
             <b-input-group id="period_selector" class="mb-2" :prepend="$gettext('Period')">
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
-                :multiple="selected.parties.length > 1 ? false : true"
+                :multiple="true"
                 label="text"
                 :max="2"
                 v-model="selected.periods"
@@ -36,12 +38,13 @@
               />
             </b-input-group>
 
+            <small class="color-red" v-if="showValidation && !selected.parties.length" v-translate>At least one party is required</small>
             <b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
                 label="text"
-                :multiple="selected.periods.length > 1 ? false : true"
+                :multiple="true"
                 v-model="selected.parties"
                 :options="parties"
               />
@@ -70,6 +73,7 @@ export default {
       reports: null,
       parties: null,
       periods: null,
+      showValidation: false,
       selected: {
         parties: [],
         periods: [],
@@ -112,6 +116,10 @@ export default {
         period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value) : this.selected.periods.value,
         party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value) : this.selected.parties.value
       }
+      if (!params.period.length || !params.party.length) {
+        this.showValidation = true
+        return
+      }
       const url = `reports/${this.selected.reports.value}/`
       this.generateReport(url, `${this.selected.reports.value}.pdf`, params)
     },
@@ -130,6 +138,7 @@ export default {
         document.body.appendChild(link)
         link.click()
         link.parentNode.removeChild(link)
+        this.showValidation = false
       } catch (e) {
         console.log('download error', e)
       }
@@ -137,3 +146,8 @@ export default {
   }
 }
 </script>
+<style>
+  .color-red {
+    color:red;
+  }
+</style>
