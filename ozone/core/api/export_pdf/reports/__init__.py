@@ -6,5 +6,5 @@ __all__ = [
 ]
 
 
-def export_prodcons(reporting_period, parties):
-    return list(get_prodcons_flowables(reporting_period, parties))
+def export_prodcons(reporting_period, parties, submission=None):
+    return list(get_prodcons_flowables(reporting_period, parties, submission))

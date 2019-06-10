@@ -685,10 +685,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%Y-%m-%d')
         filename = f'prodcons_{timestamp}.pdf'
-        buf_pdf = export_prodcons(
-            [submission.reporting_period],
-            [submission.party]
-        )
+        buf_pdf = export_prodcons([], [], submission)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp

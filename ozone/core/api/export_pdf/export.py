@@ -73,7 +73,7 @@ def export_submission(submission):
     return buff
 
 
-def export_prodcons(reporting_period, parties):
+def export_prodcons(reporting_period, parties, submission=None):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(
@@ -86,7 +86,7 @@ def export_prodcons(reporting_period, parties):
     )
 
     doc.build(
-        reports.export_prodcons(reporting_period, parties),
+        reports.export_prodcons(reporting_period, parties, submission),
         onFirstPage=add_page_footnotes,
         onLaterPages=add_page_footnotes
         )
