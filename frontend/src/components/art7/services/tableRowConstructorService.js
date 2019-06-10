@@ -33,7 +33,8 @@ const quantityCalculator = (fields, parent, section, $gettext) => {
   const forTooltip = {}
   fields.filter(quantity => parent[quantity].selected)
     .forEach(quantity => {
-      count += parseFloat(parent[quantity].selected)
+      count = doSum([count, parent[quantity].selected])
+      // count += parseFloat(parent[quantity].selected)
       forTooltip[quantity] = parent[quantity].selected
     })
 
