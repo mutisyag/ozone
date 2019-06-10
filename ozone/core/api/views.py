@@ -138,7 +138,10 @@ from ..serializers import (
 )
 
 
-from .export_pdf import export_submissions, export_prodcons
+from .export_pdf import (
+    export_submissions,
+    export_prodcons,
+)
 
 
 User = get_user_model()
@@ -681,7 +684,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
-        filename = f'submission_{pk}_{timestamp}.pdf'
+        filename = f'art7raw_{pk}_{timestamp}.pdf'
         buf_pdf = export_submissions([submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -691,11 +694,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_prodcons_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%Y-%m-%d')
-        filename = f'prodcons_{timestamp}.pdf'
-        buf_pdf = export_prodcons(
-            [submission.reporting_period],
-            [submission.party]
-        )
+        filename = f'prodcons_{pk}_{timestamp}.pdf'
+        buf_pdf = export_prodcons(submission=submission, periods=None, parties=None)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
@@ -1660,7 +1660,10 @@ class ReportsViewSet(viewsets.ViewSet):
     def prodcons(self, request):
         parties = self._get_parties(request)
         periods = self._get_periods(request)
-        return self._response_pdf('prodcons', export_prodcons(periods, parties))
+        return self._response_pdf(
+            'prodcons',
+            export_prodcons(submission=None, periods=periods, parties=parties)
+        )
 
 
 class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):

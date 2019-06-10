@@ -9,7 +9,9 @@ from reportlab.lib.units import cm
 
 from . import art7
 from . import hat
-from . import reports
+
+from .reports import prodcons
+
 from .util import right_paragraph_style, left_paragraph_style
 
 
@@ -72,7 +74,7 @@ def export_submissions(submissions):
     return buff
 
 
-def export_prodcons(reporting_period, parties):
+def export_prodcons(submission, periods, parties):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(
@@ -85,10 +87,10 @@ def export_prodcons(reporting_period, parties):
     )
 
     doc.build(
-        reports.export_prodcons(reporting_period, parties),
+        list(prodcons.get_prodcons_flowables(submission, periods, parties)),
         onFirstPage=add_page_footnotes,
         onLaterPages=add_page_footnotes
-        )
+    )
 
     buff.seek(0)
     return buff

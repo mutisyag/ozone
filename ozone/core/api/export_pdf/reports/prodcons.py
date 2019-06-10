@@ -23,6 +23,10 @@ from ..util import (
 )
 
 
+__all__ = [
+    'get_prodcons_flowables',
+]
+
 TABLE_CUSTOM_STYLES = (
     ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
     ('SPAN', (0, 0), (0, 1)),  # annex/group
@@ -94,12 +98,11 @@ def get_ods_caption(compared_period):
 
 
 def get_ods_table(headers, table):
-    table_headers = headers
     # get all except F Annex/Group
     table_data = tuple(v for k, v in table['data'].items() if k!='F')
 
     return Table(
-        table_headers + table_data,
+        headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
         style=(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
@@ -107,11 +110,10 @@ def get_ods_table(headers, table):
 
 
 def get_fgas_table(headers, table):
-    table_headers = headers
     table_data = (tuple(table['data']['F']),)  # get F Annex/Group
 
     return Table(
-        table_headers + table_data,
+        headers + table_data,
         colWidths=col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2]),
         style=(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES),
         hAlign='LEFT'
@@ -132,8 +134,8 @@ def get_fgas_caption(compared_period):
     )
 
 
-def get_prodcons_flowables(periods, parties):
-    data = get_prodcons_data(periods, parties)
+def get_prodcons_flowables(submission, periods, parties):
+    data = get_prodcons_data(submission, periods, parties)
 
     pages = []
     for table in data['tables']:
@@ -143,7 +145,7 @@ def get_prodcons_flowables(periods, parties):
             (get_report_info(table),) +
             get_description(data['groups']) +
             (Paragraph("", style=page_title_style),) +
-            (get_ods_caption(periods[1].name),) +
+            (get_ods_caption(data['periods'][1]),) +
             (get_ods_table(data['headers'], table),) +
             (Paragraph("", style=page_title_style),)
         )
@@ -156,7 +158,7 @@ def get_prodcons_flowables(periods, parties):
     return pages
 
 
-def get_prodcons_data(periods, parties):
+def get_prodcons_data(submission, periods, parties):
     data = {}
     all_groups = Group.objects.all()
     data['groups'] = {}
@@ -167,6 +169,8 @@ def get_prodcons_data(periods, parties):
             'description_alt': group.description_alt
         }
 
+    parties = [submission.party] if submission else parties
+    periods = [submission.reporting_period] if submission else periods
     periods = get_compared_period(periods)
     main_period = periods[0]
     compared_period = periods[1]
@@ -207,24 +211,50 @@ def get_prodcons_data(periods, parties):
             party=party,
             reporting_period=main_period
         )
-        prodcons_qs = ProdCons.objects.filter(
-            party=party,
-            reporting_period=main_period
-        )
-
-        # Get the date reported from the Article 7 submission related to these
-        # aggregations.
-        submission_id = None
-        for subs in prodcons_qs.values_list('submissions', flat=True):
-            id_list = subs.get(FormTypes.ART7.value, [])
-            if id_list:
-                submission_id = id_list[0]
-        submission = Submission.objects.filter(id=submission_id).first()
-        if submission:
-            # There should only be one current submission.
-            date_reported = get_date_of_reporting_str(submission)
+        if submission is None:
+            prodcons_qs = ProdCons.objects.filter(
+                party=party,
+                reporting_period=main_period
+            )
         else:
-            date_reported = "-"
+            # We need to get the actual data from *this* submission
+            prodcons_qs = submission.get_aggregated_data()
+
+        if submission is None:
+            # Get the date reported from the Article 7 submission related to these
+            # aggregations.
+            submission_id = None
+            for subs in prodcons_qs.values_list('submissions', flat=True):
+                id_list = subs.get(FormTypes.ART7.value, [])
+                if id_list:
+                    submission_id = id_list[0]
+            sub = Submission.objects.filter(id=submission_id).first()
+            if sub:
+                # There should only be one current submission.
+                date_reported = get_date_of_reporting_str(sub)
+            else:
+                date_reported = "-"
+        else:
+            date_reported = get_date_of_reporting_str(submission)
+
+#        prodcons_qs = ProdCons.objects.filter(
+#            party=party,
+#            reporting_period=main_period
+#        )
+#
+#        # Get the date reported from the Article 7 submission related to these
+#        # aggregations.
+#        submission_id = None
+#        for subs in prodcons_qs.values_list('submissions', flat=True):
+#            id_list = subs.get(FormTypes.ART7.value, [])
+#            if id_list:
+#                submission_id = id_list[0]
+#        submission = Submission.objects.filter(id=submission_id).first()
+#        if submission:
+#            # There should only be one current submission.
+#            date_reported = get_date_of_reporting_str(submission)
+#        else:
+#            date_reported = "-"
 
         table_data['party'] = {
             'name': party.name,
@@ -237,10 +267,14 @@ def get_prodcons_data(periods, parties):
         table_data['data'] = {}
         to_report_groups_main_period = Group.get_report_groups(party, main_period)
         for group in all_groups:
-            try:
-                main_prodcons = prodcons_qs.get(group=group)
-            except ProdCons.DoesNotExist:
-                main_prodcons = None
+            if submission is None:
+                try:
+                    main_prodcons = prodcons_qs.get(group=group)
+                except ProdCons.DoesNotExist:
+                    main_prodcons = None
+            else:
+                # In this case, prodcons_qs is actually a dict
+                main_prodcons = prodcons_qs.get(group, None)
 
             main_prod = get_actual_value(
                 main_prodcons,
