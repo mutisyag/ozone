@@ -46,7 +46,7 @@ add_page_footnotes = partial(
 )
 
 
-def export_submission(submission):
+def export_submissions(submissions):
     buff = BytesIO()
 
     doc = SimpleDocTemplate(
@@ -58,17 +58,16 @@ def export_submission(submission):
         bottomMargin=1*cm,
     )
     # A4 size is 21cm x 29.7cm
-
-    obligation = submission.obligation.form_type
-    if obligation == 'art7':
-        doc.build(
-            art7.export_submission(submission),
-            onFirstPage=add_page_footer,
-            onLaterPages=add_page_footer,
-        )
-    elif obligation == 'hat':
-        doc.build(hat.export_submission(submission))
-
+    flowables = [Paragraph('No data', left_paragraph_style)]
+    if submissions:
+        obligation = submissions[0].obligation.form_type
+        if obligation == 'art7':
+            flowables = art7.export_submissions(submissions)
+    doc.build(
+        flowables,
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer,
+    )
     buff.seek(0)
     return buff
 

@@ -12,6 +12,7 @@ class Reports(enum.Enum):
     Enum for describing different types of reports.
     """
 
+    ART7_RAW = 'art7_raw'
     PRODCONS = 'prodcons'
 
     @staticmethod
@@ -26,12 +27,21 @@ class Reports(enum.Enum):
         return {
             **Reports.args(has_party_param=True, has_period_param=True),
             **{
-                "display_name": "Calculated production and consumption",
+                "display_name": "Production and consumption - comparison with base year",
                 "description": _(
-                    "To compare the production and consumption of one year "
-                    "with the baseline period, select only one year and one or "
-                    "more parties. You can also select one party and two "
-                    "reporting periods for comparing to each other."
+                    "Select one or more parties and one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def art7_raw_info():
+        return {
+            **Reports.args(has_party_param=True, has_period_param=True),
+            **{
+                "display_name": "Raw data reported - Article 7",
+                "description": _(
+                    "Select one or more parties and one or more reporting periods"
                 )
             },
         }

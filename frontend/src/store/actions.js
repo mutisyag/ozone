@@ -415,7 +415,7 @@ const actions = {
 
   async getReportsList() {
     const reports = await getReports()
-    return reports.data.map(r => ({ value: r.name, text: r.name, original: r }))
+    return reports.data.map(r => ({ value: r.name, text: r.display_name, original: r }))
   },
 
   getCountries(context) {
