@@ -9,6 +9,7 @@ const Art7DataManager = () => import(/* webpackChunkName: "art7" */ '@/component
 const LetterDataManager = () => import(/* webpackChunkName: "letter" */ '@/components/letter/DataManager')
 const HatDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/hat/DataManager')
 const RafDataManager = () => import(/* webpackChunkName: "hat" */ '@/components/raf/DataManager')
+const OtherRoDataManager = () => import(/* webpackChunkName: 'otherRo' */ '@/components/otherRo/DataManager')
 
 const ExemptionDataManager = () => import(/* webpackChunkName: "exemption" */ '@/components/exemption/DataManager')
 // const FormNotFound = () => import(/* webpackChunkName: "notFound" */ '@/views/FormNotFound')
@@ -92,6 +93,14 @@ const routes = [{
       requiresAuth: true
     },
     component: LetterDataManager
+  },
+  {
+    path: 'transfer',
+    name: 'transfer',
+    meta: {
+      requiresAuth: true
+    },
+    component: OtherRoDataManager
   },
   {
     path: 'exemption',

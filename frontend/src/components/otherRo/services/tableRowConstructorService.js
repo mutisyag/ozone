@@ -18,111 +18,39 @@ export default {
   }) {
     let baseInnerFields = {}
     switch (section) {
-    case 'has_produced':
+    case 'transfers':
       baseInnerFields = {
-        checkForDelete: {
-          selected: false,
-          type: 'checkbox'
-        },
-        remarks_party: {
-          type: 'textarea',
-          selected: ''
-        },
-        remarks_os: {
-          type: 'textarea',
-          selected: ''
-        },
-        group: {
-          selected: group,
+        transfer_type: {
+          selected: null,
           type: 'nonInput'
         },
-        quantity_msac: {
-          type: 'number',
-          selected: null
-        },
-        quantity_sdac: {
-          type: 'number',
-          selected: null
-        },
-        quantity_dcpac: {
-          type: 'number',
-          selected: null
-        },
-        substance: {
-          type: 'select',
-          selected: substance || null
-        },
-        blend: {
-          type: 'select',
-          selected: blend || null,
-          expand: false
-        },
-        get validation() {
-          const errors = []
-          if (this.quantity_msac.selected === null) {
-            errors.push($gettext('Please fill-in column New imports for use in multi-split air conditioners (3)'))
-          }
-
-          const returnObj = {
-            type: 'nonInput',
-            selected: errors
-          }
-
-          return returnObj
-        }
-      }
-      break
-    case 'has_imports':
-      baseInnerFields = {
-        checkForDelete: {
-          selected: false,
-          type: 'checkbox'
-        },
-        remarks_party: {
-          type: 'textarea',
-          selected: ''
-        },
-        remarks_os: {
-          type: 'textarea',
-          selected: ''
-        },
-        group: {
-          selected: group,
+        source_party: {
+          selected: null,
           type: 'nonInput'
         },
-        quantity_msac: {
-          type: 'number',
-          selected: null
+        destination_party: {
+          selected: null,
+          type: 'nonInput'
         },
-        quantity_sdac: {
-          type: 'number',
-          selected: null
-        },
-        quantity_dcpac: {
-          type: 'number',
-          selected: null
+        reporting_period: {
+          selected: null,
+          type: 'nonInput'
         },
         substance: {
-          type: 'select',
-          selected: substance || null
+          selected: substance,
+          type: 'nonInput'
         },
-        blend: {
-          type: 'select',
-          selected: blend || null,
-          expand: false
+        transferred_amount: {
+          selected: null,
+          type: 'nonInput'
+        },
+        is_basic_domestic_need: {
+          selected: null,
+          type: 'checkbox',
+          disabled: true
         },
         get validation() {
-          const errors = []
-          if (this.quantity_msac.selected === null) {
-            errors.push($gettext('Please fill-in column New imports for use in multi-split air conditioners (3)'))
-          }
-
-          const returnObj = {
-            type: 'nonInput',
-            selected: errors
-          }
-
-          return returnObj
+          return []
         }
       }
       break

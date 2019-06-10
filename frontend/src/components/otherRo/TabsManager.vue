@@ -50,7 +50,7 @@
             </template>
             <Files :tabIndex="tabIndex" :tabId="1"/>
           </b-tab>
-          <b-tab v-for="tabId in tabsIdsWithAssideMenu" :key="tabId">
+          <b-tab v-if="$store.state.form.tabs[tabId].form_fields.length" v-for="tabId in formTabs" :key="tabId">
             <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
             </template>
@@ -64,21 +64,23 @@
       </b-card>
     </div>
     <Footer style="display:inline">
-      <b-button-group class="actions mt-2 mb-2">
-        <Save
-          v-if="$store.getters.can_save_form"
-          :data="$store.state.form"
-          :submission="submission"
-        ></Save>
-      </b-button-group>
-
+      <Save
+        class="actions mt-2 mb-2"
+        v-if="$store.getters.can_save_form"
+        :data="$store.state.form"
+        :submission="submission"
+      ></Save>
       <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
-
       <b-button-group class="pull-right actions mt-2 mb-2">
+        <b-btn @click="$refs.history_modal.show()" variant="outline-dark">
+          <span v-translate>Versions</span>
+        </b-btn>
+      </b-button-group>
+      <b-button-group class="pull-right actions mt-2 mb-2 mr-5">
         <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
           @click="checkBeforeSubmitting"
-          variant="outline-success"
+          variant="outline-primary"
         >
           <span v-translate>Submit</span>
         </b-btn>
@@ -90,27 +92,16 @@
         >
           <span>{{labels[transition]}}</span>
         </b-btn>
+
         <b-btn
           variant="outline-primary"
           @click="clone($route.query.submission)"
-          size="sm"
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
         <b-btn
-          variant="outline-primary"
-          @click="$store.dispatch('downloadStuff',
-					{
-						url: `${submission}export_pdf/`,
-						fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-					})"
-        >Export as PDF</b-btn>
-        <b-btn @click="$refs.history_modal.show()" variant="outline-info">
-          <span v-translate>Versions</span>
-        </b-btn>
-        <b-btn
-          id="delete-button"
           @click="removeSubmission"
+          id="delete-button"
           v-if="$store.getters.can_edit_data"
           variant="outline-danger"
         >
@@ -153,7 +144,7 @@ import Save from '@/components/hat/Save'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/hat/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
-import FormTemplate from '@/components/hat/FormTemplate.vue'
+import FormTemplate from '@/components/otherRo/FormTemplate.vue'
 import TransitionQuestions from '@/components/common/TransitionQuestions'
 import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 
@@ -191,9 +182,9 @@ export default {
       }
       return tab
     },
-    tabsIdsWithAssideMenu() {
+    formTabs() {
       const { form } = this.$store.state
-      return form.formDetails.tabsDisplay.filter(tabName => form.tabs[tabName].hasAssideMenu)
+      return form.formDetails.tabsDisplay.filter(tabName => !['files', 'sub_info'].includes(tabName))
     }
   },
   methods: {

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import tabsManager from '@/components/hat/TabsManager'
+import tabsManager from '@/components/otherRo/TabsManager'
 import dataManagerMixin from '@/components/common/mixins/DataManagerMixin'
 
 export default {

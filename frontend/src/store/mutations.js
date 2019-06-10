@@ -123,6 +123,7 @@ const mutations = {
     default:
       break
     }
+    console.log(formName, '---------')
     // if anything breaks really bad, revert to state.form = JSON.parse(JSON.stringify(currentFormStructure))
     state.form = currentFormStructure
     state.tableRowConstructor = tableRowConstructor
