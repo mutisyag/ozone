@@ -56,11 +56,11 @@ def export_submissions(submissions):
 
     buff, doc = get_doc_template(landscape=True)
 
-    flowables = [Paragraph('No data', left_paragraph_style)]
-    if submissions:
-        obligation = submissions[0].obligation.form_type
-        if obligation == 'art7':
-            flowables = art7.export_submissions(submissions)
+    flowables = (
+        art7.export_submissions(submissions) or
+        [Paragraph('No data', left_paragraph_style)]
+    )
+
     doc.build(
         flowables,
         onFirstPage=add_page_footer,

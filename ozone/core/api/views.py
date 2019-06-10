@@ -1641,9 +1641,11 @@ class ReportsViewSet(viewsets.ViewSet):
         submissions = list()
         for period in periods:
             for party in parties:
-                submissions.append(Submission.latest_submitted(
+                sub = Submission.latest_submitted(
                     obligation, party, period
-                ))
+                )
+                if sub:
+                    submissions.append(sub)
         return submissions
 
     @action(detail=False, methods=["get"])
