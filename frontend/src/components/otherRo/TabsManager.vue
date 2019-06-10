@@ -50,7 +50,7 @@
             </template>
             <Files :tabIndex="tabIndex" :tabId="1"/>
           </b-tab>
-          <b-tab v-if="$store.state.form.tabs[tabId].form_fields.length" v-for="tabId in formTabs" :key="tabId">
+          <b-tab v-for="tabId in formTabs" :key="tabId">
             <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
             </template>
@@ -184,7 +184,7 @@ export default {
     },
     formTabs() {
       const { form } = this.$store.state
-      return form.formDetails.tabsDisplay.filter(tabName => !['files', 'sub_info'].includes(tabName))
+      return form.formDetails.tabsDisplay.filter(tabName => !['files', 'sub_info'].includes(tabName)).filter(tabName => this.$store.state.form.tabs[tabName].form_fields.length)
     }
   },
   methods: {

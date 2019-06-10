@@ -60,7 +60,7 @@
         :data="$store.state.form"
         :submission="submission"
       ></Save>
-      <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
+      <router-link class="btn btn-light ml-2 mt-2 mb-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
       <b-button-group class="pull-right actions mt-2 mb-2">
         <b-btn
           v-if="$store.state.current_submission.available_transitions.includes('submit')"
