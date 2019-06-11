@@ -1509,7 +1509,18 @@ class Submission(models.Model):
         submission, without touching the database.
         """
 
-        group_mapping = {group: None for group in self.get_reported_groups()}
+        group_mapping = {
+            group: ProdCons(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                group=group
+            )
+            for group in self.get_reported_groups()
+        }
+        # Pre-calculate all totals in case there is no actual related data
+        for aggregation in group_mapping.values():
+            aggregation.populate_limits_and_baselines()
+            aggregation.calculate_totals()
 
         for related, aggr_flag in self.RELATED_DATA:
             if not aggr_flag:
