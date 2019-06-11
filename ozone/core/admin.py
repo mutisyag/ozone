@@ -525,6 +525,8 @@ class ProcessAgentApplicationAdmin(admin.ModelAdmin):
     list_display = ('validity', 'counter', 'substance', 'application')
     list_filter = (
         ('substance__name', custom_title_dropdown_filter('Substance')),
+        ('validity__decision__decision_id', custom_title_dropdown_filter('Decision')),
+        ('counter', custom_title_dropdown_filter('Counter'))
     )
     search_fields = ('validity', 'substance__name')
 

@@ -37,12 +37,16 @@ class ProcessAgentContainTechnology(models.Model):
 class ProcessAgentUsesValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
-    decision = models.ForeignKey(
-        Decision, related_name='uses_validity', on_delete=models.PROTECT
+    decision = models.OneToOneField(
+        Decision,
+        related_name='uses_validity',
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
-        return f"{self.decision.decision_id} {self.start_date.year}-{self.end_date.year}"
+        start_year = self.start_date.year if self.start_date else "N/A"
+        end_year = self.end_date.year if self.end_date else "N/A"
+        return f"{self.decision.decision_id} {start_year}-{end_year}"
 
     class Meta:
         verbose_name_plural = 'process agent uses validity'
@@ -126,12 +130,16 @@ class ProcessAgentUsesReported(models.Model):
 class ProcessAgentEmissionLimitValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
-    decision = models.ForeignKey(
-        Decision, related_name='limits_validity', on_delete=models.PROTECT
+    decision = models.OneToOneField(
+        Decision,
+        related_name='limits_validity',
+        on_delete=models.PROTECT
     )
 
     def __str__(self):
-        return f"{self.decision.decision_id} {self.start_date.year}-{self.end_date.year}"
+        start_year = self.start_date.year if self.start_date else "N/A"
+        end_year = self.end_date.year if self.end_date else "N/a"
+        return f"{self.decision.decision_id} {start_year}-{end_year}"
 
     class Meta:
         verbose_name_plural = 'process agent emission limits validity'
