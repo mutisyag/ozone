@@ -5,9 +5,10 @@ import decimal
 import logging
 import collections
 
-from django.core.exceptions import ValidationError
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils.timezone import make_aware
+
 from openpyxl import load_workbook
 
 from ozone.core.models import (
@@ -581,6 +582,9 @@ class Command(BaseCommand):
         date_reported = overall["DateReported"] or overall["DateCreate"] or overall["DateUpdate"]
         created_at = overall["DateCreate"] or overall["DateReported"] or overall["DateUpdate"]
         updated_at = overall["DateUpdate"] or overall["DateCreate"] or overall["DateReported"]
+        date_reported = make_aware(date_reported) if date_reported else None
+        created_at = make_aware(created_at) if created_at else None
+        updated_at = make_aware(updated_at) if updated_at else None
 
         if overall["SubmissionType"]:
             submission_format = SubmissionFormat.objects.get(name=overall["SubmissionType"])
