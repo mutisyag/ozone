@@ -271,7 +271,7 @@ class AggregationMixin:
                 submissions_set.add(submission.id)
                 aggregation.submissions[form_type] = list(submissions_set)
             else:
-                aggregation.submissions[form_type] = [submission.obligation.id,]
+                aggregation.submissions[form_type] = [submission.id,]
 
             # This will automatically trigger the calculation of computed
             # values
