@@ -1443,6 +1443,23 @@ class Submission(models.Model):
 
         groups = self.get_reported_groups()
 
+        # Clear this submission from the list of submissions for its related
+        # aggregations
+        for group in groups:
+            aggregation = ProdCons.objects.filter(
+                party=self.party,
+                reporting_period=self.reporting_period,
+                group=group
+            ).first()
+            if aggregation is None:
+                continue
+            form_type = self.obligation.form_type
+            if self.id in aggregation.submissions.get(form_type, []):
+                submissions_set = set(aggregation.submissions[form_type])
+                submissions_set.remove(self.id)
+                aggregation.submissions[form_type] = list(submissions_set)
+            aggregation.save()
+
         # Set to 0 all values that had been populated by this submission.
         # Any aggregation row that becomes full-zero after that is deleted.
         for related, aggr_flag in self.RELATED_DATA:
@@ -1480,11 +1497,19 @@ class Submission(models.Model):
         # Create all-zero ProdCons rows for all reported groups.
         # For ProdConsMT this is not necessary.
         for group in groups:
-            ProdCons.objects.get_or_create(
+            aggregation, created = ProdCons.objects.get_or_create(
                 party=self.party,
                 reporting_period=self.reporting_period,
                 group=group
             )
+            form_type = self.obligation.form_type
+            if form_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[form_type])
+                submissions_set.add(self.id)
+                aggregation.submissions[form_type] = list(submissions_set)
+            else:
+                aggregation.submissions[form_type] = [self.id,]
+            aggregation.save()
 
         for related, aggr_flag in self.RELATED_DATA:
             if not aggr_flag:
