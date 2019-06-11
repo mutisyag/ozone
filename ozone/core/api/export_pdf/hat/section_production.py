@@ -4,11 +4,13 @@ from .hat_helper import TABLE_IMPORTS_HEADER_STYLE
 from .hat_helper import TABLE_ROW_EMPTY_STYLE_IMP
 from .hat_helper import TABLE_ROW_EMPTY_IMP
 
-from ..util import get_comments_section
-from ..util import page_title_section
-from ..util import table_from_data
-from ..util import STYLES
-from ..util import TABLE_STYLES
+from ..util import (
+    get_comments_section,
+    page_title,
+    table_from_data,
+    STYLES,
+    TABLE_STYLES,
+)
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -49,10 +51,4 @@ def export_production(submission):
         Paragraph(_('2.2 Comments'), STYLES['Heading2']),
     )
 
-    return page_title_section(
-        title=_('PRODUCTION'),
-        explanatory= _(
-            'Annex F substances for exempted subsectors in metric tonnes '
-            '(not ODP or CO2-equivalent tonnes)'
-        )
-    ) + prod_page + comments_section
+    return (page_title(_('PRODUCTION')),) + prod_page + comments_section

@@ -1,5 +1,4 @@
 from io import BytesIO
-from functools import partial
 from django.utils.translation import gettext_lazy as _
 
 from reportlab.platypus import SimpleDocTemplate
@@ -9,7 +8,9 @@ from reportlab.lib.units import cm
 
 from . import art7
 from . import hat
-from . import reports
+
+from .reports import prodcons
+
 from .util import right_paragraph_style, left_paragraph_style
 
 
@@ -27,69 +28,56 @@ def add_page_footer(canvas, doc, footnote=None):
     canvas.restoreState()
 
 
-add_page_footnotes = partial(
-    add_page_footer,
-    footnote=_("""* Population in thousands <br/>
-    ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
-    - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
-    N.R. = Data Not Reported but Party is required to have reported | 
-    DIV0 = Division was not evaluated due to a zero or negative base.
-    AFR = Africa | 
-    ASIA = Asia | 
-    EEUR = Eastern Europe | 
-    LAC = Latin America & the Caribbean | 
-    WEUR = Western Europe & others
-    A5 = Article 5 Party | 
-    CEIT = Country with Economy in Transition | 
-    EU = Member of the European Union | 
-    Non-A5 = Non-Article 5 Party""")
-)
-
-
-def export_submission(submission):
+def get_doc_template(landscape=False):
     buff = BytesIO()
-
-    doc = SimpleDocTemplate(
-        buff,
-        pagesize=pagesizes.landscape(pagesizes.A4),
-        leftMargin=1*cm,
-        rightMargin=1*cm,
-        topMargin=1*cm,
-        bottomMargin=1*cm,
-    )
     # A4 size is 21cm x 29.7cm
-
-    obligation = submission.obligation.form_type
-    if obligation == 'art7':
-        doc.build(
-            art7.export_submission(submission),
-            onFirstPage=add_page_footer,
-            onLaterPages=add_page_footer,
+    if landscape:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.landscape(pagesizes.A4),
+            leftMargin=1*cm,
+            rightMargin=1*cm,
+            topMargin=1*cm,
+            bottomMargin=1*cm,
         )
-    elif obligation == 'hat':
-        doc.build(hat.export_submission(submission))
+    else:
+        doc = SimpleDocTemplate(
+            buff,
+            pagesize=pagesizes.A4,
+            leftMargin=0.8*cm,
+            rightMargin=0.8*cm,
+            topMargin=1*cm,
+            bottomMargin=1*cm,
+        )
+    return buff, doc
 
+
+def export_submissions(submissions):
+
+    buff, doc = get_doc_template(landscape=True)
+
+    flowables = (
+        art7.export_submissions(submissions) or
+        [Paragraph('No data', left_paragraph_style)]
+    )
+
+    doc.build(
+        flowables,
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer,
+    )
     buff.seek(0)
     return buff
 
 
-def export_prodcons(reporting_period, parties):
-    buff = BytesIO()
-
-    doc = SimpleDocTemplate(
-        buff,
-        pagesize=pagesizes.A4,
-        leftMargin=0.8*cm,
-        rightMargin=0.8*cm,
-        topMargin=1*cm,
-        bottomMargin=1*cm,
-    )
+def export_prodcons(submission, periods, parties):
+    buff, doc = get_doc_template(landscape=False)
 
     doc.build(
-        reports.export_prodcons(reporting_period, parties),
-        onFirstPage=add_page_footnotes,
-        onLaterPages=add_page_footnotes
-        )
+        list(prodcons.get_prodcons_flowables(submission, periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
 
     buff.seek(0)
     return buff

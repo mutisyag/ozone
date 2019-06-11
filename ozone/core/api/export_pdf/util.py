@@ -23,7 +23,6 @@ from reportlab.lib.units import mm
 
 __all__ = [
     'hr',
-    'page_title_section',
     'page_title',
     'p_c',
     'p_l',
@@ -110,9 +109,8 @@ small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE
 small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
+sm_no_spacing_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=0)
 
-
-left_description_style = _style('BodyText', alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=-1)
 
 h1_style = _style(
     'Heading1',
@@ -159,15 +157,6 @@ smb_r = partial(Paragraph, style=small_bold_right_paragraph_style)
 
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
-
-
-# TODO: remove this after revising HAT exports
-def page_title_section(title, explanatory=None):
-    return (
-        page_title(title),
-        # p_c(explanatory, fontSize=10),
-        # Spacer(1, cm),
-    )
 
 
 def col_widths(w_list):
@@ -446,20 +435,3 @@ def get_date_of_reporting_str(submission):
     if date_of_reporting:
         date_of_reporting = date_of_reporting.strftime('%d %B %Y')
     return date_of_reporting
-
-
-def get_compared_period(periods):
-    if len(periods) == 1:
-        # Comparison with Base year
-        periods.append(
-            DottedDict({'name': 'Base'})
-        )
-    return periods
-
-
-class DottedDict(object):
-    """
-    Helper class for accessing dictionary items as object attributes.
-    """
-    def __init__(self, d):
-        self.__dict__ = d

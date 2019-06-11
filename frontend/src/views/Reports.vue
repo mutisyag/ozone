@@ -32,7 +32,6 @@
                 trackBy="value"
                 :multiple="true"
                 label="text"
-                :max="2"
                 v-model="selected.periods"
                 :options="periods"
               />

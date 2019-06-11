@@ -69,6 +69,7 @@ from ..models import (
     Email,
     EmailTemplate,
     CriticalUseCategory,
+    FormTypes,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -137,7 +138,10 @@ from ..serializers import (
 )
 
 
-from .export_pdf import export_submission, export_prodcons
+from .export_pdf import (
+    export_submissions,
+    export_prodcons,
+)
 
 
 User = get_user_model()
@@ -680,8 +684,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
-        filename = f'submission_{pk}_{timestamp}.pdf'
-        buf_pdf = export_submission(submission)
+        filename = f'art7raw_{pk}_{timestamp}.pdf'
+        buf_pdf = export_submissions([submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
@@ -690,11 +694,8 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_prodcons_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%Y-%m-%d')
-        filename = f'prodcons_{timestamp}.pdf'
-        buf_pdf = export_prodcons(
-            [submission.reporting_period],
-            [submission.party]
-        )
+        filename = f'prodcons_{pk}_{timestamp}.pdf'
+        buf_pdf = export_prodcons(submission=submission, periods=None, parties=None)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
@@ -1617,22 +1618,54 @@ class ReportsViewSet(viewsets.ViewSet):
     def list(self, request):
         return Response(Reports.items())
 
-    @action(detail=False, methods=["get"])
-    def prodcons(self, request):
-        parties = request.GET.getlist(key='party')
-        parties = [
-            Party.objects.get(pk=party_pk) for party_pk in parties
-        ]
-        reporting_periods = request.GET.getlist(key='period')
-        reporting_periods = [
-            ReportingPeriod.objects.get(pk=period_pk) for period_pk in reporting_periods
-        ]
-        timestamp = datetime.now().strftime('%Y-%m-%d')
-        filename = f'prodcons_{timestamp}.pdf'
-        buf_pdf = export_prodcons(reporting_periods, parties)
+    def _response_pdf(self, base_name, buf_pdf):
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        filename = f'{base_name}_{timestamp}.pdf'
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         return resp
+
+    def _get_parties(self, request):
+        parties = request.GET.getlist(key='party')
+        return Party.objects.filter(
+            pk__in=parties
+        ).order_by('name')
+
+    def _get_periods(self, request):
+        reporting_periods = request.GET.getlist(key='period')
+        return ReportingPeriod.objects.filter(
+            pk__in=reporting_periods
+        ).order_by('-pk').all()
+
+    def get_submissions(self, obligation, periods, parties):
+        submissions = list()
+        for period in periods:
+            for party in parties:
+                sub = Submission.latest_submitted(
+                    obligation, party, period
+                )
+                if sub:
+                    submissions.append(sub)
+        return submissions
+
+    @action(detail=False, methods=["get"])
+    def art7_raw(self, request):
+        parties = self._get_parties(request)
+        periods = self._get_periods(request)
+        art7 = Obligation.objects.get(_form_type=FormTypes.ART7.value)
+        return self._response_pdf(
+            'art7raw',
+            export_submissions(self.get_submissions(art7, periods, parties))
+        )
+
+    @action(detail=False, methods=["get"])
+    def prodcons(self, request):
+        parties = self._get_parties(request)
+        periods = self._get_periods(request)
+        return self._response_pdf(
+            'prodcons',
+            export_prodcons(submission=None, periods=periods, parties=parties)
+        )
 
 
 class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
