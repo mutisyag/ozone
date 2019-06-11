@@ -1619,7 +1619,7 @@ class ReportsViewSet(viewsets.ViewSet):
         return Response(Reports.items())
 
     def _response_pdf(self, base_name, buf_pdf):
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f'{base_name}_{timestamp}.pdf'
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
@@ -1652,9 +1652,13 @@ class ReportsViewSet(viewsets.ViewSet):
     def art7_raw(self, request):
         parties = self._get_parties(request)
         periods = self._get_periods(request)
+        params = "%s_%s" % (
+            "_".join(p.abbr for p in parties),
+            "_".join(p.name for p in periods),
+        )
         art7 = Obligation.objects.get(_form_type=FormTypes.ART7.value)
         return self._response_pdf(
-            'art7raw',
+            f'art7raw_{params}',
             export_submissions(self.get_submissions(art7, periods, parties))
         )
 
@@ -1662,8 +1666,12 @@ class ReportsViewSet(viewsets.ViewSet):
     def prodcons(self, request):
         parties = self._get_parties(request)
         periods = self._get_periods(request)
+        params = "%s_%s" % (
+            "_".join(p.abbr for p in parties),
+            "_".join(p.name for p in periods),
+        )
         return self._response_pdf(
-            'prodcons',
+            f'prodcons_{params}',
             export_prodcons(submission=None, periods=periods, parties=parties)
         )
 
