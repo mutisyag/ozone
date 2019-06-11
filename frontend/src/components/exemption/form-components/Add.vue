@@ -2,7 +2,7 @@
   <div v-if="tabName">
     <div class="container">
       <h5 class="mt-2">
-        <span v-translate>Add ssfasfsaubstances</span>
+        <span v-translate>Add substances</span>
       </h5>
       <small>
         <span
