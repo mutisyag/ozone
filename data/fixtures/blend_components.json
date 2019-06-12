@@ -1,8 +1,8 @@
 [
   {
     "fields": {
-      "blend_id": 13,
-      "cnumber": "22",
+      "blend_id": 17,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.53,
       "substance": 36
@@ -12,19 +12,19 @@
   },
   {
     "fields": {
-      "blend_id": 13,
-      "cnumber": "152",
+      "blend_id": 17,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.13,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 2
   },
   {
     "fields": {
-      "blend_id": 13,
-      "cnumber": "124",
+      "blend_id": 17,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.34,
       "substance": 26
@@ -34,8 +34,8 @@
   },
   {
     "fields": {
-      "blend_id": 14,
-      "cnumber": "22",
+      "blend_id": 18,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.61,
       "substance": 36
@@ -45,19 +45,19 @@
   },
   {
     "fields": {
-      "blend_id": 14,
-      "cnumber": "152",
+      "blend_id": 18,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.11,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 5
   },
   {
     "fields": {
-      "blend_id": 14,
-      "cnumber": "124",
+      "blend_id": 18,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.28,
       "substance": 26
@@ -67,8 +67,8 @@
   },
   {
     "fields": {
-      "blend_id": 15,
-      "cnumber": "22",
+      "blend_id": 19,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.33,
       "substance": 36
@@ -78,19 +78,19 @@
   },
   {
     "fields": {
-      "blend_id": 15,
-      "cnumber": "152",
+      "blend_id": 19,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.15,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 8
   },
   {
     "fields": {
-      "blend_id": 15,
-      "cnumber": "124",
+      "blend_id": 19,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.52,
       "substance": 26
@@ -100,30 +100,30 @@
   },
   {
     "fields": {
-      "blend_id": 16,
-      "cnumber": "125",
+      "blend_id": 20,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.6,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 10
   },
   {
     "fields": {
-      "blend_id": 16,
-      "cnumber": "290",
+      "blend_id": 20,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.02,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 11
   },
   {
     "fields": {
-      "blend_id": 16,
-      "cnumber": "22",
+      "blend_id": 20,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.38,
       "substance": 36
@@ -133,30 +133,30 @@
   },
   {
     "fields": {
-      "blend_id": 17,
-      "cnumber": "125",
+      "blend_id": 21,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.38,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 13
   },
   {
     "fields": {
-      "blend_id": 17,
-      "cnumber": "290",
+      "blend_id": 21,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.02,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 14
   },
   {
     "fields": {
-      "blend_id": 17,
-      "cnumber": "22",
+      "blend_id": 21,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
@@ -166,19 +166,19 @@
   },
   {
     "fields": {
-      "blend_id": 18,
-      "cnumber": "290",
+      "blend_id": 22,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.05,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 16
   },
   {
     "fields": {
-      "blend_id": 18,
-      "cnumber": "22",
+      "blend_id": 22,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.75,
       "substance": 36
@@ -188,30 +188,30 @@
   },
   {
     "fields": {
-      "blend_id": 18,
-      "cnumber": "218",
+      "blend_id": 22,
+      "cnumber": 218,
       "component_name": "PFC-218",
       "percentage": 0.2,
-      "substance": 135
+      "substance": 289
     },
     "model": "core.blendcomponent",
     "pk": 18
   },
   {
     "fields": {
-      "blend_id": 19,
-      "cnumber": "290",
+      "blend_id": 23,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.05,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 19
   },
   {
     "fields": {
-      "blend_id": 19,
-      "cnumber": "22",
+      "blend_id": 23,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.56,
       "substance": 36
@@ -221,52 +221,52 @@
   },
   {
     "fields": {
-      "blend_id": 19,
-      "cnumber": "218",
+      "blend_id": 23,
+      "cnumber": 218,
       "component_name": "PFC-218",
       "percentage": 0.39,
-      "substance": 135
+      "substance": 289
     },
     "model": "core.blendcomponent",
     "pk": 21
   },
   {
     "fields": {
-      "blend_id": 20,
-      "cnumber": "125",
+      "blend_id": 24,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.44,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 22
   },
   {
     "fields": {
-      "blend_id": 20,
-      "cnumber": "143",
+      "blend_id": 24,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.52,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 23
   },
   {
     "fields": {
-      "blend_id": 20,
-      "cnumber": "134",
+      "blend_id": 24,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.04,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 24
   },
   {
     "fields": {
-      "blend_id": 22,
-      "cnumber": "22",
+      "blend_id": 26,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.55,
       "substance": 36
@@ -276,19 +276,19 @@
   },
   {
     "fields": {
-      "blend_id": 22,
-      "cnumber": "600",
+      "blend_id": 26,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.04,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 26
   },
   {
     "fields": {
-      "blend_id": 22,
-      "cnumber": "142",
+      "blend_id": 26,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.41,
       "substance": 33
@@ -298,261 +298,261 @@
   },
   {
     "fields": {
-      "blend_id": 23,
-      "cnumber": "32",
+      "blend_id": 28,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 28
   },
   {
     "fields": {
-      "blend_id": 23,
-      "cnumber": "125",
+      "blend_id": 28,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.4,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 29
   },
   {
     "fields": {
-      "blend_id": 23,
-      "cnumber": "134",
+      "blend_id": 28,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.4,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 30
   },
   {
     "fields": {
-      "blend_id": 24,
-      "cnumber": "32",
+      "blend_id": 29,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.1,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 31
   },
   {
     "fields": {
-      "blend_id": 24,
-      "cnumber": "125",
+      "blend_id": 29,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.7,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 32
   },
   {
     "fields": {
-      "blend_id": 24,
-      "cnumber": "134",
+      "blend_id": 29,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.2,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 33
   },
   {
     "fields": {
-      "blend_id": 25,
-      "cnumber": "32",
+      "blend_id": 30,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.23,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 34
   },
   {
     "fields": {
-      "blend_id": 25,
-      "cnumber": "125",
+      "blend_id": 30,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 35
   },
   {
     "fields": {
-      "blend_id": 25,
-      "cnumber": "134",
+      "blend_id": 30,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.52,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 36
   },
   {
     "fields": {
-      "blend_id": 26,
-      "cnumber": "32",
+      "blend_id": 31,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.15,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 37
   },
   {
     "fields": {
-      "blend_id": 26,
-      "cnumber": "125",
+      "blend_id": 31,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.15,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 38
   },
   {
     "fields": {
-      "blend_id": 26,
-      "cnumber": "134",
+      "blend_id": 31,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.7,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 39
   },
   {
     "fields": {
-      "blend_id": 27,
-      "cnumber": "32",
+      "blend_id": 32,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.25,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 40
   },
   {
     "fields": {
-      "blend_id": 27,
-      "cnumber": "125",
+      "blend_id": 32,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.15,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 41
   },
   {
     "fields": {
-      "blend_id": 27,
-      "cnumber": "134",
+      "blend_id": 32,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.6,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 42
   },
   {
     "fields": {
-      "blend_id": 28,
-      "cnumber": "32",
+      "blend_id": 33,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.3,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 43
   },
   {
     "fields": {
-      "blend_id": 28,
-      "cnumber": "125",
+      "blend_id": 33,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.3,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 44
   },
   {
     "fields": {
-      "blend_id": 28,
-      "cnumber": "134",
+      "blend_id": 33,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.4,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 45
   },
   {
     "fields": {
-      "blend_id": 29,
-      "cnumber": "32",
+      "blend_id": 34,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.025,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 46
   },
   {
     "fields": {
-      "blend_id": 29,
-      "cnumber": "125",
+      "blend_id": 34,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.025,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 47
   },
   {
     "fields": {
-      "blend_id": 29,
-      "cnumber": "134",
+      "blend_id": 34,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.95,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 48
   },
   {
     "fields": {
-      "blend_id": 30,
-      "cnumber": "125",
+      "blend_id": 37,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.07,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 49
   },
   {
     "fields": {
-      "blend_id": 30,
-      "cnumber": "143",
+      "blend_id": 37,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.46,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 50
   },
   {
     "fields": {
-      "blend_id": 30,
-      "cnumber": "22",
+      "blend_id": 37,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.47,
       "substance": 36
@@ -562,8 +562,8 @@
   },
   {
     "fields": {
-      "blend_id": 31,
-      "cnumber": "22",
+      "blend_id": 38,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
@@ -573,8 +573,8 @@
   },
   {
     "fields": {
-      "blend_id": 31,
-      "cnumber": "124",
+      "blend_id": 38,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.25,
       "substance": 26
@@ -584,8 +584,8 @@
   },
   {
     "fields": {
-      "blend_id": 31,
-      "cnumber": "142",
+      "blend_id": 38,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.15,
       "substance": 33
@@ -595,8 +595,8 @@
   },
   {
     "fields": {
-      "blend_id": 32,
-      "cnumber": "22",
+      "blend_id": 39,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.65,
       "substance": 36
@@ -606,8 +606,8 @@
   },
   {
     "fields": {
-      "blend_id": 32,
-      "cnumber": "124",
+      "blend_id": 39,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.25,
       "substance": 26
@@ -617,8 +617,8 @@
   },
   {
     "fields": {
-      "blend_id": 32,
-      "cnumber": "142",
+      "blend_id": 39,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.1,
       "substance": 33
@@ -628,63 +628,63 @@
   },
   {
     "fields": {
-      "blend_id": 33,
-      "cnumber": "32",
+      "blend_id": 40,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.5,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 58
   },
   {
     "fields": {
-      "blend_id": 33,
-      "cnumber": "125",
+      "blend_id": 40,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.5,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 59
   },
   {
     "fields": {
-      "blend_id": 34,
-      "cnumber": "32",
+      "blend_id": 41,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.45,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 60
   },
   {
     "fields": {
-      "blend_id": 34,
-      "cnumber": "125",
+      "blend_id": 41,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.55,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 61
   },
   {
     "fields": {
-      "blend_id": 35,
-      "cnumber": "1270",
+      "blend_id": 42,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.015,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 62
   },
   {
     "fields": {
-      "blend_id": 35,
-      "cnumber": "22",
+      "blend_id": 42,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.875,
       "substance": 36
@@ -694,30 +694,30 @@
   },
   {
     "fields": {
-      "blend_id": 35,
-      "cnumber": "152",
+      "blend_id": 42,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.11,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 64
   },
   {
     "fields": {
-      "blend_id": 36,
-      "cnumber": "1270",
+      "blend_id": 43,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.03,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 65
   },
   {
     "fields": {
-      "blend_id": 36,
-      "cnumber": "22",
+      "blend_id": 43,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.94,
       "substance": 36
@@ -727,19 +727,19 @@
   },
   {
     "fields": {
-      "blend_id": 36,
-      "cnumber": "152",
+      "blend_id": 43,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.03,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 67
   },
   {
     "fields": {
-      "blend_id": 37,
-      "cnumber": "22",
+      "blend_id": 45,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.7,
       "substance": 36
@@ -749,19 +749,19 @@
   },
   {
     "fields": {
-      "blend_id": 37,
-      "cnumber": "218",
+      "blend_id": 45,
+      "cnumber": 218,
       "component_name": "PFC-218",
       "percentage": 0.05,
-      "substance": 135
+      "substance": 289
     },
     "model": "core.blendcomponent",
     "pk": 69
   },
   {
     "fields": {
-      "blend_id": 37,
-      "cnumber": "142",
+      "blend_id": 45,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.25,
       "substance": 33
@@ -771,41 +771,41 @@
   },
   {
     "fields": {
-      "blend_id": 38,
-      "cnumber": "218",
+      "blend_id": 46,
+      "cnumber": 218,
       "component_name": "PFC-218",
       "percentage": 0.09,
-      "substance": 135
+      "substance": 289
     },
     "model": "core.blendcomponent",
     "pk": 71
   },
   {
     "fields": {
-      "blend_id": 38,
-      "cnumber": "134",
+      "blend_id": 46,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.88,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 72
   },
   {
     "fields": {
-      "blend_id": 38,
-      "cnumber": "600",
+      "blend_id": 46,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.03,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 73
   },
   {
     "fields": {
-      "blend_id": 39,
-      "cnumber": "22",
+      "blend_id": 47,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.51,
       "substance": 36
@@ -815,8 +815,8 @@
   },
   {
     "fields": {
-      "blend_id": 39,
-      "cnumber": "124",
+      "blend_id": 47,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.285,
       "substance": 26
@@ -826,19 +826,19 @@
   },
   {
     "fields": {
-      "blend_id": 39,
-      "cnumber": "600",
+      "blend_id": 47,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.04,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 76
   },
   {
     "fields": {
-      "blend_id": 39,
-      "cnumber": "142",
+      "blend_id": 47,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.165,
       "substance": 33
@@ -848,8 +848,8 @@
   },
   {
     "fields": {
-      "blend_id": 40,
-      "cnumber": "22",
+      "blend_id": 48,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.5,
       "substance": 36
@@ -859,8 +859,8 @@
   },
   {
     "fields": {
-      "blend_id": 40,
-      "cnumber": "124",
+      "blend_id": 48,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.39,
       "substance": 26
@@ -870,19 +870,19 @@
   },
   {
     "fields": {
-      "blend_id": 40,
-      "cnumber": "600",
+      "blend_id": 48,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.015,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 80
   },
   {
     "fields": {
-      "blend_id": 40,
-      "cnumber": "142",
+      "blend_id": 48,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.095,
       "substance": 33
@@ -892,8 +892,8 @@
   },
   {
     "fields": {
-      "blend_id": 41,
-      "cnumber": "22",
+      "blend_id": 49,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.82,
       "substance": 36
@@ -903,19 +903,19 @@
   },
   {
     "fields": {
-      "blend_id": 41,
-      "cnumber": "152",
+      "blend_id": 49,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.18,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 83
   },
   {
     "fields": {
-      "blend_id": 42,
-      "cnumber": "22",
+      "blend_id": 50,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.25,
       "substance": 36
@@ -925,30 +925,30 @@
   },
   {
     "fields": {
-      "blend_id": 42,
-      "cnumber": "152",
+      "blend_id": 50,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.75,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 85
   },
   {
     "fields": {
-      "blend_id": 43,
-      "cnumber": "134",
+      "blend_id": 51,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.59,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 86
   },
   {
     "fields": {
-      "blend_id": 43,
-      "cnumber": "124",
+      "blend_id": 51,
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.395,
       "substance": 26
@@ -958,129 +958,129 @@
   },
   {
     "fields": {
-      "blend_id": 43,
-      "cnumber": "600",
+      "blend_id": 51,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.015,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 88
   },
   {
     "fields": {
-      "blend_id": 44,
-      "cnumber": "125",
+      "blend_id": 52,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.466,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 89
   },
   {
     "fields": {
-      "blend_id": 44,
-      "cnumber": "134",
+      "blend_id": 52,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.5,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 90
   },
   {
     "fields": {
-      "blend_id": 44,
-      "cnumber": "600",
+      "blend_id": 52,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.034,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 91
   },
   {
     "fields": {
-      "blend_id": 45,
-      "cnumber": "125",
+      "blend_id": 53,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.79,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 92
   },
   {
     "fields": {
-      "blend_id": 45,
-      "cnumber": "134",
+      "blend_id": 53,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.183,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 93
   },
   {
     "fields": {
-      "blend_id": 45,
-      "cnumber": "600",
+      "blend_id": 53,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.027,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 94
   },
   {
     "fields": {
-      "blend_id": 46,
-      "cnumber": "125",
+      "blend_id": 54,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.195,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 95
   },
   {
     "fields": {
-      "blend_id": 46,
-      "cnumber": "134",
+      "blend_id": 54,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.788,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 96
   },
   {
     "fields": {
-      "blend_id": 46,
-      "cnumber": "600",
+      "blend_id": 54,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.017,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 97
   },
   {
     "fields": {
-      "blend_id": 47,
-      "cnumber": "290",
+      "blend_id": 55,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.015,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 98
   },
   {
     "fields": {
-      "blend_id": 47,
-      "cnumber": "22",
+      "blend_id": 55,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.96,
       "substance": 36
@@ -1090,96 +1090,96 @@
   },
   {
     "fields": {
-      "blend_id": 47,
-      "cnumber": "152",
+      "blend_id": 55,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.025,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 100
   },
   {
     "fields": {
-      "blend_id": 48,
-      "cnumber": "125",
+      "blend_id": 56,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.77,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 101
   },
   {
     "fields": {
-      "blend_id": 48,
-      "cnumber": "134",
+      "blend_id": 56,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.19,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 102
   },
   {
     "fields": {
-      "blend_id": 48,
-      "cnumber": "E170",
+      "blend_id": 56,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.04,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 103
   },
   {
     "fields": {
-      "blend_id": 49,
-      "cnumber": "125",
+      "blend_id": 57,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.485,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 104
   },
   {
     "fields": {
-      "blend_id": 49,
-      "cnumber": "134",
+      "blend_id": 57,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.48,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 105
   },
   {
     "fields": {
-      "blend_id": 49,
-      "cnumber": "E170",
+      "blend_id": 57,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.035,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 106
   },
   {
     "fields": {
-      "blend_id": 50,
-      "cnumber": "134",
+      "blend_id": 58,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.88,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 107
   },
   {
     "fields": {
-      "blend_id": 50,
-      "cnumber": "142",
+      "blend_id": 58,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.12,
       "substance": 33
@@ -1189,2021 +1189,2021 @@
   },
   {
     "fields": {
-      "blend_id": 51,
-      "cnumber": "125",
+      "blend_id": 59,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.58,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 109
   },
   {
     "fields": {
-      "blend_id": 51,
-      "cnumber": "134",
+      "blend_id": 59,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 110
   },
   {
     "fields": {
-      "blend_id": 52,
-      "cnumber": "125",
+      "blend_id": 60,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.85,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 111
   },
   {
     "fields": {
-      "blend_id": 52,
-      "cnumber": "134",
+      "blend_id": 60,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.15,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 112
   },
   {
     "fields": {
-      "blend_id": 53,
-      "cnumber": "125",
+      "blend_id": 61,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.851,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 113
   },
   {
     "fields": {
-      "blend_id": 53,
-      "cnumber": "134",
+      "blend_id": 61,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.115,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 114
   },
   {
     "fields": {
-      "blend_id": 53,
-      "cnumber": "600",
+      "blend_id": 61,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.034,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 115
   },
   {
     "fields": {
-      "blend_id": 54,
-      "cnumber": "125",
+      "blend_id": 62,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.55,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 116
   },
   {
     "fields": {
-      "blend_id": 54,
-      "cnumber": "134",
+      "blend_id": 62,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 117
   },
   {
     "fields": {
-      "blend_id": 54,
-      "cnumber": "600",
+      "blend_id": 62,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.03,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 118
   },
   {
     "fields": {
-      "blend_id": 55,
-      "cnumber": "125",
+      "blend_id": 63,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.82,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 119
   },
   {
     "fields": {
-      "blend_id": 55,
-      "cnumber": "134",
+      "blend_id": 63,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.15,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 120
   },
   {
     "fields": {
-      "blend_id": 55,
-      "cnumber": "600",
+      "blend_id": 63,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.03,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 121
   },
   {
     "fields": {
-      "blend_id": 56,
-      "cnumber": "125",
+      "blend_id": 64,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.651,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 122
   },
   {
     "fields": {
-      "blend_id": 56,
-      "cnumber": "134",
+      "blend_id": 64,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.315,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 123
   },
   {
     "fields": {
-      "blend_id": 56,
-      "cnumber": "600",
+      "blend_id": 64,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.034,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 124
   },
   {
     "fields": {
-      "blend_id": 57,
-      "cnumber": "125",
+      "blend_id": 65,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.58,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 125
   },
   {
     "fields": {
-      "blend_id": 57,
-      "cnumber": "134",
+      "blend_id": 65,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.393,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 126
   },
   {
     "fields": {
-      "blend_id": 57,
-      "cnumber": "600",
+      "blend_id": 65,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.027,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 127
   },
   {
     "fields": {
-      "blend_id": 58,
-      "cnumber": "134",
+      "blend_id": 66,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.525,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 128
   },
   {
     "fields": {
-      "blend_id": 58,
-      "cnumber": "227",
+      "blend_id": 66,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.475,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 129
   },
   {
     "fields": {
-      "blend_id": 59,
-      "cnumber": "125",
+      "blend_id": 67,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.505,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 130
   },
   {
     "fields": {
-      "blend_id": 59,
-      "cnumber": "134",
+      "blend_id": 67,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.47,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 131
   },
   {
     "fields": {
-      "blend_id": 59,
-      "cnumber": "600",
+      "blend_id": 67,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.009,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 132
   },
   {
     "fields": {
-      "blend_id": 59,
-      "cnumber": "600",
+      "blend_id": 67,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.01,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 133
   },
   {
     "fields": {
-      "blend_id": 59,
-      "cnumber": "601",
+      "blend_id": 67,
+      "cnumber": 601,
       "component_name": "HC-601a",
       "percentage": 0.006,
-      "substance": 126
+      "substance": 295
     },
     "model": "core.blendcomponent",
     "pk": 134
   },
   {
     "fields": {
-      "blend_id": 60,
-      "cnumber": "32",
+      "blend_id": 68,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.185,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 135
   },
   {
     "fields": {
-      "blend_id": 60,
-      "cnumber": "134",
+      "blend_id": 68,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.695,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 136
   },
   {
     "fields": {
-      "blend_id": 60,
-      "cnumber": "227",
+      "blend_id": 68,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.12,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 137
   },
   {
     "fields": {
-      "blend_id": 61,
-      "cnumber": "125",
+      "blend_id": 69,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.051,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 138
   },
   {
     "fields": {
-      "blend_id": 61,
-      "cnumber": "134",
+      "blend_id": 69,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.93,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 139
   },
   {
     "fields": {
-      "blend_id": 61,
-      "cnumber": "600",
+      "blend_id": 69,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.013,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 140
   },
   {
     "fields": {
-      "blend_id": 61,
-      "cnumber": "601",
+      "blend_id": 69,
+      "cnumber": 601,
       "component_name": "HC-601a",
       "percentage": 0.006,
-      "substance": 126
+      "substance": 295
     },
     "model": "core.blendcomponent",
     "pk": 141
   },
   {
     "fields": {
-      "blend_id": 62,
-      "cnumber": "32",
+      "blend_id": 70,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.15,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 142
   },
   {
     "fields": {
-      "blend_id": 62,
-      "cnumber": "125",
+      "blend_id": 70,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 143
   },
   {
     "fields": {
-      "blend_id": 62,
-      "cnumber": "143",
+      "blend_id": 70,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.1,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 144
   },
   {
     "fields": {
-      "blend_id": 62,
-      "cnumber": "134",
+      "blend_id": 70,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.5,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 145
   },
   {
     "fields": {
-      "blend_id": 63,
-      "cnumber": "125",
+      "blend_id": 71,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.775,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 146
   },
   {
     "fields": {
-      "blend_id": 63,
-      "cnumber": "143",
+      "blend_id": 71,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.2,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 147
   },
   {
     "fields": {
-      "blend_id": 63,
-      "cnumber": "290",
+      "blend_id": 71,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.006,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 148
   },
   {
     "fields": {
-      "blend_id": 63,
-      "cnumber": "600",
+      "blend_id": 71,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.019,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 149
   },
   {
     "fields": {
-      "blend_id": 64,
-      "cnumber": "E170",
+      "blend_id": 72,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.6,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 150
   },
   {
     "fields": {
-      "blend_id": 64,
-      "cnumber": "152",
+      "blend_id": 72,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.1,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 151
   },
   {
     "fields": {
-      "blend_id": 64,
-      "cnumber": "600",
+      "blend_id": 72,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.3,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 152
   },
   {
     "fields": {
-      "blend_id": 65,
-      "cnumber": "152",
+      "blend_id": 73,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.76,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 153
   },
   {
     "fields": {
-      "blend_id": 65,
-      "cnumber": "600",
+      "blend_id": 73,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.24,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 154
   },
   {
     "fields": {
-      "blend_id": 66,
-      "cnumber": "290",
+      "blend_id": 74,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.71,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 155
   },
   {
     "fields": {
-      "blend_id": 66,
-      "cnumber": "152",
+      "blend_id": 74,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.29,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 156
   },
   {
     "fields": {
-      "blend_id": 67,
-      "cnumber": "1270",
+      "blend_id": 75,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.8,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 157
   },
   {
     "fields": {
-      "blend_id": 67,
-      "cnumber": "E170",
+      "blend_id": 75,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.2,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 158
   },
   {
     "fields": {
-      "blend_id": 68,
-      "cnumber": "1270",
+      "blend_id": 76,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.3,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 159
   },
   {
     "fields": {
-      "blend_id": 68,
-      "cnumber": "290",
+      "blend_id": 76,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.7,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 160
   },
   {
     "fields": {
-      "blend_id": 69,
-      "cnumber": "1270",
+      "blend_id": 77,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.05,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 161
   },
   {
     "fields": {
-      "blend_id": 69,
-      "cnumber": "290",
+      "blend_id": 77,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.95,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 162
   },
   {
     "fields": {
-      "blend_id": 70,
-      "cnumber": "1270",
+      "blend_id": 78,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.25,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 163
   },
   {
     "fields": {
-      "blend_id": 70,
-      "cnumber": "290",
+      "blend_id": 78,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.75,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 164
   },
   {
     "fields": {
-      "blend_id": 71,
-      "cnumber": "125",
+      "blend_id": 79,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.632,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 165
   },
   {
     "fields": {
-      "blend_id": 71,
-      "cnumber": "143",
+      "blend_id": 79,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.18,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 166
   },
   {
     "fields": {
-      "blend_id": 71,
-      "cnumber": "134",
+      "blend_id": 79,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.16,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 167
   },
   {
     "fields": {
-      "blend_id": 71,
-      "cnumber": "600",
+      "blend_id": 79,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.028,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 168
   },
   {
     "fields": {
-      "blend_id": 72,
-      "cnumber": "E170",
+      "blend_id": 80,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.8,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 169
   },
   {
     "fields": {
-      "blend_id": 72,
-      "cnumber": "152",
+      "blend_id": 80,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.2,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 170
   },
   {
     "fields": {
-      "blend_id": 73,
-      "cnumber": "290",
+      "blend_id": 81,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.56,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 171
   },
   {
     "fields": {
-      "blend_id": 73,
-      "cnumber": "600",
+      "blend_id": 81,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.44,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 172
   },
   {
     "fields": {
-      "blend_id": 74,
-      "cnumber": "290",
+      "blend_id": 82,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.52,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 173
   },
   {
     "fields": {
-      "blend_id": 74,
-      "cnumber": "600",
+      "blend_id": 82,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.48,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 174
   },
   {
     "fields": {
-      "blend_id": 75,
-      "cnumber": "125",
+      "blend_id": 84,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.195,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 175
   },
   {
     "fields": {
-      "blend_id": 75,
-      "cnumber": "134",
+      "blend_id": 84,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.785,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 176
   },
   {
     "fields": {
-      "blend_id": 75,
-      "cnumber": "600",
+      "blend_id": 84,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.014,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 177
   },
   {
     "fields": {
-      "blend_id": 75,
-      "cnumber": "601",
+      "blend_id": 84,
+      "cnumber": 601,
       "component_name": "HC-601",
       "percentage": 0.006,
-      "substance": 125
+      "substance": 294
     },
     "model": "core.blendcomponent",
     "pk": 178
   },
   {
     "fields": {
-      "blend_id": 76,
-      "cnumber": "32",
+      "blend_id": 85,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.085,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 179
   },
   {
     "fields": {
-      "blend_id": 76,
-      "cnumber": "125",
+      "blend_id": 85,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.45,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 180
   },
   {
     "fields": {
-      "blend_id": 76,
-      "cnumber": "134",
+      "blend_id": 85,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.442,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 181
   },
   {
     "fields": {
-      "blend_id": 76,
-      "cnumber": "600",
+      "blend_id": 85,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.017,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 182
   },
   {
     "fields": {
-      "blend_id": 76,
-      "cnumber": "601",
+      "blend_id": 85,
+      "cnumber": 601,
       "component_name": "HC-601a",
       "percentage": 0.006,
-      "substance": 126
+      "substance": 295
     },
     "model": "core.blendcomponent",
     "pk": 183
   },
   {
     "fields": {
-      "blend_id": 77,
-      "cnumber": "32",
+      "blend_id": 86,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.5,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 184
   },
   {
     "fields": {
-      "blend_id": 77,
-      "cnumber": "125",
+      "blend_id": 86,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.47,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 185
   },
   {
     "fields": {
-      "blend_id": 77,
-      "cnumber": "600",
+      "blend_id": 86,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.03,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 186
   },
   {
     "fields": {
-      "blend_id": 78,
-      "cnumber": "290",
+      "blend_id": 87,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.006,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 187
   },
   {
     "fields": {
-      "blend_id": 78,
-      "cnumber": "134",
+      "blend_id": 87,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.016,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 188
   },
   {
     "fields": {
-      "blend_id": 78,
-      "cnumber": "152",
+      "blend_id": 87,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.978,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 189
   },
   {
     "fields": {
-      "blend_id": 79,
-      "cnumber": "170",
+      "blend_id": 88,
+      "cnumber": 170,
       "component_name": "HC-170",
       "percentage": 0.031,
-      "substance": 121
+      "substance": 287
     },
     "model": "core.blendcomponent",
     "pk": 190
   },
   {
     "fields": {
-      "blend_id": 79,
-      "cnumber": "290",
+      "blend_id": 88,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.548,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 191
   },
   {
     "fields": {
-      "blend_id": 79,
-      "cnumber": "600",
+      "blend_id": 88,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.06,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 192
   },
   {
     "fields": {
-      "blend_id": 79,
-      "cnumber": "600",
+      "blend_id": 88,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.361,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 193
   },
   {
     "fields": {
-      "blend_id": 80,
-      "cnumber": "32",
+      "blend_id": 89,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.31,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 194
   },
   {
     "fields": {
-      "blend_id": 80,
-      "cnumber": "125",
+      "blend_id": 89,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.31,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 195
   },
   {
     "fields": {
-      "blend_id": 80,
-      "cnumber": "134",
+      "blend_id": 89,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.3,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 196
   },
   {
     "fields": {
-      "blend_id": 80,
-      "cnumber": "152",
+      "blend_id": 89,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.03,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 197
   },
   {
     "fields": {
-      "blend_id": 80,
-      "cnumber": "227",
+      "blend_id": 89,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.05,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 198
   },
   {
     "fields": {
-      "blend_id": 81,
-      "cnumber": "1270",
+      "blend_id": 90,
+      "cnumber": 1270,
       "component_name": "HO-1270",
       "percentage": 0.55,
-      "substance": 132
+      "substance": 285
     },
     "model": "core.blendcomponent",
     "pk": 199
   },
   {
     "fields": {
-      "blend_id": 81,
-      "cnumber": "290",
+      "blend_id": 90,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.4,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 200
   },
   {
     "fields": {
-      "blend_id": 81,
-      "cnumber": "600",
+      "blend_id": 90,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.05,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 201
   },
   {
     "fields": {
-      "blend_id": 82,
-      "cnumber": "32",
+      "blend_id": 91,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.12,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 202
   },
   {
     "fields": {
-      "blend_id": 82,
-      "cnumber": "152",
+      "blend_id": 91,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.05,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 203
   },
   {
     "fields": {
-      "blend_id": 82,
-      "cnumber": "1234",
+      "blend_id": 91,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.83,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 204
   },
   {
     "fields": {
-      "blend_id": 83,
-      "cnumber": "32",
+      "blend_id": 92,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.415,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 205
   },
   {
     "fields": {
-      "blend_id": 83,
-      "cnumber": "1234",
+      "blend_id": 92,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.485,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 206
   },
   {
     "fields": {
-      "blend_id": 83,
-      "cnumber": "152",
+      "blend_id": 92,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.1,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 207
   },
   {
     "fields": {
-      "blend_id": 84,
-      "cnumber": "744",
+      "blend_id": 93,
+      "cnumber": 744,
       "component_name": "R-744",
       "percentage": 0.06,
-      "substance": 137
+      "substance": 296
     },
     "model": "core.blendcomponent",
     "pk": 208
   },
   {
     "fields": {
-      "blend_id": 84,
-      "cnumber": "134",
+      "blend_id": 93,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.09,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 209
   },
   {
     "fields": {
-      "blend_id": 84,
-      "cnumber": "1234",
+      "blend_id": 93,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.85,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 210
   },
   {
     "fields": {
-      "blend_id": 85,
-      "cnumber": "32",
+      "blend_id": 94,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 211
   },
   {
     "fields": {
-      "blend_id": 85,
-      "cnumber": "1234",
+      "blend_id": 94,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.29,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 212
   },
   {
     "fields": {
-      "blend_id": 85,
-      "cnumber": "600",
+      "blend_id": 94,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.03,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 213
   },
   {
     "fields": {
-      "blend_id": 86,
-      "cnumber": "32",
+      "blend_id": 95,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 214
   },
   {
     "fields": {
-      "blend_id": 86,
-      "cnumber": "125",
+      "blend_id": 95,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.035,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 215
   },
   {
     "fields": {
-      "blend_id": 86,
-      "cnumber": "1234",
+      "blend_id": 95,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.285,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 216
   },
   {
     "fields": {
-      "blend_id": 87,
-      "cnumber": "32",
+      "blend_id": 96,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 217
   },
   {
     "fields": {
-      "blend_id": 87,
-      "cnumber": "125",
+      "blend_id": 96,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.08,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 218
   },
   {
     "fields": {
-      "blend_id": 87,
-      "cnumber": "1234",
+      "blend_id": 96,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.24,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 219
   },
   {
     "fields": {
-      "blend_id": 88,
-      "cnumber": "32",
+      "blend_id": 97,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.26,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 220
   },
   {
     "fields": {
-      "blend_id": 88,
-      "cnumber": "125",
+      "blend_id": 97,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.26,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 221
   },
   {
     "fields": {
-      "blend_id": 88,
-      "cnumber": "1234",
+      "blend_id": 97,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.2,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 222
   },
   {
     "fields": {
-      "blend_id": 88,
-      "cnumber": "134",
+      "blend_id": 97,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.21,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 223
   },
   {
     "fields": {
-      "blend_id": 88,
-      "cnumber": "1234",
+      "blend_id": 97,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.07,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 224
   },
   {
     "fields": {
-      "blend_id": 89,
-      "cnumber": "32",
+      "blend_id": 98,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.243,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 225
   },
   {
     "fields": {
-      "blend_id": 89,
-      "cnumber": "125",
+      "blend_id": 98,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.247,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 226
   },
   {
     "fields": {
-      "blend_id": 89,
-      "cnumber": "1234",
+      "blend_id": 98,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.253,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 227
   },
   {
     "fields": {
-      "blend_id": 89,
-      "cnumber": "134",
+      "blend_id": 98,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.257,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 228
   },
   {
     "fields": {
-      "blend_id": 90,
-      "cnumber": "32",
+      "blend_id": 99,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.252,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 229
   },
   {
     "fields": {
-      "blend_id": 90,
-      "cnumber": "125",
+      "blend_id": 99,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.243,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 230
   },
   {
     "fields": {
-      "blend_id": 90,
-      "cnumber": "1234",
+      "blend_id": 99,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.232,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 231
   },
   {
     "fields": {
-      "blend_id": 90,
-      "cnumber": "134",
+      "blend_id": 99,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.273,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 232
   },
   {
     "fields": {
-      "blend_id": 91,
-      "cnumber": "32",
+      "blend_id": 100,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 233
   },
   {
     "fields": {
-      "blend_id": 91,
-      "cnumber": "125",
+      "blend_id": 100,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.2,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 234
   },
   {
     "fields": {
-      "blend_id": 91,
-      "cnumber": "1234",
+      "blend_id": 100,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.31,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 235
   },
   {
     "fields": {
-      "blend_id": 91,
-      "cnumber": "134",
+      "blend_id": 100,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.29,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 236
   },
   {
     "fields": {
-      "blend_id": 92,
-      "cnumber": "1234",
+      "blend_id": 101,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.58,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 237
   },
   {
     "fields": {
-      "blend_id": 92,
-      "cnumber": "134",
+      "blend_id": 101,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.42,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 238
   },
   {
     "fields": {
-      "blend_id": 93,
-      "cnumber": "1234",
+      "blend_id": 102,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.898,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 239
   },
   {
     "fields": {
-      "blend_id": 93,
-      "cnumber": "134",
+      "blend_id": 102,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.102,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 240
   },
   {
     "fields": {
-      "blend_id": 94,
-      "cnumber": "1234",
+      "blend_id": 103,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.888,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 241
   },
   {
     "fields": {
-      "blend_id": 94,
-      "cnumber": "134",
+      "blend_id": 103,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.112,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 242
   },
   {
     "fields": {
-      "blend_id": 95,
-      "cnumber": "1234",
+      "blend_id": 104,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.3,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 243
   },
   {
     "fields": {
-      "blend_id": 95,
-      "cnumber": "32",
+      "blend_id": 104,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.11,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 244
   },
   {
     "fields": {
-      "blend_id": 95,
-      "cnumber": "125",
+      "blend_id": 104,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.59,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 245
   },
   {
     "fields": {
-      "blend_id": 96,
-      "cnumber": "32",
+      "blend_id": 105,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.67,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 246
   },
   {
     "fields": {
-      "blend_id": 96,
-      "cnumber": "125",
+      "blend_id": 105,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.07,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 247
   },
   {
     "fields": {
-      "blend_id": 96,
-      "cnumber": "1234",
+      "blend_id": 105,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.26,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 248
   },
   {
     "fields": {
-      "blend_id": 97,
-      "cnumber": "32",
+      "blend_id": 106,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.125,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 249
   },
   {
     "fields": {
-      "blend_id": 97,
-      "cnumber": "125",
+      "blend_id": 106,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.61,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 250
   },
   {
     "fields": {
-      "blend_id": 97,
-      "cnumber": "1234",
+      "blend_id": 106,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.265,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 251
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "32",
+      "blend_id": 107,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.2,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 252
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "125",
+      "blend_id": 107,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.2,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 253
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "134",
+      "blend_id": 107,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.538,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 254
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "227",
+      "blend_id": 107,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.05,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 255
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "600",
+      "blend_id": 107,
+      "cnumber": 600,
       "component_name": "HC-600",
       "percentage": 0.006,
-      "substance": 123
+      "substance": 292
     },
     "model": "core.blendcomponent",
     "pk": 256
   },
   {
     "fields": {
-      "blend_id": 98,
-      "cnumber": "601",
+      "blend_id": 107,
+      "cnumber": 601,
       "component_name": "HC-601a",
       "percentage": 0.006,
-      "substance": 126
+      "substance": 295
     },
     "model": "core.blendcomponent",
     "pk": 257
   },
   {
     "fields": {
-      "blend_id": 99,
-      "cnumber": "32",
+      "blend_id": 108,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.35,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 258
   },
   {
     "fields": {
-      "blend_id": 99,
-      "cnumber": "1234",
+      "blend_id": 108,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.65,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 259
   },
   {
     "fields": {
-      "blend_id": 100,
-      "cnumber": "32",
+      "blend_id": 109,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.689,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 260
   },
   {
     "fields": {
-      "blend_id": 100,
-      "cnumber": "1234",
+      "blend_id": 109,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.311,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 261
   },
   {
     "fields": {
-      "blend_id": 101,
-      "cnumber": "32",
+      "blend_id": 110,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.215,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 262
   },
   {
     "fields": {
-      "blend_id": 101,
-      "cnumber": "1234",
+      "blend_id": 110,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.785,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 263
   },
   {
     "fields": {
-      "blend_id": 102,
-      "cnumber": "744",
+      "blend_id": 111,
+      "cnumber": 744,
       "component_name": "R-744",
       "percentage": 0.03,
-      "substance": 137
+      "substance": 296
     },
     "model": "core.blendcomponent",
     "pk": 264
   },
   {
     "fields": {
-      "blend_id": 102,
-      "cnumber": "32",
+      "blend_id": 111,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.215,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 265
   },
   {
     "fields": {
-      "blend_id": 102,
-      "cnumber": "1234",
+      "blend_id": 111,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.755,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 266
   },
   {
     "fields": {
-      "blend_id": 103,
-      "cnumber": "32",
+      "blend_id": 112,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.06,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 267
   },
   {
     "fields": {
-      "blend_id": 103,
-      "cnumber": "134",
+      "blend_id": 112,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.45,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 268
   },
   {
     "fields": {
-      "blend_id": 103,
-      "cnumber": "1234",
+      "blend_id": 112,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.49,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 269
   },
   {
     "fields": {
-      "blend_id": 104,
-      "cnumber": "32",
+      "blend_id": 113,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.18,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 270
   },
   {
     "fields": {
-      "blend_id": 104,
-      "cnumber": "1234",
+      "blend_id": 113,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.7,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 271
   },
   {
     "fields": {
-      "blend_id": 104,
-      "cnumber": "152",
+      "blend_id": 113,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.12,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 272
   },
   {
     "fields": {
-      "blend_id": 105,
-      "cnumber": "32",
+      "blend_id": 114,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.205,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 273
   },
   {
     "fields": {
-      "blend_id": 105,
-      "cnumber": "125",
+      "blend_id": 114,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.04,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 274
   },
   {
     "fields": {
-      "blend_id": 105,
-      "cnumber": "134",
+      "blend_id": 114,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.614,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 275
   },
   {
     "fields": {
-      "blend_id": 105,
-      "cnumber": "227",
+      "blend_id": 114,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.135,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 276
   },
   {
     "fields": {
-      "blend_id": 105,
-      "cnumber": "236",
+      "blend_id": 114,
+      "cnumber": 236,
       "component_name": "HFC-236fa",
       "percentage": 0.006,
-      "substance": 109
+      "substance": 108
     },
     "model": "core.blendcomponent",
     "pk": 277
   },
   {
     "fields": {
-      "blend_id": 106,
-      "cnumber": "32",
+      "blend_id": 115,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.68,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 278
   },
   {
     "fields": {
-      "blend_id": 106,
-      "cnumber": "1234",
+      "blend_id": 115,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.26,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 279
   },
   {
     "fields": {
-      "blend_id": 106,
-      "cnumber": "1234",
+      "blend_id": 115,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.06,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 280
   },
   {
     "fields": {
-      "blend_id": 107,
-      "cnumber": "32",
+      "blend_id": 116,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.21,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 281
   },
   {
     "fields": {
-      "blend_id": 107,
-      "cnumber": "1234",
+      "blend_id": 116,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.69,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 282
   },
   {
     "fields": {
-      "blend_id": 107,
-      "cnumber": "1234",
+      "blend_id": 116,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.1,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 283
   },
   {
     "fields": {
-      "blend_id": 108,
-      "cnumber": "32",
+      "blend_id": 117,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.12,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 284
   },
   {
     "fields": {
-      "blend_id": 108,
-      "cnumber": "125",
+      "blend_id": 117,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.52,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 285
   },
   {
     "fields": {
-      "blend_id": 108,
-      "cnumber": "134",
+      "blend_id": 117,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.14,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 286
   },
   {
     "fields": {
-      "blend_id": 108,
-      "cnumber": "1234",
+      "blend_id": 117,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.22,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 287
   },
   {
     "fields": {
-      "blend_id": 109,
-      "cnumber": "32",
+      "blend_id": 118,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.28,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 288
   },
   {
     "fields": {
-      "blend_id": 109,
-      "cnumber": "125",
+      "blend_id": 118,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.25,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 289
   },
   {
     "fields": {
-      "blend_id": 109,
-      "cnumber": "134",
+      "blend_id": 118,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.2,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 290
   },
   {
     "fields": {
-      "blend_id": 109,
-      "cnumber": "1234",
+      "blend_id": 118,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.27,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 291
   },
   {
     "fields": {
-      "blend_id": 110,
-      "cnumber": "12",
+      "blend_id": 125,
+      "cnumber": 12,
       "component_name": "CFC-12",
       "percentage": 0.738,
       "substance": 5
@@ -3213,19 +3213,19 @@
   },
   {
     "fields": {
-      "blend_id": 110,
-      "cnumber": "152",
+      "blend_id": 125,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.262,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 293
   },
   {
     "fields": {
-      "blend_id": 111,
-      "cnumber": "22",
+      "blend_id": 126,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.75,
       "substance": 36
@@ -3235,8 +3235,8 @@
   },
   {
     "fields": {
-      "blend_id": 111,
-      "cnumber": "12",
+      "blend_id": 126,
+      "cnumber": 12,
       "component_name": "CFC-12",
       "percentage": 0.25,
       "substance": 5
@@ -3246,8 +3246,8 @@
   },
   {
     "fields": {
-      "blend_id": 112,
-      "cnumber": "22",
+      "blend_id": 127,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.488,
       "substance": 36
@@ -3257,8 +3257,8 @@
   },
   {
     "fields": {
-      "blend_id": 112,
-      "cnumber": "115",
+      "blend_id": 127,
+      "cnumber": 115,
       "component_name": "CFC-115",
       "percentage": 0.512,
       "substance": 4
@@ -3268,19 +3268,19 @@
   },
   {
     "fields": {
-      "blend_id": 113,
-      "cnumber": "23",
+      "blend_id": 128,
+      "cnumber": 23,
       "component_name": "HFC-23",
       "percentage": 0.401,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 298
   },
   {
     "fields": {
-      "blend_id": 113,
-      "cnumber": "13",
+      "blend_id": 128,
+      "cnumber": 13,
       "component_name": "CFC-13",
       "percentage": 0.599,
       "substance": 11
@@ -3290,19 +3290,19 @@
   },
   {
     "fields": {
-      "blend_id": 114,
-      "cnumber": "32",
+      "blend_id": 129,
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.482,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 300
   },
   {
     "fields": {
-      "blend_id": 114,
-      "cnumber": "115",
+      "blend_id": 129,
+      "cnumber": 115,
       "component_name": "CFC-115",
       "percentage": 0.518,
       "substance": 4
@@ -3312,74 +3312,74 @@
   },
   {
     "fields": {
-      "blend_id": 117,
-      "cnumber": "125",
+      "blend_id": 132,
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.5,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 302
   },
   {
     "fields": {
-      "blend_id": 117,
-      "cnumber": "143",
+      "blend_id": 132,
+      "cnumber": 143,
       "component_name": "HFC-143a",
       "percentage": 0.5,
-      "substance": 102
+      "substance": 101
     },
     "model": "core.blendcomponent",
     "pk": 303
   },
   {
     "fields": {
-      "blend_id": 118,
-      "cnumber": "23",
+      "blend_id": 133,
+      "cnumber": 23,
       "component_name": "HFC-23",
       "percentage": 0.39,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 304
   },
   {
     "fields": {
-      "blend_id": 118,
-      "cnumber": "116",
+      "blend_id": 133,
+      "cnumber": 116,
       "component_name": "PFC-116",
       "percentage": 0.61,
-      "substance": 134
+      "substance": 283
     },
     "model": "core.blendcomponent",
     "pk": 305
   },
   {
     "fields": {
-      "blend_id": 119,
-      "cnumber": "23",
+      "blend_id": 134,
+      "cnumber": 23,
       "component_name": "HFC-23",
       "percentage": 0.46,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 306
   },
   {
     "fields": {
-      "blend_id": 119,
-      "cnumber": "116",
+      "blend_id": 134,
+      "cnumber": 116,
       "component_name": "PFC-116",
       "percentage": 0.54,
-      "substance": 134
+      "substance": 283
     },
     "model": "core.blendcomponent",
     "pk": 307
   },
   {
     "fields": {
-      "blend_id": 121,
-      "cnumber": "22",
+      "blend_id": 136,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.44,
       "substance": 36
@@ -3389,173 +3389,173 @@
   },
   {
     "fields": {
-      "blend_id": 121,
-      "cnumber": "218",
+      "blend_id": 136,
+      "cnumber": 218,
       "component_name": "PFC-218",
       "percentage": 0.56,
-      "substance": 135
+      "substance": 289
     },
     "model": "core.blendcomponent",
     "pk": 309
   },
   {
     "fields": {
-      "blend_id": 122,
-      "cnumber": "E170",
+      "blend_id": 137,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.88,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 310
   },
   {
     "fields": {
-      "blend_id": 122,
-      "cnumber": "600",
+      "blend_id": 137,
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.12,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 311
   },
   {
     "fields": {
-      "blend_id": 123,
-      "cnumber": "290",
+      "blend_id": 138,
+      "cnumber": 290,
       "component_name": "HC-290",
       "percentage": 0.95,
-      "substance": 122
+      "substance": 290
     },
     "model": "core.blendcomponent",
     "pk": 312
   },
   {
     "fields": {
-      "blend_id": 123,
-      "cnumber": "E170",
+      "blend_id": 138,
+      "cnumber": 170,
       "component_name": "HC-E170",
       "percentage": 0.05,
-      "substance": 127
+      "substance": 288
     },
     "model": "core.blendcomponent",
     "pk": 313
   },
   {
     "fields": {
-      "blend_id": 124,
-      "cnumber": "134",
+      "blend_id": 139,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.05,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 314
   },
   {
     "fields": {
-      "blend_id": 124,
-      "cnumber": "152",
+      "blend_id": 139,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.95,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 315
   },
   {
     "fields": {
-      "blend_id": 125,
-      "cnumber": "1234",
+      "blend_id": 140,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.56,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 316
   },
   {
     "fields": {
-      "blend_id": 125,
-      "cnumber": "134",
+      "blend_id": 140,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.44,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 317
   },
   {
     "fields": {
-      "blend_id": 126,
-      "cnumber": "1234",
+      "blend_id": 141,
+      "cnumber": 1234,
       "component_name": "HFO-1234yf",
       "percentage": 0.585,
-      "substance": 129
+      "substance": 284
     },
     "model": "core.blendcomponent",
     "pk": 318
   },
   {
     "fields": {
-      "blend_id": 126,
-      "cnumber": "134",
+      "blend_id": 141,
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.415,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 319
   },
   {
     "fields": {
-      "blend_id": 127,
-      "cnumber": "1336",
+      "blend_id": 142,
+      "cnumber": 1336,
       "component_name": "HFO-1336mzz(Z)",
       "percentage": 0.747,
-      "substance": 131
+      "substance": 286
     },
     "model": "core.blendcomponent",
     "pk": 320
   },
   {
     "fields": {
-      "blend_id": 127,
-      "cnumber": "1130",
+      "blend_id": 142,
+      "cnumber": 1130,
       "component_name": "HCO-1130(E)",
       "percentage": 0.253,
-      "substance": 128
+      "substance": 282
     },
     "model": "core.blendcomponent",
     "pk": 321
   },
   {
     "fields": {
-      "blend_id": 128,
-      "cnumber": "1234",
+      "blend_id": 143,
+      "cnumber": 1234,
       "component_name": "HFO-1234ze(E)",
       "percentage": 0.88,
-      "substance": 130
+      "substance": 299
     },
     "model": "core.blendcomponent",
     "pk": 322
   },
   {
     "fields": {
-      "blend_id": 128,
-      "cnumber": "227",
+      "blend_id": 143,
+      "cnumber": 227,
       "component_name": "HFC-227ea",
       "percentage": 0.12,
-      "substance": 105
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 323
   },
   {
     "fields": {
-      "blend_id": 21,
-      "cnumber": "22",
+      "blend_id": 25,
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.45,
       "substance": 36
@@ -3565,10 +3565,10 @@
   },
   {
     "fields": {
-      "blend_id": 21,
-      "cnumber": "142",
+      "blend_id": 25,
+      "cnumber": 142,
       "component_name": "HCFC-142b",
-      "percentage": 0.06,
+      "percentage": 0.055,
       "substance": 33
     },
     "model": "core.blendcomponent",
@@ -3576,22 +3576,22 @@
   },
   {
     "fields": {
-      "blend_id": 21,
-      "cnumber": "152",
+      "blend_id": 25,
+      "cnumber": 152,
       "component_name": "HFC-152a",
       "percentage": 0.07,
-      "substance": 104
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 326
   },
   {
     "fields": {
-      "blend_id": 21,
-      "cnumber": "318",
+      "blend_id": 25,
+      "cnumber": 318,
       "component_name": "PFC-C318",
-      "percentage": 0.43,
-      "substance": 136
+      "percentage": 0.425,
+      "substance": 291
     },
     "model": "core.blendcomponent",
     "pk": 327
@@ -3599,10 +3599,10 @@
   {
     "fields": {
       "blend_id": 5,
-      "cnumber": "125",
+      "cnumber": 125,
       "component_name": "HFC-125",
       "percentage": 0.45,
-      "substance": 98
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 328
@@ -3610,7 +3610,7 @@
   {
     "fields": {
       "blend_id": 5,
-      "cnumber": "22",
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.55,
       "substance": 36
@@ -3621,7 +3621,7 @@
   {
     "fields": {
       "blend_id": 6,
-      "cnumber": "22",
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.6,
       "substance": 36
@@ -3632,7 +3632,7 @@
   {
     "fields": {
       "blend_id": 6,
-      "cnumber": "142",
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.4,
       "substance": 33
@@ -3643,7 +3643,7 @@
   {
     "fields": {
       "blend_id": 1,
-      "cnumber": "22",
+      "cnumber": 22,
       "component_name": "HCFC-22",
       "percentage": 0.5,
       "substance": 36
@@ -3654,7 +3654,7 @@
   {
     "fields": {
       "blend_id": 1,
-      "cnumber": "124",
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.47,
       "substance": 26
@@ -3665,10 +3665,10 @@
   {
     "fields": {
       "blend_id": 1,
-      "cnumber": "600",
+      "cnumber": 600,
       "component_name": "HC-600a",
       "percentage": 0.03,
-      "substance": 124
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 334
@@ -3676,10 +3676,10 @@
   {
     "fields": {
       "blend_id": 2,
-      "cnumber": "23",
+      "cnumber": 23,
       "component_name": "HFC-23",
       "percentage": 0.02,
-      "substance": 106
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 335
@@ -3687,10 +3687,10 @@
   {
     "fields": {
       "blend_id": 2,
-      "cnumber": "32",
+      "cnumber": 32,
       "component_name": "HFC-32",
       "percentage": 0.28,
-      "substance": 112
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 336
@@ -3698,7 +3698,7 @@
   {
     "fields": {
       "blend_id": 2,
-      "cnumber": "124",
+      "cnumber": 124,
       "component_name": "HCFC-124",
       "percentage": 0.7,
       "substance": 26
@@ -3709,7 +3709,7 @@
   {
     "fields": {
       "blend_id": 3,
-      "cnumber": "142",
+      "cnumber": 142,
       "component_name": "HCFC-142b",
       "percentage": 0.19,
       "substance": 33
@@ -3720,10 +3720,10 @@
   {
     "fields": {
       "blend_id": 3,
-      "cnumber": "134",
+      "cnumber": 134,
       "component_name": "HFC-134a",
       "percentage": 0.79,
-      "substance": 100
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 339
@@ -3734,7 +3734,7 @@
       "cnumber": "",
       "component_name": "Lubricant",
       "percentage": 0.02,
-      "substance": 133
+      "substance": 298
     },
     "model": "core.blendcomponent",
     "pk": 340
@@ -3742,9 +3742,9 @@
   {
     "fields": {
       "blend_id": 7,
-      "cnumber": "22",
+      "cnumber": 22,
       "component_name": "HCFC-22",
-      "percentage": 0.65,
+      "percentage": 0.41,
       "substance": 36
     },
     "model": "core.blendcomponent",
@@ -3753,9 +3753,9 @@
   {
     "fields": {
       "blend_id": 7,
-      "cnumber": "142",
+      "cnumber": 142,
       "component_name": "HCFC-142b",
-      "percentage": 0.31,
+      "percentage": 0.15,
       "substance": 33
     },
     "model": "core.blendcomponent",
@@ -3764,54 +3764,54 @@
   {
     "fields": {
       "blend_id": 7,
-      "cnumber": "600",
-      "component_name": "HC-600a",
-      "percentage": 0.04,
-      "substance": 124
+      "cnumber": 227,
+      "component_name": "HFC-227ea",
+      "percentage": 0.4,
+      "substance": 104
     },
     "model": "core.blendcomponent",
     "pk": 343
   },
   {
     "fields": {
-      "blend_id": 8,
-      "cnumber": "22",
-      "component_name": "HCFC-22",
-      "percentage": 0.41,
-      "substance": 36
+      "blend_id": 7,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.04,
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 344
   },
   {
     "fields": {
-      "blend_id": 8,
-      "cnumber": "142",
-      "component_name": "HCFC-142b",
-      "percentage": 0.15,
-      "substance": 33
+      "blend_id": 10,
+      "cnumber": 22,
+      "component_name": "HCFC-22",
+      "percentage": 0.9,
+      "substance": 36
     },
     "model": "core.blendcomponent",
     "pk": 345
   },
   {
     "fields": {
-      "blend_id": 8,
-      "cnumber": "227",
-      "component_name": "HFC-227ea",
-      "percentage": 0.4,
-      "substance": 105
+      "blend_id": 10,
+      "cnumber": 152,
+      "component_name": "HFC-152a",
+      "percentage": 0.05,
+      "substance": 103
     },
     "model": "core.blendcomponent",
     "pk": 346
   },
   {
     "fields": {
-      "blend_id": 8,
-      "cnumber": "600",
-      "component_name": "HC-600a",
-      "percentage": 0.04,
-      "substance": 124
+      "blend_id": 10,
+      "cnumber": 23,
+      "component_name": "HFC-23",
+      "percentage": 0.05,
+      "substance": 105
     },
     "model": "core.blendcomponent",
     "pk": 347
@@ -3819,9 +3819,9 @@
   {
     "fields": {
       "blend_id": 11,
-      "cnumber": "22",
+      "cnumber": 22,
       "component_name": "HCFC-22",
-      "percentage": 0.9,
+      "percentage": 0.82,
       "substance": 36
     },
     "model": "core.blendcomponent",
@@ -3830,10 +3830,10 @@
   {
     "fields": {
       "blend_id": 11,
-      "cnumber": "152",
-      "component_name": "HFC-152a",
-      "percentage": 0.05,
-      "substance": 104
+      "cnumber": 123,
+      "component_name": "HCFC-123",
+      "percentage": 0.0475,
+      "substance": 24
     },
     "model": "core.blendcomponent",
     "pk": 349
@@ -3841,109 +3841,109 @@
   {
     "fields": {
       "blend_id": 11,
-      "cnumber": "23",
-      "component_name": "HFC-23",
-      "percentage": 0.05,
-      "substance": 106
+      "cnumber": 124,
+      "component_name": "HCFC-124",
+      "percentage": 0.095,
+      "substance": 26
     },
     "model": "core.blendcomponent",
     "pk": 350
   },
   {
     "fields": {
-      "blend_id": 12,
-      "cnumber": "22",
-      "component_name": "HCFC-22",
-      "percentage": 0.82,
-      "substance": 36
+      "blend_id": 11,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.0375,
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 351
   },
   {
     "fields": {
-      "blend_id": 12,
-      "cnumber": "123",
-      "component_name": "HCFC-123",
-      "percentage": 0.0475,
-      "substance": 24
+      "blend_id": 130,
+      "cnumber": 12,
+      "component_name": "CFC-12",
+      "percentage": 0.78,
+      "substance": 5
     },
     "model": "core.blendcomponent",
     "pk": 352
   },
   {
     "fields": {
-      "blend_id": 12,
-      "cnumber": "124",
-      "component_name": "HCFC-124",
-      "percentage": 0.095,
-      "substance": 26
+      "blend_id": 130,
+      "cnumber": 31,
+      "component_name": "HCFC-31",
+      "percentage": 0.22,
+      "substance": 60
     },
     "model": "core.blendcomponent",
     "pk": 353
   },
   {
     "fields": {
-      "blend_id": 12,
-      "cnumber": "600",
-      "component_name": "HC-600a",
-      "percentage": 0.0375,
-      "substance": 124
+      "blend_id": 131,
+      "cnumber": 114,
+      "component_name": "CFC-114",
+      "percentage": 0.45,
+      "substance": 3
     },
     "model": "core.blendcomponent",
     "pk": 354
   },
   {
     "fields": {
-      "blend_id": 115,
-      "cnumber": "12",
-      "component_name": "CFC-12",
-      "percentage": 0.78,
-      "substance": 5
+      "blend_id": 131,
+      "cnumber": 31,
+      "component_name": "HCFC-31",
+      "percentage": 0.55,
+      "substance": 60
     },
     "model": "core.blendcomponent",
     "pk": 355
   },
   {
     "fields": {
-      "blend_id": 115,
-      "cnumber": "31",
-      "component_name": "HCFC-31",
-      "percentage": 0.22,
-      "substance": 60
+      "blend_id": 135,
+      "cnumber": 22,
+      "component_name": "HCFC-22",
+      "percentage": 0.46,
+      "substance": 36
     },
     "model": "core.blendcomponent",
     "pk": 356
   },
   {
     "fields": {
-      "blend_id": 116,
-      "cnumber": "114",
-      "component_name": "CFC-114",
-      "percentage": 0.45,
-      "substance": 3
+      "blend_id": 8,
+      "cnumber": "",
+      "component_name": "Methyl bromide",
+      "percentage": 0.67,
+      "substance": 95
     },
     "model": "core.blendcomponent",
     "pk": 357
   },
   {
     "fields": {
-      "blend_id": 116,
-      "cnumber": "31",
-      "component_name": "HCFC-31",
-      "percentage": 0.55,
-      "substance": 60
+      "blend_id": 8,
+      "cnumber": "",
+      "component_name": "Chloropicrin",
+      "percentage": 0.33,
+      "substance": 297
     },
     "model": "core.blendcomponent",
     "pk": 358
   },
   {
     "fields": {
-      "blend_id": 120,
-      "cnumber": "22",
-      "component_name": "HCFC-22",
-      "percentage": 0.46,
-      "substance": 36
+      "blend_id": 9,
+      "cnumber": "",
+      "component_name": "Methyl bromide",
+      "percentage": 0.98,
+      "substance": 95
     },
     "model": "core.blendcomponent",
     "pk": 359
@@ -3952,88 +3952,660 @@
     "fields": {
       "blend_id": 9,
       "cnumber": "",
-      "component_name": "Methyl bromide",
-      "percentage": 0.67,
-      "substance": 95
+      "component_name": "Chloropicrin",
+      "percentage": 0.02,
+      "substance": 297
     },
     "model": "core.blendcomponent",
     "pk": 360
   },
   {
     "fields": {
-      "blend_id": 9,
-      "cnumber": "",
-      "component_name": "Chloropicrin",
-      "percentage": 0.33,
-      "substance": 138
+      "blend_id": 4,
+      "cnumber": 124,
+      "component_name": "HCFC-124",
+      "percentage": 0.39,
+      "substance": 26
     },
     "model": "core.blendcomponent",
     "pk": 361
   },
   {
     "fields": {
-      "blend_id": 10,
-      "cnumber": "",
-      "component_name": "Methyl bromide",
-      "percentage": 0.98,
-      "substance": 95
+      "blend_id": 4,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.59,
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 362
   },
   {
     "fields": {
-      "blend_id": 10,
-      "cnumber": "",
-      "component_name": "Chloropicrin",
+      "blend_id": 4,
+      "cnumber": 600,
+      "component_name": "HC-600a",
       "percentage": 0.02,
-      "substance": 138
+      "substance": 293
     },
     "model": "core.blendcomponent",
     "pk": 363
   },
   {
     "fields": {
-      "blend_id": 4,
-      "cnumber": "124",
-      "component_name": "HCFC-124",
-      "percentage": 0.39,
-      "substance": 26
+      "blend_id": 35,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.15,
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 364
   },
   {
     "fields": {
-      "blend_id": 4,
-      "cnumber": "134",
-      "component_name": "HCFC-134a",
-      "percentage": 0.59,
-      "substance": 100
+      "blend_id": 35,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.525,
+      "substance": 99
     },
     "model": "core.blendcomponent",
     "pk": 365
   },
   {
     "fields": {
-      "blend_id": 4,
-      "cnumber": "600",
-      "component_name": "HC-600a",
-      "percentage": 0.02,
-      "substance": 124
+      "blend_id": 36,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.195,
+      "substance": 111
     },
     "model": "core.blendcomponent",
     "pk": 366
   },
   {
     "fields": {
-      "blend_id": 120,
-      "cnumber": "218",
-      "component_name": "PFC-218",
-      "percentage": 0.54,
-      "substance": 135
+      "blend_id": 36,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.085,
+      "substance": 97
     },
     "model": "core.blendcomponent",
     "pk": 367
+  },
+  {
+    "fields": {
+      "blend_id": 36,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.72,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 368
+  },
+  {
+    "fields": {
+      "blend_id": 83,
+      "cnumber": 290,
+      "component_name": "HC-290",
+      "percentage": 0.95,
+      "substance": 290
+    },
+    "model": "core.blendcomponent",
+    "pk": 369
+  },
+  {
+    "fields": {
+      "blend_id": 83,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.05,
+      "substance": 293
+    },
+    "model": "core.blendcomponent",
+    "pk": 370
+  },
+  {
+    "fields": {
+      "blend_id": 119,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.025,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 371
+  },
+  {
+    "fields": {
+      "blend_id": 119,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.025,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 372
+  },
+  {
+    "fields": {
+      "blend_id": 119,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.46,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 373
+  },
+  {
+    "fields": {
+      "blend_id": 119,
+      "cnumber": 1234,
+      "component_name": "HFO-1234ze(E)",
+      "percentage": 0.49,
+      "substance": 299
+    },
+    "model": "core.blendcomponent",
+    "pk": 374
+  },
+  {
+    "fields": {
+      "blend_id": 120,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.55,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 375
+  },
+  {
+    "fields": {
+      "blend_id": 120,
+      "cnumber": 143,
+      "component_name": "HFC-143a",
+      "percentage": 0.05,
+      "substance": 101
+    },
+    "model": "core.blendcomponent",
+    "pk": 376
+  },
+  {
+    "fields": {
+      "blend_id": 120,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.32,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 377
+  },
+  {
+    "fields": {
+      "blend_id": 120,
+      "cnumber": 227,
+      "component_name": "HFC-227ea",
+      "percentage": 0.05,
+      "substance": 104
+    },
+    "model": "core.blendcomponent",
+    "pk": 378
+  },
+  {
+    "fields": {
+      "blend_id": 120,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.03,
+      "substance": 293
+    },
+    "model": "core.blendcomponent",
+    "pk": 379
+  },
+  {
+    "fields": {
+      "blend_id": 121,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.09,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 380
+  },
+  {
+    "fields": {
+      "blend_id": 121,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.42,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 381
+  },
+  {
+    "fields": {
+      "blend_id": 121,
+      "cnumber": 143,
+      "component_name": "HFC-143a",
+      "percentage": 0.02,
+      "substance": 101
+    },
+    "model": "core.blendcomponent",
+    "pk": 382
+  },
+  {
+    "fields": {
+      "blend_id": 121,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.44,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 383
+  },
+  {
+    "fields": {
+      "blend_id": 121,
+      "cnumber": 600,
+      "component_name": "HC-600",
+      "percentage": 0.03,
+      "substance": 292
+    },
+    "model": "core.blendcomponent",
+    "pk": 384
+  },
+  {
+    "fields": {
+      "blend_id": 123,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.27,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 385
+  },
+  {
+    "fields": {
+      "blend_id": 123,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.27,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 386
+  },
+  {
+    "fields": {
+      "blend_id": 123,
+      "cnumber": 1234,
+      "component_name": "HFO-1234ze(E)",
+      "percentage": 0.4,
+      "substance": 299
+    },
+    "model": "core.blendcomponent",
+    "pk": 387
+  },
+  {
+    "fields": {
+      "blend_id": 123,
+      "cnumber": 227,
+      "component_name": "HFC-227ea",
+      "percentage": 0.06,
+      "substance": 104
+    },
+    "model": "core.blendcomponent",
+    "pk": 388
+  },
+  {
+    "fields": {
+      "blend_id": 124,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.21,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 389
+  },
+  {
+    "fields": {
+      "blend_id": 124,
+      "cnumber": 290,
+      "component_name": "HC-290",
+      "percentage": 0.079,
+      "substance": 290
+    },
+    "model": "core.blendcomponent",
+    "pk": 390
+  },
+  {
+    "fields": {
+      "blend_id": 124,
+      "cnumber": 1234,
+      "component_name": "HFO-1234yf",
+      "percentage": 0.711,
+      "substance": 284
+    },
+    "model": "core.blendcomponent",
+    "pk": 391
+  },
+  {
+    "fields": {
+      "blend_id": 144,
+      "cnumber": 1234,
+      "component_name": "HFO-1234yf",
+      "percentage": 0.775,
+      "substance": 284
+    },
+    "model": "core.blendcomponent",
+    "pk": 392
+  },
+  {
+    "fields": {
+      "blend_id": 144,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.085,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 393
+  },
+  {
+    "fields": {
+      "blend_id": 144,
+      "cnumber": 152,
+      "component_name": "HFC-152a",
+      "percentage": 0.14,
+      "substance": 103
+    },
+    "model": "core.blendcomponent",
+    "pk": 394
+  },
+  {
+    "fields": {
+      "blend_id": 135,
+      "cnumber": 218,
+      "component_name": "PFC-218",
+      "percentage": 0.54,
+      "substance": 289
+    },
+    "model": "core.blendcomponent",
+    "pk": 395
+  },
+  {
+    "fields": {
+      "blend_id": 35,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.325,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 396
+  },
+  {
+    "fields": {
+      "blend_id": 15,
+      "cnumber": 12,
+      "component_name": "CFC-12",
+      "percentage": 0.5,
+      "substance": 5
+    },
+    "model": "core.blendcomponent",
+    "pk": 397
+  },
+  {
+    "fields": {
+      "blend_id": 15,
+      "cnumber": 114,
+      "component_name": "CFC-114",
+      "percentage": 0.5,
+      "substance": 3
+    },
+    "model": "core.blendcomponent",
+    "pk": 398
+  },
+  {
+    "fields": {
+      "blend_id": 16,
+      "cnumber": 12,
+      "component_name": "CFC-12",
+      "percentage": 0.6,
+      "substance": 5
+    },
+    "model": "core.blendcomponent",
+    "pk": 399
+  },
+  {
+    "fields": {
+      "blend_id": 16,
+      "cnumber": 114,
+      "component_name": "CFC-114",
+      "percentage": 0.4,
+      "substance": 3
+    },
+    "model": "core.blendcomponent",
+    "pk": 400
+  },
+  {
+    "fields": {
+      "blend_id": 27,
+      "cnumber": 22,
+      "component_name": "HCFC-22",
+      "percentage": 0.65,
+      "substance": 36
+    },
+    "model": "core.blendcomponent",
+    "pk": 401
+  },
+  {
+    "fields": {
+      "blend_id": 27,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.04,
+      "substance": 293
+    },
+    "model": "core.blendcomponent",
+    "pk": 402
+  },
+  {
+    "fields": {
+      "blend_id": 27,
+      "cnumber": 142,
+      "component_name": "HCFC-142b",
+      "percentage": 0.31,
+      "substance": 33
+    },
+    "model": "core.blendcomponent",
+    "pk": 403
+  },
+  {
+    "fields": {
+      "blend_id": 44,
+      "cnumber": 1270,
+      "component_name": "HO-1270",
+      "percentage": 0.03,
+      "substance": 285
+    },
+    "model": "core.blendcomponent",
+    "pk": 404
+  },
+  {
+    "fields": {
+      "blend_id": 44,
+      "cnumber": 22,
+      "component_name": "HCFC-22",
+      "percentage": 0.955,
+      "substance": 36
+    },
+    "model": "core.blendcomponent",
+    "pk": 405
+  },
+  {
+    "fields": {
+      "blend_id": 44,
+      "cnumber": 152,
+      "component_name": "HFC-152a",
+      "percentage": 0.015,
+      "substance": 103
+    },
+    "model": "core.blendcomponent",
+    "pk": 406
+  },
+  {
+    "fields": {
+      "blend_id": 12,
+      "cnumber": 354,
+      "component_name": "HFC-354mfc",
+      "percentage": 0.95,
+      "substance": 300
+    },
+    "model": "core.blendcomponent",
+    "pk": 407
+  },
+  {
+    "fields": {
+      "blend_id": 12,
+      "cnumber": 227,
+      "component_name": "HFC-227ea",
+      "percentage": 0.05,
+      "substance": 104
+    },
+    "model": "core.blendcomponent",
+    "pk": 408
+  },
+  {
+    "fields": {
+      "blend_id": 14,
+      "cnumber": 600,
+      "component_name": "HC-600a",
+      "percentage": 0.01,
+      "substance": 293
+    },
+    "model": "core.blendcomponent",
+    "pk": 409
+  },
+  {
+    "fields": {
+      "blend_id": 14,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.19,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 410
+  },
+  {
+    "fields": {
+      "blend_id": 14,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.8,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 411
+  },
+  {
+    "fields": {
+      "blend_id": 13,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.86,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 412
+  },
+  {
+    "fields": {
+      "blend_id": 13,
+      "cnumber": 218,
+      "component_name": "PFC-218",
+      "percentage": 0.09,
+      "substance": 289
+    },
+    "model": "core.blendcomponent",
+    "pk": 413
+  },
+  {
+    "fields": {
+      "blend_id": 13,
+      "cnumber": 290,
+      "component_name": "HC-290",
+      "percentage": 0.05,
+      "substance": 290
+    },
+    "model": "core.blendcomponent",
+    "pk": 414
+  },
+  {
+    "fields": {
+      "blend_id": 122,
+      "cnumber": 744,
+      "component_name": "R-744",
+      "percentage": 0.06,
+      "substance": 296
+    },
+    "model": "core.blendcomponent",
+    "pk": 415
+  },
+  {
+    "fields": {
+      "blend_id": 122,
+      "cnumber": 32,
+      "component_name": "HFC-32",
+      "percentage": 0.36,
+      "substance": 111
+    },
+    "model": "core.blendcomponent",
+    "pk": 416
+  },
+  {
+    "fields": {
+      "blend_id": 122,
+      "cnumber": 125,
+      "component_name": "HFC-125",
+      "percentage": 0.3,
+      "substance": 97
+    },
+    "model": "core.blendcomponent",
+    "pk": 417
+  },
+  {
+    "fields": {
+      "blend_id": 122,
+      "cnumber": 1234,
+      "component_name": "HFO-1234yf",
+      "percentage": 0.14,
+      "substance": 284
+    },
+    "model": "core.blendcomponent",
+    "pk": 418
+  },
+  {
+    "fields": {
+      "blend_id": 122,
+      "cnumber": 134,
+      "component_name": "HFC-134a",
+      "percentage": 0.14,
+      "substance": 99
+    },
+    "model": "core.blendcomponent",
+    "pk": 419
   }
 ]

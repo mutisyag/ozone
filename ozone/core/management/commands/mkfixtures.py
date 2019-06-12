@@ -78,7 +78,7 @@ class Command(BaseCommand):
         },
         'substance_edw': {
             'model': 'substance',
-            'min_id': 120,
+            'min_id': 280,
             'fixture': 'substances_edw.json',
             'sheet': 'SubstEDW',
         },
@@ -402,6 +402,7 @@ class Command(BaseCommand):
             if group == 'FI' or group == 'FII':
                 group = 'F'
             if group == 'FIII':
+                # Most of these are blends. Those which are not were moved to SubstEDW
                 return
             f['group'] = self.lookup_id('group', 'group_id', group)
 
@@ -446,13 +447,15 @@ class Command(BaseCommand):
         return f
 
     def substance_edw_map(self, f, row):
-        f['r_code'] = row['RCode']
-        f['main_usage'] = row['MainUsage'] or ""
+        # F/III substances which are not blends and should not be skipped
+        row['Anx'] = None
+        row['Grp'] = None
         return self.substance_map(f, row)
 
     def blend_map(self, f, row):
         f['blend_id'] = row['Blend']
         f['legacy_blend_id'] = row['BlendID']
+        # There is a new column called BlendType, but this mapping also works fine
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
             f['sort_order'] = 110000 + row['_index']
@@ -469,7 +472,14 @@ class Command(BaseCommand):
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""
         f['remark'] = row['Remark'] or ""
-        # TODO: Not mapped: main_usage, odp, hcfc, gwp, hfc, mp_control, type
+
+        f['odp'] = row['BlendODP']
+        f['gwp'] = row['BlendGWP']
+        f['trade_name'] = row['BlendTradeName'] or ""
+        f['composition_alt'] = row['CompositionOrg'] or ""
+        f['cnumber'] = row['CNumber'] or ""
+
+        # TODO: Not mapped: main_usage, hcfc, hfc, mp_control
         return f
 
     def blendcomponent_map(self, f, row):
@@ -477,10 +487,11 @@ class Command(BaseCommand):
         f['component_name'] = row['Component'] or ""
         f['percentage'] = row['Percentage']
         f['cnumber'] = row['CNumber'] or ""
-        substance = self.lookup_id('substance', 'substance_id', row['SubstID'])
-        if not substance:
+        try:
+            substance = self.lookup_id('substance', 'substance_id', row['SubstID'])
+        except CommandError:
             substance = self.lookup_id(
-                'substance_edw', 'name', row['Component'])
+                'substance_edw', 'substance_id', row['SubstID'])
         f['substance'] = substance
         return f
 

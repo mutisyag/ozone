@@ -352,7 +352,7 @@
       "description": "2017",
       "end_date": "2017-12-31",
       "is_reporting_allowed": true,
-      "is_reporting_open": false,
+      "is_reporting_open": true,
       "name": "2017",
       "start_date": "2017-01-01"
     },
@@ -375,7 +375,7 @@
     "fields": {
       "description": "2019",
       "end_date": "2019-12-31",
-      "is_reporting_allowed": false,
+      "is_reporting_allowed": true,
       "is_reporting_open": false,
       "name": "2019",
       "start_date": "2019-01-01"

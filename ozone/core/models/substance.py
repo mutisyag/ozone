@@ -194,15 +194,15 @@ class Substance(models.Model):
     max_odp = models.FloatField()
 
     # Global warming potential
-    gwp = models.IntegerField(null=True, blank=True)
+    gwp = models.FloatField(null=True, blank=True)
 
     formula = models.CharField(max_length=256)
 
     number_of_isomers = models.SmallIntegerField(null=True, blank=True)
 
     # TODO: what is this?
-    gwp2 = models.IntegerField(null=True, blank=True)
-    gwp_error_plus_minus = models.IntegerField(null=True, blank=True)
+    gwp2 = models.FloatField(null=True, blank=True)
+    gwp_error_plus_minus = models.FloatField(null=True, blank=True)
 
     # Existing data seems to suggest this field is always non-blank,
     # allowing it though just in case...
@@ -303,7 +303,7 @@ class Blend(models.Model):
 
     odp = models.FloatField(null=True, blank=True)
 
-    gwp = models.IntegerField(null=True, blank=True)
+    gwp = models.FloatField(null=True, blank=True)
 
     hfc = models.NullBooleanField()
 
@@ -312,6 +312,10 @@ class Blend(models.Model):
     main_usage = models.CharField(max_length=256, blank=True)
 
     remark = models.CharField(max_length=256, blank=True)
+
+    trade_name = models.CharField(max_length=256, blank=True)
+    composition_alt = models.CharField(max_length=256, blank=True)
+    cnumber = models.CharField(max_length=256, blank=True)
 
     sort_order = models.IntegerField(null=True, default=0)
 

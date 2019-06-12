@@ -148,7 +148,7 @@
       "fluorines": "F2",
       "formula": "CF2BrCl",
       "group": 2,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 1860,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -176,7 +176,7 @@
       "fluorines": "F3",
       "formula": "CF3Br",
       "group": 2,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 7030,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -204,7 +204,7 @@
       "fluorines": "F4",
       "formula": "C2F4Br2",
       "group": 2,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 1620,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -232,7 +232,7 @@
       "fluorines": "F",
       "formula": "C2FCl5",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -260,7 +260,7 @@
       "fluorines": "F2",
       "formula": "C2F2Cl4",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -288,7 +288,7 @@
       "fluorines": "F3",
       "formula": "CF3Cl",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 13900,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -316,7 +316,7 @@
       "fluorines": "F",
       "formula": "C3FCl7",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -344,7 +344,7 @@
       "fluorines": "F2",
       "formula": "C3F2Cl6",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -372,7 +372,7 @@
       "fluorines": "F3",
       "formula": "C3F3Cl5",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -400,7 +400,7 @@
       "fluorines": "F4",
       "formula": "C3F4Cl4",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -428,7 +428,7 @@
       "fluorines": "F5",
       "formula": "C3F5Cl3",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -456,7 +456,7 @@
       "fluorines": "F6",
       "formula": "C3F6Cl2",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -484,7 +484,7 @@
       "fluorines": "F7",
       "formula": "C3F7Cl",
       "group": 3,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -512,7 +512,7 @@
       "fluorines": "",
       "formula": "CCl4",
       "group": 4,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 1380,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -540,7 +540,7 @@
       "fluorines": "",
       "formula": "C2H3Cl3",
       "group": 5,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 144,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -568,7 +568,7 @@
       "fluorines": "F",
       "formula": "C2HFCl4",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -596,7 +596,7 @@
       "fluorines": "F2",
       "formula": "C2HF2Cl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 59,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -652,7 +652,7 @@
       "fluorines": "F3",
       "formula": "CHCl2CF3",
       "group": 6,
-      "gwp": 77,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -708,7 +708,7 @@
       "fluorines": "F4",
       "formula": "CHFClCF3",
       "group": 6,
-      "gwp": 609,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -736,7 +736,7 @@
       "fluorines": "F",
       "formula": "C2H2FCl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -764,7 +764,7 @@
       "fluorines": "F2",
       "formula": "C2H2F2Cl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 338,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -792,7 +792,7 @@
       "fluorines": "F3",
       "formula": "C2H2F3Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -820,7 +820,7 @@
       "fluorines": "F",
       "formula": "C2H3FCl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -876,7 +876,7 @@
       "fluorines": "F2",
       "formula": "C2H3F2Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -932,7 +932,7 @@
       "fluorines": "F",
       "formula": "C2H4FCl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1016,7 +1016,7 @@
       "fluorines": "F",
       "formula": "C3HFCl6",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1044,7 +1044,7 @@
       "fluorines": "F2",
       "formula": "C3HF2Cl5",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1072,7 +1072,7 @@
       "fluorines": "F3",
       "formula": "C3HF3Cl4",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1100,7 +1100,7 @@
       "fluorines": "F4",
       "formula": "C3HF4Cl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1128,7 +1128,7 @@
       "fluorines": "F5",
       "formula": "C3HF5Cl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1212,7 +1212,7 @@
       "fluorines": "F6",
       "formula": "C3HF6Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1240,7 +1240,7 @@
       "fluorines": "F",
       "formula": "C3H2FCl5",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1268,7 +1268,7 @@
       "fluorines": "F2",
       "formula": "C3H2F2Cl4",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1296,7 +1296,7 @@
       "fluorines": "F3",
       "formula": "C3H2F3Cl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1324,7 +1324,7 @@
       "fluorines": "F4",
       "formula": "C3H2F4Cl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1352,7 +1352,7 @@
       "fluorines": "F5",
       "formula": "C3H2F5Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1380,7 +1380,7 @@
       "fluorines": "F",
       "formula": "C3H3FCl4",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1408,7 +1408,7 @@
       "fluorines": "F2",
       "formula": "C3H3F2Cl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1436,7 +1436,7 @@
       "fluorines": "F3",
       "formula": "C3H3F3Cl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1464,7 +1464,7 @@
       "fluorines": "F4",
       "formula": "C3H3F4Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1492,7 +1492,7 @@
       "fluorines": "F",
       "formula": "C3H4FCl3",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1520,7 +1520,7 @@
       "fluorines": "F2",
       "formula": "C3H4F2Cl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1548,7 +1548,7 @@
       "fluorines": "F3",
       "formula": "C3H4F3Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1576,7 +1576,7 @@
       "fluorines": "F",
       "formula": "C3H5FCl2",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1604,7 +1604,7 @@
       "fluorines": "F2",
       "formula": "C3H5F2Cl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1632,7 +1632,7 @@
       "fluorines": "F",
       "formula": "C3H6FCl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1660,7 +1660,7 @@
       "fluorines": "F",
       "formula": "CH2FCl",
       "group": 6,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1688,7 +1688,7 @@
       "fluorines": "F2",
       "formula": "C2H2F2Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1716,7 +1716,7 @@
       "fluorines": "F3",
       "formula": "C2H2F3Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1744,7 +1744,7 @@
       "fluorines": "F",
       "formula": "C2H2FBr3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1772,7 +1772,7 @@
       "fluorines": "F2",
       "formula": "C2H3F2Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1800,7 +1800,7 @@
       "fluorines": "F",
       "formula": "C2H3FBr2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1828,7 +1828,7 @@
       "fluorines": "F",
       "formula": "C2H4FBr",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1856,7 +1856,7 @@
       "fluorines": "F2",
       "formula": "C2HF2Br3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1884,7 +1884,7 @@
       "fluorines": "F3",
       "formula": "C2HF3Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1912,7 +1912,7 @@
       "fluorines": "F4",
       "formula": "C2HF4Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1940,7 +1940,7 @@
       "fluorines": "F",
       "formula": "C2HFBr4",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1968,7 +1968,7 @@
       "fluorines": "F2",
       "formula": "C3H2F2Br4",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -1996,7 +1996,7 @@
       "fluorines": "F3",
       "formula": "C3H2F3Br3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2024,7 +2024,7 @@
       "fluorines": "F4",
       "formula": "C3H2F4Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2052,7 +2052,7 @@
       "fluorines": "F5",
       "formula": "C3H2F5Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2080,7 +2080,7 @@
       "fluorines": "F",
       "formula": "C3H2FBr5",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2108,7 +2108,7 @@
       "fluorines": "F2",
       "formula": "C3H3F2Br3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2136,7 +2136,7 @@
       "fluorines": "F3",
       "formula": "C3H3F3Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2164,7 +2164,7 @@
       "fluorines": "F4",
       "formula": "C3H3F4Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2192,7 +2192,7 @@
       "fluorines": "F",
       "formula": "C3H3FBr4",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2220,7 +2220,7 @@
       "fluorines": "F2",
       "formula": "C3H4F2Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2248,7 +2248,7 @@
       "fluorines": "F3",
       "formula": "C3H4F3Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2276,7 +2276,7 @@
       "fluorines": "F",
       "formula": "C3H4FBr3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2304,7 +2304,7 @@
       "fluorines": "F2",
       "formula": "C3H5F2Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2332,7 +2332,7 @@
       "fluorines": "F",
       "formula": "C3H5FBr2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2360,7 +2360,7 @@
       "fluorines": "F",
       "formula": "C3H6FBr",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2388,7 +2388,7 @@
       "fluorines": "F2",
       "formula": "C3HF2Br5",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2416,7 +2416,7 @@
       "fluorines": "F3",
       "formula": "C3HF3Br4",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2444,7 +2444,7 @@
       "fluorines": "F4",
       "formula": "C3HF4Br3",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2472,7 +2472,7 @@
       "fluorines": "F5",
       "formula": "C3HF5Br2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2500,7 +2500,7 @@
       "fluorines": "F6",
       "formula": "C3HF6Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2528,7 +2528,7 @@
       "fluorines": "F",
       "formula": "C3HFBr6",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2556,7 +2556,7 @@
       "fluorines": "F",
       "formula": "CH2FBr",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2584,7 +2584,7 @@
       "fluorines": "F",
       "formula": "CHFBr2",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2612,7 +2612,7 @@
       "fluorines": "F2",
       "formula": "CHF2Br",
       "group": 7,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2640,7 +2640,7 @@
       "fluorines": "",
       "formula": "CH3Br",
       "group": 9,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": 5,
       "gwp_error_plus_minus": null,
       "has_critical_uses": true,
@@ -2668,7 +2668,7 @@
       "fluorines": "",
       "formula": "CH2BrCl",
       "group": 8,
-      "gwp": null,
+      "gwp": 0,
       "gwp2": null,
       "gwp_error_plus_minus": null,
       "has_critical_uses": false,
@@ -2686,33 +2686,6 @@
     },
     "model": "core.substance",
     "pk": 96
-  },
-  {
-    "fields": {
-      "bromines": "",
-      "carbons": "",
-      "chlorines": "",
-      "description": "Other Substances",
-      "fluorines": "",
-      "formula": "",
-      "gwp": null,
-      "gwp2": 0,
-      "gwp_error_plus_minus": 0,
-      "has_critical_uses": false,
-      "hydrogens": "",
-      "is_captured": false,
-      "is_contained_in_polyols": false,
-      "max_odp": 0,
-      "min_odp": 0,
-      "name": "Other Substances and Mixtures",
-      "number_of_isomers": 0,
-      "odp": 0,
-      "remark": "Used when a non-ODS or non-specific substance is specified",
-      "sort_order": 100001,
-      "substance_id": 999
-    },
-    "model": "core.substance",
-    "pk": 97
   },
   {
     "fields": {
@@ -2740,7 +2713,7 @@
       "substance_id": 1250
     },
     "model": "core.substance",
-    "pk": 98
+    "pk": 97
   },
   {
     "fields": {
@@ -2768,7 +2741,7 @@
       "substance_id": 1340
     },
     "model": "core.substance",
-    "pk": 99
+    "pk": 98
   },
   {
     "fields": {
@@ -2796,7 +2769,7 @@
       "substance_id": 1341
     },
     "model": "core.substance",
-    "pk": 100
+    "pk": 99
   },
   {
     "fields": {
@@ -2824,7 +2797,7 @@
       "substance_id": 1430
     },
     "model": "core.substance",
-    "pk": 101
+    "pk": 100
   },
   {
     "fields": {
@@ -2852,7 +2825,7 @@
       "substance_id": 1431
     },
     "model": "core.substance",
-    "pk": 102
+    "pk": 101
   },
   {
     "fields": {
@@ -2880,7 +2853,7 @@
       "substance_id": 1520
     },
     "model": "core.substance",
-    "pk": 103
+    "pk": 102
   },
   {
     "fields": {
@@ -2908,7 +2881,7 @@
       "substance_id": 1521
     },
     "model": "core.substance",
-    "pk": 104
+    "pk": 103
   },
   {
     "fields": {
@@ -2936,7 +2909,7 @@
       "substance_id": 2275
     },
     "model": "core.substance",
-    "pk": 105
+    "pk": 104
   },
   {
     "fields": {
@@ -2964,7 +2937,7 @@
       "substance_id": 2300
     },
     "model": "core.substance",
-    "pk": 106
+    "pk": 105
   },
   {
     "fields": {
@@ -2992,7 +2965,7 @@
       "substance_id": 2363
     },
     "model": "core.substance",
-    "pk": 107
+    "pk": 106
   },
   {
     "fields": {
@@ -3020,7 +2993,7 @@
       "substance_id": 2365
     },
     "model": "core.substance",
-    "pk": 108
+    "pk": 107
   },
   {
     "fields": {
@@ -3048,7 +3021,7 @@
       "substance_id": 2366
     },
     "model": "core.substance",
-    "pk": 109
+    "pk": 108
   },
   {
     "fields": {
@@ -3076,7 +3049,7 @@
       "substance_id": 2453
     },
     "model": "core.substance",
-    "pk": 110
+    "pk": 109
   },
   {
     "fields": {
@@ -3104,7 +3077,7 @@
       "substance_id": 2456
     },
     "model": "core.substance",
-    "pk": 111
+    "pk": 110
   },
   {
     "fields": {
@@ -3132,7 +3105,7 @@
       "substance_id": 3200
     },
     "model": "core.substance",
-    "pk": 112
+    "pk": 111
   },
   {
     "fields": {
@@ -3160,7 +3133,7 @@
       "substance_id": 3659
     },
     "model": "core.substance",
-    "pk": 113
+    "pk": 112
   },
   {
     "fields": {
@@ -3188,7 +3161,7 @@
       "substance_id": 4100
     },
     "model": "core.substance",
-    "pk": 114
+    "pk": 113
   },
   {
     "fields": {
@@ -3216,6 +3189,6 @@
       "substance_id": 4310
     },
     "model": "core.substance",
-    "pk": 115
+    "pk": 114
   }
 ]
