@@ -204,6 +204,8 @@ class Substance(models.Model):
     gwp2 = models.FloatField(null=True, blank=True)
     gwp_error_plus_minus = models.FloatField(null=True, blank=True)
 
+    gwp_baseline = models.FloatField(null=True, blank=True)
+
     # Existing data seems to suggest this field is always non-blank,
     # allowing it though just in case...
     carbons = models.CharField(max_length=128, blank=True)

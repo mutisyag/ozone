@@ -433,6 +433,7 @@ class Command(BaseCommand):
         f['number_of_isomers'] = row['Number of Isomers']
         f['gwp2'] = row['GWP']
         f['gwp_error_plus_minus'] = row['GWP_Error_Plus_Minus']
+        f['gwp_baseline'] = row['BaselineSubstGWP'] or 0
         f['remark'] = row['Remark'] or ""
         f['carbons'] = row['Carbons'] or ""
         f['hydrogens'] = row['Hydrogens'] or ""
