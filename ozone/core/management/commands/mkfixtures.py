@@ -503,7 +503,7 @@ class Command(BaseCommand):
         f['is_reporting_allowed'] = f['name'][0] == 'C' or (
             f['name'].isdigit() and int(f['name']) <= 2018
         )
-        f['is_reporting_open'] = f['name'] in ('2017', '2018')
+        f['is_reporting_open'] = f['name'] in ('2018')
         return f
 
     def reportingperiod_additional_data(self, idx):
