@@ -251,6 +251,13 @@ class ReportingChannel(models.Model):
         db_table = "reporting_channel"
 
 
+class SubmissionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'reporting_period', 'obligation', 'party'
+        )
+
+
 class Submission(models.Model):
     """
     One specific data submission (version!)
@@ -314,18 +321,12 @@ class Submission(models.Model):
         for key, value in GROUP_FLAGS_MAPPING.items()
     }
 
-    # TODO: this implements the `submission_type` field from the
-    # Ozone Business Data Tables. Analyze how Party-to-Obligation/Version
-    # mappings should be modeled.
+    objects = SubmissionManager()
+
     obligation = models.ForeignKey(
         Obligation, related_name='submissions', on_delete=models.PROTECT
     )
 
-    # TODO (related to the above):
-    # It looks like the simplest (best?) solution for handling
-    # reporting format changes (i.e. schema versions) is to keep separate
-    # models&tables for each such version.
-    # Should investigate whether what's described above is a sane solution.
     schema_version = models.CharField(max_length=64)
 
     reporting_period = models.ForeignKey(
