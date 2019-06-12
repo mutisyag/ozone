@@ -7,7 +7,7 @@ const logRequests = process.env.NODE_ENV === 'development'
 
 let apiURL = `${window.location.origin}/api`
 let apiBase = `${window.location.origin}`
-let filesURL = `${window.location.protocol}//${process.env.VUE_APP_TUSD_HOST}:${process.env.VUE_APP_TUSD_PORT}/files/`
+let filesURL = `${window.location.protocol}//${process.env.VUE_APP_TUSD_HOST}:${process.env.VUE_APP_TUSD_PORT}${process.env.VUE_APP_TUSD_PATH}/files/`
 
 if (process.env.VUE_APP_API_HOST) {
   apiURL = `${window.location.protocol}//${process.env.VUE_APP_API_HOST}/api`
