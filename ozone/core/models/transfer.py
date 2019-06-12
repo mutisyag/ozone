@@ -44,9 +44,7 @@ class Transfer(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    transferred_amount = models.FloatField(
-        validators=[MinValueValidator(0.0)], blank=True, null=True
-    )
+    transferred_amount = models.FloatField(validators=[MinValueValidator(0.0)])
 
     is_basic_domestic_need = models.BooleanField(default=False)
 
