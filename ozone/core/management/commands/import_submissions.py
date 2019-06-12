@@ -748,6 +748,9 @@ class Command(BaseCommand):
             )
         for obj in submission.history.all():
             obj.history_user = self.admin
+            obj.created_at = values["submission"]["created_at"]
+            obj.updated_at = values["submission"]["updated_at"]
+            obj.history_date = values["submission"]["created_at"]
             obj.save()
 
         log_data = ", ".join("%s=%s" % (_data_type, len(values[_data_type]))
