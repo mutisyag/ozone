@@ -173,8 +173,11 @@ const actions = {
   },
 
   getCurrentUserForm(context) {
-    getCurrentUser().then(response => {
-      context.commit('setCurrentUser', response.data)
+    return new Promise((resolve) => {
+      getCurrentUser().then(response => {
+        context.commit('setCurrentUser', response.data)
+        resolve(response.data)
+      })
     })
   },
 
@@ -331,7 +334,15 @@ const actions = {
     return new Promise((resolve) => {
       console.log('----------------', formName)
       context.dispatch('getSubmissionData', { submission, $gettext }).then((reporting_period) => {
-        context.dispatch('getCurrentUserForm')
+        context.dispatch('getCurrentUserForm').then(currentUser => {
+          if (Array.isArray(currentUser)) {
+            if (currentUser[0].is_secretariat) {
+              context.dispatch('getEmailTemplates')
+            }
+          } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat) {
+            context.dispatch('getEmailTemplates')
+          }
+        })
         context.dispatch('getCountries')
         context.dispatch('getSubstances')
         context.dispatch('getSubmissionDefaultValues')
@@ -339,7 +350,6 @@ const actions = {
         // by default show all custom blends for secretariat users.
         // This way, even secretariat users will only see the correct available
         // custom blends.
-        context.dispatch('getEmailTemplates')
         context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
         context.dispatch('getSubmissionFormatOptions')
         if (formName === 'art7') {
