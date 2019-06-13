@@ -186,7 +186,7 @@ def sum_decimals(d1, d2):
     return dd1 or dd2
 
 
-# Imitate JavaScript's toPrecision. Retunrning the number with 'decimals'
+# Imitate JavaScript's toPrecision. Returning the number with 'decimals'
 # digits starting from the first non-zero digit
 def to_precision(nr, decimals):
 
