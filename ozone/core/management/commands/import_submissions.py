@@ -347,14 +347,14 @@ class Command(BaseCommand):
             try:
                 old_value = old[key]
             except KeyError:
-                logger.warning("%s inconsistency found for %s, present in old but not in new.",
+                logger.warning("%s inconsistency found for %s, present in New but not in base table.",
                                tag, key)
                 continue
 
             try:
                 new_value = new[key]
             except KeyError:
-                logger.warning("%s inconsistency found for %s, present in new but not in old.",
+                logger.warning("%s inconsistency found for %s, present in base table but not in New.",
                                tag, key)
                 continue
 
@@ -587,7 +587,10 @@ class Command(BaseCommand):
         updated_at = make_aware(updated_at) if updated_at else None
 
         if overall["SubmissionType"]:
-            submission_format = SubmissionFormat.objects.get(name=overall["SubmissionType"])
+            try:
+                submission_format = SubmissionFormat.objects.get(name=overall["SubmissionType"])
+            except SubmissionFormat.DoesNotExist:
+                submission_format = None
         else:
             submission_format = None
 
