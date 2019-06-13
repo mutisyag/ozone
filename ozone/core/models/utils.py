@@ -36,3 +36,8 @@ def round_half_up(x, decimals=0):
 
     decimal.getcontext().rounding = decimal.ROUND_HALF_UP
     return float(round(decimal.Decimal(str(x)), decimals))
+
+
+def decimal_zero_if_none(value):
+    return decimal.Decimal(repr(value)) if value is not None \
+        else decimal.Decimal(0.0)

@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
@@ -11,7 +10,7 @@ from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend
 from .aggregation import ProdCons, ProdConsMT
-from .utils import model_to_dict
+from .utils import model_to_dict, decimal_zero_if_none
 
 __all__ = [
     'Article7Questionnaire',
@@ -177,9 +176,6 @@ class AggregationMixin:
         submission. Quantities are multiplied by either the ODP or GWP of each
         substance.
         """
-        def zero_if_none(value):
-            return Decimal(repr(value)) if value is not None else Decimal(0.0)
-
         potential_field = ''
         if group.is_gwp:
             potential_field = 'substance__gwp'
@@ -196,8 +192,8 @@ class AggregationMixin:
         return {
             field_name: float(sum(
                 [
-                    zero_if_none(value[field_name]) *
-                    Decimal(repr(value[potential_field]) if value[potential_field] else 0)
+                    decimal_zero_if_none(value[field_name]) *
+                    decimal_zero_if_none(value[potential_field])
                     for value in fields_values
                 ]
             ))
@@ -227,9 +223,10 @@ class AggregationMixin:
                 # Add with existing value, as a field in the aggregation
                 # table may be populated by aggregating values from several
                 # other fields in the data models.
-                value = getattr(aggregation, aggr_field) \
-                        + values[model_field]
-                setattr(aggregation, aggr_field, value)
+                value = decimal_zero_if_none(getattr(aggregation, aggr_field))
+                model_value = decimal_zero_if_none(values[model_field])
+                value += model_value
+                setattr(aggregation, aggr_field, float(value))
 
             # This will automatically trigger the calculation of computed
             # values
@@ -252,10 +249,12 @@ class AggregationMixin:
                 # Add with existing value, as a field in the aggregation
                 # table may be populated by aggregating values from several
                 # other fields in the data models.
-                model_value = getattr(entry, model_field, None)
-                model_value = model_value if model_value else 0.0
-                value = getattr(aggregation, aggr_field) + model_value
-                setattr(aggregation, aggr_field, value)
+                model_value = decimal_zero_if_none(
+                    getattr(entry, model_field, None)
+                )
+                value = decimal_zero_if_none(getattr(aggregation, aggr_field))
+                value += model_value
+                setattr(aggregation, aggr_field, float(value))
 
             form_type = submission.obligation.form_type
             if form_type in aggregation.submissions:
@@ -361,8 +360,10 @@ class AggregationMixin:
                 # Add with existing value, as a field in the aggregation table
                 # may be populated by aggregating values from several other
                 # fields in the data models.
-                value = getattr(aggregation, aggr_field) + values[model_field]
-                setattr(aggregation, aggr_field, value)
+                value = decimal_zero_if_none(getattr(aggregation, aggr_field))
+                model_value = decimal_zero_if_none(values[model_field])
+                value += model_value
+                setattr(aggregation, aggr_field, float(value))
 
             # Populate limits and baselines; calculate totals
             aggregation.populate_limits_and_baselines()
@@ -396,10 +397,12 @@ class AggregationMixin:
                 # Add with existing value, as a field in the aggregation
                 # table may be populated by aggregating values from several
                 # other fields in the data models.
-                model_value = getattr(entry, model_field, None)
-                model_value = model_value if model_value else 0.0
-                value = getattr(aggregation, aggr_field) + model_value
-                setattr(aggregation, aggr_field, value)
+                value = decimal_zero_if_none(getattr(aggregation, aggr_field))
+                model_value = decimal_zero_if_none(
+                    getattr(entry, model_field, None)
+                )
+                value += model_value
+                setattr(aggregation, aggr_field, float(value))
 
             aggregation.calculate_totals()
 

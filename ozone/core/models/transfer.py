@@ -8,6 +8,7 @@ from .legal import ReportingPeriod
 from .party import Party
 from .reporting import Submission, FormTypes
 from .substance import Substance
+from .utils import decimal_zero_if_none
 
 
 __all__ = [
@@ -102,10 +103,14 @@ class Transfer(models.Model):
         for klass, params, potential in self.get_aggregation_classes():
             # Populate aggregation data
             aggregation, created = klass.objects.get_or_create(**params)
+            to_add = decimal_zero_if_none(self.transferred_amount) * \
+                     decimal_zero_if_none(potential)
             if self.transfer_type == 'P':
-                aggregation.prod_transfer += self.transferred_amount * potential
+                existing_value = decimal_zero_if_none(aggregation.prod_transfer)
+                aggregation.prod_transfer = float(existing_value + to_add)
             elif self.transfer_type == 'C':
-                aggregation.cons_transfer += self.transferred_amount * potential
+                existing_value = decimal_zero_if_none(aggregation.cons_transfer)
+                aggregation.cons_transfer = float(existing_value + to_add)
 
             # Populate submissions list
             form_type = FormTypes.TRANSFER.value
@@ -124,35 +129,42 @@ class Transfer(models.Model):
     def clear_aggregated_data(self):
         for klass, params, potential in self.get_aggregation_classes():
             aggregation = klass.objects.filter(**params).first()
-            if aggregation:
-                # Delete the transfer data from the aggregation
-                if self.transfer_type == 'P':
-                    aggregation.prod_transfer -= self.transferred_amount * potential
-                elif self.transfer_type == 'C':
-                    aggregation.cons_transfer -= self.transferred_amount * potential
-                aggregation.save()
+            if not aggregation:
+                continue
 
-                # Clear submissions from list
-                form_type = FormTypes.TRANSFER.value
-                if form_type in aggregation.submissions:
-                    submissions_set = set(aggregation.submissions[form_type])
-                else:
-                    submissions_set = set()
-                if (
-                    self.source_party_submission
-                    and self.source_party_submission.id in submissions_set
-                ):
-                    submissions_set.remove(self.source_party_submission.id)
-                if (
-                    self.destination_party_submission
-                    and self.destination_party_submission.id in submissions_set
-                ):
-                    submissions_set.remove(self.destination_party_submission.id)
-                aggregation.submissions[form_type] = list(submissions_set)
+            # Delete the transfer data from the aggregation
+            to_substract = decimal_zero_if_none(self.transferred_amount) * \
+                           decimal_zero_if_none(potential)
+            if self.transfer_type == 'P':
+                existing_value = decimal_zero_if_none(aggregation.prod_transfer)
+                aggregation.prod_transfer = float(existing_value - to_substract)
+            elif self.transfer_type == 'C':
+                existing_value = decimal_zero_if_none(aggregation.cons_transfer)
+                aggregation.cons_transfer = float(existing_value - to_substract)
 
-                # Delete empty aggregations
-                if aggregation.is_empty():
-                    aggregation.delete()
+            # Clear submissions from list
+            form_type = FormTypes.TRANSFER.value
+            if form_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[form_type])
+            else:
+                submissions_set = set()
+            if (
+                self.source_party_submission
+                and self.source_party_submission.id in submissions_set
+            ):
+                submissions_set.remove(self.source_party_submission.id)
+            if (
+                self.destination_party_submission
+                and self.destination_party_submission.id in submissions_set
+            ):
+                submissions_set.remove(self.destination_party_submission.id)
+            aggregation.submissions[form_type] = list(submissions_set)
+
+            aggregation.save()
+
+            # Delete empty aggregations
+            if aggregation.is_empty():
+                aggregation.delete()
 
     def clean(self):
         if self.destination_party_submission:
