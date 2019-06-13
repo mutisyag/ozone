@@ -81,7 +81,14 @@ export default {
     }
   },
   async created() {
-    this.parties = await this.$store.dispatch('getDashboardParties')
+    const currentUser = await this.$store.dispatch('getMyCurrentUser')
+    const parties = await this.$store.dispatch('getDashboardParties')
+    if (currentUser[0].is_secretariat) {
+      this.parties = parties
+    } else {
+      this.parties = parties.filter(p => p.value === currentUser[0].party)
+      this.selected.parties = this.parties
+    }
     this.periods = await this.$store.dispatch('getDashboardPeriods')
     this.reports = await this.$store.dispatch('getReportsList')
   },

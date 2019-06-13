@@ -127,6 +127,9 @@ const actions = {
       commit('setCurrentUser', response.data)
       // TODO: WHY IS IT AN ARRAY ?
       commit('setCurrentUserPartyInDashboard', response.data[0].party)
+      return new Promise((resolve) => {
+        resolve(response.data)
+      })
     } catch (e) {
       console.log('getMyCurrentUser', e)
     }
