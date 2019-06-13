@@ -482,11 +482,13 @@ class CriticalUseCategoryAdmin(admin.ModelAdmin):
 @admin.register(Transfer)
 class TransferAdmin(admin.ModelAdmin):
     list_display = (
-        'source_party', 'destination_party', 'substance', 'transferred_amount',
+        'reporting_period', 'source_party', 'destination_party', 'substance', 'transferred_amount',
     )
     list_filter = (
         ('source_party', MainPartyFilter),
         ('destination_party', MainPartyFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('substance__name', custom_title_dropdown_filter('Substance')),
     )
     search_fields = (
         'source_party__name', 'destination_party__name', 'substance__name'
