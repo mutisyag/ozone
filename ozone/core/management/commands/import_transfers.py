@@ -2,6 +2,8 @@ import logging
 
 from django.core.management.base import BaseCommand
 from django.db import transaction
+from django.utils.timezone import make_aware
+
 from openpyxl import load_workbook
 
 from ozone.core.models import (
@@ -238,6 +240,7 @@ class Command(BaseCommand):
 
     def get_submission_data(self, letter):
         letter_date = letter["LetterDate"] if letter else None
+        letter_date = make_aware(letter_date) if letter_date else None
         if letter:
             transfers_remarks_secretariat = letter["LetterDate"].strftime("%m/%d/%Y") + "\n"
             transfers_remarks_secretariat += letter["LetterSubject"] + "\n"

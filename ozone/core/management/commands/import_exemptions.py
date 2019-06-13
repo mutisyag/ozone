@@ -3,6 +3,8 @@ import re
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
+from django.utils.timezone import make_aware
+
 from openpyxl import load_workbook
 
 from ozone.core.models import (
@@ -293,9 +295,11 @@ class Command(BaseCommand):
             )
         for obj in submission.history.all():
             obj.history_user = self.admin
-            obj.created_at = data["submission"]["created_at"]
-            obj.updated_at = data["submission"]["updated_at"]
-            obj.history_date = data["submission"]["created_at"]
+            if data["submission"]["created_at"]:
+                obj.history_date = data["submission"]["created_at"]
+                obj.created_at = data["submission"]["created_at"]
+            if data["submission"]["updated_at"]:
+                obj.updated_at = data["submission"]["updated_at"]
             obj.save()
 
         return True
@@ -364,9 +368,11 @@ class Command(BaseCommand):
             )
         for obj in submission.history.all():
             obj.history_user = self.admin
-            obj.created_at = data["submission"]["created_at"]
-            obj.updated_at = data["submission"]["updated_at"]
-            obj.history_date = data["submission"]["created_at"]
+            if data["submission"]["created_at"]:
+                obj.created_at = data["submission"]["created_at"]
+                obj.history_date = data["submission"]["created_at"]
+            if data["submission"]["updated_at"]:
+                obj.updated_at = data["submission"]["updated_at"]
             obj.save()
 
         return True
@@ -423,6 +429,8 @@ class Command(BaseCommand):
 
         if not created_at:
             created_at = updated_at
+        created_at = make_aware(created_at) if created_at else created_at
+        updated_at = make_aware(updated_at) if updated_at else updated_at
 
         return {
             "submission": {
@@ -474,6 +482,10 @@ class Command(BaseCommand):
         created_at = min(created_at_list) if created_at_list else updated_at
 
         is_emergency = self.check_is_emergency(rows['EssenExemp'])
+
+        submitted_at = make_aware(submitted_at) if submitted_at else submitted_at
+        created_at = make_aware(created_at) if created_at else created_at
+        updated_at = make_aware(updated_at) if updated_at else updated_at
 
         return {
             "submission": {
