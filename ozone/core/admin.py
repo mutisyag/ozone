@@ -235,14 +235,18 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Substance)
 class SubstanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'description', 'sort_order')
-    list_filter = ('group',)
+    list_display = ('name', 'group', 'description', 'odp', 'gwp', 'formula', 'sort_order')
+    list_filter = ('group', 'is_contained_in_polyols', 'is_captured', 'has_critical_uses')
     search_fields = ['name', 'description']
 
 
 @admin.register(Blend)
 class BlendAdmin(admin.ModelAdmin):
-    list_display = ('blend_id', 'composition', 'type', 'party', 'sort_order')
+    list_display = (
+        'blend_id', 'composition',
+        'type', 'party', 'odp', 'gwp',
+        'trade_name', 'sort_order',
+    )
     list_filter = (
         'type',
         ('party', MainPartyFilter),

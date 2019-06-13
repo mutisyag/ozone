@@ -131,11 +131,21 @@ export default {
   computed: {
     tableFields() {
       return [{
-        key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-center'
+        key: 'blend_id', label: this.$gettext('Name'), sortable: true, class: 'text-left'
+      }, {
+        key: 'type', label: this.$gettext('Type'), class: 'text-center'
+      }, {
+        key: 'odp', label: this.$gettext('ODP'), class: 'text-right'
+      }, {
+        key: 'gwp', label: this.$gettext('GWP'), class: 'text-right'
+      }, {
+        key: 'composition', label: this.$gettext('Composition'), class: 'text-center'
       }, {
         key: 'components', label: this.$gettext('Components'), class: 'text-center'
       }, {
-        key: 'other_names', label: this.$gettext('Other Names'), sortable: true, class: 'text-center w-10'
+        key: 'other_names', label: this.$gettext('Other names'), sortable: true, class: 'text-center w-10'
+      }, {
+        key: 'trade_name', label: this.$gettext('Trade names'), sortable: true, class: 'text-center'
       }]
     },
     tableComponentsFields() {

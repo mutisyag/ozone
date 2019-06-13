@@ -248,7 +248,9 @@ class Substance(models.Model):
         return self.name
 
     class Meta:
-        ordering = ('group', 'substance_id')
+        ordering = [
+            'sort_order', 'pk',
+        ]
         db_table = 'substance'
 
 
@@ -383,6 +385,9 @@ class Blend(models.Model):
 
     class Meta:
         db_table = "blend"
+        ordering = [
+            'sort_order', 'pk',
+        ]
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -445,7 +450,9 @@ class BlendComponent(models.Model):
         return super().save(*args, **kwargs)
 
     class Meta:
-        ordering = ('blend', 'substance')
+        ordering = [
+            'blend__sort_order', 'substance__sort_order'
+        ]
         db_table = "blend_component"
 
 

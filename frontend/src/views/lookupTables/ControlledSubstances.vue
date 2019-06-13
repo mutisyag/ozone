@@ -92,37 +92,25 @@ export default {
           key: 'name',
           label: this.$gettext('Name'),
           sortable: true,
-          class: 'text-center'
+          class: 'text-left'
         },
         {
           key: 'odp',
           label: this.$gettext('ODP'),
           sortable: true,
-          class: 'text-center'
+          class: 'text-right'
+        },
+        {
+          key: 'gwp',
+          label: this.$gettext('GWP'),
+          sortable: true,
+          class: 'text-right'
         },
         {
           key: 'formula',
           label: this.$gettext('Formula'),
           sortable: true,
-          class: 'text-center'
-        },
-        {
-          key: 'number_of_isomers',
-          label: this.$gettext('Number of Isomers'),
-          sortable: true,
-          class: 'text-center'
-        },
-        {
-          key: 'min_odp',
-          label: this.$gettext('MinODP'),
-          sortable: true,
-          class: 'text-center'
-        },
-        {
-          key: 'max_odp',
-          label: this.$gettext('MaxODP'),
-          sortable: true,
-          class: 'text-center'
+          class: 'text-left'
         }
       ]
     },
