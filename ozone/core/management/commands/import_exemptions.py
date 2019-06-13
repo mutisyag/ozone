@@ -208,16 +208,16 @@ class Command(BaseCommand):
     def process_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
         """
         Process the parsed data and insert it into the DB.
-        Only a wrapper, see proccess_submission_exemption_entry and proccess_submission_raf_entry.
+        Only a wrapper, see process_submission_exemption_entry and process_submission_raf_entry.
         """
 
         try:
             if obligation.pk == 2:
-                return self.proccess_submission_raf_entry(
+                return self.process_submission_raf_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
             else:
-                return self.proccess_submission_exemption_entry(
+                return self.process_submission_exemption_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
         except Exception as e:
@@ -225,7 +225,7 @@ class Command(BaseCommand):
                          exc_info=True)
             return False
 
-    def proccess_submission_raf_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
+    def process_submission_raf_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
         """
         Inserts the processed data into the DB.
         """
@@ -281,13 +281,26 @@ class Command(BaseCommand):
         submission._current_state = "finalized"
         submission.save()
 
+        # Setting updated_at and created_at like this avoids creating a new
+        # history item.
+        if data["submission"]["created_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                created_at=data["submission"]["created_at"]
+            )
+        if data["submission"]["updated_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                updated_at=data["submission"]["updated_at"]
+            )
         for obj in submission.history.all():
             obj.history_user = self.admin
+            obj.created_at = data["submission"]["created_at"]
+            obj.updated_at = data["submission"]["updated_at"]
+            obj.history_date = data["submission"]["created_at"]
             obj.save()
 
         return True
 
-    def proccess_submission_exemption_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
+    def process_submission_exemption_entry(self, party_abbr, period_name, rows, obligation, recreate=False, purge=False):
         """
         Inserts the processed data into the DB.
         """
@@ -339,8 +352,21 @@ class Command(BaseCommand):
         submission._current_state = "finalized"
         submission.save()
 
+        # Setting updated_at and created_at like this avoids creating a new
+        # history item.
+        if data["submission"]["created_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                created_at=data["submission"]["created_at"]
+            )
+        if data["submission"]["updated_at"]:
+            Submission.objects.filter(pk=submission.pk).update(
+                updated_at=data["submission"]["updated_at"]
+            )
         for obj in submission.history.all():
             obj.history_user = self.admin
+            obj.created_at = data["submission"]["created_at"]
+            obj.updated_at = data["submission"]["updated_at"]
+            obj.history_date = data["submission"]["created_at"]
             obj.save()
 
         return True

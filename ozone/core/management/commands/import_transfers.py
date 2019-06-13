@@ -122,8 +122,21 @@ class Command(BaseCommand):
             submission._current_state = "submitted"
             submission.save()
 
+            # Setting updated_at and created_at like this avoids creating a new
+            # history item.
+            if entry["submission"]["created_at"]:
+                Submission.objects.filter(pk=submission.pk).update(
+                    created_at=entry["submission"]["created_at"]
+                )
+            if entry["submission"]["updated_at"]:
+                Submission.objects.filter(pk=submission.pk).update(
+                    updated_at=entry["submission"]["updated_at"]
+                )
             for obj in submission.history.all():
                 obj.history_user = self.admin
+                obj.created_at = entry["submission"]["created_at"]
+                obj.updated_at = entry["submission"]["updated_at"]
+                obj.history_date = entry["submission"]["created_at"]
                 obj.save()
 
             self.submissions_letters_map[letter_id] = submission

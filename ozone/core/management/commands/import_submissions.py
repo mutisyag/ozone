@@ -741,6 +741,8 @@ class Command(BaseCommand):
         # Fill aggregated data on submission import
         submission.fill_aggregated_data()
 
+        # Setting updated_at and created_at like this avoids creating a new
+        # history item.
         if values["submission"]["created_at"]:
             Submission.objects.filter(pk=submission.pk).update(
                 created_at=values["submission"]["created_at"]
