@@ -121,7 +121,7 @@ class Command(BaseCommand):
                 setattr(submission.info, key, value)
             submission.info.save()
 
-            submission._current_state = "submitted"
+            submission._current_state = "finalized"
             submission.save()
 
             # Setting updated_at and created_at like this avoids creating a new
@@ -258,7 +258,7 @@ class Command(BaseCommand):
                 "submitted_at": letter_date,
                 "version": 1,
                 "_workflow_class": "default_transfer",
-                "_current_state": "submitted",
+                "_current_state": "finalized",
                 "_previous_state": None,
                 "flag_provisional": False,
                 "flag_valid": True,

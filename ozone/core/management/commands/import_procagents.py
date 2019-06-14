@@ -404,7 +404,7 @@ class Command(BaseCommand):
             setattr(submission.info, key, value)
         submission.info.save()
 
-        submission._current_state = "submitted"
+        submission._current_state = "finalized"
         submission.save()
 
         for obj in submission.history.all():
@@ -425,7 +425,7 @@ class Command(BaseCommand):
                 "submitted_at": date_reported,
                 "version": 1,
                 "_workflow_class": "default_process_agent",
-                "_current_state": "submitted",
+                "_current_state": "finalized",
                 "_previous_state": None,
                 "flag_provisional": False,
                 "flag_valid": True,

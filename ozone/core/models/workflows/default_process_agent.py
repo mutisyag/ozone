@@ -16,10 +16,12 @@ class DefaultProcessAgentWorkflowStateDescription(xworkflows.Workflow):
     states = (
         ('data_entry', 'Data Entry'),
         ('submitted', 'Submitted'),
+        ('finalized', 'Finalized'),
     )
 
     transitions = (
         ('submit', 'data_entry', 'submitted'),
+        ('finalize', 'submitted', 'finalized'),
     )
 
     initial_state = 'data_entry'
@@ -30,7 +32,7 @@ class DefaultProcessAgentWorkflow(BaseWorkflow):
     """
     Implements custom transition logic for the default process agents workflow.
     """
-    final_states = ['submitted']
+    final_states = ['finalized']
     editable_data_states = ['data_entry']
     incorrect_data_states = []
 
@@ -56,3 +58,10 @@ class DefaultProcessAgentWorkflow(BaseWorkflow):
         # Set submitted_at flag
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+
+    @xworkflows.transition_check('finalize')
+    def check_finalize(self):
+        """
+        Ensure that only secretariat-edit users can finalize submissions
+        """
+        return not self.user.is_read_only and self.user.is_secretariat
