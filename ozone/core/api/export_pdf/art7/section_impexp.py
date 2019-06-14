@@ -55,6 +55,13 @@ def to_row(obj, row_index, party_field, text_qps):
         sm_l(get_remarks(obj)),
     ]
     rows.append(base_row)
+    if obj.blend:
+        current_row = row_index + len(rows) - 1
+        # Move blend name to first column and merge with second column
+        base_row[0] = base_row[1]
+        styles.extend([
+            ('SPAN', (0, current_row), (1, current_row)),
+        ])
     if is_subtotal:
         base_row[0] = smb_l(
             '%s %s (%s)' % (_('Subtotal'), substance_name, _('excluding polyols'))
@@ -269,7 +276,7 @@ def _export(data, comments, party_field, texts):
     table = rows_to_table(
         header,
         rows,
-        col_widths([1.0, 2.8, 3.5, 2.5, 2.5, 2.5, 2.5, 5, 5]),
+        col_widths([1.0, 4, 2.9, 2.5, 2.5, 2.5, 2.5, 4.8, 4.8]),
         styles
     )
 

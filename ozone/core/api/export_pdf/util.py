@@ -282,11 +282,13 @@ def get_substance_or_blend_name(obj):
 
 
 def get_group_name(obj):
-    return (
-        obj.substance.group.name
-        if obj.substance and obj.substance.group
-        else ''
-    )
+    if obj.substance and obj.substance.group_id:
+        if obj.substance.group.group_id == 'F':
+            return 'F/II' if obj.substance.is_captured else 'F/I'
+        else:
+            return obj.substance.group.name
+    else:
+        return ''
 
 
 def rows_to_table(header, rows, colWidths, style):
