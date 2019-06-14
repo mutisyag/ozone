@@ -10,6 +10,8 @@ from .reporting import Submission, FormTypes
 from .substance import Substance
 from .utils import decimal_zero_if_none
 
+from model_utils import FieldTracker
+
 
 __all__ = [
     'Transfer',
@@ -67,29 +69,32 @@ class Transfer(models.Model):
         on_delete=models.PROTECT,
     )
 
-    def get_aggregation_classes(self):
+    tracker = FieldTracker()
+
+    @staticmethod
+    def get_aggregation_classes(substance, source_party, reporting_period):
         potential = 1
-        if self.substance.group.is_gwp:
-            potential = self.substance.gwp
-        elif self.substance.group.is_odp:
-            potential = self.substance.odp
+        if substance.group.is_gwp:
+            potential = substance.gwp
+        elif substance.group.is_odp:
+            potential = substance.odp
 
         data = [
             (
                 ProdCons,
                 {
-                    'party': self.source_party,
-                    'reporting_period': self.reporting_period,
-                    'group': self.substance.group,
+                    'party': source_party,
+                    'reporting_period': reporting_period,
+                    'group': substance.group,
                 },
                 potential
             ),
             (
                 ProdConsMT,
                 {
-                    'party': self.source_party,
-                    'reporting_period': self.reporting_period,
-                    'substance': self.substance,
+                    'party': source_party,
+                    'reporting_period': reporting_period,
+                    'substance': substance,
                 },
                 1
             )
@@ -100,7 +105,9 @@ class Transfer(models.Model):
         """
         Populates relevant fields in aggregation tables based on this transfer.
         """
-        for klass, params, potential in self.get_aggregation_classes():
+        for klass, params, potential in self.__class__.get_aggregation_classes(
+            self.substance, self.source_party, self.reporting_period
+        ):
             # Populate aggregation data
             aggregation, created = klass.objects.get_or_create(**params)
             to_add = decimal_zero_if_none(self.transferred_amount) * \
@@ -126,19 +133,48 @@ class Transfer(models.Model):
 
             aggregation.save()
 
-    def clear_aggregated_data(self):
-        for klass, params, potential in self.get_aggregation_classes():
+    def clear_aggregated_data(self, use_old_values=False):
+        if use_old_values:
+            substance = Substance.objects.get(
+                id=self.tracker.previous('substance_id')
+            )
+            amount = self.tracker.previous('transferred_amount')
+            source_party = Party.objects.get(
+                id=self.tracker.previous('source_party_id')
+            )
+            reporting_period = ReportingPeriod.objects.get(
+                id=self.tracker.previous('reporting_period_id')
+            )
+            transfer_type = self.tracker.previous('transfer_type')
+            source_party_submission = Submission.objects.get(
+                id=self.tracker.previous('source_party_submission_id')
+            )
+            destination_party_submission = Submission.objects.get(
+                id=self.tracker.previous('destination_party_submission_id')
+            )
+        else:
+            substance = self.substance
+            amount = self.transferred_amount
+            source_party = self.source_party
+            reporting_period = self.reporting_period
+            transfer_type = self.transfer_type
+            source_party_submission = self.source_party_submission
+            destination_party_submission = self.destination_party_submission
+
+        for klass, params, potential in self.__class__.get_aggregation_classes(
+            substance, source_party, reporting_period
+        ):
             aggregation = klass.objects.filter(**params).first()
             if not aggregation:
                 continue
 
             # Delete the transfer data from the aggregation
-            to_substract = decimal_zero_if_none(self.transferred_amount) * \
+            to_substract = decimal_zero_if_none(amount) * \
                            decimal_zero_if_none(potential)
-            if self.transfer_type == 'P':
+            if transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
                 aggregation.prod_transfer = float(existing_value - to_substract)
-            elif self.transfer_type == 'C':
+            elif transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
                 aggregation.cons_transfer = float(existing_value - to_substract)
 
@@ -149,15 +185,15 @@ class Transfer(models.Model):
             else:
                 submissions_set = set()
             if (
-                self.source_party_submission
-                and self.source_party_submission.id in submissions_set
+                source_party_submission
+                and source_party_submission.id in submissions_set
             ):
-                submissions_set.remove(self.source_party_submission.id)
+                submissions_set.remove(source_party_submission.id)
             if (
-                self.destination_party_submission
-                and self.destination_party_submission.id in submissions_set
+                destination_party_submission
+                and destination_party_submission.id in submissions_set
             ):
-                submissions_set.remove(self.destination_party_submission.id)
+                submissions_set.remove(destination_party_submission.id)
             aggregation.submissions[form_type] = list(submissions_set)
 
             aggregation.save()
@@ -210,14 +246,18 @@ class Transfer(models.Model):
         super().clean()
 
     def delete(self, *args, **kwargs):
-        self.clear_aggregated_data()
+        self.clear_aggregated_data(use_old_values=False)
 
         super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
         self.full_clean()
 
-        # Populate aggregation data
+        if self.pk or not kwargs.get('force_insert', False):
+            # If this is an edit, delete anything related to the old values
+            self.clear_aggregated_data(use_old_values=True)
+
+        # Populate aggregation data using current values
         self.populate_aggregated_data()
 
         super().save(*args, **kwargs)
