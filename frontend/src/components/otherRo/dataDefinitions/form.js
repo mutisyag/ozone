@@ -18,10 +18,7 @@ const getFormOtherRo = ($gettext) => {
         'submissionDefaultValues.submission_format'
       ],
       comments_default_properties: {
-        'hat_imports_remarks_party': '',
-        'hat_imports_remarks_secretariat': '',
-        'hat_production_remarks_party': '',
-        'hat_production_remarks_secretariat': ''
+        'transfers_remarks_secretariat': ''
       },
       comments_endpoint_url: 'submission_remarks'
     },
@@ -41,6 +38,12 @@ const getFormOtherRo = ($gettext) => {
         title: $gettext('Transfers'),
         titleHtml: `<b>${$gettext('Transfers')}</b> <br><small>${$gettext('Annex F substances for exempted subsectors')} <br> ${$gettext('in metric tonnes (not ODP or CO2-equivalent tonnes)')}</small>`,
         form_fields: [],
+        comments: {
+          transfers_remarks_secretariat: {
+            selected: '',
+            type: 'textarea'
+          }
+        },
         blend_substance_headers: ['substance', 'source_party', 'destination_party', 'transferred_amount', 'reporting_period', 'is_basic_domestic_need'],
         get fields_order() {
           return this.section_subheaders.map(x => x.name)

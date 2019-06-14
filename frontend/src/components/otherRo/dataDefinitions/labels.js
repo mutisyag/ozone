@@ -12,7 +12,8 @@ const getLabels = ($gettext) => {
       remarks_party: $gettext('Remarks (Party)'),
       transferred_amount: $gettext('Transferred amount'),
       reporting_period: $gettext('Reporting period'),
-      is_basic_domestic_need: $gettext('Basic domestic need')
+      is_basic_domestic_need: $gettext('Basic domestic need'),
+      transfers_remarks_secretariat: $gettext('Comments (Secretariat)')
     }
   }
   return labels
