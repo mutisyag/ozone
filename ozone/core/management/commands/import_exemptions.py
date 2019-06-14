@@ -487,6 +487,11 @@ class Command(BaseCommand):
         created_at = make_aware(created_at) if created_at else created_at
         updated_at = make_aware(updated_at) if updated_at else updated_at
 
+        nominations = self.get_nominations(party, period, rows['EssenNom'])
+        approvals = self.get_exemptions_approved(
+            party, period, rows['EssenExemp']
+        )
+
         return {
             "submission": {
                 "schema_version": "legacy",
@@ -501,6 +506,7 @@ class Command(BaseCommand):
                 "flag_provisional": False,
                 "flag_valid": True,
                 "flag_superseded": False,
+                "flag_approved": len(approvals) > 0,
                 "created_by_id": self.admin.id,
                 "last_edited_by_id": self.admin.id,
                 "obligation_id": 11,
@@ -520,8 +526,8 @@ class Command(BaseCommand):
                 "email": "",
                 "date": created_at
             },
-           "nominations": self.get_nominations(party, period, rows['EssenNom']),
-           "exemptionapproveds": self.get_exemptions_approved(party, period, rows['EssenExemp'])
+           "nominations": nominations,
+           "exemptionapproveds": approvals,
         }
 
     def get_rafs(self, party, period, rows):
