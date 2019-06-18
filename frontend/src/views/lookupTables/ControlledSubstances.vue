@@ -111,6 +111,12 @@ export default {
           label: this.$gettext('Formula'),
           sortable: true,
           class: 'text-left'
+        },
+        {
+          key: 'number_of_isomers',
+          label: this.$gettext('Number of isomers'),
+          sortable: true,
+          class: 'text-right'
         }
       ]
     },

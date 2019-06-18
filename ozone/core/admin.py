@@ -235,7 +235,10 @@ class GroupAdmin(admin.ModelAdmin):
 
 @admin.register(Substance)
 class SubstanceAdmin(admin.ModelAdmin):
-    list_display = ('name', 'group', 'description', 'odp', 'gwp', 'formula', 'sort_order')
+    list_display = (
+        'name', 'group', 'description', 'odp', 'gwp',
+        'formula', 'number_of_isomers', 'sort_order',
+    )
     list_filter = ('group', 'is_contained_in_polyols', 'is_captured', 'has_critical_uses')
     search_fields = ['name', 'description']
 
