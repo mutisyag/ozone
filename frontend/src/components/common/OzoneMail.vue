@@ -1,13 +1,24 @@
 <template>
     <div v-if="templates && sender">
-      <b-btn class="square-right square-left" @click="getMail()" variant="outline-dark" v-translate>Ozone Mail</b-btn>
-      <b-modal title="OzoneMail" id="ozoneMail" size="xl" ref="ozoneMailModal">
-        <b-tabs>
+      <b-btn class="square-right square-left" @click="getMail()" variant="outline-dark" v-translate>E-mail</b-btn>
+      <b-modal title="E-mail" id="ozoneMail" size="xl" ref="ozoneMailModal">
+        <b-tabs v-model="tabIndex">
           <b-tab :title="$gettext('Send a message')">
             <b-row>
                 <b-col cols="8">
                     <b-input-group class="mb-1" prepend="To">
-                      <b-input v-model="mail.to_email"></b-input>
+                      <multiselect
+                            label="text"
+                            @tag="addTagTo($event)"
+                            :taggable="true"
+                            trackBy="value"
+                            :multiple="true"
+                            :close-on-select="true"
+                            :tag-placeholder="$gettext('Press enter to add an email')"
+                            :placeholder="$gettext('Type the recipient address and press enter')"
+                            v-model="mail.to_email"
+                            :options="toList"
+                            />
                     </b-input-group>
                     <b-input-group class="mb-1" prepend="Cc">
                       <multiselect
@@ -18,7 +29,7 @@
                             :multiple="true"
                             :close-on-select="true"
                             :tag-placeholder="$gettext('Press enter to add an email')"
-                            :placeholder="$gettext('CC')"
+                            :placeholder="$gettext('Type the recipient address and press enter')"
                             v-model="mail.cc"
                             :options="ccList"
                             />
@@ -32,16 +43,16 @@
                 <b-col>
                   <h4>Templates</h4>
                   <b-list-group class="templates">
-                    <b-list-group-item @click="mail.body = template.description" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
+                    <b-list-group-item @click="mail.body = template.description; mail.subject = template.subject" class="template-item" v-for="(template, template_index) in templates" :key="template_index">
                       <b>Template {{ template.name }} </b>
                       <br>
-                      {{ template.description }}
+                      {{ template.subject }}
                     </b-list-group-item>
                   </b-list-group>
                 </b-col>
             </b-row>
           </b-tab>
-          <b-tab v-if="history" :title="$gettext('Conversation history')">
+          <b-tab v-if="history" :title="$gettext('Correspondence')">
             <div class="mb-3" v-for="(entry, index) in history" :key="index">
                 <small style="float: right" class="muted">Date: 10 May 2019</small>
                 <h4>{{ entry.subject }}</h4>
@@ -72,9 +83,11 @@ export default {
   },
   data() {
     return {
+      tabIndex: 0,
       ccList: [],
+      toList: [],
       mail: {
-        to_email: null,
+        to_email: [],
         cc: [],
         subject: null,
         body: null
@@ -82,6 +95,9 @@ export default {
       templates: this.$store.state.emailTemplates,
       history: null
     }
+  },
+  mounted() {
+    this.addTagTo(this.sender)
   },
   computed: {
     sender() {
@@ -104,9 +120,18 @@ export default {
       this.mail.cc.push(tag.value)
     },
 
+    addTagTo(newTag) {
+      const tag = {
+        text: newTag,
+        value: newTag
+      }
+      this.toList.push(tag)
+      this.mail.to_email.push(tag.value)
+    },
+
     async sendMail() {
       const currentMail = this.mail
-      currentMail.from_email = this.sender
+      currentMail.from_email = this.$store.state.currentUser.email
       await sendEmail(this.$store.state.current_submission.id, currentMail)
       this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
@@ -119,7 +144,9 @@ export default {
         subject: null,
         body: null
       }
-      this.getMail()
+      this.getMail().then(() => {
+        this.tabIndex = 1
+      })
     }
   }
 }
