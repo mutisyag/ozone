@@ -17,7 +17,7 @@ const getNav = ($gettext) => [{
   icon: 'icon-people'
 },
 {
-  name: $gettext('Limits'),
+  name: $gettext('Consumption / production'),
   icon: 'icon-graph',
   url: '/production-consumption'
 },
