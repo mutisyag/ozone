@@ -1796,7 +1796,7 @@ class EmailSerializer(serializers.ModelSerializer):
         email = Email(
             subject=validated_data['subject'],
             body=validated_data['body'],
-            to_email=validated_data['to_email'],
+            to=validated_data['to'],
             from_email=validated_data['from_email'],
             cc=validated_data['cc'],
             submission=self.context['submission']

@@ -31,6 +31,7 @@ class Command(BaseCommand):
         'baselines',
         'limits',
         'critical_use_categories',
+        'email_templates',
     )
 
     FIXTURES_NOT_IN_TEST = (

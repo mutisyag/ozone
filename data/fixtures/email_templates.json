@@ -1,0 +1,110 @@
+[
+  {
+    "model": "core.emailtemplate",
+    "pk": 1,
+    "fields": {
+      "name": "EN_no_issues",
+      "subject": "[A7 2018] Country_XXXX: data reporting for 2018",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nOn behalf of the Executive Secretary, Ms. Tina Birmpili, I am pleased to acknowledge the submission of annual data under Article 7 of the Montreal Protocol for 2018. I wish to confirm that the Ozone Secretariat has recorded the information into the ODS Database system.   \r\n \r\nPlease find attached two PDF files, one showing the calculated levels of consumption, and the other showing the Article 7 raw data as recorded in our database. Kindly review the information and do not hesitate to contact us should you find any discrepancy. \r\n \r\nBest Regards,\r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 2,
+    "fields": {
+      "name": "FR_no_issues",
+      "subject": "[A7 2018] PAYS_XXXX: Données Article 7 du Protocole de Montréal",
+      "description": "Cher/Chère XXXX, \r\n \r\nAu nom de la secrétaire exécutive, Mme. Tina Birmpili, j'ai le plaisir d'accuser réception de votre soumission des données en vertu de l'article 7 du protocole de Montréal pour l'année 2017. Je confirme que le secrétariat a mis à jour notre système de base de données de SAO. \r\n \r\nVeuillez trouver ci-joint deux fichiers dans le format de PDF.  Le premier fichier montre les niveaux calculés de consommation pour l'année, et le deuxième montre les données saisies dans la base de données.   Veuillez vérifier les données saisies et n'hésitez pas à nous contacter si vous avez besoin de n'importe quelle clarification ou si vous trouvez n'importe quelle anomalie. \r\n  \r\nCordialement,\r\n===\r\n \r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\n \r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 3,
+    "fields": {
+      "name": "EN_no_imports",
+      "subject": "[A7 2018] Country_XXXX: Data Reporting",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nOn behalf of the Executive Secretary, Ms. Tina Birmpili, I am pleased to acknowledge the submission of annual data under Article 7 of the Montreal Protocol for 2018. I wish to confirm that the Ozone Secretariat has recorded the information into the ODS Database system.   \r\n \r\nPlease find attached two PDF files, one showing the calculated levels of consumption, and the other showing the Article 7 raw data as recorded in our database. Kindly review the information and do not hesitate to contact us should you find any discrepancy. \r\n \r\nMeanwhile, we invite you to provide, on a voluntary basis, information on countries from which your imports of ODS were derived, as envisaged in decision XXIV/12 and the annex to the revised data reporting forms for Imports (see the attached excel file). \r\n \r\nBest Regards,\r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 4,
+    "fields": {
+      "name": "FR_no_imports",
+      "subject": "[A7 2018] PAYS_XXXX: Communication des données au titre de l'année 2018 en application de l'article n°7 du Protocole de Montréal",
+      "description": "Cher/Chère XXXX, \r\n \r\nAu nom de la secrétaire exécutive, Mme. Tina Birmpili, j'ai le plaisir d'accuser réception de votre soumission des données en vertu de l'article 7 du protocole de Montréal pour l'année 2018. Je confirme que le secrétariat a mis à jour notre système de base de données de SAO. \r\n \r\nVeuillez trouver ci-joint deux fichiers dans le format de PDF.  Le premier fichier montre les niveaux calculés de consommation pour l'année, et le deuxième montre les données saisies dans la base de données.   Veuillez vérifier les données saisies et n'hésitez pas à nous contacter si vous avez besoin de n'importe quelle clarification ou si vous trouvez n'importe quelle anomalie. \r\n \r\nEn attendant, je voudrais vous inviter à fournir, sur une base volontaire, la liste des pays exportateurs et les importations venant de chaque de ces pays, comme prévu dans l'annexe ci-joint. Cette annexe a été introduit par décision XXIV/12. \r\n  \r\nCordialement,\r\n===\r\n \r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\n \r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 5,
+    "fields": {
+      "name": "EN_blank_cells",
+      "subject": "[A7 2018] Country_XXXX: ODS Consumption for year 2018 - Zeros/Blank cells not completed",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nOn behalf of the Executive Secretary, Ms. Tina Birmpili, I am pleased to acknowledge the submission of annual data under Article 7 of the Montreal Protocol for 2018. I wish to confirm that the Ozone Secretariat has recorded the information into the ODS Database system.   \r\n \r\nPlease find attached two PDF files, one showing the calculated levels of consumption, and the other showing the Article 7 raw data as recorded in our database. Kindly review the information and do not hesitate to contact us should you find any discrepancy. \r\n \r\nMeanwhile, we kindly request you to clarify whether the blank cells on data form 1 for reporting of imports represent zeros. This request for clarification is based on decision XXIV/14, which requested parties, when reporting production, imports, exports or destruction, to enter a number in each cell in the data reporting forms that they submit, including zero, where appropriate, rather than leaving the cells blank. \r\n \r\nBest Regards,\r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 6,
+    "fields": {
+      "name": "FR_blank_cells",
+      "subject": "[A7 2018] PAYS_XXXX: Communication des DONNÉS 2018",
+      "description": "Cher/Chère XXXX, \r\n \r\nAu nom de la secrétaire exécutive, Mme. Tina Birmpili, j'ai le plaisir d'accuser réception de votre soumission des données en vertu de l'article 7 du protocole de Montréal pour l'année 2018. Je confirme que le secrétariat a mis à jour notre système de base de données de SAO. \r\n \r\nVeuillez trouver ci-joint deux fichiers dans le format de PDF.  Le premier fichier montre les niveaux calculés de consommation pour l'année, et le deuxième montre les données saisies dans la base de données.   Veuillez vérifier les données saisies et n'hésitez pas à nous contacter si vous avez besoin de n'importe quelle clarification ou si vous trouvez n'importe quelle anomalie. \r\n \r\nEn attendant, je voudrais vous inviter à fournir, sur une base volontaire, la liste des pays exportateurs et les importations venant de chaque de ces pays, comme prévu dans l'annexe ci-joint. Cette annexe a été introduit par décision XXIV/12. \r\n \r\nEn outre, je voudrais vous demander de bien vouloir préciser si les cellules vides représentent zéro où vous n'avez pas mis des chiffres dans les formulaires de données sur les importations que vous avez soumis. Cette demande est fondée sur la décision XXIV/14, qui a demandé aux Parties, lorsqu’elles communiquent leurs données, d’inscrire un chiffre dans toutes les cases des formulaires, y compris le chiffre zéro, s’il y a lieu, plutôt que de laisser des cases vides. \r\n \r\nCordialement,\r\n===\r\n \r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\n \r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 7,
+    "fields": {
+      "name": "EN_zero_consumption",
+      "subject": "[A7 2018] Country_XXXX: 2018 data reporting - zero consumption",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nOn behalf of the Executive Secretary, Ms. Tina Birmpili, I am pleased to acknowledge the submission of annual data under Article 7 of the Montreal Protocol for 2018, confirming zero consumption of ozone depleting substances.    I wish to confirm that the Ozone Secretariat has recorded the information into the ODS Database system.   \r\n \r\nPlease find attached two PDF files, one showing the zero levels of consumption, and the other showing the Article 7 raw data as recorded in our database. Kindly review the information and do not hesitate to contact us should you find any discrepancy. \r\n \r\nBest Regards,\r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 8,
+    "fields": {
+      "name": "FR_zero_consumption",
+      "subject": "[A7 2018] PAYS_XXXX: 2018 data reporting - zero consumption",
+      "description": "TODO"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 9,
+    "fields": {
+      "name": "EN_Country Programme Data",
+      "subject": "[A7 2018] Country_XXXX: Country Programme data",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nOn behalf of the Executive Secretary, Ms. Tina Birmpili, I am pleased to confirm that we received your submission of completed forms for reporting of country programme data for the year 2018.    I wish to confirm that the Ozone Secretariat has extracted the Imports data and recorded the information into the ODS Database system. However, we kindly request you to complete and send us the official data reporting forms for Article 7 data. The country programme forms are primarily intended for the submission of data to the multilateral fund secretariat.  You may download the Article 7 data reporting forms from https://ozone.unep.org/countries/data-reporting-tools.\r\n \r\nPlease find attached two PDF files, one showing the calculated levels of consumption, and the other showing the raw data as recorded in our database. Kindly review the information and do not hesitate to contact us should you find any discrepancy. \r\n \r\nMeanwhile, we would like to invite you to provide, on a voluntary basis, information on the countries from which you imported your controlled substances, as envisaged in decision XXIV/12 and the annex to the revised data reporting forms for Imports (see the attached excel file).\r\n \r\nSincerely,\r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 10,
+    "fields": {
+      "name": "FR_Country Programme Data",
+      "subject": "[A7 2018] PAYS_XXXX: Données SAO 2018 - CP",
+      "description": "Cher/Chère XXXX,\r\n \r\nSuite à votre présentation des données du programme de pays pour 2018, j'ai le plaisir de vous confirmer que nous avons extrait les données des importations et nous les avons enregistrés dans notre système de base de données. Cependant, je vous prie de remplir les formulaires officiels pour l'envoi des données Article 7.  Les formulaires du programme de pays sont principalement destinés à la soumission de données au secrétariat de fonds multilatéral. Vous pouvez trouver les formulaires des données Article 7 sur notre site Web à l'adresse http://ozone.unep.org/fr/communication-des-donn%C3%A9es/outils-pour-la-communication-de-donn%C3%A9es.\r\n \r\nVeuillez trouver ci-joint deux fichiers dans le format de PDF.  Le premier fichier montre les niveaux calculés de consommation pour l'année, et le deuxième montre les données saisies dans la base de données.   Veuillez vérifier les données saisies et n'hésitez pas à nous contacter si vous avez besoin de n'importe quelle clarification ou si vous trouvez n'importe quelle anomalie. \r\n \r\nEn attendant, je voudrais vous inviter à fournir, sur une base volontaire, la liste des pays exportateurs et les importations venant de chaque de ces pays, comme prévu dans l'annexe ci-joint. Cette annexe a été introduit par décision XXIV/12. \r\n \r\nCordialement,\r\n===\r\n \r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\n \r\nUN Environment \r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya \r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 11,
+    "fields": {
+      "name": "EN_source_countries",
+      "subject": "[A7 2018] Country_XXXX: 2018 ODS Consumption Report - Source countries for imports submitted",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nThank you for submitting information on the source countries for your imports for 2018.  We have taken note of and recorded the information.\r\n \r\nThe new information is reflected in the attached file.\r\n \r\nBest Regards, \r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment\r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya\r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  },
+  {
+    "model": "core.emailtemplate",
+    "pk": 12,
+    "fields": {
+      "name": "EN_blanks_confirmed_zeros",
+      "subject": "[A7 2018] Country_XXXX: 2018 ODS Consumption Report - Zeros/Blank cells not completed",
+      "description": "Dear Mr./Mrs./Ms. XXXXX,\r\n \r\nThank you for the confirmation about blank cells representing zeros.  We have taken note of and recorded the information.\r\n  \r\nBest Regards, \r\n===\r\nGerald Mutisya (Mr.)\r\nProgramme Officer (Reporting, Data and Analysis)\r\nOzone Secretariat\r\nUN Environment\r\nUnited Nations Avenue, Gigiri\r\nP.O. Box 30552, 00100 Nairobi, Kenya\r\nTelephone: +254 20 76 24057\r\nGerald.Mutisya@un.org\r\nwww.ozone.unep.org"
+    }
+  }
+]

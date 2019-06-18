@@ -525,8 +525,8 @@ class TransferAdmin(admin.ModelAdmin):
 
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    search_fields = ['name']
+    list_display = ('name', 'subject', )
+    search_fields = ['name', 'subject', 'description', ]
 
 
 @admin.register(ProcessAgentApplication)

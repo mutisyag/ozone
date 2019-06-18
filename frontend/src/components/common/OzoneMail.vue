@@ -16,7 +16,7 @@
                             :close-on-select="true"
                             :tag-placeholder="$gettext('Press enter to add an email')"
                             :placeholder="$gettext('Type the recipient address and press enter')"
-                            v-model="mail.to_email"
+                            v-model="mail.to"
                             :options="toList"
                             />
                     </b-input-group>
@@ -57,7 +57,7 @@
                 <small style="float: right" class="muted">Date: 10 May 2019</small>
                 <h4>{{ entry.subject }}</h4>
                 <small><b>From:</b> {{entry.from_email}}</small> <br>
-                <small><b>To:</b> {{entry.to_email}} </small><br>
+                <small><b>To:</b> {{entry.to.join(', ')}} </small><br>
                 <small><b>Cc:</b> {{entry.cc.join(', ')}}</small>
                 <div class="mt-2">{{entry.body}}</div>
                 <hr>
@@ -87,7 +87,7 @@ export default {
       ccList: [],
       toList: [],
       mail: {
-        to_email: [],
+        to: [],
         cc: [],
         subject: null,
         body: null
@@ -126,7 +126,7 @@ export default {
         value: newTag
       }
       this.toList.push(tag)
-      this.mail.to_email.push(tag.value)
+      this.mail.to.push(tag.value)
     },
 
     async sendMail() {
@@ -139,7 +139,7 @@ export default {
         variant: 'success'
       })
       this.mail = {
-        to_email: null,
+        to: null,
         cc: [],
         subject: null,
         body: null

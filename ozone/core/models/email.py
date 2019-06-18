@@ -15,7 +15,7 @@ __all__ = [
 class Email(models.Model):
     subject = models.CharField(max_length=255, blank=True, null=True)
     from_email = models.CharField(max_length=255)
-    to_email = models.CharField(max_length=255)
+    to = ArrayField(models.CharField(max_length=255))
     cc = ArrayField(models.CharField(max_length=255, blank=True), null=True)
     body = models.TextField(blank=True, null=True)
     submission = models.ForeignKey(
@@ -27,7 +27,7 @@ class Email(models.Model):
             subject=self.subject,
             body=self.body,
             from_email=self.from_email,
-            to=[self.to_email],
+            to=self.to,
             cc=self.cc
         )
         email.send()
@@ -35,4 +35,5 @@ class Email(models.Model):
 
 class EmailTemplate(models.Model):
     name = models.CharField(max_length=256)
+    subject = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
