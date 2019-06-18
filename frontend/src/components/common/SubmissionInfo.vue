@@ -117,8 +117,8 @@
             </b-row>
           </b-card>
 
-          <h5 v-if="flags_info" class="mb-3" v-translate>Annex groups reported in full</h5>
-          <b-card v-if="flags_info">
+          <h5 v-if="flags_info && specific_flags_columns.length" class="mb-3" v-translate>Annex groups reported in full</h5>
+          <b-card v-if="flags_info && specific_flags_columns.length">
             <div id="annex-flags">
               <div class="flags-row" v-for="column in specific_flags_columns" :key="column">
                 <div
