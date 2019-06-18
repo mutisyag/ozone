@@ -15,10 +15,8 @@ const getFormHat = ($gettext) => {
         'initialData.display.substances',
         'initialData.display.blends',
         'initialData.display.countries',
-        'initialData.submissionFormats',
         'currentUser',
-        'permissions.form',
-        'submissionDefaultValues.submission_format'
+        'permissions.form'
       ],
       comments_default_properties: {
         'hat_imports_remarks_party': '',

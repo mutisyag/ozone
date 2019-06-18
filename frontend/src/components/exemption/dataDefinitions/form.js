@@ -14,10 +14,8 @@ const getFormExemption = ($gettext) => {
         'current_submission',
         'initialData.display.substances',
         'initialData.display.countries',
-        'initialData.submissionFormats',
         'currentUser',
-        'permissions.form',
-        'submissionDefaultValues.submission_format'
+        'permissions.form'
       ],
       comments_default_properties: {
         exemption_nomination_remarks_secretariat: '',

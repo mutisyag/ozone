@@ -15,10 +15,8 @@ const getFormRaf = ($gettext) => {
         'initialData.display.substances',
         'initialData.display.blends',
         'initialData.display.countries',
-        'initialData.submissionFormats',
         'currentUser',
         'permissions.form',
-        'submissionDefaultValues.submission_format',
         'initialData.approvedExemptionsList'
       ],
       comments_default_properties: {

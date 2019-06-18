@@ -1726,7 +1726,9 @@ class Submission(models.Model):
                         phone=latest_info.phone,
                         email=latest_info.email,
                         date=latest_info.date,
-                        submission_format=latest_info.submission_format
+                        # Don't clone the submission format, it's only needed for Art 7
+                        # and there is already a default value for it
+                        # submission_format=latest_info.submission_format
                     )
                 else:
                     info = SubmissionInfo.objects.create(submission=self)
