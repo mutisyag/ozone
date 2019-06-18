@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="flag_approved_field === undefined">
+    <!-- <div v-if="flag_approved_field === undefined"> -->
       <div
         class="mb-2"
         v-if="$store.state.current_submission.current_state === 'finalized' || $store.state.current_submission.flag_superseded"
@@ -31,8 +31,8 @@
           <i style="color: black" class="fa fa-info-circle fa-sm"></i>
         </span>
       </div>
-    </div>
-    <div v-else>
+    <!-- </div> -->
+    <!-- <div v-else>
       <span
         class="color-green mr-3"
         v-if="$store.state.current_submission.current_state === 'finalized' && flag_approved_field.selected"
@@ -47,7 +47,7 @@
         <i class="fa fa-window-close fa-sm mr-2"></i>
         <span v-translate>Not approved</span>
       </span>
-    </div>
+    </div> -->
     <div class="mt-2">
       <span v-translate>Status</span>&#8239;
       <em>{{ labels[$store.state.current_submission.current_state] }}</em>
@@ -86,12 +86,12 @@ export default {
     dateFormat(date) {
       return dateFormatToDisplay(date)
     }
-  },
-  computed: {
-    flag_approved_field() {
-      return this.$store.state.form.tabs.flags && this.$store.state.form.tabs.flags.form_fields.flag_approved
-    }
   }
+  // computed: {
+  //   flag_approved_field() {
+  //     return this.$store.state.form.tabs.flags && this.$store.state.form.tabs.flags.form_fields.flag_approved
+  //   }
+  // }
 }
 </script>
 <style scoped>
