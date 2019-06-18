@@ -41,12 +41,14 @@ This section describes actions and entry forms elements which are common to all 
 Submission info
 ---------------
 
-All forms have a :guilabel:`Submission Info` tab: |subinfo|
+All forms have a :guilabel:`Submission Info` tab:
+.. image:: images/form_submission_info.png
+
 This section is automatically filled by the system with data from the latest submission, when available.
 You must fill-in at least the mandatory fields (``Name of reporting officer`` and ``E-mail``) before saving the submission.
 The ``Reporting channel`` and ``Submission format`` fields are reserved for the Secretariat.
 
-.. |subinfo| image:: images/form_submission_info.png
+
 
 After a report is submitted, a new field becomes visible (read-only), automatically filled by the system with the actual 
 date when the :guilabel:`Submit` action has been completed.
