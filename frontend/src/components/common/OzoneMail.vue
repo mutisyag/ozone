@@ -59,7 +59,7 @@
                 <small><b>From:</b> {{entry.from_email}}</small> <br>
                 <small><b>To:</b> {{entry.to.join(', ')}} </small><br>
                 <small><b>Cc:</b> {{entry.cc.join(', ')}}</small>
-                <div class="mt-2">{{entry.body}}</div>
+                <div class="correspondence-body mt-2">{{entry.body}}</div>
                 <hr>
             </div>
           </b-tab>
@@ -97,11 +97,13 @@ export default {
     }
   },
   mounted() {
-    this.addTagTo(this.sender)
+    if (this.$store.state.form.tabs.sub_info.form_fields.email.selected) {
+      this.addTagTo(this.$store.state.form.tabs.sub_info.form_fields.email.selected)
+    }
   },
   computed: {
     sender() {
-      return this.$store.state.form.tabs.sub_info.form_fields.email.selected
+      return this.$store.state.currentUser.email
     }
   },
   methods: {
@@ -131,7 +133,7 @@ export default {
 
     async sendMail() {
       const currentMail = this.mail
-      currentMail.from_email = this.$store.state.currentUser.email
+      currentMail.from_email = this.sender
       await sendEmail(this.$store.state.current_submission.id, currentMail)
       this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
@@ -167,5 +169,8 @@ export default {
 
   .mail-input {
     height: 300px;
+  }
+  .correspondence-body {
+    white-space: pre-wrap;
   }
 </style>
