@@ -194,11 +194,20 @@ def max_value_current_year(value):
     return MaxValueValidator(current_year())(value)
 
 
+class PartyHistoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'reporting_period', 'party_type'
+        )
+
+
 class PartyHistory(models.Model):
     """
     Detailed Party information, per year (population, flags etc) can change
     based on the specified period.
     """
+
+    objects = PartyHistoryManager()
 
     party = models.ForeignKey(
         Party, related_name='history', on_delete=models.PROTECT
@@ -237,6 +246,9 @@ class PartyHistory(models.Model):
 
     def __str__(self):
         return f'{self.party.name} - {self.reporting_period}'
+
+    def is_group2(self):
+        return self.party_type.abbr.endswith('G2')
 
     class Meta:
         unique_together = ('party', 'reporting_period')

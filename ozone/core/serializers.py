@@ -305,12 +305,14 @@ class PartyRatificationSerializer(serializers.ModelSerializer):
         current_history_entry = obj.history.get(
             reporting_period=ReportingPeriod.get_current_period()
         )
-        return {
+        return dict({
             field: getattr(current_history_entry, field)
             for field in (
                 'is_eu_member', 'is_high_ambient_temperature', 'is_article5'
             )
-        }
+        }, **{
+            'is_group2': current_history_entry.is_group2()
+        })
 
     class Meta:
         model = Party

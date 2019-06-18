@@ -11,8 +11,9 @@
       </b-row>
       <b-table
         show-empty
-        outlined
         striped
+        outlined
+        class="full-bordered"
         bordered
         hover
         head-variant="light"
@@ -26,11 +27,20 @@
         @filtered="onFiltered"
         ref="table"
       >
+        <template slot="thead-top">
+          <tr>
+            <th colspan="5">&nbsp;</th>
+            <th colspan="7" class="text-center"><span v-translate>Ratification details</span></th>
+          </tr>
+        </template>
         <template slot="is_eu_member" slot-scope="data">
           <CheckedImage :item="data.item.is_eu_member"/>
         </template>
         <template slot="is_article5" slot-scope="data">
           <CheckedImage :item="data.item.is_article5"/>
+        </template>
+        <template slot="is_group2" slot-scope="data">
+          <CheckedImage :item="data.item.is_group2"/>
         </template>
         <template slot="is_high_ambient_temperature" slot-scope="data">
           <CheckedImage :item="data.item.is_high_ambient_temperature"/>
@@ -103,6 +113,10 @@ export default {
       }, {
         key: 'is_article5',
         label: this.$gettext('Article 5 party'),
+        ...sortableAndTextCenter
+      }, {
+        key: 'is_group2',
+        label: this.$gettext('Group 2'),
         ...sortableAndTextCenter
       }, {
         key: 'is_high_ambient_temperature',
@@ -179,6 +193,7 @@ export default {
 
         party.is_eu_member = party.flags.is_eu_member
         party.is_article5 = party.flags.is_article5
+        party.is_group2 = party.flags.is_group2
         party.is_high_ambient_temperature = party.flags.is_high_ambient_temperature
         return party
       })
