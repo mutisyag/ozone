@@ -2,11 +2,10 @@
   <div v-if="tab_info">
     <div class="form-sections">
       <div class="table-wrapper">
-        <div class="table-title mb-2">
-          <h4>
-            {{tab_info.formNumber}}.1
-            <span v-translate>Essential use</span>
-          </h4>
+        <div class="table-title">
+          <h6>
+            <span v-translate>Essential uses</span>
+          </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
@@ -97,10 +96,9 @@
       </div>
       <div class="table-wrapper">
         <div class="table-title">
-          <h4 class="mb-2">
-            {{tab_info.formNumber}}.2
-            <span v-translate>Critical use</span>
-          </h4>
+          <h6>
+            <span v-translate>Critical uses</span>
+          </h6>
           <div v-show="tableCritical.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
               <b-form-input :class="{ highlighted: tableCritical.filters.search && tableCritical.filters.search.length }" v-model="tableCritical.filters.search"/>

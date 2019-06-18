@@ -6,11 +6,10 @@
     >The data in this form will not be saved because you have selected in the questionnaire "no" for this section</h5>
     <div class="form-sections">
       <div class="table-wrapper">
-        <div class="table-title mb-3">
-          <h4>
-            <span class="table-title-index mr-1">{{tab_info.formNumber}}.1</span>
+        <div class="table-title">
+          <h6>
             <span v-translate>Substances</span>
-          </h4>
+          </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
@@ -224,11 +223,10 @@
         </b-table>
       </div>
       <div v-if="tabName === 'has_produced'" class="table-wrapper">
-        <div class="table-title mb-3">
-          <h4>
-            <span class="table-title-index mr-1">{{tab_info.formNumber}}.1.1</span>
-            <span v-translate>Substances - annex group F/II</span>
-          </h4>
+        <div class="table-title">
+          <h6>
+            <span v-translate>Substances - Annex group F/II</span>
+          </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteFII)" v-if="selectedForDeleteFII.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteFII.length}}&nbsp;<span v-translate>selected rows</span></span>
 
@@ -436,13 +434,10 @@
         </b-table>
       </div>
       <div v-if="hasBlends" class="table-wrapper">
-        <div class="table-title mb-3">
-          <h4 id="blends-table-title">
-            <span class="table-title-index">
-              {{tab_info.formNumber}}.2
-            </span>
+        <div class="table-title">
+          <h6 id="blends-table-title">
             <span v-translate>Blends</span>
-          </h4>
+          </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>

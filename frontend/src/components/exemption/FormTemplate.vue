@@ -3,10 +3,9 @@
     <div class="form-sections">
       <div class="table-wrapper">
         <div class="table-title">
-          <h4>
-            {{tab_info.formNumber}}.1
+          <h6>
             <span v-translate>Substances</span>
-          </h4>
+          </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
@@ -17,7 +16,6 @@
           </div>
           <i @click="table.tableFilters = !table.tableFilters" class="fa fa-filter fa-lg"></i>
         </div>
-        <hr>
 
         <b-table
           show-empty
@@ -87,7 +85,6 @@
       </div>
     </div>
     <div id="tab-comments" class="table-wrapper" v-if="tab_info.comments">
-      <hr>
       <div
         v-for="(comment, comment_key) in tab_info.comments"
         :key="comment_key"

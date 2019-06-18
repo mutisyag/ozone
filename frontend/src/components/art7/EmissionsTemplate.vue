@@ -7,7 +7,7 @@
     <div class="form-sections">
       <div class="table-wrapper">
         <div class="table-title mb-3">
-          <h4>{{tab_info.formNumber}}.1 Facilities</h4>
+          <h4></h4>
           <b-btn class="mr-3" variant="outline-primary" @click="bulkRemove" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
