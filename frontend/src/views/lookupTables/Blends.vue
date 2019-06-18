@@ -70,7 +70,7 @@
         </span>
       </template>
 
-      <template slot="components" slot-scope="row">
+      <!--template slot="components" slot-scope="row">
         <b-table
           show-empty
           outlined
@@ -89,7 +89,7 @@
             <div>{{data.item.component_name}}</div>
           </template>
         </b-table>
-      </template>
+      </template-->
     </b-table>
   </div>
 </template>
@@ -139,9 +139,9 @@ export default {
       }, {
         key: 'gwp', label: this.$gettext('GWP'), class: 'text-right'
       }, {
-        key: 'composition', label: this.$gettext('Composition'), class: 'text-center'
-      }, {
-        key: 'components', label: this.$gettext('Components'), class: 'text-center'
+        key: 'composition', label: this.$gettext('Composition'), class: 'text-left'
+      /* }, {
+        key: 'components', label: this.$gettext('Components'), class: 'text-center' */
       }, {
         key: 'other_names', label: this.$gettext('Other names'), sortable: true, class: 'text-center w-10'
       }, {
