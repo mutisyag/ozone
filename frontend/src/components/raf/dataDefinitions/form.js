@@ -188,7 +188,6 @@ const getFormRaf = ($gettext) => {
           'imports': [],
           'remarks_party': '',
           'remarks_os': '',
-          'ordering_id': null,
           'quantity_exempted': null,
           'quantity_production': null,
           'quantity_used': null,
@@ -196,6 +195,7 @@ const getFormRaf = ($gettext) => {
           'quantity_destroyed': null,
           'on_hand_start_year': null,
           'substance': null,
+          'use_categories': null,
           'is_emergency': null
         }
       },

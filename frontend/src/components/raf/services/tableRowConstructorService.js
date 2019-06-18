@@ -115,6 +115,10 @@ export default {
         type: 'number',
         selected: null
       },
+      use_categories: {
+        type: 'number',
+        selected: null
+      },
       quantity_exported: {
         type: 'number',
         selected: null
