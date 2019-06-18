@@ -400,7 +400,7 @@ export default {
       }, {
         key: 'current_state', label: this.$gettext('Status'), sortable: true
       }, {
-        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true, sortDirection: 'desc'
       }, {
         key: 'created_by', label: this.$gettext('Created by')
       }, {
@@ -441,7 +441,7 @@ export default {
       }, {
         key: 'version', label: this.$gettext('Version'), sortable: true, sortDirection: 'desc'
       }, {
-        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true
+        key: 'updated_at', label: this.$gettext('Last modified'), sortable: true, sortDirection: 'desc'
       }, {
         key: 'created_by', label: this.$gettext('Created by')
       }, {
