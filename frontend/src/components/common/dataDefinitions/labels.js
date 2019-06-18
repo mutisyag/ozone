@@ -12,7 +12,7 @@ const getCommonLabels = ($gettext) => {
     has_exports: $gettext('Exports'),
     has_produced: $gettext('Production'),
     has_destroyed: $gettext('Destruction'),
-    has_nonparty: $gettext('Nonparty'),
+    has_nonparty: $gettext('Non-Party'),
     has_emissions: $gettext('Emissions'),
     delete_submission: $gettext('Delete Submission'),
     versions: $gettext('Versions'),

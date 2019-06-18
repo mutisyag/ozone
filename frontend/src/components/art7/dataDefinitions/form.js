@@ -592,7 +592,7 @@ const getFormArt7 = ($gettext) => {
         saving: false,
         formNumber: 5,
         intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
-        title: $gettext('Nonparty'),
+        title: $gettext('Non-Party'),
         titleHtml: `<b>${$gettext('IMPORTS FROM AND/OR EXPORTS TO NON PARTIES')} </b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)')}<br>${$gettext('Annex A, B, C and E substances')}</small>`,
         tooltipForTitleHtml: $gettext('See definition of “non parties” in Instruction V.'),
         detailsHtml: $gettext('Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties'),
