@@ -219,6 +219,17 @@ const actions = {
     return parties_temp
   },
 
+  async getPeriods(context) {
+    const periodsDisplay = {}
+
+    const response = await getPeriods()
+    response.data.forEach(period => {
+      periodsDisplay[period.id] = period.name
+    })
+
+    context.commit('setDisplayPeriods', periodsDisplay)
+  },
+
   async getDashboardPeriods(context) {
     const response = await getPeriods()
     let sortedPeriods = response.data
@@ -361,6 +372,9 @@ const actions = {
         }
         if (formName === 'essencrit') {
           context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
+        }
+        if (formName === 'transfer') {
+          context.dispatch('getPeriods')
         }
         if (additionalAction) {
           context.dispatch(additionalAction)

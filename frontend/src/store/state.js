@@ -68,7 +68,8 @@ const state = {
     display: {
       substances: null,
       blends: null,
-      countries: null
+      countries: null,
+      periods: null
     }
   },
   alertData: []

@@ -3,10 +3,7 @@
     <div class="form-sections">
       <div class="table-wrapper">
         <div class="table-title mb-2">
-          <h4>
-            {{tab_info.formNumber}}.1
-            <span v-translate>Substances</span>
-          </h4>
+          <div></div>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDelete)" v-if="selectedForDelete.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDelete.length}}&nbsp;<span v-translate>selected rows</span></span>
           </b-btn>
@@ -44,13 +41,13 @@
           <template slot="substance" slot-scope="cell">
             <div style="text-align: center" class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template slot="is_basic_domestic_need" slot-scope="cell">
             <fieldGenerator
               style="text-align: center"
-              :key="`${cell.item.index}_${inputField}_${tabName}`"
-              :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-              :disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
-              :field="cell.item.originalObj[inputField]"
+              :key="`${cell.item.index}_${'is_basic_domestic_need'}_${tabName}`"
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'is_basic_domestic_need'}"
+              :disabled="true"
+              :field="cell.item.originalObj['is_basic_domestic_need']"
             ></fieldGenerator>
           </template>
         </b-table>
@@ -118,12 +115,14 @@ export default {
       this.tab_info.form_fields.forEach(form_field => {
         const tableRow = {}
         Object.keys(form_field).forEach(key => {
-          if (form_field.substance.selected) {
-            tableRow[key] = this.typeOfDisplayObj[key]
-              ? this.$store.state.initialData.display[
-                this.typeOfDisplayObj[key]
-              ][form_field[key].selected]
-              : (tableRow[key] = form_field[key].selected)
+          if (key === 'substance') {
+            tableRow[key] = this.$store.state.initialData.display.substances[form_field[key].selected]
+          } else if (key === 'source_party' || key === 'destination_party') {
+            tableRow[key] = this.$store.state.initialData.display.countries[form_field[key].selected]
+          } else if (key === 'reporting_period') {
+            tableRow[key] = this.$store.state.initialData.display.periods[form_field[key].selected]
+          } else {
+            tableRow[key] = form_field[key].selected
           }
         })
         if (Object.keys(tableRow).length) {

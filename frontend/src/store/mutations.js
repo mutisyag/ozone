@@ -265,6 +265,10 @@ const mutations = {
     state.initialData.display.countries = data
   },
 
+  setDisplayPeriods(state, data) {
+    state.initialData.display.periods = data
+  },
+
   updateGroupSubstances(state, data) {
     state.initialData.groupSubstances = data
   },
