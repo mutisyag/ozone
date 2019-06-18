@@ -135,9 +135,12 @@ class Transfer(models.Model):
 
     def clear_aggregated_data(self, use_old_values=False):
         if use_old_values:
-            substance = Substance.objects.get(
+            substance = Substance.objects.filter(
                 id=self.tracker.previous('substance_id')
-            )
+            ).first()
+            if not substance:
+                # nothing in self.tracker.previous
+                return
             amount = self.tracker.previous('transferred_amount')
             source_party = Party.objects.get(
                 id=self.tracker.previous('source_party_id')
@@ -146,12 +149,12 @@ class Transfer(models.Model):
                 id=self.tracker.previous('reporting_period_id')
             )
             transfer_type = self.tracker.previous('transfer_type')
-            source_party_submission = Submission.objects.get(
+            source_party_submission = Submission.objects.filter(
                 id=self.tracker.previous('source_party_submission_id')
-            )
-            destination_party_submission = Submission.objects.get(
+            ).first()
+            destination_party_submission = Submission.objects.filter(
                 id=self.tracker.previous('destination_party_submission_id')
-            )
+            ).first()
         else:
             substance = self.substance
             amount = self.transferred_amount
@@ -169,14 +172,16 @@ class Transfer(models.Model):
                 continue
 
             # Delete the transfer data from the aggregation
-            to_substract = decimal_zero_if_none(amount) * \
-                           decimal_zero_if_none(potential)
+            to_subtract = (
+                decimal_zero_if_none(amount) *
+                decimal_zero_if_none(potential)
+            )
             if transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
-                aggregation.prod_transfer = float(existing_value - to_substract)
+                aggregation.prod_transfer = float(existing_value - to_subtract)
             elif transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
-                aggregation.cons_transfer = float(existing_value - to_substract)
+                aggregation.cons_transfer = float(existing_value - to_subtract)
 
             # Clear submissions from list
             form_type = FormTypes.TRANSFER.value
