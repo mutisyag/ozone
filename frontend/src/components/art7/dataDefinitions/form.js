@@ -831,6 +831,7 @@ const getFormArt7 = ($gettext) => {
       flags: getTabFlags($gettext)
     }
   }
+  form.tabs.flags.showValid = true
   return form
 }
 

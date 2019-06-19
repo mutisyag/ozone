@@ -205,7 +205,8 @@ const getFormRaf = ($gettext) => {
           return Object.keys(this.default_properties)
         },
         default_properties: {
-          flag_provisional: false
+          flag_provisional: false,
+          flag_valid: false
         }
       }
     }
