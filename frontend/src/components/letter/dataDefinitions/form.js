@@ -15,7 +15,8 @@ const getFormLetter = ($gettext) => {
     tabs: {
       ...setTabFiles($gettext),
       sub_info: {
-        ...tabSubInfo
+        ...tabSubInfo,
+        filterOut: ['submission_format']
       }
     }
   }

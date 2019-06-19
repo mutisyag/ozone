@@ -26,7 +26,8 @@ const getFormExemption = ($gettext) => {
     tabs: {
       ...setTabFiles($gettext),
       sub_info: {
-        ...getTabSubInfo($gettext)
+        ...getTabSubInfo($gettext),
+        filterOut: ['submission_format']
       },
       nomination: {
         ...getTabsCommonInfoForNominationAndApproved($gettext),

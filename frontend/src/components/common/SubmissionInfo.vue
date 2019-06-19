@@ -6,7 +6,7 @@
             <div class="form-fields">
               <b-row
                 :id="order"
-                v-for="order in info.fields_order"
+                v-for="order in submissionInfoFields"
                 class="field-wrapper"
                 :key="order"
               >
@@ -188,6 +188,10 @@ export default {
   },
 
   computed: {
+    submissionInfoFields() {
+      return this.info.filterOut ? this.info.fields_order.filter(field => !this.info.filterOut.includes(field)) : this.info.fields_order
+    },
+
     onlySelectedValue() {
       return Object.keys(this.info.form_fields).filter(field => !['current_state', 'validation'].includes(field)).map(field => this.info.form_fields[field].selected)
     },
