@@ -20,7 +20,7 @@
                 trackBy="value"
                 label="text"
                 v-model="submissionNew.obligation"
-                :options="obligations"
+                :options="obligationsOptions"
               />
             </b-input-group>
 
@@ -447,6 +447,10 @@ export default {
       }, {
         key: 'actions', label: this.$gettext('Actions')
       }]
+    },
+
+    obligationsOptions() {
+      return this.obligations.filter(a => a.is_active)
     },
     sortOptionsPeriodFrom() {
       return 	Array.from(new Set(this.periods.map(f => {
