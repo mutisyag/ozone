@@ -104,7 +104,7 @@ export default {
       get available_for_use() {
         return {
           type: 'nonInput',
-          selected: valueConverter(doSum([this.on_hand_start_year.selected], [this.quantity_acquired.selected]))
+          selected: doSum([this.on_hand_start_year.selected, this.quantity_acquired.selected])
         }
       },
       is_emergency: {
