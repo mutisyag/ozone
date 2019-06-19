@@ -1700,3 +1700,7 @@ span.cog:after {
   border-radius: 50%;
   width: 2.22rem;
 }
+
+body.aside-menu-off-canvas .aside-menu {
+  z-index: 1;
+}
