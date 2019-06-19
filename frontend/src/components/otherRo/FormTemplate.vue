@@ -39,7 +39,13 @@
           </template>
 
           <template slot="substance" slot-scope="cell">
-            <div style="text-align: center" class="substance-blend-cell">{{cell.item.substance}}</div>
+            <div class="substance-blend-cell">{{cell.item.substance}}</div>
+          </template>
+          <template slot="transferred_amount" slot-scope="cell">
+            <div class="text-right">{{cell.item.transferred_amount}}</div>
+          </template>
+          <template slot="reporting_period" slot-scope="cell">
+            <div class="text-center">{{cell.item.reporting_period}}</div>
           </template>
           <template slot="is_basic_domestic_need" slot-scope="cell">
             <fieldGenerator
@@ -97,6 +103,10 @@ export default {
       typeOfDisplayObj: {
         substance: 'substances',
         blend: 'blends'
+      },
+      types: {
+        P: this.$gettext('Production'),
+        C: this.$gettext('Consumption')
       }
     }
   },
@@ -121,6 +131,8 @@ export default {
             tableRow[key] = this.$store.state.initialData.display.countries[form_field[key].selected]
           } else if (key === 'reporting_period') {
             tableRow[key] = this.$store.state.initialData.display.periods[form_field[key].selected]
+          } else if (key === 'transfer_type') {
+            tableRow[key] = this.types[form_field[key].selected]
           } else {
             tableRow[key] = form_field[key].selected
           }
