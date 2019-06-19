@@ -321,6 +321,7 @@
     </b-modal>
     <AppAside fixed>
       <DefaultAside
+        v-if="$store.getters.can_edit_data || validationLength"
         v-on:fillSearch="fillTableSearch($event)"
         :parentTabIndex.sync="sidebarTabIndex"
         :hovered="hovered"

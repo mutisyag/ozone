@@ -1,6 +1,6 @@
 <template>
   <div>
-    <AsideToggler :hasAssideMenu="$store.state.form.tabs[tabName].hasAssideMenu" />
+    <AsideToggler :validationButton="showValidationButton" :hasAssideMenu="$store.state.form.tabs[tabName].hasAssideMenu" />
     <b-tabs v-model="tabIndex">
       <b-tab v-if="hasSubstances && $store.getters.can_edit_data">
         <template slot="title">
@@ -85,6 +85,9 @@ export default {
     },
     hasBlends() {
       return Object.keys(this.$store.state.form.tabs[this.tabName].default_properties).includes('blend')
+    },
+    showValidationButton() {
+      return !this.$store.getters.can_edit_data && this.validationLength
     },
     validationLength() {
       return this.$store.getters.getValidationForCurrentTab(this.tabName).filter(field => field.validation.length).length

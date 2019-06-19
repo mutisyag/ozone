@@ -64,7 +64,9 @@ export default {
     selectedForDelete() {
       return this.tableItems.length && this.tableItems.filter(field => field.checkForDelete).map(field => field.index)
     },
-
+    validationLength() {
+      return this.$store.getters.getValidationForCurrentTab(this.tabName).filter(field => field.validation.length).length
+    },
     selectedForDeleteBlends() {
       return this.tableItemsBlends.length && this.tableItemsBlends.filter(field => field.checkForDelete).map(field => field.index)
     },
