@@ -134,6 +134,15 @@ export default {
       try {
         const downloaded = await fetch(url, { params, 'paramsSerializer': p => this.parseParams(p) }, { responseType: 'arraybuffer' })
         const blob = new Blob([downloaded.data])
+        const contentDisp = downloaded.request.getResponseHeader('Content-Disposition')
+
+        const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
+        const matches = regex.exec(contentDisp);
+
+        if (matches != null && matches[3]) { 
+          fileName = matches[3].replace(/['"]/g, '');
+        }
+
         if (navigator.msSaveBlob) {
           return navigator.msSaveBlob(blob, fileName)
         }

@@ -140,6 +140,14 @@ const actions = {
       const downloaded = await fetch(url, { responseType: 'arraybuffer', exposedHeaders: ['Content-Disposition'] })
       const blob = new Blob([downloaded.data])
       console.log(downloaded, '-----------')
+      const contentDisp = downloaded.request.getResponseHeader('Content-Disposition')
+
+      const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
+      const matches = regex.exec(contentDisp);
+
+      if (matches != null && matches[3]) { 
+        fileName = matches[3].replace(/['"]/g, '');
+      }
       /**
        * [ie11 doesn't support download attribute. we use msSaveBlob instead]
        */

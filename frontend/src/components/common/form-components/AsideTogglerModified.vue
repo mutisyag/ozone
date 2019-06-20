@@ -21,7 +21,7 @@ export default {
   },
   props: {
     hasAssideMenu: Boolean,
-    validationButton: Boolean
+    validationButton: Boolean || Number
   }
 }
 </script>
