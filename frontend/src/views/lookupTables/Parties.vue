@@ -124,31 +124,31 @@ export default {
         ...sortableAndTextCenter
       }, {
         key: 'vienna_convention',
-        label: this.$gettext('Vienna Convention'),
+        label: `${this.$gettext('Vienna Convention')} (${this.parties.filter(p => p.vienna_convention).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'montreal_protocol',
-        label: this.$gettext('Montreal Protocol'),
+        label: `${this.$gettext('Montreal Protocol')} (${this.parties.filter(p => p.montreal_protocol).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'london_amendment',
-        label: this.$gettext('London Amendment'),
+        label: `${this.$gettext('London Amendment')} (${this.parties.filter(p => p.london_amendment).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'copenhagen_amendment',
-        label: this.$gettext('Copenhagen Amendment'),
+        label: `${this.$gettext('Copenhagen Amendment')} (${this.parties.filter(p => p.copenhagen_amendment).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'montreal_amendment',
-        label: this.$gettext('Montreal Amendment'),
+        label: `${this.$gettext('Montreal Amendment')} (${this.parties.filter(p => p.montreal_amendment).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'beijing_amendment',
-        label: this.$gettext('Beijing Amendment'),
+        label: `${this.$gettext('Beijing Amendment')} (${this.parties.filter(p => p.beijing_amendment).length})`,
         ...sortableAndTextCenter
       }, {
         key: 'kigali_amendment',
-        label: this.$gettext('Kigali Amendment'),
+        label: `${this.$gettext('Kigali Amendment')} (${this.parties.filter(p => p.kigali_amendment).length})`,
         ...sortableAndTextCenter
       }]
     },
