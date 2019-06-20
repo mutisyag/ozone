@@ -55,12 +55,8 @@ OUTPUT_EXCEL_FILES = {
         'Letters',
         'ProdTransfers'
     ],
-    'nonparty_errors': [
-        'Select a NonParty Error',
-        'All quantify fields null Error'
-    ],
     'tbl_prod_cons': [
-        'tbl_prodcons'
+        'tbl_ProdCons'
     ]
 }
 
