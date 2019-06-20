@@ -225,7 +225,7 @@
       <div v-if="tabName === 'has_produced'" class="table-wrapper">
         <div class="table-title">
           <h6>
-            <span v-translate>Substances - Annex group F/II</span>
+            <span v-translate>HFC-23</span>
           </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteFII)" v-if="selectedForDeleteFII.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteFII.length}}&nbsp;<span v-translate>selected rows</span></span>
