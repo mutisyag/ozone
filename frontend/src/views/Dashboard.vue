@@ -220,6 +220,7 @@
               outlined
               bordered
               hover
+              no-local-sorting
               head-variant="light"
               stacked="md"
               :items="tableItems"
