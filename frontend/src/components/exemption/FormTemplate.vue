@@ -174,11 +174,12 @@
 import FormTemplateMixin from '@/components/common/mixins/FormTemplateMixin'
 import ValidationLabel from '@/components/common/form-components/ValidationLabel'
 import { getLabels } from '@/components/exemption/dataDefinitions/labels'
+import DefaultAside from '@/components/exemption/form-components/DefaultAside'
 
 export default {
   mixins: [FormTemplateMixin],
   components: {
-    ValidationLabel
+    ValidationLabel, DefaultAside
   },
   data() {
     return {
