@@ -393,7 +393,7 @@ export default {
       return [{
         key: 'obligation', label: this.$gettext('Obligation'), sortable: true, sortDirection: 'desc'
       }, {
-        key: 'reporting_period', label: this.$gettext('Period'), sortable: true
+        key: 'reporting_period', label: this.$gettext('Period'), sortable: true, sortDirection: 'asc'
       }, {
         key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc'
       }, {

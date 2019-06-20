@@ -551,11 +551,31 @@ class SubmissionViewFilterSet(filters.FilterSet):
         "_current_state", help_text="Filter by the submission state."
     )
 
+    order_by_field = 'ordering'
+    ordering = filters.OrderingFilter(
+        # fields(('model field name', 'parameter name'),)
+        fields=(
+            ('obligation__sort_order', 'obligation'),
+            ('reporting_period__start_date', 'reporting_period'),
+            ('party__name', 'party'),
+            ('version', 'version'),
+            ('_current_state', 'current_state'),
+            ('updated_at', 'updated_at'),
+        )
+    )
+
     def filter_superseded(self, queryset, name, value):
         if value:
             return queryset.filter(flag_superseded=True)
         else:
             return queryset.exclude(flag_superseded=True)
+
+    class Meta:
+        model = Submission
+        fields = [
+            'party', 'obligation', 'reporting_period',
+            'from_period', 'to_period', 'current_state'
+        ]
 
 
 class SubmissionViewSet(viewsets.ModelViewSet):
@@ -573,23 +593,15 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     )
     filter_backends = (
         IsOwnerFilterBackend,
+        OrderingFilter,  # only for default ordering, see SubmissionViewFilterSet
         filters.DjangoFilterBackend,
-        OrderingFilter,
         SearchFilter,
     )
     filterset_class = SubmissionViewFilterSet
     search_fields = (
         "party__name", "obligation__name", "reporting_period__name"
     )
-    ordering_fields = {
-        "obligation": "obligation",
-        "party": "party",
-        "reporting_period": "reporting_period",
-        "version": "version",
-        "_current_state": "current_state",
-        "updated_at": "updated_at",
-    }
-    ordering = ("-reporting_period__start_date", "obligation")
+    ordering = ("-reporting_period__start_date", "obligation__sort_order", "party__name")
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
