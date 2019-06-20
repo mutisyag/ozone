@@ -143,11 +143,13 @@ export default {
           fileName = matches[3].replace(/['"]/g, '')
         }
 
-        if (navigator.msSaveBlob) {
-          return navigator.msSaveBlob(blob, fileName)
+        const link = document.createElement('a')
+        if (typeof link.download === 'undefined') {
+          if (navigator.msSaveBlob) {
+            return navigator.msSaveBlob(blob, fileName)
+          }
         }
         const download_url = window.URL.createObjectURL(blob)
-        const link = document.createElement('a')
         link.href = download_url
         link.setAttribute('download', fileName)
         document.body.appendChild(link)

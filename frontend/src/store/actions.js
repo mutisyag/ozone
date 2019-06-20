@@ -140,7 +140,6 @@ const actions = {
     try {
       const downloaded = await fetch(url, { responseType: 'arraybuffer', exposedHeaders: ['Content-Disposition'] })
       const blob = new Blob([downloaded.data])
-      console.log(downloaded, '-----------')
       const contentDisp = downloaded.request.getResponseHeader('Content-Disposition')
 
       const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/
@@ -149,14 +148,16 @@ const actions = {
       if (matches != null && matches[3]) {
         fileName = matches[3].replace(/['"]/g, '')
       }
-      /**
-       * [ie11 doesn't support download attribute. we use msSaveBlob instead]
-       */
-      if (navigator.msSaveBlob) {
-        return navigator.msSaveBlob(blob, fileName)
+      const link = document.createElement('a')
+      if (typeof link.download === 'undefined') {
+        /**
+         * [ie11 doesn't support download attribute. we use msSaveBlob instead]
+         */
+        if (navigator.msSaveBlob) {
+          return navigator.msSaveBlob(blob, fileName)
+        }
       }
       const download_url = window.URL.createObjectURL(blob)
-      const link = document.createElement('a')
       link.href = download_url
       link.setAttribute('download', fileName)
       document.body.appendChild(link)
