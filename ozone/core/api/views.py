@@ -589,7 +589,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         "_current_state": "current_state",
         "updated_at": "updated_at",
     }
-    ordering = ("-reporting_period", "obligation")
+    ordering = ("-reporting_period__start_date", "obligation")
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
@@ -693,6 +693,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         buf_pdf = export_submissions([submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
         return resp
 
     @action(detail=True, methods=["get"])
@@ -703,6 +704,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         buf_pdf = export_prodcons(submission=submission, periods=None, parties=None)
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
         return resp
 
     @action(detail=True, methods=["get"])
@@ -1628,6 +1630,7 @@ class ReportsViewSet(viewsets.ViewSet):
         filename = f'{base_name}_{timestamp}.pdf'
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
+        resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
         return resp
 
     def _get_parties(self, request):
