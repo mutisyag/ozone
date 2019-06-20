@@ -209,6 +209,15 @@ export default {
       this.table.totalRows = filteredItems.length
       this.table.currentPage = 1
     }
+    // sortCompare(a, b, key, direction) {
+    //   const sortByDateType = ['london_amendment', 'montreal_protocol', 'copenhagen_amendment', 'montreal_amendment', 'beijing_amendment', 'kigali_amendment', 'montreal_protocol', 'vienna_convention']
+    //   if (sortByDateType.includes(key)) {
+    //     const first = a[key].split('<br/>')[0]
+    //     const second = b[key].split('<br/>')[0]
+    //     console.log('HERE', new Date(first) > new Date(second))
+    //     return (new Date(first) - new Date(second) < 0 ) ? true : false
+    //   }
+    // }
   },
   watch: {
     '$language.current': {
