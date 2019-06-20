@@ -241,8 +241,7 @@
             />
           </b-col>
         </b-row>
-        <div>Amount acquired by import & countries of manufacture</div>
-        <hr>
+        <div v-translate>Amount acquired by import & countries of manufacture</div>
         <b-row>
           <b-col>
             <addParties
@@ -265,15 +264,18 @@
             />
           </b-col>
         </b-row>
-        <b-row>
+        <hr>
+        <div v-if="isCritical" v-translate>Critical use categories</div>
+        <b-row v-if="isCritical">
           <b-col>
             <addCategories
               :index="modal_data.index"
               :tabName="tabName"
             ></addCategories>
           </b-col>
-          </b-row>
-              <b-row
+        </b-row>
+        <b-row
+            v-if="isCritical"
             class="mb-2 special"
             v-for="category in modal_data.field.use_categories"
             :key="category.critical_use_category"
@@ -286,7 +288,7 @@
               />
             </b-col>
           </b-row>
-        <hr>
+        <hr v-if="isCritical">
         <div
           class="mb-3"
           v-for="(order, order_index) in tab_info.modal_order"
