@@ -115,10 +115,7 @@ export default {
         type: 'number',
         selected: null
       },
-      use_categories: {
-        type: 'number',
-        selected: null
-      },
+      use_categories: [],
       quantity_exported: {
         type: 'number',
         selected: null
@@ -152,6 +149,9 @@ export default {
       console.log('prefillData', prefillData)
       Object.keys(prefillData).forEach((field) => {
         if (Array.isArray(prefillData[field]) && field === 'imports') {
+          baseInnerFields[field] = prefillData[field]
+        }
+        if (Array.isArray(prefillData[field]) && field === 'use_categories') {
           baseInnerFields[field] = prefillData[field]
         }
         console.log(field)

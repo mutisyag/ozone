@@ -17,7 +17,8 @@ const getFormRaf = ($gettext) => {
         'initialData.display.countries',
         'currentUser',
         'permissions.form',
-        'initialData.approvedExemptionsList'
+        'initialData.approvedExemptionsList',
+        'initialData.criticalUseCategoryList'
       ],
       comments_default_properties: {
         'hat_imports_remarks_party': '',
@@ -196,7 +197,7 @@ const getFormRaf = ($gettext) => {
           'quantity_destroyed': null,
           'on_hand_start_year': null,
           'substance': null,
-          'use_categories': null,
+          'use_categories': [],
           'is_emergency': null
         }
       },

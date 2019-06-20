@@ -268,6 +268,8 @@ const getControlledGroups = (party, period) => fetch(`parties/${party}/report_gr
 
 const getApprovedExemptionsList = (partyId, period) => fetch(`parties/${partyId}/approved_exemptions/?period=${period}`)
 
+const getCriticalUseCategoryList = () => fetch('critical-use-categories/')
+
 export {
   apiURL,
   apiBase,
@@ -316,5 +318,6 @@ export {
   getReports,
   getEmailTemplates,
   getEmails,
-  sendEmail
+  sendEmail,
+  getCriticalUseCategoryList
 }

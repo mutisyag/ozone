@@ -136,11 +136,11 @@ export default {
         const blob = new Blob([downloaded.data])
         const contentDisp = downloaded.request.getResponseHeader('Content-Disposition')
 
-        const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
-        const matches = regex.exec(contentDisp);
+        const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/
+        const matches = regex.exec(contentDisp)
 
-        if (matches != null && matches[3]) { 
-          fileName = matches[3].replace(/['"]/g, '');
+        if (matches != null && matches[3]) {
+          fileName = matches[3].replace(/['"]/g, '')
         }
 
         if (navigator.msSaveBlob) {

@@ -24,7 +24,8 @@ import {
   getControlledGroups,
   getApprovedExemptionsList,
   getReports,
-  getEmailTemplates
+  getEmailTemplates,
+  getCriticalUseCategoryList
 } from '@/components/common/services/api'
 
 import {
@@ -142,11 +143,11 @@ const actions = {
       console.log(downloaded, '-----------')
       const contentDisp = downloaded.request.getResponseHeader('Content-Disposition')
 
-      const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/;
-      const matches = regex.exec(contentDisp);
+      const regex = /filename[^;=\n]*=(UTF-8(['"]*))?(.*)/
+      const matches = regex.exec(contentDisp)
 
-      if (matches != null && matches[3]) { 
-        fileName = matches[3].replace(/['"]/g, '');
+      if (matches != null && matches[3]) {
+        fileName = matches[3].replace(/['"]/g, '')
       }
       /**
        * [ie11 doesn't support download attribute. we use msSaveBlob instead]
@@ -380,6 +381,7 @@ const actions = {
         }
         if (formName === 'essencrit') {
           context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
+          context.dispatch('getCriticalUseCategoryList')
         }
         if (formName === 'transfer') {
           context.dispatch('getPeriods')
@@ -395,6 +397,11 @@ const actions = {
   async getControlledGroups(context, { party, period }) {
     const controlledGroups = await getControlledGroups(party, period)
     context.commit('setControlledGroups', controlledGroups.data)
+  },
+
+  async getCriticalUseCategoryList(context) {
+    const list = await getCriticalUseCategoryList()
+    context.commit('setCriticalUseCategoryList', list.data.map(cat => ({ text: cat.name, value: cat.id })))
   },
 
   async getEmailTemplates(context) {

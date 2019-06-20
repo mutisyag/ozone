@@ -260,11 +260,32 @@
           <b-col cols="2">{{$store.state.initialData.display.countries[country.party]}}</b-col>
           <b-col>
             <fieldGenerator
-              :fieldInfo="{index:modal_data.index,tabName: tabName, field:country, party:country.party}"
+              :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
               :field="country"
             />
           </b-col>
         </b-row>
+        <b-row>
+          <b-col>
+            <addCategories
+              :index="modal_data.index"
+              :tabName="tabName"
+            ></addCategories>
+          </b-col>
+          </b-row>
+              <b-row
+            class="mb-2 special"
+            v-for="category in modal_data.field.use_categories"
+            :key="category.critical_use_category"
+          >
+            <b-col cols="2">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
+            <b-col>
+              <fieldGenerator
+                :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
+                :field="category"
+              />
+            </b-col>
+          </b-row>
         <hr>
         <div
           class="mb-3"
@@ -336,6 +357,7 @@ import ValidationLabel from '@/components/common/form-components/ValidationLabel
 import FormTemplateMxin from '@/components/common/mixins/FormTemplateMixin'
 import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import addParties from '@/components/raf/AddParties'
+import addCategories from '@/components/raf/AddCategories'
 import DefaultAside from '@/components/raf/form-components/DefaultAside'
 
 export default {
@@ -343,6 +365,7 @@ export default {
   components: {
     ValidationLabel,
     addParties,
+    addCategories,
     DefaultAside
   },
   data() {

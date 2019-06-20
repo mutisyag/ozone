@@ -68,10 +68,10 @@
     ></textarea>
 
     <input
-      v-if="isPartyField"
+      v-if="isMultipleField"
       :id="fieldInfo ? fieldInfo.field : ''"
       @keyup="validateInput"
-      @change="updateFormFieldParty"
+      @change="updateFormFieldMultiple"
       class="form-control"
       v-model="currentTyping"
       type="text"
@@ -98,7 +98,7 @@ export default {
   },
   created() {
     this.currentTyping = this.field.selected && this.field.type === 'number' ? fromExponential(this.field.selected) : this.field.selected
-    if (this.isPartyField) {
+    if (this.isMultipleField) {
       this.currentTyping = this.field.quantity
     }
     if (this.field.type === 'select') {
@@ -118,8 +118,8 @@ export default {
     fieldOptions() {
       return this.field.options
     },
-    isPartyField() {
-      return this.field.hasOwnProperty('party') && this.field.hasOwnProperty('quantity')
+    isMultipleField() {
+      return (this.field.hasOwnProperty('party') && this.field.hasOwnProperty('quantity')) || (this.field.hasOwnProperty('critical_use_category') && this.field.hasOwnProperty('quantity'))
     }
   },
 
@@ -153,7 +153,7 @@ export default {
       }
     },
 
-    updateFormFieldParty() {
+    updateFormFieldMultiple() {
       this.validateInput()
       if (this.currentTyping === '') {
         this.$store.commit('updateFormField', { value: null, fieldInfo: this.fieldInfo })

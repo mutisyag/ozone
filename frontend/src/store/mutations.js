@@ -56,8 +56,15 @@ const mutations = {
   updateFormField(state, data) {
     const tab = state.form.tabs[data.fieldInfo.tabName]
     const formField = tab.form_fields[data.fieldInfo.index]
+
+    console.log(data.fieldInfo)
     if (data.fieldInfo.party) {
       formField.imports.find(i => parseInt(i.party) === parseInt(data.fieldInfo.party)).quantity = data.value
+      return
+    }
+    if (data.fieldInfo.category) {
+      console.log('herere')
+      formField.use_categories.find(i => i.critical_use_category === data.fieldInfo.category).quantity = data.value
       return
     }
 
@@ -143,6 +150,10 @@ const mutations = {
 
   setEmailTemplates(state, data) {
     state.emailTemplates = data
+  },
+
+  setCriticalUseCategoryList(state, data) {
+    state.initialData.criticalUseCategoryList = data
   },
 
   setEssenCritTypes(state, data) {
@@ -367,6 +378,14 @@ const mutations = {
     countryList.forEach(c => {
       state.form.tabs[tabName].form_fields[index].imports.push({
         party: c, quantity: 0
+      })
+    })
+  },
+
+  addCategoryEntry(state, { tabName, index, categoryList }) {
+    categoryList.forEach(c => {
+      state.form.tabs[tabName].form_fields[index].use_categories.push({
+        critical_use_category: c, quantity: 0
       })
     })
   },

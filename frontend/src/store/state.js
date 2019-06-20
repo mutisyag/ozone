@@ -57,6 +57,7 @@ const state = {
     countryOptions: null,
     countryOptionsSubInfo: null,
     groupSubstances: null,
+    criticalUseCategoryList: null,
     substances: null,
     controlledGroups: null,
     approvedExemptionsList: null,
