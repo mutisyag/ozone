@@ -65,7 +65,7 @@
           <template slot="validation" slot-scope="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
-                <i class="fa fa-pencil-square-o fa-lg" v-b-tooltip :title="$gettext('Edit')"></i>
+               <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
                 v-if="$store.getters.can_edit_data"
