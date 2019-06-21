@@ -292,7 +292,7 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
         If no param is given, it returns the list for the current date.
         """
         period = ReportingPeriod.objects.filter(
-            name=int(request.query_params.get('period', 0))
+            name=request.query_params.get('period', '')
         ).first()
         groups = Group.get_report_groups(Party.objects.filter(pk=pk).first(), period)
         if groups:
