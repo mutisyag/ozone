@@ -210,11 +210,12 @@ export default {
       this.table.totalRows = filteredItems.length
       this.table.currentPage = 1
     },
-    sortCompare(a, b, key) {
+    sortCompare(a, b, key, direction) {
+      const placeholder = direction ? '1000' : '3000'
       const sortByDateType = ['london_amendment', 'montreal_protocol', 'copenhagen_amendment', 'montreal_amendment', 'beijing_amendment', 'kigali_amendment', 'montreal_protocol', 'vienna_convention']
       if (sortByDateType.includes(key)) {
-        const first = new Date(a[key].split('<br/>')[0])
-        const second = new Date(b[key].split('<br/>')[0])
+        const first = a[key] !== undefined ? new Date(a[key].split('<br/>')[0]) : new Date(placeholder)
+        const second = b[key] !== undefined ? new Date(b[key].split('<br/>')[0]) : new Date(placeholder)
         if (first > second) {
           return 1
         }
