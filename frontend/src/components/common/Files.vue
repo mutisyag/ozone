@@ -187,8 +187,6 @@ export default {
 </script>
 
 <style lang="css" scoped>
-.files-upload-wrapper {
-}
 a {
   margin-bottom: 1rem;
 }

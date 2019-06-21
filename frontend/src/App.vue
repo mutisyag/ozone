@@ -63,6 +63,7 @@
         </b-modal>
       </main>
     </div>
+    <InactivityDetector></InactivityDetector>
   </div>
 </template>
 
@@ -76,6 +77,7 @@ import Header from '@/components/common/Header'
 import { api } from '@/components/common/services/api'
 import auth from '@/components/common/mixins/auth'
 import { setLanguage } from '@/components/common/services/languageService'
+import InactivityDetector from '@/InactivityDetector'
 
 export default {
   name: 'app',
@@ -88,7 +90,8 @@ export default {
     SidebarToggler,
     SidebarHeader,
     SidebarNav,
-    SidebarMinimizer
+    SidebarMinimizer,
+    InactivityDetector
   },
 
   mixins: [auth],
