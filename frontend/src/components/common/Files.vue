@@ -152,7 +152,14 @@ export default {
         return
       }
       const files = this.selectedFiles.filter(file => this.allowedExtensions.find(extension => file.name.toLowerCase().trim().endsWith(extension)))
-
+      const NotAllowedFiles = this.selectedFiles.filter(file => !this.allowedExtensions.find(extension => file.name.toLowerCase().trim().endsWith(extension)))
+      if (NotAllowedFiles.length) {
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { __all__: [`${this.$gettext('The following files are not allowed')}: <br> ${NotAllowedFiles.map(f => f.name).join(' ')}`] },
+          variant: 'danger'
+        })
+      }
       files.forEach((file, index) => {
         file.updated = index
       })
