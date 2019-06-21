@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="container">
-      <div>
+      <div v-if="!new_blend">
         <h5 class="mt-2">
           <span v-translate>Add predefined blends</span>
         </h5>
@@ -73,9 +73,9 @@
         </b-btn>
         <b-btn variant="light" v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
       </b-btn-group>
-      <hr>
 
-      <div v-if="!new_blend">
+      <div v-if="!new_blend && !selected_blends.selected.length">
+        <hr>
         <h5>
           <span v-translate>Add custom blend</span>
         </h5>
