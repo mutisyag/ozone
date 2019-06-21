@@ -127,7 +127,7 @@ export default {
       const { form } = this.$store.state
       const prefill_data = this.$store.state.current_submission
       Object.keys(form.tabs).forEach((tab) => {
-        if (form.tabs[tab].endpoint_url) {
+        if (form.tabs[tab].endpoint_url && Object.keys(this.$store.state.current_submission).includes(form.tabs[tab].endpoint_url)) {
           fetch(prefill_data[form.tabs[tab].endpoint_url]).then(response => {
             if (response.data.length) {
               this.$store.commit('setTabStatus', { tab, value: 'saving' })

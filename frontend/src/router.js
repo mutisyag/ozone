@@ -103,6 +103,14 @@ const routes = [{
     component: OtherRoDataManager
   },
   {
+    path: 'procagent',
+    name: 'procagent',
+    meta: {
+      requiresAuth: true
+    },
+    component: OtherRoDataManager
+  },
+  {
     path: 'exemption',
     name: 'exemption',
     meta: {

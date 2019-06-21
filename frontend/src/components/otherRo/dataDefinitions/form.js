@@ -4,7 +4,7 @@ import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 const getFormOtherRo = ($gettext) => {
   const form = {
     formDetails: {
-      tabsDisplay: ['sub_info', 'files', 'transfers'],
+      tabsDisplay: ['sub_info', 'files', 'transfers', 'procagent'],
       dataNeeded: [
         'initialData.countryOptions',
         'initialData.countryOptionsSubInfo',
@@ -14,11 +14,7 @@ const getFormOtherRo = ($gettext) => {
         'initialData.display.countries',
         'currentUser',
         'permissions.form'
-      ],
-      comments_default_properties: {
-        'transfers_remarks_secretariat': ''
-      },
-      comments_endpoint_url: 'submission_remarks'
+      ]
     },
     tabs: {
       ...setTabFiles($gettext),
@@ -35,14 +31,8 @@ const getFormOtherRo = ($gettext) => {
         skipSave: true,
         formNumber: 1,
         title: $gettext('Transfers'),
-        titleHtml: `<b>${$gettext('Transfers')}</b> <br><small>${$gettext('Annex F substances for exempted subsectors')} <br> ${$gettext('in metric tonnes (not ODP or CO2-equivalent tonnes)')}</small>`,
+        titleHtml: `<b>${$gettext('Transfers')}</b>`,
         form_fields: [],
-        comments: {
-          transfers_remarks_secretariat: {
-            selected: '',
-            type: 'textarea'
-          }
-        },
         blend_substance_headers: ['substance', 'source_party', 'destination_party', 'transferred_amount', 'reporting_period', 'is_basic_domestic_need'],
         get fields_order() {
           return this.section_subheaders.map(x => x.name)
@@ -94,6 +84,52 @@ const getFormOtherRo = ($gettext) => {
           'substance': null,
           'transferred_amount': null,
           'is_basic_domestic_need': null
+        }
+      },
+      procagent: {
+        name: 'procagent',
+        endpoint_url: 'pa_uses_reported_url',
+        status: null,
+        skipSave: true,
+        formNumber: 1,
+        title: $gettext('Process agents'),
+        titleHtml: `<b>${$gettext('Process agents')}</b>`,
+        form_fields: [],
+        get fields_order() {
+          return this.section_subheaders.map(x => x.name)
+        },
+        get input_fields() {
+          return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
+        },
+        section_subheaders: [{
+          label: `(1)<br>${$gettext('Makeup quantity')}`,
+          name: 'makeup_quantity',
+          colspan: 1,
+          type: 'string'
+        }, {
+          label: `(2)<br>${$gettext('Emissions')}`,
+          name: 'emissions',
+          isInput: true
+        }, {
+          label: `(3)<br>${$gettext('Units')}`,
+          name: 'units',
+          isInput: true
+        }, {
+          label: `(4)<br>${$gettext('Remarks')}`,
+          name: 'remark',
+          isInput: true
+        }
+        ],
+
+        section_headers: [{
+          label: '',
+          colspan: 7
+        }],
+        default_properties: {
+          'makeup_quantity': '',
+          'emissions': '',
+          'units': null,
+          'remark': null
         }
       }
     }

@@ -122,6 +122,10 @@ const mutations = {
       currentFormStructure = getFormOtherRo($gettext)
       tableRowConstructor = otherRoTableRowConstructor
       break
+    case 'procagent':
+      currentFormStructure = getFormOtherRo($gettext)
+      tableRowConstructor = otherRoTableRowConstructor
+      break
     case 'essencrit':
       currentFormStructure = getFormRaf($gettext)
       tableRowConstructor = rafTableRowConstructor

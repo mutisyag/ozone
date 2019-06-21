@@ -12,6 +12,46 @@ const valueConverter = (item) => {
 const doSum = (sumItems) => sumItems.reduce((sum, item) => valueConverter(item) + valueConverter(sum))
 
 export default {
+  nonSubstanceRows({
+    currentSectionName, prefillData
+  }) {
+    let row
+    switch (currentSectionName) {
+    case 'procagent':
+      row = {
+        makeup_quantity: {
+          selected: null,
+          type: 'nonInput'
+        },
+        emissions: {
+          selected: null,
+          type: 'nonInput'
+        },
+        units: {
+          selected: null,
+          type: 'nonInput'
+        },
+        remark: {
+          selected: null,
+          type: 'nonInput'
+        },
+        get validation() {
+          return []
+        }
+      }
+      if (prefillData) {
+        Object.keys(prefillData).forEach((element) => {
+          if (row[element]) {
+            row[element].selected = isNumber(prefillData[element]) ? parseFloat(fromExponential(prefillData[element])) : prefillData[element]
+          }
+        })
+      }
+      return row
+    default:
+      break
+    }
+  },
+
   substanceRows({
     // eslint-disable-next-line no-unused-vars
     $gettext, section, substance, group, country, blend, prefillData

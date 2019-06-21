@@ -7,14 +7,14 @@
       >
         <span
           class="color-green mr-3"
-          v-if="$store.state.current_submission.current_state === 'finalized' && $store.state.current_submission.flag_valid && $store.state.form.tabs.flags.showValid"
+          v-if="$store.state.current_submission.current_state === 'finalized' && $store.state.form.tabs.flags && $store.state.current_submission.flag_valid && $store.state.form.tabs.flags.showValid"
         >
           <i class="fa fa-check-circle fa-sm mr-2"></i>
           <span v-translate>Valid</span>
         </span>
         <span
           class="color-red mr-3"
-          v-if="$store.state.current_submission.current_state === 'finalized' && !$store.state.current_submission.flag_valid && $store.state.form.tabs.flags.showValid"
+          v-if="$store.state.current_submission.current_state === 'finalized' && $store.state.form.tabs.flags && !$store.state.current_submission.flag_valid && $store.state.form.tabs.flags.showValid"
         >
           <i class="fa fa-exclamation-circle fa-sm mr-2"></i>
           <span v-translate>Not valid</span>
