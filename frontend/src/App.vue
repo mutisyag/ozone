@@ -63,7 +63,7 @@
         </b-modal>
       </main>
     </div>
-    <InactivityDetector></InactivityDetector>
+    <InactivityDetector v-if="env !== 'development'"></InactivityDetector>
   </div>
 </template>
 
@@ -100,8 +100,8 @@ export default {
     return {
       refCount: 0,
       isLoading: false,
-      nav: getNav(this.$gettext)
-
+      nav: getNav(this.$gettext),
+      env: process.env.NODE_ENV
     }
   },
 
