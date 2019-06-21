@@ -1185,7 +1185,7 @@ class ProcessAgentUsesReportedViewSet(viewsets.ReadOnlyModelViewSet):
     filter_backends = (IsOwnerFilterBackend,)
 
     def get_queryset(self):
-        return ProcessAgentContainTechnology.objects.filter(
+        return ProcessAgentUsesReported.objects.filter(
             submission=self.kwargs['submission_pk']
         )
 
