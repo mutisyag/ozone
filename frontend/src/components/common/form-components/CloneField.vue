@@ -67,9 +67,9 @@ export default {
   },
 
   methods: {
-
     addSubstance() {
       const current_field = JSON.parse(JSON.stringify(this.field))
+      const current_fieldWithData = JSON.parse(JSON.stringify(this.current_field))
       const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
       let currentTypeOfCountryField = ''
       const willNotAdd = []
@@ -77,6 +77,16 @@ export default {
       typeOfCountryFields.forEach(type => {
         if (current_field.hasOwnProperty(type)) currentTypeOfCountryField = type
       })
+
+      let prefillData = null
+      if (this.selected_countries.selected.length === 1) {
+        prefillData = {}
+        Object.keys(current_fieldWithData).forEach(key => {
+          prefillData[key] = current_fieldWithData[key].selected
+        })
+        delete prefillData[currentTypeOfCountryField]
+        delete prefillData.validation
+      }
 
       this.selected_countries.selected.forEach(country => {
         let fieldExists = false
@@ -104,7 +114,7 @@ export default {
             groupName: current_field.group.selected,
             country,
             blendList: [current_field.blend.selected],
-            prefillData: null
+            prefillData
           })
         }
       })
