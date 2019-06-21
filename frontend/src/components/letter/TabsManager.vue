@@ -27,7 +27,7 @@
 
     <div class="form-wrapper" style="position: relative">
       <b-card style="margin-bottom: 5rem;" no-body>
-        <b-tabs v-model="tabIndex" card>
+        <b-tabs no-key-nav v-model="tabIndex" card>
           <b-tab :title="$gettext('Submission Info')" active>
             <template slot="title">
               <div class="tab-title">

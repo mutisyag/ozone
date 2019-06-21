@@ -2,7 +2,7 @@
     <div v-if="templates && sender">
       <b-btn class="square-right square-left" @click="getMail()" variant="outline-dark" v-translate>E-mail</b-btn>
       <b-modal title="E-mail" id="ozoneMail" size="xl" ref="ozoneMailModal">
-        <b-tabs v-model="tabIndex">
+        <b-tabs no-key-nav v-model="tabIndex">
           <b-tab :title="$gettext('Send a message')">
             <b-row>
                 <b-col cols="8">

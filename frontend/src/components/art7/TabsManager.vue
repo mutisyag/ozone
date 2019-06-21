@@ -32,7 +32,7 @@
 
     <div class="form-wrapper" style="position: relative">
       <b-card style="margin-bottom: 5rem;" no-body>
-        <b-tabs v-model="tabIndex" card>
+        <b-tabs no-key-nav v-model="tabIndex" card>
           <b-tab active>
             <template slot="title">
               <tab-title-with-loader :tab="$store.state.form.tabs.sub_info"/>
