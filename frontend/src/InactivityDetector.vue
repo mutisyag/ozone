@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       time: 0,
-      inactivyTimer: 300,
+      inactivyTimer: 60,
       interval: null
     }
   },
@@ -59,7 +59,7 @@ export default {
     },
     stopInactivityTimer() {
       clearInterval(this.interval)
-      this.inactivyTimer = 300
+      this.inactivyTimer = 60
       this.$refs.inactivity_modal.hide()
     },
 
@@ -74,7 +74,7 @@ export default {
     resetTimer() {
       clearTimeout(this.time)
       //   900000 = 15 minutes
-      this.time = setTimeout(this.startInactivityTimer, 900000)
+      this.time = setTimeout(this.startInactivityTimer, 300000)
     }
   }
 }
