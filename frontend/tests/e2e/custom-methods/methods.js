@@ -529,7 +529,7 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
     has_exports: 'Exports',
     has_produced: 'Production',
     has_destroyed: 'Destruction',
-    has_nonparty: 'Nonparty',
+    has_nonparty: 'Non-Party',
     has_emission: 'Emission'
   }
   /* fields that will be set to 'yes' of no fields are given as argument */
@@ -596,7 +596,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
     has_exports_tab: { name: 'Exports' },
     has_produced_tab: { name: 'Production' },
     has_destroyed_tab: { name: 'Destruction' },
-    has_nonparty_tab: { name: 'Nonparty' }
+    has_nonparty_tab: { name: 'Non-Party' }
   }
   /* Get XPath of aside menu components	*/
   const aside_menu = `//div[@id='${tab}']//aside[@class='aside-menu']`

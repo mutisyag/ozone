@@ -290,7 +290,7 @@ module.exports = {
     addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values)
 
     addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
-    saveSubmission(browser, ['Questionnaire', 'Nonparty'])
+    saveSubmission(browser, ['Questionnaire', 'Non-Party'])
     browser.end()
   },
   BU_011: browser => {
