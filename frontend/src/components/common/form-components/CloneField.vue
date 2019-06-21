@@ -1,29 +1,33 @@
 <template>
   <div v-if="field && tabName">
-    <div style="position: relative">
-      <multiselect
-        :max-height="250"
-        :multiple="true"
-        :clear-on-select="false"
-        :hide-selected="true"
-        :close-on-select="false"
-        :disabled="disabled"
-        label="text"
-        trackBy="value"
-        :placeholder="$gettext('Countries')"
-        v-model="selected_countries.selected"
-        :options="countryOptions"
-      />
-      <b-btn
-        @click="addSubstance"
-        variant="primary"
-        class="mt-1"
-        size="sm"
-        v-if="selected_countries.selected.length"
-      >
-        <span v-translate="{length: selected_countries.selected.length}">Add %{length} rows</span>
-      </b-btn>
-    </div>
+    <b-btn class="mt-1" size="sm" variant="outline-dark" id="show-btn" @click="openModalAndSelect">Add countries</b-btn>
+    <b-modal  @shown="openCountryList" id="countries-modal" ref="countries-modal" :title="$gettext('Add countries')">
+        <div ref="countries_selector" style="position: relative">
+          <multiselect
+            :max-height="250"
+            :multiple="true"
+            :clear-on-select="false"
+            :hide-selected="true"
+            :close-on-select="false"
+            :disabled="disabled"
+            label="text"
+            trackBy="value"
+            :placeholder="$gettext('Countries')"
+            v-model="selected_countries.selected"
+            :options="countryOptions"
+          />
+        </div>
+        <template slot="modal-footer">
+          <b-btn variant="outline-danger" @click="resetData();$refs['countries-modal'].hide()">Cancel</b-btn>
+          <b-btn
+            @click="addSubstance"
+            variant="primary"
+            v-if="selected_countries.selected.length"
+            >
+            <span v-translate="{length: selected_countries.selected.length}">Add %{length} rows</span>
+          </b-btn>
+        </template>
+      </b-modal>
   </div>
 </template>
 <script>
@@ -67,6 +71,13 @@ export default {
   },
 
   methods: {
+    openModalAndSelect() {
+      this.$refs['countries-modal'].show()
+    },
+
+    openCountryList() {
+      this.$refs.countries_selector.querySelector('.multiselect').focus()
+    },
     addSubstance() {
       const current_field = JSON.parse(JSON.stringify(this.field))
       const current_fieldWithData = JSON.parse(JSON.stringify(this.current_field))
