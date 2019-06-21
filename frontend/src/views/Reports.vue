@@ -122,7 +122,7 @@ export default {
         period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value) : this.selected.periods.value,
         party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value) : this.selected.parties.value
       }
-      if (!params.period.length || !params.party.length) {
+      if (!params.period.length || !params.party.length || !this.selected.reports) {
         this.showValidation = true
         return
       }
