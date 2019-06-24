@@ -138,10 +138,11 @@ export default {
       })
       willNotAddCountryNames.length && this.$store.dispatch('setAlert', {
         $gettext: this.$gettext,
-        message: { __all__: [`${this.alerts.field_already_exists} : ${willNotAddCountryNames.join(', ')}}`] },
+        message: { __all__: [`${this.alerts.field_already_exists} : ${willNotAddCountryNames.join(', ')}`] },
         variant: 'danger'
       })
       this.$emit('removeThisField')
+      this.$refs['countries-modal'].hide()
       this.resetData()
     },
 
