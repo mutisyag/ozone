@@ -672,9 +672,11 @@
         ></textarea>
       </div>
     </div>
-    <AppAside fixed>
+    <AppAside
+      v-if="$store.getters.can_edit_data || validationLength"
+      fixed
+    >
       <DefaultAside
-        v-if="$store.getters.can_edit_data || validationLength"
         v-on:fillSearch="fillTableSearch($event)"
         :parentTabIndex.sync="sidebarTabIndex"
         :hovered="hovered"
