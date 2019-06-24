@@ -52,7 +52,7 @@ urlpatterns = [
     re_path(
         r"^reporting/.*",
         serve,
-        kwargs={'path': 'index.html'}
+        kwargs={'path': 'index.html', 'insecure': True}
     ),
     re_path(
         r"^(?!/?static/)(?!/?media/)(?P<path>.*\..*)$",
