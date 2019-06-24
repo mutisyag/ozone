@@ -12,7 +12,7 @@
         <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form.</b></p>
       </div>
       <div v-if="uncheckedFlags.length && !skipArt7Specific">
-        <p><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
+        <p class="color-red"><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags && !skipArt7Specific">
