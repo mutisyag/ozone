@@ -94,7 +94,7 @@ export default {
       get quantity_authorized_not_acquired() {
         return {
           type: 'nonInput',
-          selected: valueConverter(this.quantity_exempted.selected) - valueConverter(this.quantity_acquired.selected)
+          selected: doSum([this.quantity_exempted.selected, -this.quantity_acquired.selected])
         }
       },
       on_hand_start_year: {
@@ -128,7 +128,7 @@ export default {
         const criticalValue = critical ? valueConverter(this.quantity_exported.selected) : 0
         return {
           type: 'nonInput',
-          selected: valueConverter(this.available_for_use.selected) - valueConverter(this.quantity_used.selected) - criticalValue - valueConverter(this.quantity_destroyed.selected)
+          selected: doSum([this.available_for_use.selected, -this.quantity_used.selected, -criticalValue, -this.quantity_destroyed.selected])
         }
       },
       get validation() {
