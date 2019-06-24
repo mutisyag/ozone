@@ -697,7 +697,7 @@
   },
   {
     "fields": {
-      "description": "",
+      "description": "1987",
       "end_date": "1987-12-31",
       "is_reporting_allowed": false,
       "is_reporting_open": false,
@@ -709,7 +709,7 @@
   },
   {
     "fields": {
-      "description": "",
+      "description": "1988",
       "end_date": "1988-12-31",
       "is_reporting_allowed": false,
       "is_reporting_open": false,

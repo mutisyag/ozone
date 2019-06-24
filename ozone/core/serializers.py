@@ -419,6 +419,7 @@ class ReportingPeriodSerializer(serializers.ModelSerializer):
         model = ReportingPeriod
         fields = (
             'id', 'name', 'start_date', 'end_date',
+            'description',
             'is_reporting_allowed', 'is_reporting_open'
         )
 

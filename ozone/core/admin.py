@@ -270,10 +270,10 @@ class BlendComponentAdmin(admin.ModelAdmin):
 # Reporting-related models
 @admin.register(ReportingPeriod)
 class ReportingPeriodAdmin(admin.ModelAdmin):
-    list_display = ('name', 'start_date', 'end_date')
+    list_display = ('name', 'start_date', 'end_date', 'description')
     search_fields = ["name"]
     list_filter = (
-        'is_reporting_open',
+        'is_reporting_open', 'is_reporting_allowed',
     )
     ordering = ('-end_date',)
 
