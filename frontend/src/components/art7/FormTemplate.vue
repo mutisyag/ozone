@@ -75,7 +75,7 @@
               :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
               :disabled="!$store.getters.can_edit_data"
               v-on:removeThisField="remove_field(cell.item.index, cell.item.originalObj)"
-              v-if="!cell.item[getCountrySlot]"
+              v-if="!cell.item[getCountrySlot] && $store.getters.can_edit_data"
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
@@ -515,7 +515,7 @@
               :disabled="!$store.getters.can_edit_data"
               :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
               v-on:removeThisField="remove_field(cell.item.index, true)"
-              v-if="!cell.item[getCountrySlot]"
+              v-if="!cell.item[getCountrySlot] && $store.getters.can_edit_data"
               :tabName="tabName"
               :current_field="cell.item.originalObj"
             />
