@@ -1,8 +1,8 @@
 <template>
   <div v-if="field && tabName">
     <b-btn class="mt-1" size="sm" variant="outline-dark" id="show-btn" @click="openModalAndSelect">Add countries</b-btn>
-    <b-modal  @shown="openCountryList" id="countries-modal" ref="countries-modal" :title="$gettext('Add countries')">
-        <div ref="countries_selector" style="position: relative">
+    <b-modal size="lg"  @shown="openCountryList" id="countries-modal" ref="countries-modal" :title="$gettext('Add countries')">
+        <div ref="countries_selector" style="position: relative; width: calc(100% - 180px);">
           <multiselect
             :max-height="250"
             :multiple="true"
