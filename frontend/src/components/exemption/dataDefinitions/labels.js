@@ -5,7 +5,7 @@ const getLabels = ($gettext) => {
       substance: $gettext('Substance'),
       group: $gettext('Group'),
       is_emergency: $gettext('Emergency'),
-      quantity: `${$gettext('Quantity')} (${$gettext('in metric tonnes')})`,
+      quantity: `${$gettext('Quantity')} (${$gettext('in metric tons')})`,
       remarks_os: $gettext('Remarks')
     },
     approved: {
@@ -13,7 +13,7 @@ const getLabels = ($gettext) => {
       substance: $gettext('Substance'),
       group: $gettext('Group'),
       is_emergency: $gettext('Emergency'),
-      quantity: `${$gettext('Quantity')} (${$gettext('in metric tonnes')})`,
+      quantity: `${$gettext('Quantity')} (${$gettext('in metric tons')})`,
       remarks_os: $gettext('Remarks')
     }
   }

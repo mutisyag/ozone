@@ -19,7 +19,7 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
         name: 'substance'
       },
       {
-        label: `(3) <br> ${$gettext('Quantity')} (${$gettext('in metric tonnes')})`,
+        label: `(3) <br> ${$gettext('Quantity')} (${$gettext('in metric tons')})`,
         name: 'quantity',
         isInput: true
       },
