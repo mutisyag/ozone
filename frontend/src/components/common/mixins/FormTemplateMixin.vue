@@ -147,7 +147,7 @@ export default {
       if (this.isReadOnly) {
         return this.$gettext('There are no records to show')
       }
-      return this.$gettext('Please use the form on the right sidebar to add blends')
+      return this.$gettext('Please use the form on the right sidebar to add mixtures')
     },
     tableFields() {
       const tableHeaders = []
@@ -175,21 +175,21 @@ export default {
           if (this.tabName === 'has_imports' && this.$route.name === 'art7') {
             tableHeaders.push({
               key: 'blend',
-              label: `(2a) <br> ${this.$gettext('Blend')}`,
+              label: `(2a) <br> ${this.$gettext('Mixtures')}`,
               width: form_field.width || null,
               ...options
             })
           } else if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
             tableHeaders.push({
               key: 'blend',
-              label: `(1b) <br> ${this.$gettext('Blend')}`,
+              label: `(1b) <br> ${this.$gettext('Mixtures')}`,
               width: form_field.width || null,
               ...options
             })
           } else {
             tableHeaders.push({
               key: 'blend',
-              label: `(2) <br> ${this.$gettext('Blend')}`,
+              label: `(2) <br> ${this.$gettext('Mixtures')}`,
               width: form_field.width || null,
               ...options
             })

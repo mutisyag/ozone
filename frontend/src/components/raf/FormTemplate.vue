@@ -212,7 +212,7 @@
         <span
           v-else
           v-translate="{name: tab_data.display.blends[modal_data.field.blend.selected].name}"
-        >Edit %{name} blend</span>
+        >Edit %{name} mixture</span>
       </div>
       <div v-if="modal_data">
         <p class="muted">

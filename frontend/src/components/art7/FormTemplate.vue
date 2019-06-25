@@ -436,7 +436,7 @@
       <div v-if="hasBlends" class="table-wrapper">
         <div class="table-title">
           <h6 id="blends-table-title">
-            <span v-translate>Blends</span>
+            <span v-translate>Mixtures</span>
           </h6>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
@@ -693,7 +693,7 @@
         <span
           v-else
           v-translate="{name: tab_data.display.blends[modal_data.field.blend.selected].name}"
-        >Edit %{name} blend</span>
+        >Edit %{name} mixture</span>
       </div>
       <div v-if="modal_data">
         <p class="muted">

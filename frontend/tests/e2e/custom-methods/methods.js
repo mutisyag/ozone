@@ -1,16 +1,16 @@
 const logMessage = (browser, message) => {
-	browser.perform((done) => {
-		console.log('==================================================================')
-		console.log(message)
-		console.log('==================================================================')
-		done()
-	})
+  browser.perform((done) => {
+    console.log('==================================================================')
+    console.log(message)
+    console.log('==================================================================')
+    done()
+  })
 }
 
 const showMouse = (browser) => {
-  browser.execute(function() {
-    let app    = document.getElementsByClassName('app')
-    let cursor  = document.createElement('div')
+  browser.execute(() => {
+    const app = document.getElementsByClassName('app')
+    const cursor = document.createElement('div')
 
     cursor.setAttribute('id', 'cursor')
     app[0].appendChild(cursor)
@@ -25,27 +25,27 @@ const showMouse = (browser) => {
     cursor.style.pointerEvents = 'none'
     cursor.style.zIndex = '9999'
 
-    document.addEventListener('mousemove', function(e) {
-      let x = e.clientX
-      let y = e.clientY
+    document.addEventListener('mousemove', (e) => {
+      const x = e.clientX
+      const y = e.clientY
 
-      cursor.style.left = x + 'px'
-      cursor.style.top = y + 'px'
+      cursor.style.left = `${x}px`
+      cursor.style.top = `${y}px`
       cursor.style.borderColor = '#000'
     })
 
-    document.addEventListener('click', function(e) {
+    document.addEventListener('click', (e) => {
       cursor.style.borderColor = 'red'
     })
 
-    return true;
-  });
+    return true
+  })
 
   browser.pause(1000)
 }
 
 const login = (browser, username, password, mouse = false) => {
-	logMessage(browser, "Log in with " + username + ":" + password)
+  logMessage(browser, `Log in with ${username}:${password}`)
 
   browser.url(process.env.VUE_DEV_SERVER_URL)
     .useCss()
@@ -57,23 +57,23 @@ const login = (browser, username, password, mouse = false) => {
     .click('input[type="submit"]')
     .waitForElementVisible('#obligation_selector', 8000)
     .assert.urlContains('/reporting/dashboard')
-  
+
   if (mouse === true) {
     showMouse(browser)
   }
 }
 
 const logout = (browser) => {
-	logMessage(browser, 'Log out')
+  logMessage(browser, 'Log out')
   browser.useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
     .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
-		.pause(200)
+    .pause(200)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
     .pause(500)
     .waitForElementVisible('#logout_button', 5000)
     .moveToElement('#logout_button', undefined, undefined)
-		.pause(200)
+    .pause(200)
     .click('#logout_button')
     .pause(500)
     .waitForElementVisible('#id_username', 5000)
@@ -82,7 +82,7 @@ const logout = (browser) => {
 
 const setMultiSelector = (browser, selector_id, option, singleSelectWithText = true) => {
   const time = 20000
-  let multiselectSingle = '';
+  let multiselectSingle = ''
 
   if (singleSelectWithText) {
     multiselectSingle = `//div[@id='${selector_id}']//span[contains(@class, 'multiselect__single') and contains(text(), '${option}')]`
@@ -94,13 +94,13 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
     .useXpath()
     /* Check if multiselect is visible */
     .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, time)
-    
+
     .element('xpath', multiselectSingle, (result) => {
       if (result.status === -1) {
         browser
           /* Open multiselect */
           .moveToElement(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, undefined, undefined)
-					.pause(1000)
+          .pause(1000)
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
           .pause(1000)
           /* Check if multiselect is opened */
@@ -119,7 +119,7 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
 }
 
 const createSubmission = (browser, obligation, period, party, edit_party = false, back_to_dashboard = false) => {
-	logMessage(browser, 'Creating submission \'' + obligation + '\' for \'' + period + '\'')
+  logMessage(browser, `Creating submission '${obligation}' for '${period}'`)
 
   const submission = {
     obligation_selector: { option: obligation, read_write: true, singleSelectWithText: true },
@@ -179,7 +179,7 @@ const handleModal = (browser, accept = true) => {
 }
 
 const deleteSubmissionFake = (browser) => {
-	logMessage(browser, 'Fake delete')
+  logMessage(browser, 'Fake delete')
 
   browser
     .useXpath()
@@ -203,7 +203,7 @@ const deleteSubmission = (browser) => {
 }
 
 const saveSubmission = (browser, tabs = []) => {
-	logMessage(browser, 'Saving submission')
+  logMessage(browser, 'Saving submission')
 
   browser.useXpath()
     /* Click Save and continue button */
@@ -256,7 +256,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
     /* Check if submissionInfo has missing fields */
     if (!submissionInfo.hasOwnProperty(field) && autocomplet) {
       submissionInfo[field] = ''
-    } 
+    }
 
     if (submissionInfo.hasOwnProperty(field)) {
       /* Add submissionInfo in input fields */
@@ -290,7 +290,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
  *	Use this before calling clickQuestionnaireRadios(args)
  */
 const saveAndFail = (browser, submissionInfo) => {
-	logMessage(browser, 'Save and fail')
+  logMessage(browser, 'Save and fail')
 
   fillSubmissionInfo(browser, submissionInfo)
 
@@ -384,7 +384,7 @@ const closeAsideMenu = (browser, tab) => {
 }
 
 const filterSubmission = (browser, table, options, first_row_expected, rows_number_expected) => {
-	logMessage(browser, 'Filtering submissions')
+  logMessage(browser, 'Filtering submissions')
 
   const filters = {
     submission_search_filter: options[0],
@@ -444,7 +444,7 @@ const filterSubmission = (browser, table, options, first_row_expected, rows_numb
 }
 
 const filterEntity = (browser, tab, filters) => {
-	logMessage(browser, 'Filtering entities')
+  logMessage(browser, 'Filtering entities')
 
   const tabs = {
     controlled_substances: {
@@ -521,7 +521,7 @@ const checkSumbissionInfoFlags = (browser) => {
 }
 
 const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
-	logMessage(browser, 'Clicking questionnaire radios: ' + fields)
+  logMessage(browser, `Clicking questionnaire radios: ${fields}`)
 
   let restrictedFields = ['has_imports', 'has_exports', 'has_produced', 'has_destroyed', 'has_nonparty', 'has_emissions']
   const tabs = {
@@ -572,7 +572,7 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
 }
 
 const addEntity = (browser, tab, entity, options, order = undefined, check = false) => {
-	logMessage(browser, 'Adding entity ' + entity + ': [\'' + options[0] + '\', \'' + options[1] + '\']')
+  logMessage(browser, `Adding entity ${entity}: ['${options[0]}', '${options[1]}']`)
 
   const selectors = []
   /**
@@ -582,7 +582,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
    */
   const entities = {
     'substance': ['Substance', 'substance_annex_selector', 'substance_selector', 'add-substance-button', 'substance-table'],
-    'blend': ['Blend', 'blend_type_selector', 'blend_selector', 'add-blend-button', 'blend-table']
+    'blend': ['Mixture', 'blend_type_selector', 'blend_selector', 'add-blend-button', 'blend-table']
   }
   /* Special case */
   // TODO: find a dynamic way
@@ -700,63 +700,63 @@ const addFacility = (browser, table, tab, row, row_values, check = false) => {
 }
 
 const addValues = (browser, table, tab, row, row_values, modal_values) => {
-	logMessage(browser, 'Adding values to entity')
-	/* Hide app-footer */
-	browser
-		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-		.pause(500)
-	
-	if (Object.entries(row_values).length > 0) {
-		browser
-			.useCss()
-			.moveToElement(`#${tab} #${table} tbody tr:nth-child(${row})`, undefined, undefined)
-			/* Add values to entity */
-			for (const field_id of Object.keys(row_values)) {
-				browser
-					.element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
-						if (result.status !== -1) {
-							browser
-								.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
-						} else {
-							browser
-								.setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
-						}
-					})
-			}
-	}
+  logMessage(browser, 'Adding values to entity')
+  /* Hide app-footer */
+  browser
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+    .pause(500)
 
-	if (Object.entries(modal_values).length > 0) {
-		/* Open edit modal */
-		browser
-			.waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
-			.click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
-			.pause(500)
+  if (Object.entries(row_values).length > 0) {
+    browser
+      .useCss()
+      .moveToElement(`#${tab} #${table} tbody tr:nth-child(${row})`, undefined, undefined)
+    /* Add values to entity */
+    for (const field_id of Object.keys(row_values)) {
+      browser
+        .element('css selector', `#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, (result) => {
+          if (result.status !== -1) {
+            browser
+              .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) textarea#${field_id}`, row_values[field_id])
+          } else {
+            browser
+              .setValue(`#${tab} #${table} tbody tr:nth-child(${row}) input#${field_id}`, row_values[field_id])
+          }
+        })
+    }
+  }
 
-		browser
-			.waitForElementVisible(`#${tab} .modal-body`, 5000)
-			.pause(500)
-		/* Add values in modal */
-		for (const field_id of Object.keys(modal_values)) {
-			browser
-				.click(`#${tab} .modal-body #${field_id}`)
-				.pause(200)
-				.clearValue(`#${tab} .modal-body #${field_id}`)
-				.setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
-		}
-		/* Close modal */
-		browser
-			.pause(500)
-			.click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
-			.pause(500)
-	}
-	/* Show app-footer */
-	browser
-		.execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
-		.pause(500)
+  if (Object.entries(modal_values).length > 0) {
+    /* Open edit modal */
+    browser
+      .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
+      .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
+      .pause(500)
+
+    browser
+      .waitForElementVisible(`#${tab} .modal-body`, 5000)
+      .pause(500)
+    /* Add values in modal */
+    for (const field_id of Object.keys(modal_values)) {
+      browser
+        .click(`#${tab} .modal-body #${field_id}`)
+        .pause(200)
+        .clearValue(`#${tab} .modal-body #${field_id}`)
+        .setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
+    }
+    /* Close modal */
+    browser
+      .pause(500)
+      .click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
+      .pause(500)
+  }
+  /* Show app-footer */
+  browser
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+    .pause(500)
 }
 
 const addComment = (browser, tab, comment) => {
-	logMessage(browser, 'Adding comment')
+  logMessage(browser, 'Adding comment')
 
   browser
     .useCss()
@@ -817,7 +817,7 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
 }
 
 const uploadeFile = (browser, filename, filepath) => {
-	logMessage(browser, 'Uploading file')
+  logMessage(browser, 'Uploading file')
 
   const path = require('path')
   const find_root = require('find-root')

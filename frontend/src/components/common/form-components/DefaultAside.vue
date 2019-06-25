@@ -10,7 +10,7 @@
       </b-tab>
       <b-tab v-if="hasBlends && $store.getters.can_edit_data">
         <template slot="title">
-          <span v-translate>Blends</span>
+          <span v-translate>Mixtures</span>
         </template>
         <AddBlend :tabName="tabName"></AddBlend>
       </b-tab>

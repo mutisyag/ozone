@@ -5,7 +5,7 @@ const getLabels = ($gettext) => {
     common: getCommonLabels($gettext),
     has_imports: {
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       group: $gettext('Group'),
       percent: $gettext('Percentage'),
       source_party: $gettext('Exporting country/region/territory'),
@@ -38,7 +38,7 @@ const getLabels = ($gettext) => {
     },
     has_exports: {
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       percent: $gettext('Percentage'),
       group: $gettext('Group'),
       quantity_polyols: $gettext('Polyols'),
@@ -104,7 +104,7 @@ const getLabels = ($gettext) => {
       percent: $gettext('Percentage'),
       quantity_destroyed: $gettext('Quantity destroyed'),
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       destruction_remarks_party: $gettext('Comments (Party)'),
       destruction_remarks_secretariat: $gettext('Comments (Secretariat)')
     },
@@ -117,7 +117,7 @@ const getLabels = ($gettext) => {
       quantity_export_new: $gettext('Quantity of exports to non-parties (new)'),
       quantity_export_recovered: $gettext('Quantity of exports to non-parties (recovered)'),
       substance: $gettext('Substance'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       trade_party: $gettext('Exporting or importing country/region/territory'),
       nonparty_remarks_party: $gettext('Comments (Party)'),
       nonparty_remarks_secretariat: $gettext('Comments (Secretariat)')

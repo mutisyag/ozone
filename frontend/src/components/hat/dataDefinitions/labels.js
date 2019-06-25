@@ -5,7 +5,7 @@ const getLabels = ($gettext) => {
     common: getCommonLabels($gettext),
     has_imports: {
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       group: $gettext('Group'),
       percent: $gettext('Percentage'),
       remarks_os: $gettext('Remarks (Secretariat)'),

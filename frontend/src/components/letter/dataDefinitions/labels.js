@@ -2,7 +2,7 @@ const getLabels = ($gettext) => {
   const labels = {
     has_imports: {
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       group: $gettext('Group'),
       percent: $gettext('Percentage'),
       source_party: $gettext('Exporting country/region/territory'),
@@ -31,7 +31,7 @@ const getLabels = ($gettext) => {
     },
     has_exports: {
       substance: $gettext('Substances'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       percent: $gettext('Percentage'),
       group: $gettext('Group'),
       destination_party: $gettext('Destination country/region/territory'),
@@ -91,7 +91,7 @@ const getLabels = ($gettext) => {
       percent: $gettext('Percentage'),
       quantity_destroyed: $gettext('Quantity destroyed'),
       substance: $gettext('Substances'),
-      blend: $gettext('blend')
+      blend: $gettext('Mixtures')
     },
     has_nonparty: {
       remarks_party: $gettext('Remarks (Secretariat)'),
@@ -102,7 +102,7 @@ const getLabels = ($gettext) => {
       quantity_export_new: $gettext('Quantity of exports to non-parties (new)'),
       quantity_export_recovered: $gettext('Quantity of exports to non-parties (recovered)'),
       substance: $gettext('Substance'),
-      blend: $gettext('Blend'),
+      blend: $gettext('Mixtures'),
       trade_party: $gettext('Exporting or destination country/region/territory')
     },
     has_emissions: {

@@ -109,7 +109,7 @@
         <div class="table-title">
           <h4>
             {{tab_info.formNumber}}.2
-            <span v-translate>Blends</span>
+            <span v-translate>Mixtures</span>
           </h4>
           <b-btn class="mr-3" variant="outline-danger" @click="bulkRemove(selectedForDeleteBlends)" v-if="selectedForDeleteBlends.length">
             <span><span v-translate>Delete</span>&nbsp;{{selectedForDeleteBlends.length}}&nbsp;<span v-translate>selected rows</span></span>
@@ -185,7 +185,7 @@
             <span
               style="cursor:pointer;"
               class="substance-blend-cell"
-              v-b-tooltip.hover="'Click to expand/collapse blend'"
+              v-b-tooltip.hover="'Click to expand/collapse mixture'"
               @click.stop="cell.toggleDetails"
             >
               <i :class="`fa fa-caret-${expandedStatus(cell.item._showDetails)}`"></i>

@@ -8,7 +8,7 @@ const getNav = ($gettext) => [{
   url: '/lookup-tables/controlled-substances',
   icon: 'icon-chemistry'
 }, {
-  name: $gettext('Blends'),
+  name: $gettext('Mixtures'),
   url: '/lookup-tables/blends',
   icon: 'icon-layers'
 }, {

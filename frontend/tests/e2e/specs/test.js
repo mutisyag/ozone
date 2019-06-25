@@ -388,7 +388,7 @@ module.exports = {
     const components = 'HCFC-22'
 
     login(browser, 'p_ro', 'p_ro')
-    openLookupTable(browser, 'Blends')
+    openLookupTable(browser, 'Mixtures')
     filterEntity(browser, 'blends', [name, components])
     logout(browser)
     browser.end()

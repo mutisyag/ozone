@@ -3,14 +3,14 @@
     <div class="container">
       <div v-if="!new_blend">
         <h5 class="mt-2">
-          <span v-translate>Add predefined blends</span>
+          <span v-translate>Add predefined mixtures</span>
         </h5>
         <small>
           <span
             v-translate
-          >Filter by blend types in order to select one or more blends. A row for each blend will be added in blends table. Blends can be deleted using table controls.</span>
+          >Filter by mixture types in order to select one or more mixtures. A row for each mixture will be added in mixtures table. Mixtures can be deleted using table controls.</span>
         </small>
-        <b-input-group id="blend_type_selector" class="mt-2" prepend="Blend types">
+        <b-input-group id="blend_type_selector" class="mt-2" prepend="Mixture types">
           <multiselect
             :placeholder="$gettext('Select option')"
             :clear-on-select="false"
@@ -26,7 +26,7 @@
         </b-input-group>
 
         <div class="mt-2 mb-2" style="display: flex;">
-          <b-input-group id="blend_selector" class="mt-2" prepend="Blends">
+          <b-input-group id="blend_selector" class="mt-2" prepend="Mixtures">
             <multiselect
               :placeholder="$gettext('Select option')"
               trackBy="value"
@@ -77,21 +77,21 @@
       <div v-if="!new_blend && !selected_blends.selected.length">
         <hr>
         <h5>
-          <span v-translate>Add custom blend</span>
+          <span v-translate>Add custom mixture</span>
         </h5>
         <b-btn variant="primary" @click="addNewBlend">
-          <span v-translate>Add new blend</span>
+          <span v-translate>Add new mixture</span>
         </b-btn>
       </div>
 
       <div v-if="new_blend">
         <h5>
-          <span v-translate>Add custom blend</span>
+          <span v-translate>Add custom mixture</span>
         </h5>
         <small>
           <span
             v-translate
-          >If a non-standard blend not listed above please indicate the blend name and the percentage by weight of each constituent controlled substance of the blend. Please pay attention to the percentage values before adding a new blend. For mistakes please contact secretariat to delete the blend.</span>
+          >If a non-standard mixture not listed above please indicate the mixture name and the percentage by weight of each constituent controlled substance of the mixture. Please pay attention to the percentage values before adding a new mixture. For mistakes please contact secretariat to delete the mixture.</span>
         </small>
         <b-input-group class="mt-2" prepend="Blend name">
           <b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
