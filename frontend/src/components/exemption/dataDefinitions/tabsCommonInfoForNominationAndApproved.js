@@ -7,10 +7,6 @@ const getTabsCommonInfoForNominationAndApproved = ($gettext) => {
     status: null,
     saving: false,
     formNumber: 2,
-    intro: 'intro....................',
-    // detailsHtml: $gettext('detailsHtml...........................'),
-    tooltipForTitleHtml: $gettext('tooltipForTitleHtml................................'),
-    subtitle: $gettext('subtitle............'),
     description: $gettext('description...............'),
     isInvalid: false,
     section_subheaders: [

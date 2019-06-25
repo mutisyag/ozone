@@ -242,11 +242,11 @@ const datePickerValue = (browser) => {
 }
 
 const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) => {
-	logMessage(browser, 'Filling submission info')
+  logMessage(browser, 'Filling submission information')
 
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
   /* Open Submission Info tab */
-  selectTab(browser, 'Submission Info')
+  selectTab(browser, 'Submission Information')
   browser.useXpath()
     .execute('window.scrollTo(0,document.body.scrollHeight);')
     .waitForElementVisible("//input[@id='reporting_officer']", 10000)
@@ -300,7 +300,7 @@ const saveAndFail = (browser, submissionInfo) => {
     .click("//footer[@class='app-footer']//button[@id='save-button']")
     .pause(500)
     .execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
-    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Info')]//i[contains(@class, 'fa-exclamation-circle')]", 20000)
+    .waitForElementVisible("//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Submission Information')]//i[contains(@class, 'fa-exclamation-circle')]", 20000)
 }
 /**
  * 	editSubmission(browser)
@@ -502,7 +502,7 @@ const checkSumbissionInfoFlags = (browser) => {
     'flag_has_reported_f'
   ]
   /* Open Submission Info tab */
-  selectTab(browser, 'Submission Info')
+  selectTab(browser, 'Submission Information')
   /* Check all flags */
   flags.forEach(flag => {
     browser.useCss()
@@ -551,7 +551,7 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
   browser
     .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
     .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
-    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Info')]", 10000)
+    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Information')]", 10000)
     .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
     .useCss()
     .execute('window.scrollTo(0,250);')

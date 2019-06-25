@@ -17,7 +17,7 @@ const getCommonLabels = ($gettext) => {
     delete_submission: $gettext('Delete Submission'),
     versions: $gettext('Versions'),
     has_imports: $gettext('Imports'),
-    sub_info: $gettext('Submission info'),
+    sub_info: $gettext('Submission information'),
     questionaire_questions: $gettext('Questionnaire'),
     submitted: $gettext('Submitted'),
     processing: $gettext('Processing'),

@@ -43,16 +43,15 @@ const getFormArt7 = ($gettext) => {
       ...setTabFiles($gettext),
       sub_info: {
         ...getTabSubInfo($gettext),
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms')
+        detailsHtml: $gettext('Respondents are requested to read the data reporting instructions and guidelines and to refer to them as necessary when completing the data forms.')
       },
       questionaire_questions: {
         name: 'questionaire_questions',
         hasAssideMenu: false,
         endpoint_url: 'article7questionnaire_url',
-        intro: $gettext('Respondents are requested to read the Introduction in section 2, the General Instructions in section 4 and the Definitions in section 5 carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms.'),
         title: $gettext('Questionnaire'),
-        titleHtml: `<b>${$gettext('QUESTIONNAIRE')}</b> <br> <small>${$gettext('All fields are mandatory')}</small>`,
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
+        titleHtml: `<b>${$gettext('QUESTIONNAIRE')}</b> <br> <small>${$gettext('All answers are mandatory')}</small>`,
+        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions and the Definitions carefully before proceeding to the questionnaire.'),
         status: null,
         isInvalid: false,
         form_fields: getQuestionnaireFields($gettext),
@@ -83,13 +82,9 @@ const getFormArt7 = ($gettext) => {
         status: null,
         saving: false,
         formNumber: 2,
-        intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Exports'),
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
-        titleHtml: `<b>${$gettext('EXPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tonnes (not ODP tonnes)')}</small>`,
-        tooltipForTitleHtml: $gettext('Includes re exports. Ref. decisions IV/14 and XVII/16, paragraph 4.'),
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C, E and F substances'),
+        detailsHtml: $gettext('Fill in this form only if your country exported or re-exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs.'),
+        titleHtml: `<b>${$gettext('EXPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)')}</small>`,
         isInvalid: false,
         section_subheaders: [
           {
@@ -216,10 +211,9 @@ const getFormArt7 = ($gettext) => {
         validate: true,
         saving: false,
         formNumber: 1,
-        intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Imports'),
-        titleHtml: `<b>${$gettext('IMPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tonnes ( not ODP tonnes)')}</small>`,
-        detailsHtml: $gettext('Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
+        titleHtml: `<b>${$gettext('IMPORTS')}</b> <br> <small>${$gettext('Annexes A, B, C, E and F substances')}</small> <br> <small>${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)')}</small>`,
+        detailsHtml: $gettext('Fill in this form only if your country imported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs.'),
         comments: {
           imports_remarks_party: {
             selected: '',
@@ -230,8 +224,6 @@ const getFormArt7 = ($gettext) => {
             type: 'textarea'
           }
         },
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C, E and F substances'),
         blend_substance_headers: ['substance', 'percent', 'quantity_total_new', 'quantity_total_recovered', 'quantity_feedstock', 'quantity_exempted'],
         section_subheaders: [{
           name: 'group',
@@ -344,13 +336,10 @@ const getFormArt7 = ($gettext) => {
         validate: true,
         saving: false,
         formNumber: 3,
-        intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Production'),
-        titleHtml: `<b>${$gettext('PRODUCTION')}</b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)')}<br>${$gettext('Annex A, B, C, E and F substances')}</small>`,
-        detailsHtml: $gettext('Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
+        titleHtml: `<b>${$gettext('PRODUCTION AND HFC-23 GENERATION')}</b> <br><small> ${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)')}<br>${$gettext('Annex A, B, C, E and F substances')}</small>`,
+        detailsHtml: $gettext('Fill in this form only if your country produced CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs or generated HFC-23.'),
         isInvalid: false,
-        description: $gettext('Annexes A, B, C, E and F substances'),
         form_fields: [],
         fields_order: ['substance', 'blend', 'quantity_total_produced', 'quantity_feedstock', 'quantity_exempted', 'decision_exempted', 'quantity_article_5', 'validation'],
         special_fields_order: ['substance', 'quantity_total_produced', 'quantity_feedstock', 'quantity_for_destruction', 'quantity_exempted', 'decision_exempted', 'validation'],
@@ -528,12 +517,9 @@ const getFormArt7 = ($gettext) => {
         validate: true,
         saving: false,
         formNumber: 4,
-        intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Destruction'),
-        titleHtml: `<b>${$gettext('QUANTITY OF SUBSTANCES DESTROYED')} </b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)<br>Annex A, B, C, E and F substances')}</small>`,
-        detailsHtml: $gettext('Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs'),
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C, E and F substances'),
+        titleHtml: `<b>${$gettext('DESTRUCTION OF CONTROLLED SUBSTANCES')} </b> <br><small> ${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)<br>Annex A, B, C, E and F substances')}</small>`,
+        detailsHtml: $gettext('Fill in this form only if your country destroyed CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs.'),
         fields_order: ['substance', 'quantity_destroyed', 'remarks_party', 'remarks_os', 'validation'],
         blend_substance_headers: ['substance', 'percent', 'quantity_destroyed'],
         modal_order: ['quantity_destroyed'],
@@ -591,13 +577,9 @@ const getFormArt7 = ($gettext) => {
         validate: true,
         saving: false,
         formNumber: 5,
-        intro: `1. ${$gettext('Fill in this form only if your country imported CFCs, HCFCs, HBFCs, halons, methyl chloroform, carbon tetrachloride, bromochloromethane, or methyl bromide')}`,
         title: $gettext('Non-Party'),
-        titleHtml: `<b>${$gettext('IMPORTS FROM AND/OR EXPORTS TO NON PARTIES')} </b> <br><small> ${$gettext('in tonnes (not ODP or GWP tonnes)')}<br>${$gettext('Annex A, B, C and E substances')}</small>`,
-        tooltipForTitleHtml: $gettext('See definition of “non parties” in Instruction V.'),
-        detailsHtml: $gettext('Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide to non parties'),
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C, E and F substances'),
+        titleHtml: `<b>${$gettext('IMPORTS FROM AND/OR EXPORTS TO NON-PARTIES')} </b> <br><small> ${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)')}<br>${$gettext('Annex A, B, C and E substances')}</small>`,
+        detailsHtml: $gettext('Fill in this form only if your country imported or exported CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane or methyl bromide from or to non-parties.'),
         isInvalid: false,
         fields_order: ['substance', 'blend', 'trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered', 'remarks_party', 'remarks_os', 'validation'],
         modal_order: ['trade_party', 'quantity_import_new', 'quantity_import_recovered', 'quantity_export_new', 'quantity_export_recovered'],
@@ -662,12 +644,12 @@ const getFormArt7 = ($gettext) => {
           {
             label: $gettext('Quantity of imports from non-parties'),
             colspan: 2,
-            tooltip: $gettext('See definition of “non parties” in Instruction V.')
+            tooltip: $gettext('See definition of “non-parties” in Instruction V.')
           },
           {
             label: $gettext('Quantity of exports to non-parties'),
             colspan: 2,
-            tooltip: $gettext('See definition of “non parties” in Instruction V.')
+            tooltip: $gettext('See definition of “non-parties” in Instruction V.')
           },
           {
             label: ''
@@ -712,11 +694,8 @@ const getFormArt7 = ($gettext) => {
         saving: false,
         formNumber: 6,
         title: $gettext('Emissions'),
-        titleHtml: `<b>${$gettext('DATA ON QUANTITY OF EMISSIONS OF HFC 23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES')}</b><br><small>${$gettext('In metric tons, not ODP or CO2-equivalent tonnes.')}</small>`,
-        tooltipHtml: $gettext('Information in columns 2 to 5 is excluded from the reporting requirements under Article 7 of the Protocol and is provided on a voluntary basis'),
-        detailsHtml: $gettext('Fill in this form only if your country generated HFC 23 from any facility that produced (manufactured) Annex C Group I or Annex F substances'),
-        subtitle: $gettext('in metric tonnes (not ODP tonnes)'),
-        description: $gettext('Annexes A, B, C, E and F substances'),
+        titleHtml: `<b>${$gettext('EMISSIONS OF HFC-23 FROM FACILITIES MANUFACTURING ANNEX C GROUP I OR ANNEX F SUBSTANCES')}</b><br><small>${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes).')}</small>`,
+        detailsHtml: $gettext('Fill in this form only if your country generated HFC-23 from any facility that produced (manufactured) Annex C Group I or Annex F substances.'),
         isInvalid: false,
         // used for identification when adding labels
         form_fields: [],

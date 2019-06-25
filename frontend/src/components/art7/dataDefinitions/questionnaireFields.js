@@ -40,7 +40,7 @@ const getQuestionnaireFields = ($gettext) => {
       name: 'has_nonparty',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
-      info: $gettext('If No, ignore data form 5 and go to question 6. If Yes, please complete data form 5. Please read instruction V (on data on imports from and exports to non-parties) of the data reporting instructions and guidelines document carefully, particularly the definition of non parties, before filling in the form.')
+      info: $gettext('If No, ignore data form 5 and go to question 6. If Yes, please complete data form 5. Please read instruction V (on data on imports from and exports to non-parties) of the data reporting instructions and guidelines document carefully, particularly the definition of non-parties, before filling in the form.')
     },
     has_emissions: {
       label: `6. ${$gettext('Did your country generate the substance HFC-23 in the reporting year from any facility that produces (manufactures) Annex C Group I or Annex F substances?')}`,

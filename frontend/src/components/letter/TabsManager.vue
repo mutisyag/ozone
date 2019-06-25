@@ -28,10 +28,10 @@
     <div class="form-wrapper" style="position: relative">
       <b-card style="margin-bottom: 5rem;" no-body>
         <b-tabs no-key-nav v-model="tabIndex" card>
-          <b-tab :title="$gettext('Submission Info')" active>
+          <b-tab :title="$gettext('Submission Information')" active>
             <template slot="title">
               <div class="tab-title">
-                <span v-translate>Submission Info</span>
+                <span v-translate>Submission Information</span>
               </div>
             </template>
             <SubmissionInfo ref="sub_info" :info="$store.state.form.tabs.sub_info" :tabId="0"/>

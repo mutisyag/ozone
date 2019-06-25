@@ -80,7 +80,7 @@ module.exports = {
     saveAndFail(browser, data.submissionInfo)
     fillSubmissionInfo(browser, data, autocomplet)
     clickQuestionnaireRadios(browser)
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     logout(browser)
     browser.end()
   },
@@ -99,9 +99,9 @@ module.exports = {
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     clickQuestionnaireRadios(browser)
     fillSubmissionInfo(browser, submissionInfo)
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     checkSumbissionInfoFlags(browser)
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     openGeneralInstructions(browser)
     logout(browser)
     browser.end()
@@ -337,7 +337,7 @@ module.exports = {
     clickQuestionnaireRadios(browser)
     selectTab(browser, 'Files')
     uploadeFile(browser, 'hello.pdf', '../../../../')
-    saveSubmission(browser, ['Submission Info', 'Questionnaire'])
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     browser.end()
   },
   // BU_013: browser => {

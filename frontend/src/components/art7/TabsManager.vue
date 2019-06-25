@@ -213,7 +213,7 @@ export default {
 
   computed: {
     submissionInfoLabel() {
-      return this.$gettext('Submission Info')
+      return this.$gettext('Submission Information')
     },
     availableTransitions() {
       return this.$store.state.current_submission.available_transitions.filter(t => t !== 'submit')
