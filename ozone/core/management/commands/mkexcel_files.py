@@ -1,8 +1,7 @@
-import copy
 import warnings
 
 import openpyxl
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 
 warnings.filterwarnings("ignore")
 
@@ -29,7 +28,7 @@ OUTPUT_EXCEL_FILES = {
     'legacy_exemptions': [
         'EssenUse',
         'EssenNom',
-        'EssenNom'
+        'EssenExemp'
     ],
     'legacy_procagents': [
         'ProcAgentContanTechnology',
@@ -60,12 +59,12 @@ OUTPUT_EXCEL_FILES = {
     ]
 }
 
+
 class Command(BaseCommand):
     help = 'Split the Excel master file by worksheets creating multiple Excel files'
 
     def add_arguments(self, parser):
-        parser.add_argument('file',
-                            help="Master Excel file")
+        parser.add_argument('file', help="Master Excel file")
 
     def handle(self, *args, **options):
         source_workbook = openpyxl.load_workbook(filename=options['file'], read_only=True)
@@ -82,7 +81,7 @@ class Command(BaseCommand):
                     for i_c, cell in enumerate(row, start=1):
                         target_cell = target_worksheet.cell(column=i_c, row=i_r)
                         target_cell.value = cell.value
-                        target_cell.number_format = cell.number_format or ''            
+                        target_cell.number_format = cell.number_format or ''
 
             target_workbook.save('{name}.xlsx'.format(name=name))
             self.stdout.write(self.style.SUCCESS('Successfully generated "%s" Excel file' % name))
