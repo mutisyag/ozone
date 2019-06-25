@@ -71,6 +71,7 @@
       v-if="isMultipleField"
       :id="fieldInfo ? fieldInfo.field : ''"
       @keyup="validateInput"
+      :disabled="disabled"
       @change="updateFormFieldMultiple"
       class="form-control"
       v-model="currentTyping"

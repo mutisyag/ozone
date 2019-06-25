@@ -248,6 +248,7 @@
               :parties="modal_data.field.imports"
               :index="modal_data.index"
               :tabName="tabName"
+              v-if="$store.getters.can_edit_data"
             ></addParties>
           </b-col>
         </b-row>
@@ -261,6 +262,7 @@
             <fieldGenerator
               :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
               :field="country"
+              :disabled="!$store.getters.can_edit_data"
             />
           </b-col>
         </b-row>
@@ -272,6 +274,7 @@
               <addCategories
                 :index="modal_data.index"
                 :tabName="tabName"
+                v-if="$store.getters.can_edit_data"
               ></addCategories>
             </b-col>
           </b-row>
@@ -285,6 +288,7 @@
                 <fieldGenerator
                   :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
                   :field="category"
+                  :disabled="!$store.getters.can_edit_data"
                 />
               </b-col>
             </b-row>
