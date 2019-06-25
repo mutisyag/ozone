@@ -57,8 +57,8 @@
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
-              :disabled="false"
               :field="cell.item.originalObj[inputField]"
+              :disabled="!$store.getters.can_edit_data"
             />
           </template>
 
