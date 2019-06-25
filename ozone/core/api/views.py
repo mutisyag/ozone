@@ -306,7 +306,7 @@ class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     @action(detail=True, methods=["get"])
     def approved_exemptions(self, request, pk=None, **kwargs):
         reporting_period = ReportingPeriod.objects.filter(
-            name=int(request.query_params.get('period', 0))
+            name=request.query_params.get('period', '')
         ).first()
         party = Party.objects.filter(pk=pk).first()
         return Response(
