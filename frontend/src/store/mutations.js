@@ -381,7 +381,7 @@ const mutations = {
   addCountryEntries(state, { tabName, index, countryList }) {
     countryList.forEach(c => {
       state.form.tabs[tabName].form_fields[index].imports.push({
-        party: c, quantity: 0
+        party: c, quantity: null
       })
     })
   },
@@ -389,7 +389,7 @@ const mutations = {
   addCategoryEntry(state, { tabName, index, categoryList }) {
     categoryList.forEach(c => {
       state.form.tabs[tabName].form_fields[index].use_categories.push({
-        critical_use_category: c, quantity: 0
+        critical_use_category: c, quantity: null
       })
     })
   },

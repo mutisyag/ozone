@@ -136,6 +136,10 @@ export default {
         if (this.on_hand_end_year.selected === null) {
           errors.push($gettext('Please fill-in column On hand end of year (13)'))
         }
+        // TODO: WIP
+        // if (valueConverter(this.quantity_import.selected) > valueConverter(this.quantity_acquired.selected)) {
+        //   errors.push($gettext('Sum of amounts by country should not be higher than the total amount imported'))
+        // }
 
         const returnObj = {
           type: 'nonInput',

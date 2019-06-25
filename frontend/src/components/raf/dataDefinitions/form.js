@@ -82,10 +82,12 @@ const getFormRaf = ($gettext) => {
           name: 'quantity_import'
         }, {
           label: `F<br>${$gettext('Total acquired')} <br> (D+E)`,
-          name: 'quantity_acquired'
+          name: 'quantity_acquired',
+          class: 'text-right'
         }, {
           label: `G<br>${$gettext('Authorized but not acquired')} <br> (C-F)`,
-          name: 'quantity_authorized_not_acquired'
+          name: 'quantity_authorized_not_acquired',
+          class: 'text-right'
         }, {
           label: `H<br>${$gettext('On hand start of the year')}`,
           name: 'on_hand_start_year',
@@ -93,7 +95,7 @@ const getFormRaf = ($gettext) => {
         }, {
           label: `I<br>${$gettext('Available for use')}<br> (H+F)`,
           name: 'available_for_use',
-          isInput: true
+          class: 'text-right'
         }, {
           label: `J<br>${$gettext('Used for essential use')}`,
           name: 'quantity_used',
@@ -108,7 +110,8 @@ const getFormRaf = ($gettext) => {
           isInput: true
         }, {
           label: `M<br>${$gettext('On hand end of year')}<br>(I-J-L)`,
-          name: 'on_hand_end_year'
+          name: 'on_hand_end_year',
+          class: 'text-right'
         }, {
           label: `<br>${$gettext('Emergency')}`,
           name: 'is_emergency',
@@ -134,10 +137,12 @@ const getFormRaf = ($gettext) => {
           name: 'quantity_import'
         }, {
           label: `E<br>${$gettext('Total acquired')} <br> (C+D)`,
-          name: 'quantity_acquired'
+          name: 'quantity_acquired',
+          class: 'text-right'
         }, {
           label: `F<br>${$gettext('Authorized but not acquired')} <br> (B-E)`,
-          name: 'quantity_authorized_not_acquired'
+          name: 'quantity_authorized_not_acquired',
+          class: 'text-right'
         }, {
           label: `G<br>${$gettext('On hand start of the year')}`,
           name: 'on_hand_start_year',
@@ -145,7 +150,7 @@ const getFormRaf = ($gettext) => {
         }, {
           label: `H<br>${$gettext('Available for use')}<br> (E+G)`,
           name: 'available_for_use',
-          isInput: true
+          class: 'text-right'
         }, {
           label: `I<br>${$gettext('Amount used for critical use')}`,
           name: 'quantity_used',
@@ -160,7 +165,8 @@ const getFormRaf = ($gettext) => {
           isInput: true
         }, {
           label: `L<br>${$gettext('On hand end of year')}<br>(H-I-J-K)`,
-          name: 'on_hand_end_year'
+          name: 'on_hand_end_year',
+          class: 'text-right'
         }, {
           label: `<br>${$gettext('Emergency')}`,
           name: 'is_emergency',

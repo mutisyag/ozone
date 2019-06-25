@@ -265,30 +265,32 @@
           </b-col>
         </b-row>
         <hr>
-        <div v-if="isCritical" v-translate>Critical use categories</div>
-        <b-row v-if="isCritical">
-          <b-col>
-            <addCategories
-              :index="modal_data.index"
-              :tabName="tabName"
-            ></addCategories>
-          </b-col>
-        </b-row>
-        <b-row
-            v-if="isCritical"
-            class="mb-2 special"
-            v-for="category in modal_data.field.use_categories"
-            :key="category.critical_use_category"
-          >
-            <b-col cols="2">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
+        <div v-if="isCritical">
+          <div v-translate>Amounts used by critical use category</div>
+          <b-row>
             <b-col>
-              <fieldGenerator
-                :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
-                :field="category"
-              />
+              <addCategories
+                :index="modal_data.index"
+                :tabName="tabName"
+              ></addCategories>
             </b-col>
           </b-row>
-        <hr v-if="isCritical">
+          <b-row
+              class="mb-2 special"
+              v-for="category in modal_data.field.use_categories"
+              :key="category.critical_use_category"
+            >
+              <b-col cols="2">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
+              <b-col>
+                <fieldGenerator
+                  :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
+                  :field="category"
+                />
+              </b-col>
+            </b-row>
+          <hr>
+        </div>
+
         <div
           class="mb-3"
           v-for="(order, order_index) in tab_info.modal_order"
@@ -402,7 +404,6 @@ export default {
   methods: {
     specialLabels(field, substance) {
       if (this.isCritical) {
-        console.log('substance - ', substance)
         return this.labels.critical[field]
       }
       return this.labels[field]
@@ -479,6 +480,7 @@ export default {
       const tableHeaders = []
       const options = {}
       this.tab_info.section_subheaders_critical.forEach((form_field) => {
+        options.class = [options.class, form_field.class]
         const header = {
           key: form_field.name,
           label: form_field.label,

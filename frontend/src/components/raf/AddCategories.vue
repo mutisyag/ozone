@@ -16,7 +16,7 @@
             trackBy="value"
             :multiple="true"
             v-model="selected_categories.selected"
-            :options="countries"
+            :options="categories"
           />
         </b-input-group>
       </b-col>
@@ -56,7 +56,7 @@ export default {
   },
 
   computed: {
-    countries() {
+    categories() {
       return this.$store.state.initialData.criticalUseCategoryList
     }
   },
