@@ -1,7 +1,7 @@
 const setTabFiles = ($gettext) => ({
   files: {
     name: 'files',
-    endpoint_url: 'files_url',
+    // endpoint_url: 'files_url',
     hideInfoButton: true,
     status: null,
     hasAssideMenu: false,
