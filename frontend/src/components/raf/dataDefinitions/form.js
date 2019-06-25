@@ -97,7 +97,7 @@ const getFormRaf = ($gettext) => {
           name: 'available_for_use',
           class: 'text-right'
         }, {
-          label: `J<br>${$gettext('Used for essential use')}`,
+          label: `J<br>${$gettext('Amount used for essential use')}`,
           name: 'quantity_used',
           isInput: true
         }, {

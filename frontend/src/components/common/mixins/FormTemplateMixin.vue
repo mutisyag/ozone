@@ -176,21 +176,21 @@ export default {
           if (this.tabName === 'has_imports' && this.$route.name === 'art7') {
             tableHeaders.push({
               key: 'blend',
-              label: `(2a) <br> ${this.$gettext('Mixtures')}`,
+              label: `(2a) <br> ${this.$gettext('Mixture')}`,
               width: form_field.width || null,
               ...options
             })
           } else if (['has_destroyed', 'has_exports'].includes(this.tabName) && this.$route.name === 'art7') {
             tableHeaders.push({
               key: 'blend',
-              label: `(1b) <br> ${this.$gettext('Mixtures')}`,
+              label: `(1b) <br> ${this.$gettext('Mixture')}`,
               width: form_field.width || null,
               ...options
             })
           } else {
             tableHeaders.push({
               key: 'blend',
-              label: `(2) <br> ${this.$gettext('Mixtures')}`,
+              label: `(2) <br> ${this.$gettext('Mixture')}`,
               width: form_field.width || null,
               ...options
             })

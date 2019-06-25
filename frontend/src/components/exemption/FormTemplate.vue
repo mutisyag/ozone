@@ -125,7 +125,7 @@
         <p class="muted">
           <span
             v-translate
-          >All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
+          >All the quantity values should be expressed in metric tonnes (not ODP or CO₂-equivalent tonnes).</span>
           <br>
           <b>
             <span v-translate>The values are saved automatically in the table, as you type.</span>

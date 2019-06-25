@@ -218,7 +218,7 @@
         <p class="muted">
           <span
             v-translate
-          >All the quantity values should be expressed in metric tonnes ( not ODP tonnes).</span>
+          >All the quantity values should be expressed in metric tonnes (not ODP or CO₂-equivalent tonnes).</span>
           <br>
           <b>
             <span v-translate>The values are saved automatically in the table, as you type.</span>
@@ -297,7 +297,7 @@
           :key="`modal_${order_index}`"
         >
           <b-row class="special">
-            <b-col cols="3">{{specialLabels(order, modal_data.field.substance.selected)}}</b-col>
+            <b-col cols="3">{{specialLabels(order)}}</b-col>
             <b-col cols="6">
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
@@ -402,7 +402,7 @@ export default {
     }
   },
   methods: {
-    specialLabels(field, substance) {
+    specialLabels(field) {
       if (this.isCritical) {
         return this.labels.critical[field]
       }
