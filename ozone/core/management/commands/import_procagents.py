@@ -17,11 +17,11 @@ from ozone.core.models import (
     Meeting,
     Decision,
     ProcessAgentUsesReported,
-    ProcessAgentUsesValidity,
-    ProcessAgentEmissionLimitValidity,
     ProcessAgentApplication,
+    ProcessAgentApplicationValidity,
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
+    ProcessAgentEmissionLimitValidity,
 )
 
 logger = logging.getLogger(__name__)
@@ -155,7 +155,7 @@ class Command(BaseCommand):
             return
 
         if not getattr(decision, 'uses_validity', None):
-            ProcessAgentUsesValidity.objects.create(
+            ProcessAgentApplicationValidity.objects.create(
                 decision=decision,
                 start_date=date(row['StartYear'], 1, 1) if row['StartYear'] else None,
                 end_date=date(row['EndYear'], 12, 31) if row['EndYear'] else None
@@ -477,7 +477,7 @@ class Command(BaseCommand):
 
     @transaction.atomic
     def delete_pa_uses_validity(self, entry):
-        obj = ProcessAgentUsesValidity.objects.filter(
+        obj = ProcessAgentApplicationValidity.objects.filter(
             decision__decision_id=entry['Decision'],
             start_date__year=entry['StartYear'],
             end_date__year=entry['EndYear']

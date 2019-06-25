@@ -5,7 +5,6 @@ import adminactions.actions as actions
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import AdminSite
 from django.contrib.admin import site
@@ -52,7 +51,7 @@ from .models import (
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
     ProcessAgentUsesReported,
-    ProcessAgentUsesValidity,
+    ProcessAgentApplicationValidity,
     ProcessAgentEmissionLimitValidity,
     Decision,
 )
@@ -590,8 +589,8 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
     search_fields = ('submission__reporting_period__name', 'submission__party__name', 'validity')
 
 
-@admin.register(ProcessAgentUsesValidity)
-class ProcessAgentUsesValidityAdmin(admin.ModelAdmin):
+@admin.register(ProcessAgentApplicationValidity)
+class ProcessAgentApplicationValidityAdmin(admin.ModelAdmin):
     list_display = ('decision', 'start_date', 'end_date')
     search_fields = ('decision', )
 

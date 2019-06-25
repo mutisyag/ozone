@@ -11,7 +11,7 @@ __all__ = [
     'ProcessAgentApplication',
     'ProcessAgentUsesReported',
     'ProcessAgentEmissionLimit',
-    'ProcessAgentUsesValidity',
+    'ProcessAgentApplicationValidity',
     'ProcessAgentEmissionLimitValidity',
 ]
 
@@ -34,7 +34,7 @@ class ProcessAgentContainTechnology(models.Model):
         db_table = 'pa_contain_technology'
 
 
-class ProcessAgentUsesValidity(models.Model):
+class ProcessAgentApplicationValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     decision = models.OneToOneField(
@@ -61,7 +61,7 @@ class ProcessAgentApplication(models.Model):
     """
 
     validity = models.ForeignKey(
-        ProcessAgentUsesValidity,
+        ProcessAgentApplicationValidity,
         related_name='pa_applications',
         on_delete=models.PROTECT
     )
@@ -94,7 +94,7 @@ class ProcessAgentUsesReported(models.Model):
     )
 
     validity = models.ForeignKey(
-        ProcessAgentUsesValidity,
+        ProcessAgentApplicationValidity,
         related_name='pa_uses_reported',
         on_delete=models.PROTECT
     )
