@@ -233,19 +233,19 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
         result = self.client.get(
             reverse("core:submission-list"),
-            {"page": 1, "page_size": 1, "ordering": "period"},
-        )
-        self.assertEqual(result.status_code, 200)
-        self.assertEqual(len(result.json()['results']), 1)
-        self.assertEqual(result.json()['results'][0]["id"], submission1.id)
-
-        result = self.client.get(
-            reverse("core:submission-list"),
-            {"page": 2, "page_size": 1, "ordering": "period"},
+            {"page": 1, "page_size": 1, "ordering": "reporting_period"},
         )
         self.assertEqual(result.status_code, 200)
         self.assertEqual(len(result.json()['results']), 1)
         self.assertEqual(result.json()['results'][0]["id"], submission2.id)
+
+        result = self.client.get(
+            reverse("core:submission-list"),
+            {"page": 2, "page_size": 1, "ordering": "reporting_period"},
+        )
+        self.assertEqual(result.status_code, 200)
+        self.assertEqual(len(result.json()['results']), 1)
+        self.assertEqual(result.json()['results'][0]["id"], submission1.id)
 
     def test_clone(self):
         submission = self.create_submission()
