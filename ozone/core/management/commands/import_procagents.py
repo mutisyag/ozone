@@ -300,18 +300,14 @@ class Command(BaseCommand):
         # are two decisions instead of one.
         for decision_id in row['Decision'].split(' AND '):
             decision = self.get_or_create_decision(decision_id)
-            if getattr(decision, 'uses_validity', None):
-                validity = decision.uses_validity
-            else:
-                logger.error(
-                    f"Uses validity does not exists decision {decision}"
-                )
-                return
-
+            application = ProcessAgentApplication.objects.filter(
+                counter=row['ProcessNumber'],
+                validity__decision=decision
+            ).first()
             ProcessAgentUsesReported.objects.create(
                 submission=submission,
-                validity=validity,
-                process_number=row['ProcessNumber'],
+                decision=decision,
+                application=application,
                 makeup_quantity=row['MakeUpQuantity'],
                 emissions=row['Emissions'],
                 units=row['Units'],
@@ -483,7 +479,7 @@ class Command(BaseCommand):
             end_date__year=entry['EndYear']
         ).first()
         if obj:
-            for related_data in ['pa_applications', 'pa_uses_reported']:
+            for related_data in ['pa_applications',]:
                 for instance in getattr(obj, related_data).all():
                     logger.info("Deleting related data: %s", instance)
                     instance.delete()

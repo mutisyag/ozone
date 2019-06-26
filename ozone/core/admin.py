@@ -578,15 +578,21 @@ class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin
 
 @admin.register(ProcessAgentUsesReported)
 class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+    def get_application(self, obj):
+        return obj.application.application or ''
+    get_application.short_description = 'Application'
+
     list_display = (
-        'get_reporting_period', 'get_party', 'validity',
-        'process_number', 'makeup_quantity', 'emissions', 'units'
+        'get_reporting_period', 'get_party', 'get_application',
+        'makeup_quantity', 'emissions', 'units'
     )
     list_filter = (
         ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
         ('submission__party', MainPartyFilter)
     )
-    search_fields = ('submission__reporting_period__name', 'submission__party__name', 'validity')
+    search_fields = (
+        'submission__reporting_period__name', 'submission__party__name',
+    )
 
 
 @admin.register(ProcessAgentApplicationValidity)

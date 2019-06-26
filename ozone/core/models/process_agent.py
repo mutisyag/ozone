@@ -93,13 +93,21 @@ class ProcessAgentUsesReported(models.Model):
         on_delete=models.PROTECT
     )
 
-    validity = models.ForeignKey(
-        ProcessAgentApplicationValidity,
+    decision = models.ForeignKey(
+        Decision,
         related_name='pa_uses_reported',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT
     )
 
-    process_number = models.PositiveSmallIntegerField(null=True, blank=True)
+    application = models.ForeignKey(
+        ProcessAgentApplication,
+        related_name='pa_uses_reported',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
 
     makeup_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)],
