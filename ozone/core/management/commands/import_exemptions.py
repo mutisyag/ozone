@@ -222,6 +222,8 @@ class Command(BaseCommand):
                 return self.process_submission_exemption_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error("Error %s while saving: %s/%s", e, party_abbr, period_name,
                          exc_info=True)

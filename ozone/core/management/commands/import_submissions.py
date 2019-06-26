@@ -103,6 +103,8 @@ class Command(BaseCommand):
         """
         try:
             return self._process_entry(party, period, values, recreate=recreate, purge=purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error("Error %s while saving: %s/%s", e, party.abbr, period.name,
                          exc_info=True)
