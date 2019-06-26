@@ -1018,6 +1018,7 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
     application = serializers.CharField(
         source='application.application', default=''
     )
+    decision = serializers.CharField(default='')
 
     class Meta:
         model = ProcessAgentUsesReported
