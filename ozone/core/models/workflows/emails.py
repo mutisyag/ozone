@@ -27,5 +27,5 @@ def notify_workflow_transitioned(workflow):
             "registration/workflow_transitioned_subject.txt",
             "registration/workflow_transitioned_email.html",
             context=context,
-            to_email=recipients,
+            to_email=to_email,
         )
