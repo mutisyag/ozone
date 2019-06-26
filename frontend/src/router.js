@@ -49,7 +49,7 @@ const routes = [{
 {
   path: '/login',
   beforeEnter() {
-    window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.href)}`
+    window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.origin)}/reporting`
   },
   name: 'Login'
 },
