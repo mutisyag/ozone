@@ -1513,7 +1513,7 @@ class SubmissionSerializer(
     is_submitted_at_visible = serializers.SerializerMethodField()
     is_submitted_at_mandatory = serializers.SerializerMethodField()
 
-    created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S.%fZ')
+    created_at = serializers.DateTimeField()
     updated_at = serializers.SerializerMethodField()
     created_by = serializers.StringRelatedField(read_only=True)
     last_edited_by = serializers.StringRelatedField(read_only=True)
@@ -1647,7 +1647,7 @@ class SubmissionSerializer(
             obj.history.all()
             .order_by('-history_date')
             .first()
-            .history_date.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            .history_date
         )
 
 
@@ -1672,7 +1672,7 @@ class CreateSubmissionSerializer(serializers.ModelSerializer):
 
 
 class ListSubmissionSerializer(CreateSubmissionSerializer):
-    created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S.%fZ')
+    created_at = serializers.DateTimeField()
     updated_at = serializers.SerializerMethodField()
     available_transitions = serializers.SerializerMethodField()
     is_cloneable = serializers.SerializerMethodField()
@@ -1717,7 +1717,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
             obj.history.all()
             .order_by('-history_date')
             .first()
-            .history_date.strftime('%Y-%m-%dT%H:%M:%S.%fZ')
+            .history_date
         )
 
 
