@@ -170,7 +170,10 @@ class Command(BaseCommand):
                 try:
                     blend_id = blend.id
                 except AttributeError:
-                    logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
+                    logger.error(
+                        "Import new unknown substance %s/%s/%s",
+                        party.abbr, period.name, import_row["SubstID"]
+                    )
                     continue
 
             if substance and substance.substance_id != 194:
@@ -401,8 +404,8 @@ class Command(BaseCommand):
                 try:
                     blend_id = blend.id
                 except AttributeError:
-                    logger.error("Import new unknown substance %s/%s",
-                                 party.abbr, period.name)
+                    logger.error("Import new unknown substance %s/%s/%s",
+                                 party.abbr, period.name, exports_row["SubstID"])
                     continue
 
             if not any(exports_row[_npt_type]
@@ -468,7 +471,10 @@ class Command(BaseCommand):
                 try:
                     blend_id = blend.id
                 except AttributeError:
-                    logger.error("Import new unknown substance %s/%s", party.abbr, period.name)
+                    logger.error(
+                        "Import new unknown substance %s/%s/%s",
+                        party.abbr, period.name, destroyed_row["SubstID"]
+                    )
                     continue
 
             if not destroyed_row["Destroyed"]:
