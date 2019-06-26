@@ -172,6 +172,34 @@
       "bromines": "",
       "carbons": "",
       "chlorines": "",
+      "description": "Fluoroethane",
+      "fluorines": "",
+      "formula": "",
+      "gwp": 0,
+      "gwp2": null,
+      "gwp_baseline": 0,
+      "gwp_error_plus_minus": null,
+      "has_critical_uses": false,
+      "hydrogens": "",
+      "is_captured": false,
+      "is_contained_in_polyols": false,
+      "max_odp": 0,
+      "min_odp": 0,
+      "name": "HFC-161",
+      "number_of_isomers": null,
+      "odp": 0,
+      "remark": "",
+      "sort_order": 111610,
+      "substance_id": 1610
+    },
+    "model": "core.substance",
+    "pk": 287
+  },
+  {
+    "fields": {
+      "bromines": "",
+      "carbons": "",
+      "chlorines": "",
       "description": "Ethane",
       "fluorines": "",
       "formula": "",
@@ -193,7 +221,7 @@
       "substance_id": 1700
     },
     "model": "core.substance",
-    "pk": 287
+    "pk": 288
   },
   {
     "fields": {
@@ -221,7 +249,7 @@
       "substance_id": 1705
     },
     "model": "core.substance",
-    "pk": 288
+    "pk": 289
   },
   {
     "fields": {
@@ -249,7 +277,7 @@
       "substance_id": 2180
     },
     "model": "core.substance",
-    "pk": 289
+    "pk": 290
   },
   {
     "fields": {
@@ -277,7 +305,7 @@
       "substance_id": 2900
     },
     "model": "core.substance",
-    "pk": 290
+    "pk": 291
   },
   {
     "fields": {
@@ -305,7 +333,7 @@
       "substance_id": 3180
     },
     "model": "core.substance",
-    "pk": 291
+    "pk": 292
   },
   {
     "fields": {
@@ -333,7 +361,7 @@
       "substance_id": 6000
     },
     "model": "core.substance",
-    "pk": 292
+    "pk": 293
   },
   {
     "fields": {
@@ -361,7 +389,7 @@
       "substance_id": 6001
     },
     "model": "core.substance",
-    "pk": 293
+    "pk": 294
   },
   {
     "fields": {
@@ -389,7 +417,7 @@
       "substance_id": 6010
     },
     "model": "core.substance",
-    "pk": 294
+    "pk": 295
   },
   {
     "fields": {
@@ -417,7 +445,35 @@
       "substance_id": 6011
     },
     "model": "core.substance",
-    "pk": 295
+    "pk": 296
+  },
+  {
+    "fields": {
+      "bromines": "",
+      "carbons": "",
+      "chlorines": "",
+      "description": "ammonia (NH3)",
+      "fluorines": "",
+      "formula": "",
+      "gwp": 0,
+      "gwp2": null,
+      "gwp_baseline": 0,
+      "gwp_error_plus_minus": null,
+      "has_critical_uses": false,
+      "hydrogens": "",
+      "is_captured": false,
+      "is_contained_in_polyols": false,
+      "max_odp": 0,
+      "min_odp": 0,
+      "name": "R-717",
+      "number_of_isomers": null,
+      "odp": 0,
+      "remark": "",
+      "sort_order": 117170,
+      "substance_id": 7170
+    },
+    "model": "core.substance",
+    "pk": 297
   },
   {
     "fields": {
@@ -441,11 +497,11 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 107440,
+      "sort_order": 117440,
       "substance_id": 7440
     },
     "model": "core.substance",
-    "pk": 296
+    "pk": 298
   },
   {
     "fields": {
@@ -473,7 +529,7 @@
       "substance_id": 9115
     },
     "model": "core.substance",
-    "pk": 297
+    "pk": 299
   },
   {
     "fields": {
@@ -501,7 +557,7 @@
       "substance_id": 9130
     },
     "model": "core.substance",
-    "pk": 298
+    "pk": 300
   },
   {
     "fields": {
@@ -529,7 +585,7 @@
       "substance_id": 12349
     },
     "model": "core.substance",
-    "pk": 299
+    "pk": 301
   },
   {
     "fields": {
@@ -557,6 +613,6 @@
       "substance_id": 23541
     },
     "model": "core.substance",
-    "pk": 300
+    "pk": 302
   }
 ]
