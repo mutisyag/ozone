@@ -431,6 +431,9 @@ class Command(BaseCommand):
 
         if not created_at:
             created_at = updated_at
+        elif not updated_at:
+            updated_at = created_at
+
         created_at = make_aware(created_at) if created_at else created_at
         updated_at = make_aware(updated_at) if updated_at else updated_at
 
@@ -476,11 +479,12 @@ class Command(BaseCommand):
 
         # Because there are multiple 'DateCreate' and 'SubmitDate' values
         # we will take the latest value.
-        submitted_at_list = [entry['SubmitDate'] for entry in rows['EssenNom'] if entry['SubmitDate']]
+        date_seek_rows = rows['EssenNom'] + rows['EssenExemp']
+        submitted_at_list = [entry['SubmitDate'] for entry in date_seek_rows if entry.get('SubmitDate')]
         submitted_at = min(submitted_at_list) if submitted_at_list else None
-        updated_at_list = [entry['DateUpdate'] for entry in rows['EssenNom'] if entry['DateUpdate']]
+        updated_at_list = [entry['DateUpdate'] for entry in date_seek_rows if entry.get('DateUpdate')]
         updated_at = min(updated_at_list) if updated_at_list else None
-        created_at_list = [entry['DateCreate'] for entry in rows['EssenNom'] if entry['DateCreate']]
+        created_at_list = [entry['DateCreate'] for entry in date_seek_rows if entry.get('DateCreate')]
         created_at = min(created_at_list) if created_at_list else updated_at
 
         is_emergency = self.check_is_emergency(rows['EssenExemp'])
@@ -493,6 +497,11 @@ class Command(BaseCommand):
         approvals = self.get_exemptions_approved(
             party, period, rows['EssenExemp']
         )
+
+        if not created_at:
+            created_at = updated_at
+        elif not updated_at:
+            updated_at = created_at
 
         return {
             "submission": {
