@@ -1012,7 +1012,7 @@ class ProcessAgentContainTechnologySerializer(serializers.ModelSerializer):
 
 
 class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
-    substance = serializers.CharField(
+    application_substance = serializers.CharField(
         source='application.substance', default=''
     )
     application = serializers.CharField(
@@ -1022,7 +1022,7 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcessAgentUsesReported
         fields = (
-            'substance', 'application',
+            'application_substance', 'application',
             'makeup_quantity', 'emissions', 'units', 'remark'
         )
 
