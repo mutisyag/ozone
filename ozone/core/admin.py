@@ -587,7 +587,7 @@ class ProcessAgentContainTechnologyAdmin(
 @admin.register(ProcessAgentUsesReported)
 class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
     def get_application(self, obj):
-        return obj.application.application or ''
+        return obj.application.application if obj.application else ''
     get_application.short_description = 'Application'
 
     list_display = (
