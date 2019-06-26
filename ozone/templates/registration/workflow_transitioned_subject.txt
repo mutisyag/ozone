@@ -1,0 +1,3 @@
+{% load i18n %}{% autoescape off %}
+{% blocktrans %}Submission {{ submission }} has changed to {{ new_state }}{% endblocktrans %}
+{% endautoescape %}
