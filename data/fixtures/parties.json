@@ -2749,7 +2749,7 @@
       "mdg_region": "275",
       "name": "State of Palestine",
       "name_alt": "Palestine",
-      "parent_party": null,
+      "parent_party": 185,
       "remark": "",
       "subregion": 5
     },

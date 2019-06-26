@@ -150688,5 +150688,20 @@
     },
     "model": "core.partyhistory",
     "pk": 10046
+  },
+  {
+    "fields": {
+      "is_article5": true,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 185,
+      "party_type": 2,
+      "population": 4817,
+      "remark": "added manually by andrei",
+      "reporting_period": 32
+    },
+    "model": "core.partyhistory",
+    "pk": 10047
   }
 ]
