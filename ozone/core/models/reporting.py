@@ -101,6 +101,8 @@ class Obligation(models.Model):
     NOT_CLONEABLE = [
         FormTypes.EXEMPTION.value,
         FormTypes.TRANSFER.value,
+        FormTypes.PROCAGENT.value,
+        FormTypes.OTHER.value,
     ]
 
     AGGREGATABLE = [
