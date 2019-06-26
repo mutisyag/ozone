@@ -533,7 +533,10 @@ class ProcessAgentApplicationAdmin(admin.ModelAdmin):
     list_display = ('validity', 'counter', 'substance', 'application')
     list_filter = (
         ('substance__name', custom_title_dropdown_filter('Substance')),
-        ('validity__decision__decision_id', custom_title_dropdown_filter('Decision')),
+        (
+            'validity__decision__decision_id',
+            custom_title_dropdown_filter('Decision')
+        ),
         ('counter', custom_title_dropdown_filter('Counter'))
     )
     search_fields = ('validity', 'substance__name')
@@ -567,10 +570,15 @@ class ProcessAgentBaseAdmin:
 
 
 @admin.register(ProcessAgentContainTechnology)
-class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+class ProcessAgentContainTechnologyAdmin(
+    ProcessAgentBaseAdmin, admin.ModelAdmin
+):
     list_display = ('get_reporting_period', 'get_party', 'contain_technology')
     list_filter = (
-        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        (
+            'submission__reporting_period__name',
+            custom_title_dropdown_filter('Period')
+        ),
         ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__party__name',)
@@ -587,7 +595,10 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
         'makeup_quantity', 'emissions', 'units'
     )
     list_filter = (
-        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        (
+            'submission__reporting_period__name',
+            custom_title_dropdown_filter('Period')
+        ),
         ('submission__party', MainPartyFilter)
     )
     search_fields = (
