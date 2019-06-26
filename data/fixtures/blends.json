@@ -199,15 +199,15 @@
   },
   {
     "fields": {
-      "blend_id": "NSM-354mfc/227ea",
+      "blend_id": "NSM-365mfc/227ea",
       "cnumber": "",
-      "composition": "HFC-354mfc=95%, HFC-227ea=5%",
+      "composition": "HFC-365mfc=95%, HFC-227ea=5%",
       "composition_alt": "",
       "gwp": null,
       "legacy_blend_id": 25001,
       "odp": null,
       "other_names": "",
-      "remark": "Introduced by Switzerland - 5 Apr 2019",
+      "remark": "Introduced by Switzerland - 5 Apr 2019. Updated on 10 Jun 2019.",
       "sort_order": 130012,
       "trade_name": "From Switzerland",
       "type": "Other"

@@ -4468,10 +4468,10 @@
   {
     "fields": {
       "blend_id": 12,
-      "cnumber": 354,
-      "component_name": "HFC-354mfc",
+      "cnumber": 365,
+      "component_name": "HFC-365mfc",
       "percentage": 0.95,
-      "substance": 300
+      "substance": 112
     },
     "model": "core.blendcomponent",
     "pk": 407
