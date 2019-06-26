@@ -193,6 +193,7 @@ MIDDLEWARE = [
     'core.middleware.ExceptionMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
     'core.middleware.ImpersonateTokenAuthMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 # STATIC
