@@ -239,7 +239,7 @@ class SubstanceAdmin(admin.ModelAdmin):
         'formula', 'number_of_isomers', 'sort_order',
     )
     list_filter = ('group', 'is_contained_in_polyols', 'is_captured', 'has_critical_uses')
-    search_fields = ['name', 'description']
+    search_fields = ['name', 'description', 'substance_id']
 
 
 @admin.register(Blend)
@@ -253,7 +253,7 @@ class BlendAdmin(admin.ModelAdmin):
         'type',
         ('party', MainPartyFilter),
     )
-    search_fields = ['blend_id']
+    search_fields = ['blend_id', 'legacy_blend_id']
 
 
 @admin.register(BlendComponent)
