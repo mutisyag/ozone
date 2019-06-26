@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 import xworkflows
 
 from .base import BaseWorkflow
+from .emails import notify_workflow_transitioned
 from ...exceptions import TransitionFailed
 
 
@@ -158,3 +159,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
     @xworkflows.transition('unrecall_to_finalized')
     def unrecall_to_finalized(self):
         self.model_instance.make_current()
+
+    @xworkflows.on_enter_state(*[s.name for s in state.states])
+    def notify_by_email(self, *args, **kwargs):
+        notify_workflow_transitioned(self)
