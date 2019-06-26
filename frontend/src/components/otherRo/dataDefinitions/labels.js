@@ -5,6 +5,8 @@ const getLabels = ($gettext) => {
     common: getCommonLabels($gettext),
     transfers: {
       substance: $gettext('Substances'),
+      application: $gettext('Application'),
+      application_substance: $gettext('Substance'),
       transfer_type: $gettext('Transfer type'),
       source_party: $gettext('Source party'),
       destination_party: $gettext('Destination party'),

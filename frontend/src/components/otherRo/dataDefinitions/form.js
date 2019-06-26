@@ -102,22 +102,25 @@ const getFormOtherRo = ($gettext) => {
           return this.section_subheaders.filter(x => x.isInput).map(x => x.name)
         },
         section_subheaders: [{
-          label: `(1)<br>${$gettext('Makeup quantity')}`,
+          label: `(1) <br> ${$gettext('Substance')}`,
+          name: 'application_substance'
+        }, {
+          label: `(2) <br> ${$gettext('Application')}`,
+          name: 'application'
+        }, {
+          label: `(3)<br>${$gettext('Makeup quantity')}`,
           name: 'makeup_quantity',
-          colspan: 1,
-          type: 'string'
+          class: 'text-right'
         }, {
-          label: `(2)<br>${$gettext('Emissions')}`,
+          label: `(4)<br>${$gettext('Emissions')}`,
           name: 'emissions',
-          isInput: true
+          class: 'text-right'
         }, {
-          label: `(3)<br>${$gettext('Units')}`,
-          name: 'units',
-          isInput: true
+          label: `(5)<br>${$gettext('Units')}`,
+          name: 'units'
         }, {
-          label: `(4)<br>${$gettext('Remarks')}`,
-          name: 'remark',
-          isInput: true
+          label: `(6)<br>${$gettext('Remarks')}`,
+          name: 'remark'
         }
         ],
 
@@ -126,6 +129,8 @@ const getFormOtherRo = ($gettext) => {
           colspan: 7
         }],
         default_properties: {
+          'application_substance': '',
+          'application': '',
           'makeup_quantity': '',
           'emissions': '',
           'units': null,

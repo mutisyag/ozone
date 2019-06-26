@@ -145,19 +145,6 @@ export default {
       })
       return tableFields
     },
-    tableFields() {
-      const tableHeaders = []
-      const options = {}
-      this.tab_info.section_subheaders.forEach((form_field) => {
-        tableHeaders.push({
-          key: form_field.name,
-          label: form_field.label,
-          width: form_field.width || null,
-          ...options
-        })
-      })
-      return tableHeaders
-    },
     getTabInputFields() {
       return this.tab_info.input_fields
     },

@@ -19,6 +19,14 @@ export default {
     switch (currentSectionName) {
     case 'procagent':
       row = {
+        application_substance: {
+          selected: null,
+          type: 'nonInput'
+        },
+        application: {
+          selected: null,
+          type: 'nonInput'
+        },
         makeup_quantity: {
           selected: null,
           type: 'nonInput'
