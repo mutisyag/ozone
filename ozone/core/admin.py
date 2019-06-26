@@ -5,7 +5,6 @@ import adminactions.actions as actions
 from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDropdownFilter
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
-from django.contrib.admin.forms import AdminAuthenticationForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import AdminSite
 from django.contrib.admin import site
@@ -52,7 +51,7 @@ from .models import (
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
     ProcessAgentUsesReported,
-    ProcessAgentUsesValidity,
+    ProcessAgentApplicationValidity,
     ProcessAgentEmissionLimitValidity,
     Decision,
 )
@@ -534,7 +533,10 @@ class ProcessAgentApplicationAdmin(admin.ModelAdmin):
     list_display = ('validity', 'counter', 'substance', 'application')
     list_filter = (
         ('substance__name', custom_title_dropdown_filter('Substance')),
-        ('validity__decision__decision_id', custom_title_dropdown_filter('Decision')),
+        (
+            'validity__decision__decision_id',
+            custom_title_dropdown_filter('Decision')
+        ),
         ('counter', custom_title_dropdown_filter('Counter'))
     )
     search_fields = ('validity', 'substance__name')
@@ -568,10 +570,15 @@ class ProcessAgentBaseAdmin:
 
 
 @admin.register(ProcessAgentContainTechnology)
-class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+class ProcessAgentContainTechnologyAdmin(
+    ProcessAgentBaseAdmin, admin.ModelAdmin
+):
     list_display = ('get_reporting_period', 'get_party', 'contain_technology')
     list_filter = (
-        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        (
+            'submission__reporting_period__name',
+            custom_title_dropdown_filter('Period')
+        ),
         ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__party__name',)
@@ -579,19 +586,28 @@ class ProcessAgentContainTechnologyAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin
 
 @admin.register(ProcessAgentUsesReported)
 class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
+    def get_application(self, obj):
+        return obj.application.application if obj.application else ''
+    get_application.short_description = 'Application'
+
     list_display = (
-        'get_reporting_period', 'get_party', 'validity',
-        'process_number', 'makeup_quantity', 'emissions', 'units'
+        'get_reporting_period', 'get_party', 'get_application',
+        'makeup_quantity', 'emissions', 'units'
     )
     list_filter = (
-        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        (
+            'submission__reporting_period__name',
+            custom_title_dropdown_filter('Period')
+        ),
         ('submission__party', MainPartyFilter)
     )
-    search_fields = ('submission__reporting_period__name', 'submission__party__name', 'validity')
+    search_fields = (
+        'submission__reporting_period__name', 'submission__party__name',
+    )
 
 
-@admin.register(ProcessAgentUsesValidity)
-class ProcessAgentUsesValidityAdmin(admin.ModelAdmin):
+@admin.register(ProcessAgentApplicationValidity)
+class ProcessAgentApplicationValidityAdmin(admin.ModelAdmin):
     list_display = ('decision', 'start_date', 'end_date')
     search_fields = ('decision', )
 

@@ -17,11 +17,11 @@ from ozone.core.models import (
     Meeting,
     Decision,
     ProcessAgentUsesReported,
-    ProcessAgentUsesValidity,
-    ProcessAgentEmissionLimitValidity,
     ProcessAgentApplication,
+    ProcessAgentApplicationValidity,
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
+    ProcessAgentEmissionLimitValidity,
 )
 
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class Command(BaseCommand):
         self.wb = load_workbook(filename=options["file"])
 
         workbook_processors = [
-            ('ProcAgentUsesValidity', self.process_pa_uses_validity),
+            ('ProcAgentUsesValidity', self.process_pa_applications_validity),
             ('ProcAgentUses', self.process_pa_application),
             ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
             ('ProcAgentEmitLimits', self.process_pa_emission_limit),
@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 ('ProcAgentUsesDateReported', self.process_submission_data),
                 ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
                 ('ProcAgentContanTechnology', self.process_pa_contain_technology),
-                ('ProcAgentUsesValidity', self.process_pa_uses_validity),
+                ('ProcAgentUsesValidity', self.process_pa_applications_validity),
                 ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
             ]
 
@@ -139,9 +139,9 @@ class Command(BaseCommand):
             )
             self.insert_submission(entry)
 
-    def process_pa_uses_validity(self, row, purge=False):
+    def process_pa_applications_validity(self, row, purge=False):
         try:
-            return self._process_pa_uses_validity(row, purge)
+            return self._process_pa_applications_validity(row, purge)
         except KeyboardInterrupt:
             raise
         except Exception as e:
@@ -151,15 +151,15 @@ class Command(BaseCommand):
             )
 
     @transaction.atomic
-    def _process_pa_uses_validity(self, row, purge):
+    def _process_pa_applications_validity(self, row, purge):
         decision = self.get_or_create_decision(row['Decision'])
 
         if purge:
-            self.delete_pa_uses_validity(row)
+            self.delete_pa_applications_validity(row)
             return
 
-        if not getattr(decision, 'uses_validity', None):
-            ProcessAgentUsesValidity.objects.create(
+        if not getattr(decision, 'applications_validity', None):
+            ProcessAgentApplicationValidity.objects.create(
                 decision=decision,
                 start_date=date(row['StartYear'], 1, 1) if row['StartYear'] else None,
                 end_date=date(row['EndYear'], 12, 31) if row['EndYear'] else None
@@ -186,8 +186,8 @@ class Command(BaseCommand):
     @transaction.atomic
     def _process_pa_application(self, row):
         decision = self.get_or_create_decision(row['Decision'])
-        if getattr(decision, 'uses_validity', None):
-            validity = decision.uses_validity
+        if getattr(decision, 'applications_validity', None):
+            validity = decision.applications_validity
         else:
             logger.error(f"Uses validity does not exists decision {decision}")
             return
@@ -312,18 +312,14 @@ class Command(BaseCommand):
         # are two decisions instead of one.
         for decision_id in row['Decision'].split(' AND '):
             decision = self.get_or_create_decision(decision_id)
-            if getattr(decision, 'uses_validity', None):
-                validity = decision.uses_validity
-            else:
-                logger.error(
-                    f"Uses validity does not exists decision {decision}"
-                )
-                return
-
+            application = ProcessAgentApplication.objects.filter(
+                counter=row['ProcessNumber'],
+                validity__decision=decision
+            ).first()
             ProcessAgentUsesReported.objects.create(
                 submission=submission,
-                validity=validity,
-                process_number=row['ProcessNumber'],
+                decision=decision,
+                application=application,
                 makeup_quantity=row['MakeUpQuantity'],
                 emissions=row['Emissions'],
                 units=row['Units'],
@@ -490,14 +486,14 @@ class Command(BaseCommand):
             sub.delete()
 
     @transaction.atomic
-    def delete_pa_uses_validity(self, entry):
-        obj = ProcessAgentUsesValidity.objects.filter(
+    def delete_pa_applications_validity(self, entry):
+        obj = ProcessAgentApplicationValidity.objects.filter(
             decision__decision_id=entry['Decision'],
             start_date__year=entry['StartYear'],
             end_date__year=entry['EndYear']
         ).first()
         if obj:
-            for related_data in ['pa_applications', 'pa_uses_reported']:
+            for related_data in ['pa_applications',]:
                 for instance in getattr(obj, related_data).all():
                     logger.info("Deleting related data: %s", instance)
                     instance.delete()

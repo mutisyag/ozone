@@ -11,7 +11,7 @@ __all__ = [
     'ProcessAgentApplication',
     'ProcessAgentUsesReported',
     'ProcessAgentEmissionLimit',
-    'ProcessAgentUsesValidity',
+    'ProcessAgentApplicationValidity',
     'ProcessAgentEmissionLimitValidity',
 ]
 
@@ -34,12 +34,12 @@ class ProcessAgentContainTechnology(models.Model):
         db_table = 'pa_contain_technology'
 
 
-class ProcessAgentUsesValidity(models.Model):
+class ProcessAgentApplicationValidity(models.Model):
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     decision = models.OneToOneField(
         Decision,
-        related_name='uses_validity',
+        related_name='applications_validity',
         on_delete=models.PROTECT
     )
 
@@ -49,8 +49,8 @@ class ProcessAgentUsesValidity(models.Model):
         return f"{self.decision.decision_id} {start_year}-{end_year}"
 
     class Meta:
-        verbose_name_plural = 'process agent uses validity'
-        db_table = 'pa_uses_validity'
+        verbose_name_plural = 'process agent applications validity'
+        db_table = 'pa_applications_validity'
 
 
 class ProcessAgentApplication(models.Model):
@@ -61,7 +61,7 @@ class ProcessAgentApplication(models.Model):
     """
 
     validity = models.ForeignKey(
-        ProcessAgentUsesValidity,
+        ProcessAgentApplicationValidity,
         related_name='pa_applications',
         on_delete=models.PROTECT
     )
@@ -93,13 +93,21 @@ class ProcessAgentUsesReported(models.Model):
         on_delete=models.PROTECT
     )
 
-    validity = models.ForeignKey(
-        ProcessAgentUsesValidity,
+    decision = models.ForeignKey(
+        Decision,
         related_name='pa_uses_reported',
+        null=True,
+        blank=True,
         on_delete=models.PROTECT
     )
 
-    process_number = models.PositiveSmallIntegerField(null=True, blank=True)
+    application = models.ForeignKey(
+        ProcessAgentApplication,
+        related_name='pa_uses_reported',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
 
     makeup_quantity = models.FloatField(
         validators=[MinValueValidator(0.0)],

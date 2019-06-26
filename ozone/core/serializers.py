@@ -1012,9 +1012,19 @@ class ProcessAgentContainTechnologySerializer(serializers.ModelSerializer):
 
 
 class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
+    application_substance = serializers.CharField(
+        source='application.substance', default=''
+    )
+    application = serializers.CharField(
+        source='application.application', default=''
+    )
+
     class Meta:
         model = ProcessAgentUsesReported
-        exclude = ('submission',)
+        fields = (
+            'application_substance', 'application',
+            'makeup_quantity', 'emissions', 'units', 'remark'
+        )
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):
