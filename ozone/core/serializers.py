@@ -1022,7 +1022,7 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcessAgentUsesReported
         fields = (
-            'application_substance', 'application',
+            'application_substance', 'application', 'decision',
             'makeup_quantity', 'emissions', 'units', 'remark'
         )
 
