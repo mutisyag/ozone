@@ -100,6 +100,8 @@ class Command(BaseCommand):
     def process_submission_data(self, row, purge=False):
         try:
             return self._process_submission_data(row, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving submission %s/%s", e, row['CntryID'], row['PeriodID'],
@@ -140,6 +142,8 @@ class Command(BaseCommand):
     def process_pa_applications_validity(self, row, purge=False):
         try:
             return self._process_pa_applications_validity(row, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving process agent uses validity for decision %",
@@ -171,6 +175,8 @@ class Command(BaseCommand):
     def process_pa_application(self, row, purge=False):
         try:
             return self._process_pa_application(row)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving process agent application for decision %s",
@@ -198,6 +204,8 @@ class Command(BaseCommand):
     def process_pa_emission_limit_validity(self, row, purge=False):
         try:
             return self._process_pa_emission_limit_validity(row, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving process agent emission limits validity for decision %s",
@@ -231,6 +239,8 @@ class Command(BaseCommand):
     def process_pa_emission_limit(self, row, purge=False):
         try:
             return self._process_pa_emission_limit(row)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving process agent emission limit "
@@ -267,6 +277,8 @@ class Command(BaseCommand):
     def process_pa_uses_reported_data(self, row, purge=False):
         try:
             return self._process_pa_uses_reported_data(row, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving the reported uses of process agent for %s/%s",
@@ -336,6 +348,8 @@ class Command(BaseCommand):
     def process_pa_contain_technology(self, row, purge=False):
         try:
             return self._process_pa_contain_technology(row, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving process agent contain technology for %s/%s",

@@ -81,6 +81,8 @@ class Command(BaseCommand):
     def process_letter_data(self, letter, purge=False):
         try:
             return self._process_letter_data(letter, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while saving transfer %s", e, letter['LetterID'],
@@ -155,6 +157,8 @@ class Command(BaseCommand):
         """
         try:
             return self._process_transfer_data(transfer, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 f"Error {e} while saving transfer {transfer['ProdTransferID']}",
@@ -206,6 +210,8 @@ class Command(BaseCommand):
         """
         try:
             return self._process_letter_transfer_data(entry, purge)
+        except KeyboardInterrupt:
+            raise
         except Exception as e:
             logger.error(
                 "Error %s while processing transfer-letter mapping %s %s", e,
