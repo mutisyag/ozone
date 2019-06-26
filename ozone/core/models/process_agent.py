@@ -39,7 +39,7 @@ class ProcessAgentApplicationValidity(models.Model):
     end_date = models.DateField(null=True)
     decision = models.OneToOneField(
         Decision,
-        related_name='uses_validity',
+        related_name='applications_validity',
         on_delete=models.PROTECT
     )
 
@@ -49,8 +49,8 @@ class ProcessAgentApplicationValidity(models.Model):
         return f"{self.decision.decision_id} {start_year}-{end_year}"
 
     class Meta:
-        verbose_name_plural = 'process agent uses validity'
-        db_table = 'pa_uses_validity'
+        verbose_name_plural = 'process agent applications validity'
+        db_table = 'pa_applications_validity'
 
 
 class ProcessAgentApplication(models.Model):
