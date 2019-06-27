@@ -288,6 +288,7 @@ class ObligationAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     base_list_display = (
         "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
+        "is_active", "activated",
     )
     superuser_list_display = (
         "login_as",
@@ -296,7 +297,11 @@ class UserAdmin(admin.ModelAdmin):
     actions = ["reset_password"]
     exclude = ["password", "user_permissions"]
     readonly_fields = ["last_login", "date_joined", "created_by", "activated"]
-    list_filter = (("party", MainPartyFilter), "is_secretariat", "is_read_only", "is_staff", "is_superuser")
+    list_filter = (
+        ("party", MainPartyFilter),
+        "is_secretariat", "is_read_only", "is_staff", "is_superuser",
+        "is_active", "activated",
+    )
 
     def reset_password(self, request, queryset, template="password_reset"):
         domain_override = request.META.get("HTTP_HOST")
