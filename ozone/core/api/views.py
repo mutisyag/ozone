@@ -605,7 +605,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     search_fields = (
         "party__name", "obligation__name", "reporting_period__name"
     )
-    ordering = ("-reporting_period__start_date", "obligation__sort_order", "party__name")
+    ordering = (
+        "-updated_at", "-reporting_period__start_date", "obligation__sort_order", "party__name"
+    )
     permission_classes = (IsAuthenticated, IsSecretariatOrSamePartySubmission, )
     pagination_class = SubmissionPaginator
 
