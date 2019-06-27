@@ -1058,24 +1058,27 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
 
     def clone(self, new_instance=None):
         """
-        Clone imports data for this model instance and attach them to
-        "new_instance".
+        Clone imports & use categories data for this model instance and attach
+        them to "new_instance".
         """
         if not new_instance:
             return
 
-        for import_instance in self.imports.all():
-            attributes = model_to_dict(
-                import_instance,
-                exclude=[
-                    'id', 'report_id', '_state', '_deferred_fields', '_tracker',
-                    'save',
-                ]
-            )
-            attributes['report_id'] = new_instance.pk
-            import_clone = import_instance.__class__.objects.create(
-                **attributes
-            )
+        for related in ['imports', 'use_categories']:
+            if not hasattr(self, related):
+                continue
+            for related_instance in getattr(self, related).all():
+                attributes = model_to_dict(
+                    related_instance,
+                    exclude=[
+                        'id', 'report_id', '_state', '_deferred_fields',
+                        '_tracker', 'save', 'clean',
+                    ]
+                )
+                attributes['report_id'] = new_instance.pk
+                related_instance.__class__.objects.create(
+                    **attributes
+                )
 
     class Meta:
         db_table = 'reporting_raf'
