@@ -317,3 +317,36 @@ class EssenCritSubmissionMethods(TestSubmissionMethods):
 class OtherSubmissionMethods(TestSubmissionMethods):
     _form_type = "other"
     links_data = LINKS_OTHER
+
+    def test_clone(self):
+        """
+        Overriding method from main class, as form_type "other" does not
+        allow cloning
+        """
+        submission = self.create_submission()
+        submission._current_state = "finalized"
+        submission.save()
+
+        result = self.client.post(
+            reverse(
+                "core:submission-clone",
+                kwargs={"pk": submission.pk},
+            ),
+        )
+        self.assertEqual(result.status_code, 422, result.json())
+
+    def test_clone_versions(self):
+        """Cloning not allowed for these submissions"""
+        pass
+
+    def test_list_all_versions(self):
+        """Cloning not allowed for these submissions"""
+        pass
+
+    def test_list_current_only(self):
+        """Cloning not allowed for these submissions"""
+        pass
+
+    def test_list_superseded_only(self):
+        """Cloning not allowed for these submissions"""
+        pass

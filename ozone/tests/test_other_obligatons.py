@@ -156,10 +156,4 @@ class DataOtherTest(BaseTests):
                 kwargs={"pk": submission.pk},
             ),
         )
-        self.assertEqual(result.status_code, 200, result.json())
-        new_id = result.json()['url'].split("/")[-2]
-        new_data_other = Submission.objects.get(pk=new_id).dataothers.first()
-        self.assertEqual({
-            'remarks_os': new_data_other.remarks_os,
-            'remarks_party': new_data_other.remarks_party,
-        }, REMARKS_DATA)
+        self.assertEqual(result.status_code, 422, result.json())
