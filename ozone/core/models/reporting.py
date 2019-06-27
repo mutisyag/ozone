@@ -1744,6 +1744,11 @@ class Submission(models.Model):
 
         else:
             # This is not the first save
+            # Make sure that `updated_at` is properly updated even for
+            # partial updates.
+            if update_fields is not None:
+                update_fields = list(set(list(update_fields) + ['updated_at']))
+
             self.clean()
             return super().save(
                 force_insert=force_insert, force_update=force_update,
