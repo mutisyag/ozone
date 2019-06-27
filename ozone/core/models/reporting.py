@@ -1261,7 +1261,12 @@ class Submission(models.Model):
                     continue
                 attributes = model_to_dict(instance, exclude=exclude)
                 attributes['submission_id'] = clone.pk
-                instance.__class__.objects.create(**attributes)
+                instance_clone = instance.__class__.objects.create(**attributes)
+
+                # Related data instances might also have their related data;
+                # in this case they should implement a "clone" method.
+                if hasattr(instance, 'clone'):
+                    instance.clone(new_instance=instance_clone)
 
         return clone
 

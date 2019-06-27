@@ -1056,6 +1056,27 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
     def is_critical(self):
         return self.substance.has_critical_uses
 
+    def clone(self, new_instance=None):
+        """
+        Clone imports data for this model instance and attach them to
+        "new_instance".
+        """
+        if not new_instance:
+            return
+
+        for import_instance in self.imports.all():
+            attributes = model_to_dict(
+                import_instance,
+                exclude=[
+                    'id', 'report_id', '_state', '_deferred_fields', '_tracker',
+                    'save',
+                ]
+            )
+            attributes['report_id'] = new_instance.pk
+            import_clone = import_instance.__class__.objects.create(
+                **attributes
+            )
+
     class Meta:
         db_table = 'reporting_raf'
         ordering = ['substance__sort_order', 'substance__substance_id']
