@@ -52,7 +52,7 @@ X_FRAME_OPTIONS = 'DENY'
 # https://docs.djangoproject.com/en/dev/ref/settings/#default-from-email
 DEFAULT_FROM_EMAIL = env(
     'DJANGO_DEFAULT_FROM_EMAIL',
-    default='Ozone <noreply@eaudeweb.ro>'
+    default='Ozone Reporting Tool<no-reply@eaudeweb.ro>'
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#server-email
 SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
