@@ -73,6 +73,7 @@
       @keyup="validateInput"
       :disabled="disabled"
       @change="updateFormFieldMultiple"
+      actual_type="number"
       class="form-control"
       v-model="currentTyping"
       type="text"

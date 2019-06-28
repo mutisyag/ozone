@@ -307,6 +307,7 @@
             <b-col cols="3">{{specialLabels(order)}}</b-col>
             <b-col cols="6">
               <fieldGenerator
+                style="text-align:right"
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field:order}"
                 :disabled="!$store.getters.can_edit_data"
                 v-if="modal_data.field[order].type != 'multiselect'"
