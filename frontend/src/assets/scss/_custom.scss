@@ -820,7 +820,7 @@ button img.icon {
     padding-right: 2rem;
     // color: #20a8d8;
     height: 47px;
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     // box-shadow: -3px 3px 3px rgba(0,0,0,0.2); 
@@ -852,6 +852,7 @@ button img.icon {
     overflow: hidden;
     display: inline-block;
     vertical-align: top;
+    margin-top: 8px;
   }
 
   .navbar-toggler span {
@@ -1358,7 +1359,7 @@ body .vdp-datepicker__calendar {
 }
 
 .vdp-datepicker .form-control[readonly] {
-  background-color: initial;
+  background-color: white;
 }
 
 .vdp-datepicker .form-control:disabled {
@@ -1547,6 +1548,7 @@ main.main {
   margin: .8rem;
   width: calc(100% - 1.6rem);
   margin-bottom: 2rem;
+  max-height: 130px;
 }
 
 .sidebar-minimized.sidebar-fixed .sidebar {
@@ -1745,4 +1747,8 @@ body.aside-menu-off-canvas .aside-menu {
     width: 100%;
     margin-left: 0;
   }
+}
+
+.tooltip-inner {
+  white-space: pre-line;
 }

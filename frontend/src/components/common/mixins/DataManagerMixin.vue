@@ -20,7 +20,7 @@ export default {
   },
 
   async beforeRouteLeave(to, from, next) {
-    if (this.alertUnsavedData()) {
+    if (this.alertUnsavedData() && !this.$store.state.preventLeaveConfirm) {
       const answer = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'Do you really want to leave this page? You have unsaved changes!', $gettext: this.$gettext })
       if (answer) {
         next()
@@ -40,6 +40,7 @@ export default {
 
   computed: {
     initialDataReady() {
+      this.$store.commit('setPreventLeaveConfirm', false)
       if (!this.form) {
         return false
       }
@@ -107,6 +108,7 @@ export default {
       }
     },
     alertUnsavedData(e) {
+      if(!this.$store.state.preventLeaveConfirm) return false
       const tabsWithData = []
       Object.values(this.form.tabs).forEach((tab) => {
         [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)

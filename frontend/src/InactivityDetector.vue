@@ -71,6 +71,7 @@ export default {
         this.inactivyTimer -= 1
       }
       if (this.inactivyTimer === 0) {
+        this.$store.commit('setPreventLeaveConfirm', true)
         this.logout()
         this.resetTimer()
         window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.origin)}/reporting`

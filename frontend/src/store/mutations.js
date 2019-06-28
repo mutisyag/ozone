@@ -386,6 +386,10 @@ const mutations = {
     })
   },
 
+  setPreventLeaveConfirm(state, data) {
+    state.preventLeaveConfirm = data
+  },
+
   addCategoryEntry(state, { tabName, index, categoryList }) {
     categoryList.forEach(c => {
       state.form.tabs[tabName].form_fields[index].use_categories.push({

@@ -2,6 +2,7 @@ const state = {
   currentUser: null,
   actionToDispatch: null,
   submissionDefaultValues: null,
+  preventLeaveConfirm: false,
   dataForAction: null,
   emailTemplates: null,
   dashboard: {
