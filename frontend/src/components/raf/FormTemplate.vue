@@ -257,7 +257,7 @@
           v-for="country in modal_data.field.imports"
           :key="country.party"
         >
-          <b-col cols="2">{{$store.state.initialData.display.countries[country.party]}}</b-col>
+          <b-col cols="5">{{$store.state.initialData.display.countries[country.party]}}</b-col>
           <b-col>
             <fieldGenerator
               :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
@@ -283,7 +283,7 @@
               v-for="category in modal_data.field.use_categories"
               :key="category.critical_use_category"
             >
-              <b-col cols="2">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
+              <b-col cols="5">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
               <b-col>
                 <fieldGenerator
                   :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
