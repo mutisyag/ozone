@@ -17,6 +17,9 @@
 </template>
 <script>
 import auth from '@/components/common/mixins/auth'
+import {
+  apiBase
+} from '@/components/common/services/api.js'
 
 export default {
   data() {
@@ -69,6 +72,8 @@ export default {
       }
       if (this.inactivyTimer === 0) {
         this.logout()
+        this.resetTimer()
+        window.location = `${apiBase}/admin/login/?next=${encodeURIComponent(window.location.origin)}/reporting`
       }
     },
     resetTimer() {
