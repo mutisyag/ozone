@@ -298,7 +298,6 @@ class Submission(models.Model):
         ('nominations', True),
         ('exemptionapproveds', True),
         ('rafreports', True),
-        ('pa_contain_technologies', False),
         ('pa_uses_reported', False),
         ('transfers_from', False),
         ('transfers_to', False),
@@ -604,12 +603,6 @@ class Submission(models.Model):
         max_length=9999, blank=True,
         verbose_name="process agent uses reported remarks",
         help_text="General Process agent uses reported remarks added "
-                  "by the ozone secretariat"
-    )
-    pa_contain_technology_remarks_secretariat = models.CharField(
-        max_length=9999, blank=True,
-        verbose_name="process agent contain technology remarks",
-        help_text="General Process agent contain technology remarks added "
                   "by the ozone secretariat"
     )
 
@@ -1104,7 +1097,6 @@ class Submission(models.Model):
             "exemption_nomination_remarks_secretariat",
             "exemption_approved_remarks_secretariat",
             "pa_uses_reported_remarks_secretariat",
-            "pa_contain_technology_remarks_secretariat",
             "reporting_channel_id",
             "submitted_at",
         ]

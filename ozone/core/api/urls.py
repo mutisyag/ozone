@@ -41,6 +41,10 @@ router.register(r"limits", views.LimitViewSet)
 
 router.register(r"critical-use-categories", views.CriticalUseCategoryViewSet)
 
+router.register(
+    r"pa-contain-technologies", views.ProcessAgentContainTechnologyViewSet
+)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
@@ -135,15 +139,6 @@ procagent_uses_reported_router.register(
     "pa-uses-reported",
     views.ProcessAgentUsesReportedViewSet,
     base_name="submission-pa-uses-reported"
-)
-
-procagent_contain_technologies_router = routers.NestedSimpleRouter(
-    submissions_router, "submissions", lookup="submission"
-)
-procagent_contain_technologies_router.register(
-    "pa-contain-technologies",
-    views.ProcessAgentContainTechnologyViewSet,
-    base_name="submission-pa-contain-technologies"
 )
 
 submission_transitions_router = routers.NestedSimpleRouter(
@@ -267,7 +262,6 @@ nested_routers = [
     data_others_router,
     transfers_router,
     procagent_uses_reported_router,
-    procagent_contain_technologies_router,
     submission_info_router,
     submission_transitions_router,
     submission_flags_router,

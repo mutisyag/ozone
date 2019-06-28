@@ -578,15 +578,8 @@ class ProcessAgentBaseAdmin:
 class ProcessAgentContainTechnologyAdmin(
     ProcessAgentBaseAdmin, admin.ModelAdmin
 ):
-    list_display = ('get_reporting_period', 'get_party', 'contain_technology')
-    list_filter = (
-        (
-            'submission__reporting_period__name',
-            custom_title_dropdown_filter('Period')
-        ),
-        ('submission__party', MainPartyFilter)
-    )
-    search_fields = ('submission__party__name',)
+    list_display = ('description',)
+    search_fields = ('description',)
 
 
 @admin.register(ProcessAgentUsesReported)

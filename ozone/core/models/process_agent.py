@@ -21,13 +21,7 @@ class ProcessAgentContainTechnology(models.Model):
     Reported containment technologies
     """
 
-    submission = models.ForeignKey(
-        Submission,
-        related_name='pa_contain_technologies',
-        on_delete=models.PROTECT
-    )
-
-    contain_technology = models.CharField(max_length=9999)
+    description = models.CharField(max_length=9999)
 
     class Meta:
         verbose_name_plural = 'process agent contain technologies'
@@ -103,6 +97,14 @@ class ProcessAgentUsesReported(models.Model):
 
     application = models.ForeignKey(
         ProcessAgentApplication,
+        related_name='pa_uses_reported',
+        blank=True,
+        null=True,
+        on_delete=models.PROTECT
+    )
+
+    contain_technology = models.ForeignKey(
+        ProcessAgentContainTechnology,
         related_name='pa_uses_reported',
         blank=True,
         null=True,
