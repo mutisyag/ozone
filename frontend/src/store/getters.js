@@ -144,6 +144,13 @@ const getters = {
           return period.text
         }
       },
+      period_description: () => {
+        // TODO: find a better way to do this
+        const period = state.dashboard.periods.find(a => a.value === submission.reporting_period)
+        if (period && period.hasOwnProperty('text')) {
+          return period.description
+        }
+      },
       party: () => state.dashboard.parties.find(a => a.value === submission.party).text,
       period_start: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).start_date.split('-')[0],
       period_end: () => state.dashboard.periods.find(a => a.value === submission.reporting_period).end_date.split('-')[0]

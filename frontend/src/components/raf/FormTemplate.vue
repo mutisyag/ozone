@@ -425,7 +425,7 @@ export default {
       return this.modal_data.field.substance.selected && this.$store.state.initialData.substances.find(s => parseInt(s.value) === parseInt(this.modal_data.field.substance.selected)).has_critical_uses
     },
     currentPeriod() {
-      return this.$store.state.current_submission.reporting_period
+      return this.$store.state.current_submission.reporting_period_description
     },
     tableItems() {
       const tableFields = []

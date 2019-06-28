@@ -1496,6 +1496,7 @@ class SubmissionSerializer(
 
     # Frontend needs both reporting period name and id.
     reporting_period_id = serializers.SerializerMethodField()
+    reporting_period_description = serializers.SerializerMethodField()
 
     in_initial_state = serializers.SerializerMethodField()
 
@@ -1534,7 +1535,7 @@ class SubmissionSerializer(
 
         base_fields = (
             'id', 'party', 'reporting_period', 'obligation', 'version',
-            'reporting_period_id',
+            'reporting_period_id', 'reporting_period_description',
             'files', 'files_url',
             'sub_info_url', 'sub_info',
             'submission_flags_url', 'submission_remarks',
@@ -1600,6 +1601,9 @@ class SubmissionSerializer(
 
     def get_reporting_period_id(self, obj):
         return obj.reporting_period.id
+
+    def get_reporting_period_description(self, obj):
+        return obj.reporting_period.description 
 
     def get_in_initial_state(self, obj):
         return obj.in_initial_state
