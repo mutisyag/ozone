@@ -3,7 +3,7 @@
     <div class="breadcrumb custom">
       <small style="width: 30%;">
         <b-btn
-          variant="outline-info"
+          variant="primary"
           @click="createModalData"
           v-show="!selectedTab.hideInfoButton"
           style="margin-right:.5rem"
