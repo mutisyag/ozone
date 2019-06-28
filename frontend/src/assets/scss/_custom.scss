@@ -1719,3 +1719,30 @@ body.aside-menu-off-canvas .aside-menu {
 .color-red {
   color: #f04e28;
 }
+
+.app-header {
+  .navbar-toggler {
+    position: absolute;
+  }
+  h3 {
+    margin-left: 130px;
+    margin-right: 120px;
+  }
+  @media(max-width: 1050px) {
+    .navbar-nav {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    h3 {
+      margin-top: 5px;
+    }
+  }
+}
+
+@media (max-width: 1050px) {
+  html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed.sidebar-minimized .main, html:not([dir="rtl"]) .sidebar-lg-show.sidebar-fixed.sidebar-minimized .app-footer, html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .main, html:not([dir="rtl"]) .sidebar-show.sidebar-fixed.sidebar-minimized .app-footer {
+    width: 100%;
+    margin-left: 0;
+  }
+}
