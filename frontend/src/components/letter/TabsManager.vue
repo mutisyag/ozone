@@ -165,7 +165,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', `${this.$store.state.current_submission.reporting_period} ${this.$store.state.current_submission.obligation} ${this.$gettext('data submission for')} ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]}`)
+      this.$store.commit('updateBreadcrumbs', `${this.$store.state.current_submission.reporting_period_description} ${this.$store.state.current_submission.obligation} ${this.$gettext('data submission for')} ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]}`)
     },
     async clone(url) {
       const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You are about to create a new version for data entry. The current version will be superseded once the new version is submitted.', $gettext: this.$gettext })
