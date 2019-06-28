@@ -241,7 +241,10 @@
             />
           </b-col>
         </b-row>
-        <div v-translate>Amount acquired by import & countries of manufacture</div>
+        <div
+          v-if="$store.getters.can_edit_data || modal_data.field.imports.length"
+          v-translate
+        >Amount acquired by import & countries of manufacture</div>
         <b-row>
           <b-col>
             <addParties
