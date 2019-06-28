@@ -28,7 +28,7 @@
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
-                label="text"
+                label="description"
                 customTemplateText="<i class='fa fa-clock-o fa-lg'></i>"
                 customTemplate="is_reporting_open"
                 v-model="submissionNew.reporting_period"
@@ -374,7 +374,7 @@ export default {
         this.submissions.forEach((element) => {
           tableFields.push({
             obligation: this.getSubmissionInfo(element).obligation(),
-            reporting_period: this.getSubmissionInfo(element).period(),
+            reporting_period: this.getSubmissionInfo(element).period_description(),
             party: this.getSubmissionInfo(element).party(),
             current_state: element.flag_superseded ? `${this.labels[element.current_state]} (${this.labels.flags.flag_superseded})` : this.labels[element.current_state],
             version: element.version,
@@ -419,7 +419,7 @@ export default {
           }
           const row = {
             obligation: this.getSubmissionInfo(element).obligation(),
-            reporting_period: this.getSubmissionInfo(element).period(),
+            reporting_period: this.getSubmissionInfo(element).period_description(),
             party: this.getSubmissionInfo(element).party(),
             version: element.version,
             updated_at: dateFormatToDisplay(element.updated_at),

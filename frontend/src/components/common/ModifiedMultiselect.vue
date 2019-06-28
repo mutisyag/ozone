@@ -5,18 +5,19 @@
     v-model="completeValue"
     :options="options"
     :track-by="trackBy"
+    :label="label"
   >
     <template v-if="customTemplate" slot="singleLabel" slot-scope="props">
       <div :class="{highlighted: props.option[customTemplate]}">
         <span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
-        <span class="option__title">{{ props.option.text }}</span>
+        <span class="option__title">{{ props.option[label] }}</span>
       </div>
     </template>
 
     <template v-if="customTemplate" slot="option" slot-scope="props">
       <div :class="{highlighted: props.option[customTemplate]}">
         <span v-html="props.option[customTemplate] ? `${customTemplateText} ` : ''"></span>
-        <span class="option__title">{{ props.option.text }}</span>
+        <span class="option__title">{{ props.option[label] }}</span>
       </div>
     </template>
   </multiselect>
@@ -29,7 +30,7 @@ export default {
   components: {
     Multiselect
   },
-  props: ['value', 'options', 'trackBy', 'customTemplate', 'customTemplateText'],
+  props: ['value', 'options', 'trackBy', 'customTemplate', 'customTemplateText', 'label'],
   computed: {
     completeValue: {
       get() {
