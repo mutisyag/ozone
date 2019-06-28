@@ -59,10 +59,22 @@ SERVER_EMAIL = env('DJANGO_SERVER_EMAIL', default=DEFAULT_FROM_EMAIL)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-subject-prefix
 EMAIL_SUBJECT_PREFIX = env('DJANGO_EMAIL_SUBJECT_PREFIX', default='[Ozone]')
 
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-host
+EMAIL_HOST = env('DJANGO_EMAIL_HOST', default='smtp')
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-EMAIL_PORT
+EMAIL_PORT = env.int('DJANGO_EMAIL_PORT', default=25)
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-use-tls
+EMAIL_USE_TLS = env.bool('DJANGO_EMAIL_USE_TLS', default=False)
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#email-use-ssl
+EMAIL_USE_SSL = env.bool('DJANGO_EMAIL_USE_SSL', default=False)
+
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host-user
-EMAIL_HOST_USER = env('EMAIL_HOST_USER', default=None)
+EMAIL_HOST_USER = env('DJANGO_EMAIL_HOST_USER', default=None)
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host-password
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default=None)
+EMAIL_HOST_PASSWORD = env('DJANGO_EMAIL_HOST_PASSWORD', default=None)
 
 # ADMIN
 # ------------------------------------------------------------------------------
