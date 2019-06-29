@@ -14,7 +14,7 @@
             >Generate report by selecting the report type and filtering by party and period. Only one filter can have multiple values.</span>
           </small>
           <div class="create-submission mt-2">
-            <small class="color-red" v-if="showValidation && !selected.reports" v-translate>Please chose a report</small>
+            <small class="color-red" v-if="showValidation && !selected.reports" v-translate>Please choose a report</small>
             <b-input-group id="reports_selector" class="mb-2" :prepend="$gettext('Reports')">
               <multiselect
                 :placeholder="$gettext('Select option')"
