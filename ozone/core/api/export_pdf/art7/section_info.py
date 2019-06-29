@@ -125,7 +125,7 @@ def get_questionnaire_table(submission):
 def export_info(submission):
     title = (
         Paragraph("%s %s - %s %s" % (
-            submission.reporting_period.name,
+            submission.reporting_period.description,
             submission.obligation.name,
             submission.party.name,
             ('(%s)' % (_('Provisional'),)) if submission.flag_provisional else '',
