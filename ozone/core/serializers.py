@@ -1008,7 +1008,7 @@ class TransferSerializer(serializers.ModelSerializer):
 class ProcessAgentContainTechnologySerializer(serializers.ModelSerializer):
     class Meta:
         model = ProcessAgentContainTechnology
-        exclude = ('submission',)
+        fields = '__all__'
 
 
 class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
@@ -1024,7 +1024,8 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
         model = ProcessAgentUsesReported
         fields = (
             'application_substance', 'application', 'decision',
-            'makeup_quantity', 'emissions', 'units', 'remark'
+            'makeup_quantity', 'emissions', 'units', 'contain_technologies',
+            'remark'
         )
 
 
@@ -1256,10 +1257,7 @@ class SubmissionRemarksSerializer(
                 'exemption_approved_remarks_secretariat',
             ),
             'transfer': ('transfers_remarks_secretariat',),
-            'procagent': (
-                'pa_uses_reported_remarks_secretariat',
-                'pa_contain_technology_remarks_secretariat'
-            ),
+            'procagent': ('pa_uses_reported_remarks_secretariat',),
         }
         fields = list(set(sum(per_type_fields.values(), ())))
 
@@ -1489,10 +1487,6 @@ class SubmissionSerializer(
         view_name='core:submission-pa-uses-reported-list',
         lookup_url_kwarg='submission_pk',
     )
-    pa_contain_technologies_url = serializers.HyperlinkedIdentityField(
-        view_name='core:submission-pa-contain-technologies-list',
-        lookup_url_kwarg='submission_pk',
-    )
 
     # Frontend needs both reporting period name and id.
     reporting_period_id = serializers.SerializerMethodField()
@@ -1584,7 +1578,6 @@ class SubmissionSerializer(
             ),
             'procagent': base_fields + (
                 'pa_uses_reported_url',
-                'pa_contain_technologies_url',
             ),
         }
         # All possible fields still need to be specified here.

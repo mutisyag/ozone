@@ -8,6 +8,18 @@ from .models import Blend, Submission, Party
 User = get_user_model()
 
 
+class IsSecretariat(BasePermission):
+    """
+    This is used for evaluating persmissions on all views that can only be
+    accessed by secretariat
+    """
+    def has_permission(self, request, view):
+        return request.user.is_secretariat
+
+    def has_object_permission(self, request, view, obj):
+        return request.user.is_secretariat
+
+
 class IsSecretariatOrSamePartySubmission(BasePermission):
     """
     This is used for evaluating permissions on Submission views.

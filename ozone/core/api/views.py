@@ -1165,19 +1165,13 @@ class TransferViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProcessAgentContainTechnologyViewSet(viewsets.ReadOnlyModelViewSet):
-    form_types = ("procagent",)
     serializer_class = ProcessAgentContainTechnologySerializer
+    # We are only allowing Secretariat users to view contain technologies.
     permission_classes = (
         IsAuthenticated,
-        IsSecretariatOrSamePartySubmissionRelatedRO,
-        IsCorrectObligation,
+        IsSecretariat,
     )
-    filter_backends = (IsOwnerFilterBackend,)
-
-    def get_queryset(self):
-        return ProcessAgentContainTechnology.objects.filter(
-            submission=self.kwargs['submission_pk']
-        )
+    queryset = ProcessAgentContainTechnology.objects.all()
 
 
 class ProcessAgentUsesReportedViewSet(viewsets.ReadOnlyModelViewSet):
