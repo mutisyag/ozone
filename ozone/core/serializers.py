@@ -1024,7 +1024,8 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
         model = ProcessAgentUsesReported
         fields = (
             'application_substance', 'application', 'decision',
-            'makeup_quantity', 'emissions', 'units', 'remark'
+            'makeup_quantity', 'emissions', 'units', 'contain_technologies',
+            'remark'
         )
 
 
