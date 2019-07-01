@@ -94,3 +94,7 @@ class DefaultExemptionWorkflow(BaseWorkflow):
     def submit(self):
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+
+    @xworkflows.on_enter_state(*[s.name for s in state.states])
+    def notify_by_email(self, *args, **kwargs):
+        notify_workflow_transitioned(self)

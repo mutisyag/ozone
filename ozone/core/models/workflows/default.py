@@ -163,3 +163,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
     @xworkflows.on_enter_state(*[s.name for s in state.states])
     def notify_by_email(self, *args, **kwargs):
         notify_workflow_transitioned(self)
+
+    @xworkflows.on_enter_state(*[s.name for s in state.states])
+    def notify_by_email(self, *args, **kwargs):
+        notify_workflow_transitioned(self)
