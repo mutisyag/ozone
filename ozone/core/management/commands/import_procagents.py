@@ -78,9 +78,9 @@ class Command(BaseCommand):
             ('ProcAgentUses', self.process_pa_application),
             ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
             ('ProcAgentEmitLimits', self.process_pa_emission_limit),
+            ('ProcAgentContanTechnology', self.process_pa_contain_technology),
             ('ProcAgentUsesDateReported', self.process_submission_data),
             ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
-            ('ProcAgentContanTechnology', self.process_pa_contain_technology)
         ]
         worksheet_processors = {
             'ProcAgentContanTechnology': self.process_pa_contain_technology_ws,
@@ -164,7 +164,21 @@ class Command(BaseCommand):
                 "pa_uses_reported_remarks_secretariat",
                 row['Remark']
             )
-            self.insert_submission(entry)
+            submission = self.insert_submission(entry)
+
+        # Add a single extra row for all contain technologies in this
+        # submission
+        contain_technologies = ProcessAgentContainTechnology.objects.filter(
+            description__in=list(
+                self.contain_technologies_map.get((party, period), '')
+            )
+        )
+        if contain_technologies.exists():
+            rep = ProcessAgentUsesReported.objects.create(
+                submission=submission,
+            )
+            for tech in contain_technologies:
+                rep.contain_technologies.add(tech)
 
     def process_pa_applications_validity(self, row, purge=False):
         try:
@@ -343,11 +357,6 @@ class Command(BaseCommand):
                 counter=row['ProcessNumber'],
                 validity__decision=decision
             ).first()
-            contain_technologies = ProcessAgentContainTechnology.objects.filter(
-                description__in=list(
-                    self.contain_technologies_map.get((party, period), '')
-                )
-            )
             ProcessAgentUsesReported.objects.create(
                 submission=submission,
                 decision=decision,

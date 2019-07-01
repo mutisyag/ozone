@@ -103,12 +103,9 @@ class ProcessAgentUsesReported(models.Model):
         on_delete=models.PROTECT
     )
 
-    contain_technology = models.ForeignKey(
+    contain_technologies = models.ManyToManyField(
         ProcessAgentContainTechnology,
-        related_name='pa_uses_reported',
         blank=True,
-        null=True,
-        on_delete=models.PROTECT
     )
 
     makeup_quantity = models.FloatField(
