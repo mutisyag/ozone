@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 import xworkflows
 
 from .base import BaseWorkflow
+from .emails import notify_workflow_transitioned
 from ...exceptions import TransitionFailed
 
 

@@ -1,6 +1,7 @@
 import xworkflows
 
 from .base import BaseWorkflow
+from .emails import notify_workflow_transitioned
 
 
 __all__ = [
