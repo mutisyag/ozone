@@ -56,6 +56,14 @@
               :field="cell.item.originalObj['is_basic_domestic_need']"
             ></fieldGenerator>
           </template>
+          <template slot="contain_technologies" slot-scope="cell">
+            <fieldGenerator
+              :key="`${cell.item.index}_${'contain_technologies'}_${tabName}`"
+              :fieldInfo="{index:cell.item.index,tabName: tabName, field:'contain_technologies'}"
+              :disabled="true"
+              :field="cell.item.originalObj['contain_technologies']"
+            ></fieldGenerator>
+          </template>
         </b-table>
       </div>
 

@@ -108,7 +108,7 @@ export default {
       }
     },
     alertUnsavedData(e) {
-      if(!this.$store.state.preventLeaveConfirm) return false
+      if (!this.$store.state.preventLeaveConfirm) return false
       const tabsWithData = []
       Object.values(this.form.tabs).forEach((tab) => {
         [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)

@@ -119,8 +119,13 @@ const getFormOtherRo = ($gettext) => {
           label: `(5)<br>${$gettext('Units')}`,
           name: 'units'
         }, {
+          label: `(5)<br> ${$gettext('Contain technology')}`,
+          name: 'contain_technologies',
+          class: ['text-left', 'brake-row']
+        }, {
           label: `(6)<br>${$gettext('Remarks')}`,
-          name: 'remark'
+          name: 'remark',
+          class: 'text-left'
         }
         ],
 
@@ -133,6 +138,7 @@ const getFormOtherRo = ($gettext) => {
           'application': '',
           'makeup_quantity': '',
           'emissions': '',
+          'contain_technologies': [],
           'units': null,
           'remark': null
         }

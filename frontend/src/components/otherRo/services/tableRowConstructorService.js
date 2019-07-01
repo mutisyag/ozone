@@ -31,6 +31,10 @@ export default {
           selected: null,
           type: 'nonInput'
         },
+        contain_technologies: {
+          selected: null,
+          type: 'list'
+        },
         emissions: {
           selected: null,
           type: 'nonInput'

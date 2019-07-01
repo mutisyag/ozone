@@ -153,7 +153,7 @@ export default {
       const tableHeaders = []
       const options = {}
       this.tab_info.section_subheaders.forEach((form_field) => {
-        options.class = [options.class, form_field.class]
+        options.class = form_field.class
         tableHeaders.push({
           key: form_field.name,
           label: form_field.label,

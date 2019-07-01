@@ -67,6 +67,10 @@
       v-model="currentTyping"
     ></textarea>
 
+    <ul v-else-if="field.type === 'list'">
+      <li v-for="(item, id) in field.selected" :key="id">{{item}}</li>
+    </ul>
+
     <input
       v-if="isMultipleField"
       :id="fieldInfo ? fieldInfo.field : ''"
