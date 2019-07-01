@@ -43,6 +43,8 @@ class Command(BaseCommand):
                            for _substance in Substance.objects.all()}
         self.meetings = {_meeting.meeting_id: _meeting
                          for _meeting in Meeting.objects.all()}
+        self.wb = None
+        self.contain_technologies_map = {}
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
@@ -71,7 +73,7 @@ class Command(BaseCommand):
         # Load all the data.
         self.wb = load_workbook(filename=options["file"])
 
-        workbook_processors = [
+        workbook_row_processors = [
             ('ProcAgentUsesValidity', self.process_pa_applications_validity),
             ('ProcAgentUses', self.process_pa_application),
             ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
@@ -80,8 +82,11 @@ class Command(BaseCommand):
             ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
             ('ProcAgentContanTechnology', self.process_pa_contain_technology)
         ]
+        worksheet_processors = {
+            'ProcAgentContanTechnology': self.process_pa_contain_technology_ws,
+        }
         if options["purge"]:
-            workbook_processors = [
+            workbook_row_processors = [
                 ('ProcAgentUsesDateReported', self.process_submission_data),
                 ('ProcAgentUsesReported', self.process_pa_uses_reported_data),
                 ('ProcAgentContanTechnology', self.process_pa_contain_technology),
@@ -89,13 +94,35 @@ class Command(BaseCommand):
                 ('ProcAgentEmitLimitsValidity', self.process_pa_emission_limit_validity),
             ]
 
-        for workbook_name, workbook_processor in workbook_processors:
+        for workbook_name, workbook_processor in workbook_row_processors:
             worksheet = self.wb[workbook_name]
             values = list(worksheet.values)
             headers = values[0]
+            if workbook_name in worksheet_processors:
+                # This means that the whole worksheet data needs to be
+                # pre-loaded
+                worksheet_processors[workbook_name](values)
             for row in values[1:]:
                 row = dict(zip(headers, row))
                 workbook_processor(row, options["purge"])
+
+    def process_pa_contain_technology_ws(self, worksheet):
+        """
+        Loads all contain technology data in memory to populate submissions
+        later.
+        """
+        headers = worksheet[0]
+        for row in worksheet[1:]:
+            row = dict(zip(headers, row))
+            party = self.parties[row['CntryID']]
+            period = self.periods[row['PeriodID']]
+            description = row['ContainTechnology']
+
+            key = (party, period)
+            if (party, period) not in self.contain_technologies_map:
+                self.contain_technologies_map[key] = set()
+
+            self.contain_technologies_map[key].add(description)
 
     def process_submission_data(self, row, purge=False):
         try:
@@ -316,6 +343,11 @@ class Command(BaseCommand):
                 counter=row['ProcessNumber'],
                 validity__decision=decision
             ).first()
+            contain_technologies = ProcessAgentContainTechnology.objects.filter(
+                description__in=list(
+                    self.contain_technologies_map.get((party, period), '')
+                )
+            )
             ProcessAgentUsesReported.objects.create(
                 submission=submission,
                 decision=decision,
@@ -359,28 +391,15 @@ class Command(BaseCommand):
             return
 
     def _process_pa_contain_technology(self, row, purge):
-        party = self.parties[row['CntryID']]
-        period = self.periods[row['PeriodID']]
-
         if purge:
-            self.delete_submission(
-                party,
-                period,
-                Obligation.objects.filter(
-                    _form_type=FormTypes.PROCAGENT.value
-                ).first()
-            )
+            ProcessAgentContainTechnology.objects.filter(
+                description=row['ContainTechnology']
+            ).delete()
+            logger.info(f"Process agent contain technology deleted.")
             return
 
-        submission = self.get_or_create_submission(
-            party,
-            period,
-            "pa_contain_technology_remarks_secretariat"
-        )
-
         ProcessAgentContainTechnology.objects.create(
-            submission=submission,
-            contain_technology=row['ContainTechnology']
+            description=row['ContainTechnology']
         )
         logger.info(f"Process agent contain technology added.")
 
