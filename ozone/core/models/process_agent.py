@@ -23,6 +23,9 @@ class ProcessAgentContainTechnology(models.Model):
 
     description = models.CharField(max_length=9999)
 
+    def __str__(self):
+        return self.description
+
     class Meta:
         verbose_name_plural = 'process agent contain technologies'
         db_table = 'pa_contain_technology'
@@ -67,6 +70,9 @@ class ProcessAgentApplication(models.Model):
     application = models.CharField(max_length=256)
 
     remark = models.CharField(max_length=9999, blank=True)
+
+    def __str__(self):
+        return f'{self.substance} - {self.application}'
 
     class Meta:
         db_table = 'pa_application'
@@ -128,6 +134,18 @@ class ProcessAgentUsesReported(models.Model):
     )
 
     remark = models.CharField(max_length=9999, blank=True)
+
+    def __str__(self):
+        if self.application:
+            return (
+                f'{self.submission.party} - Process agent reported use of '
+                f'{self.application.substance} for '
+                f'{self.submission.reporting_period.name}'
+            )
+        return (
+            f'{self.submission.party} - Process agent reported use for '
+            f'{self.submission.reporting_period.name}'
+        )
 
     class Meta:
         verbose_name_plural = 'process agent uses reported'

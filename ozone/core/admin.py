@@ -575,9 +575,7 @@ class ProcessAgentBaseAdmin:
 
 
 @admin.register(ProcessAgentContainTechnology)
-class ProcessAgentContainTechnologyAdmin(
-    ProcessAgentBaseAdmin, admin.ModelAdmin
-):
+class ProcessAgentContainTechnologyAdmin(admin.ModelAdmin):
     list_display = ('description',)
     search_fields = ('description',)
 
