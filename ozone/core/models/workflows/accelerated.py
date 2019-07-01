@@ -1,6 +1,7 @@
 import xworkflows
 
 from .base import BaseWorkflow
+from .emails import notify_workflow_transitioned
 
 
 __all__ = [
@@ -71,3 +72,7 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
     @xworkflows.transition('unrecall')
     def unrecall(self):
         self.model_instance.make_current()
+
+    @xworkflows.on_enter_state(*[s.name for s in state.states])
+    def notify_by_email(self, *args, **kwargs):
+        notify_workflow_transitioned(self)

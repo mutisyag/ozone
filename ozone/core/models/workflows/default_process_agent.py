@@ -1,6 +1,7 @@
 import xworkflows
 
 from .base import BaseWorkflow
+from .emails import notify_workflow_transitioned
 
 
 __all__ = [
@@ -65,3 +66,7 @@ class DefaultProcessAgentWorkflow(BaseWorkflow):
         Ensure that only secretariat-edit users can finalize submissions
         """
         return not self.user.is_read_only and self.user.is_secretariat
+
+    @xworkflows.on_enter_state(*[s.name for s in state.states])
+    def notify_by_email(self, *args, **kwargs):
+        notify_workflow_transitioned(self)
