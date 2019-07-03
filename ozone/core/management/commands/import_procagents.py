@@ -44,7 +44,9 @@ class Command(BaseCommand):
         self.meetings = {_meeting.meeting_id: _meeting
                          for _meeting in Meeting.objects.all()}
         self.wb = None
+        self.admin = None
         self.contain_technologies_map = {}
+        self.contain_technologies_objects_map = {}
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
@@ -106,6 +108,10 @@ class Command(BaseCommand):
                 row = dict(zip(headers, row))
                 workbook_processor(row, options["purge"])
 
+    @staticmethod
+    def _strip_description(description):
+        return description.replace(" ", "").upper()
+
     def process_pa_contain_technology_ws(self, worksheet):
         """
         Loads all contain technology data in memory to populate submissions
@@ -121,7 +127,6 @@ class Command(BaseCommand):
             key = (party, period)
             if (party, period) not in self.contain_technologies_map:
                 self.contain_technologies_map[key] = set()
-
             self.contain_technologies_map[key].add(description)
 
     def process_submission_data(self, row, purge=False):
@@ -168,12 +173,15 @@ class Command(BaseCommand):
 
         # Add a single extra row for all contain technologies in this
         # submission
-        contain_technologies = ProcessAgentContainTechnology.objects.filter(
-            description__in=list(
-                self.contain_technologies_map.get((party, period), '')
-            )
-        )
-        if contain_technologies.exists():
+        ct_list = [
+            self._strip_description(desc)
+            for desc in self.contain_technologies_map.get((party, period), [])
+        ]
+        contain_technologies = [
+            self.contain_technologies_objects_map[ct] for ct in ct_list
+            if ct in self.contain_technologies_objects_map
+        ]
+        if contain_technologies:
             rep = ProcessAgentUsesReported.objects.create(
                 submission=submission,
             )
@@ -407,9 +415,15 @@ class Command(BaseCommand):
             logger.info(f"Process agent contain technology deleted.")
             return
 
-        ProcessAgentContainTechnology.objects.create(
+        stripped_description = self._strip_description(row['ContainTechnology'])
+        if stripped_description in self.contain_technologies_objects_map:
+            logger.info(f"Process agent contain technology was already added.")
+            return
+
+        tech = ProcessAgentContainTechnology.objects.create(
             description=row['ContainTechnology']
         )
+        self.contain_technologies_objects_map[stripped_description] = tech
         logger.info(f"Process agent contain technology added.")
 
     @transaction.atomic
