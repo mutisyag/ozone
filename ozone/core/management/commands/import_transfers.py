@@ -230,17 +230,32 @@ class Command(BaseCommand):
         submission = self.submissions_letters_map.get(entry['LetterID'], None)
 
         if not transfer or not submission:
-            logger.info(
+            logger.warning(
                 f"Could not process mapping of letter {entry['LetterID']} and "
-                f"transfer {entry['ProdTransferID']}"
+                f"transfer {entry['ProdTransferID']}. Transfer or letter does "
+                f"not exist."
             )
             return
 
         # Set the submission on the transfer
         if transfer.source_party == submission.party:
+            logger.info(
+                f"Added source letter {entry['LetterID']} to transfer "
+                f"{entry['ProdTransferID']}"
+            )
             transfer.source_party_submission = submission
         elif transfer.destination_party == submission.party:
             transfer.destination_party_submission = submission
+            logger.info(
+                f"Added destination party letter {entry['LetterID']} to "
+                f"transfer {entry['ProdTransferID']}"
+            )
+        else:
+            logger.warning(
+                f"Letter party has no connection with the transfer parties "
+                f"for letter {entry['LetterID']} and transfer "
+                f"{entry['ProdTransferID']}."
+            )
 
         transfer.save()
 
