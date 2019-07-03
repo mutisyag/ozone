@@ -288,7 +288,7 @@ class ObligationAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     base_list_display = (
         "username", "first_name", "last_name", "email", "is_secretariat", "is_read_only", "party",
-        "is_active", "activated",
+        "is_active", "activated", "last_login",
     )
     superuser_list_display = (
         "login_as",
