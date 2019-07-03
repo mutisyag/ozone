@@ -7,6 +7,7 @@
       "description": "Data forms 1-6",
       "_form_type": "art7",
       "is_active": true,
+      "has_versions": true,
       "has_reporting_periods": true,
       "is_default": true,
       "sort_order": 10
@@ -20,6 +21,7 @@
       "description": "Reporting account format",
       "_form_type": "essencrit",
       "is_active": true,
+      "has_versions": true,
       "has_reporting_periods": true,
       "sort_order": 50
     }
@@ -32,6 +34,7 @@
       "description": "Data forms 7 and 8",
       "_form_type": "hat",
       "is_active": false,
+      "has_versions": true,
       "has_reporting_periods": true,
       "sort_order": 70
     }
@@ -44,6 +47,7 @@
       "description": "",
       "_form_type": "transfer",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 40
@@ -57,6 +61,7 @@
       "description": "",
       "_form_type": "other",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 80
@@ -70,6 +75,7 @@
       "description": "",
       "_form_type": "procagent",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 60
@@ -83,6 +89,7 @@
       "description": "",
       "_form_type": "other",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 30
@@ -96,6 +103,7 @@
       "description": "",
       "_form_type": "other",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 20
@@ -109,6 +117,7 @@
       "description": "",
       "_form_type": "other",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 90
@@ -122,6 +131,7 @@
       "description": "",
       "_form_type": "other",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": true,
       "sort_order": 110
@@ -135,6 +145,7 @@
       "description": "",
       "_form_type": "exemption",
       "is_active": true,
+      "has_versions": false,
       "has_reporting_periods": true,
       "other": false,
       "sort_order": 100
