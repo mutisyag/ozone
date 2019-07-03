@@ -132,6 +132,16 @@ class Obligation(models.Model):
                   "certain events (e.g. transfers)"
     )
 
+    # For some obligations, multiple submissions for the same party & period
+    # mean different versions of the same submission. For others, they mean
+    # separate submissions, which should be visible as such in the UI.
+    # This flag differentiates between the two situations.
+    has_versions = models.BooleanField(
+        default=True,
+        help_text="Indicates whether submissions for this obligation can have "
+                  "multiple versions"
+    )
+
     # The type of form used to submit data.
     # This will possibly get more complicated in the future
     # (e.g. when different forms will be necessary for the same obligation
