@@ -36,6 +36,9 @@ class DeviationType(models.Model):
 
     remark = models.CharField(max_length=512, blank=True)
 
+    def __str__(self):
+        return self.deviation_type_id
+
     class Meta:
         db_table = 'deviation_type'
 
@@ -73,6 +76,13 @@ class DeviationSource(models.Model):
     )
 
     remark = models.CharField(max_length=512, blank=True)
+
+    def __str__(self):
+        return (
+            f"Deviation source for {self.party.name} - "
+            f"{self.reporting_period.name} - {self.group}, of type "
+            f"{self.deviation_type}"
+        )
 
     class Meta:
         # TODO: should this be 'reporting_deviation_source'?
