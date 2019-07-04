@@ -111,8 +111,11 @@ class Command(BaseCommand):
             DeviationType.objects.filter(
                 deviation_type_id=create_data["deviation_type_id"]
             ).delete()
+            logger.info(f"Deleted deviation type {row['DeviationTypeID']}")
             return
+
         DeviationType.objects.create(**create_data)
+        logger.info(f"Created deviation type {row['DeviationTypeID']}")
 
     def import_sources_data(self, row, purge=False):
         try:
@@ -147,6 +150,16 @@ class Command(BaseCommand):
                 group_id=create_data["group_id"],
                 deviation_type_id=create_data["deviation_type_id"],
             ).delete()
+            logger.info(
+                f"Deleted deviation source for {row['CntryID']} - "
+                f"{row['PeriodID']} - {row['Anx'] + row['Grp']}, of type "
+                f"{row['DeviationTypeID']}"
+            )
             return
 
         DeviationSource.objects.create(**create_data)
+        logger.info(
+            f"Created deviation source for {row['CntryID']} - "
+            f"{row['PeriodID']} - {row['Anx'] + row['Grp']}, of type "
+            f"{row['DeviationTypeID']}"
+        )
