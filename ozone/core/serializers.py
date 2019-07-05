@@ -54,6 +54,8 @@ from .models import (
     Email,
     EmailTemplate,
     CriticalUseCategory,
+    DeviationType,
+    DeviationSource,
 )
 
 User = get_user_model()
@@ -1030,6 +1032,18 @@ class ProcessAgentUsesReportedSerializer(serializers.ModelSerializer):
             'makeup_quantity', 'emissions', 'units', 'contain_technologies',
             'remark'
         )
+
+
+class DeviationTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviationType
+        fields = '__all__'
+
+
+class DeviationSourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DeviationSource
+        fields = '__all__'
 
 
 class UpdateSubmissionInfoSerializer(serializers.ModelSerializer):

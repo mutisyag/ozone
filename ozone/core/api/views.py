@@ -70,6 +70,8 @@ from ..models import (
     EmailTemplate,
     CriticalUseCategory,
     FormTypes,
+    DeviationType,
+    DeviationSource,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -135,6 +137,8 @@ from ..serializers import (
     EmailSerializer,
     EmailTemplateSerializer,
     CriticalUseCategorySerializer,
+    DeviationSourceSerializer,
+    DeviationTypeSerializer,
 )
 
 
@@ -519,6 +523,52 @@ class LimitViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Limit.objects.filter(party=F('party__parent_party'))
+
+
+class DeviationTypeViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = DeviationTypeSerializer
+    # We are only allowing Secretariat users to view deviation types.
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariat,
+    )
+    queryset = DeviationType.objects.all()
+
+
+class DeviationSourcePaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class DeviationSourceFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    group = filters.NumberFilter(
+        "group", help_text="Filter by Annex Group ID"
+    )
+
+
+class DeviationSourceViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = DeviationSource.objects.all()
+    serializer_class = DeviationSourceSerializer
+
+    filter_backends = (
+        IsOwnerFilterBackend,
+        OrderingFilter,  # only for default ordering, see SubmissionViewFilterSet
+        filters.DjangoFilterBackend,
+        SearchFilter,
+    )
+    filterset_class = DeviationSourceFilterSet
+
+    ordering_fields = (
+        "-reporting_period__start_date", "party__name", "group__group_id"
+    )
+    pagination_class = DeviationSourcePaginator
+
+    def get_queryset(self):
+        return DeviationSource.objects.all()
 
 
 class SubmissionPaginator(PageNumberPagination):
