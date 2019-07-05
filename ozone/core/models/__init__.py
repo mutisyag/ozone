@@ -13,3 +13,4 @@ from .file import *
 from .aggregation import *
 from .report import *
 from .email import *
+from .deviation import *

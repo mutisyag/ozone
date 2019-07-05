@@ -54,6 +54,8 @@ from .models import (
     ProcessAgentApplicationValidity,
     ProcessAgentEmissionLimitValidity,
     Decision,
+    DeviationType,
+    DeviationSource,
 )
 
 
@@ -620,6 +622,29 @@ class DecisionAdmin(admin.ModelAdmin):
     search_fields = ('decision_id', 'name')
     list_filter = (
         ('meeting__description', custom_title_dropdown_filter('Meeting')),
+    )
+
+
+@admin.register(DeviationType)
+class DeviationTypeAdmin(admin.ModelAdmin):
+    list_display = ('deviation_type_id', 'description', 'deviation_pc')
+    search_fields =  ('deviation_type_id', 'deviation_pc')
+
+
+@admin.register(DeviationSource)
+class DeviationSourceAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'reporting_period', 'group', 'deviation_type',
+        'production', 'consumption'
+    )
+    search_fields = (
+        'reporting_period__name', 'party__name',
+        'deviation_type__deviation_type_id'
+    )
+    list_filter = (
+        ('party', MainPartyFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        'group'
     )
 
 

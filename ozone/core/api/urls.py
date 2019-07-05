@@ -45,6 +45,9 @@ router.register(
     r"pa-contain-technologies", views.ProcessAgentContainTechnologyViewSet
 )
 
+router.register(r"deviation-types", views.DeviationTypeViewSet)
+router.register(r"deviation-sources", views.DeviationSourceViewSet)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
