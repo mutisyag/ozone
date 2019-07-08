@@ -1,16 +1,9 @@
 const logMessage = (browser, message, header = false) => {
+  let delimiter = header ? '===============' : '---------------'
   browser.perform((done) => {
-    if (header) {
-      console.log('===============')
-    } else {
-      console.log('---------------')
-    }
+    console.log(delimiter)
     console.log(message)
-    if (header) {
-      console.log('===============')
-    } else {
-      console.log('---------------')
-    }
+    console.log(delimiter)
     done()
   })
 }
