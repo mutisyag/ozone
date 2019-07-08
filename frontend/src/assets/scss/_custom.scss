@@ -1792,10 +1792,16 @@ body.aside-menu-off-canvas .aside-menu {
 
 @media(max-width: 1400px) {
   .form-sections {
-
     .table-wrapper {
       width: 100%;
       overflow-x: auto;
     }
+  }
+}
+
+
+@media(max-width: 1250px) {
+  input {
+    min-width: 80px;
   }
 }

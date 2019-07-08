@@ -177,7 +177,7 @@
             </b-row>
           </template>
           <b-container fluid>
-            <div class="mt-2 mb-2 dashboard-filters">
+            <div class="mt-2 mb-2 dashboard-filters all-submissions">
               <b-input-group :prepend="$gettext('Search')">
                 <b-form-input id="submission_search_filter" v-model="tableOptions.filters.search"/>
               </b-input-group>
@@ -701,6 +701,23 @@ export default {
 
 <style lang="scss">
 .dashboard-page {
+  .dashboard-filters.all-submissions {
+    flex-wrap: wrap;
+    button {
+      width: calc(10% - 5px);
+    }
+    .input-group {
+      width: calc(30% - 5px);
+      &:nth-child(1) {
+        width: calc(35% - 5px);
+        margin-bottom: 5px;
+      }
+      &:nth-child(2) {
+        width: calc(65% - 5px);
+        margin-bottom: 5px;
+      }
+    }
+  }
   .fade-enter-active,
   .fade-leave-active {
     transition: opacity 0.5s;
