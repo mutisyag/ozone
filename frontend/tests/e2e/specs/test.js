@@ -7,6 +7,7 @@
 const util = require('util')
 const execSync = util.promisify(require('child_process').execSync)
 const {
+  logMessage,
   showMouse,
   login,
   logout,
@@ -46,18 +47,20 @@ module.exports = {
     console.log('done running cleanup')
   },
   BU_001: browser => {
+    logMessage(browser, 'Testing the login / logout functionality', true)
     login(browser, 'p_ro', 'p_ro')
     logout(browser)
     browser.end()
   },
-  // BU_002: browser => {
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2017', '')
-  //   deleteSubmissionFake(browser)
-  //   deleteSubmission(browser)
-  //   logout(browser)
-  //   browser.end()
-  // },
+  BU_002: browser => {
+    logMessage(browser, 'Testing the creation / deletion of Article 7 submission', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2017', '')
+    deleteSubmissionFake(browser)
+    deleteSubmission(browser)
+    logout(browser)
+    browser.end()
+  },
   BU_003: browser => {
     const data = {
       submissionInfo: {
@@ -73,6 +76,7 @@ module.exports = {
 
     const autocomplet = false
 
+    logMessage(browser, 'Testing the edit of Article 7', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     openDashboard(browser)
@@ -85,6 +89,7 @@ module.exports = {
     browser.end()
   },
   BU_004: browser => {
+    
     const submissionInfo = {
       reporting_officer: 'test name',
       designation: 'test designation',
@@ -95,6 +100,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Submission Information', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     clickQuestionnaireRadios(browser)
@@ -119,6 +125,7 @@ module.exports = {
       reporting_officer: 'test name'
     }
 
+    logMessage(browser, 'Testing the edit of Questionnaire', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     saveAndFail(browser, data.submissionInfo)
@@ -148,6 +155,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Imports tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -180,6 +188,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Exports tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -214,6 +223,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Production tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -244,6 +254,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Destruction tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -278,6 +289,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Non-Party tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -310,6 +322,7 @@ module.exports = {
       email: 'john.doe@gmail.com'
     }
 
+    logMessage(browser, 'Testing the edit of Emissions tab', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)
@@ -331,6 +344,8 @@ module.exports = {
       phone: '+490000000',
       email: 'john.doe@gmail.com'
     }
+
+    logMessage(browser, 'Testing attachments functionality', true)
     login(browser, 'p_ro', 'p_ro')
     createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
     fillSubmissionInfo(browser, submissionInfo)

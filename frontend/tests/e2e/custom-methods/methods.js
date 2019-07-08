@@ -1,8 +1,9 @@
-const logMessage = (browser, message) => {
+const logMessage = (browser, message, header = false) => {
+  let delimiter = header ? '===============' : '---------------'
   browser.perform((done) => {
-    console.log('==================================================================')
+    console.log(delimiter)
     console.log(message)
-    console.log('==================================================================')
+    console.log(delimiter)
     done()
   })
 }
@@ -64,16 +65,16 @@ const login = (browser, username, password, mouse = false) => {
 }
 
 const logout = (browser) => {
-  logMessage(browser, 'Log out')
+  logMessage(browser, 'Log out', false)
   browser.useCss()
     .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
     .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
-    .pause(200)
+    .pause(500)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
     .pause(500)
     .waitForElementVisible('#logout_button', 5000)
     .moveToElement('#logout_button', undefined, undefined)
-    .pause(200)
+    .pause(500)
     .click('#logout_button')
     .pause(500)
     .waitForElementVisible('#id_username', 5000)
@@ -343,9 +344,10 @@ const openDashboard = (browser) => {
 }
 
 const openGeneralInstructions = (browser) => {
+  logMessage(browser, 'Opening General Instructions')
   browser.useXpath()
-    .waitForElementVisible("//button[contains(@class, 'btn-outline-info')]", 10000)
-    .click("//button[contains(@class, 'btn-outline-info')]")
+    .waitForElementVisible("//button/i[contains(@class, 'fa-info')]", 10000)
+    .click("//button/i[contains(@class, 'fa-info')]")
     .pause(500)
     .execute('window.scrollTo(0,0)')
     .pause(500)
@@ -733,20 +735,20 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
       .pause(500)
 
     browser
-      .waitForElementVisible(`#${tab} .modal-body`, 5000)
+      .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 5000)
       .pause(500)
     /* Add values in modal */
     for (const field_id of Object.keys(modal_values)) {
       browser
-        .click(`#${tab} .modal-body #${field_id}`)
+        .click(`#${tab} #edit_modal .modal-body #${field_id}`)
         .pause(200)
-        .clearValue(`#${tab} .modal-body #${field_id}`)
-        .setValue(`#${tab} .modal-body #${field_id}`, modal_values[field_id])
+        .clearValue(`#${tab} #edit_modal .modal-body #${field_id}`)
+        .setValue(`#${tab} #edit_modal .modal-body #${field_id}`, modal_values[field_id])
     }
     /* Close modal */
     browser
       .pause(500)
-      .click(`#${tab} .modal-dialog button span[data-msgid="Close"]`)
+      .click(`#${tab} #edit_modal .modal-dialog button span[data-msgid="Close"]`)
       .pause(500)
   }
   /* Show app-footer */
@@ -796,19 +798,19 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
   })
   browser
-    .waitForElementVisible(`#${tab} .modal-body`, 5000)
+    .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 5000)
     .pause(500)
   /* Check if modal inputs are empty */
   for (const field_id of Object.keys(modal_values)) {
     browser
-      .getValue(`#${tab} .modal-body #${field_id}`, (data) => {
+      .getValue(`#${tab} #edit_modal .modal-body #${field_id}`, (data) => {
         browser.assert.equal(data.value, '')
       })
   }
   /* Close modal */
   browser
     .pause(500)
-    .click(`#${tab} .modal-dialog .close`)
+    .click(`#${tab} #edit_modal .modal-dialog .close`)
     .pause(500)
     .execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
     /* Show app-footer */
@@ -836,6 +838,7 @@ const uploadeFile = (browser, filename, filepath) => {
 }
 
 module.exports = {
+  logMessage,
   showMouse,
   login,
   logout,
