@@ -181,6 +181,9 @@ export default {
     selectedForDelete() {
       return this.tab_info.form_fields.filter(field => field.checkForDelete.selected).map(field => this.tab_info.form_fields.indexOf(field))
     },
+    validationLength() {
+      return this.$store.getters.getValidationForCurrentTab(this.tabName).filter(field => field.validation.length).length
+    },
     tableItems() {
       const tableFields = []
       this.tab_info.form_fields.forEach(form_field => {
