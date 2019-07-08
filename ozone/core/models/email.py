@@ -13,13 +13,15 @@ __all__ = [
 
 
 class Email(models.Model):
+    date = models.DateTimeField(auto_now_add=True, editable=False)
     subject = models.CharField(max_length=255, blank=True, null=True)
     from_email = models.CharField(max_length=255)
     to = ArrayField(models.CharField(max_length=255))
     cc = ArrayField(models.CharField(max_length=255, blank=True), null=True)
     body = models.TextField(blank=True, null=True)
     submission = models.ForeignKey(
-        Submission, related_name='emails', on_delete=models.PROTECT
+        Submission, related_name='emails',
+        null=True, on_delete=models.SET_NULL,
     )
 
     def send_email(self):
@@ -31,6 +33,9 @@ class Email(models.Model):
             cc=self.cc
         )
         email.send()
+
+    def __str__(self):
+        return f"Email for {self.submission}"
 
 
 class EmailTemplate(models.Model):

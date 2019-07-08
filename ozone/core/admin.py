@@ -46,6 +46,7 @@ from .models import (
     CriticalUseCategory,
     FormTypes,
     Transfer,
+    Email,
     EmailTemplate,
     ProcessAgentApplication,
     ProcessAgentContainTechnology,
@@ -216,7 +217,7 @@ class PartyHistoryAdmin(admin.ModelAdmin):
     list_display = ('party', 'reporting_period', 'party_type')
     list_filter = (
         'party_type',
-        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
         ('party', MainPartyFilter),
     )
     search_fields = ["party__name"]
@@ -378,7 +379,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     )
     list_filter = (
         'obligation',
-        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
         ('party', MainPartyFilter),
         '_current_state',
         'flag_provisional', 'flag_valid', 'flag_superseded',
@@ -424,7 +425,7 @@ class SubmissionInfoAdmin(admin.ModelAdmin):
     list_filter = (
         'submission_format',
         'submission__obligation',
-        ('submission__reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('submission__reporting_period__name', custom_title_dropdown_filter('period')),
         ('submission__party', MainPartyFilter)
     )
     search_fields = ('submission__party__name',)
@@ -473,7 +474,7 @@ class LimitAdmin(admin.ModelAdmin):
     )
     list_filter = (
         'group', 'limit_type',
-        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
         ('party', MainPartyFilter)
     )
     search_fields = ['party__name', 'party__abbr']
@@ -500,8 +501,8 @@ class TransferAdmin(admin.ModelAdmin):
     list_filter = (
         ('source_party', MainPartyFilter),
         ('destination_party', MainPartyFilter),
-        ('reporting_period__name', custom_title_dropdown_filter('Period')),
-        ('substance__name', custom_title_dropdown_filter('Substance')),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
+        ('substance__name', custom_title_dropdown_filter('substance')),
     )
     search_fields = (
         'source_party__name', 'destination_party__name', 'substance__name'
@@ -529,6 +530,15 @@ class TransferAdmin(admin.ModelAdmin):
         return form
 
 
+@admin.register(Email)
+class EmailAdmin(admin.ModelAdmin):
+    list_display = ('date', 'subject', 'to', 'submission')
+    list_filter = (
+        ('submission__reporting_period__name', custom_title_dropdown_filter('period')),
+        ('submission__party', MainPartyFilter),
+    )
+
+
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ('name', 'subject', )
@@ -539,12 +549,12 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 class ProcessAgentApplicationAdmin(admin.ModelAdmin):
     list_display = ('validity', 'counter', 'substance', 'application')
     list_filter = (
-        ('substance__name', custom_title_dropdown_filter('Substance')),
+        ('substance__name', custom_title_dropdown_filter('substance')),
         (
             'validity__decision__decision_id',
-            custom_title_dropdown_filter('Decision')
+            custom_title_dropdown_filter('decision')
         ),
-        ('counter', custom_title_dropdown_filter('Counter'))
+        ('counter', custom_title_dropdown_filter('counter'))
     )
     search_fields = ('validity', 'substance__name')
 
@@ -561,7 +571,7 @@ class ProcessAgentEmissionLimitAdmin(admin.ModelAdmin):
 class ProcessAgentBaseAdmin:
     def get_reporting_period(self, obj):
         return obj.submission.reporting_period
-    get_reporting_period.short_description = 'Reporting Period'
+    get_reporting_period.short_description = 'Reporting period'
 
     def get_party(self, obj):
         return obj.submission.party
@@ -595,7 +605,7 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
     list_filter = (
         (
             'submission__reporting_period__name',
-            custom_title_dropdown_filter('Period')
+            custom_title_dropdown_filter('period')
         ),
         ('submission__party', MainPartyFilter)
     )
@@ -621,7 +631,7 @@ class DecisionAdmin(admin.ModelAdmin):
     list_display = ('decision_id', 'name', 'meeting')
     search_fields = ('decision_id', 'name')
     list_filter = (
-        ('meeting__description', custom_title_dropdown_filter('Meeting')),
+        ('meeting__description', custom_title_dropdown_filter('meeting')),
     )
 
 

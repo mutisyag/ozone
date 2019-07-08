@@ -60,7 +60,7 @@ class MDGRegion(models.Model):
     class Meta:
         ordering = ('name',)
         db_table = 'mdg_region'
-        verbose_name = 'MDG Region'
+        verbose_name = 'MDG region'
 
 
 class PartyType(models.Model):

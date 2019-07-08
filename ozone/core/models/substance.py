@@ -54,14 +54,14 @@ class Group(models.Model):
     name_alt = models.CharField(
         max_length=64,
         blank=True, null=True,
-        verbose_name=_("Alternate name"),
+        verbose_name=_("alternate name"),
     )
 
     description = models.CharField(max_length=256)
     description_alt = models.CharField(
         max_length=1024,
         blank=True, null=True,
-        verbose_name=_("Alternate description"),
+        verbose_name=_("alternate description"),
     )
 
     control_treaty = models.ForeignKey(

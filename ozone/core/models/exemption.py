@@ -111,7 +111,7 @@ class CriticalUseCategory(models.Model):
     class Meta:
         ordering = ('name',)
         db_table = 'critical_use_category'
-        verbose_name_plural = 'Critical use categories'
+        verbose_name_plural = 'critical use categories'
 
 
 class ApprovedCriticalUse(models.Model):

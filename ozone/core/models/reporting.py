@@ -401,92 +401,92 @@ class Submission(models.Model):
     # Flags
     flag_provisional = models.BooleanField(
         default=False,
-        verbose_name='Provisional',
+        verbose_name='provisional',
         help_text="If set to true it signals that future changes are foreseen."
     )
     flag_valid = models.NullBooleanField(
         default=None,
-        verbose_name='Valid',
+        verbose_name='valid',
         help_text="If set to true it signals that the data in the current "
         "version is considered correct. Can be set by the Secretariat during "
         "Processing or at the transition between the Processing or Finalized states."
     )
     flag_superseded = models.BooleanField(
         default=False,
-        verbose_name='Superseded',
+        verbose_name='superseded',
         help_text="If set to true it means that the current version is not "
         "relevant anymore. When a newer version of data is Submitted, "
         "the current one is automatically flagged as Superseded."
     )
     flag_checked_blanks = models.BooleanField(
         default=True,
-        verbose_name='Checked blanks',
+        verbose_name='checked blanks',
     )
     flag_has_blanks = models.BooleanField(
         default=False,
-        verbose_name='Has blanks',
+        verbose_name='has blanks',
     )
     flag_confirmed_blanks = models.BooleanField(
         default=False,
-        verbose_name='Confirmed blanks',
+        verbose_name='confirmed blanks',
     )
     flag_has_reported_a1 = models.BooleanField(
         default=False,
-        verbose_name='Has reported A/I',
+        verbose_name='has reported A/I',
         help_text="If set to true it means that substances under "
                   "Annex A Group 1 were reported."
     )
     flag_has_reported_a2 = models.BooleanField(
         default=False,
-        verbose_name='Has reported A/II',
+        verbose_name='has reported A/II',
         help_text="If set to true it means that substances under "
                   "Annex A Group 2 were reported."
     )
     flag_has_reported_b1 = models.BooleanField(
         default=False,
-        verbose_name='Has reported B/I',
+        verbose_name='has reported B/I',
         help_text="If set to true it means that substances under "
                   "Annex B Group 1 were reported."
     )
     flag_has_reported_b2 = models.BooleanField(
         default=False,
-        verbose_name='Has reported B/II',
+        verbose_name='has reported B/II',
         help_text="If set to true it means that substances under "
                   "Annex B Group 2 were reported."
     )
     flag_has_reported_b3 = models.BooleanField(
         default=False,
-        verbose_name='Has reported B/III',
+        verbose_name='has reported B/III',
         help_text="If set to true it means that substances under "
                   "Annex B Group 3 were reported."
     )
     flag_has_reported_c1 = models.BooleanField(
         default=False,
-        verbose_name='Has reported C/I',
+        verbose_name='has reported C/I',
         help_text="If set to true it means that substances under "
                   "Annex C Group 1 were reported."
     )
     flag_has_reported_c2 = models.BooleanField(
         default=False,
-        verbose_name='Has reported C/II',
+        verbose_name='has reported C/II',
         help_text="If set to true it means that substances under "
                   "Annex C Group 2 were reported."
     )
     flag_has_reported_c3 = models.BooleanField(
         default=False,
-        verbose_name='Has reported C/III',
+        verbose_name='has reported C/III',
         help_text="If set to true it means that substances under "
                   "Annex C Group 3 were reported."
     )
     flag_has_reported_e = models.BooleanField(
         default=False,
-        verbose_name='Has reported E/I',
+        verbose_name='has reported E/I',
         help_text="If set to true it means that substances under "
                   "Annex E were reported."
     )
     flag_has_reported_f = models.BooleanField(
         default=False,
-        verbose_name='Has reported F',
+        verbose_name='has reported F',
         help_text="If set to true it means that substances under "
                   "Annex F were reported."
     )
