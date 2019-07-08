@@ -1791,8 +1791,11 @@ body.aside-menu-off-canvas .aside-menu {
 
 
 @media(max-width: 1400px) {
-  .table-wrapper {
-    width: 100%;
-    overflow-x: auto;
+  .form-sections {
+
+    .table-wrapper {
+      width: 100%;
+      overflow-x: auto;
+    }
   }
 }
