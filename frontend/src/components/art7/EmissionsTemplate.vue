@@ -117,7 +117,7 @@
       </div>
     </div>
 
-    <AppAside fixed>
+    <AppAside v-if="$store.getters.can_edit_data || validationLength" fixed>
       <DefaultAside
         v-on:fillSearch="table.tableFilters = true; table.filters.search = $event.facility"
         :parentTabIndex.sync="sidebarTabIndex"
