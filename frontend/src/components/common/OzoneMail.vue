@@ -132,23 +132,31 @@ export default {
     },
 
     async sendMail() {
-      const currentMail = this.mail
-      currentMail.from_email = this.sender
-      await sendEmail(this.$store.state.current_submission.id, currentMail)
-      this.$store.dispatch('setAlert', {
-        $gettext: this.$gettext,
-        message: { __all__: [this.$gettext('Mail sent')] },
-        variant: 'success'
-      })
-      this.mail = {
-        to: null,
-        cc: [],
-        subject: null,
-        body: null
+      if (this.mail.to !== null && this.mail.to.length > 0) {
+        const currentMail = this.mail
+        currentMail.from_email = this.sender
+        await sendEmail(this.$store.state.current_submission.id, currentMail)
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { __all__: [this.$gettext('Mail sent')] },
+          variant: 'success'
+        })
+        this.mail = {
+          to: null,
+          cc: [],
+          subject: null,
+          body: null
+        }
+        this.getMail().then(() => {
+          this.tabIndex = 1
+        })
+      } else {
+        this.$store.dispatch('setAlert', {
+          $gettext: this.$gettext,
+          message: { __all__: [this.$gettext('You must specify a recipient')] },
+          variant: 'danger'
+        })
       }
-      this.getMail().then(() => {
-        this.tabIndex = 1
-      })
     }
   }
 }
