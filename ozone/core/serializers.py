@@ -337,6 +337,12 @@ class SubstanceSerializer(serializers.ModelSerializer):
 
 
 class GroupSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+
+class GroupSubstanceSerializer(serializers.ModelSerializer):
     substances = SubstanceSerializer(
         many=True, read_only=True
     )

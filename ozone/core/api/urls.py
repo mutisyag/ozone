@@ -281,7 +281,8 @@ nested_routers = [
 ]
 
 # Groups
-router.register(r"group-substances", views.GroupViewSet)
+router.register(r"groups", views.GroupViewSet)
+router.register(r"group-substances", views.GroupSubstanceViewSet)
 
 # Blends
 router.register(r"blends", views.BlendViewSet, base_name="blends")

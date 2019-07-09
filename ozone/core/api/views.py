@@ -119,6 +119,7 @@ from ..serializers import (
     ProcessAgentContainTechnologySerializer,
     DataOtherSerializer,
     GroupSerializer,
+    GroupSubstanceSerializer,
     SubstanceSerializer,
     BlendSerializer,
     CreateBlendSerializer,
@@ -273,7 +274,7 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all().prefetch_related(
         'subregion', 'subregion__region'
-    )
+    ).order_by('id')
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
@@ -372,17 +373,23 @@ class ObligationViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class GroupViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
+    queryset = Group.objects.all()
+    serializer_class = GroupSerializer
+    permission_classes = (IsAuthenticated,)
+
+
+class GroupSubstanceViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     """
     list:
     Get the list of substances grouped by their Group.
     """
 
     queryset = Group.objects.all()
-    serializer_class = GroupSerializer
+    serializer_class = GroupSubstanceSerializer
     permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):
-        serializer = GroupSerializer(
+        serializer = GroupSubstanceSerializer(
             self.filter_queryset(self.get_queryset()),
             many=True,
             context={"request": request},
