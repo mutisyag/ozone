@@ -48,6 +48,9 @@ router.register(
 router.register(r"deviation-types", views.DeviationTypeViewSet)
 router.register(r"deviation-sources", views.DeviationSourceViewSet)
 
+router.register(r"plans-of-action-decisions", views.PlanOfActionDecisionViewSet)
+router.register(r"plans-of-action", views.PlanOfActionViewSet)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)

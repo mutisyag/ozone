@@ -56,6 +56,8 @@ from .models import (
     CriticalUseCategory,
     DeviationType,
     DeviationSource,
+    PlanOfActionDecision,
+    PlanOfAction,
 )
 
 User = get_user_model()
@@ -1043,6 +1045,18 @@ class DeviationTypeSerializer(serializers.ModelSerializer):
 class DeviationSourceSerializer(serializers.ModelSerializer):
     class Meta:
         model = DeviationSource
+        fields = '__all__'
+
+
+class PlanOfActionDecisionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanOfActionDecision
+        fields = '__all__'
+
+
+class PlanOfActionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlanOfAction
         fields = '__all__'
 
 
