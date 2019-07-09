@@ -616,7 +616,7 @@ class PlanOfActionViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = PlanOfActionSerializer
     permission_classes = (
         IsAuthenticated,
-        IsSecretariat,
+        IsSecretariatOrSameParty,
     )
 
     filter_backends = (
