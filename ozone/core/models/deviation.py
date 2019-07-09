@@ -29,7 +29,6 @@ class DeviationType(models.Model):
 
     description = models.CharField(max_length=256, blank=True)
 
-    # TODO: Identify what this field really means :)
     deviation_pc = models.CharField(
         max_length=16, choices=((p.value, p.name) for p in DeviationPCTypes)
     )

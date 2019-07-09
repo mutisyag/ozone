@@ -72,6 +72,8 @@ from ..models import (
     FormTypes,
     DeviationType,
     DeviationSource,
+    PlanOfActionDecision,
+    PlanOfAction,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -88,6 +90,7 @@ from ..permissions import (
     IsSecretariatOrSamePartyLimit,
     IsSecretariatOrSamePartySubmissionRelatedRO,
     IsSecretariat,
+    IsSecretariatOrSameParty,
 )
 from ..serializers import (
     CurrentUserSerializer,
@@ -139,6 +142,8 @@ from ..serializers import (
     CriticalUseCategorySerializer,
     DeviationSourceSerializer,
     DeviationTypeSerializer,
+    PlanOfActionDecisionSerializer,
+    PlanOfActionSerializer
 )
 
 
@@ -553,10 +558,14 @@ class DeviationSourceFilterSet(filters.FilterSet):
 class DeviationSourceViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = DeviationSource.objects.all()
     serializer_class = DeviationSourceSerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariat,
+    )
 
     filter_backends = (
         IsOwnerFilterBackend,
-        OrderingFilter,  # only for default ordering, see SubmissionViewFilterSet
+        OrderingFilter,
         filters.DjangoFilterBackend,
         SearchFilter,
     )
@@ -569,6 +578,62 @@ class DeviationSourceViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return DeviationSource.objects.all()
+
+
+class PlanOfActionDecisionViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PlanOfActionDecisionSerializer
+    # We are only allowing Secretariat users to view plans of action decisions.
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariat,
+    )
+    queryset = PlanOfActionDecision.objects.all()
+
+
+class PlanOfActionPaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class PlanOfActionFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    group = filters.NumberFilter(
+        "group", help_text="Filter by Annex Group ID"
+    )
+    is_valid = filters.BooleanFilter(
+        "is_valid", help_text="Filter by is_valid field"
+    )
+    combined_id = filters.BooleanFilter(
+        "combined_id", help_text="Filter by combined_id field"
+    )
+
+
+class PlanOfActionViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = PlanOfAction.objects.all()
+    serializer_class = PlanOfActionSerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariat,
+    )
+
+    filter_backends = (
+        IsOwnerFilterBackend,
+        OrderingFilter,
+        filters.DjangoFilterBackend,
+        SearchFilter,
+    )
+    filterset_class = PlanOfActionFilterSet
+
+    ordering_fields = (
+        "-reporting_period__start_date", "party__name", "group__group_id"
+    )
+    pagination_class = PlanOfActionPaginator
+
+    def get_queryset(self):
+        return PlanOfAction.objects.all()
 
 
 class SubmissionPaginator(PageNumberPagination):

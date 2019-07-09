@@ -14,3 +14,4 @@ from .aggregation import *
 from .report import *
 from .email import *
 from .deviation import *
+from .plans_of_action import *
