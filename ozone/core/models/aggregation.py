@@ -331,6 +331,13 @@ class BaseProdCons(models.Model):
         abstract = True
 
 
+class ProdConsManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'reporting_period', 'group'
+        )
+
+
 class ProdCons(BaseProdCons):
     """
     Concrete model for ODP-based aggregations.
@@ -346,6 +353,8 @@ class ProdCons(BaseProdCons):
         'calculated_production',
         'calculated_consumption',
     ]
+
+    objects = ProdConsManager()
 
     group = models.ForeignKey(
         Group,
@@ -444,6 +453,14 @@ class ProdCons(BaseProdCons):
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
         unique_together = ("party", "reporting_period", "group")
+        verbose_name_plural = 'Production consumptions'
+
+
+class ProdConsMTManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'reporting_period', 'substance'
+        )
 
 
 class ProdConsMT(BaseProdCons):
@@ -455,6 +472,8 @@ class ProdConsMT(BaseProdCons):
         'calculated_production',
         'calculated_consumption',
     ]
+
+    objects = ProdConsMTManager()
 
     substance = models.ForeignKey(
         Substance,
@@ -479,3 +498,4 @@ class ProdConsMT(BaseProdCons):
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons_mt"
         unique_together = ("party", "reporting_period", "substance")
+        verbose_name_plural = 'Production consumptions metric tonnes'

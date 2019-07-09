@@ -59,6 +59,8 @@ from .models import (
     DeviationSource,
     PlanOfActionDecision,
     PlanOfAction,
+    ProdCons,
+    ProdConsMT,
 )
 
 
@@ -640,7 +642,7 @@ class DecisionAdmin(admin.ModelAdmin):
 @admin.register(DeviationType)
 class DeviationTypeAdmin(admin.ModelAdmin):
     list_display = ('deviation_type_id', 'description', 'deviation_pc')
-    search_fields =  ('deviation_type_id', 'deviation_pc')
+    search_fields = ('deviation_type_id', 'deviation_pc')
 
 
 @admin.register(DeviationSource)
@@ -674,6 +676,38 @@ class PlanOfActionAdmin(admin.ModelAdmin):
     )
     search_fields =  (
         'reporting_period__name', 'party__name', 'group__group_id',
+    )
+
+
+@admin.register(ProdCons)
+class ProdConsAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'reporting_period', 'group',
+        'calculated_production', 'calculated_consumption',
+        'baseline_prod', 'baseline_cons', 'limit_prod', 'limit_cons'
+    )
+    list_filter = (
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter),
+        'group'
+    )
+
+
+@admin.register(ProdConsMT)
+class ProdConsMTAdmin(admin.ModelAdmin):
+    def get_group(self, obj):
+        return obj.substance.group
+    get_group.short_description = 'Group'
+
+    list_display = (
+        'party', 'reporting_period', 'get_group', 'substance',
+        'calculated_production', 'calculated_consumption'
+    )
+    list_filter = (
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter),
+        ('substance__name', custom_title_dropdown_filter('substance')),
+        'substance__group'
     )
 
 
