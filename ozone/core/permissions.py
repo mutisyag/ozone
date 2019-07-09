@@ -20,6 +20,33 @@ class IsSecretariat(BasePermission):
         return request.user.is_secretariat
 
 
+class IsSecretariatOrSameParty(BasePermission):
+    """
+    Check if user is secretariat or has the same party as that on the object.
+    """
+    def has_permission(self, request, view):
+        # We leave it to has_object_permission to check everything.
+        return True
+
+    def has_object_permission(self, request, view, obj):
+        if request.user.is_secretariat:
+            return True
+        else:
+            return request.user.party == obj.party
+
+
+class IsSecretariatOrSafeMethod(BasePermission):
+    """
+    Check if user is secretariat or safe method.
+    """
+
+    def has_permission(self, request, view):
+        if request.method in SAFE_METHODS:
+            return True
+
+        return request.user.is_secretariat
+
+
 class IsSecretariatOrSamePartySubmission(BasePermission):
     """
     This is used for evaluating permissions on Submission views.
@@ -247,42 +274,6 @@ class IsSecretariatOrSamePartyUser(BasePermission):
         # It means that we only want the current logged in user;
         # get_queryset will take care of this.
         return True
-
-
-class IsSecretariatOrSafeMethod(BasePermission):
-    """
-    Check if user is secretariat or safe method.
-    """
-
-    def has_permission(self, request, view):
-        if request.method in SAFE_METHODS:
-            return True
-
-        return request.user.is_secretariat
-
-
-class IsSecretariat(BasePermission):
-    """
-    Check if user is secretariat.
-    """
-
-    def has_permission(self, request, view):
-        return request.user.is_secretariat
-
-
-class IsSecretariatOrSameParty(BasePermission):
-    """
-    Check if user is secretariat or has the same party as that on the object.
-    """
-    def has_permission(self, request, view):
-        # We leave it to has_object_permission to check everything.
-        return True
-
-    def has_object_permission(self, request, view, obj):
-        if request.user.is_secretariat:
-            return True
-        else:
-            return request.user.party == obj.party
 
 
 class IsSecretariatOrSamePartyAggregation(BasePermission):
