@@ -452,6 +452,13 @@ class AggregationViewFilterSet(filters.FilterSet):
     group = filters.NumberFilter(
         "group", help_text="Filter by Annex Group ID"
     )
+    ordering = filters.OrderingFilter(
+        fields=(
+            ('reporting_period__start_date', 'reporting_period'),
+            ('party__name', 'party'),
+            ('group__group_id', 'group'),
+        )
+    )
 
 
 class AggregationViewSet(viewsets.ModelViewSet):
@@ -472,7 +479,6 @@ class AggregationViewSet(viewsets.ModelViewSet):
     search_fields = (
         "party__name", "reporting_period__name"
     )
-    ordering_fields = ("reporting_period", "party", "group")
     ordering = ("-reporting_period__start_date", "party", "group")
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartyAggregation,
