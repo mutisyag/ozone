@@ -27,6 +27,7 @@ class PlanOfActionDecision(models.Model):
 
     class Meta:
         db_table = 'plan_of_action_decision'
+        ordering = ('-year_adopted', 'party__name')
 
 
 class PlanOfAction(models.Model):
@@ -52,7 +53,7 @@ class PlanOfAction(models.Model):
     )
 
     annex_group_description = models.CharField(
-        models.CharField, max_length=256, blank=True
+        max_length=256, blank=True, verbose_name=_('annex group description')
     )
 
     combined_id = models.BooleanField(default=False)
@@ -84,5 +85,6 @@ class PlanOfAction(models.Model):
 
     class Meta:
         db_table = 'plan_of_action'
-        verbose_name_plural = 'plans_of_action'
+        verbose_name_plural = 'plans of action'
         unique_together = ('party', 'reporting_period', 'group',)
+        ordering = ('party__name', '-reporting_period', 'group',)
