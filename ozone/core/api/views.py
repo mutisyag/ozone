@@ -274,7 +274,7 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Party.objects.all().prefetch_related(
         'subregion', 'subregion__region'
-    ).order_by('id')
+    ).order_by('name')
     serializer_class = PartySerializer
     permission_classes = (IsAuthenticated,)
 
@@ -862,8 +862,9 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
-        filename = f'art7raw_{pk}_{timestamp}.pdf'
-        buf_pdf = export_submissions([submission])
+        obligation = submission.obligation._form_type
+        filename = f'{obligation}_{pk}_{timestamp}.pdf'
+        buf_pdf = export_submissions(submission.obligation, [submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
         resp['Content-Disposition'] = f'attachment; filename="{filename}"'
         resp['Access-Control-Expose-Headers'] = 'Content-Disposition'
@@ -1834,7 +1835,7 @@ class ReportsViewSet(viewsets.ViewSet):
         art7 = Obligation.objects.get(_form_type=FormTypes.ART7.value)
         return self._response_pdf(
             f'art7raw_{params}',
-            export_submissions(self.get_submissions(art7, periods, parties))
+            export_submissions(art7, self.get_submissions(art7, periods, parties))
         )
 
     @action(detail=False, methods=["get"])
@@ -1848,6 +1849,20 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'prodcons_{params}',
             export_prodcons(submission=None, periods=periods, parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def raf(self, request):
+        parties = self._get_parties(request)
+        periods = self._get_periods(request)
+        params = "%s_%s" % (
+            "_".join(p.abbr for p in parties),
+            "_".join(p.name for p in periods),
+        )
+        raf = Obligation.objects.get(_form_type=FormTypes.ESSENCRIT.value)
+        return self._response_pdf(
+            f'raf_{params}',
+            export_submissions(raf, self.get_submissions(raf, periods, parties))
         )
 
 

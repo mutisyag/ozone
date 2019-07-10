@@ -88,7 +88,7 @@ class ModifyPreventionMixin:
 @enum.unique
 class FormTypes(enum.Enum):
     ART7 = 'art7'
-    ESSENCRIT = 'essencrit'
+    ESSENCRIT = 'essencrit'  # TODO: rename this to RAF
     HAT = 'hat'
     OTHER = 'other'
     EXEMPTION = 'exemption'

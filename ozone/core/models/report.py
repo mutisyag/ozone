@@ -14,6 +14,7 @@ class Reports(enum.Enum):
 
     ART7_RAW = 'art7_raw'
     PRODCONS = 'prodcons'
+    RAF = 'raf'
 
     @staticmethod
     def args(has_party_param=False, has_period_param=False):
@@ -40,6 +41,18 @@ class Reports(enum.Enum):
             **Reports.args(has_party_param=True, has_period_param=True),
             **{
                 "display_name": "Raw data reported - Article 7",
+                "description": _(
+                    "Select one or more parties and one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def raf_info():
+        return {
+            **Reports.args(has_party_param=True, has_period_param=True),
+            **{
+                "display_name": "Reporting accounting framework essential and critical uses",
                 "description": _(
                     "Select one or more parties and one or more reporting periods"
                 )

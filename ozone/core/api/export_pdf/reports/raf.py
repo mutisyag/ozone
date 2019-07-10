@@ -1,0 +1,379 @@
+import collections
+
+from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph, Table
+from reportlab.platypus import PageBreak
+
+from ozone.core.models import (
+    ProdCons,
+    Group,
+    PartyHistory,
+    Limit,
+    LimitTypes,
+    Submission,
+    FormTypes,
+)
+from ozone.core.models.utils import round_half_up
+
+from ..util import (
+    h1_style, h2_style, sm_no_spacing_style,
+    smb_l, sm_l, sm_r, b_l, sm_c, smb_c,
+    TABLE_STYLES, grid_color,
+    col_widths, get_big_float, get_remarks,
+    sum_decimals, subtract_decimals,
+)
+
+
+__all__ = [
+    'get_flowables',
+    'export_submissions',
+]
+
+TABLE_CUSTOM_STYLES = (
+    # ('LINEBELOW', (0, 0), (-1, 2), 0.5, grid_color),
+    ('GRID', (0, 0), (-1, 2), 0.5, grid_color),
+    ('VALIGN', (0, 0), (-1, 0), 'TOP'),
+    ('ALIGN', (0, 0), (-1, 2), 'CENTER'),
+    ('ALIGN', (2, 3), (4, -1), 'RIGHT'),
+    ('ALIGN', (6, 3), (13, -1), 'RIGHT'),
+    ('SPAN', (4, 0), (5, 0)),  # E hspan
+    ('SPAN', (4, 1), (5, 1)),  # Imported hspan
+    ('SPAN', (0, 1), (0, 2)),  # Year
+    ('SPAN', (1, 1), (1, 2)),  # Substance
+    ('SPAN', (2, 1), (2, 2)),  # Exempted
+    ('SPAN', (3, 1), (3, 2)),  # Production
+    ('SPAN', (6, 1), (6, 2)),  # Total acquired
+    ('SPAN', (7, 1), (7, 2)),  # Authorized
+    ('SPAN', (8, 1), (8, 2)),  # On hand start
+    ('SPAN', (9, 1), (9, 2)),  # Available for use
+    ('SPAN', (10, 1), (10, 2)),  # Used
+    ('SPAN', (11, 1), (11, 2)),  # Exported
+    ('SPAN', (12, 1), (12, 2)),  # Destroyed
+    ('SPAN', (13, 1), (13, 2)),  # On hand end
+    ('SPAN', (14, 1), (14, 2)),  # Emergency
+    ('SPAN', (15, 1), (15, 2)),  # Remark
+)
+
+
+def get_header(party_name, report_title):
+    return [
+        Paragraph(party_name.upper(), style=h1_style),
+        Paragraph(report_title, style=h2_style),
+    ]
+
+
+def get_table_header_essen():
+    return [
+        (
+            smb_c('A'),
+            smb_c('B'),
+            smb_c('C³'),
+            smb_c('D'),
+            smb_c('E'),
+            '',
+            smb_c('F<br/>(D+E)'),
+            smb_c('G<br/>(C-F)'),
+            smb_c('H¹'),
+            smb_c('I<br/>(H+F)'),
+            smb_c('J'),
+            smb_c('K'),
+            smb_c('L'),
+            smb_c('M²<br/>(I-J-L)'),
+            '',
+            '',
+        ),
+        (
+            sm_c(_('Year')),
+            sm_c(_('Substance')),
+            sm_c(_('Amount exempted')),
+            sm_c(_('Production')),
+            sm_c(_('Imported quantities')),
+            '',
+            sm_c(_('Total amount acquired')),
+            sm_c(_('Authorized but not acquired')),
+            sm_c(_('On hand start of the year')),
+            sm_c(_('Available for use')),
+            sm_c(_('Amount used for essential use')),
+            sm_c(_('Contained in exported products')),
+            sm_c(_('Amount destroyed')),
+            sm_c(_('On hand end of the year')),
+            sm_c(_('Emergency')),
+            sm_c(_('Remark')),
+        ),
+        (
+            '',
+            '',
+            '',
+            '',
+            sm_c(_('Amount')),
+            sm_c(_('Source country')),
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+        ),
+    ]
+
+
+def get_table_header_crit():
+    return [
+        (
+            smb_c('A'),
+            '',  # fake column for substance
+            smb_c('B¹'),
+            smb_c('C'),
+            smb_c('D'),
+            '',
+            smb_c('E<br/>(C+D)'),
+            smb_c('F<br/>(B-E)'),
+            smb_c('G²'),
+            smb_c('H<br/>(E+G)'),
+            smb_c('I'),
+            smb_c('J'),
+            smb_c('K'),
+            smb_c('L³<br/>(H-I-J-K)'),
+            '',
+            '',
+        ),
+        (
+            sm_c(_('Year')),
+            '',  # fake column for substance
+            sm_c(_('Amount exempted')),
+            sm_c(_('Production')),
+            sm_c(_('Imported quantities')),
+            '',
+            sm_c(_('Total amount acquired')),
+            sm_c(_('Authorized but not acquired')),
+            sm_c(_('On hand start of the year')),
+            sm_c(_('Available for use')),
+            sm_c(_('Amount used for critical use')),
+            sm_c(_('Amount exported')),
+            sm_c(_('Amount destroyed')),
+            sm_c(_('On hand end of the year')),
+            sm_c(_('Emergency')),
+            sm_c(_('Remark')),
+        ),
+        (
+            '',
+            '',  # fake column for substance
+            '',
+            '',
+            sm_c(_('Amount')),
+            sm_c(_('Source country')),
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+        ),
+    ]
+
+
+def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_func):
+    rows = list()
+    styles = list()
+    for item in data:
+        imports = list(item.imports.order_by('party__name').all())
+        total_imported = 0
+        for imp in imports:
+            total_imported = sum_decimals(
+                total_imported,
+                imp.quantity
+            )
+        total_acquired = sum_decimals(item.quantity_production, total_imported)
+        authorized_not_acquired = subtract_decimals(item.quantity_exempted, total_acquired)
+        total_available = sum_decimals(item.on_hand_start_year, total_acquired)
+        on_hand_end_year = on_hand_func(total_available, item)
+        first_import = imports.pop(0) if imports else None
+        if first_import and first_import.quantity and first_import.party:
+            source_party = first_import.party.name or _('Unspecified')
+        else:
+            source_party = ''
+        rows.append((
+            sm_c(reporting_period.name),  # A
+            sm_l(item.substance.name),  # B (essen) or hidden (crit)
+            sm_r(get_big_float(item.quantity_exempted)),  # C | B
+            sm_r(get_big_float(item.quantity_production)),  # D | C
+            sm_r(get_big_float(first_import.quantity)) if first_import else '',  # E|D - amount
+            sm_l(source_party),  # E|D - source country
+            sm_r(get_big_float(total_acquired)),  # F|E
+            sm_r(get_big_float(authorized_not_acquired)),  # G|F
+            sm_r(get_big_float(item.on_hand_start_year)),  # H|G
+            sm_r(get_big_float(total_available)),  # I|H
+            sm_r(get_big_float(item.quantity_used)),  # J|I
+            sm_r(get_big_float(item.quantity_exported)),  # K|J
+            sm_r(get_big_float(item.quantity_destroyed)),  # L|K
+            sm_r(get_big_float(on_hand_end_year)),  # M|L
+            sm_c(_('Yes')) if item.is_emergency else '',  # Emergency
+            sm_l(get_remarks(item)),  # Remark
+        ))
+        row_index = base_row_index + len(rows)
+        for imp in imports:
+            # Add more rows if multiple import sources
+            rows.append((
+                # Don't repeat previously shown fields, only show E
+                '', '', '', '',
+                sm_r(get_big_float(imp.quantity)),
+                sm_l(imp.party.name) if imp.party else _('Unspecified') if imp.quantity else '',
+                '', '', '', '', '', '', '', '', '', '',
+            ))
+        if imports:
+            # merge rows when multiple import sources (except columns E)
+            span_columns = (*range(0, 4), *range(6, 16))
+            styles.extend([
+                #  Vertical span of common columns for all exempted rows
+                ('SPAN', (col, row_index), (col, row_index+len(imports)))
+                for col in span_columns
+            ])
+
+    return rows, styles
+
+
+def get_table_data_essen(submission, base_row_index):
+    data = submission.rafreports.exclude(substance__has_critical_uses=True)
+
+    def on_hand_func(total_available, item):
+        return subtract_decimals(
+            total_available,
+            sum_decimals(item.quantity_used, item.quantity_destroyed)
+        )
+
+    return get_table_data_essen_crit(
+        data,
+        submission.reporting_period,
+        base_row_index,
+        on_hand_func
+    )
+
+
+def get_table_data_crit(submission, base_row_index):
+    data = submission.rafreports.filter(substance__has_critical_uses=True)
+
+    def on_hand_func(total_available, item):
+        return subtract_decimals(
+            total_available,
+            sum_decimals(
+                item.quantity_used,
+                sum_decimals(item.quantity_exported, item.quantity_destroyed)
+            )
+        )
+
+    return get_table_data_essen_crit(
+        data,
+        submission.reporting_period,
+        base_row_index,
+        on_hand_func
+    )
+
+
+def get_table_essen(submissions):
+    rows = list()
+
+    styles = list(TABLE_STYLES + TABLE_CUSTOM_STYLES)
+    rows += get_table_header_essen()
+    for submission in submissions:
+        row_data, row_styles = get_table_data_essen(submission, len(rows)-1)
+        rows += row_data
+        styles += row_styles
+    widths = col_widths([0.9, 2.5, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 4.0])
+    return Table(rows, colWidths=widths, style=styles, hAlign='LEFT', repeatRows=3)
+
+
+def get_table_crit(submissions):
+    rows = list()
+
+    styles = list(TABLE_STYLES + TABLE_CUSTOM_STYLES)
+    rows += get_table_header_crit()
+    for submission in submissions:
+        row_data, row_styles = get_table_data_crit(submission, len(rows)-1)
+        rows += row_data
+        styles += row_styles
+    widths = col_widths([0.9, 0, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 6.5])
+    return Table(rows, colWidths=widths, style=styles, hAlign='LEFT', repeatRows=3)
+
+
+def get_footer_essen():
+    notes = [
+        "(All quantities expressed in metric tonnes.)",
+
+        """¹ National Governments may not be able to estimate quantities on hand as
+        at 1 January 1996 but can track the subsequent inventory of ODS produced
+        for essential uses (Column M).""",
+        "² Carried forward as \"On hand start of year\" for next year.",
+        """³ Note that essential use for a particular year may be the sum of quantities
+        authorized by decision in more than one year.""",
+    ]
+    return [
+        Paragraph(_(note), sm_no_spacing_style) for note in notes
+    ]
+
+
+def get_footer_crit():
+    notes = [
+        "(All quantities expressed in metric tonnes.)",
+
+        """¹ Exempted by the parties to the Montreal Protocol.
+        Note that the critical use for a particular year may be the sum of quantities
+        authorized by decision in more than one year.""",
+        """² Where possible, national Governments should include quantities on hand
+        as of 1 January 2005 and for each year thereafter.
+        National Governments that are not able to estimate quantities on hand as of
+        1 January 2005 can track the subsequent inventory of methyl bromide produced
+        for critical uses (column L).""",
+        "³ Carried forward as \"Amount on hand at start of year\" for next year.",
+    ]
+    return [
+        Paragraph(_(note), sm_no_spacing_style) for note in notes
+    ]
+
+
+def get_flowables(party_name, submissions):
+    essen_title = Paragraph(
+        _("Reporting accounting framework for essential uses \
+        other than laboratory and analytical applications"),
+        style=h2_style
+    )
+    # essen_title.keepWithNext = True
+
+    crit_title = Paragraph(
+        _("Reporting accounting framework for critical uses of methyl bromide"),
+        style=h2_style
+    )
+    # crit_title.keepWithNext = True
+
+    flowables = [
+        Paragraph(party_name.upper(), style=h1_style),
+        essen_title,
+        get_table_essen(submissions),
+        *get_footer_essen(),
+        Paragraph('', style=h1_style),
+        crit_title,
+        get_table_crit(submissions),
+        *get_footer_crit(),
+        Paragraph('', style=h1_style),
+        PageBreak(),
+    ]
+    return flowables
+
+
+def export_submissions(submissions):
+    flowables = list()
+    # Regroup submissions by party
+    data = collections.defaultdict(list)
+    for submission in submissions:
+        data[submission.party.name].append(submission)
+
+    for party in sorted(data.keys()):
+        flowables += get_flowables(party, data[party])
+    return flowables

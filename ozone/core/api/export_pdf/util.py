@@ -186,6 +186,13 @@ def sum_decimals(d1, d2):
     return dd1 or dd2
 
 
+def subtract_decimals(d1, d2):
+    dd1 = as_decimal(d1)
+    dd2 = as_decimal(d2)
+    zero = Decimal(0.0)
+    return (dd1 or zero) - (dd2 or zero)
+
+
 # Imitate JavaScript's toPrecision. Returning the number with 'decimals'
 # digits starting from the first non-zero digit
 def to_precision(nr, decimals):

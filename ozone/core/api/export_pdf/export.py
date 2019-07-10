@@ -7,9 +7,15 @@ from reportlab.lib import pagesizes
 from reportlab.lib.units import cm
 
 from . import art7
-from . import hat
 
-from .reports import prodcons
+from .reports import (
+    prodcons,
+    raf,
+)
+
+from ozone.core.models import (
+    FormTypes,
+)
 
 from .util import right_paragraph_style, left_paragraph_style
 
@@ -52,12 +58,16 @@ def get_doc_template(landscape=False):
     return buff, doc
 
 
-def export_submissions(submissions):
+def export_submissions(obligation, submissions):
 
     buff, doc = get_doc_template(landscape=True)
+    if obligation._form_type == FormTypes.ART7.value:
+        clazz = art7
+    elif obligation._form_type == FormTypes.ESSENCRIT.value:
+        clazz = raf
 
     flowables = (
-        art7.export_submissions(submissions) or
+        clazz.export_submissions(submissions) or
         [Paragraph('No data', left_paragraph_style)]
     )
 

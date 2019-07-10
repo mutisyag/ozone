@@ -97,7 +97,7 @@
       <div class="table-wrapper">
         <div class="table-title">
           <h6>
-            <span v-translate>Critical uses</span>
+            <span v-translate>Critical uses of methyl bromide</span>
           </h6>
           <div v-show="tableCritical.tableFilters" class="table-filters">
             <b-input-group :prepend="$gettext('Filter')">
