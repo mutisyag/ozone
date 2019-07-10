@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError, NON_FIELD_ERRORS
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from rest_framework.authtoken.models import Token
-from sentry_sdk import capture_exception
+from sentry_sdk import capture_exception, configure_scope
 
 
 User = get_user_model()
@@ -32,6 +32,8 @@ class ExceptionMiddleware(object):
             status = exception.status_code
             exception_dict = exception.to_dict()
         else:
+            with configure_scope() as scope:
+                scope.user = {"username": request.user.username}
             capture_exception(exception)
             status = 500
             exception_dict = {
