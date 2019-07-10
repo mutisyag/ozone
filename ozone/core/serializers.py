@@ -295,7 +295,9 @@ class PartySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Party
-        fields = ('id', 'name', 'abbr', 'subregion', 'parent_party')
+        fields = (
+            'id', 'name', 'abbr', 'subregion', 'parent_party', 'iso_alpha3_code'
+        )
 
 
 class PartyRatificationSerializer(serializers.ModelSerializer):
