@@ -176,32 +176,18 @@ class Command(BaseCommand):
                     )
                     continue
 
-            if substance and substance.substance_id != 194:
-                quantity_essen_uses = import_row["ImpEssenUse"]
-                quantity_crit_uses = None
-            else:
-                quantity_essen_uses = None
-                quantity_crit_uses = import_row["ImpEssenUse"]
-
             quantity_lab_uses = import_row["ImpLabUse"]
-            decision_lab_uses = ""
-            decision_essen_uses = ""
-            decision_crit_uses = ""
+            quantity_essen_uses = None
+            quantity_crit_uses = None
             remark = import_row["Remark"] if import_row["Remark"] is not None else ''
+            decision_lab_uses = remark
             if quantity_lab_uses and import_row["ImpEssenUse"]:
                 diff = import_row["ImpEssenUse"] - quantity_lab_uses
-                if diff > 0.0001:
-                    decision_lab_uses = remark
+                if diff >= 0:
                     if substance and substance.substance_id != 194:
                         quantity_essen_uses = diff
-                        decision_essen_uses = remark
                     else:
                         quantity_crit_uses = diff
-                        decision_crit_uses = remark
-                elif -0.0001 <= diff <= 0.0001:
-                    quantity_lab_uses = quantity_essen_uses if diff >= 0 else quantity_lab_uses
-                    quantity_essen_uses = None
-                    decision_lab_uses = remark
                 else:
                     logger.warning(
                         "Import: ImpLabUse is greater than ImpEssenUse for %s/%s/%s",
@@ -223,8 +209,6 @@ class Command(BaseCommand):
                 "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
                 "quantity_polyols": import_row["ImpPolyol"],
                 "quantity_other_uses": None,
-                "decision_critical_uses": decision_crit_uses,
-                "decision_essential_uses": decision_essen_uses,
                 "decision_high_ambient_temperature": "",
                 "decision_laboratory_analytical_uses": decision_lab_uses,
                 "decision_process_agent_uses": "",
