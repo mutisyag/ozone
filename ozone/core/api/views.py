@@ -453,6 +453,9 @@ class AggregationPaginator(PageNumberPagination):
 
 class AggregationViewFilterSet(filters.FilterSet):
     party = filters.NumberFilter("party", help_text="Filter by party ID")
+    iso_code = filters.CharFilter(
+        field_name="party__iso_alpha3_code", lookup_expr='iexact'
+    )
     reporting_period = filters.NumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
