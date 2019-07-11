@@ -147,6 +147,7 @@ class BlendCompositionMixin:
                 )
                 attributes['substance_id'] = component.substance.pk
                 attributes['blend_item_id'] = self.pk
+                attributes.update(field_dictionary)
                 self.__class__.objects.create(**attributes)
 
 
