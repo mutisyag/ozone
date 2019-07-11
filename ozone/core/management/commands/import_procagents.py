@@ -238,8 +238,15 @@ class Command(BaseCommand):
         if getattr(decision, 'applications_validity', None):
             validity = decision.applications_validity
         else:
-            logger.error(f"Uses validity does not exists decision {decision}")
-            return
+            if decision.decision_id == 'UNK':
+                validity, created = ProcessAgentApplicationValidity.objects.get_or_create(
+                    decision=decision
+                )
+            else:
+                logger.error(
+                    f"Uses validity does not exist for decision {decision}"
+                )
+                return
 
         ProcessAgentApplication.objects.create(
             validity=validity,
@@ -305,8 +312,15 @@ class Command(BaseCommand):
         if getattr(decision, 'limits_validity', None):
             validity = decision.limits_validity
         else:
-            logger.error(f"Limits validity does not exists decision {decision}")
-            return
+            if decision.decision_id == 'UNK':
+                validity, created = ProcessAgentEmissionLimitValidity.objects.get_or_create(
+                    decision=decision
+                )
+            else:
+                logger.error(
+                    f"Limits validity does not exist for decision {decision}"
+                )
+                return
 
         party = self.parties[row['CntryID']]
 
@@ -385,8 +399,21 @@ class Command(BaseCommand):
             decision_id = decision_id[:-1]
         decision = Decision.objects.filter(decision_id=decision_id).first()
         if not decision:
-            meeting_id = decision_id.split('/')[0]
-            meeting = self.meetings[meeting_id]
+            if decision_id == 'UNK':
+                if 'UNK' in self.meetings:
+                    meeting = self.meetings['UNK']
+                else:
+                    meeting, created = Meeting.objects.get_or_create(
+                        meeting_id='UNK',
+                        defaults={
+                            'location': 'UNK',
+                            'description': 'UNK'
+                        }
+                    )
+                    self.meetings['UNK'] = meeting
+            else:
+                meeting_id = decision_id.split('/')[0]
+                meeting = self.meetings[meeting_id]
             decision = Decision.objects.create(
                 decision_id=decision_id,
                 meeting=meeting
