@@ -451,15 +451,39 @@ class AggregationPaginator(PageNumberPagination):
     page_size_query_param = "page_size"
 
 
+class MultiValueCharFilter(filters.BaseCSVFilter, filters.CharFilter):
+    def filter(self, qs, value):
+        # Value is either a list or an 'empty' value
+        if value:
+            new_qs = qs.model.objects.none()
+            for v in value:
+                new_qs = new_qs | super().filter(qs, v)
+            return new_qs.distinct()
+        return qs
+
+
+class MultiValueNumberFilter(filters.BaseCSVFilter, filters.NumberFilter):
+    def filter(self, qs, value):
+        # Value is either a list or an 'empty' value
+        if value:
+            new_qs = qs.model.objects.none()
+            for v in value:
+                new_qs = new_qs | super().filter(qs, v)
+            return new_qs.distinct()
+        return qs
+
+
 class AggregationViewFilterSet(filters.FilterSet):
-    party = filters.NumberFilter("party", help_text="Filter by party ID")
-    iso_code = filters.CharFilter(
+    party = MultiValueNumberFilter(
+        "party", help_text="Filter by party ID"
+    )
+    iso_code = MultiValueCharFilter(
         field_name="party__iso_alpha3_code", lookup_expr='iexact'
     )
-    reporting_period = filters.NumberFilter(
+    reporting_period = MultiValueNumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
-    group = filters.NumberFilter(
+    group = MultiValueNumberFilter(
         "group", help_text="Filter by Annex Group ID"
     )
     ordering = filters.OrderingFilter(
