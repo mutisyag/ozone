@@ -182,8 +182,8 @@ class BaseProdCons(models.Model):
         """
         This resets all aggregation data for the given party/period.
 
-        For now this simply means deleting all corresponding rows, but this might
-        change in the future if more data sources (besides Art7) are added
+        For now this simply means deleting all corresponding rows, but this
+        might change in the future if more data sources (besides Art7) are added
         """
         aggregations = cls.objects.filter(
             party=party, reporting_period=reporting_period
@@ -213,6 +213,8 @@ class BaseProdCons(models.Model):
                 or period.name == '2010' and party.abbr in special_cases_2010
             ):
                 return 2
+        if group and group.group_id == 'F':
+            return 0
         return 1
 
     @property
