@@ -79,7 +79,7 @@ export default {
     },
     resetTimer() {
       clearTimeout(this.time)
-      //   900000 = 15 minutes
+      //   300000 = 5 minutes
       this.time = setTimeout(this.startInactivityTimer, 300000)
     }
   }
