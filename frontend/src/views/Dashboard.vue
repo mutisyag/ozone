@@ -534,7 +534,7 @@ export default {
       if (currentUser) {
         this.submissionNew.party = currentUser.party
       }
-      return currentUser
+      return currentUser || {}
     },
     periods() {
       return this.$store.state.dashboard.periods
