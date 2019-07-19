@@ -390,6 +390,18 @@ const mutations = {
     state.preventLeaveConfirm = data
   },
 
+  // pushes the id of the component that did the save into an state.saveSuccess
+  //  in order to watch for the state.saveSucess.indexOf(component._uid) somwhere else
+  saveSuccess(state, id) {
+    if (state.saveSuccess.indexOf(id) === -1) {
+      state.saveSuccess.push(id)
+    }
+  },
+
+  removeSaveSuccess(state, id) {
+    state.saveSuccess.splice(state.saveSuccess.indexOf(id), 1)
+  },
+
   addCategoryEntry(state, { tabName, index, categoryList }) {
     categoryList.forEach(c => {
       state.form.tabs[tabName].form_fields[index].use_categories.push({

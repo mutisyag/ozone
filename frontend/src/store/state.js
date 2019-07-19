@@ -5,6 +5,7 @@ const state = {
   preventLeaveConfirm: false,
   dataForAction: null,
   emailTemplates: null,
+  saveSuccess: [],
   dashboard: {
     mySubmissions: null,
     submissions: null,

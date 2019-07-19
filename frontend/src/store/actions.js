@@ -109,11 +109,26 @@ const actions = {
     })
   },
 
+  getUnsavedTabs(context) {
+    const tabsWithData = []
+    Object.values(context.state.form.tabs).forEach((tab) => {
+      [false, 'edited'].includes(tab.status) && tabsWithData.push(tab.title)
+    })
+    return tabsWithData.length
+  },
+  // id = id of the component that triggered the save
+  async confirmSaveDone(context, id) {
+    const unsaved = await context.dispatch('getUnsavedTabs')
+    if (!unsaved) {
+      context.commit('saveSuccess', id)
+    }
+  },
+
   saveCallback(context, { actionToDispatch, data }) {
     context.dispatch(actionToDispatch, data)
   },
 
-  triggerSave(context, data) {
+  async triggerSave(context, data) {
     if (data) {
       context.commit('setActionToDispatch', data.action)
       context.commit('setDataForAction', data.data)
