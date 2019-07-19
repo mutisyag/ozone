@@ -93,7 +93,7 @@
             v-translate
           >If a non-standard mixture not listed above please indicate the mixture name and the percentage by weight of each constituent controlled substance of the mixture. Please pay attention to the percentage values before adding a new mixture. For mistakes please contact secretariat to delete the mixture.</span>
         </small>
-        <b-input-group class="mt-2" prepend="Blend name">
+        <b-input-group class="mt-2" prepend="Mixture name">
           <b-form-input type="text" @blur.native="alertIfBlendExists" v-model="new_blend.text"></b-form-input>
           <b-input-group-append>
             <b-btn @click="addSubstanceToBlend">
