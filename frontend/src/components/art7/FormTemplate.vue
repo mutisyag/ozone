@@ -582,7 +582,7 @@
             <div
               style="position: relative;z-index: 1; margin-top: 1rem"
               class="special-field"
-              v-if="isQps.includes(parseInt(cell.item.originalObj.blend.selected))"
+              v-if="isQpsBlend.includes(parseInt(cell.item.originalObj.blend.selected))"
               :key="`${tooltipField}_qps`"
             >
               <b-input-group v-if="tooltipField === 'quantity_exempted'">
@@ -940,12 +940,25 @@ export default {
       return ''
     },
     isPolyols() {
-      return ['has_imports', 'has_exports'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value),
-        ...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)] : []
+      const tabsThatHavePolyols = ['has_imports', 'has_exports']
+      if (!tabsThatHavePolyols.includes(this.tabName)) return
+      return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value)]
     },
+    // we might need this in the future
+    // isPolyolsBlends() {
+    //   const tabsThatHavePolyols = ['has_imports', 'has_exports']
+    //   if (!tabsThatHavePolyols.includes(this.tabName)) return
+    //   return [...this.tab_data.blends.filter(s => s.is_contained_in_polyols).map(s => s.id)]
+    // },
     isQps() {
-      return ['has_imports', 'has_exports', 'has_produced'].includes(this.tabName) ? [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value),
-        ...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)] : []
+      const tabsThatHaveQPS = ['has_imports', 'has_exports', 'has_produced']
+      if (!tabsThatHaveQPS.includes(this.tabName)) return []
+      return [...this.tab_data.substances.filter(s => s.is_qps).map(s => s.value)]
+    },
+    isQpsBlend() {
+      const tabsThatHaveQPS = ['has_imports', 'has_exports', 'has_produced']
+      if (!tabsThatHaveQPS.includes(this.tabName)) return []
+      return [...this.tab_data.blends.filter(s => s.is_qps).map(s => s.id)]
     },
     tableItems() {
       const tableFields = []
