@@ -1,3 +1,4 @@
+from datetime import datetime
 from io import BytesIO
 from django.utils.translation import gettext_lazy as _
 
@@ -11,13 +12,14 @@ from . import art7
 from .reports import (
     prodcons,
     raf,
+    impexp_new_rec,
 )
 
 from ozone.core.models import (
     FormTypes,
 )
 
-from .util import right_paragraph_style, left_paragraph_style
+from .util import right_paragraph_style, left_paragraph_style, centered_paragraph_style
 
 
 def add_page_footer(canvas, doc, footnote=None):
@@ -30,6 +32,31 @@ def add_page_footer(canvas, doc, footnote=None):
     footer = Paragraph('%s %d' % (_('Page'), canvas._pageNumber), right_paragraph_style)
     w, h = footer.wrap(doc.width, doc.bottomMargin)
     footer.drawOn(canvas, doc.rightMargin, h)
+
+    canvas.restoreState()
+
+
+def add_page_footer_impexp_new_rec(canvas, doc):
+    canvas.saveState()
+
+    footers = [
+        Paragraph(
+            datetime.now().strftime("%A, %B %d,"),
+            left_paragraph_style
+        ),
+        Paragraph(
+            '*Population in thousands',
+            centered_paragraph_style
+        ),
+        Paragraph(
+            '%s %d' % (_('Page'), canvas._pageNumber),
+            right_paragraph_style
+        ),
+    ]
+
+    for footer in footers:
+        w, h = footer.wrap(doc.width, doc.bottomMargin)
+        footer.drawOn(canvas, doc.bottomMargin, h)
 
     canvas.restoreState()
 
@@ -87,6 +114,19 @@ def export_prodcons(submission, periods, parties):
         list(prodcons.get_prodcons_flowables(submission, periods, parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_impexp_new_rec(periods, parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(impexp_new_rec.get_impexp_new_rec_flowables(periods, parties)),
+        onFirstPage=add_page_footer_impexp_new_rec,
+        onLaterPages=add_page_footer_impexp_new_rec
     )
 
     buff.seek(0)

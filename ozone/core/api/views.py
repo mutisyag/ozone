@@ -151,6 +151,7 @@ from ..serializers import (
 from .export_pdf import (
     export_submissions,
     export_prodcons,
+    export_impexp_new_rec,
 )
 
 
@@ -1863,6 +1864,19 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'raf_{params}',
             export_submissions(raf, self.get_submissions(raf, periods, parties))
+        )
+
+    @action(detail=False, methods=["get"])
+    def impexp_new_rec(self, request):
+        parties = self._get_parties(request)
+        periods = self._get_periods(request)
+        params = "%s_%s" % (
+            "_".join(p.abbr for p in parties),
+            "_".join(p.name for p in periods),
+        )
+        return self._response_pdf(
+            f'impexp_new_rec{params}',
+            export_impexp_new_rec(periods=periods, parties=parties)
         )
 
 

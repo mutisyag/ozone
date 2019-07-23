@@ -15,6 +15,7 @@ class Reports(enum.Enum):
     ART7_RAW = 'art7_raw'
     PRODCONS = 'prodcons'
     RAF = 'raf'
+    IMPEXP_NEW_REC = 'impexp_new_rec'
 
     @staticmethod
     def args(has_party_param=False, has_period_param=False):
@@ -55,6 +56,18 @@ class Reports(enum.Enum):
                 "display_name": "Reporting accounting framework essential and critical uses",
                 "description": _(
                     "Select one or more parties and one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def impexp_new_rec_info():
+        return {
+            **Reports.args(has_party_param=True, has_period_param=True),
+            **{
+                "display_name": "Import and Export of New and Recovered Substances",
+                "description": _(
+                    "Select one or more parties and one reporting period"
                 )
             },
         }

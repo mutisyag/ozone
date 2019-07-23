@@ -36,6 +36,8 @@ __all__ = [
     'smb_c',
     'smb_l',
     'smb_r',
+    'smbi_l',
+    'smbi_r',
     'p_bullet',
 ]
 
@@ -107,6 +109,8 @@ small_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SM
 small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
+small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
 sm_no_spacing_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=0)
@@ -139,6 +143,7 @@ page_title_style = _style(
     fontSize=FONTSIZE_H3, fontName='Helvetica-Bold',
 )
 
+
 p_c = partial(Paragraph, style=centered_paragraph_style)
 p_l = partial(Paragraph, style=left_paragraph_style)
 p_r = partial(Paragraph, style=right_paragraph_style)
@@ -154,6 +159,8 @@ sm_r = partial(Paragraph, style=small_right_paragraph_style)
 smb_c = partial(Paragraph, style=small_bold_centered_paragraph_style)
 smb_l = partial(Paragraph, style=small_bold_left_paragraph_style)
 smb_r = partial(Paragraph, style=small_bold_right_paragraph_style)
+smbi_l = partial(Paragraph, style=small_bold_italic_left_paragraph_style)
+smbi_r = partial(Paragraph, style=small_bold_italic_right_paragraph_style)
 
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
