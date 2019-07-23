@@ -144,12 +144,18 @@ export default {
       this.$refs[`countries-modal-${this._uid}`].hide()
       this.$emit('removeThisField')
       this.resetData()
+      this.cleanupModalMess()
     },
 
     resetData() {
       this.selected_countries.selected = []
     },
-
+    cleanupModalMess() {
+      const body = document.querySelector('body')
+      body.classList.remove('modal-open')
+      body.setAttribute('style', '')
+      body.setAttribute('data-modal-open-count', '0')
+    },
     removeSpecialChars(str) {
       return str.replace(/[^a-zA-Z0-9]+/g, '')
     }
