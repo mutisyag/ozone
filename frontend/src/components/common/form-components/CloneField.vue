@@ -1,7 +1,7 @@
 <template>
   <div v-if="field && tabName">
     <b-btn class="mt-1" size="sm" variant="outline-dark" id="show-btn" @click="openModalAndSelect">Add countries</b-btn>
-    <b-modal size="lg"  @shown="openCountryList" id="countries-modal" ref="countries-modal" :title="$gettext('Add countries')">
+    <b-modal size="lg"  @shown="openCountryList" :id="`countries-modal-${this._uid}`" :ref="`countries-modal-${this._uid}`" :title="$gettext('Add countries')">
         <div ref="countries_selector" style="position: relative; width: calc(100% - 180px);">
           <multiselect
             :max-height="250"
@@ -18,7 +18,7 @@
           />
         </div>
         <template slot="modal-footer">
-          <b-btn variant="outline-danger" @click="resetData();$refs['countries-modal'].hide()">Cancel</b-btn>
+          <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${this._uid}`].hide()">Cancel</b-btn>
           <b-btn
             @click="addSubstance"
             variant="primary"
@@ -72,7 +72,7 @@ export default {
 
   methods: {
     openModalAndSelect() {
-      this.$refs['countries-modal'].show()
+      this.$refs[`countries-modal-${this._uid}`].show()
     },
 
     openCountryList() {
@@ -141,8 +141,8 @@ export default {
         message: { __all__: [`${this.alerts.field_already_exists} : ${willNotAddCountryNames.join(', ')}`] },
         variant: 'danger'
       })
+      this.$refs[`countries-modal-${this._uid}`].hide()
       this.$emit('removeThisField')
-      this.$refs['countries-modal'].hide()
       this.resetData()
     },
 
