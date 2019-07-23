@@ -135,6 +135,8 @@ export default {
       }
       if (tab.status !== null) {
         this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
+      } else {
+        return
       }
       let current_tab_data
 

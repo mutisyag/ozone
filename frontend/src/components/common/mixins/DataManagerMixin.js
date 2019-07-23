@@ -1,4 +1,3 @@
-<script>
 import {
   fetch
 } from '@/components/common/services/api.js'
@@ -135,7 +134,6 @@ export default {
         if (form.tabs[tab].endpoint_url && Object.keys(this.$store.state.current_submission).includes(form.tabs[tab].endpoint_url)) {
           fetch(prefill_data[form.tabs[tab].endpoint_url]).then(response => {
             if (response.data.length) {
-              this.$store.commit('setTabStatus', { tab, value: 'saving' })
               this.prefill(form.tabs[tab].name, response.data)
             } else {
               this.$store.commit('updateNewTabs', tab)
@@ -188,7 +186,6 @@ export default {
         const [prefillData] = data
         this.$store.commit('prefillTab', { tabName, data: prefillData })
       }
-      this.$store.commit('setTabStatus', { tab: tabName, value: true })
     }
 
   },
@@ -200,4 +197,3 @@ export default {
     }
   }
 }
-</script>

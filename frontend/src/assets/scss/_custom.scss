@@ -1450,6 +1450,11 @@ input[type="text"].highlighted {
 .card-header {
   border-bottom: none;
   background-color: white;
+  .nav-tabs {
+    .nav-item {
+      position: relative;
+    }
+  }
 }
 
 .tabs .card-header {

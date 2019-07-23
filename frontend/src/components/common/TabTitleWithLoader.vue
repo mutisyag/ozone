@@ -8,6 +8,9 @@
     <i v-if="tabStatus === false" style="color: red;" class="fa fa-exclamation-circle"></i>
     <i v-if="tabStatus === true" style="color: green;" class="fa fa-check-circle"></i>
     <i v-if="tabStatus === 'edited'" class="fa fa-edit"></i>
+    <b-badge v-if="tabStatus === null && tabDataLength" variant="primary" sm>
+      {{tabDataLength}}
+    </b-badge>
   </div>
 </template>
 
@@ -20,6 +23,9 @@ export default {
   computed: {
     tabStatus() {
       return this.$store.getters.getTabStatus(this.tab.name)
+    },
+    tabDataLength() {
+      return this.$store.state.form.tabs[this.tab.name].form_fields.length
     }
   }
 }
@@ -56,6 +62,12 @@ export default {
   margin-left: 5px;
   margin-top: 5px;
 }
+
+.tab-title .badge {
+    margin-left: 5px;
+    margin-top: -3px;
+    max-height: 17px;
+}
 /* Safari */
 @-webkit-keyframes spin {
   0% {
@@ -74,4 +86,5 @@ export default {
     transform: rotate(360deg);
   }
 }
+
 </style>
