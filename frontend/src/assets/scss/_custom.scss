@@ -1134,6 +1134,8 @@ body:not(.aside-menu-lg-show) .form-wrapper {
   .tab-content {
     flex-grow: 1;
     height: unset !important;
+    max-height: calc(100vh - 141px);
+    overflow-y: auto;
   }
 }
 
