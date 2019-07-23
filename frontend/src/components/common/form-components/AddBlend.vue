@@ -30,9 +30,9 @@
             <multiselect
               :placeholder="$gettext('Select option')"
               trackBy="value"
-              :clear-on-select="false"
               :hide-selected="true"
-              :close-on-select="true"
+              :clear-on-select="true"
+              :close-on-select="false"
               :multiple="true"
               label="text"
               v-model="selected_blends.selected"

@@ -24,9 +24,9 @@
       <b-input-group id="substance_selector" class="mb-2 mt-2" :prepend="$gettext('Substances')">
         <multiselect
           :placeholder="$gettext('Select option')"
-          :clear-on-select="false"
           :hide-selected="true"
-          :close-on-select="true"
+          :clear-on-select="true"
+          :close-on-select="false"
           label="text"
           trackBy="value"
           :multiple="true"
