@@ -18,7 +18,7 @@
           />
         </div>
         <template slot="modal-footer">
-          <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${this._uid}`].hide()">Cancel</b-btn>
+          <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${_uid}`].hide()">Cancel</b-btn>
           <b-btn
             @click="addSubstance"
             variant="primary"
