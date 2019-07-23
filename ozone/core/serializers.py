@@ -1582,7 +1582,7 @@ class SubmissionSerializer(
 
             # Permission-related fields; value is dependent on user
             'available_transitions', 'available_transitions_url',
-            'is_cloneable',
+            'is_cloneable', 'is_versionable',
             'changeable_flags',
             'can_change_remarks_party',
             'can_change_remarks_secretariat',
@@ -1624,7 +1624,8 @@ class SubmissionSerializer(
         fields = list(set(sum(per_type_fields.values(), ())))
 
         read_only_fields = (
-            'available_transitions', 'is_cloneable', 'changeable_flags',
+            'is_cloneable', 'is_versionable',
+            'available_transitions', 'changeable_flags',
             'can_change_remarks_party', 'can_change_remarks_secretariat',
             'can_change_reporting_channel', 'can_upload_files',
             'can_edit_data', 'can_delete_data',
@@ -1729,7 +1730,7 @@ class ListSubmissionSerializer(CreateSubmissionSerializer):
                 'data_changes_allowed', 'is_current',
                 'flag_provisional', 'flag_valid', 'flag_superseded',
                 # Permissions-related fields
-                'available_transitions', 'is_cloneable',
+                'available_transitions', 'is_cloneable', 'is_versionable',
                 'can_edit_data', 'can_delete_data',
             )
         )

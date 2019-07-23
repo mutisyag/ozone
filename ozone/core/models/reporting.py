@@ -643,6 +643,10 @@ class Submission(models.Model):
     history = HistoricalRecords()
 
     @property
+    def is_versionable(self):
+        return self.obligation.has_versions
+
+    @property
     def filled_by_secretariat(self):
         return self.created_by.is_secretariat
 
