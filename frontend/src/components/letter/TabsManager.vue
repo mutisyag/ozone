@@ -77,7 +77,7 @@
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
-        <b-btn v-if="$store.state.current_submission.has_versions" @click="$refs.history_modal.show()" variant="outline-info">
+        <b-btn v-if="$store.state.current_submission.is_versionable" @click="$refs.history_modal.show()" variant="outline-info">
           <span v-translate>Versions</span>
         </b-btn>
         <b-btn

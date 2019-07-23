@@ -72,7 +72,7 @@
       ></Save>
       <router-link class="btn btn-light ml-2" :to="{name: 'Dashboard'}" v-translate>Close</router-link>
       <b-button-group class="pull-right actions mt-2 mb-2">
-        <b-btn v-if="$store.state.current_submission.has_versions" @click="$refs.history_modal.show()" variant="outline-dark">
+        <b-btn v-if="$store.state.current_submission.is_versionable" @click="$refs.history_modal.show()" variant="outline-dark">
           <span v-translate>Versions</span>
         </b-btn>
       </b-button-group>

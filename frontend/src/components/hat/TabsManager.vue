@@ -105,7 +105,7 @@
 						fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
 					})"
         >Export as PDF</b-btn>
-        <b-btn v-if="$store.state.current_submission.has_versions" @click="$refs.history_modal.show()" variant="outline-info">
+        <b-btn v-if="$store.state.current_submission.is_versionable" @click="$refs.history_modal.show()" variant="outline-info">
           <span v-translate>Versions</span>
         </b-btn>
         <b-btn
