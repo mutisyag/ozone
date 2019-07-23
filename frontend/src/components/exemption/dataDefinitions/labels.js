@@ -14,7 +14,9 @@ const getLabels = ($gettext) => {
       group: $gettext('Group'),
       is_emergency: $gettext('Emergency'),
       quantity: `${$gettext('Quantity')} (${$gettext('in metric tons')})`,
-      remarks_os: $gettext('Remarks')
+      remarks_os: $gettext('Remarks'),
+      approved_teap_amount: $gettext('Amount recommended by TEAP'),
+      decision_approved: $gettext('Decision')
     }
   }
   return labels

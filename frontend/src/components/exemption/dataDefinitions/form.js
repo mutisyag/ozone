@@ -52,11 +52,66 @@ const getFormExemption = ($gettext) => {
         title: $gettext('Approved'),
         titleHtml: `<b>${$gettext('Approved')}</b>`,
         endpoint_url: 'exemption_approved_url',
+        section_subheaders: [
+          {
+            label: `(1) <br> ${$gettext('Annex/Group')}`,
+            name: 'group'
+          },
+          {
+            label: `(2) <br> ${$gettext('Substance')}`,
+            name: 'substance'
+          },
+          {
+            label: `(3) <br> ${$gettext('Quantity')} (${$gettext('in metric tons')})`,
+            name: 'quantity',
+            isInput: true
+          },
+          {
+            label: `(4) <br> ${$gettext('Emergency')}`,
+            name: 'is_emergency',
+            isInput: true
+          },
+          {
+            label: `(5) <br> ${$gettext('Remarks')}`,
+            name: 'remarks_os',
+            isInput: true
+          },
+          {
+            label: `(6) <br> ${$gettext('Decision')}`,
+            name: 'decision_approved',
+            isInput: true
+          },
+          {
+            label: `(7) <br> ${$gettext('Amount recommended by TEAP')}`,
+            name: 'approved_teap_amount',
+            isInput: true
+          },
+          {
+            label: `<br> ${$gettext('Actions')}`,
+            name: 'validation'
+          }
+        ],
         comments: {
           exemption_approved_remarks_secretariat: {
             selected: '',
             type: 'textarea'
           }
+        },
+        get fields_order() {
+          return this.section_subheaders.map(x => x.name)
+        },
+        get rowInputFields() {
+          return this.section_subheaders
+            .filter(x => x.isInput)
+            .map(x => x.name)
+        },
+        default_properties: {
+          substance: null,
+          quantity: null,
+          is_emergency: null,
+          remarks_os: null,
+          decision_approved: null,
+          approved_teap_amount: null
         }
       },
       flags: {

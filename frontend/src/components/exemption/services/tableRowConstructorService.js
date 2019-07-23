@@ -24,6 +24,14 @@ export default {
         selected: group,
         type: 'nonInput'
       },
+      decision_approved: {
+        selected: '',
+        type: 'text'
+      },
+      approved_teap_amount: {
+        selected: null,
+        type: 'number'
+      },
       quantity: {
         type: 'number',
         selected: null
