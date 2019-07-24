@@ -859,6 +859,11 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     @action(detail=True, methods=["get"])
+    def change_history(self, request, pk=None):
+        historical_records = Submission.objects.get(pk=pk).get_change_history()
+        return Response(historical_records)
+
+    @action(detail=True, methods=["get"])
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')

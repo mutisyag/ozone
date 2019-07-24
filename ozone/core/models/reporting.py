@@ -1394,6 +1394,44 @@ class Submission(models.Model):
             obligation=self.obligation,
         )
 
+    def get_change_history(self):
+        """
+        Returns a list of relevant changes (i.e. state changes for now) for
+        all versions pertaining to this submission's party/period/obligation,
+        together with the time of change and user which performed the change.
+        """
+        watched_fields = ['_current_state',]
+        display_fields = ['version', 'history_date', 'history_user',]
+        ret = []
+        current_values = dict()
+        complete_history = HistoricalSubmission.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation,
+        ).order_by('history_date').values(*watched_fields, *display_fields)
+        # We need to identify when the watched fields for any version have
+        # changed.
+        for item in complete_history:
+            version = item['version']
+            # TODO: differentiate between creation and update
+            if version not in current_values:
+                # This item corresponds to the creation of a new version
+                current_values[version] = item
+                ret.append(item)
+            else:
+                # This history entry corresponds to an existing version.
+                # Check whether there's any watched_fields difference to the
+                # current values.
+                diff = {
+                    watched_field: item[watched_field]
+                    for watched_field in watched_fields
+                    if item[watched_field] != current_values[version][watched_field]
+                }
+                if diff:
+                    current_values[version] = item
+                    ret.append(item)
+        return ret
+
     def has_filled_nominations(self):
         return self.nominations.exists()
 
