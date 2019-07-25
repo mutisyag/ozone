@@ -1,5 +1,4 @@
-from reportlab.lib import colors
-from reportlab.platypus import Paragraph, Table, PageBreak, KeepTogether
+from reportlab.platypus import Paragraph, Table, PageBreak
 from reportlab.lib.enums import TA_CENTER
 
 from functools import partial
@@ -151,7 +150,7 @@ def get_subtotal(period, rows):
         export_new += row[3]
         export_recovered += row[4]
     return (
-        smbi_l('Sub-Total ODS for {period} in ODP tonnes'.format(period=period.name)),
+        smbi_l(_('Sub-Total ODS for {period} in ODP tonnes').format(period=period.name)),
         smbi_r(str(round_half_up(import_new, 3))),
         smbi_r(str(round_half_up(import_recovered, 3))),
         smbi_r(str(round_half_up(export_new, 3))),
@@ -219,8 +218,11 @@ def get_table_header(period):
         ),
         (
             b_c(
-                "{period} Import and export of new and recovered substances".format(
-                period=period)
+                _(
+                    "{period} Import and export of new and recovered substances".format(
+                        period=period
+                    )
+                )
             ),
             '',
             '',
@@ -229,7 +231,7 @@ def get_table_header(period):
         ),
         (
             b_c(
-                "(in ODP tonnes for annexes A,B,C,E and CO2-equivalent tonnes for annex F)"
+                _("(in ODP tonnes for annexes A,B,C,E and CO2-equivalent tonnes for annex F)")
             ),
             '',
             '',
@@ -262,7 +264,7 @@ def get_table_header(period):
 
 def get_title():
     return (
-        page_title("Annex III"),
+        page_title(_("Annex III")),
     )
 
 
@@ -286,7 +288,7 @@ def get_total(parties):
                 export_new += row[3]
                 export_recovered += row[4]
     return (
-        b_l('TOTAL'),
+        b_l(_('TOTAL')),
         b_r(str(round_half_up(import_new, 3))),
         b_r(str(round_half_up(import_recovered, 3))),
         b_r(str(round_half_up(export_new, 3))),
