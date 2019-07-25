@@ -278,28 +278,30 @@ def get_table_data_crit(submission, base_row_index):
 
 
 def get_table_essen(submissions):
-    rows = list()
-
     styles = list(TABLE_STYLES + TABLE_CUSTOM_STYLES)
-    rows += get_table_header_essen()
+    rows = get_table_header_essen()
+    num_header_rows = len(rows)
     for submission in submissions:
         row_data, row_styles = get_table_data_essen(submission, len(rows)-1)
         rows += row_data
         styles += row_styles
     widths = col_widths([0.9, 2.5, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 4.0])
+    if len(rows) == num_header_rows:
+        return None
     return Table(rows, colWidths=widths, style=styles, hAlign='LEFT', repeatRows=3)
 
 
 def get_table_crit(submissions):
-    rows = list()
-
     styles = list(TABLE_STYLES + TABLE_CUSTOM_STYLES)
-    rows += get_table_header_crit()
+    rows = get_table_header_crit()
+    num_header_rows = len(rows)
     for submission in submissions:
         row_data, row_styles = get_table_data_crit(submission, len(rows)-1)
         rows += row_data
         styles += row_styles
     widths = col_widths([0.9, 0, 1.5, 1.5, 1.3, 2.5, 1.5, 1.5, 1.5, 1.5, 1.8, 1.5, 1.3, 1.2, 0.8, 6.5])
+    if len(rows) == num_header_rows:
+        return None
     return Table(rows, colWidths=widths, style=styles, hAlign='LEFT', repeatRows=3)
 
 
@@ -345,22 +347,30 @@ def get_flowables(party_name, submissions):
         style=h2_style
     )
     # essen_title.keepWithNext = True
+    essen_table = get_table_essen(submissions)
+    essen_flowables = [
+        essen_title,
+        essen_table,
+        *get_footer_essen(),
+    ] if essen_table else []
 
     crit_title = Paragraph(
         _("Reporting accounting framework for critical uses of methyl bromide"),
         style=h2_style
     )
     # crit_title.keepWithNext = True
+    crit_table = get_table_crit(submissions)
+    crit_flowables = [
+        crit_title,
+        crit_table,
+        *get_footer_crit(),
+    ] if crit_table else []
 
     flowables = [
         Paragraph(party_name.upper(), style=h1_style),
-        essen_title,
-        get_table_essen(submissions),
-        *get_footer_essen(),
         Paragraph('', style=h1_style),
-        crit_title,
-        get_table_crit(submissions),
-        *get_footer_crit(),
+        *essen_flowables,
+        *crit_flowables,
         Paragraph('', style=h1_style),
         PageBreak(),
     ]
