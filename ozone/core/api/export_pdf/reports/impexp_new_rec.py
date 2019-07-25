@@ -15,7 +15,8 @@ from ozone.core.models.utils import round_half_up
 
 from ..util import (
     col_widths,
-    b_c, b_r, b_l, smb_c, smb_r, smb_l, smbi_r, smbi_l,
+    h1_style,
+    b_c, b_r, b_l, smb_c, smb_r, smb_l, smbi_r, smbi_l, sm_no_spacing_style,
     _style,
     FONTSIZE_TABLE, FONTSIZE_H1,
 )
@@ -66,6 +67,8 @@ def get_impexp_new_rec_flowables(periods, parties):
         period = period_data['period']
         parties = period_data['parties']
         flowables.append(get_table(period, parties))
+        flowables.append(*get_footer())
+        flowables.append(Paragraph('', style=h1_style))
         flowables += [PageBreak()]
     return flowables
 
@@ -289,3 +292,13 @@ def get_total(parties):
         b_r(str(round_half_up(export_new, 3))),
         b_r(str(round_half_up(export_recovered, 3))),
     )
+
+
+def get_footer():
+    notes = [
+        "* Population in thousands",
+    ]
+
+    return [
+        Paragraph(_(note), sm_no_spacing_style) for note in notes
+    ]
