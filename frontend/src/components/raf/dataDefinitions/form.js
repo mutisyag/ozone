@@ -46,7 +46,7 @@ const getFormRaf = ($gettext) => {
         saving: false,
         formNumber: 2,
         title: $gettext('Essential and critical uses'),
-        titleHtml: `<b>${$gettext('PRODUCTION')}</b><br><small>${$gettext('Annex F substances for exempted subsectors')}<br>${$gettext('in metric tons (not ODP or CO2-equivalent tonnes)')}</small>`,
+        titleHtml: `<b>${$gettext('PRODUCTION')}</b><br><small>${$gettext('Annex F substances for exempted subsectors')}<br>${$gettext('in metric tons (not ODP or CO₂-equivalent tonnes)')}</small>`,
         detailsHtml: `1. ${$gettext('Fill in this form only if your country is listed in appendix II to decision XXVIII/2, has formally notified the Secretariat of its intention to use the high-ambient-temperature exemption, and produced HFCs for its own use in the subsectors contained in appendix I to decision XXVIII/2')}`,
         isInvalid: false,
         form_fields: [],
