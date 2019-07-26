@@ -79,10 +79,17 @@ class Treaty(models.Model):
         db_table = 'treaty'
 
 
+class DecisionManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related('meeting')
+
+
 class Decision(models.Model):
     """
     Decision
     """
+
+    objects = DecisionManager()
 
     decision_id = models.CharField(max_length=16, unique=True)
 

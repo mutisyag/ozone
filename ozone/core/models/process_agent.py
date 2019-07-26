@@ -31,7 +31,17 @@ class ProcessAgentContainTechnology(models.Model):
         db_table = 'pa_contain_technology'
 
 
+class ProcessAgentApplicationValidityManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'decision',
+        )
+
+
 class ProcessAgentApplicationValidity(models.Model):
+
+    objects = ProcessAgentApplicationValidityManager()
+
     start_date = models.DateField(null=True)
     end_date = models.DateField(null=True)
     decision = models.OneToOneField(
@@ -43,11 +53,18 @@ class ProcessAgentApplicationValidity(models.Model):
     def __str__(self):
         start_year = self.start_date.year if self.start_date else "N/A"
         end_year = self.end_date.year if self.end_date else "N/A"
-        return f"{self.decision.decision_id} {start_year}-{end_year}"
+        return f"{self.decision.decision_id} ({start_year}-{end_year})"
 
     class Meta:
         verbose_name_plural = 'process agent applications validity'
         db_table = 'pa_applications_validity'
+
+
+class ProcessAgentApplicationManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'substance', 'validity', 'validity__decision',
+        )
 
 
 class ProcessAgentApplication(models.Model):
@@ -56,6 +73,8 @@ class ProcessAgentApplication(models.Model):
     in table A of decision X/14 and updated periodically by the Meeting of the
     Parties.
     """
+
+    objects = ProcessAgentApplicationManager()
 
     validity = models.ForeignKey(
         ProcessAgentApplicationValidity,
@@ -78,6 +97,14 @@ class ProcessAgentApplication(models.Model):
         db_table = 'pa_application'
 
 
+class ProcessAgentUsesReportedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'submission', 'submission__party', 'submission__reporting_period',
+            'decision', 'application',
+        )
+
+
 class ProcessAgentUsesReported(models.Model):
     """
     Records information on process agent uses reported.
@@ -86,6 +113,8 @@ class ProcessAgentUsesReported(models.Model):
         ('MT', 'Metric Tonnes'),
         ('ODP tonnes', 'ODP Tonnes')
     )
+
+    objects = ProcessAgentUsesReportedManager()
 
     submission = models.ForeignKey(
         Submission,
