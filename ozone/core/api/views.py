@@ -1875,7 +1875,7 @@ class ReportsViewSet(viewsets.ViewSet):
             "_".join(p.name for p in periods),
         )
         return self._response_pdf(
-            f'impexp_new_rec{params}',
+            f'impexp_new_rec_{params}',
             export_impexp_new_rec(periods=periods, parties=parties)
         )
 

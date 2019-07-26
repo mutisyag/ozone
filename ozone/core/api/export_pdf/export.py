@@ -98,7 +98,7 @@ def export_impexp_new_rec(periods, parties):
     buff, doc = get_doc_template(landscape=False)
 
     doc.build(
-        list(impexp_new_rec.get_impexp_new_rec_flowables(periods, parties)),
+        list(impexp_new_rec.get_flowables(periods, parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )

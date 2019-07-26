@@ -65,7 +65,7 @@ class Reports(enum.Enum):
         return {
             **Reports.args(has_party_param=True, has_period_param=True),
             **{
-                "display_name": "Import and Export of New and Recovered Substances",
+                "display_name": "Import and export of new and recovered substances",
                 "description": _(
                     "Select one or more parties and one reporting period"
                 )

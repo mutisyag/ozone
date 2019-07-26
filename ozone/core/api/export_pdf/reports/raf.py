@@ -4,20 +4,9 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.platypus import PageBreak
 
-from ozone.core.models import (
-    ProdCons,
-    Group,
-    PartyHistory,
-    Limit,
-    LimitTypes,
-    Submission,
-    FormTypes,
-)
-from ozone.core.models.utils import round_half_up
-
 from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
-    smb_l, sm_l, sm_r, b_l, sm_c, smb_c,
+    sm_l, sm_r, sm_c, smb_c,
     TABLE_STYLES, grid_color,
     col_widths, get_big_float, get_remarks,
     sum_decimals, subtract_decimals,

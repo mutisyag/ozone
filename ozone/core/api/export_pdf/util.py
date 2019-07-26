@@ -24,20 +24,12 @@ from reportlab.lib.units import mm
 __all__ = [
     'hr',
     'page_title',
-    'p_c',
-    'p_l',
-    'p_r',
-    'b_c',
-    'b_l',
-    'b_r',
-    'sm_c',
-    'sm_l',
-    'sm_r',
-    'smb_c',
-    'smb_l',
-    'smb_r',
-    'smbi_l',
-    'smbi_r',
+    'p_c', 'p_l', 'p_r',
+    'b_c', 'b_l', 'b_r',
+    'sm_c', 'sm_l', 'sm_r',
+    'smb_c', 'smb_l', 'smb_r',
+    'smi_c', 'smi_l', 'smi_r',
+    'smbi_l', 'smbi_r', 'smbi_c',
     'p_bullet',
 ]
 
@@ -57,17 +49,20 @@ soft_color = (0.8, 0.8, 0.8)
 lighter_grey = (0.95, 0.95, 0.95)
 
 
-TABLE_STYLES = (
+TABLE_STYLES_NOBORDER = (
     ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('GRID', (0, 0), (-1, 0), 0.5, grid_color),
-    ('BOX', (0, 0), (-1, -1), 0.5, grid_color),
-    ('LINEBEFORE', (0, 0), (-1, -1), 0.1, soft_color),
-    ('LINEABOVE', (0, 0), (-1, -1), 0.1, grid_color),
     ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
     ('TOPPADDING', (0, 0), (-1, -1), 0),
     ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
     ('LEFTPADDING', (0, 0), (-1, -1), 2),
     ('RIGHTPADDING', (0, 0), (-1, -1), 2),
+)
+
+TABLE_STYLES = TABLE_STYLES_NOBORDER + (
+    ('GRID', (0, 0), (-1, 0), 0.5, grid_color),
+    ('BOX', (0, 0), (-1, -1), 0.5, grid_color),
+    ('LINEBEFORE', (0, 0), (-1, -1), 0.1, soft_color),
+    ('LINEABOVE', (0, 0), (-1, -1), 0.1, grid_color),
 )
 
 DOUBLE_HEADER_TABLE_STYLES = TABLE_STYLES + (
@@ -100,17 +95,27 @@ _bodytext = partial(_style, 'BodyText', fontSize=FONTSIZE_DEFAULT, fontName='Hel
 centered_paragraph_style = _bodytext(alignment=TA_CENTER)
 left_paragraph_style = _bodytext(alignment=TA_LEFT)
 right_paragraph_style = _bodytext(alignment=TA_RIGHT)
+
 bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontName='Helvetica-Bold')
 bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontName='Helvetica-Bold')
 bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontName='Helvetica-Bold')
+
 small_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL)
 small_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL)
 small_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL)
+
 small_bold_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 small_bold_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
 small_bold_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Bold')
+
+small_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
+small_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
+small_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-Oblique')
+
 small_bold_italic_left_paragraph_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
 small_bold_italic_right_paragraph_style = _bodytext(alignment=TA_RIGHT, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
+small_bold_italic_centered_paragraph_style = _bodytext(alignment=TA_CENTER, fontSize=FONTSIZE_SMALL, fontName='Helvetica-BoldOblique')
+
 bullet_paragraph_style = _bodytext(alignment=TA_LEFT)
 no_spacing_style = _bodytext(alignment=TA_LEFT, spaceBefore=0)
 sm_no_spacing_style = _bodytext(alignment=TA_LEFT, fontSize=FONTSIZE_SMALL, spaceBefore=0)
@@ -159,8 +164,15 @@ sm_r = partial(Paragraph, style=small_right_paragraph_style)
 smb_c = partial(Paragraph, style=small_bold_centered_paragraph_style)
 smb_l = partial(Paragraph, style=small_bold_left_paragraph_style)
 smb_r = partial(Paragraph, style=small_bold_right_paragraph_style)
+
+smi_c = partial(Paragraph, style=small_italic_centered_paragraph_style)
+smi_l = partial(Paragraph, style=small_italic_left_paragraph_style)
+smi_r = partial(Paragraph, style=small_italic_right_paragraph_style)
+
 smbi_l = partial(Paragraph, style=small_bold_italic_left_paragraph_style)
 smbi_r = partial(Paragraph, style=small_bold_italic_right_paragraph_style)
+smbi_c = partial(Paragraph, style=small_bold_italic_centered_paragraph_style)
+
 
 p_bullet = partial(Paragraph, style=bullet_paragraph_style)
 page_title = partial(Paragraph, style=page_title_style)
@@ -175,6 +187,13 @@ def get_big_float(nr):
     if not nr:
         return ''
     return '{:f}'.format(Decimal(str(nr)))
+
+
+def round_big_float(nr, precision):
+    if not nr:
+        return ''
+    format_str = '{0:.%sf}' % (precision,)
+    return format_str.format(Decimal(str(nr)))
 
 
 def as_decimal(nr):

@@ -1,40 +1,21 @@
-from reportlab.platypus import Paragraph, Table, PageBreak
-from reportlab.lib.enums import TA_CENTER
-
-from functools import partial
-
+from collections import defaultdict
 from django.utils.translation import gettext_lazy as _
+from reportlab.platypus import Paragraph, Table, PageBreak
 
 from ozone.core.models import (
     Group,
     ProdCons,
     PartyHistory,
 )
-from ozone.core.models.utils import round_half_up
 
 from ..util import (
-    col_widths,
-    h1_style,
-    b_c, b_r, b_l, smb_c, smb_r, smb_l, smbi_r, smbi_l, sm_no_spacing_style,
-    _style,
-    FONTSIZE_TABLE, FONTSIZE_H1,
+    TABLE_STYLES_NOBORDER, col_widths, round_big_float,
+    h1_style, sm_no_spacing_style,
+    b_c, b_r, b_l, smb_c, smb_r, smb_l, smi_l, sm_r,
 )
-
-
-page_title_style = _style(
-    'Heading1', alignment=TA_CENTER,
-    fontSize=FONTSIZE_H1, fontName='Helvetica-Bold',
-)
-page_title = partial(Paragraph, style=page_title_style)
 
 
 TABLE_CUSTOM_STYLES = (
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('VALIGN', (0, 0), (-1, -1), 'MIDDLE'),
-    ('TOPPADDING', (0, 0), (-1, -1), 0),
-    ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-    ('LEFTPADDING', (0, 0), (-1, -1), 2),
-    ('RIGHTPADDING', (0, 0), (-1, -1), 2),
     ('ALIGN', (1, 3), (-1, -1), 'RIGHT'),
     ('SPAN', (0, 0), (4, 0)),  # Title: Annex III
     ('SPAN', (0, 1), (4, 1)),  # Subtitle
@@ -45,20 +26,15 @@ TABLE_CUSTOM_STYLES = (
 
 
 TABLE_CUSTOM_KEEPTOGETHER_STYLES = (
-    ('FONTSIZE', (0, 0), (-1, -1), FONTSIZE_TABLE),
-    ('TOPPADDING', (0, 0), (-1, -1), 0),
-    ('BOTTOMPADDING', (0, 0), (-1, -1), 0),
-    ('LEFTPADDING', (0, 0), (-1, -1), 2),
-    ('RIGHTPADDING', (0, 0), (-1, -1), 2),
     ('ALIGN', (1, 0), (-1, -1), 'RIGHT'),
     ('KEEPTOGETHER', (0, 0), (-1, -1)),
 )
 
 
-__all__ = ['get_impexp_new_rec_flowables']
+__all__ = ['get_flowables']
 
 
-def get_impexp_new_rec_flowables(periods, parties):
+def get_flowables(periods, parties):
     data = get_data(periods, parties)
 
     flowables = []
@@ -84,14 +60,7 @@ def get_data(periods, parties):
                 party=party,
                 reporting_period=period
             )
-
-            groups_data = get_party_data(period, party, prodcons_qs)
-            if groups_data['data']:
-                if has_subtotal(groups_data['data']):
-                    groups_data['data'].append(
-                        get_subtotal(period, groups_data['data'])
-                    )
-                period_data['parties'].append(groups_data)
+            period_data['parties'].append(get_party_data(period, party, prodcons_qs))
         data.append(period_data)
     return data
 
@@ -102,18 +71,22 @@ def get_party_data(period, party, prodcons_qs):
         reporting_period=period
     )
 
-    data = []
+    ods_data = []
+    hfc_data = []
     all_groups = Group.objects.all()
     for group in all_groups:
         try:
             prodcons = prodcons_qs.get(group=group)
-            import_new = round_half_up(prodcons.import_new, 3)
-            import_recovered = round_half_up(prodcons.import_recovered, 3)
-            export_new = round_half_up(prodcons.export_new, 3)
-            export_recovered = round_half_up(prodcons.export_recovered, 3)
+            # Don't round yet, because very small figures might exist
+            # and we want them displayed as 0.000 in the report
+            import_new = prodcons.import_new
+            import_recovered = prodcons.import_recovered
+            export_new = prodcons.export_new
+            export_recovered = prodcons.export_recovered
         except ProdCons.DoesNotExist:
             import_new, import_recovered, export_new, export_recovered = 0, 0, 0, 0
         if any([import_new, import_recovered, export_new, export_recovered]) != 0:
+            data = ods_data if group.is_odp else hfc_data
             data.append(
                 (
                     group.group_id + ' - ' + group.description,
@@ -123,80 +96,83 @@ def get_party_data(period, party, prodcons_qs):
                     export_recovered,
                 )
             )
+
     return {
         'name': party.name,
         'population': history.population,
         'party_type': history.party_type.abbr,
-        'data': data
+        'ods_data': ods_data,
+        'hfc_data': hfc_data,
+        'ods_subtotal': get_subtotal(ods_data),
     }
 
 
-def has_subtotal(rows):
-    # Don't count Annex F at sub-total
-    no_groups = len([group for group in rows if 'HFCs' not in group[0]])
-
-    # Sub-total makes sense when there are at least two groups
-    return True if no_groups >= 2 else False
-
-
-def get_subtotal(period, rows):
+def get_subtotal(rows):
     import_new, import_recovered, export_new, export_recovered = 0, 0, 0, 0
     for row in rows:
-        # Don't count Annex F when computing the sub-total
-        if 'HFCs' in row[0]:
-            continue
         import_new += row[1]
         import_recovered += row[2]
         export_new += row[3]
         export_recovered += row[4]
     return (
-        smbi_l(_('Sub-Total ODS for {period} in ODP tonnes').format(period=period.name)),
-        smbi_r(str(round_half_up(import_new, 3))),
-        smbi_r(str(round_half_up(import_recovered, 3))),
-        smbi_r(str(round_half_up(export_new, 3))),
-        smbi_r(str(round_half_up(export_recovered, 3))),
+        smi_l(_('Subtotal ODS in ODP tonnes')),
+        import_new,
+        import_recovered,
+        export_new,
+        export_recovered,
+    ) if any((import_new, import_recovered, export_new, export_recovered)) else None
+
+
+def get_row(data, precision):
+    return (
+        data[0],
+        sm_r(round_big_float(data[1], precision)),
+        sm_r(round_big_float(data[2], precision)),
+        sm_r(round_big_float(data[3], precision)),
+        sm_r(round_big_float(data[4], precision)),
     )
 
 
 def get_table(period, parties):
     rows = list()
     rows += get_table_header(period)
-    styles = list(TABLE_CUSTOM_STYLES)
+    styles = list(TABLE_STYLES_NOBORDER + TABLE_CUSTOM_STYLES)
 
     for party in parties:
         party_rows = list()
-        party_rows.append((
-            smb_l(get_party_history(party)),
-        ))
-        annex_f = None
-        for data in party['data']:
-            if (not type(data[0]) is Paragraph) and 'HFCs' in data[0]:
-                annex_f = data
-                continue
-            party_rows.append(data)
-        if annex_f:
+        if party['ods_data'] or party['hfc_data']:
+            party_rows.append((
+                smb_l(get_party_history(party)),
+            ))
+        for data in party['ods_data']:
+            party_rows.append(get_row(data, 5))
+        # append subtotals
+        if party['ods_subtotal']:
+            party_rows.append(get_row(party['ods_subtotal'], 5))
+        for data in party['hfc_data']:
             # We append annex F data after the sub-total
-            party_rows.append(annex_f)
+            party_rows.append(get_row(data, 0))
 
         # Append party data as table to use "keeptogether" feature
-        styles_keeptogether = list(TABLE_CUSTOM_KEEPTOGETHER_STYLES)
-        rows.append(
-            (
-                Table(
-                    party_rows,
-                    colWidths=col_widths([8, 2, 3, 2, 3]),
-                    style=styles_keeptogether,
-                    hAlign='RIGHT'
-                ),
-                '',
-                '',
-                '',
-                ''
+        styles_keeptogether = list(TABLE_STYLES_NOBORDER + TABLE_CUSTOM_KEEPTOGETHER_STYLES)
+        if party_rows:
+            rows.append(
+                (
+                    Table(
+                        party_rows,
+                        colWidths=col_widths([8, 2, 3, 2, 3]),
+                        style=styles_keeptogether,
+                        hAlign='RIGHT'
+                    ),
+                    '',
+                    '',
+                    '',
+                    ''
+                )
             )
-        )
-        rows.append(('', '', '', '', ''))
+            rows.append(('', '', '', '', ''))
 
-    rows.append(get_total(parties))
+    rows += get_totals(parties)
 
     return Table(
         rows,
@@ -210,7 +186,7 @@ def get_table(period, parties):
 def get_table_header(period):
     return [
         (
-            page_title(_('Annex III')),
+            Paragraph(_('Annex III'), style=h1_style),
             '',
             '',
             '',
@@ -219,7 +195,7 @@ def get_table_header(period):
         (
             b_c(
                 _(
-                    "{period} Import and export of new and recovered substances".format(
+                    "{period} import and export of new and recovered substances".format(
                         period=period
                     )
                 )
@@ -262,15 +238,9 @@ def get_table_header(period):
     ]
 
 
-def get_title():
-    return (
-        page_title(_("Annex III")),
-    )
-
-
 def get_party_history(party):
     return _(
-        """{party_name} {party_type} -Population*: {population}""".format(
+        """{party_name} {party_type} - Population*: {population}""".format(
             party_name=party['name'],
             party_type=party['party_type'],
             population=party['population'],
@@ -278,22 +248,35 @@ def get_party_history(party):
     )
 
 
-def get_total(parties):
-    import_new, import_recovered, export_new, export_recovered = 0, 0, 0, 0
-    for party in parties:
-        for row in party['data']:
-            if not type(row[0]) is Paragraph:
-                import_new += row[1]
-                import_recovered += row[2]
-                export_new += row[3]
-                export_recovered += row[4]
-    return (
-        b_l(_('TOTAL')),
-        b_r(str(round_half_up(import_new, 3))),
-        b_r(str(round_half_up(import_recovered, 3))),
-        b_r(str(round_half_up(export_new, 3))),
-        b_r(str(round_half_up(export_recovered, 3))),
-    )
+def get_totals(parties):
+    totals = {
+        'ods_data': defaultdict(float),
+        'hfc_data': defaultdict(float),
+    }
+    for key in totals:
+        for party in parties:
+            for row in party[key]:
+                totals[key]['import_new'] += row[1]
+                totals[key]['import_recovered'] += row[2]
+                totals[key]['export_new'] += row[3]
+                totals[key]['export_recovered'] += row[4]
+                totals[key]['sum'] += sum(row[1:4])
+
+    totals['ods_data']['label'] = 'TOTAL ODS in ODP tonnes'
+    totals['hfc_data']['label'] = 'TOTAL HFC in CO2-equivalent tonnes'
+    totals['ods_data']['precision'] = 5
+    totals['hfc_data']['precision'] = 0
+
+    def to_cell(x, precision):
+        return b_r(round_big_float(x, precision))
+
+    return [(
+        b_l(_(totals[key]['label'])),
+        *(
+            to_cell(totals[key][x], totals[key]['precision'])
+            for x in ('import_new', 'import_recovered', 'export_new', 'export_recovered')
+        )
+    ) for key in totals if totals[key]['sum']]
 
 
 def get_footer():
