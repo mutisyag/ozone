@@ -587,10 +587,12 @@ class Command(BaseCommand):
             try:
                 party = self.parties[entry["ImpSrcCntryID"]].name
             except KeyError as e:
-                party = "Unknown"
+                party = None
 
             if entry["Remark"]:
-                remarks.append(party + ": " + entry["Remark"])
+                if party:
+                    remarks.append(party + ": ")
+                remarks.append(entry["Remark"])
 
         return '\n'.join(remarks)
 
@@ -598,16 +600,17 @@ class Command(BaseCommand):
         raf_imports = []
         for entry in entries:
             if entry["Imported"]:
-                logger.info(f'processing import from {entry["ImpSrcCntryID"]}, quantity {entry["Imported"]}')
+                logger.info(f'{entry["CntryID"]}/{entry["PeriodID"]}: processing import from {entry["ImpSrcCntryID"]}, quantity {entry["Imported"]}')
                 try:
                     party = self.parties[entry["ImpSrcCntryID"]]
                 except KeyError as e:
-                    logger.warning(
-                        "RAF (imports): Unknown source party for %s/%s: %s",
-                        entry["CntryID"],
-                        entry["PeriodID"],
-                        entry["ImpSrcCntryID"],
-                    )
+                    if entry["ImpSrcCntryID"] != 'UNK':
+                        logger.error(
+                            "RAF (imports): Unknown source party for %s/%s: %s",
+                            entry["CntryID"],
+                            entry["PeriodID"],
+                            entry["ImpSrcCntryID"],
+                        )
                     party = None
                 raf_imports.append({
                     "party": party,

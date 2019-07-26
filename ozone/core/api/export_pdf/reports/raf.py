@@ -185,8 +185,8 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
         total_available = sum_decimals(item.on_hand_start_year, total_acquired)
         on_hand_end_year = on_hand_func(total_available, item)
         first_import = imports.pop(0) if imports else None
-        if first_import and first_import.quantity and first_import.party:
-            source_party = first_import.party.name or _('Unspecified')
+        if first_import and first_import.quantity:
+            source_party = first_import.party.name if first_import.party else _('Unspecified')
         else:
             source_party = ''
         rows.append((
