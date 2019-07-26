@@ -599,7 +599,7 @@ class Command(BaseCommand):
     def get_raf_imports(self, entries):
         raf_imports = []
         for entry in entries:
-            if entry["Imported"]:
+            if entry["Imported"] is not None:
                 logger.info(f'{entry["CntryID"]}/{entry["PeriodID"]}: processing import from {entry["ImpSrcCntryID"]}, quantity {entry["Imported"]}')
                 try:
                     party = self.parties[entry["ImpSrcCntryID"]]
