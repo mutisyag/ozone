@@ -665,7 +665,10 @@ class DeviationSourceAdmin(admin.ModelAdmin):
 @admin.register(PlanOfActionDecision)
 class PlanOfActionDecisionAdmin(admin.ModelAdmin):
     list_display = ('decision', 'party', 'year_adopted')
-    search_fields =  ('decision', 'party__name', 'year_adopted')
+    search_fields = ('decision', 'party__name', 'year_adopted')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
 
 
 @admin.register(PlanOfAction)
@@ -674,8 +677,13 @@ class PlanOfActionAdmin(admin.ModelAdmin):
         'party', 'reporting_period', 'group', 'benchmark',
         'annex_group_description', 'combined_id', 'is_valid', 'decision',
     )
-    search_fields =  (
+    search_fields = (
         'reporting_period__name', 'party__name', 'group__group_id',
+    )
+    list_filter = (
+        ('reporting_period__name', custom_title_dropdown_filter('Period')),
+        ('party', MainPartyFilter),
+        'group'
     )
 
 

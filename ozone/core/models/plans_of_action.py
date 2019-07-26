@@ -25,6 +25,11 @@ class PlanOfActionDecision(models.Model):
 
     year_adopted = models.PositiveIntegerField()
 
+    def __str__(self):
+        return (
+            f"Decision {self.decision} for {self.party} - {self.year_adopted}"
+        )
+
     class Meta:
         db_table = 'plan_of_action_decision'
         ordering = ('-year_adopted', 'party__name')
