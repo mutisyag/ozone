@@ -84,11 +84,6 @@ class Command(BaseCommand):
             ("CntryID", PeriodID): {
                 (
                     "SubstID",
-                    "Produced",
-                    "OpenBal",
-                    "EssenUse",
-                    "Exported",
-                    "Destroyed",
                     "EssenCrit"
                 ):
                     [ { data1 }, { data2 } ]
@@ -117,11 +112,6 @@ class Command(BaseCommand):
                 results[pk1] = {}
             pk2 = (
                 row["SubstID"],
-                row["Produced"],
-                row["OpenBal"],
-                row["EssenUse"],
-                row["Exported"],
-                row["Destroyed"],
                 self.get_is_emergency_raf(
                     row["Remark"] if row["Remark"] else ""
                 )
@@ -139,6 +129,7 @@ class Command(BaseCommand):
                 avoid_duplicates[avoid_duplicates_pk] = True
             else:
                 if avoid_duplicates.get(avoid_duplicates_pk):
+                    # TODO: what is going on here?
                     if row["Exempted"]:
                         for existing_row in results[pk1][pk2]:
                             if existing_row["ImpSrcCntryID"] == row["ImpSrcCntryID"]:
@@ -552,7 +543,7 @@ class Command(BaseCommand):
         rafs = []
 
         for pk, entries in rows.items():
-            # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "EssenCrit")
+            # pk = ("SubstID", "EssenCrit")
             try:
                 substance_id = self.substances[pk[0]].id
             except KeyError as e:
@@ -563,13 +554,25 @@ class Command(BaseCommand):
                 "raf_report": {
                     "substance_id": substance_id,
                     # ImpSrcCntryID will be added into `imports` table
-                    "quantity_exempted": entries[0]["Exempted"],
-                    "quantity_production": pk[1],
-                    "on_hand_start_year": pk[2],
-                    "quantity_used": pk[3],
-                    "quantity_exported": pk[4],
-                    "quantity_destroyed": pk[5],
-                    "is_emergency": pk[6],
+                    "quantity_exempted": sum(
+                        e["Exempted"] or 0 for e in entries
+                    ),
+                    "quantity_production": sum(
+                        e["Produced"] or 0 for e in entries
+                    ),
+                    "on_hand_start_year": sum(
+                        e["OpenBal"] or 0 for e in entries
+                    ),
+                    "quantity_used": sum(
+                        e["EssenUse"] or 0 for e in entries
+                    ),
+                    "quantity_exported": sum(
+                        e["Exported"] or 0 for e in entries
+                    ),
+                    "quantity_destroyed": sum(
+                        e["Destroyed"] or 0 for e in entries
+                    ),
+                    "is_emergency": pk[1],
                     "remarks_os": self.get_raf_remarks(entries),
                     "remarks_party": ""
                 },
@@ -595,6 +598,7 @@ class Command(BaseCommand):
         raf_imports = []
         for entry in entries:
             if entry["Imported"]:
+                logger.info(f'processing import from {entry["ImpSrcCntryID"]}, quantity {entry["Imported"]}')
                 try:
                     party = self.parties[entry["ImpSrcCntryID"]]
                 except KeyError as e:
