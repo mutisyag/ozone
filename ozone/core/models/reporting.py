@@ -332,6 +332,9 @@ class Submission(models.Model):
         for key, value in GROUP_FLAGS_MAPPING.items()
     }
 
+    # Only create historical records when changing these fields
+    WATCHED_FIELDS = ('_current_state',)
+
     objects = SubmissionManager()
 
     obligation = models.ForeignKey(
@@ -1400,37 +1403,16 @@ class Submission(models.Model):
         all versions pertaining to this submission's party/period/obligation,
         together with the time of change and user which performed the change.
         """
-        watched_fields = ['_current_state',]
         display_fields = ['version', 'history_date', 'history_user',]
-        ret = []
-        current_values = dict()
-        complete_history = HistoricalSubmission.objects.filter(
+        return HistoricalSubmission.objects.filter(
             party=self.party,
             reporting_period=self.reporting_period,
             obligation=self.obligation,
-        ).order_by('history_date').values(*watched_fields, *display_fields)
-        # We need to identify when the watched fields for any version have
-        # changed.
-        for item in complete_history:
-            version = item['version']
-            # TODO: differentiate between creation and update
-            if version not in current_values:
-                # This item corresponds to the creation of a new version
-                current_values[version] = item
-                ret.append(item)
-            else:
-                # This history entry corresponds to an existing version.
-                # Check whether there's any watched_fields difference to the
-                # current values.
-                diff = {
-                    watched_field: item[watched_field]
-                    for watched_field in watched_fields
-                    if item[watched_field] != current_values[version][watched_field]
-                }
-                if diff:
-                    current_values[version] = item
-                    ret.append(item)
-        return ret
+        ).order_by(
+            'history_date'
+        ).values(
+            *self.WATCHED_FIELDS, *display_fields,
+        )
 
     def has_filled_nominations(self):
         return self.nominations.exists()
@@ -1794,10 +1776,23 @@ class Submission(models.Model):
                 update_fields = list(set(list(update_fields) + ['updated_at']))
 
             self.clean()
-            return super().save(
-                force_insert=force_insert, force_update=force_update,
-                using=using, update_fields=update_fields
+
+            # Only create a history entry if any of the WATCHED_FIELDS
+            # has changed.
+            enable_history = any(
+                [self.tracker.has_changed(f) for f in self.WATCHED_FIELDS]
             )
+            if not enable_history:
+                self.skip_history_when_saving = True
+            try:
+                ret = super().save(
+                    force_insert=force_insert, force_update=force_update,
+                    using=using, update_fields=update_fields
+                )
+            finally:
+                if not enable_history:
+                    del self.skip_history_when_saving
+            return ret
 
     def set_submitted(self):
         self.submitted_at = datetime.now().date()
