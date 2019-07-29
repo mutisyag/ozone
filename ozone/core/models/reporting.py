@@ -35,6 +35,7 @@ __all__ = [
     'FormTypes',
     'Obligation',
     'Submission',
+    'HistoricalSubmission',
     'SubmissionInfo',
     'ReportingChannel',
     'SubmissionFormat',
@@ -331,6 +332,9 @@ class Submission(models.Model):
         value: key
         for key, value in GROUP_FLAGS_MAPPING.items()
     }
+
+    # Only create historical records when changing these fields
+    WATCHED_FIELDS = ('_current_state',)
 
     objects = SubmissionManager()
 
@@ -1394,6 +1398,23 @@ class Submission(models.Model):
             obligation=self.obligation,
         )
 
+    def get_change_history(self):
+        """
+        Returns a list of relevant changes (i.e. state changes for now) for
+        all versions pertaining to this submission's party/period/obligation,
+        together with the time of change and user which performed the change.
+        """
+        display_fields = ['version', 'history_date', 'history_user',]
+        return HistoricalSubmission.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period,
+            obligation=self.obligation,
+        ).order_by(
+            'history_date'
+        ).values(
+            *self.WATCHED_FIELDS, *display_fields,
+        )
+
     def has_filled_nominations(self):
         return self.nominations.exists()
 
@@ -1756,10 +1777,23 @@ class Submission(models.Model):
                 update_fields = list(set(list(update_fields) + ['updated_at']))
 
             self.clean()
-            return super().save(
-                force_insert=force_insert, force_update=force_update,
-                using=using, update_fields=update_fields
+
+            # Only create a history entry if any of the WATCHED_FIELDS
+            # has changed.
+            enable_history = any(
+                [self.tracker.has_changed(f) for f in self.WATCHED_FIELDS]
             )
+            if not enable_history:
+                self.skip_history_when_saving = True
+            try:
+                ret = super().save(
+                    force_insert=force_insert, force_update=force_update,
+                    using=using, update_fields=update_fields
+                )
+            finally:
+                if not enable_history:
+                    del self.skip_history_when_saving
+            return ret
 
     def set_submitted(self):
         self.submitted_at = datetime.now().date()

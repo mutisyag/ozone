@@ -74,6 +74,7 @@ from ..models import (
     DeviationSource,
     PlanOfActionDecision,
     PlanOfAction,
+    HistoricalSubmission,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -677,6 +678,68 @@ class PlanOfActionViewSet(viewsets.ReadOnlyModelViewSet):
         return PlanOfAction.objects.all()
 
 
+class SubmissionChangePaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
+class IsHistoryOwnerFilterBackend(BaseFilterBackend):
+    def filter_queryset(self, request, queryset, view):
+        if not request.user.is_authenticated or request.user.is_anonymous:
+            return queryset.none()
+        elif request.user.is_secretariat:
+            # Secretariat user
+            return queryset
+        else:
+            # Party user
+            return queryset.filter(party=request.user.party)
+
+
+class SubmissionChangeFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    obligation = filters.NumberFilter(
+        "obligation", help_text="Filter by Obligation ID"
+    )
+
+    class Meta:
+        model = HistoricalSubmission
+        fields = ('party', 'obligation', 'reporting_period',)
+
+
+class SubmissionChangeViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = HistoricalSubmission.objects.all()
+    serializer_class = SubmissionHistorySerializer
+    permission_classes = (
+        IsAuthenticated,
+        IsSecretariatOrSameParty,
+    )
+
+    filter_backends = (
+        IsHistoryOwnerFilterBackend,
+        OrderingFilter,
+        filters.DjangoFilterBackend,
+        SearchFilter,
+    )
+    filterset_class = SubmissionChangeFilterSet
+    search_fields = (
+        "party__name", "obligation__name", "reporting_period__name"
+    )
+    ordering = (
+        "obligation__sort_order",
+        "-reporting_period__start_date",
+        "party__name",
+        "-history_date",
+    )
+
+    pagination_class = SubmissionChangePaginator
+
+    def get_queryset(self):
+        return HistoricalSubmission.objects.all()
+
+
 class SubmissionPaginator(PageNumberPagination):
     page_query_param = "page"
     page_size_query_param = "page_size"
@@ -858,6 +921,11 @@ class SubmissionViewSet(viewsets.ModelViewSet):
         historical_records = Submission.objects.get(pk=pk).history.all()
         serializer = SubmissionHistorySerializer(historical_records, many=True)
         return Response(serializer.data)
+
+    @action(detail=True, methods=["get"])
+    def change_history(self, request, pk=None):
+        historical_records = Submission.objects.get(pk=pk).get_change_history()
+        return Response(historical_records)
 
     @action(detail=True, methods=["get"])
     def export_pdf(self, request, pk=None):
