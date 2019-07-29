@@ -35,6 +35,7 @@ __all__ = [
     'FormTypes',
     'Obligation',
     'Submission',
+    'HistoricalSubmission',
     'SubmissionInfo',
     'ReportingChannel',
     'SubmissionFormat',

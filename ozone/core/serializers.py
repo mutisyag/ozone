@@ -23,6 +23,7 @@ from .models import (
     BlendComponent,
     Blend,
     Submission,
+    HistoricalSubmission,
     SubmissionInfo,
     Treaty,
     Article7Questionnaire,
@@ -1759,7 +1760,7 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
     current_state = serializers.SerializerMethodField()
 
     class Meta:
-        model = Submission
+        model = HistoricalSubmission
         fields = (
             'user', 'date', 'current_state',
             'flag_provisional', 'flag_valid', 'flag_superseded',
@@ -1770,16 +1771,20 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
             'flag_has_reported_c2', 'flag_has_reported_c3',
             'flag_has_reported_e', 'flag_has_reported_f',
         )
+        read_only_fields = fields
 
     def get_date(self, obj):
         return obj.history_date.strftime('%Y-%m-%d')
 
     def get_current_state(self, obj):
-        # Unfortunately I can't find a way to avoid using the protected field
         return obj._current_state
 
     def get_user(self, obj):
-        return obj.history_user.username
+        try:
+            return obj.history_user.username
+        except AttributeError as e:
+            print(f'{obj.history_user} - {obj.id} - {obj}')
+            raise
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):

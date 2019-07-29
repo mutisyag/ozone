@@ -51,6 +51,8 @@ router.register(r"deviation-sources", views.DeviationSourceViewSet)
 router.register(r"plans-of-action-decisions", views.PlanOfActionDecisionViewSet)
 router.register(r"plans-of-action", views.PlanOfActionViewSet)
 
+router.register(r"change-history", views.SubmissionChangeViewSet)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
