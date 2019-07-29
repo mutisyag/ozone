@@ -6,7 +6,7 @@ const setTabFiles = ($gettext) => ({
     status: null,
     hasAssideMenu: false,
     title: $gettext('Files'),
-    titleHtml: $gettext('Files'),
+    titleHtml: `<b>${$gettext('SUPPORTING DOCUMENTS')}</b>`,
     detailsHtml: '',
     default_properties: {
       files: []

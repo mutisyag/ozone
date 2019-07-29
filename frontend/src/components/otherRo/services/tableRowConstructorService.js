@@ -70,7 +70,7 @@ export default {
   }) {
     let baseInnerFields = {}
     switch (section) {
-    case 'transfers':
+    case 'transfer':
       baseInnerFields = {
         transfer_type: {
           selected: null,
