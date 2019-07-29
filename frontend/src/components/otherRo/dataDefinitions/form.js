@@ -32,6 +32,7 @@ const getFormOtherRo = ($gettext) => {
         formNumber: 1,
         title: $gettext('Transfers'),
         titleHtml: `<b>${$gettext('Transfer of production/consumption rights')}</b>`,
+        detailsHtml: $gettext('Please fill in this form only if your country used controlled substances for process agent applications in accordance with paragraph decision X/14. Relevant decisions in filling in the form include: IV/12, X/14, XXI/3 and XXIII/7.'),
         form_fields: [],
         blend_substance_headers: ['substance', 'source_party', 'destination_party', 'transferred_amount', 'reporting_period', 'is_basic_domestic_need'],
         get fields_order() {
@@ -94,6 +95,7 @@ const getFormOtherRo = ($gettext) => {
         formNumber: 1,
         title: $gettext('Process agent uses'),
         titleHtml: `<b>${$gettext('List of uses of controlled substances as process agents')}</b>`,
+        detailsHtml: $gettext('Please fill in this form only if your country used controlled substances for process agent applications in accordance with paragraph decision X/14. Relevant decisions in filling in the form include: IV/12, X/14, XXI/3 and XXIII/7.'),
         form_fields: [],
         get fields_order() {
           return this.section_subheaders.map(x => x.name)
