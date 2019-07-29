@@ -21,7 +21,7 @@ const getFormOtherRo = ($gettext) => {
       sub_info: {
         ...getTabSubInfo($gettext),
         hideInfoButton: true,
-        detailsHtml: $gettext('Respondents are requested to read the Introduction, the General Instructions, and the Definitions carefully before proceeding to the questionnaire and to refer to them as necessary when completing the data forms'),
+        detailsHtml: $gettext('Please fill in this form only if your country used controlled substances for process agent applications in accordance with paragraph decision X/14. Relevant decisions in filling in the form include: IV/12, X/14, XXI/3 and XXIII/7.'),
         filterOut: ['submission_format']
       },
       transfers: {
@@ -31,7 +31,7 @@ const getFormOtherRo = ($gettext) => {
         skipSave: true,
         formNumber: 1,
         title: $gettext('Transfers'),
-        titleHtml: `<b>${$gettext('Transfers')}</b>`,
+        titleHtml: `<b>${$gettext('Transfer of production/consumption rights')}</b>`,
         form_fields: [],
         blend_substance_headers: ['substance', 'source_party', 'destination_party', 'transferred_amount', 'reporting_period', 'is_basic_domestic_need'],
         get fields_order() {
@@ -62,7 +62,7 @@ const getFormOtherRo = ($gettext) => {
           name: 'reporting_period',
           isInput: true
         }, {
-          label: `(6)<br>${$gettext('Basic domestic need')}`,
+          label: `(6)<br>${$gettext('Basic domestic needs')}`,
           name: 'is_basic_domestic_need',
           isInput: true
         }, {
@@ -92,8 +92,8 @@ const getFormOtherRo = ($gettext) => {
         status: null,
         skipSave: true,
         formNumber: 1,
-        title: $gettext('Process agents'),
-        titleHtml: `<b>${$gettext('Process agents')}</b>`,
+        title: $gettext('Process agent uses'),
+        titleHtml: `<b>${$gettext('List of uses of controlled substances as process agents')}</b>`,
         form_fields: [],
         get fields_order() {
           return this.section_subheaders.map(x => x.name)
@@ -105,21 +105,21 @@ const getFormOtherRo = ($gettext) => {
           label: `(1) <br> ${$gettext('Substance')}`,
           name: 'application_substance'
         }, {
-          label: `(2) <br> ${$gettext('Application')}`,
+          label: `(2) <br> ${$gettext('Process agent application')}`,
           name: 'application'
         }, {
-          label: `(3)<br>${$gettext('Makeup quantity')}`,
+          label: `(3)<br>${$gettext('Make-up or consumption')}`,
           name: 'makeup_quantity',
           class: 'text-right'
         }, {
-          label: `(4)<br>${$gettext('Emissions')}`,
+          label: `(4)<br>${$gettext('Maximum emissions')}`,
           name: 'emissions',
           class: 'text-right'
         }, {
-          label: `(5)<br>${$gettext('Units')}`,
+          label: `(5)<br>${$gettext('Unit')}`,
           name: 'units'
         }, {
-          label: `(5)<br> ${$gettext('Contain technology')}`,
+          label: `(5)<br> ${$gettext('Containment technologies used to minimize emissions')}`,
           name: 'contain_technologies',
           class: ['text-left', 'brake-row']
         }, {
