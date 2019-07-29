@@ -723,6 +723,15 @@ class SubmissionChangeViewSet(viewsets.ReadOnlyModelViewSet):
         SearchFilter,
     )
     filterset_class = SubmissionChangeFilterSet
+    search_fields = (
+        "party__name", "obligation__name", "reporting_period__name"
+    )
+    ordering = (
+        "obligation__sort_order",
+        "-reporting_period__start_date",
+        "party__name",
+        "-history_date",
+    )
 
     pagination_class = SubmissionChangePaginator
 
