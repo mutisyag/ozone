@@ -1762,6 +1762,7 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
     class Meta:
         model = HistoricalSubmission
         fields = (
+            'party', 'reporting_period', 'obligation', 'version',
             'user', 'date', 'current_state',
             'flag_provisional', 'flag_valid', 'flag_superseded',
             'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
@@ -1780,11 +1781,7 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
         return obj._current_state
 
     def get_user(self, obj):
-        try:
-            return obj.history_user.username
-        except AttributeError as e:
-            print(f'{obj.history_user} - {obj.id} - {obj}')
-            raise
+        return obj.history_user.username
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
