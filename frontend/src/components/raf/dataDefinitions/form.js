@@ -2,6 +2,11 @@ import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
 import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
 import { getTabFlags } from '@/components/common/dataDefinitions/tabFlags'
 
+// eslint-disable-next-line func-names && eslint-disable-next-line no-extend-native
+const insetInArray = (index, item, arr) => {
+  arr.splice(index, 0, item)
+}
+
 const getFormRaf = ($gettext) => {
   const form = {
     formDetails: {
@@ -59,7 +64,12 @@ const getFormRaf = ($gettext) => {
         },
 
         get modal_order() {
-          return this.section_subheaders.map(x => x.name).filter(x => !['year', 'substance', 'validation', 'imports'].includes(x))
+          const order = this.section_subheaders.map(x => x.name).filter(x => !['year', 'substance', 'validation'].includes(x))
+          const indexImports = order.indexOf('quantity_import')
+          insetInArray(indexImports, 'imports', order)
+          const indexCritical = order.indexOf('quantity_used')
+          insetInArray(indexCritical, 'critical_use_category', order)
+          return order
         },
         section_subheaders: [{
           label: `A<br>${$gettext('Year')}`,

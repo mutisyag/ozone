@@ -29,11 +29,11 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
   const forTooltip = {}
   fields.forEach(field => {
     count = doSum([count, field.quantity])
-    forTooltip[field.party] = valueConverter(field.quantity)
+    forTooltip[field.party ? field.party : field.critical_use_category] = valueConverter(field.quantity)
   })
 
   if (count === 0) {
-    returnObj.selected = ''
+    returnObj.selected = null
   } else {
     returnObj.selected = fromExponential(count)
   }
@@ -49,7 +49,7 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue
+    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue, critical_use_categories
   }) {
     const	baseInnerFields = {
       checkForDelete: {
@@ -81,7 +81,13 @@ export default {
         type: 'number',
         selected: null
       },
-      imports: [],
+      imports: [
+        {
+          id: 'other',
+          party: 'other',
+          quantity: null
+        }
+      ],
       get quantity_import() {
         return quantityCalculator(this.imports, this, section, $gettext, countries)
       },
@@ -114,6 +120,16 @@ export default {
       quantity_used: {
         type: 'number',
         selected: null
+      },
+      set quantity_use_categories(val) {
+        if (this.use_categories.length) {
+          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
+        } else {
+          this.quantity_used = {
+            type: 'number',
+            selected: null
+          }
+        }
       },
       use_categories: [],
       quantity_exported: {
@@ -149,14 +165,21 @@ export default {
         return returnObj
       }
     }
+    if (critical) {
+      baseInnerFields.use_categories = [{
+        id: 'other',
+        category: 'other',
+        quantity: null
+      }]
+    }
     if (prefillData) {
       console.log('prefillData', prefillData)
       Object.keys(prefillData).forEach((field) => {
         if (Array.isArray(prefillData[field]) && field === 'imports') {
-          baseInnerFields[field] = prefillData[field]
+          baseInnerFields[field] = [...baseInnerFields[field], ...prefillData[field]]
         }
         if (Array.isArray(prefillData[field]) && field === 'use_categories') {
-          baseInnerFields[field] = prefillData[field]
+          baseInnerFields[field] = [...baseInnerFields[field], ...prefillData[field]]
         }
         console.log(field)
         baseInnerFields[field]
@@ -164,6 +187,7 @@ export default {
             ? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
           : null
       })
+      baseInnerFields.quantity_use_categories = null
     }
 
     return baseInnerFields

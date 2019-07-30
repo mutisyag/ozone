@@ -149,7 +149,21 @@
           </template>
 
           <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+              <span
+                v-if="cell.item.originalObj[inputField].type === 'nonInput'"
+                class="edit-trigger"
+                :key="`${cell.item.index}_${inputField}_${tabName}`"
+                v-b-tooltip.hover="cell.item.originalObj[inputField].tooltip ? true : false"
+                :title="cell.item.originalObj[inputField].tooltip"
+                @click="createModalData(cell.item.originalObj, cell.item.index)"
+              >
+              <span class="input text-right">
+                {{(cell.item[inputField])}}
+                <i v-if="cell.item[inputField]" class="fa fa-info-circle fa-lg"></i>
+              </span>
+            </span>
             <fieldGenerator
+              v-else
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
               :disabled="['remarks_os', 'remarks_party'].includes(inputField) ? getCommentFieldPermission(inputField) : !$store.getters.can_edit_data"
@@ -242,66 +256,10 @@
           </b-col>
         </b-row>
         <div
-          v-if="$store.getters.can_edit_data || modal_data.field.imports.length"
-          v-translate
-        >Amount acquired by import & countries of manufacture</div>
-        <b-row>
-          <b-col>
-            <addParties
-              :parties="modal_data.field.imports"
-              :index="modal_data.index"
-              :tabName="tabName"
-              v-if="$store.getters.can_edit_data"
-            ></addParties>
-          </b-col>
-        </b-row>
-        <b-row
-          class="mb-2 special"
-          v-for="country in modal_data.field.imports"
-          :key="country.party"
-        >
-          <b-col cols="5">{{$store.state.initialData.display.countries[country.party]}}</b-col>
-          <b-col>
-            <fieldGenerator
-              :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
-              :field="country"
-              :disabled="!$store.getters.can_edit_data"
-            />
-          </b-col>
-        </b-row>
-        <hr>
-        <div v-if="isCritical">
-          <div v-translate>Amounts used by critical use category</div>
-          <b-row>
-            <b-col>
-              <addCategories
-                :index="modal_data.index"
-                :tabName="tabName"
-                v-if="$store.getters.can_edit_data"
-              ></addCategories>
-            </b-col>
-          </b-row>
-          <b-row
-              class="mb-2 special"
-              v-for="category in modal_data.field.use_categories"
-              :key="category.critical_use_category"
-            >
-              <b-col cols="5">{{$store.state.initialData.criticalUseCategoryList.find( c => c.value == category.critical_use_category).text}}</b-col>
-              <b-col>
-                <fieldGenerator
-                  :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
-                  :field="category"
-                  :disabled="!$store.getters.can_edit_data"
-                />
-              </b-col>
-            </b-row>
-          <hr>
-        </div>
-
-        <div
           class="mb-3"
           v-for="(order, order_index) in tab_info.modal_order"
           :key="`modal_${order_index}`"
+          v-if="order !== 'imports' && modal_data.field[order]"
         >
           <b-row class="special">
             <b-col cols="3">{{specialLabels(order)}}</b-col>
@@ -329,6 +287,78 @@
             </b-col>
           </b-row>
         </div>
+        <div
+          class="ml-4"
+          v-else-if="order === 'imports'"
+        >
+          <div
+            v-if="$store.getters.can_edit_data || modal_data.field.imports.length"
+            v-translate
+          >Amount acquired by import & countries of manufacture</div>
+          <b-row>
+            <b-col>
+              <addParties
+                :parties="modal_data.field.imports"
+                :index="modal_data.index"
+                :tabName="tabName"
+                v-if="$store.getters.can_edit_data"
+              ></addParties>
+            </b-col>
+          </b-row>
+          <b-row
+            class="mb-2 special"
+            style="margin-left: 0;"
+            v-for="country in modal_data.field.imports"
+            :key="country.party"
+          >
+            <b-col cols="5">{{$store.state.initialData.display.countries[country.party]}}</b-col>
+            <b-col>
+              <fieldGenerator
+                :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
+                :field="country"
+                :disabled="!$store.getters.can_edit_data"
+              />
+            </b-col>
+            <b-col v-if="country.id !== 'other'" cols="1" class="d-flex align-items-center">
+                <i class="fa fa-trash fa-lg cursor-pointer" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'imports', fieldIndex: modal_data.field.imports.indexOf(country)})"></i>
+            </b-col>
+          </b-row>
+          <hr>
+        </div>
+        <div
+          class="ml-4"
+          v-else-if="isCritical && order === 'critical_use_category'"
+        >
+          <div v-translate>Amounts used by critical use category</div>
+          <b-row>
+            <b-col>
+              <addCategories
+                :index="modal_data.index"
+                :tabName="tabName"
+                v-if="$store.getters.can_edit_data"
+              ></addCategories>
+            </b-col>
+          </b-row>
+          <b-row
+              class="mb-2 special"
+              v-for="category in modal_data.field.use_categories"
+              :key="category.critical_use_category"
+            >
+              <b-col cols="5">{{$store.state.initialData.display.criticalUseCategoryList[category.critical_use_category]}}</b-col>
+              <b-col>
+                <fieldGenerator
+                  :fieldInfo="{ index:modal_data.index,tabName: tabName, field: category, category: category.critical_use_category }"
+                  :field="category"
+                  :disabled="!$store.getters.can_edit_data"
+                />
+              </b-col>
+              <b-col cols="1">
+                  <i class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'use_categories', fieldIndex: modal_data.field.use_categories.indexOf(category)})"></i>
+              </b-col>
+            </b-row>
+          <hr>
+        </div>
+
         <b-row
           class="mt-3"
           v-for="comment_field in ['remarks_party','remarks_os']"
@@ -431,7 +461,8 @@ export default {
       const tableFields = []
       this.tab_info.form_fields.forEach(form_field => {
         const tableRow = {}
-        Object.keys(form_field).forEach(key => {
+        for (const key of Object.keys(form_field)) {
+          if (key === 'quantity_use_categories') continue
           if (form_field.substance.selected && !this.$store.getters.getCriticalSubstances(form_field.substance.selected)) {
             tableRow[key] = this.typeOfDisplayObj[key]
               ? this.$store.state.initialData.display[
@@ -440,7 +471,7 @@ export default {
               : (tableRow[key] = form_field[key].selected)
             tableRow.year = this.currentPeriod
           }
-        })
+        }
         if (Object.keys(tableRow).length) {
           tableRow.originalObj = form_field
           tableRow.index = this.tab_info.form_fields.indexOf(form_field)
@@ -460,7 +491,9 @@ export default {
       const tableFields = []
       this.tab_info.form_fields.forEach((element) => {
         const tableRow = {}
-        Object.keys(element).forEach(key => {
+        // Object.keys(element).forEach(key => {
+        for (const key of Object.keys(element)) {
+          if (key === 'quantity_use_categories') continue
           if (element.substance.selected && this.$store.getters.getCriticalSubstances(element.substance.selected)) {
             tableRow[key] = this.typeOfDisplayObj[key]
               ? this.$store.state.initialData.display[
@@ -469,7 +502,7 @@ export default {
               : (tableRow[key] = element[key].selected)
             tableRow.year = this.currentPeriod
           }
-        })
+        }
         if (Object.keys(tableRow).length) {
           tableRow.originalObj = element
           tableRow.index = this.tab_info.form_fields.indexOf(element)

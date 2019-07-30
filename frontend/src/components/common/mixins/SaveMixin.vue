@@ -146,8 +146,9 @@ export default {
           const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
           for (const row in form_field) {
             // special case for raf imports
+            if (!form_field[row]) continue
             if (!Array.isArray(form_field[row])) {
-              save_obj[row] = form_field[row].selected
+              save_obj[row] = form_field[row] ? form_field[row].selected : null
             } else {
               save_obj[row] = form_field[row]
             }

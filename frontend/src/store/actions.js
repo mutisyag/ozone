@@ -417,7 +417,13 @@ const actions = {
 
   async getCriticalUseCategoryList(context) {
     const list = await getCriticalUseCategoryList()
-    context.commit('setCriticalUseCategoryList', list.data.map(cat => ({ text: cat.name, value: cat.id })))
+    context.commit('setCriticalUseCategoryList', {
+      data: list.data.map(cat => ({ text: cat.name, value: cat.id })),
+      display: list.data.reduce((result, item) => {
+        result[item.id] = item.name
+        return result
+      }, { 'other': 'other' })
+    })
   },
 
   async getEmailTemplates(context) {
@@ -481,6 +487,7 @@ const actions = {
     getParties().then(response => {
       const countryOptions = response.data.map((country) => {
         countryDisplay[country.id] = country.name
+        countryDisplay['other'] = 'other'
         return { value: country.id, text: country.name, iso: country.abbr }
       }).filter((p) => p.value !== context.state.current_submission.party)
       const countryOptionsSubInfo = response.data.map((country) => ({ value: country.id, text: country.name, iso: country.abbr }))
@@ -556,7 +563,8 @@ const actions = {
           // ordering_id,
           countries: context.state.initialData.display.countries,
           critical: data.critical || null,
-          exemptionValue: data.exemptionValue
+          exemptionValue: data.exemptionValue,
+          critical_use_categories: context.state.initialData.display.criticalUseCategoryList
         })
         context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
       })

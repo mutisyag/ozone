@@ -72,7 +72,8 @@ const state = {
       substances: null,
       blends: null,
       countries: null,
-      periods: null
+      periods: null,
+      criticalUseCategoryList: null
     }
   },
   alertData: []
