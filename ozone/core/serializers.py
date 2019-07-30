@@ -16,6 +16,7 @@ from .models import (
     Subregion,
     Party,
     PartyRatification,
+    PartyHistory,
     ReportingPeriod,
     Obligation,
     Substance,
@@ -309,17 +310,25 @@ class PartyRatificationSerializer(serializers.ModelSerializer):
     flags = serializers.SerializerMethodField()
 
     def get_flags(self, obj):
-        current_history_entry = obj.history.get(
-            reporting_period=ReportingPeriod.get_current_period()
-        )
-        return dict({
-            field: getattr(current_history_entry, field)
-            for field in (
-                'is_eu_member', 'is_high_ambient_temperature', 'is_article5'
+        try:
+            current_history_entry = obj.history.get(
+                reporting_period=ReportingPeriod.get_current_period()
             )
-        }, **{
-            'is_group2': current_history_entry.is_group2()
-        })
+            return dict({
+                field: getattr(current_history_entry, field)
+                for field in (
+                    'is_eu_member', 'is_high_ambient_temperature', 'is_article5'
+                )
+            }, **{
+                'is_group2': current_history_entry.is_group2()
+            })
+        except PartyHistory.DoesNotExist:
+            return {
+                'is_eu_member':  False,
+                'is_high_ambient_temperature':  False,
+                'is_article5':  False,
+                'is_group2':  False,
+            }
 
     class Meta:
         model = Party
