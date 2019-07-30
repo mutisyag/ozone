@@ -169,6 +169,11 @@ class Party(models.Model):
     abbr_alt = models.CharField(max_length=6, blank=True)
     name_alt = models.CharField(max_length=256, blank=True)
 
+    # Date when Vienna Convention was signed
+    sign_date_vc = models.DateField(null=True, blank=True)
+    # Date when Montreal Protocol was signed
+    sign_date_mp = models.DateField(null=True, blank=True)
+
     @classmethod
     def get_main_parties(cls):
         return cls.objects.filter(id=models.F('parent_party_id'))

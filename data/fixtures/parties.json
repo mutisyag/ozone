@@ -158,6 +158,8 @@
       "name_alt": "Argentina",
       "parent_party": 11,
       "remark": "",
+      "sign_date_mp": "1988-06-29",
+      "sign_date_vc": "1985-03-22",
       "subregion": 11
     },
     "model": "core.party",
@@ -188,6 +190,8 @@
       "name_alt": "Austria",
       "parent_party": 13,
       "remark": "",
+      "sign_date_mp": "1988-08-29",
+      "sign_date_vc": "1985-09-16",
       "subregion": 18
     },
     "model": "core.party",
@@ -203,6 +207,7 @@
       "name_alt": "Australia",
       "parent_party": 14,
       "remark": "",
+      "sign_date_mp": "1988-06-08",
       "subregion": 18
     },
     "model": "core.party",
@@ -307,6 +312,8 @@
       "name_alt": "Belgium",
       "parent_party": 21,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -322,6 +329,8 @@
       "name_alt": "Burkina Faso",
       "parent_party": 22,
       "remark": "",
+      "sign_date_mp": "1988-09-14",
+      "sign_date_vc": "1985-12-12",
       "subregion": 2
     },
     "model": "core.party",
@@ -544,6 +553,8 @@
       "name_alt": "Belarus",
       "parent_party": 37,
       "remark": "",
+      "sign_date_mp": "1988-01-22",
+      "sign_date_vc": "1985-03-22",
       "subregion": 7
     },
     "model": "core.party",
@@ -574,6 +585,8 @@
       "name_alt": "Canada",
       "parent_party": 39,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -633,6 +646,7 @@
       "name_alt": "Congo",
       "parent_party": 43,
       "remark": "",
+      "sign_date_mp": "1988-09-15",
       "subregion": 2
     },
     "model": "core.party",
@@ -648,6 +662,8 @@
       "name_alt": "Switzerland",
       "parent_party": 44,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -693,6 +709,8 @@
       "name_alt": "Chile",
       "parent_party": 47,
       "remark": "",
+      "sign_date_mp": "1988-06-14",
+      "sign_date_vc": "1985-03-22",
       "subregion": 11
     },
     "model": "core.party",
@@ -856,6 +874,8 @@
       "name_alt": "Germany",
       "parent_party": 58,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -886,6 +906,8 @@
       "name_alt": "Denmark",
       "parent_party": 60,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -961,6 +983,8 @@
       "name_alt": "European Union",
       "parent_party": 65,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -991,6 +1015,8 @@
       "name_alt": "Egypt",
       "parent_party": 67,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 1
     },
     "model": "core.party",
@@ -1036,6 +1062,7 @@
       "name_alt": "Spain",
       "parent_party": 70,
       "remark": "",
+      "sign_date_mp": "1988-07-21",
       "subregion": 18
     },
     "model": "core.party",
@@ -1066,6 +1093,8 @@
       "name_alt": "Finland",
       "parent_party": 72,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -1141,6 +1170,8 @@
       "name_alt": "France",
       "parent_party": 77,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -1171,6 +1202,8 @@
       "name_alt": "United Kingdom",
       "parent_party": 79,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-05-20",
       "subregion": 18
     },
     "model": "core.party",
@@ -1245,6 +1278,7 @@
       "name_alt": "Ghana",
       "parent_party": 84,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 1
     },
     "model": "core.party",
@@ -1349,6 +1383,8 @@
       "name_alt": "Greece",
       "parent_party": 91,
       "remark": "",
+      "sign_date_mp": "1987-10-29",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -1527,6 +1563,7 @@
       "name_alt": "Indonesia",
       "parent_party": 103,
       "remark": "",
+      "sign_date_mp": "1988-07-21",
       "subregion": 3
     },
     "model": "core.party",
@@ -1542,6 +1579,7 @@
       "name_alt": "Ireland",
       "parent_party": 104,
       "remark": "",
+      "sign_date_mp": "1988-09-15",
       "subregion": 18
     },
     "model": "core.party",
@@ -1557,6 +1595,7 @@
       "name_alt": "Israel",
       "parent_party": 105,
       "remark": "",
+      "sign_date_mp": "1988-01-14",
       "subregion": 18
     },
     "model": "core.party",
@@ -1661,6 +1700,8 @@
       "name_alt": "Italy",
       "parent_party": 112,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -1720,6 +1761,7 @@
       "name_alt": "Japan",
       "parent_party": 116,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 14
     },
     "model": "core.party",
@@ -1735,6 +1777,7 @@
       "name_alt": "Kenya",
       "parent_party": 117,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 1
     },
     "model": "core.party",
@@ -2020,6 +2063,8 @@
       "name_alt": "Luxembourg",
       "parent_party": 136,
       "remark": "",
+      "sign_date_mp": "1988-01-29",
+      "sign_date_vc": "1985-04-17",
       "subregion": 18
     },
     "model": "core.party",
@@ -2065,6 +2110,8 @@
       "name_alt": "Morocco",
       "parent_party": 139,
       "remark": "",
+      "sign_date_mp": "1988-01-07",
+      "sign_date_vc": "1986-02-07",
       "subregion": 2
     },
     "model": "core.party",
@@ -2304,6 +2351,7 @@
       "name_alt": "Malta",
       "parent_party": 155,
       "remark": "",
+      "sign_date_mp": "1988-09-15",
       "subregion": 18
     },
     "model": "core.party",
@@ -2334,6 +2382,7 @@
       "name_alt": "Maldives",
       "parent_party": 157,
       "remark": "",
+      "sign_date_mp": "1988-07-12",
       "subregion": 4
     },
     "model": "core.party",
@@ -2364,6 +2413,8 @@
       "name_alt": "Mexico",
       "parent_party": 159,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-04-01",
       "subregion": 10
     },
     "model": "core.party",
@@ -2498,6 +2549,8 @@
       "name_alt": "Netherlands",
       "parent_party": 168,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -2513,6 +2566,8 @@
       "name_alt": "Norway",
       "parent_party": 169,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -2573,6 +2628,8 @@
       "name_alt": "New Zealand",
       "parent_party": 173,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1986-03-21",
       "subregion": 18
     },
     "model": "core.party",
@@ -2603,6 +2660,7 @@
       "name_alt": "Panama",
       "parent_party": 175,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 10
     },
     "model": "core.party",
@@ -2618,6 +2676,7 @@
       "name_alt": "Peru",
       "parent_party": 176,
       "remark": "",
+      "sign_date_vc": "1985-03-22",
       "subregion": 11
     },
     "model": "core.party",
@@ -2663,6 +2722,7 @@
       "name_alt": "Philippines",
       "parent_party": 179,
       "remark": "",
+      "sign_date_mp": "1988-09-14",
       "subregion": 3
     },
     "model": "core.party",
@@ -2766,6 +2826,7 @@
       "name_alt": "Portugal",
       "parent_party": 186,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 18
     },
     "model": "core.party",
@@ -2871,6 +2932,8 @@
       "name_alt": "Russian Federation",
       "parent_party": 193,
       "remark": "",
+      "sign_date_mp": "1987-12-29",
+      "sign_date_vc": "1985-03-22",
       "subregion": 7
     },
     "model": "core.party",
@@ -2961,6 +3024,8 @@
       "name_alt": "Sweden",
       "parent_party": 199,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -3079,6 +3144,7 @@
       "name_alt": "Senegal",
       "parent_party": 207,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 2
     },
     "model": "core.party",
@@ -3257,6 +3323,7 @@
       "name_alt": "Togo",
       "parent_party": 219,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 2
     },
     "model": "core.party",
@@ -3272,6 +3339,7 @@
       "name_alt": "Thailand",
       "parent_party": 220,
       "remark": "",
+      "sign_date_mp": "1988-09-15",
       "subregion": 3
     },
     "model": "core.party",
@@ -3451,6 +3519,8 @@
       "name_alt": "Ukraine",
       "parent_party": 232,
       "remark": "",
+      "sign_date_mp": "1988-02-18",
+      "sign_date_vc": "1985-03-22",
       "subregion": 7
     },
     "model": "core.party",
@@ -3466,6 +3536,7 @@
       "name_alt": "Uganda",
       "parent_party": 233,
       "remark": "",
+      "sign_date_mp": "1988-09-15",
       "subregion": 1
     },
     "model": "core.party",
@@ -3495,6 +3566,8 @@
       "name_alt": "United States",
       "parent_party": 235,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
+      "sign_date_vc": "1985-03-22",
       "subregion": 18
     },
     "model": "core.party",
@@ -3570,6 +3643,7 @@
       "name_alt": "Venezuela",
       "parent_party": 240,
       "remark": "",
+      "sign_date_mp": "1987-09-16",
       "subregion": 11
     },
     "model": "core.party",

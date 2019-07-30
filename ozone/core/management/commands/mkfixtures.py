@@ -277,9 +277,16 @@ class Command(BaseCommand):
         f['remark'] = row['Remark'] or ""
         # parent_party will be replaced in party_postprocess
         f['parent_party'] = row['MainCntryID']
+
         f['iso_alpha3_code'] = row['ISO_Alpha3Code'] or ''
         f['abbr_alt'] = row['CntryID_org'] or ''
         f['name_alt'] = row['CntryName20'] or ''
+
+        if row['SignVC']:
+            f['sign_date_vc'] = row['SignVC'].date()
+        if row['SignMP']:
+            f['sign_date_mp'] = row['SignMP'].date()
+
         try:
             f['mdg_region'] = self.lookup_id('mdgregion', 'code', str(row['MDG_CntryCode']))
         except CommandError:
@@ -355,6 +362,7 @@ class Command(BaseCommand):
         f['is_eu_member'] = row['EurUnion']
         f['is_ceit'] = row['CEIT']
         f['remark'] = row['Remark'] if row['Remark'] else ""
+
         return f
 
     def partyratification_map(self, f, row):
@@ -368,7 +376,6 @@ class Command(BaseCommand):
             'At': RatificationTypes.ACCEPTANCE.value,
             'R': RatificationTypes.RATIFICATION.value,
             'Sc': RatificationTypes.SUCCESSION.value,
-            # TODO: What about RatificationTypes.SIGNING ??
         }
         objs = []
         party = self.lookup_id('party', 'abbr', row['CntryID'])
