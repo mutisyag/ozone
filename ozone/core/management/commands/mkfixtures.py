@@ -703,6 +703,14 @@ class Command(BaseCommand):
                 obj['pk'] = len(newdata) + 1
                 newdata[key] = obj
             # else continue
+        newdata["OTHER"] = {
+            'fields': {
+                'name': 'Other',
+                'code': 'OTHER'
+            },
+            'pk': len(newdata) + 1,
+            'model': data[0]['model']
+        }
 
         return sorted(
             list(newdata.values()),

@@ -1678,5 +1678,13 @@
     },
     "model": "core.criticalusecategory",
     "pk": 210
+  },
+  {
+    "fields": {
+      "code": "OTHER",
+      "name": "Other"
+    },
+    "model": "core.criticalusecategory",
+    "pk": 211
   }
 ]
