@@ -219,7 +219,10 @@ class Command(BaseCommand):
         """
         Inserts the processed data into the DB.
         """
-        logger.info(f'Creating RAF for {party_abbr}/{period_name}')
+        logger.info(
+            f'{"Deleting" if purge else "Creating"} RAF for '
+            f'{party_abbr}/{period_name}'
+        )
 
         try:
             party = self.parties[party_abbr]
@@ -489,7 +492,7 @@ class Command(BaseCommand):
             party, period, rows['EssenExemp']
         )
         approved_critical_uses = self.get_critical_uses_approved(
-            party, period, rows['MeBrAgreedCriticalUseCategories']
+            rows['MeBrAgreedCriticalUseCategories']
         )
 
         if not created_at:
@@ -686,12 +689,9 @@ class Command(BaseCommand):
 
         return approved_exemptions
 
-    def get_critical_uses_approved(self, party, period, rows):
+    def get_critical_uses_approved(self, rows):
         """
-        Parses the MeBrAgreedCriticalUseCategories data for the submission identified by
-        the party/period combination.
-
-        Return a list of approved critical use categories.
+        Returns a list of approved critical use categories from the rows.
         """
 
         approved_critical_uses = []
