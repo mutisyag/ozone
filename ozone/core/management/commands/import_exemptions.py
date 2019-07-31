@@ -1,5 +1,4 @@
 import logging
-import re
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
@@ -18,6 +17,8 @@ from ozone.core.models import (
     Obligation,
     Nomination,
     ExemptionApproved,
+    CriticalUseCategory,
+    ApprovedCriticalUse,
 )
 
 
@@ -112,9 +113,7 @@ class Command(BaseCommand):
                 results[pk1] = {}
             pk2 = (
                 row["SubstID"],
-                self.get_is_emergency_raf(
-                    row["Remark"] if row["Remark"] else ""
-                )
+                row["ExemptType"] == "EmergCrit" if row["ExemptType"] else False,
             )
 
             avoid_duplicates_pk = (
@@ -140,14 +139,9 @@ class Command(BaseCommand):
 
         return results
 
-    def get_is_emergency_raf(self, remark):
-        if re.search('emergency', remark, re.IGNORECASE):
-            return True
-        return False
-
     def load_exemption_sheets(self, filename):
         """
-        Loads the 'EssenNom' and 'EssenExemp' from the Excel file.
+        Loads the 'EssenNom', 'EssenExemp' and 'MeBrAgreedCriticalUseCategories'.
         Returns a dictionary in the following format:
         {
             ("CntryID", PeriodID): {
@@ -165,7 +159,7 @@ class Command(BaseCommand):
 
         wb = load_workbook(filename=filename)
 
-        ws_list = [wb['EssenNom'], wb['EssenExemp']]
+        ws_list = [wb['EssenNom'], wb['EssenExemp'], wb['MeBrAgreedCriticalUseCategories']]
 
         for sheet in ws_list:
             values = list(sheet.values)
@@ -178,6 +172,7 @@ class Command(BaseCommand):
                     # Initialize both lists.
                     results[pk]['EssenNom'] = []
                     results[pk]['EssenExemp'] = []
+                    results[pk]['MeBrAgreedCriticalUseCategories'] = []
                     results[pk][sheet.title].append(row)
                 else:
                     results[pk][sheet.title].append(row)
@@ -224,6 +219,7 @@ class Command(BaseCommand):
         """
         Inserts the processed data into the DB.
         """
+        logger.info(f'Creating RAF for {party_abbr}/{period_name}')
 
         try:
             party = self.parties[party_abbr]
@@ -328,6 +324,7 @@ class Command(BaseCommand):
 
         data = self.get_submission_exemption_data(party, period, rows)
 
+        logger.info(f'Creating Exemption for {party_abbr}/{period_name}')
         submission = Submission.objects.create(
             **data["submission"]
         )
@@ -345,6 +342,9 @@ class Command(BaseCommand):
                     submission=submission,
                     **val
                 )
+        self.create_approved_critical_uses(
+            party, period, data['approved_critical_uses']
+        )
 
         submission._current_state = "finalized"
         submission.save()
@@ -488,6 +488,9 @@ class Command(BaseCommand):
         approvals = self.get_exemptions_approved(
             party, period, rows['EssenExemp']
         )
+        approved_critical_uses = self.get_critical_uses_approved(
+            party, period, rows['MeBrAgreedCriticalUseCategories']
+        )
 
         if not created_at:
             created_at = updated_at
@@ -528,8 +531,9 @@ class Command(BaseCommand):
                 "email": "",
                 "date": created_at
             },
-           "nominations": nominations,
-           "exemptionapproveds": approvals,
+            "nominations": nominations,
+            "exemptionapproveds": approvals,
+            "approved_critical_uses": approved_critical_uses,
         }
 
     def get_rafs(self, party, period, rows):
@@ -677,7 +681,59 @@ class Command(BaseCommand):
                 "approved_teap_amount": row['ApprTEAP'],
                 "quantity": row["ApprAmt"],
                 "remarks_os": row['Remark'] if row['Remark'] else "",
-                "is_emergency": row["IsEmergency"] if row["IsEmergency"] else False
+                "is_emergency": True if row["IsEmergency"] else False
             })
 
         return approved_exemptions
+
+    def get_critical_uses_approved(self, party, period, rows):
+        """
+        Parses the MeBrAgreedCriticalUseCategories data for the submission identified by
+        the party/period combination.
+
+        Return a list of approved critical use categories.
+        """
+
+        approved_critical_uses = []
+
+        for row in rows:
+
+            approved_critical_uses.append({
+                "decision": row['ApprDec'],
+                "category_name": row['Categories of permitted critical uses'],
+                "quantity": row["ApprAmt"],
+            })
+
+        return approved_critical_uses
+
+    def create_approved_critical_uses(self, party, period, items):
+        for item in items:
+            code = CriticalUseCategory.get_alt_name(item['category_name'])
+            decision = item['decision']
+            # Remove number in bracket when searching for the exemption
+            # to handle inconsistent decision numbers
+            decision_base = decision[:decision.find('(')]
+            try:
+                category = CriticalUseCategory.objects.get(code=code)
+                exemption = ExemptionApproved.objects.get(
+                    submission__party=party,
+                    submission__reporting_period=period,
+                    decision_approved__startswith=decision_base,
+                    substance__has_critical_uses=True,
+                    is_emergency=False,
+                )
+                ApprovedCriticalUse.objects.create(
+                    exemption=exemption,
+                    critical_use_category=category,
+                    quantity=item['quantity']
+                )
+            except CriticalUseCategory.DoesNotExist:
+                logger.error(
+                    "Unknown category %s for %s/%s",
+                    item['category_name'], party.abbr, period.name
+                )
+            except ExemptionApproved.DoesNotExist:
+                logger.error(
+                    "Unknown exemption: %s/%s/%s",
+                    party.abbr, period.name, item['decision']
+                )

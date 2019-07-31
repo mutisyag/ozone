@@ -11,6 +11,7 @@ __all__ = [
     'Nomination',
     'ExemptionApproved',
     'CriticalUseCategory',
+    'ApprovedCriticalUse',
 ]
 
 
@@ -53,10 +54,20 @@ class Nomination(BaseExemption):
         db_table = 'exemption_nomination'
 
 
+class ExemptionApprovedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'submission', 'submission__reporting_period', 'submission__party',
+            'substance',
+        )
+
+
 class ExemptionApproved(BaseExemption):
     """
     Filled by a Secretariat after a Meeting of the Parties (or an emergency decision).
     """
+
+    objects = ExemptionApprovedManager()
 
     decision_approved = models.CharField(max_length=256, blank=True)
 
@@ -64,6 +75,11 @@ class ExemptionApproved(BaseExemption):
         validators=[MinValueValidator(0.0)],
         blank=True, null=True
     )
+
+    def __str__(self):
+        return f"""Exemption {self.submission.reporting_period.name}\
+        {self.submission.party.abbr} ({self.submission.party.name})\
+        {self.substance.name} - {self.decision_approved}"""
 
     @classmethod
     def get_approved_amounts(cls, party, reporting_period):
@@ -90,6 +106,7 @@ class ExemptionApproved(BaseExemption):
 
     class Meta:
         db_table = 'exemption_approved'
+        verbose_name_plural = 'Exemptions approved'
 
 
 class CriticalUseCategory(models.Model):
@@ -121,7 +138,7 @@ class ApprovedCriticalUse(models.Model):
     exemption = models.ForeignKey(
         ExemptionApproved,
         related_name='approved_uses',
-        on_delete=models.PROTECT
+        on_delete=models.CASCADE
     )
 
     critical_use_category = models.ForeignKey(
@@ -137,3 +154,4 @@ class ApprovedCriticalUse(models.Model):
 
     class Meta:
         db_table = 'exemption_approved_critical_use'
+        verbose_name_plural = 'Exemptions approved critical uses'
