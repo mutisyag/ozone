@@ -335,7 +335,7 @@ class PartyRatificationViewSet(ReadOnlyMixin, generics.ListAPIView):
 
     def get_queryset(self):
         queryset = Party.get_main_parties().prefetch_related(
-            'subregion', 'ratifications', 'ratifications__treaty'
+            'subregion', 'ratifications', 'ratifications__treaty', 'declarations',
         )
         if self.kwargs.get('party_id'):
             queryset = queryset.filter(id=self.kwargs['party_id'])

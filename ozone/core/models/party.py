@@ -17,6 +17,7 @@ __all__ = [
     'PartyHistory',
     'Language',
     'PartyRatification',
+    'PartyDeclaration',
     'PartyType',
     'Language',
 ]
@@ -287,6 +288,24 @@ class PartyRatification(models.Model):
 
     class Meta:
         db_table = 'party_ratification'
+
+
+class PartyDeclaration(models.Model):
+    """
+    Associated notes (HTML text) related to ratification of VC and MP.
+    """
+
+    party = models.ForeignKey(
+        Party, related_name='declarations', on_delete=models.PROTECT
+    )
+
+    declaration = models.TextField()
+
+    def __str__(self):
+        return f'{self.party.name} (declaration)'
+
+    class Meta:
+        db_table = 'party_declaration'
 
 
 class Language(models.Model):

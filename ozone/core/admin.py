@@ -43,6 +43,7 @@ from .models import (
     Baseline,
     Limit,
     PartyRatification,
+    PartyDeclaration,
     CriticalUseCategory,
     FormTypes,
     Transfer,
@@ -489,6 +490,22 @@ class PartyRatificationAdmin(admin.ModelAdmin):
     list_display = ('party', 'treaty', 'ratification_type', 'ratification_date', 'entry_into_force_date')
     list_filter = (('party', MainPartyFilter), 'treaty', 'ratification_type')
     search_fields = ['party__name', 'treaty__name']
+
+
+@admin.register(PartyDeclaration)
+class PartyDeclarationAdmin(admin.ModelAdmin):
+    list_display = ('party', )
+    list_filter = (('party', MainPartyFilter),)
+    search_fields = ['party__name', 'declaration']
+    ordering = ('party__name', )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        main_parties_queryset = Party.objects.filter(
+            parent_party__id=F('id'),
+        ).order_by('name')
+        form.base_fields['party'].queryset = main_parties_queryset
+        return form
 
 
 @admin.register(CriticalUseCategory)

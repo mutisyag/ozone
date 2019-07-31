@@ -24,6 +24,7 @@ class Command(BaseCommand):
         'partytypes',
         'partieshistory',
         'partiesratification',
+        'partiesdeclaration',
         'reporting_channels',
         'submission_formats',
         'baseline_types',
