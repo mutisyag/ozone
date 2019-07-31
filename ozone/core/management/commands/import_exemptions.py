@@ -662,15 +662,17 @@ class Command(BaseCommand):
             try:
                 code = CriticalUseCategory.get_alt_name(entry['CU_Title'])
                 category = CriticalUseCategory.objects.get(code=code)
-                use_categories.append({
-                    'quantity': entry["CU_Amount"],
-                    'critical_use_category': category,
-                })
             except CriticalUseCategory.DoesNotExist:
-                logger.error(
+                logger.warning(
                     f'Unknown category {code} for {entry["CntryID"]}/'
                     f'{entry["PeriodID"]}'
                 )
+                category = None
+
+            use_categories.append({
+                'quantity': entry["CU_Amount"],
+                'critical_use_category': category,
+            })
 
         return use_categories
 
