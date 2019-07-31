@@ -66,7 +66,7 @@ class Command(BaseCommand):
             raise
         except Exception as e:
             logger.error(
-                "Error %s while saving transfer %s/%s", e, row['cntry'], row['name'],
+                "Error %s while saving focal point %s/%s", e, row['cntry'], row['name'],
                 exc_info=True
             )
             return 0
