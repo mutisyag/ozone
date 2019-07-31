@@ -659,13 +659,18 @@ class Command(BaseCommand):
                 f'{entry["CntryID"]}/{entry["PeriodID"]}: processing critical '
                 f'use category {entry["CU_Title"]}'
             )
-            code = CriticalUseCategory.get_alt_name(entry['CU_Title'])
-            use_categories.append({
+            try:
+                code = CriticalUseCategory.get_alt_name(entry['CU_Title'])
+                category = CriticalUseCategory.objects.get(code=code)
+                use_categories.append({
                     'quantity': entry["CU_Amount"],
-                    'critical_use_category': CriticalUseCategory.objects.get(
-                        code=code
-                    ),
-            })
+                    'critical_use_category': category,
+                })
+            except CriticalUseCategory.DoesNotExist:
+                logger.error(
+                    f'Unknown category {code} for {entry["CntryID"]}/'
+                    f'{entry["PeriodID"]}'
+                )
 
         return use_categories
 
