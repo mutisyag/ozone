@@ -44,7 +44,10 @@ from .models import (
     Limit,
     PartyRatification,
     PartyDeclaration,
+    ExemptionApproved,
+    Nomination,
     CriticalUseCategory,
+    ApprovedCriticalUse,
     FormTypes,
     Transfer,
     Email,
@@ -506,6 +509,86 @@ class PartyDeclarationAdmin(admin.ModelAdmin):
         ).order_by('name')
         form.base_fields['party'].queryset = main_parties_queryset
         return form
+
+
+class ExemptionBaseAdmin:
+    # TODO: maybe merge with ProcessAgentBaseAdmin
+    def get_reporting_period(self, obj):
+        return obj.submission.reporting_period
+    get_reporting_period.short_description = 'Reporting period'
+
+    def get_party(self, obj):
+        return obj.submission.party
+    get_party.short_description = 'Party'
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        submission_queryset = Submission.objects.filter(
+            obligation___form_type=FormTypes.EXEMPTION.value
+        ).order_by('reporting_period__name')
+        form.base_fields['submission'].queryset = submission_queryset
+        return form
+
+
+@admin.register(ExemptionApproved)
+class ExemptionApprovedAdmin(ExemptionBaseAdmin, admin.ModelAdmin):
+    list_display = (
+        'get_reporting_period', 'get_party',
+        'substance',
+        'decision_approved',
+        'quantity', 'approved_teap_amount', 'is_emergency',
+    )
+    search_fields = ['decision_approved', 'submission__party__name']
+    list_filter = (
+        ('submission__reporting_period__name', custom_title_dropdown_filter('period')),
+        ('submission__party', MainPartyFilter),
+        ('decision_approved', custom_title_dropdown_filter('decision')),
+        ('substance__name', custom_title_dropdown_filter('substance')),
+        'is_emergency'
+    )
+    ordering = ('-submission__reporting_period__name', 'submission__party__name')
+
+
+@admin.register(ApprovedCriticalUse)
+class ApprovedCriticalUseAdmin(admin.ModelAdmin):
+
+    def get_reporting_period(self, obj):
+        return obj.exemption.submission.reporting_period
+    get_reporting_period.short_description = 'Reporting period'
+
+    def get_party(self, obj):
+        return obj.exemption.submission.party
+    get_party.short_description = 'Party'
+
+    def get_decision(self, obj):
+        return obj.exemption.decision_approved
+    get_decision.short_description = 'Decision'
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        exemption_queryset = ExemptionApproved.objects.filter(
+            substance__has_critical_uses=True
+        ).order_by('-submission__reporting_period__name', 'submission__party__name')
+        form.base_fields['exemption'].queryset = exemption_queryset
+        return form
+
+    list_display = (
+        'get_reporting_period', 'get_party',
+        'get_decision',
+        'critical_use_category',
+        'quantity',
+    )
+    list_filter = (
+        ('exemption__submission__reporting_period__name', custom_title_dropdown_filter('period')),
+        ('exemption__submission__party', MainPartyFilter),
+        ('exemption__decision_approved', custom_title_dropdown_filter('decision')),
+        ('critical_use_category__name', custom_title_dropdown_filter('category')),
+    )
+    search_fields = (
+        'critical_use_category__name', 'exemption__decision_approved',
+    )
+
+    ordering = ('-exemption__submission__reporting_period__name', 'exemption__submission__party__name')
 
 
 @admin.register(CriticalUseCategory)
