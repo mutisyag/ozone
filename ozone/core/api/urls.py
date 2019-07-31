@@ -325,6 +325,16 @@ email_templates.register(
 )
 router.extend(email_templates)
 
+# Countries profile
+countries_profile = routers.SimpleRouter()
+countries_profile.register(
+    'countries-profile',
+    views.CountryProfileViewSet,
+    base_name='countries-profile'
+)
+router.extend(countries_profile)
+
+
 urlpatterns = (
     router.urls
     + [url for router in nested_routers for url in router.urls]

@@ -75,6 +75,7 @@ from ..models import (
     PlanOfActionDecision,
     PlanOfAction,
     HistoricalSubmission,
+    FocalPoint,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -145,7 +146,8 @@ from ..serializers import (
     DeviationSourceSerializer,
     DeviationTypeSerializer,
     PlanOfActionDecisionSerializer,
-    PlanOfActionSerializer
+    PlanOfActionSerializer,
+    FocalPointSerializer,
 )
 
 
@@ -1952,3 +1954,31 @@ class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = CriticalUseCategorySerializer
     queryset = CriticalUseCategory.objects.all()
+
+
+class CountryProfileViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
+
+    def _set_if_not_none(self, mapping, key, value):
+        if value is not None:
+            mapping[key] = value
+
+    @action(detail=False, methods=["get"], url_path="focal-points")
+    def focal_points(self, request):
+        party = self.request.query_params.get('party')
+        is_licensing_system = self.request.query_params.get('is_licensing_system')
+        is_national = self.request.query_params.get('is_national')
+
+        filter_params = {}
+        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'is_licensing_system', is_licensing_system)
+        self._set_if_not_none(filter_params, 'is_national', is_national)
+
+        focal_points = FocalPoint.objects.filter(
+            **filter_params
+        ).order_by('ordering_id')
+
+        serializer = FocalPointSerializer(
+            focal_points, many=True, context={"request": request}
+        )
+        return Response(serializer.data)
