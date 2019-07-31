@@ -651,7 +651,7 @@ class EmailTemplateAdmin(admin.ModelAdmin):
 
 @admin.register(ProcessAgentApplication)
 class ProcessAgentApplicationAdmin(admin.ModelAdmin):
-    list_display = ('validity', 'counter', 'substance', 'application')
+    list_display = ('validity', 'counter', 'substance', 'application', 'remark')
     list_filter = (
         ('substance__name', custom_title_dropdown_filter('substance')),
         (
@@ -660,7 +660,7 @@ class ProcessAgentApplicationAdmin(admin.ModelAdmin):
         ),
         ('counter', custom_title_dropdown_filter('counter'))
     )
-    search_fields = ('validity', 'substance__name')
+    search_fields = ('validity__decision__decision_id', 'substance__name', 'application', 'remark')
 
 
 @admin.register(ProcessAgentEmissionLimit)
@@ -702,9 +702,25 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
         return obj.application.application if obj.application else ''
     get_application.short_description = 'Application'
 
+    def get_substance(self, obj):
+        return obj.application.substance.name if obj.application and obj.application.substance else ''
+    get_substance.short_description = 'Substance'
+
+    def get_decision(self, obj):
+        return obj.decision.decision_id if obj.decision else ''
+    get_decision.short_description = 'Decision'
+
+    def get_containment(self, obj):
+        return ', '.join(
+            [x.description for x in obj.contain_technologies.all()]
+        ) if obj.contain_technologies else ''
+    get_containment.short_description = 'Containment technologies'
+
     list_display = (
-        'get_reporting_period', 'get_party', 'get_application',
-        'makeup_quantity', 'emissions', 'units'
+        'get_reporting_period', 'get_party',
+        'makeup_quantity', 'emissions', 'units',
+        'get_application', 'get_decision', 'get_substance',
+        'get_containment',
     )
     list_filter = (
         (
@@ -714,7 +730,9 @@ class ProcessAgentUsesReportedAdmin(ProcessAgentBaseAdmin, admin.ModelAdmin):
         ('submission__party', MainPartyFilter)
     )
     search_fields = (
-        'submission__reporting_period__name', 'submission__party__name',
+        'submission__reporting_period__name',
+        'submission__party__name',
+        'contain_technologies__description',
     )
 
 
