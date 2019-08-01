@@ -65,6 +65,8 @@ from .models import (
     PlanOfAction,
     ProdCons,
     ProdConsMT,
+    FocalPoint,
+    LicensingSystem,
 )
 
 
@@ -835,6 +837,33 @@ class ProdConsMTAdmin(admin.ModelAdmin):
         ('substance__name', custom_title_dropdown_filter('substance')),
         'substance__group'
     )
+
+
+@admin.register(FocalPoint)
+class FocalPointAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'name', 'designation', 'email', 'is_licensing_system', 'is_national'
+    )
+    search_fields = ('party__name', 'name', 'designation')
+    list_filter = (
+        ('party', MainPartyFilter),
+        'is_licensing_system', 'is_national'
+    )
+    ordering = ('ordering_id', )
+
+
+@admin.register(LicensingSystem)
+class LicensingSystemAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'has_ods', 'date_reported_ods', 'has_hfc', 'date_reported_hfc',
+        'remarks'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'has_ods', 'has_hfc'
+    )
+    ordering = ('party__name', )
 
 
 # register all adminactions
