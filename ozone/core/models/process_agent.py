@@ -101,7 +101,7 @@ class ProcessAgentUsesReportedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
             'submission', 'submission__party', 'submission__reporting_period',
-            'decision', 'application',
+            'decision', 'application', 'application__substance',
         )
 
 

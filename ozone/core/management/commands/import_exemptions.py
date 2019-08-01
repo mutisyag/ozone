@@ -13,6 +13,7 @@ from ozone.core.models import (
     ReportingPeriod,
     ReportingChannel,
     RAFReport,
+    RAFReportUseCategory,
     RAFImport,
     Obligation,
     Nomination,
@@ -123,19 +124,34 @@ class Command(BaseCommand):
                 row["ImpSrcCntryID"],
             )
             if not results[pk1].get(pk2):
-                results[pk1][pk2] = []
-                results[pk1][pk2].append(row)
+                results[pk1][pk2] = {"raf": [], "critical": []}
+                results[pk1][pk2]["raf"].append(row)
                 avoid_duplicates[avoid_duplicates_pk] = True
             else:
                 if avoid_duplicates.get(avoid_duplicates_pk):
                     # TODO: what is going on here?
                     if row["Exempted"]:
-                        for existing_row in results[pk1][pk2]:
+                        for existing_row in results[pk1][pk2]["raf"]:
                             if existing_row["ImpSrcCntryID"] == row["ImpSrcCntryID"]:
                                 existing_row["Exempted"] = row["Exempted"]
                 else:
-                    results[pk1][pk2].append(row)
+                    results[pk1][pk2]["raf"].append(row)
                     avoid_duplicates[avoid_duplicates_pk] = True
+
+        ws = wb['MeBrActualCriticalUsebyCategory']
+        values = list(ws.values)
+        headers = values[0]
+        for row in values[1:]:
+            row = dict(zip(headers, row))
+            pk1 = row["CntryID"], row["PeriodID"]
+            if not results.get(pk1):
+                results[pk1] = {}
+            pk2 = (
+                Substance.objects.get(name='Methyl Bromide').substance_id, False
+            )
+            if not results[pk1].get(pk2):
+                results[pk1][pk2] = {"raf": [], "critical": []}
+            results[pk1][pk2]["critical"].append(row)
 
         return results
 
@@ -204,7 +220,7 @@ class Command(BaseCommand):
                 return self.process_submission_raf_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
-            else:
+            elif obligation.pk == 11:
                 return self.process_submission_exemption_entry(
                     party_abbr, period_name, rows, obligation, recreate=recreate, purge=purge
                 )
@@ -219,7 +235,10 @@ class Command(BaseCommand):
         """
         Inserts the processed data into the DB.
         """
-        logger.info(f'Creating RAF for {party_abbr}/{period_name}')
+        logger.info(
+            f'{"Deleting" if purge else "Creating"} RAF for '
+            f'{party_abbr}/{period_name}'
+        )
 
         try:
             party = self.parties[party_abbr]
@@ -262,11 +281,18 @@ class Command(BaseCommand):
                 **raf['raf_report']
             )
 
-            # Create RAFImport objects, if exists.
+            # Create RAFImport objects, if they exist.
             for raf_import in raf['imports']:
                 RAFImport.objects.create(
                     report=report,
                     **raf_import
+                )
+
+            # Create critical use category objects, if they exist
+            for raf_critical_use in raf['use_categories']:
+                RAFReportUseCategory.objects.create(
+                    report=report,
+                    **raf_critical_use
                 )
 
         submission._current_state = "finalized"
@@ -403,7 +429,7 @@ class Command(BaseCommand):
         created_at = None
         for pk in rows.keys():
             # pk = ("SubstID", "Produced", "OpenBal", "EssenUse", "Exported", "Destroyed", "EssenCrit")
-            for row in rows[pk]:
+            for row in rows[pk]["raf"]:
                 if not created_at and row["DateCreate"]:
                     created_at = row["DateCreate"]
                 elif created_at and row["DateCreate"]:
@@ -413,7 +439,7 @@ class Command(BaseCommand):
         # # Similar to `DateCreate` but this time we will take the newest value.
         updated_at = None
         for pk in rows.keys():
-            for row in rows[pk]:
+            for row in rows[pk]["raf"]:
                 if not updated_at and row["DateUpdate"]:
                     updated_at = row["DateUpdate"]
                 elif updated_at and row["DateUpdate"]:
@@ -459,7 +485,7 @@ class Command(BaseCommand):
                 "email": "",
                 "date": created_at
             },
-            "rafreports": self.get_rafs(party, period, rows)
+            "rafreports": self.get_rafs(party, period, rows),
         }
 
     def get_submission_exemption_data(self, party, period, rows):
@@ -489,7 +515,7 @@ class Command(BaseCommand):
             party, period, rows['EssenExemp']
         )
         approved_critical_uses = self.get_critical_uses_approved(
-            party, period, rows['MeBrAgreedCriticalUseCategories']
+            rows['MeBrAgreedCriticalUseCategories']
         )
 
         if not created_at:
@@ -546,8 +572,10 @@ class Command(BaseCommand):
 
         rafs = []
 
-        for pk, entries in rows.items():
+        for pk, entry in rows.items():
             # pk = ("SubstID", "EssenCrit")
+            raf_entries = entry["raf"]
+            critical_entries = entry["critical"]
             try:
                 substance_id = self.substances[pk[0]].id
             except KeyError as e:
@@ -559,28 +587,29 @@ class Command(BaseCommand):
                     "substance_id": substance_id,
                     # ImpSrcCntryID will be added into `imports` table
                     "quantity_exempted": sum(
-                        e["Exempted"] or 0 for e in entries
+                        e["Exempted"] or 0 for e in raf_entries
                     ),
                     "quantity_production": sum(
-                        e["Produced"] or 0 for e in entries
+                        e["Produced"] or 0 for e in raf_entries
                     ),
                     "on_hand_start_year": sum(
-                        e["OpenBal"] or 0 for e in entries
+                        e["OpenBal"] or 0 for e in raf_entries
                     ),
                     "quantity_used": sum(
-                        e["EssenUse"] or 0 for e in entries
+                        e["EssenUse"] or 0 for e in raf_entries
                     ),
                     "quantity_exported": sum(
-                        e["Exported"] or 0 for e in entries
+                        e["Exported"] or 0 for e in raf_entries
                     ),
                     "quantity_destroyed": sum(
-                        e["Destroyed"] or 0 for e in entries
+                        e["Destroyed"] or 0 for e in raf_entries
                     ),
                     "is_emergency": pk[1],
-                    "remarks_os": self.get_raf_remarks(entries),
+                    "remarks_os": self.get_raf_remarks(raf_entries),
                     "remarks_party": ""
                 },
-                "imports": self.get_raf_imports(entries)
+                "imports": self.get_raf_imports(raf_entries),
+                "use_categories": self.get_use_categories(critical_entries)
             })
 
         return rafs
@@ -621,6 +650,31 @@ class Command(BaseCommand):
                     "quantity": entry["Imported"]
                 })
         return raf_imports
+
+    def get_use_categories(self, entries):
+        use_categories = []
+
+        for entry in entries:
+            logger.info(
+                f'{entry["CntryID"]}/{entry["PeriodID"]}: processing critical '
+                f'use category {entry["CU_Title"]}'
+            )
+            try:
+                code = CriticalUseCategory.get_alt_name(entry['CU_Title'])
+                category = CriticalUseCategory.objects.get(code=code)
+            except CriticalUseCategory.DoesNotExist:
+                logger.warning(
+                    f'Unknown category {code} for {entry["CntryID"]}/'
+                    f'{entry["PeriodID"]}'
+                )
+                category = None
+
+            use_categories.append({
+                'quantity': entry["CU_Amount"],
+                'critical_use_category': category,
+            })
+
+        return use_categories
 
     def check_is_emergency(self, rows):
         """
@@ -686,12 +740,9 @@ class Command(BaseCommand):
 
         return approved_exemptions
 
-    def get_critical_uses_approved(self, party, period, rows):
+    def get_critical_uses_approved(self, rows):
         """
-        Parses the MeBrAgreedCriticalUseCategories data for the submission identified by
-        the party/period combination.
-
-        Return a list of approved critical use categories.
+        Returns a list of approved critical use categories from the rows.
         """
 
         approved_critical_uses = []

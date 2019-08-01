@@ -1101,6 +1101,7 @@ class RAFReportUseCategory(ModifyPreventionMixin, models.Model):
 
     critical_use_category = models.ForeignKey(
         CriticalUseCategory,
+        null=True,
         related_name='use_categories',
         on_delete=models.CASCADE
     )
