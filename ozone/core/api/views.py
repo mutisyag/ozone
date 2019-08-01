@@ -76,6 +76,7 @@ from ..models import (
     PlanOfAction,
     HistoricalSubmission,
     FocalPoint,
+    LicensingSystem,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -148,6 +149,7 @@ from ..serializers import (
     PlanOfActionDecisionSerializer,
     PlanOfActionSerializer,
     FocalPointSerializer,
+    LicensingSystemSerializer,
 )
 
 
@@ -1980,5 +1982,23 @@ class CountryProfileViewSet(viewsets.ViewSet):
 
         serializer = FocalPointSerializer(
             focal_points, many=True, context={"request": request}
+        )
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], url_path="licensing-systems")
+    def licensing_systems(self, request):
+        party = self.request.query_params.get('party')
+        has_ods = self.request.query_params.get('has_ods')
+        has_hfc = self.request.query_params.get('has_hfc')
+
+        filter_params = {}
+        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'has_ods', has_ods)
+        self._set_if_not_none(filter_params, 'has_hfc', has_hfc)
+
+        licensing_systems = LicensingSystem.objects.filter(**filter_params)
+
+        serializer = LicensingSystemSerializer(
+            licensing_systems, many=True, context={"request": request}
         )
         return Response(serializer.data)

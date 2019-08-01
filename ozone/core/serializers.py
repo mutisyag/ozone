@@ -62,6 +62,7 @@ from .models import (
     PlanOfActionDecision,
     PlanOfAction,
     FocalPoint,
+    LicensingSystem,
 )
 
 User = get_user_model()
@@ -1879,3 +1880,11 @@ class FocalPointSerializer(serializers.ModelSerializer):
     class Meta:
         model = FocalPoint
         exclude = ('submission', 'ordering_id')
+
+
+class LicensingSystemSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = LicensingSystem
+        exclude = ('submission', )
