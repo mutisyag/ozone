@@ -91,5 +91,5 @@ class PlanOfAction(models.Model):
     class Meta:
         db_table = 'plan_of_action'
         verbose_name_plural = 'plans of action'
-        unique_together = ('party', 'reporting_period', 'group',)
+        unique_together = ('party', 'reporting_period', 'group', 'is_valid',)
         ordering = ('party__name', '-reporting_period', 'group',)
