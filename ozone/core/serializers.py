@@ -61,6 +61,8 @@ from .models import (
     DeviationSource,
     PlanOfActionDecision,
     PlanOfAction,
+    FocalPoint,
+    LicensingSystem,
 )
 
 User = get_user_model()
@@ -1870,3 +1872,19 @@ class EmailTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmailTemplate
         fields = "__all__"
+
+
+class FocalPointSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = FocalPoint
+        exclude = ('submission', 'ordering_id')
+
+
+class LicensingSystemSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = LicensingSystem
+        exclude = ('submission', )
