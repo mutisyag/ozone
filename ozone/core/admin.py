@@ -803,7 +803,8 @@ class PlanOfActionAdmin(admin.ModelAdmin):
     list_filter = (
         ('reporting_period__name', custom_title_dropdown_filter('Period')),
         ('party', MainPartyFilter),
-        'group'
+        'group',
+        'is_valid',
     )
 
 

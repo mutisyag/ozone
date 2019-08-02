@@ -181,7 +181,7 @@ class Command(BaseCommand):
                 row["AnxGrpDescription"] if row['AnxGrpDescription'] else '')
             ,
             "combined_id": False if row["CombinedID"] == 0 else True,
-            "is_valid": False if row["isValid"] == 0 else True,
+            "is_valid": row["isValid"],
             "decision_id": decision.id if decision else None,
         }
 
