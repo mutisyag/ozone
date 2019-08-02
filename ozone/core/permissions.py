@@ -44,7 +44,7 @@ class IsSecretariatOrSafeMethod(BasePermission):
         if request.method in SAFE_METHODS:
             return True
 
-        return request.user.is_secretariat
+        return request.user.is_secretariat and not request.user.is_read_only
 
 
 class IsSecretariatOrSamePartySubmission(BasePermission):
