@@ -63,6 +63,7 @@ from .models import (
     PlanOfAction,
     FocalPoint,
     LicensingSystem,
+    Website,
 )
 
 User = get_user_model()
@@ -1888,3 +1889,11 @@ class LicensingSystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = LicensingSystem
         exclude = ('submission', )
+
+
+class WebsiteSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Website
+        exclude = ('ordering_id', )

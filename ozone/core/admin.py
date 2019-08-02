@@ -67,6 +67,7 @@ from .models import (
     ProdConsMT,
     FocalPoint,
     LicensingSystem,
+    Website,
 )
 
 
@@ -865,6 +866,19 @@ class LicensingSystemAdmin(admin.ModelAdmin):
         'has_ods', 'has_hfc'
     )
     ordering = ('party__name', )
+
+
+@admin.register(Website)
+class WebsiteAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'url', 'description', 'is_url_broken'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'is_url_broken'
+    )
+    ordering = ('ordering_id', )
 
 
 # register all adminactions

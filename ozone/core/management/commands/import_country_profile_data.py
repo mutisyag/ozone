@@ -10,6 +10,7 @@ from ozone.core.models import (
     LicensingSystem,
     Party,
     User,
+    Website,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,7 +52,8 @@ class Command(BaseCommand):
 
         workbook_processors = [
             ('fp-LicSys', self.process_focal_points_data),
-            ('LicSysEstablishment', self.process_licensing_system_data)
+            ('LicSysEstablishment', self.process_licensing_system_data),
+            ('Websites', self.process_website_data),
         ]
 
         for workbook_name, workbook_processor in workbook_processors:
@@ -130,7 +132,7 @@ class Command(BaseCommand):
             raise
         except Exception as e:
             logger.error(
-                "Error %s while saving licensing system %s",
+                "Error %s while saving licensing system for %s",
                 e,
                 row['CntryID'],
                 exc_info=True,
@@ -142,7 +144,7 @@ class Command(BaseCommand):
         entry = self.get_licensing_system_data(row)
 
         LicensingSystem.objects.create(**entry)
-        logger.info("Licensing system %s imported", row['CntryID'])
+        logger.info("Licensing system for %s imported", row['CntryID'])
         return True
 
     def get_licensing_system_data(self, row):
@@ -163,4 +165,48 @@ class Command(BaseCommand):
             "has_hfc": has_hfc,
             "date_reported_hfc": row["HFCLicSysRepDate"],
             "remarks": row["HFCLicSysSummary"] if row["HFCLicSysSummary"] else ""
+        }
+
+    def process_website_data(self, row):
+        try:
+            return self._process_website_data(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving website for %s and URL text: %s",
+                e,
+                row['Country'],
+                row['URL_text'],
+                exc_info=True,
+            )
+            return 0
+
+    @transaction.atomic()
+    def _process_website_data(self, row):
+        entry = self.get_website_data(row)
+        Website.objects.create(**entry)
+        logger.info(
+            "Website for %s and URL text: %s imported",
+            row['Country'],
+            row['URL_text']
+        )
+        return True
+
+    def get_website_data(self, row):
+        try:
+            party = self.parties[row['Country']]
+        except KeyError as e:
+            import pdb; pdb.set_trace()
+            raise e
+
+        is_url_broken = False
+        if row['Broken URL link']:
+            is_url_broken = True
+        return {
+            "party_id": party.id,
+            "url": row['URL'],
+            "description": row['URL_text'] if row['URL_text'] else "",
+            "is_url_broken": is_url_broken,
+            "ordering_id": row['Order']
         }

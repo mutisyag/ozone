@@ -3,6 +3,26 @@ from django.db import models
 from . import Party, Submission
 
 
+class Website(models.Model):
+    party = models.ForeignKey(
+        Party, related_name='websites', on_delete=models.PROTECT
+    )
+    # TODO
+    # file = models.FileField(
+    #     upload_to='uploads/', blank=True, null=True
+    # )
+    url = models.URLField(
+        'URL', max_length=255, null=True, blank=True
+    )
+    description = models.CharField(max_length=9999, blank=True)
+    is_url_broken = models.BooleanField(default=False)
+
+    ordering_id = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "website"
+
+
 class LicensingSystem(models.Model):
     party = models.ForeignKey(
         Party, related_name='licensing_systems', on_delete=models.PROTECT
