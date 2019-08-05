@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import logging
 
 from openpyxl import load_workbook
@@ -59,7 +61,9 @@ class Command(BaseCommand):
             ('fp-LicSys', self.process_focal_points_data),
             ('LicSysEstablishment', self.process_licensing_system_data),
             ('Websites', self.process_website_data),
-            ('cp_Article_9', self.process_article9)
+            ('cp_Article_9', self.process_article9),
+            ('cp_Env_Sound_Mgmt_strategies', self.process_ods_strategies),
+            ('cp_Avoid_HCFC_Equip', self.process_unwanted_imports)
         ]
 
         for workbook_name, workbook_processor in workbook_processors:
@@ -268,4 +272,84 @@ class Command(BaseCommand):
             "description": row['Publications_Title'] if row['Publications_Title'] else "",
             "url": url,
             "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
+        }
+
+    def process_ods_strategies(self, row):
+        try:
+            return self._process_ods_strategies(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving ODS strategies for %s",
+                e,
+                row['Party'],
+                exc_info=True,
+            )
+            return 0
+
+    def _process_ods_strategies(self, row):
+        entry = self.get_ods_strategies_data(row)
+        OtherCountryProfileData.objects.create(**entry)
+        logger.info(
+            "ODS strategy for %s imported",
+            row['Party'],
+        )
+
+    def get_ods_strategies_data(self, row):
+        try:
+            party = self.parties[row['Party']]
+        except KeyError as e:
+            raise e
+
+        try:
+            period = self.periods[str(row['PeriodID'])]
+        except KeyError as e:
+            raise e
+
+        return {
+            "party_id": party.id,
+            "reporting_period_id": period.id,
+            "obligation_id": 10,
+            "url": row["URL"] if row["URL"] else "",
+        }
+
+    def process_unwanted_imports(self, row):
+        try:
+            return self._process_unwanted_imports(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving unwanted imports for %s",
+                e,
+                row['Party'],
+                exc_info=True,
+            )
+            return 0
+
+    def _process_unwanted_imports(self, row):
+        entry = self.get_unwanted_import_data(row)
+        OtherCountryProfileData.objects.create(**entry)
+        logger.info(
+            "Unwanted import for %s imported",
+            row['Party'],
+        )
+
+    def get_unwanted_import_data(self, row):
+        try:
+            party = self.parties[row['Party']]
+        except KeyError as e:
+            raise e
+
+        try:
+            period = self.periods[str(row['Document_Date'].year)]
+        except KeyError as e:
+            raise e
+
+        return {
+            "party_id": party.id,
+            "reporting_period_id": period.id,
+            "obligation_id": 10,
+            "url": row["URL"] if row["URL"] else "",
         }
