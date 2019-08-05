@@ -78,6 +78,7 @@ from ..models import (
     FocalPoint,
     LicensingSystem,
     Website,
+    OtherCountryProfileData,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -152,6 +153,7 @@ from ..serializers import (
     FocalPointSerializer,
     LicensingSystemSerializer,
     WebsiteSerializer,
+    OtherCountryProfileDataSerializer,
 )
 
 
@@ -2006,15 +2008,37 @@ class CountryProfileViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     @action(detail=False, methods=["get"], url_path="websites")
-    def website(self, request):
+    def websites(self, request):
         party = self.request.query_params.get('party')
 
         filter_params = {}
         self._set_if_not_none(filter_params, 'party__abbr', party)
 
-        websites = Website.objects.filter(**filter_params)
+        websites = Website.objects.filter(
+            **filter_params
+        ).order_by('ordering_id')
 
         serializer = WebsiteSerializer(
             websites, many=True, context={"request": request}
+        )
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], url_path="others")
+    def others(self, request):
+        party = self.request.query_params.get('party')
+        period = self.request.query_params.get('period')
+        obligation = self.request.query_params.get('obligation')
+
+        filter_params = {}
+        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'reporting_period__name', period)
+        self._set_if_not_none(filter_params, 'obligation__id', obligation)
+
+        others = OtherCountryProfileData.objects.filter(
+            **filter_params
+        ).order_by('party__name', 'reporting_period__name')
+
+        serializer = OtherCountryProfileDataSerializer(
+            others, many=True, context={"request": request}
         )
         return Response(serializer.data)

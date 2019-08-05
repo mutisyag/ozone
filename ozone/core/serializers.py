@@ -64,6 +64,7 @@ from .models import (
     FocalPoint,
     LicensingSystem,
     Website,
+    OtherCountryProfileData,
 )
 
 User = get_user_model()
@@ -1897,3 +1898,13 @@ class WebsiteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Website
         exclude = ('ordering_id', )
+
+
+class OtherCountryProfileDataSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+    period = serializers.StringRelatedField(source='reporting_period', read_only=True)
+    obligation = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = OtherCountryProfileData
+        exclude = ('submission', 'reporting_period')

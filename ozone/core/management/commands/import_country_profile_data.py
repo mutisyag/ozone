@@ -7,10 +7,14 @@ from django.db import transaction
 
 from ozone.core.models import (
     FocalPoint,
+    FormTypes,
     LicensingSystem,
+    Obligation,
+    OtherCountryProfileData,
     Party,
+    ReportingPeriod,
     User,
-    Website,
+    Website
 )
 
 logger = logging.getLogger(__name__)
@@ -24,6 +28,7 @@ class Command(BaseCommand):
         self.wb = None
         self.parties = {_party.name: _party for _party in Party.objects.all()}
         self.parties_abbr = {_party.abbr: _party for _party in Party.objects.all()}
+        self.periods = {_period.name: _period for _period in ReportingPeriod.objects.all()}
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
@@ -54,6 +59,7 @@ class Command(BaseCommand):
             ('fp-LicSys', self.process_focal_points_data),
             ('LicSysEstablishment', self.process_licensing_system_data),
             ('Websites', self.process_website_data),
+            ('cp_Article_9', self.process_article9)
         ]
 
         for workbook_name, workbook_processor in workbook_processors:
@@ -197,7 +203,6 @@ class Command(BaseCommand):
         try:
             party = self.parties[row['Country']]
         except KeyError as e:
-            import pdb; pdb.set_trace()
             raise e
 
         is_url_broken = False
@@ -209,4 +214,58 @@ class Command(BaseCommand):
             "description": row['URL_text'] if row['URL_text'] else "",
             "is_url_broken": is_url_broken,
             "ordering_id": row['Order']
+        }
+
+    def process_article9(self, row):
+        try:
+            return self._process_article9(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving article9 for %s/%s/%s",
+                e,
+                row['Party'],
+                row['PeriodID'],
+                row['Publications_Title'],
+                exc_info=True,
+            )
+            return 0
+
+    def _process_article9(self, row):
+        entry = self.get_article9_data(row)
+        OtherCountryProfileData.objects.create(**entry)
+        logger.info(
+            "Article9 for %s/%s imported",
+            row['Party'],
+            row['PeriodID']
+        )
+
+    def get_article9_data(self, row):
+        try:
+            party = self.parties[row['Party']]
+        except KeyError as e:
+            if row['Party'] == 'Venezuela':
+                party = self.parties['Venezuela (Bolivarian Republic of)']
+            else:
+                raise e
+        try:
+            period = self.periods[str(row['PeriodID'])]
+        except KeyError as e:
+            raise e
+
+        if row['Submission URL']:
+            url = row['Submission URL']
+        elif row['Publications_URL']:
+            url = row['Publications_URL']
+        else:
+            url = ""
+
+        return {
+            "party_id": party.id,
+            "reporting_period_id": period.id,
+            "obligation_id": 8,
+            "description": row['Publications_Title'] if row['Publications_Title'] else "",
+            "url": url,
+            "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
         }

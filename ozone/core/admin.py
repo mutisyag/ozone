@@ -68,6 +68,7 @@ from .models import (
     FocalPoint,
     LicensingSystem,
     Website,
+    OtherCountryProfileData,
 )
 
 
@@ -879,6 +880,20 @@ class WebsiteAdmin(admin.ModelAdmin):
         'is_url_broken'
     )
     ordering = ('ordering_id', )
+
+
+@admin.register(OtherCountryProfileData)
+class OtherCountryProfileDataAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'reporting_period', 'obligation', 'url', 'description',
+        'remarks_secretariat'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'obligation'
+    )
+    ordering = ('party__name', 'reporting_period__name')
 
 
 # register all adminactions

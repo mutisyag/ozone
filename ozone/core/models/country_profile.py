@@ -1,6 +1,45 @@
 from django.db import models
 
-from . import Party, Submission
+from . import Obligation, Party, ReportingPeriod, Submission
+
+
+class OtherCountryProfileData(models.Model):
+
+    party = models.ForeignKey(
+        Party,
+        related_name='other_country_profile_data',
+        on_delete=models.PROTECT
+    )
+    reporting_period = models.ForeignKey(
+        ReportingPeriod,
+        related_name='other_country_profile_data',
+        on_delete=models.PROTECT
+    )
+    obligation = models.ForeignKey(
+        Obligation,
+        related_name='other_country_profile_data',
+        on_delete=models.PROTECT
+    )
+    submission = models.ForeignKey(
+        Submission,
+        related_name='other_country_profile_data',
+        on_delete=models.PROTECT,
+        null=True
+    )
+
+    description = models.CharField(max_length=9999, blank=True)
+    # TODO
+    # file = models.FileField(
+    #     upload_to='uploads/', blank=True, null=True
+    # )
+    url = models.URLField(
+        'URL', max_length=1024, null=True, blank=True
+    )
+    remarks_secretariat = models.CharField(max_length=9999, blank=True)
+
+    class Meta:
+        db_table = "other_country_profile_data"
+        verbose_name_plural = "other country profile data"
 
 
 class Website(models.Model):
@@ -12,7 +51,7 @@ class Website(models.Model):
     #     upload_to='uploads/', blank=True, null=True
     # )
     url = models.URLField(
-        'URL', max_length=255, null=True, blank=True
+        'URL', max_length=1024, null=True, blank=True
     )
     description = models.CharField(max_length=9999, blank=True)
     is_url_broken = models.BooleanField(default=False)
