@@ -1967,6 +1967,13 @@ class CountryProfileViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"], url_path="focal-points")
     def focal_points(self, request):
+        """
+        Query arguments:
+        - "party": <int>
+        - "is_licensing_system": <boolean>
+        - "is_national": <boolean>
+        """
+
         party = self.request.query_params.get('party')
         is_licensing_system = self.request.query_params.get('is_licensing_system')
         is_national = self.request.query_params.get('is_national')
@@ -1987,6 +1994,13 @@ class CountryProfileViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"], url_path="licensing-systems")
     def licensing_systems(self, request):
+        """
+        Query arguments:
+        - "party": <int>
+        - "has_ods": <boolean>
+        - "has_hfc": <boolean>
+        """
+
         party = self.request.query_params.get('party')
         has_ods = self.request.query_params.get('has_ods')
         has_hfc = self.request.query_params.get('has_hfc')
