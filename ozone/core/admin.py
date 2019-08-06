@@ -872,7 +872,7 @@ class LicensingSystemAdmin(admin.ModelAdmin):
 @admin.register(Website)
 class WebsiteAdmin(admin.ModelAdmin):
     list_display = (
-        'party', 'url', 'description', 'is_url_broken'
+        'party', 'url', 'file', 'description', 'is_url_broken'
     )
     search_fields = ('party__name', )
     list_filter = (
@@ -885,7 +885,7 @@ class WebsiteAdmin(admin.ModelAdmin):
 @admin.register(OtherCountryProfileData)
 class OtherCountryProfileDataAdmin(admin.ModelAdmin):
     list_display = (
-        'party', 'reporting_period', 'obligation', 'url', 'description',
+        'party', 'reporting_period', 'obligation', 'url', 'file', 'description',
         'remarks_secretariat'
     )
     search_fields = ('party__name', )

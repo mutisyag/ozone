@@ -3,6 +3,10 @@ from django.db import models
 from . import Obligation, Party, ReportingPeriod, Submission
 
 
+def user_directory_path(instance, filename):
+    return filename
+
+
 class OtherCountryProfileData(models.Model):
 
     party = models.ForeignKey(
@@ -24,14 +28,15 @@ class OtherCountryProfileData(models.Model):
         Submission,
         related_name='other_country_profile_data',
         on_delete=models.PROTECT,
-        null=True
+        null=True,
+        blank=True
     )
 
     description = models.CharField(max_length=9999, blank=True)
-    # TODO
-    # file = models.FileField(
-    #     upload_to='uploads/', blank=True, null=True
-    # )
+
+    file = models.FileField(
+        upload_to=user_directory_path, blank=True, null=True
+    )
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
     )
@@ -46,10 +51,11 @@ class Website(models.Model):
     party = models.ForeignKey(
         Party, related_name='websites', on_delete=models.PROTECT
     )
-    # TODO
-    # file = models.FileField(
-    #     upload_to='uploads/', blank=True, null=True
-    # )
+
+    file = models.FileField(
+        upload_to=user_directory_path, blank=True, null=True
+    )
+
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
     )
@@ -76,7 +82,8 @@ class LicensingSystem(models.Model):
         Submission,
         related_name='licensing_systems',
         on_delete=models.PROTECT,
-        null=True
+        null=True,
+        blank=True
     )
 
     class Meta:
@@ -101,7 +108,8 @@ class FocalPoint(models.Model):
         Submission,
         related_name='focal_points',
         on_delete=models.PROTECT,
-        null=True
+        null=True,
+        blank=True
     )
 
     ordering_id = models.IntegerField(default=0)

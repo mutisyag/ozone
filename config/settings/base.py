@@ -210,6 +210,7 @@ STATICFILES_DIRS = (
 # MEDIA
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#media-root
+MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/local/tusd_uploads'
 
 
