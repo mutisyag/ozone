@@ -1972,7 +1972,7 @@ class CountryProfileViewSet(viewsets.ViewSet):
         is_national = self.request.query_params.get('is_national')
 
         filter_params = {}
-        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'party__id', party)
         self._set_if_not_none(filter_params, 'is_licensing_system', is_licensing_system)
         self._set_if_not_none(filter_params, 'is_national', is_national)
 
@@ -1992,7 +1992,7 @@ class CountryProfileViewSet(viewsets.ViewSet):
         has_hfc = self.request.query_params.get('has_hfc')
 
         filter_params = {}
-        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'party__id', party)
         self._set_if_not_none(filter_params, 'has_ods', has_ods)
         self._set_if_not_none(filter_params, 'has_hfc', has_hfc)
 
