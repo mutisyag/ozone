@@ -2023,10 +2023,15 @@ class CountryProfileViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"], url_path="websites")
     def websites(self, request):
+        """
+        Query arguments:
+        - "party": <int>
+        """
+
         party = self.request.query_params.get('party')
 
         filter_params = {}
-        self._set_if_not_none(filter_params, 'party__abbr', party)
+        self._set_if_not_none(filter_params, 'party__id', party)
 
         websites = Website.objects.filter(
             **filter_params
@@ -2039,13 +2044,20 @@ class CountryProfileViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=["get"], url_path="others")
     def others(self, request):
+        """
+        Query arguments:
+        - "party": <int>
+        - "period": <int>
+        - "obligation": <int>
+        """
+
         party = self.request.query_params.get('party')
         period = self.request.query_params.get('period')
         obligation = self.request.query_params.get('obligation')
 
         filter_params = {}
-        self._set_if_not_none(filter_params, 'party__abbr', party)
-        self._set_if_not_none(filter_params, 'reporting_period__name', period)
+        self._set_if_not_none(filter_params, 'party__id', party)
+        self._set_if_not_none(filter_params, 'reporting_period__id', period)
         self._set_if_not_none(filter_params, 'obligation__id', obligation)
 
         others = OtherCountryProfileData.objects.filter(
