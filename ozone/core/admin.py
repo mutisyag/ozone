@@ -69,6 +69,7 @@ from .models import (
     LicensingSystem,
     Website,
     OtherCountryProfileData,
+    ReclamationFacility,
 )
 
 
@@ -894,6 +895,18 @@ class OtherCountryProfileDataAdmin(admin.ModelAdmin):
         'obligation'
     )
     ordering = ('party__name', 'reporting_period__name')
+
+
+@admin.register(ReclamationFacility)
+class ReclamationFacilityAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'date_reported', 'name', 'address', 'reclaimed_substances',
+        'capacity', 'remarks'
+    )
+    search_fields = ('party__name', 'name')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
 
 
 # register all adminactions

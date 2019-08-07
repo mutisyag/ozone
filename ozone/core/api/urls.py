@@ -325,7 +325,6 @@ email_templates.register(
 )
 router.extend(email_templates)
 
-
 # Countries profile
 focal_points = routers.SimpleRouter()
 focal_points.register(
@@ -360,6 +359,14 @@ others.register(
     base_name='countries-profile/others'
 )
 router.extend(others)
+
+reclamation_facilities = routers.SimpleRouter()
+reclamation_facilities.register(
+    'countries-profile/reclamation-facilities',
+    views.ReclamationFacilityViewSet,
+    base_name='countries-profile/reclamation-facilities'
+)
+router.extend(reclamation_facilities)
 
 
 urlpatterns = (

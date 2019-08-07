@@ -65,6 +65,7 @@ from .models import (
     LicensingSystem,
     Website,
     OtherCountryProfileData,
+    ReclamationFacility,
 )
 
 User = get_user_model()
@@ -1908,3 +1909,11 @@ class OtherCountryProfileDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = OtherCountryProfileData
         exclude = ('submission', 'reporting_period')
+
+
+class ReclamationFacilitySerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = ReclamationFacility
+        fields = "__all__"

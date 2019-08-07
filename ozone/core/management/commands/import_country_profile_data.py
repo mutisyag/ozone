@@ -14,6 +14,7 @@ from ozone.core.models import (
     Obligation,
     OtherCountryProfileData,
     Party,
+    ReclamationFacility,
     ReportingPeriod,
     User,
     Website
@@ -63,7 +64,8 @@ class Command(BaseCommand):
             ('Websites', self.process_website_data),
             ('cp_Article_9', self.process_article9),
             ('cp_Env_Sound_Mgmt_strategies', self.process_ods_strategies),
-            ('cp_Avoid_HCFC_Equip', self.process_unwanted_imports)
+            ('cp_Avoid_HCFC_Equip', self.process_unwanted_imports),
+            ('cp_Reclamation_Facilities2', self.process_reclamation_facilities),
         ]
 
         for workbook_name, workbook_processor in workbook_processors:
@@ -352,4 +354,44 @@ class Command(BaseCommand):
             "reporting_period_id": period.id,
             "obligation_id": 10,
             "url": row["URL"] if row["URL"] else "",
+        }
+
+    def process_reclamation_facilities(self, row):
+        try:
+            return self._process_reclamation_facilities(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving reclamation facility for %s/%s",
+                e,
+                row['Party'],
+                row['Facility_Name'],
+                exc_info=True,
+            )
+            return 0
+
+    def _process_reclamation_facilities(self, row):
+        entry = self.get_reclamation_facilities_data(row)
+        ReclamationFacility.objects.create(**entry)
+        logger.info(
+            "Reclamation facility %s/%s imported",
+            row['Party'],
+            row['Facility_Name'],
+        )
+
+    def get_reclamation_facilities_data(self, row):
+        try:
+            party = self.parties[row['Party']]
+        except KeyError as e:
+            raise e
+
+        return {
+            "party_id": party.id,
+            "date_reported": row['Report_Date'] if row['Report_Date'] else "",
+            "name": row['Facility_Name'] if row['Facility_Name'] else "",
+            "address": row['Address'] if row['Address'] else "",
+            "reclaimed_substances": row['Reclaimed_Substances'] if row['Reclaimed_Substances'] else "",
+            "capacity": row['Capacity'] if row['Capacity'] else "",
+            "remarks": row['Remarks'] if row['Remarks'] else "",
         }

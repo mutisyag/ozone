@@ -155,6 +155,7 @@ from ..serializers import (
     LicensingSystemSerializer,
     WebsiteSerializer,
     OtherCountryProfileDataSerializer,
+    ReclamationFacilitySerializer,
 )
 
 
@@ -2032,3 +2033,13 @@ class OtherViewSet(mixins.ListModelMixin, GenericViewSet):
         filters.DjangoFilterBackend,
     )
     filterset_class = OtherFilterSet
+
+
+class ReclamationFacilityViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = ReclamationFacility.objects.all()
+    serializer_class = ReclamationFacilitySerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet

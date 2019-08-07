@@ -7,6 +7,22 @@ def user_directory_path(instance, filename):
     return filename
 
 
+class ReclamationFacility(models.Model):
+    party = models.ForeignKey(
+        Party, related_name='reclamation_facilities', on_delete=models.PROTECT
+    )
+    date_reported = models.DateField(null=True)
+    name = models.CharField(max_length=256, blank=True)
+    address = models.CharField(max_length=512, blank=True)
+    reclaimed_substances = models.CharField(max_length=512, blank=True)
+    capacity = models.CharField(max_length=64, blank=True)
+    remarks = models.CharField(max_length=9999, blank=True)
+
+    class Meta:
+        db_table = "reclamation_facility"
+        verbose_name_plural = "reclamation facilities"
+
+
 class OtherCountryProfileData(models.Model):
 
     party = models.ForeignKey(
