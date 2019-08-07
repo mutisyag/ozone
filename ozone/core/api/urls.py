@@ -325,14 +325,41 @@ email_templates.register(
 )
 router.extend(email_templates)
 
+
 # Countries profile
-countries_profile = routers.SimpleRouter()
-countries_profile.register(
-    'countries-profile',
-    views.CountryProfileViewSet,
-    base_name='countries-profile'
+focal_points = routers.SimpleRouter()
+focal_points.register(
+    'countries-profile/focal-points',
+    views.FocalPointViewSet,
+    base_name='countries-profile/focal-points'
 )
-router.extend(countries_profile)
+router.extend(focal_points)
+
+
+licensing_systems = routers.SimpleRouter()
+licensing_systems.register(
+    'countries-profile/licensing-systems',
+    views.LicensingSystemViewSet,
+    base_name='countries-profile/licensing-systems'
+)
+router.extend(licensing_systems)
+
+
+websites = routers.SimpleRouter()
+websites.register(
+    'countries-profile/websites',
+    views.WebsiteViewSet,
+    base_name='countries-profile/websites'
+)
+router.extend(websites)
+
+others = routers.SimpleRouter()
+others.register(
+    'countries-profile/others',
+    views.OtherViewSet,
+    base_name='countries-profile/others'
+)
+router.extend(others)
 
 
 urlpatterns = (

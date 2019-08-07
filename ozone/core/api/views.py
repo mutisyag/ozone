@@ -79,6 +79,7 @@ from ..models import (
     LicensingSystem,
     Website,
     OtherCountryProfileData,
+    ReclamationFacility,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -1962,109 +1963,72 @@ class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CriticalUseCategory.objects.all()
 
 
-class CountryProfileViewSet(viewsets.ViewSet):
+class BaseCountryProfileFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+
+
+class FocalPointFilterSet(BaseCountryProfileFilterSet):
+    is_licensing_system = filters.BooleanFilter(
+        "is_licensing_system", help_text="Filter by is_licensing_system boolean field"
+    )
+    is_national = filters.BooleanFilter(
+        "is_national", help_text="Filter by is_national boolean field"
+    )
+
+
+class FocalPointViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = FocalPoint.objects.all()
+    serializer_class = FocalPointSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = FocalPointFilterSet
 
-    def _set_if_not_none(self, mapping, key, value):
-        if value is not None:
-            mapping[key] = value
 
-    @action(detail=False, methods=["get"], url_path="focal-points")
-    def focal_points(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        - "is_licensing_system": <boolean>
-        - "is_national": <boolean>
-        """
+class LicensingSystemFilterSet(BaseCountryProfileFilterSet):
+    has_ods = filters.BooleanFilter(
+        "has_ods", help_text="Filter by has_ods boolean field"
+    )
+    has_hfc = filters.BooleanFilter(
+        "has_hfc", help_text="Filter by has_hfc boolean field"
+    )
 
-        party = self.request.query_params.get('party')
-        is_licensing_system = self.request.query_params.get('is_licensing_system')
-        is_national = self.request.query_params.get('is_national')
 
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-        self._set_if_not_none(filter_params, 'is_licensing_system', is_licensing_system)
-        self._set_if_not_none(filter_params, 'is_national', is_national)
+class LicensingSystemViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = LicensingSystem.objects.all()
+    serializer_class = LicensingSystemSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = LicensingSystemFilterSet
 
-        focal_points = FocalPoint.objects.filter(
-            **filter_params
-        ).order_by('ordering_id')
 
-        serializer = FocalPointSerializer(
-            focal_points, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+class WebsiteViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = Website.objects.all()
+    serializer_class = WebsiteSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
 
-    @action(detail=False, methods=["get"], url_path="licensing-systems")
-    def licensing_systems(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        - "has_ods": <boolean>
-        - "has_hfc": <boolean>
-        """
 
-        party = self.request.query_params.get('party')
-        has_ods = self.request.query_params.get('has_ods')
-        has_hfc = self.request.query_params.get('has_hfc')
+class OtherFilterSet(BaseCountryProfileFilterSet):
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    obligation = filters.NumberFilter(
+        "obligation", help_text="Filter by Obligation ID"
+    )
 
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-        self._set_if_not_none(filter_params, 'has_ods', has_ods)
-        self._set_if_not_none(filter_params, 'has_hfc', has_hfc)
 
-        licensing_systems = LicensingSystem.objects.filter(**filter_params)
-
-        serializer = LicensingSystemSerializer(
-            licensing_systems, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
-
-    @action(detail=False, methods=["get"], url_path="websites")
-    def websites(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        """
-
-        party = self.request.query_params.get('party')
-
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-
-        websites = Website.objects.filter(
-            **filter_params
-        ).order_by('ordering_id')
-
-        serializer = WebsiteSerializer(
-            websites, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
-
-    @action(detail=False, methods=["get"], url_path="others")
-    def others(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        - "period": <int>
-        - "obligation": <int>
-        """
-
-        party = self.request.query_params.get('party')
-        period = self.request.query_params.get('period')
-        obligation = self.request.query_params.get('obligation')
-
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-        self._set_if_not_none(filter_params, 'reporting_period__id', period)
-        self._set_if_not_none(filter_params, 'obligation__id', obligation)
-
-        others = OtherCountryProfileData.objects.filter(
-            **filter_params
-        ).order_by('party__name', 'reporting_period__name')
-
-        serializer = OtherCountryProfileDataSerializer(
-            others, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+class OtherViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = OtherCountryProfileData.objects.all()
+    serializer_class = OtherCountryProfileDataSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = OtherFilterSet
