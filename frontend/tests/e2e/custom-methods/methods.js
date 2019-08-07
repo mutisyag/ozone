@@ -53,10 +53,10 @@ const login = (browser, username, password, mouse = false) => {
     .waitForElementVisible('#id_username', 20000)
     .setValue('#id_username', username)
     .setValue('#id_password', password)
-    .waitForElementVisible('input[type="submit"]', 10000)
+    .waitForElementVisible('input[type="submit"]', 20000)
     .pause(1000)
     .click('input[type="submit"]')
-    .waitForElementVisible('#obligation_selector', 8000)
+    .waitForElementVisible('#obligation_selector', 20000)
     .assert.urlContains('/reporting/dashboard')
 
   if (mouse === true) {
@@ -67,22 +67,21 @@ const login = (browser, username, password, mouse = false) => {
 const logout = (browser) => {
   logMessage(browser, 'Log out', false)
   browser.useCss()
-    .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 5000)
+    .waitForElementVisible('header.app-header .navbar-nav a.dropdown-toggle', 20000)
     .moveToElement('header.app-header .navbar-nav a.dropdown-toggle', undefined, undefined)
     .pause(500)
     .click('header.app-header .navbar-nav a.dropdown-toggle')
     .pause(500)
-    .waitForElementVisible('#logout_button', 5000)
+    .waitForElementVisible('#logout_button', 20000)
     .moveToElement('#logout_button', undefined, undefined)
     .pause(500)
     .click('#logout_button')
     .pause(500)
-    .waitForElementVisible('#id_username', 5000)
+    .waitForElementVisible('#id_username', 20000)
     .assert.urlContains('/admin/login')
 }
 
 const setMultiSelector = (browser, selector_id, option, singleSelectWithText = true) => {
-  const time = 20000
   let multiselectSingle = ''
 
   if (singleSelectWithText) {
@@ -94,7 +93,7 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
   browser
     .useXpath()
     /* Check if multiselect is visible */
-    .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, time)
+    .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`, 20000)
 
     .element('xpath', multiselectSingle, (result) => {
       if (result.status === -1) {
@@ -105,9 +104,9 @@ const setMultiSelector = (browser, selector_id, option, singleSelectWithText = t
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect']`)
           .pause(1000)
           /* Check if multiselect is opened */
-          .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']`, time)
+          .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']`, 20000)
           /* Check if desired option is visible */
-          .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, time)
+          .waitForElementVisible(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, 20000)
           /* Select option */
           .moveToElement(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`, undefined, undefined)
           .click(`//div[@id = '${selector_id}']//div[@class = 'multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${option}')]`)
@@ -130,7 +129,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
 
   browser
     .useCss()
-    .waitForElementVisible('.create-submission', 10000)
+    .waitForElementVisible('.create-submission', 20000)
 
   for (const selector_id in submission) {
     if (submission[selector_id].read_write === true) {
@@ -140,16 +139,16 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
 
   browser
     .useXpath()
-    .waitForElementVisible('//div[contains(@class,"create-submission")]//button', 5000)
+    .waitForElementVisible('//div[contains(@class,"create-submission")]//button', 20000)
     .moveToElement('//div[contains(@class,"create-submission")]//button', undefined, undefined)
     .click('//div[contains(@class,"create-submission")]//button')
     .pause(5000)
-    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 5000)
+    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 20000)
 
   if (back_to_dashboard === true) {
     browser.useXpath()
       .pause(500)
-      .waitForElementVisible("//a[@href='/reporting/dashboard']", 10000)
+      .waitForElementVisible("//a[@href='/reporting/dashboard']", 20000)
       .moveToElement("//a[@href='/reporting/dashboard']", undefined, undefined)
       .click("//a[@href='/reporting/dashboard']")
       .pause(500)
@@ -165,14 +164,14 @@ const handleModal = (browser, accept = true) => {
   browser
     /* Check if moodal is opened */
     .useXpath()
-    .waitForElementVisible(modal, 10000)
+    .waitForElementVisible(modal, 20000)
   if (accept) {
     browser
-      .waitForElementVisible(modal + acceptButton, 10000)
+      .waitForElementVisible(modal + acceptButton, 20000)
       .click(modal + acceptButton)
   } else {
     browser
-      .waitForElementVisible(modal + declineButton, 10000)
+      .waitForElementVisible(modal + declineButton, 20000)
       .click(modal + declineButton)
   }
   browser
@@ -184,7 +183,7 @@ const deleteSubmissionFake = (browser) => {
 
   browser
     .useXpath()
-    .waitForElementVisible("//button[@id='delete-button']", 10000)
+    .waitForElementVisible("//button[@id='delete-button']", 20000)
     .click("//button[@id='delete-button']")
     .pause(500)
   handleModal(browser, false)
@@ -192,15 +191,15 @@ const deleteSubmissionFake = (browser) => {
 const deleteSubmission = (browser) => {
   browser
     .useXpath()
-    .waitForElementVisible("//button[@id='delete-button']", 10000)
+    .waitForElementVisible("//button[@id='delete-button']", 20000)
     .click("//button[@id='delete-button']")
     .pause(500)
   handleModal(browser)
 
   /* Validation */
   browser
-    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission deleted')]", 5000)
-    .waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 10000)
+    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission deleted')]", 20000)
+    .waitForElementVisible("//table[@id='all-submissions-table']//div[contains(text(), 'There are no records to show')]", 20000)
 }
 
 const saveSubmission = (browser, tabs = []) => {
@@ -209,7 +208,7 @@ const saveSubmission = (browser, tabs = []) => {
   browser.useXpath()
     /* Click Save and continue button */
     .execute('window.scrollTo(0,document.body.scrollHeight);')
-    .waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
+    .waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 20000)
     .click("//footer[@class='app-footer']//button[@id='save-button']")
     .pause(500)
     .execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
@@ -225,7 +224,7 @@ const selectTab = (browser, tab) => {
   browser
     .execute('window.scrollTo(0,0)')
     .useXpath()
-    .waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 5000)
+    .waitForElementVisible(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`, 20000)
     .click(`//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), '${tab}')]`)
     .pause(1500)
 }
@@ -233,10 +232,10 @@ const selectTab = (browser, tab) => {
 const datePickerValue = (browser) => {
   const day = "//div[@id='date']//div[contains(@class, 'vdp-datepicker__calendar')][1]//span[contains(@class, 'cell day') and text()='1']"
   browser
-    .waitForElementVisible("//div[@id='date']//input", 10000)
+    .waitForElementVisible("//div[@id='date']//input", 20000)
     .click("//div[@id='date']//input")
     .pause(1000)
-    .waitForElementVisible(day, 10000)
+    .waitForElementVisible(day, 20000)
     .moveToElement(day, undefined, undefined)
     .click(day)
     .pause(1000)
@@ -250,7 +249,7 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   selectTab(browser, 'Submission Information')
   browser.useXpath()
     .execute('window.scrollTo(0,document.body.scrollHeight);')
-    .waitForElementVisible("//input[@id='reporting_officer']", 10000)
+    .waitForElementVisible("//input[@id='reporting_officer']", 20000)
     .pause(500)
 
   fields.forEach(field => {
@@ -273,10 +272,10 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   /* Add country name (special case) */
   if (submissionInfo.country !== undefined) {
     browser
-      .waitForElementVisible("//form[contains(@class,'form-sections')]//div[@class='multiselect']", 10000)
+      .waitForElementVisible("//form[contains(@class,'form-sections')]//div[@class='multiselect']", 20000)
       .click("//form[contains(@class,'form-sections')]//div[@class='multiselect']")
       .pause(500)
-      .waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 10000)
+      .waitForElementVisible(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, 20000)
       .moveToElement(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`, undefined, undefined)
       .pause(500)
       .click(`//div[@id='country']//span[contains(text(),'${submissionInfo.country}')]`)
@@ -297,7 +296,7 @@ const saveAndFail = (browser, submissionInfo) => {
 
   browser.useXpath()
     .execute('window.scrollTo(0,document.body.scrollHeight);')
-    .waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 10000)
+    .waitForElementVisible("//footer[@class='app-footer']//button[@id='save-button']", 20000)
     .click("//footer[@class='app-footer']//button[@id='save-button']")
     .pause(500)
     .execute('document.body.scrollTop = 0;document.documentElement.scrollTop = 0')
@@ -310,7 +309,7 @@ const saveAndFail = (browser, submissionInfo) => {
 const editSubmission = (browser, table_order) => {
   browser
     .useXpath()
-    .waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Edit')]`, 10000)
+    .waitForElementVisible(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Edit')]`, 20000)
     .click(`//table[@id='data-entry-submissions-table']//tbody//tr[${table_order}]//span[contains(text(), 'Edit')]`)
     .pause(3000)
 }
@@ -334,10 +333,10 @@ const openLookupTable = (browser, page) => {
 
 const openDashboard = (browser) => {
   browser.useXpath()
-    .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 10000)
+    .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 20000)
     .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']")
     .pause(3000)
-    .waitForElementVisible('//div[@id="obligation_selector"]', 10000)
+    .waitForElementVisible('//div[@id="obligation_selector"]', 20000)
     .pause(3000)
     .assert.urlContains('/reporting/dashboard')
     .pause(3000)
@@ -346,7 +345,7 @@ const openDashboard = (browser) => {
 const openGeneralInstructions = (browser) => {
   logMessage(browser, 'Opening General Instructions')
   browser.useXpath()
-    .waitForElementVisible("//button/i[contains(@class, 'fa-info')]", 10000)
+    .waitForElementVisible("//button/i[contains(@class, 'fa-info')]", 20000)
     .click("//button/i[contains(@class, 'fa-info')]")
     .pause(500)
     .execute('window.scrollTo(0,0)')
@@ -471,7 +470,7 @@ const filterEntity = (browser, tab, filters) => {
           browser
             .click(`#${field}`)
             .pause(500)
-            .waitForElementVisible(`#${field} .multiselect__content-wrapper`, 5000)
+            .waitForElementVisible(`#${field} .multiselect__content-wrapper`, 20000)
             .useXpath()
             .click(`//div[@id='${field}']//div[@class='multiselect__content-wrapper']//ul//li//span//span[contains(text(),'${filters[index]}')]`)
             .pause(100)
@@ -487,7 +486,7 @@ const filterEntity = (browser, tab, filters) => {
   browser.useCss().pause(2000)
   if (tabs[tab].clear !== '') {
     browser
-      .waitForElementVisible(`#${tabs[tab].clear}`, 10000)
+      .waitForElementVisible(`#${tabs[tab].clear}`, 20000)
       .click(`#${tabs[tab].clear}`)
       .pause(1500)
   }
@@ -512,7 +511,7 @@ const checkSumbissionInfoFlags = (browser) => {
         if (result.value !== 'true') {
           browser
             .useXpath()
-            .waitForElementVisible(`(//label[@for='${flag}'])[2]`, 10000)
+            .waitForElementVisible(`(//label[@for='${flag}'])[2]`, 20000)
             .click(`(//label[@for='${flag}'])[2]`)
             .pause(500)
         }
@@ -545,19 +544,19 @@ const clickQuestionnaireRadios = (browser, fields = [], allow_all = true) => {
   /* Check if all tabs are disabled */
   for (const tab in tabs) {
     browser
-      .waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 10000)
+      .waitForElementVisible(`//div[contains(@class,'form-wrapper')]//div[contains(@class, 'card-header')]//a[contains(@class, 'disabled')]//div[contains(text(), '${tabs[tab]}')]`, 20000)
   }
 
   selectTab(browser, 'Questionnaire')
 
   browser
-    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 10000)
-    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 10000)
-    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Information')]", 10000)
-    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 10000)
+    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Questionnaire')]", 20000)
+    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Files')]", 20000)
+    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//a[not(contains(@class, 'disabled'))]//div[contains(text(), 'Submission Information')]", 20000)
+    .waitForElementVisible("//div[contains(@class, 'form-wrapper')]//div[contains(@class, 'card-header')]//ul//li//div[contains(text(), 'Questionnaire')]", 20000)
     .useCss()
     .execute('window.scrollTo(0,250);')
-    .waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 10000)
+    .waitForElementVisible('.field-wrapper #has_nonparty .custom-control:first-of-type label', 20000)
     .pause(500)
   /* Set fields to 'yes' */
   for (const field of fields) {
@@ -614,17 +613,17 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   browser
     .useXpath()
     /* Open entity form */
-    .waitForElementVisible(`${aside_menu}//div[@class='tabs']`, 5000)
-    .waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`, 5000)
+    .waitForElementVisible(`${aside_menu}//div[@class='tabs']`, 20000)
+    .waitForElementVisible(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`, 20000)
     .click(`${aside_nav}//span[contains(text(), '${entities[entity][0]}')]`)
     .pause(500)
   selectors.forEach((selector, index) => {
     browser
       /* Add option */
-      .waitForElementVisible(selector, 5000)
+      .waitForElementVisible(selector, 20000)
       .click(selector)
       .pause(500)
-      .waitForElementVisible(`${selector}//div[@class='multiselect__content-wrapper']`, 5000)
+      .waitForElementVisible(`${selector}//div[@class='multiselect__content-wrapper']`, 20000)
       .click(`${selector}//div[@class='multiselect__content-wrapper']//ul//li//span//span[text() = '${options[index]}']`)
       /* Close selector */
       .pause(100)
@@ -633,7 +632,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   })
   /* Submit entity */
   browser
-    .waitForElementVisible(add_entity_button, 5000)
+    .waitForElementVisible(add_entity_button, 20000)
     .click(add_entity_button)
     .pause(500)
 
@@ -642,7 +641,7 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
   if (check === true) {
     browser
       /* Check if entity was added and status is invalid */
-      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, 5000)
+      .waitForElementVisible(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, 20000)
       .moveToElement(`//div[@id='${tab}']//table[@id='${entities[entity][4]}']//tbody//tr[${order}]//i[contains(@class, 'fa-exclamation-circle')]`, undefined, undefined)
 
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
@@ -654,8 +653,8 @@ const addEntity = (browser, tab, entity, options, order = undefined, check = fal
       .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
       .pause(500)
       /* Check if Validation tab is opened and has a warrning */
-      .waitForElementVisible(`${aside_menu}//div[@class='validation-tab']`, 5000)
-      .waitForElementVisible(`${aside_nav}//span[contains(@class, 'badge-danger')]`, 5000)
+      .waitForElementVisible(`${aside_menu}//div[@class='validation-tab']`, 20000)
+      .waitForElementVisible(`${aside_nav}//span[contains(@class, 'badge-danger')]`, 20000)
       .execute('window.scrollTo(0,0)')
 
     closeAsideMenu(browser, tab)
@@ -730,12 +729,12 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
   if (Object.entries(modal_values).length > 0) {
     /* Open edit modal */
     browser
-      .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 5000)
+      .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 20000)
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
       .pause(500)
 
     browser
-      .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 5000)
+      .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 20000)
       .pause(500)
     /* Add values in modal */
     for (const field_id of Object.keys(modal_values)) {
@@ -798,7 +797,7 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
   })
   browser
-    .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 5000)
+    .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 20000)
     .pause(500)
   /* Check if modal inputs are empty */
   for (const field_id of Object.keys(modal_values)) {
@@ -828,7 +827,7 @@ const uploadeFile = (browser, filename, filepath) => {
   console.log(file)
   browser
     .useCss()
-    .waitForElementVisible('#choose-files-button__BV_file_outer_', 10000)
+    .waitForElementVisible('#choose-files-button__BV_file_outer_', 20000)
     .setValue('input#choose-files-button', file, (result) => {
       if (result.status !== 0) {
         console.log(result)
