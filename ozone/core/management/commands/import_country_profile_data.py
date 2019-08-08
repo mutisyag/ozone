@@ -11,6 +11,7 @@ from ozone.core.models import (
     FocalPoint,
     LicensingSystem,
     Obligation,
+    ObligationTypes,
     OtherCountryProfileData,
     Party,
     ReclamationFacility,
@@ -269,7 +270,9 @@ class Command(BaseCommand):
         return {
             "party_id": party.id,
             "reporting_period_id": period.id,
-            "obligation_id": 8,
+            "obligation_id": Obligation.objects.filter(
+                _obligation_type=ObligationTypes.ART9.value
+            ).first(),
             "description": row['Publications_Title'] if row['Publications_Title'] else "",
             "url": url,
             "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
@@ -311,7 +314,9 @@ class Command(BaseCommand):
         return {
             "party_id": party.id,
             "reporting_period_id": period.id,
-            "obligation_id": 10,
+            "obligation_id": Obligation.objects.filter(
+                _obligation_type=ObligationTypes.OTHER.value
+            ).first(),
             "url": row["URL"] if row["URL"] else "",
         }
 
@@ -351,7 +356,9 @@ class Command(BaseCommand):
         return {
             "party_id": party.id,
             "reporting_period_id": period.id,
-            "obligation_id": 10,
+            "obligation_id": Obligation.objects.filter(
+                _obligation_type=ObligationTypes.OTHER.value
+            ).first(),
             "url": row["URL"] if row["URL"] else "",
         }
 
