@@ -10,6 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.db.models import FloatField
 from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
@@ -507,10 +508,7 @@ class AggregationViewFilterSet(filters.FilterSet):
     )
 
 
-class AggregationViewSet(viewsets.ModelViewSet):
-    # Will only allow GET for now on this view
-    http_method_names = ['get']
-
+class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProdCons.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationSerializer
 
@@ -533,6 +531,92 @@ class AggregationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ProdCons.objects.filter(party=F('party__parent_party'))
+
+    def list(self, request, *args, **kwargs):
+        """
+        We need to override the default ViewSet list method to handle the
+        custom `aggregation` parameter.
+        """
+        def populate_aggregation(aggregation, fields, to_add):
+            """
+            Helper function to populate an aggregation's fields based on a list
+            of dictionaries containing key-value pairs for those fields.
+            """
+            for field in fields:
+                setattr(
+                    aggregation,
+                    field,
+                    sum([a[field] or 0 for a in to_add])
+                )
+            aggregation.apply_rounding()
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Handle aggregation
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else None
+        if aggregates:
+            fields = [
+                f.name for f in ProdCons._meta.fields
+                if isinstance(f, FloatField)
+            ]
+            # Using `distinct()` does not work because this queryset is
+            # ordered by fields from related models, which makes similar
+            # values seem distinct.
+            periods = set(
+                queryset.values_list('reporting_period', flat=True)
+            )
+            values = []
+            if 'party' in aggregates and 'group' in aggregates:
+                # Sum values for all groups and all parties for each reporting
+                # period
+                for period in periods:
+                    aggregation = ProdCons(reporting_period_id=period)
+                    to_add = queryset.filter(
+                        reporting_period=period
+                    ).values(*fields)
+                    populate_aggregation(aggregation, fields, to_add)
+                    values.append(aggregation)
+                queryset = values
+            elif 'party' in aggregates:
+                groups = set(queryset.values_list('group', flat=True))
+                for group in groups:
+                    for period in periods:
+                        aggregation = ProdCons(
+                            group_id=group, reporting_period_id=period
+                        )
+                        to_add = queryset.filter(
+                            group=group, reporting_period=period
+                        ).values(*fields)
+                        populate_aggregation(aggregation, fields, to_add)
+                        values.append(aggregation)
+                queryset = values
+            elif 'group' in aggregates:
+                parties = set(queryset.values_list('party', flat=True))
+                for party in parties:
+                    for period in periods:
+                        aggregation = ProdCons(
+                            party_id=party, reporting_period_id=period
+                        )
+                        to_add = queryset.filter(
+                            party=party, reporting_period=period
+                        ).values(*fields)
+                        populate_aggregation(aggregation, fields, to_add)
+                        values.append(aggregation)
+                queryset = values
+
+            # Aggregating disables pagination. Ordering also seems to go down
+            # the drain. However that is ok given the small number of results
+            # that will be returned.
+            return Response(AggregationSerializer(queryset, many=True).data)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class LimitPaginator(PageNumberPagination):
