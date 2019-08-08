@@ -347,7 +347,7 @@ class Command(BaseCommand):
             "party_id": party.id,
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.OTHER.value
+                _obligation_type=ObligationTypes.ODSSTRATEGIES.value
             ).first().id,
             "url": row["URL"] if row["URL"] else "",
             "url_type": URLTypes.SUBMISSION.value
@@ -392,7 +392,7 @@ class Command(BaseCommand):
             "party_id": party.id,
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.OTHER.value
+                _obligation_type=ObligationTypes.UNWANTEDIMPORTS.value
             ).first().id,
             "url": row["URL"] if row["URL"] else "",
             "url_type": URLTypes.SUBMISSION.value
