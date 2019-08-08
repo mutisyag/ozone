@@ -300,7 +300,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
 class ObligationAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_default', 'is_active')
     exclude = ('has_reporting_periods',)
-    readonly_fields = ['_obligation_type']
+    readonly_fields = ['_form_type']
 
 
 @admin.register(User)

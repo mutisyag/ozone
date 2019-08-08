@@ -387,7 +387,7 @@
     "fields": {
       "description": "2020",
       "end_date": "2020-12-31",
-      "is_reporting_allowed": false,
+      "is_reporting_allowed": true,
       "is_reporting_open": false,
       "name": "2020",
       "start_date": "2020-01-01"
@@ -399,7 +399,7 @@
     "fields": {
       "description": "2021",
       "end_date": "2021-12-31",
-      "is_reporting_allowed": false,
+      "is_reporting_allowed": true,
       "is_reporting_open": false,
       "name": "2021",
       "start_date": "2021-01-01"
