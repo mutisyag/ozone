@@ -29,7 +29,7 @@ class BaseArt7ImportTest(BaseTests):
         self.maxDiff = None
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory(_form_type="art7")
+        self.obligation = ObligationFactory(_obligation_type="art7")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -106,7 +106,7 @@ class TestArt7Import(BaseArt7ImportTest):
         self.assertEqual(result.status_code, 201, result.json())
 
     def test_create_wrong_obligation(self):
-        obligation = ObligationFactory.create(_form_type="hat", name="Much obliged")
+        obligation = ObligationFactory.create(_obligation_type="hat", name="Much obliged")
         submission = self.create_submission(obligation=obligation)
 
         data = dict(ART7_IMPORT_DATA)

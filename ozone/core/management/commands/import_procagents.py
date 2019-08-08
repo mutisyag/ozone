@@ -13,7 +13,7 @@ from ozone.core.models import (
     ReportingPeriod,
     User,
     Obligation,
-    FormTypes,
+    ObligationTypes,
     Meeting,
     Decision,
     ProcessAgentUsesReported,
@@ -151,7 +151,7 @@ class Command(BaseCommand):
                 party,
                 period,
                 Obligation.objects.filter(
-                    _form_type=FormTypes.PROCAGENT.value
+                    _obligation_type=ObligationTypes.PROCAGENT.value
                 ).first()
             )
             return
@@ -159,7 +159,7 @@ class Command(BaseCommand):
         submission = Submission.objects.filter(
             party_id=party,
             reporting_period_id=period,
-            obligation___form_type=FormTypes.PROCAGENT.value,
+            obligation___obligation_type=ObligationTypes.PROCAGENT.value,
         ).first()
         if not submission:
             entry = self.get_submission_data(
@@ -360,7 +360,7 @@ class Command(BaseCommand):
                 party,
                 period,
                 Obligation.objects.filter(
-                    _form_type=FormTypes.PROCAGENT.value
+                    _obligation_type=ObligationTypes.PROCAGENT.value
                 ).first()
             )
             return
@@ -458,7 +458,7 @@ class Command(BaseCommand):
         submission = Submission.objects.filter(
             party_id=party,
             reporting_period_id=period,
-            obligation___form_type=FormTypes.PROCAGENT.value,
+            obligation___obligation_type=ObligationTypes.PROCAGENT.value,
         ).first()
         if not submission:
             entry = self.get_submission_data(
@@ -512,7 +512,7 @@ class Command(BaseCommand):
                 "created_by_id": self.admin.id,
                 "last_edited_by_id": self.admin.id,
                 "obligation_id": Obligation.objects.filter(
-                    _form_type=FormTypes.PROCAGENT.value
+                    _obligation_type=ObligationTypes.PROCAGENT.value
                 ).first().id,
                 "party_id": party.id,
                 "reporting_period_id": period.id,

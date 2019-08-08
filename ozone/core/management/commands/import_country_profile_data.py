@@ -9,7 +9,6 @@ from django.db import transaction
 
 from ozone.core.models import (
     FocalPoint,
-    FormTypes,
     LicensingSystem,
     Obligation,
     OtherCountryProfileData,

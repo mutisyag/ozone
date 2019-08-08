@@ -69,7 +69,7 @@ ALL_REMARK_DATA = dict(
 class BaseRemarksTests(BaseTests):
     success_code = 200
     fail_code = 422
-    _form_type = "art7"
+    _obligation_type = "art7"
     remarks_data = {}
     fail_on_wrong_field = False
 
@@ -77,7 +77,7 @@ class BaseRemarksTests(BaseTests):
         super().setUp()
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory(_form_type=self._form_type)
+        self.obligation = ObligationFactory(_obligation_type=self._obligation_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -163,7 +163,7 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
     """
 
     remarks_data = ART7_REMARKS_DATA
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def _check_remark_update_permission(
         self, user, field_type, owner, expect_success, fail_code=None
@@ -228,30 +228,30 @@ class SubmissionRemarksPermissionTests(PatchIsSamePartyMixIn, BaseRemarksTests):
 
 class HATSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
     remarks_data = HAT7_REMARKS_DATA
-    _form_type = "hat"
+    _obligation_type = "hat"
 
 
 class EssenCritSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
     remarks_data = ESSENCRIT_REMARKS_DATA
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
 
 
 class OtherSubmissionRemarksPermissionTests(SubmissionRemarksPermissionTests):
     remarks_data = OTHER_REMARKS_DATA
-    _form_type = "other"
+    _obligation_type = "other"
 
 class ExemptionSubmissionRemarksPermissionTests(
     SubmissionRemarksPermissionTests
 ):
     remarks_data = EXEMPTION_REMARKS_DATA
-    _form_type = "exemption"
+    _obligation_type = "exemption"
 
 
 class TransferSubmissionRemarksPermissionTests(
     SubmissionRemarksPermissionTests
 ):
     remarks_data = TRANSFERS_REMARKS_DATA
-    _form_type = "transfer"
+    _obligation_type = "transfer"
 
 
 class SubmissionRemarksPermissionWorkflowTests(
@@ -264,7 +264,7 @@ class SubmissionRemarksPermissionWorkflowTests(
     """
 
     remarks_data = ART7_REMARKS_DATA
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def _check_remark_update_permission_state(
         self, user, field_type, owner, previous_state, current_state, expect_success
@@ -345,33 +345,33 @@ class HATSubmissionRemarksPermissionWorkflowTests(
     SubmissionRemarksPermissionWorkflowTests
 ):
     remarks_data = HAT7_REMARKS_DATA
-    _form_type = "hat"
+    _obligation_type = "hat"
 
 
 class EssenCritSubmissionRemarksPermissionWorkflowTests(
     SubmissionRemarksPermissionWorkflowTests
 ):
     remarks_data = ESSENCRIT_REMARKS_DATA
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
 
 
 class OtherSubmissionRemarksPermissionWorkflowTests(
     SubmissionRemarksPermissionWorkflowTests
 ):
     remarks_data = OTHER_REMARKS_DATA
-    _form_type = "other"
+    _obligation_type = "other"
 
 
 class ExemptionSubmissionRemarksPermissionWorkflowTests(
     SubmissionRemarksPermissionWorkflowTests
 ):
     remarks_data = EXEMPTION_REMARKS_DATA
-    _form_type = "exemption"
+    _obligation_type = "exemption"
 
 
 class SubmissionRetrieveTest(BaseRemarksTests):
     remarks_data = ART7_REMARKS_DATA
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def _check_remark_retrieve_data(self, user, owner):
         submission = self.create_submission(owner, **ALL_REMARK_DATA)
@@ -400,28 +400,28 @@ class SubmissionRetrieveTest(BaseRemarksTests):
 
 class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
     remarks_data = HAT7_REMARKS_DATA
-    _form_type = "hat"
+    _obligation_type = "hat"
 
 
 class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
     remarks_data = ESSENCRIT_REMARKS_DATA
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
 
 
 class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
     remarks_data = OTHER_REMARKS_DATA
-    _form_type = "other"
+    _obligation_type = "other"
 
 
 class ExemptionSubmissionRetrieveTest(SubmissionRetrieveTest):
     remarks_data = EXEMPTION_REMARKS_DATA
-    _form_type = "exemption"
+    _obligation_type = "exemption"
 
 
 class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
     success_code = 200
     fail_code = 403
-    _form_type = "art7"
+    _obligation_type = "art7"
     remarks_data = ART7_REMARKS_DATA
     fail_on_wrong_field = True
 
@@ -498,26 +498,26 @@ class SubmissionRemarksTestIsSamePartyPermissions(BaseRemarksTests):
 class HATSubmissionRemarksTestIsSamePartyPermissions(
     SubmissionRemarksTestIsSamePartyPermissions
 ):
-    _form_type = "hat"
+    _obligation_type = "hat"
     remarks_data = HAT7_REMARKS_DATA
 
 
 class EssenCritSubmissionRemarksTestIsSamePartyPermissions(
     SubmissionRemarksTestIsSamePartyPermissions
 ):
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
     remarks_data = ESSENCRIT_REMARKS_DATA
 
 
 class OtherSubmissionRemarksTestIsSamePartyPermissions(
     SubmissionRemarksTestIsSamePartyPermissions
 ):
-    _form_type = "other"
+    _obligation_type = "other"
     remarks_data = OTHER_REMARKS_DATA
 
 
 class ExemptionSubmissionRemarksTestIsSamePartyPermissions(
     SubmissionRemarksTestIsSamePartyPermissions
 ):
-    _form_type = "exemption"
+    _obligation_type = "exemption"
     remarks_data = EXEMPTION_REMARKS_DATA

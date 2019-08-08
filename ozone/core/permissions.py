@@ -248,13 +248,13 @@ class IsCorrectObligation(BasePermission):
 
     def has_permission(self, request, view):
         # Explicit is better than implicit.
-        if view.form_types is None:
+        if view.obligation_types is None:
             return True
         submission_id = view.kwargs.get('submission_pk', None)
         if not submission_id:
             return False
-        form_type = Submission.objects.get(pk=submission_id).obligation.form_type
-        return form_type in view.form_types
+        obligation_type = Submission.objects.get(pk=submission_id).obligation.obligation_type
+        return obligation_type in view.obligation_types
 
 
 class IsSecretariatOrSamePartyUser(BasePermission):

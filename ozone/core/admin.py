@@ -48,7 +48,7 @@ from .models import (
     Nomination,
     CriticalUseCategory,
     ApprovedCriticalUse,
-    FormTypes,
+    ObligationTypes,
     Transfer,
     Email,
     EmailTemplate,
@@ -297,7 +297,7 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
 class ObligationAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_default', 'is_active')
     exclude = ('has_reporting_periods',)
-    readonly_fields = ['_form_type']
+    readonly_fields = ['_obligation_type']
 
 
 @admin.register(User)
@@ -529,7 +529,7 @@ class ExemptionBaseAdmin:
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         submission_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.EXEMPTION.value
+            obligation___obligation_type=ObligationTypes.EXEMPTION.value
         ).order_by('reporting_period__name')
         form.base_fields['submission'].queryset = submission_queryset
         return form
@@ -622,8 +622,9 @@ class TransferAdmin(admin.ModelAdmin):
         main_parties_queryset = Party.objects.filter(
             parent_party__id=F('id'),
         ).order_by('name')
+        import pdb; pdb.set_trace()
         source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.TRANSFER.value
+            obligation___obligation_type=ObligationTypes.TRANSFER.value
         ).order_by('reporting_period__name')
         if obj is not None:
             source_sub_queryset = source_sub_queryset.filter(
@@ -689,7 +690,7 @@ class ProcessAgentBaseAdmin:
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         submission_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.PROCAGENT.value
+            obligation___obligation_type=ObligationTypes.PROCAGENT.value
         ).order_by('reporting_period__name')
         form.base_fields['submission'].queryset = submission_queryset
         return form

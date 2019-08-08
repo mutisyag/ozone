@@ -171,7 +171,7 @@ class ReporterUserAnotherPartyFactory(DjangoModelFactory):
 
 class ObligationFactory(DjangoModelFactory):
     name = 'Test Obligation'
-    _form_type = 'art7'
+    _obligation_type = 'art7'
 
     class Meta:
         model = Obligation

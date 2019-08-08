@@ -22,7 +22,7 @@ from .factories import (
 
 
 class BaseCustomBlendsTests(BaseTests):
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def setUp(self):
         super().setUp()
@@ -33,7 +33,7 @@ class BaseCustomBlendsTests(BaseTests):
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
         self.language = LanguageEnFactory()
-        self.obligation = ObligationFactory.create(_form_type=self._form_type)
+        self.obligation = ObligationFactory.create(_obligation_type=self._obligation_type)
 
         hash_alg = Argon2PasswordHasher()
         self.secretariat_user = SecretariatUserFactory(
