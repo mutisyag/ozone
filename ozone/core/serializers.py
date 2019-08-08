@@ -63,6 +63,9 @@ from .models import (
     PlanOfAction,
     FocalPoint,
     LicensingSystem,
+    Website,
+    OtherCountryProfileData,
+    ReclamationFacility,
 )
 
 User = get_user_model()
@@ -1888,3 +1891,29 @@ class LicensingSystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = LicensingSystem
         exclude = ('submission', )
+
+
+class WebsiteSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Website
+        exclude = ('ordering_id', )
+
+
+class OtherCountryProfileDataSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+    period = serializers.StringRelatedField(source='reporting_period', read_only=True)
+    obligation = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = OtherCountryProfileData
+        exclude = ('submission', 'reporting_period')
+
+
+class ReclamationFacilitySerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = ReclamationFacility
+        fields = "__all__"

@@ -67,6 +67,9 @@ from .models import (
     ProdConsMT,
     FocalPoint,
     LicensingSystem,
+    Website,
+    OtherCountryProfileData,
+    ReclamationFacility,
 )
 
 
@@ -865,6 +868,45 @@ class LicensingSystemAdmin(admin.ModelAdmin):
         'has_ods', 'has_hfc'
     )
     ordering = ('party__name', )
+
+
+@admin.register(Website)
+class WebsiteAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'url', 'file', 'description', 'is_url_broken'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'is_url_broken'
+    )
+    ordering = ('ordering_id', )
+
+
+@admin.register(OtherCountryProfileData)
+class OtherCountryProfileDataAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'reporting_period', 'obligation', 'url', 'file', 'description',
+        'remarks_secretariat'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'obligation'
+    )
+    ordering = ('party__name', 'reporting_period__name')
+
+
+@admin.register(ReclamationFacility)
+class ReclamationFacilityAdmin(admin.ModelAdmin):
+    list_display = (
+        'party', 'date_reported', 'name', 'address', 'reclaimed_substances',
+        'capacity', 'remarks'
+    )
+    search_fields = ('party__name', 'name')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
 
 
 # register all adminactions
