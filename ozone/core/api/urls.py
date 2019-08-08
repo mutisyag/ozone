@@ -368,6 +368,31 @@ reclamation_facilities.register(
 )
 router.extend(reclamation_facilities)
 
+illegal_trades = routers.SimpleRouter()
+illegal_trades.register(
+    'country-profiles/illegal-trades',
+    views.IllegalTradeViewSet,
+    base_name='country-profiles/illegal-trades'
+)
+router.extend(illegal_trades)
+
+orm_reports = routers.SimpleRouter()
+orm_reports.register(
+    'country-profiles/orm-reports',
+    views.ORMReportViewSet,
+    base_name='country-profiles/orm-reports'
+)
+router.extend(orm_reports)
+
+
+multilateral_funds = routers.SimpleRouter()
+multilateral_funds.register(
+    'country-profiles/multilateral-funds',
+    views.MultilateralFundViewSet,
+    base_name='country-profiles/multilateral-funds'
+)
+router.extend(multilateral_funds)
+
 
 urlpatterns = (
     router.urls

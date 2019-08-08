@@ -70,6 +70,9 @@ from .models import (
     Website,
     OtherCountryProfileData,
     ReclamationFacility,
+    IllegalTrade,
+    ORMReport,
+    MultilateralFund,
 )
 
 
@@ -922,7 +925,7 @@ class OtherCountryProfileDataObligationFilter(RelatedDropdownFilter):
 
 
 @admin.register(OtherCountryProfileData)
-class OtherCountryProfileDataAdmin(admin.ModelAdmin):
+class OtherCountryProfileDataAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
 
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -950,6 +953,7 @@ class OtherCountryProfileDataAdmin(admin.ModelAdmin):
     list_filter = (
         ('party', MainPartyFilter),
         ('obligation', OtherCountryProfileDataObligationFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
     )
     ordering = ('party__name', 'reporting_period__name')
 
@@ -961,6 +965,39 @@ class ReclamationFacilityAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
         'capacity', 'remarks'
     )
     search_fields = ('party__name', 'name')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
+
+
+@admin.register(IllegalTrade)
+class IllegalTradeAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'submission_id', 'seizure_date_year', 'substances_traded',
+        'volume', 'importing_exporting_country'
+    )
+    search_fields = ('party__name',)
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
+
+
+@admin.register(ORMReport)
+class ORMReportAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'meeting', 'reporting_period', 'description', 'url'
+    )
+    search_fields = ('party__name',)
+    list_filter = (
+        ('party', MainPartyFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
+    )
+
+
+@admin.register(MultilateralFund)
+class MultilateralFund(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = ('party', 'funds_approved', 'funds_disbursed')
+    search_fields = ('party__name',)
     list_filter = (
         ('party', MainPartyFilter),
     )

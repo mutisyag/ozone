@@ -66,6 +66,8 @@ from .models import (
     Website,
     OtherCountryProfileData,
     ReclamationFacility,
+    IllegalTrade,
+    MultilateralFund,
 )
 
 User = get_user_model()
@@ -1916,4 +1918,29 @@ class ReclamationFacilitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ReclamationFacility
+        fields = "__all__"
+
+
+class IllegalTradeSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = IllegalTrade
+        fields = "__all__"
+
+
+class ORMReportSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+    period = serializers.StringRelatedField(source='reporting_period', read_only=True)
+
+    class Meta:
+        model = IllegalTrade
+        fields = "__all__"
+
+
+class MultilateralFundSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = MultilateralFund
         fields = "__all__"
