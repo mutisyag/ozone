@@ -20,6 +20,7 @@ from ozone.core.models import (
     ReclamationFacility,
     ReportingPeriod,
     User,
+    URLTypes,
     Website
 )
 
@@ -246,13 +247,15 @@ class Command(BaseCommand):
 
     @transaction.atomic()
     def _process_article9(self, row):
-        entry = self.get_article9_data(row)
-        OtherCountryProfileData.objects.create(**entry)
-        logger.info(
-            "Article9 for %s/%s imported",
-            row['Party'],
-            row['PeriodID']
-        )
+        entries = self.get_article9_data(row)
+        for entry in entries:
+            OtherCountryProfileData.objects.create(**entry)
+            logger.info(
+                "Article9 for %s/%s/%s imported",
+                row['Party'],
+                row['PeriodID'],
+                entry['url_type']
+            )
         return True
 
     def get_article9_data(self, row):
@@ -268,23 +271,42 @@ class Command(BaseCommand):
         except KeyError as e:
             raise e
 
+        urls = []
         if row['Submission URL']:
-            url = row['Submission URL']
-        elif row['Publications_URL']:
-            url = row['Publications_URL']
-        else:
-            url = ""
+            urls.append(
+                (
+                    row['Submission URL'],
+                    period.name,
+                    URLTypes.SUBMISSION.value
+                )
+            )
+        if row['Publications_URL']:
+            urls.append(
+                (
+                    row['Publications_URL'],
+                    row['Publications_Title'],
+                    URLTypes.PUBLICATION.value
+                )
+            )
+        if not row['Submission URL'] and not row['Publications_URL']:
+            urls.append(
+                ("", "", None)
+            )
 
-        return {
-            "party_id": party.id,
-            "reporting_period_id": period.id,
-            "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.ART9.value
-            ).first(),
-            "description": row['Publications_Title'] if row['Publications_Title'] else "",
-            "url": url,
-            "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
-        }
+        entries = []
+        for url, description, url_type in urls:
+            entries.append({
+                "party_id": party.id,
+                "reporting_period_id": period.id,
+                "obligation_id": Obligation.objects.filter(
+                    _obligation_type=ObligationTypes.ART9.value
+                ).first().id,
+                "description": description,
+                "url": url,
+                "url_type": url_type,
+                "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
+            })
+        return entries
 
     def process_ods_strategies(self, row):
         try:
@@ -326,8 +348,9 @@ class Command(BaseCommand):
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
                 _obligation_type=ObligationTypes.OTHER.value
-            ).first(),
+            ).first().id,
             "url": row["URL"] if row["URL"] else "",
+            "url_type": URLTypes.SUBMISSION.value
         }
 
     def process_unwanted_imports(self, row):
@@ -370,8 +393,9 @@ class Command(BaseCommand):
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
                 _obligation_type=ObligationTypes.OTHER.value
-            ).first(),
+            ).first().id,
             "url": row["URL"] if row["URL"] else "",
+            "url_type": URLTypes.SUBMISSION.value
         }
 
     def process_reclamation_facilities(self, row):

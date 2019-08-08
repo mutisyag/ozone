@@ -1,3 +1,5 @@
+import enum
+
 from django.db import models
 
 from . import Obligation, Party, ReportingPeriod, Submission
@@ -5,6 +7,12 @@ from . import Obligation, Party, ReportingPeriod, Submission
 
 def user_directory_path(instance, filename):
     return filename
+
+
+@enum.unique
+class URLTypes(enum.Enum):
+    SUBMISSION = 'Submission'
+    PUBLICATION = 'Publication'
 
 
 class MultilateralFund(models.Model):
@@ -96,12 +104,15 @@ class OtherCountryProfileData(models.Model):
     )
 
     description = models.CharField(max_length=9999, blank=True)
-
     file = models.FileField(
         upload_to=user_directory_path, blank=True, null=True
     )
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
+    )
+    url_type = models.CharField(
+        max_length=64, choices=((s.value, s.name) for s in URLTypes),
+        null=True,
     )
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
