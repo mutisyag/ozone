@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from .aggregation import ProdCons, ProdConsMT
 from .legal import ReportingPeriod
 from .party import Party
-from .reporting import Submission, FormTypes
+from .reporting import Submission, ObligationTypes
 from .substance import Substance
 from .utils import decimal_zero_if_none
 
@@ -120,16 +120,16 @@ class Transfer(models.Model):
                 aggregation.cons_transfer = float(existing_value + to_add)
 
             # Populate submissions list
-            form_type = FormTypes.TRANSFER.value
-            if form_type in aggregation.submissions:
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = ObligationTypes.TRANSFER.value
+            if obligation_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[obligation_type])
             else:
                 submissions_set = set()
             if self.source_party_submission:
                 submissions_set.add(self.source_party_submission.id)
             if self.destination_party_submission:
                 submissions_set.add(self.destination_party_submission.id)
-            aggregation.submissions[form_type] = list(submissions_set)
+            aggregation.submissions[obligation_type] = list(submissions_set)
 
             aggregation.save()
 
@@ -184,9 +184,9 @@ class Transfer(models.Model):
                 aggregation.cons_transfer = float(existing_value - to_subtract)
 
             # Clear submissions from list
-            form_type = FormTypes.TRANSFER.value
-            if form_type in aggregation.submissions:
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = ObligationTypes.TRANSFER.value
+            if obligation_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[obligation_type])
             else:
                 submissions_set = set()
             if (
@@ -199,7 +199,7 @@ class Transfer(models.Model):
                 and destination_party_submission.id in submissions_set
             ):
                 submissions_set.remove(destination_party_submission.id)
-            aggregation.submissions[form_type] = list(submissions_set)
+            aggregation.submissions[obligation_type] = list(submissions_set)
 
             aggregation.save()
 
@@ -218,7 +218,7 @@ class Transfer(models.Model):
                         )],
                     }
                 )
-            if self.destination_party_submission.obligation.form_type != FormTypes.TRANSFER.value:
+            if self.destination_party_submission.obligation.obligation_type != ObligationTypes.TRANSFER.value:
                 raise ValidationError(
                     {
                         'destination_party_submission': [_(
@@ -238,7 +238,7 @@ class Transfer(models.Model):
                         )],
                     }
                 )
-            if self.source_party_submission.obligation.form_type != FormTypes.TRANSFER.value:
+            if self.source_party_submission.obligation.obligation_type != ObligationTypes.TRANSFER.value:
                 raise ValidationError(
                     {
                         'source_party_submission': [_(

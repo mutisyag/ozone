@@ -15,7 +15,7 @@ from .reports import (
 )
 
 from ozone.core.models import (
-    FormTypes,
+    ObligationTypes,
 )
 
 from .util import right_paragraph_style, left_paragraph_style
@@ -62,9 +62,9 @@ def get_doc_template(landscape=False):
 def export_submissions(obligation, submissions):
 
     buff, doc = get_doc_template(landscape=True)
-    if obligation._form_type == FormTypes.ART7.value:
+    if obligation._obligation_type == ObligationTypes.ART7.value:
         clazz = art7
-    elif obligation._form_type == FormTypes.ESSENCRIT.value:
+    elif obligation._obligation_type == ObligationTypes.ESSENCRIT.value:
         clazz = raf
 
     flowables = (

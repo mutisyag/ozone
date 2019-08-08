@@ -469,7 +469,7 @@ class ReportingPeriodSerializer(serializers.ModelSerializer):
 class ObligationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obligation
-        fields = ('id', 'name', 'form_type', 'sort_order', 'is_active')
+        fields = ('id', 'name', 'obligation_type', 'sort_order', 'is_active')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -1229,7 +1229,7 @@ class PerTypeFieldsMixIn(object):
         if not instance:
             return
         try:
-            return cls.Meta.per_type_fields[instance.obligation.form_type]
+            return cls.Meta.per_type_fields[instance.obligation.obligation_type]
         except KeyError:
             return cls.Meta.base_fields
 

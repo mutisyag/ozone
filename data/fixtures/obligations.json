@@ -5,7 +5,7 @@
     "fields": {
       "name": "Article 7 - Data Reporting",
       "description": "Data forms 1-6",
-      "_form_type": "art7",
+      "_obligation_type": "art7",
       "is_active": true,
       "has_versions": true,
       "has_reporting_periods": true,
@@ -19,7 +19,7 @@
     "fields": {
       "name": "Accounting for Essential and Critical uses (RAF)",
       "description": "Reporting account format",
-      "_form_type": "essencrit",
+      "_obligation_type": "essencrit",
       "is_active": true,
       "has_versions": true,
       "has_reporting_periods": true,
@@ -32,7 +32,7 @@
     "fields": {
       "name": "HAT Exemption: Imports and Production",
       "description": "Data forms 7 and 8",
-      "_form_type": "hat",
+      "_obligation_type": "hat",
       "is_active": false,
       "has_versions": true,
       "has_reporting_periods": true,
@@ -45,7 +45,7 @@
     "fields": {
       "name": "Article 2 (p. 5, 5 bis, 7) - Transfer of production/consumption rights",
       "description": "",
-      "_form_type": "transfer",
+      "_obligation_type": "transfer",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -59,7 +59,7 @@
     "fields": {
       "name": "Laboratory and analytical uses (dec. VI/9(p. 3) and annex II of 6th MOP report)",
       "description": "",
-      "_form_type": "other",
+      "_obligation_type": "labuses",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -73,7 +73,7 @@
     "fields": {
       "name": "Process agent uses (dec. X/14)",
       "description": "",
-      "_form_type": "procagent",
+      "_obligation_type": "procagent",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -87,7 +87,7 @@
     "fields": {
       "name": "Article 4B - Licensing information",
       "description": "",
-      "_form_type": "other",
+      "_obligation_type": "art4b",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -101,7 +101,7 @@
     "fields": {
       "name": "Article 9 - Research, development, public awareness and exchange of information",
       "description": "",
-      "_form_type": "other",
+      "_obligation_type": "art9",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -115,7 +115,7 @@
     "fields": {
       "name": "Requests for changes in baseline data (decs. XIII/15(p. 5) and XV/19)",
       "description": "",
-      "_form_type": "other",
+      "_obligation_type": "reqchanges",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -129,7 +129,7 @@
     "fields": {
       "name": "Other information",
       "description": "",
-      "_form_type": "other",
+      "_obligation_type": "other",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,
@@ -143,7 +143,7 @@
     "fields": {
       "name": "Nominations for Essential- and Critical-use Exemptions (EUN/CUN)",
       "description": "",
-      "_form_type": "exemption",
+      "_obligation_type": "exemption",
       "is_active": true,
       "has_versions": false,
       "has_reporting_periods": true,

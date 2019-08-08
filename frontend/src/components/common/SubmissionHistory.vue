@@ -63,7 +63,7 @@ export default {
       this.$router.go(this.$router.currentRoute)
     },
     getFormName(obligation) {
-      return this.obligations.find(o => o.id === obligation).form_type
+      return this.obligations.find(o => o.id === obligation).obligation_type
     },
     async getObligations() {
       const obligations = await getObligations()

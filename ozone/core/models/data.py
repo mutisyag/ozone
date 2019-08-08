@@ -257,13 +257,13 @@ class AggregationMixin:
                 value += model_value
                 setattr(aggregation, aggr_field, float(value))
 
-            form_type = submission.obligation.form_type
-            if form_type in aggregation.submissions:
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = submission.obligation.obligation_type
+            if obligation_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.add(submission.id)
-                aggregation.submissions[form_type] = list(submissions_set)
+                aggregation.submissions[obligation_type] = list(submissions_set)
             else:
-                aggregation.submissions[form_type] = [submission.id,]
+                aggregation.submissions[obligation_type] = [submission.id,]
 
             # This will automatically trigger the calculation of computed
             # values
@@ -317,11 +317,11 @@ class AggregationMixin:
                 setattr(aggregation, aggr_field, 0.0)
 
             # Clear this submission from the list of submissions for this aggr
-            form_type = submission.obligation.form_type
-            if submission.id in aggregation.submissions.get(form_type, []):
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = submission.obligation.obligation_type
+            if submission.id in aggregation.submissions.get(obligation_type, []):
+                submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.remove(submission.id)
-                aggregation.submissions[form_type] = list(submissions_set)
+                aggregation.submissions[obligation_type] = list(submissions_set)
 
             # If this has left the aggregation empty, delete it; else save
             if aggregation.is_empty():

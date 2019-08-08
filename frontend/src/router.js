@@ -186,6 +186,10 @@ const routerOptions = {
 const router = new Router(routerOptions)
 
 router.beforeEach((to, from, next) => {
+  if(!router.options.routes.find(r => r.name === 'Submission').children.map(c => c.name).includes(to.name) && to.query.submission) {
+    const newTo = {...to, name: 'other'}
+    next(newTo)
+  }
   if (to.meta.requiresAuth) {
     const authToken = window.$cookies.get('authToken')
 

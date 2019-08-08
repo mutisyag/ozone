@@ -28,7 +28,7 @@ User = get_user_model()
 
 
 class BaseUserRoleTests(BaseTests):
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def setUp(self):
         super().setUp()
@@ -36,7 +36,7 @@ class BaseUserRoleTests(BaseTests):
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory.create(subregion=self.subregion)
-        self.obligation = ObligationFactory.create(_form_type=self._form_type)
+        self.obligation = ObligationFactory.create(_obligation_type=self._obligation_type)
         self.language = LanguageEnFactory()
         ReportingChannelFactory()
 

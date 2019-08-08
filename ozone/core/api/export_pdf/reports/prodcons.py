@@ -9,7 +9,7 @@ from ozone.core.models import (
     Limit,
     LimitTypes,
     Submission,
-    FormTypes,
+    ObligationTypes,
 )
 from ozone.core.models.utils import round_half_up
 
@@ -270,7 +270,7 @@ def _get_date_reported(submission, prodcons_qs):
     # Get the date reported from the Article 7 submission related to ProdCons
     submission_id = None
     for subs in prodcons_qs.values_list('submissions', flat=True):
-        id_list = subs.get(FormTypes.ART7.value, [])
+        id_list = subs.get(ObligationTypes.ART7.value, [])
         if id_list:
             submission_id = id_list[0]
     sub = Submission.objects.filter(id=submission_id).first()

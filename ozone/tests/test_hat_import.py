@@ -25,7 +25,7 @@ class BaseHATImportTest(BaseTests):
         super().setUp()
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory(_form_type="hat")
+        self.obligation = ObligationFactory(_obligation_type="hat")
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -81,7 +81,7 @@ class TestHATImport(BaseHATImportTest):
         self.assertEqual(result.status_code, 201, result.json())
 
     def test_create_wrong_obligation(self):
-        obligation = ObligationFactory.create(_form_type="art7", name="Much obliged")
+        obligation = ObligationFactory.create(_obligation_type="art7", name="Much obliged")
         submission = self.create_submission(obligation=obligation)
 
         data = dict(HAT_IMPORT_DATA)

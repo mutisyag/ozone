@@ -69,7 +69,7 @@ from ..models import (
     Email,
     EmailTemplate,
     CriticalUseCategory,
-    FormTypes,
+    ObligationTypes,
     DeviationType,
     DeviationSource,
     PlanOfActionDecision,
@@ -941,7 +941,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
-        obligation = submission.obligation._form_type
+        obligation = submission.obligation._obligation_type
         filename = f'{obligation}_{pk}_{timestamp}.pdf'
         buf_pdf = export_submissions(submission.obligation, [submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
@@ -982,7 +982,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionTransitionsViewSet(viewsets.ModelViewSet):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionTransitionsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -998,7 +998,7 @@ class SubmissionTransitionsViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionInfoSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1051,7 +1051,7 @@ class SubmissionFlagsViewSet(
     mixins.UpdateModelMixin, mixins.ListModelMixin,
     GenericViewSet, SerializerRequestContextMixIn
 ):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags,
@@ -1090,7 +1090,7 @@ class SubmissionRemarksViewSet(
     Update the general remarks for this specific submission.
     """
     # XXX TODO Check if this should be available for all #497
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks,
@@ -1116,7 +1116,7 @@ class SubmissionRemarksViewSet(
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7QuestionnaireSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1148,7 +1148,7 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 class Article7DestructionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7DestructionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1169,7 +1169,7 @@ class Article7DestructionViewSet(
 class Article7ProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1189,7 +1189,7 @@ class Article7ProductionViewSet(
 class Article7ExportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ExportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1209,7 +1209,7 @@ class Article7ExportViewSet(
 class Article7ImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1229,7 +1229,7 @@ class Article7ImportViewSet(
 class Article7NonPartyTradeViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1249,7 +1249,7 @@ class Article7NonPartyTradeViewSet(
 class Article7EmissionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7EmissionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1269,7 +1269,7 @@ class Article7EmissionViewSet(
 class HighAmbientTemperatureImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("hat",)
+    obligation_types = ("hat",)
     serializer_class = HighAmbientTemperatureImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1289,7 +1289,7 @@ class HighAmbientTemperatureImportViewSet(
 class HighAmbientTemperatureProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("hat",)
+    obligation_types = ("hat",)
     serializer_class = HighAmbientTemperatureProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1307,7 +1307,7 @@ class HighAmbientTemperatureProductionViewSet(
 
 
 class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
-    form_types = ("other",)
+    obligation_types = ("other",)
     serializer_class = DataOtherSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1327,7 +1327,7 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 class ExemptionNominationViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("exemption",)
+    obligation_types = ("exemption",)
     serializer_class = ExemptionNominationSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation,
@@ -1346,7 +1346,7 @@ class ExemptionNominationViewSet(
 class ExemptionApprovedViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = ("exemption",)
+    obligation_types = ("exemption",)
     serializer_class = ExemptionApprovedSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation
@@ -1365,7 +1365,7 @@ class ExemptionApprovedViewSet(
 class RAFViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = ("essencrit",)
+    obligation_types = ("essencrit",)
     serializer_class = RAFSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1383,7 +1383,7 @@ class TransferViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This only needs to be read-only for now
     """
-    form_types = ("transfer",)
+    obligation_types = ("transfer",)
     serializer_class = TransferSerializer
     permission_classes = (
         IsAuthenticated,
@@ -1410,7 +1410,7 @@ class ProcessAgentContainTechnologyViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProcessAgentUsesReportedViewSet(viewsets.ReadOnlyModelViewSet):
-    form_types = ("procagent",)
+    obligation_types = ("procagent",)
     serializer_class = ProcessAgentUsesReportedSerializer
     permission_classes = (
         IsAuthenticated,
@@ -1430,7 +1430,7 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     download:
     Download the submission file.
     """
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionFileSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1911,7 +1911,7 @@ class ReportsViewSet(viewsets.ViewSet):
             "_".join(p.abbr for p in parties),
             "_".join(p.name for p in periods),
         )
-        art7 = Obligation.objects.get(_form_type=FormTypes.ART7.value)
+        art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
         return self._response_pdf(
             f'art7raw_{params}',
             export_submissions(art7, self.get_submissions(art7, periods, parties))
@@ -1938,7 +1938,7 @@ class ReportsViewSet(viewsets.ViewSet):
             "_".join(p.abbr for p in parties),
             "_".join(p.name for p in periods),
         )
-        raf = Obligation.objects.get(_form_type=FormTypes.ESSENCRIT.value)
+        raf = Obligation.objects.get(_obligation_type=ObligationTypes.ESSENCRIT.value)
         return self._response_pdf(
             f'raf_{params}',
             export_submissions(raf, self.get_submissions(raf, periods, parties))

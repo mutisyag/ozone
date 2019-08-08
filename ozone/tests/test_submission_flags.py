@@ -27,14 +27,14 @@ OLD_VALUE = False
 class BaseFlagsTests(BaseTests):
     success_code = 200
     fail_code = 422
-    _form_type = "art7"
+    _obligation_type = "art7"
     flag_data = {}
 
     def setUp(self):
         super().setUp()
         self.workflow_class = "default"
 
-        self.obligation = ObligationFactory(_form_type=self._form_type)
+        self.obligation = ObligationFactory(_obligation_type=self._obligation_type)
         self.region = RegionFactory.create()
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -346,22 +346,22 @@ class SubmissionFlagsPermissionTests(BaseFlagsTests):
 
 class HATSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = ALL_FLAGS_DATA
-    _form_type = "hat"
+    _obligation_type = "hat"
 
 
 class EssenCritSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = ESSENCRIT_FLAGS_DATA
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
 
 
 class OtherSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = BASE_FLAG_DATA
-    _form_type = "other"
+    _obligation_type = "other"
 
 
 class ExemptionSubmissionFlagsPermissionTests(SubmissionFlagsPermissionTests):
     flag_data = EXEMPTION_FLAGS_DATA
-    _form_type = "exemption"
+    _obligation_type = "exemption"
 
 
 class SubmissionRetrieveTest(BaseFlagsTests):
@@ -396,19 +396,19 @@ class SubmissionRetrieveTest(BaseFlagsTests):
 
 class HATSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = ALL_FLAGS_DATA
-    _form_type = "hat"
+    _obligation_type = "hat"
 
 
 class EssenCritSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = ESSENCRIT_FLAGS_DATA
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
 
 
 class OtherSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = BASE_FLAG_DATA
-    _form_type = "other"
+    _obligation_type = "other"
 
 
 class ExemptionSubmissionRetrieveTest(SubmissionRetrieveTest):
     flag_data = EXEMPTION_FLAGS_DATA
-    _form_type = "exemption"
+    _obligation_type = "exemption"
