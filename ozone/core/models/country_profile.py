@@ -41,7 +41,7 @@ class ORMReport(models.Model):
 
     class Meta:
         db_table = "orm_report"
-        verbose_name = "ORM reports"
+        verbose_name = "ORM report"
 
 
 class IllegalTrade(models.Model):

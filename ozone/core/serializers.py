@@ -67,6 +67,7 @@ from .models import (
     OtherCountryProfileData,
     ReclamationFacility,
     IllegalTrade,
+    ORMReport,
     MultilateralFund,
 )
 
@@ -1934,7 +1935,7 @@ class ORMReportSerializer(serializers.ModelSerializer):
     period = serializers.StringRelatedField(source='reporting_period', read_only=True)
 
     class Meta:
-        model = IllegalTrade
+        model = ORMReport
         fields = "__all__"
 
 
