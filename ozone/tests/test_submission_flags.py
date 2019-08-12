@@ -377,7 +377,15 @@ class SubmissionRetrieveTest(BaseFlagsTests):
                 kwargs={"submission_pk": submission.pk},
             ),
         )
-        self.assertEqual(result.json(), [self.flag_data])
+        test_flag_data = dict(self.flag_data)
+        if not owner.is_secretariat:
+            # The default value of checked_blanks and confirmed_blanks
+            # for Party-created submissions is False
+            if 'flag_checked_blanks' in test_flag_data:
+                test_flag_data.update({'flag_checked_blanks': True})
+            if 'flag_confirmed_blanks' in test_flag_data:
+                test_flag_data.update({'flag_confirmed_blanks': True})
+        self.assertEqual(result.json(), [test_flag_data])
 
     def test_retrieve_as_party_party_reporter(self):
         self._check_flags_retrieve_data(self.party_user, self.party_user)

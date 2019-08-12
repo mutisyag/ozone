@@ -1736,9 +1736,22 @@ class Submission(models.Model):
                     for flag in self.GROUP_FLAGS_MAPPING.keys():
                         setattr(self, flag, getattr(self.cloned_from, flag))
                 else:
-                    groups = Group.get_report_groups(self.party, self.reporting_period)
+                    groups = Group.get_report_groups(
+                        self.party, self.reporting_period
+                    )
                     for g in groups:
-                        setattr(self, self.FLAG_GROUPS_MAPPING[g.group_id], True)
+                        setattr(
+                            self, self.FLAG_GROUPS_MAPPING[g.group_id], True
+                        )
+
+            # Prefill blank-related flags if needed
+            if self.obligation.obligation_type in [
+                ObligationTypes.ART7.value, ObligationTypes.HAT.value
+            ]:
+                if not self.filled_by_secretariat:
+                    self.flag_checked_blanks = True
+                    self.flag_confirmed_blanks = True
+                    self.flag_has_blanks = False
 
             self.clean()
             ret = super().save(
