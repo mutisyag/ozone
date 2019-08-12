@@ -941,7 +941,7 @@ export default {
     },
     isPolyols() {
       const tabsThatHavePolyols = ['has_imports', 'has_exports']
-      if (!tabsThatHavePolyols.includes(this.tabName)) return
+      if (!tabsThatHavePolyols.includes(this.tabName)) return []
       return [...this.tab_data.substances.filter(s => s.is_contained_in_polyols).map(s => s.value)]
     },
     // we might need this in the future
