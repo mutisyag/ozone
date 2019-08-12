@@ -933,23 +933,15 @@ class ExemptionApprovedSerializer(
         exclude = ('submission',)
 
 
-# Helper functions for handling unknown/other parties in RAF imports and use
+# Helper function for handling unknown/other parties in RAF imports and use
 # categories.
 def _handle_party_other_out(entry):
     """
-    When the party is not known, frontend will send special country id 9999
-    instead of null.
+    When the party is None on the model instance, frontend will get special
+    country id 9999 instead of null.
     """
-    entry["party"] = 9999 if entry["party"] == None else entry["party"]
-    return entry
-
-
-def _handle_party_other_in(entry):
-    """
-    When the party is not known, frontend will send special country id 9999
-    instead of null.
-    """
-    entry["party"] = None if entry["party"] == 9999 else entry["party"]
+    if 'party' in entry:
+        entry["party"] = 9999 if entry["party"] is None else entry["party"]
     return entry
 
 
@@ -990,6 +982,20 @@ class RAFListSerializer(
     imports = RAFImportSerializer(many=True)
     use_categories = RAFReportUseCategorySerializer(many=True)
 
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding is_valid to treat special case of party 9999 - which actually
+        translates into None in the DB. If all occurrences of 9999 in
+        self.initial_data are not replaced, field validation will fail since
+        9999 is not an actual pk.
+        """
+        for data in self.initial_data:
+            for imp in data.get('imports', []):
+                if imp['party'] == 9999:
+                    imp['party'] = None
+
+        return super().is_valid(raise_exception)
+
     def create_single(self, data, instance, submission):
         """
         Creates a single entry taking into account the special "imports" and
@@ -1000,13 +1006,11 @@ class RAFListSerializer(
         res = super().create_single(data, instance, submission)
 
         for value_entry in imports:
-            value_entry = _handle_party_other_in(value_entry)
             RAFImport.objects.create(
                 report=res, **value_entry
             )
 
         for value_entry in use_categories:
-            value_entry = _handle_party_other_in(value_entry)
             RAFReportUseCategory.objects.create(
                 report=res, **value_entry
             )
@@ -1024,7 +1028,6 @@ class RAFListSerializer(
                 # related manager.
                 existing_entry.imports.all().delete()
                 for value_entry in value:
-                    value_entry = _handle_party_other_in(value_entry)
                     RAFImport.objects.create(
                         report=existing_entry, **value_entry
                     )
@@ -1034,7 +1037,6 @@ class RAFListSerializer(
                 # the related manager.
                 existing_entry.use_categories.all().delete()
                 for value_entry in value:
-                    value_entry = _handle_party_other_in(value_entry)
                     RAFReportUseCategory.objects.create(
                         report=existing_entry, **value_entry
                     )
@@ -1055,8 +1057,23 @@ class RAFSerializer(
     imports = RAFImportSerializer(many=True)
     use_categories = RAFReportUseCategorySerializer(many=True)
 
-    def create(self, validated_data):
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding is_valid to treat special case of party 9999 - which actually
+        translates into None in the DB. If all occurrences of 9999 in
+        self.initial_data are not replaced, field validation will fail since
+        9999 is not an actual pk.
+        """
+        for imp in self.initial_data.get('imports', []):
+            if imp['party'] == 9999:
+                imp['party'] = None
+        return super().is_valid(raise_exception)
 
+    def create(self, validated_data):
+        """
+        Overriding create() to make sure imports and use_categories are
+        properly treated.
+        """
         imports_data = validated_data.pop("imports", [])
         use_categories_data = validated_data.pop("use_categories", [])
 
