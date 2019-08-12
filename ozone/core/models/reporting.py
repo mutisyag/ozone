@@ -32,7 +32,7 @@ from ..exceptions import (
 
 __all__ = [
     'ModifyPreventionMixin',
-    'FormTypes',
+    'ObligationTypes',
     'Obligation',
     'Submission',
     'HistoricalSubmission',
@@ -87,7 +87,7 @@ class ModifyPreventionMixin:
 
 
 @enum.unique
-class FormTypes(enum.Enum):
+class ObligationTypes(enum.Enum):
     ART7 = 'art7'
     ESSENCRIT = 'essencrit'  # TODO: rename this to RAF
     HAT = 'hat'
@@ -95,20 +95,30 @@ class FormTypes(enum.Enum):
     EXEMPTION = 'exemption'
     TRANSFER = 'transfer'
     PROCAGENT = 'procagent'
+    LABUSES = 'labuses'
+    ART4B = 'art4b'
+    ART9 = 'art9'
+    REQCHANGES = 'reqchanges'
+    ODSSTRATEGIES = 'odsstrategies'
+    UNWANTEDIMPORTS = 'unwantedimports'
 
 
 class Obligation(models.Model):
 
     NOT_CLONEABLE = [
-        FormTypes.EXEMPTION.value,
-        FormTypes.TRANSFER.value,
-        FormTypes.PROCAGENT.value,
-        FormTypes.OTHER.value,
+        ObligationTypes.EXEMPTION.value,
+        ObligationTypes.TRANSFER.value,
+        ObligationTypes.PROCAGENT.value,
+        ObligationTypes.OTHER.value,
+        ObligationTypes.LABUSES.value,
+        ObligationTypes.ART4B.value,
+        ObligationTypes.ART9.value,
+        ObligationTypes.REQCHANGES.value,
     ]
 
     AGGREGATABLE = [
-        FormTypes.ART7.value,
-        FormTypes.HAT.value,
+        ObligationTypes.ART7.value,
+        ObligationTypes.HAT.value,
     ]
 
     name = models.CharField(
@@ -143,14 +153,10 @@ class Obligation(models.Model):
                   "multiple versions"
     )
 
-    # The type of form used to submit data.
-    # This will possibly get more complicated in the future
-    # (e.g. when different forms will be necessary for the same obligation
-    # but different reporting periods due to changes in the methodology
-    _form_type = models.CharField(
-        max_length=64, choices=((s.value, s.name) for s in FormTypes),
+    _obligation_type = models.CharField(
+        max_length=64, choices=((s.value, s.name) for s in ObligationTypes),
         null=True,
-        help_text="Used to generate the correct form, based on this obligation."
+        help_text="Used to generate the correct form and filter obligations."
     )
 
     sort_order = models.IntegerField(null=True)
@@ -169,16 +175,16 @@ class Obligation(models.Model):
     )
 
     @property
-    def form_type(self):
-        return self._form_type
+    def obligation_type (self):
+        return self._obligation_type
 
     @property
     def is_not_cloneable(self):
-        return self.form_type in self.NOT_CLONEABLE
+        return self.obligation_type in self.NOT_CLONEABLE
 
     @property
     def is_aggregateable(self):
-        return self.form_type in self.AGGREGATABLE
+        return self.obligation_type in self.AGGREGATABLE
 
     def __str__(self):
         return self.name
@@ -813,7 +819,7 @@ class Submission(models.Model):
         ):
             return False
 
-        if self.obligation.form_type == FormTypes.ART7.value:
+        if self.obligation.obligation_type == ObligationTypes.ART7.value:
             if (
                 not hasattr(self, "article7questionnaire")
                 or self.article7questionnaire is None
@@ -846,7 +852,7 @@ class Submission(models.Model):
             return []
 
         # Treat exemption case separately
-        if self.obligation.form_type == FormTypes.EXEMPTION.value:
+        if self.obligation.obligation_type == ObligationTypes.EXEMPTION.value:
             if user.is_secretariat:
                 if self.in_initial_state:
                     return ['flag_emergency',]
@@ -1017,7 +1023,7 @@ class Submission(models.Model):
         Returns whether user has edit rights on this submission based on
         user type & who it was created by (state not taken into account).
         """
-        if self.obligation.form_type == FormTypes.EXEMPTION.value:
+        if self.obligation.obligation_type == ObligationTypes.EXEMPTION.value:
             if (
                 user.is_secretariat
                 or user.party == self.party and not self.filled_by_secretariat
@@ -1034,7 +1040,7 @@ class Submission(models.Model):
     def can_edit_data(self, user):
         if self.has_edit_rights(user):
             if (
-                self.obligation.form_type == FormTypes.EXEMPTION.value
+                self.obligation.obligation_type == ObligationTypes.EXEMPTION.value
                 and not user.is_secretariat and user.party is not None
             ):
                 return self.in_initial_state
@@ -1428,7 +1434,7 @@ class Submission(models.Model):
         return self.flag_emergency
 
     def can_change_submitted_at(self, user):
-        if self.obligation.form_type == FormTypes.EXEMPTION.value:
+        if self.obligation.obligation_type == ObligationTypes.EXEMPTION.value:
             if user.is_secretariat and not self.in_final_state:
                 return True
 
@@ -1488,11 +1494,11 @@ class Submission(models.Model):
             ).first()
             if aggregation is None:
                 continue
-            form_type = self.obligation.form_type
-            if self.id in aggregation.submissions.get(form_type, []):
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = self.obligation.obligation_type
+            if self.id in aggregation.submissions.get(obligation_type, []):
+                submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.remove(self.id)
-                aggregation.submissions[form_type] = list(submissions_set)
+                aggregation.submissions[obligation_type] = list(submissions_set)
             aggregation.save()
 
         # Set to 0 all values that had been populated by this submission.
@@ -1537,13 +1543,13 @@ class Submission(models.Model):
                 reporting_period=self.reporting_period,
                 group=group
             )
-            form_type = self.obligation.form_type
-            if form_type in aggregation.submissions:
-                submissions_set = set(aggregation.submissions[form_type])
+            obligation_type = self.obligation.obligation_type
+            if obligation_type in aggregation.submissions:
+                submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.add(self.id)
-                aggregation.submissions[form_type] = list(submissions_set)
+                aggregation.submissions[obligation_type] = list(submissions_set)
             else:
-                aggregation.submissions[form_type] = [self.id,]
+                aggregation.submissions[obligation_type] = [self.id,]
             aggregation.save()
 
         for related, aggr_flag in self.RELATED_DATA:
@@ -1704,11 +1710,11 @@ class Submission(models.Model):
                 self.version = current_submissions.latest('version').version + 1
 
             # On first save we need to instantiate the submission's workflow
-            if self.obligation.form_type == FormTypes.EXEMPTION.value:
+            if self.obligation.obligation_type == ObligationTypes.EXEMPTION.value:
                 self._workflow_class = 'default_exemption'
-            elif self.obligation.form_type == FormTypes.TRANSFER.value:
+            elif self.obligation.obligation_type == ObligationTypes.TRANSFER.value:
                 self._workflow_class = 'default_transfer'
-            elif self.obligation.form_type == FormTypes.PROCAGENT.value:
+            elif self.obligation.obligation_type == ObligationTypes.PROCAGENT.value:
                 self._workflow_class = 'default_process_agent'
             else:
                 self._workflow_class = 'default'
@@ -1725,7 +1731,7 @@ class Submission(models.Model):
                 )
 
             # Prefill Art 7 has_reported flags
-            if self.obligation.form_type == FormTypes.ART7.value:
+            if self.obligation.obligation_type == ObligationTypes.ART7.value:
                 if self.cloned_from:
                     for flag in self.GROUP_FLAGS_MAPPING.keys():
                         setattr(self, flag, getattr(self.cloned_from, flag))

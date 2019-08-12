@@ -325,14 +325,73 @@ email_templates.register(
 )
 router.extend(email_templates)
 
-# Countries profile
-countries_profile = routers.SimpleRouter()
-countries_profile.register(
-    'countries-profile',
-    views.CountryProfileViewSet,
-    base_name='countries-profile'
+# Country profiles
+focal_points = routers.SimpleRouter()
+focal_points.register(
+    'country-profiles/focal-points',
+    views.FocalPointViewSet,
+    base_name='country-profiles/focal-points'
 )
-router.extend(countries_profile)
+router.extend(focal_points)
+
+
+licensing_systems = routers.SimpleRouter()
+licensing_systems.register(
+    'country-profiles/licensing-systems',
+    views.LicensingSystemViewSet,
+    base_name='country-profiles/licensing-systems'
+)
+router.extend(licensing_systems)
+
+
+websites = routers.SimpleRouter()
+websites.register(
+    'country-profiles/websites',
+    views.WebsiteViewSet,
+    base_name='country-profiles/websites'
+)
+router.extend(websites)
+
+others = routers.SimpleRouter()
+others.register(
+    'country-profiles/others',
+    views.OtherViewSet,
+    base_name='country-profiles/others'
+)
+router.extend(others)
+
+reclamation_facilities = routers.SimpleRouter()
+reclamation_facilities.register(
+    'country-profiles/reclamation-facilities',
+    views.ReclamationFacilityViewSet,
+    base_name='country-profiles/reclamation-facilities'
+)
+router.extend(reclamation_facilities)
+
+illegal_trades = routers.SimpleRouter()
+illegal_trades.register(
+    'country-profiles/illegal-trades',
+    views.IllegalTradeViewSet,
+    base_name='country-profiles/illegal-trades'
+)
+router.extend(illegal_trades)
+
+orm_reports = routers.SimpleRouter()
+orm_reports.register(
+    'country-profiles/orm-reports',
+    views.ORMReportViewSet,
+    base_name='country-profiles/orm-reports'
+)
+router.extend(orm_reports)
+
+
+multilateral_funds = routers.SimpleRouter()
+multilateral_funds.register(
+    'country-profiles/multilateral-funds',
+    views.MultilateralFundViewSet,
+    base_name='country-profiles/multilateral-funds'
+)
+router.extend(multilateral_funds)
 
 
 urlpatterns = (

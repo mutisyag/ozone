@@ -652,7 +652,7 @@ export default {
       })
     },
     getFormName(obligation) {
-      return this.obligations.find(o => o.value === obligation).form_type
+      return this.obligations.find(o => o.value === obligation).obligation_type
     },
     onFiltered(filteredItems) {
       this.dataEntryTable.totalRows = filteredItems.length

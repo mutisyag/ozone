@@ -10,6 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
+from django.db.models import FloatField
 from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
@@ -69,7 +70,7 @@ from ..models import (
     Email,
     EmailTemplate,
     CriticalUseCategory,
-    FormTypes,
+    ObligationTypes,
     DeviationType,
     DeviationSource,
     PlanOfActionDecision,
@@ -77,6 +78,12 @@ from ..models import (
     HistoricalSubmission,
     FocalPoint,
     LicensingSystem,
+    Website,
+    OtherCountryProfileData,
+    ReclamationFacility,
+    IllegalTrade,
+    ORMReport,
+    MultilateralFund,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -150,6 +157,12 @@ from ..serializers import (
     PlanOfActionSerializer,
     FocalPointSerializer,
     LicensingSystemSerializer,
+    WebsiteSerializer,
+    OtherCountryProfileDataSerializer,
+    ReclamationFacilitySerializer,
+    IllegalTradeSerializer,
+    ORMReportSerializer,
+    MultilateralFundSerializer,
 )
 
 
@@ -501,10 +514,7 @@ class AggregationViewFilterSet(filters.FilterSet):
     )
 
 
-class AggregationViewSet(viewsets.ModelViewSet):
-    # Will only allow GET for now on this view
-    http_method_names = ['get']
-
+class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProdCons.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationSerializer
 
@@ -527,6 +537,92 @@ class AggregationViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return ProdCons.objects.filter(party=F('party__parent_party'))
+
+    def list(self, request, *args, **kwargs):
+        """
+        We need to override the default ViewSet list method to handle the
+        custom `aggregation` parameter.
+        """
+        def populate_aggregation(aggregation, fields, to_add):
+            """
+            Helper function to populate an aggregation's fields based on a list
+            of dictionaries containing key-value pairs for those fields.
+            """
+            for field in fields:
+                setattr(
+                    aggregation,
+                    field,
+                    sum([a[field] or 0 for a in to_add])
+                )
+            aggregation.apply_rounding()
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Handle aggregation
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else None
+        if aggregates:
+            fields = [
+                f.name for f in ProdCons._meta.fields
+                if isinstance(f, FloatField)
+            ]
+            # Using `distinct()` does not work because this queryset is
+            # ordered by fields from related models, which makes similar
+            # values seem distinct.
+            periods = set(
+                queryset.values_list('reporting_period', flat=True)
+            )
+            values = []
+            if 'party' in aggregates and 'group' in aggregates:
+                # Sum values for all groups and all parties for each reporting
+                # period
+                for period in periods:
+                    aggregation = ProdCons(reporting_period_id=period)
+                    to_add = queryset.filter(
+                        reporting_period=period
+                    ).values(*fields)
+                    populate_aggregation(aggregation, fields, to_add)
+                    values.append(aggregation)
+                queryset = values
+            elif 'party' in aggregates:
+                groups = set(queryset.values_list('group', flat=True))
+                for group in groups:
+                    for period in periods:
+                        aggregation = ProdCons(
+                            group_id=group, reporting_period_id=period
+                        )
+                        to_add = queryset.filter(
+                            group=group, reporting_period=period
+                        ).values(*fields)
+                        populate_aggregation(aggregation, fields, to_add)
+                        values.append(aggregation)
+                queryset = values
+            elif 'group' in aggregates:
+                parties = set(queryset.values_list('party', flat=True))
+                for party in parties:
+                    for period in periods:
+                        aggregation = ProdCons(
+                            party_id=party, reporting_period_id=period
+                        )
+                        to_add = queryset.filter(
+                            party=party, reporting_period=period
+                        ).values(*fields)
+                        populate_aggregation(aggregation, fields, to_add)
+                        values.append(aggregation)
+                queryset = values
+
+            # Aggregating disables pagination. Ordering also seems to go down
+            # the drain. However that is ok given the small number of results
+            # that will be returned.
+            return Response(AggregationSerializer(queryset, many=True).data)
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 class LimitPaginator(PageNumberPagination):
@@ -935,7 +1031,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
     def export_pdf(self, request, pk=None):
         submission = Submission.objects.get(pk=pk)
         timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
-        obligation = submission.obligation._form_type
+        obligation = submission.obligation._obligation_type
         filename = f'{obligation}_{pk}_{timestamp}.pdf'
         buf_pdf = export_submissions(submission.obligation, [submission])
         resp = HttpResponse(buf_pdf, content_type='application/pdf')
@@ -976,7 +1072,7 @@ class SubmissionViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionTransitionsViewSet(viewsets.ModelViewSet):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionTransitionsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -992,7 +1088,7 @@ class SubmissionTransitionsViewSet(viewsets.ModelViewSet):
 
 
 class SubmissionInfoViewSet(viewsets.ModelViewSet):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionInfoSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1045,7 +1141,7 @@ class SubmissionFlagsViewSet(
     mixins.UpdateModelMixin, mixins.ListModelMixin,
     GenericViewSet, SerializerRequestContextMixIn
 ):
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionFlagsSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionFlags,
@@ -1084,7 +1180,7 @@ class SubmissionRemarksViewSet(
     Update the general remarks for this specific submission.
     """
     # XXX TODO Check if this should be available for all #497
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionRemarksSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRemarks,
@@ -1110,7 +1206,7 @@ class SubmissionRemarksViewSet(
 
 
 class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7QuestionnaireSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1142,7 +1238,7 @@ class Article7QuestionnaireViewSet(viewsets.ModelViewSet):
 class Article7DestructionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7DestructionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1163,7 +1259,7 @@ class Article7DestructionViewSet(
 class Article7ProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1183,7 +1279,7 @@ class Article7ProductionViewSet(
 class Article7ExportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ExportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1203,7 +1299,7 @@ class Article7ExportViewSet(
 class Article7ImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7ImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1223,7 +1319,7 @@ class Article7ImportViewSet(
 class Article7NonPartyTradeViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7NonPartyTradeSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1243,7 +1339,7 @@ class Article7NonPartyTradeViewSet(
 class Article7EmissionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("art7",)
+    obligation_types = ("art7",)
     serializer_class = Article7EmissionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1263,7 +1359,7 @@ class Article7EmissionViewSet(
 class HighAmbientTemperatureImportViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("hat",)
+    obligation_types = ("hat",)
     serializer_class = HighAmbientTemperatureImportSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1283,7 +1379,7 @@ class HighAmbientTemperatureImportViewSet(
 class HighAmbientTemperatureProductionViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("hat",)
+    obligation_types = ("hat",)
     serializer_class = HighAmbientTemperatureProductionSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1301,7 +1397,7 @@ class HighAmbientTemperatureProductionViewSet(
 
 
 class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
-    form_types = ("other",)
+    obligation_types = ("other",)
     serializer_class = DataOtherSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1321,7 +1417,7 @@ class DataOtherViewSet(SerializerDataContextMixIn, viewsets.ModelViewSet):
 class ExemptionNominationViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet
 ):
-    form_types = ("exemption",)
+    obligation_types = ("exemption",)
     serializer_class = ExemptionNominationSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation,
@@ -1340,7 +1436,7 @@ class ExemptionNominationViewSet(
 class ExemptionApprovedViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = ("exemption",)
+    obligation_types = ("exemption",)
     serializer_class = ExemptionApprovedSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSafeMethod, IsCorrectObligation
@@ -1359,7 +1455,7 @@ class ExemptionApprovedViewSet(
 class RAFViewSet(
     BulkCreateUpdateMixin, SerializerDataContextMixIn, viewsets.ModelViewSet,
 ):
-    form_types = ("essencrit",)
+    obligation_types = ("essencrit",)
     serializer_class = RAFSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1377,7 +1473,7 @@ class TransferViewSet(viewsets.ReadOnlyModelViewSet):
     """
     This only needs to be read-only for now
     """
-    form_types = ("transfer",)
+    obligation_types = ("transfer",)
     serializer_class = TransferSerializer
     permission_classes = (
         IsAuthenticated,
@@ -1404,7 +1500,7 @@ class ProcessAgentContainTechnologyViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class ProcessAgentUsesReportedViewSet(viewsets.ReadOnlyModelViewSet):
-    form_types = ("procagent",)
+    obligation_types = ("procagent",)
     serializer_class = ProcessAgentUsesReportedSerializer
     permission_classes = (
         IsAuthenticated,
@@ -1424,7 +1520,7 @@ class SubmissionFileViewSet(BulkCreateUpdateMixin, viewsets.ModelViewSet):
     download:
     Download the submission file.
     """
-    form_types = None
+    obligation_types = None
     serializer_class = SubmissionFileSerializer
     permission_classes = (
         IsAuthenticated, IsSecretariatOrSamePartySubmissionRelated,
@@ -1905,7 +2001,7 @@ class ReportsViewSet(viewsets.ViewSet):
             "_".join(p.abbr for p in parties),
             "_".join(p.name for p in periods),
         )
-        art7 = Obligation.objects.get(_form_type=FormTypes.ART7.value)
+        art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
         return self._response_pdf(
             f'art7raw_{params}',
             export_submissions(art7, self.get_submissions(art7, periods, parties))
@@ -1932,7 +2028,7 @@ class ReportsViewSet(viewsets.ViewSet):
             "_".join(p.abbr for p in parties),
             "_".join(p.name for p in periods),
         )
-        raf = Obligation.objects.get(_form_type=FormTypes.ESSENCRIT.value)
+        raf = Obligation.objects.get(_obligation_type=ObligationTypes.ESSENCRIT.value)
         return self._response_pdf(
             f'raf_{params}',
             export_submissions(raf, self.get_submissions(raf, periods, parties))
@@ -1958,61 +2054,118 @@ class CriticalUseCategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = CriticalUseCategory.objects.all()
 
 
-class CountryProfileViewSet(viewsets.ViewSet):
+class BaseCountryProfileFilterSet(filters.FilterSet):
+    party = filters.NumberFilter("party", help_text="Filter by party ID")
+
+
+class FocalPointFilterSet(BaseCountryProfileFilterSet):
+    is_licensing_system = filters.BooleanFilter(
+        "is_licensing_system", help_text="Filter by is_licensing_system boolean field"
+    )
+    is_national = filters.BooleanFilter(
+        "is_national", help_text="Filter by is_national boolean field"
+    )
+
+
+class FocalPointViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = FocalPoint.objects.all()
+    serializer_class = FocalPointSerializer
     permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = FocalPointFilterSet
 
-    def _set_if_not_none(self, mapping, key, value):
-        if value is not None:
-            mapping[key] = value
 
-    @action(detail=False, methods=["get"], url_path="focal-points")
-    def focal_points(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        - "is_licensing_system": <boolean>
-        - "is_national": <boolean>
-        """
+class LicensingSystemFilterSet(BaseCountryProfileFilterSet):
+    has_ods = filters.BooleanFilter(
+        "has_ods", help_text="Filter by has_ods boolean field"
+    )
+    has_hfc = filters.BooleanFilter(
+        "has_hfc", help_text="Filter by has_hfc boolean field"
+    )
 
-        party = self.request.query_params.get('party')
-        is_licensing_system = self.request.query_params.get('is_licensing_system')
-        is_national = self.request.query_params.get('is_national')
 
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-        self._set_if_not_none(filter_params, 'is_licensing_system', is_licensing_system)
-        self._set_if_not_none(filter_params, 'is_national', is_national)
+class LicensingSystemViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = LicensingSystem.objects.all()
+    serializer_class = LicensingSystemSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = LicensingSystemFilterSet
 
-        focal_points = FocalPoint.objects.filter(
-            **filter_params
-        ).order_by('ordering_id')
 
-        serializer = FocalPointSerializer(
-            focal_points, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+class WebsiteViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = Website.objects.all()
+    serializer_class = WebsiteSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
 
-    @action(detail=False, methods=["get"], url_path="licensing-systems")
-    def licensing_systems(self, request):
-        """
-        Query arguments:
-        - "party": <int>
-        - "has_ods": <boolean>
-        - "has_hfc": <boolean>
-        """
 
-        party = self.request.query_params.get('party')
-        has_ods = self.request.query_params.get('has_ods')
-        has_hfc = self.request.query_params.get('has_hfc')
+class OtherFilterSet(BaseCountryProfileFilterSet):
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+    obligation = filters.NumberFilter(
+        "obligation", help_text="Filter by Obligation ID"
+    )
 
-        filter_params = {}
-        self._set_if_not_none(filter_params, 'party__id', party)
-        self._set_if_not_none(filter_params, 'has_ods', has_ods)
-        self._set_if_not_none(filter_params, 'has_hfc', has_hfc)
 
-        licensing_systems = LicensingSystem.objects.filter(**filter_params)
+class OtherViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = OtherCountryProfileData.objects.all()
+    serializer_class = OtherCountryProfileDataSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = OtherFilterSet
 
-        serializer = LicensingSystemSerializer(
-            licensing_systems, many=True, context={"request": request}
-        )
-        return Response(serializer.data)
+
+class ReclamationFacilityViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = ReclamationFacility.objects.all()
+    serializer_class = ReclamationFacilitySerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
+
+
+class IllegalTradeViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = IllegalTrade.objects.all()
+    serializer_class = IllegalTradeSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
+
+
+class ORMReportFilterSet(BaseCountryProfileFilterSet):
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+
+
+class ORMReportViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = ORMReport.objects.all()
+    serializer_class = ORMReportSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = ORMReportFilterSet
+
+
+class MultilateralFundViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = MultilateralFund.objects.all()
+    serializer_class = MultilateralFundSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet

@@ -48,7 +48,7 @@ from .models import (
     Nomination,
     CriticalUseCategory,
     ApprovedCriticalUse,
-    FormTypes,
+    ObligationTypes,
     Transfer,
     Email,
     EmailTemplate,
@@ -67,6 +67,12 @@ from .models import (
     ProdConsMT,
     FocalPoint,
     LicensingSystem,
+    Website,
+    OtherCountryProfileData,
+    ReclamationFacility,
+    IllegalTrade,
+    ORMReport,
+    MultilateralFund,
 )
 
 
@@ -294,7 +300,6 @@ class ReportingPeriodAdmin(admin.ModelAdmin):
 class ObligationAdmin(admin.ModelAdmin):
     list_display = ('name', 'is_default', 'is_active')
     exclude = ('has_reporting_periods',)
-    readonly_fields = ['_form_type']
 
 
 @admin.register(User)
@@ -526,7 +531,7 @@ class ExemptionBaseAdmin:
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         submission_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.EXEMPTION.value
+            obligation___obligation_type=ObligationTypes.EXEMPTION.value
         ).order_by('reporting_period__name')
         form.base_fields['submission'].queryset = submission_queryset
         return form
@@ -620,7 +625,7 @@ class TransferAdmin(admin.ModelAdmin):
             parent_party__id=F('id'),
         ).order_by('name')
         source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.TRANSFER.value
+            obligation___obligation_type=ObligationTypes.TRANSFER.value
         ).order_by('reporting_period__name')
         if obj is not None:
             source_sub_queryset = source_sub_queryset.filter(
@@ -686,7 +691,7 @@ class ProcessAgentBaseAdmin:
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         submission_queryset = Submission.objects.filter(
-            obligation___form_type=FormTypes.PROCAGENT.value
+            obligation___obligation_type=ObligationTypes.PROCAGENT.value
         ).order_by('reporting_period__name')
         form.base_fields['submission'].queryset = submission_queryset
         return form
@@ -840,8 +845,18 @@ class ProdConsMTAdmin(admin.ModelAdmin):
     )
 
 
+class BaseCountryPofileAdmin:
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        main_parties_queryset = Party.objects.filter(
+            parent_party__id=F('id'),
+        ).order_by('name')
+        form.base_fields['party'].queryset = main_parties_queryset
+        return form
+
+
 @admin.register(FocalPoint)
-class FocalPointAdmin(admin.ModelAdmin):
+class FocalPointAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
     list_display = (
         'party', 'name', 'designation', 'email', 'is_licensing_system', 'is_national'
     )
@@ -852,9 +867,26 @@ class FocalPointAdmin(admin.ModelAdmin):
     )
     ordering = ('ordering_id', )
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        submission_queryset = Submission.objects.filter(
+            obligation___obligation_type=ObligationTypes.OTHER.value
+        ).order_by('reporting_period__name')
+        form.base_fields['submission'].queryset = submission_queryset
+        return form
+
 
 @admin.register(LicensingSystem)
-class LicensingSystemAdmin(admin.ModelAdmin):
+class LicensingSystemAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        submission_queryset = Submission.objects.filter(
+            obligation___obligation_type=ObligationTypes.ART4B.value
+        ).order_by('reporting_period__name')
+        form.base_fields['submission'].queryset = submission_queryset
+        return form
+
     list_display = (
         'party', 'has_ods', 'date_reported_ods', 'has_hfc', 'date_reported_hfc',
         'remarks'
@@ -865,6 +897,112 @@ class LicensingSystemAdmin(admin.ModelAdmin):
         'has_ods', 'has_hfc'
     )
     ordering = ('party__name', )
+
+
+@admin.register(Website)
+class WebsiteAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'url', 'file', 'description', 'is_url_broken'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        'is_url_broken'
+    )
+    ordering = ('ordering_id', )
+
+
+class OtherCountryProfileDataObligationFilter(RelatedDropdownFilter):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.lookup_choices = Obligation.objects.filter(
+            _obligation_type__in=[
+                ObligationTypes.ART9.value,
+                ObligationTypes.ODSSTRATEGIES.value,
+                ObligationTypes.UNWANTEDIMPORTS.value
+            ]
+        ).values_list('id', 'name')
+
+
+@admin.register(OtherCountryProfileData)
+class OtherCountryProfileDataAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        submission_queryset = Submission.objects.filter(
+            obligation___obligation_type__in=[
+                ObligationTypes.ART9.value,
+                ObligationTypes.ODSSTRATEGIES.value,
+                ObligationTypes.UNWANTEDIMPORTS.value
+            ]
+        ).order_by('reporting_period__name')
+        obligation_queryset = Obligation.objects.filter(
+            _obligation_type__in=[
+                ObligationTypes.ART9.value,
+                ObligationTypes.ODSSTRATEGIES.value,
+                ObligationTypes.UNWANTEDIMPORTS.value
+            ]
+        )
+        form.base_fields['submission'].queryset = submission_queryset
+        form.base_fields['obligation'].queryset = obligation_queryset
+        return form
+
+    list_display = (
+        'party', 'reporting_period', 'obligation', 'url', 'file', 'description',
+        'remarks_secretariat'
+    )
+    search_fields = ('party__name', )
+    list_filter = (
+        ('party', MainPartyFilter),
+        ('obligation', OtherCountryProfileDataObligationFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
+    )
+    ordering = ('party__name', 'reporting_period__name')
+
+
+@admin.register(ReclamationFacility)
+class ReclamationFacilityAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'date_reported', 'name', 'address', 'reclaimed_substances',
+        'capacity', 'remarks'
+    )
+    search_fields = ('party__name', 'name')
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
+
+
+@admin.register(IllegalTrade)
+class IllegalTradeAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'submission_id', 'seizure_date_year', 'substances_traded',
+        'volume', 'importing_exporting_country'
+    )
+    search_fields = ('party__name',)
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
+
+
+@admin.register(ORMReport)
+class ORMReportAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = (
+        'party', 'meeting', 'reporting_period', 'description', 'url'
+    )
+    search_fields = ('party__name',)
+    list_filter = (
+        ('party', MainPartyFilter),
+        ('reporting_period__name', custom_title_dropdown_filter('period')),
+    )
+
+
+@admin.register(MultilateralFund)
+class MultilateralFund(BaseCountryPofileAdmin, admin.ModelAdmin):
+    list_display = ('party', 'funds_approved', 'funds_disbursed')
+    search_fields = ('party__name',)
+    list_filter = (
+        ('party', MainPartyFilter),
+    )
 
 
 # register all adminactions

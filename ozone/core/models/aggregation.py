@@ -381,8 +381,17 @@ class ProdCons(BaseProdCons):
 
     @property
     def decimals(self):
+        """
+        Returns the number of rounding decimals for this particular instance,
+        based on reporting period, group and party.
+        Using getattr instead of the standard self.field_name as this property
+        can be used on unsaved and inconsistent (e.g. party==None) model
+        instances, in which case Django will complain.
+        """
         return BaseProdCons.get_decimals(
-            self.reporting_period, self.group, self.party
+            self.reporting_period,
+            getattr(self, 'group', None),
+            getattr(self, 'party', None),
         )
 
     def populate_limits_and_baselines(self):
@@ -467,7 +476,7 @@ class ProdConsMTManager(models.Manager):
 
 class ProdConsMT(BaseProdCons):
     """
-    Concrete model for ODP-based aggregations.
+    Concrete model for MT-based aggregations.
     These aggregate totals per substance.
     """
     ROUNDABLE_FIELDS = [

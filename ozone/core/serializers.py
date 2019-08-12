@@ -63,6 +63,11 @@ from .models import (
     PlanOfAction,
     FocalPoint,
     LicensingSystem,
+    Website,
+    OtherCountryProfileData,
+    ReclamationFacility,
+    IllegalTrade,
+    MultilateralFund,
 )
 
 User = get_user_model()
@@ -466,7 +471,7 @@ class ReportingPeriodSerializer(serializers.ModelSerializer):
 class ObligationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Obligation
-        fields = ('id', 'name', 'form_type', 'sort_order', 'is_active')
+        fields = ('id', 'name', 'obligation_type', 'sort_order', 'is_active')
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -1226,7 +1231,7 @@ class PerTypeFieldsMixIn(object):
         if not instance:
             return
         try:
-            return cls.Meta.per_type_fields[instance.obligation.form_type]
+            return cls.Meta.per_type_fields[instance.obligation.obligation_type]
         except KeyError:
             return cls.Meta.base_fields
 
@@ -1888,3 +1893,54 @@ class LicensingSystemSerializer(serializers.ModelSerializer):
     class Meta:
         model = LicensingSystem
         exclude = ('submission', )
+
+
+class WebsiteSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = Website
+        exclude = ('ordering_id', )
+
+
+class OtherCountryProfileDataSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+    period = serializers.StringRelatedField(source='reporting_period', read_only=True)
+    obligation = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = OtherCountryProfileData
+        exclude = ('submission', 'reporting_period')
+
+
+class ReclamationFacilitySerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = ReclamationFacility
+        fields = "__all__"
+
+
+class IllegalTradeSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = IllegalTrade
+        fields = "__all__"
+
+
+class ORMReportSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+    period = serializers.StringRelatedField(source='reporting_period', read_only=True)
+
+    class Meta:
+        model = IllegalTrade
+        fields = "__all__"
+
+
+class MultilateralFundSerializer(serializers.ModelSerializer):
+    party = serializers.StringRelatedField(read_only=True)
+
+    class Meta:
+        model = MultilateralFund
+        fields = "__all__"

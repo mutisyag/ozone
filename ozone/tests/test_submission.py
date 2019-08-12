@@ -38,7 +38,7 @@ ALL_LINKS = LINKS_ART7 + LINKS_HAT + LINKS_ESSENCRIT + LINKS_OTHER
 
 
 class BaseSubmissionTest(BaseTests):
-    _form_type = "art7"
+    _obligation_type = "art7"
 
     def setUp(self):
         super().setUp()
@@ -46,7 +46,7 @@ class BaseSubmissionTest(BaseTests):
 
         self.region = RegionFactory.create()
         self.period = ReportingPeriodFactory.create(name="Some period")
-        self.obligation = ObligationFactory.create(_form_type=self._form_type)
+        self.obligation = ObligationFactory.create(_obligation_type=self._obligation_type)
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
         self.another_party = AnotherPartyFactory(subregion=self.subregion)
@@ -305,22 +305,22 @@ class TestSubmissionMethods(BaseSubmissionTest):
 
 
 class HATSubmissionMethods(TestSubmissionMethods):
-    _form_type = "hat"
+    _obligation_type = "hat"
     links_data = LINKS_HAT
 
 
 class EssenCritSubmissionMethods(TestSubmissionMethods):
-    _form_type = "essencrit"
+    _obligation_type = "essencrit"
     links_data = LINKS_ESSENCRIT
 
 
 class OtherSubmissionMethods(TestSubmissionMethods):
-    _form_type = "other"
+    _obligation_type = "other"
     links_data = LINKS_OTHER
 
     def test_clone(self):
         """
-        Overriding method from main class, as form_type "other" does not
+        Overriding method from main class, as obligation_type "other" does not
         allow cloning
         """
         submission = self.create_submission()
