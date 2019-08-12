@@ -933,7 +933,34 @@ class ExemptionApprovedSerializer(
         exclude = ('submission',)
 
 
+# Helper functions for handling unknown/other parties in RAF imports and use
+# categories.
+def _handle_party_other_out(entry):
+    """
+    When the party is not known, frontend will send special country id 9999
+    instead of null.
+    """
+    entry["party"] = 9999 if entry["party"] == None else entry["party"]
+    return entry
+
+
+def _handle_party_other_in(entry):
+    """
+    When the party is not known, frontend will send special country id 9999
+    instead of null.
+    """
+    entry["party"] = None if entry["party"] == 9999 else entry["party"]
+    return entry
+
+
 class RAFImportSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        """
+        Handle the special case of the party with id 9999.
+        """
+        ret = super().to_representation(instance)
+        return _handle_party_other_out(ret)
 
     class Meta:
         model = RAFImport
@@ -941,6 +968,13 @@ class RAFImportSerializer(serializers.ModelSerializer):
 
 
 class RAFReportUseCategorySerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        """
+        Handle the special case of the party with id 9999.
+        """
+        ret = super().to_representation(instance)
+        return _handle_party_other_out(ret)
 
     class Meta:
         model = RAFReportUseCategory
@@ -966,11 +1000,13 @@ class RAFListSerializer(
         res = super().create_single(data, instance, submission)
 
         for value_entry in imports:
+            value_entry = _handle_party_other_in(value_entry)
             RAFImport.objects.create(
                 report=res, **value_entry
             )
 
         for value_entry in use_categories:
+            value_entry = _handle_party_other_in(value_entry)
             RAFReportUseCategory.objects.create(
                 report=res, **value_entry
             )
@@ -988,6 +1024,7 @@ class RAFListSerializer(
                 # related manager.
                 existing_entry.imports.all().delete()
                 for value_entry in value:
+                    value_entry = _handle_party_other_in(value_entry)
                     RAFImport.objects.create(
                         report=existing_entry, **value_entry
                     )
@@ -997,6 +1034,7 @@ class RAFListSerializer(
                 # the related manager.
                 existing_entry.use_categories.all().delete()
                 for value_entry in value:
+                    value_entry = _handle_party_other_in(value_entry)
                     RAFReportUseCategory.objects.create(
                         report=existing_entry, **value_entry
                     )
@@ -1669,7 +1707,7 @@ class SubmissionSerializer(
         return obj.reporting_period.id
 
     def get_reporting_period_description(self, obj):
-        return obj.reporting_period.description 
+        return obj.reporting_period.description
 
     def get_in_initial_state(self, obj):
         return obj.in_initial_state
