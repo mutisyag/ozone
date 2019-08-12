@@ -9,14 +9,18 @@ from django.db import transaction
 
 from ozone.core.models import (
     FocalPoint,
+    IllegalTrade,
     LicensingSystem,
+    MultilateralFund,
     Obligation,
     ObligationTypes,
     OtherCountryProfileData,
+    ORMReport,
     Party,
     ReclamationFacility,
     ReportingPeriod,
     User,
+    URLTypes,
     Website
 )
 
@@ -66,6 +70,9 @@ class Command(BaseCommand):
             ('cp_Env_Sound_Mgmt_strategies', self.process_ods_strategies),
             ('cp_Avoid_HCFC_Equip', self.process_unwanted_imports),
             ('cp_Reclamation_Facilities2', self.process_reclamation_facilities),
+            ('cp_Illegal_Trade2', self.process_illegal_trades),
+            ('cp_ORM_Reports', self.process_orm_reports),
+            ('MLF', self.process_multilateral_funds),
         ]
 
         for workbook_name, workbook_processor in workbook_processors:
@@ -238,14 +245,18 @@ class Command(BaseCommand):
             )
             return 0
 
+    @transaction.atomic()
     def _process_article9(self, row):
-        entry = self.get_article9_data(row)
-        OtherCountryProfileData.objects.create(**entry)
-        logger.info(
-            "Article9 for %s/%s imported",
-            row['Party'],
-            row['PeriodID']
-        )
+        entries = self.get_article9_data(row)
+        for entry in entries:
+            OtherCountryProfileData.objects.create(**entry)
+            logger.info(
+                "Article9 for %s/%s/%s imported",
+                row['Party'],
+                row['PeriodID'],
+                entry['url_type']
+            )
+        return True
 
     def get_article9_data(self, row):
         try:
@@ -260,23 +271,42 @@ class Command(BaseCommand):
         except KeyError as e:
             raise e
 
+        urls = []
         if row['Submission URL']:
-            url = row['Submission URL']
-        elif row['Publications_URL']:
-            url = row['Publications_URL']
-        else:
-            url = ""
+            urls.append(
+                (
+                    row['Submission URL'],
+                    period.name,
+                    URLTypes.SUBMISSION.value
+                )
+            )
+        if row['Publications_URL']:
+            urls.append(
+                (
+                    row['Publications_URL'],
+                    row['Publications_Title'],
+                    URLTypes.PUBLICATION.value
+                )
+            )
+        if not row['Submission URL'] and not row['Publications_URL']:
+            urls.append(
+                ("", "", None)
+            )
 
-        return {
-            "party_id": party.id,
-            "reporting_period_id": period.id,
-            "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.ART9.value
-            ).first(),
-            "description": row['Publications_Title'] if row['Publications_Title'] else "",
-            "url": url,
-            "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
-        }
+        entries = []
+        for url, description, url_type in urls:
+            entries.append({
+                "party_id": party.id,
+                "reporting_period_id": period.id,
+                "obligation_id": Obligation.objects.filter(
+                    _obligation_type=ObligationTypes.ART9.value
+                ).first().id,
+                "description": description,
+                "url": url,
+                "url_type": url_type,
+                "remarks_secretariat": row["Additonal Text for URL"] if row["Additonal Text for URL"] else ""
+            })
+        return entries
 
     def process_ods_strategies(self, row):
         try:
@@ -292,6 +322,7 @@ class Command(BaseCommand):
             )
             return 0
 
+    @transaction.atomic()
     def _process_ods_strategies(self, row):
         entry = self.get_ods_strategies_data(row)
         OtherCountryProfileData.objects.create(**entry)
@@ -299,6 +330,7 @@ class Command(BaseCommand):
             "ODS strategy for %s imported",
             row['Party'],
         )
+        return True
 
     def get_ods_strategies_data(self, row):
         try:
@@ -315,9 +347,10 @@ class Command(BaseCommand):
             "party_id": party.id,
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.OTHER.value
-            ).first(),
+                _obligation_type=ObligationTypes.ODSSTRATEGIES.value
+            ).first().id,
             "url": row["URL"] if row["URL"] else "",
+            "url_type": URLTypes.SUBMISSION.value
         }
 
     def process_unwanted_imports(self, row):
@@ -334,6 +367,7 @@ class Command(BaseCommand):
             )
             return 0
 
+    @transaction.atomic()
     def _process_unwanted_imports(self, row):
         entry = self.get_unwanted_import_data(row)
         OtherCountryProfileData.objects.create(**entry)
@@ -341,6 +375,7 @@ class Command(BaseCommand):
             "Unwanted import for %s imported",
             row['Party'],
         )
+        return True
 
     def get_unwanted_import_data(self, row):
         try:
@@ -357,9 +392,10 @@ class Command(BaseCommand):
             "party_id": party.id,
             "reporting_period_id": period.id,
             "obligation_id": Obligation.objects.filter(
-                _obligation_type=ObligationTypes.OTHER.value
-            ).first(),
+                _obligation_type=ObligationTypes.UNWANTEDIMPORTS.value
+            ).first().id,
             "url": row["URL"] if row["URL"] else "",
+            "url_type": URLTypes.SUBMISSION.value
         }
 
     def process_reclamation_facilities(self, row):
@@ -377,6 +413,7 @@ class Command(BaseCommand):
             )
             return 0
 
+    @transaction.atomic()
     def _process_reclamation_facilities(self, row):
         entry = self.get_reclamation_facilities_data(row)
         ReclamationFacility.objects.create(**entry)
@@ -385,6 +422,7 @@ class Command(BaseCommand):
             row['Party'],
             row['Facility_Name'],
         )
+        return True
 
     def get_reclamation_facilities_data(self, row):
         try:
@@ -400,4 +438,175 @@ class Command(BaseCommand):
             "reclaimed_substances": row['Reclaimed_Substances'] if row['Reclaimed_Substances'] else "",
             "capacity": row['Capacity'] if row['Capacity'] else "",
             "remarks": row['Remarks'] if row['Remarks'] else "",
+        }
+
+    def process_illegal_trades(self, row):
+        try:
+            return self._process_illegal_trades(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving illegal trade for %s/%s",
+                e,
+                row['Party'],
+                row['Substances_Traded'],
+                exc_info=True,
+            )
+            return 0
+
+    @transaction.atomic()
+    def _process_illegal_trades(self, row):
+        entry = self.get_illegal_trade_data(row)
+        if entry:
+            IllegalTrade.objects.create(**entry)
+            logger.info(
+                "Illegal trade for %s/%s imported",
+                row['Party'],
+                row['Substances_Traded'],
+            )
+            return True
+
+    def get_illegal_trade_data(self, row):
+        try:
+            party = self.parties[row['Party']]
+        except KeyError as e:
+            if row['Party'] == "Federated States of Micronesia":
+                party = self.parties['Micronesia (Federated States of)']
+            elif row['Party'] == "PARAGUAY":
+                party = self.parties['Paraguay']
+            else:
+                # Sheet contains empty rows.
+                if not row['Party']:
+                    return
+                raise e
+
+        return {
+            "party_id": party.id,
+            "submission_id": row['Submission ID'],
+            "seizure_date_year": row['Seizure_Date_Year'] if row['Seizure_Date_Year'] else "",
+            "substances_traded": row['Substances_Traded'] if row['Substances_Traded'] else "",
+            "volume": row['Volume'] if row['Volume'] else "",
+            "importing_exporting_country": row['Importing_Exporting_Country'] if row['Importing_Exporting_Country'] else "",
+            "illegal_trade_details": row['Illegal_Trade_Details'] if row['Illegal_Trade_Details'] else "",
+            "action_taken": row['Action_Taken'] if row['Action_Taken'] else "",
+            "remarks": row['Remark'] if row['Remark'] else "",
+            "ordering_id": row['Sec_Order']
+        }
+
+    def process_orm_reports(self, row):
+        try:
+            return self._process_orm_reports(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving ORM Report for %s/%s/%s",
+                e,
+                row['CntryID'],
+                row['Meeting'],
+                row['Year'],
+                exc_info=True,
+            )
+            return 0
+
+    @transaction.atomic()
+    def _process_orm_reports(self, row):
+        entry = self.get_orm_report_data(row)
+        ORMReport.objects.create(**entry)
+        logger.info(
+            "ORM Report for %s/%s/%s imported",
+            row['CntryID'],
+            row['Meeting'],
+            row['Year'],
+        )
+        return True
+
+    def get_orm_report_data(self, row):
+        try:
+            party = self.parties_abbr[row['CntryID']]
+        except KeyError as e:
+            raise e
+
+        try:
+            period = self.periods[str(row['Year'])]
+        except KeyError as e:
+            raise e
+
+        description = row['Extra Text for URL']
+        if not description or description == "\\N":
+            description = ""
+        return {
+            "party_id": party.id,
+            "meeting": row['Meeting'] if row['Meeting'] else "",
+            "reporting_period_id": period.id,
+            "description": description ,
+            "url": row['URL'] if row['URL'] else ""
+        }
+
+    def process_multilateral_funds(self, row):
+        try:
+            return self._process_multilateral_funds(row)
+        except KeyboardInterrupt:
+            raise
+        except Exception as e:
+            logger.error(
+                "Error %s while saving multilateral fund for %s",
+                e,
+                row['Country'],
+                exc_info=True,
+            )
+            return 0
+
+    @transaction.atomic()
+    def _process_multilateral_funds(self, row):
+        entry = self.get_multilateral_fund_data(row)
+        MultilateralFund.objects.create(**entry)
+        logger.info(
+            "Multilateral fund for %s imported",
+            row['Country'],
+        )
+        return True
+
+    def get_multilateral_fund_data(self, row):
+        try:
+            party = self.parties[row['Country']]
+        except KeyError as e:
+            if row['Country'] == 'Bolivia':
+                party = self.parties['Bolivia (Plurinational State of)']
+            elif row['Country'] == 'Cape Verde':
+                party = self.parties['Cabo Verde']
+            elif row['Country'] == 'Congo, DR':
+                party = self.parties['Democratic Republic of the Congo']
+            elif row['Country'] == "Cote D'Ivoire":
+                party = self.parties["Côte d'Ivoire"]
+            elif row['Country'] == 'Guinea-Bissau':
+                party = self.parties["Guinea Bissau"]
+            elif row['Country'] == 'Iran':
+                party = self.parties['Iran (Islamic Republic of)']
+            elif row['Country'] == 'Korea, DPR':
+                party = self.parties["Democratic People's Republic of Korea"]
+            elif row['Country'] == 'Lao, PDR':
+                party = self.parties["Lao People's Democratic Republic"]
+            elif row['Country'] == 'Micronesia':
+                party = self.parties['Micronesia (Federated States of)']
+            elif row['Country'] == 'Moldova, Rep':
+                party = self.parties['Republic of Moldova']
+            elif row['Country'] == 'Syria':
+                party = self.parties['Syrian Arab Republic']
+            elif row['Country'] == 'Tanzania':
+                party = self.parties['United Republic of Tanzania']
+            elif row['Country'] == 'Timor Leste':
+                party = self.parties['Timor-Leste']
+            elif row['Country'] == 'Venezuela':
+                party = self.parties['Venezuela (Bolivarian Republic of)']
+            elif row['Country'] == 'Vietnam':
+                party = self.parties['Viet Nam']
+            else:
+                raise e
+
+        return {
+            "party_id": party.id,
+            "funds_approved": row['Funds approved '],
+            "funds_disbursed": row[' Funds disbursed '],
         }

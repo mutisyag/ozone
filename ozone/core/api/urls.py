@@ -325,48 +325,73 @@ email_templates.register(
 )
 router.extend(email_templates)
 
-# Countries profile
+# Country profiles
 focal_points = routers.SimpleRouter()
 focal_points.register(
-    'countries-profile/focal-points',
+    'country-profiles/focal-points',
     views.FocalPointViewSet,
-    base_name='countries-profile/focal-points'
+    base_name='country-profiles/focal-points'
 )
 router.extend(focal_points)
 
 
 licensing_systems = routers.SimpleRouter()
 licensing_systems.register(
-    'countries-profile/licensing-systems',
+    'country-profiles/licensing-systems',
     views.LicensingSystemViewSet,
-    base_name='countries-profile/licensing-systems'
+    base_name='country-profiles/licensing-systems'
 )
 router.extend(licensing_systems)
 
 
 websites = routers.SimpleRouter()
 websites.register(
-    'countries-profile/websites',
+    'country-profiles/websites',
     views.WebsiteViewSet,
-    base_name='countries-profile/websites'
+    base_name='country-profiles/websites'
 )
 router.extend(websites)
 
 others = routers.SimpleRouter()
 others.register(
-    'countries-profile/others',
+    'country-profiles/others',
     views.OtherViewSet,
-    base_name='countries-profile/others'
+    base_name='country-profiles/others'
 )
 router.extend(others)
 
 reclamation_facilities = routers.SimpleRouter()
 reclamation_facilities.register(
-    'countries-profile/reclamation-facilities',
+    'country-profiles/reclamation-facilities',
     views.ReclamationFacilityViewSet,
-    base_name='countries-profile/reclamation-facilities'
+    base_name='country-profiles/reclamation-facilities'
 )
 router.extend(reclamation_facilities)
+
+illegal_trades = routers.SimpleRouter()
+illegal_trades.register(
+    'country-profiles/illegal-trades',
+    views.IllegalTradeViewSet,
+    base_name='country-profiles/illegal-trades'
+)
+router.extend(illegal_trades)
+
+orm_reports = routers.SimpleRouter()
+orm_reports.register(
+    'country-profiles/orm-reports',
+    views.ORMReportViewSet,
+    base_name='country-profiles/orm-reports'
+)
+router.extend(orm_reports)
+
+
+multilateral_funds = routers.SimpleRouter()
+multilateral_funds.register(
+    'country-profiles/multilateral-funds',
+    views.MultilateralFundViewSet,
+    base_name='country-profiles/multilateral-funds'
+)
+router.extend(multilateral_funds)
 
 
 urlpatterns = (

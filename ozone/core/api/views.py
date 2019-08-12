@@ -81,6 +81,9 @@ from ..models import (
     Website,
     OtherCountryProfileData,
     ReclamationFacility,
+    IllegalTrade,
+    ORMReport,
+    MultilateralFund,
 )
 from ..permissions import (
     IsSecretariatOrSamePartySubmission,
@@ -157,6 +160,9 @@ from ..serializers import (
     WebsiteSerializer,
     OtherCountryProfileDataSerializer,
     ReclamationFacilitySerializer,
+    IllegalTradeSerializer,
+    ORMReportSerializer,
+    MultilateralFundSerializer,
 )
 
 
@@ -2122,6 +2128,42 @@ class OtherViewSet(mixins.ListModelMixin, GenericViewSet):
 class ReclamationFacilityViewSet(mixins.ListModelMixin, GenericViewSet):
     queryset = ReclamationFacility.objects.all()
     serializer_class = ReclamationFacilitySerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
+
+
+class IllegalTradeViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = IllegalTrade.objects.all()
+    serializer_class = IllegalTradeSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = BaseCountryProfileFilterSet
+
+
+class ORMReportFilterSet(BaseCountryProfileFilterSet):
+    reporting_period = filters.NumberFilter(
+        "reporting_period", help_text="Filter by Reporting Period ID"
+    )
+
+
+class ORMReportViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = ORMReport.objects.all()
+    serializer_class = ORMReportSerializer
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = ORMReportFilterSet
+
+
+class MultilateralFundViewSet(mixins.ListModelMixin, GenericViewSet):
+    queryset = MultilateralFund.objects.all()
+    serializer_class = MultilateralFundSerializer
     permission_classes = (IsAuthenticated,)
     filter_backends = (
         filters.DjangoFilterBackend,

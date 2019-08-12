@@ -1,3 +1,5 @@
+import enum
+
 from django.db import models
 
 from . import Obligation, Party, ReportingPeriod, Submission
@@ -5,6 +7,59 @@ from . import Obligation, Party, ReportingPeriod, Submission
 
 def user_directory_path(instance, filename):
     return filename
+
+
+@enum.unique
+class URLTypes(enum.Enum):
+    SUBMISSION = 'Submission'
+    PUBLICATION = 'Publication'
+
+
+class MultilateralFund(models.Model):
+    party = models.ForeignKey(
+        Party, related_name='multilateral_funds', on_delete=models.PROTECT
+    )
+    funds_approved = models.IntegerField()
+    funds_disbursed = models.IntegerField()
+
+    class Meta:
+        db_table = "multilateral_fund"
+
+
+class ORMReport(models.Model):
+    party = models.ForeignKey(
+        Party, related_name='orm_reports', on_delete=models.PROTECT
+    )
+    meeting = models.CharField(max_length=64, blank=True)
+    reporting_period = models.ForeignKey(
+        ReportingPeriod,
+        related_name='orm_reports',
+        on_delete=models.PROTECT
+    )
+    description = models.CharField(max_length=9999, blank=True)
+    url = models.URLField('URL', max_length=1024, null=True, blank=True)
+
+    class Meta:
+        db_table = "orm_report"
+        verbose_name = "ORM reports"
+
+
+class IllegalTrade(models.Model):
+    party = models.ForeignKey(
+        Party, related_name='illegal_trades', on_delete=models.PROTECT
+    )
+    submission_id = models.IntegerField(blank=True, null=True)
+    seizure_date_year = models.CharField(max_length=256, blank=True)
+    substances_traded = models.CharField(max_length=256, blank=True)
+    volume = models.CharField(max_length=256, blank=True)
+    importing_exporting_country = models.CharField(max_length=256, blank=True)
+    illegal_trade_details = models.CharField(max_length=9999, blank=True)
+    action_taken = models.CharField(max_length=9999, blank=True)
+    remarks = models.CharField(max_length=9999, blank=True)
+    ordering_id = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = "illegal_trade"
 
 
 class ReclamationFacility(models.Model):
@@ -49,12 +104,15 @@ class OtherCountryProfileData(models.Model):
     )
 
     description = models.CharField(max_length=9999, blank=True)
-
     file = models.FileField(
         upload_to=user_directory_path, blank=True, null=True
     )
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
+    )
+    url_type = models.CharField(
+        max_length=64, choices=((s.value, s.name) for s in URLTypes),
+        null=True,
     )
     remarks_secretariat = models.CharField(max_length=9999, blank=True)
 
