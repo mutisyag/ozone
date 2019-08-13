@@ -39,6 +39,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")
+        parser.add_argument("-S", "--sheet", help="Only process this single sheet.")
 
     def handle(self, *args, **options):
         stream = logging.StreamHandler()
@@ -74,6 +75,10 @@ class Command(BaseCommand):
             ('cp_ORM_Reports', self.process_orm_reports),
             ('MLF', self.process_multilateral_funds),
         ]
+
+        sheet = options["sheet"]
+        if sheet:
+            workbook_processors = [x for x in workbook_processors if x[0] == sheet]
 
         for workbook_name, workbook_processor in workbook_processors:
             worksheet = self.wb[workbook_name]
