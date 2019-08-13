@@ -1816,3 +1816,10 @@ body.aside-menu-off-canvas .aside-menu {
 .cursor-pointer {
   cursor: pointer;
 }
+
+
+.multiselect {
+  .multiselect__input {
+    width: auto!important;
+  }
+}

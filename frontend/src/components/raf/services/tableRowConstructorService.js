@@ -11,7 +11,7 @@ const createTooltip = (fields, section, $gettext, countries) => {
   let tooltip_title = ''
   if (Object.keys(fields).length) {
     Object.keys(fields).forEach(field => {
-      tooltip_title += `${countries[field]} : ${fromExponential(fields[field])}\n`
+      tooltip_title += `${countries[field] || $gettext('Unspecified')} : ${fromExponential(fields[field])}\n`
     })
   }
   tooltip_title += `\n ${$gettext('Click to edit')}`
@@ -83,9 +83,8 @@ export default {
       },
       imports: [
         {
-          id: 'other',
-          party: 'other',
-          quantity: null
+          party: 9999,
+          quantity: 0
         }
       ],
       get quantity_import() {
@@ -127,7 +126,7 @@ export default {
         } else {
           this.quantity_used = {
             type: 'number',
-            selected: null
+            selected: 0
           }
         }
       },
@@ -167,19 +166,19 @@ export default {
     }
     if (critical) {
       baseInnerFields.use_categories = [{
-        id: 'other',
-        category: 'other',
-        quantity: null
+        code: 'OTHER',
+        critical_use_category: Object.keys(critical_use_categories).find(c => critical_use_categories[c] == 'Other'),
+        quantity: 0
       }]
     }
     if (prefillData) {
       console.log('prefillData', prefillData)
       Object.keys(prefillData).forEach((field) => {
         if (Array.isArray(prefillData[field]) && field === 'imports') {
-          baseInnerFields[field] = [...baseInnerFields[field], ...prefillData[field]]
+          baseInnerFields[field] = prefillData[field]
         }
         if (Array.isArray(prefillData[field]) && field === 'use_categories') {
-          baseInnerFields[field] = [...baseInnerFields[field], ...prefillData[field]]
+          baseInnerFields[field] = prefillData[field]
         }
         console.log(field)
         baseInnerFields[field]

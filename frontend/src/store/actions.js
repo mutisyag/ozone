@@ -418,11 +418,11 @@ const actions = {
   async getCriticalUseCategoryList(context) {
     const list = await getCriticalUseCategoryList()
     context.commit('setCriticalUseCategoryList', {
-      data: list.data.map(cat => ({ text: cat.name, value: cat.id })),
+      data: list.data.map(cat => ({ text: cat.name, value: cat.id, code: cat.code })),
       display: list.data.reduce((result, item) => {
         result[item.id] = item.name
         return result
-      }, { 'other': 'other' })
+      }, {})
     })
   },
 

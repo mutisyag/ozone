@@ -311,7 +311,7 @@
             v-for="country in modal_data.field.imports"
             :key="country.party"
           >
-            <b-col cols="5">{{$store.state.initialData.display.countries[country.party]}}</b-col>
+            <b-col cols="5">{{$store.state.initialData.display.countries[country.party] || $gettext('Unspecified')}}</b-col>
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index,tabName: tabName, field: country, party:country.party}"
@@ -319,8 +319,8 @@
                 :disabled="!$store.getters.can_edit_data"
               />
             </b-col>
-            <b-col v-if="country.id !== 'other'" cols="1" class="d-flex align-items-center">
-                <i class="fa fa-trash fa-lg cursor-pointer" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'imports', fieldIndex: modal_data.field.imports.indexOf(country)})"></i>
+            <b-col cols="1" class="d-flex align-items-center">
+                <i v-if="country.party !== 9999" class="fa fa-trash fa-lg cursor-pointer" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'imports', fieldIndex: modal_data.field.imports.indexOf(country)})"></i>
             </b-col>
           </b-row>
           <hr>
@@ -353,7 +353,7 @@
                 />
               </b-col>
               <b-col cols="1">
-                  <i class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'use_categories', fieldIndex: modal_data.field.use_categories.indexOf(category)})"></i>
+                  <i v-if="idOfOtherCategory !== category.critical_use_category" class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'use_categories', fieldIndex: modal_data.field.use_categories.indexOf(category)})"></i>
               </b-col>
             </b-row>
           <hr>
@@ -448,6 +448,9 @@ export default {
     }
   },
   computed: {
+    idOfOtherCategory() {
+      return this.$store.state.initialData.criticalUseCategoryList.find(cat => cat.code === 'OTHER').value
+    },
     emergency_field() {
       return this.tab_info.form_fields.map((field, index) => ({ index, emergency: field.is_emergency.selected }))
     },
