@@ -163,6 +163,7 @@ from ..serializers import (
     IllegalTradeSerializer,
     ORMReportSerializer,
     MultilateralFundSerializer,
+    EssentialCriticalSerializer,
 )
 
 
@@ -2169,3 +2170,70 @@ class MultilateralFundViewSet(mixins.ListModelMixin, GenericViewSet):
         filters.DjangoFilterBackend,
     )
     filterset_class = BaseCountryProfileFilterSet
+
+
+class EssentialCriticalFilterSet(filters.FilterSet):
+    party = MultiValueNumberFilter(
+        field_name="submission__party", help_text="Filter by party ID"
+    )
+    start_reporting_period = filters.CharFilter(
+        field_name="submission__reporting_period__name",
+        lookup_expr="gte",
+        help_text="Filter by reporting period name (e.g. 2010)"
+    )
+    end_reporting_period = filters.CharFilter(
+        field_name="submission__reporting_period__name",
+        lookup_expr="lte",
+        help_text="Filter by reporting period name (e.g. 2010)"
+    )
+    group = MultiValueNumberFilter(
+        field_name="substance__group", help_text="Filter by Annex Group ID"
+    )
+
+
+class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
+    permission_classes = (IsAuthenticated,)
+    filter_backends = (
+        filters.DjangoFilterBackend,
+    )
+    filterset_class = EssentialCriticalFilterSet
+
+    def get_queryset(self):
+        return ExemptionApproved.objects.all()
+
+    def list(self, request, *args, **kwargs):
+
+        def calculate_substances_sum(qs):
+            return sum([obj.quantity*obj.substance.odp for obj in qs])
+
+        queryset = self.filter_queryset(self.get_queryset())
+
+        reporting_periods = queryset.values_list('submission__reporting_period', flat=True)
+        parties = queryset.values_list('submission__party', flat=True)
+        groups = queryset.values_list('substance__group', flat=True)
+
+        data = []
+        for reporting_period in reporting_periods:
+            for party in parties:
+                for group in groups:
+                    qs = queryset.filter(
+                        submission__reporting_period=reporting_period,
+                        submission__party=party,
+                        substance__group=group
+                    )
+                    type = request.query_params.get('type', None)
+                    if type == 'critical':
+                        qs = qs.filter(substance__has_critical_uses=True)
+                    elif type == 'essential':
+                        qs = qs.filter(substance__has_critical_uses=False)
+
+                    if qs:
+                        data.append({
+                            'reporting_period': reporting_period,
+                            'party': party,
+                            'group': group,
+                            'quantity': calculate_substances_sum(qs)
+                        })
+
+        results = EssentialCriticalSerializer(data, many=True).data
+        return Response(results)

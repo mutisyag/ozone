@@ -418,5 +418,10 @@ urlpatterns = (
             views.GetSubmissionFormatsViewSet.as_view(),
             name='get_submission_formats'
         ),
+        path(
+            'essencrit/',
+            views.EssentialCriticalViewSet.as_view(),
+            name='essencrit'
+        )
     ]
 )
