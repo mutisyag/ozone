@@ -1,4 +1,3 @@
-<script>
 import { getLoginToken, removeLoginToken } from '@/components/common/services/login_api'
 
 export default {
@@ -29,4 +28,3 @@ export default {
     }
   }
 }
-</script>
