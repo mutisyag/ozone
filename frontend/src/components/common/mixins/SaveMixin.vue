@@ -127,110 +127,120 @@ export default {
     },
 
     async submitData(tab, url) {
-      if (tab.name === 'sub_info' && !this.$store.getters.can_edit_data) {
-        return
-      }
-      if (tab.skipSave) {
-        return
-      }
-      if (tab.status !== null) {
-        this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
-      } else {
-        return
-      }
-      let current_tab_data
-
-      if (Array.isArray(tab.form_fields)) {
-        current_tab_data = []
-        tab.form_fields.forEach(form_field => {
-          const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
-          for (const row in form_field) {
-            // special case for raf imports
-            if (!form_field[row]) continue
-            if (!Array.isArray(form_field[row])) {
-              save_obj[row] = form_field[row] ? form_field[row].selected : null
-            } else {
-              save_obj[row] = form_field[row]
-            }
-
-            if (form_field[row].type === 'date') {
-              save_obj[row] = dateFormatToYYYYMMDD(save_obj[row], this.$language.current)
-            }
-          }
-          current_tab_data.push(save_obj)
-        })
-      }
-
-      if (isObject(tab.form_fields)) {
-        const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
-        current_tab_data = {}
-        Object.keys(save_obj).forEach(key => {
-          if (key === 'submitted_at' && !this.is_secretariat) {
-            return
-          }
-          current_tab_data[key] = tab.form_fields[key].selected
-          if (tab.form_fields[key].type === 'date') {
-            current_tab_data[key] = dateFormatToYYYYMMDD(current_tab_data[key], this.$language.current)
-          }
-        })
-      }
-
-      try {
-        if (this.newTabs.includes(tab.name) && tab.name !== 'files') {
-          await post(url, current_tab_data)
-          this.$store.commit('setTabStatus', { tab: tab.name, value: true })
-
-          if (isObject(tab.form_fields)) {
-            this.$store.commit('tabHasBeenSaved', tab.name)
-          }
-
-          if (Array.isArray(tab.form_fields)) {
-            if (tab.form_fields.length) {
-              this.$store.commit('tabHasBeenSaved', tab.name)
-            } else {
-              this.$store.commit('updateNewTabs', tab.name)
-            }
-          }
+      await new Promise(async (resolve) => {
+        if (tab.name === 'sub_info' && !this.$store.getters.can_edit_data) {
+          resolve()
+          return
+        }
+        if (tab.skipSave) {
+          resolve()
+          return
+        }
+        if (tab.status !== null) {
+          this.$store.commit('setTabStatus', { tab: tab.name, value: 'saving' })
         } else {
-          if (tab.name === 'files') {
-            await this.uploadFiles()
+          resolve()
+          return
+        }
+        let current_tab_data
 
-            current_tab_data = this.getFilesWithUpdatedDescription()
-              .map(file => ({
-                id: file.id,
-                name: file.name,
-                description: file.description
-              }))
-          }
+        if (Array.isArray(tab.form_fields)) {
+          current_tab_data = []
+          tab.form_fields.forEach(form_field => {
+            const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
+            for (const row in form_field) {
+              // special case for raf imports
+              if (!form_field[row]) continue
+              if (!Array.isArray(form_field[row])) {
+                save_obj[row] = form_field[row] ? form_field[row].selected : null
+              } else {
+                save_obj[row] = form_field[row]
+              }
 
-          await update(url, current_tab_data)
+              if (form_field[row].type === 'date') {
+                save_obj[row] = dateFormatToYYYYMMDD(save_obj[row], this.$language.current)
+              }
+            }
+            current_tab_data.push(save_obj)
+          })
+        }
 
-          if (tab.name === 'files') {
-            await this.getSubmissionFiles()
-          }
-          if (tab.status !== null) {
+        if (isObject(tab.form_fields)) {
+          const save_obj = JSON.parse(JSON.stringify(tab.default_properties))
+          current_tab_data = {}
+          Object.keys(save_obj).forEach(key => {
+            if (key === 'submitted_at' && !this.is_secretariat) {
+              resolve()
+              return
+            }
+            current_tab_data[key] = tab.form_fields[key].selected
+            if (tab.form_fields[key].type === 'date') {
+              current_tab_data[key] = dateFormatToYYYYMMDD(current_tab_data[key], this.$language.current)
+            }
+          })
+        }
+
+        try {
+          if (this.newTabs.includes(tab.name) && tab.name !== 'files') {
+            await post(url, current_tab_data)
             this.$store.commit('setTabStatus', { tab: tab.name, value: true })
-          }
 
-          if (Array.isArray(tab.form_fields)) {
-            if (!tab.form_fields.length) {
-              this.$store.commit('updateNewTabs', tab.name)
+            if (isObject(tab.form_fields)) {
+              this.$store.commit('tabHasBeenSaved', tab.name)
+            }
+
+            if (Array.isArray(tab.form_fields)) {
+              if (tab.form_fields.length) {
+                this.$store.commit('tabHasBeenSaved', tab.name)
+              } else {
+                this.$store.commit('updateNewTabs', tab.name)
+              }
+            }
+          } else {
+            if (tab.name === 'files') {
+              await this.uploadFiles()
+
+              current_tab_data = this.getFilesWithUpdatedDescription()
+                .map(file => ({
+                  id: file.id,
+                  name: file.name,
+                  description: file.description
+                }))
+            }
+
+            await update(url, current_tab_data)
+
+            if (tab.name === 'files') {
+              await this.getSubmissionFiles()
+            }
+            if (tab.status !== null) {
+              this.$store.commit('setTabStatus', { tab: tab.name, value: true })
+            }
+
+            if (Array.isArray(tab.form_fields)) {
+              if (!tab.form_fields.length) {
+                this.$store.commit('updateNewTabs', tab.name)
+              }
             }
           }
+          if (tab.name === 'sub_info') {
+            this.$store.dispatch('getNewTransitions')
+          }
+        } catch (error) {
+          this.$store.commit('setTabStatus', { tab: tab.name, value: false })
+          console.log(error)
+          this.resetActionToDispatch()
+          this.$store.dispatch('setAlert', {
+            $gettext: this.$gettext,
+            message: { __all__: [this.alerts.save_failed] },
+            variant: 'danger' })
         }
-        if (tab.name === 'sub_info') {
-          this.$store.dispatch('getNewTransitions')
-        }
-      } catch (error) {
-        this.$store.commit('setTabStatus', { tab: tab.name, value: false })
-        console.log(error)
-        this.resetActionToDispatch()
-        this.$store.dispatch('setAlert', {
-          $gettext: this.$gettext,
-          message: { __all__: [this.alerts.save_failed] },
-          variant: 'danger' })
-      }
-      this.tabsToSave = this.tabsToSave.filter(t => t !== tab.name)
+        resolve()
+      })
+      // this.checkIfThereIsAnotherActionToDoBeforeReturning(tab.name)
+    },
+    checkIfThereIsAnotherActionToDoBeforeReturning(tabName) {
+      this.tabsToSave = this.tabsToSave.filter(t => t !== tabName)
       if (this.tabsToSave.length === 0) {
         this.$store.dispatch('clearEdited')
         if (this.$store.state.actionToDispatch) {

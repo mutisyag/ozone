@@ -368,45 +368,42 @@ const actions = {
   },
 
   // CHECK THIS IF formName CHANGES. It's hardcoded for optimization purpose
-  getInitialData(context, { submission, formName, $gettext, additionalAction }) {
+  async getInitialData(context, { submission, formName, $gettext, additionalAction }) {
     context.commit('setForm', { formName, $gettext })
-    return new Promise((resolve) => {
-      console.log('----------------', formName)
-      context.dispatch('getSubmissionData', { submission, $gettext }).then((reporting_period) => {
-        context.dispatch('getCurrentUserForm').then(currentUser => {
-          if (Array.isArray(currentUser)) {
-            if (currentUser[0].is_secretariat) {
-              context.dispatch('getEmailTemplates')
-            }
-          } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat) {
+    console.log('----------------', formName)
+    await context.dispatch('getSubmissionData', { submission, $gettext }).then(async (reporting_period) => {
+      context.dispatch('getCurrentUserForm').then(currentUser => {
+        if (Array.isArray(currentUser)) {
+          if (currentUser[0].is_secretariat) {
             context.dispatch('getEmailTemplates')
           }
-        })
-        context.dispatch('getCountries')
-        context.dispatch('getSubstances')
-        context.dispatch('getSubmissionDefaultValues')
-        // Filter custom blends by the submission's party, because the API will
-        // by default show all custom blends for secretariat users.
-        // This way, even secretariat users will only see the correct available
-        // custom blends.
-        context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
-        context.dispatch('getSubmissionFormatOptions')
-        if (formName === 'art7') {
-          context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
-          context.dispatch('getNonParties', reporting_period)
+        } else if (currentUser && !Array.isArray(currentUser) && currentUser.is_secretariat) {
+          context.dispatch('getEmailTemplates')
         }
-        if (formName === 'essencrit') {
-          context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
-          context.dispatch('getCriticalUseCategoryList')
-        }
-        if (formName === 'transfer') {
-          context.dispatch('getPeriods')
-        }
-        if (additionalAction) {
-          context.dispatch(additionalAction)
-        }
-        resolve()
       })
+      await context.dispatch('getCountries')
+      await context.dispatch('getSubstances')
+      await context.dispatch('getSubmissionDefaultValues')
+      // Filter custom blends by the submission's party, because the API will
+      // by default show all custom blends for secretariat users.
+      // This way, even secretariat users will only see the correct available
+      // custom blends.
+      await context.dispatch('getCustomBlends', { party: context.state.current_submission.party })
+      await context.dispatch('getSubmissionFormatOptions')
+      if (formName === 'art7') {
+        await context.dispatch('getControlledGroups', { party: context.state.current_submission.party, period: reporting_period })
+        await context.dispatch('getNonParties', reporting_period)
+      }
+      if (formName === 'essencrit') {
+        await context.dispatch('getApprovedExemptionsList', { partyId: context.state.current_submission.party, period: reporting_period })
+        await context.dispatch('getCriticalUseCategoryList')
+      }
+      if (formName === 'transfer') {
+        await context.dispatch('getPeriods')
+      }
+      if (additionalAction) {
+        await context.dispatch(additionalAction)
+      }
     })
   },
   // party id, period name
@@ -443,11 +440,11 @@ const actions = {
 
   getSubmissionData(context, { submission, $gettext }) {
     return new Promise((resolve) => {
-      getSubmission(submission).then((response) => {
-        context.commit('updateSubmissionData', response.data)
-        context.commit('setFlagsPermissions', response.data.changeable_flags)
-        context.dispatch('getCurrentSubmissionHistory', { submission, $gettext })
-        context.commit('setFormPermissions', {
+      getSubmission(submission).then(async (response) => {
+        await context.commit('updateSubmissionData', response.data)
+        await context.commit('setFlagsPermissions', response.data.changeable_flags)
+        await context.dispatch('getCurrentSubmissionHistory', { submission, $gettext })
+        await context.commit('setFormPermissions', {
           can_change_remarks_party: response.data.can_change_remarks_party,
           can_change_remarks_secretariat: response.data.can_change_remarks_secretariat,
           can_change_reporting_channel: response.data.can_change_reporting_channel,
@@ -497,30 +494,29 @@ const actions = {
     })
   },
 
-  getSubstances(context) {
+  async getSubstances(context) {
     const tempSubstances = []
     const substancesDisplay = {}
-    getSubstances().then((response) => {
-      response.data.forEach(group => {
-        group.substances.sort((a, b) => a.sort_order - b.sort_order)
-        group.substances.forEach(substance => {
-          tempSubstances.push({
-            value: substance.id,
-            text: substance.name,
-            group,
-            is_qps: substance.is_qps,
-            is_contained_in_polyols: substance.is_contained_in_polyols,
-            is_captured: substance.is_captured,
-            has_critical_uses: substance.has_critical_uses
-          })
-          substancesDisplay[substance.id] = substance.name
+    const response = await getSubstances()
+    response.data.forEach(group => {
+      group.substances.sort((a, b) => a.sort_order - b.sort_order)
+      group.substances.forEach(substance => {
+        tempSubstances.push({
+          value: substance.id,
+          text: substance.name,
+          group,
+          is_qps: substance.is_qps,
+          is_contained_in_polyols: substance.is_contained_in_polyols,
+          is_captured: substance.is_captured,
+          has_critical_uses: substance.has_critical_uses
         })
+        substancesDisplay[substance.id] = substance.name
       })
-
-      context.commit('updateGroupSubstances', response.data)
-      context.commit('updateSubstances', tempSubstances)
-      context.commit('updateSubstancesDisplay', substancesDisplay)
     })
+
+    await context.commit('updateGroupSubstances', response.data)
+    await context.commit('updateSubstances', tempSubstances)
+    await context.commit('updateSubstancesDisplay', substancesDisplay)
   },
 
   getCustomBlends(context, { party }) {
@@ -565,7 +561,8 @@ const actions = {
             countries: context.state.initialData.display.countries,
             critical: data.critical || null,
             exemptionValue: data.exemptionValue,
-            critical_use_categories: context.state.initialData.display.criticalUseCategoryList
+            critical_use_categories: context.state.initialData.display.criticalUseCategoryList,
+            has_critical_uses: context.getters.getCriticalSubstances(substance, data.substanceList)
           })
           context.commit('addRow', { sectionName: data.currentSectionName, row: inner_fields })
         })

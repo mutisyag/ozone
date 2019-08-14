@@ -49,7 +49,7 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue, critical_use_categories
+    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue, critical_use_categories, has_critical_uses
   }) {
     const	baseInnerFields = {
       checkForDelete: {
@@ -122,14 +122,18 @@ export default {
       },
       set quantity_use_categories(val) {
         const self = this
-        if (!this.use_categories.length) {
+        console.log('lalalala', critical)
+        if (!this.use_categories.length && has_critical_uses) {
           this.use_categories = [{
             code: 'OTHER',
             critical_use_category: Object.keys(critical_use_categories).find(c => ['Other', 'Unspecified'].includes(critical_use_categories[c])),
             quantity: self.quantity_used.selected || 0
           }]
+          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
         }
-        this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
+        if (has_critical_uses) {
+          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
+        }
       },
       use_categories: [],
       quantity_exported: {
