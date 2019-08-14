@@ -646,7 +646,7 @@ class Command(BaseCommand):
                 "has_produced": overall["Produced"],
                 "has_destroyed": overall["Destroyed"],
                 "has_nonparty": overall["NonPartyTrade"],
-                "has_emissions": False,
+                "has_emissions": overall["Emitted"],
                 # "submission_id": "",
             },
             "imports": self.get_imports(row, party, period),
