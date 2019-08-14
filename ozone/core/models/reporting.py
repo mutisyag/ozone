@@ -501,7 +501,7 @@ class Submission(models.Model):
                   "Annex F were reported."
     )
 
-    time_reported_f = models.DateTimeField(
+    date_reported_f = models.DateField(
         null=True,
         help_text="Date at which substances under Annex F were reported."
     )
@@ -1470,8 +1470,8 @@ class Submission(models.Model):
         Called at Submit to mark the time at which substances in annex group F
         have been reported.
         """
-        if self.flag_has_reported_f is True:
-            self.time_reported_f = timezone.now()
+        if self.flag_has_reported_f is True and self.date_reported_f is None:
+            self.date_reported_f = timezone.now().date()
             self.save()
 
     def check_submitted_at_modified(self):

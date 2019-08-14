@@ -1689,6 +1689,7 @@ class SubmissionSerializer(
                 'article7destructions_url', 'article7productions_url',
                 'article7exports_url', 'article7imports_url',
                 'article7nonpartytrades_url', 'article7emissions_url',
+                'date_reported_f',
             ),
             'hat': base_fields + (
                 'hat_productions_url', 'hat_imports_url',
