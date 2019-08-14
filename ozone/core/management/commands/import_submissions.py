@@ -574,9 +574,11 @@ class Command(BaseCommand):
         date_reported = overall["DateReported"] or overall["DateCreate"] or overall["DateUpdate"]
         created_at = overall["DateCreate"] or overall["DateReported"] or overall["DateUpdate"]
         updated_at = overall["DateUpdate"] or overall["DateCreate"] or overall["DateReported"]
+        date_reported_f = overall["HFCDateReported"]
         date_reported = make_aware(date_reported) if date_reported else None
         created_at = make_aware(created_at) if created_at else None
         updated_at = make_aware(updated_at) if updated_at else None
+        date_reported_f = make_aware(date_reported_f) if date_reported_f else None
 
         if overall["SubmissionType"]:
             try:
@@ -625,6 +627,7 @@ class Command(BaseCommand):
                 "flag_has_reported_c3": overall["CIII_ComplRep"],
                 "flag_has_reported_e": overall["EI_ComplRep"],
                 "flag_has_reported_f": overall["F_ComplRep"],
+                "date_reported_f": date_reported_f,
                 "reporting_channel": ReportingChannel.objects.get(name="Legacy"),
                 "questionnaire_remarks_party": "",
                 "questionnaire_remarks_secretariat": overall["Remark"] or "",
