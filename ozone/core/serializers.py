@@ -47,6 +47,7 @@ from .models import (
     Language,
     Nomination,
     ExemptionApproved,
+    ApprovedCriticalUse,
     RAFReport,
     RAFReportUseCategory,
     RAFImport,
@@ -913,11 +914,53 @@ class ExemptionNominationSerializer(
         exclude = ('submission',)
 
 
+class ApprovedCriticalUseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprovedCriticalUse
+        exclude = ('exemption',)
+
+
 class ExemptionApprovedListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
     unique_with = 'is_emergency'
+
+    approved_uses = ApprovedCriticalUseSerializer(many=True, required=False)
+
+    def create_single(self, data, instance, submission):
+        """
+        Creates a single entry taking into account the special case of approved
+        critical uses.
+        """
+        approved_uses = data.pop('approved_uses', [])
+        res = super().create_single(data, instance, submission)
+
+        for value_entry in approved_uses:
+            ApprovedCriticalUse.objects.create(exemption=res, **value_entry)
+
+        return res
+
+    def update_single(self, existing_entry, entry):
+        """
+        Updates a single entry taking into account the special case of approved
+        critical uses.
+        """
+        changed = False
+        for field, value in entry.items():
+            if field == 'approved_uses':
+                # Delete all existing approved critical uses and recreate them,
+                # using the related manager.
+                existing_entry.approved_uses.all().delete()
+                for value_entry in value:
+                    ApprovedCriticalUse.objects.create(
+                        exemption=existing_entry, **value_entry
+                    )
+                changed = True
+            elif getattr(existing_entry, field, None) != value:
+                setattr(existing_entry, field, value)
+                changed = True
+        return changed
 
 
 class ExemptionApprovedSerializer(
@@ -926,6 +969,21 @@ class ExemptionApprovedSerializer(
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
+    approved_uses = ApprovedCriticalUseSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        """
+        Overriding create() to make sure critical_uses are properly treated.
+        """
+        approved_uses_data = validated_data.pop("approved_uses", [])
+
+        instance = ExemptionApproved.objects.create(
+            submission=self.context['submission'], **validated_data
+        )
+        for data in approved_uses_data:
+            ApprovedCriticalUse.objects.create(exemption=instance, **data)
+
+        return instance
 
     class Meta:
         list_serializer_class = ExemptionApprovedListSerializer
