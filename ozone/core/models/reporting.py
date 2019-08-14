@@ -1,11 +1,11 @@
 import enum
 import os
 
-from datetime import datetime
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
@@ -499,6 +499,11 @@ class Submission(models.Model):
         verbose_name='has reported F',
         help_text="If set to true it means that substances under "
                   "Annex F were reported."
+    )
+
+    time_reported_f = models.DateTimeField(
+        null=True,
+        help_text="Date at which substances under Annex F were reported."
     )
 
     # Art7 Remarks
@@ -1460,6 +1465,15 @@ class Submission(models.Model):
         """
         return not user.is_secretariat
 
+    def set_annex_f_reported(self):
+        """
+        Called at Submit to mark the time at which substances in annex group F
+        have been reported.
+        """
+        if self.flag_has_reported_f is True:
+            self.time_reported_f = timezone.now()
+            self.save()
+
     def check_submitted_at_modified(self):
         if 'submitted_at' in self.tracker.changed().keys():
             return True
@@ -1815,7 +1829,7 @@ class Submission(models.Model):
             return ret
 
     def set_submitted(self):
-        self.submitted_at = datetime.now().date()
+        self.submitted_at = timezone.now().date()
         self.save()
 
 

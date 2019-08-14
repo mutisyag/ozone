@@ -142,6 +142,9 @@ class DefaultArticle7Workflow(BaseWorkflow):
         # Set submitted_at flag
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+        # If substances in annex F have been reported, set the time at which
+        # they were reported.
+        self.model_instance.set_annex_f_reported()
 
     @xworkflows.transition('recall')
     def recall(self):
