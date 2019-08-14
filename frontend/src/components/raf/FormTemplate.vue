@@ -353,7 +353,7 @@
                 />
               </b-col>
               <b-col cols="1">
-                  <i v-if="idOfOtherCategory !== category.critical_use_category" class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'use_categories', fieldIndex: modal_data.field.use_categories.indexOf(category)})"></i>
+                  <i v-if="idOfOtherCategory != category.critical_use_category" class="fa fa-trash fa-lg cursor-pointer d-flex align-items-center" @click="$store.commit('removeFormField', { index: modal_data.index, tabName: tabName, fieldName: 'use_categories', fieldIndex: modal_data.field.use_categories.indexOf(category)})"></i>
               </b-col>
             </b-row>
           <hr>

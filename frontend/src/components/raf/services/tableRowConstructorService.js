@@ -121,14 +121,15 @@ export default {
         selected: null
       },
       set quantity_use_categories(val) {
-        if (this.use_categories.length) {
-          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
-        } else {
-          this.quantity_used = {
-            type: 'number',
-            selected: 0
-          }
+        const self = this
+        if (!this.use_categories.length) {
+          this.use_categories = [{
+            code: 'OTHER',
+            critical_use_category: Object.keys(critical_use_categories).find(c => ['Other', 'Unspecified'].includes(critical_use_categories[c])),
+            quantity: self.quantity_used.selected || 0
+          }]
         }
+        this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
       },
       use_categories: [],
       quantity_exported: {
@@ -167,10 +168,11 @@ export default {
     if (critical) {
       baseInnerFields.use_categories = [{
         code: 'OTHER',
-        critical_use_category: Object.keys(critical_use_categories).find(c => critical_use_categories[c] == 'Other'),
+        critical_use_category: Object.keys(critical_use_categories).find(c => ['Other', 'Unspecified'].includes(critical_use_categories[c])),
         quantity: 0
       }]
     }
+
     if (prefillData) {
       console.log('prefillData', prefillData)
       Object.keys(prefillData).forEach((field) => {
@@ -186,8 +188,8 @@ export default {
             ? parseFloat(fromExponential(prefillData[field])) : prefillData[field]
           : null
       })
-      baseInnerFields.quantity_use_categories = null
     }
+    baseInnerFields.quantity_use_categories = null
 
     return baseInnerFields
   }
