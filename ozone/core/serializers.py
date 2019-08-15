@@ -1999,7 +1999,7 @@ class FocalPointSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FocalPoint
-        exclude = ('submission', 'ordering_id')
+        exclude = ('submission',)
 
 
 class LicensingSystemSerializer(serializers.ModelSerializer):
