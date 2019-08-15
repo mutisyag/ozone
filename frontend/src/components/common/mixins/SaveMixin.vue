@@ -242,8 +242,8 @@ export default {
     checkIfThereIsAnotherActionToDoBeforeReturning(tabName) {
       this.tabsToSave = this.tabsToSave.filter(t => t !== tabName)
       if (this.tabsToSave.length === 0) {
-        this.$store.dispatch('clearEdited')
         if (this.$store.state.actionToDispatch) {
+          this.$store.dispatch('clearEdited')
           this.$store.dispatch('saveCallback', { actionToDispatch: this.$store.state.actionToDispatch, data: this.$store.state.dataForAction })
           this.resetActionToDispatch()
         }
