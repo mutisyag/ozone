@@ -772,9 +772,9 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         self.assertEqual(resp.status_code, 200)
         self.assertEqual(resp.data['current_state'], 'submitted')
 
-    def test_fill_nomination_secretariat(self):
+    def test_process_secretariat(self):
         """
-        Testing `fill_nomination` transition using a secretariat user for
+        Testing `process` transition using a secretariat user for
         a submission created by the same secretariat user.
         Expected result: 200.
         """
@@ -793,14 +793,14 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
-            transition='fill_nomination'
+            transition='process'
         )
         self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data['current_state'], 'nomination_filled')
+        self.assertEqual(resp.data['current_state'], 'processing')
 
-    def test_fill_nomination_reporter(self):
+    def test_process_reporter(self):
         """
-        Testing `fill_nomination` transition using a party reporter user for
+        Testing `process` transition using a party reporter user for
         a submission created by the same party reporter user.
         Expected result: 412 Only secretariat users can make this transition.
         """
@@ -819,7 +819,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         self.client.login(username=self.reporter.username, password='qwe123qwe')
         resp = self.call_transition(
             submission=submission,
-            transition='fill_nomination'
+            transition='process'
         )
         self.assertEqual(resp.status_code, 412)
 
@@ -833,7 +833,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.secretariat_user,
             party=self.party,
-            current_state='nomination_filled',
+            current_state='processing',
             flag_approved=True
         )
 
@@ -860,7 +860,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.secretariat_user,
             party=self.party,
-            current_state='nomination_filled',
+            current_state='processing',
             flag_approved=True
         )
 
@@ -881,7 +881,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.secretariat_user,
             party=self.party,
-            current_state='nomination_filled',
+            current_state='processing',
             flag_approved=False
         )
 
@@ -907,7 +907,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.secretariat_user,
             party=self.party,
-            current_state='nomination_filled',
+            current_state='processing',
             flag_approved=False
         )
 
@@ -929,7 +929,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.reporter,
             party=self.party,
-            current_state='nomination_filled',
+            current_state='processing',
             flag_approved=True
         )
 
