@@ -26,8 +26,8 @@ class DefaultExemptionWorkflowStateDescription(xworkflows.Workflow):
 
     transitions = (
         ('submit', 'data_entry', 'submitted'),
-        ('process', 'submitted', 'processing'),
-        ('finalize', ('submitted', 'processing'), 'finalized'),
+        ('process', ('data_entry', 'submitted'), 'processing'),
+        ('finalize', 'processing', 'finalized'),
     )
 
     initial_state = 'data_entry'
@@ -53,6 +53,11 @@ class DefaultExemptionWorkflow(BaseWorkflow):
 
     @xworkflows.transition_check('process')
     def check_process(self):
+        # Do not allow secretariat users to directly send party-filled
+        # submissions from data_entry to processing.
+        if self.in_initial_state:
+            if not self.model_instance.filled_by_secretariat:
+                return False
         return self.user.is_secretariat and not self.user.is_read_only
 
     @xworkflows.transition_check('finalize')
