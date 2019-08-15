@@ -123,7 +123,6 @@ SUPERSEDED_FLAGS = (
     'flag_superseded',
 )
 EXEMPTION_FLAGS = (
-    'flag_approved',
     'flag_emergency',
 )
 

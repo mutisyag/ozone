@@ -400,7 +400,7 @@ class SubmissionAdmin(admin.ModelAdmin):
         '__str__', 'party', 'reporting_period', 'obligation', '_current_state',
         'flag_provisional', 'flag_valid', 'flag_superseded',
         'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
-        'flag_emergency', 'flag_approved',
+        'flag_emergency',
         'a1', 'a2', 'b1', 'b2', 'b3', 'c1', 'c2', 'c3', 'e', 'f',
     )
     list_filter = (
@@ -410,7 +410,7 @@ class SubmissionAdmin(admin.ModelAdmin):
         '_current_state',
         'flag_provisional', 'flag_valid', 'flag_superseded',
         'flag_checked_blanks', 'flag_has_blanks', 'flag_confirmed_blanks',
-        'flag_emergency', 'flag_approved',
+        'flag_emergency',
         'flag_has_reported_a1', 'flag_has_reported_a2',
         'flag_has_reported_b1', 'flag_has_reported_b2', 'flag_has_reported_b3',
         'flag_has_reported_c1', 'flag_has_reported_c2', 'flag_has_reported_c3',

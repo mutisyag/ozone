@@ -77,7 +77,6 @@ class BaseWorkflowPermissionsTests(BaseTests):
             current_state,
             previous_state=None,
             flag_valid=None,
-            flag_approved=None,
     ):
         submission = SubmissionFactory(
             party=party,
@@ -91,7 +90,6 @@ class BaseWorkflowPermissionsTests(BaseTests):
         submission._previous_state = previous_state
         submission._current_state = current_state
         submission.flag_valid = flag_valid
-        submission.flag_approved = flag_approved
         submission.save()
 
         return submission
@@ -775,7 +773,8 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
     def test_process_secretariat(self):
         """
         Testing `process` transition using a secretariat user for
-        a submission created by the same secretariat user.
+        a submission created by the same secretariat user, starting from the
+        "submitted" state.
         Expected result: 200.
         """
 
@@ -783,6 +782,33 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
             owner=self.secretariat_user,
             party=self.party,
             current_state='submitted'
+        )
+
+        NominationFactory(
+            submission=submission, substance=self.substance,
+            **EXEMPTION_NOMINATION_DATA
+        )
+
+        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
+        resp = self.call_transition(
+            submission=submission,
+            transition='process'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.data['current_state'], 'processing')
+
+    def test_process_from_data_entry_secretariat(self):
+        """
+        Testing `process` transition using a secretariat user for
+        a submission created by the same secretariat user, starting from the
+        "data_entry" state.
+        Expected result: 200.
+        """
+
+        submission = self.create_submission(
+            owner=self.secretariat_user,
+            party=self.party,
+            current_state='data_entry'
         )
 
         NominationFactory(
@@ -834,81 +860,11 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
             owner=self.secretariat_user,
             party=self.party,
             current_state='processing',
-            flag_approved=True
         )
 
         ExemptionApprovedFactory(
             submission=submission, substance=self.substance,
             **EXEMPTION_APPROVED_DATA
-        )
-
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
-        resp = self.call_transition(
-            submission=submission,
-            transition='finalize'
-        )
-        self.assertEqual(resp.status_code, 200)
-        self.assertEqual(resp.data['current_state'], 'finalized')
-
-    def test_finalize_no_data_secretariat(self):
-        """
-        Testing `finalize` transition without exempted data, using a
-        secretariat user for a submission created by the same secretariat user.
-        Expected result: 412.
-        """
-
-        submission = self.create_submission(
-            owner=self.secretariat_user,
-            party=self.party,
-            current_state='processing',
-            flag_approved=True
-        )
-
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
-        resp = self.call_transition(
-            submission=submission,
-            transition='finalize'
-        )
-        self.assertEqual(resp.status_code, 412)
-
-    def test_finalize_not_approved_secretariat(self):
-        """
-        Testing `finalize` transition, for a refused nomination, using a
-        secretariat user for a submission created by the same secretariat user.
-        Expected result: 412.
-        """
-
-        submission = self.create_submission(
-            owner=self.secretariat_user,
-            party=self.party,
-            current_state='processing',
-            flag_approved=False
-        )
-
-        ExemptionApprovedFactory(
-            submission=submission, substance=self.substance,
-            **EXEMPTION_APPROVED_DATA
-        )
-
-        self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
-        resp = self.call_transition(
-            submission=submission,
-            transition='finalize'
-        )
-        self.assertEqual(resp.status_code, 412)
-
-    def test_finalize_not_approved_no_data_secretariat(self):
-        """
-        Testing `finalize` transition, for a refused nomination but with no data,
-        using a secretariat user for a submission created by the same secretariat user.
-        Expected result: 200.
-        """
-
-        submission = self.create_submission(
-            owner=self.secretariat_user,
-            party=self.party,
-            current_state='processing',
-            flag_approved=False
         )
 
         self.client.login(username=self.secretariat_user.username, password='qwe123qwe')
@@ -929,8 +885,7 @@ class DefaultExemptionWorkflowTests(BaseWorkflowPermissionsTests):
         submission = self.create_submission(
             owner=self.reporter,
             party=self.party,
-            current_state='processing',
-            flag_approved=True
+            current_state='processing'
         )
 
         ExemptionApprovedFactory(

@@ -70,11 +70,6 @@ class AcceleratedExemptionWorkflow(BaseWorkflow):
                 )
             )
 
-    @xworkflows.transition('finalize')
-    def finalize(self):
-        self.model_instance.flag_approved = True
-        self.model_instance.save()
-
     @xworkflows.on_enter_state(*[s.name for s in state.states])
     def notify_by_email(self, *args, **kwargs):
         notify_workflow_transitioned(self)
