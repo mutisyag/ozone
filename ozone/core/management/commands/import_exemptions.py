@@ -504,8 +504,6 @@ class Command(BaseCommand):
         created_at_list = [entry['DateCreate'] for entry in date_seek_rows if entry.get('DateCreate')]
         created_at = min(created_at_list) if created_at_list else updated_at
 
-        is_emergency = self.check_is_emergency(rows['EssenExemp'])
-
         submitted_at = make_aware(submitted_at) if submitted_at else submitted_at
         created_at = make_aware(created_at) if created_at else created_at
         updated_at = make_aware(updated_at) if updated_at else updated_at
@@ -530,8 +528,7 @@ class Command(BaseCommand):
                 "created_at": created_at,
                 "updated_at": updated_at,
                 "version": 1,
-                "flag_emergency": is_emergency,
-                "_workflow_class": "default_exemption" if not is_emergency else "accelerated_exemption",
+                "_workflow_class": "default_exemption",
                 "_current_state": "finalized",
                 "_previous_state": None,
                 "flag_provisional": False,
