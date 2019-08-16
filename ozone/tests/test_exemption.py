@@ -32,7 +32,7 @@ EXEMPTION_APPROVED_DATA = {
     "quantity": 100,
     "remarks_os": "nothing to remark OS",
     "decision_approved": "it's a test",
-    "approved_teap_amount": 100
+    "approved_teap_amount": 100,
 }
 
 
@@ -291,6 +291,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["group"] = ''
         # Default value for emergency is False
         expected_data["is_emergency"] = False
+        # Default value for approved_uses is an empty list
+        expected_data["approved_uses"] = []
         self.assertEqual(result.json(), [expected_data])
 
     def test_get_reporter(self):
@@ -316,6 +318,8 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["group"] = ''
         # Default value for is_emergency is False
         expected_data["is_emergency"] = False
+        # Default value for approved_uses is an empty list
+        expected_data["approved_uses"] = []
         self.assertEqual(result.json(), [expected_data])
 
     def test_update_secretariat(self):

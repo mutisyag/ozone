@@ -11,7 +11,7 @@ const createTooltip = (fields, section, $gettext, countries) => {
   let tooltip_title = ''
   if (Object.keys(fields).length) {
     Object.keys(fields).forEach(field => {
-      tooltip_title += `${countries[field]} : ${fromExponential(fields[field])}\n`
+      tooltip_title += `${countries[field] || $gettext('Unspecified')} : ${fromExponential(fields[field])}\n`
     })
   }
   tooltip_title += `\n ${$gettext('Click to edit')}`
@@ -29,11 +29,11 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
   const forTooltip = {}
   fields.forEach(field => {
     count = doSum([count, field.quantity])
-    forTooltip[field.party] = valueConverter(field.quantity)
+    forTooltip[field.party ? field.party : field.critical_use_category] = valueConverter(field.quantity)
   })
 
   if (count === 0) {
-    returnObj.selected = ''
+    returnObj.selected = null
   } else {
     returnObj.selected = fromExponential(count)
   }
@@ -49,7 +49,7 @@ const quantityCalculator = (fields, parent, section, $gettext, countries) => {
 export default {
   substanceRows({
     // eslint-disable-next-line no-unused-vars
-    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue
+    $gettext, section, substance, group, country, blend, prefillData, countries, critical, exemptionValue, critical_use_categories, has_critical_uses
   }) {
     const	baseInnerFields = {
       checkForDelete: {
@@ -81,7 +81,12 @@ export default {
         type: 'number',
         selected: null
       },
-      imports: [],
+      imports: [
+        {
+          party: 9999,
+          quantity: 0
+        }
+      ],
       get quantity_import() {
         return quantityCalculator(this.imports, this, section, $gettext, countries)
       },
@@ -114,6 +119,21 @@ export default {
       quantity_used: {
         type: 'number',
         selected: null
+      },
+      set quantity_use_categories(val) {
+        const self = this
+        console.log('lalalala', critical)
+        if (!this.use_categories.length && has_critical_uses) {
+          this.use_categories = [{
+            code: 'OTHER',
+            critical_use_category: Object.keys(critical_use_categories).find(c => ['Other', 'Unspecified'].includes(critical_use_categories[c])),
+            quantity: self.quantity_used.selected || 0
+          }]
+          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
+        }
+        if (has_critical_uses) {
+          this.quantity_used = quantityCalculator(this.use_categories, this, section, $gettext, critical_use_categories)
+        }
       },
       use_categories: [],
       quantity_exported: {
@@ -149,6 +169,14 @@ export default {
         return returnObj
       }
     }
+    if (critical) {
+      baseInnerFields.use_categories = [{
+        code: 'OTHER',
+        critical_use_category: Object.keys(critical_use_categories).find(c => ['Other', 'Unspecified'].includes(critical_use_categories[c])),
+        quantity: 0
+      }]
+    }
+
     if (prefillData) {
       console.log('prefillData', prefillData)
       Object.keys(prefillData).forEach((field) => {
@@ -165,6 +193,7 @@ export default {
           : null
       })
     }
+    baseInnerFields.quantity_use_categories = null
 
     return baseInnerFields
   }

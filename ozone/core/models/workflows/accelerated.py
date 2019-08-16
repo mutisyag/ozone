@@ -63,6 +63,7 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
         self.model_instance.make_current()
         if self.model_instance.is_submitted_at_automatically_filled(self.user):
             self.model_instance.set_submitted()
+        self.model_instance.set_annex_f_reported()
 
     @xworkflows.transition('recall')
     def recall(self):

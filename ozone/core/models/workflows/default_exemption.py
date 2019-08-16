@@ -20,14 +20,14 @@ class DefaultExemptionWorkflowStateDescription(xworkflows.Workflow):
     states = (
         ('data_entry', 'Data Entry'),
         ('submitted', 'Submitted'),
-        ('nomination_filled', 'Nomination Filled'),
+        ('processing', 'Processing'),
         ('finalized', 'Finalized'),
     )
 
     transitions = (
         ('submit', 'data_entry', 'submitted'),
-        ('fill_nomination', 'submitted', 'nomination_filled'),
-        ('finalize', 'nomination_filled', 'finalized'),
+        ('process', ('data_entry', 'submitted'), 'processing'),
+        ('finalize', 'processing', 'finalized'),
     )
 
     initial_state = 'data_entry'
@@ -39,7 +39,7 @@ class DefaultExemptionWorkflow(BaseWorkflow):
     """
 
     final_states = ['finalized']
-    editable_data_states = ['data_entry', 'submitted', 'nomination_filled']
+    editable_data_states = ['data_entry', 'submitted', 'processing']
     incorrect_data_states = []
 
     state = DefaultExemptionWorkflowStateDescription()
@@ -51,12 +51,14 @@ class DefaultExemptionWorkflow(BaseWorkflow):
             and self.is_secretariat_or_same_party_owner(self.model_instance)
         )
 
-    @xworkflows.transition_check('fill_nomination')
-    def check_fill_nomination(self):
-        return (
-            not self.user.is_read_only and self.user.is_secretariat
-            and self.model_instance.has_filled_nominations()
-        )
+    @xworkflows.transition_check('process')
+    def check_process(self):
+        # Do not allow secretariat users to directly send party-filled
+        # submissions from data_entry to processing.
+        if self.in_initial_state:
+            if not self.model_instance.filled_by_secretariat:
+                return False
+        return self.user.is_secretariat and not self.user.is_read_only
 
     @xworkflows.transition_check('finalize')
     def check_finalize(self):

@@ -614,4 +614,5 @@ class Command(BaseCommand):
             "party_id": party.id,
             "funds_approved": row['Funds approved '],
             "funds_disbursed": row[' Funds disbursed '],
+            "last_updated": datetime.strptime("10-Feb-2018", "%d-%b-%Y")
         }

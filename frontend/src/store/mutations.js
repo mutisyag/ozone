@@ -59,12 +59,12 @@ const mutations = {
 
     console.log(data.fieldInfo)
     if (data.fieldInfo.party) {
-      formField.imports.find(i => parseInt(i.party) === parseInt(data.fieldInfo.party)).quantity = data.value
+      formField.imports.find(i => i.party === data.fieldInfo.party).quantity = data.value
       return
     }
     if (data.fieldInfo.category) {
-      console.log('herere')
       formField.use_categories.find(i => i.critical_use_category === data.fieldInfo.category).quantity = data.value
+      formField.quantity_use_categories = null
       return
     }
 
@@ -73,6 +73,11 @@ const mutations = {
     } else {
       formField[data.fieldInfo.field].selected = data.value
     }
+  },
+
+  removeFormField(state, { index, tabName, fieldName, fieldIndex }) {
+    state.form.tabs[tabName].form_fields[index][fieldName].splice(fieldIndex, 1)
+    state.form.tabs[tabName].form_fields[index].quantity_use_categories = null
   },
 
   setSubmissionHistory(state, data) {
@@ -156,8 +161,9 @@ const mutations = {
     state.emailTemplates = data
   },
 
-  setCriticalUseCategoryList(state, data) {
+  setCriticalUseCategoryList(state, { data, display }) {
     state.initialData.criticalUseCategoryList = data
+    state.initialData.display.criticalUseCategoryList = display
   },
 
   setEssenCritTypes(state, data) {

@@ -47,6 +47,7 @@ from .models import (
     Language,
     Nomination,
     ExemptionApproved,
+    ApprovedCriticalUse,
     RAFReport,
     RAFReportUseCategory,
     RAFImport,
@@ -913,11 +914,53 @@ class ExemptionNominationSerializer(
         exclude = ('submission',)
 
 
+class ApprovedCriticalUseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ApprovedCriticalUse
+        exclude = ('exemption',)
+
+
 class ExemptionApprovedListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', ]
     unique_with = 'is_emergency'
+
+    approved_uses = ApprovedCriticalUseSerializer(many=True, required=False)
+
+    def create_single(self, data, instance, submission):
+        """
+        Creates a single entry taking into account the special case of approved
+        critical uses.
+        """
+        approved_uses = data.pop('approved_uses', [])
+        res = super().create_single(data, instance, submission)
+
+        for value_entry in approved_uses:
+            ApprovedCriticalUse.objects.create(exemption=res, **value_entry)
+
+        return res
+
+    def update_single(self, existing_entry, entry):
+        """
+        Updates a single entry taking into account the special case of approved
+        critical uses.
+        """
+        changed = False
+        for field, value in entry.items():
+            if field == 'approved_uses':
+                # Delete all existing approved critical uses and recreate them,
+                # using the related manager.
+                existing_entry.approved_uses.all().delete()
+                for value_entry in value:
+                    ApprovedCriticalUse.objects.create(
+                        exemption=existing_entry, **value_entry
+                    )
+                changed = True
+            elif getattr(existing_entry, field, None) != value:
+                setattr(existing_entry, field, value)
+                changed = True
+        return changed
 
 
 class ExemptionApprovedSerializer(
@@ -926,6 +969,21 @@ class ExemptionApprovedSerializer(
     group = serializers.CharField(
         source='substance.group.group_id', default='', read_only=True
     )
+    approved_uses = ApprovedCriticalUseSerializer(many=True, required=False)
+
+    def create(self, validated_data):
+        """
+        Overriding create() to make sure critical_uses are properly treated.
+        """
+        approved_uses_data = validated_data.pop("approved_uses", [])
+
+        instance = ExemptionApproved.objects.create(
+            submission=self.context['submission'], **validated_data
+        )
+        for data in approved_uses_data:
+            ApprovedCriticalUse.objects.create(exemption=instance, **data)
+
+        return instance
 
     class Meta:
         list_serializer_class = ExemptionApprovedListSerializer
@@ -933,7 +991,26 @@ class ExemptionApprovedSerializer(
         exclude = ('submission',)
 
 
+# Helper function for handling unknown/other parties in RAF imports and use
+# categories.
+def _handle_party_other_out(entry):
+    """
+    When the party is None on the model instance, frontend will get special
+    country id 9999 instead of null.
+    """
+    if 'party' in entry:
+        entry["party"] = 9999 if entry["party"] is None else entry["party"]
+    return entry
+
+
 class RAFImportSerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        """
+        Handle the special case of the party with id 9999.
+        """
+        ret = super().to_representation(instance)
+        return _handle_party_other_out(ret)
 
     class Meta:
         model = RAFImport
@@ -941,6 +1018,13 @@ class RAFImportSerializer(serializers.ModelSerializer):
 
 
 class RAFReportUseCategorySerializer(serializers.ModelSerializer):
+
+    def to_representation(self, instance):
+        """
+        Handle the special case of the party with id 9999.
+        """
+        ret = super().to_representation(instance)
+        return _handle_party_other_out(ret)
 
     class Meta:
         model = RAFReportUseCategory
@@ -955,6 +1039,20 @@ class RAFListSerializer(
 
     imports = RAFImportSerializer(many=True)
     use_categories = RAFReportUseCategorySerializer(many=True)
+
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding is_valid to treat special case of party 9999 - which actually
+        translates into None in the DB. If all occurrences of 9999 in
+        self.initial_data are not replaced, field validation will fail since
+        9999 is not an actual pk.
+        """
+        for data in self.initial_data:
+            for imp in data.get('imports', []):
+                if imp['party'] == 9999:
+                    imp['party'] = None
+
+        return super().is_valid(raise_exception)
 
     def create_single(self, data, instance, submission):
         """
@@ -1017,8 +1115,23 @@ class RAFSerializer(
     imports = RAFImportSerializer(many=True)
     use_categories = RAFReportUseCategorySerializer(many=True)
 
-    def create(self, validated_data):
+    def is_valid(self, raise_exception=False):
+        """
+        Overriding is_valid to treat special case of party 9999 - which actually
+        translates into None in the DB. If all occurrences of 9999 in
+        self.initial_data are not replaced, field validation will fail since
+        9999 is not an actual pk.
+        """
+        for imp in self.initial_data.get('imports', []):
+            if imp['party'] == 9999:
+                imp['party'] = None
+        return super().is_valid(raise_exception)
 
+    def create(self, validated_data):
+        """
+        Overriding create() to make sure imports and use_categories are
+        properly treated.
+        """
         imports_data = validated_data.pop("imports", [])
         use_categories_data = validated_data.pop("use_categories", [])
 
@@ -1634,6 +1747,7 @@ class SubmissionSerializer(
                 'article7destructions_url', 'article7productions_url',
                 'article7exports_url', 'article7imports_url',
                 'article7nonpartytrades_url', 'article7emissions_url',
+                'date_reported_f',
             ),
             'hat': base_fields + (
                 'hat_productions_url', 'hat_imports_url',
@@ -1669,7 +1783,7 @@ class SubmissionSerializer(
         return obj.reporting_period.id
 
     def get_reporting_period_description(self, obj):
-        return obj.reporting_period.description 
+        return obj.reporting_period.description
 
     def get_in_initial_state(self, obj):
         return obj.in_initial_state
@@ -1885,7 +1999,7 @@ class FocalPointSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FocalPoint
-        exclude = ('submission', 'ordering_id')
+        exclude = ('submission',)
 
 
 class LicensingSystemSerializer(serializers.ModelSerializer):

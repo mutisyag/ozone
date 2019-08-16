@@ -21,6 +21,7 @@ class MultilateralFund(models.Model):
     )
     funds_approved = models.IntegerField()
     funds_disbursed = models.IntegerField()
+    last_updated = models.DateField(null=True)
 
     class Meta:
         db_table = "multilateral_fund"
@@ -60,6 +61,7 @@ class IllegalTrade(models.Model):
 
     class Meta:
         db_table = "illegal_trade"
+        ordering = ('ordering_id',)
 
 
 class ReclamationFacility(models.Model):
@@ -190,3 +192,4 @@ class FocalPoint(models.Model):
 
     class Meta:
         db_table = "focal_point"
+        ordering = ('ordering_id',)

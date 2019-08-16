@@ -7,8 +7,9 @@ export default {
     alertUnsavedData(tabName, tab, url) {
       const answer = window.confirm(`${this.$gettextInterpolate('Data in form "%{tab}" will be removed, because you have chosen "No" in the questionnaire for the corresponding question.', { tab: this.labels[tabName] })}`)
       if (answer) {
-        this.$store.dispatch('removeDataFromTab', tabName).then(() => {
-          this.submitData(tab, url)
+        this.$store.dispatch('removeDataFromTab', tabName).then(async () => {
+          await this.submitData(tab, url)
+          this.checkIfThereIsAnotherActionToDoBeforeReturning(tab.name)
         })
         return true
       }
@@ -50,14 +51,15 @@ export default {
       })
       this.tabsToSave = [...justSave, ...removeDataAndSave]
       if (!stopSave) {
-        Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
+        Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(async tab => {
           const url = this.$store.state.current_submission[tab.endpoint_url]
           if (!doNotSave.includes(tab.name)) {
             if (justSave.includes(tab.name)) {
-              this.submitData(tab, url)
+              await this.submitData(tab, url)
             } else {
-              url && this.submitData(tab, url)
+              url && await this.submitData(tab, url)
             }
+            this.checkIfThereIsAnotherActionToDoBeforeReturning(tab.name)
           }
         })
       }

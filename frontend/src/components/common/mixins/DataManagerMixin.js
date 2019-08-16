@@ -130,20 +130,31 @@ export default {
     prePrefill() {
       const { form } = this.$store.state
       const prefill_data = this.$store.state.current_submission
+      const endpoints = []
+      const tabsList = []
       Object.keys(form.tabs).forEach((tab) => {
         if (form.tabs[tab].endpoint_url && Object.keys(this.$store.state.current_submission).includes(form.tabs[tab].endpoint_url)) {
-          fetch(prefill_data[form.tabs[tab].endpoint_url]).then(response => {
-            if (response.data.length) {
-              this.prefill(form.tabs[tab].name, response.data)
-            } else {
-              this.$store.commit('updateNewTabs', tab)
-            }
-          }).catch(error => {
-            console.log(error)
-          })
+          endpoints.push(fetch(prefill_data[form.tabs[tab].endpoint_url]))
+          tabsList.push(tab)
+          // fetch().then(response => {
+          //   if (response.data.length) {
+          //     this.prefill(form.tabs[tab].name, response.data)
+          //   } else {
+          //
+          //   }
+          // }).catch(error => {
+          //   console.log(error)
+          // })
         }
       })
-      this.prefilled = true
+
+      Promise.all(endpoints,).then((responses) => {
+        const prefillData = responses.map((r, index) => (this.prefill({ tabName: tabsList[index], data: r.data })))
+        Promise.all(prefillData).then(() => {
+          console.log('done-prefilling')
+          this.prefilled = true
+        })
+      })
     },
 
     prefillComments() {
@@ -154,38 +165,47 @@ export default {
       })
     },
 
-    prefill(tabName, data) {
-      let ordering_id = 0
-      if (Array.isArray(this.form.tabs[tabName].form_fields)) {
-        ordering_id = Math.max(...data.map(row => row.ordering_id))
-        const sortedData = tabName === 'has_emissions' ? data.sort((a, b) => a.ordering_id - b.ordering_id) : data
-        sortedData.forEach(item => {
-          if (item.substance || item.blend) {
-            this.$store.dispatch('createSubstance', {
-              $gettext: this.$gettext,
-              substanceList: item.substance ? [item.substance] : null,
-              currentSectionName: tabName,
-              groupName: null,
-              country: null,
-              blendList: item.blend ? [item.blend] : null,
-              prefillData: item
-            })
-          } else {
-            this.$store.dispatch('createRow', {
-              $gettext: this.$gettext,
-              currentSectionName: tabName,
-              prefillData: item
-            })
-          }
-        })
-        if (tabName === 'has_emissions') {
-          this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+    prefill({ tabName, data }) {
+      return new Promise((resolve) => {
+        if (!data.length) {
+          this.$store.commit('updateNewTabs', tabName)
+          return resolve()
         }
-      }
-      if (isObject(this.form.tabs[tabName].form_fields)) {
-        const [prefillData] = data
-        this.$store.commit('prefillTab', { tabName, data: prefillData })
-      }
+        console.log('prefilling', tabName)
+        let ordering_id = 0
+        if (Array.isArray(this.form.tabs[tabName].form_fields)) {
+          ordering_id = Math.max(...data.map(row => row.ordering_id))
+          const sortedData = tabName === 'has_emissions' ? data.sort((a, b) => a.ordering_id - b.ordering_id) : data
+          sortedData.forEach(async item => {
+            if (item.substance || item.blend) {
+              await this.$store.dispatch('createSubstance', {
+                $gettext: this.$gettext,
+                substanceList: item.substance ? [item.substance] : null,
+                currentSectionName: tabName,
+                groupName: null,
+                country: null,
+                blendList: item.blend ? [item.blend] : null,
+                prefillData: item
+              })
+            } else {
+              await this.$store.dispatch('createRow', {
+                $gettext: this.$gettext,
+                currentSectionName: tabName,
+                prefillData: item
+              })
+            }
+            return resolve()
+          })
+          if (tabName === 'has_emissions') {
+            this.$store.commit('setTabOrderingId', { tabName, ordering_id })
+          }
+        }
+        if (isObject(this.form.tabs[tabName].form_fields)) {
+          const [prefillData] = data
+          this.$store.commit('prefillTab', { tabName, data: prefillData })
+        }
+        return resolve()
+      })
     }
 
   },

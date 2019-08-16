@@ -21,6 +21,7 @@ module.exports = {
     'import/no-unresolved': 'off',
     'no-param-reassign': 'off',
     'camelcase': 'off',
+    'no-continue': 'off',
     'max-len': 'off',
     'no-unused-expressions': 'off',
     'arrow-parens': 'off',
