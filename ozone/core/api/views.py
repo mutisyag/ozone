@@ -2207,13 +2207,12 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
         def calculate_substances_sum(qs):
             return sum([obj.quantity*obj.substance.odp for obj in qs])
 
-        def filter_entries_by_period_party_group(queryset, reporting_period, party, group):
+        def filter_entries_by_period_party_group(queryset, reporting_period, party, group, type):
             qs = queryset.filter(
                 submission__reporting_period=reporting_period,
                 submission__party=party,
                 substance__group=group
             )
-            type = request.query_params.get('type', None)
             if type == 'critical':
                 qs = qs.filter(
                     substance__has_critical_uses=True)
@@ -2231,82 +2230,91 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
 
+        type = request.query_params.get('type', None)
+
         data = []
         for reporting_period in reporting_periods:
+            # When dealing with aggregations we append the entry after we
+            # compute the sum. So we use this boolean to decide if
+            # an entry has to be added to the result.
+            has_data = False
+
             if aggregates and 'party' in aggregates and 'group' in aggregates:
                 sum_by_party_group = 0
                 for party in parties:
                     for group in groups:
                         qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group
+                            queryset, reporting_period, party, group, type
                         )
-                        sum_by_party_group += calculate_substances_sum(qs)
-                data.append({
-                    'reporting_period': reporting_period,
-                    'party': None,
-                    'group': None,
-                    'quantity': round_half_up(
-                        sum_by_party_group,
-                        2
-                    )
-                })
+                        if qs:
+                            sum_by_party_group += calculate_substances_sum(qs)
+                            has_data = True
+                if has_data:
+                    data.append({
+                        'reporting_period': reporting_period,
+                        'party': None,
+                        'group': None,
+                        'quantity': round_half_up(
+                            sum_by_party_group,
+                            2
+                        )
+                    })
             elif aggregates and 'group' in aggregates:
                 for party in parties:
                     sum_by_group = 0
                     for group in groups:
                         qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group
+                            queryset, reporting_period, party, group, type
                         )
-                        sum_by_group += calculate_substances_sum(qs)
-                    data.append({
-                        'reporting_period': reporting_period,
-                        'party': party,
-                        'group': None,
-                        'quantity': round_half_up(
-                            sum_by_group,
-                            2
-                        )
-                    })
+                        if qs:
+                            sum_by_group += calculate_substances_sum(qs)
+                            has_data = True
+                    if has_data:
+                        data.append({
+                            'reporting_period': reporting_period,
+                            'party': party,
+                            'group': None,
+                            'quantity': round_half_up(
+                                sum_by_group,
+                                2
+                            )
+                        })
             elif aggregates and 'party' in aggregates:
                 for group in groups:
                     sum_by_party = 0
                     for party in parties:
                         qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group
+                            queryset, reporting_period, party, group, type
                         )
-                        sum_by_party += calculate_substances_sum(qs)
-                    data.append({
-                        'reporting_period': reporting_period,
-                        'party': None,
-                        'group': group,
-                        'quantity': round_half_up(
-                            sum_by_party,
-                            2
-                        )
-                    })
-            else:
-                for party in parties:
-                    for group in groups:
-                        qs = queryset.filter(
-                            submission__reporting_period=reporting_period,
-                            submission__party=party,
-                            substance__group=group
-                        )
-                        type = request.query_params.get('type', None)
-                        if type == 'critical':
-                            qs = qs.filter(substance__has_critical_uses=True)
-                        elif type == 'essential':
-                            qs = qs.filter(substance__has_critical_uses=False)
-
+                        if qs:
+                            sum_by_party += calculate_substances_sum(qs)
+                            has_data = True
+                    if has_data:
                         data.append({
                             'reporting_period': reporting_period,
-                            'party': party,
+                            'party': None,
                             'group': group,
                             'quantity': round_half_up(
-                                calculate_substances_sum(qs),
+                                sum_by_party,
                                 2
                             )
                         })
+            else:
+                for party in parties:
+                    for group in groups:
+                        qs = filter_entries_by_period_party_group(
+                            queryset, reporting_period, party, group, type
+                        )
+                        if qs:
+                            data.append({
+                                'reporting_period': reporting_period,
+                                'party': party,
+                                'group': group,
+                                'quantity': round_half_up(
+                                    calculate_substances_sum(qs),
+                                    2
+                                )
+                            })
 
         results = EssentialCriticalSerializer(data, many=True).data
         return Response(results)
