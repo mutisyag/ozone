@@ -2059,3 +2059,10 @@ class MultilateralFundSerializer(serializers.ModelSerializer):
     class Meta:
         model = MultilateralFund
         fields = "__all__"
+
+
+class EssentialCriticalSerializer(serializers.Serializer):
+    reporting_period = serializers.IntegerField()
+    party = serializers.IntegerField()
+    group = serializers.IntegerField()
+    quantity = serializers.FloatField()
