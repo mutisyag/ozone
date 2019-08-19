@@ -137,3 +137,6 @@ ozone/media/
 
 # Excel files
 *.xlsx
+
+/.vagrant
+/.env

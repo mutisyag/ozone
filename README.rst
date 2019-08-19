@@ -18,6 +18,14 @@ With Docker
 ^^^^^^^^^^^
 
 
+Vagrant
+^^^^^^^
+::
+
+    vagrant up
+    vagrant ssh -- /vagrant/utility/vagrant_test.sh
+
+
 Settings
 --------
 
