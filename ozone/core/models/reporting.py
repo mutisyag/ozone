@@ -99,8 +99,6 @@ class ObligationTypes(enum.Enum):
     ART4B = 'art4b'
     ART9 = 'art9'
     REQCHANGES = 'reqchanges'
-    ODSSTRATEGIES = 'odsstrategies'
-    UNWANTEDIMPORTS = 'unwantedimports'
 
 
 class Obligation(models.Model):
