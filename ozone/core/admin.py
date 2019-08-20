@@ -998,7 +998,11 @@ class ORMReportAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
 
 @admin.register(MultilateralFund)
 class MultilateralFund(BaseCountryPofileAdmin, admin.ModelAdmin):
-    list_display = ('party', 'funds_approved', 'funds_disbursed')
+    list_display = (
+        'party',
+        'funds_approved', 'funds_disbursed',
+        'date_approved', 'date_disbursed',
+    )
     search_fields = ('party__name',)
     list_filter = (
         ('party', MainPartyFilter),

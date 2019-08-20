@@ -21,7 +21,8 @@ class MultilateralFund(models.Model):
     )
     funds_approved = models.IntegerField()
     funds_disbursed = models.IntegerField()
-    last_updated = models.DateField(null=True)
+    date_approved = models.DateField(null=True)
+    date_disbursed = models.DateField(null=True)
 
     class Meta:
         db_table = "multilateral_fund"

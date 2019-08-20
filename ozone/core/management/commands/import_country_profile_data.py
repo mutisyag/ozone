@@ -568,11 +568,17 @@ class Command(BaseCommand):
     @transaction.atomic()
     def _process_multilateral_funds(self, row):
         entry = self.get_multilateral_fund_data(row)
-        MultilateralFund.objects.create(**entry)
-        logger.info(
-            "Multilateral fund for %s imported",
-            row['Country'],
-        )
+        if entry:
+            MultilateralFund.objects.create(**entry)
+            logger.info(
+                "Multilateral fund for %s imported",
+                row['Country'],
+            )
+        else:
+            logger.info(
+                "Multilateral fund for %s skipped",
+                row['Country'],
+            )
         return True
 
     def get_multilateral_fund_data(self, row):
@@ -609,6 +615,14 @@ class Command(BaseCommand):
                 party = self.parties['Venezuela (Bolivarian Republic of)']
             elif row['Country'] == 'Vietnam':
                 party = self.parties['Viet Nam']
+            elif row['Country'] in [
+                'Global',
+                'Region: AFR',
+                'Region: ASP',
+                'Region: EUR',
+                'Region: LAC',
+            ]:
+                return None
             else:
                 raise e
 
@@ -616,5 +630,6 @@ class Command(BaseCommand):
             "party_id": party.id,
             "funds_approved": row['Funds approved '],
             "funds_disbursed": row[' Funds disbursed '],
-            "last_updated": datetime.strptime("10-Feb-2018", "%d-%b-%Y")
+            "date_approved": datetime.strptime("31-May-2019", "%d-%b-%Y"),
+            "date_disbursed": datetime.strptime("31-Dec-2017", "%d-%b-%Y"),
         }
