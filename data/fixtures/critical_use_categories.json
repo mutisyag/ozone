@@ -1682,7 +1682,7 @@
   {
     "fields": {
       "code": "OTHER",
-      "name": "Other"
+      "name": "Unspecified"
     },
     "model": "core.criticalusecategory",
     "pk": 211
