@@ -485,11 +485,13 @@ class Command(BaseCommand):
                 if not row['Party']:
                     return
                 raise e
-
+        seisure_date = row['Seizure_Date_Year'] if row['Seizure_Date_Year'] else ""
+        if type(seisure_date) == datetime:
+            seisure_date = seisure_date.strftime('%d-%m-%Y')
         return {
             "party_id": party.id,
             "submission_id": row['Submission ID'],
-            "seizure_date_year": row['Seizure_Date_Year'] if row['Seizure_Date_Year'] else "",
+            "seizure_date_year": seisure_date,
             "substances_traded": row['Substances_Traded'] if row['Substances_Traded'] else "",
             "volume": row['Volume'] if row['Volume'] else "",
             "importing_exporting_country": row['Importing_Exporting_Country'] if row['Importing_Exporting_Country'] else "",
