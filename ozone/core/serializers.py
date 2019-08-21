@@ -2022,6 +2022,9 @@ class OtherCountryProfileDataSerializer(serializers.ModelSerializer):
     party = serializers.StringRelatedField(read_only=True)
     period = serializers.StringRelatedField(source='reporting_period', read_only=True)
     obligation = serializers.StringRelatedField(read_only=True)
+    obligation_type = serializers.StringRelatedField(
+        source='obligation._obligation_type', read_only=True
+    )
 
     class Meta:
         model = OtherCountryProfileData

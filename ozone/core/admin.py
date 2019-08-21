@@ -919,7 +919,8 @@ class OtherCountryProfileDataObligationFilter(RelatedDropdownFilter):
             _obligation_type__in=[
                 ObligationTypes.ART9.value,
                 ObligationTypes.ODSSTRATEGIES.value,
-                ObligationTypes.UNWANTEDIMPORTS.value
+                ObligationTypes.UNWANTEDIMPORTS.value,
+                ObligationTypes.OTHER.value,
             ]
         ).values_list('id', 'name')
 
@@ -933,14 +934,16 @@ class OtherCountryProfileDataAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
             obligation___obligation_type__in=[
                 ObligationTypes.ART9.value,
                 ObligationTypes.ODSSTRATEGIES.value,
-                ObligationTypes.UNWANTEDIMPORTS.value
+                ObligationTypes.UNWANTEDIMPORTS.value,
+                ObligationTypes.OTHER.value,
             ]
         ).order_by('reporting_period__name')
         obligation_queryset = Obligation.objects.filter(
             _obligation_type__in=[
                 ObligationTypes.ART9.value,
                 ObligationTypes.ODSSTRATEGIES.value,
-                ObligationTypes.UNWANTEDIMPORTS.value
+                ObligationTypes.UNWANTEDIMPORTS.value,
+                ObligationTypes.OTHER.value,
             ]
         )
         form.base_fields['submission'].queryset = submission_queryset

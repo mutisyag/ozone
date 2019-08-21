@@ -269,6 +269,9 @@ class Command(BaseCommand):
         except KeyError as e:
             if row['Party'] == 'Venezuela':
                 party = self.parties['Venezuela (Bolivarian Republic of)']
+            elif row['Party'] == 'European Community':
+                party = self.parties['European Union']
+                row['Additonal Text for URL'] = "European Community"
             else:
                 raise e
         try:
