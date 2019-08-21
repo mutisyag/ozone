@@ -3812,5 +3812,21 @@
     },
     "model": "core.party",
     "pk": 251
+  },
+  {
+    "fields": {
+      "abbr": "YU",
+      "abbr_alt": "YUG",
+      "iso_alpha3_code": "YUG",
+      "mdg_region": "688",
+      "name": "Yugoslavia",
+      "name_alt": "Yugoslavia",
+      "parent_party": 252,
+      "remark": "",
+      "subregion": 7,
+      "is_active": false
+    },
+    "model": "core.party",
+    "pk": 252
   }
 ]

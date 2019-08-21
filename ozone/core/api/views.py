@@ -293,7 +293,9 @@ class SubregionViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
 
 
 class PartyViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
-    queryset = Party.objects.all().prefetch_related(
+    queryset = Party.objects.filter(
+        is_active=True,
+    ).prefetch_related(
         'subregion', 'subregion__region'
     ).order_by('name')
     serializer_class = PartySerializer

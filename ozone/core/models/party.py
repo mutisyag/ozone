@@ -175,6 +175,12 @@ class Party(models.Model):
     # Date when Montreal Protocol was signed
     sign_date_mp = models.DateField(null=True, blank=True)
 
+    is_active = models.BooleanField(
+        default=True,
+        help_text="Indicates whether the party can submit new reports."
+                  "Only necessary for backwards compatibility"
+    )
+
     @classmethod
     def get_main_parties(cls):
         return cls.objects.filter(id=models.F('parent_party_id'))

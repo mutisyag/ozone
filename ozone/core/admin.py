@@ -204,6 +204,7 @@ class MainPartyFilter(RelatedDropdownFilter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lookup_choices = Party.objects.filter(
+            is_active=True,
             parent_party__id=F('id'),
         ).order_by('name').values_list('id', 'name')
 
@@ -212,6 +213,7 @@ class ParentPartyFilter(RelatedDropdownFilter):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.lookup_choices = Party.objects.filter(
+            is_active=True,
             id__in=Subquery(Party.objects.exclude(
                 parent_party__id=F('id'),
             ).values('parent_party_id'))
@@ -226,6 +228,15 @@ class PartyAdmin(admin.ModelAdmin):
         ('parent_party', ParentPartyFilter)
     )
     search_fields = ['name', 'abbr']
+
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        main_parties_queryset = Party.objects.filter(
+            is_active=True,
+            parent_party__id=F('id'),
+        ).order_by('name')
+        form.base_fields['parent_party'].queryset = main_parties_queryset
+        return form
 
 
 @admin.register(PartyHistory)
@@ -512,6 +523,7 @@ class PartyDeclarationAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         main_parties_queryset = Party.objects.filter(
+            is_active=True,
             parent_party__id=F('id'),
         ).order_by('name')
         form.base_fields['party'].queryset = main_parties_queryset
@@ -622,6 +634,7 @@ class TransferAdmin(admin.ModelAdmin):
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         main_parties_queryset = Party.objects.filter(
+            is_active=True,
             parent_party__id=F('id'),
         ).order_by('name')
         source_sub_queryset = dest_sub_queryset = Submission.objects.filter(
@@ -849,6 +862,8 @@ class BaseCountryPofileAdmin:
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
         main_parties_queryset = Party.objects.filter(
+            #  don't filter by is_active
+            #  because there is some legacy data for Yugoslavia
             parent_party__id=F('id'),
         ).order_by('name')
         form.base_fields['party'].queryset = main_parties_queryset
