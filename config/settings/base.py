@@ -185,14 +185,14 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'core.middleware.TokenAdminAuthMiddleware',
+    'ozone.core.middleware.TokenAdminAuthMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'simple_history.middleware.HistoryRequestMiddleware',
-    'core.middleware.ExceptionMiddleware',
+    'ozone.core.middleware.ExceptionMiddleware',
     'impersonate.middleware.ImpersonateMiddleware',
-    'core.middleware.ImpersonateTokenAuthMiddleware',
+    'ozone.core.middleware.ImpersonateTokenAuthMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
@@ -284,7 +284,7 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
-        'core.utils.api.BrowsableAPIRendererWithoutForms',
+        'ozone.core.utils.api.BrowsableAPIRendererWithoutForms',
     ),
 }
 
