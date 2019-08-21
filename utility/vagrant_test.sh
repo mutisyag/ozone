@@ -2,7 +2,7 @@
 
 ## environment
 cd /vagrant
-source .envrc.travis
+source .envrc.vagrant
 
 
 ## run tests

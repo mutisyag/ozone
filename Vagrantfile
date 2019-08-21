@@ -18,6 +18,6 @@ Vagrant.configure("2") do |config|
     vmck.cpus = 2
   end
 
-  config.vm.provision :shell, path: "utility/vagrant_provision.sh"
+  config.vm.provision :shell, privileged: false, path: "utility/vagrant_provision.sh"
 
 end

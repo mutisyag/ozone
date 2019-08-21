@@ -2,44 +2,51 @@
 
 ## environment
 cd /vagrant
-source .envrc.travis
+source .envrc.vagrant
+export DEBIAN_FRONTEND=noninteractive
 
 
-## apt packages
 (
-  echo "Installing dependencies"
+  echo "Installing apt packages"
   set -x
 
-  export DEBIAN_FRONTEND=noninteractive
-  sudo apt-get update -q
-  sudo apt-get install -qy wget curl ca-certificates gnupg lsb-core
+  sudo apt-get update -qq
+  sudo apt-get install -qqy wget curl ca-certificates gnupg lsb-core
 )
 
 
-## postgresql 9.4
 dpkg --list | grep -q postgresql-9.4 && echo "PostgreSQL 9.4 already installed" || (
   echo "Installing PostgreSQL 9.4"
   set -x
 
-  export DEBIAN_FRONTEND=noninteractive
   curl -s https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
   sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
 
-  sudo apt-get update -q
-  sudo apt-get install -qy postgresql-9.4
+  sudo apt-get update -qq
+  sudo apt-get install -qqy postgresql-9.4
 
   sudo sed -Ei 's/^(host\s.*)md5/\1trust/' /etc/postgresql/9.4/main/pg_hba.conf
   sudo systemctl restart postgresql
+  sudo -u postgres createuser -s vagrant
+  createdb ozone
 )
 
 
-## tusd
-pidof tusd && echo "tusd already running" || (
-  echo "Downloading tusd"
+node --version | grep -q 'v8\.' && echo "Nodejs 8 already installed" || (
+  echo "Installing Nodejs v8.x"
   set -x
 
-  cd /tmp
-  wget -q https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
+  sudo snap install node --classic --channel=8
+)
+
+
+pidof tusd && echo "tusd already running" || (
+  echo "Downloading and running tusd"
+  set -x
+
+  mkdir /tmp/tusd-dist
+  cd /tmp/tusd-dist
+  curl -sLO https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
   tar -xzvf tusd_linux_amd64.tar.gz
 
   # Start tusd server
@@ -47,10 +54,24 @@ pidof tusd && echo "tusd already running" || (
 )
 
 
-## python packages
 (
-  echo "Installing dependencies"
+  echo "Installing Python dependencies"
   set -x
 
-  sudo pip3 install -r requirements/tests.txt
+  sudo pip3 install -q -r requirements/tests.txt
+
+  python3 manage.py migrate
+  python3 manage.py load_initial_fixtures
 )
+
+
+(
+  echo "Building the frontend"
+  set -x
+
+  cd frontend
+  npm install --quiet
+  npm run build
+)
+
+echo "✔ Provisioning successful!"
