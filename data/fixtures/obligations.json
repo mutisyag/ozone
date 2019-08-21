@@ -150,5 +150,33 @@
       "other": false,
       "sort_order": 100
     }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 12,
+    "fields": {
+      "name": "Environmentally Sound Management of Banks of ODS: Strategies",
+      "description": "(Decision XX/7(5))",
+      "_obligation_type": "odsstrategies",
+      "is_active": true,
+      "has_versions": false,
+      "has_reporting_periods": true,
+      "other": true,
+      "sort_order": 110
+    }
+  },
+  {
+    "model": "core.obligation",
+    "pk": 13,
+    "fields": {
+      "name": "Avoiding the unwanted import of products and equipment containing or relying on hydrochlorofluorocarbons",
+      "description": "(Decision XXVII/8)",
+      "_obligation_type": "unwantedimports",
+      "is_active": true,
+      "has_versions": false,
+      "has_reporting_periods": true,
+      "other": true,
+      "sort_order": 120
+    }
   }
 ]
