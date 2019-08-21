@@ -24,12 +24,18 @@ class Command(BaseCommand):
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
 
-        self.periods = {_period.name: _period
-                        for _period in ReportingPeriod.objects.all()}
-        self.parties = {_party.abbr: _party
-                        for _party in Party.objects.all()}
-        self.substances = {_substance.substance_id: _substance
-                           for _substance in Substance.objects.all()}
+        self.periods = {
+            _period.name: _period
+            for _period in ReportingPeriod.objects.all()
+        }
+        self.parties = {
+            _party.abbr if _party.abbr != 'EU' else 'ECE': _party
+            for _party in Party.objects.all()
+        }
+        self.substances = {
+            _substance.substance_id: _substance
+            for _substance in Substance.objects.all()
+        }
         self.wb = None
         self.submissions_letters_map = {}
         self.transfers_map = {}

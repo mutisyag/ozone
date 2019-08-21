@@ -34,8 +34,14 @@ class Command(BaseCommand):
         super().__init__(stdout=None, stderr=None, no_color=False)
         self.wb = None
         self.parties = {_party.name: _party for _party in Party.objects.all()}
-        self.parties_abbr = {_party.abbr: _party for _party in Party.objects.all()}
-        self.periods = {_period.name: _period for _period in ReportingPeriod.objects.all()}
+        self.parties_abbr = {
+            _party.abbr if _party.abbr != 'EU' else 'ECE': _party
+            for _party in Party.objects.all()
+        }
+        self.periods = {
+            _period.name: _period
+            for _period in ReportingPeriod.objects.all()
+        }
 
     def add_arguments(self, parser):
         parser.add_argument('file', help="the xlsx input file")

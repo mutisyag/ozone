@@ -54,8 +54,8 @@ class Command(BaseCommand):
                     if limit_type.value in [
                         LimitTypes.BDN.value,
                         LimitTypes.PRODUCTION.value
-                    ] and party.abbr == 'ECE':
-                        # No BDN or Prod limits for ECE
+                    ] and party.abbr == 'EU':
+                        # No BDN or Prod limits for EU/ECE(European Union)
                         continue
                     cm_queryset_by_limit_type = cm_queryset.filter(
                         limit_type=limit_type.value

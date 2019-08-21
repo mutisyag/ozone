@@ -147,6 +147,9 @@ class Command(BaseCommand):
     def lookup_id(self, model, field, key, data=None):
         # This method used to be pretty until UNK SubRegion appeared several
         # times
+        if key == 'ECE' and model == 'party':
+            key = 'EU'
+
         if not key:
             return None
         if not data:
@@ -258,6 +261,10 @@ class Command(BaseCommand):
             # Remove "All countries" and "Some countries"
             # f['_deleted'] = True
             return None
+
+        if row['CntryID'] == 'ECE':
+            f['abbr'] = 'EU'
+
         if row['CntryName'] == 'Taiwan Province':
             f['name'] = 'Taiwan, Province of China'
         else:
@@ -277,6 +284,9 @@ class Command(BaseCommand):
         f['remark'] = row['Remark'] or ""
         # parent_party will be replaced in party_postprocess
         f['parent_party'] = row['MainCntryID']
+        if row['CntryID'] == 'PS':
+            # State of Palestine
+            f['parent_party'] = 'PS'
 
         f['iso_alpha3_code'] = row['ISO_Alpha3Code'] or ''
         f['abbr_alt'] = row['CntryID_org'] or ''

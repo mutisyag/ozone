@@ -238,7 +238,7 @@ class BaseProdCons(models.Model):
 
     @property
     def is_european_union(self):
-        return self.party == Party.objects.filter(abbr="ECE").first()
+        return self.party == Party.objects.filter(abbr="EU").first()
 
     @property
     def is_after_2010(self):

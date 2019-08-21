@@ -37,8 +37,10 @@ class Command(BaseCommand):
 
         self.periods = {_period.name: _period
                         for _period in ReportingPeriod.objects.all()}
-        self.parties = {_party.abbr: _party
-                        for _party in Party.objects.all()}
+        self.parties = {
+            _party.abbr if _party.abbr != 'EU' else 'ECE': _party
+            for _party in Party.objects.all()
+        }
         self.substances = {_substance.substance_id: _substance
                            for _substance in Substance.objects.all()}
         self.meetings = {_meeting.meeting_id: _meeting

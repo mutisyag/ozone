@@ -32,7 +32,7 @@ class Command(BaseCommand):
             for _period in ReportingPeriod.objects.all()
         }
         self.parties = {
-            _party.abbr: _party.id
+            _party.abbr if _party.abbr != 'EU' else 'ECE': _party.id
             for _party in Party.objects.all()
         }
         self.groups = {
