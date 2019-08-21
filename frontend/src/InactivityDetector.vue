@@ -79,8 +79,8 @@ export default {
     },
     resetTimer() {
       clearTimeout(this.time)
-      //   300000 = 5 minutes
-      this.time = setTimeout(this.startInactivityTimer, 300000)
+      //   30*1000*60 = 30 minutes for automatic logout
+      this.time = setTimeout(this.startInactivityTimer, 1800000)
     }
   }
 }
