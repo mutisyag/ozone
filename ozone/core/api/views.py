@@ -551,11 +551,23 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             of dictionaries containing key-value pairs for those fields.
             """
             for field in fields:
-                setattr(
-                    aggregation,
-                    field,
-                    sum([a[field] or 0 for a in to_add])
-                )
+                # A null value in any limit field means that the sum of all
+                # values for that field across an aggregation should be null
+                # (because null means no limits)
+                if field.startswith('limit_'):
+                    setattr(
+                        aggregation,
+                        field,
+                        None if any([a[field] is None for a in to_add]) else
+                        sum([a[field] for a in to_add])
+                    )
+                else:
+                    setattr(
+                        aggregation,
+                        field,
+                        None if all([a[field] is None for a in to_add]) else
+                        sum([a[field] or 0 for a in to_add])
+                    )
             aggregation.apply_rounding()
 
         queryset = self.filter_queryset(self.get_queryset())
