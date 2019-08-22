@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.contrib.postgres import fields
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.utils.functional import cached_property
 
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
@@ -236,18 +237,18 @@ class BaseProdCons(models.Model):
     def has_read_rights(self, user):
         return self.has_read_rights_for_party(self.party, user)
 
-    @property
+    @cached_property
     def is_european_union(self):
         return self.party == Party.objects.filter(abbr="EU").first()
 
-    @property
+    @cached_property
     def is_after_2010(self):
         rp_2010 = ReportingPeriod.objects.get(name="2010")
         if self.reporting_period.start_date >= rp_2010.start_date:
             return True
         return False
 
-    @property
+    @cached_property
     def is_china_or_brazil(self):
         return (
             self.party == Party.objects.filter(abbr="CN").first()
@@ -379,7 +380,7 @@ class ProdCons(BaseProdCons):
 
     limit_bdn = models.FloatField(blank=True, null=True, default=None)
 
-    @property
+    @cached_property
     def decimals(self):
         """
         Returns the number of rounding decimals for this particular instance,
@@ -493,7 +494,7 @@ class ProdConsMT(BaseProdCons):
         help_text="Substance for which this aggregation was calculated",
     )
 
-    @property
+    @cached_property
     def decimals(self):
         return BaseProdCons.get_decimals(
             self.reporting_period, self.substance.group, self.party
