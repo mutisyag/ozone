@@ -2092,4 +2092,5 @@ class EssentialCriticalSerializer(serializers.Serializer):
     reporting_period = serializers.IntegerField()
     party = serializers.IntegerField()
     group = serializers.IntegerField()
-    quantity = serializers.FloatField()
+    quantity_essential = serializers.FloatField()
+    quantity_critical = serializers.FloatField()

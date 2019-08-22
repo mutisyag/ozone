@@ -561,16 +561,21 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         aggregation,
                         field,
                         None if any([a[field] is None for a in to_add]) else
-                        sum([a[field] for a in to_add])
+                        round_half_up(
+                            sum([a[field] for a in to_add]),
+                            2
+                        )
                     )
                 else:
                     setattr(
                         aggregation,
                         field,
                         None if all([a[field] is None for a in to_add]) else
-                        sum([a[field] or 0 for a in to_add])
+                        round_half_up(
+                            sum([a[field] or 0 for a in to_add]),
+                            2
+                        )
                     )
-            aggregation.apply_rounding()
 
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -589,48 +594,49 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset.values_list('reporting_period', flat=True)
             )
             values = []
-            if 'party' in aggregates and 'group' in aggregates:
-                # Sum values for all groups and all parties for each reporting
-                # period
-                for period in periods:
+            for period in periods:
+                # Use a list of dictionaries for in-memory storage to optimize
+                # DB queries.
+                values_list = queryset.filter(
+                    reporting_period=period
+                ).values(*fields, 'party', 'group', 'reporting_period')
+                if 'party' in aggregates and 'group' in aggregates:
+                    # Sum values for all groups and all parties for this
+                    # reporting period
                     aggregation = ProdCons(reporting_period_id=period)
-                    to_add = queryset.filter(
-                        reporting_period=period
-                    ).values(*fields)
-                    populate_aggregation(aggregation, fields, to_add)
+                    populate_aggregation(aggregation, fields, values_list)
                     values.append(aggregation)
-                queryset = values
-            elif 'party' in aggregates:
-                groups = set(queryset.values_list('group', flat=True))
-                for group in groups:
-                    for period in periods:
-                        aggregation = ProdCons(
-                            group_id=group, reporting_period_id=period
-                        )
-                        to_add = queryset.filter(
-                            group=group, reporting_period=period
-                        ).values(*fields)
-                        populate_aggregation(aggregation, fields, to_add)
-                        values.append(aggregation)
-                queryset = values
-            elif 'group' in aggregates:
-                parties = set(queryset.values_list('party', flat=True))
-                for party in parties:
-                    for period in periods:
-                        aggregation = ProdCons(
-                            party_id=party, reporting_period_id=period
-                        )
-                        to_add = queryset.filter(
-                            party=party, reporting_period=period
-                        ).values(*fields)
-                        populate_aggregation(aggregation, fields, to_add)
-                        values.append(aggregation)
-                queryset = values
+                elif 'party' in aggregates:
+                    groups = set(queryset.values_list('group', flat=True))
+                    for group in groups:
+                        entries = [
+                            value for value in values_list
+                            if value['group'] == group
+                        ]
+                        if entries:
+                            aggregation = ProdCons(
+                                group_id=group, reporting_period_id=period
+                            )
+                            populate_aggregation(aggregation, fields, entries)
+                            values.append(aggregation)
+                elif 'group' in aggregates:
+                    parties = set(queryset.values_list('party', flat=True))
+                    for party in parties:
+                        entries = [
+                            value for value in values_list
+                            if value['party'] == party
+                        ]
+                        if entries:
+                            aggregation = ProdCons(
+                                party_id=party, reporting_period_id=period
+                            )
+                            populate_aggregation(aggregation, fields, entries)
+                            values.append(aggregation)
 
             # Aggregating disables pagination. Ordering also seems to go down
             # the drain. However that is ok given the small number of results
             # that will be returned.
-            return Response(AggregationSerializer(queryset, many=True).data)
+            return Response(AggregationSerializer(values, many=True).data)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -2214,121 +2220,119 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
     filterset_class = EssentialCriticalFilterSet
 
     def get_queryset(self):
-        return ExemptionApproved.objects.all()
+        return ExemptionApproved.objects.all().prefetch_related(
+            'submission__party', 'submission__reporting_period',
+            'substance__group', 'substance__odp'
+        )
 
     def list(self, request, *args, **kwargs):
 
-        def calculate_substances_sum(qs):
-            return sum([obj.quantity*obj.substance.odp for obj in qs])
-
-        def filter_entries_by_period_party_group(queryset, reporting_period, party, group, type):
-            qs = queryset.filter(
-                submission__reporting_period=reporting_period,
-                submission__party=party,
-                substance__group=group
+        def populate_aggregation(aggregation, to_add):
+            """
+            Helper function to populate an aggregation's fields based on a list
+            of dictionaries containing key-value pairs for those fields.
+            """
+            aggregation['quantity_essential'] = round_half_up(
+                sum(
+                    [
+                        (a['quantity'] or 0) * a['substance__odp']
+                        for a in to_add
+                        if not a['substance__has_critical_uses']
+                    ]
+                ),
+                2
             )
-            if type == 'critical':
-                qs = qs.filter(
-                    substance__has_critical_uses=True)
-            elif type == 'essential':
-                qs = qs.filter(
-                    substance__has_critical_uses=False)
-            return qs
+            aggregation['quantity_critical'] = round_half_up(
+                sum(
+                    [
+                        (a['quantity'] or 0) * a['substance__odp']
+                        for a in to_add
+                        if a['substance__has_critical_uses']
+                    ]
+                ),
+                2
+            )
 
         queryset = self.filter_queryset(self.get_queryset())
 
-        reporting_periods = queryset.values_list('submission__reporting_period', flat=True)
-        parties = queryset.values_list('submission__party', flat=True)
-        groups = queryset.values_list('substance__group', flat=True)
+        values_list = queryset.values_list(
+            'submission__reporting_period',
+            'submission__party',
+            'substance__group',
+        )
+        reporting_periods = set(value[0] for value in values_list)
+        parties = set(value[1] for value in values_list)
+        groups = set(value[2] for value in values_list)
 
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
 
-        type = request.query_params.get('type', None)
-
         data = []
         for reporting_period in reporting_periods:
-            # When dealing with aggregations we append the entry after we
-            # compute the sum. So we use this boolean to decide if
-            # an entry has to be added to the result.
-            has_data = False
+            # Create in-memory list of dictionaries for each exemption approved
+            # for this reporting_period
+            to_add = queryset.filter(
+                submission__reporting_period=reporting_period
+            ).values(
+                'quantity', 'substance__odp', 'submission__party',
+                'substance__group', 'substance__has_critical_uses'
+            )
 
             if aggregates and 'party' in aggregates and 'group' in aggregates:
-                sum_by_party_group = 0
-                for party in parties:
-                    for group in groups:
-                        qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group, type
-                        )
-                        if qs:
-                            sum_by_party_group += calculate_substances_sum(qs)
-                            has_data = True
-                if has_data:
-                    data.append({
-                        'reporting_period': reporting_period,
-                        'party': None,
-                        'group': None,
-                        'quantity': round_half_up(
-                            sum_by_party_group,
-                            2
-                        )
-                    })
+                ret = dict({
+                    'reporting_period': reporting_period,
+                    'party': None,
+                    'group': None,
+                })
+                populate_aggregation(ret, to_add)
+                data.append(ret)
             elif aggregates and 'group' in aggregates:
                 for party in parties:
-                    sum_by_group = 0
-                    for group in groups:
-                        qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group, type
-                        )
-                        if qs:
-                            sum_by_group += calculate_substances_sum(qs)
-                            has_data = True
-                    if has_data:
-                        data.append({
+                    # Do in-memory filtering to avoid yet another DB hit
+                    entries = [
+                        entry for entry in to_add
+                        if entry['submission__party'] == party
+                    ]
+                    if entries:
+                        ret = dict({
                             'reporting_period': reporting_period,
                             'party': party,
                             'group': None,
-                            'quantity': round_half_up(
-                                sum_by_group,
-                                2
-                            )
                         })
+                        populate_aggregation(ret, entries)
+                        data.append(ret)
             elif aggregates and 'party' in aggregates:
                 for group in groups:
-                    sum_by_party = 0
-                    for party in parties:
-                        qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group, type
-                        )
-                        if qs:
-                            sum_by_party += calculate_substances_sum(qs)
-                            has_data = True
-                    if has_data:
-                        data.append({
+                    # Do in-memory filtering to avoid yet another DB hit
+                    entries = [
+                        entry for entry in to_add
+                        if entry['substance__group'] == group
+                    ]
+                    if entries:
+                        ret = dict({
                             'reporting_period': reporting_period,
                             'party': None,
                             'group': group,
-                            'quantity': round_half_up(
-                                sum_by_party,
-                                2
-                            )
                         })
+                        populate_aggregation(ret, entries)
+                        data.append(ret)
             else:
                 for party in parties:
                     for group in groups:
-                        qs = filter_entries_by_period_party_group(
-                            queryset, reporting_period, party, group, type
-                        )
-                        if qs:
-                            data.append({
+                        # Do in-memory filtering to avoid yet another DB hit
+                        entries = [
+                            entry for entry in to_add
+                            if entry['substance__group'] == group and
+                            entry['submission__party'] == party
+                        ]
+                        if entries:
+                            ret = dict({
                                 'reporting_period': reporting_period,
                                 'party': party,
                                 'group': group,
-                                'quantity': round_half_up(
-                                    calculate_substances_sum(qs),
-                                    2
-                                )
                             })
+                            populate_aggregation(ret, entries)
+                            data.append(ret)
 
         results = EssentialCriticalSerializer(data, many=True).data
         return Response(results)
