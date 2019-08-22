@@ -2193,6 +2193,11 @@ class MultilateralFundViewSet(mixins.ListModelMixin, GenericViewSet):
     filterset_class = BaseCountryProfileFilterSet
 
 
+class EssentialCriticalPaginator(PageNumberPagination):
+    page_query_param = "page"
+    page_size_query_param = "page_size"
+
+
 class EssentialCriticalFilterSet(filters.FilterSet):
     party = MultiValueNumberFilter(
         field_name="submission__party", help_text="Filter by party ID"
@@ -2212,17 +2217,34 @@ class EssentialCriticalFilterSet(filters.FilterSet):
     )
 
 
-class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
+class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = ExemptionApproved.objects.all().prefetch_related(
+        'submission__party', 'submission__reporting_period',
+        'substance__group'
+    )
+    serializer_class = ExemptionApprovedSerializer
+
     permission_classes = (IsAuthenticated,)
     filter_backends = (
         filters.DjangoFilterBackend,
+        OrderingFilter,
+        SearchFilter,
     )
     filterset_class = EssentialCriticalFilterSet
+    search_fields = (
+        "submission__party__name", "submission__reporting_period__name"
+    )
+    ordering = (
+        "-submission__reporting_period__start_date",
+        "submission__party",
+        "substance__group"
+    )
+    pagination_class = EssentialCriticalPaginator
 
     def get_queryset(self):
         return ExemptionApproved.objects.all().prefetch_related(
             'submission__party', 'submission__reporting_period',
-            'substance__group', 'substance__odp'
+            'substance__group'
         )
 
     def list(self, request, *args, **kwargs):
@@ -2255,6 +2277,21 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
 
         queryset = self.filter_queryset(self.get_queryset())
 
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else None
+
+        # If there are no aggregations to perform, behave like a normal
+        # ModelViewSet.
+        if not aggregates or ('party' not in aggregates and 'group' not in aggregates):
+            page = self.paginate_queryset(queryset)
+            if page is not None:
+                serializer = self.get_serializer(page, many=True)
+                return self.get_paginated_response(serializer.data)
+
+            serializer = self.get_serializer(queryset, many=True)
+            return Response(serializer.data)
+
+        # Otherwise, need to perform the aggregations
         values_list = queryset.values_list(
             'submission__reporting_period',
             'submission__party',
@@ -2263,9 +2300,6 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
         reporting_periods = set(value[0] for value in values_list)
         parties = set(value[1] for value in values_list)
         groups = set(value[2] for value in values_list)
-
-        aggregates = request.query_params.get('aggregation', None)
-        aggregates = aggregates.split(',') if aggregates else None
 
         data = []
         for reporting_period in reporting_periods:
@@ -2277,8 +2311,10 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
                 'quantity', 'substance__odp', 'submission__party',
                 'substance__group', 'substance__has_critical_uses'
             )
+            if not to_add:
+                continue
 
-            if aggregates and 'party' in aggregates and 'group' in aggregates:
+            if 'party' in aggregates and 'group' in aggregates:
                 ret = dict({
                     'reporting_period': reporting_period,
                     'party': None,
@@ -2286,7 +2322,7 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
                 })
                 populate_aggregation(ret, to_add)
                 data.append(ret)
-            elif aggregates and 'group' in aggregates:
+            elif 'group' in aggregates:
                 for party in parties:
                     # Do in-memory filtering to avoid yet another DB hit
                     entries = [
@@ -2301,7 +2337,8 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
                         })
                         populate_aggregation(ret, entries)
                         data.append(ret)
-            elif aggregates and 'party' in aggregates:
+            elif 'party' in aggregates:
+                print(f'period {reporting_period}; groups {groups}')
                 for group in groups:
                     # Do in-memory filtering to avoid yet another DB hit
                     entries = [
@@ -2316,23 +2353,7 @@ class EssentialCriticalViewSet(ReadOnlyMixin, generics.ListAPIView):
                         })
                         populate_aggregation(ret, entries)
                         data.append(ret)
-            else:
-                for party in parties:
-                    for group in groups:
-                        # Do in-memory filtering to avoid yet another DB hit
-                        entries = [
-                            entry for entry in to_add
-                            if entry['substance__group'] == group and
-                            entry['submission__party'] == party
-                        ]
-                        if entries:
-                            ret = dict({
-                                'reporting_period': reporting_period,
-                                'party': party,
-                                'group': group,
-                            })
-                            populate_aggregation(ret, entries)
-                            data.append(ret)
 
-        results = EssentialCriticalSerializer(data, many=True).data
-        return Response(results)
+        return Response(
+            EssentialCriticalSerializer(data, many=True).data
+        )

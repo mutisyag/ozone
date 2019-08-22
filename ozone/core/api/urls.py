@@ -53,6 +53,8 @@ router.register(r"plans-of-action", views.PlanOfActionViewSet)
 
 router.register(r"change-history", views.SubmissionChangeViewSet)
 
+router.register(r"essencrit", views.EssentialCriticalViewSet)
+
 # Submissions
 submissions_router = routers.SimpleRouter()
 submissions_router.register(r"submissions", views.SubmissionViewSet)
@@ -418,10 +420,5 @@ urlpatterns = (
             views.GetSubmissionFormatsViewSet.as_view(),
             name='get_submission_formats'
         ),
-        path(
-            'essencrit/',
-            views.EssentialCriticalViewSet.as_view(),
-            name='essencrit'
-        )
     ]
 )
