@@ -89,7 +89,6 @@ module.exports = {
     browser.end()
   },
   BU_004: browser => {
-    
     const submissionInfo = {
       reporting_officer: 'test name',
       designation: 'test designation',

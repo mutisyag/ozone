@@ -1,5 +1,7 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable global-require */
 const logMessage = (browser, message, header = false) => {
-  let delimiter = header ? '===============' : '---------------'
+  const delimiter = header ? '===============' : '---------------'
   browser.perform((done) => {
     console.log(delimiter)
     console.log(message)
@@ -35,6 +37,7 @@ const showMouse = (browser) => {
       cursor.style.borderColor = '#000'
     })
 
+    // eslint-disable-next-line no-unused-vars
     document.addEventListener('click', (e) => {
       cursor.style.borderColor = 'red'
     })
@@ -142,8 +145,7 @@ const createSubmission = (browser, obligation, period, party, edit_party = false
     .waitForElementVisible('//div[contains(@class,"create-submission")]//button', 20000)
     .moveToElement('//div[contains(@class,"create-submission")]//button', undefined, undefined)
     .click('//div[contains(@class,"create-submission")]//button')
-    .pause(5000)
-    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 20000)
+    .waitForElementVisible("//div[@class='toasted bulma success' and contains(text(), 'Submission added successfully.')]", 30000, false)
 
   if (back_to_dashboard === true) {
     browser.useXpath()
@@ -361,8 +363,10 @@ const openAsideMenu = (browser, tab) => {
   browser
     .execute('window.scrollTo(0,0)')
     .useXpath()
+    // eslint-disable-next-line no-unused-vars
     .execute(function getContent(data) {
       /* Convert the unicode of toggler icon to string */
+      // eslint-disable-next-line prefer-rest-params
       return `\\u${getComputedStyle(document.querySelector(arguments[0]), ':before').content.replace(/'|"/g, '').charCodeAt(0).toString(16)}`
     }, [aside_menu_toggler], (result) => {
       const closed = '\\ue916'
@@ -765,6 +769,7 @@ const addComment = (browser, tab, comment) => {
     .pause(500)
 }
 
+// eslint-disable-next-line no-unused-vars
 const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_column = 1) => {
   browser
     .useXpath()
