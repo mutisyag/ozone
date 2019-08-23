@@ -7,7 +7,7 @@ import ozone.core.models.file
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0185_remove_acc_exemption_wf_class'),
+        ('core', '0188_party_isactive'),
     ]
 
     operations = [
@@ -18,10 +18,5 @@ class Migration(migrations.Migration):
         migrations.RemoveField(
             model_name='submission',
             name='flag_approved',
-        ),
-        migrations.AlterField(
-            model_name='submissionfile',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory),
         ),
     ]
