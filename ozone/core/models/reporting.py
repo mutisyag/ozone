@@ -646,11 +646,6 @@ class Submission(models.Model):
         help_text="If set to true it means that ozone secretariat "
                   "can fill out only the Approved form directly."
     )
-    flag_approved = models.NullBooleanField(
-        default=None,
-        verbose_name='Approved',
-        help_text="If set to true it means that the nomination was approved."
-    )
 
     # Needed to track state changes and help with custom logic
     tracker = FieldTracker()
@@ -861,9 +856,6 @@ class Submission(models.Model):
             if user.is_secretariat:
                 if self.in_initial_state:
                     return ['flag_emergency',]
-                else:
-                    # Approved flag can only be set after submitting
-                    return ['flag_approved',]
             return []
 
         flags_list = []
@@ -1098,7 +1090,6 @@ class Submission(models.Model):
             "flag_has_reported_e",
             "flag_has_reported_f",
             # Exemption flags
-            "flag_approved",
             "flag_emergency",
             # Remarks, secretariat remarks can be changed
             # at any time, while the party remarks cannot.
@@ -1431,9 +1422,6 @@ class Submission(models.Model):
 
     def has_filled_approved_exemptions(self):
         return self.exemptionapproveds.exists()
-
-    def has_set_approved_flag(self):
-        return self.flag_approved
 
     def is_emergency(self):
         return self.flag_emergency

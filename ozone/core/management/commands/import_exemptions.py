@@ -536,7 +536,6 @@ class Command(BaseCommand):
                 "flag_provisional": False,
                 "flag_valid": True,
                 "flag_superseded": False,
-                "flag_approved": len(approvals) > 0,
                 "created_by_id": self.admin.id,
                 "last_edited_by_id": self.admin.id,
                 "obligation_id": 11,

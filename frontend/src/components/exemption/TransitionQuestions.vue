@@ -14,7 +14,7 @@
         <b-btn class="mr-2" @click="$refs.transition_modal.hide()" variant="danger">
           <span v-translate>Close</span>
         </b-btn>
-        <b-btn :disabled="disableOkButton" @click="doTransition" variant="success">Ok</b-btn>
+        <b-btn @click="doTransition" variant="success">Ok</b-btn>
       </div>
     </b-modal>
   </div>
@@ -29,14 +29,6 @@ export default {
     doTransition() {
       this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true } })
       this.$refs.transition_modal.hide()
-    }
-  },
-  computed: {
-    disableOkButton() {
-      if (this.transition === 'finalize' && this.$store.state.form.tabs.flags.form_fields.flag_approved.selected === null) {
-        return true
-      }
-      return false
     }
   }
 }

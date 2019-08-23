@@ -1385,9 +1385,7 @@ class SubmissionFlagsSerializer(
             ),
             'essencrit': base_fields,
             'other': base_fields,
-            'exemption': (
-                'flag_approved', 'flag_emergency',
-            ),
+            'exemption': ('flag_emergency',),
             'transfer': base_fields,
             'procagent': base_fields,
         }
