@@ -1,7 +1,8 @@
 const setTabFiles = ($gettext) => ({
   files: {
     name: 'files',
-    // endpoint_url: 'files_url',
+    // endpoint_url is not used, but it is needed in order to note introduce another exception in the saving process
+    endpoint_url: 'files_url',
     hideInfoButton: true,
     status: null,
     hasAssideMenu: false,

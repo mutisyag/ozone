@@ -59,6 +59,7 @@ export default {
       this.invalidTabs = []
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
       for (const tab of tabsToValidate) {
+        // DO NOT REMOVE THIS
         console.log(this.$store.getters.multiRowValidation(tab), tab)
         if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
           this.invalidTabs.push(this.form.tabs[tab].name)
