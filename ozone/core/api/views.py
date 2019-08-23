@@ -2249,27 +2249,25 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
             Helper function to populate an aggregation's fields based on a list
             of dictionaries containing key-value pairs for those fields.
             """
+            essential_use_quantities = [
+                (a['quantity'] or 0) * a['substance__odp']
+                for a in to_add
+                if not a['substance__has_critical_uses']
+            ]
             aggregation['quantity_essential'] = round_half_up(
-                sum(
-                    [
-                        (a['quantity'] or 0) * a['substance__odp']
-                        for a in to_add
-                        if not a['substance__has_critical_uses']
-                    ]
-                ),
-                2
-            )
-            aggregation['quantity_critical'] = round_half_up(
-                sum(
-                    [
-                        (a['quantity'] or 0) * a['substance__odp']
-                        for a in to_add
-                        if a['substance__has_critical_uses']
-                    ]
-                ),
-                2
-            )
+                sum(essential_use_quantities), 2
+            ) if essential_use_quantities else None
 
+            critical_use_quantities = [
+                (a['quantity'] or 0) * a['substance__odp']
+                for a in to_add
+                if a['substance__has_critical_uses']
+            ]
+            aggregation['quantity_critical'] = round_half_up(
+                sum(critical_use_quantities), 2
+            ) if critical_use_quantities else None
+
+        # First filter queryset according to params
         queryset = self.filter_queryset(self.get_queryset())
 
         aggregates = request.query_params.get('aggregation', None)
