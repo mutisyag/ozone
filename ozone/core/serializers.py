@@ -2090,5 +2090,38 @@ class EssentialCriticalSerializer(serializers.Serializer):
     reporting_period = serializers.IntegerField()
     party = serializers.IntegerField()
     group = serializers.IntegerField()
-    quantity_essential = serializers.FloatField()
-    quantity_critical = serializers.FloatField()
+    quantity_essential = serializers.FloatField(allow_null=True)
+    quantity_critical = serializers.FloatField(allow_null=True)
+
+
+class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
+    """
+    Used for serializing more detailed information about approved exemptions
+    (to be used when presenting them non-aggregated), keeping with the format
+    of EssentialCriticalSerializer.
+    """
+    reporting_period = serializers.IntegerField(
+        source='submission.reporting_period.id', read_only=True
+    )
+    party = serializers.IntegerField(
+        source='submission.party.id', read_only=True
+    )
+    group = serializers.IntegerField(
+        source='substance.group.id', read_only=True
+    )
+
+    quantity_essential = serializers.SerializerMethodField()
+    quantity_critical = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ExemptionApproved
+        fields = (
+            'reporting_period', 'party', 'group',
+            'substance', 'quantity_essential', 'quantity_critical'
+        )
+
+    def get_quantity_essential(self, obj):
+        return obj.quantity if obj.substance.has_critical_uses else None
+
+    def get_quantity_critical(self, obj):
+        return obj.quantity if (not obj.substance.has_critical_uses) else None

@@ -164,6 +164,7 @@ from ..serializers import (
     ORMReportSerializer,
     MultilateralFundSerializer,
     EssentialCriticalSerializer,
+    EssentialCriticalDetailedSerializer,
 )
 
 
@@ -2216,7 +2217,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         'submission__party', 'submission__reporting_period',
         'substance__group'
     )
-    serializer_class = ExemptionApprovedSerializer
+    serializer_class = EssentialCriticalDetailedSerializer
 
     permission_classes = (IsAuthenticated,)
     filter_backends = (
