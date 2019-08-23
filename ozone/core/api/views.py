@@ -2202,15 +2202,9 @@ class EssentialCriticalFilterSet(filters.FilterSet):
     party = MultiValueNumberFilter(
         field_name="submission__party", help_text="Filter by party ID"
     )
-    start_reporting_period = filters.CharFilter(
-        field_name="submission__reporting_period__name",
-        lookup_expr="gte",
-        help_text="Filter by reporting period name (e.g. 2010)"
-    )
-    end_reporting_period = filters.CharFilter(
-        field_name="submission__reporting_period__name",
-        lookup_expr="lte",
-        help_text="Filter by reporting period name (e.g. 2010)"
+    reporting_period = MultiValueNumberFilter(
+        "submission__reporting_period",
+        help_text="Filter by Reporting Period ID"
     )
     group = MultiValueNumberFilter(
         field_name="substance__group", help_text="Filter by Annex Group ID"
