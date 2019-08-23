@@ -1927,7 +1927,7 @@ class SubmissionHistorySerializer(serializers.ModelSerializer):
         return obj._current_state
 
     def get_user(self, obj):
-        return obj.history_user.username
+        return obj.history_user.username if obj.history_user else None
 
 
 class AuthTokenByValueSerializer(serializers.ModelSerializer):
