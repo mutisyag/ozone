@@ -241,7 +241,7 @@ export default {
 
   methods: {
     bulkRemove(indexList) {
-      this.$store.commit('removeBulkFields', {
+      this.$store.dispatch('removeBulkFields', {
         tab: this.tabName,
         indexList,
         $gettext: this.$gettext

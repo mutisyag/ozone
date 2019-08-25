@@ -227,6 +227,7 @@ const getSubmissionDefaultValues = () => fetch('default-values/')
 
 const uploadFile = (file, submissionId, onProgressCallback) => new Promise(async (resolve, reject) => {
   const responseToken = await post(`submissions/${submissionId}/token/`)
+  console.log(filesURL)
   const upload = new tus.Upload(file, {
     endpoint: filesURL,
     metadata: {

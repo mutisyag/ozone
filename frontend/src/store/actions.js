@@ -344,6 +344,14 @@ const actions = {
     commit('removeField', { tab, index })
   },
 
+  async removeBulkFields({ dispatch, commit }, { tab, indexList, $gettext }) {
+    const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the selected rows?', $gettext })
+    if (!confirmed) {
+      return confirmed
+    }
+    commit('removeBulkFields', { tab, indexList })
+  },
+
   async removeSubmission({ dispatch }, { submissionUrl, $gettext }) {
     const confirmed = await dispatch('openConfirmModal', { title: 'Please confirm', description: 'Are you sure you want to delete the submission? All data will be deleted irreversibly.', $gettext })
     if (!confirmed) {
