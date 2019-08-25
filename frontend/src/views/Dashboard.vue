@@ -123,6 +123,7 @@
             :sort-by.sync="dataEntryTable.sorting.sortBy"
             :sort-desc.sync="dataEntryTable.sorting.sortDesc"
             :sort-direction="dataEntryTable.sorting.sortDirection"
+            :sort-compare="sortCompare"
             ref="dataEntryTable"
             @filtered="onFiltered"
           >
@@ -574,6 +575,23 @@ export default {
   },
 
   methods: {
+    sortCompare(a, b, key, direction) {
+      const placeholder = direction ? '1000' : '3000'
+      if (key === 'updated_at') {
+        const first = a[key] !== undefined ? new Date(a[key]) : new Date(placeholder)
+        const second = b[key] !== undefined ? new Date(b[key]) : new Date(placeholder)
+        if (first > second) {
+          return 1
+        }
+        if (first < second) {
+          return -1
+        }
+        if (first === second) {
+          return 0
+        }
+      }
+      return null
+    },
 
     getStartDateOfYear(year) {
       const currentYear = year.split('-')
