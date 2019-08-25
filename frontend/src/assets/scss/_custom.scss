@@ -1823,3 +1823,10 @@ body.aside-menu-off-canvas .aside-menu {
     width: auto!important;
   }
 }
+
+.table-title {
+  margin-bottom: .5rem;
+  h6 {
+    flex-grow: 1;
+  }
+}
