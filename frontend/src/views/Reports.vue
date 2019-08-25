@@ -19,6 +19,7 @@
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
+                :hide-selected="true"
                 label="text"
                 v-model="selected.reports"
                 :options="reports"
@@ -30,6 +31,7 @@
               <multiselect
                 :placeholder="$gettext('Select option')"
                 trackBy="value"
+                :hide-selected="true"
                 :multiple="true"
                 label="text"
                 v-model="selected.periods"
@@ -44,6 +46,7 @@
                 trackBy="value"
                 label="text"
                 :multiple="true"
+                :hide-selected="true"
                 v-model="selected.parties"
                 :options="parties"
               />

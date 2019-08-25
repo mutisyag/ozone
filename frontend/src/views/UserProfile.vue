@@ -14,6 +14,7 @@
         <multiselect
           trackBy="value"
           label="text"
+          :hide-selected="true"
           v-model="userProfile.language"
           :options="availableLanguages"
         />

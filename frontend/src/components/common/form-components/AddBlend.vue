@@ -118,6 +118,7 @@
             @tag="addTag($event,substance)"
             :taggable="true"
             trackBy="value"
+            :hide-selected="true"
             :close-on-select="true"
             :tag-placeholder="$gettext('Press enter to use a new substance')"
             :placeholder="$gettext('Controlled or new substance')"

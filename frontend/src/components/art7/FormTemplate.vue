@@ -716,6 +716,7 @@
               trackBy="value"
               :disabled="!$store.getters.can_edit_data"
               label="text"
+              :hide-selected="true"
               :placeholder="$gettext('Select substance')"
               :value="parseInt(modal_data.field.substance.selected)"
               :options="tab_data.substances"

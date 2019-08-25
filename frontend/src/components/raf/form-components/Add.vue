@@ -15,6 +15,7 @@
           @input="prepareSubstances"
           :multiple="true"
           label="text"
+          :hide-selected="true"
           :close-on-select="true"
           trackBy="value"
           v-model="selected_groups.selected"

@@ -141,6 +141,7 @@
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
               :disabled="!$store.getters.can_edit_data"
+              :hide-selected="true"
               label="text"
               :placeholder="$gettext('Select substance')"
               :value="parseInt(modal_data.field.substance.selected)"

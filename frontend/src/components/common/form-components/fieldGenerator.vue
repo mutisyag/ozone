@@ -51,6 +51,7 @@
         :placeholder="$gettext('Select option')"
         :multiple="false"
         label="text"
+        :hide-selected="true"
         trackBy="value"
         @input="updateFormField($event)"
         :disabled="disabled"
