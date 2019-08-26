@@ -2116,7 +2116,7 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExemptionApproved
         fields = (
-            'reporting_period', 'party', 'group',
+            'reporting_period', 'party', 'group', 'decision_approved',
             'substance', 'quantity_essential', 'quantity_critical'
         )
 
