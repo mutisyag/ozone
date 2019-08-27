@@ -594,13 +594,17 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             periods = set(
                 queryset.values_list('reporting_period', flat=True)
             )
+            all_values = queryset.values(
+                *fields, 'party', 'group', 'reporting_period'
+            )
             values = []
             for period in periods:
                 # Use a list of dictionaries for in-memory storage to optimize
                 # DB queries.
-                values_list = queryset.filter(
-                    reporting_period=period
-                ).values(*fields, 'party', 'group', 'reporting_period')
+                values_list = [
+                    value for value in all_values
+                    if value['reporting_period'] == period
+                ]
                 if 'party' in aggregates and 'group' in aggregates:
                     # Sum values for all groups and all parties for this
                     # reporting period
@@ -2295,15 +2299,17 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         groups = set(value[2] for value in values_list)
 
         data = []
+        all_values = queryset.values(
+            'quantity', 'submission__party', 'submission__reporting_period',
+            'substance__odp', 'substance__group', 'substance__has_critical_uses'
+        )
         for reporting_period in reporting_periods:
             # Create in-memory list of dictionaries for each exemption approved
             # for this reporting_period
-            to_add = queryset.filter(
-                submission__reporting_period=reporting_period
-            ).values(
-                'quantity', 'substance__odp', 'submission__party',
-                'substance__group', 'substance__has_critical_uses'
-            )
+            to_add = [
+                value for value in all_values
+                if value['submission__reporting_period'] == reporting_period
+            ]
             if not to_add:
                 continue
 
@@ -2331,7 +2337,6 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                         populate_aggregation(ret, entries)
                         data.append(ret)
             elif 'party' in aggregates:
-                print(f'period {reporting_period}; groups {groups}')
                 for group in groups:
                     # Do in-memory filtering to avoid yet another DB hit
                     entries = [
