@@ -174,7 +174,7 @@ from .export_pdf import (
     export_impexp_new_rec,
 )
 
-from ..models.utils import round_half_up
+from ..models.utils import round_decimal_half_up
 
 User = get_user_model()
 
@@ -562,7 +562,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         aggregation,
                         field,
                         None if any([a[field] is None for a in to_add]) else
-                        round_half_up(
+                        round_decimal_half_up(
                             sum([a[field] for a in to_add]),
                             2
                         )
@@ -572,7 +572,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         aggregation,
                         field,
                         None if all([a[field] is None for a in to_add]) else
-                        round_half_up(
+                        round_decimal_half_up(
                             sum([a[field] or 0 for a in to_add]),
                             2
                         )
@@ -2258,7 +2258,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                 for a in to_add
                 if not a['substance__has_critical_uses']
             ]
-            aggregation['quantity_essential'] = round_half_up(
+            aggregation['quantity_essential'] = round_decimal_half_up(
                 sum(essential_use_quantities), 2
             ) if essential_use_quantities else None
 
@@ -2267,7 +2267,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                 for a in to_add
                 if a['substance__has_critical_uses']
             ]
-            aggregation['quantity_critical'] = round_half_up(
+            aggregation['quantity_critical'] = round_decimal_half_up(
                 sum(critical_use_quantities), 2
             ) if critical_use_quantities else None
 

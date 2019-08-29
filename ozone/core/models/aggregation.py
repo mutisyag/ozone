@@ -9,7 +9,7 @@ from django.utils.functional import cached_property
 from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group, Substance
-from .utils import round_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
+from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .control import Limit, LimitTypes, Baseline, BaselineType
 
 
@@ -312,7 +312,7 @@ class BaseProdCons(models.Model):
             field_value = getattr(self, field_name)
             if field_value is not None and field_value != '':
                 setattr(
-                    self, field_name, round_half_up(field_value, self.decimals)
+                    self, field_name, round_decimal_half_up(field_value, self.decimals)
                 )
 
     def calculate_totals(self):

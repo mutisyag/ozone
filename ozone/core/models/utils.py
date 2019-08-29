@@ -33,7 +33,7 @@ def model_to_dict(instance, fields=None, exclude=None):
     return attributes
 
 
-def round_half_up(x, decimals=0):
+def round_float_half_up(x, decimals=0):
     # Be aware that some floats are represented with extra decimals, e.g.
     # 9.075 => Decimal('9.074999999999999289457264239899814128875732421875')
     # 1171.545 => Decimal('1171.545000000000072759576141834259033203125')
@@ -43,6 +43,10 @@ def round_half_up(x, decimals=0):
     return float(round(decimal.Decimal(str(x)), decimals))
 
 
+def round_decimal_half_up(x, decimals=0):
+    decimal.getcontext().rounding = decimal.ROUND_HALF_UP
+    return round(x, decimals)
+
+
 def decimal_zero_if_none(value):
-    return decimal.Decimal(repr(value)) if value is not None \
-        else decimal.Decimal(0.0)
+    return value if value is not None else decimal.Decimal(0.0)
