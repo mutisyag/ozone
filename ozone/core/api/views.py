@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models import FloatField
+from django.db.models import DecimalField
 from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
@@ -586,7 +586,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         if aggregates:
             fields = [
                 f.name for f in ProdCons._meta.fields
-                if isinstance(f, FloatField)
+                if isinstance(f, DecimalField)
             ]
             # Using `distinct()` does not work because this queryset is
             # ordered by fields from related models, which makes similar
