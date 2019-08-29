@@ -119,10 +119,10 @@ class Transfer(models.Model):
                      decimal_zero_if_none(potential)
             if self.transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
-                aggregation.prod_transfer = float(existing_value + to_add)
+                aggregation.prod_transfer = existing_value + to_add
             elif self.transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
-                aggregation.cons_transfer = float(existing_value + to_add)
+                aggregation.cons_transfer = existing_value + to_add
 
             # Populate submissions list
             obligation_type = ObligationTypes.TRANSFER.value
@@ -183,10 +183,10 @@ class Transfer(models.Model):
             )
             if transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
-                aggregation.prod_transfer = float(existing_value - to_subtract)
+                aggregation.prod_transfer = existing_value - to_subtract
             elif transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
-                aggregation.cons_transfer = float(existing_value - to_subtract)
+                aggregation.cons_transfer = existing_value - to_subtract
 
             # Clear submissions from list
             obligation_type = ObligationTypes.TRANSFER.value

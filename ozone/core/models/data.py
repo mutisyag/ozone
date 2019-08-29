@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models, transaction
@@ -197,13 +199,13 @@ class AggregationMixin:
         ).values(potential_field, *field_names)
 
         return {
-            field_name: float(sum(
+            field_name: sum(
                 [
                     decimal_zero_if_none(value[field_name]) *
                     decimal_zero_if_none(value[potential_field])
                     for value in fields_values
                 ]
-            ))
+            )
             for field_name in field_names
         }
 
@@ -233,7 +235,7 @@ class AggregationMixin:
                 value = decimal_zero_if_none(getattr(aggregation, aggr_field))
                 model_value = decimal_zero_if_none(values[model_field])
                 value += model_value
-                setattr(aggregation, aggr_field, float(value))
+                setattr(aggregation, aggr_field, value)
 
             # This will automatically trigger the calculation of computed
             # values
@@ -261,7 +263,7 @@ class AggregationMixin:
                 )
                 value = decimal_zero_if_none(getattr(aggregation, aggr_field))
                 value += model_value
-                setattr(aggregation, aggr_field, float(value))
+                setattr(aggregation, aggr_field, value)
 
             obligation_type = submission.obligation.obligation_type
             if obligation_type in aggregation.submissions:
@@ -296,7 +298,7 @@ class AggregationMixin:
 
             # Set all aggregation fields coming from this model to zero
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                setattr(aggregation, aggr_field, 0.0)
+                setattr(aggregation, aggr_field, Decimal('0.0'))
 
             # If this has left the aggregation empty, delete it; else save
             if aggregation.is_empty():
@@ -320,7 +322,7 @@ class AggregationMixin:
 
             # Set all aggregation fields coming from this model to zero
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
-                setattr(aggregation, aggr_field, 0.0)
+                setattr(aggregation, aggr_field, Decimal('0.0'))
 
             # Clear this submission from the list of submissions for this aggr
             obligation_type = submission.obligation.obligation_type
@@ -370,7 +372,7 @@ class AggregationMixin:
                 value = decimal_zero_if_none(getattr(aggregation, aggr_field))
                 model_value = decimal_zero_if_none(values[model_field])
                 value += model_value
-                setattr(aggregation, aggr_field, float(value))
+                setattr(aggregation, aggr_field, value)
 
             # Populate limits and baselines; calculate totals
             aggregation.populate_limits_and_baselines()
@@ -409,7 +411,7 @@ class AggregationMixin:
                     getattr(entry, model_field, None)
                 )
                 value += model_value
-                setattr(aggregation, aggr_field, float(value))
+                setattr(aggregation, aggr_field, value)
 
             aggregation.calculate_totals()
 

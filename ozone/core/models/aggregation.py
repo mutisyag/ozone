@@ -51,132 +51,132 @@ class BaseProdCons(models.Model):
     # Production
     production_all_new = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_feedstock = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_essential_uses = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_laboratory_analytical_uses = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_article_5 = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_quarantine = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     production_process_agent = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Destruction
     destroyed = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Imports
     import_new = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_recovered = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_feedstock = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_essential_uses = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_laboratory_uses = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_quarantine = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     import_process_agent = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Exports
     export_new = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     export_recovered = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     export_feedstock = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     export_essential_uses = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     export_quarantine = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     export_process_agent = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Non-party: these values are an aggregation of art7 non-party trade
     # ([import/export]_[new/recovered])
     non_party_import = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     non_party_export = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Transfers
     prod_transfer = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
     cons_transfer = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     # Totals computed based on the above fields.
@@ -223,7 +223,8 @@ class BaseProdCons(models.Model):
     @classmethod
     def get_decimals(cls, period, group, party):
         """
-        Returns the number of decimals according to the following rounding rules.
+        Returns the number of decimals according to the following
+        rounding rules.
         """
 
         special_cases_2009 = [
@@ -312,7 +313,8 @@ class BaseProdCons(models.Model):
             field_value = getattr(self, field_name)
             if field_value is not None and field_value != '':
                 setattr(
-                    self, field_name, round_decimal_half_up(field_value, self.decimals)
+                    self, field_name,
+                    round_decimal_half_up(field_value, self.decimals)
                 )
 
     def calculate_totals(self):

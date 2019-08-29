@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator
 from django.db import models
@@ -56,7 +58,7 @@ class PlanOfAction(models.Model):
 
     benchmark = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        default=0.0, validators=[MinValueValidator(0.0)]
+        default=Decimal('0.0'), validators=[MinValueValidator(0.0)]
     )
 
     annex_group_description = models.CharField(
