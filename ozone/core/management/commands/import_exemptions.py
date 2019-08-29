@@ -1,10 +1,9 @@
 import logging
+from openpyxl import load_workbook
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
 from django.utils.timezone import make_aware
-
-from openpyxl import load_workbook
 
 from ozone.core.models import (
     Party,
@@ -21,6 +20,7 @@ from ozone.core.models import (
     CriticalUseCategory,
     ApprovedCriticalUse,
 )
+from ozone.core.models.utils import float_to_decimal_zero_if_none
 
 
 User = get_user_model()
@@ -585,22 +585,28 @@ class Command(BaseCommand):
                     "substance_id": substance_id,
                     # ImpSrcCntryID will be added into `imports` table
                     "quantity_exempted": sum(
-                        e["Exempted"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["Exempted"])
+                        for e in raf_entries
                     ),
                     "quantity_production": sum(
-                        e["Produced"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["Produced"])
+                        for e in raf_entries
                     ),
                     "on_hand_start_year": sum(
-                        e["OpenBal"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["OpenBal"])
+                        for e in raf_entries
                     ),
                     "quantity_used": sum(
-                        e["EssenUse"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["EssenUse"])
+                        for e in raf_entries
                     ),
                     "quantity_exported": sum(
-                        e["Exported"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["Exported"])
+                        for e in raf_entries
                     ),
                     "quantity_destroyed": sum(
-                        e["Destroyed"] or 0 for e in raf_entries
+                        float_to_decimal_zero_if_none(e["Destroyed"])
+                        for e in raf_entries
                     ),
                     "is_emergency": pk[1],
                     "remarks_os": self.get_raf_remarks(raf_entries),
@@ -645,7 +651,7 @@ class Command(BaseCommand):
                     party = None
                 raf_imports.append({
                     "party": party,
-                    "quantity": entry["Imported"]
+                    "quantity": float_to_decimal_zero_if_none(entry["Imported"])
                 })
         return raf_imports
 
@@ -668,7 +674,7 @@ class Command(BaseCommand):
                 category = None
 
             use_categories.append({
-                'quantity': entry["CU_Amount"],
+                'quantity': float_to_decimal_zero_if_none(entry["CU_Amount"]),
                 'critical_use_category': category,
             })
 
@@ -704,7 +710,7 @@ class Command(BaseCommand):
 
             nominations.append({
                 "substance_id": substance_id,
-                "quantity": row['SubmitAmt'],
+                "quantity": float_to_decimal_zero_if_none(row['SubmitAmt']),
                 "remarks_os": row['Remark'] if row['Remark'] else ""
             })
 
@@ -730,8 +736,10 @@ class Command(BaseCommand):
             approved_exemptions.append({
                 "substance_id": substance_id,
                 "decision_approved": row['ApprDec'],
-                "approved_teap_amount": row['ApprTEAP'],
-                "quantity": row["ApprAmt"],
+                "approved_teap_amount": float_to_decimal_zero_if_none(
+                    row['ApprTEAP']
+                ),
+                "quantity": float_to_decimal_zero_if_none(row["ApprAmt"]),
                 "remarks_os": row['Remark'] if row['Remark'] else "",
                 "is_emergency": True if row["IsEmergency"] else False
             })
@@ -750,7 +758,7 @@ class Command(BaseCommand):
             approved_critical_uses.append({
                 "decision": row['ApprDec'],
                 "category_name": row['Categories of permitted critical uses'],
-                "quantity": row["ApprAmt"],
+                "quantity": float_to_decimal_zero_if_none(row["ApprAmt"]),
             })
 
         return approved_critical_uses
