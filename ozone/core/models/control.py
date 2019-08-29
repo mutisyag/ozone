@@ -6,6 +6,7 @@ from django.db import models
 from .party import Party, PartyType
 from .legal import ReportingPeriod
 from .substance import Group
+from .utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 
 
 __all__ = [
@@ -77,7 +78,9 @@ class ControlMeasure(models.Model):
     # This can be blank. When not present, it is valid until the end of time
     end_date = models.DateField(blank=True, null=True)
 
-    allowed = models.FloatField(
+    # This is a percentage
+    allowed = models.DecimalField(
+        max_digits=6, decimal_places=5,
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
 
@@ -101,7 +104,8 @@ class Baseline(models.Model):
         help_text="Baseline type: A5/NA5 Prod/Cons or BDN"
     )
 
-    baseline = models.FloatField(
+    baseline = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -130,7 +134,8 @@ class Limit(models.Model):
         help_text="Limit types can be Production, Consumption and BDN"
     )
 
-    limit = models.FloatField(
+    limit = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 

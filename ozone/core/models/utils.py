@@ -2,6 +2,11 @@ import enum
 import decimal
 
 
+# Default values for decimal
+DECIMAL_FIELD_DIGITS = 25
+DECIMAL_FIELD_DECIMALS = 15
+
+
 @enum.unique
 class RatificationTypes(enum.Enum):
     """

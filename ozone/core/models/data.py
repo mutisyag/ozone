@@ -10,7 +10,13 @@ from .party import Party
 from .reporting import ModifyPreventionMixin, Submission
 from .substance import BlendComponent, Substance, Blend
 from .aggregation import ProdCons, ProdConsMT
-from .utils import model_to_dict, decimal_zero_if_none
+from .utils import (
+    model_to_dict,
+    decimal_zero_if_none,
+    DECIMAL_FIELD_DIGITS,
+    DECIMAL_FIELD_DECIMALS
+)
+
 
 __all__ = [
     'Article7Questionnaire',
@@ -488,17 +494,21 @@ class BaseImportExportReport(models.Model):
     This will be used as a base for data reporting models on import and export.
     """
 
-    quantity_total_new = models.FloatField(
+    quantity_total_new = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_total_recovered = models.FloatField(
+    quantity_total_recovered = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_feedstock = models.FloatField(
+    quantity_feedstock = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_polyols = models.FloatField(
+    quantity_polyols = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_polyols = models.CharField(
@@ -517,43 +527,50 @@ class BaseUses(models.Model):
     substances.
     """
 
-    quantity_critical_uses = models.FloatField(
+    quantity_critical_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_critical_uses = models.CharField(max_length=512, blank=True)
 
-    quantity_essential_uses = models.FloatField(
+    quantity_essential_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_essential_uses = models.CharField(max_length=512, blank=True)
 
-    quantity_high_ambient_temperature = models.FloatField(
+    quantity_high_ambient_temperature = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_high_ambient_temperature = models.CharField(
         max_length=512, blank=True
     )
 
-    quantity_laboratory_analytical_uses = models.FloatField(
+    quantity_laboratory_analytical_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_laboratory_analytical_uses = models.CharField(
         max_length=512, blank=True
     )
 
-    quantity_process_agent_uses = models.FloatField(
+    quantity_process_agent_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_process_agent_uses = models.CharField(max_length=512, blank=True)
 
-    quantity_quarantine_pre_shipment = models.FloatField(
+    quantity_quarantine_pre_shipment = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_quarantine_pre_shipment = models.CharField(
         max_length=512, blank=True
     )
 
-    quantity_other_uses = models.FloatField(
+    quantity_other_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     decision_other_uses = models.CharField(
@@ -747,18 +764,22 @@ class Article7Production(
 
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
-    quantity_total_produced = models.FloatField(
+    quantity_total_produced = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_feedstock = models.FloatField(
+    quantity_feedstock = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_for_destruction = models.FloatField(
+    quantity_for_destruction = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # "Production for supply to Article 5 countries in accordance
     # with Articles 2A‑2H and 5"
-    quantity_article_5 = models.FloatField(
+    quantity_article_5 = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -790,7 +811,8 @@ class Article7Destruction(
         'quantity_destroyed': 'destroyed',
     }
 
-    quantity_destroyed = models.FloatField(
+    quantity_destroyed = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -829,16 +851,20 @@ class Article7NonPartyTrade(
         Party, blank=True, null=True, on_delete=models.PROTECT
     )
 
-    quantity_import_new = models.FloatField(
+    quantity_import_new = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_import_recovered = models.FloatField(
+    quantity_import_recovered = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_export_new = models.FloatField(
+    quantity_export_new = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
-    quantity_export_recovered = models.FloatField(
+    quantity_export_recovered = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -899,31 +925,38 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
     facility_name = models.CharField(max_length=256)
 
     # Total amount generated
-    quantity_generated = models.FloatField(
+    quantity_generated = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount generated and captured for all uses
-    quantity_captured_all_uses = models.FloatField(
+    quantity_captured_all_uses = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount generated and captured for feedstock use in your country
-    quantity_captured_feedstock = models.FloatField(
+    quantity_captured_feedstock = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount generated and captured for destruction
-    quantity_captured_for_destruction = models.FloatField(
+    quantity_captured_for_destruction = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount used for feedstock without prior capture
-    quantity_feedstock = models.FloatField(
+    quantity_feedstock = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount destroyed without prior capture
-    quantity_destroyed = models.FloatField(
+    quantity_destroyed = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
     # Amount of generated emissions
-    quantity_emitted = models.FloatField(
+    quantity_emitted = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)]
     )
 
@@ -935,15 +968,18 @@ class Article7Emission(ModifyPreventionMixin, BaseReport):
 
 class BaseHighAmbientTemperature(models.Model):
 
-    quantity_msac = models.FloatField(
+    quantity_msac = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True,
         help_text="Used in multi-split air conditioners"
     )
-    quantity_sdac = models.FloatField(
+    quantity_sdac = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True,
         help_text="Used in split ducted air conditioners"
     )
-    quantity_dcpac = models.FloatField(
+    quantity_dcpac = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True,
         help_text="Used in ducted commercial packaged air conditioners",
     )
@@ -1021,27 +1057,33 @@ class RAFReport(ModifyPreventionMixin, BaseReport):
     # criticality is inferred from substance, only emergency flag is needed
     is_emergency = models.BooleanField(default=False)
 
-    quantity_exempted = models.FloatField(
+    quantity_exempted = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_production = models.FloatField(
+    quantity_production = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_used = models.FloatField(
+    quantity_used = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_exported = models.FloatField(
+    quantity_exported = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    quantity_destroyed = models.FloatField(
+    quantity_destroyed = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    on_hand_start_year = models.FloatField(
+    on_hand_start_year = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -1106,7 +1148,8 @@ class RAFReportUseCategory(ModifyPreventionMixin, models.Model):
         on_delete=models.CASCADE
     )
 
-    quantity = models.FloatField(
+    quantity = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
@@ -1160,7 +1203,10 @@ class RAFImport(ModifyPreventionMixin, models.Model):
     )
 
     # This needs to have a quantity specified
-    quantity = models.FloatField(validators=[MinValueValidator(0.0)])
+    quantity = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        validators=[MinValueValidator(0.0)]
+    )
 
     tracker = FieldTracker()
 

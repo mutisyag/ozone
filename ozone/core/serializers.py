@@ -71,6 +71,7 @@ from .models import (
     ORMReport,
     MultilateralFund,
 )
+from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 
 User = get_user_model()
 
@@ -2090,8 +2091,14 @@ class EssentialCriticalSerializer(serializers.Serializer):
     reporting_period = serializers.IntegerField()
     party = serializers.IntegerField()
     group = serializers.IntegerField()
-    quantity_essential = serializers.FloatField(allow_null=True)
-    quantity_critical = serializers.FloatField(allow_null=True)
+    quantity_essential = serializers.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        allow_null=True
+    )
+    quantity_critical = serializers.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        allow_null=True
+    )
 
 
 class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):

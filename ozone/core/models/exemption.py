@@ -5,6 +5,7 @@ from django.db import models
 
 from .reporting import Submission
 from .substance import Substance
+from .utils import DECIMAL_FIELD_DIGITS, DECIMAL_FIELD_DECIMALS
 
 
 __all__ = [
@@ -23,7 +24,8 @@ class BaseExemption(models.Model):
 
     substance = models.ForeignKey(Substance, on_delete=models.PROTECT)
 
-    quantity = models.FloatField(
+    quantity = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)],
         blank=True, null=True
     )
@@ -64,14 +66,16 @@ class ExemptionApprovedManager(models.Manager):
 
 class ExemptionApproved(BaseExemption):
     """
-    Filled by a Secretariat after a Meeting of the Parties (or an emergency decision).
+    Filled by a Secretariat after a Meeting of the Parties
+    (or an emergency decision).
     """
 
     objects = ExemptionApprovedManager()
 
     decision_approved = models.CharField(max_length=256, blank=True)
 
-    approved_teap_amount = models.FloatField(
+    approved_teap_amount = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)],
         blank=True, null=True
     )
@@ -147,7 +151,8 @@ class ApprovedCriticalUse(models.Model):
         on_delete=models.CASCADE
     )
 
-    quantity = models.FloatField(
+    quantity = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)],
         blank=True, null=True
     )

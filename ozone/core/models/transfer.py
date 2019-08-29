@@ -8,7 +8,9 @@ from .legal import ReportingPeriod
 from .party import Party
 from .reporting import Submission, ObligationTypes
 from .substance import Substance
-from .utils import decimal_zero_if_none
+from .utils import (
+    decimal_zero_if_none, DECIMAL_FIELD_DIGITS, DECIMAL_FIELD_DECIMALS
+)
 
 from model_utils import FieldTracker
 
@@ -47,7 +49,10 @@ class Transfer(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    transferred_amount = models.FloatField(validators=[MinValueValidator(0.0)])
+    transferred_amount = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        validators=[MinValueValidator(0.0)]
+    )
 
     is_basic_domestic_need = models.BooleanField(default=False)
 

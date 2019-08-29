@@ -7,6 +7,7 @@ from .legal import ReportingPeriod
 from .meeting import Decision
 from .party import Party
 from .substance import Group
+from .utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 
 
 __all__ = [
@@ -53,7 +54,8 @@ class PlanOfAction(models.Model):
         Group, related_name='plans_of_action', on_delete=models.PROTECT
     )
 
-    benchmark = models.FloatField(
+    benchmark = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         default=0.0, validators=[MinValueValidator(0.0)]
     )
 
