@@ -14,6 +14,7 @@ from ozone.core.models import (
     Transfer,
     User,
 )
+from ozone.core.models.utils import float_to_decimal_zero_if_none
 
 logger = logging.getLogger(__name__)
 
@@ -320,7 +321,9 @@ class Command(BaseCommand):
             "reporting_period_id": reporting_period.id,
             "substance_id": substance.id,
             "transfer_type": "P",
-            "transferred_amount": transfer["ProdTransfer"],
+            "transferred_amount": float_to_decimal_zero_if_none(
+                transfer["ProdTransfer"]
+            ),
             "is_basic_domestic_need": transfer['IsBDN'],
             "source_party_id": source_party.id,
             "destination_party_id": destination_party.id,
