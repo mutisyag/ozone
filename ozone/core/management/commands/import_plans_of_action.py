@@ -16,6 +16,7 @@ from ozone.core.models import (
     PlanOfActionDecision,
     PlanOfAction,
 )
+from ozone.core.models.utils import float_to_decimal_zero_if_none
 
 
 User = get_user_model()
@@ -176,7 +177,7 @@ class Command(BaseCommand):
             "party_id": self.parties[row["CntryID"]],
             "reporting_period_id": self.periods[row["PeriodID"]],
             "group_id": self.groups[row["Anx"] + row["Grp"]],
-            "benchmark": row["Benchmark"],
+            "benchmark": float_to_decimal_zero_if_none(row["Benchmark"]),
             "annex_group_description": (
                 row["AnxGrpDescription"] if row['AnxGrpDescription'] else '')
             ,
