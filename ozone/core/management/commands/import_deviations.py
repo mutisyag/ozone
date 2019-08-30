@@ -13,7 +13,7 @@ from ozone.core.models import (
     DeviationType,
     DeviationSource,
 )
-from ozone.core.models.utils import float_to_decimal_zero_if_none
+from ozone.core.models.utils import float_to_decimal
 
 User = get_user_model()
 
@@ -138,8 +138,8 @@ class Command(BaseCommand):
             "deviation_type_id": DeviationType.objects.filter(
                 deviation_type_id=row["DeviationTypeID"]
             ).first().id,
-            "production": float_to_decimal_zero_if_none(row["Production"]),
-            "consumption": float_to_decimal_zero_if_none(row["Consumption"]),
+            "production": float_to_decimal(row["Production"]),
+            "consumption": float_to_decimal(row["Consumption"]),
             "remark": row["Remark"] if row["Remark"] else "",
         }
 

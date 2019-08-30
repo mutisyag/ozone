@@ -20,7 +20,10 @@ from ozone.core.models import (
     CriticalUseCategory,
     ApprovedCriticalUse,
 )
-from ozone.core.models.utils import float_to_decimal_zero_if_none
+from ozone.core.models.utils import (
+    float_to_decimal,
+    float_to_decimal_zero_if_none
+)
 
 
 User = get_user_model()
@@ -674,7 +677,7 @@ class Command(BaseCommand):
                 category = None
 
             use_categories.append({
-                'quantity': float_to_decimal_zero_if_none(entry["CU_Amount"]),
+                'quantity': float_to_decimal(entry["CU_Amount"]),
                 'critical_use_category': category,
             })
 
@@ -710,7 +713,7 @@ class Command(BaseCommand):
 
             nominations.append({
                 "substance_id": substance_id,
-                "quantity": float_to_decimal_zero_if_none(row['SubmitAmt']),
+                "quantity": float_to_decimal(row['SubmitAmt']),
                 "remarks_os": row['Remark'] if row['Remark'] else ""
             })
 
@@ -736,10 +739,8 @@ class Command(BaseCommand):
             approved_exemptions.append({
                 "substance_id": substance_id,
                 "decision_approved": row['ApprDec'],
-                "approved_teap_amount": float_to_decimal_zero_if_none(
-                    row['ApprTEAP']
-                ),
-                "quantity": float_to_decimal_zero_if_none(row["ApprAmt"]),
+                "approved_teap_amount": float_to_decimal(row['ApprTEAP']),
+                "quantity": float_to_decimal(row["ApprAmt"]),
                 "remarks_os": row['Remark'] if row['Remark'] else "",
                 "is_emergency": True if row["IsEmergency"] else False
             })
@@ -758,7 +759,7 @@ class Command(BaseCommand):
             approved_critical_uses.append({
                 "decision": row['ApprDec'],
                 "category_name": row['Categories of permitted critical uses'],
-                "quantity": float_to_decimal_zero_if_none(row["ApprAmt"]),
+                "quantity": float_to_decimal(row["ApprAmt"]),
             })
 
         return approved_critical_uses
