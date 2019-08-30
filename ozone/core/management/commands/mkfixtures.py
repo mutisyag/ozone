@@ -11,7 +11,7 @@ from openpyxl import load_workbook
 from ozone.core.models.exemption import CriticalUseCategory
 from ozone.core.models.substance import Blend
 from ozone.core.models.utils import RatificationTypes
-from ozone.core.models.utils import round_decimal_half_up
+from ozone.core.models.utils import round_float_half_up
 
 
 class Command(BaseCommand):
@@ -450,7 +450,9 @@ class Command(BaseCommand):
         f['number_of_isomers'] = row['Number of Isomers']
         f['gwp2'] = row['GWP']
         f['gwp_error_plus_minus'] = row['GWP_Error_Plus_Minus']
-        f['gwp_baseline'] = row['BaselineSubstGWP'] or 0
+        f['gwp_baseline'] = float_to_decimal_zero_if_none(
+            row['BaselineSubstGWP']
+        )
         f['remark'] = row['Remark'] or ""
         f['carbons'] = row['Carbons'] or ""
         f['hydrogens'] = row['Hydrogens'] or ""
@@ -592,7 +594,7 @@ class Command(BaseCommand):
             # because is not a special case and we will round to 1 decimal.
             baseline_prod = row['CalcProd']
             if baseline_prod:
-                baseline_prod = round_decimal_half_up(row['CalcProd'], 1)
+                baseline_prod = round_float_half_up(row['CalcProd'], 1)
             f['baseline'] = baseline_prod
             entries.append(f)
 
@@ -606,7 +608,7 @@ class Command(BaseCommand):
             )
             baseline_cons = row['CalcCons']
             if baseline_cons:
-                baseline_cons = round_decimal_half_up(row['CalcCons'], 1)
+                baseline_cons = round_float_half_up(row['CalcCons'], 1)
             f['baseline'] = baseline_cons
             entries.append(f)
 
@@ -686,7 +688,7 @@ class Command(BaseCommand):
             baseline += data['prod_transfers']
 
         # BDN new baselines are rounded to 5 decimals
-        return round_decimal_half_up(baseline, 5)
+        return round_float_half_up(baseline, 5)
 
     def criticalusecategory_map(self, f, row):
         columns = [
