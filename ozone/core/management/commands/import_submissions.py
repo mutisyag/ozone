@@ -27,6 +27,7 @@ from ozone.core.models import (
     SubmissionFormat,
     Blend,
 )
+from ozone.core.models.utils import float_to_decimal
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -200,16 +201,28 @@ class Command(BaseCommand):
                 "remarks_party": import_row["Remark"] or "",
                 # "remarks_os": "",
                 "source_party_id": source_party_id,
-                "quantity_total_new": import_row["ImpNew"],
-                "quantity_total_recovered": import_row["ImpRecov"],
-                "quantity_feedstock": import_row["ImpFeedstock"],
-                "quantity_critical_uses": quantity_crit_uses,
-                "quantity_essential_uses": quantity_essen_uses,
+                "quantity_total_new": float_to_decimal(import_row["ImpNew"]),
+                "quantity_total_recovered": float_to_decimal(
+                    import_row["ImpRecov"]
+                ),
+                "quantity_feedstock": float_to_decimal(
+                    import_row["ImpFeedstock"]
+                ),
+                "quantity_critical_uses": float_to_decimal(quantity_crit_uses),
+                "quantity_essential_uses": float_to_decimal(
+                    quantity_essen_uses
+                ),
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": quantity_lab_uses,
-                "quantity_process_agent_uses": import_row["ImpProcAgent"],
-                "quantity_quarantine_pre_shipment": import_row["ImpQuarAppl"],
-                "quantity_polyols": import_row["ImpPolyol"],
+                "quantity_laboratory_analytical_uses": float_to_decimal(
+                    quantity_lab_uses
+                ),
+                "quantity_process_agent_uses": float_to_decimal(
+                    import_row["ImpProcAgent"]
+                ),
+                "quantity_quarantine_pre_shipment": float_to_decimal(
+                    import_row["ImpQuarAppl"]
+                ),
+                "quantity_polyols": float_to_decimal(import_row["ImpPolyol"]),
                 "quantity_other_uses": None,
                 "decision_high_ambient_temperature": "",
                 "decision_laboratory_analytical_uses": decision_lab_uses,
@@ -298,10 +311,18 @@ class Command(BaseCommand):
                 "substance_id": substance_id,
                 "trade_party_id": trade_party_id,
                 # "remarks_os": "",
-                "quantity_import_new": nonparty_row["NPTImpNew"],
-                "quantity_import_recovered": nonparty_row["NPTImpRecov"],
-                "quantity_export_new": nonparty_row["NPTExpNew"],
-                "quantity_export_recovered": nonparty_row["NPTExpRecov"],
+                "quantity_import_new": float_to_decimal(
+                    nonparty_row["NPTImpNew"]
+                ),
+                "quantity_import_recovered": float_to_decimal(
+                    nonparty_row["NPTImpRecov"]
+                ),
+                "quantity_export_new": float_to_decimal(
+                    nonparty_row["NPTExpNew"]
+                ),
+                "quantity_export_recovered": float_to_decimal(
+                    nonparty_row["NPTExpRecov"]
+                ),
                 # "blend_id": "",
                 # "blend_item_id": "",
                 # "submission_id": "", # Autofilled
@@ -407,16 +428,24 @@ class Command(BaseCommand):
                 "remarks_party": exports_row["Remark"] or "",
                 # "remarks_os": "",
                 "destination_party_id": destination_party_id,
-                "quantity_total_new": exports_row["ExpNew"],
-                "quantity_total_recovered": exports_row["ExpRecov"],
-                "quantity_feedstock": exports_row["ExpFeedstock"],
-                "quantity_critical_uses": exports_row["ExpEssenUse"] if critical else None,
-                "quantity_essential_uses": exports_row["ExpEssenUse"] if not critical else None,
+                "quantity_total_new": float_to_decimal(exports_row["ExpNew"]),
+                "quantity_total_recovered": float_to_decimal(
+                    exports_row["ExpRecov"]
+                ),
+                "quantity_feedstock": float_to_decimal(
+                    exports_row["ExpFeedstock"]
+                ),
+                "quantity_critical_uses": float_to_decimal(exports_row["ExpEssenUse"]) if critical else None,
+                "quantity_essential_uses": float_to_decimal(exports_row["ExpEssenUse"]) if not critical else None,
                 "quantity_high_ambient_temperature": None,
                 "quantity_laboratory_analytical_uses": None,
-                "quantity_process_agent_uses": exports_row["ExpProcAgent"],
-                "quantity_quarantine_pre_shipment": exports_row["ExpQuarAppl"],
-                "quantity_polyols": exports_row["ExpPolyol"],
+                "quantity_process_agent_uses": float_to_decimal(
+                    exports_row["ExpProcAgent"]
+                ),
+                "quantity_quarantine_pre_shipment": float_to_decimal(
+                    exports_row["ExpQuarAppl"]
+                ),
+                "quantity_polyols": float_to_decimal(exports_row["ExpPolyol"]),
                 "quantity_other_uses": None,
                 "decision_critical_uses": "",
                 "decision_essential_uses": "",
@@ -471,7 +500,9 @@ class Command(BaseCommand):
                 "remarks_party": destroyed_row["Remark"] or "",
                 "substance_id": substance_id if substance else None,
                 # "remarks_os": "",
-                "quantity_destroyed": destroyed_row["Destroyed"],
+                "quantity_destroyed": float_to_decimal(
+                    destroyed_row["Destroyed"]
+                ),
                 "blend_id": blend_id if blend else None,
                 # "blend_item_id": "",
                 # "submission_id": "", # Auto filled
@@ -536,16 +567,30 @@ class Command(BaseCommand):
                 "remarks_party": produce_row["Remark"] or "",
                 "substance_id": substance_id,
                 # "remarks_os": "",
-                "quantity_critical_uses": quantity_crit_uses,
-                "quantity_essential_uses": quantity_essen_uses,
+                "quantity_critical_uses": float_to_decimal(quantity_crit_uses),
+                "quantity_essential_uses": float_to_decimal(
+                    quantity_essen_uses
+                ),
                 "quantity_high_ambient_temperature": None,
-                "quantity_laboratory_analytical_uses": quantity_lab_uses,
-                "quantity_process_agent_uses": produce_row["ProdProcAgent"],
-                "quantity_quarantine_pre_shipment": produce_row["ProdQuarAppl"],
-                "quantity_total_produced": produce_row["ProdAllNew"],
+                "quantity_laboratory_analytical_uses": float_to_decimal(
+                    quantity_lab_uses
+                ),
+                "quantity_process_agent_uses": float_to_decimal(
+                    produce_row["ProdProcAgent"]
+                ),
+                "quantity_quarantine_pre_shipment": float_to_decimal(
+                    produce_row["ProdQuarAppl"]
+                ),
+                "quantity_total_produced": float_to_decimal(
+                    produce_row["ProdAllNew"]
+                ),
                 "quantity_other_uses": None,
-                "quantity_feedstock": produce_row["ProdFeedstock"],
-                "quantity_article_5": produce_row["ProdArt5"],
+                "quantity_feedstock": float_to_decimal(
+                    produce_row["ProdFeedstock"]
+                ),
+                "quantity_article_5": float_to_decimal(
+                    produce_row["ProdArt5"]
+                ),
                 "quantity_for_destruction": None,
                 "decision_critical_uses": decision_crit_uses,
                 "decision_essential_uses": decision_essen_uses,
