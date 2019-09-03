@@ -2230,12 +2230,20 @@ class EssentialCriticalFilterSet(filters.FilterSet):
     group = MultiValueNumberFilter(
         field_name="substance__group", help_text="Filter by Annex Group ID"
     )
+    region = MultiValueNumberFilter(
+        field_name="submission__party__subregion__region_id",
+        help_text="Filter by party's region_id",
+    )
+    subregion = MultiValueNumberFilter(
+        field_name="submission__party__subregion_id",
+        help_text="Filter by party's subregion_id",
+    )
 
 
 class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ExemptionApproved.objects.all().prefetch_related(
         'submission__party', 'submission__reporting_period',
-        'substance__group'
+        'substance__group', 'submission__party__subregion',
     )
     serializer_class = EssentialCriticalDetailedSerializer
 
