@@ -274,13 +274,13 @@ class BaseBlendCompositionSerializer(serializers.ModelSerializer):
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
-        fields = ('name', 'abbr')
+        fields = ('id', 'name', 'abbr')
 
 
 class SubregionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subregion
-        fields = ('name', 'abbr', 'region')
+        fields = ('id', 'name', 'abbr', 'region')
 
 
 class TreatySerializer(serializers.ModelSerializer):
