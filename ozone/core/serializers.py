@@ -303,12 +303,16 @@ class RatificationSerializer(serializers.ModelSerializer):
 
 
 class PartySerializer(serializers.ModelSerializer):
-    subregion = serializers.StringRelatedField(many=False)
+    region_id = serializers.PrimaryKeyRelatedField(
+        source="subregion.region_id",
+        many=False,
+        read_only=True,
+    )
 
     class Meta:
         model = Party
         fields = (
-            'id', 'name', 'abbr', 'subregion', 'parent_party', 'iso_alpha3_code'
+            'id', 'name', 'abbr', 'region_id', 'subregion_id', 'parent_party', 'iso_alpha3_code'
         )
 
 
