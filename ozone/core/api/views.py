@@ -502,13 +502,28 @@ class AggregationViewFilterSet(filters.FilterSet):
         "party", help_text="Filter by party ID"
     )
     iso_code = MultiValueCharFilter(
-        field_name="party__iso_alpha3_code", lookup_expr='iexact'
+        field_name="party__iso_alpha3_code",
+        lookup_expr='iexact',
+        help_text="Filter by party.iso_alpha3_code",
     )
     reporting_period = MultiValueNumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
     )
     group = MultiValueNumberFilter(
         "group", help_text="Filter by Annex Group ID"
+    )
+#    TODO: should we pre-calculate is_article5 and is_eu_member in ProdCons ?
+#    is_article5 = filters.BooleanFilter(
+#        field_name="is_article5",
+#        help_text="Filter by party.is_article5",
+#    )
+    region = MultiValueNumberFilter(
+        field_name="party__subregion__region_id",
+        help_text="Filter by party's region_id",
+    )
+    subregion = MultiValueNumberFilter(
+        field_name="party__subregion_id",
+        help_text="Filter by party's subregion_id",
     )
     ordering = filters.OrderingFilter(
         fields=(
@@ -525,6 +540,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
     filter_backends = (
         # Aggregations are public information, no need to enforce filtering
+        # With the exeption of Destruction data by annex group
         # IsOwnerFilterBackend,
         filters.DjangoFilterBackend,
         OrderingFilter,
