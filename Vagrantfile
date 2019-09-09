@@ -16,6 +16,7 @@ Vagrant.configure("2") do |config|
     vmck.vmck_url = ENV["VMCK_URL"]
     vmck.memory = 4000
     vmck.cpus = 2
+    vmck.name = ENV["VMCK_NAME"] || "ozone"
   end
 
   config.vm.provision :shell, privileged: false, path: "utility/vagrant_provision.sh"
