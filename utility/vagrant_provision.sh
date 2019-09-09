@@ -11,7 +11,11 @@ export DEBIAN_FRONTEND=noninteractive
   set -x
 
   sudo apt-get update -qq
-  sudo apt-get install -qqy wget curl ca-certificates gnupg lsb-core
+  sudo apt-get install -qqy \
+    wget curl ca-certificates gnupg lsb-core snapd \
+    python3-pip build-essential git
+
+  sudo update-locale LANG=en_US.UTF-8
 )
 
 
@@ -70,8 +74,8 @@ pidof tusd && echo "tusd already running" || (
   set -x
 
   cd frontend
-  npm install --quiet
-  npm run build
+  /snap/bin/npm install --quiet
+  /snap/bin/npm run build
 )
 
 echo "✔ Provisioning successful!"
