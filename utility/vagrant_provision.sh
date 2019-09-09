@@ -74,8 +74,8 @@ pidof tusd && echo "tusd already running" || (
   set -x
 
   cd frontend
-  npm install --quiet
-  npm run build
+  /snap/bin/npm install --quiet
+  /snap/bin/npm run build
 )
 
 echo "✔ Provisioning successful!"
