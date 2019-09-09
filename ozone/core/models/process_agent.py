@@ -5,6 +5,7 @@ from .party import Party
 from .reporting import Submission
 from .substance import Substance
 from .meeting import Decision
+from .utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 
 __all__ = [
     'ProcessAgentContainTechnology',
@@ -143,13 +144,15 @@ class ProcessAgentUsesReported(models.Model):
         blank=True,
     )
 
-    makeup_quantity = models.FloatField(
+    makeup_quantity = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)],
         null=True,
         blank=True
     )
 
-    emissions = models.FloatField(
+    emissions = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)],
         null=True,
         blank=True
@@ -217,9 +220,15 @@ class ProcessAgentEmissionLimit(models.Model):
         on_delete=models.PROTECT
     )
 
-    makeup_consumption = models.FloatField(validators=[MinValueValidator(0.0)])
+    makeup_consumption = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        validators=[MinValueValidator(0.0)]
+    )
 
-    max_emissions = models.FloatField(validators=[MinValueValidator(0.0)])
+    max_emissions = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        validators=[MinValueValidator(0.0)]
+    )
 
     remark = models.CharField(max_length=9999, blank=True)
 

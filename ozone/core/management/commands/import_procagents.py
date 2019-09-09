@@ -23,6 +23,10 @@ from ozone.core.models import (
     ProcessAgentEmissionLimit,
     ProcessAgentEmissionLimitValidity,
 )
+from ozone.core.models.utils import (
+    float_to_decimal,
+    float_to_decimal_zero_if_none,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -329,8 +333,10 @@ class Command(BaseCommand):
         ProcessAgentEmissionLimit.objects.create(
             party=party,
             validity=validity,
-            makeup_consumption=row['MakeupOrCons'],
-            max_emissions=row['MaxEmissions'],
+            makeup_consumption=float_to_decimal_zero_if_none(
+                row['MakeupOrCons']
+            ),
+            max_emissions=float_to_decimal_zero_if_none(row['MaxEmissions']),
             remark=row['Remark'] if row['Remark'] else ""
         )
 
@@ -385,8 +391,8 @@ class Command(BaseCommand):
                 submission=submission,
                 decision=decision,
                 application=application,
-                makeup_quantity=row['MakeUpQuantity'],
-                emissions=row['Emissions'],
+                makeup_quantity=float_to_decimal(row['MakeUpQuantity']),
+                emissions=float_to_decimal(row['Emissions']),
                 units=row['Units'],
                 remark=row['Remarks'] if row['Remarks'] else "",
             )

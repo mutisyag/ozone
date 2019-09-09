@@ -10,7 +10,7 @@ import os
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models import FloatField
+from django.db.models import DecimalField
 from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
@@ -174,7 +174,7 @@ from .export_pdf import (
     export_impexp_new_rec,
 )
 
-from ..models.utils import round_half_up
+from ..models.utils import round_decimal_half_up
 
 User = get_user_model()
 
@@ -578,7 +578,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         aggregation,
                         field,
                         None if any([a[field] is None for a in to_add]) else
-                        round_half_up(
+                        round_decimal_half_up(
                             sum([a[field] for a in to_add]),
                             2
                         )
@@ -588,7 +588,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         aggregation,
                         field,
                         None if all([a[field] is None for a in to_add]) else
-                        round_half_up(
+                        round_decimal_half_up(
                             sum([a[field] or 0 for a in to_add]),
                             2
                         )
@@ -602,7 +602,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         if aggregates:
             fields = [
                 f.name for f in ProdCons._meta.fields
-                if isinstance(f, FloatField)
+                if isinstance(f, DecimalField)
             ]
             # Using `distinct()` does not work because this queryset is
             # ordered by fields from related models, which makes similar
@@ -2282,7 +2282,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                 for a in to_add
                 if not a['substance__has_critical_uses']
             ]
-            aggregation['quantity_essential'] = round_half_up(
+            aggregation['quantity_essential'] = round_decimal_half_up(
                 sum(essential_use_quantities), 2
             ) if essential_use_quantities else None
 
@@ -2291,7 +2291,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                 for a in to_add
                 if a['substance__has_critical_uses']
             ]
-            aggregation['quantity_critical'] = round_half_up(
+            aggregation['quantity_critical'] = round_decimal_half_up(
                 sum(critical_use_quantities), 2
             ) if critical_use_quantities else None
 

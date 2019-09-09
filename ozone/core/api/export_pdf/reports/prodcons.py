@@ -11,7 +11,7 @@ from ozone.core.models import (
     Submission,
     ObligationTypes,
 )
-from ozone.core.models.utils import round_half_up
+from ozone.core.models.utils import round_decimal_half_up
 
 from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
@@ -338,7 +338,7 @@ def get_limit(party, period, group, limit_type):
 
 def get_per_capita_cons(cons, population):
     if not isinstance(cons, str):
-        return round_half_up(cons / population, 4)
+        return round_decimal_half_up(cons / population, 4)
     else:
         return '-'
 
@@ -361,7 +361,7 @@ def get_chng(actual_value, compared_value):
     if isinstance(actual_value, str) or isinstance(compared_value, str):
         return '-'
     elif actual_value > 0 and compared_value != 0:
-        return round_half_up(
+        return round_decimal_half_up(
             -100 + actual_value / compared_value * 100,
             2
         )

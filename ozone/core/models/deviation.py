@@ -6,6 +6,7 @@ from django.db import models
 from .legal import ReportingPeriod
 from .party import Party
 from .substance import Group
+from .utils import DECIMAL_FIELD_DIGITS, DECIMAL_FIELD_DECIMALS
 
 
 __all__ = [
@@ -66,11 +67,13 @@ class DeviationSource(models.Model):
         on_delete=models.PROTECT
     )
 
-    production = models.FloatField(
+    production = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 
-    consumption = models.FloatField(
+    consumption = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
     )
 

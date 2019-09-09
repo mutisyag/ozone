@@ -8,7 +8,9 @@ from .legal import ReportingPeriod
 from .party import Party
 from .reporting import Submission, ObligationTypes
 from .substance import Substance
-from .utils import decimal_zero_if_none
+from .utils import (
+    decimal_zero_if_none, DECIMAL_FIELD_DIGITS, DECIMAL_FIELD_DECIMALS
+)
 
 from model_utils import FieldTracker
 
@@ -47,7 +49,10 @@ class Transfer(models.Model):
         Substance, on_delete=models.PROTECT
     )
 
-    transferred_amount = models.FloatField(validators=[MinValueValidator(0.0)])
+    transferred_amount = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        validators=[MinValueValidator(0.0)]
+    )
 
     is_basic_domestic_need = models.BooleanField(default=False)
 
@@ -114,10 +119,10 @@ class Transfer(models.Model):
                      decimal_zero_if_none(potential)
             if self.transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
-                aggregation.prod_transfer = float(existing_value + to_add)
+                aggregation.prod_transfer = existing_value + to_add
             elif self.transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
-                aggregation.cons_transfer = float(existing_value + to_add)
+                aggregation.cons_transfer = existing_value + to_add
 
             # Populate submissions list
             obligation_type = ObligationTypes.TRANSFER.value
@@ -178,10 +183,10 @@ class Transfer(models.Model):
             )
             if transfer_type == 'P':
                 existing_value = decimal_zero_if_none(aggregation.prod_transfer)
-                aggregation.prod_transfer = float(existing_value - to_subtract)
+                aggregation.prod_transfer = existing_value - to_subtract
             elif transfer_type == 'C':
                 existing_value = decimal_zero_if_none(aggregation.cons_transfer)
-                aggregation.cons_transfer = float(existing_value - to_subtract)
+                aggregation.cons_transfer = existing_value - to_subtract
 
             # Clear submissions from list
             obligation_type = ObligationTypes.TRANSFER.value

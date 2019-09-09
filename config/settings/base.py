@@ -286,6 +286,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'ozone.core.utils.api.BrowsableAPIRendererWithoutForms',
     ),
+    'COERCE_DECIMAL_TO_STRING': False,
 }
 
 

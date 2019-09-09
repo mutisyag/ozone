@@ -188,23 +188,30 @@ class Substance(models.Model):
     )
 
     # Ozone-depleting potential
-    odp = models.FloatField()
+    odp = models.DecimalField(max_digits=20, decimal_places=10)
     # TODO: any info on when the below two are used?
-    min_odp = models.FloatField()
-    max_odp = models.FloatField()
+    min_odp = models.DecimalField(max_digits=20, decimal_places=10)
+    max_odp = models.DecimalField(max_digits=20, decimal_places=10)
 
     # Global warming potential
-    gwp = models.FloatField(null=True, blank=True)
+    gwp = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
 
     formula = models.CharField(max_length=256)
 
     number_of_isomers = models.SmallIntegerField(null=True, blank=True)
 
     # TODO: what is this?
-    gwp2 = models.FloatField(null=True, blank=True)
-    gwp_error_plus_minus = models.FloatField(null=True, blank=True)
-
-    gwp_baseline = models.FloatField(null=True, blank=True)
+    gwp2 = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
+    gwp_error_plus_minus = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
+    gwp_baseline = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
 
     # Existing data seems to suggest this field is always non-blank,
     # allowing it though just in case...
@@ -305,9 +312,13 @@ class Blend(models.Model):
                   "Other or Custom."
     )
 
-    odp = models.FloatField(null=True, blank=True)
+    odp = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
 
-    gwp = models.FloatField(null=True, blank=True)
+    gwp = models.DecimalField(
+        max_digits=20, decimal_places=10, null=True, blank=True
+    )
 
     hfc = models.NullBooleanField()
 
@@ -416,7 +427,8 @@ class BlendComponent(models.Model):
         on_delete=models.PROTECT
     )
 
-    percentage = models.FloatField(
+    percentage = models.DecimalField(
+        max_digits=6, decimal_places=5,
         validators=[MinValueValidator(0.0), MaxValueValidator(1.0)]
     )
 
