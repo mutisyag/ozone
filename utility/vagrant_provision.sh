@@ -11,7 +11,9 @@ export DEBIAN_FRONTEND=noninteractive
   set -x
 
   sudo apt-get update -qq
-  sudo apt-get install -qqy wget curl ca-certificates gnupg lsb-core
+  sudo apt-get install -qqy \
+    wget curl ca-certificates gnupg lsb-core snapd \
+    python3-pip build-essential git
 )
 
 
