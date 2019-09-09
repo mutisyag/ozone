@@ -14,6 +14,8 @@ export DEBIAN_FRONTEND=noninteractive
   sudo apt-get install -qqy \
     wget curl ca-certificates gnupg lsb-core snapd \
     python3-pip build-essential git
+
+  sudo update-locale LANG=en_US.UTF-8
 )
 
 
