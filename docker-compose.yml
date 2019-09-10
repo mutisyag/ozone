@@ -49,6 +49,7 @@ services:
       - ./docker/app.env
     volumes:
      - tusd-uploads:/var/local/tusd_uploads
+     - media:/var/local/media
     depends_on:
       - postgres
       - tusd
@@ -83,6 +84,8 @@ volumes:
   pg-data:
     driver: local
   tusd-uploads:
+    driver: local
+  media:
     driver: local
   weblate-data:
     driver: local
