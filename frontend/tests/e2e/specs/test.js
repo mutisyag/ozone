@@ -134,6 +134,7 @@ module.exports = {
     logout(browser)
     browser.end()
   },
+  /*
   BU_006: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -168,6 +169,7 @@ module.exports = {
     saveSubmission(browser, ['Questionnaire', 'Imports'])
     browser.end()
   },
+  */
   BU_007: browser => {
     const row_values = {
       quantity_total_new: 0.12
