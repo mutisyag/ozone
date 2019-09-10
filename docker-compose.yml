@@ -85,6 +85,8 @@ volumes:
     driver: local
   tusd-uploads:
     driver: local
+  media:
+    driver: local
   weblate-data:
     driver: local
   pg-weblate-data:
