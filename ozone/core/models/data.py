@@ -144,7 +144,7 @@ class BlendCompositionMixin:
                 for field in self.QUANTITY_FIELDS:
                     # Compute individual substance quantities
                     quantity = getattr(self, field)
-                    field_dictionary[field] = component.percentage * quantity \
+                    field_dictionary[field] = quantize(component.percentage * quantity) \
                         if quantity else None
 
                 attributes = model_to_dict(
@@ -157,8 +157,6 @@ class BlendCompositionMixin:
                 attributes['substance_id'] = component.substance.pk
                 attributes['blend_item_id'] = self.pk
                 attributes.update(field_dictionary)
-                attributes['quantity_feedstock'] = quantize(attributes['quantity_feedstock'])
-                attributes['quantity_total_new'] = quantize(attributes['quantity_total_new'])
                 self.__class__.objects.create(**attributes)
 
 
