@@ -64,5 +64,5 @@ def float_to_decimal(value):
 
 def quantize(value):
     """Quantize to DECIMAL_FIELD_DECIMALS decimal places"""
-    quant = Decimal(10) ** -DECIMAL_FIELD_DECIMALS
+    quant = decimal.Decimal(10) ** -DECIMAL_FIELD_DECIMALS
     return value.quantize(quant)
