@@ -16,7 +16,8 @@ from .utils import (
     model_to_dict,
     decimal_zero_if_none,
     DECIMAL_FIELD_DIGITS,
-    DECIMAL_FIELD_DECIMALS
+    DECIMAL_FIELD_DECIMALS,
+    quantize,
 )
 
 
@@ -156,6 +157,8 @@ class BlendCompositionMixin:
                 attributes['substance_id'] = component.substance.pk
                 attributes['blend_item_id'] = self.pk
                 attributes.update(field_dictionary)
+                attributes['quantity_feedstock'] = quantize(attributes['quantity_feedstock'])
+                attributes['quantity_total_new'] = quantize(attributes['quantity_total_new'])
                 self.__class__.objects.create(**attributes)
 
 
