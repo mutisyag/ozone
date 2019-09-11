@@ -1,9 +1,6 @@
 // http://nightwatchjs.org/gettingstarted#settings-file
 
-const deepmerge = require('deepmerge')
-const userOptions = JSON.parse(process.env.VUE_NIGHTWATCH_USER_OPTIONS || '{}')
-
-module.exports = deepmerge({
+module.exports = {
   src_folders: ['tests/e2e/specs'],
   output_folder: 'tests/e2e/reports',
   custom_assertions_path: ['tests/e2e/custom-assertions'],
@@ -20,6 +17,17 @@ module.exports = deepmerge({
 
   test_settings: {
     default: {
+      // desiredCapabilities: {
+      //   browserName: 'chrome',
+      //   javascriptEnabled: true,
+      //   acceptSslCerts: true,
+      //   chromeOptions: {
+      //     args: [
+      //       '--disable-dev-shm-usage',
+      //       '--window-size=1800,900'
+      //     ]
+      //   }
+      // },
       selenium_port: 4444,
       selenium_host: 'localhost',
       silent: true
@@ -29,8 +37,14 @@ module.exports = deepmerge({
       desiredCapabilities: {
         browserName: 'chrome',
         javascriptEnabled: true,
-        acceptSslCerts: true
+        acceptSslCerts: true,
+        chromeOptions: {
+          args: [
+            '--disable-dev-shm-usage',
+            '--window-size=1800,900'
+          ]
+        }
       }
     }
   }
-}, userOptions)
+}

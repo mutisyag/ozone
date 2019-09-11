@@ -36,7 +36,7 @@ const {
 
 module.exports = {
   beforeEach: (browser) => {
-    browser.resizeWindow(1480, 900)
+    // browser.resizeWindow(1480, 900)
     console.log('running backend')
     execSync('bash ../utility/setup_backend.sh', { env: process.env })
     console.log('done running backend')
@@ -134,7 +134,6 @@ module.exports = {
     logout(browser)
     browser.end()
   },
-  /*
   BU_006: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -169,7 +168,6 @@ module.exports = {
     saveSubmission(browser, ['Questionnaire', 'Imports'])
     browser.end()
   },
-  */
   BU_007: browser => {
     const row_values = {
       quantity_total_new: 0.12
