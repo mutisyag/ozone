@@ -734,6 +734,8 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
     /* Open edit modal */
     browser
       .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 20000)
+      .moveToElement(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 10, 10)
+      .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
       .pause(500)
 

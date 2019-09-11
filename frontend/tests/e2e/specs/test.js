@@ -36,7 +36,7 @@ const {
 
 module.exports = {
   beforeEach: (browser) => {
-    browser.resizeWindow(1480, 900)
+    // browser.resizeWindow(1480, 900)
     console.log('running backend')
     execSync('bash ../utility/setup_backend.sh', { env: process.env })
     console.log('done running backend')
@@ -304,56 +304,56 @@ module.exports = {
     saveSubmission(browser, ['Questionnaire', 'Non-Party'])
     browser.end()
   },
-  BU_011: browser => {
-    const row_values = {
-      facility_name: 'CCT Facility',
-      quantity_generated: 10,
-      quantity_emitted: 10
+  // BU_011: browser => {
+  //   const row_values = {
+  //     facility_name: 'CCT Facility',
+  //     quantity_generated: 10,
+  //     quantity_emitted: 10
 
-    }
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  //   }
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    logMessage(browser, 'Testing the edit of Emissions tab', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser, ['has_emissions'])
+  //   logMessage(browser, 'Testing the edit of Emissions tab', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   clickQuestionnaireRadios(browser, ['has_emissions'])
 
-    addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, true)
+  //   addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, true)
 
-    addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
-    saveSubmission(browser, ['Questionnaire', 'Emissions'])
-    browser.end()
-  },
-  BU_012: browser => {
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  //   addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
+  //   saveSubmission(browser, ['Questionnaire', 'Emissions'])
+  //   browser.end()
+  // },
+  // BU_012: browser => {
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    logMessage(browser, 'Testing attachments functionality', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser)
-    selectTab(browser, 'Files')
-    uploadeFile(browser, 'hello.pdf', '../../../../')
-    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-    browser.end()
-  },
+  //   logMessage(browser, 'Testing attachments functionality', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   clickQuestionnaireRadios(browser)
+  //   selectTab(browser, 'Files')
+  //   uploadeFile(browser, 'hello.pdf', '../../../../')
+  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  //   browser.end()
+  // },
   // BU_013: browser => {
   //   login(browser, 'p_ro', 'p_ro')
   //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
