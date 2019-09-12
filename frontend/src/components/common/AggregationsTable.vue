@@ -3,13 +3,10 @@
   <!-- {{aggregations}} -->
   <b-table
     show-empty
-    hover
     :items="items"
     :fields="fields"
     bordered
-    striped
-    outlined
-    class="full-bordered"
+    class="full-bordered prodcons-table"
   >
     <template v-slot:thead-top>
       <tr>
@@ -51,12 +48,12 @@ export default {
     fields() {
       const fields = [
         { key: 'group', label: this.$gettext('Annex/Group') },
-        { key: 'baseline_prod', label: this.$gettext('Baseline'), class: 'text-right big-border' },
+        { key: 'baseline_prod', label: this.$gettext('Baseline'), class: 'text-right' },
         { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right' },
-        { key: 'limit_prod', label: this.$gettext('Limit'), class: 'text-right big-border' },
-        { key: 'baseline_cons', label: this.$gettext('Baseline'), class: 'text-right big-border' },
+        { key: 'limit_prod', label: this.$gettext('Limit'), class: 'text-right' },
+        { key: 'baseline_cons', label: this.$gettext('Baseline'), class: 'text-right' },
         { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right'  },
-        { key: 'limit_cons', label: this.$gettext('Limit') , class: 'text-right big-border' },
+        { key: 'limit_cons', label: this.$gettext('Limit') , class: 'text-right' },
         // { key: 'baseline_bdn', label: this.$gettext('Baseline') },
         // { key: 'production_article_5', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
         // { key: 'limit_bdn', label: this.$gettext('Limit') }
