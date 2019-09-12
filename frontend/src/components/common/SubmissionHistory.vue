@@ -14,7 +14,7 @@
       :sort-direction="table.sortDirection"
       ref="table"
     >
-      <template slot="actions" slot-scope="cell">
+      <template v-slot:cell(actions)="cell">
         <a
           @click="changeRoute({ name: getFormName(cell.item.details.obligation), query: {submission: cell.item.actions}})"
           class="btn btn-outline-primary btn-sm"

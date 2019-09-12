@@ -1830,3 +1830,11 @@ body.aside-menu-off-canvas .aside-menu {
     flex-grow: 1;
   }
 }
+
+.table-bordered.full-bordered > thead > tr > th.big-border, 
+.table-bordered.full-bordered > tbody > tr > th.big-border, 
+.table-bordered.full-bordered > tfoot > tr > th.big-border, 
+.table-bordered.full-bordered > thead > tr > td.big-border, 
+.table-bordered.full-bordered > tbody > tr > td.big-border, 
+.table-bordered.full-bordered > tfoot > tr > td.big-border {
+}

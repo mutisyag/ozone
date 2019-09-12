@@ -28,7 +28,7 @@
     "@sentry/browser": "4.5.3",
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
-    "bootstrap-vue": "2.0.0-rc.13",
+    "bootstrap-vue": "2.0.0",
     "core-js": "^2.6.5",
     "decimal.js": "^10.1.1",
     "flag-icon-css": "^3.3.0",

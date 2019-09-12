@@ -37,10 +37,13 @@
           :filter="table.filters.search"
           ref="table"
         >
-          <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+
+          <template v-for="field in tableFields" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="thead-top">
+
+
+          <template v-slot:thead-top>
             <tr class="first-header">
               <th
                 v-for="(header, header_index) in tab_info.section_headers"
@@ -63,14 +66,14 @@
             </tr>
           </template>
 
-          <template slot="group" slot-scope="cell">
+          <template v-slot:cell(group)="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
 
-          <template :slot="getCountrySlot" slot-scope="cell">
+          <template v-slot:[`cell(${getCountrySlot})`]="cell">
             <CloneField
               :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
               :disabled="!$store.getters.can_edit_data"
@@ -82,7 +85,7 @@
             <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template v-for="inputField in getTabInputFields"  v-slot:[`cell(${inputField})`]="cell">
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
@@ -91,7 +94,7 @@
             />
           </template>
 
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
@@ -99,7 +102,7 @@
             />
           </template>
 
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
@@ -121,8 +124,7 @@
 
           <template
             v-for="tooltipField in getTabDecisionQuantityFields"
-            :slot="tooltipField"
-            slot-scope="cell"
+            v-slot:[`cell(${tooltipField})`]="cell"
           >
             <div
               class="edit-trigger"
@@ -255,10 +257,10 @@
           :filter="tableFII.filters.search"
           ref="tableFII"
         >
-          <template v-for="field in tableFieldsFII" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFieldsFII" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="thead-top">
+          <template v-slot:thead-top>
             <tr class="first-header">
               <th
                 v-for="(header, header_index) in tab_info.special_headers.section_headers"
@@ -281,15 +283,15 @@
             </tr>
           </template>
 
-          <template slot="group" slot-scope="cell">
+          <template v-slot:cell(group)="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
 
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
 
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
@@ -299,8 +301,7 @@
 
           <template
             v-for="inputField in getTabSpecialInputFields"
-            :slot="inputField"
-            slot-scope="cell"
+            v-slot:[`cell(${inputField})`]="cell"
           >
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -310,7 +311,7 @@
             />
           </template>
 
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
@@ -332,8 +333,7 @@
 
           <template
             v-for="tooltipField in getTabDecisionQuantityFields"
-            :slot="tooltipField"
-            slot-scope="cell"
+            v-slot:[`cell(${tooltipField})`]="cell"
           >
             <div
               class="edit-trigger"
@@ -468,10 +468,10 @@
           :filter="tableBlends.filters.search"
           ref="tableBlends"
         >
-          <template v-for="field in tableFieldsBlends" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFieldsBlends" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="thead-top">
+          <template v-slot:thead-top>
             <tr class="first-header">
               <th
                 v-for="(header, header_index) in tab_info.section_headers"
@@ -494,7 +494,7 @@
             </tr>
           </template>
 
-          <template slot="blend" slot-scope="cell">
+          <template v-slot:cell(blend)="cell">
             <span
               style="cursor:pointer;"
               class="substance-blend-cell"
@@ -505,12 +505,12 @@
               {{cell.item.blend}}
             </span>
           </template>
-          <template slot="type" slot-scope="cell">
+          <template v-slot:cell(type)="cell">
             <div
               class="group-cell"
             >{{tab_data.blends.find(blend => cell.item.originalObj.blend.selected === blend.id).type}}</div>
           </template>
-          <template :slot="getCountrySlot" slot-scope="cell">
+          <template v-slot:[`cell(${getCountrySlot})`]="cell">
             <CloneField
               :disabled="!$store.getters.can_edit_data"
               :key="`${cell.item.index}_${getCountrySlot}_${tabName}`"
@@ -522,7 +522,7 @@
             <div class="country-cell" v-else>{{cell.item[getCountrySlot]}}</div>
           </template>
 
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template v-for="inputField in getTabInputFields" v-slot:[`cell(${inputField})`]="cell">
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
@@ -531,7 +531,7 @@
             />
           </template>
 
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
@@ -539,7 +539,7 @@
             />
           </template>
 
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
@@ -561,8 +561,7 @@
 
           <template
             v-for="tooltipField in getTabDecisionQuantityFields"
-            :slot="tooltipField"
-            slot-scope="cell"
+            v-slot:[`cell(${tooltipField})`]="cell"
           >
             <div
               class="edit-trigger"
@@ -620,7 +619,7 @@
             </div>
           </template>
 
-          <template slot="row-details" slot-scope="row">
+          <template v-slot:cell(row-details)="row">
             <thead>
               <tr>
                 <th

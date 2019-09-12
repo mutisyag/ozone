@@ -29,7 +29,7 @@
           :fields="tableFieldsUploaded.filter(field => field.key !== 'date')"
     >
 
-      <template slot="description" slot-scope="cell">
+      <template v-slot:cell(description)="cell">
         <b-form-input
           class="d-inline"
           placeholder="Optional description"
@@ -39,7 +39,7 @@
         />
       </template>
 
-      <template slot="actions" slot-scope="cell">
+      <template v-slot:cell(actions)="cell">
         <div class="d-flex">
           <b-button variant="outline-danger" v-if="$store.getters.can_upload_files" @click="deleteFile($event, cell.item.details)">
             <i class="fa fa-trash" aria-hidden="true"></i>
@@ -66,7 +66,7 @@
             :items="tableItemsUploaded"
             :fields="tableFieldsUploaded"
           >
-        <template slot="actions" slot-scope="cell">
+        <template v-slot:cell(actions)="cell">
           <b-btn
             variant="outline-primary"
             @click="$store.dispatch('downloadStuff', { url: cell.item.details.file_url, fileName: cell.item.details.name })"

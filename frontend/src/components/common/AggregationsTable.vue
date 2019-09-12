@@ -6,18 +6,19 @@
     hover
     :items="items"
     :fields="fields"
-    class="full-bordered"
-    head-variant="light"
     bordered
+    striped
+    outlined
+    class="full-bordered"
   >
-    <template slot="thead-top">
+    <template v-slot:thead-top>
       <tr>
         <th v-for="(category, index) in tableTop" :key="index" :colspan="category.colspan">
           {{category.label}}
         </th>
       </tr>
     </template>
-    <template slot="group" slot-scope="cell">
+    <template v-slot:cell(group)="cell">
         {{$store.state.initialData.groupSubstances.find(g => g.id === cell.item.group).group_id}}
     </template>
   </b-table>
@@ -38,10 +39,11 @@ export default {
         }, {
           label: this.$gettext('Consumption'),
           colspan: 3
-        }, {
-          label: this.$gettext('Production allowance for BDN of Article 5 parties'),
-          colspan: 3
-        }
+        }, 
+        // {
+        //   label: this.$gettext('Production allowance for BDN of Article 5 parties'),
+        //   colspan: 3
+        // }
       ]
     }
   },
@@ -49,15 +51,15 @@ export default {
     fields() {
       const fields = [
         { key: 'group', label: this.$gettext('Annex/Group') },
-        { key: 'baseline_prod', label: this.$gettext('Baseline') },
-        { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
-        { key: 'limit_prod', label: this.$gettext('Limit') },
-        { key: 'baseline_cons', label: this.$gettext('Baseline') },
-        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
-        { key: 'limit_cons', label: this.$gettext('Limit') },
-        { key: 'baseline_bdn', label: this.$gettext('Baseline') },
-        { key: 'production_article_5', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
-        { key: 'limit_bdn', label: this.$gettext('Limit') }
+        { key: 'baseline_prod', label: this.$gettext('Baseline'), class: 'text-right big-border' },
+        { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right' },
+        { key: 'limit_prod', label: this.$gettext('Limit'), class: 'text-right big-border' },
+        { key: 'baseline_cons', label: this.$gettext('Baseline'), class: 'text-right big-border' },
+        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right'  },
+        { key: 'limit_cons', label: this.$gettext('Limit') , class: 'text-right big-border' },
+        // { key: 'baseline_bdn', label: this.$gettext('Baseline') },
+        // { key: 'production_article_5', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
+        // { key: 'limit_bdn', label: this.$gettext('Limit') }
       ]
       return fields
     },

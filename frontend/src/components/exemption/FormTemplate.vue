@@ -33,16 +33,16 @@
           :filter="table.filters.search"
           ref="table"
         >
-          <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFields" v-slot:[`head(${field.key})`]="field">
             <div v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="group" slot-scope="cell">
+          <template v-slot:cell(group)="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
@@ -51,8 +51,7 @@
           </template>
           <template
             v-for="inputField in tab_info.rowInputFields"
-            :slot="inputField"
-            slot-scope="cell"
+            v-slot:[`cell(${inputField})`]="cell"
           >
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
@@ -62,7 +61,7 @@
             />
           </template>
 
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>

@@ -34,20 +34,20 @@
           :filter="table.filters.search"
           ref="table"
         >
-          <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFields" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
 
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
-          <template slot="transferred_amount" slot-scope="cell">
+          <template v-slot:cell(transferred_amount)="cell">
             <div class="text-right">{{cell.item.transferred_amount}}</div>
           </template>
-          <template slot="reporting_period" slot-scope="cell">
+          <template v-slot:cell(reporting_period)="cell">
             <div class="text-center">{{cell.item.reporting_period}}</div>
           </template>
-          <template slot="is_basic_domestic_need" slot-scope="cell">
+          <template v-slot:cell(is_basic_domestic_need)="cell">
             <fieldGenerator
               style="text-align: center"
               :key="`${cell.item.index}_${'is_basic_domestic_need'}_${tabName}`"
@@ -56,7 +56,7 @@
               :field="cell.item.originalObj['is_basic_domestic_need']"
             ></fieldGenerator>
           </template>
-          <template slot="contain_technologies" slot-scope="cell">
+          <template v-slot:cell(contain_technologies)="cell">
             <fieldGenerator
               :key="`${cell.item.index}_${'contain_technologies'}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'contain_technologies'}"

@@ -28,43 +28,43 @@
         @filtered="onFiltered"
         ref="table"
       >
-        <template slot="thead-top">
+        <template v-slot:thead-top>
           <tr>
             <th colspan="5">&nbsp;</th>
             <th colspan="7" class="text-center"><span v-translate>Ratification details</span></th>
           </tr>
         </template>
-        <template slot="is_eu_member" slot-scope="data">
+        <template v-slot:cell(is_eu_member)="data">
           <CheckedImage :item="data.item.is_eu_member"/>
         </template>
-        <template slot="is_article5" slot-scope="data">
+        <template v-slot:cell(is_article5)="data">
           <CheckedImage :item="data.item.is_article5"/>
         </template>
-        <template slot="is_group2" slot-scope="data">
+        <template v-slot:cell(is_group2)="data">
           <CheckedImage :item="data.item.is_group2"/>
         </template>
-        <template slot="is_high_ambient_temperature" slot-scope="data">
+        <template v-slot:cell(is_high_ambient_temperature)="data">
           <CheckedImage :item="data.item.is_high_ambient_temperature"/>
         </template>
-        <template slot="vienna_convention" slot-scope="data">
+        <template v-slot:cell(vienna_convention)="data">
           <div v-html="data.item.vienna_convention"></div>
         </template>
-        <template slot="montreal_protocol" slot-scope="data">
+        <template v-slot:cell(montreal_protocol)="data">
           <div v-html="data.item.montreal_protocol"></div>
         </template>
-        <template slot="london_amendment" slot-scope="data">
+        <template v-slot:cell(london_amendment)="data">
           <div v-html="data.item.london_amendment"></div>
         </template>
-        <template slot="copenhagen_amendment" slot-scope="data">
+        <template v-slot:cell(copenhagen_amendment)="data">
           <div v-html="data.item.copenhagen_amendment"></div>
         </template>
-        <template slot="montreal_amendment" slot-scope="data">
+        <template v-slot:cell(montreal_amendment)="data">
           <div v-html="data.item.montreal_amendment"></div>
         </template>
-        <template slot="beijing_amendment" slot-scope="data">
+        <template v-slot:cell(beijing_amendment)="data">
           <div v-html="data.item.beijing_amendment"></div>
         </template>
-        <template slot="kigali_amendment" slot-scope="data">
+        <template v-slot:cell(kigali_amendment)="data">
           <div v-html="data.item.kigali_amendment"></div>
         </template>
       </b-table>
