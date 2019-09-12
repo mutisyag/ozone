@@ -744,7 +744,7 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
     /* Add values in modal */
     for (const field_id of Object.keys(modal_values)) {
       browser
-        .click(`#${tab} #edit_modal .modal-body #${field_id}`)
+        .click(`#edit_modal .modal-body #${field_id}`)
         .pause(200)
         .clearValue(`#edit_modal .modal-body #${field_id}`)
         .setValue(`#edit_modal .modal-body #${field_id}`, modal_values[field_id])
