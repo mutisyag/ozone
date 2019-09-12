@@ -35,23 +35,23 @@
           :filter="table.filters.search"
           ref="table"
         >
-          <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFields" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               v-show="$store.getters.can_edit_data"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
               :field="cell.item.originalObj.checkForDelete"
             />
           </template>
-          <template slot="group" slot-scope="cell">
+          <template v-slot:cell(group)="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
-          <template slot="quantity_import" slot-scope="cell">
+          <template v-slot:cell(quantity_import)="cell">
             <span
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj.quantity_import.tooltip ? true : false"
@@ -65,7 +65,7 @@
             </span>
           </template>
 
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template v-for="inputField in getTabInputFields" v-slot:[`cell(${inputField})`]="cell">
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
@@ -73,7 +73,7 @@
               :field="cell.item.originalObj[inputField]"
             ></fieldGenerator>
           </template>
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                 <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
@@ -125,16 +125,16 @@
           :filter="tableCritical.filters.search"
           ref="tableCritical"
         >
-          <template v-for="field in tableFieldsCritical" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFieldsCritical" v-slot:[`head(${field.key})`]="field">
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="group" slot-scope="cell">
+          <template v-slot:cell(group)="cell">
             <div class="group-cell">{{cell.item.group}}</div>
           </template>
-          <template slot="substance" slot-scope="cell">
+          <template v-slot:cell(substance)="cell">
             <div class="substance-blend-cell">{{cell.item.substance}}</div>
           </template>
-          <template slot="quantity_import" slot-scope="cell">
+          <template v-slot:cell(quantity_import)="cell">
             <span
               class="edit-trigger"
               v-b-tooltip.hover="cell.item.originalObj.quantity_import.tooltip ? true : false"
@@ -148,7 +148,7 @@
             </span>
           </template>
 
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template v-for="inputField in getTabInputFields" v-slot:[`cell(${inputField})`]="cell">
               <span
                 v-if="cell.item.originalObj[inputField].type === 'nonInput'"
                 class="edit-trigger"
@@ -170,7 +170,7 @@
               :field="cell.item.originalObj[inputField]"
             ></fieldGenerator>
           </template>
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
                <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>

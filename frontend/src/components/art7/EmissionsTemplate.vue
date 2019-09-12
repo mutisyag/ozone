@@ -37,10 +37,10 @@
           :filter="table.filters.search"
           ref="table"
         >
-          <template v-for="field in tableFields" :slot="`HEAD_${field.key}`">
+          <template v-for="field in tableFields" v-slot:[`head(${field.key})`]>
             <div v-html="field.label" :key="field.key"></div>
           </template>
-          <template slot="thead-top">
+          <template v-slot:thead-top>
             <tr class="first-header">
               <th
                 v-for="(header, header_index) in tab_info.section_headers"
@@ -63,7 +63,7 @@
             </tr>
           </template>
 
-          <template slot="checkForDelete" slot-scope="cell">
+          <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
               :disabled="!$store.getters.can_edit_data"
@@ -71,7 +71,7 @@
             />
           </template>
 
-          <template v-for="inputField in getTabInputFields" :slot="inputField" slot-scope="cell">
+          <template v-for="inputField in getTabInputFields" v-slot:[`cell(${inputField})`]="cell">
             <fieldGenerator
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
@@ -80,7 +80,7 @@
             />
           </template>
 
-          <template slot="validation" slot-scope="cell">
+          <template v-slot:cell(validation)="cell">
             <span
               class="row-controls"
               :key="`${cell.item.index}_validation_${tabName}_button`"

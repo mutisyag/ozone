@@ -130,7 +130,7 @@
             ref="dataEntryTable"
             @filtered="onFiltered"
           >
-            <template slot="actions" slot-scope="row">
+            <template v-slot:cell(actions)="row">
               <router-link
                 class="btn btn-light btn-sm"
                 :to="{ name: getFormName(row.item.details.obligation), query: {submission: row.item.details.url}}"
@@ -235,7 +235,7 @@
               :sort-direction="tableOptions.sorting.sortDirection"
               ref="table"
             >
-              <template slot="actions" slot-scope="row">
+              <template v-slot:cell(actions)="row">
                 <b-button-group>
                   <router-link
                     class="btn btn-light btn-sm"

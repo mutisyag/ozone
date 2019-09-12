@@ -43,7 +43,7 @@
         ref="table"
         @sort-changed="sortings"
       >
-        <template slot="thead-top">
+        <template v-slot:thead-top>
           <tr>
             <th v-for="(category, index) in tableTop" :key="index" :colspan="category.colspan">
               {{category.label}}

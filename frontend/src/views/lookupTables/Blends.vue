@@ -64,7 +64,7 @@
       @filtered="onFiltered"
       ref="table"
     >
-      <template slot="other_names" slot-scope="data">
+      <template v-slot:cell(other_names)="data">
         <span v-if="data.item.other_names">{{data.item.other_names}}</span>
         <span v-else>
         </span>
