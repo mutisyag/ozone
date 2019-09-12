@@ -10,6 +10,19 @@ const logMessage = (browser, message, header = false) => {
   })
 }
 
+const logNetworkTraffic = (browser) => {
+  browser.getLog('browser', logEntriesArray => {
+    console.log("Network traffic")
+    console.log("Log length: " + logEntriesArray.length)
+    logEntriesArray.forEach(log => {
+      if (log.message.includes('api')) {
+        let date = new Date(log.timestamp)
+        console.log("[" + log.level + "] " + date + " : " + log.message)
+      }
+    })
+  })
+}
+
 const showMouse = (browser) => {
   browser.execute(() => {
     const app = document.getElementsByClassName('app')
@@ -247,12 +260,18 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   logMessage(browser, 'Filling submission information')
 
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
+  /* Hide app-footer */
+  browser
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+    .pause(500)
+
   /* Open Submission Info tab */
   selectTab(browser, 'Submission Information')
   browser.useXpath()
     .execute('window.scrollTo(0,document.body.scrollHeight);')
     .waitForElementVisible("//input[@id='reporting_officer']", 20000)
     .pause(500)
+    
 
   fields.forEach(field => {
     /* Check if submissionInfo has missing fields */
@@ -285,6 +304,10 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   }
   /* Add date (special case) */
   datePickerValue(browser)
+  /* Show app-footer */
+  browser
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+    .pause(500)
 }
 
 /**
@@ -845,6 +868,7 @@ const uploadeFile = (browser, filename, filepath) => {
 
 module.exports = {
   logMessage,
+  logNetworkTraffic,
   showMouse,
   login,
   logout,

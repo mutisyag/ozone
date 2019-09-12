@@ -7,12 +7,12 @@ module.exports = {
 
   selenium: {
     start_process: true,
-    server_path: '/usr/local/lib/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.141.59.jar',
+    server_path: '/usr/lib/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.141.59.jar',
     host: '127.0.0.1',
     port: 4444,
     cli_args: {
-      'webdriver.chrome.driver': '/usr/local/lib/node_modules/webdriver-manager/selenium/chromedriver_76.0.3809.12'
-    }
+      'webdriver.chrome.driver': '/usr/lib/node_modules/webdriver-manager/selenium/chromedriver_76.0.3809.12'
+    },
   },
 
   test_settings: {
@@ -30,7 +30,9 @@ module.exports = {
       // },
       selenium_port: 4444,
       selenium_host: 'localhost',
-      silent: true
+      silent: true,
+      skip_testcases_on_fail: false,
+      end_session_on_fail: false
     },
 
     chrome: {
@@ -44,7 +46,8 @@ module.exports = {
             '--window-size=1800,900'
           ]
         }
-      }
+      },
+      skip_testcases_on_fail: false,
     }
   }
 }

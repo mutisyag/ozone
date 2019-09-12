@@ -8,6 +8,7 @@ const util = require('util')
 const execSync = util.promisify(require('child_process').execSync)
 const {
   logMessage,
+  logNetworkTraffic,
   showMouse,
   login,
   logout,
@@ -36,21 +37,41 @@ const {
 
 module.exports = {
   beforeEach: (browser) => {
-    // browser.resizeWindow(1480, 900)
+    browser.resizeWindow(1480, 900)
     console.log('running backend')
     execSync('bash ../utility/setup_backend.sh', { env: process.env })
     console.log('done running backend')
   },
-  afterEach: () => {
-    console.log('running cleanup')
-    execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
-    console.log('done running cleanup')
+  afterEach: (browser, done) => {
+    let sessionId = browser.sessionId
+
+    browser.getLog('browser', logEntriesArray => {
+      console.log("==========NETWORK TRAFFIC==========")
+      logEntriesArray.forEach(log => {
+        if (log.message.includes('api')) {
+          let date = new Date(log.timestamp)
+          date = date.toString().split(' ')
+          date = date[0] + ' ' + date[1] + ' ' + date[2] + ' ' + date[3] + ' ' + date[4]
+          console.log("[" + log.level + "] " + date + " : " + log.message)
+        }
+      })
+      console.log("===================================")
+    })
+
+    browser.end(() => {
+      console.log('running cleanup')
+      execSync('bash ../utility/cleanup_backend.sh', { env: process.env })
+      console.log('done running cleanup')
+      done()
+    })
+  },
+  after: (browser, done) => {
+    done()
   },
   BU_001: browser => {
     logMessage(browser, 'Testing the login / logout functionality', true)
     login(browser, 'p_ro', 'p_ro')
     logout(browser)
-    browser.end()
   },
   BU_002: browser => {
     logMessage(browser, 'Testing the creation / deletion of Article 7 submission', true)
@@ -59,7 +80,6 @@ module.exports = {
     deleteSubmissionFake(browser)
     deleteSubmission(browser)
     logout(browser)
-    browser.end()
   },
   BU_003: browser => {
     const data = {
@@ -86,7 +106,6 @@ module.exports = {
     clickQuestionnaireRadios(browser)
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     logout(browser)
-    browser.end()
   },
   BU_004: browser => {
     const submissionInfo = {
@@ -109,7 +128,6 @@ module.exports = {
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
     openGeneralInstructions(browser)
     logout(browser)
-    browser.end()
   },
   BU_005: browser => {
     const data = {
@@ -132,42 +150,40 @@ module.exports = {
     clickQuestionnaireRadios(browser, [], false)
     saveSubmission(browser, ['Questionnaire'])
     logout(browser)
-    browser.end()
   },
-  BU_006: browser => {
-    const row_values = {
-      quantity_total_new: 0.12
-    }
-    const modal_values = {
-      quantity_feedstock: 0.10,
-      quantity_critical_uses: 0.01,
-      decision_critical_uses: 'Do that'
-    }
-    const start_column = 4
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
+  // BU_006: browser => {
+  //   const row_values = {
+  //     quantity_total_new: 0.12
+  //   }
+  //   const modal_values = {
+  //     quantity_feedstock: 0.10,
+  //     quantity_critical_uses: 0.01,
+  //     decision_critical_uses: 'Do that'
+  //   }
+  //   const start_column = 4
+  //   const submissionInfo = {
+  //     reporting_officer: 'test name',
+  //     designation: 'test designation',
+  //     organization: 'test organisation',
+  //     postal_address: 'test address',
+  //     country: 'France',
+  //     phone: '+490000000',
+  //     email: 'john.doe@gmail.com'
+  //   }
 
-    logMessage(browser, 'Testing the edit of Imports tab', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser, ['has_imports'])
-    addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
-    addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values)
+  //   logMessage(browser, 'Testing the edit of Imports tab', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   fillSubmissionInfo(browser, submissionInfo)
+  //   clickQuestionnaireRadios(browser, ['has_imports'])
+  //   addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
+  //   addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values)
 
-    addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
-    addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values)
+  //   addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
+  //   addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values)
 
-    saveSubmission(browser, ['Questionnaire', 'Imports'])
-    browser.end()
-  },
+  //   saveSubmission(browser, ['Questionnaire', 'Imports'])
+  // },
   BU_007: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -201,7 +217,6 @@ module.exports = {
 
     addComment(browser, 'has_exports_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Exports'])
-    browser.end()
   },
   BU_008: browser => {
     const row_values = {
@@ -236,7 +251,6 @@ module.exports = {
 
     addComment(browser, 'has_produced_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Production'])
-    browser.end()
   },
   BU_009: browser => {
     const row_values = {
@@ -267,7 +281,6 @@ module.exports = {
 
     addComment(browser, 'has_destroyed_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Destruction'])
-    browser.end()
   },
   BU_010: browser => {
     const row_values = {
@@ -302,7 +315,6 @@ module.exports = {
 
     addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Non-Party'])
-    browser.end()
   },
   // BU_011: browser => {
   //   const row_values = {
@@ -331,29 +343,27 @@ module.exports = {
 
   //   addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
   //   saveSubmission(browser, ['Questionnaire', 'Emissions'])
-  //   browser.end()
   // },
-  // BU_012: browser => {
-  //   const submissionInfo = {
-  //     reporting_officer: 'test name',
-  //     designation: 'test designation',
-  //     organization: 'test organisation',
-  //     postal_address: 'test address',
-  //     country: 'France',
-  //     phone: '+490000000',
-  //     email: 'john.doe@gmail.com'
-  //   }
+  BU_012: browser => {
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
 
-  //   logMessage(browser, 'Testing attachments functionality', true)
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-  //   fillSubmissionInfo(browser, submissionInfo)
-  //   clickQuestionnaireRadios(browser)
-  //   selectTab(browser, 'Files')
-  //   uploadeFile(browser, 'hello.pdf', '../../../../')
-  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-  //   browser.end()
-  // },
+    logMessage(browser, 'Testing attachments functionality', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser)
+    selectTab(browser, 'Files')
+    uploadeFile(browser, 'hello.pdf', '../../../../')
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  },
   // BU_013: browser => {
   //   login(browser, 'p_ro', 'p_ro')
   //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
@@ -395,7 +405,6 @@ module.exports = {
     openLookupTable(browser, 'Substances')
     filterEntity(browser, 'controlled_substances', [group, name, formula])
     logout(browser)
-    browser.end()
   },
   BU_020: browser => {
     const name = 'R-411B'
@@ -405,7 +414,6 @@ module.exports = {
     openLookupTable(browser, 'Mixtures')
     filterEntity(browser, 'blends', [name, components])
     logout(browser)
-    browser.end()
   },
   BU_021: browser => {
     const name = 'Afghanistan'
@@ -414,7 +422,6 @@ module.exports = {
     openLookupTable(browser, 'Parties')
     filterEntity(browser, 'parties', [name])
     logout(browser)
-    browser.end()
   },
   // BU_022: browser => {
   //   const submissions = [
@@ -541,6 +548,5 @@ module.exports = {
     saveSubmission(browser, ['Submission Info'])
 
     logout(browser)
-    browser.end()
   }
 }
