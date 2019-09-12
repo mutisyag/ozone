@@ -26,7 +26,7 @@
     "@coreui/icons": "^0.3.0",
     "@coreui/vue": "^2.1.2",
     "@sentry/browser": "4.5.3",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "2.0.0",
     "core-js": "^2.6.5",
@@ -44,12 +44,11 @@
     "vue-multiselect": "^2.1.4",
     "vue-router": "^3.0.2",
     "vuejs-datepicker": "^1.5.4",
-    "vuex": "^3.1.0",
-    "webpack-bundle-tracker": "^0.3.0"
+    "vuex": "^3.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.5.0",
-    "@vue/cli-plugin-e2e-nightwatch": "^3.10.0",
+    "@vue/cli-plugin-e2e-nightwatch": "^3.11.0",
     "@vue/cli-plugin-eslint": "^3.5.0",
     "@vue/cli-plugin-unit-mocha": "^3.5.0",
     "@vue/cli-service": "^3.5.0",
@@ -63,7 +62,7 @@
     "eslint-plugin-vue": "^5.2.2",
     "istanbul-instrumenter-loader": "^3.0.1",
     "node-sass": "^4.11.0",
-    "nyc": "^13.3.0",
+    "nyc": "^14.1.1",
     "sass-loader": "^7.0.1",
     "sinon": "^7.2.7",
     "vue-template-compiler": "^2.6.8"
