@@ -179,9 +179,14 @@ class Command(BaseCommand):
                     )
                     continue
 
+            if substance and substance.substance_id != 194:
+                quantity_essen_uses = import_row["ImpEssenUse"]
+                quantity_crit_uses = None
+            else:
+                quantity_essen_uses = None
+                quantity_crit_uses = import_row["ImpEssenUse"]
+
             quantity_lab_uses = import_row["ImpLabUse"]
-            quantity_essen_uses = None
-            quantity_crit_uses = None
             remark = import_row["Remark"] if import_row["Remark"] is not None else ''
             decision_lab_uses = remark
             if quantity_lab_uses and import_row["ImpEssenUse"]:

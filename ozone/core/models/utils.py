@@ -60,3 +60,9 @@ def float_to_decimal_zero_if_none(value):
 def float_to_decimal(value):
     """Converts null-able float to decimal, returns None if value is None"""
     return decimal.Decimal(str(value)) if value else None
+
+
+def quantize(value):
+    """Quantize to DECIMAL_FIELD_DECIMALS decimal places"""
+    quant = decimal.Decimal(10) ** -DECIMAL_FIELD_DECIMALS
+    return value.quantize(quant)

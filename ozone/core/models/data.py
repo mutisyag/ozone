@@ -16,7 +16,8 @@ from .utils import (
     model_to_dict,
     decimal_zero_if_none,
     DECIMAL_FIELD_DIGITS,
-    DECIMAL_FIELD_DECIMALS
+    DECIMAL_FIELD_DECIMALS,
+    quantize,
 )
 
 
@@ -143,7 +144,7 @@ class BlendCompositionMixin:
                 for field in self.QUANTITY_FIELDS:
                     # Compute individual substance quantities
                     quantity = getattr(self, field)
-                    field_dictionary[field] = component.percentage * quantity \
+                    field_dictionary[field] = quantize(component.percentage * quantity) \
                         if quantity else None
 
                 attributes = model_to_dict(
