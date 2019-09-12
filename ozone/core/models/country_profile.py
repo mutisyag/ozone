@@ -167,6 +167,20 @@ class LicensingSystem(models.Model):
         db_table = "licensing_system"
 
 
+class LicensingSystemFile(models.Model):
+    licensing_system = models.ForeignKey(
+        LicensingSystem, related_name='files', on_delete=models.CASCADE
+    )
+    file = models.FileField(upload_to=user_directory_path)
+
+
+class LicensingSystemURL(models.Model):
+    licensing_system = models.ForeignKey(
+        LicensingSystem, related_name='urls', on_delete=models.CASCADE
+    )
+    url = models.URLField('URL', max_length=1024)
+
+
 class FocalPoint(models.Model):
     party = models.ForeignKey(
         Party, related_name='focal_points', on_delete=models.PROTECT

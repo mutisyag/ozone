@@ -6,8 +6,7 @@ from django_admin_listfilter_dropdown.filters import DropdownFilter, RelatedDrop
 from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import logout as auth_logout
-from django.contrib.admin import AdminSite
-from django.contrib.admin import site
+from django.contrib.admin import site, AdminSite, TabularInline
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import F, Subquery
@@ -67,6 +66,8 @@ from .models import (
     ProdConsMT,
     FocalPoint,
     LicensingSystem,
+    LicensingSystemFile,
+    LicensingSystemURL,
     Website,
     OtherCountryProfileData,
     ReclamationFacility,
@@ -891,6 +892,16 @@ class FocalPointAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
         return form
 
 
+class LicensingSystemFileInline(TabularInline):
+    model = LicensingSystemFile
+    extra = 1
+
+
+class LicensingSystemURLInline(TabularInline):
+    model = LicensingSystemURL
+    extra = 1
+
+
 @admin.register(LicensingSystem)
 class LicensingSystemAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
 
@@ -905,6 +916,10 @@ class LicensingSystemAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
     list_display = (
         'party', 'has_ods', 'date_reported_ods', 'has_hfc', 'date_reported_hfc',
         'remarks'
+    )
+    inlines = (
+        LicensingSystemFileInline,
+        LicensingSystemURLInline,
     )
     search_fields = ('party__name', )
     list_filter = (
