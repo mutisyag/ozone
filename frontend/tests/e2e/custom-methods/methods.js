@@ -736,24 +736,23 @@ const addValues = (browser, table, tab, row, row_values, modal_values) => {
       .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 20000)
       .moveToElement(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`, 10, 10)
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
-      .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .fa-pencil-square-o`)
       .pause(500)
 
     browser
-      .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 20000)
+      .waitForElementVisible('#edit_modal .modal-body', 20000)
       .pause(500)
     /* Add values in modal */
     for (const field_id of Object.keys(modal_values)) {
       browser
         .click(`#${tab} #edit_modal .modal-body #${field_id}`)
         .pause(200)
-        .clearValue(`#${tab} #edit_modal .modal-body #${field_id}`)
-        .setValue(`#${tab} #edit_modal .modal-body #${field_id}`, modal_values[field_id])
+        .clearValue(`#edit_modal .modal-body #${field_id}`)
+        .setValue(`#edit_modal .modal-body #${field_id}`, modal_values[field_id])
     }
     /* Close modal */
     browser
       .pause(500)
-      .click(`#${tab} #edit_modal .modal-dialog button span[data-msgid="Close"]`)
+      .click('#edit_modal .modal-dialog button span[data-msgid="Close"]')
       .pause(500)
   }
   /* Show app-footer */
@@ -804,19 +803,19 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
       .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .row-controls span:not(.table-btn)`)
   })
   browser
-    .waitForElementVisible(`#${tab} #edit_modal .modal-body`, 20000)
+    .waitForElementVisible(`#edit_modal .modal-body`, 20000)
     .pause(500)
   /* Check if modal inputs are empty */
   for (const field_id of Object.keys(modal_values)) {
     browser
-      .getValue(`#${tab} #edit_modal .modal-body #${field_id}`, (data) => {
+      .getValue(`#edit_modal .modal-body #${field_id}`, (data) => {
         browser.assert.equal(data.value, '')
       })
   }
   /* Close modal */
   browser
     .pause(500)
-    .click(`#${tab} #edit_modal .modal-dialog .close`)
+    .click('#edit_modal .modal-dialog .close')
     .pause(500)
     .execute(`document.querySelector("#${tab} #${table} tbody tr:nth-child(${row})").classList.remove("hovered")`, () => {})
     /* Show app-footer */
