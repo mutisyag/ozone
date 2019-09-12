@@ -10,6 +10,19 @@ const logMessage = (browser, message, header = false) => {
   })
 }
 
+const logNetworkTraffic = (browser) => {
+  browser.getLog('browser', logEntriesArray => {
+    console.log("Network traffic")
+    console.log("Log length: " + logEntriesArray.length)
+    logEntriesArray.forEach(log => {
+      if (log.message.includes('api')) {
+        let date = new Date(log.timestamp)
+        console.log("[" + log.level + "] " + date + " : " + log.message)
+      }
+    })
+  })
+}
+
 const showMouse = (browser) => {
   browser.execute(() => {
     const app = document.getElementsByClassName('app')
@@ -845,6 +858,7 @@ const uploadeFile = (browser, filename, filepath) => {
 
 module.exports = {
   logMessage,
+  logNetworkTraffic,
   showMouse,
   login,
   logout,
