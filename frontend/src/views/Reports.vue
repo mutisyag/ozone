@@ -84,6 +84,7 @@ export default {
     }
   },
   async created() {
+    this.updateBreadcrumbs()
     const currentUser = await this.$store.dispatch('getMyCurrentUser')
     const parties = await this.$store.dispatch('getDashboardParties')
     if (currentUser[0].is_secretariat) {
@@ -99,6 +100,9 @@ export default {
     Multiselect
   },
   methods: {
+    updateBreadcrumbs() {
+      this.$store.commit('updateBreadcrumbs', `${this.$gettext('Reports')} | ${this.$gettext('Online Reporting System')}`)
+    },
     parseParams(params) {
       const keys = Object.keys(params)
       let options = ''

@@ -241,7 +241,7 @@ export default {
       }
     },
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Production and consumption'))
+      this.$store.commit('updateBreadcrumbs', `${this.$gettext('Production and consumption')} | ${this.$gettext('Online Reporting System')}`)
     }
   },
 
