@@ -39,7 +39,6 @@
               />
             </b-input-group>
 
-            <small class="color-red" v-if="showValidation && !selected.parties.length" v-translate>At least one party is required</small>
             <b-input-group id="party_selector" class="mb-2" :prepend="$gettext('Party')">
               <multiselect
                 :placeholder="$gettext('Select option')"
@@ -129,7 +128,7 @@ export default {
         period: Array.isArray(this.selected.periods) ? this.selected.periods.map(p => p.value) : this.selected.periods.value,
         party: Array.isArray(this.selected.parties) ? this.selected.parties.map(p => p.value) : this.selected.parties.value
       }
-      if (!params.period.length || !params.party.length || !this.selected.reports) {
+      if (!params.period.length || !this.selected.reports) {
         this.showValidation = true
         return
       }
