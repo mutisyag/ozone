@@ -69,7 +69,7 @@
           id="add-blend-button"
           variant="primary"
         >
-          <span v-translate="{length: selected_blends.selected.length}">Add %{length} rows</span>
+          <span v-translate="{length: selected_blends.selected.length}">Add %{length} mixtures</span>
         </b-btn>
         <b-btn variant="light" v-if="selected_blends.selected.length" @click="resetData">Cancel</b-btn>
       </b-btn-group>
