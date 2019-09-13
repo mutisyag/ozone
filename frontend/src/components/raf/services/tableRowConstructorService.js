@@ -73,7 +73,7 @@ export default {
         selected: substance || null
       },
       quantity_exempted: {
-        type: 'number',
+        type: 'nonInput',        
         selected: null,
         exemptionValue
       },
