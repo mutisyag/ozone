@@ -30,7 +30,7 @@
             </b-btn>
           </b-col>
         </b-row>
-        
+    
         <template slot="modal-footer">
           <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${_uid}`].hide()">Cancel</b-btn>
         </template>
