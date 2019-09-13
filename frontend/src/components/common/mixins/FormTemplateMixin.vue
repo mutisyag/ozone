@@ -60,6 +60,14 @@ export default {
     }
   },
 
+  mounted(){
+    const tables = document.querySelectorAll('body .tab-pane table')
+    tables.forEach(t=> {
+      console.log('letable', t)
+      t.addEventListener('click', this.closeSidebar)
+    })
+  },
+
   computed: {
     selectedForDelete() {
       return this.tableItems.length && this.tableItems.filter(field => field.checkForDelete).map(field => field.index)
@@ -240,6 +248,12 @@ export default {
   },
 
   methods: {
+    closeSidebar(e) {
+      if(!e.target.classList.contains('fa-exclamation-circle')) {
+        const body = document.querySelector('body')
+        body.classList.remove('aside-menu-lg-show')
+      }
+    },
     bulkRemove(indexList) {
       this.$store.dispatch('removeBulkFields', {
         tab: this.tabName,

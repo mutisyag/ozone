@@ -232,8 +232,6 @@ export default {
     selectedTab() {
       const { form } = this.$store.state
       const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
-      const body = document.querySelector('body')
-      body.classList.remove('aside-menu-lg-show')
       return tab
     },
     tabsIdsWithAssideMenu() {
