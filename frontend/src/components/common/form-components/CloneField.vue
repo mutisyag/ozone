@@ -33,13 +33,6 @@
         
         <template slot="modal-footer">
           <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${_uid}`].hide()">Cancel</b-btn>
-          <!-- <b-btn
-            @click="addSubstance"
-            variant="primary"
-            v-if="selected_countries.selected.length"
-            >
-            <span v-translate="{length: selected_countries.selected.length}">Add %{length} rows</span>
-          </b-btn> -->
         </template>
       </b-modal>
   </div>
