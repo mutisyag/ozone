@@ -174,12 +174,6 @@ export default {
     selectedTab() {
       const { form } = this.$store.state
       const tab = form.tabs[form.formDetails.tabsDisplay[this.tabIndex]]
-      const body = document.querySelector('body')
-      if (tab.hasAssideMenu && !this.$store.getters.isReadOnly) {
-        body.classList.add('aside-menu-lg-show')
-      } else {
-        body.classList.remove('aside-menu-lg-show')
-      }
       return tab
     },
     formTabs() {
