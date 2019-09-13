@@ -1,31 +1,45 @@
 <template>
   <div v-if="field && tabName">
     <b-btn class="mt-1" size="sm" variant="outline-dark" id="show-btn" @click="openModalAndSelect">Add countries</b-btn>
-    <b-modal size="lg"  @shown="openCountryList" :id="`countries-modal-${this._uid}`" :ref="`countries-modal-${this._uid}`" :title="$gettext('Add countries')">
-        <div ref="countries_selector" style="position: relative; width: calc(100% - 180px);">
-          <multiselect
-            :max-height="250"
-            :multiple="true"
-            :clear-on-select="false"
-            :hide-selected="true"
-            :close-on-select="false"
-            :disabled="disabled"
-            label="text"
-            trackBy="value"
-            :placeholder="$gettext('Countries')"
-            v-model="selected_countries.selected"
-            :options="countryOptions"
-          />
-        </div>
+    <b-modal size="lg"  @shown="openCountryList" :id="`countries-modal-${this._uid}`" :ref="`countries-modal-${this._uid}`" :title="$gettext('Select one or more countries/regions/territories')">
+        <b-row>
+          <b-col cols="8">
+            <div ref="countries_selector" style="position: relative; width: 100%;">
+              <multiselect
+                :max-height="250"
+                :multiple="true"
+                :clear-on-select="false"
+                :hide-selected="true"
+                :close-on-select="false"
+                :disabled="disabled"
+                label="text"
+                trackBy="value"
+                :placeholder="false"
+                v-model="selected_countries.selected"
+                :options="countryOptions"
+              />
+            </div>
+          </b-col>
+          <b-col>
+            <b-btn
+              @click="addSubstance"
+              variant="primary"
+              v-if="selected_countries.selected.length"
+              >
+              <span v-translate="{length: selected_countries.selected.length}">Add %{length} countries/regions/territories</span>
+            </b-btn>
+          </b-col>
+        </b-row>
+        
         <template slot="modal-footer">
           <b-btn variant="outline-danger" @click="resetData();$refs[`countries-modal-${_uid}`].hide()">Cancel</b-btn>
-          <b-btn
+          <!-- <b-btn
             @click="addSubstance"
             variant="primary"
             v-if="selected_countries.selected.length"
             >
             <span v-translate="{length: selected_countries.selected.length}">Add %{length} rows</span>
-          </b-btn>
+          </b-btn> -->
         </template>
       </b-modal>
   </div>
