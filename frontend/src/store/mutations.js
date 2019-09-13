@@ -57,7 +57,6 @@ const mutations = {
     const tab = state.form.tabs[data.fieldInfo.tabName]
     const formField = tab.form_fields[data.fieldInfo.index]
 
-    console.log(data.fieldInfo)
     if (data.fieldInfo.party) {
       formField.imports.find(i => i.party === data.fieldInfo.party).quantity = data.value
       return
