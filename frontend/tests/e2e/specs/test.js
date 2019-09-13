@@ -402,7 +402,7 @@ module.exports = {
     const formula = 'CFCl3'
 
     login(browser, 'p_ro', 'p_ro')
-    openLookupTable(browser, 'Substances')
+    openLookupTable(browser, 'Controlled substances')
     filterEntity(browser, 'controlled_substances', [group, name, formula])
     logout(browser)
   },
