@@ -29,7 +29,7 @@ export default {
         if (questionnaire_field.selected && !this.invalidTabs.includes(questionnaire_field.name)) {
           justSave.push(questionnaire_field.name)
         }
-        if (!questionnaire_field.selected && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length) {
+        if (questionnaire_field.selected === false && this.$store.state.form.tabs[questionnaire_field.name].form_fields.length) {
           removeDataAndSave.push(questionnaire_field.name)
         }
         if (!questionnaire_field.selected

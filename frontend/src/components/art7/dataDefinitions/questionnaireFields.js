@@ -4,7 +4,7 @@ const getQuestionnaireFields = ($gettext) => {
   const questionnaireFields = {
     has_imports: {
       label: `1. ${$gettext('Did your country import CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs in the reporting year?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_imports',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
@@ -12,7 +12,7 @@ const getQuestionnaireFields = ($gettext) => {
     },
     has_exports: {
       label: `2. ${$gettext('Did your country export or re-export CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs in the reporting year?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_exports',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
@@ -20,7 +20,7 @@ const getQuestionnaireFields = ($gettext) => {
     },
     has_produced: {
       label: `3. ${$gettext('Did your country produce CFCs, halons, carbon tetrachloride, methyl chloroform, HCFCs, HBFCs, bromochloromethane, methyl bromide or HFCs in the reporting year?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_produced',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
@@ -28,7 +28,7 @@ const getQuestionnaireFields = ($gettext) => {
     },
     has_destroyed: {
       label: `4. ${$gettext('Did your country destroy any ozone-depleting substances or HFCs in the reporting year?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_destroyed',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
@@ -36,7 +36,7 @@ const getQuestionnaireFields = ($gettext) => {
     },
     has_nonparty: {
       label: `5. ${$gettext('Did your country import from or export or re-export to non-Parties in the reporting year?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_nonparty',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),
@@ -44,7 +44,7 @@ const getQuestionnaireFields = ($gettext) => {
     },
     has_emissions: {
       label: `6. ${$gettext('Did your country generate the substance HFC-23 in the reporting year from any facility that produces (manufactures) Annex C Group I or Annex F substances?')}`,
-      type: 'radio',
+      type: 'questionnaireRadio',
       name: 'has_emissions',
       selected: null,
       options: getCommonQuestionnaireOptions($gettext),

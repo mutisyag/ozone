@@ -40,6 +40,23 @@
       :checked="field.selected"
       :options="field.options"
     ></b-form-radio-group>
+
+    <b-form-group :id="field.name" v-else-if="field.type === 'questionnaireRadio'">
+        <b-form-checkbox
+          v-for="(option, index) in field.options"
+          :key="`${field.name}_${option.value}_${index}`"
+          :id="`${field.name}_${option.value}_${index}`"
+          :name="`${field.name}_${option.value}_${index}`"
+          :value="option.value"
+          :unchecked-value="null"
+          @change="updateFormFieldQuestionnaire($event, field.selected)"
+          :checked="field.selected"
+          inline
+        >
+        {{option.text}}
+      </b-form-checkbox>
+    </b-form-group>
+    
     <b-form-checkbox
       :id="id"
       @change="updateFormFieldWithTabs"
@@ -173,6 +190,10 @@ export default {
 
     updateFormFieldWithTabs(event) {
       this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
+    },
+    updateFormFieldQuestionnaire(event, value) {
+      this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
+
     }
   },
   watch: {
