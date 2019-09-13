@@ -429,7 +429,7 @@ class Submission(models.Model):
         "the current one is automatically flagged as Superseded."
     )
     flag_checked_blanks = models.BooleanField(
-        default=True,
+        default=False,
         verbose_name='checked blanks',
     )
     flag_has_blanks = models.BooleanField(
