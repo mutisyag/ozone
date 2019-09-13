@@ -361,7 +361,7 @@ const openDashboard = (browser) => {
     .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 20000)
     .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']")
     .pause(3000)
-    .waitForElementVisible('//div[@id="obligation_selector"]', 20000)
+    // .waitForElementVisible('//div[@id="obligation_selector"]', 20000)
     .pause(3000)
     .assert.urlContains('/reporting/dashboard')
     .pause(3000)
