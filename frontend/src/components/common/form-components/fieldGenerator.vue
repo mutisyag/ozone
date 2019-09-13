@@ -40,7 +40,7 @@
       :options="field.options"
     ></b-form-radio-group>
 
-    <b-form-group  v-else-if="field.type === 'questionnaireRadio'">
+    <b-form-group :id="field.name" v-else-if="field.type === 'questionnaireRadio'">
         <b-form-checkbox
           v-for="(option, index) in field.options"
           :key="`${field.name}_${option.value}_${index}`"
