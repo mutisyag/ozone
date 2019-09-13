@@ -211,7 +211,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Blends'))
+      this.$store.commit('updateBreadcrumbs', `${this.$gettext('Mixtures')} | ${this.$gettext('Online Reporting System')}`)
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length

@@ -204,7 +204,7 @@ export default {
   },
   methods: {
     updateBreadcrumbs() {
-      this.$store.commit('updateBreadcrumbs', this.$gettext('Parties'))
+      this.$store.commit('updateBreadcrumbs', `${this.$gettext('Parties')} | ${this.$gettext('Online Reporting System')}`)
     },
     onFiltered(filteredItems) {
       this.table.totalRows = filteredItems.length

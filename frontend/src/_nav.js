@@ -4,7 +4,7 @@ const getNav = ($gettext) => [{
   icon: 'icon-screen-desktop'
 },
 {
-  name: $gettext('Substances'),
+  name: $gettext('Controlled substances'),
   url: '/lookup-tables/controlled-substances',
   icon: 'icon-chemistry'
 }, {
