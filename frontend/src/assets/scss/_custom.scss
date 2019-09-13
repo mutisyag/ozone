@@ -1849,3 +1849,13 @@ body.aside-menu-off-canvas .aside-menu {
     background: #eee;
   }
 }
+
+
+.modal-dialog {
+  button.close {
+    font-weight: 800;
+    color: #f04d29;
+    font-size: 1.8rem;
+    opacity: 1;
+  }
+}

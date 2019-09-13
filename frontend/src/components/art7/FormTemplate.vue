@@ -695,6 +695,8 @@
         >Edit %{name} mixture</span>
       </div>
       <div v-if="modal_data">
+      <b-btn @click="$refs.edit_modal.hide()" style="float:right" variant="success">Close</b-btn>          
+
         <p class="muted">
           <span
             v-translate
