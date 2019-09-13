@@ -64,6 +64,8 @@ from .models import (
     PlanOfAction,
     FocalPoint,
     LicensingSystem,
+    LicensingSystemFile,
+    LicensingSystemURL,
     Website,
     OtherCountryProfileData,
     ReclamationFacility,
@@ -2005,12 +2007,26 @@ class FocalPointSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
 
+class LicensingSystemFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LicensingSystemFile
+        exclude = ('licensing_system', )
+
+
+class LicensingSystemURLSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LicensingSystemURL
+        exclude = ('licensing_system', )
+
+
 class LicensingSystemSerializer(serializers.ModelSerializer):
     party = serializers.StringRelatedField(read_only=True)
     iso_alpha3_code = serializers.StringRelatedField(
         source="party.iso_alpha3_code",
         read_only=True,
     )
+    files = LicensingSystemFileSerializer(read_only=True, many=True)
+    urls = LicensingSystemURLSerializer(read_only=True, many=True)
 
     class Meta:
         model = LicensingSystem
