@@ -81,32 +81,32 @@ module.exports = {
     deleteSubmission(browser)
     logout(browser)
   },
-  BU_003: browser => {
-    const data = {
-      submissionInfo: {
-        designation: 'test designation',
-        organization: 'test organisation',
-        postal_address: 'test address',
-        country: 'France',
-        phone: '+490000000',
-        email: 'john.doe@gmail.com'
-      },
-      reporting_officer: 'test name'
-    }
+  // BU_003: browser => {
+  //   const data = {
+  //     submissionInfo: {
+  //       designation: 'test designation',
+  //       organization: 'test organisation',
+  //       postal_address: 'test address',
+  //       country: 'France',
+  //       phone: '+490000000',
+  //       email: 'john.doe@gmail.com'
+  //     },
+  //     reporting_officer: 'test name'
+  //   }
 
-    const autocomplet = false
+  //   const autocomplet = false
 
-    logMessage(browser, 'Testing the edit of Article 7', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    openDashboard(browser)
-    editSubmission(browser, 1)
-    saveAndFail(browser, data.submissionInfo)
-    fillSubmissionInfo(browser, data, autocomplet)
-    clickQuestionnaireRadios(browser)
-    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-    logout(browser)
-  },
+  //   logMessage(browser, 'Testing the edit of Article 7', true)
+  //   login(browser, 'p_ro', 'p_ro')
+  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+  //   openDashboard(browser)
+  //   editSubmission(browser, 1)
+  //   saveAndFail(browser, data.submissionInfo)
+  //   fillSubmissionInfo(browser, data, autocomplet)
+  //   clickQuestionnaireRadios(browser)
+  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+  //   logout(browser)
+  // },
   BU_004: browser => {
     const submissionInfo = {
       reporting_officer: 'test name',
