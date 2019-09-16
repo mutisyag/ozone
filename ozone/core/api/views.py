@@ -146,6 +146,7 @@ from ..serializers import (
     RAFSerializer,
     SubmissionFormatSerializer,
     AggregationSerializer,
+    AggregationNoDestructionSerializer,
     AggregationMTSerializer,
     LimitSerializer,
     EmailSerializer,
@@ -540,7 +541,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
     filter_backends = (
         # Aggregations are public information, no need to enforce filtering
-        # With the exeption of Destruction data by annex group
+        # (with the exception of Destruction data by annex group).
         # IsOwnerFilterBackend,
         filters.DjangoFilterBackend,
         OrderingFilter,
@@ -564,10 +565,15 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         We need to override the default ViewSet list method to handle the
         custom `aggregation` parameter.
         """
-        def populate_aggregation(aggregation, fields, to_add):
+        def populate_aggregation(
+            aggregation, fields, to_add, destructions_only_from=None
+        ):
             """
             Helper function to populate an aggregation's fields based on a list
             of dictionaries containing key-value pairs for those fields.
+
+            If the destructions_only_from parameter is set, only take into
+            account destruction values from the party it is set to.
             """
             for field in fields:
                 # A null value in any limit field means that the sum of all
@@ -580,6 +586,21 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         None if any([a[field] is None for a in to_add]) else
                         round_decimal_half_up(
                             sum([a[field] for a in to_add]),
+                            2
+                        )
+                    )
+                elif field.startswith('destruction') and destructions_only_from:
+                    setattr(
+                        aggregation,
+                        field,
+                        None if all([a[field] is None for a in to_add]) else
+                        round_decimal_half_up(
+                            sum(
+                                [
+                                    a[field] or 0 for a in to_add
+                                    if a['party'] == destructions_only_from
+                                ]
+                            ),
                             2
                         )
                     )
@@ -607,12 +628,18 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             # Using `distinct()` does not work because this queryset is
             # ordered by fields from related models, which makes similar
             # values seem distinct.
-            periods = set(
-                queryset.values_list('reporting_period', flat=True)
-            )
             all_values = queryset.values(
                 *fields, 'party', 'group', 'reporting_period'
             )
+            periods = set(queryset.values('reporting_period', flat=True))
+
+            # This one is used to limit the destruction values that are being
+            # aggregated - only the ones for the party the user is coming from
+            # will be taken into account.
+            destructions_only_from = None
+            if not request.user.is_secretariat:
+                destructions_only_from = request.user.party_id
+
             values = []
             for period in periods:
                 # Use a list of dictionaries for in-memory storage to optimize
@@ -625,7 +652,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                     # Sum values for all groups and all parties for this
                     # reporting period
                     aggregation = ProdCons(reporting_period_id=period)
-                    populate_aggregation(aggregation, fields, values_list)
+                    populate_aggregation(
+                        aggregation, fields, values_list, destructions_only_from
+                    )
                     values.append(aggregation)
                 elif 'party' in aggregates:
                     groups = set(queryset.values_list('group', flat=True))
@@ -638,7 +667,10 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             aggregation = ProdCons(
                                 group_id=group, reporting_period_id=period
                             )
-                            populate_aggregation(aggregation, fields, entries)
+                            populate_aggregation(
+                                aggregation, fields, entries,
+                                destructions_only_from
+                            )
                             values.append(aggregation)
                 elif 'group' in aggregates:
                     parties = set(queryset.values_list('party', flat=True))
@@ -651,13 +683,30 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             aggregation = ProdCons(
                                 party_id=party, reporting_period_id=period
                             )
-                            populate_aggregation(aggregation, fields, entries)
+                            populate_aggregation(
+                                aggregation, fields, entries,
+                                destructions_only_from
+                            )
                             values.append(aggregation)
 
             # Aggregating disables pagination. Ordering also seems to go down
             # the drain. However that is ok given the small number of results
             # that will be returned.
             return Response(AggregationSerializer(values, many=True).data)
+
+        # If queryset related to data for other parties than the user's,
+        # we will not show destruction data at all. In order to keep
+        # a consistent behavior between paginated and non-paginated responses,
+        # we look at the entire queryset when deciding which serializer to use.
+        # Overwriting self.serializer_class seems like the less intrusive
+        # way to do this (as get_serializer_class() does not get access to the
+        # queryset).
+        if not request.user.is_secretariat:
+            parties = set(queryset.values_list('party', flat=True))
+            # If there are additional parties in this queryset to the user's,
+            # do not serialize destruction data
+            if len(parties - {self.request.user.party_id}):
+                self.serializer_class = AggregationNoDestructionSerializer
 
         page = self.paginate_queryset(queryset)
         if page is not None:

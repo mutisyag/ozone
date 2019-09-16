@@ -1959,6 +1959,13 @@ class AggregationSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class AggregationNoDestructionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdCons
+        exclude = ('destroyed',)
+
+
 class AggregationMTSerializer(serializers.ModelSerializer):
 
     class Meta:
