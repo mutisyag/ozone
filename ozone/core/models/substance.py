@@ -292,6 +292,7 @@ class Blend(models.Model):
     party = models.ForeignKey(
         Party,
         related_name='custom_blends',
+        blank=True,
         null=True,
         on_delete=models.PROTECT,
         help_text="Only custom blends will be associated with a Party."
