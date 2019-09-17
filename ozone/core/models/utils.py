@@ -62,6 +62,13 @@ def float_to_decimal(value):
     return decimal.Decimal(str(value)) if value else None
 
 
+def sum_decimals(d1, d2):
+    """ Adds decimals but keeps None values if present"""
+    if d1 and d2:
+        return d1+d2
+    return d1 or d2
+
+
 def quantize(value):
     """Quantize to DECIMAL_FIELD_DECIMALS decimal places"""
     quant = decimal.Decimal(10) ** -DECIMAL_FIELD_DECIMALS

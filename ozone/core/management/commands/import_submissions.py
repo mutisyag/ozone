@@ -27,7 +27,7 @@ from ozone.core.models import (
     SubmissionFormat,
     Blend,
 )
-from ozone.core.models.utils import float_to_decimal
+from ozone.core.models.utils import float_to_decimal, sum_decimals
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -139,7 +139,10 @@ class Command(BaseCommand):
 
             for imp_type in self.import_types:
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
-                double_check_new[pk] += decimal.Decimal(import_row[imp_type] or 0)
+                double_check_new[pk] = sum_decimals(
+                    double_check_new[pk],
+                    float_to_decimal(import_row[imp_type])
+                )
 
             if not any(import_row[_npt_type]
                        for _npt_type in ("ImpNew", "ImpRecov")):
@@ -190,7 +193,7 @@ class Command(BaseCommand):
             remark = import_row["Remark"] if import_row["Remark"] is not None else ''
             decision_lab_uses = remark
             if quantity_lab_uses and import_row["ImpEssenUse"]:
-                diff = import_row["ImpEssenUse"] - quantity_lab_uses
+                diff = float_to_decimal(import_row["ImpEssenUse"]) - float_to_decimal(quantity_lab_uses)
                 if diff >= 0:
                     if substance and substance.substance_id != 194:
                         quantity_essen_uses = diff
@@ -213,7 +216,9 @@ class Command(BaseCommand):
                 "quantity_feedstock": float_to_decimal(
                     import_row["ImpFeedstock"]
                 ),
-                "quantity_critical_uses": float_to_decimal(quantity_crit_uses),
+                "quantity_critical_uses": float_to_decimal(
+                    quantity_crit_uses
+                ),
                 "quantity_essential_uses": float_to_decimal(
                     quantity_essen_uses
                 ),
@@ -246,7 +251,10 @@ class Command(BaseCommand):
         for import_row in row["Import"]:
             for imp_type in self.import_types:
                 pk = party.abbr, period.name, import_row["SubstID"], imp_type
-                double_check_old[pk] += decimal.Decimal(import_row[imp_type] or 0)
+                double_check_old[pk] = sum_decimals(
+                    double_check_old[pk],
+                    float_to_decimal(import_row[imp_type])
+                )
 
         self.double_check(double_check_old, double_check_new, "Import")
 
@@ -277,11 +285,23 @@ class Command(BaseCommand):
         nonparty_remarks_secretariat = []
         for nonparty_row in row["NonPartyTradeNew"]:
             pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
-            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpNew"] or 0)
-            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTImpRecov"] or 0)
+            double_check_new[pk] = sum_decimals(
+                double_check_new[pk],
+                float_to_decimal(nonparty_row["NPTImpNew"])
+            )
+            double_check_new[pk] = sum_decimals(
+                double_check_new[pk],
+                float_to_decimal(nonparty_row["NPTImpRecov"])
+            )
             pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
-            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpNew"] or 0)
-            double_check_new[pk] += decimal.Decimal(nonparty_row["NPTExpRecov"] or 0)
+            double_check_new[pk] = sum_decimals(
+                double_check_new[pk],
+                float_to_decimal(nonparty_row["NPTExpNew"])
+            )
+            double_check_new[pk] = sum_decimals(
+                double_check_new[pk],
+                float_to_decimal(nonparty_row["NPTExpRecov"])
+            )
 
             try:
                 substance_id = self.substances[nonparty_row["SubstID"]].id
@@ -338,9 +358,15 @@ class Command(BaseCommand):
         # consistency. Only use the NonPartyTradeNew sheet for now.
         for nonparty_row in row["NonPartyTrade"]:
             pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTImp"
-            double_check_old[pk] += decimal.Decimal(nonparty_row["Import"] or 0)
+            double_check_old[pk] = sum_decimals(
+                double_check_old[pk],
+                float_to_decimal(nonparty_row["Import"])
+            )
             pk = party.abbr, period.name, nonparty_row["SubstID"], "NPTExp"
-            double_check_old[pk] += decimal.Decimal(nonparty_row["Export"] or 0)
+            double_check_old[pk] = sum_decimals(
+                double_check_old[pk],
+                float_to_decimal(nonparty_row["Export"])
+            )
 
         self.double_check(double_check_old, double_check_new, "NonPartyTrade")
 
@@ -375,7 +401,11 @@ class Command(BaseCommand):
                                tag, key)
                 continue
 
-            if abs(new_value - old_value) >= (0.1 ** self.precision):
+            if (
+                new_value and not old_value or
+                old_value and not new_value or
+                new_value and old_value and abs(new_value - old_value) >= (0.1 ** self.precision)
+            ):
                 logger.warning("%s inconsistency found for %s, values differ old=%s new=%s",
                                tag, key, old_value, new_value)
                 continue
@@ -549,7 +579,7 @@ class Command(BaseCommand):
             decision_crit_uses = ""
             remark = produce_row["Remark"] if produce_row["Remark"] is not None else ''
             if quantity_lab_uses and produce_row["ProdEssenUse"]:
-                diff = produce_row["ProdEssenUse"] - quantity_lab_uses
+                diff = float_to_decimal(produce_row["ProdEssenUse"]) - float_to_decimal(quantity_lab_uses)
                 if diff > 0.0001:
                     decision_lab_uses = remark
                     if substance.substance_id != 194:
@@ -572,7 +602,9 @@ class Command(BaseCommand):
                 "remarks_party": produce_row["Remark"] or "",
                 "substance_id": substance_id,
                 # "remarks_os": "",
-                "quantity_critical_uses": float_to_decimal(quantity_crit_uses),
+                "quantity_critical_uses": float_to_decimal(
+                    quantity_crit_uses
+                ),
                 "quantity_essential_uses": float_to_decimal(
                     quantity_essen_uses
                 ),
