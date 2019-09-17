@@ -150,9 +150,9 @@ class LicensingSystem(models.Model):
         Party, related_name='licensing_systems', on_delete=models.PROTECT
     )
     has_ods = models.BooleanField(default=False)
-    date_reported_ods = models.DateField(null=True)
+    date_reported_ods = models.DateField(null=True, blank=True)
     has_hfc = models.BooleanField(default=False)
-    date_reported_hfc = models.DateField(null=True)
+    date_reported_hfc = models.DateField(null=True, blank=True)
     remarks = models.CharField(max_length=9999, blank=True)
 
     submission = models.ForeignKey(
