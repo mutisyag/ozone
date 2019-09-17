@@ -173,12 +173,18 @@ class LicensingSystemFile(models.Model):
     )
     file = models.FileField(upload_to=user_directory_path)
 
+    class Meta:
+        db_table = "licensing_system_file"
+
 
 class LicensingSystemURL(models.Model):
     licensing_system = models.ForeignKey(
         LicensingSystem, related_name='urls', on_delete=models.CASCADE
     )
     url = models.URLField('URL', max_length=1024)
+
+    class Meta:
+        db_table = "licensing_system_url"
 
 
 class FocalPoint(models.Model):
