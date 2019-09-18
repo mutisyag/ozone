@@ -190,7 +190,7 @@ def get_big_float(nr):
 
 
 def format_decimal(nr):
-    if not nr:
+    if nr is None:
         return ''
     return '{:f}'.format(nr.normalize())
 
