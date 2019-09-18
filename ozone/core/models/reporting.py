@@ -819,13 +819,6 @@ class Submission(models.Model):
         ):
             return False
 
-        if self.obligation.obligation_type == ObligationTypes.ART7.value:
-            if (
-                not hasattr(self, "article7questionnaire")
-                or self.article7questionnaire is None
-            ):
-                return False
-
         return True
 
     def can_edit_flags(self, user):

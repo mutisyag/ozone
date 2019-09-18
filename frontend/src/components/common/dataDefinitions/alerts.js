@@ -4,7 +4,6 @@ const getAlerts = ($gettext) => {
     clone_success: $gettext('A new version of this submission has been added.'),
     cant_find_instructions: $gettext('No detailed instructions for the current form are available.'),
     save_before_submit: $gettext('You have unsaved changes. Please save the submission first.'),
-    questionaire_beforeSubmit: $gettext('Please complete the Questionnaire before submitting.'),
     substance_already_exists: $gettext('Unable to add the following substances because they already exist'),
     select_country_before_adding_again: $gettext('select at least one country for each substance before adding.'),
     blend_already_exists: $gettext('Unable to add mixture. Another mixture with this name already exists.'),
