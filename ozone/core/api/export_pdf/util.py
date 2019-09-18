@@ -189,6 +189,12 @@ def get_big_float(nr):
     return '{:f}'.format(Decimal(str(nr)))
 
 
+def format_decimal(nr):
+    if nr is None:
+        return ''
+    return '{:f}'.format(nr.normalize())
+
+
 def round_big_float(nr, precision):
     if not nr:
         return ''
@@ -202,21 +208,6 @@ def as_decimal(nr):
     if not isinstance(nr, Decimal):
         return Decimal(repr(nr))
     return nr
-
-
-def sum_decimals(d1, d2):
-    dd1 = as_decimal(d1)
-    dd2 = as_decimal(d2)
-    if dd1 and dd2:
-        return dd1+dd2
-    return dd1 or dd2
-
-
-def subtract_decimals(d1, d2):
-    dd1 = as_decimal(d1)
-    dd2 = as_decimal(d2)
-    zero = Decimal(0.0)
-    return (dd1 or zero) - (dd2 or zero)
 
 
 # Imitate JavaScript's toPrecision. Returning the number with 'decimals'

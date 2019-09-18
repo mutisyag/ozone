@@ -69,6 +69,11 @@ def sum_decimals(d1, d2):
     return d1 or d2
 
 
+def subtract_decimals(d1, d2):
+    zero = decimal.Decimal(0.0)
+    return (d1 or zero) - (d2 or zero)
+
+
 def quantize(value):
     """Quantize to DECIMAL_FIELD_DECIMALS decimal places"""
     quant = decimal.Decimal(10) ** -DECIMAL_FIELD_DECIMALS

@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 
 from ..util import (
-    get_big_float,
+    format_decimal,
     get_comments_section,
     get_remarks,
     rows_to_table,
@@ -26,7 +26,7 @@ def table_row(obj):
     return (
         sm_l(obj.facility_name),
     ) + tuple(
-        sm_r(get_big_float(field))
+        sm_r(format_decimal(field))
         for field in fields
     ) + (
         sm_l(get_remarks(obj)),

@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 
 from ..util import (
-    get_big_float,
+    format_decimal,
     get_comments_section,
     exclude_blend_items,
     get_substance_or_blend_name,
@@ -20,7 +20,7 @@ def table_row(obj):
     return (
         sm_c(get_group_name(obj)),
         sm_l(get_substance_or_blend_name(obj)),
-        sm_r(get_big_float(obj.quantity_destroyed)),
+        sm_r(format_decimal(obj.quantity_destroyed)),
         sm_l(get_remarks(obj)),
     )
 

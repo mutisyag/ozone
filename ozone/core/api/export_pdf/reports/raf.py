@@ -1,15 +1,17 @@
 import collections
+from decimal import Decimal
 
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.platypus import PageBreak
 
+from ozone.core.models.utils import sum_decimals, subtract_decimals
+
 from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
     sm_l, sm_r, sm_c, smb_c,
     TABLE_STYLES, grid_color,
-    col_widths, get_big_float, get_remarks,
-    sum_decimals, subtract_decimals,
+    col_widths, format_decimal, get_remarks,
 )
 
 
@@ -174,7 +176,7 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
     styles = list()
     for item in data:
         imports = list(item.imports.order_by('party__name').all())
-        total_imported = 0
+        total_imported = Decimal(0.0)
         for imp in imports:
             total_imported = sum_decimals(
                 total_imported,
@@ -194,18 +196,18 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
         rows.append((
             sm_c(reporting_period.name),  # A
             sm_l(item.substance.name),  # B (essen) or hidden (crit)
-            sm_r(get_big_float(item.quantity_exempted)),  # C | B
-            sm_r(get_big_float(item.quantity_production)),  # D | C
-            sm_r(get_big_float(first_import.quantity)) if first_import else '',  # E|D - amount
+            sm_r(format_decimal(item.quantity_exempted)),  # C | B
+            sm_r(format_decimal(item.quantity_production)),  # D | C
+            sm_r(format_decimal(first_import.quantity)) if first_import else '',  # E|D - amount
             sm_l(source_party),  # E|D - source country
-            sm_r(get_big_float(total_acquired)),  # F|E
-            sm_r(get_big_float(authorized_not_acquired)),  # G|F
-            sm_r(get_big_float(item.on_hand_start_year)),  # H|G
-            sm_r(get_big_float(total_available)),  # I|H
-            sm_r(get_big_float(item.quantity_used)),  # J|I
-            sm_r(get_big_float(item.quantity_exported)),  # K|J
-            sm_r(get_big_float(item.quantity_destroyed)),  # L|K
-            sm_r(get_big_float(on_hand_end_year)),  # M|L
+            sm_r(format_decimal(total_acquired)),  # F|E
+            sm_r(format_decimal(authorized_not_acquired)),  # G|F
+            sm_r(format_decimal(item.on_hand_start_year)),  # H|G
+            sm_r(format_decimal(total_available)),  # I|H
+            sm_r(format_decimal(item.quantity_used)),  # J|I
+            sm_r(format_decimal(item.quantity_exported)),  # K|J
+            sm_r(format_decimal(item.quantity_destroyed)),  # L|K
+            sm_r(format_decimal(on_hand_end_year)),  # M|L
             sm_c(_('Yes')) if item.is_emergency else '',  # Emergency
             sm_l(get_remarks(item)),  # Remark
         ))
@@ -215,7 +217,7 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
             rows.append((
                 # Don't repeat previously shown fields, only show E
                 '', '', '', '',
-                sm_r(get_big_float(imp.quantity)),
+                sm_r(format_decimal(imp.quantity)),
                 sm_l(imp.party.name) if imp.party else _('Unspecified') if imp.quantity else '',
                 '', '', '', '', '', '', '', '', '', '',
             ))
