@@ -131,7 +131,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
         """
         # Also validate imports and exports data (will raise a validation error
         # if data is not consistent).
-        # self.model_instance.check_imports_exports()
+        return True
 
     @xworkflows.transition('submit')
     def submit(self):
