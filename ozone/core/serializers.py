@@ -604,151 +604,11 @@ class Article7ProductionSerializer(
         exclude = ('submission',)
 
 
-def get_field_value(initial_data_entry, field_name):
-    """
-    Returns the value of a numerical field from entries (dictionaries
-    representing a single art7 import/export data entry) in serializer's
-    self.initial_data.
-    The UI can send None as a value in these fields.
-    """
-    ret = initial_data_entry.get(field_name, 0)
-    return Decimal(repr(ret)) if ret is not None else Decimal(0)
-
-
-def validate_import_export_data(
-    initial_data, totals_fields, quantity_fields, party_field
-):
-    """
-    Function for validation of initial data sent to the Import/Export
-    serializers in regards to complex, per-form validation criteria
-    (see https://github.com/eaudeweb/ozone/issues/81)
-    """
-
-    # Find all entries in self.initial_data that do not have a src/dst country
-    # (actually, there should only be one such entry, but this cannot be
-    # guaranteed at this stage of the request processing).
-    # Then find all substances relating to those entries (could be blends).
-    # From these substances, keep only the ones that are also in at least one
-    # entry with a src/dst country.
-    partyless_substances = set()
-    partyful_substances = set()
-    for entry in initial_data:
-        if entry.get(party_field, None) is None:
-            if entry.get('substance', None):
-                partyless_substances.add(entry.get('substance'))
-            elif entry.get('blend', None):
-                partyless_substances.update(
-                    Blend.objects.get(
-                        id=entry.get('blend')
-                    ).get_substance_ids()
-                )
-        else:
-            if entry.get('substance', None):
-                partyful_substances.add(entry.get('substance'))
-            elif entry.get('blend', None):
-                partyful_substances.update(
-                    Blend.objects.get(
-                        id=entry.get('blend')
-                    ).get_substance_ids()
-                )
-    related_substances = partyless_substances.intersection(partyful_substances)
-
-    # Calculate the sums of quantities and totals for each substance
-    if related_substances:
-        sums_dictionary = {
-            substance: {'totals_sum': Decimal(0), 'quantities_sum': Decimal(0)}
-            for substance in related_substances
-        }
-        for entry in initial_data:
-            if entry.get('blend', None):
-                # Blend entry
-                blend_subs = Blend.objects.get(
-                    id=entry.get('blend')
-                ).get_substance_ids_percentages()
-
-                for substance, percentage in blend_subs:
-                    if substance in related_substances:
-                        percentage = Decimal(repr(percentage))
-                        sums_dictionary[substance]['totals_sum'] += sum(
-                            [
-                                get_field_value(entry, field) * percentage
-                                for field in totals_fields
-                            ]
-                        )
-                        sums_dictionary[substance]['quantities_sum'] += sum(
-                            [
-                                get_field_value(entry, field) * percentage
-                                for field in quantity_fields
-                            ]
-                        )
-
-            elif entry.get('substance', None):
-                substance = entry.get('substance')
-                if substance in related_substances:
-                    sums_dictionary[substance]['totals_sum'] += sum(
-                        [
-                            get_field_value(entry, field)
-                            for field in totals_fields
-                        ]
-                    )
-                    sums_dictionary[substance]['quantities_sum'] += sum(
-                        [
-                            get_field_value(entry, field)
-                            for field in quantity_fields
-                        ]
-                    )
-
-        # And finally verify that, for each substance,
-        # sum of totals > sum of quantities
-        valid = all(
-            [
-                sums['totals_sum'] >= sums['quantities_sum']
-                for sums in sums_dictionary.values()
-            ]
-        )
-        if not valid:
-            raise ValidationError(
-                'For each substance that has no destination_party,'
-                'the sum of quantities across all data entries should be '
-                'less than the sum of totals'
-            )
-
-
 class Article7ExportListSerializer(
     DataCheckRemarksBulkUpdateMixIn, BaseBulkUpdateSerializer
 ):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'destination_party'
-
-    def is_valid(self, raise_exception=False):
-        """
-        Overriding the serializer's default is_valid method so we add extra
-        validation related to feedstock vs new/recovered quantities.
-
-        Typically, such validations would be performed on the models, but in
-        our case:
-        - we need to import legacy data that might not satisfy these conditions
-        - we need to perform the validation on a list of entries (i.e. model
-        instances), aggregating data from several of them. That happens because
-        we have bulk serializers.
-
-        """
-        # Call is_valid first to avoid expensive computation on invalid data
-        ret = super().is_valid(raise_exception)
-
-        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
-        quantity_fields = [
-            f for f in Article7Export.QUANTITY_FIELDS
-            if f not in totals_fields and f != 'quantity_polyols'
-        ]
-
-        # This will simply raise a ValidationError if self.initial_data does
-        # not satisfy the totals >= quantities criteria.
-        validate_import_export_data(
-            self.initial_data, totals_fields, quantity_fields, self.unique_with
-        )
-
-        return ret
 
 
 class Article7ExportSerializer(
@@ -769,36 +629,6 @@ class Article7ImportListSerializer(
 ):
     substance_blend_fields = ['substance', 'blend']
     unique_with = 'source_party'
-
-    def is_valid(self, raise_exception=False):
-        """
-        Overriding the serializer's default is_valid method so we add extra
-        validation related to feedstock vs new/recovered quantities.
-
-        Typically, such validations would be performed on the models, but in
-        our case:
-        - we need to import legacy data that might not satisfy these conditions
-        - we need to perform the validation on a list of entries (i.e. model
-        instances), aggregating data from several of them. That happens because
-        we have bulk serializers.
-
-        """
-        # Call is_valid first to avoid expensive computation on invalid data
-        ret = super().is_valid(raise_exception)
-
-        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
-        quantity_fields = [
-            f for f in Article7Import.QUANTITY_FIELDS
-            if f not in totals_fields and f != 'quantity_polyols'
-        ]
-
-        # This will simply raise a ValidationError if self.initial_data does
-        # not satisfy the totals >= quantities criteria.
-        validate_import_export_data(
-            self.initial_data, totals_fields, quantity_fields, self.unique_with
-        )
-
-        return ret
 
 
 class Article7ImportSerializer(

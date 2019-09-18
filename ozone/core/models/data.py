@@ -497,6 +497,10 @@ class BaseImportExportReport(models.Model):
     This will be used as a base for data reporting models on import and export.
     """
 
+    # This needs to be defined in the concrete model for the data validation
+    # to work.
+    PARTY_FIELD = None
+
     quantity_total_new = models.DecimalField(
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         validators=[MinValueValidator(0.0)], blank=True, null=True
@@ -517,6 +521,106 @@ class BaseImportExportReport(models.Model):
     decision_polyols = models.CharField(
         max_length=512, blank=True
     )
+
+    @classmethod
+    def validate_import_export_data(cls, submission):
+        """
+        Function for validation of all import/export data in a specific Art 7
+        submission. Validation is done in regards to complex, per-form
+        validation criteria (see https://github.com/eaudeweb/ozone/issues/81)
+        """
+
+        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
+        party_field = cls.PARTY_FIELD
+        quantity_fields = [
+            f for f in cls.QUANTITY_FIELDS
+            if f not in totals_fields and f != 'quantity_polyols'
+        ]
+
+        # Find all entries in this submission that do not have a src/dst country
+        # (actually, there should only be one such entry).
+        # Then find all substances relating to those entries, taking blend
+        # contents into account.
+        # From these substances, keep only the ones that are also in at least
+        # one entry with a src/dst country.
+        partyless_substances = set()
+        partyful_substances = set()
+
+        for entry in cls.objects.filter(submission=submission):
+            substance = getattr(entry, 'substance', None)
+            blend = getattr(entry, 'blend', None)
+            if getattr(entry, party_field, None) is None:
+                if substance:
+                    partyless_substances.add(substance.id)
+                elif blend:
+                    partyless_substances.update(blend.get_substance_ids())
+            else:
+                if substance:
+                    partyful_substances.add(substance.id)
+                elif blend:
+                    partyful_substances.update(blend.get_substance_ids())
+        related_substances = partyless_substances.intersection(
+            partyful_substances
+        )
+
+        # Calculate the sums of quantities and totals for each substance
+        if related_substances:
+            sums_dictionary = {
+                substance: {
+                    'totals_sum': Decimal(0),
+                    'quantities_sum': Decimal(0)
+                }
+                for substance in related_substances
+            }
+            for entry in cls.objects.filter(submission=submission):
+                substance = getattr(entry, 'substance', None)
+                blend = getattr(entry, 'blend', None)
+                if blend:
+                    # Blend entry
+                    blend_subs = blend.get_substance_ids_percentages()
+                    for substance, percentage in blend_subs:
+                        if substance in related_substances:
+                            sums_dictionary[substance]['totals_sum'] += sum(
+                                [
+                                    getattr(entry, field, Decimal(0)) * percentage
+                                    for field in totals_fields
+                                ]
+                            )
+                            sums_dictionary[substance]['quantities_sum'] += sum(
+                                [
+                                    getattr(entry, field, Decimal(0)) * percentage
+                                    for field in quantity_fields
+                                ]
+                            )
+                elif substance:
+                    if substance in related_substances:
+                        sums_dictionary[substance.id]['totals_sum'] += sum(
+                            [
+                                getattr(entry, field, Decimal(0))
+                                for field in totals_fields
+                            ]
+                        )
+                        sums_dictionary[substance.id]['quantities_sum'] += sum(
+                            [
+                                getattr(entry, field, Decimal(0))
+                                for field in quantity_fields
+                            ]
+                        )
+
+            # And finally verify that, for each substance,
+            # sum of totals > sum of quantities
+            valid = all(
+                [
+                    sums['totals_sum'] >= sums['quantities_sum']
+                    for sums in sums_dictionary.values()
+                ]
+            )
+            if not valid:
+                raise ValidationError(
+                    'For each substance that has no destination_party,'
+                    'the sum of quantities across all data entries should be '
+                    'less than the sum of totals'
+                )
 
     class Meta:
         abstract = True
@@ -661,6 +765,8 @@ class Article7Export(
         'quantity_other_uses',
     ]
 
+    PARTY_FIELD = 'destination_party'
+
     # {aggregation_field: data_field_1, ...}
     AGGREGATION_MAPPING = {
         'quantity_total_new': 'export_new',
@@ -725,6 +831,8 @@ class Article7Import(
         'quantity_quarantine_pre_shipment': 'import_quarantine',
         'quantity_process_agent_uses': 'import_process_agent'
     }
+
+    PARTY_FIELD = 'source_party'
 
     # FieldTracker does not work on abstract models
     tracker = FieldTracker()

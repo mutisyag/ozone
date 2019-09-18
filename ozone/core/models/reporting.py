@@ -828,6 +828,19 @@ class Submission(models.Model):
 
         return True
 
+    def check_imports_exports(self):
+        """
+        Performs checks on all imports and exports data in this submission
+        based on the validation rules described in
+        https://github.com/eaudeweb/ozone/issues/81/
+        If validation fails, this will raise a validation error.
+        """
+        if self.obligation.obligation_type == ObligationTypes.ART7.value:
+            if hasattr(self, "article7imports") and self.article7imports:
+                self.article7imports.__class__.validate_import_export_data(self)
+            if hasattr(self, "article7exports") and self.article7exports:
+                self.article7exports.__class__.validate_import_export_data(self)
+
     def can_edit_flags(self, user):
         """
         Returns True if user can set *any* flags on this submission,
