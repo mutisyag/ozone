@@ -70,10 +70,16 @@ def get_data(periods, parties):
 
 
 def get_party_data(period, party, prodcons_qs):
-    history = PartyHistory.objects.get(
-        party=party,
-        reporting_period=period
-    )
+    population = party_type = None
+    try:
+        history = PartyHistory.objects.get(
+            party=party,
+            reporting_period=period
+        )
+        population = history.population
+        party_type = history.party_type.abbr
+    except PartyHistory.DoesNotExist:
+        pass
 
     ods_data = []
     hfc_data = []
@@ -103,8 +109,8 @@ def get_party_data(period, party, prodcons_qs):
 
     return {
         'name': party.name,
-        'population': history.population,
-        'party_type': history.party_type.abbr,
+        'population': population,
+        'party_type': party_type,
         'ods_data': ods_data,
         'hfc_data': hfc_data,
         'ods_subtotal': get_subtotal(ods_data),

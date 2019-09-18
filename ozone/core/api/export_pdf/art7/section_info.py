@@ -94,12 +94,18 @@ def get_questionnaire_table(submission):
     def _yn(condition):
         return p_c(_('Yes') if condition else _('No'))
     row = (
-        _yn(submission.article7questionnaire.has_imports),
-        _yn(submission.article7questionnaire.has_exports),
-        _yn(submission.article7questionnaire.has_produced),
-        _yn(submission.article7questionnaire.has_destroyed),
-        _yn(submission.article7questionnaire.has_nonparty),
-        _yn(submission.article7questionnaire.has_emissions),
+        _yn(submission.article7questionnaire.has_imports)
+        if hasattr(submission, 'article7questionnaire') else '-',
+        _yn(submission.article7questionnaire.has_exports)
+        if hasattr(submission, 'article7questionnaire') else '-',
+        _yn(submission.article7questionnaire.has_produced)
+        if hasattr(submission, 'article7questionnaire') else '-',
+        _yn(submission.article7questionnaire.has_destroyed)
+        if hasattr(submission, 'article7questionnaire') else '-',
+        _yn(submission.article7questionnaire.has_nonparty)
+        if hasattr(submission, 'article7questionnaire') else '-',
+        _yn(submission.article7questionnaire.has_emissions)
+        if hasattr(submission, 'article7questionnaire') else '-',
 
         _yn(submission.flag_has_reported_a1),
         _yn(submission.flag_has_reported_a2),

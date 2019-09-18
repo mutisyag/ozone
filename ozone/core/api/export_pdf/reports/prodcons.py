@@ -179,17 +179,22 @@ def get_prodcons_flowables(submission, periods, parties):
 
 def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_groups):
     table_data = {}
-    history = PartyHistory.objects.get(
-        party=party,
-        reporting_period=period
-    )
+    try:
+        history = PartyHistory.objects.get(
+            party=party,
+            reporting_period=period
+        )
+        population = history.population
+        party_type = history.party_type.abbr
+    except PartyHistory.DoesNotExist:
+        return None
 
     table_data['period'] = period.name
 
     table_data['party'] = {
         'name': party.name,
-        'population': "{:,}".format(history.population),
-        'party_type': history.party_type.abbr,
+        'population': '{:,}'.format(population) if population else '',
+        'party_type': party_type,
         'date_reported': date_reported,
         'region': party.subregion.region.abbr
     }
@@ -231,7 +236,7 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
             group,
             LimitTypes.CONSUMPTION.value,
         )
-        per_capita_cons = get_per_capita_cons(main_cons, history.population)
+        per_capita_cons = get_per_capita_cons(main_cons, population)
 
         # Comparison with Base year
         compared_prod = get_baseline(
@@ -317,9 +322,12 @@ def get_prodcons_data(submission, periods, parties):
                 # We need to get the actual data from *this* submission
                 prodcons_qs = submission.get_aggregated_data()
             date_reported = _get_date_reported(submission, prodcons_qs)
-            data['parties'][party.name].append(_get_table_data(
+            table_data = _get_table_data(
                 party, period, prodcons_qs, submission, date_reported, all_groups
-            ))
+            )
+            # Can be None for inactive parties / no history (e.g. Yugoslavia)
+            if table_data:
+                data['parties'][party.name].append(table_data)
 
     return data
 
