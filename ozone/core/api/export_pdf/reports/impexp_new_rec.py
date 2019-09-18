@@ -1,4 +1,5 @@
 from collections import defaultdict
+from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table, PageBreak
 
@@ -8,8 +9,11 @@ from ozone.core.models import (
     PartyHistory,
 )
 
+from ozone.core.models.utils import round_decimal_half_up
+
 from ..util import (
-    TABLE_STYLES_NOBORDER, col_widths, round_big_float,
+    TABLE_STYLES_NOBORDER, col_widths,
+    format_decimal,
     h1_style, sm_no_spacing_style,
     b_c, b_r, b_l, smb_c, smb_r, smb_l, smi_l, sm_r,
 )
@@ -83,19 +87,19 @@ def get_party_data(period, party, prodcons_qs):
             import_recovered = prodcons.import_recovered
             export_new = prodcons.export_new
             export_recovered = prodcons.export_recovered
-        except ProdCons.DoesNotExist:
-            import_new, import_recovered, export_new, export_recovered = 0, 0, 0, 0
-        if any([import_new, import_recovered, export_new, export_recovered]) != 0:
-            data = ods_data if group.is_odp else hfc_data
-            data.append(
-                (
-                    group.group_id + ' - ' + group.description,
-                    import_new,
-                    import_recovered,
-                    export_new,
-                    export_recovered,
+            if any((import_new, import_recovered, export_new, export_recovered)):
+                data = ods_data if group.is_odp else hfc_data
+                data.append(
+                    (
+                        group.group_id + ' - ' + group.description,
+                        import_new,
+                        import_recovered,
+                        export_new,
+                        export_recovered,
+                    )
                 )
-            )
+        except ProdCons.DoesNotExist:
+            pass
 
     return {
         'name': party.name,
@@ -108,7 +112,7 @@ def get_party_data(period, party, prodcons_qs):
 
 
 def get_subtotal(rows):
-    import_new, import_recovered, export_new, export_recovered = 0, 0, 0, 0
+    import_new = import_recovered = export_new = export_recovered = Decimal('0.0')
     for row in rows:
         import_new += row[1]
         import_recovered += row[2]
@@ -126,10 +130,10 @@ def get_subtotal(rows):
 def get_row(data, precision):
     return (
         data[0],
-        sm_r(round_big_float(data[1], precision)),
-        sm_r(round_big_float(data[2], precision)),
-        sm_r(round_big_float(data[3], precision)),
-        sm_r(round_big_float(data[4], precision)),
+        sm_r(format_decimal(round_decimal_half_up(data[1], precision))),
+        sm_r(format_decimal(round_decimal_half_up(data[2], precision))),
+        sm_r(format_decimal(round_decimal_half_up(data[3], precision))),
+        sm_r(format_decimal(round_decimal_half_up(data[4], precision))),
     )
 
 
@@ -250,8 +254,8 @@ def get_party_history(party):
 
 def get_totals(parties):
     totals = {
-        'ods_data': defaultdict(float),
-        'hfc_data': defaultdict(float),
+        'ods_data': defaultdict(Decimal),
+        'hfc_data': defaultdict(Decimal),
     }
     for key in totals:
         for party in parties:
@@ -268,7 +272,7 @@ def get_totals(parties):
     totals['hfc_data']['precision'] = 0
 
     def to_cell(x, precision):
-        return b_r(round_big_float(x, precision))
+        return b_r(format_decimal(round_decimal_half_up(x, precision)))
 
     return [(
         b_l(_(totals[key]['label'])),

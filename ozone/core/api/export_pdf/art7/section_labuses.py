@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 
@@ -45,7 +46,7 @@ def export_labuses(submission):
                 'group': get_group_name(item),
                 'substance': substance_name,
                 'consumption': item.quantity_laboratory_analytical_uses,
-                'production': 0,
+                'production': Decimal('0.0'),
                 'remark': item.decision_laboratory_analytical_uses or '',
             }
         else:
@@ -64,7 +65,7 @@ def export_labuses(submission):
             data[substance_name] = {
                 'group': get_group_name(item),
                 'substance': substance_name,
-                'consumption': 0,
+                'consumption': Decimal('0.0'),
                 'production': item.quantity_laboratory_analytical_uses,
                 'remark': item.decision_laboratory_analytical_uses or '',
             }

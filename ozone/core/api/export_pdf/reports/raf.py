@@ -1,15 +1,17 @@
 import collections
+from decimal import Decimal
 
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.platypus import PageBreak
+
+from ozone.core.models.utils import sum_decimals, subtract_decimals
 
 from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
     sm_l, sm_r, sm_c, smb_c,
     TABLE_STYLES, grid_color,
     col_widths, format_decimal, get_remarks,
-    sum_decimals, subtract_decimals,
 )
 
 
@@ -174,7 +176,7 @@ def get_table_data_essen_crit(data, reporting_period, base_row_index, on_hand_fu
     styles = list()
     for item in data:
         imports = list(item.imports.order_by('party__name').all())
-        total_imported = 0
+        total_imported = Decimal(0.0)
         for imp in imports:
             total_imported = sum_decimals(
                 total_imported,
