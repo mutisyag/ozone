@@ -189,6 +189,12 @@ def get_big_float(nr):
     return '{:f}'.format(Decimal(str(nr)))
 
 
+def format_decimal(nr):
+    if not nr:
+        return ''
+    return '{:f}'.format(nr.normalize())
+
+
 def round_big_float(nr, precision):
     if not nr:
         return ''
