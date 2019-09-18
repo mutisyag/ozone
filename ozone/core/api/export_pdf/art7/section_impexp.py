@@ -1,11 +1,12 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 
+from ozone.core.models.utils import sum_decimals
+
 from ..util import (
     col_widths,
-    sum_decimals,
     exclude_blend_items,
-    get_big_float,
+    format_decimal,
     get_comments_section,
     get_quantity,
     get_decision,
@@ -42,10 +43,10 @@ def to_row(obj, row_index, party_field, text_qps):
         sm_c(get_group_name(obj)),
         sm_l(substance_name),
         sm_l(party.name if party else ''),
-        p_r_func(get_big_float(obj.quantity_total_new)),
-        p_r_func(get_big_float(obj.quantity_total_recovered)),
-        p_r_func(get_big_float(obj.quantity_feedstock)),
-        p_r_func(get_big_float(get_quantity(obj, first_field)) if first_field else ''),
+        p_r_func(format_decimal(obj.quantity_total_new)),
+        p_r_func(format_decimal(obj.quantity_total_recovered)),
+        p_r_func(format_decimal(obj.quantity_feedstock)),
+        p_r_func(format_decimal(get_quantity(obj, first_field)) if first_field else ''),
         sm_l(
             '%s %s' % (
                 EXEMPTED_FIELDS[first_field],
@@ -80,7 +81,7 @@ def to_row(obj, row_index, party_field, text_qps):
         rows.append((
             # Don't repeat previously shown fields
             '', '', '', '', '', '',
-            p_r_func(get_big_float(get_quantity(obj, f))),
+            p_r_func(format_decimal(get_quantity(obj, f))),
             sm_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
             '',
         ))
@@ -96,7 +97,7 @@ def to_row(obj, row_index, party_field, text_qps):
             ),
             (
                 '', '', '', '', '', '',
-                p_r_func(get_big_float(obj.quantity_quarantine_pre_shipment)),
+                p_r_func(format_decimal(obj.quantity_quarantine_pre_shipment)),
                 sm_l(get_decision(obj, 'quarantine_pre_shipment')),
                 '',
             )
@@ -148,7 +149,7 @@ def to_row(obj, row_index, party_field, text_qps):
                 (
                     smb_l('%s %s' % (_('Subtotal polyols containing'), obj.substance.name)),
                     '', '', '', '', '',
-                    smb_r(get_big_float(obj.quantity_polyols)),
+                    smb_r(format_decimal(obj.quantity_polyols)),
                     '', '',
                 )
             ])
@@ -164,7 +165,7 @@ def to_row(obj, row_index, party_field, text_qps):
                     '',
                     sm_l(party.name if party else ''),
                     '', '', '',
-                    sm_r(get_big_float(obj.quantity_polyols)),
+                    sm_r(format_decimal(obj.quantity_polyols)),
                     sm_l(get_decision(obj, 'polyols')),
                     '',
                 )

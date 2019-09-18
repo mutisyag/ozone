@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph, Table
 from reportlab.platypus import PageBreak
@@ -16,6 +17,7 @@ from ozone.core.models.utils import round_decimal_half_up
 from ..util import (
     h1_style, h2_style, sm_no_spacing_style,
     smb_l, sm_l, b_l,
+    format_decimal,
     DOUBLE_HEADER_TABLE_STYLES,
     col_widths,
     get_date_of_reporting_str,
@@ -111,7 +113,14 @@ def get_table(table_data):
         ('SPAN', (0, current_row), (-1, current_row)),
     ])
 
-    rows += [v for k, v in table_data['data'].items() if k != 'F']
+    def _format(row):
+        return (
+            format_decimal(value) if isinstance(value, Decimal) else value
+            for value in row
+        )
+
+    rows += [_format(v) for k, v in table_data['data'].items() if k != 'F']
+
     if 'F' in table_data['data'].keys():
         hfc_caption = _("Production and Consumption of HFCs for {period} (CO2-equivalent tonnes)")
         rows.append((
@@ -121,7 +130,7 @@ def get_table(table_data):
         styles.extend([
             ('SPAN', (0, current_row), (-1, current_row)),
         ])
-        rows.append(table_data['data']['F'])
+        rows.append(_format(table_data['data']['F']))
 
     return Table(
         rows,

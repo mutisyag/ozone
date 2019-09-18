@@ -128,15 +128,8 @@ class DefaultArticle7Workflow(BaseWorkflow):
     def before_submit(self, *args, **kwargs):
         """
         Called right before the transition is actually performed.
-        Will not allow transition and warn users if the questionnaire is not
-        filled.
         """
-        if not self.model_instance.article7questionnaire.is_filled:
-            raise TransitionFailed(
-                _('Questionnaire form must be completed before submitting.')
-            )
-
-        # Also validate imports and exports data (will raise a validation error
+        # Validate imports and exports data (will raise a validation error
         # if data is not consistent).
         self.model_instance.check_imports_exports()
 

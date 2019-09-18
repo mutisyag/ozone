@@ -2,7 +2,7 @@ from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import Paragraph
 
 from ..util import (
-    get_big_float,
+    format_decimal,
     get_quantity,
     get_decision,
     get_comments_section,
@@ -32,17 +32,17 @@ def to_row(obj, row_index):
     rows.append((
         sm_c(get_group_name(obj)),
         sm_l(obj.substance.name),
-        sm_r(get_big_float(obj.quantity_total_produced)),
-        sm_r(get_big_float(obj.quantity_feedstock)),
-        sm_r(get_big_float(obj.quantity_for_destruction)),
-        sm_r(get_big_float(get_quantity(obj, first_field))) if first_field else '',
+        sm_r(format_decimal(obj.quantity_total_produced)),
+        sm_r(format_decimal(obj.quantity_feedstock)),
+        sm_r(format_decimal(obj.quantity_for_destruction)),
+        sm_r(format_decimal(get_quantity(obj, first_field))) if first_field else '',
         sm_l(
             '%s %s' % (
                 EXEMPTED_FIELDS[first_field],
                 get_decision(obj, first_field)
             )
         ) if first_field else '',
-        sm_r(get_big_float(obj.quantity_article_5)),
+        sm_r(format_decimal(obj.quantity_article_5)),
         sm_l(get_remarks(obj)),
     ))
 
@@ -51,7 +51,7 @@ def to_row(obj, row_index):
         rows.append((
             # Don't repeat previously shown fields
             '', '', '', '', '',
-            sm_r(get_big_float(get_quantity(obj, f))),
+            sm_r(format_decimal(get_quantity(obj, f))),
             sm_l('%s %s' % (EXEMPTED_FIELDS[f], get_decision(obj, f))),
             '', '',
         ))
@@ -67,7 +67,7 @@ def to_row(obj, row_index):
             ),
             (
                 '', '', '', '', '',
-                sm_r(get_big_float(obj.quantity_quarantine_pre_shipment)),
+                sm_r(format_decimal(obj.quantity_quarantine_pre_shipment)),
                 get_decision(obj, 'quarantine_pre_shipment'),
                 '', '',
             )
