@@ -555,6 +555,7 @@ class BaseImportExportReport(models.Model):
                 elif blend:
                     partyless_substances.update(blend.get_substance_ids())
             else:
+
                 if substance:
                     partyful_substances.add(substance.id)
                 elif blend:
@@ -593,16 +594,16 @@ class BaseImportExportReport(models.Model):
                                 ]
                             )
                 elif substance:
-                    if substance in related_substances:
+                    if substance.id in related_substances:
                         sums_dictionary[substance.id]['totals_sum'] += sum(
                             [
-                                getattr(entry, field, Decimal(0))
+                                getattr(entry, field, Decimal(0)) or Decimal(0)
                                 for field in totals_fields
                             ]
                         )
                         sums_dictionary[substance.id]['quantities_sum'] += sum(
                             [
-                                getattr(entry, field, Decimal(0))
+                                getattr(entry, field, Decimal(0)) or Decimal(0)
                                 for field in quantity_fields
                             ]
                         )
@@ -617,9 +618,9 @@ class BaseImportExportReport(models.Model):
             )
             if not valid:
                 raise ValidationError(
-                    'For each substance that has no destination_party,'
-                    'the sum of quantities across all data entries should be '
-                    'less than the sum of totals'
+                    f'For each substance that has no {party_field}, '
+                    f'the sum of quantities across all data entries should be '
+                    f'less than the sum of totals'
                 )
 
     class Meta:

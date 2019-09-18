@@ -124,6 +124,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
                 _('Valid flag must be set before submission is finalized')
             )
 
+    @xworkflows.before_transition('submit')
     def before_submit(self, *args, **kwargs):
         """
         Called right before the transition is actually performed.
@@ -134,6 +135,7 @@ class DefaultArticle7Workflow(BaseWorkflow):
             raise TransitionFailed(
                 _('Questionnaire form must be completed before submitting.')
             )
+
         # Also validate imports and exports data (will raise a validation error
         # if data is not consistent).
         self.model_instance.check_imports_exports()

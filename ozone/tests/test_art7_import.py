@@ -197,6 +197,39 @@ class TestArt7Import(BaseArt7ImportTest):
         )
         self.assertEqual(result.status_code, 422, result.json())
 
+    def test_create_inconsistent_data(self):
+        # Test according to https://github.com/eaudeweb/ozone/issues/81
+        submission = self.create_submission()
+
+        # This has 'quantity_total_new': 40.0
+        data1 = dict(ART7_IMPORT_DATA)
+        data1["substance"] = self.substance.id
+        data1["source_party"] = self.party.id
+
+        data2 = dict(ART7_IMPORT_DATA)
+        data2["substance"] = self.substance.id
+        data2["source_party"] = None
+        data2["quantity_total_new"] = None
+        data2["quantity_feedstock"] = 41.0
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+        result = self.client.post(
+            reverse(
+                "core:submission-call-transition",
+                kwargs={"pk": submission.pk},
+            ),
+            {"transition": "submit", "party": submission.party.pk},
+        )
+        self.assertEqual(result.status_code, 422, result.json())
+
     def test_get(self):
         submission = self.create_submission()
 

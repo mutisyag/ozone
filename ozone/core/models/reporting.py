@@ -837,9 +837,9 @@ class Submission(models.Model):
         """
         if self.obligation.obligation_type == ObligationTypes.ART7.value:
             if hasattr(self, "article7imports") and self.article7imports:
-                self.article7imports.__class__.validate_import_export_data(self)
+                self.article7imports.model.validate_import_export_data(self)
             if hasattr(self, "article7exports") and self.article7exports:
-                self.article7exports.__class__.validate_import_export_data(self)
+                self.article7exports.model.validate_import_export_data(self)
 
     def can_edit_flags(self, user):
         """
