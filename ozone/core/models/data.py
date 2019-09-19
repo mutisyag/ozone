@@ -770,7 +770,7 @@ class Article7Export(
         db_table = 'reporting_art7_exports'
         ordering = [
             'substance__sort_order', 'substance__substance_id',
-            'blend__sort_order'
+            'blend__sort_order', 'destination_party__name',
         ]
 
 
@@ -827,7 +827,7 @@ class Article7Import(
         db_table = 'reporting_art7_imports'
         ordering = [
             'substance__sort_order', 'substance__substance_id',
-            'blend__sort_order'
+            'blend__sort_order', 'source_party__name',
         ]
 
 
