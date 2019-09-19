@@ -129,9 +129,9 @@ class DefaultArticle7Workflow(BaseWorkflow):
         """
         Called right before the transition is actually performed.
         """
-        # Also validate imports and exports data (will raise a validation error
+        # Validate imports and exports data (will raise a validation error
         # if data is not consistent).
-        return True
+        self.model_instance.check_imports_exports()
 
     @xworkflows.transition('submit')
     def submit(self):

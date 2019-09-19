@@ -1,4 +1,4 @@
-import unittest
+from decimal import Decimal
 
 from django.urls import reverse
 from django.contrib.auth.hashers import Argon2PasswordHasher
@@ -18,6 +18,8 @@ from .factories import (
     SubregionFactory,
     SubstanceFactory,
     AnotherSubstanceFactory,
+    BlendFactory,
+    BlendComponentFactory,
     AnotherPartyFactory,
     ImportFactory,
 )
@@ -45,6 +47,15 @@ class BaseArt7ImportTest(BaseTests):
 
         self.substance = SubstanceFactory()
         self.another_substance = AnotherSubstanceFactory()
+        self.blend = BlendFactory()
+        BlendComponentFactory(
+            blend=self.blend, substance=self.substance,
+            percentage=Decimal('0.5')
+        )
+        BlendComponentFactory(
+            blend=self.blend, substance=self.another_substance,
+            percentage=Decimal('0.5')
+        )
         ReportingChannelFactory()
 
     def create_submission(self, **kwargs):
@@ -194,6 +205,162 @@ class TestArt7Import(BaseArt7ImportTest):
                 kwargs={"submission_pk": submission.pk},
             ),
             [data1, data2],
+        )
+        self.assertEqual(result.status_code, 422, result.json())
+
+    def test_create_consistent_data(self):
+        # Test according to https://github.com/eaudeweb/ozone/issues/81
+        # In this test case we test the pre-submit checks ensuring that
+        # when a substance is added to imports both with a source party and
+        # without a source party, the total reported quantity of that substance
+        # is greater than the total of the detailed-use reported quantites.
+        # This is a positive test case - the pre-submit checks should allow the
+        # submit transition, as the above condition is met.
+        submission = self.create_submission()
+
+        data1 = dict(ART7_IMPORT_DATA)
+        data1["substance"] = self.substance.id
+        data1["source_party"] = self.party.id
+        data1["quantity_total_new"] = 40.0
+
+        data2 = dict(ART7_IMPORT_DATA)
+        data2["substance"] = self.substance.id
+        data2["source_party"] = None
+        data2["quantity_total_new"] = None
+        data2["quantity_feedstock"] = 39.0
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+        result = self.client.post(
+            reverse(
+                "core:submission-call-transition",
+                kwargs={"pk": submission.pk},
+            ),
+            {"transition": "submit", "party": submission.party.pk},
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+
+    def test_create_consistent_data_blend(self):
+        # Test according to https://github.com/eaudeweb/ozone/issues/81
+        # In this test case we test the pre-submit checks ensuring that
+        # when a substance is added to imports both with a source party and
+        # without a source party, the total reported quantity of that substance
+        # is greater than the total of the detailed-use reported quantites.
+        # This is a positive test case - the pre-submit checks should allow the
+        # submit transition, as the above condition is met.
+        submission = self.create_submission()
+
+        data1 = dict(ART7_IMPORT_DATA)
+        data1["blend"] = self.blend.id
+        data1["source_party"] = self.party.id
+        data1["quantity_total_new"] = 40.0
+
+        data2 = dict(ART7_IMPORT_DATA)
+        data2["blend"] = self.blend.id
+        data2["source_party"] = None
+        data2["quantity_total_new"] = None
+        data2["quantity_feedstock"] = 39.0
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+        result = self.client.post(
+            reverse(
+                "core:submission-call-transition",
+                kwargs={"pk": submission.pk},
+            ),
+            {"transition": "submit", "party": submission.party.pk},
+        )
+        self.assertEqual(result.status_code, 200, result.json())
+
+    def test_create_inconsistent_data(self):
+        # Test according to https://github.com/eaudeweb/ozone/issues/81
+        # In this test case we test the pre-submit checks ensuring that
+        # when a substance is added to imports both with a source party and
+        # without a source party, the total reported quantity of that substance
+        # is greater than the total of the detailed-use reported quantites.
+        # This is a negative test case - the pre-submit checks should not allow
+        # the submit transition, as the above condition is not met.
+        submission = self.create_submission()
+
+        data1 = dict(ART7_IMPORT_DATA)
+        data1["substance"] = self.substance.id
+        data1["source_party"] = self.party.id
+        data1["quantity_total_new"] = 40.0
+
+        data2 = dict(ART7_IMPORT_DATA)
+        data2["substance"] = self.substance.id
+        data2["source_party"] = None
+        data2["quantity_total_new"] = None
+        data2["quantity_feedstock"] = 41.0
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+        result = self.client.post(
+            reverse(
+                "core:submission-call-transition",
+                kwargs={"pk": submission.pk},
+            ),
+            {"transition": "submit", "party": submission.party.pk},
+        )
+        self.assertEqual(result.status_code, 422, result.json())
+
+    def test_create_inconsistent_data_blends(self):
+        # Test according to https://github.com/eaudeweb/ozone/issues/81
+        # In this test case we test the pre-submit checks ensuring that
+        # when a substance is added to imports both with a source party and
+        # without a source party, the total reported quantity of that substance
+        # is greater than the total of the detailed-use reported quantites.
+        # This is a negative test case - the pre-submit checks should not allow
+        # the submit transition, as the above condition is not met.
+        submission = self.create_submission()
+
+        data1 = dict(ART7_IMPORT_DATA)
+        data1["blend"] = self.blend.id
+        data1["source_party"] = self.party.id
+        data1["quantity_total_new"] = 40.0
+
+        data2 = dict(ART7_IMPORT_DATA)
+        data2["blend"] = self.blend.id
+        data2["source_party"] = None
+        data2["quantity_total_new"] = None
+        data2["quantity_feedstock"] = 41.0
+
+        result = self.client.post(
+            reverse(
+                "core:submission-article7-imports-list",
+                kwargs={"submission_pk": submission.pk},
+            ),
+            [data1, data2],
+        )
+        self.assertEqual(result.status_code, 201, result.json())
+
+        result = self.client.post(
+            reverse(
+                "core:submission-call-transition",
+                kwargs={"pk": submission.pk},
+            ),
+            {"transition": "submit", "party": submission.party.pk},
         )
         self.assertEqual(result.status_code, 422, result.json())
 

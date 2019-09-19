@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from ozone.core.models import (
     Annex,
     Blend,
+    BlendComponent,
     Group,
     Meeting,
     Obligation,
@@ -300,6 +301,12 @@ class BlendFactory(DjangoModelFactory):
 
     class Meta:
         model = Blend
+
+
+class BlendComponentFactory(DjangoModelFactory):
+
+    class Meta:
+        model = BlendComponent
 
 
 class SubstanceFactory(DjangoModelFactory):
