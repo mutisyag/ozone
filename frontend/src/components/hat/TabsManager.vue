@@ -93,7 +93,6 @@
         <b-btn
           variant="outline-primary"
           @click="clone($route.query.submission)"
-          size="sm"
           v-if="$store.state.current_submission.is_cloneable"
           :disabled="$store.state.currentUser.is_read_only"
         >Revise</b-btn>
