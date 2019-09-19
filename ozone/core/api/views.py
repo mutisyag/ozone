@@ -2015,15 +2015,22 @@ class ReportsViewSet(viewsets.ViewSet):
 
     def _get_parties(self, request):
         parties = request.GET.getlist(key='party')
-        return Party.objects.filter(
-            pk__in=parties
-        ).order_by('name')
+        if request.user.is_secretariat:
+            qs = Party.get_main_parties()
+            if parties:
+                qs = qs.filter(pk__in=parties)
+        else:
+            qs = Party.objects.filter(
+                pk=request.user.party_id
+            )
+        return qs.order_by('name')
 
     def _get_periods(self, request):
         reporting_periods = request.GET.getlist(key='period')
-        return ReportingPeriod.objects.filter(
-            pk__in=reporting_periods
-        ).order_by('-pk').all()
+        qs = ReportingPeriod.get_past_periods()
+        if reporting_periods:
+            qs = qs.filter(pk__in=reporting_periods)
+        return qs.order_by('-start_date')
 
     def get_submissions(self, obligation, periods, parties):
         submissions = list()

@@ -64,6 +64,16 @@ class ReportingPeriod(models.Model):
             .first()
         )
 
+    @classmethod
+    def get_past_periods(cls):
+        today = datetime.now().date()
+        return (
+            cls.objects.filter(
+                is_reporting_allowed=True,
+                end_date__lte=today,
+            ).order_by('-start_date')
+        )
+
     def clean(self):
         if self.end_date and self.start_date > self.end_date:
             raise ValidationError(

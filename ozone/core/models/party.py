@@ -183,7 +183,10 @@ class Party(models.Model):
 
     @classmethod
     def get_main_parties(cls):
-        return cls.objects.filter(id=models.F('parent_party_id'))
+        return cls.objects.filter(
+            id=models.F('parent_party_id'),
+            is_active=True,
+        )
 
     def __str__(self):
         return self.name
