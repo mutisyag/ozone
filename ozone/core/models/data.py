@@ -545,21 +545,20 @@ class BaseImportExportReport(models.Model):
         # one entry with a src/dst country.
         partyless_substances = set()
         partyful_substances = set()
+        # Only taking into account substance entries (as there already are
+        # substance entries auto-generated from blends - and calculating them
+        # again is redundant)
+        substance_entries = cls.objects.filter(submission=submission).exclude(
+            blend__isnull=False
+        )
 
-        for entry in cls.objects.filter(submission=submission):
+        for entry in substance_entries:
             substance = getattr(entry, 'substance', None)
-            blend = getattr(entry, 'blend', None)
-            if getattr(entry, party_field, None) is None:
-                if substance:
-                    partyless_substances.add(substance.id)
-                elif blend:
-                    partyless_substances.update(blend.get_substance_ids())
+            party = getattr(entry, party_field, None)
+            if party is None:
+                partyless_substances.add(substance.id)
             else:
-
-                if substance:
-                    partyful_substances.add(substance.id)
-                elif blend:
-                    partyful_substances.update(blend.get_substance_ids())
+                partyful_substances.add(substance.id)
         related_substances = partyless_substances.intersection(
             partyful_substances
         )
@@ -573,40 +572,23 @@ class BaseImportExportReport(models.Model):
                 }
                 for substance in related_substances
             }
-            for entry in cls.objects.filter(submission=submission):
+            # Only fetch data entries containing the related_substances
+            for entry in substance_entries.filter(
+                substance_id__in=related_substances
+            ):
                 substance = getattr(entry, 'substance', None)
-                blend = getattr(entry, 'blend', None)
-                if blend:
-                    # Blend entry
-                    blend_subs = blend.get_substance_ids_percentages()
-                    for substance, percentage in blend_subs:
-                        if substance in related_substances:
-                            sums_dictionary[substance]['totals_sum'] += sum(
-                                [
-                                    getattr(entry, field, Decimal(0)) * percentage
-                                    for field in totals_fields
-                                ]
-                            )
-                            sums_dictionary[substance]['quantities_sum'] += sum(
-                                [
-                                    getattr(entry, field, Decimal(0)) * percentage
-                                    for field in quantity_fields
-                                ]
-                            )
-                elif substance:
-                    if substance.id in related_substances:
-                        sums_dictionary[substance.id]['totals_sum'] += sum(
-                            [
-                                getattr(entry, field, Decimal(0)) or Decimal(0)
-                                for field in totals_fields
-                            ]
-                        )
-                        sums_dictionary[substance.id]['quantities_sum'] += sum(
-                            [
-                                getattr(entry, field, Decimal(0)) or Decimal(0)
-                                for field in quantity_fields
-                            ]
-                        )
+                sums_dictionary[substance.id]['totals_sum'] += sum(
+                    [
+                        getattr(entry, field, Decimal(0)) or Decimal(0)
+                        for field in totals_fields
+                    ]
+                )
+                sums_dictionary[substance.id]['quantities_sum'] += sum(
+                    [
+                        getattr(entry, field, Decimal(0)) or Decimal(0)
+                        for field in quantity_fields
+                    ]
+                )
 
             # And finally verify that, for each substance,
             # sum of totals > sum of quantities
