@@ -401,15 +401,6 @@ class Blend(models.Model):
             'sort_order', 'pk',
         ]
 
-    def save(self, *args, **kwargs):
-        if self.pk:
-            if self.custom is False:
-                raise MethodNotAllowed(
-                    _("Predefined blends composition cannot be changed.")
-                )
-        self.full_clean()
-        return super().save(*args, **kwargs)
-
 
 class BlendComponent(models.Model):
     """
