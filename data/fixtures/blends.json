@@ -2590,5 +2590,27 @@
     },
     "model": "core.blend",
     "pk": 144
+  },
+  {
+    "fields": {
+      "blend_id": "Other mixture",
+      "legacy_blend_id": null,
+      "party": null,
+      "composition": "Unspecified mixture",
+      "other_names": "",
+      "type": "Other",
+      "odp": null,
+      "gwp": null,
+      "hfc": null,
+      "hcfc": null,
+      "main_usage": "",
+      "remark": "",
+      "trade_name": "",
+      "composition_alt": "",
+      "cnumber": "",
+      "sort_order": 999999
+    },
+    "model": "core.blend",
+    "pk": 145,
   }
 ]

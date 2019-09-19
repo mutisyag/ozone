@@ -198,7 +198,7 @@ class Substance(models.Model):
         max_digits=20, decimal_places=10, null=True, blank=True
     )
 
-    formula = models.CharField(max_length=256)
+    formula = models.CharField(max_length=256, null=True, blank=True)
 
     number_of_isomers = models.SmallIntegerField(null=True, blank=True)
 
