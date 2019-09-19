@@ -610,18 +610,13 @@ class BaseImportExportReport(models.Model):
 
             # And finally verify that, for each substance,
             # sum of totals > sum of quantities
-            valid = all(
-                [
-                    sums['totals_sum'] >= sums['quantities_sum']
-                    for sums in sums_dictionary.values()
-                ]
-            )
-            if not valid:
-                raise ValidationError(
-                    f'For each substance that has no {party_field}, '
-                    f'the sum of quantities across all data entries should be '
-                    f'less than the sum of totals'
-                )
+            for id, sums in sums_dictionary.items():
+                if sums['totals_sum'] < sums['quantities_sum']:
+                    raise ValidationError(
+                        f'For {Substance.objects.filter(id=id).first()}, the '
+                        f'sum of quantities across all data entries is greater '
+                        f'than the sum of totals.'
+                    )
 
     class Meta:
         abstract = True
