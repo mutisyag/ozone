@@ -32,6 +32,7 @@ const {
   addValues,
   addComment,
   rowIsEmpty,
+  toggleMixtureDetails,
   uploadeFile
 } = require('../custom-methods/methods.js')
 
@@ -548,5 +549,35 @@ module.exports = {
     saveSubmission(browser, ['Submission Info'])
 
     logout(browser)
-  }
+  },
+  BU_024: browser => {
+    const row_values = {
+      quantity_total_new: 0.12
+    }
+    const modal_values = {
+      quantity_feedstock: 0.10,
+      quantity_critical_uses: 0.01,
+      decision_critical_uses: 'Do that'
+    }
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
+
+    logMessage(browser, 'Testing the toggle details of blends functionality', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_exports'])
+
+    addEntity(browser, 'has_exports_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+    addValues(browser, 'blend-table', 'has_exports_tab', 1, row_values, modal_values)
+
+    toggleMixtureDetails(browser, 'blend-table', 'has_exports_tab', 1)
+  },
 }

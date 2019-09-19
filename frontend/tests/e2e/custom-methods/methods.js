@@ -260,14 +260,14 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   logMessage(browser, 'Filling submission information')
 
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
-  /* Hide app-footer */
-  browser
-    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
-    .pause(500)
-
   /* Open Submission Info tab */
   selectTab(browser, 'Submission Information')
-  browser.useXpath()
+    
+  browser
+    .useXpath()
+    /* Hide app-footer */
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+    .pause(500)
     .execute('window.scrollTo(0,document.body.scrollHeight);')
     .waitForElementVisible("//input[@id='reporting_officer']", 20000)
     .pause(500)
@@ -846,6 +846,23 @@ const rowIsEmpty = (browser, table, tab, row, row_values, modal_values, start_co
     .pause(500)
 }
 
+const toggleMixtureDetails = (browser, table, tab, row) => {
+  browser
+    /* Hide app-footer	*/
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'none\'')
+    .pause(500)
+    .useCss()
+    .waitForElementVisible(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`, 20000)
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`)
+    .pause(500)
+    .waitForElementVisible(`#${tab} #${table} tr:nth-child(${row + 1}).b-table-details`, 20000)
+    .click(`#${tab} #${table} tbody tr:nth-child(${row}) td .substance-blend-cell`)
+    .pause(500)
+    /* Show app-footer */
+    .execute('document.getElementsByClassName(\'app-footer\')[0].style.display = \'inline\'')
+    .pause(500)
+}
+
 const uploadeFile = (browser, filename, filepath) => {
   logMessage(browser, 'Uploading file')
 
@@ -894,5 +911,6 @@ module.exports = {
   addValues,
   addComment,
   rowIsEmpty,
+  toggleMixtureDetails,
   uploadeFile
 }

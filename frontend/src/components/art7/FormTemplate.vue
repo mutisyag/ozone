@@ -619,7 +619,7 @@
             </div>
           </template>
 
-          <template v-slot:cell(row-details)="row">
+          <template v-slot:row-details="row">
             <thead>
               <tr>
                 <th
