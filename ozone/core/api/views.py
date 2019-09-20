@@ -512,11 +512,14 @@ class AggregationViewFilterSet(filters.FilterSet):
     group = MultiValueNumberFilter(
         "group", help_text="Filter by Annex Group ID"
     )
-#    TODO: should we pre-calculate is_article5 and is_eu_member in ProdCons ?
-#    is_article5 = filters.BooleanFilter(
-#        field_name="is_article5",
-#        help_text="Filter by party.is_article5",
-#    )
+    is_article5 = filters.BooleanFilter(
+        field_name="is_article5",
+        help_text="Filter by party_history.is_article5",
+    )
+    is_eu_member = filters.BooleanFilter(
+        field_name="is_eu_member",
+        help_text="Filter by party_history.is_eu_member",
+    )
     region = MultiValueNumberFilter(
         field_name="party__subregion__region_id",
         help_text="Filter by party's region_id",
