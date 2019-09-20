@@ -260,15 +260,9 @@ const fillSubmissionInfo = (browser, submissionInfo = {}, autocomplet = true) =>
   logMessage(browser, 'Filling submission information')
 
   const fields = ['reporting_officer', 'designation', 'organization', 'postal_address', 'phone', 'email']
-<<<<<<< Updated upstream
-  /* Open Submission Info tab */
-  selectTab(browser, 'Submission Information')
-    
-=======
   
   /* Open Submission Info tab */
   selectTab(browser, 'Submission Information')
->>>>>>> Stashed changes
   browser
     .useXpath()
     /* Hide app-footer */
