@@ -213,7 +213,7 @@ STATICFILES_DIRS = (
 MEDIA_URL = '/media/'
 MEDIA_ROOT = '/var/local/media'
 
-
+FILE_UPLOAD_PERMISSIONS = 0o644
 
 # TODO: this part should be synchronized with Webpack
 # (see /frontend/config/conf.js)
