@@ -38,5 +38,37 @@
             "name": "BDN_NA5",
             "remarks": "BDN production baseline after 28 July 2000"
         }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 6,
+        "fields": {
+            "name": "NA5ProdGWP",
+            "remarks": "Production baseline (CO2 eq) for non-Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 7,
+        "fields": {
+            "name": "NA5ConsGWP",
+            "remarks": "Consumption baseline (CO2 eq) for non-Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 8,
+        "fields": {
+            "name": "A5ProdGWP",
+            "remarks": "Production baseline (CO2 eq) for Article 5 parties"
+        }
+    },
+    {
+        "model": "core.baselinetype",
+        "pk": 9,
+        "fields": {
+            "name": "A5ConsGWP",
+            "remarks": "Consumption baseline (CO2 eq) for Article 5 parties"
+        }
     }
 ]

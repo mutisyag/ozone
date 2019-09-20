@@ -359,6 +359,25 @@ class BaseProdCons(models.Model):
                     round_decimal_half_up(field_value, decimals)
                 )
 
+    def get_calc_consumption(self):
+        """
+            Formula for non-EU members is needed for their C/I baselines
+        """
+        return (
+            self.production_all_new
+            - self.production_feedstock
+            - self.production_quarantine
+            - self.get_production_process_agent()
+            - self.destroyed
+            - self.export_new
+            + self.get_export_quarantine()
+            + self.non_party_export
+            + self.import_new
+            - self.import_feedstock
+            - self.get_import_process_agent()
+            - self.import_quarantine
+        )
+
     def calculate_totals(self):
         """
         Called on save() to automatically update fields.
@@ -384,20 +403,7 @@ class BaseProdCons(models.Model):
         if self.is_eu_member:
             self.calculated_consumption = None
         else:
-            self.calculated_consumption = (
-                self.production_all_new
-                - self.production_feedstock
-                - self.production_quarantine
-                - self.get_production_process_agent()
-                - self.destroyed
-                - self.export_new
-                + self.get_export_quarantine()
-                + self.non_party_export
-                + self.import_new
-                - self.import_feedstock
-                - self.get_import_process_agent()
-                - self.import_quarantine
-            )
+            self.calculated_consumption = self.get_calc_consumption()
 
         # QPS production & consumption (QPSProd, QPSCons)
         if self.is_european_union:
@@ -428,7 +434,6 @@ class BaseProdCons(models.Model):
                 self.import_laboratory_uses
                 + self.production_laboratory_analytical_uses
             )
-
         # Apply rounding to everything that needs it.
         self.apply_rounding()
 

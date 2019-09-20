@@ -167,10 +167,19 @@ class Group(models.Model):
         db_table = 'group'
 
 
+class SubstanceManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'group',
+        )
+
+
 class Substance(models.Model):
     """
     Stores all info for a specific substance
     """
+
+    objects = SubstanceManager()
 
     substance_id = models.IntegerField(unique=True)
 

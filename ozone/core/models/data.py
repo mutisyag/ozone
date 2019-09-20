@@ -191,7 +191,18 @@ class AggregationMixin:
             potential_field = 'substance__gwp'
         elif group.is_odp:
             potential_field = 'substance__odp'
+        return cls._get_fields_sum_by_group_and_field(
+            submission, group, field_names, potential_field
+        )
 
+    @classmethod
+    def get_fields_sum_for_gwp_baseline(cls, submission, group, field_names):
+        return cls._get_fields_sum_by_group_and_field(
+            submission, group, field_names, 'substance__gwp_baseline'
+        )
+
+    @classmethod
+    def _get_fields_sum_by_group_and_field(cls, submission, group, field_names, potential_field):
         # This works both faster and more correctly than using Django's
         # aggregations!
         # One SQL query for all fields.
@@ -339,7 +350,34 @@ class AggregationMixin:
                 aggregation.save()
 
     @classmethod
+    def get_aggregated_data_gwp_baseline(cls, submission, reported_groups):
+        """
+        Similar to get_aggregated_data,
+        but instead of ODP/GWP compute everything using substance.gwp_baseline
+        """
+        return cls._get_aggregated_data(
+            submission,
+            reported_groups,
+            cls.get_fields_sum_for_gwp_baseline
+        )
+
+    @classmethod
     def get_aggregated_data(cls, submission, reported_groups):
+        """
+        reported_groups: mapping of form:
+        {
+            group: ProdCons instance,
+            ...
+        }
+        """
+        return cls._get_aggregated_data(
+            submission,
+            reported_groups,
+            cls.get_fields_sum_by_group
+        )
+
+    @classmethod
+    def _get_aggregated_data(cls, submission, reported_groups, field_getter):
         """
         reported_groups: mapping of form:
         {
@@ -363,7 +401,7 @@ class AggregationMixin:
                 )
                 reported_groups[group] = aggregation
 
-            values = cls.get_fields_sum_by_group(
+            values = field_getter(
                 submission, group, cls.AGGREGATION_MAPPING.keys()
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
