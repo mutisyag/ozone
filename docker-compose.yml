@@ -49,7 +49,7 @@ services:
       - ./docker/app.env
     volumes:
      - tusd-uploads:/var/local/tusd_uploads
-     - media:/var/local/media
+     - ./media:/var/local/media
     depends_on:
       - postgres
       - tusd
