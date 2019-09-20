@@ -45,6 +45,12 @@ class BaseProdCons(models.Model):
         help_text="Reporting Period for which this aggregation was calculated",
     )
 
+    # These flags are redundant, as they are already present in the PartyHistory
+    # model, but they are added here to enable easy API filtering based on them.
+    # The values for them will be automatically added at first save.
+    is_article5 = models.NullBooleanField(blank=True)
+    is_eu_member = models.NullBooleanField(blank=True)
+
     submissions = fields.JSONField(default=dict)
 
     # Aggregated quantity fields (derived from data reports)
@@ -283,13 +289,19 @@ class BaseProdCons(models.Model):
             or self.party == Party.objects.filter(abbr="BR").first()
         )
 
-    def get_production_process_agent(self, is_article_5):
-        if not is_article_5 or (self.is_china_or_brazil and self.is_after_2010):
+    def get_production_process_agent(self):
+        if (
+            not self.is_article5
+            or (self.is_china_or_brazil and self.is_after_2010)
+        ):
             return self.production_process_agent
         return Decimal(0.0)
 
-    def get_import_process_agent(self, is_article_5):
-        if not is_article_5 or (self.is_china_or_brazil and self.is_after_2010):
+    def get_import_process_agent(self):
+        if (
+            not self.is_article5
+            or (self.is_china_or_brazil and self.is_after_2010)
+        ):
             return self.import_process_agent
         return Decimal(0.0)
 
@@ -324,11 +336,6 @@ class BaseProdCons(models.Model):
             - calculated_production
             - calculated_consumption
         """
-        # Get the party's characteristics for this specific reporting period
-        party = PartyHistory.objects.get(
-            party=self.party, reporting_period=self.reporting_period
-        )
-
         # Production
         if self.is_european_union:
             self.calculated_production = None
@@ -337,28 +344,28 @@ class BaseProdCons(models.Model):
                 self.production_all_new
                 - self.production_feedstock
                 - self.production_quarantine
-                - self.get_production_process_agent(party.is_article5)
+                - self.get_production_process_agent()
                 - self.destroyed
                 - self.get_export_feedstock()
                 - self.get_export_process_agent()
             )
 
         # Consumption
-        if party.is_eu_member:
+        if self.is_eu_member:
             self.calculated_consumption = None
         else:
             self.calculated_consumption = (
                 self.production_all_new
                 - self.production_feedstock
                 - self.production_quarantine
-                - self.get_production_process_agent(party.is_article5)
+                - self.get_production_process_agent()
                 - self.destroyed
                 - self.export_new
                 + self.get_export_quarantine()
                 + self.non_party_export
                 + self.import_new
                 - self.import_feedstock
-                - self.get_import_process_agent(party.is_article5)
+                - self.get_import_process_agent()
                 - self.import_quarantine
             )
         self.apply_rounding()
@@ -507,8 +514,15 @@ class ProdCons(BaseProdCons):
         """
         self.calculate_totals()
 
-        # If this is first save, also populate baselines and limits.
+        # If this is first save, fill article5 and EU flags and also populate
+        # baselines and limits.
         if not self.pk or force_insert:
+            ph = PartyHistory.objects.filter(
+                party=self.party,
+                reporting_period=self.reporting_period
+            ).first()
+            self.is_article5 = ph.is_article5 if ph else None
+            self.is_eu_member = ph.is_eu_member if ph else None
             self.populate_limits_and_baselines()
 
         super().save(force_insert, force_update, using, update_fields)
