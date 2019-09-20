@@ -82,32 +82,32 @@ module.exports = {
     deleteSubmission(browser)
     logout(browser)
   },
-  // BU_003: browser => {
-  //   const data = {
-  //     submissionInfo: {
-  //       designation: 'test designation',
-  //       organization: 'test organisation',
-  //       postal_address: 'test address',
-  //       country: 'France',
-  //       phone: '+490000000',
-  //       email: 'john.doe@gmail.com'
-  //     },
-  //     reporting_officer: 'test name'
-  //   }
+  BU_003: browser => {
+    const data = {
+      submissionInfo: {
+        designation: 'test designation',
+        organization: 'test organisation',
+        postal_address: 'test address',
+        country: 'France',
+        phone: '+490000000',
+        email: 'john.doe@gmail.com'
+      },
+      reporting_officer: 'test name'
+    }
 
-  //   const autocomplet = false
+    const autocomplet = false
 
-  //   logMessage(browser, 'Testing the edit of Article 7', true)
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-  //   openDashboard(browser)
-  //   editSubmission(browser, 1)
-  //   saveAndFail(browser, data.submissionInfo)
-  //   fillSubmissionInfo(browser, data, autocomplet)
-  //   clickQuestionnaireRadios(browser)
-  //   saveSubmission(browser, ['Submission Information', 'Questionnaire'])
-  //   logout(browser)
-  // },
+    logMessage(browser, 'Testing the edit of Article 7', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    openDashboard(browser)
+    editSubmission(browser, 1)
+    saveAndFail(browser, data.submissionInfo)
+    fillSubmissionInfo(browser, data, autocomplet)
+    clickQuestionnaireRadios(browser)
+    saveSubmission(browser, ['Submission Information', 'Questionnaire'])
+    logout(browser)
+  },
   BU_004: browser => {
     const submissionInfo = {
       reporting_officer: 'test name',
@@ -152,39 +152,39 @@ module.exports = {
     saveSubmission(browser, ['Questionnaire'])
     logout(browser)
   },
-  // BU_006: browser => {
-  //   const row_values = {
-  //     quantity_total_new: 0.12
-  //   }
-  //   const modal_values = {
-  //     quantity_feedstock: 0.10,
-  //     quantity_critical_uses: 0.01,
-  //     decision_critical_uses: 'Do that'
-  //   }
-  //   const start_column = 4
-  //   const submissionInfo = {
-  //     reporting_officer: 'test name',
-  //     designation: 'test designation',
-  //     organization: 'test organisation',
-  //     postal_address: 'test address',
-  //     country: 'France',
-  //     phone: '+490000000',
-  //     email: 'john.doe@gmail.com'
-  //   }
+  BU_006: browser => {
+    const row_values = {
+      quantity_total_new: 0.12
+    }
+    const modal_values = {
+      quantity_feedstock: 0.10,
+      quantity_critical_uses: 0.01,
+      decision_critical_uses: 'Do that'
+    }
+    const start_column = 4
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
 
-  //   logMessage(browser, 'Testing the edit of Imports tab', true)
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-  //   fillSubmissionInfo(browser, submissionInfo)
-  //   clickQuestionnaireRadios(browser, ['has_imports'])
-  //   addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
-  //   addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values)
+    logMessage(browser, 'Testing the edit of Imports tab', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_imports'])
+    addEntity(browser, 'has_imports_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'])
+    addValues(browser, 'substance-table', 'has_imports_tab', 1, row_values, modal_values)
 
-  //   addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
-  //   addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values)
+    addEntity(browser, 'has_imports_tab', 'blend', ['Zeotrope', 'R-401B'])
+    addValues(browser, 'blend-table', 'has_imports_tab', 1, row_values, modal_values)
 
-  //   saveSubmission(browser, ['Questionnaire', 'Imports'])
-  // },
+    saveSubmission(browser, ['Questionnaire', 'Imports'])
+  },
   BU_007: browser => {
     const row_values = {
       quantity_total_new: 0.12
@@ -317,34 +317,34 @@ module.exports = {
     addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Non-Party'])
   },
-  // BU_011: browser => {
-  //   const row_values = {
-  //     facility_name: 'CCT Facility',
-  //     quantity_generated: 10,
-  //     quantity_emitted: 10
+  BU_011: browser => {
+    const row_values = {
+      facility_name: 'CCT Facility',
+      quantity_generated: 10,
+      quantity_emitted: 10
 
-  //   }
-  //   const submissionInfo = {
-  //     reporting_officer: 'test name',
-  //     designation: 'test designation',
-  //     organization: 'test organisation',
-  //     postal_address: 'test address',
-  //     country: 'France',
-  //     phone: '+490000000',
-  //     email: 'john.doe@gmail.com'
-  //   }
+    }
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
 
-  //   logMessage(browser, 'Testing the edit of Emissions tab', true)
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-  //   fillSubmissionInfo(browser, submissionInfo)
-  //   clickQuestionnaireRadios(browser, ['has_emissions'])
+    logMessage(browser, 'Testing the edit of Emissions tab', true)
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    clickQuestionnaireRadios(browser, ['has_emissions'])
 
-  //   addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, true)
+    addFacility(browser, 'facility-table', 'has_emissions_tab', 1, row_values, true)
 
-  //   addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
-  //   saveSubmission(browser, ['Questionnaire', 'Emissions'])
-  // },
+    addComment(browser, 'has_emissions_tab', 'Hakuna Matata')
+    saveSubmission(browser, ['Questionnaire', 'Emissions'])
+  },
   BU_012: browser => {
     const submissionInfo = {
       reporting_officer: 'test name',
@@ -365,38 +365,34 @@ module.exports = {
     uploadeFile(browser, 'hello.pdf', '../../../../')
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
   },
-  // BU_013: browser => {
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
-  //   deleteSubmission(browser)
-  //   browser.end()
-  // },
+  BU_013: browser => {
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
+    deleteSubmission(browser)
+  },
   // BU_014: browser => {
   //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018')
+  //   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
   //   deleteSubmission(browser)
-  //   browser.end()
   // },
-  // BU_015: browser => {
-  //   const submissionInfo = {
-  //     reporting_officer: 'test name',
-  //     designation: 'test designation',
-  //     organization: 'test organisation',
-  //     postal_address: 'test address',
-  //     country: 'France',
-  //     phone: '+490000000',
-  //     email: 'john.doe@gmail.com'
-  //   }
+  BU_015: browser => {
+    const submissionInfo = {
+      reporting_officer: 'test name',
+      designation: 'test designation',
+      organization: 'test organisation',
+      postal_address: 'test address',
+      country: 'France',
+      phone: '+490000000',
+      email: 'john.doe@gmail.com'
+    }
 
-  //   login(browser, 'p_ro', 'p_ro')
-  //   createSubmission(browser, 'HAT Exemption: Imports and Production', '2018', '')
-  //   fillSubmissionInfo(browser, submissionInfo)
-  //   saveSubmission(browser, ['Submission Info'])
-  //   checkSumbissionInfoFlags(browser)
-  //   saveSubmission(browser, ['Submission Info'])
-  //   logout(browser)
-  //   browser.end()
-  // },
+    login(browser, 'p_ro', 'p_ro')
+    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
+    fillSubmissionInfo(browser, submissionInfo)
+    saveSubmission(browser, ['Submission Info'])
+    saveSubmission(browser, ['Submission Info'])
+    logout(browser)
+  },
   BU_019: browser => {
     const group = 'A/I Chlorofluorocarbons (CFCs)'
     const name = 'CFC-11'
