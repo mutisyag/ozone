@@ -5,6 +5,10 @@ import django.db.models.deletion
 import ozone.core.models.country_profile
 
 
+def dummy_upload_to(instance, filename):
+    return filename
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -15,12 +19,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='othercountryprofiledata',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.country_profile.user_directory_path),
+            field=models.FileField(blank=True, null=True, upload_to=dummy_upload_to),
         ),
         migrations.AddField(
             model_name='website',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.country_profile.user_directory_path),
+            field=models.FileField(blank=True, null=True, upload_to=dummy_upload_to),
         ),
         migrations.AlterField(
             model_name='focalpoint',

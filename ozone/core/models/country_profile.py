@@ -5,10 +5,6 @@ from django.db import models
 from . import Obligation, Party, ReportingPeriod, Submission
 
 
-def user_directory_path(instance, filename):
-    return filename
-
-
 @enum.unique
 class URLTypes(enum.Enum):
     SUBMISSION = 'Submission'
@@ -108,7 +104,7 @@ class OtherCountryProfileData(models.Model):
 
     description = models.CharField(max_length=9999, blank=True)
     file = models.FileField(
-        upload_to=user_directory_path, blank=True, null=True
+        upload_to='other-country-profile-data/', blank=True, null=True
     )
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
@@ -130,7 +126,7 @@ class Website(models.Model):
     )
 
     file = models.FileField(
-        upload_to=user_directory_path, blank=True, null=True
+        upload_to='website/', blank=True, null=True
     )
 
     url = models.URLField(
@@ -171,7 +167,7 @@ class LicensingSystemFile(models.Model):
     licensing_system = models.ForeignKey(
         LicensingSystem, related_name='files', on_delete=models.CASCADE
     )
-    file = models.FileField(upload_to=user_directory_path)
+    file = models.FileField(upload_to='licensing-system/')
 
     class Meta:
         db_table = "licensing_system_file"
