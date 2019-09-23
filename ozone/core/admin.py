@@ -17,6 +17,10 @@ from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 
+from ozone.core.export.submissions import export_submissions
+from ozone.core.utils.tempfiles import capture_temp_file
+from ozone.core.utils.tempfiles import django_file_response
+
 # Register your models here.
 from .models import (
     Meeting,
@@ -444,6 +448,18 @@ class SubmissionAdmin(admin.ModelAdmin):
         obj._current_state = 'data_entry'
         obj.save()
         obj.delete()
+
+    def export_legacy_xlsx(self, request, queryset):
+        data = export_submissions(queryset)
+
+        with capture_temp_file('legacy_submissions.xlsx') as (path, output):
+            data.dump_xlsx(path)
+
+        return django_file_response(output)
+
+    export_legacy_xlsx.short_description = "Export legaxy XLSX"
+
+    actions = admin.ModelAdmin.actions + [export_legacy_xlsx]
 
 
 @admin.register(SubmissionInfo)

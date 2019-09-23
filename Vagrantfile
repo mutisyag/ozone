@@ -14,7 +14,7 @@ Vagrant.configure("2") do |config|
   config.vm.provider :vmck do |vmck|
     vmck.image_path = "imgbuild-master.qcow2.tar.gz"
     vmck.vmck_url = ENV["VMCK_URL"]
-    vmck.memory = 4000
+    vmck.memory = 8000
     vmck.cpus = 2
     vmck.name = ENV["VMCK_NAME"] || "ozone"
   end

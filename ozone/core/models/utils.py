@@ -6,6 +6,9 @@ import decimal
 DECIMAL_FIELD_DIGITS = 25
 DECIMAL_FIELD_DECIMALS = 15
 
+# Substance ID constants
+METHYL_BROMIDE = 194
+
 
 @enum.unique
 class RatificationTypes(enum.Enum):

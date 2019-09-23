@@ -18,6 +18,8 @@ export DEBIAN_FRONTEND=noninteractive
   sudo update-locale LANG=en_US.UTF-8
 )
 
+export PATH=$PATH:/snap/bin
+
 
 dpkg --list | grep -q postgresql-9.4 && echo "PostgreSQL 9.4 already installed" || (
   echo "Installing PostgreSQL 9.4"

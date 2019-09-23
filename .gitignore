@@ -137,6 +137,8 @@ ozone/media/
 
 # Excel files
 *.xlsx
+!/ozone/tests/examples/*.xlsx
+/ozone/tests/examples/.~lock*
 
 /.vagrant
 /.env

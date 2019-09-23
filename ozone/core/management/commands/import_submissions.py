@@ -27,7 +27,9 @@ from ozone.core.models import (
     SubmissionFormat,
     Blend,
 )
-from ozone.core.models.utils import float_to_decimal, sum_decimals
+from ozone.core.models.utils import float_to_decimal
+from ozone.core.models.utils import sum_decimals
+from ozone.core.models.utils import METHYL_BROMIDE
 
 logger = logging.getLogger(__name__)
 CACHE_LOC = "/var/tmp/legacy_submission.cache"
@@ -182,7 +184,7 @@ class Command(BaseCommand):
                     )
                     continue
 
-            if substance and substance.substance_id != 194:
+            if substance and substance.substance_id != METHYL_BROMIDE:
                 quantity_essen_uses = import_row["ImpEssenUse"]
                 quantity_crit_uses = None
             else:
@@ -195,7 +197,7 @@ class Command(BaseCommand):
             if quantity_lab_uses and import_row["ImpEssenUse"]:
                 diff = float_to_decimal(import_row["ImpEssenUse"]) - float_to_decimal(quantity_lab_uses)
                 if diff >= 0:
-                    if substance and substance.substance_id != 194:
+                    if substance and substance.substance_id != METHYL_BROMIDE:
                         quantity_essen_uses = diff
                     else:
                         quantity_crit_uses = diff
@@ -456,7 +458,7 @@ class Command(BaseCommand):
                                period.name, exports_row["SubstID"])
 
             critical = False
-            if substance and substance.substance_id == 194:
+            if substance and substance.substance_id == METHYL_BROMIDE:
                 critical = True
 
             exports.append({
@@ -566,7 +568,7 @@ class Command(BaseCommand):
                 logger.warning("Produce no quantity specified: %s/%s/%s", party.abbr,
                                period.name, produce_row["SubstID"])
 
-            if substance.substance_id != 194:
+            if substance.substance_id != METHYL_BROMIDE:
                 quantity_essen_uses = produce_row["ProdEssenUse"]
                 quantity_crit_uses = None
             else:
@@ -582,7 +584,7 @@ class Command(BaseCommand):
                 diff = float_to_decimal(produce_row["ProdEssenUse"]) - float_to_decimal(quantity_lab_uses)
                 if diff > 0.0001:
                     decision_lab_uses = remark
-                    if substance.substance_id != 194:
+                    if substance.substance_id != METHYL_BROMIDE:
                         quantity_essen_uses = diff
                         decision_essen_uses = remark
                     else:
