@@ -168,6 +168,7 @@ class LicensingSystemFile(models.Model):
         LicensingSystem, related_name='files', on_delete=models.CASCADE
     )
     file = models.FileField(upload_to='licensing-system/')
+    title = models.CharField(max_length=256)
 
     class Meta:
         db_table = "licensing_system_file"
@@ -178,6 +179,7 @@ class LicensingSystemURL(models.Model):
         LicensingSystem, related_name='urls', on_delete=models.CASCADE
     )
     url = models.URLField('URL', max_length=1024)
+    title = models.CharField(max_length=256)
 
     class Meta:
         db_table = "licensing_system_url"
