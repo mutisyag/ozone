@@ -54,12 +54,15 @@ def decimal_zero_if_none(value):
 
 def float_to_decimal_zero_if_none(value):
     """Converts float to decimal, avoiding exception if value is None"""
-    return decimal.Decimal(str(value)) if value else decimal.Decimal(0.0)
+    return (
+        decimal.Decimal(str(value)) if value is not None
+        else decimal.Decimal(0.0)
+    )
 
 
 def float_to_decimal(value):
     """Converts null-able float to decimal, returns None if value is None"""
-    return decimal.Decimal(str(value)) if value else None
+    return decimal.Decimal(str(value)) if value is not None else None
 
 
 def sum_decimals(d1, d2):
