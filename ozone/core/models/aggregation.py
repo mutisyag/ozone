@@ -347,11 +347,8 @@ class BaseProdCons(models.Model):
     def get_export_or_production_quarantine(self):
         if self.production_quarantine >= self.export_quarantine:
             return self.export_quarantine
-        elif self.production_quarantine < self.export_quarantine:
-            return self.production_quarantine
         else:
-            # :)
-            return Decimal(0.0)
+            return self.production_quarantine
 
     def apply_rounding(self):
         for field_name, decimals in self.get_roundable_fields().items():
