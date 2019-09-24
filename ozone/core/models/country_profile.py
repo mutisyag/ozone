@@ -104,7 +104,7 @@ class OtherCountryProfileData(models.Model):
 
     description = models.CharField(max_length=9999, blank=True)
     file = models.FileField(
-        upload_to='other-country-profile-data/', blank=True, null=True
+        upload_to='public/other-country-profile-data/', blank=True, null=True
     )
     url = models.URLField(
         'URL', max_length=1024, null=True, blank=True
@@ -126,7 +126,7 @@ class Website(models.Model):
     )
 
     file = models.FileField(
-        upload_to='website/', blank=True, null=True
+        upload_to='public/website/', blank=True, null=True
     )
 
     url = models.URLField(
@@ -167,7 +167,7 @@ class LicensingSystemFile(models.Model):
     licensing_system = models.ForeignKey(
         LicensingSystem, related_name='files', on_delete=models.CASCADE
     )
-    file = models.FileField(upload_to='licensing-system/')
+    file = models.FileField(upload_to='public/licensing-system/')
     title = models.CharField(max_length=256)
 
     class Meta:
