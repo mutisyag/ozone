@@ -9,6 +9,7 @@ from .reporting import Submission
 __all__ = [
     'Email',
     'EmailTemplate',
+    'EmailTemplateAttachment',
 ]
 
 
@@ -42,3 +43,18 @@ class EmailTemplate(models.Model):
     name = models.CharField(max_length=256)
     subject = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class EmailTemplateAttachment(models.Model):
+    email_template = models.ForeignKey(
+        EmailTemplate, related_name='attachments',
+        on_delete=models.CASCADE,
+    )
+    file = models.FileField(upload_to='email-template-attachments/')
+    filename = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.filename

@@ -55,6 +55,7 @@ from .models import (
     Transfer,
     Email,
     EmailTemplate,
+    EmailTemplateAttachment,
     ProcessAgentApplication,
     ProcessAgentContainTechnology,
     ProcessAgentEmissionLimit,
@@ -680,10 +681,18 @@ class EmailAdmin(admin.ModelAdmin):
     )
 
 
+class EmailTemplateAttachmentInline(TabularInline):
+    model = EmailTemplateAttachment
+    extra = 1
+
+
 @admin.register(EmailTemplate)
 class EmailTemplateAdmin(admin.ModelAdmin):
     list_display = ('name', 'subject', )
     search_fields = ['name', 'subject', 'description', ]
+    inlines = [
+        EmailTemplateAttachmentInline,
+    ]
 
 
 @admin.register(ProcessAgentApplication)

@@ -57,6 +57,7 @@ from .models import (
     Limit,
     Email,
     EmailTemplate,
+    EmailTemplateAttachment,
     CriticalUseCategory,
     DeviationType,
     DeviationSource,
@@ -1822,11 +1823,20 @@ class EmailSerializer(serializers.ModelSerializer):
         return email
 
 
+class EmailTemplateAttachmentSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmailTemplateAttachment
+        fields = ['id', 'filename']
+
+
 class EmailTemplateSerializer(serializers.ModelSerializer):
+
+    attachments = EmailTemplateAttachmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = EmailTemplate
-        fields = "__all__"
+        fields = ['id', 'name', 'subject', 'description', 'attachments']
 
 
 class FocalPointSerializer(serializers.ModelSerializer):
