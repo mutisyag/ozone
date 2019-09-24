@@ -29,6 +29,8 @@ server {
   listen 443 ssl;
   server_name ozone-staging.edw.ro;
 
+  client_max_body_size 0;
+
   ssl_certificate     /etc/letsencrypt/live/ozone-staging.edw.ro/fullchain.pem;
   ssl_certificate_key /etc/letsencrypt/live/ozone-staging.edw.ro/privkey.pem;
 
@@ -39,6 +41,10 @@ server {
 
   location /.well-known/acme-challenge/ {
       root /var/local/certbot;
+  }
+
+  location /media/ {
+      alias /opt/ozone/media/;
   }
 
   location /mailtrap {
@@ -55,7 +61,7 @@ server {
     tcp_nopush on;
     gzip on;
     gzip_types text/plain application/x-javascript text/css;
-    expires 1d;
+    add_header Cache-Control "no-store, must-revalidate";
     root /opt/ozone/webroot/;
     try_files $uri $uri/ /index.html;
   }
@@ -102,6 +108,10 @@ server {
 
   location / {
     proxy_pass http://tusd/;
+  }
+
+  location /.well-known/acme-challenge/ {
+      root /var/local/certbot;
   }
 
   proxy_request_buffering  off;
