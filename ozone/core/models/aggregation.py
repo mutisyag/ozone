@@ -578,27 +578,23 @@ class ProdCons(BaseProdCons):
         if bdn:
             self.baseline_bdn = bdn.baseline
 
-    def save(
-        self,
-        force_insert=False, force_update=False, using=None, update_fields=None
-    ):
+    def save(self, *args, **kwargs):
         """
-        At each save, we need to recalculate the totals.
+        Overridden to perform extra actions.
         """
+        # At each save, we need to recalculate the totals.
         self.calculate_totals()
 
-        # If this is first save, fill article5 and EU flags and also populate
-        # baselines and limits.
-        if not self.pk or force_insert:
-            ph = PartyHistory.objects.filter(
-                party=self.party,
-                reporting_period=self.reporting_period
-            ).first()
-            self.is_article5 = ph.is_article5 if ph else None
-            self.is_eu_member = ph.is_eu_member if ph else None
-            self.populate_limits_and_baselines()
+        # Fill article5 and EU flags and also populate baselines and limits.
+        ph = PartyHistory.objects.filter(
+            party=self.party,
+            reporting_period=self.reporting_period
+        ).first()
+        self.is_article5 = ph.is_article5 if ph else None
+        self.is_eu_member = ph.is_eu_member if ph else None
+        self.populate_limits_and_baselines()
 
-        super().save(force_insert, force_update, using, update_fields)
+        super().save(*args, **kwargs)
 
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
