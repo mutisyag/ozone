@@ -27,9 +27,13 @@ class BaseProdCons(models.Model):
     becomes current for that party & reporting period, the values in the entry
     will be automatically updated.
     """
-    # Fields that need to be rounded. Kept empty here; each subclass will set
-    # them accordingly.
-    ROUNDABLE_FIELDS = []
+    def get_roundable_fields(self):
+        """
+        Returns fields that should be rounded after all calculations are
+        performed, together with the number of decimals to be rounded to.
+        """
+        # Needs to be implemented in each subclass for rounding to work
+        raise NotImplementedError
 
     party = models.ForeignKey(
         Party,
@@ -200,12 +204,32 @@ class BaseProdCons(models.Model):
         null=True, blank=True, default=None
     )
 
+    calculated_qps_production = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        null=True, blank=True, default=None
+    )
+
+    calculated_qps_consumption = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        null=True, blank=True, default=None
+    )
+
+    calculated_laboratory_production = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        null=True, blank=True, default=None
+    )
+
+    calculated_laboratory_consumption = models.DecimalField(
+        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
+        null=True, blank=True, default=None
+    )
+
     def is_empty(self):
         """Returns True if aggregation has all-zero values"""
         for field in self.__class__._meta.get_fields():
             if (
                 isinstance(field, models.DecimalField)
-                and field.name not in self.ROUNDABLE_FIELDS
+                and field.name not in self.get_roundable_fields()
                 and field.value_from_object(self) != Decimal(0.0)
             ):
                 return False
@@ -320,13 +344,22 @@ class BaseProdCons(models.Model):
             return self.export_quarantine
         return Decimal(0.0)
 
+    def get_export_or_production_quarantine(self):
+        if self.production_quarantine >= self.export_quarantine:
+            return self.export_quarantine
+        elif self.production_quarantine < self.export_quarantine:
+            return self.production_quarantine
+        else:
+            # :)
+            return Decimal(0.0)
+
     def apply_rounding(self):
-        for field_name in self.ROUNDABLE_FIELDS:
+        for field_name, decimals in self.get_roundable_fields().items():
             field_value = getattr(self, field_name)
             if field_value is not None and field_value != '':
                 setattr(
                     self, field_name,
-                    round_decimal_half_up(field_value, self.decimals)
+                    round_decimal_half_up(field_value, decimals)
                 )
 
     def calculate_totals(self):
@@ -368,6 +401,38 @@ class BaseProdCons(models.Model):
                 - self.get_import_process_agent()
                 - self.import_quarantine
             )
+
+        # QPS production & consumption (QPSProd, QPSCons)
+        if self.is_european_union:
+            self.calculated_qps_production = None
+        else:
+            self.calculated_qps_production = self.production_quarantine
+
+        if self.is_eu_member:
+            self.calculated_qps_consumption = None
+        else:
+            self.calculated_qps_consumption = (
+                self.production_quarantine
+                + self.import_quarantine
+                - self.get_export_or_production_quarantine()
+            )
+
+        # Laboratory production & consumption (LabProd, LabCons)
+        if self.is_european_union:
+            self.calculated_laboratory_production = None
+        else:
+            self.calculated_laboratory_production = \
+                self.production_laboratory_analytical_uses
+
+        if self.is_eu_member:
+            self.calculated_laboratory_consumption = None
+        else:
+            self.calculated_laboratory_consumption = (
+                self.import_laboratory_uses
+                + self.production_laboratory_analytical_uses
+            )
+
+        # Apply rounding to everything that needs it.
         self.apply_rounding()
 
     class Meta:
@@ -386,16 +451,27 @@ class ProdCons(BaseProdCons):
     Concrete model for ODP-based aggregations.
     These aggregate totals per substance group.
     """
-    ROUNDABLE_FIELDS = [
-        'baseline_prod',
-        'baseline_cons',
-        'baseline_bdn',
-        'limit_prod',
-        'limit_cons',
-        'limit_bdn',
-        'calculated_production',
-        'calculated_consumption',
-    ]
+    def get_roundable_fields(self):
+        """
+        Returns fields that should be rounded after all calculations are
+        performed, together with the number of decimals to be rounded to.
+        """
+        # self.decimals is a cached property, so it's ok to call it several
+        # times
+        return {
+            'baseline_prod': self.decimals,
+            'baseline_cons': self.decimals,
+            'baseline_bdn': self.decimals,
+            'limit_prod': self.decimals,
+            'limit_cons': self.decimals,
+            'limit_bdn': self.decimals,
+            'calculated_production': self.decimals,
+            'calculated_consumption': self.decimals,
+            'calculated_qps_production': self.decimals,
+            'calculated_qps_consumption': self.decimals,
+            'calculated_laboratory_production': 5,
+            'calculated_laboratory_consumption': 5,
+        }
 
     objects = ProdConsManager()
 
@@ -545,10 +621,19 @@ class ProdConsMT(BaseProdCons):
     Concrete model for MT-based aggregations.
     These aggregate totals per substance.
     """
-    ROUNDABLE_FIELDS = [
-        'calculated_production',
-        'calculated_consumption',
-    ]
+    def get_roundable_fields(self):
+        """
+        Returns fields that should be rounded after all calculations are
+        performed, together with the number of decimals to be rounded to.
+        """
+        return {
+            'calculated_production': self.decimals,
+            'calculated_consumption': self.decimals,
+            'calculated_qps_production': self.decimals,
+            'calculated_qps_consumption': self.decimals,
+            'calculated_laboratory_production': 5,
+            'calculated_laboratory_consumption': 5,
+        }
 
     objects = ProdConsMTManager()
 
