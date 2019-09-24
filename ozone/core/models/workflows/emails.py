@@ -4,9 +4,11 @@ from ozone.core.email import send_mail_from_template
 from ozone.core.utils.site import get_site_name
 
 
-def skip(email):
-    if re.search(r'@example\.(com|org)$', email):
-        return True
+def allow_sending_to(email):
+    # if re.search(r'@example\.(com|org)$', email):
+    #     return False
+
+    return True
 
 
 def notify_workflow_transitioned(workflow):
@@ -22,16 +24,14 @@ def notify_workflow_transitioned(workflow):
         'site_name': get_site_name(),
     }
 
-    recipients = [u.email for u in User.objects.filter(is_secretariat=True)]
-    recipients.append(submission.info.email)
+    to_emails = set(u.email for u in User.objects.filter(is_secretariat=True))
+    cc_emails = set(u.email for u in submission.party.users.all())
+    cc_emails.add(submission.info.email)
 
-    for to_email in recipients:
-        if skip(to_email):
-            continue
-
-        send_mail_from_template(
-            "registration/workflow_transitioned_subject.txt",
-            "registration/workflow_transitioned_email.html",
-            context=context,
-            to_email=to_email,
-        )
+    send_mail_from_template(
+        "registration/workflow_transitioned_subject.txt",
+        "registration/workflow_transitioned_email.html",
+        context=context,
+        to_emails=filter(allow_sending_to, to_emails),
+        cc_emails=filter(allow_sending_to, cc_emails),
+    )
