@@ -5,8 +5,8 @@ from ozone.core.utils.site import get_site_name
 
 
 def allow_sending_to(email):
-    # if re.search(r'@example\.(com|org)$', email):
-    #     return False
+    if re.search(r'@example\.(com|org)$', email):
+        return False
 
     return True
 
