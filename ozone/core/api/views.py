@@ -2248,6 +2248,14 @@ class EssentialCriticalFilterSet(filters.FilterSet):
         field_name="submission__party__subregion_id",
         help_text="Filter by party's subregion_id",
     )
+    is_article5 = filters.BooleanFilter(
+        field_name="is_article5",
+        help_text="Filter by party_history.is_article5",
+    )
+    is_eu_member = filters.BooleanFilter(
+        field_name="is_eu_member",
+        help_text="Filter by party_history.is_eu_member",
+    )
 
 
 class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):

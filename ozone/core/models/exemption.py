@@ -3,6 +3,7 @@ import re
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from .party import PartyHistory
 from .reporting import Submission
 from .substance import Substance
 from .utils import DECIMAL_FIELD_DIGITS, DECIMAL_FIELD_DECIMALS
@@ -80,6 +81,12 @@ class ExemptionApproved(BaseExemption):
         blank=True, null=True
     )
 
+    # These flags are redundant, as they are already present in the PartyHistory
+    # model, but they are added here to enable easy API filtering based on them.
+    # The values for them will be automatically populated by save().
+    is_article5 = models.NullBooleanField(blank=True)
+    is_eu_member = models.NullBooleanField(blank=True)
+
     def __str__(self):
         return f"""Exemption {self.submission.reporting_period.name}\
         {self.submission.party.abbr} ({self.submission.party.name})\
@@ -107,6 +114,21 @@ class ExemptionApproved(BaseExemption):
                 else:
                     ret['non_emergency'][substance] = amount if amount else 0
         return ret
+
+    def save(self, *args, **kwargs):
+        """
+        Overriding save() to populate is_eu_member and is_article5 based on
+        the corresponding PartyHistory entry. This allows easier API filtering
+        based on Article 5/EU membership criteria.
+        """
+        ph = PartyHistory.objects.filter(
+            party=self.submission.party,
+            reporting_period=self.submission.reporting_period
+        ).first()
+        self.is_article5 = ph.is_article5 if ph else None
+        self.is_eu_member = ph.is_eu_member if ph else None
+
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'exemption_approved'
