@@ -61,7 +61,11 @@ server {
     tcp_nopush on;
     gzip on;
     gzip_types text/plain application/x-javascript text/css;
-    add_header Cache-Control "no-store, must-revalidate";
+    expires 1d;
+    location =/index.html {
+      expires off;
+      add_header Cache-Control "no-store, must-revalidate";
+    }
     root /opt/ozone/webroot/;
     try_files $uri $uri/ /index.html;
   }
