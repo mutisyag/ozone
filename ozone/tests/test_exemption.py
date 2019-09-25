@@ -291,6 +291,9 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["group"] = ''
         # Default value for emergency is False
         expected_data["is_emergency"] = False
+        # Default values for these are None (no PartyHistory entries here)
+        expected_data["is_article5"] = None
+        expected_data["is_eu_member"] = None
         # Default value for approved_uses is an empty list
         expected_data["approved_uses"] = []
         self.assertEqual(result.json(), [expected_data])
@@ -318,6 +321,9 @@ class ExemptionApprovedTests(BaseExemptionTests):
         expected_data["group"] = ''
         # Default value for is_emergency is False
         expected_data["is_emergency"] = False
+        # Default values for these are None (no PartyHistory entries here)
+        expected_data["is_article5"] = None
+        expected_data["is_eu_member"] = None
         # Default value for approved_uses is an empty list
         expected_data["approved_uses"] = []
         self.assertEqual(result.json(), [expected_data])

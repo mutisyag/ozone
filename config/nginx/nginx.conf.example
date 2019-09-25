@@ -44,7 +44,10 @@ server {
   }
 
   location /media/ {
-      alias /opt/ozone/media/;
+      location /media/public/ {
+          alias /opt/ozone/media/public/;
+      }
+      return 404;
   }
 
   location /mailtrap {
