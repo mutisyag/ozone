@@ -7,7 +7,7 @@ import ozone.core.models.file
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0201_aggregation_qps_lab_calculations'),
+        ('core', '0203_populate_exemption_approved_flags'),
     ]
 
     operations = [
