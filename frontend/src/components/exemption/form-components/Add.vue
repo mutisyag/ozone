@@ -151,11 +151,12 @@ export default {
     },
 
     addSubstance() {
-      this.updateGroup(this.selected_substance.selected)
+      const ordered_selected_substance = this.selected_substance.options.filter(option => this.selected_substance.selected.includes(option.value)).map(s => s.value)
+      this.updateGroup(ordered_selected_substance)
 
       const willNotAdd = []
 
-      for (const subst of this.selected_substance.selected) {
+      for (const subst of ordered_selected_substance) {
         const alreadyAdded = this.$store.state.form.tabs[this.tabName].form_fields.filter(field => (parseInt(field.substance.selected) === parseInt(subst)))
         if (alreadyAdded.length === 2) {
           willNotAdd.push(subst)
