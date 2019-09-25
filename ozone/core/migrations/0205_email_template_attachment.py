@@ -8,7 +8,7 @@ import ozone.core.models.file
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0201_aggregation_qps_lab_calculations'),
+        ('core', '0204_auto_20190924_1740'),
     ]
 
     operations = [
