@@ -56,6 +56,14 @@ OUTPUT_EXCEL_FILES = {
     ],
     'tbl_prod_cons': [
         'tbl_ProdCons'
+    ],
+    'legacy_plans_of_action': [
+        'Plans_of_Action_Decs',
+        'Plans_of_Action'
+    ],
+    'legacy_bdn_limits': [
+        'BDNProdLimits',
+        'BDNProdLimitsNew'
     ]
 }
 
