@@ -43,8 +43,8 @@ server {
       root /var/local/certbot;
   }
 
-  location /media/ {
-      alias /opt/ozone/media/;
+  location /media/public/ {
+      alias /opt/ozone/media/public/;
   }
 
   location /mailtrap {

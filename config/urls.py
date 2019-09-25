@@ -84,7 +84,11 @@ if settings.DEBUG:
             kwargs={"exception": Exception("Page not Found")},
         ),
         path("500/", default_views.server_error),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    ]
+    urlpatterns += static(
+        f"{settings.MEDIA_URL}/public",
+        document_root=f"{settings.MEDIA_ROOT}public/",
+    )
 
     # This allows browsable API authentication
     urlpatterns += [
