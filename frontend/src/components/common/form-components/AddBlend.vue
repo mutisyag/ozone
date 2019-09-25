@@ -297,6 +297,7 @@ export default {
 
     addSubstance(type) {
       if (type === 'selected') {
+        const ordered_selected_blends = this.selected_blends.options.filter(option => this.selected_blends.selected.includes(option.value)).map(s => s.value)
         const current_field = this.$store.state.form.tabs[this.tabName].default_properties
         const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
         let currentTypeOfCountryField = ''
@@ -306,7 +307,7 @@ export default {
           if (current_field.hasOwnProperty(typec)) currentTypeOfCountryField = typec
         })
 
-        for (const blend of this.selected_blends.selected) {
+        for (const blend of ordered_selected_blends) {
           let fieldExists = false
           for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
             if (parseInt(existing_field.blend.selected) === blend && existing_field[currentTypeOfCountryField].selected === null) {
