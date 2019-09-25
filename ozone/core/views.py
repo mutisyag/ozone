@@ -45,6 +45,6 @@ class ActivateUserPasswordResetConfirmView(PasswordResetConfirmView):
                         "account": self.user,
                         "site_name": self.request.META.get("HTTP_HOST")
                     },
-                    to_email=self.user.created_by.email
+                    to_emails=[self.user.created_by.email],
                 )
         return result
