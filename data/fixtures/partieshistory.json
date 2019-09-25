@@ -39002,12 +39002,12 @@
   {
     "fields": {
       "is_article5": false,
-      "is_ceit": false,
+      "is_ceit": true,
       "is_eu_member": false,
       "is_high_ambient_temperature": false,
-      "party": 65,
+      "party": 66,
       "party_type": 4,
-      "population": 338891,
+      "population": 1533,
       "remark": "",
       "reporting_period": 1
     },
@@ -39017,12 +39017,12 @@
   {
     "fields": {
       "is_article5": false,
-      "is_ceit": false,
+      "is_ceit": true,
       "is_eu_member": false,
       "is_high_ambient_temperature": false,
-      "party": 65,
+      "party": 66,
       "party_type": 4,
-      "population": 338891,
+      "population": 1533,
       "remark": "Used 1986 values",
       "reporting_period": 59
     },
@@ -39032,767 +39032,17 @@
   {
     "fields": {
       "is_article5": false,
-      "is_ceit": false,
+      "is_ceit": true,
       "is_eu_member": false,
       "is_high_ambient_temperature": false,
-      "party": 65,
+      "party": 66,
       "party_type": 4,
-      "population": 338891,
+      "population": 1533,
       "remark": "Used 1986 values",
       "reporting_period": 60
     },
     "model": "core.partyhistory",
     "pk": 2603
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 342654,
-      "remark": "",
-      "reporting_period": 2
-    },
-    "model": "core.partyhistory",
-    "pk": 2604
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 343986,
-      "remark": "",
-      "reporting_period": 3
-    },
-    "model": "core.partyhistory",
-    "pk": 2605
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 345302,
-      "remark": "",
-      "reporting_period": 4
-    },
-    "model": "core.partyhistory",
-    "pk": 2606
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 346609,
-      "remark": "",
-      "reporting_period": 5
-    },
-    "model": "core.partyhistory",
-    "pk": 2607
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 347868,
-      "remark": "",
-      "reporting_period": 6
-    },
-    "model": "core.partyhistory",
-    "pk": 2608
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 349018,
-      "remark": "",
-      "reporting_period": 7
-    },
-    "model": "core.partyhistory",
-    "pk": 2609
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 371937,
-      "remark": "",
-      "reporting_period": 8
-    },
-    "model": "core.partyhistory",
-    "pk": 2610
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 372889,
-      "remark": "",
-      "reporting_period": 9
-    },
-    "model": "core.partyhistory",
-    "pk": 2611
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 373664,
-      "remark": "",
-      "reporting_period": 10
-    },
-    "model": "core.partyhistory",
-    "pk": 2612
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 374269,
-      "remark": "",
-      "reporting_period": 11
-    },
-    "model": "core.partyhistory",
-    "pk": 2613
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 374806,
-      "remark": "",
-      "reporting_period": 12
-    },
-    "model": "core.partyhistory",
-    "pk": 2614
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 375276,
-      "remark": "",
-      "reporting_period": 13
-    },
-    "model": "core.partyhistory",
-    "pk": 2615
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 375674,
-      "remark": "",
-      "reporting_period": 14
-    },
-    "model": "core.partyhistory",
-    "pk": 2616
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 377380,
-      "remark": "",
-      "reporting_period": 15
-    },
-    "model": "core.partyhistory",
-    "pk": 2617
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 377707,
-      "remark": "",
-      "reporting_period": 16
-    },
-    "model": "core.partyhistory",
-    "pk": 2618
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 377955,
-      "remark": "",
-      "reporting_period": 17
-    },
-    "model": "core.partyhistory",
-    "pk": 2619
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 378124,
-      "remark": "",
-      "reporting_period": 18
-    },
-    "model": "core.partyhistory",
-    "pk": 2620
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 378217,
-      "remark": "",
-      "reporting_period": 19
-    },
-    "model": "core.partyhistory",
-    "pk": 2621
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 378241,
-      "remark": "",
-      "reporting_period": 20
-    },
-    "model": "core.partyhistory",
-    "pk": 2622
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 378205,
-      "remark": "",
-      "reporting_period": 21
-    },
-    "model": "core.partyhistory",
-    "pk": 2623
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 496204,
-      "remark": "",
-      "reporting_period": 22
-    },
-    "model": "core.partyhistory",
-    "pk": 2624
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 497532,
-      "remark": "",
-      "reporting_period": 23
-    },
-    "model": "core.partyhistory",
-    "pk": 2625
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 498746,
-      "remark": "",
-      "reporting_period": 24
-    },
-    "model": "core.partyhistory",
-    "pk": 2626
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 499828,
-      "remark": "",
-      "reporting_period": 25
-    },
-    "model": "core.partyhistory",
-    "pk": 2627
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 500797,
-      "remark": "",
-      "reporting_period": 26
-    },
-    "model": "core.partyhistory",
-    "pk": 2628
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 501670,
-      "remark": "",
-      "reporting_period": 27
-    },
-    "model": "core.partyhistory",
-    "pk": 2629
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 502470,
-      "remark": "",
-      "reporting_period": 28
-    },
-    "model": "core.partyhistory",
-    "pk": 2630
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 503198,
-      "remark": "",
-      "reporting_period": 29
-    },
-    "model": "core.partyhistory",
-    "pk": 2631
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 503846,
-      "remark": "",
-      "reporting_period": 30
-    },
-    "model": "core.partyhistory",
-    "pk": 2632
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 504417,
-      "remark": "",
-      "reporting_period": 31
-    },
-    "model": "core.partyhistory",
-    "pk": 2633
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 504908,
-      "remark": "",
-      "reporting_period": 32
-    },
-    "model": "core.partyhistory",
-    "pk": 2634
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 505316,
-      "remark": "",
-      "reporting_period": 33
-    },
-    "model": "core.partyhistory",
-    "pk": 2635
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 505641,
-      "remark": "",
-      "reporting_period": 34
-    },
-    "model": "core.partyhistory",
-    "pk": 2636
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 505890,
-      "remark": "",
-      "reporting_period": 35
-    },
-    "model": "core.partyhistory",
-    "pk": 2637
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506068,
-      "remark": "",
-      "reporting_period": 36
-    },
-    "model": "core.partyhistory",
-    "pk": 2638
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506178,
-      "remark": "",
-      "reporting_period": 37
-    },
-    "model": "core.partyhistory",
-    "pk": 2639
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506227,
-      "remark": "",
-      "reporting_period": 38
-    },
-    "model": "core.partyhistory",
-    "pk": 2640
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506210,
-      "remark": "",
-      "reporting_period": 39
-    },
-    "model": "core.partyhistory",
-    "pk": 2641
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506144,
-      "remark": "",
-      "reporting_period": 40
-    },
-    "model": "core.partyhistory",
-    "pk": 2642
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 506017,
-      "remark": "",
-      "reporting_period": 41
-    },
-    "model": "core.partyhistory",
-    "pk": 2643
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 505841,
-      "remark": "",
-      "reporting_period": 42
-    },
-    "model": "core.partyhistory",
-    "pk": 2644
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 5,
-      "population": 505618,
-      "remark": "",
-      "reporting_period": 43
-    },
-    "model": "core.partyhistory",
-    "pk": 2645
-  },
-  {
-    "fields": {
-      "is_article5": true,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 1,
-      "population": 371937,
-      "remark": "",
-      "reporting_period": 54
-    },
-    "model": "core.partyhistory",
-    "pk": 2646
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 4,
-      "population": 338891,
-      "remark": "",
-      "reporting_period": 55
-    },
-    "model": "core.partyhistory",
-    "pk": 2647
-  },
-  {
-    "fields": {
-      "is_article5": true,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 1,
-      "population": 374806,
-      "remark": "",
-      "reporting_period": 56
-    },
-    "model": "core.partyhistory",
-    "pk": 2648
-  },
-  {
-    "fields": {
-      "is_article5": true,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 1,
-      "population": 375276,
-      "remark": "",
-      "reporting_period": 57
-    },
-    "model": "core.partyhistory",
-    "pk": 2649
-  },
-  {
-    "fields": {
-      "is_article5": true,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 65,
-      "party_type": 1,
-      "population": 375674,
-      "remark": "",
-      "reporting_period": 58
-    },
-    "model": "core.partyhistory",
-    "pk": 2650
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": true,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 66,
-      "party_type": 4,
-      "population": 1533,
-      "remark": "",
-      "reporting_period": 1
-    },
-    "model": "core.partyhistory",
-    "pk": 2651
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": true,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 66,
-      "party_type": 4,
-      "population": 1533,
-      "remark": "Used 1986 values",
-      "reporting_period": 59
-    },
-    "model": "core.partyhistory",
-    "pk": 2652
-  },
-  {
-    "fields": {
-      "is_article5": false,
-      "is_ceit": true,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 66,
-      "party_type": 4,
-      "population": 1533,
-      "remark": "Used 1986 values",
-      "reporting_period": 60
-    },
-    "model": "core.partyhistory",
-    "pk": 2653
   },
   {
     "fields": {
@@ -39807,7 +39057,7 @@
       "reporting_period": 2
     },
     "model": "core.partyhistory",
-    "pk": 2654
+    "pk": 2604
   },
   {
     "fields": {
@@ -39822,7 +39072,7 @@
       "reporting_period": 3
     },
     "model": "core.partyhistory",
-    "pk": 2655
+    "pk": 2605
   },
   {
     "fields": {
@@ -39837,7 +39087,7 @@
       "reporting_period": 4
     },
     "model": "core.partyhistory",
-    "pk": 2656
+    "pk": 2606
   },
   {
     "fields": {
@@ -39852,7 +39102,7 @@
       "reporting_period": 5
     },
     "model": "core.partyhistory",
-    "pk": 2657
+    "pk": 2607
   },
   {
     "fields": {
@@ -39867,7 +39117,7 @@
       "reporting_period": 6
     },
     "model": "core.partyhistory",
-    "pk": 2658
+    "pk": 2608
   },
   {
     "fields": {
@@ -39882,7 +39132,7 @@
       "reporting_period": 7
     },
     "model": "core.partyhistory",
-    "pk": 2659
+    "pk": 2609
   },
   {
     "fields": {
@@ -39897,7 +39147,7 @@
       "reporting_period": 8
     },
     "model": "core.partyhistory",
-    "pk": 2660
+    "pk": 2610
   },
   {
     "fields": {
@@ -39912,7 +39162,7 @@
       "reporting_period": 9
     },
     "model": "core.partyhistory",
-    "pk": 2661
+    "pk": 2611
   },
   {
     "fields": {
@@ -39927,7 +39177,7 @@
       "reporting_period": 10
     },
     "model": "core.partyhistory",
-    "pk": 2662
+    "pk": 2612
   },
   {
     "fields": {
@@ -39942,7 +39192,7 @@
       "reporting_period": 11
     },
     "model": "core.partyhistory",
-    "pk": 2663
+    "pk": 2613
   },
   {
     "fields": {
@@ -39957,7 +39207,7 @@
       "reporting_period": 12
     },
     "model": "core.partyhistory",
-    "pk": 2664
+    "pk": 2614
   },
   {
     "fields": {
@@ -39972,7 +39222,7 @@
       "reporting_period": 13
     },
     "model": "core.partyhistory",
-    "pk": 2665
+    "pk": 2615
   },
   {
     "fields": {
@@ -39987,7 +39237,7 @@
       "reporting_period": 14
     },
     "model": "core.partyhistory",
-    "pk": 2666
+    "pk": 2616
   },
   {
     "fields": {
@@ -40002,7 +39252,7 @@
       "reporting_period": 15
     },
     "model": "core.partyhistory",
-    "pk": 2667
+    "pk": 2617
   },
   {
     "fields": {
@@ -40017,7 +39267,7 @@
       "reporting_period": 16
     },
     "model": "core.partyhistory",
-    "pk": 2668
+    "pk": 2618
   },
   {
     "fields": {
@@ -40032,7 +39282,7 @@
       "reporting_period": 17
     },
     "model": "core.partyhistory",
-    "pk": 2669
+    "pk": 2619
   },
   {
     "fields": {
@@ -40047,7 +39297,7 @@
       "reporting_period": 18
     },
     "model": "core.partyhistory",
-    "pk": 2670
+    "pk": 2620
   },
   {
     "fields": {
@@ -40062,7 +39312,7 @@
       "reporting_period": 19
     },
     "model": "core.partyhistory",
-    "pk": 2671
+    "pk": 2621
   },
   {
     "fields": {
@@ -40077,7 +39327,7 @@
       "reporting_period": 20
     },
     "model": "core.partyhistory",
-    "pk": 2672
+    "pk": 2622
   },
   {
     "fields": {
@@ -40092,7 +39342,7 @@
       "reporting_period": 21
     },
     "model": "core.partyhistory",
-    "pk": 2673
+    "pk": 2623
   },
   {
     "fields": {
@@ -40107,7 +39357,7 @@
       "reporting_period": 22
     },
     "model": "core.partyhistory",
-    "pk": 2674
+    "pk": 2624
   },
   {
     "fields": {
@@ -40122,7 +39372,7 @@
       "reporting_period": 23
     },
     "model": "core.partyhistory",
-    "pk": 2675
+    "pk": 2625
   },
   {
     "fields": {
@@ -40137,7 +39387,7 @@
       "reporting_period": 24
     },
     "model": "core.partyhistory",
-    "pk": 2676
+    "pk": 2626
   },
   {
     "fields": {
@@ -40152,7 +39402,7 @@
       "reporting_period": 25
     },
     "model": "core.partyhistory",
-    "pk": 2677
+    "pk": 2627
   },
   {
     "fields": {
@@ -40167,7 +39417,7 @@
       "reporting_period": 26
     },
     "model": "core.partyhistory",
-    "pk": 2678
+    "pk": 2628
   },
   {
     "fields": {
@@ -40182,7 +39432,7 @@
       "reporting_period": 27
     },
     "model": "core.partyhistory",
-    "pk": 2679
+    "pk": 2629
   },
   {
     "fields": {
@@ -40197,7 +39447,7 @@
       "reporting_period": 28
     },
     "model": "core.partyhistory",
-    "pk": 2680
+    "pk": 2630
   },
   {
     "fields": {
@@ -40212,7 +39462,7 @@
       "reporting_period": 29
     },
     "model": "core.partyhistory",
-    "pk": 2681
+    "pk": 2631
   },
   {
     "fields": {
@@ -40227,7 +39477,7 @@
       "reporting_period": 30
     },
     "model": "core.partyhistory",
-    "pk": 2682
+    "pk": 2632
   },
   {
     "fields": {
@@ -40242,7 +39492,7 @@
       "reporting_period": 31
     },
     "model": "core.partyhistory",
-    "pk": 2683
+    "pk": 2633
   },
   {
     "fields": {
@@ -40257,7 +39507,7 @@
       "reporting_period": 32
     },
     "model": "core.partyhistory",
-    "pk": 2684
+    "pk": 2634
   },
   {
     "fields": {
@@ -40272,7 +39522,7 @@
       "reporting_period": 33
     },
     "model": "core.partyhistory",
-    "pk": 2685
+    "pk": 2635
   },
   {
     "fields": {
@@ -40287,7 +39537,7 @@
       "reporting_period": 34
     },
     "model": "core.partyhistory",
-    "pk": 2686
+    "pk": 2636
   },
   {
     "fields": {
@@ -40302,7 +39552,7 @@
       "reporting_period": 35
     },
     "model": "core.partyhistory",
-    "pk": 2687
+    "pk": 2637
   },
   {
     "fields": {
@@ -40317,7 +39567,7 @@
       "reporting_period": 36
     },
     "model": "core.partyhistory",
-    "pk": 2688
+    "pk": 2638
   },
   {
     "fields": {
@@ -40332,7 +39582,7 @@
       "reporting_period": 37
     },
     "model": "core.partyhistory",
-    "pk": 2689
+    "pk": 2639
   },
   {
     "fields": {
@@ -40347,7 +39597,7 @@
       "reporting_period": 38
     },
     "model": "core.partyhistory",
-    "pk": 2690
+    "pk": 2640
   },
   {
     "fields": {
@@ -40362,7 +39612,7 @@
       "reporting_period": 39
     },
     "model": "core.partyhistory",
-    "pk": 2691
+    "pk": 2641
   },
   {
     "fields": {
@@ -40377,7 +39627,7 @@
       "reporting_period": 40
     },
     "model": "core.partyhistory",
-    "pk": 2692
+    "pk": 2642
   },
   {
     "fields": {
@@ -40392,7 +39642,7 @@
       "reporting_period": 41
     },
     "model": "core.partyhistory",
-    "pk": 2693
+    "pk": 2643
   },
   {
     "fields": {
@@ -40407,7 +39657,7 @@
       "reporting_period": 42
     },
     "model": "core.partyhistory",
-    "pk": 2694
+    "pk": 2644
   },
   {
     "fields": {
@@ -40422,7 +39672,7 @@
       "reporting_period": 43
     },
     "model": "core.partyhistory",
-    "pk": 2695
+    "pk": 2645
   },
   {
     "fields": {
@@ -40437,7 +39687,7 @@
       "reporting_period": 54
     },
     "model": "core.partyhistory",
-    "pk": 2696
+    "pk": 2646
   },
   {
     "fields": {
@@ -40452,7 +39702,7 @@
       "reporting_period": 55
     },
     "model": "core.partyhistory",
-    "pk": 2697
+    "pk": 2647
   },
   {
     "fields": {
@@ -40467,7 +39717,7 @@
       "reporting_period": 56
     },
     "model": "core.partyhistory",
-    "pk": 2698
+    "pk": 2648
   },
   {
     "fields": {
@@ -40482,7 +39732,7 @@
       "reporting_period": 57
     },
     "model": "core.partyhistory",
-    "pk": 2699
+    "pk": 2649
   },
   {
     "fields": {
@@ -40497,7 +39747,7 @@
       "reporting_period": 58
     },
     "model": "core.partyhistory",
-    "pk": 2700
+    "pk": 2650
   },
   {
     "fields": {
@@ -40512,7 +39762,7 @@
       "reporting_period": 1
     },
     "model": "core.partyhistory",
-    "pk": 2701
+    "pk": 2651
   },
   {
     "fields": {
@@ -40527,7 +39777,7 @@
       "reporting_period": 59
     },
     "model": "core.partyhistory",
-    "pk": 2702
+    "pk": 2652
   },
   {
     "fields": {
@@ -40542,7 +39792,7 @@
       "reporting_period": 60
     },
     "model": "core.partyhistory",
-    "pk": 2703
+    "pk": 2653
   },
   {
     "fields": {
@@ -40557,7 +39807,7 @@
       "reporting_period": 2
     },
     "model": "core.partyhistory",
-    "pk": 2704
+    "pk": 2654
   },
   {
     "fields": {
@@ -40572,7 +39822,7 @@
       "reporting_period": 3
     },
     "model": "core.partyhistory",
-    "pk": 2705
+    "pk": 2655
   },
   {
     "fields": {
@@ -40587,7 +39837,7 @@
       "reporting_period": 4
     },
     "model": "core.partyhistory",
-    "pk": 2706
+    "pk": 2656
   },
   {
     "fields": {
@@ -40602,7 +39852,7 @@
       "reporting_period": 5
     },
     "model": "core.partyhistory",
-    "pk": 2707
+    "pk": 2657
   },
   {
     "fields": {
@@ -40617,7 +39867,7 @@
       "reporting_period": 6
     },
     "model": "core.partyhistory",
-    "pk": 2708
+    "pk": 2658
   },
   {
     "fields": {
@@ -40632,7 +39882,7 @@
       "reporting_period": 7
     },
     "model": "core.partyhistory",
-    "pk": 2709
+    "pk": 2659
   },
   {
     "fields": {
@@ -40647,7 +39897,7 @@
       "reporting_period": 8
     },
     "model": "core.partyhistory",
-    "pk": 2710
+    "pk": 2660
   },
   {
     "fields": {
@@ -40662,7 +39912,7 @@
       "reporting_period": 9
     },
     "model": "core.partyhistory",
-    "pk": 2711
+    "pk": 2661
   },
   {
     "fields": {
@@ -40677,7 +39927,7 @@
       "reporting_period": 10
     },
     "model": "core.partyhistory",
-    "pk": 2712
+    "pk": 2662
   },
   {
     "fields": {
@@ -40692,7 +39942,7 @@
       "reporting_period": 11
     },
     "model": "core.partyhistory",
-    "pk": 2713
+    "pk": 2663
   },
   {
     "fields": {
@@ -40707,7 +39957,7 @@
       "reporting_period": 12
     },
     "model": "core.partyhistory",
-    "pk": 2714
+    "pk": 2664
   },
   {
     "fields": {
@@ -40722,7 +39972,7 @@
       "reporting_period": 13
     },
     "model": "core.partyhistory",
-    "pk": 2715
+    "pk": 2665
   },
   {
     "fields": {
@@ -40737,7 +39987,7 @@
       "reporting_period": 14
     },
     "model": "core.partyhistory",
-    "pk": 2716
+    "pk": 2666
   },
   {
     "fields": {
@@ -40752,7 +40002,7 @@
       "reporting_period": 15
     },
     "model": "core.partyhistory",
-    "pk": 2717
+    "pk": 2667
   },
   {
     "fields": {
@@ -40767,7 +40017,7 @@
       "reporting_period": 16
     },
     "model": "core.partyhistory",
-    "pk": 2718
+    "pk": 2668
   },
   {
     "fields": {
@@ -40782,7 +40032,7 @@
       "reporting_period": 17
     },
     "model": "core.partyhistory",
-    "pk": 2719
+    "pk": 2669
   },
   {
     "fields": {
@@ -40797,7 +40047,7 @@
       "reporting_period": 18
     },
     "model": "core.partyhistory",
-    "pk": 2720
+    "pk": 2670
   },
   {
     "fields": {
@@ -40812,7 +40062,7 @@
       "reporting_period": 19
     },
     "model": "core.partyhistory",
-    "pk": 2721
+    "pk": 2671
   },
   {
     "fields": {
@@ -40827,7 +40077,7 @@
       "reporting_period": 20
     },
     "model": "core.partyhistory",
-    "pk": 2722
+    "pk": 2672
   },
   {
     "fields": {
@@ -40842,7 +40092,7 @@
       "reporting_period": 21
     },
     "model": "core.partyhistory",
-    "pk": 2723
+    "pk": 2673
   },
   {
     "fields": {
@@ -40857,7 +40107,7 @@
       "reporting_period": 22
     },
     "model": "core.partyhistory",
-    "pk": 2724
+    "pk": 2674
   },
   {
     "fields": {
@@ -40872,7 +40122,7 @@
       "reporting_period": 23
     },
     "model": "core.partyhistory",
-    "pk": 2725
+    "pk": 2675
   },
   {
     "fields": {
@@ -40887,7 +40137,7 @@
       "reporting_period": 24
     },
     "model": "core.partyhistory",
-    "pk": 2726
+    "pk": 2676
   },
   {
     "fields": {
@@ -40902,7 +40152,7 @@
       "reporting_period": 25
     },
     "model": "core.partyhistory",
-    "pk": 2727
+    "pk": 2677
   },
   {
     "fields": {
@@ -40917,7 +40167,7 @@
       "reporting_period": 26
     },
     "model": "core.partyhistory",
-    "pk": 2728
+    "pk": 2678
   },
   {
     "fields": {
@@ -40932,7 +40182,7 @@
       "reporting_period": 27
     },
     "model": "core.partyhistory",
-    "pk": 2729
+    "pk": 2679
   },
   {
     "fields": {
@@ -40947,7 +40197,7 @@
       "reporting_period": 28
     },
     "model": "core.partyhistory",
-    "pk": 2730
+    "pk": 2680
   },
   {
     "fields": {
@@ -40962,7 +40212,7 @@
       "reporting_period": 29
     },
     "model": "core.partyhistory",
-    "pk": 2731
+    "pk": 2681
   },
   {
     "fields": {
@@ -40977,7 +40227,7 @@
       "reporting_period": 30
     },
     "model": "core.partyhistory",
-    "pk": 2732
+    "pk": 2682
   },
   {
     "fields": {
@@ -40992,7 +40242,7 @@
       "reporting_period": 31
     },
     "model": "core.partyhistory",
-    "pk": 2733
+    "pk": 2683
   },
   {
     "fields": {
@@ -41007,7 +40257,7 @@
       "reporting_period": 32
     },
     "model": "core.partyhistory",
-    "pk": 2734
+    "pk": 2684
   },
   {
     "fields": {
@@ -41022,7 +40272,7 @@
       "reporting_period": 33
     },
     "model": "core.partyhistory",
-    "pk": 2735
+    "pk": 2685
   },
   {
     "fields": {
@@ -41037,7 +40287,7 @@
       "reporting_period": 34
     },
     "model": "core.partyhistory",
-    "pk": 2736
+    "pk": 2686
   },
   {
     "fields": {
@@ -41052,7 +40302,7 @@
       "reporting_period": 35
     },
     "model": "core.partyhistory",
-    "pk": 2737
+    "pk": 2687
   },
   {
     "fields": {
@@ -41067,7 +40317,7 @@
       "reporting_period": 36
     },
     "model": "core.partyhistory",
-    "pk": 2738
+    "pk": 2688
   },
   {
     "fields": {
@@ -41082,7 +40332,7 @@
       "reporting_period": 37
     },
     "model": "core.partyhistory",
-    "pk": 2739
+    "pk": 2689
   },
   {
     "fields": {
@@ -41097,7 +40347,7 @@
       "reporting_period": 38
     },
     "model": "core.partyhistory",
-    "pk": 2740
+    "pk": 2690
   },
   {
     "fields": {
@@ -41112,7 +40362,7 @@
       "reporting_period": 39
     },
     "model": "core.partyhistory",
-    "pk": 2741
+    "pk": 2691
   },
   {
     "fields": {
@@ -41127,7 +40377,7 @@
       "reporting_period": 40
     },
     "model": "core.partyhistory",
-    "pk": 2742
+    "pk": 2692
   },
   {
     "fields": {
@@ -41142,7 +40392,7 @@
       "reporting_period": 41
     },
     "model": "core.partyhistory",
-    "pk": 2743
+    "pk": 2693
   },
   {
     "fields": {
@@ -41157,7 +40407,7 @@
       "reporting_period": 42
     },
     "model": "core.partyhistory",
-    "pk": 2744
+    "pk": 2694
   },
   {
     "fields": {
@@ -41172,7 +40422,7 @@
       "reporting_period": 43
     },
     "model": "core.partyhistory",
-    "pk": 2745
+    "pk": 2695
   },
   {
     "fields": {
@@ -41187,7 +40437,7 @@
       "reporting_period": 54
     },
     "model": "core.partyhistory",
-    "pk": 2746
+    "pk": 2696
   },
   {
     "fields": {
@@ -41202,7 +40452,7 @@
       "reporting_period": 55
     },
     "model": "core.partyhistory",
-    "pk": 2747
+    "pk": 2697
   },
   {
     "fields": {
@@ -41217,7 +40467,7 @@
       "reporting_period": 56
     },
     "model": "core.partyhistory",
-    "pk": 2748
+    "pk": 2698
   },
   {
     "fields": {
@@ -41232,7 +40482,7 @@
       "reporting_period": 57
     },
     "model": "core.partyhistory",
-    "pk": 2749
+    "pk": 2699
   },
   {
     "fields": {
@@ -41247,7 +40497,7 @@
       "reporting_period": 58
     },
     "model": "core.partyhistory",
-    "pk": 2750
+    "pk": 2700
   },
   {
     "fields": {
@@ -41262,7 +40512,7 @@
       "reporting_period": 1
     },
     "model": "core.partyhistory",
-    "pk": 2751
+    "pk": 2701
   },
   {
     "fields": {
@@ -41277,7 +40527,7 @@
       "reporting_period": 59
     },
     "model": "core.partyhistory",
-    "pk": 2752
+    "pk": 2702
   },
   {
     "fields": {
@@ -41292,7 +40542,7 @@
       "reporting_period": 60
     },
     "model": "core.partyhistory",
-    "pk": 2753
+    "pk": 2703
   },
   {
     "fields": {
@@ -41307,7 +40557,7 @@
       "reporting_period": 2
     },
     "model": "core.partyhistory",
-    "pk": 2754
+    "pk": 2704
   },
   {
     "fields": {
@@ -41322,7 +40572,7 @@
       "reporting_period": 3
     },
     "model": "core.partyhistory",
-    "pk": 2755
+    "pk": 2705
   },
   {
     "fields": {
@@ -41337,7 +40587,7 @@
       "reporting_period": 4
     },
     "model": "core.partyhistory",
-    "pk": 2756
+    "pk": 2706
   },
   {
     "fields": {
@@ -41352,7 +40602,7 @@
       "reporting_period": 5
     },
     "model": "core.partyhistory",
-    "pk": 2757
+    "pk": 2707
   },
   {
     "fields": {
@@ -41367,7 +40617,7 @@
       "reporting_period": 6
     },
     "model": "core.partyhistory",
-    "pk": 2758
+    "pk": 2708
   },
   {
     "fields": {
@@ -41382,7 +40632,7 @@
       "reporting_period": 7
     },
     "model": "core.partyhistory",
-    "pk": 2759
+    "pk": 2709
   },
   {
     "fields": {
@@ -41397,7 +40647,7 @@
       "reporting_period": 8
     },
     "model": "core.partyhistory",
-    "pk": 2760
+    "pk": 2710
   },
   {
     "fields": {
@@ -41412,7 +40662,7 @@
       "reporting_period": 9
     },
     "model": "core.partyhistory",
-    "pk": 2761
+    "pk": 2711
   },
   {
     "fields": {
@@ -41427,7 +40677,7 @@
       "reporting_period": 10
     },
     "model": "core.partyhistory",
-    "pk": 2762
+    "pk": 2712
   },
   {
     "fields": {
@@ -41442,7 +40692,7 @@
       "reporting_period": 11
     },
     "model": "core.partyhistory",
-    "pk": 2763
+    "pk": 2713
   },
   {
     "fields": {
@@ -41457,7 +40707,7 @@
       "reporting_period": 12
     },
     "model": "core.partyhistory",
-    "pk": 2764
+    "pk": 2714
   },
   {
     "fields": {
@@ -41472,7 +40722,7 @@
       "reporting_period": 13
     },
     "model": "core.partyhistory",
-    "pk": 2765
+    "pk": 2715
   },
   {
     "fields": {
@@ -41487,7 +40737,7 @@
       "reporting_period": 14
     },
     "model": "core.partyhistory",
-    "pk": 2766
+    "pk": 2716
   },
   {
     "fields": {
@@ -41502,7 +40752,7 @@
       "reporting_period": 15
     },
     "model": "core.partyhistory",
-    "pk": 2767
+    "pk": 2717
   },
   {
     "fields": {
@@ -41517,7 +40767,7 @@
       "reporting_period": 16
     },
     "model": "core.partyhistory",
-    "pk": 2768
+    "pk": 2718
   },
   {
     "fields": {
@@ -41532,7 +40782,7 @@
       "reporting_period": 17
     },
     "model": "core.partyhistory",
-    "pk": 2769
+    "pk": 2719
   },
   {
     "fields": {
@@ -41547,7 +40797,7 @@
       "reporting_period": 18
     },
     "model": "core.partyhistory",
-    "pk": 2770
+    "pk": 2720
   },
   {
     "fields": {
@@ -41562,7 +40812,7 @@
       "reporting_period": 19
     },
     "model": "core.partyhistory",
-    "pk": 2771
+    "pk": 2721
   },
   {
     "fields": {
@@ -41577,7 +40827,7 @@
       "reporting_period": 20
     },
     "model": "core.partyhistory",
-    "pk": 2772
+    "pk": 2722
   },
   {
     "fields": {
@@ -41592,7 +40842,7 @@
       "reporting_period": 21
     },
     "model": "core.partyhistory",
-    "pk": 2773
+    "pk": 2723
   },
   {
     "fields": {
@@ -41607,7 +40857,7 @@
       "reporting_period": 22
     },
     "model": "core.partyhistory",
-    "pk": 2774
+    "pk": 2724
   },
   {
     "fields": {
@@ -41622,7 +40872,7 @@
       "reporting_period": 23
     },
     "model": "core.partyhistory",
-    "pk": 2775
+    "pk": 2725
   },
   {
     "fields": {
@@ -41637,7 +40887,7 @@
       "reporting_period": 24
     },
     "model": "core.partyhistory",
-    "pk": 2776
+    "pk": 2726
   },
   {
     "fields": {
@@ -41652,7 +40902,7 @@
       "reporting_period": 25
     },
     "model": "core.partyhistory",
-    "pk": 2777
+    "pk": 2727
   },
   {
     "fields": {
@@ -41667,7 +40917,7 @@
       "reporting_period": 26
     },
     "model": "core.partyhistory",
-    "pk": 2778
+    "pk": 2728
   },
   {
     "fields": {
@@ -41682,7 +40932,7 @@
       "reporting_period": 27
     },
     "model": "core.partyhistory",
-    "pk": 2779
+    "pk": 2729
   },
   {
     "fields": {
@@ -41697,7 +40947,7 @@
       "reporting_period": 28
     },
     "model": "core.partyhistory",
-    "pk": 2780
+    "pk": 2730
   },
   {
     "fields": {
@@ -41712,7 +40962,7 @@
       "reporting_period": 29
     },
     "model": "core.partyhistory",
-    "pk": 2781
+    "pk": 2731
   },
   {
     "fields": {
@@ -41727,7 +40977,7 @@
       "reporting_period": 30
     },
     "model": "core.partyhistory",
-    "pk": 2782
+    "pk": 2732
   },
   {
     "fields": {
@@ -41742,7 +40992,7 @@
       "reporting_period": 31
     },
     "model": "core.partyhistory",
-    "pk": 2783
+    "pk": 2733
   },
   {
     "fields": {
@@ -41757,7 +41007,7 @@
       "reporting_period": 32
     },
     "model": "core.partyhistory",
-    "pk": 2784
+    "pk": 2734
   },
   {
     "fields": {
@@ -41772,7 +41022,7 @@
       "reporting_period": 33
     },
     "model": "core.partyhistory",
-    "pk": 2785
+    "pk": 2735
   },
   {
     "fields": {
@@ -41787,7 +41037,7 @@
       "reporting_period": 34
     },
     "model": "core.partyhistory",
-    "pk": 2786
+    "pk": 2736
   },
   {
     "fields": {
@@ -41802,7 +41052,7 @@
       "reporting_period": 35
     },
     "model": "core.partyhistory",
-    "pk": 2787
+    "pk": 2737
   },
   {
     "fields": {
@@ -41817,7 +41067,7 @@
       "reporting_period": 36
     },
     "model": "core.partyhistory",
-    "pk": 2788
+    "pk": 2738
   },
   {
     "fields": {
@@ -41832,7 +41082,7 @@
       "reporting_period": 37
     },
     "model": "core.partyhistory",
-    "pk": 2789
+    "pk": 2739
   },
   {
     "fields": {
@@ -41847,7 +41097,7 @@
       "reporting_period": 38
     },
     "model": "core.partyhistory",
-    "pk": 2790
+    "pk": 2740
   },
   {
     "fields": {
@@ -41862,7 +41112,7 @@
       "reporting_period": 39
     },
     "model": "core.partyhistory",
-    "pk": 2791
+    "pk": 2741
   },
   {
     "fields": {
@@ -41877,7 +41127,7 @@
       "reporting_period": 40
     },
     "model": "core.partyhistory",
-    "pk": 2792
+    "pk": 2742
   },
   {
     "fields": {
@@ -41892,7 +41142,7 @@
       "reporting_period": 41
     },
     "model": "core.partyhistory",
-    "pk": 2793
+    "pk": 2743
   },
   {
     "fields": {
@@ -41907,7 +41157,7 @@
       "reporting_period": 42
     },
     "model": "core.partyhistory",
-    "pk": 2794
+    "pk": 2744
   },
   {
     "fields": {
@@ -41922,7 +41172,7 @@
       "reporting_period": 43
     },
     "model": "core.partyhistory",
-    "pk": 2795
+    "pk": 2745
   },
   {
     "fields": {
@@ -41937,7 +41187,7 @@
       "reporting_period": 54
     },
     "model": "core.partyhistory",
-    "pk": 2796
+    "pk": 2746
   },
   {
     "fields": {
@@ -41952,7 +41202,7 @@
       "reporting_period": 55
     },
     "model": "core.partyhistory",
-    "pk": 2797
+    "pk": 2747
   },
   {
     "fields": {
@@ -41967,7 +41217,7 @@
       "reporting_period": 56
     },
     "model": "core.partyhistory",
-    "pk": 2798
+    "pk": 2748
   },
   {
     "fields": {
@@ -41982,7 +41232,7 @@
       "reporting_period": 57
     },
     "model": "core.partyhistory",
-    "pk": 2799
+    "pk": 2749
   },
   {
     "fields": {
@@ -41997,7 +41247,7 @@
       "reporting_period": 58
     },
     "model": "core.partyhistory",
-    "pk": 2800
+    "pk": 2750
   },
   {
     "fields": {
@@ -42012,7 +41262,7 @@
       "reporting_period": 1
     },
     "model": "core.partyhistory",
-    "pk": 2801
+    "pk": 2751
   },
   {
     "fields": {
@@ -42027,7 +41277,7 @@
       "reporting_period": 59
     },
     "model": "core.partyhistory",
-    "pk": 2802
+    "pk": 2752
   },
   {
     "fields": {
@@ -42042,7 +41292,7 @@
       "reporting_period": 60
     },
     "model": "core.partyhistory",
-    "pk": 2803
+    "pk": 2753
   },
   {
     "fields": {
@@ -42057,7 +41307,7 @@
       "reporting_period": 2
     },
     "model": "core.partyhistory",
-    "pk": 2804
+    "pk": 2754
   },
   {
     "fields": {
@@ -42072,7 +41322,7 @@
       "reporting_period": 3
     },
     "model": "core.partyhistory",
-    "pk": 2805
+    "pk": 2755
   },
   {
     "fields": {
@@ -42087,7 +41337,7 @@
       "reporting_period": 4
     },
     "model": "core.partyhistory",
-    "pk": 2806
+    "pk": 2756
   },
   {
     "fields": {
@@ -42102,7 +41352,7 @@
       "reporting_period": 5
     },
     "model": "core.partyhistory",
-    "pk": 2807
+    "pk": 2757
   },
   {
     "fields": {
@@ -42117,7 +41367,7 @@
       "reporting_period": 6
     },
     "model": "core.partyhistory",
-    "pk": 2808
+    "pk": 2758
   },
   {
     "fields": {
@@ -42132,7 +41382,7 @@
       "reporting_period": 7
     },
     "model": "core.partyhistory",
-    "pk": 2809
+    "pk": 2759
   },
   {
     "fields": {
@@ -42147,7 +41397,7 @@
       "reporting_period": 8
     },
     "model": "core.partyhistory",
-    "pk": 2810
+    "pk": 2760
   },
   {
     "fields": {
@@ -42162,7 +41412,7 @@
       "reporting_period": 9
     },
     "model": "core.partyhistory",
-    "pk": 2811
+    "pk": 2761
   },
   {
     "fields": {
@@ -42177,7 +41427,7 @@
       "reporting_period": 10
     },
     "model": "core.partyhistory",
-    "pk": 2812
+    "pk": 2762
   },
   {
     "fields": {
@@ -42192,7 +41442,7 @@
       "reporting_period": 11
     },
     "model": "core.partyhistory",
-    "pk": 2813
+    "pk": 2763
   },
   {
     "fields": {
@@ -42207,7 +41457,7 @@
       "reporting_period": 12
     },
     "model": "core.partyhistory",
-    "pk": 2814
+    "pk": 2764
   },
   {
     "fields": {
@@ -42222,7 +41472,7 @@
       "reporting_period": 13
     },
     "model": "core.partyhistory",
-    "pk": 2815
+    "pk": 2765
   },
   {
     "fields": {
@@ -42237,7 +41487,7 @@
       "reporting_period": 14
     },
     "model": "core.partyhistory",
-    "pk": 2816
+    "pk": 2766
   },
   {
     "fields": {
@@ -42252,7 +41502,7 @@
       "reporting_period": 15
     },
     "model": "core.partyhistory",
-    "pk": 2817
+    "pk": 2767
   },
   {
     "fields": {
@@ -42267,7 +41517,7 @@
       "reporting_period": 16
     },
     "model": "core.partyhistory",
-    "pk": 2818
+    "pk": 2768
   },
   {
     "fields": {
@@ -42282,7 +41532,7 @@
       "reporting_period": 17
     },
     "model": "core.partyhistory",
-    "pk": 2819
+    "pk": 2769
   },
   {
     "fields": {
@@ -42297,7 +41547,7 @@
       "reporting_period": 18
     },
     "model": "core.partyhistory",
-    "pk": 2820
+    "pk": 2770
   },
   {
     "fields": {
@@ -42312,7 +41562,7 @@
       "reporting_period": 19
     },
     "model": "core.partyhistory",
-    "pk": 2821
+    "pk": 2771
   },
   {
     "fields": {
@@ -42327,7 +41577,7 @@
       "reporting_period": 20
     },
     "model": "core.partyhistory",
-    "pk": 2822
+    "pk": 2772
   },
   {
     "fields": {
@@ -42342,7 +41592,7 @@
       "reporting_period": 21
     },
     "model": "core.partyhistory",
-    "pk": 2823
+    "pk": 2773
   },
   {
     "fields": {
@@ -42357,7 +41607,7 @@
       "reporting_period": 22
     },
     "model": "core.partyhistory",
-    "pk": 2824
+    "pk": 2774
   },
   {
     "fields": {
@@ -42372,7 +41622,7 @@
       "reporting_period": 23
     },
     "model": "core.partyhistory",
-    "pk": 2825
+    "pk": 2775
   },
   {
     "fields": {
@@ -42387,7 +41637,7 @@
       "reporting_period": 24
     },
     "model": "core.partyhistory",
-    "pk": 2826
+    "pk": 2776
   },
   {
     "fields": {
@@ -42402,7 +41652,7 @@
       "reporting_period": 25
     },
     "model": "core.partyhistory",
-    "pk": 2827
+    "pk": 2777
   },
   {
     "fields": {
@@ -42417,7 +41667,7 @@
       "reporting_period": 26
     },
     "model": "core.partyhistory",
-    "pk": 2828
+    "pk": 2778
   },
   {
     "fields": {
@@ -42432,7 +41682,7 @@
       "reporting_period": 27
     },
     "model": "core.partyhistory",
-    "pk": 2829
+    "pk": 2779
   },
   {
     "fields": {
@@ -42447,7 +41697,7 @@
       "reporting_period": 28
     },
     "model": "core.partyhistory",
-    "pk": 2830
+    "pk": 2780
   },
   {
     "fields": {
@@ -42462,7 +41712,7 @@
       "reporting_period": 29
     },
     "model": "core.partyhistory",
-    "pk": 2831
+    "pk": 2781
   },
   {
     "fields": {
@@ -42477,7 +41727,7 @@
       "reporting_period": 30
     },
     "model": "core.partyhistory",
-    "pk": 2832
+    "pk": 2782
   },
   {
     "fields": {
@@ -42492,7 +41742,7 @@
       "reporting_period": 31
     },
     "model": "core.partyhistory",
-    "pk": 2833
+    "pk": 2783
   },
   {
     "fields": {
@@ -42507,7 +41757,7 @@
       "reporting_period": 32
     },
     "model": "core.partyhistory",
-    "pk": 2834
+    "pk": 2784
   },
   {
     "fields": {
@@ -42522,7 +41772,7 @@
       "reporting_period": 33
     },
     "model": "core.partyhistory",
-    "pk": 2835
+    "pk": 2785
   },
   {
     "fields": {
@@ -42537,7 +41787,7 @@
       "reporting_period": 34
     },
     "model": "core.partyhistory",
-    "pk": 2836
+    "pk": 2786
   },
   {
     "fields": {
@@ -42552,7 +41802,7 @@
       "reporting_period": 35
     },
     "model": "core.partyhistory",
-    "pk": 2837
+    "pk": 2787
   },
   {
     "fields": {
@@ -42567,7 +41817,7 @@
       "reporting_period": 36
     },
     "model": "core.partyhistory",
-    "pk": 2838
+    "pk": 2788
   },
   {
     "fields": {
@@ -42582,7 +41832,7 @@
       "reporting_period": 37
     },
     "model": "core.partyhistory",
-    "pk": 2839
+    "pk": 2789
   },
   {
     "fields": {
@@ -42597,7 +41847,7 @@
       "reporting_period": 38
     },
     "model": "core.partyhistory",
-    "pk": 2840
+    "pk": 2790
   },
   {
     "fields": {
@@ -42612,7 +41862,7 @@
       "reporting_period": 39
     },
     "model": "core.partyhistory",
-    "pk": 2841
+    "pk": 2791
   },
   {
     "fields": {
@@ -42627,7 +41877,7 @@
       "reporting_period": 40
     },
     "model": "core.partyhistory",
-    "pk": 2842
+    "pk": 2792
   },
   {
     "fields": {
@@ -42642,7 +41892,7 @@
       "reporting_period": 41
     },
     "model": "core.partyhistory",
-    "pk": 2843
+    "pk": 2793
   },
   {
     "fields": {
@@ -42657,7 +41907,7 @@
       "reporting_period": 42
     },
     "model": "core.partyhistory",
-    "pk": 2844
+    "pk": 2794
   },
   {
     "fields": {
@@ -42672,7 +41922,7 @@
       "reporting_period": 43
     },
     "model": "core.partyhistory",
-    "pk": 2845
+    "pk": 2795
   },
   {
     "fields": {
@@ -42687,7 +41937,7 @@
       "reporting_period": 54
     },
     "model": "core.partyhistory",
-    "pk": 2846
+    "pk": 2796
   },
   {
     "fields": {
@@ -42702,7 +41952,7 @@
       "reporting_period": 55
     },
     "model": "core.partyhistory",
-    "pk": 2847
+    "pk": 2797
   },
   {
     "fields": {
@@ -42717,7 +41967,7 @@
       "reporting_period": 56
     },
     "model": "core.partyhistory",
-    "pk": 2848
+    "pk": 2798
   },
   {
     "fields": {
@@ -42732,7 +41982,7 @@
       "reporting_period": 57
     },
     "model": "core.partyhistory",
-    "pk": 2849
+    "pk": 2799
   },
   {
     "fields": {
@@ -42747,7 +41997,7 @@
       "reporting_period": 58
     },
     "model": "core.partyhistory",
-    "pk": 2850
+    "pk": 2800
   },
   {
     "fields": {
@@ -42762,7 +42012,7 @@
       "reporting_period": 1
     },
     "model": "core.partyhistory",
-    "pk": 2851
+    "pk": 2801
   },
   {
     "fields": {
@@ -42777,7 +42027,7 @@
       "reporting_period": 59
     },
     "model": "core.partyhistory",
-    "pk": 2852
+    "pk": 2802
   },
   {
     "fields": {
@@ -42792,7 +42042,7 @@
       "reporting_period": 60
     },
     "model": "core.partyhistory",
-    "pk": 2853
+    "pk": 2803
   },
   {
     "fields": {
@@ -42807,7 +42057,7 @@
       "reporting_period": 2
     },
     "model": "core.partyhistory",
-    "pk": 2854
+    "pk": 2804
   },
   {
     "fields": {
@@ -42822,7 +42072,7 @@
       "reporting_period": 3
     },
     "model": "core.partyhistory",
-    "pk": 2855
+    "pk": 2805
   },
   {
     "fields": {
@@ -42837,7 +42087,7 @@
       "reporting_period": 4
     },
     "model": "core.partyhistory",
-    "pk": 2856
+    "pk": 2806
   },
   {
     "fields": {
@@ -42852,7 +42102,7 @@
       "reporting_period": 5
     },
     "model": "core.partyhistory",
-    "pk": 2857
+    "pk": 2807
   },
   {
     "fields": {
@@ -42867,7 +42117,7 @@
       "reporting_period": 6
     },
     "model": "core.partyhistory",
-    "pk": 2858
+    "pk": 2808
   },
   {
     "fields": {
@@ -42882,7 +42132,7 @@
       "reporting_period": 7
     },
     "model": "core.partyhistory",
-    "pk": 2859
+    "pk": 2809
   },
   {
     "fields": {
@@ -42897,7 +42147,7 @@
       "reporting_period": 8
     },
     "model": "core.partyhistory",
-    "pk": 2860
+    "pk": 2810
   },
   {
     "fields": {
@@ -42912,7 +42162,7 @@
       "reporting_period": 9
     },
     "model": "core.partyhistory",
-    "pk": 2861
+    "pk": 2811
   },
   {
     "fields": {
@@ -42927,7 +42177,7 @@
       "reporting_period": 10
     },
     "model": "core.partyhistory",
-    "pk": 2862
+    "pk": 2812
   },
   {
     "fields": {
@@ -42942,7 +42192,7 @@
       "reporting_period": 11
     },
     "model": "core.partyhistory",
-    "pk": 2863
+    "pk": 2813
   },
   {
     "fields": {
@@ -42957,7 +42207,7 @@
       "reporting_period": 12
     },
     "model": "core.partyhistory",
-    "pk": 2864
+    "pk": 2814
   },
   {
     "fields": {
@@ -42972,7 +42222,7 @@
       "reporting_period": 13
     },
     "model": "core.partyhistory",
-    "pk": 2865
+    "pk": 2815
   },
   {
     "fields": {
@@ -42987,7 +42237,7 @@
       "reporting_period": 14
     },
     "model": "core.partyhistory",
-    "pk": 2866
+    "pk": 2816
   },
   {
     "fields": {
@@ -43002,7 +42252,7 @@
       "reporting_period": 15
     },
     "model": "core.partyhistory",
-    "pk": 2867
+    "pk": 2817
   },
   {
     "fields": {
@@ -43017,7 +42267,7 @@
       "reporting_period": 16
     },
     "model": "core.partyhistory",
-    "pk": 2868
+    "pk": 2818
   },
   {
     "fields": {
@@ -43032,7 +42282,7 @@
       "reporting_period": 17
     },
     "model": "core.partyhistory",
-    "pk": 2869
+    "pk": 2819
   },
   {
     "fields": {
@@ -43047,7 +42297,7 @@
       "reporting_period": 18
     },
     "model": "core.partyhistory",
-    "pk": 2870
+    "pk": 2820
   },
   {
     "fields": {
@@ -43062,7 +42312,7 @@
       "reporting_period": 19
     },
     "model": "core.partyhistory",
-    "pk": 2871
+    "pk": 2821
   },
   {
     "fields": {
@@ -43077,7 +42327,7 @@
       "reporting_period": 20
     },
     "model": "core.partyhistory",
-    "pk": 2872
+    "pk": 2822
   },
   {
     "fields": {
@@ -43092,7 +42342,7 @@
       "reporting_period": 21
     },
     "model": "core.partyhistory",
-    "pk": 2873
+    "pk": 2823
   },
   {
     "fields": {
@@ -43107,7 +42357,7 @@
       "reporting_period": 22
     },
     "model": "core.partyhistory",
-    "pk": 2874
+    "pk": 2824
   },
   {
     "fields": {
@@ -43122,7 +42372,7 @@
       "reporting_period": 23
     },
     "model": "core.partyhistory",
-    "pk": 2875
+    "pk": 2825
   },
   {
     "fields": {
@@ -43137,7 +42387,7 @@
       "reporting_period": 24
     },
     "model": "core.partyhistory",
-    "pk": 2876
+    "pk": 2826
   },
   {
     "fields": {
@@ -43152,7 +42402,7 @@
       "reporting_period": 25
     },
     "model": "core.partyhistory",
-    "pk": 2877
+    "pk": 2827
   },
   {
     "fields": {
@@ -43167,7 +42417,7 @@
       "reporting_period": 26
     },
     "model": "core.partyhistory",
-    "pk": 2878
+    "pk": 2828
   },
   {
     "fields": {
@@ -43182,7 +42432,7 @@
       "reporting_period": 27
     },
     "model": "core.partyhistory",
-    "pk": 2879
+    "pk": 2829
   },
   {
     "fields": {
@@ -43197,7 +42447,7 @@
       "reporting_period": 28
     },
     "model": "core.partyhistory",
-    "pk": 2880
+    "pk": 2830
   },
   {
     "fields": {
@@ -43212,7 +42462,7 @@
       "reporting_period": 29
     },
     "model": "core.partyhistory",
-    "pk": 2881
+    "pk": 2831
   },
   {
     "fields": {
@@ -43227,7 +42477,7 @@
       "reporting_period": 30
     },
     "model": "core.partyhistory",
-    "pk": 2882
+    "pk": 2832
   },
   {
     "fields": {
@@ -43242,7 +42492,7 @@
       "reporting_period": 31
     },
     "model": "core.partyhistory",
-    "pk": 2883
+    "pk": 2833
   },
   {
     "fields": {
@@ -43257,7 +42507,7 @@
       "reporting_period": 32
     },
     "model": "core.partyhistory",
-    "pk": 2884
+    "pk": 2834
   },
   {
     "fields": {
@@ -43272,7 +42522,7 @@
       "reporting_period": 33
     },
     "model": "core.partyhistory",
-    "pk": 2885
+    "pk": 2835
   },
   {
     "fields": {
@@ -43287,7 +42537,7 @@
       "reporting_period": 34
     },
     "model": "core.partyhistory",
-    "pk": 2886
+    "pk": 2836
   },
   {
     "fields": {
@@ -43302,7 +42552,7 @@
       "reporting_period": 35
     },
     "model": "core.partyhistory",
-    "pk": 2887
+    "pk": 2837
   },
   {
     "fields": {
@@ -43317,7 +42567,7 @@
       "reporting_period": 36
     },
     "model": "core.partyhistory",
-    "pk": 2888
+    "pk": 2838
   },
   {
     "fields": {
@@ -43332,7 +42582,7 @@
       "reporting_period": 37
     },
     "model": "core.partyhistory",
-    "pk": 2889
+    "pk": 2839
   },
   {
     "fields": {
@@ -43347,7 +42597,7 @@
       "reporting_period": 38
     },
     "model": "core.partyhistory",
-    "pk": 2890
+    "pk": 2840
   },
   {
     "fields": {
@@ -43362,7 +42612,7 @@
       "reporting_period": 39
     },
     "model": "core.partyhistory",
-    "pk": 2891
+    "pk": 2841
   },
   {
     "fields": {
@@ -43377,7 +42627,7 @@
       "reporting_period": 40
     },
     "model": "core.partyhistory",
-    "pk": 2892
+    "pk": 2842
   },
   {
     "fields": {
@@ -43392,7 +42642,7 @@
       "reporting_period": 41
     },
     "model": "core.partyhistory",
-    "pk": 2893
+    "pk": 2843
   },
   {
     "fields": {
@@ -43407,7 +42657,7 @@
       "reporting_period": 42
     },
     "model": "core.partyhistory",
-    "pk": 2894
+    "pk": 2844
   },
   {
     "fields": {
@@ -43422,7 +42672,7 @@
       "reporting_period": 43
     },
     "model": "core.partyhistory",
-    "pk": 2895
+    "pk": 2845
   },
   {
     "fields": {
@@ -43437,7 +42687,7 @@
       "reporting_period": 54
     },
     "model": "core.partyhistory",
-    "pk": 2896
+    "pk": 2846
   },
   {
     "fields": {
@@ -43452,7 +42702,7 @@
       "reporting_period": 55
     },
     "model": "core.partyhistory",
-    "pk": 2897
+    "pk": 2847
   },
   {
     "fields": {
@@ -43467,7 +42717,7 @@
       "reporting_period": 56
     },
     "model": "core.partyhistory",
-    "pk": 2898
+    "pk": 2848
   },
   {
     "fields": {
@@ -43482,7 +42732,7 @@
       "reporting_period": 57
     },
     "model": "core.partyhistory",
-    "pk": 2899
+    "pk": 2849
   },
   {
     "fields": {
@@ -43493,6 +42743,756 @@
       "party": 71,
       "party_type": 1,
       "population": 64063,
+      "remark": "",
+      "reporting_period": 58
+    },
+    "model": "core.partyhistory",
+    "pk": 2850
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 338891,
+      "remark": "",
+      "reporting_period": 1
+    },
+    "model": "core.partyhistory",
+    "pk": 2851
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 338891,
+      "remark": "Used 1986 values",
+      "reporting_period": 59
+    },
+    "model": "core.partyhistory",
+    "pk": 2852
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 338891,
+      "remark": "Used 1986 values",
+      "reporting_period": 60
+    },
+    "model": "core.partyhistory",
+    "pk": 2853
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 342654,
+      "remark": "",
+      "reporting_period": 2
+    },
+    "model": "core.partyhistory",
+    "pk": 2854
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 343986,
+      "remark": "",
+      "reporting_period": 3
+    },
+    "model": "core.partyhistory",
+    "pk": 2855
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 345302,
+      "remark": "",
+      "reporting_period": 4
+    },
+    "model": "core.partyhistory",
+    "pk": 2856
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 346609,
+      "remark": "",
+      "reporting_period": 5
+    },
+    "model": "core.partyhistory",
+    "pk": 2857
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 347868,
+      "remark": "",
+      "reporting_period": 6
+    },
+    "model": "core.partyhistory",
+    "pk": 2858
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 349018,
+      "remark": "",
+      "reporting_period": 7
+    },
+    "model": "core.partyhistory",
+    "pk": 2859
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 371937,
+      "remark": "",
+      "reporting_period": 8
+    },
+    "model": "core.partyhistory",
+    "pk": 2860
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 372889,
+      "remark": "",
+      "reporting_period": 9
+    },
+    "model": "core.partyhistory",
+    "pk": 2861
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 373664,
+      "remark": "",
+      "reporting_period": 10
+    },
+    "model": "core.partyhistory",
+    "pk": 2862
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 374269,
+      "remark": "",
+      "reporting_period": 11
+    },
+    "model": "core.partyhistory",
+    "pk": 2863
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 374806,
+      "remark": "",
+      "reporting_period": 12
+    },
+    "model": "core.partyhistory",
+    "pk": 2864
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 375276,
+      "remark": "",
+      "reporting_period": 13
+    },
+    "model": "core.partyhistory",
+    "pk": 2865
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 375674,
+      "remark": "",
+      "reporting_period": 14
+    },
+    "model": "core.partyhistory",
+    "pk": 2866
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 377380,
+      "remark": "",
+      "reporting_period": 15
+    },
+    "model": "core.partyhistory",
+    "pk": 2867
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 377707,
+      "remark": "",
+      "reporting_period": 16
+    },
+    "model": "core.partyhistory",
+    "pk": 2868
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 377955,
+      "remark": "",
+      "reporting_period": 17
+    },
+    "model": "core.partyhistory",
+    "pk": 2869
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 378124,
+      "remark": "",
+      "reporting_period": 18
+    },
+    "model": "core.partyhistory",
+    "pk": 2870
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 378217,
+      "remark": "",
+      "reporting_period": 19
+    },
+    "model": "core.partyhistory",
+    "pk": 2871
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 378241,
+      "remark": "",
+      "reporting_period": 20
+    },
+    "model": "core.partyhistory",
+    "pk": 2872
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 378205,
+      "remark": "",
+      "reporting_period": 21
+    },
+    "model": "core.partyhistory",
+    "pk": 2873
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 496204,
+      "remark": "",
+      "reporting_period": 22
+    },
+    "model": "core.partyhistory",
+    "pk": 2874
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 497532,
+      "remark": "",
+      "reporting_period": 23
+    },
+    "model": "core.partyhistory",
+    "pk": 2875
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 498746,
+      "remark": "",
+      "reporting_period": 24
+    },
+    "model": "core.partyhistory",
+    "pk": 2876
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 499828,
+      "remark": "",
+      "reporting_period": 25
+    },
+    "model": "core.partyhistory",
+    "pk": 2877
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 500797,
+      "remark": "",
+      "reporting_period": 26
+    },
+    "model": "core.partyhistory",
+    "pk": 2878
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 501670,
+      "remark": "",
+      "reporting_period": 27
+    },
+    "model": "core.partyhistory",
+    "pk": 2879
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 502470,
+      "remark": "",
+      "reporting_period": 28
+    },
+    "model": "core.partyhistory",
+    "pk": 2880
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 503198,
+      "remark": "",
+      "reporting_period": 29
+    },
+    "model": "core.partyhistory",
+    "pk": 2881
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 503846,
+      "remark": "",
+      "reporting_period": 30
+    },
+    "model": "core.partyhistory",
+    "pk": 2882
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 504417,
+      "remark": "",
+      "reporting_period": 31
+    },
+    "model": "core.partyhistory",
+    "pk": 2883
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 504908,
+      "remark": "",
+      "reporting_period": 32
+    },
+    "model": "core.partyhistory",
+    "pk": 2884
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 505316,
+      "remark": "",
+      "reporting_period": 33
+    },
+    "model": "core.partyhistory",
+    "pk": 2885
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 505641,
+      "remark": "",
+      "reporting_period": 34
+    },
+    "model": "core.partyhistory",
+    "pk": 2886
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 505890,
+      "remark": "",
+      "reporting_period": 35
+    },
+    "model": "core.partyhistory",
+    "pk": 2887
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506068,
+      "remark": "",
+      "reporting_period": 36
+    },
+    "model": "core.partyhistory",
+    "pk": 2888
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506178,
+      "remark": "",
+      "reporting_period": 37
+    },
+    "model": "core.partyhistory",
+    "pk": 2889
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506227,
+      "remark": "",
+      "reporting_period": 38
+    },
+    "model": "core.partyhistory",
+    "pk": 2890
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506210,
+      "remark": "",
+      "reporting_period": 39
+    },
+    "model": "core.partyhistory",
+    "pk": 2891
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506144,
+      "remark": "",
+      "reporting_period": 40
+    },
+    "model": "core.partyhistory",
+    "pk": 2892
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 506017,
+      "remark": "",
+      "reporting_period": 41
+    },
+    "model": "core.partyhistory",
+    "pk": 2893
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 505841,
+      "remark": "",
+      "reporting_period": 42
+    },
+    "model": "core.partyhistory",
+    "pk": 2894
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 5,
+      "population": 505618,
+      "remark": "",
+      "reporting_period": 43
+    },
+    "model": "core.partyhistory",
+    "pk": 2895
+  },
+  {
+    "fields": {
+      "is_article5": true,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 1,
+      "population": 371937,
+      "remark": "",
+      "reporting_period": 54
+    },
+    "model": "core.partyhistory",
+    "pk": 2896
+  },
+  {
+    "fields": {
+      "is_article5": false,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 4,
+      "population": 338891,
+      "remark": "",
+      "reporting_period": 55
+    },
+    "model": "core.partyhistory",
+    "pk": 2897
+  },
+  {
+    "fields": {
+      "is_article5": true,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 1,
+      "population": 374806,
+      "remark": "",
+      "reporting_period": 56
+    },
+    "model": "core.partyhistory",
+    "pk": 2898
+  },
+  {
+    "fields": {
+      "is_article5": true,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 1,
+      "population": 375276,
+      "remark": "",
+      "reporting_period": 57
+    },
+    "model": "core.partyhistory",
+    "pk": 2899
+  },
+  {
+    "fields": {
+      "is_article5": true,
+      "is_ceit": false,
+      "is_eu_member": false,
+      "is_high_ambient_temperature": false,
+      "party": 65,
+      "party_type": 1,
+      "population": 375674,
       "remark": "",
       "reporting_period": 58
     },
@@ -150688,20 +150688,5 @@
     },
     "model": "core.partyhistory",
     "pk": 10046
-  },
-  {
-    "fields": {
-      "is_article5": true,
-      "is_ceit": false,
-      "is_eu_member": false,
-      "is_high_ambient_temperature": false,
-      "party": 185,
-      "party_type": 2,
-      "population": 4817,
-      "remark": "added manually by andrei",
-      "reporting_period": 32
-    },
-    "model": "core.partyhistory",
-    "pk": 10047
   }
 ]

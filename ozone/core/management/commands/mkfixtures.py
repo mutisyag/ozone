@@ -13,7 +13,6 @@ from ozone.core.models.substance import Blend
 from ozone.core.models.utils import (
     RatificationTypes,
     round_float_half_up,
-    float_to_decimal_zero_if_none,
 )
 
 
@@ -453,9 +452,7 @@ class Command(BaseCommand):
         f['number_of_isomers'] = row['Number of Isomers']
         f['gwp2'] = row['GWP']
         f['gwp_error_plus_minus'] = row['GWP_Error_Plus_Minus']
-        f['gwp_baseline'] = float_to_decimal_zero_if_none(
-            row['BaselineSubstGWP']
-        )
+        f['gwp_baseline'] = row['BaselineSubstGWP']
         f['remark'] = row['Remark'] or ""
         f['carbons'] = row['Carbons'] or ""
         f['hydrogens'] = row['Hydrogens'] or ""
@@ -481,16 +478,16 @@ class Command(BaseCommand):
         # There is a new column called BlendType, but this mapping also works fine
         if f['blend_id'].startswith('R-4'):
             f['type'] = Blend.BlendTypes.ZEOTROPE.value
-            f['sort_order'] = 110000 + row['_index']
+            f['sort_order'] = 120000 + row['_index']
         elif f['blend_id'].startswith('R-5'):
             f['type'] = Blend.BlendTypes.AZEOTROPE.value
-            f['sort_order'] = 120000 + row['_index']
+            f['sort_order'] = 130000 + row['_index']
         elif f['blend_id'].startswith('MeBr'):
             f['type'] = Blend.BlendTypes.MeBr.value
-            f['sort_order'] = 140000 + row['_index']
+            f['sort_order'] = 150000 + row['_index']
         else:
             f['type'] = Blend.BlendTypes.OTHER.value
-            f['sort_order'] = 130000 + row['_index']
+            f['sort_order'] = 140000 + row['_index']
 
         f['composition'] = row['Composition']
         f['other_names'] = row['OtherNames'] or ""
@@ -524,7 +521,7 @@ class Command(BaseCommand):
         f['end_date'] = row['EndDate'].date()
         f['description'] = row['PeriodDescr']
         f['is_reporting_allowed'] = f['name'][0] == 'C' or (
-            f['name'].isdigit() and int(f['name']) <= 2018
+            f['name'].isdigit() and int(f['name']) <= 2021
         )
         f['is_reporting_open'] = f['name'] in ('2018')
         return f
