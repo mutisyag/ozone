@@ -1786,7 +1786,15 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
-        fields = "__all__"
+        # This will be served through a different serializer
+        exclude = ('destroyed', )
+
+
+class AggregationDestructionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdCons
+        fields = ('id', 'party', 'reporting_period', 'group', 'destroyed')
 
 
 class AggregationMTSerializer(serializers.ModelSerializer):

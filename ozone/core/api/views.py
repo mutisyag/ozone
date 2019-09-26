@@ -147,6 +147,7 @@ from ..serializers import (
     SubmissionFormatSerializer,
     AggregationSerializer,
     AggregationMTSerializer,
+    AggregationDestructionSerializer,
     LimitSerializer,
     EmailSerializer,
     EmailTemplateSerializer,
@@ -497,7 +498,10 @@ class MultiValueNumberFilter(filters.BaseCSVFilter, filters.NumberFilter):
         return qs
 
 
-class AggregationViewFilterSet(filters.FilterSet):
+class BaseAggregationViewFilterSet(filters.FilterSet):
+    """
+    Base filterset for aggregation views.
+    """
     party = MultiValueNumberFilter(
         "party", help_text="Filter by party ID"
     )
@@ -508,9 +512,6 @@ class AggregationViewFilterSet(filters.FilterSet):
     )
     reporting_period = MultiValueNumberFilter(
         "reporting_period", help_text="Filter by Reporting Period ID"
-    )
-    group = MultiValueNumberFilter(
-        "group", help_text="Filter by Annex Group ID"
     )
     is_article5 = filters.BooleanFilter(
         field_name="is_article5",
@@ -537,13 +538,60 @@ class AggregationViewFilterSet(filters.FilterSet):
     )
 
 
+class AggregationViewFilterSet(BaseAggregationViewFilterSet):
+    """
+    The Aggregation view can be filtered & ordered based on Annex Group
+    """
+    group = MultiValueNumberFilter(
+        "group", help_text="Filter by Annex Group ID"
+    )
+    ordering = filters.OrderingFilter(
+        fields=(
+            ('reporting_period__start_date', 'reporting_period'),
+            ('party__name', 'party'),
+            ('group__group_id', 'group'),
+        )
+    )
+
+
+def populate_aggregation(aggregation, fields, to_add):
+    """
+    Helper function to populate an aggregation's fields based on a list
+    of dictionaries containing key-value pairs for those fields.
+    """
+    for field in fields:
+        # A null value in any limit field means that the sum of all
+        # values for that field across an aggregation should be null
+        # (because null means no limits)
+        if field.startswith('limit_'):
+            setattr(
+                aggregation,
+                field,
+                None if any([a[field] is None for a in to_add]) else
+                round_decimal_half_up(
+                    sum([a[field] for a in to_add]),
+                    2
+                )
+            )
+        else:
+            setattr(
+                aggregation,
+                field,
+                None if all([a[field] is None for a in to_add]) else
+                round_decimal_half_up(
+                    sum([a[field] or 0 for a in to_add]),
+                    2
+                )
+            )
+
+
 class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProdCons.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationSerializer
 
     filter_backends = (
         # Aggregations are public information, no need to enforce filtering
-        # With the exeption of Destruction data by annex group
+        # With the exception of Destruction data by annex group
         # IsOwnerFilterBackend,
         filters.DjangoFilterBackend,
         OrderingFilter,
@@ -567,36 +615,6 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         We need to override the default ViewSet list method to handle the
         custom `aggregation` parameter.
         """
-        def populate_aggregation(aggregation, fields, to_add):
-            """
-            Helper function to populate an aggregation's fields based on a list
-            of dictionaries containing key-value pairs for those fields.
-            """
-            for field in fields:
-                # A null value in any limit field means that the sum of all
-                # values for that field across an aggregation should be null
-                # (because null means no limits)
-                if field.startswith('limit_'):
-                    setattr(
-                        aggregation,
-                        field,
-                        None if any([a[field] is None for a in to_add]) else
-                        round_decimal_half_up(
-                            sum([a[field] for a in to_add]),
-                            2
-                        )
-                    )
-                else:
-                    setattr(
-                        aggregation,
-                        field,
-                        None if all([a[field] is None for a in to_add]) else
-                        round_decimal_half_up(
-                            sum([a[field] or 0 for a in to_add]),
-                            2
-                        )
-                    )
-
         queryset = self.filter_queryset(self.get_queryset())
 
         # Handle aggregation
@@ -669,6 +687,88 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class AggregationDestructionViewFilterSet(BaseAggregationViewFilterSet):
+    """
+    Used specifically for the destruction endpoint; allows all filtering
+    available on the aggregation endpoint, except for group/substance
+    """
+    ordering = filters.OrderingFilter(
+        fields=(
+            ('reporting_period__start_date', 'reporting_period'),
+            ('party__name', 'party'),
+        )
+    )
+
+
+class AggregationDestructionViewSet(AggregationViewSet):
+    """
+    Overrides the read-only AggregationViewSet to:
+    - show only destruction-related information
+    - ensure data is not broken down by group
+    """
+    serializer_class = AggregationDestructionSerializer
+
+    filterset_class = AggregationDestructionViewFilterSet
+    ordering = ("-reporting_period__start_date", "party",)
+
+    def list(self, request, *args, **kwargs):
+        """
+        We need to override the default ViewSet list method to handle the
+        custom `aggregation` parameter.
+        """
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Using `distinct()` does not work because this queryset is
+        # ordered by fields from related models, which makes similar
+        # values seem distinct.
+        periods = set(
+            queryset.values_list('reporting_period', flat=True)
+        )
+        all_values = queryset.values(
+            'destroyed', 'party', 'group', 'reporting_period'
+        )
+        values = []
+
+        # Handle aggregation. In this case we always aggregate by group, since
+        # only the total destructions sum per party/period is public.
+        aggregation = request.query_params.get('aggregation', None)
+        for period in periods:
+            # Use a list of dictionaries for in-memory storage to optimize
+            # DB queries.
+            values_list = [
+                value for value in all_values
+                if value['reporting_period'] == period
+            ]
+            if aggregation and aggregation == 'party':
+                # Sum values for all groups and all parties for this
+                # reporting period
+                aggregation = ProdCons(reporting_period_id=period)
+                populate_aggregation(aggregation, ['destroyed',], values_list)
+                values.append(aggregation)
+            else:
+                parties = set(queryset.values_list('party', flat=True))
+                for party in parties:
+                    entries = [
+                        value for value in values_list
+                        if value['party'] == party
+                    ]
+                    if entries:
+                        aggregation = ProdCons(
+                            party_id=party, reporting_period_id=period
+                        )
+                        populate_aggregation(
+                            aggregation, ['destroyed',], entries
+                        )
+                        values.append(aggregation)
+
+        # Aggregating disables pagination. Ordering also seems to go down
+        # the drain. However that is ok given the small number of results
+        # that will be returned.
+        return Response(
+            AggregationDestructionSerializer(values, many=True).data
+        )
 
 
 class LimitPaginator(PageNumberPagination):
