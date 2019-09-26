@@ -28,6 +28,7 @@
       @input="updateFormField"
       v-model="currentTyping"
       :highlighted="{dates:[new Date()]}"
+      :disabled-dates="disabledDates"
       format="d MMMM yyyy"
       v-else-if="field.type === 'date'"
     ></Datepicker>
@@ -132,11 +133,15 @@ export default {
       // This issue affects only the select because of the pair (text - value) that needs to match
       this.currentTyping = Number(this.field.selected) || this.field.selected
     }
+    if (this.$store.state.currentUser.is_secretariat) {
+      this.disabledDates.from = new Date()
+    }
   },
 
   data() {
     return {
-      currentTyping: null
+      currentTyping: null,
+      disabledDates: {}
     }
   },
 
