@@ -148,7 +148,6 @@ from ..serializers import (
     AggregationSerializer,
     AggregationMTSerializer,
     AggregationDestructionSerializer,
-    AggregationDestructionMTSerializer,
     LimitSerializer,
     EmailSerializer,
     EmailTemplateSerializer,
