@@ -49,7 +49,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101130,
+      "sort_order": 111130,
       "substance_id": 1130
     },
     "model": "core.substance",
@@ -77,7 +77,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101160,
+      "sort_order": 111160,
       "substance_id": 1160
     },
     "model": "core.substance",
@@ -105,7 +105,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101234,
+      "sort_order": 112340,
       "substance_id": 1234
     },
     "model": "core.substance",
@@ -133,7 +133,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101270,
+      "sort_order": 111270,
       "substance_id": 1270
     },
     "model": "core.substance",
@@ -161,7 +161,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101336,
+      "sort_order": 111336,
       "substance_id": 1336
     },
     "model": "core.substance",
@@ -217,7 +217,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101700,
+      "sort_order": 111700,
       "substance_id": 1700
     },
     "model": "core.substance",
@@ -245,7 +245,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 101705,
+      "sort_order": 111705,
       "substance_id": 1705
     },
     "model": "core.substance",
@@ -273,7 +273,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 102180,
+      "sort_order": 112180,
       "substance_id": 2180
     },
     "model": "core.substance",
@@ -301,7 +301,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 102900,
+      "sort_order": 112900,
       "substance_id": 2900
     },
     "model": "core.substance",
@@ -329,7 +329,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 103180,
+      "sort_order": 113180,
       "substance_id": 3180
     },
     "model": "core.substance",
@@ -357,7 +357,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 106000,
+      "sort_order": 116000,
       "substance_id": 6000
     },
     "model": "core.substance",
@@ -385,7 +385,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 106001,
+      "sort_order": 116001,
       "substance_id": 6001
     },
     "model": "core.substance",
@@ -413,7 +413,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 106010,
+      "sort_order": 116010,
       "substance_id": 6010
     },
     "model": "core.substance",
@@ -441,7 +441,7 @@
       "number_of_isomers": null,
       "odp": 0,
       "remark": "",
-      "sort_order": 106011,
+      "sort_order": 116011,
       "substance_id": 6011
     },
     "model": "core.substance",
