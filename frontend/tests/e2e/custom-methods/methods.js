@@ -359,10 +359,12 @@ const openLookupTable = (browser, page) => {
 const openDashboard = (browser) => {
   browser.useXpath()
     .waitForElementVisible("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 20000)
+    .moveToElement("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']", 0, 0)
+    .pause(500)
     .click("//nav[contains(@class, 'sidebar-nav')]//a[@href='/reporting/dashboard']")
     .pause(3000)
-    // .waitForElementVisible('//div[@id="obligation_selector"]', 20000)
-    .pause(3000)
+    .waitForElementVisible('//div[@id="obligation_selector"]', 20000)
+    .pause(500)
     .assert.urlContains('/reporting/dashboard')
     .pause(3000)
 }
