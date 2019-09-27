@@ -1794,14 +1794,21 @@ class AggregationDestructionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
-        fields = ('id', 'party', 'reporting_period', 'group', 'destroyed')
+        fields = ('id', 'party', 'reporting_period', 'destroyed')
 
 
 class AggregationMTSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdConsMT
-        fields = "__all__"
+        exclude = ('destroyed', )
+
+
+class AggregationDestructionMTSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProdConsMT
+        fields = ('id', 'party', 'reporting_period', 'destroyed')
 
 
 class LimitSerializer(serializers.ModelSerializer):
