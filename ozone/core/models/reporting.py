@@ -5,13 +5,14 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
+from django.utils.functional import cached_property
 from django.utils import timezone
 from model_utils import FieldTracker
 from simple_history.models import HistoricalRecords
 
 from .aggregation import ProdCons
 from .legal import ReportingPeriod
-from .party import Party
+from .party import Party, PartyHistory
 from .substance import Group
 from .utils import model_to_dict
 from .workflows import (
@@ -1482,6 +1483,19 @@ class Submission(models.Model):
             if getattr(self, key, False) is True
         ]
         return Group.objects.filter(group_id__in=reported_groups)
+
+    @cached_property
+    def party_history(self):
+        """
+        Returns the PartyHistory entry corresponding to this submission's party
+        and reporting_period.
+        """
+        ph = PartyHistory.objects.filter(
+            party=submission.party, reporting_period=submission.reporting_period
+        ).first()
+        is_article5 = ph.is_article5 if ph else None
+        is_eu_member = ph.is_eu_member if ph else None
+
 
     def purge_aggregated_data(self):
         """
