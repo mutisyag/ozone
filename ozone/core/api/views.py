@@ -65,6 +65,7 @@ from ..models import (
     RAFReport,
     SubmissionFormat,
     ProdCons,
+    ProdConsMT,
     Limit,
     Reports,
     Email,
@@ -148,6 +149,7 @@ from ..serializers import (
     AggregationSerializer,
     AggregationMTSerializer,
     AggregationDestructionSerializer,
+    AggregationDestructionMTSerializer,
     LimitSerializer,
     EmailSerializer,
     EmailTemplateSerializer,
@@ -554,6 +556,22 @@ class AggregationViewFilterSet(BaseAggregationViewFilterSet):
     )
 
 
+class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
+    """
+    The Aggregation view can be filtered & ordered based on Annex Group
+    """
+    substance = MultiValueNumberFilter(
+        "substance", help_text="Filter by Substance ID"
+    )
+    ordering = filters.OrderingFilter(
+        fields=(
+            ('reporting_period__start_date', 'reporting_period'),
+            ('party__name', 'party'),
+            ('substance__substance_id', 'substance'),
+        )
+    )
+
+
 def populate_aggregation(aggregation, fields, to_add):
     """
     Helper function to populate an aggregation's fields based on a list
@@ -607,6 +625,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     )
     pagination_class = AggregationPaginator
 
+    # Custom class attributes needed for our custom list() implementation to
+    # work properly in subclasses
+    model_class = ProdCons
+    group_or_substance = 'group'
+
     def get_queryset(self):
         return ProdCons.objects.filter(party=F('party__parent_party'))
 
@@ -622,7 +645,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         aggregates = aggregates.split(',') if aggregates else None
         if aggregates:
             fields = [
-                f.name for f in ProdCons._meta.fields
+                f.name for f in self.model_class._meta.fields
                 if isinstance(f, DecimalField)
             ]
             # Using `distinct()` does not work because this queryset is
@@ -632,7 +655,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 queryset.values_list('reporting_period', flat=True)
             )
             all_values = queryset.values(
-                *fields, 'party', 'group', 'reporting_period'
+                *fields, 'party', 'reporting_period', self.group_or_substance
             )
             values = []
             for period in periods:
@@ -642,26 +665,34 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                     value for value in all_values
                     if value['reporting_period'] == period
                 ]
-                if 'party' in aggregates and 'group' in aggregates:
-                    # Sum values for all groups and all parties for this
-                    # reporting period
-                    aggregation = ProdCons(reporting_period_id=period)
+                if (
+                    'party' in aggregates
+                    and self.group_or_substance in aggregates
+                ):
+                    # Sum values for all groups/substances and all parties
+                    # for this reporting period.
+                    aggregation = self.model_class(reporting_period_id=period)
                     populate_aggregation(aggregation, fields, values_list)
                     values.append(aggregation)
                 elif 'party' in aggregates:
-                    groups = set(queryset.values_list('group', flat=True))
-                    for group in groups:
+                    groups_or_subs = set(
+                        queryset.values_list(self.group_or_substance, flat=True)
+                    )
+                    for g_or_s in groups_or_subs:
                         entries = [
                             value for value in values_list
-                            if value['group'] == group
+                            if value[self.group_or_substance] == g_or_s
                         ]
                         if entries:
-                            aggregation = ProdCons(
-                                group_id=group, reporting_period_id=period
+                            g_or_s_query = {
+                                f'{self.group_or_substance}_id': g_or_s
+                            }
+                            aggregation = self.model_class(
+                                **g_or_s_query, reporting_period_id=period
                             )
                             populate_aggregation(aggregation, fields, entries)
                             values.append(aggregation)
-                elif 'group' in aggregates:
+                elif self.group_or_substance in aggregates:
                     parties = set(queryset.values_list('party', flat=True))
                     for party in parties:
                         entries = [
@@ -669,16 +700,16 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             if value['party'] == party
                         ]
                         if entries:
-                            aggregation = ProdCons(
+                            aggregation = self.model_class(
                                 party_id=party, reporting_period_id=period
                             )
                             populate_aggregation(aggregation, fields, entries)
                             values.append(aggregation)
 
-            # Aggregating disables pagination. Ordering also seems to go down
-            # the drain. However that is ok given the small number of results
-            # that will be returned.
-            return Response(AggregationSerializer(values, many=True).data)
+            # Aggregating disables pagination. However that is ok given the
+            # small number of results that will be returned.
+            # Ordering is also lost due to the use of set().
+            return Response(self.serializer_class(values, many=True).data)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -687,6 +718,22 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class AggregationMTViewSet(AggregationViewSet):
+    queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
+    serializer_class = AggregationMTSerializer
+
+    filterset_class = AggregationMTViewFilterSet
+    ordering = ("-reporting_period__start_date", "party",)
+
+    # Custom class attributes needed for our custom list() implementation to
+    # work properly in subclasses
+    model_class = ProdConsMT
+    group_or_substance = 'substance'
+
+    def get_queryset(self):
+        return ProdConsMT.objects.filter(party=F('party__parent_party'))
 
 
 class AggregationDestructionViewFilterSet(BaseAggregationViewFilterSet):
@@ -713,6 +760,11 @@ class AggregationDestructionViewSet(AggregationViewSet):
     filterset_class = AggregationDestructionViewFilterSet
     ordering = ("-reporting_period__start_date", "party",)
 
+    # Custom class attributes needed for our custom list() implementation to
+    # work properly in subclasses
+    model_class = ProdCons
+    group_or_substance = 'group'
+
     def list(self, request, *args, **kwargs):
         """
         We need to override the default ViewSet list method to handle the
@@ -727,13 +779,15 @@ class AggregationDestructionViewSet(AggregationViewSet):
             queryset.values_list('reporting_period', flat=True)
         )
         all_values = queryset.values(
-            'destroyed', 'party', 'group', 'reporting_period'
+            'destroyed', 'party', 'reporting_period', self.group_or_substance
         )
         values = []
 
         # Handle aggregation. In this case we always aggregate by group, since
         # only the total destructions sum per party/period is public.
         aggregation = request.query_params.get('aggregation', None)
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else None
         for period in periods:
             # Use a list of dictionaries for in-memory storage to optimize
             # DB queries.
@@ -741,13 +795,14 @@ class AggregationDestructionViewSet(AggregationViewSet):
                 value for value in all_values
                 if value['reporting_period'] == period
             ]
-            if aggregation and aggregation == 'party':
-                # Sum values for all groups and all parties for this
-                # reporting period
-                aggregation = ProdCons(reporting_period_id=period)
+            if aggregates and 'party' in aggregates:
+                # Sum values for all groups (or substances) and all parties for
+                # this reporting period
+                aggregation = self.model_class(reporting_period_id=period)
                 populate_aggregation(aggregation, ['destroyed',], values_list)
                 values.append(aggregation)
             else:
+                # Sum values for all groups/substances for this reporting period
                 parties = set(queryset.values_list('party', flat=True))
                 for party in parties:
                     entries = [
@@ -755,7 +810,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         if value['party'] == party
                     ]
                     if entries:
-                        aggregation = ProdCons(
+                        aggregation = self.model_class(
                             party_id=party, reporting_period_id=period
                         )
                         populate_aggregation(
@@ -763,12 +818,33 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         )
                         values.append(aggregation)
 
-        # Aggregating disables pagination. Ordering also seems to go down
-        # the drain. However that is ok given the small number of results
-        # that will be returned.
+        # Aggregating disables pagination. However that is ok given the small
+        # number of results that will be returned.
+        # Ordering is also lost due to the use of set().
         return Response(
-            AggregationDestructionSerializer(values, many=True).data
+            self.serializer_class(values, many=True).data
         )
+
+
+class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
+    """
+    Overrides the read-only AggregationDestructionViewSet to:
+    - show only destruction-related information
+    - ensure data is not broken down by substance
+    """
+    queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
+    serializer_class = AggregationDestructionMTSerializer
+
+    filterset_class = AggregationDestructionViewFilterSet
+    ordering = ("-reporting_period__start_date", "party",)
+
+    # Custom class attributes needed for our custom list() implementation
+    # (from AggregationDestructionViewSet) to work properly in this subclass.
+    model_class = ProdConsMT
+    group_or_substance = 'substance'
+
+    def get_queryset(self):
+        return ProdConsMT.objects.filter(party=F('party__parent_party'))
 
 
 class LimitPaginator(PageNumberPagination):
