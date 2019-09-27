@@ -1580,7 +1580,7 @@ class Submission(models.Model):
     def get_aggregated_data(self):
         """
         Returns dict of non-persistent calculated aggregated data for this
-        submission, without touching the database.
+        submission, without writing to the database.
         """
 
         group_mapping = {

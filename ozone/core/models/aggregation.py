@@ -554,29 +554,25 @@ class ProdCons(BaseProdCons):
 
         # Populate baselines; first get appropriate baseline types
         if party.is_article5:
-            prod_bt = BaselineType.objects.get(name='A5Prod')
-            cons_bt = BaselineType.objects.get(name='A5Cons')
+            prod_bt = 'A5Prod'
+            cons_bt = 'A5Cons'
             # Non-existent name
             bdn_bt = None
         else:
-            prod_bt = BaselineType.objects.get(name='NA5Prod')
-            cons_bt = BaselineType.objects.get(name='NA5Cons')
-            bdn_bt = BaselineType.objects.get(name='BDN_NA5')
+            prod_bt = 'NA5Prod'
+            cons_bt = 'NA5Cons'
+            bdn_bt = 'BDN_NA5'
 
-        baselines = Baseline.objects.filter(
+        for baseline in Baseline.objects.filter(
             party=self.party,
             group=self.group
-        )
-        prod = baselines.filter(baseline_type=prod_bt).first()
-        cons = baselines.filter(baseline_type=cons_bt).first()
-        bdn = baselines.filter(baseline_type=bdn_bt).first()
-
-        if prod:
-            self.baseline_prod = prod.baseline
-        if cons:
-            self.baseline_cons = cons.baseline
-        if bdn:
-            self.baseline_bdn = bdn.baseline
+        ).values('baseline_type__name', 'baseline'):
+            if baseline['baseline_type__name'] == prod_bt:
+                self.baseline_prod = baseline['baseline']
+            if baseline['baseline_type__name'] == cons_bt:
+                self.baseline_cons = baseline['baseline']
+            if baseline['baseline_type__name'] == bdn_bt:
+                self.baseline_bdn = baseline['baseline']
 
     def save(self, *args, **kwargs):
         """
