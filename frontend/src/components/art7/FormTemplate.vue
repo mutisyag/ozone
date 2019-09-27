@@ -42,7 +42,6 @@
             <div :style="`width: ${field.width ? field.width + 'px' : 'auto'}`" v-html="field.label" :key="field.key"></div>
           </template>
 
-
           <template v-slot:thead-top>
             <tr class="first-header">
               <th
@@ -695,7 +694,7 @@
         >Edit %{name} mixture</span>
       </div>
       <div v-if="modal_data">
-      <b-btn @click="$refs.edit_modal.hide()" style="float:right" variant="success">Close</b-btn>          
+      <b-btn @click="$refs.edit_modal.hide()" style="float:right" variant="success">Close</b-btn>
 
         <p class="muted">
           <span
