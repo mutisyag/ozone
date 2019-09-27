@@ -350,6 +350,10 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals() and
+        # is_article5 to populate_limits_and_baselines().
+        # The submission's party_history property is cached.
         ph = submission.party_history
         is_article5 = ph.is_article5 if ph else None
         is_eu_member = ph.is_eu_member if ph else None
@@ -398,6 +402,9 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals().
+        # The submission's party_history property is cached.
         ph = submission.party_history
         is_eu_member = ph.is_eu_member if ph else None
 
