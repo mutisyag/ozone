@@ -1,6 +1,8 @@
 import json
 import os
 
+from decimal import Decimal
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.core.serializers.json import DjangoJSONEncoder
@@ -11,6 +13,7 @@ from ozone.core.models import (
     ControlMeasure,
     Group,
     LimitTypes,
+    Party,
     PartyHistory,
     ProdCons,
 )
@@ -57,6 +60,11 @@ class Command(BaseCommand):
                     ] and party.abbr == 'EU':
                         # No BDN or Prod limits for EU/ECE(European Union)
                         continue
+                    if limit_type.value in [
+                        LimitTypes.CONSUMPTION.value
+                    ] and party in Party.get_eu_members_at(period.name):
+                        # No consumption baseline for EU member states
+                        continue
                     cm_queryset_by_limit_type = cm_queryset.filter(
                         limit_type=limit_type.value
                     )
@@ -65,51 +73,50 @@ class Command(BaseCommand):
                         continue
                     elif length == 1:
                         cm = cm_queryset_by_limit_type.first()
-                        baseline = Baseline.objects.filter(
-                            party=party,
-                            group=group,
-                            baseline_type=cm.baseline_type
-                        ).first()
-                        if not baseline or baseline.baseline is None:
-                            if group.group_id == 'CII' or group.group_id == 'CIII':
-                                baseline = 0
-                            else:
-                                continue
+                        if group.group_id == 'CII' or group.group_id == 'CIII':
+                            baseline = 0
                         else:
-                            baseline = baseline.baseline
-                        limit = (100 * cm.allowed * baseline) / 100
+                            baseline = Baseline.objects.filter(
+                                party=party,
+                                group=group,
+                                baseline_type=cm.baseline_type
+                            ).first()
+                            if not baseline or baseline.baseline is None:
+                                continue
+                            else:
+                                baseline = baseline.baseline
+                        # TODO: rounding
+                        limit = cm.allowed * baseline
                         data.append(
                             self.get_entry(idx, party, period, group, limit_type.value, limit)
                         )
                         idx += 1
                     elif length == 2:
                         # This happens for BDN limits, A/I and E/I, Non-A5 parties
-                        cm1 = cm_queryset_by_limit_type[0]
-                        cm2 = cm_queryset_by_limit_type[1]
-                        baseline1 = Baseline.objects.filter(
-                            party=party,
-                            group=group,
-                            baseline_type=cm1.baseline_type
-                        ).first()
-                        baseline2 = Baseline.objects.filter(
-                            party=party,
-                            group=group,
-                            baseline_type=cm2.baseline_type
-                        ).first()
-                        if (
-                            not baseline1
-                            or baseline1.baseline is None
-                            or not baseline2
-                            or baseline2.baseline is None
-                        ):
-                            if group.group_id == 'CII' or group.group_id == 'CIII':
-                                baseline1 = 0
-                                baseline2 = 0
-                            else:
-                                continue
+                        if group.group_id == 'CII' or group.group_id == 'CIII':
+                            baseline1 = Decimal('0')
+                            baseline2 = Decimal('0')
                         else:
-                            baseline1 = baseline1.baseline
-                            baseline2 = baseline2.baseline
+                            cm1 = cm_queryset_by_limit_type[0]
+                            cm2 = cm_queryset_by_limit_type[1]
+                            baseline1 = Baseline.objects.filter(
+                                party=party,
+                                group=group,
+                                baseline_type=cm1.baseline_type
+                            ).first()
+                            baseline2 = Baseline.objects.filter(
+                                party=party,
+                                group=group,
+                                baseline_type=cm2.baseline_type
+                            ).first()
+                            if (
+                                not baseline1 or baseline1.baseline is None
+                                or not baseline2 or baseline2.baseline is None
+                            ):
+                                continue
+                            else:
+                                baseline1 = baseline1.baseline
+                                baseline2 = baseline2.baseline
                         days1 = (cm1.end_date - period.start_date).days + 1
                         days2 = (period.end_date - cm2.start_date).days + 1
                         limit = (
