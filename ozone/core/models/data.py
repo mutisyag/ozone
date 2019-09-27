@@ -388,6 +388,14 @@ class AggregationMixin:
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
 
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals() and
+        # is_article5 to populate_limits_and_baselines().
+        # The submission's party_history property is cached.
+        ph = submission.party_history
+        is_article5 = ph.is_article5 if ph else None
+        is_eu_member = ph.is_eu_member if ph else None
+
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
         for group, aggregation in reported_groups.items():
@@ -414,8 +422,11 @@ class AggregationMixin:
                 setattr(aggregation, aggr_field, value)
 
             # Populate limits and baselines; calculate totals
-            aggregation.populate_limits_and_baselines()
-            aggregation.calculate_totals()
+            # Because these aggregation entries have not been written to the DB,
+            # the values for aggregation.is_article5 and is_eu_member are not
+            # correct and need to be passed as parameters.
+            aggregation.populate_limits_and_baselines(is_article5)
+            aggregation.calculate_totals(is_eu_member)
 
     @classmethod
     def get_aggregated_mt_data(cls, submission, queryset, reported_substances):
@@ -428,6 +439,12 @@ class AggregationMixin:
         """
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
+
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals().
+        # The submission's party_history property is cached.
+        ph = submission.party_history
+        is_eu_member = ph.is_eu_member if ph else None
 
         for entry in queryset:
             # Add entry to dictionary if necessary
@@ -452,7 +469,7 @@ class AggregationMixin:
                 value += model_value
                 setattr(aggregation, aggr_field, value)
 
-            aggregation.calculate_totals()
+            aggregation.calculate_totals(is_eu_member)
 
 
 class BaseReport(models.Model):

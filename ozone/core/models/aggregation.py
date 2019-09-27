@@ -10,7 +10,7 @@ from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group, Substance
 from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
-from .control import Limit, LimitTypes, Baseline, BaselineType
+from .control import Limit, LimitTypes, Baseline
 
 
 __all__ = [
@@ -378,13 +378,19 @@ class BaseProdCons(models.Model):
             - self.import_quarantine
         )
 
-    def calculate_totals(self):
+    def calculate_totals(self, is_eu_member=None):
         """
         Called on save() to automatically update fields.
         Calculates values for:
             - calculated_production
             - calculated_consumption
         """
+        # Check whether this instance has the is_eu_member field properly
+        # populated. If not (which may happen when the method is called for
+        # generating non-persistent data, then the is_eu_member parameter should
+        # be used.
+        if self.is_eu_member is None:
+            self.is_eu_member = is_eu_member
         # Production
         if self.is_european_union:
             self.calculated_production = None
@@ -531,18 +537,22 @@ class ProdCons(BaseProdCons):
             getattr(self, 'party', None),
         )
 
-    def populate_limits_and_baselines(self):
+    def populate_limits_and_baselines(self, is_article5=None):
         """
-        At first save we fetch the limits/baselines from the corresponding
-        tables.
-
+        At save we fetch the limits/baselines from the corresponding tables.
         This assumes that said tables are pre-populated, which should happen
         in practice. Otherwise, this method might be triggered by other means.
+
+        We may also fetch the limits/baselines data without having first saved
+        the instance. In this case the is_article5 parameter is used.
         """
-        # Get the party's characteristics for this specific reporting period
-        party = PartyHistory.objects.get(
-            party=self.party, reporting_period=self.reporting_period
-        )
+        # If this instance had already been saved, the is_article5 field should
+        # already be populated with a coherent value.
+        # If the instance has not been saved (as in the case of non-persistent
+        # instances used to generate on-the-fly data), then use the
+        # externally-provided parameter.
+        if self.is_article5 is None:
+            self.is_article5 = is_article5
 
         # Populate limits
         for limit in Limit.objects.filter(
@@ -558,30 +568,26 @@ class ProdCons(BaseProdCons):
                 self.limit_bdn = limit.limit
 
         # Populate baselines; first get appropriate baseline types
-        if party.is_article5:
-            prod_bt = BaselineType.objects.get(name='A5Prod')
-            cons_bt = BaselineType.objects.get(name='A5Cons')
+        if self.is_article5:
+            prod_bt = 'A5Prod'
+            cons_bt = 'A5Cons'
             # Non-existent name
             bdn_bt = None
         else:
-            prod_bt = BaselineType.objects.get(name='NA5Prod')
-            cons_bt = BaselineType.objects.get(name='NA5Cons')
-            bdn_bt = BaselineType.objects.get(name='BDN_NA5')
+            prod_bt = 'NA5Prod'
+            cons_bt = 'NA5Cons'
+            bdn_bt = 'BDN_NA5'
 
-        baselines = Baseline.objects.filter(
+        for baseline in Baseline.objects.filter(
             party=self.party,
             group=self.group
-        )
-        prod = baselines.filter(baseline_type=prod_bt).first()
-        cons = baselines.filter(baseline_type=cons_bt).first()
-        bdn = baselines.filter(baseline_type=bdn_bt).first()
-
-        if prod:
-            self.baseline_prod = prod.baseline
-        if cons:
-            self.baseline_cons = cons.baseline
-        if bdn:
-            self.baseline_bdn = bdn.baseline
+        ).values('baseline_type__name', 'baseline'):
+            if baseline['baseline_type__name'] == prod_bt:
+                self.baseline_prod = baseline['baseline']
+            if baseline['baseline_type__name'] == cons_bt:
+                self.baseline_cons = baseline['baseline']
+            if baseline['baseline_type__name'] == bdn_bt:
+                self.baseline_bdn = baseline['baseline']
 
     def save(self, *args, **kwargs):
         """
