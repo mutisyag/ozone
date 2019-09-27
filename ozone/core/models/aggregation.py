@@ -540,12 +540,11 @@ class ProdCons(BaseProdCons):
     def populate_limits_and_baselines(self, is_article5=None):
         """
         At save we fetch the limits/baselines from the corresponding tables.
+        This assumes that said tables are pre-populated, which should happen
+        in practice. Otherwise, this method might be triggered by other means.
 
         We may also fetch the limits/baselines data without having first saved
         the instance. In this case the is_article5 parameter is used.
-
-        This assumes that said tables are pre-populated, which should happen
-        in practice. Otherwise, this method might be triggered by other means.
         """
         # If this instance had already been saved, the is_article5 field should
         # already be populated with a coherent value.

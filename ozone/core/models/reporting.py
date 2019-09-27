@@ -1490,10 +1490,9 @@ class Submission(models.Model):
         Returns the PartyHistory entry corresponding to this submission's party
         and reporting_period.
         """
-        ph = PartyHistory.objects.filter(
+        return PartyHistory.objects.filter(
             party=self.party, reporting_period=self.reporting_period
         ).first()
-        return ph
 
     def purge_aggregated_data(self):
         """
