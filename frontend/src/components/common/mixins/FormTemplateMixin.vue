@@ -60,9 +60,9 @@ export default {
     }
   },
 
-  mounted(){
+  mounted() {
     const tables = document.querySelectorAll('body .tab-pane table')
-    tables.forEach(t=> {
+    tables.forEach(t => {
       console.log('letable', t)
       t.addEventListener('click', this.closeSidebar)
     })
@@ -249,7 +249,7 @@ export default {
 
   methods: {
     closeSidebar(e) {
-      if(!e.target.classList.contains('fa-exclamation-circle')) {
+      if (!e.target.classList.contains('fa-exclamation-circle')) {
         const body = document.querySelector('body')
         body.classList.remove('aside-menu-lg-show')
       }

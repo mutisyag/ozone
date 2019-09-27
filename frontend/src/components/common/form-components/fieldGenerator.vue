@@ -57,7 +57,7 @@
         {{option.text}}
       </b-form-checkbox>
     </b-form-group>
-    
+
     <b-form-checkbox
       :id="id"
       @change="updateFormFieldWithTabs"
@@ -198,7 +198,6 @@ export default {
     },
     updateFormFieldQuestionnaire(event, value) {
       this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
-
     }
   },
   watch: {
