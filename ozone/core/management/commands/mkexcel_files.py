@@ -16,8 +16,6 @@ OUTPUT_EXCEL_FILES = {
         'Period',
         'CntryYr',
         'MDG_RegionsCntryArea',
-        'MeBrAgreedCriticalUseCategories',
-        'MeBrActualCriticalUsebyCategory'
     ],
     'legacy_compliance': [
         'DeviationTypes',
@@ -28,7 +26,9 @@ OUTPUT_EXCEL_FILES = {
     'legacy_exemptions': [
         'EssenUse',
         'EssenNom',
-        'EssenExemp'
+        'EssenExemp',
+        'MeBrAgreedCriticalUseCategories',
+        'MeBrActualCriticalUsebyCategory'
     ],
     'legacy_procagents': [
         'ProcAgentContanTechnology',

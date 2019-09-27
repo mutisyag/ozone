@@ -76,7 +76,7 @@ class Command(BaseCommand):
         for user in all_users:
             password = user.username if not options['random_passwords'] else (
                 User.objects.make_random_password())
-            user.password = password
+            user.set_password(password)
             logger.info("Password reset for user %s/%s", user, password)
             user.save()
 
