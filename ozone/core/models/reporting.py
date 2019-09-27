@@ -1491,11 +1491,9 @@ class Submission(models.Model):
         and reporting_period.
         """
         ph = PartyHistory.objects.filter(
-            party=submission.party, reporting_period=submission.reporting_period
+            party=self.party, reporting_period=self.reporting_period
         ).first()
-        is_article5 = ph.is_article5 if ph else None
-        is_eu_member = ph.is_eu_member if ph else None
-
+        return ph
 
     def purge_aggregated_data(self):
         """
