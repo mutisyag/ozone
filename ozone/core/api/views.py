@@ -786,6 +786,8 @@ class AggregationDestructionViewSet(AggregationViewSet):
         # Handle aggregation. In this case we always aggregate by group, since
         # only the total destructions sum per party/period is public.
         aggregation = request.query_params.get('aggregation', None)
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else None
         for period in periods:
             # Use a list of dictionaries for in-memory storage to optimize
             # DB queries.
@@ -793,13 +795,14 @@ class AggregationDestructionViewSet(AggregationViewSet):
                 value for value in all_values
                 if value['reporting_period'] == period
             ]
-            if aggregation and aggregation == 'party':
-                # Sum values for all groups and all parties for this
-                # reporting period
+            if aggregates and 'party' in aggregates:
+                # Sum values for all groups (or substances) and all parties for
+                # this reporting period
                 aggregation = self.model_class(reporting_period_id=period)
                 populate_aggregation(aggregation, ['destroyed',], values_list)
                 values.append(aggregation)
             else:
+                # Sum values for all groups/substances for this reporting period
                 parties = set(queryset.values_list('party', flat=True))
                 for party in parties:
                     entries = [
