@@ -458,7 +458,7 @@ class SubmissionAdmin(admin.ModelAdmin):
             filename='legacy_submissions.xlsx',
         )
 
-    export_legacy_xlsx.short_description = "Export legaxy XLSX"
+    export_legacy_xlsx.short_description = "Export legacy XLSX"
 
     actions = admin.ModelAdmin.actions + [export_legacy_xlsx]
 
