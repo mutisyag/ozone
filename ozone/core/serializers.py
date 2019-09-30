@@ -21,6 +21,7 @@ from .models import (
     PartyHistory,
     ReportingPeriod,
     Obligation,
+    ObligationTypes,
     Substance,
     Group,
     BlendComponent,
@@ -77,6 +78,7 @@ from .models import (
 )
 from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .models.report import Reports
+from ozone.core.api import export_pdf
 
 User = get_user_model()
 
@@ -1833,6 +1835,31 @@ def guess_mimetype(filename, default='application/octet-stream'):
     return mimetypes.guess_type(filename)[0] or default
 
 
+def generate_report(report, submission):
+    party = submission.party
+    period = submission.reporting_period
+
+    if report == Reports.ART7_RAW.value:
+        art7 = Obligation.objects.get(
+            _obligation_type=ObligationTypes.ART7.value)
+        data = export_pdf.export_submissions(art7, [submission])
+
+    elif report == Reports.PRODCONS.value:
+        data = export_pdf.export_prodcons(
+            submission=submission,
+            periods=[period],
+            parties=[party],
+        )
+
+    else:
+        raise ValueError(f"Unknown report type {report!r}")
+
+    filename = f"{report}_{party.abbr}_{period.name}.pdf"
+    mime_type = 'application/pdf'
+
+    return (filename, data.getvalue(), mime_type)
+
+
 class EmailSerializer(serializers.ModelSerializer):
 
     # TODO maybe unify attachment types?
@@ -1844,13 +1871,15 @@ class EmailSerializer(serializers.ModelSerializer):
         exclude = ('submission',)
 
     def create(self, validated_data):
+        submission = self.context['submission']
+
         email = Email(
             subject=validated_data['subject'],
             body=validated_data['body'],
             to=validated_data['to'],
             from_email=validated_data['from_email'],
             cc=validated_data['cc'],
-            submission=self.context['submission']
+            submission=submission,
         )
 
         attachments = []
@@ -1861,7 +1890,8 @@ class EmailSerializer(serializers.ModelSerializer):
             mime_type = guess_mimetype(a.filename)
             attachments.append((a.filename, data, mime_type))
 
-        # TODO generated_attachments
+        for attachment in validated_data['generated_attachments']:
+            attachments.append(generate_report(attachment['id'], submission))
 
         email.send_email(attachments)
         email.save()
