@@ -604,7 +604,13 @@ def populate_aggregation(aggregation, fields, to_add):
 
 
 class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = ProdCons.objects.filter(party=F('party__parent_party'))
+    # Do not present Annex F data in this view, as it is in metric tons, while
+    # data for all other groups is in ODP tons.
+    queryset = ProdCons.objects.filter(
+        party=F('party__parent_party')
+    ).exclude(
+        group__annex__annex_id='F'
+    )
     serializer_class = AggregationSerializer
 
     filter_backends = (
@@ -631,7 +637,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     group_or_substance = 'group'
 
     def get_queryset(self):
-        return ProdCons.objects.filter(party=F('party__parent_party'))
+        return ProdCons.objects.filter(
+            party=F('party__parent_party')
+        ).exclude(
+            group__annex__annex_id='F'
+        )
 
     def list(self, request, *args, **kwargs):
         """
@@ -721,6 +731,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AggregationMTViewSet(AggregationViewSet):
+    # This view displays Metric Tons data for all annex groups
     queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationMTSerializer
 
@@ -754,6 +765,9 @@ class AggregationDestructionViewSet(AggregationViewSet):
     Overrides the read-only AggregationViewSet to:
     - show only destruction-related information
     - ensure data is not broken down by group
+
+    Will not present Annex F data in this view, as it is in metric tons, while
+    data for all other annex groups is in ODP tons.
     """
     serializer_class = AggregationDestructionSerializer
 
@@ -832,6 +846,7 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     - show only destruction-related information
     - ensure data is not broken down by substance
     """
+    # This view displays Metric Tons data for all annex groups
     queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationDestructionMTSerializer
 
