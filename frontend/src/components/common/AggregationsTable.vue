@@ -36,7 +36,7 @@ export default {
         }, {
           label: this.$gettext('Consumption'),
           colspan: 3
-        }, 
+        }
         // {
         //   label: this.$gettext('Production allowance for BDN of Article 5 parties'),
         //   colspan: 3
@@ -52,8 +52,8 @@ export default {
         { key: 'calculated_production', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right' },
         { key: 'limit_prod', label: this.$gettext('Limit'), class: 'text-right' },
         { key: 'baseline_cons', label: this.$gettext('Baseline'), class: 'text-right' },
-        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right'  },
-        { key: 'limit_cons', label: this.$gettext('Limit') , class: 'text-right' },
+        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})`, class: 'text-right' },
+        { key: 'limit_cons', label: this.$gettext('Limit'), class: 'text-right' }
         // { key: 'baseline_bdn', label: this.$gettext('Baseline') },
         // { key: 'production_article_5', label: `${this.$gettext('Calculated')} (${this.$store.state.current_submission.reporting_period_description})` },
         // { key: 'limit_bdn', label: this.$gettext('Limit') }

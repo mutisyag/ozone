@@ -45,7 +45,16 @@ class BaseSubmissionTest(BaseTests):
         self.workflow_class = "default"
 
         self.region = RegionFactory.create()
-        self.period = ReportingPeriodFactory.create(name="Some period")
+        self.period = ReportingPeriodFactory.create(
+            name="2018 test",
+            start_date=datetime.strptime('2018-01-01', '%Y-%m-%d'),
+            end_date = datetime.strptime('2018-12-31', '%Y-%m-%d')
+        )
+        self.newer_period = ReportingPeriodFactory.create(
+            name="2019 test",
+            start_date=datetime.strptime('2019-01-01', '%Y-%m-%d'),
+            end_date = datetime.strptime('2019-12-31', '%Y-%m-%d')
+        )
         self.obligation = ObligationFactory.create(_obligation_type=self._obligation_type)
         self.subregion = SubregionFactory.create(region=self.region)
         self.party = PartyFactory(subregion=self.subregion)
@@ -228,7 +237,7 @@ class TestSubmissionMethods(BaseSubmissionTest):
         self.assertEqual(result.json()[0]['version'], 1)
 
     def test_list_paginated(self):
-        submission1 = self.create_submission()
+        submission1 = self.create_submission(reporting_period=self.newer_period)
         submission2 = self.create_submission(reporting_period=self.period)
 
         result = self.client.get(

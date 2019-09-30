@@ -188,6 +188,22 @@ class Party(models.Model):
             is_active=True,
         )
 
+    @classmethod
+    def get_eu_members(cls):
+        """ Returns the current EU member states
+        """
+        return Party.get_eu_members_at(ReportingPeriod.get_current_period())
+
+    @classmethod
+    def get_eu_members_at(cls, reporting_period):
+        """ Returns the current EU member states
+        """
+        return cls.objects.filter(
+            history__is_eu_member=True,
+            history__reporting_period=reporting_period,
+            is_active=True,
+        )
+
     def __str__(self):
         return self.name
 

@@ -68,11 +68,15 @@ def float_to_decimal(value):
     return decimal.Decimal(str(value)) if value is not None else None
 
 
-def sum_decimals(d1, d2):
+def sum_decimals(*args):
     """ Adds decimals but keeps None values if present"""
-    if d1 and d2:
-        return d1+d2
-    return d1 or d2
+    total = None
+    for d in args:
+        if d is not None and total is None:
+            total = d
+        elif d is not None:
+            total = total + d
+    return total
 
 
 def subtract_decimals(d1, d2):

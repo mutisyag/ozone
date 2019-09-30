@@ -1,5 +1,7 @@
 {% load i18n %}{% autoescape off %}
-{% blocktrans %}Submission {{ submission }} has been changed to {{ new_state }} by {{ user }}.{% endblocktrans %}
+{% blocktrans %}{{ party }} has {{ new_state }} its report on {{ obligation }} for {{ reporting_period }} - this being submission number {{ version }}.
+
+Submitted by {{ user }}.{% endblocktrans %}
 
 {% blocktrans %}The {{ site_name }} team{% endblocktrans %}
 

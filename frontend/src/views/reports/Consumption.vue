@@ -83,18 +83,18 @@ export default {
   data() {
     return {
       fields: [
-        { key: 'party', label: `${this.$gettext('Party')}`, sortable: true, sortDirection: 'desc' },
-        { key: 'group', label: `${this.$gettext('Annex/Group')}`, sortable: true, sortDirection: 'desc' },
-        { key: 'reporting_period', label: `${this.$gettext('Reporting period')}`, sortable: true },
-        { key: 'baseline_prod', label: this.$gettext('Baseline') },
-        { key: 'calculated_production', label: `${this.$gettext('Calculated')}` },
-        { key: 'limit_prod', label: this.$gettext('Limit') },
-        { key: 'baseline_cons', label: this.$gettext('Baseline') },
-        { key: 'calculated_consumption', label: `${this.$gettext('Calculated')}` },
-        { key: 'limit_cons', label: this.$gettext('Limit') },
-        { key: 'baseline_bdn', label: this.$gettext('Baseline') },
-        { key: 'production_article_5', label: `${this.$gettext('Calculated')}` },
-        { key: 'limit_bdn', label: this.$gettext('Limit') }
+        { key: 'party', label: this.$gettext('Party'), sortable: true, sortDirection: 'desc' },
+        { key: 'group', label: this.$gettext('Annex/Group'), sortable: true, sortDirection: 'desc' },
+        { key: 'reporting_period', label: this.$gettext('Reporting period'), sortable: true },
+        { key: 'baseline_prod', label: this.$gettext('Baseline'), class: 'text-right' },
+        { key: 'calculated_production', label: this.$gettext('Calculated'), class: 'text-right' },
+        { key: 'limit_prod', label: this.$gettext('Limit'), class: 'text-right' },
+        { key: 'baseline_cons', label: this.$gettext('Baseline'), class: 'text-right' },
+        { key: 'calculated_consumption', label: this.$gettext('Calculated'), class: 'text-right' },
+        { key: 'limit_cons', label: this.$gettext('Limit'), class: 'text-right' },
+        // { key: 'baseline_bdn', label: this.$gettext('Baseline') },
+        { key: 'production_article_5', label: this.$gettext('Calculated'), class: 'text-right' },
+        { key: 'limit_bdn', label: this.$gettext('Limit'), class: 'text-right' }
       ],
       items: [],
       filters: {
@@ -143,7 +143,7 @@ export default {
           colspan: 3
         }, {
           label: this.$gettext('Production allowance for BDN of Article 5 Parties'),
-          colspan: 3
+          colspan: 2
         }
       ],
       tableReady: false,

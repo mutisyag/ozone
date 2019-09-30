@@ -117,7 +117,12 @@
             </b-row>
           </b-card>
 
-          <h5 v-if="flags_info && specific_flags_columns.length" class="mb-3" v-translate>Annex groups reported in full</h5>
+          <h5 v-if="flags_info && specific_flags_columns.length"
+            class="mb-3" v-translate v-b-tooltip.hover placement="left"
+            :title="$gettext('Select the annex groups for which you are submitting complete data, including reporting of zeros where appropriate, e.g. for phased-out substances or annex groups.')">
+            Annex groups reported in full
+            <i class="fa fa-info-circle fa-sm"></i>
+          </h5>
           <b-card v-if="flags_info && specific_flags_columns.length">
             <div id="annex-flags">
               <div class="flags-row" v-for="column in specific_flags_columns" :key="column">

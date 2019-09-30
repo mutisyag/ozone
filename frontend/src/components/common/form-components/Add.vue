@@ -114,10 +114,10 @@ export default {
       this.substances.forEach(substance => {
         if (this.selected_groups.selected.length) {
           if (this.selected_groups.selected.includes(substance.group.group_id)) {
-            this.selected_substance.options.push({ text: substance.text, value: substance.value })
+            this.selected_substance.options.push({ text: substance.text, value: substance.value, sort_order: substance.sort_order })
           }
         } else {
-          this.selected_substance.options.push({ text: substance.text, value: substance.value })
+          this.selected_substance.options.push({ text: substance.text, value: substance.value, sort_order: substance.sort_order })
         }
       })
     },
@@ -147,7 +147,8 @@ export default {
     },
 
     addSubstance() {
-      this.updateGroup(this.selected_substance.selected)
+      const ordered_selected_substance = this.selected_substance.options.filter(option => this.selected_substance.selected.includes(option.value)).map(s => s.value)
+      this.updateGroup(ordered_selected_substance)
 
       const { default_properties } = this.$store.state.form.tabs[this.tabName]
       const typeOfCountryFields = ['destination_party', 'source_party', 'trade_party']
@@ -158,7 +159,7 @@ export default {
         if (default_properties.hasOwnProperty(type)) currentTypeOfCountryField = type
       })
 
-      for (const subst of this.selected_substance.selected) {
+      for (const subst of ordered_selected_substance) {
         let fieldExists = false
         for (const existing_field of this.$store.state.form.tabs[this.tabName].form_fields) {
           if (parseInt(existing_field.substance.selected) === subst && (!currentTypeOfCountryField || existing_field[currentTypeOfCountryField].selected === null)) {

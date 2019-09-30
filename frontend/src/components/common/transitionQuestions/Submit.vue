@@ -12,7 +12,7 @@
         <p><b>You have chosen "Yes" in the questionnaire, but not entered any substances in {{questionnaireStatus.join(', ')}} form.</b></p>
       </div>
       <div v-if="uncheckedFlags.length && !skipArt7Specific">
-        <p class="color-red"><b>You have not reported data for annex group: {{uncheckedFlags.join(', ')}}.</b></p>
+        <p class="color-red"><b> Under the TAB for 'Submission Information', you have not selected to report data for annex group(s) {{uncheckedFlags.join(', ')}}. Kindly note that these annex groups will be treated as 'NOT REPORTED' until the data is reported in full.</b></p>
       </div>
     </div>
     <div v-if="$store.state.currentUser.is_secretariat && formTabs.flags && !skipArt7Specific">

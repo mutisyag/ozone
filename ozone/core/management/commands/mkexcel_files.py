@@ -16,8 +16,6 @@ OUTPUT_EXCEL_FILES = {
         'Period',
         'CntryYr',
         'MDG_RegionsCntryArea',
-        'MeBrAgreedCriticalUseCategories',
-        'MeBrActualCriticalUsebyCategory'
     ],
     'legacy_compliance': [
         'DeviationTypes',
@@ -28,7 +26,9 @@ OUTPUT_EXCEL_FILES = {
     'legacy_exemptions': [
         'EssenUse',
         'EssenNom',
-        'EssenExemp'
+        'EssenExemp',
+        'MeBrAgreedCriticalUseCategories',
+        'MeBrActualCriticalUsebyCategory'
     ],
     'legacy_procagents': [
         'ProcAgentContanTechnology',
@@ -56,6 +56,14 @@ OUTPUT_EXCEL_FILES = {
     ],
     'tbl_prod_cons': [
         'tbl_ProdCons'
+    ],
+    'legacy_plans_of_action': [
+        'Plans_of_Action_Decs',
+        'Plans_of_Action'
+    ],
+    'legacy_bdn_limits': [
+        'BDNProdLimits',
+        'BDNProdLimitsNew'
     ]
 }
 

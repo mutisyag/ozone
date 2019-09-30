@@ -10,7 +10,7 @@ from .legal import ReportingPeriod
 from .party import Party, PartyHistory
 from .substance import Group, Substance
 from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
-from .control import Limit, LimitTypes, Baseline, BaselineType
+from .control import Limit, LimitTypes, Baseline
 
 
 __all__ = [
@@ -250,26 +250,26 @@ class BaseProdCons(models.Model):
             if aggregation.is_empty():
                 aggregation.delete()
 
+    special_cases_2009 = [
+        'CD', 'CG', 'DZ', 'EC', 'ER', 'GQ', 'GW', 'HT', 'LC', 'MA', 'MK',
+        'MZ', 'NE', 'NG', 'SZ', 'FJ', 'PK', 'PH'
+    ]
+    special_cases_2010 = [
+        'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
+        'YE', 'FJ', 'PK', 'PH'
+    ]
+
     @classmethod
     def get_decimals(cls, period, group, party):
         """
         Returns the number of decimals according to the following
         rounding rules.
         """
-
-        special_cases_2009 = [
-            'CD', 'CG', 'DZ', 'EC', 'ER', 'GQ', 'GW', 'HT', 'LC', 'MA', 'MK',
-            'MZ', 'NE', 'NG', 'SZ', 'FJ', 'PK', 'PH'
-        ]
-        special_cases_2010 = [
-            'DZ', 'EC', 'ER', 'HT', 'LC', 'LY', 'MA', 'NG', 'PE', 'SZ', 'TR',
-            'YE', 'FJ', 'PK', 'PH'
-        ]
         if group and group.group_id == 'CI':
             if (
                 period.start_date >= datetime.strptime('2011-01-01', "%Y-%m-%d").date()
-                or period.name == '2009' and party.abbr in special_cases_2009
-                or period.name == '2010' and party.abbr in special_cases_2010
+                or period.name == '2009' and party.abbr in cls.special_cases_2009
+                or period.name == '2010' and party.abbr in cls.special_cases_2010
             ):
                 return 2
         if group and group.group_id == 'F':
@@ -359,13 +359,38 @@ class BaseProdCons(models.Model):
                     round_decimal_half_up(field_value, decimals)
                 )
 
-    def calculate_totals(self):
+    def get_calc_consumption(self):
+        """
+            Formula for non-EU members is needed for their C/I baselines
+        """
+        return (
+            self.production_all_new
+            - self.production_feedstock
+            - self.production_quarantine
+            - self.get_production_process_agent()
+            - self.destroyed
+            - self.export_new
+            + self.get_export_quarantine()
+            + self.non_party_export
+            + self.import_new
+            - self.import_feedstock
+            - self.get_import_process_agent()
+            - self.import_quarantine
+        )
+
+    def calculate_totals(self, is_eu_member=None):
         """
         Called on save() to automatically update fields.
         Calculates values for:
             - calculated_production
             - calculated_consumption
         """
+        # Check whether this instance has the is_eu_member field properly
+        # populated. If not (which may happen when the method is called for
+        # generating non-persistent data, then the is_eu_member parameter should
+        # be used.
+        if self.is_eu_member is None:
+            self.is_eu_member = is_eu_member
         # Production
         if self.is_european_union:
             self.calculated_production = None
@@ -384,20 +409,7 @@ class BaseProdCons(models.Model):
         if self.is_eu_member:
             self.calculated_consumption = None
         else:
-            self.calculated_consumption = (
-                self.production_all_new
-                - self.production_feedstock
-                - self.production_quarantine
-                - self.get_production_process_agent()
-                - self.destroyed
-                - self.export_new
-                + self.get_export_quarantine()
-                + self.non_party_export
-                + self.import_new
-                - self.import_feedstock
-                - self.get_import_process_agent()
-                - self.import_quarantine
-            )
+            self.calculated_consumption = self.get_calc_consumption()
 
         # QPS production & consumption (QPSProd, QPSCons)
         if self.is_european_union:
@@ -428,7 +440,6 @@ class BaseProdCons(models.Model):
                 self.import_laboratory_uses
                 + self.production_laboratory_analytical_uses
             )
-
         # Apply rounding to everything that needs it.
         self.apply_rounding()
 
@@ -526,18 +537,22 @@ class ProdCons(BaseProdCons):
             getattr(self, 'party', None),
         )
 
-    def populate_limits_and_baselines(self):
+    def populate_limits_and_baselines(self, is_article5=None):
         """
-        At first save we fetch the limits/baselines from the corresponding
-        tables.
-
+        At save we fetch the limits/baselines from the corresponding tables.
         This assumes that said tables are pre-populated, which should happen
         in practice. Otherwise, this method might be triggered by other means.
+
+        We may also fetch the limits/baselines data without having first saved
+        the instance. In this case the is_article5 parameter is used.
         """
-        # Get the party's characteristics for this specific reporting period
-        party = PartyHistory.objects.get(
-            party=self.party, reporting_period=self.reporting_period
-        )
+        # If this instance had already been saved, the is_article5 field should
+        # already be populated with a coherent value.
+        # If the instance has not been saved (as in the case of non-persistent
+        # instances used to generate on-the-fly data), then use the
+        # externally-provided parameter.
+        if self.is_article5 is None:
+            self.is_article5 = is_article5
 
         # Populate limits
         for limit in Limit.objects.filter(
@@ -553,30 +568,26 @@ class ProdCons(BaseProdCons):
                 self.limit_bdn = limit.limit
 
         # Populate baselines; first get appropriate baseline types
-        if party.is_article5:
-            prod_bt = BaselineType.objects.get(name='A5Prod')
-            cons_bt = BaselineType.objects.get(name='A5Cons')
+        if self.is_article5:
+            prod_bt = 'A5Prod'
+            cons_bt = 'A5Cons'
             # Non-existent name
             bdn_bt = None
         else:
-            prod_bt = BaselineType.objects.get(name='NA5Prod')
-            cons_bt = BaselineType.objects.get(name='NA5Cons')
-            bdn_bt = BaselineType.objects.get(name='BDN_NA5')
+            prod_bt = 'NA5Prod'
+            cons_bt = 'NA5Cons'
+            bdn_bt = 'BDN_NA5'
 
-        baselines = Baseline.objects.filter(
+        for baseline in Baseline.objects.filter(
             party=self.party,
             group=self.group
-        )
-        prod = baselines.filter(baseline_type=prod_bt).first()
-        cons = baselines.filter(baseline_type=cons_bt).first()
-        bdn = baselines.filter(baseline_type=bdn_bt).first()
-
-        if prod:
-            self.baseline_prod = prod.baseline
-        if cons:
-            self.baseline_cons = cons.baseline
-        if bdn:
-            self.baseline_bdn = bdn.baseline
+        ).values('baseline_type__name', 'baseline'):
+            if baseline['baseline_type__name'] == prod_bt:
+                self.baseline_prod = baseline['baseline']
+            if baseline['baseline_type__name'] == cons_bt:
+                self.baseline_cons = baseline['baseline']
+            if baseline['baseline_type__name'] == bdn_bt:
+                self.baseline_bdn = baseline['baseline']
 
     def save(self, *args, **kwargs):
         """

@@ -191,7 +191,18 @@ class AggregationMixin:
             potential_field = 'substance__gwp'
         elif group.is_odp:
             potential_field = 'substance__odp'
+        return cls._get_fields_sum_by_group_and_field(
+            submission, group, field_names, potential_field
+        )
 
+    @classmethod
+    def get_fields_sum_for_gwp_baseline(cls, submission, group, field_names):
+        return cls._get_fields_sum_by_group_and_field(
+            submission, group, field_names, 'substance__gwp_baseline'
+        )
+
+    @classmethod
+    def _get_fields_sum_by_group_and_field(cls, submission, group, field_names, potential_field):
         # This works both faster and more correctly than using Django's
         # aggregations!
         # One SQL query for all fields.
@@ -339,7 +350,34 @@ class AggregationMixin:
                 aggregation.save()
 
     @classmethod
+    def get_aggregated_data_gwp_baseline(cls, submission, reported_groups):
+        """
+        Similar to get_aggregated_data,
+        but instead of ODP/GWP compute everything using substance.gwp_baseline
+        """
+        return cls._get_aggregated_data(
+            submission,
+            reported_groups,
+            cls.get_fields_sum_for_gwp_baseline
+        )
+
+    @classmethod
     def get_aggregated_data(cls, submission, reported_groups):
+        """
+        reported_groups: mapping of form:
+        {
+            group: ProdCons instance,
+            ...
+        }
+        """
+        return cls._get_aggregated_data(
+            submission,
+            reported_groups,
+            cls.get_fields_sum_by_group
+        )
+
+    @classmethod
+    def _get_aggregated_data(cls, submission, reported_groups, field_getter):
         """
         reported_groups: mapping of form:
         {
@@ -349,6 +387,14 @@ class AggregationMixin:
         """
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
+
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals() and
+        # is_article5 to populate_limits_and_baselines().
+        # The submission's party_history property is cached.
+        ph = submission.party_history
+        is_article5 = ph.is_article5 if ph else None
+        is_eu_member = ph.is_eu_member if ph else None
 
         # Aggregations are unique per Party/Period/AnnexGroup. We need to
         # iterate over the substance groups in this submission.
@@ -363,7 +409,7 @@ class AggregationMixin:
                 )
                 reported_groups[group] = aggregation
 
-            values = cls.get_fields_sum_by_group(
+            values = field_getter(
                 submission, group, cls.AGGREGATION_MAPPING.keys()
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
@@ -376,8 +422,11 @@ class AggregationMixin:
                 setattr(aggregation, aggr_field, value)
 
             # Populate limits and baselines; calculate totals
-            aggregation.populate_limits_and_baselines()
-            aggregation.calculate_totals()
+            # Because these aggregation entries have not been written to the DB,
+            # the values for aggregation.is_article5 and is_eu_member are not
+            # correct and need to be passed as parameters.
+            aggregation.populate_limits_and_baselines(is_article5)
+            aggregation.calculate_totals(is_eu_member)
 
     @classmethod
     def get_aggregated_mt_data(cls, submission, queryset, reported_substances):
@@ -390,6 +439,12 @@ class AggregationMixin:
         """
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
+
+        # Since the ProdConsMT entries created here are not persisted, we need
+        # to pass the value of is_eu_member to calculate_totals().
+        # The submission's party_history property is cached.
+        ph = submission.party_history
+        is_eu_member = ph.is_eu_member if ph else None
 
         for entry in queryset:
             # Add entry to dictionary if necessary
@@ -414,7 +469,7 @@ class AggregationMixin:
                 value += model_value
                 setattr(aggregation, aggr_field, value)
 
-            aggregation.calculate_totals()
+            aggregation.calculate_totals(is_eu_member)
 
 
 class BaseReport(models.Model):

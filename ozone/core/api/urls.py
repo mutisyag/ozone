@@ -37,6 +37,13 @@ router.register(r"users", views.UserViewSet)
 router.register(r"obligations", views.ObligationViewSet)
 
 router.register(r"aggregations", views.AggregationViewSet)
+router.register(r"aggregations-mt", views.AggregationMTViewSet)
+router.register(
+    r"aggregations-destruction", views.AggregationDestructionViewSet
+)
+router.register(
+    r"aggregations-destruction-mt", views.AggregationDestructionMTViewSet
+)
 router.register(r"limits", views.LimitViewSet)
 
 router.register(r"critical-use-categories", views.CriticalUseCategoryViewSet)

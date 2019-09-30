@@ -32,9 +32,13 @@ class Command(BaseCommand):
             for _period in ReportingPeriod.objects.all()
         }
         self.parties = {
-            _party.abbr if _party.abbr != 'EU' else 'ECE': _party.id
+            _party.abbr: _party.id
             for _party in Party.objects.all()
         }
+        # Append legacy EU code
+        self.parties.update({
+            'ECE': Party.objects.get(abbr='EU').id
+        })
         self.groups = {
             _group.group_id: _group.id
             for _group in Group.objects.all()
