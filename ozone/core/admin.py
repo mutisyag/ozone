@@ -1,4 +1,5 @@
 import uuid
+import tempfile
 
 import adminactions.actions as actions
 
@@ -16,10 +17,9 @@ from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
 from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
+from django.http import FileResponse
 
 from ozone.core.export.submissions import export_submissions
-from ozone.core.utils.tempfiles import capture_temp_file
-from ozone.core.utils.tempfiles import django_file_response
 
 # Register your models here.
 from .models import (
@@ -48,7 +48,6 @@ from .models import (
     PartyRatification,
     PartyDeclaration,
     ExemptionApproved,
-    Nomination,
     CriticalUseCategory,
     ApprovedCriticalUse,
     ObligationTypes,
@@ -451,11 +450,13 @@ class SubmissionAdmin(admin.ModelAdmin):
 
     def export_legacy_xlsx(self, request, queryset):
         data = export_submissions(queryset)
-
-        with capture_temp_file('legacy_submissions.xlsx') as (path, output):
-            data.dump_xlsx(path)
-
-        return django_file_response(output)
+        output = tempfile.NamedTemporaryFile()
+        data.dump_xlsx(output.name)
+        return FileResponse(
+            output,
+            as_attachment=True,
+            filename='legacy_submissions.xlsx',
+        )
 
     export_legacy_xlsx.short_description = "Export legaxy XLSX"
 
