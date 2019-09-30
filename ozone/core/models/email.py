@@ -25,18 +25,23 @@ class Email(models.Model):
         null=True, on_delete=models.SET_NULL,
     )
 
-    def send_email(self):
+    def send_email(self, attachments=[]):
         email = EmailMultiAlternatives(
             subject=self.subject,
             body=self.body,
             from_email=self.from_email,
             to=self.to,
-            cc=self.cc
+            cc=self.cc,
+            attachments=attachments,
         )
         email.send()
 
     def __str__(self):
         return f"Email for {self.submission}"
+
+    # TODO save the attachments somehow?
+    attachments = []
+    generated_attachments = []
 
 
 class EmailTemplate(models.Model):

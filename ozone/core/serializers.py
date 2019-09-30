@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+import mimetypes
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -75,6 +76,7 @@ from .models import (
     MultilateralFund,
 )
 from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
+from .models.report import Reports
 
 User = get_user_model()
 
@@ -1819,7 +1821,24 @@ class LimitSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class EmailAttachment(serializers.Serializer):
+
+    id = serializers.CharField()
+
+    class Meta:
+        fields = "__all__"
+
+
+def guess_mimetype(filename, default='application/octet-stream'):
+    return mimetypes.guess_type(filename)[0] or default
+
+
 class EmailSerializer(serializers.ModelSerializer):
+
+    # TODO maybe unify attachment types?
+    attachments = serializers.ListField(child=EmailAttachment())
+    generated_attachments = serializers.ListField(child=EmailAttachment())
+
     class Meta:
         model = Email
         exclude = ('submission',)
@@ -1833,7 +1852,18 @@ class EmailSerializer(serializers.ModelSerializer):
             cc=validated_data['cc'],
             submission=self.context['submission']
         )
-        email.send_email()
+
+        attachments = []
+        for attachment in validated_data['attachments']:
+            a = EmailTemplateAttachment.objects.get(pk=attachment['id'])
+            with a.file.open('rb') as f:
+                data = f.read()
+            mime_type = guess_mimetype(a.filename)
+            attachments.append((a.filename, data, mime_type))
+
+        # TODO generated_attachments
+
+        email.send_email(attachments)
         email.save()
         return email
 
@@ -1848,10 +1878,20 @@ class EmailTemplateAttachmentSerializer(serializers.ModelSerializer):
 class EmailTemplateSerializer(serializers.ModelSerializer):
 
     attachments = EmailTemplateAttachmentSerializer(many=True, read_only=True)
+    generated_attachments = serializers.ReadOnlyField(default=[
+        {
+            'id': Reports.ART7_RAW.value,
+            'filename': 'art7raw_{party}_{period}.pdf',
+        },
+        {
+            'id': Reports.PRODCONS.value,
+            'filename': 'prodcons_{party}_{period}.pdf',
+        },
+    ])
 
     class Meta:
         model = EmailTemplate
-        fields = ['id', 'name', 'subject', 'description', 'attachments']
+        fields = "__all__"
 
 
 class FocalPointSerializer(serializers.ModelSerializer):
