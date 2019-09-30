@@ -77,11 +77,7 @@
       <b-button-group class="pull-right actions mt-2 mb-2">
         <b-btn
           variant="outline-dark"
-          @click="$store.dispatch('downloadStuff',
-						{
-							url: `${submission}export_pdf/`,
-							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period}.pdf`
-						})"
+          @click="checkIfSaved('exportPDF')"
         >Export as PDF</b-btn>
         <b-btn v-if="$store.state.current_submission.is_versionable" @click="$refs.history_modal.show()" variant="outline-dark">
           <span v-translate>Versions</span>
@@ -153,6 +149,7 @@ import SubmissionInfo from '@/components/common/SubmissionInfo.vue'
 import Files from '@/components/common/Files'
 import { getInstructions, cloneSubmission } from '@/components/common/services/api'
 import Save from '@/components/raf/Save'
+import SaveWatcher from '@/components/common/SaveWatcher'
 import SubmissionHistory from '@/components/common/SubmissionHistory.vue'
 import { getLabels } from '@/components/raf/dataDefinitions/labels'
 import TabTitleWithLoader from '@/components/common/TabTitleWithLoader'
@@ -175,6 +172,7 @@ export default {
     data: null,
     submission: String
   },
+  mixins: [SaveWatcher],
 
   created() {
     this.updateBreadcrumbs()
@@ -248,6 +246,23 @@ export default {
         if (result) {
           this.$router.push({ name: 'Dashboard' })
         }
+      })
+    },
+    async checkIfSaved(callback) {
+      const unsavedTabs = Object.values(this.$store.state.form.tabs).filter(tab => [false, 'edited'].includes(tab.status))
+      if (unsavedTabs.length) {
+        const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You have unsaved changes in the data form. Do you wish to save before continuing ?', $gettext: this.$gettext })
+        if (confirmed) {
+          this.triggerSave(this[callback])
+        }
+      } else {
+        this[callback]()
+      }
+    },
+    exportPDF() {
+      this.$store.dispatch('downloadStuff', {
+        url: `${this.submission}export_pdf/`,
+        fileName: `${this.$store.state.current_submission.obligation} - ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]} - ${this.$store.state.current_submission.reporting_period}.pdf`
       })
     }
   },
