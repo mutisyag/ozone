@@ -1,6 +1,5 @@
 from contextlib import contextmanager
-from io import BytesIO
-from tempfile import TemporaryDirectory
+import tempfile
 from pathlib import Path
 import mimetypes
 
@@ -18,9 +17,9 @@ def capture_temp_file(name):
     output.name == 'myfile.txt'
     output.read() == b'hello world'
     """
-    with TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / name
-        output = BytesIO()
+        output = tempfile.TemporaryFile()
         output.name = name
 
         yield path, output
