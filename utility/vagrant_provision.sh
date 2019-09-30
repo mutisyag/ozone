@@ -61,13 +61,16 @@ pidof tusd && echo "tusd already running" || (
 
 
 (
-  echo "Installing Python dependencies"
+  echo "Installing Python dependencies and preparing database"
   set -x
 
   sudo pip3 install -q -r requirements/tests.txt
 
   python3 manage.py migrate
   python3 manage.py load_initial_fixtures
+
+  cd utility
+  ./setup_backend.sh
 )
 
 
