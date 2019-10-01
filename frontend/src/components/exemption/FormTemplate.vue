@@ -190,6 +190,15 @@ export default {
     }
   },
 
+  computed: {
+    tableEmptyText() {
+      if (this.readOnly) {
+        return this.$gettext('This table shows substances and amounts once the secretariat processes your submission')
+      }
+      return this.$gettext('Please use the form on the right sidebar to add substances')
+    }
+  },
+
   props: {
     readOnly: Boolean
   },

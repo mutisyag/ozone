@@ -64,7 +64,7 @@ import { getAlerts } from '@/components/common/dataDefinitions/alerts'
 export default {
 
   props: {
-    tabName: String,
+    tabName: String
   },
 
   components: {
