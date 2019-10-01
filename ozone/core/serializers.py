@@ -1823,15 +1823,6 @@ class LimitSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EmailAttachment(serializers.Serializer):
-
-    source = serializers.CharField()
-    id = serializers.CharField()
-
-    class Meta:
-        fields = "__all__"
-
-
 def guess_mimetype(filename, default='application/octet-stream'):
     return mimetypes.guess_type(filename)[0] or default
 
@@ -1840,10 +1831,18 @@ def generate_report(report, submission):
     party = submission.party
     period = submission.reporting_period
 
+    filename = f"{report}_{party.abbr}_{period.name}.pdf"
+
     if report == Reports.ART7_RAW.value:
         art7 = Obligation.objects.get(
             _obligation_type=ObligationTypes.ART7.value)
         data = export_pdf.export_submissions(art7, [submission])
+        return {
+            'title': Reports.art7_raw_info()['display_name'],
+            'filename': filename,
+            'data': data.getvalue(),
+            'mime_type': 'application/pdf',
+        }
 
     elif report == Reports.PRODCONS.value:
         data = export_pdf.export_prodcons(
@@ -1851,19 +1850,20 @@ def generate_report(report, submission):
             periods=None,
             parties=None,
         )
+        return {
+            'title': Reports.prodcons_info()['display_name'],
+            'filename': filename,
+            'data': data.getvalue(),
+            'mime_type': 'application/pdf',
+        }
 
     else:
         raise ValueError(f"Unknown report type {report!r}")
 
-    filename = f"{report}_{party.abbr}_{period.name}.pdf"
-    mime_type = 'application/pdf'
-
-    return (filename, data.getvalue(), mime_type)
-
 
 class EmailSerializer(serializers.ModelSerializer):
 
-    attachments = serializers.ListField(child=EmailAttachment())
+    attachments = serializers.ListField(child=serializers.JSONField())
 
     class Meta:
         model = Email
@@ -1871,15 +1871,6 @@ class EmailSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         submission = self.context['submission']
-
-        email = Email(
-            subject=validated_data['subject'],
-            body=validated_data['body'],
-            to=validated_data['to'],
-            from_email=validated_data['from_email'],
-            cc=validated_data['cc'],
-            submission=submission,
-        )
 
         attachments = []
         for attachment in validated_data['attachments']:
@@ -1890,7 +1881,12 @@ class EmailSerializer(serializers.ModelSerializer):
                 with a.file.open('rb') as f:
                     data = f.read()
                 mime_type = guess_mimetype(a.filename)
-                attachments.append((a.filename, data, mime_type))
+                attachments.append({
+                    'title': a.title,
+                    'filename': a.filename,
+                    'data': data,
+                    'mime_type': mime_type,
+                })
 
             elif source == 'generate_report':
                 report = generate_report(attachment['id'], submission)
@@ -1899,7 +1895,27 @@ class EmailSerializer(serializers.ModelSerializer):
             else:
                 raise ValueError(f"Unknown email attachment source {source!r}")
 
-        email.send_email(attachments)
+        email = Email(
+            subject=validated_data['subject'],
+            body=validated_data['body'],
+            to=validated_data['to'],
+            from_email=validated_data['from_email'],
+            cc=validated_data['cc'],
+            submission=submission,
+            attachments=[{
+                'title': a['title'],
+                'size': len(a['data']),
+                'filename': a['filename'],
+                'mime_type': a['mime_type'],
+            } for a in attachments],
+        )
+
+        mime_attachments = [
+            (a['filename'], a['data'], a['mime_type'])
+            for a in attachments
+        ]
+
+        email.send_email(mime_attachments)
         email.save()
         return email
 

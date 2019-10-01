@@ -1,6 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 
 from .reporting import Submission
@@ -24,24 +24,21 @@ class Email(models.Model):
         Submission, related_name='emails',
         null=True, on_delete=models.SET_NULL,
     )
+    attachments = JSONField(default=list)
 
-    def send_email(self, attachments=None):
+    def send_email(self, mime_attachments=None):
         email = EmailMultiAlternatives(
             subject=self.subject,
             body=self.body,
             from_email=self.from_email,
             to=self.to,
             cc=self.cc,
-            attachments=attachments,
+            attachments=mime_attachments,
         )
         email.send()
 
     def __str__(self):
         return f"Email for {self.submission}"
-
-    # TODO save the attachments somehow?
-    attachments = []
-    generated_attachments = []
 
 
 class EmailTemplate(models.Model):
