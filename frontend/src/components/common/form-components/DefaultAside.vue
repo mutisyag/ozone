@@ -6,13 +6,13 @@
         <template slot="title">
           <span v-translate>Substances</span>
         </template>
-        <add :disabled="disabled" :tabName="tabName"></add>
+        <add :tabName="tabName"></add>
       </b-tab>
       <b-tab v-if="hasBlends && $store.getters.can_edit_data">
         <template slot="title">
           <span v-translate>Mixtures</span>
         </template>
-        <AddBlend :disabled="disabled" :tabName="tabName"></AddBlend>
+        <AddBlend :tabName="tabName"></AddBlend>
       </b-tab>
       <b-tab :title-link-class="validationLength > 0 ? {} : null">
         <template slot="title">
@@ -97,8 +97,7 @@ export default {
   props: {
     hovered: null,
     tabName: String,
-    parentTabIndex: Number,
-    disabled: Boolean
+    parentTabIndex: Number
   },
 
   watch: {

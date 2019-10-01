@@ -20,7 +20,6 @@
           trackBy="value"
           v-model="selected_groups.selected"
           :options="selected_groups.options"
-          :disabled="disabled"
         />
       </b-input-group>
       <b-input-group id="substance_selector" class="mb-2 mt-2" :prepend="$gettext('Substances')">
@@ -35,7 +34,6 @@
           v-model="selected_substance.selected"
           @change="updateGroup($event)"
           :options="selected_substance.options"
-          :disabled="disabled"
         />
       </b-input-group>
       <b-btn-group>
@@ -67,7 +65,6 @@ export default {
 
   props: {
     tabName: String,
-    disabled: Boolean
   },
 
   components: {
