@@ -25,7 +25,7 @@ class Email(models.Model):
         null=True, on_delete=models.SET_NULL,
     )
 
-    def send_email(self, attachments=[]):
+    def send_email(self, attachments=None):
         email = EmailMultiAlternatives(
             subject=self.subject,
             body=self.body,
