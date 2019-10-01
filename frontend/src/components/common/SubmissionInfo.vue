@@ -96,7 +96,7 @@
                 <div class="d-flex" v-for="order in blank_flags" :key="order">
                     <fieldGenerator
                       :fieldInfo="{index:order, tabName: flags_info.name, field:order}"
-                      :disabled="$store.getters.transitionState"
+                      :disabled="$store.getters.transitionState || (is_secretariat && is_submitted && created_by_party)"
                       :field="flags_info.form_fields[order]"
                       :id="order"
                     ></fieldGenerator>
@@ -227,6 +227,12 @@ export default {
     is_data_entry() {
       this.info.form_fields.current_state.selected = this.$store.state.current_submission.current_state === 'data_entry'
       return this.$store.state.current_submission.current_state === 'data_entry'
+    },
+    is_submitted() {
+      return this.$store.state.current_submission.current_state === 'submitted'
+    },
+    created_by_party() {
+      return this.$store.state.current_submission.created_by !== 'secretariat'
     }
   },
 
