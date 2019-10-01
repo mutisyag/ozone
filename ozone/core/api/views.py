@@ -6,6 +6,7 @@ from pathlib import Path
 import logging
 import urllib.parse
 import os
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -168,6 +169,7 @@ from ..serializers import (
     MultilateralFundSerializer,
     EssentialCriticalSerializer,
     EssentialCriticalDetailedSerializer,
+    EssentialCriticalMTDetailedSerializer,
 )
 
 
@@ -597,7 +599,7 @@ def populate_aggregation(aggregation, fields, to_add):
                 field,
                 None if all([a[field] is None for a in to_add]) else
                 round_decimal_half_up(
-                    sum([a[field] or 0 for a in to_add]),
+                    sum([a[field] or Decimal(0) for a in to_add]),
                     2
                 )
             )
@@ -2449,6 +2451,30 @@ class EssentialCriticalFilterSet(filters.FilterSet):
     )
 
 
+def populate_essencrit_aggregation(aggregation, to_add, odp_tons):
+    """
+    Helper function to populate an aggregation's fields based on a list
+    of dictionaries containing key-value pairs for those fields.
+    """
+    essential_use_quantities = [
+        (a['quantity'] or Decimal(0)) * (a['substance__odp'] if odp_tons else Decimal(1))
+        for a in to_add
+        if not a['substance__has_critical_uses']
+    ]
+    aggregation['quantity_essential'] = round_decimal_half_up(
+        sum(essential_use_quantities), 2
+    ) if essential_use_quantities else None
+
+    critical_use_quantities = [
+        (a['quantity'] or Decimal(0)) * (a['substance__odp'] if odp_tons else Decimal(1))
+        for a in to_add
+        if a['substance__has_critical_uses']
+    ]
+    aggregation['quantity_critical'] = round_decimal_half_up(
+        sum(critical_use_quantities), 2
+    ) if critical_use_quantities else None
+
+
 class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ExemptionApproved.objects.all().prefetch_related(
         'submission__party', 'submission__reporting_period',
@@ -2473,6 +2499,9 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
     )
     pagination_class = EssentialCriticalPaginator
 
+    # Custom class attribute needed for list() to properly work
+    odp_tons = True
+
     def get_queryset(self):
         return ExemptionApproved.objects.all().prefetch_related(
             'submission__party', 'submission__reporting_period',
@@ -2480,30 +2509,6 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         )
 
     def list(self, request, *args, **kwargs):
-
-        def populate_aggregation(aggregation, to_add):
-            """
-            Helper function to populate an aggregation's fields based on a list
-            of dictionaries containing key-value pairs for those fields.
-            """
-            essential_use_quantities = [
-                (a['quantity'] or 0) * a['substance__odp']
-                for a in to_add
-                if not a['substance__has_critical_uses']
-            ]
-            aggregation['quantity_essential'] = round_decimal_half_up(
-                sum(essential_use_quantities), 2
-            ) if essential_use_quantities else None
-
-            critical_use_quantities = [
-                (a['quantity'] or 0) * a['substance__odp']
-                for a in to_add
-                if a['substance__has_critical_uses']
-            ]
-            aggregation['quantity_critical'] = round_decimal_half_up(
-                sum(critical_use_quantities), 2
-            ) if critical_use_quantities else None
-
         # First filter queryset according to params
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -2552,7 +2557,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                     'party': None,
                     'group': None,
                 })
-                populate_aggregation(ret, to_add)
+                populate_essencrit_aggregation(ret, to_add, self.odp_tons)
                 data.append(ret)
             elif 'group' in aggregates:
                 for party in parties:
@@ -2567,7 +2572,9 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                             'party': party,
                             'group': None,
                         })
-                        populate_aggregation(ret, entries)
+                        populate_essencrit_aggregation(
+                            ret, entries, self.odp_tons
+                        )
                         data.append(ret)
             elif 'party' in aggregates:
                 for group in groups:
@@ -2582,9 +2589,22 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
                             'party': None,
                             'group': group,
                         })
-                        populate_aggregation(ret, entries)
+                        populate_essencrit_aggregation(
+                            ret, entries, self.odp_tons
+                        )
                         data.append(ret)
 
         return Response(
             EssentialCriticalSerializer(data, many=True).data
         )
+
+
+class EssentialCriticalMTViewSet(EssentialCriticalViewSet):
+    """
+    The same information as in the EssentialCriticalViewSet, but given in
+    metric tons.
+    """
+    serializer_class = EssentialCriticalMTDetailedSerializer
+
+    # Custom class attribute needed for list() to properly work
+    odp_tons = False

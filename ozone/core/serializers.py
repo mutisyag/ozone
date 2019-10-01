@@ -1953,6 +1953,10 @@ class MultilateralFundSerializer(serializers.ModelSerializer):
 
 
 class EssentialCriticalSerializer(serializers.Serializer):
+    """
+    This is used to serialize aggregated essencrit data; which means that the
+    quantities for each entry have already been converted to ODP tons.
+    """
     reporting_period = serializers.IntegerField()
     party = serializers.IntegerField()
     group = serializers.IntegerField()
@@ -1971,6 +1975,8 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
     Used for serializing more detailed information about approved exemptions
     (to be used when presenting them non-aggregated), keeping with the format
     of EssentialCriticalSerializer.
+    The quantities are presented in ODP tons (as is also the case with
+    aggregated data).
     """
     reporting_period = serializers.IntegerField(
         source='submission.reporting_period.id', read_only=True
@@ -1992,6 +1998,21 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
             'substance', 'quantity_essential', 'quantity_critical'
         )
 
+    def get_quantity_essential(self, obj):
+        return obj.quantity * obj.substance.odp \
+            if obj.substance.has_critical_uses else None
+
+    def get_quantity_critical(self, obj):
+        return obj.quantity * obj.substance.odp \
+            if (not obj.substance.has_critical_uses) else None
+
+
+class EssentialCriticalMTDetailedSerializer(
+    EssentialCriticalDetailedSerializer
+):
+    """
+    The serializerReturns the essencrit quantities in metric tons.
+    """
     def get_quantity_essential(self, obj):
         return obj.quantity if obj.substance.has_critical_uses else None
 

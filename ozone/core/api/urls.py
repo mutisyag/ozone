@@ -61,6 +61,7 @@ router.register(r"plans-of-action", views.PlanOfActionViewSet)
 router.register(r"change-history", views.SubmissionChangeViewSet)
 
 router.register(r"essencrit", views.EssentialCriticalViewSet)
+router.register(r"essencrit-mt", views.EssentialCriticalMTViewSet)
 
 # Submissions
 submissions_router = routers.SimpleRouter()
