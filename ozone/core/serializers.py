@@ -1825,6 +1825,7 @@ class LimitSerializer(serializers.ModelSerializer):
 
 class EmailAttachment(serializers.Serializer):
 
+    source = serializers.CharField()
     id = serializers.CharField()
 
     class Meta:
@@ -1862,9 +1863,7 @@ def generate_report(report, submission):
 
 class EmailSerializer(serializers.ModelSerializer):
 
-    # TODO maybe unify attachment types?
     attachments = serializers.ListField(child=EmailAttachment())
-    generated_attachments = serializers.ListField(child=EmailAttachment())
 
     class Meta:
         model = Email
@@ -1884,14 +1883,21 @@ class EmailSerializer(serializers.ModelSerializer):
 
         attachments = []
         for attachment in validated_data['attachments']:
-            a = EmailTemplateAttachment.objects.get(pk=attachment['id'])
-            with a.file.open('rb') as f:
-                data = f.read()
-            mime_type = guess_mimetype(a.filename)
-            attachments.append((a.filename, data, mime_type))
+            source = attachment['source']
 
-        for attachment in validated_data['generated_attachments']:
-            attachments.append(generate_report(attachment['id'], submission))
+            if source == 'email_template_attachment':
+                a = EmailTemplateAttachment.objects.get(pk=attachment['id'])
+                with a.file.open('rb') as f:
+                    data = f.read()
+                mime_type = guess_mimetype(a.filename)
+                attachments.append((a.filename, data, mime_type))
+
+            elif source == 'generate_report':
+                report = generate_report(attachment['id'], submission)
+                attachments.append(report)
+
+            else:
+                raise ValueError(f"Unknown email attachment source {source!r}")
 
         email.send_email(attachments)
         email.save()
@@ -1900,9 +1906,11 @@ class EmailSerializer(serializers.ModelSerializer):
 
 class EmailTemplateAttachmentSerializer(serializers.ModelSerializer):
 
+    source = serializers.ReadOnlyField(default='email_template_attachment')
+
     class Meta:
         model = EmailTemplateAttachment
-        fields = ['id', 'filename']
+        fields = ['id', 'filename', 'title', 'source']
 
 
 class EmailTemplateSerializer(serializers.ModelSerializer):
@@ -1912,10 +1920,14 @@ class EmailTemplateSerializer(serializers.ModelSerializer):
         {
             'id': Reports.ART7_RAW.value,
             'filename': 'art7raw_{party}_{period}.pdf',
+            'title': Reports.art7_raw_info()['display_name'],
+            'source': 'generate_report',
         },
         {
             'id': Reports.PRODCONS.value,
             'filename': 'prodcons_{party}_{period}.pdf',
+            'title': Reports.prodcons_info()['display_name'],
+            'source': 'generate_report',
         },
     ])
 
