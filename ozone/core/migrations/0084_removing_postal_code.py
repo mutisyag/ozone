@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_postal_code_to_address),
+        migrations.RunPython(move_postal_code_to_address, elidable=True),
         migrations.RemoveField(
             model_name='submissioninfo',
             name='postal_code',

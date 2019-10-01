@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             field=models.CharField(max_length=5, null=True),
             preserve_default=False,
         ),
-        migrations.RunPython(add_language_codes),
+        migrations.RunPython(add_language_codes, elidable=True),
         migrations.AlterField(
             model_name='language',
             name='iso',

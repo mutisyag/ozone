@@ -19,5 +19,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_nomination_filled_to_processing),
+        migrations.RunPython(move_nomination_filled_to_processing, elidable=True),
     ]

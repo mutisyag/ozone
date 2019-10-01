@@ -19,5 +19,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(move_accelerated_to_default),
+        migrations.RunPython(move_accelerated_to_default, elidable=True),
     ]

@@ -39,5 +39,5 @@ class Migration(migrations.Migration):
             name='is_default_secretariat',
             field=models.BooleanField(default=False),
         ),
-        migrations.RunPython(update_reporting_channels),
+        migrations.RunPython(update_reporting_channels, elidable=True),
     ]

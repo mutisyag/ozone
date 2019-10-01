@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
             name='country_fk',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='infos', to='core.Party'),
         ),
-        migrations.RunPython(link_parties),
+        migrations.RunPython(link_parties, elidable=True),
     ]
