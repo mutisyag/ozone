@@ -25,5 +25,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(populate_prodcons_flags),
+        migrations.RunPython(populate_prodcons_flags, elidable=True),
     ]

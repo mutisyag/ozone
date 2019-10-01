@@ -21,5 +21,5 @@ class Migration(migrations.Migration):
             name='type',
             field=models.CharField(choices=[('Zeotrope', 'ZEOTROPE'), ('Azeotrope', 'AZEOTROPE'), ('Methyl bromide', 'MeBr'), ('Other', 'OTHER'), ('Custom', 'CUSTOM')], max_length=128),
         ),
-        migrations.RunPython(migrate_custom_blends)
+        migrations.RunPython(migrate_custom_blends, elidable=True)
     ]

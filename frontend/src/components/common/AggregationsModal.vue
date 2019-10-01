@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-btn class="square-right" @click="checkIfSaved()" variant="outline-dark" v-translate>Calculated amounts</b-btn>
+    <b-btn class="square-right" @click="checkIfSaved('getAggregations')" variant="outline-dark" v-translate>Calculated amounts</b-btn>
     <b-modal id="aggregationModal" size="xl" ref="aggregationModal">
       <div slot="modal-title">
         <span v-translate>Calculated production and consumption</span> - {{ $store.state.initialData.display.countries[$store.state.current_submission.party] }} - {{ $store.state.current_submission.reporting_period }}
@@ -9,11 +9,7 @@
       <div slot="modal-footer">
         <b-btn
           variant="outline-dark mr-2"
-          @click="$store.dispatch('downloadStuff',
-						{
-							url: `${submission}export_prodcons_pdf/`,
-							fileName: `${$store.state.current_submission.obligation} - ${$store.state.initialData.display.countries[$store.state.current_submission.party]} - ${$store.state.current_submission.reporting_period} - production & consumption.pdf`
-						})"
+          @click="exportPDF"
          v-translate>Export PDF</b-btn>
         <b-btn @click="$refs.aggregationModal.hide()" variant="outline-danger" v-translate>Close</b-btn>
       </div>
@@ -50,20 +46,26 @@ export default {
     }
   },
   methods: {
-    async checkIfSaved() {
+    async checkIfSaved(callback) {
       if (this.unsaved) {
         const confirmed = await this.$store.dispatch('openConfirmModal', { title: 'Please confirm', description: 'You have unsaved changes in the data form. Do you wish to save before continuing ?', $gettext: this.$gettext })
         if (confirmed) {
-          this.triggerSave(this.getAggregations())
+          this.triggerSave(this[callback])
         }
       } else {
-        this.getAggregations()
+        this[callback]()
       }
     },
     async getAggregations() {
       const aggregations = await getSubmissionAggregations(this.submission)
       this.aggregations = aggregations.data
       this.$refs.aggregationModal.show()
+    },
+    async exportPDF() {
+      this.$store.dispatch('downloadStuff', {
+        url: `${this.submission}export_prodcons_pdf/`,
+        fileName: `${this.$store.state.current_submission.obligation} - ${this.$store.state.initialData.display.countries[this.$store.state.current_submission.party]} - ${this.$store.state.current_submission.reporting_period} - production & consumption.pdf`
+      })
     }
   }
 }

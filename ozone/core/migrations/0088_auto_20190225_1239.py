@@ -47,5 +47,5 @@ class Migration(migrations.Migration):
             name='type_of_use',
             field=models.ForeignKey(default=1, on_delete=django.db.models.deletion.PROTECT, to='core.RAFTypeOfUse'),
         ),
-        migrations.RunPython(load_essen_crit_types),
+        migrations.RunPython(load_essen_crit_types, elidable=True),
     ]

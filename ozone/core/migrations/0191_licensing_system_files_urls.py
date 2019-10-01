@@ -5,10 +5,6 @@ import django.db.models.deletion
 import ozone.core.models.country_profile
 
 
-def dummy_upload_to(instance, filename):
-    return filename
-
-
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -20,7 +16,7 @@ class Migration(migrations.Migration):
             name='LicensingSystemFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file', models.FileField(upload_to=dummy_upload_to)),
+                ('file', models.FileField()),
                 ('licensing_system', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='files', to='core.LicensingSystem')),
             ],
         ),

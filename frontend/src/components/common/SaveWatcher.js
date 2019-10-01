@@ -12,7 +12,9 @@ const saveWatcher = {
       const watcher = this.$watch('saved', (newVal, oldVal) => {
         if (oldVal !== newVal && newVal !== -1) {
           this.$store.commit('removeSaveSuccess', this._uid)
-          callFunctionAfterSaveisDone
+          if (callFunctionAfterSaveisDone instanceof Function) {
+            callFunctionAfterSaveisDone()
+          }
           // remove the watcher
           watcher()
         }

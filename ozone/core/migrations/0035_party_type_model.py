@@ -107,7 +107,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=256, unique=True)),
             ],
         ),
-        migrations.RunPython(populate_party_type),
+        migrations.RunPython(populate_party_type, elidable=True),
         migrations.AddField(
             model_name='partyhistory',
             name='is_article5',
@@ -125,7 +125,7 @@ class Migration(migrations.Migration):
             name='party_type',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='party_histories', to='core.PartyType'),
         ),
-        migrations.RunPython(migrate_party_history_party_type),
+        migrations.RunPython(migrate_party_history_party_type, elidable=True),
         migrations.RemoveField(
             model_name='partyhistory',
             name='party_type_old',

@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(remove_unk_and_czs),
-        migrations.RunPython(refresh_fixtures),
+        migrations.RunPython(remove_unk_and_czs, elidable=True),
+        migrations.RunPython(refresh_fixtures, elidable=True),
     ]

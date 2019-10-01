@@ -19,5 +19,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(replace_eu_code),
+        migrations.RunPython(replace_eu_code, elidable=True),
     ]

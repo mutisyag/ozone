@@ -2,18 +2,19 @@
   <div class="row justify-content-center">
     <b-card class="col-md-6" v-if="userProfile">
       <b-input-group class="mb-2" :prepend="$gettext('First name')">
-        <input class="form-control" v-model="userProfile.first_name">
+        <input :readonly="readonly" class="form-control" v-model="userProfile.first_name">
       </b-input-group>
       <b-input-group class="mb-2" :prepend="$gettext('Last name')">
-        <input class="form-control" v-model="userProfile.last_name">
+        <input :readonly="readonly" class="form-control" v-model="userProfile.last_name">
       </b-input-group>
       <b-input-group class="mb-2" :prepend="$gettext('Email')">
-        <input class="form-control" v-model="userProfile.email">
+        <input :readonly="readonly" class="form-control" v-model="userProfile.email">
       </b-input-group>
       <b-input-group class="mb-2" :prepend="$gettext('Language')">
         <multiselect
           trackBy="value"
           label="text"
+          :disabled="readonly"
           :hide-selected="true"
           v-model="userProfile.language"
           :options="availableLanguages"
@@ -41,8 +42,14 @@
         </b>
       </b-input-group>
       <b-input-group class="mb-2">
-        <b-button variant="primary" @click="save()">
-          <span v-translate>Save</span>
+        <b-button v-if="readonly" class="mr-2" variant="primary" @click="edit()">
+          <span>{{ $gettext('Edit') }}</span>
+        </b-button>
+        <b-button v-if="!readonly" class="mr-2" variant="primary" @click="save()">
+          <span>{{ $gettext('Save') }}</span>
+        </b-button>
+        <b-button v-if="!readonly" class="mr-2" variant="danger" @click="cancel()">
+          <span>{{ $gettext('Cancel') }}</span>
         </b-button>
       </b-input-group>
     </b-card>
@@ -58,7 +65,8 @@ export default {
   },
   data() {
     return {
-      userProfile: null
+      userProfile: null,
+      readonly: true
     }
   },
   async created() {
@@ -81,8 +89,18 @@ export default {
     }
   },
   methods: {
+    edit() {
+      this.readonly = false
+    },
     save() {
       this.$store.dispatch('updateCurrentUser', { user: this.userProfile, $gettext: this.$gettext })
+      this.readonly = true
+    },
+    cancel() {
+      this.userProfile = {
+        ...this.$store.state.currentUser
+      }
+      this.readonly = true
     }
   }
 }
