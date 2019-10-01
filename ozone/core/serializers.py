@@ -1847,8 +1847,8 @@ def generate_report(report, submission):
     elif report == Reports.PRODCONS.value:
         data = export_pdf.export_prodcons(
             submission=submission,
-            periods=[period],
-            parties=[party],
+            periods=None,
+            parties=None,
         )
 
     else:
