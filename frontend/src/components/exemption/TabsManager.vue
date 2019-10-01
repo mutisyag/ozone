@@ -45,6 +45,7 @@
               <tab-title-with-loader :tab="$store.state.form.tabs[tabId]"/>
             </template>
             <FormTemplate
+              :readOnly="!is_secretariat"
               :tabId="$store.state.form.formDetails.tabsDisplay.indexOf(tabId)"
               :tabIndex="tabIndex"
               :tabName="tabId"

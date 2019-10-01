@@ -6,6 +6,6 @@ export default {
   mixins: [DefaultAside],
   components: {
     add: Add
-  }
+  },
 }
 </script>

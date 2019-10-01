@@ -44,7 +44,7 @@
           </template>
           <template v-slot:cell(checkForDelete)="cell">
             <fieldGenerator
-              v-show="$store.getters.can_edit_data"
+              v-show="$store.getters.can_edit_data && !readOnly"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:'checkForDelete'}"
               :field="cell.item.originalObj.checkForDelete"
             />
@@ -57,17 +57,17 @@
               :key="`${cell.item.index}_${inputField}_${tabName}`"
               :fieldInfo="{index:cell.item.index,tabName: tabName, field:inputField}"
               :field="cell.item.originalObj[inputField]"
-              :disabled="!$store.getters.can_edit_data"
+              :disabled="!$store.getters.can_edit_data || readOnly"
             />
           </template>
 
           <template v-slot:cell(validation)="cell">
             <b-btn-group class="row-controls">
               <span  @click="createModalData(cell.item.originalObj, cell.item.index)">
-               <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data, 'fa-eye': !$store.getters.can_edit_data}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
+               <i :class="{'fa-pencil-square-o': $store.getters.can_edit_data && !readOnly, 'fa-eye': !$store.getters.can_edit_data || readOnly}" class="fa fa-lg"  v-b-tooltip :title="$gettext('Edit')"></i>
               </span>
               <span
-                v-if="$store.getters.can_edit_data"
+                v-if="$store.getters.can_edit_data && !readOnly"
                 @click="remove_field(cell.item.index)"
                 class="table-btn"
               >
@@ -102,7 +102,7 @@
     </div>
     <hr>
     <AppAside
-      v-if="$store.getters.can_edit_data || validationLength"
+      v-if="($store.getters.can_edit_data || validationLength) && !readOnly"
       fixed
     >
       <DefaultAside
@@ -139,7 +139,7 @@
               class="mb-2"
               @input="updateFormField($event, {index:modal_data.index,tabName: tabName, field:'substance'})"
               trackBy="value"
-              :disabled="!$store.getters.can_edit_data"
+              :disabled="!$store.getters.can_edit_data || readOnly"
               :hide-selected="true"
               label="text"
               :placeholder="$gettext('Select substance')"
@@ -156,7 +156,7 @@
             <b-col>
               <fieldGenerator
                 :fieldInfo="{index:modal_data.index, tabName: tabName, field:modalField}"
-                :disabled="!$store.getters.can_edit_data"
+                :disabled="!$store.getters.can_edit_data || readOnly"
                 :field="modal_data.field[modalField]"
               />
             </b-col>
@@ -191,7 +191,7 @@ export default {
   },
 
   props: {
-    hasDisabledFields: Boolean
+    readOnly: Boolean
   },
 
   created() {
