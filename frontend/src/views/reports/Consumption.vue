@@ -217,7 +217,7 @@ export default {
     sortings(el) {
       this.tableOptions.params.page = null
       this.canRequest = false
-      this.tableOptions.params.ordering = el.sortDesc ? `-${el.sorting.sortBy}` : el.sorting.sortBy
+      this.tableOptions.params.ordering = el.sortDesc ? `-${el.sortBy}` : el.sortBy
       this.getItems()
     },
     onResetFilters() {
