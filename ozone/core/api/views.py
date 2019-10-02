@@ -697,7 +697,13 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         )
                         populate_aggregation(aggregation, fields, entries)
                         values.append(aggregation)
-            if substance_to_group is True:
+            elif substance_to_group is True:
+                # This is used to aggregate MT values (in which entries are per
+                # substance) into entries that contain total values for each
+                # group (as this is what the endpoint should actually list).
+                # It is only done when no other aggregation is performed, as
+                # any of the above aggregations will already have converted
+                # the per-substance entries to per-group entries.
                 for group in groups:
                     for party in parties:
                         entries = [
