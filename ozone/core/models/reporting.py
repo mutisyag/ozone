@@ -56,7 +56,7 @@ class ModifyPreventionMixin:
         return [
             # Secretariat remarks can be changed
             # at any time, while the party remarks cannot.
-            "remarks_os"
+            "remarks_os",
         ]
 
     def clean(self):
@@ -1125,6 +1125,10 @@ class Submission(models.Model):
             "pa_uses_reported_remarks_secretariat",
             "reporting_channel_id",
             "submitted_at",
+            # Since various fields on the submission can be changed even after
+            # submit (based on other checks), updated_at needs to be always
+            # update-able.
+            "updated_at",
         ]
 
     @staticmethod
