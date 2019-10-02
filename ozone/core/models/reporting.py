@@ -764,13 +764,11 @@ class Submission(models.Model):
                 transitions.append(transition.name)
         return transitions
 
-    @transaction.atomic
     def call_transition(self, trans_name, user):
         """
         Interface for calling a specific transition name on the workflow.
 
-        It automatically persists the previous and new states, by saving the
-        entire instance!
+        It automatically persists the previous and current states.
 
         """
         # Call this now so we don't recreate the self.workflow object ad nauseam
