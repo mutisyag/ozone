@@ -919,7 +919,7 @@ class Submission(models.Model):
         ]
         if len(wrongly_modified_flags) > 0:
             raise ValidationError({
-                field: [_('User do not have permission to change this flag.')]
+                field: [_('User does not have permission to change this flag.')]
                 for field in wrongly_modified_flags
             })
         return True
@@ -986,7 +986,7 @@ class Submission(models.Model):
 
         if len(wrongly_modified_remarks) > 0:
             raise ValidationError({
-                field: [_('User do not have permission to change this remark.')]
+                field: [_('User does not have permission to change this remark.')]
                 for field in wrongly_modified_remarks
             })
         return True

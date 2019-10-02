@@ -77,6 +77,7 @@
                     :disabled="$store.getters.transitionState"
                     :field="flags_info.form_fields[order]"
                     :id="order"
+                    @change="setTabStatus"
                   ></fieldGenerator>
                   <label style="margin-left: -3px" :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
                     <div
@@ -99,6 +100,7 @@
                       :disabled="$store.getters.transitionState || (is_secretariat && is_submitted && created_by_party)"
                       :field="flags_info.form_fields[order]"
                       :id="order"
+                      @change="setTabStatus"
                     ></fieldGenerator>
                     <label style="margin-left: -3px" :class="{'muted': flags_info.form_fields[order].disabled}" :for="order">
                       <div
@@ -137,6 +139,7 @@
                       :disabled="$store.getters.transitionState"
                       :field="flags_info.form_fields[order]"
                       :id="order"
+                      @change="setTabStatus"
                     ></fieldGenerator>
                   </span>
                   <span>
@@ -263,6 +266,14 @@ export default {
         return true
       }
       return !this.$store.getters.can_edit_data
+    },
+    setTabStatus(fieldInfo) {
+      //  Set flags tab status when flag is ticked
+      if (fieldInfo && fieldInfo.tabName === 'flags') {
+        if (this.$store.state.current_submission.changeable_flags.includes(fieldInfo.index)) {
+          this.$store.commit('setTabStatus', { tab: fieldInfo.tabName, value: 'edited' })
+        }
+      }
     }
   },
   watch: {

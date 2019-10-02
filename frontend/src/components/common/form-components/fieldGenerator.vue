@@ -194,6 +194,7 @@ export default {
     },
 
     updateFormFieldWithTabs(event) {
+      this.$emit('change', this.fieldInfo)
       this.$store.commit('updateFormField', { value: event, fieldInfo: this.fieldInfo })
     },
     updateFormFieldQuestionnaire(event) {

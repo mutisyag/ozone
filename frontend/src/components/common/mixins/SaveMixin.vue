@@ -174,7 +174,13 @@ export default {
               resolve()
               return
             }
-            current_tab_data[key] = tab.form_fields[key].selected
+            if (tab.name === 'flags') {
+              if (this.$store.state.current_submission.changeable_flags.includes(key)) {
+                current_tab_data[key] = tab.form_fields[key].selected
+              }
+            } else {
+              current_tab_data[key] = tab.form_fields[key].selected
+            }
             if (tab.form_fields[key].type === 'date') {
               current_tab_data[key] = dateFormatToYYYYMMDD(current_tab_data[key], this.$language.current)
             }
