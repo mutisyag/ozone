@@ -19,7 +19,7 @@ from rest_framework.authtoken.models import Token
 from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 
-from ozone.core.export.submissions import export_submissions
+from ozone.core.export.submissions import export_submissions, ExportError
 
 # Register your models here.
 from .models import (
@@ -449,7 +449,12 @@ class SubmissionAdmin(admin.ModelAdmin):
         obj.delete()
 
     def export_legacy_xlsx(self, request, queryset):
-        data = export_submissions(queryset)
+        try:
+            data = export_submissions(queryset)
+        except ExportError as e:
+            self.message_user(request, e, messages.ERROR)
+            return
+
         output = tempfile.NamedTemporaryFile()
         data.dump_xlsx(output.name)
         return FileResponse(

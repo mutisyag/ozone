@@ -1,6 +1,11 @@
 from collections import defaultdict
+
 from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+from django.utils.translation import gettext_lazy as _
+
 from ozone.core.utils.spreadsheet import OzoneSpreadsheet, OzoneTable
+
 
 tz_default = timezone.get_default_timezone()
 tz_utc = timezone.utc
@@ -16,6 +21,10 @@ def substance_or_blend_id(row):
     if row.blend:
         return row.blend.legacy_blend_id
     raise RuntimeError("Neither substance nor blend? What is this sorcery?")
+
+
+class ExportError(RuntimeError):
+    """ Error during export """
 
 
 def export_overall(queryset):
@@ -40,7 +49,11 @@ def export_overall(queryset):
 
     def rows():
         for submission in queryset:
-            article7questionnaire = submission.article7questionnaire
+            try:
+                article7questionnaire = submission.article7questionnaire
+            except ObjectDoesNotExist:
+                raise ExportError(_(f"{submission!r} has no questionnaire"))
+
             yield {
                 'CntryID':  submission.party.abbr,
                 'PeriodID': submission.reporting_period.name,
