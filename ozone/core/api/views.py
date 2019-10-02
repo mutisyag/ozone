@@ -747,8 +747,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AggregationMTViewSet(AggregationViewSet):
     # This view displays Metric Tons data for all annex groups
-    # TODO: prefetch_related?
-    queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
+    queryset = ProdConsMT.objects.filter(
+        party=F('party__parent_party')
+    ).prefetch_related(
+        'substance__group'
+    )
     serializer_class = AggregationMTSerializer
 
     filterset_class = AggregationMTViewFilterSet
@@ -770,7 +773,6 @@ class AggregationMTViewSet(AggregationViewSet):
         Need to override, since these are actually serialized as "normal"
         ProdCons objects (instead of ProdConsMT).
         """
-        # TODO: proper filterset, based on substance__group!
         queryset = self.filter_queryset(self.get_queryset())
 
         # Handle aggregation
