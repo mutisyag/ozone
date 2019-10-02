@@ -82,7 +82,9 @@ class File(models.Model):
     name = models.CharField(max_length=512)
 
     file = models.FileField(
-        upload_to=get_storage_directory, null=True, blank=True
+        upload_to=get_storage_directory,
+        max_length=1024,
+        null=True, blank=True,
     )
 
     tus_id = models.CharField(max_length=32, blank=True, null=True)
@@ -124,7 +126,9 @@ class SubmissionFile(File):
     )
 
     file = models.FileField(
-        upload_to=get_storage_directory, null=True, blank=True
+        upload_to=get_storage_directory,
+        max_length=1024,
+        null=True, blank=True,
     )
 
     tracker = FieldTracker()
