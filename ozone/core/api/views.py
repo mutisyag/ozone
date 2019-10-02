@@ -533,13 +533,6 @@ class BaseAggregationViewFilterSet(filters.FilterSet):
         field_name="party__subregion_id",
         help_text="Filter by party's subregion_id",
     )
-    ordering = filters.OrderingFilter(
-        fields=(
-            ('reporting_period__start_date', 'reporting_period'),
-            ('party__name', 'party'),
-            ('group__group_id', 'group'),
-        )
-    )
 
 
 class AggregationViewFilterSet(BaseAggregationViewFilterSet):
@@ -562,14 +555,15 @@ class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
     """
     The Aggregation view can be filtered & ordered based on Annex Group
     """
-    substance = MultiValueNumberFilter(
-        "substance", help_text="Filter by Substance ID"
+    group = MultiValueNumberFilter(
+        field_name="substance__group",
+        help_text="Filter by Group ID"
     )
     ordering = filters.OrderingFilter(
         fields=(
             ('reporting_period__start_date', 'reporting_period'),
             ('party__name', 'party'),
-            ('substance__substance_id', 'substance'),
+            ('substance__group_id', 'group'),
         )
     )
 
@@ -636,7 +630,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     # Custom class attributes needed for our custom list() implementation to
     # work properly in subclasses
     model_class = ProdCons
-    group_or_substance = 'group'
+    group_field = 'group'
 
     def get_queryset(self):
         return ProdCons.objects.filter(
@@ -644,6 +638,88 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         ).exclude(
             group__annex__annex_id='F'
         )
+
+    def list_aggregated_data(
+        self, queryset, aggregates, substance_to_group=False
+    ):
+        fields = [
+            f.name for f in self.model_class._meta.fields
+            if isinstance(f, DecimalField)
+        ]
+        # Using `distinct()` does not work because this queryset is
+        # ordered by fields from related models, which makes similar
+        # values seem distinct.
+        periods = set(
+            queryset.values_list('reporting_period', flat=True)
+        )
+        groups = set(
+            queryset.values_list(self.group_field, flat=True)
+        )
+        parties = set(queryset.values_list('party', flat=True))
+        all_values = queryset.values(
+            *fields, 'party', 'reporting_period', self.group_field
+        )
+        values = []
+        for period in periods:
+            # Use a list of dictionaries for in-memory storage to optimize
+            # DB queries.
+            values_list = [
+                value for value in all_values
+                if value['reporting_period'] == period
+            ]
+            if 'party' in aggregates and 'group' in aggregates:
+                # Sum values for all groups/substances and all parties
+                # for this reporting period.
+                aggregation = ProdCons(reporting_period_id=period)
+                populate_aggregation(aggregation, fields, values_list)
+                values.append(aggregation)
+            elif 'party' in aggregates:
+                for group in groups:
+                    entries = [
+                        value for value in values_list
+                        if value[self.group_field] == group
+                    ]
+                    if entries:
+                        aggregation = ProdCons(
+                            group_id=group, reporting_period_id=period
+                        )
+                        populate_aggregation(aggregation, fields, entries)
+                        values.append(aggregation)
+            elif 'group' in aggregates:
+                for party in parties:
+                    entries = [
+                        value for value in values_list
+                        if value['party'] == party
+                    ]
+                    if entries:
+                        aggregation = ProdCons(
+                            party_id=party, reporting_period_id=period
+                        )
+                        populate_aggregation(aggregation, fields, entries)
+                        values.append(aggregation)
+            if substance_to_group is True:
+                for group in groups:
+                    for party in parties:
+                        entries = [
+                            value for value in values_list
+                            if (
+                                value[self.group_field] == group
+                                and value['party'] == party
+                            )
+                        ]
+                        if entries:
+                            aggregation = ProdCons(
+                                party_id=party,
+                                group_id=group,
+                                reporting_period_id=period
+                            )
+                            populate_aggregation(aggregation, fields, entries)
+                            values.append(aggregation)
+
+        # Aggregating disables pagination. However that is ok given the
+        # small number of results that will be returned.
+        # Ordering is also lost due to the use of set().
+        return Response(AggregationSerializer(values, many=True).data)
 
     def list(self, request, *args, **kwargs):
         """
@@ -656,72 +732,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
         if aggregates:
-            fields = [
-                f.name for f in self.model_class._meta.fields
-                if isinstance(f, DecimalField)
-            ]
-            # Using `distinct()` does not work because this queryset is
-            # ordered by fields from related models, which makes similar
-            # values seem distinct.
-            periods = set(
-                queryset.values_list('reporting_period', flat=True)
+            return self.list_aggregated_data(
+                queryset, aggregates, substance_to_group=False
             )
-            all_values = queryset.values(
-                *fields, 'party', 'reporting_period', self.group_or_substance
-            )
-            values = []
-            for period in periods:
-                # Use a list of dictionaries for in-memory storage to optimize
-                # DB queries.
-                values_list = [
-                    value for value in all_values
-                    if value['reporting_period'] == period
-                ]
-                if (
-                    'party' in aggregates
-                    and self.group_or_substance in aggregates
-                ):
-                    # Sum values for all groups/substances and all parties
-                    # for this reporting period.
-                    aggregation = self.model_class(reporting_period_id=period)
-                    populate_aggregation(aggregation, fields, values_list)
-                    values.append(aggregation)
-                elif 'party' in aggregates:
-                    groups_or_subs = set(
-                        queryset.values_list(self.group_or_substance, flat=True)
-                    )
-                    for g_or_s in groups_or_subs:
-                        entries = [
-                            value for value in values_list
-                            if value[self.group_or_substance] == g_or_s
-                        ]
-                        if entries:
-                            g_or_s_query = {
-                                f'{self.group_or_substance}_id': g_or_s
-                            }
-                            aggregation = self.model_class(
-                                **g_or_s_query, reporting_period_id=period
-                            )
-                            populate_aggregation(aggregation, fields, entries)
-                            values.append(aggregation)
-                elif self.group_or_substance in aggregates:
-                    parties = set(queryset.values_list('party', flat=True))
-                    for party in parties:
-                        entries = [
-                            value for value in values_list
-                            if value['party'] == party
-                        ]
-                        if entries:
-                            aggregation = self.model_class(
-                                party_id=party, reporting_period_id=period
-                            )
-                            populate_aggregation(aggregation, fields, entries)
-                            values.append(aggregation)
-
-            # Aggregating disables pagination. However that is ok given the
-            # small number of results that will be returned.
-            # Ordering is also lost due to the use of set().
-            return Response(self.serializer_class(values, many=True).data)
 
         page = self.paginate_queryset(queryset)
         if page is not None:
@@ -734,19 +747,38 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
 class AggregationMTViewSet(AggregationViewSet):
     # This view displays Metric Tons data for all annex groups
+    # TODO: prefetch_related?
     queryset = ProdConsMT.objects.filter(party=F('party__parent_party'))
     serializer_class = AggregationMTSerializer
 
     filterset_class = AggregationMTViewFilterSet
-    ordering = ("-reporting_period__start_date", "party",)
+    search_fields = (
+        "party__name", "reporting_period__name"
+    )
+    ordering = ("-reporting_period__start_date", "party", "substance__group")
 
     # Custom class attributes needed for our custom list() implementation to
     # work properly in subclasses
     model_class = ProdConsMT
-    group_or_substance = 'substance'
+    group_field = 'substance__group'
 
     def get_queryset(self):
         return ProdConsMT.objects.filter(party=F('party__parent_party'))
+
+    def list(self, request, *args, **kwargs):
+        """
+        Need to override, since these are actually serialized as "normal"
+        ProdCons objects (instead of ProdConsMT).
+        """
+        # TODO: proper filterset, based on substance__group!
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Handle aggregation
+        aggregates = request.query_params.get('aggregation', None)
+        aggregates = aggregates.split(',') if aggregates else []
+        return self.list_aggregated_data(
+            queryset, aggregates, substance_to_group=True
+        )
 
 
 class AggregationDestructionViewFilterSet(BaseAggregationViewFilterSet):
