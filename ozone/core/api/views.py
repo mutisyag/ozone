@@ -752,12 +752,17 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class AggregationMTViewSet(AggregationViewSet):
-    # This view displays Metric Tons data for all annex groups
+    """
+    This view displays Metric Tons data for all annex groups.
+    """
     queryset = ProdConsMT.objects.filter(
         party=F('party__parent_party')
     ).prefetch_related(
         'substance__group'
     )
+    # Actually, in all use cases of this ViewSet, everything will be serialized
+    # through the AggregationSerializer. However, we need this here to avoid
+    # errors in Django's magic inner workings.
     serializer_class = AggregationMTSerializer
 
     filterset_class = AggregationMTViewFilterSet
