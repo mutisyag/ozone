@@ -56,7 +56,7 @@ class ModifyPreventionMixin:
         return [
             # Secretariat remarks can be changed
             # at any time, while the party remarks cannot.
-            "remarks_os"
+            "remarks_os",
         ]
 
     def clean(self):
@@ -768,8 +768,7 @@ class Submission(models.Model):
         """
         Interface for calling a specific transition name on the workflow.
 
-        It automatically persists the previous and new states, by saving the
-        entire instance!
+        It automatically persists the previous and current states.
 
         """
         # Call this now so we don't recreate the self.workflow object ad nauseam
@@ -807,7 +806,7 @@ class Submission(models.Model):
         # If everything went OK, persist the result and the transition.
         self._previous_state = self._current_state
         self._current_state = workflow.state.name
-        self.save()
+        self.save(update_fields=('_previous_state', '_current_state',))
 
     def is_submittable(self):
         """
@@ -1126,6 +1125,10 @@ class Submission(models.Model):
             "pa_uses_reported_remarks_secretariat",
             "reporting_channel_id",
             "submitted_at",
+            # Since various fields on the submission can be changed even after
+            # submit (based on other checks), updated_at needs to be always
+            # update-able.
+            "updated_at",
         ]
 
     @staticmethod
@@ -1331,9 +1334,9 @@ class Submission(models.Model):
             )
             for version in versions:
                 version.flag_superseded = True
-                version.save()
+                version.save(update_fields=('flag_superseded',))
             self.flag_superseded = False
-            self.save()
+            self.save(update_fields=('flag_superseded',))
 
         # Populate submission-specific aggregated data
         self.fill_aggregated_data()
@@ -1366,7 +1369,7 @@ class Submission(models.Model):
             latest = versions.first()
             if latest:
                 latest.flag_superseded = False
-                latest.save()
+                latest.save(update_fields=('flag_superseded',))
 
         # Populate submission-specific aggregated data. Kept out of the atomic
         # block due to execution time.
@@ -1467,7 +1470,7 @@ class Submission(models.Model):
         """
         if self.flag_has_reported_f is True and self.date_reported_f is None:
             self.date_reported_f = timezone.now().date()
-            self.save()
+            self.save(update_fields=('flag_has_reported_f',))
 
     def check_submitted_at_modified(self):
         if 'submitted_at' in self.tracker.changed().keys():
@@ -1738,8 +1741,10 @@ class Submission(models.Model):
         super().clean()
 
     @transaction.atomic
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
+    def save(
+        self,
+        force_insert=False, force_update=False, using=None, update_fields=None
+    ):
         # Several actions need to be performed on first save
         # No need to check `update_fields`, since this is the first
         # save. If other fields are changed during an update, they
@@ -1874,7 +1879,7 @@ class Submission(models.Model):
 
     def set_submitted(self):
         self.submitted_at = timezone.now().date()
-        self.save()
+        self.save(update_fields=('submitted_at',))
 
 
 class SubmissionFormat(models.Model):
