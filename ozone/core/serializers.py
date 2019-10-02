@@ -1786,7 +1786,6 @@ class AggregationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ProdCons
-        # This will be served through a different serializer
         exclude = ('destroyed', )
 
 
