@@ -58,29 +58,31 @@ export default {
     validation() {
       this.invalidTabs = []
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
-      for (const tab of tabsToValidate) {
-        // DO NOT REMOVE THIS
-        console.log(this.$store.getters.multiRowValidation(tab), tab)
-        if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
-          this.invalidTabs.push(this.form.tabs[tab].name)
-          this.$store.commit('setTabStatus', { tab, value: false })
-          this.resetActionToDispatch()
-        }
-        if (Array.isArray(this.form.tabs[tab].form_fields)) {
-          for (const field of this.form.tabs[tab].form_fields) {
-            if (field.validation.selected.length) {
-              this.invalidTabs.push(this.form.tabs[tab].name)
-              this.$store.commit('setTabStatus', { tab, value: false })
-              this.resetActionToDispatch()
-              break
-            }
-          }
-        } else {
-          console.log(this.form.tabs[tab].form_fields.validation.selected.length)
-          if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
+      if (this.$store.state.dataForAction && this.$store.state.dataForAction.transition === 'submit') {
+        for (const tab of tabsToValidate) {
+          // DO NOT REMOVE THIS
+          console.log(this.$store.getters.multiRowValidation(tab), tab)
+          if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
             this.invalidTabs.push(this.form.tabs[tab].name)
             this.$store.commit('setTabStatus', { tab, value: false })
             this.resetActionToDispatch()
+          }
+          if (Array.isArray(this.form.tabs[tab].form_fields)) {
+            for (const field of this.form.tabs[tab].form_fields) {
+              if (field.validation.selected.length) {
+                this.invalidTabs.push(this.form.tabs[tab].name)
+                this.$store.commit('setTabStatus', { tab, value: false })
+                this.resetActionToDispatch()
+                break
+              }
+            }
+          } else {
+            console.log(this.form.tabs[tab].form_fields.validation.selected.length)
+            if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
+              this.invalidTabs.push(this.form.tabs[tab].name)
+              this.$store.commit('setTabStatus', { tab, value: false })
+              this.resetActionToDispatch()
+            }
           }
         }
       }
