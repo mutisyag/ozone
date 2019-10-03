@@ -35,9 +35,16 @@ class Command(BaseCommand):
         self.wb = None
         self.parties = {_party.name: _party for _party in Party.objects.all()}
         self.parties_abbr = {
-            _party.abbr if _party.abbr != 'EU' else 'ECE': _party
+            _party.abbr: _party
             for _party in Party.objects.all()
         }
+        try:
+            self.parties_abbr.update({
+                'ECE': Party.objects.get(abbr='EU')
+            })
+        except Party.DoesNotExist:
+            # can happen when running tests which invoke this command
+            pass
         self.periods = {
             _period.name: _period
             for _period in ReportingPeriod.objects.all()
@@ -173,7 +180,16 @@ class Command(BaseCommand):
     def _process_licensing_system_data(self, row):
         entry = self.get_licensing_system_data(row)
 
-        LicensingSystem.objects.create(**entry)
+        # Make sure the existing entries are not duplicated
+        # and links/files are preserved
+
+        obj, created = LicensingSystem.objects.get_or_create(
+            party_id=entry['party_id']
+        )
+        if not created:
+            for attr, value in entry.items():
+                setattr(obj, attr, value)
+                obj.save()
         logger.info("Licensing system for %s imported", row['CntryID'])
         return True
 
@@ -192,7 +208,7 @@ class Command(BaseCommand):
         return {
             "party_id": party.id,
             "has_ods": has_ods,
-            "has_hfc": has_hfc,
+            "has_hfc": has_hfc or bool(row["HFCLicSysRepDate"]),
             "date_reported_hfc": row["HFCLicSysRepDate"],
             "remarks": row["HFCLicSysSummary"] if row["HFCLicSysSummary"] else ""
         }
