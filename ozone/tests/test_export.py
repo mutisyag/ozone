@@ -2,6 +2,7 @@ from decimal import Decimal as D
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from django.contrib.auth.hashers import Argon2PasswordHasher
+from django.test import tag
 from ozone.core.management.commands import import_submissions
 from ozone.core.management.commands import export_submissions
 from ozone.core.utils.spreadsheet import OzoneSpreadsheet
@@ -131,6 +132,7 @@ class ExportTest(BaseTests):
         factories.ReportingChannelFactory(name="Legacy")
         factories.ObligationFactory(pk=1)
 
+    @tag('export')
     def test_export_submissions_imports(self):
         in_path = examples / 'art7_submissions.xlsx'
         in_data = OzoneSpreadsheet.from_xlsx(in_path)

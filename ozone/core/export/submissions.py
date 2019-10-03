@@ -1,10 +1,10 @@
 from collections import defaultdict
 
 from django.utils import timezone
-from django.core.exceptions import ObjectDoesNotExist
 from django.utils.translation import gettext_lazy as _
 
 from ozone.core.utils.spreadsheet import OzoneSpreadsheet, OzoneTable
+from ozone.core.models import ObligationTypes
 
 
 tz_default = timezone.get_default_timezone()
@@ -49,45 +49,69 @@ def export_overall(queryset):
 
     def rows():
         for submission in queryset:
-            try:
-                article7questionnaire = submission.article7questionnaire
-            except ObjectDoesNotExist:
-                raise ExportError(_(f"{submission!r} has no questionnaire"))
+
+            # Filter out non-art7 submissions
+            if submission.obligation._obligation_type not in (
+                ObligationTypes.ART7.value, None
+            ):
+                # TODO: fix test fixtures?
+                # why _obligation_type is None when running tests
+                continue
+
+            art7questionnaire = (
+                submission.article7questionnaire
+                if hasattr(submission, 'article7questionnaire')
+                else None
+            )
+
+            submission_format = (
+                submission.info.submission_format.name
+                if submission.info and submission.info.submission_format
+                else None
+            )
+
+            def _to_int(instance, flag_name):
+                # use this instead of int because some flags are optional
+                return None if (
+                    instance is None or
+                    not hasattr(instance, flag_name) or
+                    getattr(instance, flag_name) is None
+                ) else int(getattr(instance, flag_name))
 
             yield {
                 'CntryID':  submission.party.abbr,
                 'PeriodID': submission.reporting_period.name,
                 'DataID':   0,
 
-                'Imported':       int(article7questionnaire.has_imports),
-                'Exported':       int(article7questionnaire.has_exports),
-                'Produced':       int(article7questionnaire.has_produced),
-                'Destroyed':      int(article7questionnaire.has_destroyed),
-                'NonPartyTrade':  int(article7questionnaire.has_nonparty),
-                'Emitted':        int(article7questionnaire.has_emissions),
+                'Imported':       _to_int(art7questionnaire, 'has_imports'),
+                'Exported':       _to_int(art7questionnaire, 'has_exports'),
+                'Produced':       _to_int(art7questionnaire, 'has_produced'),
+                'Destroyed':      _to_int(art7questionnaire, 'has_destroyed'),
+                'NonPartyTrade':  _to_int(art7questionnaire, 'has_nonparty'),
+                'Emitted':        _to_int(art7questionnaire, 'has_emissions'),
                 'DateReported':   submission.submitted_at,
-                'AI_ComplRep':    int(submission.flag_has_reported_a1),
-                'AII_ComplRep':   int(submission.flag_has_reported_a2),
-                'BI_ComplRep':    int(submission.flag_has_reported_b1),
-                'BII_ComplRep':   int(submission.flag_has_reported_b2),
-                'BIII_ComplRep':  int(submission.flag_has_reported_b3),
-                'CI_ComplRep':    int(submission.flag_has_reported_c1),
-                'CII_ComplRep':   int(submission.flag_has_reported_c2),
-                'CIII_ComplRep':  int(submission.flag_has_reported_c3),
-                'EI_ComplRep':    int(submission.flag_has_reported_e),
-                'F_ComplRep':     int(submission.flag_has_reported_f),
-                'Checked_Blanks': int(submission.flag_checked_blanks),
-                'Blanks':         int(submission.flag_has_blanks),
-                'Confirm_Blanks': int(submission.flag_confirmed_blanks),
+                'AI_ComplRep':    _to_int(submission, 'flag_has_reported_a1'),
+                'AII_ComplRep':   _to_int(submission, 'flag_has_reported_a2'),
+                'BI_ComplRep':    _to_int(submission, 'flag_has_reported_b1'),
+                'BII_ComplRep':   _to_int(submission, 'flag_has_reported_b2'),
+                'BIII_ComplRep':  _to_int(submission, 'flag_has_reported_b3'),
+                'CI_ComplRep':    _to_int(submission, 'flag_has_reported_c1'),
+                'CII_ComplRep':   _to_int(submission, 'flag_has_reported_c2'),
+                'CIII_ComplRep':  _to_int(submission, 'flag_has_reported_c3'),
+                'EI_ComplRep':    _to_int(submission, 'flag_has_reported_e'),
+                'F_ComplRep':     _to_int(submission, 'flag_has_reported_f'),
+                'Checked_Blanks': _to_int(submission, 'flag_checked_blanks'),
+                'Blanks':         _to_int(submission, 'flag_has_blanks'),
+                'Confirm_Blanks': _to_int(submission, 'flag_confirmed_blanks'),
 
                 'UserCreate':     None,
                 'UserUpdate':     None,
                 'DateCreate':     fix_tz(submission.created_at),
                 'DateUpdate':     fix_tz(submission.updated_at),
                 'Remark':         remark(submission),
-                'SubmissionType': None,
+                'SubmissionType': submission_format,
                 'TS': None,
-                'HFCDateReported': None,
+                'HFCDateReported': submission.date_reported_f,
             }
 
     return OzoneTable(header, rows())
