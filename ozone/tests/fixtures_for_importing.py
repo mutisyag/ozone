@@ -7,10 +7,12 @@ def get_required_fixtures(data, blend_list):
     party_set = set()
     period_set = set()
     substance_set = set()
+    submission_format_set = set()
 
     for row in data.tables['Overall'].rows:
         party_set.add(row['CntryID'])
         period_set.add(row['PeriodID'])
+        submission_format_set.add(row['SubmissionType'])
 
     for row in data.tables['ImportNew'].rows:
         party_set.add(row['OrgCntryID'])
@@ -35,11 +37,13 @@ def get_required_fixtures(data, blend_list):
         'period_list': sorted(period_set),
         'substance_list': sorted(substance_set - blend_set),
         'blend_list': blend_list,
+        'submission_format_list': sorted(submission_format_set),
     }
 
 
 def create_fixtures(subregion, party_list, period_list,
-                    substance_list, blend_list=[]):
+                    substance_list, blend_list=[],
+                    submission_format_list=[],):
     for abbr in party_list:
         factories.PartyFactory(
             abbr=abbr,
@@ -71,3 +75,8 @@ def create_fixtures(subregion, party_list, period_list,
                     substance_id=substance_id),
                 percentage=percentage,
             )
+
+    for name in submission_format_list:
+        factories.SubmissionFormatFactory(
+            name=name,
+        )
