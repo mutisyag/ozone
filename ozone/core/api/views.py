@@ -600,12 +600,10 @@ def populate_aggregation(aggregation, fields, to_add):
 
 
 class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
-    # Do not present Annex F data in this view, as it is in metric tons, while
-    # data for all other groups is in ODP tons.
+    # Data for this view is in ODP tons for annexes A-E and 
+    # CO2-eq tonnes for annex F
     queryset = ProdCons.objects.filter(
         party=F('party__parent_party')
-    ).exclude(
-        group__annex__annex_id='F'
     )
     serializer_class = AggregationSerializer
 
@@ -635,8 +633,6 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return ProdCons.objects.filter(
             party=F('party__parent_party')
-        ).exclude(
-            group__annex__annex_id='F'
         )
 
     def list_aggregated_data(
@@ -812,9 +808,6 @@ class AggregationDestructionViewSet(AggregationViewSet):
     Overrides the read-only AggregationViewSet to:
     - show only destruction-related information
     - ensure data is not broken down by group
-
-    Will not present Annex F data in this view, as it is in metric tons, while
-    data for all other annex groups is in ODP tons.
     """
     serializer_class = AggregationDestructionSerializer
 
