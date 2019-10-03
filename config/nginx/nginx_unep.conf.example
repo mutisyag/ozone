@@ -1,0 +1,83 @@
+# server_names_hash_bucket_size 128;
+# Uncomment above linke in case the hostname is longer, like
+# ec2-35-158-183-33.eu-central-1.compute.amazonaws.com
+
+upstream app {
+  ip_hash;
+  server localhost:8000;
+}
+upstream tusd {
+  ip_hash;
+  server localhost:8001;
+}
+upstream weblate {
+  ip_hash;
+  server localhost:8002;
+}
+upstream pgadmin {
+  ip_hash;
+  server localhost:8003;
+}
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    ''      close;
+}
+
+server {
+  listen 80;
+  server_name ors.ozone.unep.org;
+  #server_name ors.ozone.unep.org ec2-35-158-183-33.eu-central-1.compute.amazonaws.com;
+  return 301 https://$host$request_uri;
+
+  location /.well-known/acme-challenge/ {
+      root /var/www/html/letsencrypt;
+  }
+
+  access_log /var/log/nginx/access.log main;
+}
+
+server {
+    server_name ors.ozone.unep.org;
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/ors.ozone.unep.org/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/ors.ozone.unep.org/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+   location ~ ^/(admin|api|api-auth|impersonate|o|reset)/ {
+     uwsgi_pass app;
+     include uwsgi_params;
+   }
+
+   location /media/ {
+     location /media/public/ {
+       alias /var/local/ozone/media/public/;
+     }
+     return 404;
+  }
+
+   location /upload/ {
+     proxy_pass http://tusd/;
+   }
+
+   location /pgadmin/ {
+     proxy_pass http://pgadmin/pgadmin/;
+   }
+
+  location / {
+    sendfile on;
+    tcp_nopush on;
+    gzip on;
+    gzip_types text/plain application/x-javascript text/css;
+    expires 1d;
+    location =/index.html {
+      expires off;
+      add_header Cache-Control "no-store, must-revalidate";
+    }
+
+    root /var/local/ozone/webroot/;
+    try_files $uri $uri/ /index.html;
+  }
+  access_log /var/log/nginx/access.log main;
+}
