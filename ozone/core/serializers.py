@@ -1998,12 +1998,22 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
         )
 
     def get_quantity_essential(self, obj):
-        return obj.quantity * obj.substance.odp \
-            if obj.substance.has_critical_uses else None
+        if (
+            obj.substance.has_critical_uses
+            and obj.quantity is not None
+            and obj.substance.odp is not None
+        ):
+            return obj.quantity * obj.substance.odp
+        return None
 
     def get_quantity_critical(self, obj):
-        return obj.quantity * obj.substance.odp \
-            if (not obj.substance.has_critical_uses) else None
+        if (
+            not obj.substance.has_critical_uses
+            and obj.quantity is not None
+            and obj.substance.odp is not None
+        ):
+            return obj.quantity * obj.substance.odp
+        return None
 
 
 class EssentialCriticalMTDetailedSerializer(
