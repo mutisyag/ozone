@@ -36,13 +36,28 @@ router.register(r"periods", views.ReportingPeriodViewSet)
 router.register(r"users", views.UserViewSet)
 router.register(r"obligations", views.ObligationViewSet)
 
-router.register(r"aggregations", views.AggregationViewSet)
-router.register(r"aggregations-mt", views.AggregationMTViewSet)
+# Groups
+router.register(r"groups", views.GroupViewSet, "groups")
 router.register(
-    r"aggregations-destruction", views.AggregationDestructionViewSet
+    r"group-substances", views.GroupSubstanceViewSet, "group-substances"
+)
+
+# Blends
+router.register(r"blends", views.BlendViewSet, "blends")
+
+router.register(r"aggregations", views.AggregationViewSet, "aggregations")
+router.register(
+    r"aggregations-mt", views.AggregationMTViewSet, "aggregations-mt"
 )
 router.register(
-    r"aggregations-destruction-mt", views.AggregationDestructionMTViewSet
+    r"aggregations-destruction",
+    views.AggregationDestructionViewSet,
+    "aggregations-destruction"
+)
+router.register(
+    r"aggregations-destruction-mt",
+    views.AggregationDestructionMTViewSet,
+    "aggregations-destruction-mt"
 )
 router.register(r"limits", views.LimitViewSet)
 
@@ -60,8 +75,10 @@ router.register(r"plans-of-action", views.PlanOfActionViewSet)
 
 router.register(r"change-history", views.SubmissionChangeViewSet)
 
-router.register(r"essencrit", views.EssentialCriticalViewSet)
-router.register(r"essencrit-mt", views.EssentialCriticalMTViewSet)
+router.register(r"essencrit", views.EssentialCriticalViewSet, "essencrit")
+router.register(
+    r"essencrit-mt", views.EssentialCriticalMTViewSet, "essencrit-mt"
+)
 
 # Submissions
 submissions_router = routers.SimpleRouter()
@@ -291,13 +308,6 @@ nested_routers = [
     raf_router,
     email_router,
 ]
-
-# Groups
-router.register(r"groups", views.GroupViewSet)
-router.register(r"group-substances", views.GroupSubstanceViewSet)
-
-# Blends
-router.register(r"blends", views.BlendViewSet, base_name="blends")
 
 # File uploads
 upload_hooks_router = routers.SimpleRouter()
