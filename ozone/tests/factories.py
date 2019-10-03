@@ -1,5 +1,5 @@
 from datetime import datetime
-from factory import SubFactory, post_generation
+from factory import SubFactory, post_generation, LazyAttribute
 from factory.django import DjangoModelFactory
 from django.contrib.auth import get_user_model
 
@@ -9,6 +9,7 @@ from ozone.core.models import (
     BlendComponent,
     Group,
     Meeting,
+    ObligationTypes,
     Obligation,
     Party,
     PartyType,
@@ -172,7 +173,9 @@ class ReporterUserAnotherPartyFactory(DjangoModelFactory):
 
 class ObligationFactory(DjangoModelFactory):
     name = 'Test Obligation'
-    _obligation_type = 'art7'
+    # Weird workaround for the fact that DjangoModelFactory ignores field names
+    # starting with underscore.
+    _obligation_type = LazyAttribute(lambda _o: ObligationTypes.ART7.value)
 
     class Meta:
         model = Obligation

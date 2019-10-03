@@ -1,7 +1,6 @@
 from collections import defaultdict
 
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 from ozone.core.utils.spreadsheet import OzoneSpreadsheet, OzoneTable
 from ozone.core.models import ObligationTypes
@@ -52,10 +51,8 @@ def export_overall(queryset):
 
             # Filter out non-art7 submissions
             if submission.obligation._obligation_type not in (
-                ObligationTypes.ART7.value, None
+                ObligationTypes.ART7.value,
             ):
-                # TODO: fix test fixtures?
-                # why _obligation_type is None when running tests
                 continue
 
             art7questionnaire = (
