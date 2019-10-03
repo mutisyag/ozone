@@ -1300,7 +1300,7 @@ class Submission(models.Model):
         return os.path.join(
             SUBMISSION_ROOT_DIR,
             self.reporting_period.name,
-            self.obligation.name,
+            self.obligation.obligation_type,
             self.party.abbr,
             str(self.version)
         )
