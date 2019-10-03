@@ -38,32 +38,34 @@ server {
 }
 
 server {
-    server_name ors.ozone.unep.org;
-    listen 443 ssl; # managed by Certbot
-    ssl_certificate /etc/letsencrypt/live/ors.ozone.unep.org/fullchain.pem; # managed by Certbot
-    ssl_certificate_key /etc/letsencrypt/live/ors.ozone.unep.org/privkey.pem; # managed by Certbot
-    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
-    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+  server_name ors.ozone.unep.org;
+  listen 443 ssl; # managed by Certbot
+  ssl_certificate /etc/letsencrypt/live/ors.ozone.unep.org/fullchain.pem; # managed by Certbot
+  ssl_certificate_key /etc/letsencrypt/live/ors.ozone.unep.org/privkey.pem; # managed by Certbot
+  include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+  ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 
-   location ~ ^/(admin|api|api-auth|impersonate|o|reset)/ {
-     uwsgi_pass app;
-     include uwsgi_params;
-   }
+  client_max_body_size 0;
 
-   location /media/ {
-     location /media/public/ {
-       alias /var/local/ozone/media/public/;
-     }
-     return 404;
+  location ~ ^/(admin|api|api-auth|impersonate|o|reset)/ {
+    uwsgi_pass app;
+    include uwsgi_params;
   }
 
-   location /upload/ {
-     proxy_pass http://tusd/;
-   }
+  location /media/ {
+    location /media/public/ {
+      alias /var/local/ozone/media/public/;
+    }
+    return 404;
+  }
 
-   location /pgadmin/ {
-     proxy_pass http://pgadmin/pgadmin/;
-   }
+  location /upload/ {
+    proxy_pass http://tusd/;
+  }
+
+  location /pgadmin/ {
+    proxy_pass http://pgadmin/pgadmin/;
+  }
 
   location / {
     sendfile on;
