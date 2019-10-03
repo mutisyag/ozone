@@ -260,6 +260,14 @@ class Substance(models.Model):
             return self.group.annex.annex_id == 'E'
         return False
 
+    @property
+    def odp_or_gwp(self):
+        if self.group and self.group.is_odp:
+            return self.odp
+        if self.group and self.group.is_gwp:
+            return self.gwp
+        return None
+
     def __str__(self):
         return self.name
 

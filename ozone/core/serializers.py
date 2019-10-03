@@ -2001,18 +2001,18 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
         if (
             obj.substance.has_critical_uses
             and obj.quantity is not None
-            and obj.substance.odp is not None
         ):
-            return obj.quantity * obj.substance.odp
+            odp_gwp = obj.substance.odp_or_gwp
+            return obj.quantity * odp_gwp if odp_gwp else None
         return None
 
     def get_quantity_critical(self, obj):
         if (
             not obj.substance.has_critical_uses
             and obj.quantity is not None
-            and obj.substance.odp is not None
         ):
-            return obj.quantity * obj.substance.odp
+            odp_gwp = obj.substance.odp_or_gwp
+            return obj.quantity * odp_gwp if odp_gwp else None
         return None
 
 
