@@ -30,6 +30,7 @@ export default {
       invalidTabs: [],
       tabsToSave: [],
       labels: null,
+      validateBeforeTransitions: ['before-submit'],
       alerts: getAlerts(this.$gettext)
     }
   },
@@ -59,20 +60,18 @@ export default {
       this.invalidTabs = []
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
       for (const tab of tabsToValidate) {
-        if (tab === 'sub_info' || (this.$store.state.dataForAction && this.$store.state.dataForAction.transition === 'submit')) {
+        if (tab === 'sub_info' || (this.$store.state.dataForAction && this.validateBeforeTransitions.includes(this.$store.state.dataForAction.transition))) {
           // DO NOT REMOVE THIS
           console.log(this.$store.getters.multiRowValidation(tab), tab)
           if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
             this.invalidTabs.push(this.form.tabs[tab].name)
             this.$store.commit('setTabStatus', { tab, value: false })
-            this.resetActionToDispatch()
           }
           if (Array.isArray(this.form.tabs[tab].form_fields)) {
             for (const field of this.form.tabs[tab].form_fields) {
               if (field.validation.selected.length) {
                 this.invalidTabs.push(this.form.tabs[tab].name)
                 this.$store.commit('setTabStatus', { tab, value: false })
-                this.resetActionToDispatch()
                 break
               }
             }
@@ -81,15 +80,24 @@ export default {
             if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
               this.invalidTabs.push(this.form.tabs[tab].name)
               this.$store.commit('setTabStatus', { tab, value: false })
-              this.resetActionToDispatch()
             }
           }
         }
       }
       if (this.invalidTabs.length) {
+        let message = { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: Array.from(new Set(this.invalidTabs)).map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] }
+
+        if (this.$store.state.dataForAction && this.validateBeforeTransitions.includes(this.$store.state.dataForAction.transition)) {
+          message = { __all__: [
+            `${this.$gettextInterpolate('Unable to %{nextTransition} submission. Fill in the %{invalidTabs} mandatory fields %{transition}.', {
+              nextTransition: this.$store.state.dataForAction.nextTransition,
+              invalidTabs: Array.from(new Set(this.invalidTabs)).map(tab => this.labels[tab]).join(', '),
+              transition: this.$store.state.dataForAction.transition.split('-').join(' ')
+            })}`] }
+        }
         this.$store.dispatch('setAlert', {
           $gettext: this.$gettext,
-          message: { __all__: [`${this.$gettextInterpolate('Unable to save submission. Fill in the %{invalidTabs}', { invalidTabs: Array.from(new Set(this.invalidTabs)).map(tab => this.labels[tab]).join(', ') })} mandatory fields before saving.`] },
+          message,
           variant: 'danger'
         })
         this.resetActionToDispatch()
