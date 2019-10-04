@@ -191,7 +191,7 @@ class AggregationMixin:
         potential_field = ''
         if baseline is True:
             potential_field = 'substance__gwp_baseline'
-        if group.is_gwp:
+        elif group.is_gwp:
             potential_field = 'substance__gwp'
         elif group.is_odp:
             potential_field = 'substance__odp'
