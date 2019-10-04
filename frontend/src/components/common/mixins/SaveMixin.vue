@@ -58,8 +58,8 @@ export default {
     validation() {
       this.invalidTabs = []
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
-      if (this.$store.state.dataForAction && this.$store.state.dataForAction.transition === 'submit') {
-        for (const tab of tabsToValidate) {
+      for (const tab of tabsToValidate) {
+        if (tab === 'sub_info' || (this.$store.state.dataForAction && this.$store.state.dataForAction.transition === 'submit')) {
           // DO NOT REMOVE THIS
           console.log(this.$store.getters.multiRowValidation(tab), tab)
           if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
