@@ -631,8 +631,9 @@ class Command(BaseCommand):
         return func, periods
 
     def _prod_cons_gwp(self, party, group, period_name, prod_or_cons):
-        """ Normally should be invoked only for groups A/I (CFC) and C/I (HCFC)
-            prod_or_cons should be 'PROD' or 'CONS'
+        """
+        Normally should be invoked only for groups A/I (CFC) and C/I (HCFC).
+        prod_or_cons should be 'PROD' or 'CONS'.
         """
         prodcons = self._get_prodcons(party, group, period_name)
         if not prodcons:
@@ -640,7 +641,7 @@ class Command(BaseCommand):
 
         submission_id = prodcons.submissions.get('art7')[0]
         submission = Submission.objects.get(pk=submission_id)
-        agg = submission.get_aggregated_data_gwp_baseline().get(group)
+        agg = submission.get_aggregated_data(baseline=True).get(group)
         if prod_or_cons == 'PROD':
             return agg.calculated_production
         else:

@@ -1591,7 +1591,7 @@ class Submission(models.Model):
                         )
                     )
 
-    def get_aggregated_data(self):
+    def get_aggregated_data(self, baseline=False):
         """
         Returns dict of non-persistent calculated aggregated data for this
         submission, without writing to the database.
@@ -1607,6 +1607,12 @@ class Submission(models.Model):
         }
         # Pre-calculate all totals in case there is no actual related data
         for aggregation in group_mapping.values():
+            if baseline is True:
+                # Override prodcons.decimals, because GWP should be rounded to 0
+                # and there are some values ending in .45, which become
+                # the next integer upon double rounding.
+                aggregation.decimals = 15
+
             aggregation.populate_limits_and_baselines()
             aggregation.calculate_totals()
 
@@ -1619,45 +1625,7 @@ class Submission(models.Model):
                     related_manager.model.get_aggregated_data(
                         submission=self,
                         reported_groups=group_mapping,
-                    )
-
-        return group_mapping
-
-    def get_aggregated_data_gwp_baseline(self):
-        """
-        Returns dict of non-persistent calculated aggregated data for this
-        submission, without touching the database.
-        """
-
-        group_mapping = {
-            group: ProdCons(
-                party=self.party,
-                reporting_period=self.reporting_period,
-                group=group
-            )
-            for group in self.get_reported_groups()
-        }
-
-        # Pre-calculate all totals in case there is no actual related data
-        for aggregation in group_mapping.values():
-            """ Override prodcons.decimals, because GWP should be rounded to 0
-                and there are some values ending in .45
-                which become the next integer upon double rounding
-            """
-            aggregation.decimals = 15
-
-            aggregation.populate_limits_and_baselines()
-            aggregation.calculate_totals()
-
-        for related, aggr_flag in self.RELATED_DATA:
-            if not aggr_flag:
-                continue
-            related_manager = getattr(self, related)
-            if related_manager.count() > 0:
-                if hasattr(related_manager.model, 'get_aggregated_data_gwp_baseline'):
-                    related_manager.model.get_aggregated_data_gwp_baseline(
-                        submission=self,
-                        reported_groups=group_mapping,
+                        baseline=baseline
                     )
 
         return group_mapping

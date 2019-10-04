@@ -180,32 +180,22 @@ class AggregationMixin:
     """
 
     @classmethod
-    def get_fields_sum_by_group(cls, submission, group, field_names):
+    def get_fields_sum_by_group(cls, submission, group, field_names, baseline):
         """
         Returns sum of quantities reported for given group_id, for a certain
         submission. Quantities are multiplied by either the ODP or GWP of each
         substance.
+        If the baseline argument is True, then quantities are multiplied by
+        the substance's gwp_baseline (useful when calculating baselines).
         """
         potential_field = ''
+        if baseline is True:
+            potential_field = 'substance__gwp_baseline'
         if group.is_gwp:
             potential_field = 'substance__gwp'
         elif group.is_odp:
             potential_field = 'substance__odp'
-        return cls._get_fields_sum_by_group_and_field(
-            submission, group, field_names, potential_field
-        )
 
-    @classmethod
-    def get_fields_sum_for_gwp_baseline(cls, submission, group, field_names):
-        return cls._get_fields_sum_by_group_and_field(
-            submission, group, field_names, 'substance__gwp_baseline'
-        )
-
-    @classmethod
-    def _get_fields_sum_by_group_and_field(cls, submission, group, field_names, potential_field):
-        # This works both faster and more correctly than using Django's
-        # aggregations!
-        # One SQL query for all fields.
         fields_values = cls.objects.filter(
             submission=submission, substance__group__id=group.id
         ).values(potential_field, *field_names)
@@ -238,7 +228,7 @@ class AggregationMixin:
             )
 
             values = cls.get_fields_sum_by_group(
-                submission, group, cls.AGGREGATION_MAPPING.keys()
+                submission, group, cls.AGGREGATION_MAPPING.keys(), False
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
                 # Add with existing value, as a field in the aggregation
@@ -350,34 +340,7 @@ class AggregationMixin:
                 aggregation.save()
 
     @classmethod
-    def get_aggregated_data_gwp_baseline(cls, submission, reported_groups):
-        """
-        Similar to get_aggregated_data,
-        but instead of ODP/GWP compute everything using substance.gwp_baseline
-        """
-        return cls._get_aggregated_data(
-            submission,
-            reported_groups,
-            cls.get_fields_sum_for_gwp_baseline
-        )
-
-    @classmethod
-    def get_aggregated_data(cls, submission, reported_groups):
-        """
-        reported_groups: mapping of form:
-        {
-            group: ProdCons instance,
-            ...
-        }
-        """
-        return cls._get_aggregated_data(
-            submission,
-            reported_groups,
-            cls.get_fields_sum_by_group
-        )
-
-    @classmethod
-    def _get_aggregated_data(cls, submission, reported_groups, field_getter):
+    def get_aggregated_data(cls, submission, reported_groups, baseline=False):
         """
         reported_groups: mapping of form:
         {
@@ -409,8 +372,8 @@ class AggregationMixin:
                 )
                 reported_groups[group] = aggregation
 
-            values = field_getter(
-                submission, group, cls.AGGREGATION_MAPPING.keys()
+            values = cls.get_fields_sum_by_group(
+                submission, group, cls.AGGREGATION_MAPPING.keys(), baseline
             )
             for model_field, aggr_field in cls.AGGREGATION_MAPPING.items():
                 # Add with existing value, as a field in the aggregation table
