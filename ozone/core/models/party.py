@@ -196,13 +196,32 @@ class Party(models.Model):
 
     @classmethod
     def get_eu_members_at(cls, reporting_period):
-        """ Returns the current EU member states
+        """ Returns the EU member states at specified time
         """
         return cls.objects.filter(
             history__is_eu_member=True,
             history__reporting_period=reporting_period,
             is_active=True,
         )
+
+    def is_eu_member_at(self, reporting_period):
+        ph = PartyHistory.objects.filter(
+            party=self,
+            reporting_period=reporting_period
+        ).first()
+        if ph and ph.is_eu_member:
+            return True
+        return False
+
+    def is_art5_at(self, reporting_period):
+        ph = PartyHistory.objects.filter(
+            party=self,
+            reporting_period=reporting_period
+        ).first()
+        # TODO: remove field from model and use party type?
+        if ph and ph.is_article5:
+            return True
+        return False
 
     def __str__(self):
         return self.name

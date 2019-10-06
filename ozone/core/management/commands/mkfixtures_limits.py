@@ -62,7 +62,7 @@ class Command(BaseCommand):
                         continue
                     if limit_type.value in [
                         LimitTypes.CONSUMPTION.value
-                    ] and party in Party.get_eu_members_at(period.name):
+                    ] and party in Party.get_eu_members_at(period):
                         # No consumption baseline for EU member states
                         continue
                     cm_queryset_by_limit_type = cm_queryset.filter(

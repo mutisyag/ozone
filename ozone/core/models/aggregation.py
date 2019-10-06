@@ -582,11 +582,14 @@ class ProdCons(BaseProdCons):
             party=self.party,
             group=self.group
         ).values('baseline_type__name', 'baseline'):
-            if baseline['baseline_type__name'] == prod_bt:
+            if (baseline['baseline_type__name'] == prod_bt
+                    and self.limit_prod is not None):
                 self.baseline_prod = baseline['baseline']
-            if baseline['baseline_type__name'] == cons_bt:
+            if (baseline['baseline_type__name'] == cons_bt
+                    and self.limit_cons is not None):
                 self.baseline_cons = baseline['baseline']
-            if baseline['baseline_type__name'] == bdn_bt:
+            if (baseline['baseline_type__name'] == bdn_bt
+                    and self.limit_bdn is not None):
                 self.baseline_bdn = baseline['baseline']
 
     def save(self, *args, **kwargs):

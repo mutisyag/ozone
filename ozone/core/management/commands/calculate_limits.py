@@ -189,6 +189,7 @@ class Command(BaseCommand):
                 party.abbr, party.name, period.name
             ))
             for group in self.groups.values():
+                has_changed = False
                 for limit_type in LimitTypes:
                     limit = self.get_limit(
                         limit_type.value, group, party, party_type, period
@@ -204,14 +205,12 @@ class Command(BaseCommand):
                     if options['simulate']:
                         continue
 
-                    has_changed = self._persist_limit(
+                    has_changed |= self._persist_limit(
                         limit_type.value, group, party, period, limit
                     )
-                    #if baseline_type.name in ('A5Prod', 'A5Cons', 'NA5Prod', 'NA5Cons'):
-                    #    must_update_prodcons = must_update_prodcons or has_changed
-                #if must_update_prodcons:
-                    # invoke after all baseline types for this group are computed
-                #    self._update_prodcons(group, party)
+                if has_changed:
+                    # invoke after all limit types for this group are computed
+                    self._update_prodcons(group, party, period)
 
     def _persist_limit(self, limit_type, group, party, period, new_value):
         has_changed = False
@@ -258,15 +257,19 @@ class Command(BaseCommand):
                 ))
             obj.limit = new_value
             obj.save()
-            return has_changed
+        return has_changed
 
-    def _update_prodcons(self, group, party):
+    def _update_prodcons(self, group, party, period):
         qs = ProdCons.objects.filter(
             party=party,
             group=group,
+            reporting_period=period,
         )
         for prodcons in qs.all():
             prodcons.populate_limits_and_baselines()
+            logger.debug("Updating ProdCons for {}/{}/{}".format(
+                party.abbr, group.group_id, period.name
+            ))
             prodcons.save()
 
     def _get_baseline(self, party, group, baseline_type):
@@ -308,8 +311,9 @@ class Command(BaseCommand):
         ):
             # No BDN or Prod limits for EU/ECE(European Union)
             return None
+
         if (
-            party in Party.get_eu_members_at(period.name) and
+            party in Party.get_eu_members_at(period) and
             limit_type == LimitTypes.CONSUMPTION.value
         ):
             # No consumption baseline for EU member states

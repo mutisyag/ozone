@@ -78,6 +78,11 @@ class Command(BaseCommand):
             help="Party code, for limiting the calculation to a single party"
         )
         parser.add_argument(
+            '--baseline_types',
+            nargs='*',
+            help="Party code, for limiting the calculation to a single party"
+        )
+        parser.add_argument(
             '--simulate',
             action='store_true',
             help="Don't store any change, only simulate"
@@ -148,11 +153,15 @@ class Command(BaseCommand):
                 logger.debug(f"Checking {log_line}")
                 if computed != legacy and not (
                     # Skip some known issues when computed is None for EU members
-                    computed is None and party.abbr in self.eu_member_states and (
-                        legacy == 0 or baseline_type in ('A5ConsGWP', 'NA5ConsGWP')
+                    legacy is None and party.abbr in self.eu_member_states and (
+                        baseline_type in ('A5Cons', 'NA5Cons') or
+                        baseline_type == 'NA5ConsGWP' and group_name == 'CI'
+                    ) or
+                    legacy is None and party.abbr == 'EU' and (
+                        baseline_type in ('A5Prod', 'NA5Prod')
                     ) or
                     computed is None and party.abbr == 'EU' and (
-                        baseline_type in ('A5ProdGWP, NA5ProdGWP')
+                        baseline_type in ('A5ProdGWP', 'NA5ProdGWP')
                     )
                 ):
                     logger.error(f"Failed for {log_line}")
@@ -183,9 +192,13 @@ class Command(BaseCommand):
 
     def process_party(self, party, options):
         logger.info(f"Processing party {party.abbr} {party.name}")
+        baseline_types = options.get('baseline_types')
+
         for group in self.groups.values():
             must_update_prodcons = False
             for baseline_type in BaselineType.objects.all():
+                if baseline_types and baseline_type.name not in baseline_types:
+                    continue
                 baseline = self.get_baseline(baseline_type.name, group, party)
                 if baseline is not None:
                     logger.debug("Got {:10f} for {}/{}/{}".format(
@@ -245,7 +258,7 @@ class Command(BaseCommand):
                 ))
             obj.baseline = new_value
             obj.save()
-            return has_changed
+        return has_changed
 
     def _update_prodcons(self, group, party):
         qs = ProdCons.objects.filter(
@@ -333,26 +346,39 @@ class Command(BaseCommand):
         return average_prod if average_prod > 0 else Decimal('0')
 
     def consumption(self, party, group, periods):
-        # EU member states don't have this baseline
         if len(periods) != 1:
             raise CommandError(
                 f"Consumption func should have only one period parameter,"
                 "got {periods}"
             )
         prodcons = self._get_prodcons(party, group, periods[0])
-        if not prodcons or prodcons.is_eu_member:
+        if not prodcons:
             return None
-        return prodcons.calculated_consumption \
-            if prodcons.calculated_consumption > 0 else Decimal('0')
+
+        if prodcons.is_eu_member:
+            # TODO: re-calculate real consumption
+            consumption = round_decimal_half_up(
+                prodcons.get_calc_consumption(),
+                prodcons.decimals
+            )
+        else:
+            consumption = prodcons.calculated_consumption
+        return consumption if consumption > 0 else Decimal('0')
 
     def average_consumption(self, party, group, periods):
         total_cons = Decimal('0.0')
         rounding_digits = 0
         for period in periods:
             prodcons = self._get_prodcons(party, group, period)
-            if not prodcons or prodcons.is_eu_member:
+            if not prodcons:
                 return None
-            total_cons += prodcons.calculated_consumption
+            if prodcons.is_eu_member:
+                total_cons += round_decimal_half_up(
+                    prodcons.get_calc_consumption(),
+                    prodcons.decimals
+                )
+            else:
+                total_cons += prodcons.calculated_consumption
             if group.group_id in ('AI', 'AII', 'BI', 'BII', 'BIII'):
                 # Add ImpRecov and subtract ExpRecov
                 total_cons += prodcons.import_recovered - prodcons.export_recovered
@@ -378,6 +404,7 @@ class Command(BaseCommand):
         if hcfc_1989 and cfc_1989:
             # Note: For EU members, real consumption is included in the formula
             # even if they have NULL calculated_consumption
+
             average_prod = sum_decimals(
                     hcfc_1989.calculated_production,
                     cfc_1989.calculated_production * Decimal('0.028'),
@@ -401,13 +428,26 @@ class Command(BaseCommand):
         cfc_1989 = self._get_prodcons(party, cfc_group, '1989')
         if hcfc_1989 and cfc_1989:
             if hcfc_1989.is_eu_member:
-                return None
-            average_cons = round_decimal_half_up(
+                #hcfc_1989.calculated_consumption = round_decimal_half_up(
+                #    hcfc_1989.get_calc_consumption(),
+                #    1  # always 1 decimal for 1989
+                #)
+                #cfc_1989.calculated_consumption = round_decimal_half_up(
+                #    cfc_1989.get_calc_consumption(),
+                #    1  # always 1 decimal for 1989
+                #)
+                # TODO: but is it correct to use unrounded values for EU members
+                # and rounded values for non-EU?
+                hcfc_1989.calculated_consumption = hcfc_1989.get_calc_consumption()
+                cfc_1989.calculated_consumption = cfc_1989.get_calc_consumption()
+
+            # Use already rounded values for calculated consumption
+            c1_baseline_cons = round_decimal_half_up(
                 hcfc_1989.calculated_consumption +
                 cfc_1989.calculated_consumption * Decimal('0.028'),
-                hcfc_1989.decimals
+                1  # always 1 decimal for 1989
             )
-            return average_cons if average_cons > 0 else Decimal('0')
+            return c1_baseline_cons if c1_baseline_cons > 0 else Decimal('0')
         return None
 
     def _get_hcfc_percentage(self, party):
@@ -480,7 +520,16 @@ class Command(BaseCommand):
             if prod_cons == 'PROD':
                 total_amount += prodcons.calculated_production
             elif prod_cons == 'CONS':
-                total_amount += prodcons.calculated_consumption
+                # Check EU membership
+                if party in Party.get_eu_members_at(
+                    self.reporting_periods[period]
+                ):
+                    return None
+                total_amount += (
+                    prodcons.calculated_consumption
+                    if prodcons.calculated_consumption
+                    else Decimal('0')
+                )
         if total_amount < 0:
             total_amount = Decimal('0')
 
@@ -537,9 +586,8 @@ class Command(BaseCommand):
         return func, periods
 
     def baseline_NA5Cons(self, group, party):
-        if party.abbr in self.eu_member_states:
-            # EU member states don't have this baseline
-            return None, None
+        # We need this baseline also for EU member states
+        #  which weren't EU members in 1986, 1989, etc.
         if group.group_id in ('AI', 'AII'):
             periods = ('1986',)
             func = self.consumption
@@ -588,9 +636,8 @@ class Command(BaseCommand):
         return func, periods
 
     def baseline_A5Cons(self, group, party):
-        if party.abbr in self.eu_member_states:
-            # EU member states don't have this baseline
-            return None, None
+        # We need this baseline for EU member states
+        #  which weren't EU members in 1986, 1989, etc.
         if group.group_id in ('AI', 'AII'):
             periods = ('1995', '1996', '1997')
             func = self.average_consumption
@@ -634,18 +681,26 @@ class Command(BaseCommand):
         """
         Normally should be invoked only for groups A/I (CFC) and C/I (HCFC).
         prod_or_cons should be 'PROD' or 'CONS'.
+        Note that the result is unrounded because that's necessary
+        for consumption_ci_na5_gwp
         """
         prodcons = self._get_prodcons(party, group, period_name)
         if not prodcons:
             return None
 
+        if len(prodcons.submissions.get('art7')) > 1:
+            logger.error(
+                'Multiple art7 submissions found for {}/{}/{}'.format(
+                    party.abbr, group.group_id, period_name
+                )
+            )
         submission_id = prodcons.submissions.get('art7')[0]
         submission = Submission.objects.get(pk=submission_id)
         agg = submission.get_aggregated_data(baseline=True).get(group)
         if prod_or_cons == 'PROD':
             return agg.calculated_production
         else:
-            return agg.calculated_consumption
+            return agg.get_calc_consumption()
 
     def consumption_ci_na5_gwp(self, party, _group, _periods):
         """
@@ -763,9 +818,6 @@ class Command(BaseCommand):
 
     def baseline_NA5ConsGWP(self, group, party):
         # only for group C/I, which is part of the HFC baseline formula
-        if party.abbr in self.eu_member_states:
-            # EU member states don't have this baseline
-            return None, None
         if group.group_id in ('CI',):
             periods = ('1989',)
             func = self.consumption_ci_na5_gwp
@@ -797,9 +849,6 @@ class Command(BaseCommand):
 
     def baseline_A5ConsGWP(self, group, party):
         # only for group C/I, which is part of the HFC baseline formula
-        if party.abbr in self.eu_member_states:
-            # EU member states don't have this baseline
-            return None, None
         if group.group_id in ('CI',):
             periods = ('2009', '2010')
             func = self.average_consumption_gwp
