@@ -239,6 +239,7 @@ class Command(BaseCommand):
                     period.name,
                     new_value,
                 ))
+                has_changed = True
             elif obj.limit != new_value:
                 has_changed = True
                 logger.info("Updating limit for {}/{}/{}/{} from {} to {}".format(
@@ -329,7 +330,7 @@ class Command(BaseCommand):
             cm = cm_queryset.first()
             baseline = self._get_baseline(party, group, cm.baseline_type)
             if baseline is None:
-                return None
+                return Decimal('0')
             else:
                 return round_decimal_half_up(
                     baseline * cm.allowed,
@@ -343,7 +344,7 @@ class Command(BaseCommand):
             baseline1 = self._get_baseline(party, group, cm1.baseline_type)
             baseline2 = self._get_baseline(party, group, cm2.baseline_type)
             if baseline1 is None or baseline2 is None:
-                return None
+                return Decimal('0')
             days1 = (cm1.end_date - period.start_date).days + 1
             days2 = (period.end_date - cm2.start_date).days + 1
             limit = (
