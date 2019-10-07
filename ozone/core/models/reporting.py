@@ -1548,6 +1548,9 @@ class Submission(models.Model):
         """
         Fill aggregated data from this submission into the corresponding
         aggregation model instance.
+
+        Returns list of ID's of ProdCons objects that have been created or
+        modified.
         """
         if not self.obligation.is_aggregateable:
             return
@@ -1559,6 +1562,7 @@ class Submission(models.Model):
 
         # Create all-zero ProdCons rows for all reported groups.
         # For ProdConsMT this is not necessary.
+        ret = []
         for group in groups:
             aggregation, created = ProdCons.objects.get_or_create(
                 party=self.party,
@@ -1573,6 +1577,7 @@ class Submission(models.Model):
             else:
                 aggregation.submissions[obligation_type] = [self.id,]
             aggregation.save()
+            ret.append(aggregation.id)
 
         for related, aggr_flag in self.RELATED_DATA:
             if not aggr_flag:
@@ -1590,6 +1595,7 @@ class Submission(models.Model):
                             substance__isnull=False
                         )
                     )
+        return ret
 
     def get_aggregated_data(self, baseline=False):
         """
