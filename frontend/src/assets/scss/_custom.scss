@@ -1817,10 +1817,12 @@ body.aside-menu-off-canvas .aside-menu {
   cursor: pointer;
 }
 
-
-.multiselect {
-  .multiselect__input {
-    width: auto!important;
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  /* IE10+ CSS styles go here */
+  .multiselect {
+    .multiselect__input {
+      width: 100% !important;
+    }
   }
 }
 
