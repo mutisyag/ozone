@@ -1,6 +1,6 @@
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 
 
 from .reporting import Submission
@@ -9,6 +9,7 @@ from .reporting import Submission
 __all__ = [
     'Email',
     'EmailTemplate',
+    'EmailTemplateAttachment',
 ]
 
 
@@ -23,14 +24,16 @@ class Email(models.Model):
         Submission, related_name='emails',
         null=True, on_delete=models.SET_NULL,
     )
+    attachments = JSONField(default=list)
 
-    def send_email(self):
+    def send_email(self, mime_attachments=None):
         email = EmailMultiAlternatives(
             subject=self.subject,
             body=self.body,
             from_email=self.from_email,
             to=self.to,
-            cc=self.cc
+            cc=self.cc,
+            attachments=mime_attachments,
         )
         email.send()
 
@@ -42,3 +45,19 @@ class EmailTemplate(models.Model):
     name = models.CharField(max_length=256)
     subject = models.CharField(max_length=255, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+class EmailTemplateAttachment(models.Model):
+    email_template = models.ForeignKey(
+        EmailTemplate, related_name='attachments',
+        on_delete=models.CASCADE,
+    )
+    file = models.FileField(upload_to='email-template-attachments/')
+    filename = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.filename

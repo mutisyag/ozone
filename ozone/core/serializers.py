@@ -1,5 +1,6 @@
 from datetime import datetime
 from decimal import Decimal
+import mimetypes
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -20,6 +21,7 @@ from .models import (
     PartyHistory,
     ReportingPeriod,
     Obligation,
+    ObligationTypes,
     Substance,
     Group,
     BlendComponent,
@@ -57,6 +59,7 @@ from .models import (
     Limit,
     Email,
     EmailTemplate,
+    EmailTemplateAttachment,
     CriticalUseCategory,
     DeviationType,
     DeviationSource,
@@ -74,6 +77,8 @@ from .models import (
     MultilateralFund,
 )
 from .models.utils import DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
+from .models.report import Reports
+from ozone.core.api import export_pdf
 
 User = get_user_model()
 
@@ -1817,26 +1822,129 @@ class LimitSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+def guess_mimetype(filename, default='application/octet-stream'):
+    return mimetypes.guess_type(filename)[0] or default
+
+
+def generate_report(report, submission):
+    party = submission.party
+    period = submission.reporting_period
+
+    filename = f"{report}_{party.abbr}_{period.name}.pdf"
+
+    if report == Reports.ART7_RAW.value:
+        art7 = Obligation.objects.get(
+            _obligation_type=ObligationTypes.ART7.value)
+        data = export_pdf.export_submissions(art7, [submission])
+        return {
+            'title': Reports.art7_raw_info()['display_name'],
+            'filename': filename,
+            'data': data.getvalue(),
+            'mime_type': 'application/pdf',
+        }
+
+    elif report == Reports.PRODCONS.value:
+        data = export_pdf.export_prodcons(
+            submission=submission,
+            periods=None,
+            parties=None,
+        )
+        return {
+            'title': Reports.prodcons_info()['display_name'],
+            'filename': filename,
+            'data': data.getvalue(),
+            'mime_type': 'application/pdf',
+        }
+
+    else:
+        raise ValueError(f"Unknown report type {report!r}")
+
+
 class EmailSerializer(serializers.ModelSerializer):
+
+    attachments = serializers.ListField(child=serializers.JSONField())
+
     class Meta:
         model = Email
         exclude = ('submission',)
 
     def create(self, validated_data):
+        submission = self.context['submission']
+
+        attachments = []
+        for attachment in validated_data['attachments']:
+            source = attachment['source']
+
+            if source == 'email_template_attachment':
+                a = EmailTemplateAttachment.objects.get(pk=attachment['id'])
+                with a.file.open('rb') as f:
+                    data = f.read()
+                mime_type = guess_mimetype(a.filename)
+                attachments.append({
+                    'title': a.title,
+                    'filename': a.filename,
+                    'data': data,
+                    'mime_type': mime_type,
+                })
+
+            elif source == 'generate_report':
+                report = generate_report(attachment['id'], submission)
+                attachments.append(report)
+
+            else:
+                raise ValueError(f"Unknown email attachment source {source!r}")
+
         email = Email(
             subject=validated_data['subject'],
             body=validated_data['body'],
             to=validated_data['to'],
             from_email=validated_data['from_email'],
             cc=validated_data['cc'],
-            submission=self.context['submission']
+            submission=submission,
+            attachments=[{
+                'title': a['title'],
+                'size': len(a['data']),
+                'filename': a['filename'],
+                'mime_type': a['mime_type'],
+            } for a in attachments],
         )
-        email.send_email()
+
+        mime_attachments = [
+            (a['filename'], a['data'], a['mime_type'])
+            for a in attachments
+        ]
+
+        email.send_email(mime_attachments)
         email.save()
         return email
 
 
+class EmailTemplateAttachmentSerializer(serializers.ModelSerializer):
+
+    source = serializers.ReadOnlyField(default='email_template_attachment')
+
+    class Meta:
+        model = EmailTemplateAttachment
+        fields = ['id', 'filename', 'title', 'source']
+
+
 class EmailTemplateSerializer(serializers.ModelSerializer):
+
+    attachments = EmailTemplateAttachmentSerializer(many=True, read_only=True)
+    generated_attachments = serializers.ReadOnlyField(default=[
+        {
+            'id': Reports.ART7_RAW.value,
+            'filename': 'art7raw_{party}_{period}.pdf',
+            'title': Reports.art7_raw_info()['display_name'],
+            'source': 'generate_report',
+        },
+        {
+            'id': Reports.PRODCONS.value,
+            'filename': 'prodcons_{party}_{period}.pdf',
+            'title': Reports.prodcons_info()['display_name'],
+            'source': 'generate_report',
+        },
+    ])
 
     class Meta:
         model = EmailTemplate
