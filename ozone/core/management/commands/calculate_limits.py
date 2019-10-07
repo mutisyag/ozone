@@ -1,22 +1,18 @@
 import logging
 
 from decimal import Decimal
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import Q
 
-from functools import lru_cache
 from openpyxl import load_workbook
 import collections
 
 from ozone.core.models import (
     Party,
     PartyHistory,
-    Submission,
     ReportingPeriod,
     Group,
     ProdCons,
-    Transfer,
-    BaselineType,
     Limit,
     Baseline,
     ControlMeasure,
@@ -25,9 +21,7 @@ from ozone.core.models import (
 
 from ozone.core.models.utils import (
     round_decimal_half_up,
-    sum_decimals,
     float_to_decimal,
-    float_to_decimal_zero_if_none,
 )
 
 logger = logging.getLogger(__name__)
