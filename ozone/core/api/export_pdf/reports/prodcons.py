@@ -151,7 +151,7 @@ def get_footer():
         ASIA = Asia | 
         EEUR = Eastern Europe | 
         LAC = Latin America & the Caribbean | 
-        WEUR = Western Europe & others
+        WEUR = Western Europe & others | 
         A5 = Article 5 Party | 
         NA5 = Non-Article 5 Party"""
     ))
