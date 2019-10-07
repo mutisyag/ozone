@@ -147,16 +147,13 @@ def get_footer():
         ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
         - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
         N.R. = Data Not Reported but Party is required to have reported | 
-        DIV0 = Division was not evaluated due to a zero or negative base.
         AFR = Africa | 
         ASIA = Asia | 
         EEUR = Eastern Europe | 
         LAC = Latin America & the Caribbean | 
         WEUR = Western Europe & others
         A5 = Article 5 Party | 
-        CEIT = Country with Economy in Transition | 
-        EU = Member of the European Union | 
-        Non-A5 = Non-Article 5 Party"""
+        NA5 = Non-Article 5 Party"""
     ))
 
 
@@ -203,7 +200,8 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
     }
 
     table_data['data'] = {}
-    to_report_groups_main_period = Group.get_report_groups(party, period)
+    to_report_groups = Group.get_report_groups(party, period)
+    controlled_groups = Group.get_controlled_groups(party, period)
 
     for group in all_groups:
         if submission is None:
@@ -254,7 +252,7 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
                 main_prodcons,
                 'calculated_production',
                 group,
-                to_report_groups_main_period
+                to_report_groups
             )
         if is_eu_member:
             main_cons = None
@@ -263,7 +261,7 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
                 main_prodcons,
                 'calculated_consumption',
                 group,
-                to_report_groups_main_period
+                to_report_groups
             )
         per_capita_cons = get_per_capita_cons(main_cons, population)
 
@@ -277,17 +275,11 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
         ) if not is_eu_member else None
 
         baseline_prod = get_formatted_baseline(
-                baseline_prod,
-                main_prod,
-                group,
-                to_report_groups_main_period
+            baseline_prod, main_prod, group, controlled_groups
         ) if party.abbr != 'EU' else None
 
         baseline_cons = get_formatted_baseline(
-                baseline_cons,
-                main_cons,
-                group,
-                to_report_groups_main_period
+            baseline_cons, main_cons, group, controlled_groups
         ) if not is_eu_member else None
 
         limit_prod = get_formatted_limit(
@@ -308,17 +300,15 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
                 id=group.group_id,
                 descr=group.description
             ),
+
             main_prod,
             baseline_prod,
-
             chng_prod,
-
             limit_prod,
-            main_cons,
 
+            main_cons,
             baseline_cons,
             chng_cons,
-
             limit_cons,
 
             per_capita_cons
@@ -406,10 +396,10 @@ def get_formatted_limit(limit):
     return limit if limit is not None else '-'
 
 
-def get_formatted_baseline(baseline, actual, group, to_report_groups):
+def get_formatted_baseline(baseline, actual, group, controlled_groups):
     # actual is get_formatted_value(production/consumption)
     if baseline is None:
-        if group not in to_report_groups or group.group_id in ['CII', 'CIII']:
+        if group not in controlled_groups or group.group_id in ['CII', 'CIII']:
             return '-'
         return 'N.R.'
     else:
@@ -421,20 +411,6 @@ def get_per_capita_cons(cons, population):
         return '-'
     else:
         return round_decimal_half_up(cons / population, 4)
-
-
-def get_baseline(prodcons, field, actual_value, group):
-    if prodcons and getattr(prodcons, field) is not None:
-        baseline = getattr(prodcons, field)
-    else:
-        baseline = 'N.R.'
-        if (
-            group.group_id in ['CII', 'CIII']
-            or (not isinstance(actual_value, str) and actual_value <= 0)
-            or actual_value == '-'
-        ):
-            baseline = ""
-    return baseline
 
 
 def get_chng(actual_value, baseline):
