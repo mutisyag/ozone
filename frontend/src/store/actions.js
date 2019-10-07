@@ -303,7 +303,7 @@ const actions = {
     })
   },
 
-  async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext, noModal }) {
+  async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext, noModal, backToDashboard = true }) {
     if (!noModal) {
       const confirmed = await dispatch('openConfirmModal', { $gettext })
       if (!confirmed) {
@@ -316,7 +316,7 @@ const actions = {
       } else {
         dispatch('getSubmissionData', { submission, $gettext })
       }
-      if (process.env.NODE_ENV !== 'development') {
+      if (process.env.NODE_ENV !== 'development' && backToDashboard) {
         router.push({ path: '/dashboard' })
       }
       dispatch('setAlert', {

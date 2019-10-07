@@ -44,7 +44,8 @@ export default {
   data() {
     return {
       labels: {},
-      transitionToValidate: ['submit']
+      transitionToValidate: ['submit'],
+      noForwardToDashboard: ['process']
     }
   },
   computed: {
@@ -67,7 +68,7 @@ export default {
   },
   methods: {
     doTransition() {
-      this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true } })
+      this.$store.dispatch('triggerSave', { action: 'doSubmissionTransition', data: { $gettext: this.$gettext, submission: this.submission, transition: this.transition, noModal: true, backToDashboard: !this.noForwardToDashboard.includes(this.transition) } })
       this.$refs.transition_modal.hide()
     }
   },
