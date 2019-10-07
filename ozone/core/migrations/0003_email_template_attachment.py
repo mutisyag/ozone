@@ -9,7 +9,7 @@ import ozone.core.models.file
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0001_squashed_0204_auto_20190924_1740'),
+        ('core', '0002_longer_file_paths'),
     ]
 
     operations = [
