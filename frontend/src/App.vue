@@ -78,6 +78,7 @@ import { api } from '@/components/common/services/api'
 import auth from '@/components/common/mixins/auth'
 import { setLanguage } from '@/components/common/services/languageService'
 import InactivityDetector from '@/InactivityDetector'
+import loadPollyfills from '@/helpers/polyfills'
 
 export default {
   name: 'app',
@@ -139,6 +140,7 @@ export default {
     }
   },
   created() {
+    loadPollyfills()
     api.interceptors.request.use((config) => {
       if (!config.hideLoader) {
         this.setLoading(true)
