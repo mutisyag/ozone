@@ -40,10 +40,20 @@ class Annex(models.Model):
         db_table = 'annex'
 
 
+class GroupManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'annex',
+        )
+
+
 class Group(models.Model):
     """
     Substance Group information
     """
+
+    objects = GroupManager()
+
     group_id = models.CharField(max_length=16, unique=True)
 
     annex = models.ForeignKey(
@@ -170,7 +180,7 @@ class Group(models.Model):
 class SubstanceManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
-            'group',
+            'group', 'group__annex',
         )
 
 

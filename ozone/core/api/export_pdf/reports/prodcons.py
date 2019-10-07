@@ -7,6 +7,7 @@ from ozone.core.models import (
     ProdCons,
     Group,
     PartyHistory,
+    Baseline,
     Limit,
     LimitTypes,
     Submission,
@@ -146,16 +147,13 @@ def get_footer():
         ** Consumption and Production numbers are rounded to a uniform number of decimal places. <br/><br/>
         - = Data Not Reported and Party has no Obligation to have Reported that data at this time. <br/>
         N.R. = Data Not Reported but Party is required to have reported | 
-        DIV0 = Division was not evaluated due to a zero or negative base.
         AFR = Africa | 
         ASIA = Asia | 
         EEUR = Eastern Europe | 
         LAC = Latin America & the Caribbean | 
-        WEUR = Western Europe & others
+        WEUR = Western Europe & others | 
         A5 = Article 5 Party | 
-        CEIT = Country with Economy in Transition | 
-        EU = Member of the European Union | 
-        Non-A5 = Non-Article 5 Party"""
+        NA5 = Non-Article 5 Party"""
     ))
 
 
@@ -186,6 +184,8 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
         )
         population = history.population
         party_type = history.party_type.abbr
+        is_eu_member = history.is_eu_member
+        is_article5 = history.is_article5
     except PartyHistory.DoesNotExist:
         return None
 
@@ -200,7 +200,9 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
     }
 
     table_data['data'] = {}
-    to_report_groups_main_period = Group.get_report_groups(party, period)
+    to_report_groups = Group.get_report_groups(party, period)
+    controlled_groups = Group.get_controlled_groups(party, period)
+
     for group in all_groups:
         if submission is None:
             try:
@@ -211,52 +213,85 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
             # In this case, prodcons_qs is actually a dict
             main_prodcons = prodcons_qs.get(group, None)
 
-        main_prod = get_actual_value(
-            main_prodcons,
-            'calculated_production',
-            group,
-            to_report_groups_main_period
-        )
-        limit_prod = get_limit(
-            party,
-            period,
-            group,
-            LimitTypes.PRODUCTION.value,
-        )
+        if main_prodcons:
+            # Get some pre-calculated values
+            limit_prod = main_prodcons.limit_prod
+            limit_cons = main_prodcons.limit_cons
+            baseline_prod = main_prodcons.baseline_prod
+            baseline_cons = main_prodcons.baseline_cons
+        else:
+            limit_prod = get_limit(
+                party,
+                period,
+                group,
+                LimitTypes.PRODUCTION.value,
+            )
+            limit_cons = get_limit(
+                party,
+                period,
+                group,
+                LimitTypes.CONSUMPTION.value,
+            )
+            baseline_prod = Baseline.objects.filter(
+                party=party,
+                group=group,
+                baseline_type__name='A5Prod' if is_article5 else 'NA5Prod',
+            ).first()
+            baseline_prod = baseline_prod.baseline if baseline_prod else None
+            baseline_cons = Baseline.objects.filter(
+                party=party,
+                group=group,
+                baseline_type__name='A5Cons' if is_article5 else 'NA5Cons',
+            ).first()
+            baseline_cons = baseline_cons.baseline if baseline_cons else None
 
-        main_cons = get_actual_value(
-            main_prodcons,
-            'calculated_consumption',
-            group,
-            to_report_groups_main_period
-        )
-        limit_cons = get_limit(
-            party,
-            period,
-            group,
-            LimitTypes.CONSUMPTION.value,
-        )
+        if party.abbr == 'EU':
+            main_prod = None
+        else:
+            main_prod = get_formatted_value(
+                main_prodcons,
+                'calculated_production',
+                group,
+                to_report_groups
+            )
+        if is_eu_member:
+            main_cons = None
+        else:
+            main_cons = get_formatted_value(
+                main_prodcons,
+                'calculated_consumption',
+                group,
+                to_report_groups
+            )
         per_capita_cons = get_per_capita_cons(main_cons, population)
 
-        # Comparison with Base year
-        compared_prod = get_baseline(
-            main_prodcons,
-            'baseline_prod',
-            main_prod,
-            group
-        )
-        compared_cons = get_baseline(
-            main_prodcons,
-            'baseline_cons',
-            main_cons,
-            group
-        )
+        # % reduction vs base year
+        chng_prod = get_chng(
+            main_prod, baseline_prod
+        ) if party.abbr != 'EU' else None
 
-        chng_prod = get_chng(main_prod, compared_prod)
-        chng_cons = get_chng(main_cons, compared_cons)
+        chng_cons = get_chng(
+            main_cons, baseline_cons
+        ) if not is_eu_member else None
+
+        baseline_prod = get_formatted_baseline(
+            baseline_prod, main_prod, group, controlled_groups
+        ) if party.abbr != 'EU' else None
+
+        baseline_cons = get_formatted_baseline(
+            baseline_cons, main_cons, group, controlled_groups
+        ) if not is_eu_member else None
+
+        limit_prod = get_formatted_limit(
+            limit_prod
+        ) if party.abbr != 'EU' else None
+
+        limit_cons = get_formatted_limit(
+            limit_cons
+        ) if not is_eu_member else None
 
         if check_skip_group(
-            [main_prod, compared_prod, main_cons, compared_cons]
+            [main_prod, baseline_prod, main_cons, baseline_cons]
         ):
             continue
 
@@ -265,15 +300,19 @@ def _get_table_data(party, period, prodcons_qs, submission, date_reported, all_g
                 id=group.group_id,
                 descr=group.description
             ),
+
             main_prod,
-            compared_prod,
+            baseline_prod,
             chng_prod,
             limit_prod,
+
             main_cons,
-            compared_cons,
+            baseline_cons,
             chng_cons,
             limit_cons,
+
             per_capita_cons
+            if not is_eu_member else None,
         )
     return table_data
 
@@ -332,7 +371,7 @@ def get_prodcons_data(submission, periods, parties):
     return data
 
 
-def get_actual_value(prodcons, field, group, to_report_groups):
+def get_formatted_value(prodcons, field, group, to_report_groups):
     if prodcons and getattr(prodcons, field) is not None:
         actual_value = getattr(prodcons, field)
     else:
@@ -350,36 +389,41 @@ def get_limit(party, period, group, limit_type):
         group=group,
         limit_type=limit_type,
     ).first()
-    return limit.limit if limit else '-'
+    return limit.limit if limit else None
+
+
+def get_formatted_limit(limit):
+    return limit if limit is not None else '-'
+
+
+def get_formatted_baseline(baseline, actual, group, controlled_groups):
+    # actual is get_formatted_value(production/consumption)
+    if baseline is None:
+        if group not in controlled_groups or group.group_id in ['CII', 'CIII']:
+            return '-'
+        return 'N.R.'
+    else:
+        return baseline if actual != '-' else '-'
 
 
 def get_per_capita_cons(cons, population):
-    if not isinstance(cons, str):
+    if cons is None or isinstance(cons, str) or not population:
+        return '-'
+    else:
         return round_decimal_half_up(cons / population, 4)
-    else:
+
+
+def get_chng(actual_value, baseline):
+    if isinstance(actual_value, str):
         return '-'
-
-
-def get_baseline(prodcons, field, actual_value, group):
-    if prodcons and getattr(prodcons, field) is not None:
-        baseline = getattr(prodcons, field)
-    else:
-        baseline = 'N.R.'
-        if (
-            group.group_id in ['CII', 'CIII']
-            or (not isinstance(actual_value, str) and actual_value <= 0)
-            or actual_value == '-'
-        ):
-            baseline = ""
-    return baseline
-
-
-def get_chng(actual_value, compared_value):
-    if isinstance(actual_value, str) or isinstance(compared_value, str):
+    elif actual_value <= 0:
+        # even when baseline was not reported
+        return -100
+    elif baseline is None:
         return '-'
-    elif actual_value > 0 and compared_value != 0:
+    elif actual_value > 0 and baseline != 0:
         return round_decimal_half_up(
-            -100 + actual_value / compared_value * 100,
+            actual_value / baseline * 100 - 100,
             2
         )
     else:
@@ -387,6 +431,7 @@ def get_chng(actual_value, compared_value):
 
 
 def check_skip_group(values):
-    if all(val == '-' or val == "" for val in values):
-        return True
-    return False
+    return all(
+        val is None or val == '-' or val == ""
+        for val in values
+    )

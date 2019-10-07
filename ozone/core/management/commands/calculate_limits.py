@@ -1,22 +1,18 @@
 import logging
 
 from decimal import Decimal
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import BaseCommand
 from django.db.models import Q
 
-from functools import lru_cache
 from openpyxl import load_workbook
 import collections
 
 from ozone.core.models import (
     Party,
     PartyHistory,
-    Submission,
     ReportingPeriod,
     Group,
     ProdCons,
-    Transfer,
-    BaselineType,
     Limit,
     Baseline,
     ControlMeasure,
@@ -25,9 +21,7 @@ from ozone.core.models import (
 
 from ozone.core.models.utils import (
     round_decimal_half_up,
-    sum_decimals,
     float_to_decimal,
-    float_to_decimal_zero_if_none,
 )
 
 logger = logging.getLogger(__name__)
@@ -189,6 +183,7 @@ class Command(BaseCommand):
                 party.abbr, party.name, period.name
             ))
             for group in self.groups.values():
+                has_changed = False
                 for limit_type in LimitTypes:
                     limit = self.get_limit(
                         limit_type.value, group, party, party_type, period
@@ -204,14 +199,12 @@ class Command(BaseCommand):
                     if options['simulate']:
                         continue
 
-                    has_changed = self._persist_limit(
+                    has_changed |= self._persist_limit(
                         limit_type.value, group, party, period, limit
                     )
-                    #if baseline_type.name in ('A5Prod', 'A5Cons', 'NA5Prod', 'NA5Cons'):
-                    #    must_update_prodcons = must_update_prodcons or has_changed
-                #if must_update_prodcons:
-                    # invoke after all baseline types for this group are computed
-                #    self._update_prodcons(group, party)
+                if has_changed:
+                    # invoke after all limit types for this group are computed
+                    self._update_prodcons(group, party, period)
 
     def _persist_limit(self, limit_type, group, party, period, new_value):
         has_changed = False
@@ -246,6 +239,7 @@ class Command(BaseCommand):
                     period.name,
                     new_value,
                 ))
+                has_changed = True
             elif obj.limit != new_value:
                 has_changed = True
                 logger.info("Updating limit for {}/{}/{}/{} from {} to {}".format(
@@ -258,15 +252,19 @@ class Command(BaseCommand):
                 ))
             obj.limit = new_value
             obj.save()
-            return has_changed
+        return has_changed
 
-    def _update_prodcons(self, group, party):
+    def _update_prodcons(self, group, party, period):
         qs = ProdCons.objects.filter(
             party=party,
             group=group,
+            reporting_period=period,
         )
         for prodcons in qs.all():
             prodcons.populate_limits_and_baselines()
+            logger.debug("Updating ProdCons for {}/{}/{}".format(
+                party.abbr, group.group_id, period.name
+            ))
             prodcons.save()
 
     def _get_baseline(self, party, group, baseline_type):
@@ -308,8 +306,9 @@ class Command(BaseCommand):
         ):
             # No BDN or Prod limits for EU/ECE(European Union)
             return None
+
         if (
-            party in Party.get_eu_members_at(period.name) and
+            party in Party.get_eu_members_at(period) and
             limit_type == LimitTypes.CONSUMPTION.value
         ):
             # No consumption baseline for EU member states
@@ -331,7 +330,7 @@ class Command(BaseCommand):
             cm = cm_queryset.first()
             baseline = self._get_baseline(party, group, cm.baseline_type)
             if baseline is None:
-                return None
+                return Decimal('0')
             else:
                 return round_decimal_half_up(
                     baseline * cm.allowed,
@@ -345,7 +344,7 @@ class Command(BaseCommand):
             baseline1 = self._get_baseline(party, group, cm1.baseline_type)
             baseline2 = self._get_baseline(party, group, cm2.baseline_type)
             if baseline1 is None or baseline2 is None:
-                return None
+                return Decimal('0')
             days1 = (cm1.end_date - period.start_date).days + 1
             days2 = (period.end_date - cm2.start_date).days + 1
             limit = (
