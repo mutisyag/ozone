@@ -43,7 +43,8 @@ export default {
   },
   data() {
     return {
-      labels: {}
+      labels: {},
+      transitionToValidate: ['submit']
     }
   },
   computed: {
@@ -74,7 +75,16 @@ export default {
     transition: {
       handler(val) {
         if (val !== null) {
-          this.$refs.transition_modal.show()
+          if (this.transitionToValidate.includes(val)) {
+            this.$store.dispatch('triggerSave', { action: '', data: { submission: this.submission, transition: `before-${this.transition}`, nextTransition: this.transition } })
+            if (this.$store.state.dataForAction === null) {
+              this.$emit('removeTransition')
+            } else {
+              this.$refs.transition_modal.show()
+            }
+          } else {
+            this.$refs.transition_modal.show()
+          }
         }
       }
     }
