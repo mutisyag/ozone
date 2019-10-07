@@ -10,12 +10,12 @@
         <span
           class="btn-link"
           @click="$emit('fillSearch', { substance: display.substances[field.substance] })"
-          v-if="display.substances[field.substance]"
+          v-if="field.substance && display.substances[field.substance]"
         >{{display.substances[field.substance]}}</span>
         <span
           class="btn-link"
           @click="$emit('fillSearch', { blend: display.blends[field.blend].name })"
-          v-if="display.blends[field.blend]"
+          v-if="field.blend && display.blends[field.blend]"
         >{{display.blends[field.blend].name}}</span>
         <span
           class="btn-link"
