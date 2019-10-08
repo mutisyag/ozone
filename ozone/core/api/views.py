@@ -455,12 +455,15 @@ class BlendViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Blend.objects.all().prefetch_related(
-            'components', 'components__substance'
+            'components__substance__group__annex'
         )
-        party = self.request.user.party or self.request.query_params.get('party', None)
+        party = self.request.user.party or self.request.query_params.get(
+            'party', None
+        )
         if party is not None:
             queryset = queryset.filter(
-                party=party) | queryset.filter(party=None)
+                party=party
+            ) | queryset.filter(party=None)
         return queryset
 
     def get_serializer_class(self):
@@ -600,7 +603,7 @@ def populate_aggregation(aggregation, fields, to_add):
 
 
 class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
-    # Data for this view is in ODP tons for annexes A-E and 
+    # Data for this view is in ODP tons for annexes A-E and
     # CO2-eq tonnes for annex F
     queryset = ProdCons.objects.filter(
         party=F('party__parent_party')
