@@ -1,14 +1,24 @@
 import logging
 
 from django.core.management.base import BaseCommand
-from django.db.models import F
 
-from ozone.core.models import Submission, ProdCons, Party, ReportingPeriod, ObligationTypes
+from ozone.core.models import (
+    Submission,
+    ProdCons,
+    Party,
+    ReportingPeriod,
+    ObligationTypes,
+)
 
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
+    """
+    Calculates and saves (overwriting if needed) aggregations for all Article 7
+    submissions.
+    """
+
     help = __doc__
 
     def add_arguments(self, parser):
