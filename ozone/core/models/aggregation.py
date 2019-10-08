@@ -610,6 +610,14 @@ class ProdCons(BaseProdCons):
 
         super().save(*args, **kwargs)
 
+    def update_limits_and_baselines(self):
+        """
+        Used wheen needing to save just baselines and limits without performing
+        any extra totals calculations.
+        """
+        self.populate_limits_and_baselines()
+        super().save()
+
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
         unique_together = ("party", "reporting_period", "group")

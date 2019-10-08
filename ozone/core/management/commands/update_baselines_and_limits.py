@@ -75,7 +75,7 @@ class Command(BaseCommand):
                 logger.debug(f"Found aggregation {a.id}")
 
             if options['confirm']:
-                a.populate_limits_and_baselines()
+                a.update_limits_and_baselines()
                 logger.debug(
                     f"Updated aggregation {a} with:\n"
                     f"baseline production: {a.baseline_prod},\n"
