@@ -1683,12 +1683,13 @@ class Submission(models.Model):
         # We need to delete all related data entries before being able to
         # delete the submission. We leave it to the interface to ask "are you
         # sure?" to the user.
-        for related_data, aggr_flag in self.RELATED_DATA:
-            related_qs = getattr(self, related_data).all()
-            if related_qs:
-                related_qs.delete()
+        with transaction.atomic():
+            for related_data, aggr_flag in self.RELATED_DATA:
+                related_qs = getattr(self, related_data).all()
+                if related_qs:
+                    related_qs.delete()
 
-        super().delete(*args, **kwargs)
+            super().delete(*args, **kwargs)
 
     def clean(self):
         if not self.reporting_period.is_reporting_allowed:
