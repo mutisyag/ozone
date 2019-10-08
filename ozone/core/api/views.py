@@ -417,6 +417,9 @@ class GroupSubstanceViewSet(ReadOnlyMixin, viewsets.ModelViewSet):
     serializer_class = GroupSubstanceSerializer
     permission_classes = (IsAuthenticated,)
 
+    def get_queryset(self):
+        return Group.objects.all().prefetch_related('substances')
+
     def list(self, request, *args, **kwargs):
         serializer = GroupSubstanceSerializer(
             self.filter_queryset(self.get_queryset()),
