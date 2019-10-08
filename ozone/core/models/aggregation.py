@@ -592,6 +592,18 @@ class ProdCons(BaseProdCons):
                     and self.limit_bdn is not None):
                 self.baseline_bdn = baseline['baseline']
 
+    def update_limits_and_baselines(self):
+        """
+        Used when needing to save just baselines and limits without performing
+        any extra totals calculations.
+        """
+        self.populate_limits_and_baselines()
+        super().save()
+
+    def __str__(self):
+        return f'Aggregation for {self.party.name}, ' \
+               f'{self.reporting_period.name}, group {self.group.group_id}'
+
     def save(self, *args, **kwargs):
         """
         Overridden to perform extra actions.
@@ -609,14 +621,6 @@ class ProdCons(BaseProdCons):
         self.populate_limits_and_baselines()
 
         super().save(*args, **kwargs)
-
-    def update_limits_and_baselines(self):
-        """
-        Used wheen needing to save just baselines and limits without performing
-        any extra totals calculations.
-        """
-        self.populate_limits_and_baselines()
-        super().save()
 
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
@@ -664,6 +668,10 @@ class ProdConsMT(BaseProdCons):
         return BaseProdCons.get_decimals(
             self.reporting_period, self.substance.group, self.party
         )
+
+    def __str__(self):
+        return f'MT Aggregation for {self.party.name}, ' \
+               f'{self.reporting_period.name}, substance {self.substance.name}'
 
     def save(self, *args, **kwargs):
         """
