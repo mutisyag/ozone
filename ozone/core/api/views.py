@@ -662,23 +662,24 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             *fields, 'party', 'reporting_period', self.group_field
         )
         values = []
+        # Use a dictionary of list of dictionaries for in-memory storage to
+        # optimize DB queries.
+        values_list = {period: [] for period in periods}
+        for value in all_values:
+            values_list[value['reporting_period']].append(value)
         for period in periods:
-            # Use a list of dictionaries for in-memory storage to optimize
-            # DB queries.
-            values_list = [
-                value for value in all_values
-                if value['reporting_period'] == period
-            ]
             if 'party' in aggregates and 'group' in aggregates:
                 # Sum values for all groups/substances and all parties
                 # for this reporting period.
                 aggregation = ProdCons(reporting_period_id=period)
-                populate_aggregation(aggregation, fields, values_list)
+                populate_aggregation(
+                    aggregation, fields, values_list.get(period, [])
+                )
                 values.append(aggregation)
             elif 'party' in aggregates:
                 for group in groups:
                     entries = [
-                        value for value in values_list
+                        value for value in values_list.get(period, [])
                         if value[self.group_field] == group
                     ]
                     if entries:
@@ -688,16 +689,17 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         populate_aggregation(aggregation, fields, entries)
                         values.append(aggregation)
             elif 'group' in aggregates:
+                entries = {party: [] for party in parties}
+                for value in values_list.get(period, []):
+                    entries[value['party']].append(value)
                 for party in parties:
-                    entries = [
-                        value for value in values_list
-                        if value['party'] == party
-                    ]
-                    if entries:
+                    if entries.get(party, []):
                         aggregation = ProdCons(
                             party_id=party, reporting_period_id=period
                         )
-                        populate_aggregation(aggregation, fields, entries)
+                        populate_aggregation(
+                            aggregation, fields, entries[party]
+                        )
                         values.append(aggregation)
             elif substance_to_group is True:
                 # This is used to aggregate MT values (in which entries are per
@@ -709,7 +711,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 for group in groups:
                     for party in parties:
                         entries = [
-                            value for value in values_list
+                            value for value in values_list.get(period, [])
                             if (
                                 value[self.group_field] == group
                                 and value['party'] == party
