@@ -708,22 +708,24 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 # It is only done when no other aggregation is performed, as
                 # any of the above aggregations will already have converted
                 # the per-substance entries to per-group entries.
+                entries = {
+                    (party, group): [] for group in groups for party in parties
+                }
+                for value in values_list.get(period, []):
+                    entries[(value['party'], value[self.group_field])].append(
+                        value
+                    )
                 for group in groups:
                     for party in parties:
-                        entries = [
-                            value for value in values_list.get(period, [])
-                            if (
-                                value[self.group_field] == group
-                                and value['party'] == party
-                            )
-                        ]
-                        if entries:
+                        if entries[(party, group)]:
                             aggregation = ProdCons(
                                 party_id=party,
                                 group_id=group,
                                 reporting_period_id=period
                             )
-                            populate_aggregation(aggregation, fields, entries)
+                            populate_aggregation(
+                                aggregation, fields, entries[(party, group)]
+                            )
                             values.append(aggregation)
 
         # Aggregating disables pagination. However that is ok given the
