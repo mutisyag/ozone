@@ -48,6 +48,10 @@ class ReportingPeriod(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def is_control_period(self):
+        return self.name in ['C1999', 'C2000', 'C2001', 'BaseA5', 'BaseNA5']
+
     @classmethod
     def get_current_period(cls):
         today = datetime.now().date()

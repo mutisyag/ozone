@@ -176,7 +176,7 @@ class Command(BaseCommand):
             party_type = party_history.party_type
             period = party_history.reporting_period
 
-            if period.name in ['C1999', 'C2000', 'C2001', 'BaseA5', 'BaseNA5']:
+            if period.is_control_period:
                 # No limits for control periods
                 continue
             logger.debug('Processing party {}({}) and period {}'.format(

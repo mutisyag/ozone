@@ -39,12 +39,10 @@ class Command(BaseCommand):
             party = party_history.party
             party_type = party_history.party_type
             period = party_history.reporting_period
-            if period.name in ["C1999", "C2000", "C2001"]:
+            if period.is_control_period:
                 # No limits for control periods
                 continue
             print('Processing country {} and period {}'.format(party.name, period.name))
-            if period.name == 'BaseA5' or period.name == 'BaseNA5':
-                continue
             for group in Group.objects.all():
                 cm_queryset = ControlMeasure.objects.filter(
                     group=group,
