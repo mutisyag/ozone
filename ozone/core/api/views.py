@@ -576,17 +576,15 @@ class AggregationMTViewFilterSet(BaseAggregationViewFilterSet):
 
 def populate_aggregation(aggregation, fields, to_add):
     """
-    Helper function to populate an aggregation's fields based on a list
-    of dictionaries containing key-value pairs for those fields.
+    Helper function to populate an aggregation dictionary's fields based on a
+    list of dictionaries containing key-value pairs for those fields.
     """
     for field in fields:
         # A null value in any limit field means that the sum of all
         # values for that field across an aggregation should be null
         # (because null means no limits)
         if field.startswith('limit_'):
-            setattr(
-                aggregation,
-                field,
+            aggregation[field] = (
                 None if any([a[field] is None for a in to_add]) else
                 round_decimal_half_up(
                     sum([a[field] for a in to_add]),
@@ -594,9 +592,7 @@ def populate_aggregation(aggregation, fields, to_add):
                 )
             )
         else:
-            setattr(
-                aggregation,
-                field,
+            aggregation[field] = (
                 None if all([a[field] is None for a in to_add]) else
                 round_decimal_half_up(
                     sum([a[field] or Decimal(0) for a in to_add]),
@@ -671,7 +667,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             if 'party' in aggregates and 'group' in aggregates:
                 # Sum values for all groups/substances and all parties
                 # for this reporting period.
-                aggregation = ProdCons(reporting_period_id=period)
+                aggregation = dict({'reporting_period': period})
                 populate_aggregation(
                     aggregation, fields, values_list.get(period, [])
                 )
@@ -683,9 +679,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         if value[self.group_field] == group
                     ]
                     if entries:
-                        aggregation = ProdCons(
-                            group_id=group, reporting_period_id=period
-                        )
+                        aggregation = dict({
+                            'group': group, 'reporting_period': period
+                        })
                         populate_aggregation(aggregation, fields, entries)
                         values.append(aggregation)
             elif 'group' in aggregates:
@@ -694,9 +690,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                     entries[value['party']].append(value)
                 for party in parties:
                     if entries.get(party, []):
-                        aggregation = ProdCons(
-                            party_id=party, reporting_period_id=period
-                        )
+                        aggregation = dict({
+                            'party': party, 'reporting_period': period
+                        })
                         populate_aggregation(
                             aggregation, fields, entries[party]
                         )
@@ -718,11 +714,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 for group in groups:
                     for party in parties:
                         if entries[(party, group)]:
-                            aggregation = ProdCons(
-                                party_id=party,
-                                group_id=group,
-                                reporting_period_id=period
-                            )
+                            aggregation = dict({
+                                'party': party,
+                                'group': group,
+                                'reporting_period': period
+                            })
                             populate_aggregation(
                                 aggregation, fields, entries[(party, group)]
                             )
@@ -731,7 +727,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         # Aggregating disables pagination. However that is ok given the
         # small number of results that will be returned.
         # Ordering is also lost due to the use of set().
-        return Response(AggregationSerializer(values, many=True).data)
+        return Response(values)
 
     def list(self, request, *args, **kwargs):
         """
