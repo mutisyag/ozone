@@ -365,34 +365,34 @@ module.exports = {
     uploadeFile(browser, 'hello.pdf', '../../../../')
     saveSubmission(browser, ['Submission Information', 'Questionnaire'])
   },
-  BU_013: browser => {
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
-    deleteSubmission(browser)
-  },
+  //BU_013: browser => {
+  //  login(browser, 'p_ro', 'p_ro')
+  //  createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
+  //  deleteSubmission(browser)
+  //},
   // BU_014: browser => {
   //   login(browser, 'p_ro', 'p_ro')
   //   createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018')
   //   deleteSubmission(browser)
   // },
-  BU_015: browser => {
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
-
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    saveSubmission(browser, ['Submission Info'])
-    saveSubmission(browser, ['Submission Info'])
-    logout(browser)
-  },
+  //BU_015: browser => {
+  //  const submissionInfo = {
+  //    reporting_officer: 'test name',
+  //    designation: 'test designation',
+  //    organization: 'test organisation',
+  //    postal_address: 'test address',
+  //    country: 'France',
+  //    phone: '+490000000',
+  //    email: 'john.doe@gmail.com'
+  //  }
+  //
+  //  login(browser, 'p_ro', 'p_ro')
+  //  createSubmission(browser, 'Accounting for Essential and Critical uses (RAF)', '2018', '')
+  //  fillSubmissionInfo(browser, submissionInfo)
+  //  saveSubmission(browser, ['Submission Info'])
+  //  saveSubmission(browser, ['Submission Info'])
+  //  logout(browser)
+  //},
   BU_019: browser => {
     const group = 'A/I Chlorofluorocarbons (CFCs)'
     const name = 'CFC-11'
