@@ -1,8 +1,6 @@
 import logging
 
-from decimal import Decimal
 from django.core.management.base import BaseCommand
-from django.db.models import Q
 
 from openpyxl import load_workbook
 import collections
@@ -10,19 +8,15 @@ import collections
 from ozone.core.models import (
     Party,
     PartyHistory,
-    ReportingPeriod,
-    Group,
     ProdCons,
     Limit,
-    Baseline,
     ControlMeasure,
     LimitTypes,
 )
 
-from ozone.core.models.utils import (
-    round_decimal_half_up,
-    float_to_decimal,
-)
+from ozone.core.models.utils import float_to_decimal
+
+from ozone.core.calculated import limits
 
 logger = logging.getLogger(__name__)
 
@@ -32,45 +26,7 @@ class Command(BaseCommand):
 
     def __init__(self, stdout=None, stderr=None, no_color=False):
         super().__init__(stdout=None, stderr=None, no_color=False)
-
-        self.groups = {
-            _group.group_id: _group
-            for _group in Group.objects.all()
-        }
-        self.reporting_periods = {
-            _period.name: _period
-            for _period in ReportingPeriod.objects.all()
-        }
-        self.parties = {
-            _party.abbr: _party
-            for _party in Party.get_main_parties()
-        }
-        self.eu_member_states = [
-            _party.abbr
-            for _party in Party.get_eu_members()
-        ]
-        self.eu_member_states_1989 = [
-            _party.abbr
-            for _party in Party.get_eu_members_at(
-                self.reporting_periods['1989']
-            )
-        ]
-
-        def _new_eu_member_states_since(period_name):
-            return [
-                self.parties[_party]
-                for _party in self.eu_member_states
-                if _party not in [
-                    _p.abbr
-                    for _p in Party.get_eu_members_at(
-                        self.reporting_periods[period_name]
-                    )
-                ]
-            ]
-        self.new_eu_member_states_since = {
-            _period: _new_eu_member_states_since(_period)
-            for _period in ('1989', '2009', '2010')
-        }
+        self.calculator = limits.LimitCalculator()
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -99,9 +55,12 @@ class Command(BaseCommand):
         ))
         logger.addHandler(stream)
         logger.setLevel(logging.INFO)
+        limits.logger.addHandler(stream)
+        limits.logger.setLevel(logging.INFO)
 
         if int(options['verbosity']) > 1:
             logger.setLevel(logging.DEBUG)
+            limits.logger.setLevel(logging.DEBUG)
 
         if not ControlMeasure.objects.exists():
             logger.error("Control measures not found, aborting.")
@@ -137,15 +96,15 @@ class Command(BaseCommand):
         errors = list()
         for pk, row in results.items():
             # key = (CntryId, Period, Anx, Grp)
-            party = self.parties[pk[0]]
-            period = self.reporting_periods[pk[1]]
-            group = self.groups[pk[2]+pk[3]]
+            party = self.calculator.parties[pk[0]]
+            period = self.calculator.reporting_periods[pk[1]]
+            group = self.calculator.groups[pk[2] + pk[3]]
             party_type = PartyHistory.objects.get(
                 party=party,
                 reporting_period=period,
             ).party_type
 
-            computed = self.get_limit(
+            computed = self.calculator.get_limit(
                 'BDN', group, party, party_type, period
             )
             legacy = float_to_decimal(row['BDNProdLimit'])
@@ -182,10 +141,10 @@ class Command(BaseCommand):
             logger.debug('Processing party {}({}) and period {}'.format(
                 party.abbr, party.name, period.name
             ))
-            for group in self.groups.values():
+            for group in self.calculator.groups.values():
                 has_changed = False
                 for limit_type in LimitTypes:
-                    limit = self.get_limit(
+                    limit = self.calculator.get_limit(
                         limit_type.value, group, party, party_type, period
                     )
                     if limit is not None:
@@ -266,92 +225,3 @@ class Command(BaseCommand):
                 party.abbr, group.group_id, period.name
             ))
             prodcons.save()
-
-    def _get_baseline(self, party, group, baseline_type):
-        if group.group_id in ('CII', 'CIII'):
-            # Fake baseline, because control measures start with phase-out
-            return Decimal(0)
-        else:
-            baseline = Baseline.objects.filter(
-                party=party,
-                group=group,
-                baseline_type=baseline_type
-            ).first()
-            if baseline is None:
-                return None
-            else:
-                return baseline.baseline
-
-    def _get_decimals_for_limits(self, group, party):
-        """
-            Limits must use the same number of decimals as baselines.
-            Meaning that for C/I we only use one decimal, unless party is
-              in that special list, because C/I baseline for A5
-              is the everage of 2009 and 2010
-        """
-        if group.group_id == 'F':
-            return 0
-        elif group.group_id == 'CI' and (
-            party.abbr in ProdCons.special_cases_2009 or
-            party.abbr in ProdCons.special_cases_2010
-        ):
-            return 2
-        return 1
-
-    def get_limit(self, limit_type, group, party, party_type, period):
-
-        if party.abbr == 'EU' and limit_type in (
-            LimitTypes.BDN.value,
-            LimitTypes.PRODUCTION.value
-        ):
-            # No BDN or Prod limits for EU/ECE(European Union)
-            return None
-
-        if (
-            party in Party.get_eu_members_at(period) and
-            limit_type == LimitTypes.CONSUMPTION.value
-        ):
-            # No consumption baseline for EU member states
-            return None
-
-        cm_queryset = ControlMeasure.objects.filter(
-            group=group,
-            party_type=party_type,
-            start_date__lte=period.end_date,
-            limit_type=limit_type,
-        ).filter(
-            Q(end_date__gte=period.start_date) | Q(end_date__isnull=True)
-        ).order_by('start_date')
-        cm_count = cm_queryset.count()
-        if cm_count == 0:
-            # No control measures here
-            return None
-        elif cm_count == 1:
-            cm = cm_queryset.first()
-            baseline = self._get_baseline(party, group, cm.baseline_type)
-            if baseline is None:
-                return Decimal('0')
-            else:
-                return round_decimal_half_up(
-                    baseline * cm.allowed,
-                    self._get_decimals_for_limits(group, party)
-                )
-        elif cm_count == 2:
-            # This happens for NA5 BDN limits, AI/BI/EI
-            # because control measure becomes applicable in July 28, 2000
-            cm1 = cm_queryset[0]
-            cm2 = cm_queryset[1]
-            baseline1 = self._get_baseline(party, group, cm1.baseline_type)
-            baseline2 = self._get_baseline(party, group, cm2.baseline_type)
-            if baseline1 is None or baseline2 is None:
-                return Decimal('0')
-            days1 = (cm1.end_date - period.start_date).days + 1
-            days2 = (period.end_date - cm2.start_date).days + 1
-            limit = (
-                cm1.allowed * days1 * baseline1 +
-                cm2.allowed * days2 * baseline2
-            ) / ((period.end_date - period.start_date).days + 1)
-            return round_decimal_half_up(
-                limit,
-                self._get_decimals_for_limits(group, party)
-            )

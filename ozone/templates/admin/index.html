@@ -1,0 +1,27 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+<div class="module">
+  <table style="width: 100%">
+    <caption>
+      <span class="section">Ozone Tools</span>
+    </caption>
+    <tbody>
+      <tr>
+        <th scope="row">
+          <a href="/admin/ozone_tools/generate_baselines/">Generate baselines</a>
+        </th>
+      </tr>
+      <tr>
+        <th scope="row">
+          <a href="/admin/ozone_tools/generate_limits/">Generate limits</a>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+
+
+{{ block.super }}
+{% endblock %}

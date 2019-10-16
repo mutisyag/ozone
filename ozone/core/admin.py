@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import F, Subquery
 from django.shortcuts import redirect
+from django.urls import path
 from django.urls import reverse
 from django.utils.html import format_html
 from django.views.decorators.cache import never_cache
@@ -20,6 +21,8 @@ from django.utils.translation import gettext_lazy as _
 from django.http import FileResponse
 
 from ozone.core.export.submissions import export_submissions, ExportError
+from ozone.core.calculated import baselines
+from ozone.core.calculated import limits
 
 # Register your models here.
 from .models import (
@@ -122,6 +125,20 @@ class OzoneAdminSite(AdminSite, metaclass=Singleton):
 
     # Text to put at the top of the admin index page.
     index_title = _('Administration')
+
+    def get_urls(self):
+        return [
+            path('ozone_tools/generate_baselines/', self.generate_baselines),
+            path('ozone_tools/generate_limits/', self.generate_limits),
+        ] + super().get_urls()
+
+    def generate_baselines(self, request):
+        context = dict(self.each_context(request))
+        return baselines.admin_view(request, context)
+
+    def generate_limits(self, request):
+        context = dict(self.each_context(request))
+        return limits.admin_view(request, context)
 
     @never_cache
     def login(self, request, extra_context=None):

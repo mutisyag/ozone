@@ -1,0 +1,162 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+
+<form method="POST">
+{% csrf_token %}
+
+{% if step == "diff" %}
+  <h2>To be created ({{ diff.missing|length }})</h2>
+  <table id="diff-missing">
+    <thead>
+      <th><input type="checkbox" checked></th>
+      <th>Party</th>
+      <th>Reporting period</th>
+      <th>Limit type</th>
+      <th>Annex/Group</th>
+      <th>Limit value</th>
+    </thead>
+    <tbody>
+    {% for record in diff.missing %}
+      <tr>
+        <th scope="row"><input type="checkbox" checked name="missing"
+            value="{{ record.checkbox_value }}"></th>
+        <td>{{ record.party }}</td>
+        <td>{{ record.reporting_period }}</td>
+        <td>{{ record.limit_type.name }}</td>
+        <td>{{ record.group }}</td>
+        <td>{{ record.limit }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>To be updated ({{ diff.different|length }})</h2>
+  <table id="diff-different">
+    <thead>
+      <th><input type="checkbox" checked></th>
+      <th>Party</th>
+      <th>Reporting period</th>
+      <th>Limit type</th>
+      <th>Substance group</th>
+      <th>Limit current value</th>
+      <th>Limit new value</th>
+    </thead>
+    <tbody>
+    {% for record in diff.different %}
+      <tr>
+        <th scope="row"><input type="checkbox" checked name="different"
+            value="{{ record.checkbox_value }}"></th>
+        <td>{{ record.row.party }}</td>
+        <td>{{ record.row.reporting_period }}</td>
+        <td>{{ record.row.limit_type.name }}</td>
+        <td>{{ record.row.group }}</td>
+        <td>{{ record.row.limit }}</td>
+        <td>{{ record.new_value }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2>To be deleted ({{ diff.obsolete|length }})</h2>
+  <table id="diff-obsolete">
+    <thead>
+      <th><input type="checkbox" checked></th>
+      <th>Party</th>
+      <th>Reporting period</th>
+      <th>Limit type</th>
+      <th>Substance group</th>
+      <th>Limit value</th>
+    </thead>
+    <tbody>
+    {% for record in diff.obsolete %}
+      <tr>
+        <th scope="row"><input type="checkbox" checked name="obsolete"
+            value="{{ record.checkbox_value }}"></th>
+        <td>{{ record.row.party }}</td>
+        <td>{{ record.row.reporting_period }}</td>
+        <td>{{ record.row.limit_type.name }}</td>
+        <td>{{ record.row.group }}</td>
+        <td>{{ record.row.limit }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <input type="hidden" name="step" value="apply">
+  <button type="submit">Apply changes</button>
+
+{% else %}
+  <p>
+    <label>
+      Party
+      <select name="party">
+        <option value="*">All</option>
+        {% for party in parties %}
+          <option value="{{ party.pk }}">{{ party }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
+  <p>
+    <label>
+      Reporting period
+      <select name="reporting_period">
+        <option value="*">All</option>
+        {% for period in reporting_periods %}
+          <option value="{{ period.pk }}">{{ period }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
+  <p>
+    <label>
+      Annex group
+      <select name="group">
+        <option value="*">All</option>
+        {% for group in groups %}
+          <option value="{{ group.pk }}">{{ group }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
+  <input type="hidden" name="step" value="diff">
+  <button type="submit">Preview changes</button>
+{% endif %}
+
+</form>
+
+<script>
+(function() {
+  function checkboxy(table) {
+    var master = table.querySelector('thead input[type=checkbox]');
+    var checkboxes = table.querySelectorAll('tbody input[type=checkbox]');
+
+    function clickMaster(e) {
+      for (var i of checkboxes) i.checked = master.checked;
+    }
+
+    function clickItem(e) {
+      master.checked = allChecked();
+    }
+
+    function allChecked() {
+      for (var i of checkboxes) if (! i.checked) return false;
+      return true;
+    }
+
+    table.addEventListener('click', function(e) {
+      if (e.target === master) return clickMaster(e);
+      for (var i of checkboxes) if (e.target === i) return clickItem(e);
+    });
+  }
+
+  checkboxy(document.querySelector('table#diff-missing'));
+  checkboxy(document.querySelector('table#diff-different'));
+  checkboxy(document.querySelector('table#diff-obsolete'));
+})();
+</script>
+
+{% endblock %}
