@@ -1,4 +1,4 @@
-const nodeListPrototypes = function() {
+const nodeListPrototypes = () => {
   if (window.NodeList) {
     if (!NodeList.prototype.forEach) {
       NodeList.prototype.forEach = Array.prototype.forEach
@@ -6,27 +6,26 @@ const nodeListPrototypes = function() {
   }
 }
 
-const nodePrototypes = function () {
+const nodePrototypes = (...args) => {
   if (window.Node) {
     if (!Node.prototype.contains) {
-      Node.prototype.contains = function (node) {
-        if (!(0 in arguments)) {
+      Node.prototype.contains = (node) => {
+        if (args.length < 1) {
           throw new TypeError('1 argument is required')
         }
         do {
-          console.log(node)
           if (this === node) {
             return true
           }
-        } while (node = node && node.parentNode)
+          node = node && node.parentNode
+        } while (node)
         return false
       }
     }
   }
-  
 }
 
-const loadPollyfills = function() {
+const loadPollyfills = () => {
   nodeListPrototypes()
   nodePrototypes()
 }

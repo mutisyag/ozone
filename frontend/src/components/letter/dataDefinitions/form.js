@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/letter/dataDefinitions/tabFiles'
 
 const getFormLetter = ($gettext) => {
   const tabSubInfo = getTabSubInfo($gettext)

@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/otherRo/dataDefinitions/tabFiles'
 
 const getFormOtherRo = ($gettext, formName) => {
   const sub_info_details_html = {

@@ -1,5 +1,5 @@
 import { getTabSubInfo } from '@/components/common/dataDefinitions/tabSubInfo'
-import { setTabFiles } from '@/components/common/dataDefinitions/tabFiles'
+import { setTabFiles } from '@/components/exemption/dataDefinitions/tabFiles'
 import { getTabsCommonInfoForNominationAndApproved } from './tabsCommonInfoForNominationAndApproved'
 
 const getFormExemption = ($gettext) => {

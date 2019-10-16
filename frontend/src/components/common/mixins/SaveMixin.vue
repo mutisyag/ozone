@@ -61,23 +61,28 @@ export default {
       const tabsToValidate = Object.values(this.form.tabs).filter(tab => tab.validate).map(tab => tab.name)
       for (const tab of tabsToValidate) {
         if (tab === 'sub_info' || (this.$store.state.dataForAction && this.validateBeforeTransitions.includes(this.$store.state.dataForAction.transition))) {
-          // DO NOT REMOVE THIS
-          console.log(this.$store.getters.multiRowValidation(tab), tab)
-          if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
-            this.invalidTabs.push(this.form.tabs[tab].name)
-            this.$store.commit('setTabStatus', { tab, value: false })
-          }
-          if (Array.isArray(this.form.tabs[tab].form_fields)) {
-            for (const field of this.form.tabs[tab].form_fields) {
-              if (field.validation.selected.length) {
+          if (tab !== 'files' || (tab === 'files' && !this.is_secretariat)) {
+            // DO NOT REMOVE THIS
+            console.log(this.$store.getters.multiRowValidation(tab), tab)
+            if (Object.keys(this.$store.getters.multiRowValidation(tab)).length) {
+              this.invalidTabs.push(this.form.tabs[tab].name)
+              this.$store.commit('setTabStatus', { tab, value: false })
+            }
+            if (Array.isArray(this.form.tabs[tab].form_fields)) {
+              for (const field of this.form.tabs[tab].form_fields) {
+                if (field.validation.selected.length) {
+                  this.invalidTabs.push(this.form.tabs[tab].name)
+                  this.$store.commit('setTabStatus', { tab, value: false })
+                  break
+                }
+              }
+            } else if (this.form.tabs[tab].form_fields.validation) {
+              console.log(this.form.tabs[tab].form_fields.validation.selected.length)
+              if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
                 this.invalidTabs.push(this.form.tabs[tab].name)
                 this.$store.commit('setTabStatus', { tab, value: false })
-                break
               }
-            }
-          } else {
-            console.log(this.form.tabs[tab].form_fields.validation.selected.length)
-            if (this.form.tabs[tab].form_fields.validation && this.form.tabs[tab].form_fields.validation.selected.length) {
+            } else if (this.form.tabs[tab].validation === false) {
               this.invalidTabs.push(this.form.tabs[tab].name)
               this.$store.commit('setTabStatus', { tab, value: false })
             }
