@@ -1,0 +1,15 @@
+{% extends './login.html' %}
+{% load i18n static %}
+
+{% block content %}
+  <div id="content-main">
+    <form id="login_form">
+    <div class="password-reset-link">
+      {% blocktrans %}
+      Login failed. You have probably logged in in another browser tab.
+      <a href="{{ login_url }}">Click here</a> to reload this page and try again.
+      {% endblocktrans %}
+    </div>
+    </form>
+  </div>
+{% endblock content %}

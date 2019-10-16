@@ -268,6 +268,10 @@ TEMPLATES = [
 # CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
+# Security
+CSRF_FAILURE_VIEW = 'ozone.core.views.csrf_failure'
+
+
 # Guardian
 ANONYMOUS_USER_NAME = None
 

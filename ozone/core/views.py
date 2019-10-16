@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.contrib.auth.views import PasswordResetConfirmView
+from django.http import HttpResponseForbidden
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.views.i18n import set_language as set_language_django
 
 from ozone.core.email import send_mail_from_template
@@ -48,3 +50,15 @@ class ActivateUserPasswordResetConfirmView(PasswordResetConfirmView):
                     to_emails=[self.user.created_by.email],
                 )
         return result
+
+
+def csrf_failure(request, reason="", template_name="admin/403_csrf.html"):
+    """
+    Will be used as a custom view in case of 403 errors due to CSRF token
+    not matching (which can happen when logging in after automatic logout when
+    multiple tabs are open).
+    By convention, this needs to return HttpResponseForbidden.
+    """
+    return HttpResponseForbidden(
+        render_to_string(template_name)
+    )
