@@ -20,5 +20,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision :shell, privileged: false, path: "utility/vagrant_provision.sh"
+  config.vm.provision :shell, privileged: false, path: "utility/vagrant_provision_e2e.sh"
 
 end

@@ -32,3 +32,6 @@ export POSTGRES_PASSWORD=
 # Other
 # XXX TODO: Why is this needed?
 export USE_DOCKER=yes
+
+export OZONE_NIGHTWATCH_LOCAL_SELENIUM_JAR=/usr/local/lib/node_modules/webdriver-manager/selenium/selenium-server-standalone-3.141.59.jar
+export OZONE_NIGHTWATCH_LOCAL_CHROMEDRIVER=/usr/local/lib/node_modules/webdriver-manager/selenium/chromedriver_77.0.3865.40

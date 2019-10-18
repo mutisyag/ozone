@@ -20,10 +20,25 @@ With Docker
 
 Vagrant
 ^^^^^^^
-::
+Start up the Vagrant VM::
 
     vagrant up
-    vagrant ssh -- /vagrant/utility/vagrant_test.sh
+
+Run unit tests::
+
+    vagrant ssh
+    . .envrc.vagrant
+    pytest
+
+Run e2e tests::
+
+    vagrant ssh -- -L 5901:localhost:5901
+    . .envrc.vagrant
+    vnc4server -geometry 1920x1080
+    cd frontend
+    DISPLAY=:1 npm run e2e-local
+
+To see the e2e tests in progress, connect to local port 5901 with a VNC client.
 
 
 Settings
