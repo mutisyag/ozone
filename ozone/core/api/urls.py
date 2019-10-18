@@ -438,5 +438,10 @@ urlpatterns = (
             views.GetSubmissionFormatsViewSet.as_view(),
             name='get_submission_formats'
         ),
+        path(
+            'get-reporting-channels/',
+            views.GetReportingChannelsViewSet.as_view(),
+            name='get_reporting_channels'
+        ),
     ]
 )

@@ -227,6 +227,9 @@ class ReportingChannel(models.Model):
     # True if this is the default channel set when cloning a submission
     is_default_for_cloning = models.BooleanField(default=False)
 
+    # False for values which can be selected by web form users
+    is_reserved_system = models.BooleanField(default=False)
+
     @classmethod
     def get_default(cls, user):
         """
