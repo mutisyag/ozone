@@ -554,6 +554,10 @@ class ProdCons(BaseProdCons):
         if self.is_article5 is None:
             self.is_article5 = is_article5
 
+        # Reset baselines and limits to None, in case previous values exist
+        self.limit_prod = self.limit_cons = self.limit_bdn = None
+        self.baseline_prod = self.baseline_cons = self.baseline_bdn = None
+
         # Populate limits
         for limit in Limit.objects.filter(
             party=self.party,
