@@ -5,7 +5,8 @@
       "description": "",
       "is_default_party": true,
       "is_default_secretariat": false,
-      "is_default_for_cloning": true
+      "is_default_for_cloning": true,
+      "is_reserved_system": false
     },
     "model": "core.reportingchannel",
     "pk": 1
@@ -16,7 +17,8 @@
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": true,
-      "is_default_for_cloning": false
+      "is_default_for_cloning": false,
+      "is_reserved_system": false
     },
     "model": "core.reportingchannel",
     "pk": 2
@@ -27,7 +29,8 @@
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false
+      "is_default_for_cloning": false,
+      "is_reserved_system": true
     },
     "model": "core.reportingchannel",
     "pk": 3
@@ -38,7 +41,8 @@
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false
+      "is_default_for_cloning": false,
+      "is_reserved_system": false
     },
     "model": "core.reportingchannel",
     "pk": 4
@@ -49,7 +53,8 @@
       "description": "",
       "is_default_party": false,
       "is_default_secretariat": false,
-      "is_default_for_cloning": false
+      "is_default_for_cloning": false,
+      "is_reserved_system": true
     },
     "model": "core.reportingchannel",
     "pk": 5

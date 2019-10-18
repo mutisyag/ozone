@@ -147,6 +147,7 @@ from ..serializers import (
     ExemptionApprovedSerializer,
     RAFSerializer,
     SubmissionFormatSerializer,
+    ReportingChannelSerializer,
     AggregationSerializer,
     AggregationMTSerializer,
     AggregationDestructionSerializer,
@@ -1418,6 +1419,34 @@ class GetSubmissionFormatsViewSet(ReadOnlyMixin, generics.ListAPIView):
     queryset = SubmissionFormat.objects.all()
     permission_classes = (IsAuthenticated,)
     serializer_class = SubmissionFormatSerializer
+
+
+class GetReportingChannelsViewSet(ReadOnlyMixin, generics.ListAPIView):
+    """
+    retrieve:
+    Get the available options for the reporting channel.
+    """
+
+    queryset = ReportingChannel.objects.filter(
+        is_reserved_system=False,
+    )
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ReportingChannelSerializer
+
+    def get_queryset(self):
+        qs = ReportingChannel.objects.filter(
+            # Filter out Legacy and API
+            is_reserved_system=False,
+        )
+        if self.request.user.is_secretariat:
+            """
+            Secretariat shouldn't need to choose `Web form`
+            when entering data on behalf of parties
+            """
+            qs = qs.filter(
+                is_default_party=False,
+            )
+        return qs
 
 
 class SubmissionFlagsViewSet(

@@ -1153,6 +1153,15 @@ class SubmissionFormatSerializer(serializers.ModelSerializer):
         fields = ('name', )
 
 
+class ReportingChannelSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ReportingChannel
+        fields = ('name',
+                  'is_default_party',
+                  'is_default_secretariat')
+
+
 class PerTypeFieldsMixIn(object):
     """
     A ModelSerializer that takes an additional `fields` argument that
