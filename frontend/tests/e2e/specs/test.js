@@ -283,40 +283,40 @@ module.exports = {
     addComment(browser, 'has_destroyed_tab', 'Hakuna Matata')
     saveSubmission(browser, ['Questionnaire', 'Destruction'])
   },
-  BU_010: browser => {
-    const row_values = {
-      quantity_import_new: 0.12,
-      quantity_import_recovered: 0.12
-    }
-    const modal_values = {
-      quantity_export_new: 0.05,
-      quantity_export_recovered: 0.01
-    }
-    const submissionInfo = {
-      reporting_officer: 'test name',
-      designation: 'test designation',
-      organization: 'test organisation',
-      postal_address: 'test address',
-      country: 'France',
-      phone: '+490000000',
-      email: 'john.doe@gmail.com'
-    }
-
-    logMessage(browser, 'Testing the edit of Non-Party tab', true)
-    login(browser, 'p_ro', 'p_ro')
-    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
-    fillSubmissionInfo(browser, submissionInfo)
-    clickQuestionnaireRadios(browser, ['has_nonparty'])
-
-    addEntity(browser, 'has_nonparty_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
-    addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values)
-
-    addEntity(browser, 'has_nonparty_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
-    addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values)
-
-    addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
-    saveSubmission(browser, ['Questionnaire', 'Non-Party'])
-  },
+//  BU_010: browser => {
+//    const row_values = {
+//      quantity_import_new: 0.12,
+//      quantity_import_recovered: 0.12
+//    }
+//    const modal_values = {
+//      quantity_export_new: 0.05,
+//      quantity_export_recovered: 0.01
+//    }
+//    const submissionInfo = {
+//      reporting_officer: 'test name',
+//      designation: 'test designation',
+//      organization: 'test organisation',
+//      postal_address: 'test address',
+//      country: 'France',
+//      phone: '+490000000',
+//      email: 'john.doe@gmail.com'
+//    }
+//
+//    logMessage(browser, 'Testing the edit of Non-Party tab', true)
+//    login(browser, 'p_ro', 'p_ro')
+//    createSubmission(browser, 'Article 7 - Data Reporting', '2018', '')
+//    fillSubmissionInfo(browser, submissionInfo)
+//    clickQuestionnaireRadios(browser, ['has_nonparty'])
+//
+//    addEntity(browser, 'has_nonparty_tab', 'substance', ['A/I Chlorofluorocarbons (CFCs)', 'CFC-11'], 1, true)
+//    addValues(browser, 'substance-table', 'has_nonparty_tab', 1, row_values, modal_values)
+//
+//    addEntity(browser, 'has_nonparty_tab', 'blend', ['Zeotrope', 'R-401A'], 1, true)
+//    addValues(browser, 'blend-table', 'has_nonparty_tab', 1, row_values, modal_values)
+//
+//    addComment(browser, 'has_nonparty_tab', 'Hakuna Matata')
+//    saveSubmission(browser, ['Questionnaire', 'Non-Party'])
+//  },
   BU_011: browser => {
     const row_values = {
       facility_name: 'CCT Facility',
