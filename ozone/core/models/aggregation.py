@@ -588,9 +588,23 @@ class ProdCons(BaseProdCons):
             if (baseline['baseline_type__name'] == cons_bt
                     and self.limit_cons is not None):
                 self.baseline_cons = baseline['baseline']
+            # This is actually not correct for all cases - see below
             if (baseline['baseline_type__name'] == bdn_bt
                     and self.limit_bdn is not None):
                 self.baseline_bdn = baseline['baseline']
+
+        # Finally, set or overwrite baseline_bdn if needed.
+        # The above-set value is valid only for NA5 parties, year >= 2000
+        # and annex groups A/I, A/II, B/I and E/I.
+        # For all other cases, the BDN baseline is the A5 or NA5 prod baseline.
+        if self.limit_bdn is not None:
+            start_date_2000 = datetime.strptime('2000-01-01', '%Y-%m-%d').date()
+            if (
+                self.reporting_period.start_date < start_date_2000
+                or self.is_article5
+                or self.group.group_id not in ['AI', 'AII', 'BI', 'EI']
+            ):
+                self.baseline_bdn = self.baseline_prod
 
     def update_limits_and_baselines(self):
         """
