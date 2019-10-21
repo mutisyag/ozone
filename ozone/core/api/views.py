@@ -668,7 +668,11 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             if 'party' in aggregates and 'group' in aggregates:
                 # Sum values for all groups/substances and all parties
                 # for this reporting period.
-                aggregation = dict({'reporting_period': period})
+                aggregation = dict({
+                    'reporting_period': period,
+                    'party': None,
+                    'group': None
+                })
                 populate_aggregation(
                     aggregation, fields, values_list.get(period, [])
                 )
@@ -681,7 +685,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                     ]
                     if entries:
                         aggregation = dict({
-                            'group': group, 'reporting_period': period
+                            'group': group,
+                            'reporting_period': period,
+                            'party': None
                         })
                         populate_aggregation(aggregation, fields, entries)
                         values.append(aggregation)
@@ -692,7 +698,9 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 for party in parties:
                     if entries.get(party, []):
                         aggregation = dict({
-                            'party': party, 'reporting_period': period
+                            'party': party,
+                            'reporting_period': period,
+                            'group': None
                         })
                         populate_aggregation(
                             aggregation, fields, entries[party]
@@ -821,9 +829,8 @@ class AggregationDestructionViewSet(AggregationViewSet):
     filterset_class = AggregationDestructionViewFilterSet
     ordering = ("-reporting_period__start_date", "party",)
 
-    # Custom class attributes needed for our custom list() implementation to
+    # Custom class attribute needed for our custom list() implementation to
     # work properly in subclasses
-    model_class = ProdCons
     group_or_substance = 'group'
 
     def list(self, request, *args, **kwargs):
@@ -846,7 +853,6 @@ class AggregationDestructionViewSet(AggregationViewSet):
 
         # Handle aggregation. In this case we always aggregate by group, since
         # only the total destructions sum per party/period is public.
-        aggregation = request.query_params.get('aggregation', None)
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
         for period in periods:
@@ -859,7 +865,11 @@ class AggregationDestructionViewSet(AggregationViewSet):
             if aggregates and 'party' in aggregates:
                 # Sum values for all groups (or substances) and all parties for
                 # this reporting period
-                aggregation = self.model_class(reporting_period_id=period)
+                aggregation = dict({
+                    'reporting_period': period,
+                    'party': None,
+                    'group': None
+                })
                 populate_aggregation(aggregation, ['destroyed',], values_list)
                 values.append(aggregation)
             else:
@@ -871,9 +881,11 @@ class AggregationDestructionViewSet(AggregationViewSet):
                         if value['party'] == party
                     ]
                     if entries:
-                        aggregation = self.model_class(
-                            party_id=party, reporting_period_id=period
-                        )
+                        aggregation = dict({
+                            'party': party,
+                            'reporting_period': period,
+                            'group': None
+                        })
                         populate_aggregation(
                             aggregation, ['destroyed',], entries
                         )
@@ -882,9 +894,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
         # Aggregating disables pagination. However that is ok given the small
         # number of results that will be returned.
         # Ordering is also lost due to the use of set().
-        return Response(
-            self.serializer_class(values, many=True).data
-        )
+        return Response(values)
 
 
 class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
@@ -900,9 +910,8 @@ class AggregationDestructionMTViewSet(AggregationDestructionViewSet):
     filterset_class = AggregationDestructionViewFilterSet
     ordering = ("-reporting_period__start_date", "party",)
 
-    # Custom class attributes needed for our custom list() implementation
+    # Custom class attribute needed for our custom list() implementation
     # (from AggregationDestructionViewSet) to work properly in this subclass.
-    model_class = ProdConsMT
     group_or_substance = 'substance'
 
     def get_queryset(self):
