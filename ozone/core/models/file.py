@@ -67,6 +67,10 @@ class UploadToken(models.Model):
         )
 
 
+def default_upload_to(instance, filename):
+    raise NotImplementedError
+
+
 class File(models.Model):
     """
     A File object will be created on all uploads where the file is fully
@@ -75,14 +79,11 @@ class File(models.Model):
     `upload_successful` flag.
     """
 
-    def get_storage_directory(self, filename):
-        raise NotImplementedError
-
     # The name the file gets in the ORS
     name = models.CharField(max_length=512)
 
     file = models.FileField(
-        upload_to=get_storage_directory,
+        upload_to=default_upload_to,
         max_length=1024,
         null=True, blank=True,
     )
@@ -109,13 +110,14 @@ class File(models.Model):
         abstract = True
 
 
-class SubmissionFile(File):
-    def get_storage_directory(self, filename):
-        return os.path.join(
-            self.submission.get_storage_directory(),
-            os.path.basename(filename)
-        )
+def submission_file_upload_to(instance, filename):
+    return os.path.join(
+        instance.submission.get_storage_directory(),
+        os.path.basename(filename)
+    )
 
+
+class SubmissionFile(File):
     # The name as given originally by the uploader
     original_name = models.CharField(max_length=512, blank=True, default='')
     # Indicates the suffix in the case of multiple files of same original name
@@ -126,7 +128,7 @@ class SubmissionFile(File):
     )
 
     file = models.FileField(
-        upload_to=get_storage_directory,
+        upload_to=submission_file_upload_to,
         max_length=1024,
         null=True, blank=True,
     )
@@ -135,12 +137,6 @@ class SubmissionFile(File):
 
     class Meta:
         db_table = 'submission_file'
-
-    def get_storage_directory(self, filename):
-        return os.path.join(
-            self.submission.get_storage_directory(),
-            os.path.basename(filename)
-        )
 
     def get_download_url(self):
         return reverse(

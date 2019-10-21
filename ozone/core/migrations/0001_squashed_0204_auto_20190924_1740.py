@@ -1431,7 +1431,7 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('original_name', models.CharField(blank=True, default='', max_length=512)),
                 ('suffix', models.PositiveSmallIntegerField(default=0)),
-                ('file', models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory)),
+                ('file', models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.default_upload_to)),
                 ('submission', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='files', to='core.Submission')),
                 ('uploader', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='uploaded_files', to=settings.AUTH_USER_MODEL)),
             ],

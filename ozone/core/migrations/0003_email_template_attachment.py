@@ -31,6 +31,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='submissionfile',
             name='file',
-            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.SubmissionFile.get_storage_directory),
+            field=models.FileField(blank=True, null=True, upload_to=ozone.core.models.file.default_upload_to),
         ),
     ]
