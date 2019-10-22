@@ -36,6 +36,10 @@
           <i class="fa fa-unlock"/>
           <span v-translate>Reset password</span>
         </b-dropdown-item>
+        <b-dropdown-item :href="`${apiBase}/docs/`">
+          <i class="fa fa-question"/>
+          <span v-translate>Help</span>
+        </b-dropdown-item>
         <b-dropdown-item @click="logout" id="logout_button">
           <i class="fa fa-lock"/>
           <span v-if="$store.state.currentUser.impersonated_by" v-translate>Release</span>
