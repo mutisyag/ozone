@@ -637,30 +637,6 @@
   },
   {
     "fields": {
-      "description": "Article 5 Base Years",
-      "end_date": "2000-12-31",
-      "is_reporting_allowed": false,
-      "is_reporting_open": false,
-      "name": "BaseA5",
-      "start_date": "1995-01-01"
-    },
-    "model": "core.reportingperiod",
-    "pk": 54
-  },
-  {
-    "fields": {
-      "description": "Non-Article 5 Base Years",
-      "end_date": "1991-12-31",
-      "is_reporting_allowed": false,
-      "is_reporting_open": false,
-      "name": "BaseNA5",
-      "start_date": "1986-01-01"
-    },
-    "model": "core.reportingperiod",
-    "pk": 55
-  },
-  {
-    "fields": {
       "description": "Control Period Jul 1999 to Jun 2000",
       "end_date": "2000-06-30",
       "is_reporting_allowed": true,

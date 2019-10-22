@@ -87,12 +87,6 @@ class Command(BaseCommand):
         'baselinetype': {
             'fixture': 'baseline_types.json'
         },
-        'baseline': {
-            'fixture': 'baselines.json',
-            'sheet': 'tbl_prodcons',
-            'additional_data': {},
-            'prod_transfers': {},
-        },
         'criticalusecategory': {
             'fixture': 'critical_use_categories.json',
             'sheet': ['MeBrAgreedCriticalUseCategories', 'MeBrActualCriticalUsebyCategory']
@@ -313,9 +307,11 @@ class Command(BaseCommand):
                 'party', 'abbr', f['parent_party'])
 
     def partyhistory_map(self, f, row):
-        if row['CntryID'] == 'HOLV' or row['CntryID'].upper() in self.EXCLUDED:
-            # f['party'] = self.lookup_id('party', 'abbr', 'VA')
-            # f['_deleted'] = True
+        if (
+            row['CntryID'] == 'HOLV' or
+            row['CntryID'].upper() in self.EXCLUDED or
+            row['PeriodID'] in ('BaseA5', 'BaseNA5')
+        ):
             return None
         else:
             f['party'] = self.lookup_id('party', 'abbr', row['CntryID'])
@@ -516,6 +512,8 @@ class Command(BaseCommand):
         return f
 
     def reportingperiod_map(self, f, row):
+        if row['PeriodID'] in ('BaseA5', 'BaseNA5'):
+            return None
         f['name'] = row['PeriodID']
         f['start_date'] = row['StartDate'].date()
         f['end_date'] = row['EndDate'].date()
@@ -554,141 +552,6 @@ class Command(BaseCommand):
             }
         ]
         return objs
-
-    def baseline_map(self, f, row):
-        additional_periods = ['1995', '1996', '1997', '1998', '1999', '2000']
-        baseline_periods = ['BaseA5', 'BaseNA5']
-        bdn_groups = ['AI', 'AII', 'BI', 'EI']
-        group = row['Anx'] + row['Grp']
-        if row['PeriodID'] in additional_periods and group in bdn_groups:
-            if not self.MODELS['baseline']['additional_data'].get(row['CntryID']):
-                self.MODELS['baseline']['additional_data'][row['CntryID']] = {}
-                for bdn_group in bdn_groups:
-                    self.MODELS['baseline']['additional_data'][row['CntryID']][bdn_group] = {}
-            self.store_baseline_additional_data(
-                row['CntryID'],
-                row['PeriodID'],
-                group,
-                row['ProdArt5'] if row['ProdArt5'] else 0,
-            )
-        elif row['PeriodID'] in baseline_periods:
-            if row['PeriodID'] == 'BaseNA5' and row['ProdTransfer']:
-                self.store_baseline_prod_transfers(
-                    row['CntryID'],
-                    group,
-                    row['ProdTransfer']
-                )
-            entries = []
-            party = self.lookup_id('party', 'abbr', row['CntryID'])
-            group = self.lookup_id('group', 'group_id', group)
-            party_type = row['PeriodID'][4:]
-
-            f['party'] = party
-            f['group'] = group
-            f['baseline_type_id'] = self.lookup_id(
-                'baselinetype',
-                'name',
-                party_type + 'Prod'
-            )
-            # Don't need to call get_decimals for 'BaseA5' and 'BaseNA5' periods
-            # because is not a special case and we will round to 1 decimal.
-            baseline_prod = row['CalcProd']
-            if baseline_prod:
-                baseline_prod = round_float_half_up(row['CalcProd'], 1)
-            f['baseline'] = baseline_prod
-            entries.append(f)
-
-            f = {}
-            f['party'] = party
-            f['group'] = group
-            f['baseline_type_id'] = self.lookup_id(
-                'baselinetype',
-                'name',
-                party_type + 'Cons'
-            )
-            baseline_cons = row['CalcCons']
-            if baseline_cons:
-                baseline_cons = round_float_half_up(row['CalcCons'], 1)
-            f['baseline'] = baseline_cons
-            entries.append(f)
-
-            print('Procces country {} for group {}'.format(row['CntryID'], row['Anx'] + row['Grp']))
-
-            return entries
-        else:
-            return
-
-    def store_baseline_additional_data(self, party, period, group, prod):
-        """
-        Returns a dictionary in the following format:
-        {
-            'CntryID':  {
-                'GroupID': {
-                    '1995': 'ProdArt5': val1,
-                    '1996': 'ProdArt5': val2,
-                    ...
-                    '2000': 'ProdArt5': val3
-                }
-            }
-        }
-        """
-
-        self.MODELS['baseline']['additional_data'][party][group][period] = {
-            'ProdArt5': prod,
-        }
-
-    def store_baseline_prod_transfers(self, party, group, prod_transfer):
-        self.MODELS['baseline']['prod_transfers'][(party, group)] = prod_transfer
-
-    def baseline_additional_data(self, idx):
-        entries = []
-        bdn_groups = ['AI', 'AII', 'BI', 'EI']
-        for party in self.MODELS['baseline']['additional_data'].keys():
-            for group in bdn_groups:
-                obj = {}
-                obj['model'] = "core.baseline"
-                obj['fields'] = {}
-                obj['fields']['party'] = self.lookup_id('party', 'abbr', party)
-                obj['fields']['group'] = self.lookup_id('group', 'group_id', group)
-                obj['fields']['baseline_type_id'] = self.lookup_id('baselinetype', 'name', 'BDN_NA5')
-                data = self.MODELS['baseline']['additional_data'][party][group]
-                data['prod_transfers'] = self.MODELS['baseline']['prod_transfers'].get((party, group))
-                obj['fields']['baseline'] = getattr(self, 'get_bdn_' + group)(data)
-                obj['pk'] = idx
-                entries.append(obj)
-                idx += 1
-                print('Procces additional data country {} for group {}'.format(party, group))
-
-        return entries
-
-    def get_bdn_AI(self, data):
-        periods = ['1995', '1996', '1997']
-        return self.calc_avg(data, periods)
-
-    def get_bdn_AII(self, data):
-        periods = ['1995', '1996', '1997']
-        return self.calc_avg(data, periods)
-
-    def get_bdn_BI(self, data):
-        periods = ['1998', '1999', '2000']
-        return self.calc_avg(data, periods)
-
-    def get_bdn_EI(self, data):
-        periods = ['1995', '1996', '1997', '1998']
-        return self.calc_avg(data, periods)
-
-    def calc_avg(self, data, periods):
-        s = 0
-        for period in periods:
-            if not data.get(period):
-                return
-            s += data[period]['ProdArt5']
-        baseline = s / len(periods)
-        if data['prod_transfers']:
-            baseline += data['prod_transfers']
-
-        # BDN new baselines are rounded to 5 decimals
-        return round_float_half_up(baseline, 5)
 
     def criticalusecategory_map(self, f, row):
         columns = [
