@@ -50,7 +50,7 @@ class ReportingPeriod(models.Model):
 
     @property
     def is_control_period(self):
-        return self.name in ['C1999', 'C2000', 'C2001', 'BaseA5', 'BaseNA5']
+        return self.name in ['C1999', 'C2000', 'C2001']
 
     @classmethod
     def get_current_period(cls):
