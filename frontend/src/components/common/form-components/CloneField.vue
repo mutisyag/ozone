@@ -14,7 +14,6 @@
                 :disabled="disabled"
                 label="text"
                 trackBy="value"
-                :placeholder="false"
                 v-model="selected_countries.selected"
                 :options="countryOptions"
               />

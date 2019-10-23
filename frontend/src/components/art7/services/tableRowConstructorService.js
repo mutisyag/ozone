@@ -320,15 +320,15 @@ export default {
         const errors = []
         if (this.skipValidation === 0) {
           if (doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected, this.quantity_polyols.selected]) <= 0) {
-            errors.push($gettext('Please fill-in column Total quantity imported for all uses (3 or 4)'))
+            errors.push($gettext('Please fill-in column Total quantity for all uses (3 or 4)'))
           }
-          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected]) > doSum([this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
-            errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components (6)'))
+          if (doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected]) > valueConverter(this.quantity_total_new.selected)) {
+            errors.push($gettext('Total quantity for all uses (3) must be greater than or equal to the sum of its individual components (5+6)'))
           }
         }
 
         if (this.skipValidation === 2) {
-          errors.push($gettext('Total quantity imported for all uses (3+4) must be greater than or equal to the sum of its individual components for all exporting parties'))
+          errors.push($gettext('Total quantity for all uses (3) must be greater than or equal to the sum of its individual components (5+6) for all parties'))
           if (!doSum([this.quantity_feedstock.selected, this.quantity_exempted.selected, this.quantity_quarantine_pre_shipment.selected, this.quantity_total_new.selected, this.quantity_total_recovered.selected])) {
             errors.push($gettext('The row cannot be empty. Please fill in any column'))
           }
@@ -347,7 +347,7 @@ export default {
 
         return returnObj
       },
-      // This might be confuzing. We're using a trilean heare. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
+      // This might be confuzing. We're using a trilean here. 0 is base state, 1 is valid for multirow validation, 2 is invalid for multirow validation
       skipValidation: 0
     }
 

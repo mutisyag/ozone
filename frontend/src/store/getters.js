@@ -1,4 +1,4 @@
-import { doSum } from '@/components/common/services/utilsService'
+import { doSum, valueConverter } from '@/components/common/services/utilsService'
 import { Decimal } from 'decimal.js'
 
 const sumBiggerThanParts = (state, tab, partyField) => {
@@ -33,7 +33,7 @@ const sumBiggerThanParts = (state, tab, partyField) => {
     }
 
     multipleSubstances[key].forEach(entry => {
-      finalError[key].left = Decimal.add(doSum([entry.quantity_total_new.selected, entry.quantity_total_recovered.selected]), finalError[key].left).toNumber()
+      finalError[key].left = Decimal.add(valueConverter(entry.quantity_total_new.selected), finalError[key].left).toNumber()
       finalError[key].right = Decimal.add(doSum([entry.quantity_feedstock.selected, entry.quantity_exempted.selected, entry.quantity_quarantine_pre_shipment.selected]), finalError[key].right).toNumber()
     })
   })
