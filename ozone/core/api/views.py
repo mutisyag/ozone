@@ -11,7 +11,6 @@ from decimal import Decimal
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.files import File
-from django.db.models import DecimalField
 from django.db.models.query import QuerySet, F, Q
 from django.http import HttpResponse
 from django_filters import rest_framework as filters
@@ -730,10 +729,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         }
 
         # All decimal fields need to be retrieved from DB
-        fields = [
-            f.name for f in self.model_class._meta.fields
-            if isinstance(f, DecimalField)
-        ]
+        fields = self.model_class.decimal_fields()
         # Using `distinct()` does not work because this queryset is
         # ordered by fields from related models, which makes similar
         # values seem distinct.
