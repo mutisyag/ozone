@@ -549,10 +549,11 @@ class BaseImportExportReport(models.Model):
         """
 
         totals_fields = ['quantity_total_new',]
+        excluded_fields = ['quantity_polyols', 'quantity_total_recovered']
         party_field = cls.PARTY_FIELD
         quantity_fields = [
             f for f in cls.QUANTITY_FIELDS
-            if f not in totals_fields and f != 'quantity_polyols'
+            if f not in totals_fields and f not in excluded_fields
         ]
 
         # Find all entries in this submission that do not have a src/dst country
