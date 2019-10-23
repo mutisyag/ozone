@@ -548,7 +548,7 @@ class BaseImportExportReport(models.Model):
         validation criteria (see https://github.com/eaudeweb/ozone/issues/81)
         """
 
-        totals_fields = ['quantity_total_new', 'quantity_total_recovered']
+        totals_fields = ['quantity_total_new',]
         party_field = cls.PARTY_FIELD
         quantity_fields = [
             f for f in cls.QUANTITY_FIELDS
