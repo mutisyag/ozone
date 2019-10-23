@@ -671,13 +671,11 @@ class BaselineCalculator:
         return func, periods
 
 
-def expected_baselines():
+def expected_baselines(parties, groups):
     calculator = BaselineCalculator()
-    main_parties = Party.get_main_parties()
-    groups = calculator.groups.values()
     baseline_types = list(BaselineType.objects.all())
 
-    for party in main_parties:
+    for party in parties:
         for group in groups:
             for baseline_type in baseline_types:
                 baseline = calculator.get_baseline(baseline_type.name, group, party)
@@ -692,7 +690,7 @@ def expected_baselines():
                 }
 
 
-def baselines_diff():
+def baselines_diff(parties, groups):
     def record_key(record):
         return (
             record['party'].id,
@@ -709,13 +707,21 @@ def baselines_diff():
 
     expected = {
         record_key(record): record
-        for record in expected_baselines()
+        for record in expected_baselines(
+            list(parties),
+            list(groups),
+        )
     }
 
     obsolete = []
     different = []
 
-    for row in Baseline.objects.all().iterator():
+    existing_baselines = (
+        Baseline.objects
+        .filter(party__in=parties)
+        .filter(group__in=groups)
+    )
+    for row in existing_baselines.iterator():
         key = row_key(row)
         try:
             expected_record = expected.pop(key)
@@ -734,7 +740,15 @@ def baselines_diff():
 
 
 def admin_diff(request, context):
-    diff = baselines_diff()
+    parties = Party.get_main_parties()
+    if request.POST['party'] != '*':
+        parties = parties.filter(pk=request.POST['party'])
+
+    groups = Group.objects.all()
+    if request.POST['group'] != '*':
+        groups = groups.filter(pk=request.POST['group'])
+
+    diff = baselines_diff(parties, groups)
 
     for record in diff['missing']:
         record['checkbox_value'] = json.dumps({
@@ -815,5 +829,8 @@ def admin_view(request, context):
 
         else:
             raise RuntimeError(f"Unexpected step {step!r}")
+
+    context['parties'] = Party.get_main_parties()
+    context['groups'] = Group.objects.all()
 
     return TemplateResponse(request, 'admin/ozone_tools/generate_baselines.html', context)

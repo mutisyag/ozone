@@ -80,6 +80,30 @@
   <button type="submit">Apply changes</button>
 
 {% else %}
+  <p>
+    <label>
+      Party
+      <select name="party">
+        <option value="*">All</option>
+        {% for party in parties %}
+          <option value="{{ party.pk }}">{{ party }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
+  <p>
+    <label>
+      Annex group
+      <select name="group">
+        <option value="*">All</option>
+        {% for group in groups %}
+          <option value="{{ group.pk }}">{{ group }}</option>
+        {% endfor %}
+      </select>
+    </label>
+  </p>
+
   <input type="hidden" name="step" value="diff">
   <button type="submit">Preview changes</button>
 {% endif %}
