@@ -548,6 +548,13 @@ class BaseImportExportReport(models.Model):
         validation criteria (see https://github.com/eaudeweb/ozone/issues/81)
         """
 
+        def get_fields_sum(entry_dict, field_names):
+            field_values = [
+                decimal_zero_if_none(entry_dict.get(f, Decimal(0)))
+                for f in field_names
+            ]
+            return sum(field_values) if field_values else Decimal(0)
+
         totals_fields = ['quantity_total_new',]
         excluded_fields = ['quantity_polyols', 'quantity_total_recovered']
         party_field = cls.PARTY_FIELD
@@ -570,18 +577,61 @@ class BaseImportExportReport(models.Model):
         substance_entries = cls.objects.filter(submission=submission).exclude(
             blend__isnull=False
         )
+        values = substance_entries.values(
+            'substance', party_field, *totals_fields, *quantity_fields
+        )
 
-        for entry in substance_entries:
-            substance = getattr(entry, 'substance', None)
-            party = getattr(entry, party_field, None)
+        for entry in values:
+            substance = entry.get('substance', None)
+            party = entry.get(party_field, None)
+
+            # If this entry has a party set, it should be checked for
+            # consistency at entry level.
+            # (see https://github.com/eaudeweb/ozone/issues/1416)
+            if party is not None:
+                if (
+                    get_fields_sum(entry, totals_fields) <
+                    get_fields_sum(entry, quantity_fields)
+                ):
+                    raise ValidationError(
+                        f'For {Substance.objects.filter(id=substance).first()},'
+                        f' {Party.objects.filter(id=party).first()}, '
+                        f'the sum of quantities across this data entry is '
+                        f'greater than the sum of totals.'
+                    )
+
+            # Populate sets for checks across all data
             if party is None:
-                partyless_substances.add(substance.id)
+                partyless_substances.add(substance)
             else:
-                partyful_substances.add(substance.id)
+                partyful_substances.add(substance)
+
+        # For substances that are only present in party-less rows, we check
+        # that each row has totals >= quantities.
+        completely_partyless_substances = partyless_substances.difference(
+            partyful_substances
+        )
+        if completely_partyless_substances:
+            completely_partyless_entries = (
+                v for v in values
+                if v.get('substance', None) in completely_partyless_substances
+            )
+            for entry in completely_partyless_entries:
+                if (
+                    get_fields_sum(entry, totals_fields) <
+                    get_fields_sum(entry, quantity_fields)
+                ):
+                    raise ValidationError(
+                        f'For {Substance.objects.filter(id=substance).first()},'
+                        f' the sum of quantities across this data entry is'
+                        f'greater than the sum of totals.'
+                    )
+
+        # Now check all substances that are present both in partyless and
+        # partyful rows.
         related_substances = partyless_substances.intersection(
             partyful_substances
         )
-
         # Calculate the sums of quantities and totals for each substance
         if related_substances:
             sums_dictionary = {
@@ -592,21 +642,17 @@ class BaseImportExportReport(models.Model):
                 for substance in related_substances
             }
             # Only fetch data entries containing the related_substances
-            for entry in substance_entries.filter(
-                substance_id__in=related_substances
-            ):
-                substance = getattr(entry, 'substance', None)
-                sums_dictionary[substance.id]['totals_sum'] += sum(
-                    [
-                        getattr(entry, field, Decimal(0)) or Decimal(0)
-                        for field in totals_fields
-                    ]
+            related_entries = (
+                v for v in values
+                if v.get('substance', None) in related_substances
+            )
+            for entry in related_entries:
+                substance = entry.get('substance', None)
+                sums_dictionary[substance]['totals_sum'] += get_fields_sum(
+                    entry, totals_fields
                 )
-                sums_dictionary[substance.id]['quantities_sum'] += sum(
-                    [
-                        getattr(entry, field, Decimal(0)) or Decimal(0)
-                        for field in quantity_fields
-                    ]
+                sums_dictionary[substance]['quantities_sum'] += get_fields_sum(
+                    entry, quantity_fields
                 )
 
             # And finally verify that, for each substance,
