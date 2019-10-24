@@ -63,7 +63,6 @@ export default {
   mounted() {
     const tables = document.querySelectorAll('body .tab-pane table')
     tables.forEach(t => {
-      console.log('letable', t)
       t.addEventListener('click', this.closeSidebar)
     })
   },
