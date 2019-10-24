@@ -19,6 +19,13 @@ __all__ = [
 ]
 
 
+party_china = Party.objects.filter(abbr="CN").first()
+party_brazil = Party.objects.filter(abbr="BR").first()
+party_eu = Party.objects.filter(abbr="EU").first()
+
+reporting_period_2010 = ReportingPeriod.objects.get(name="2010")
+
+
 class BaseProdCons(models.Model):
     """
     Base *abstract* aggregation model for Production/consumption data reports.
@@ -276,6 +283,51 @@ class BaseProdCons(models.Model):
             return 0
         return 1
 
+    @classmethod
+    def get_decimals_table(cls, period_names, group_ids, party_abbrs):
+        """
+        Returns a dict having tuples of (period_name, group_id, party_abbr)
+        as keys and number of decimals as values.
+        """
+        periods = ReportingPeriod.objects.filter(
+            name__in=period_names
+        ).values('start_date', 'name')
+        start_date_2011 = datetime.strptime('2011-01-01', "%Y-%m-%d").date()
+        ret = {}
+        for period in periods:
+            for group in group_ids:
+                for party in party_abbrs:
+                    # Default value
+                    decimals = 1
+                    if group == 'CI':
+                        if (
+                            period['start_date'] >= start_date_2011
+                            or period['name'] == '2009' and party in cls.special_cases_2009
+                            or period['name'] == '2010' and party in cls.special_cases_2010
+                        ):
+                            decimals = 2
+                    if group and group.group_id == 'F':
+                        decimals = 0
+                    ret[(period, group, party)] = decimals
+        return ret
+
+    @classmethod
+    def get_max_decimals_for_periods(cls, period_names, group, party):
+        """
+        Returns the number of decimals according to the following
+        rounding rules.
+        """
+        max_decimals = 0
+        decimals_table = cls.get_decimals_table(
+            period_names, [group.group_id], [party.abbr]
+        )
+        for period in period_names:
+            max_decimals = max(
+                max_decimals,
+                decimals_table[(period, group.group_id, party.abbr)]
+            )
+        return max_decimals
+
     @property
     def decimals(self):
         """
@@ -297,21 +349,20 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.party == Party.objects.filter(abbr="EU").first()
+        return self.party == party_eu
 
     @cached_property
     def is_after_2010(self):
-        rp_2010 = ReportingPeriod.objects.get(name="2010")
-        if self.reporting_period.start_date >= rp_2010.start_date:
+        if (
+            self.reporting_period.start_date >=
+            reporting_period_2010.start_date
+        ):
             return True
         return False
 
     @cached_property
     def is_china_or_brazil(self):
-        return (
-            self.party == Party.objects.filter(abbr="CN").first()
-            or self.party == Party.objects.filter(abbr="BR").first()
-        )
+        return self.party == party_china or self.party == party_brazil
 
     def get_production_process_agent(self):
         if (
@@ -361,7 +412,7 @@ class BaseProdCons(models.Model):
 
     def get_calc_consumption(self):
         """
-            Formula for non-EU members is needed for their C/I baselines
+        Formula for non-EU members is needed for their C/I baselines
         """
         return (
             self.production_all_new
