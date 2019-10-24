@@ -32,6 +32,7 @@ class CalculationError(Exception):
 class BaselineCalculator:
 
     def __init__(self):
+        self.current_period = ReportingPeriod.get_current_period()
         self.groups = {
             _group.group_id: _group
             for _group in Group.objects.all()
@@ -43,6 +44,12 @@ class BaselineCalculator:
         self.parties = {
             _party.abbr: _party
             for _party in Party.get_main_parties()
+        }
+        self.party_types = {
+            entry['party__abbr']: entry['party_type__abbr']
+            for entry in PartyHistory.objects.filter(
+                reporting_period=self.current_period,
+            ).values('party__abbr', 'party_type__abbr')
         }
         self.eu_member_states = [
             _party.abbr
@@ -262,10 +269,7 @@ class BaselineCalculator:
             25% for NA5G2
             65% for A5 (G1 and G2)
         """
-        party_type = PartyHistory.objects.get(
-            party=party,
-            reporting_period=ReportingPeriod.get_current_period(),
-        ).party_type.abbr
+        party_type = self.party_types[party.abbr]
         return {
             'NA5G1': Decimal('0.15'),
             'NA5G2': Decimal('0.25'),
@@ -295,16 +299,12 @@ class BaselineCalculator:
              A5 Group 2: Average HFC for 2024–2026 + 65% of HCFC baseline
         """
         try:
-            current_period = ReportingPeriod.get_current_period()
-            party_type = PartyHistory.objects.get(
-                party=party,
-                reporting_period=current_period,
-            ).party_type.abbr
+            party_type = self.party_types[party.abbr]
             if not party_type.startswith(base_party_type):
                 return None
         except PartyHistory.DoesNotExist:
             # can happen for Palestine or new states
-            logger.warning(f"No party history for {party.abbr}/{current_period.name}")
+            logger.warning(f"No party history for {party.abbr}/{self.current_period.name}")
             return None
 
         base_periods = {
