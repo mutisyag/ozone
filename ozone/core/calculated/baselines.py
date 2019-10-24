@@ -63,15 +63,13 @@ class BaselineCalculator:
         ]
 
         def _new_eu_member_states_since(period_name):
+            eu_members_for_period = Party.get_eu_members_at(
+                self.reporting_periods[period_name]
+            ).values_list('abbr', flat=True)
             return [
                 self.parties[_party]
                 for _party in self.eu_member_states
-                if _party not in [
-                    _p.abbr
-                    for _p in Party.get_eu_members_at(
-                        self.reporting_periods[period_name]
-                    )
-                ]
+                if _party not in eu_members_for_period
             ]
         self.new_eu_member_states_since = {
             _period: _new_eu_member_states_since(_period)
