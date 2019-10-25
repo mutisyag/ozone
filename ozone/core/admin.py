@@ -10,7 +10,8 @@ from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import site, AdminSite, TabularInline
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
-from django.db.models import F, Subquery
+from django.db.models import F, Subquery, CharField, TextField
+from django.forms import TextInput, Textarea
 from django.shortcuts import redirect
 from django.urls import path
 from django.urls import reverse
@@ -918,6 +919,11 @@ class BaseCountryPofileAdmin:
         form.base_fields['party'].queryset = main_parties_queryset
         return form
 
+    formfield_overrides = {
+        CharField: {'widget': TextInput(attrs={'size': '120'})},
+        TextField: {'widget': Textarea(attrs={'rows': 4, 'cols': 120})},
+    }
+
 
 @admin.register(FocalPoint)
 class FocalPointAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
@@ -1056,7 +1062,7 @@ class ReclamationFacilityAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
 @admin.register(IllegalTrade)
 class IllegalTradeAdmin(BaseCountryPofileAdmin, admin.ModelAdmin):
     list_display = (
-        'party', 'submission_id', 'seizure_date_year', 'substances_traded',
+        'party', 'submission_id', 'submission_year', 'seizure_date_year', 'substances_traded',
         'volume', 'importing_exporting_country'
     )
     search_fields = ('party__name',)

@@ -11,7 +11,16 @@ class URLTypes(enum.Enum):
     PUBLICATION = 'Publication'
 
 
+class MultilateralFundManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party'
+        )
+
+
 class MultilateralFund(models.Model):
+    objects = MultilateralFundManager()
+
     party = models.ForeignKey(
         Party, related_name='multilateral_funds', on_delete=models.PROTECT
     )
@@ -24,7 +33,16 @@ class MultilateralFund(models.Model):
         db_table = "multilateral_fund"
 
 
+class ORMReportManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'reporting_period'
+        )
+
+
 class ORMReport(models.Model):
+    objects = ORMReportManager()
+
     party = models.ForeignKey(
         Party, related_name='orm_reports', on_delete=models.PROTECT
     )
@@ -42,11 +60,22 @@ class ORMReport(models.Model):
         verbose_name = "ORM report"
 
 
+class IllegalTradeManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party'
+        )
+
+
 class IllegalTrade(models.Model):
+    objects = IllegalTradeManager()
+
     party = models.ForeignKey(
         Party, related_name='illegal_trades', on_delete=models.PROTECT
     )
     submission_id = models.IntegerField(blank=True, null=True)
+    ordering_id = models.IntegerField(default=0)
+    submission_year = models.CharField(max_length=256, blank=True)
     seizure_date_year = models.CharField(max_length=256, blank=True)
     substances_traded = models.CharField(max_length=256, blank=True)
     volume = models.CharField(max_length=256, blank=True)
@@ -54,14 +83,23 @@ class IllegalTrade(models.Model):
     illegal_trade_details = models.CharField(max_length=9999, blank=True)
     action_taken = models.CharField(max_length=9999, blank=True)
     remarks = models.CharField(max_length=9999, blank=True)
-    ordering_id = models.IntegerField(default=0)
+    reported_by = models.CharField(max_length=9999, blank=True)
 
     class Meta:
         db_table = "illegal_trade"
         ordering = ('ordering_id',)
 
 
+class ReclamationFacilityManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party'
+        )
+
+
 class ReclamationFacility(models.Model):
+    objects = ReclamationFacilityManager()
+
     party = models.ForeignKey(
         Party, related_name='reclamation_facilities', on_delete=models.PROTECT
     )
@@ -77,7 +115,15 @@ class ReclamationFacility(models.Model):
         verbose_name_plural = "reclamation facilities"
 
 
+class OtherCountryProfileDataManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'reporting_period', 'obligation', 'submission'
+        )
+
+
 class OtherCountryProfileData(models.Model):
+    objects = OtherCountryProfileDataManager()
 
     party = models.ForeignKey(
         Party,
@@ -120,7 +166,16 @@ class OtherCountryProfileData(models.Model):
         verbose_name_plural = "other country profile data"
 
 
+class WebsiteManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party'
+        )
+
+
 class Website(models.Model):
+    objects = WebsiteManager()
+
     party = models.ForeignKey(
         Party, related_name='websites', on_delete=models.PROTECT
     )
@@ -141,7 +196,18 @@ class Website(models.Model):
         db_table = "website"
 
 
+class LicensingSystemManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'submission'
+        ).prefetch_related(
+            'files', 'urls'
+        )
+
+
 class LicensingSystem(models.Model):
+    objects = LicensingSystemManager()
+
     party = models.ForeignKey(
         Party, related_name='licensing_systems', on_delete=models.PROTECT
     )
@@ -185,7 +251,16 @@ class LicensingSystemURL(models.Model):
         db_table = "licensing_system_url"
 
 
+class FocalPointManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'party', 'submission'
+        )
+
+
 class FocalPoint(models.Model):
+    objects = FocalPointManager()
+
     party = models.ForeignKey(
         Party, related_name='focal_points', on_delete=models.PROTECT
     )
