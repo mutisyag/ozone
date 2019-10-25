@@ -3,6 +3,7 @@ from decimal import Decimal
 from functools import lru_cache
 import logging
 
+from django.db import models
 from django.db import transaction
 from django.template.response import TemplateResponse
 from django.contrib import messages
@@ -81,7 +82,6 @@ class BaselineCalculator:
 
     def _populate_prodcons_cache(self, group, party):
         # If key is already there, leave it as it was
-        from django.db import models
         if (group, party) != self.prodcons_objects_key:
             prodcons_values = ProdCons.objects.filter(
                 group=group, party=party
@@ -321,13 +321,14 @@ class BaselineCalculator:
              A5 Group 1: Average HFC for 2020–2022 + 65% of HCFC baseline
              A5 Group 2: Average HFC for 2024–2026 + 65% of HCFC baseline
         """
-        try:
-            party_type = self.party_types[party.abbr]
-            if not party_type.startswith(base_party_type):
-                return None
-        except PartyHistory.DoesNotExist:
+
+        party_type = self.party_types.get(party.abbr, None)
+        if party_type is None:
             # can happen for Palestine or new states
             logger.warning(f"No party history for {party.abbr}/{self.current_period.name}")
+            return None
+
+        if not party_type.startswith(base_party_type):
             return None
 
         base_periods = {
