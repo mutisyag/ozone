@@ -61,6 +61,9 @@ class BaselineCalculator:
                 self.reporting_periods['1989']
             )
         ]
+        # Will be set when get_baseline() is called and unset at call completion
+        self.prodcons_objects_key = None
+        self.prodcons_objects = {}
 
         def _new_eu_member_states_since(period_name):
             eu_members_for_period = Party.get_eu_members_at(
@@ -76,7 +79,33 @@ class BaselineCalculator:
             for _period in ('1989', '2009', '2010')
         }
 
+    def _populate_prodcons_cache(self, group, party):
+        # If key is already there, leave it as it was
+        from django.db import models
+        if (group, party) != self.prodcons_objects_key:
+            prodcons_values = ProdCons.objects.filter(
+                group=group, party=party
+            ).values(
+                'reporting_period__name', 'is_article5', 'is_eu_member',
+                *[
+                    f.name for f in ProdCons._meta.get_fields()
+                    if isinstance(f, models.DecimalField)
+                ]
+            )
+            self.prodcons_objects = {p: None for p in self.reporting_periods}
+            for value in prodcons_values:
+                period_name = value.pop('reporting_period__name')
+                reporting_period = self.reporting_periods[period_name]
+                self.prodcons_objects[period_name] = ProdCons(
+                    party=party,
+                    group=group,
+                    reporting_period=reporting_period,
+                    **value
+                )
+            self.prodcons_objects_key = (group, party)
+
     def get_baseline(self, baseline_type, group, party):
+        self._populate_prodcons_cache(group, party)
         func, periods = getattr(
             self, 'baseline_' + baseline_type
         )(group, party)
@@ -84,19 +113,15 @@ class BaselineCalculator:
 
     @lru_cache(maxsize=128)
     def _get_prodcons(self, party, group, period_name):
-        try:
-            return ProdCons.objects.get(
-                party=party,
-                reporting_period__name=period_name,
-                group=group,
-            )
-        except ProdCons.DoesNotExist:
+        p = self.prodcons_objects.get(period_name, None)
+        if p is None:
+            # TODO: add fallback to objects.get() if (party, group) does not match
             logger.warning("{} has not reported {} for {}".format(
                 party.name,
                 group.group_id,
                 period_name
             ))
-            return None
+        return p
 
     def _get_bdn_transfer(self, party, group, period_name):
         transfers = Transfer.objects.filter(
