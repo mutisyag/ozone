@@ -82,6 +82,8 @@ class BaselineCalculator:
         }
 
     def _populate_prodcons_cache(self, group, party):
+        # TODO: this could be lru_cached and also the cache key could be just
+        # the party (needs more testing).
         # If key is already there, leave it as it was
         if (group, party) != self.prodcons_objects_key:
             prodcons_values = ProdCons.objects.filter(
