@@ -516,6 +516,7 @@ class Command(BaseCommand):
         return {
             "party_id": party.id,
             "submission_id": row['Submission ID'],
+            "submission_year": row['Submission_Year'] or "",
             "seizure_date_year": seisure_date,
             "substances_traded": row['Substances_Traded'] if row['Substances_Traded'] else "",
             "volume": row['Volume'] if row['Volume'] else "",
@@ -523,7 +524,8 @@ class Command(BaseCommand):
             "illegal_trade_details": row['Illegal_Trade_Details'] if row['Illegal_Trade_Details'] else "",
             "action_taken": row['Action_Taken'] if row['Action_Taken'] else "",
             "remarks": row['Remark'] if row['Remark'] else "",
-            "ordering_id": row['Sec_Order']
+            "ordering_id": row['Sec_Order'],
+            "reported_by": row['Reported_by'] or "",
         }
 
     def process_orm_reports(self, row):
