@@ -20,6 +20,7 @@ from ozone.core.models import Submission
 from ozone.core.models import Transfer
 from ozone.core.models.utils import round_decimal_half_up
 from ozone.core.models.utils import sum_decimals
+from ozone.core.models.utils import decimal_zero_if_none
 
 
 logger = logging.getLogger(__name__)
@@ -87,6 +88,7 @@ class BaselineCalculator:
                 group=group, party=party
             ).values(
                 'reporting_period__name', 'is_article5', 'is_eu_member',
+                'submissions',
                 *[
                     f.name for f in ProdCons._meta.get_fields()
                     if isinstance(f, models.DecimalField)
@@ -239,7 +241,7 @@ class BaselineCalculator:
 
             average_prod = sum_decimals(
                 hcfc_1989.calculated_production,
-                cfc_1989.calculated_production * Decimal('0.028'),
+                decimal_zero_if_none(cfc_1989.calculated_production) * Decimal('0.028'),
                 hcfc_1989.get_calc_consumption(),
                 cfc_1989.get_calc_consumption() * Decimal('0.028'),
             )
