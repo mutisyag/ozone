@@ -117,9 +117,13 @@ class BaselineCalculator:
 
     @lru_cache(maxsize=128)
     def _get_prodcons(self, party, group, period_name):
-        p = self.prodcons_objects.get(period_name, None)
+        if (group, party) == self.prodcons_objects_key:
+            p = self.prodcons_objects.get(period_name, None)
+        else:
+            p = ProdCons.objects.filter(
+                party=party, group=group, reporting_period__name=period_name
+            ).first()
         if p is None:
-            # TODO: add fallback to objects.get() if (party, group) does not match
             logger.warning("{} has not reported {} for {}".format(
                 party.name,
                 group.group_id,
