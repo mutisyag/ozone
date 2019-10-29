@@ -269,6 +269,10 @@ class FocalPoint(models.Model):
     tel = models.CharField(max_length=128, blank=True)
     email = models.CharField(max_length=256, blank=True)
     fax = models.CharField(max_length=256, blank=True)
+
+    organisation = models.CharField(max_length=9999, blank=True)
+    city = models.CharField(max_length=9999, blank=True)
+    country = models.CharField(max_length=9999, blank=True)
     address = models.CharField(max_length=9999, blank=True)
 
     is_licensing_system = models.BooleanField(default=False)

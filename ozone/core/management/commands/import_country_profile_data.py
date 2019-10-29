@@ -156,7 +156,7 @@ class Command(BaseCommand):
             "tel": row["tel"] if row["tel"] else "",
             "email": row["email"] if row["email"] else "",
             "fax": row["fax"] if row["fax"] else "",
-            "address": address,
+            "organisation": address,
             "is_licensing_system": is_licensing_system,
             "is_national": is_national,
             "ordering_id": row["Order"]
