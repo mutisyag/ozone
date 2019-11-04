@@ -502,6 +502,14 @@ class BaselineCalculator:
             func = self.average_production_bdn
         return func, periods
 
+    @lru_cache(maxsize=16)
+    def _get_aggregation_from_submission(self, submission_id):
+        """
+        Helps cache result of expensive call made in _prod_cons_gwp().
+        """
+        submission = Submission.objects.get(pk=submission_id)
+        return submission.get_aggregated_data(baseline=True)
+
     def _prod_cons_gwp(self, party, group, period_name, prod_or_cons):
         """
         Normally should be invoked only for groups A/I (CFC) and C/I (HCFC).
@@ -520,8 +528,7 @@ class BaselineCalculator:
                 )
             )
         submission_id = prodcons.submissions.get('art7')[0]
-        submission = Submission.objects.get(pk=submission_id)
-        agg = submission.get_aggregated_data(baseline=True).get(group)
+        agg = self._get_aggregation_from_submission(submission_id).get(group)
         if prod_or_cons == 'PROD':
             return agg.calculated_production
         else:
