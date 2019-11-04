@@ -308,10 +308,7 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_china_or_brazil(self):
-        return (
-            self.party == Party.objects.filter(abbr="CN").first()
-            or self.party == Party.objects.filter(abbr="BR").first()
-        )
+        return self.party.abbr == "CN" or self.party.abbr == "BR"
 
     def get_production_process_agent(self):
         if (
