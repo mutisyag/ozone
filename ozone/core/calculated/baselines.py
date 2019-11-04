@@ -3,7 +3,6 @@ from decimal import Decimal
 from functools import lru_cache
 import logging
 
-from django.db import models
 from django.db import transaction
 from django.template.response import TemplateResponse
 from django.contrib import messages
@@ -78,7 +77,7 @@ class BaselineCalculator:
             for _period in ('1989', '2009', '2010')
         }
 
-    @lru_cache(maxsize=16)
+    @lru_cache(maxsize=2)
     def _get_prodcons_objects(self, group, party):
         prodcons_objects = {p: None for p in self.reporting_periods}
         for p in ProdCons.objects.filter(group=group, party=party):
@@ -91,7 +90,7 @@ class BaselineCalculator:
         )(group, party)
         return func(party, group, periods) if func else None
 
-    @lru_cache(maxsize=128)
+    @lru_cache(maxsize=2)
     def _get_prodcons(self, party, group, period_name):
         prodcons_objects = self._get_prodcons_objects(group, party)
         p = prodcons_objects.get(period_name, None)
@@ -485,7 +484,7 @@ class BaselineCalculator:
             func = self.average_production_bdn
         return func, periods
 
-    @lru_cache(maxsize=16)
+    @lru_cache(maxsize=2)
     def _get_aggregation_from_submission(self, submission_id):
         """
         Helps cache result of expensive call made in _prod_cons_gwp().
