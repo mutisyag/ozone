@@ -63,9 +63,6 @@ class BaselineCalculator:
                 self.reporting_periods['1989']
             )
         ]
-        # Will be set when get_baseline() is called and unset at call completion
-        self.prodcons_objects_key = None
-        self.prodcons_objects = {}
 
         def _new_eu_member_states_since(period_name):
             eu_members_for_period = Party.get_eu_members_at(
@@ -81,35 +78,31 @@ class BaselineCalculator:
             for _period in ('1989', '2009', '2010')
         }
 
-    def _populate_prodcons_cache(self, group, party):
-        # TODO: this could be lru_cached and also the cache key could be just
-        # the party (needs more testing).
-        # If key is already there, leave it as it was
-        if (group, party) != self.prodcons_objects_key:
-            prodcons_values = ProdCons.objects.filter(
-                group=group, party=party
-            ).values(
-                'reporting_period__name', 'is_article5', 'is_eu_member',
-                'submissions',
-                *[
-                    f.name for f in ProdCons._meta.get_fields()
-                    if isinstance(f, models.DecimalField)
-                ]
+    @lru_cache(maxsize=16)
+    def _get_prodcons_objects(self, group, party):
+        prodcons_values = ProdCons.objects.filter(
+            group=group, party=party
+        ).values(
+            'reporting_period__name', 'is_article5', 'is_eu_member',
+            'submissions',
+            *[
+                f.name for f in ProdCons._meta.get_fields()
+                if isinstance(f, models.DecimalField)
+            ]
+        )
+        prodcons_objects = {p: None for p in self.reporting_periods}
+        for value in prodcons_values:
+            period_name = value.pop('reporting_period__name')
+            reporting_period = self.reporting_periods[period_name]
+            prodcons_objects[period_name] = ProdCons(
+                party=party,
+                group=group,
+                reporting_period=reporting_period,
+                **value
             )
-            self.prodcons_objects = {p: None for p in self.reporting_periods}
-            for value in prodcons_values:
-                period_name = value.pop('reporting_period__name')
-                reporting_period = self.reporting_periods[period_name]
-                self.prodcons_objects[period_name] = ProdCons(
-                    party=party,
-                    group=group,
-                    reporting_period=reporting_period,
-                    **value
-                )
-            self.prodcons_objects_key = (group, party)
+        return prodcons_objects
 
     def get_baseline(self, baseline_type, group, party):
-        self._populate_prodcons_cache(group, party)
         func, periods = getattr(
             self, 'baseline_' + baseline_type
         )(group, party)
@@ -117,12 +110,8 @@ class BaselineCalculator:
 
     @lru_cache(maxsize=128)
     def _get_prodcons(self, party, group, period_name):
-        if (group, party) == self.prodcons_objects_key:
-            p = self.prodcons_objects.get(period_name, None)
-        else:
-            p = ProdCons.objects.filter(
-                party=party, group=group, reporting_period__name=period_name
-            ).first()
+        prodcons_objects = self._get_prodcons_objects(group, party)
+        p = prodcons_objects.get(period_name, None)
         if p is None:
             logger.warning("{} has not reported {} for {}".format(
                 party.name,
