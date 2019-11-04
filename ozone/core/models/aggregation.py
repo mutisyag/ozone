@@ -297,7 +297,7 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.party == Party.objects.filter(abbr="EU").first()
+        return self.party.abbr == "EU"
 
     @cached_property
     def is_after_2010(self):
