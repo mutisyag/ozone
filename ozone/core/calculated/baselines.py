@@ -508,7 +508,9 @@ class BaselineCalculator:
         Helps cache result of expensive call made in _prod_cons_gwp().
         """
         submission = Submission.objects.get(pk=submission_id)
-        return submission.get_aggregated_data(baseline=True)
+        return submission.get_aggregated_data(
+            baseline=True, populate_baselines=False
+        )
 
     def _prod_cons_gwp(self, party, group, period_name, prod_or_cons):
         """
