@@ -80,15 +80,16 @@ class BaselineCalculator:
 
     @lru_cache(maxsize=16)
     def _get_prodcons_objects(self, group, party):
+        decimal_fields = [
+            f.name for f in ProdCons._meta.get_fields()
+            if isinstance(f, models.DecimalField)
+        ]
         prodcons_values = ProdCons.objects.filter(
             group=group, party=party
         ).values(
             'reporting_period__name', 'is_article5', 'is_eu_member',
             'submissions',
-            *[
-                f.name for f in ProdCons._meta.get_fields()
-                if isinstance(f, models.DecimalField)
-            ]
+            *decimal_fields
         )
         prodcons_objects = {p: None for p in self.reporting_periods}
         for value in prodcons_values:
