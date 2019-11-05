@@ -59,7 +59,7 @@ class LimitCalculator:
             for _limit_type in LimitTypes
         }
         for cm in ControlMeasure.objects.select_related(
-            'group', 'party_type'
+            'group', 'party_type', 'baseline_type'
         ).order_by('start_date'):
             key = (cm.group.group_id, cm.party_type.name, cm.limit_type)
             self.control_measures[key].append(cm)
