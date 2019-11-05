@@ -75,7 +75,7 @@ class LimitCalculator:
         """
         return None
 
-    def get_limit(self, limit_type, group, party, party_type, period):
+    def get_limit(self, limit_type, group, party, party_type, is_eu_member, period):
 
         if party.abbr == 'EU' and limit_type in (
             LimitTypes.BDN.value,
@@ -84,10 +84,7 @@ class LimitCalculator:
             # No BDN or Prod limits for EU/ECE(European Union)
             return None
 
-        if (
-            self._party_in_eu(party, period)
-            and limit_type == LimitTypes.CONSUMPTION.value
-        ):
+        if is_eu_member and limit_type == LimitTypes.CONSUMPTION.value:
             # No consumption baseline for EU member states
             return None
 
@@ -181,12 +178,14 @@ def expected_limits(parties, reporting_periods, groups):
 
     for party in parties:
         qs = PartyHistory.objects.filter(
-            party=party
+            party=party,
+            reporting_period__in=reporting_periods
         ).order_by('reporting_period__start_date')
 
         for party_history in qs:
             party = party_history.party
             party_type = party_history.party_type
+            is_eu_member = party_history.is_eu_member
             period = party_history.reporting_period
 
             if period.is_control_period:
@@ -203,6 +202,7 @@ def expected_limits(parties, reporting_periods, groups):
                         group,
                         party,
                         party_type,
+                        is_eu_member,
                         period,
                     )
                     if limit is None:
