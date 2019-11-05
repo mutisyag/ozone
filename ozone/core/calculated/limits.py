@@ -136,16 +136,24 @@ class LimitCalculator:
                 self._get_decimals_for_limits(group, party)
             )
 
+    @lru_cache(maxsize=1)
+    def _get_baselines_for_party(self, party):
+        ret = {}
+        for b in Baseline.objects.filter(party=party).select_related(
+            'group', 'baseline_type'
+        ):
+            key = (b.group.group_id, b.baseline_type.name)
+            ret[key] = b
+        return ret
+
     def _get_baseline(self, party, group, baseline_type):
         if group.group_id in ('CII', 'CIII'):
             # Fake baseline, because control measures start with phase-out
             return Decimal(0)
         else:
-            baseline = Baseline.objects.filter(
-                party=party,
-                group=group,
-                baseline_type=baseline_type
-            ).first()
+            baselines = self._get_baselines_for_party(party)
+            key = (group.group_id, baseline_type.name)
+            baseline = baselines.get(key, None)
             if baseline is None:
                 return None
             else:
