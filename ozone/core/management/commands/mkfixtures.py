@@ -321,11 +321,8 @@ class Command(BaseCommand):
         art5_group2 = ["BH", "IN", "IR", "IQ",
                        "KW", "OM", "PK", "QA", "SA", "AE"]
         non_art5_group2 = ["BY", "KZ", "RU", "TJ", "UZ"]
-        period_datetime = datetime.strptime(
-            self.FIXTURES['reportingperiod'][
-                f['reporting_period'] - 1]['fields']['end_date'], "%Y-%m-%d"
-        )
-        if period_datetime < datetime.strptime('2019-01-01', "%Y-%m-%d"):
+
+        if not row['PeriodID'].isdigit() or int(row['PeriodID']) < 2019:
             if row['Article5']:
                 f['party_type'] = self.lookup_id(
                     'partytype', 'name', 'Article 5'
