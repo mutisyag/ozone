@@ -77,8 +77,6 @@ class LimitCalculator:
 
     def get_limit(self, limit_type, group, party, party_type, period):
 
-        print(f'called get_limit() with {(limit_type, group, party, party_type, period)}')
-
         if party.abbr == 'EU' and limit_type in (
             LimitTypes.BDN.value,
             LimitTypes.PRODUCTION.value
@@ -93,20 +91,23 @@ class LimitCalculator:
             # No consumption baseline for EU member states
             return None
 
-        cm_queryset = ControlMeasure.objects.filter(
-            group=group,
-            party_type=party_type,
-            start_date__lte=period.end_date,
-            limit_type=limit_type,
-        ).filter(
-            Q(end_date__gte=period.start_date) | Q(end_date__isnull=True)
-        ).order_by('start_date')
-        cm_count = cm_queryset.count()
+        # Get the control measure objects for these limits
+        key = (group.group_id, party_type.name, limit_type)
+        cm_objects = self.control_measures[key]
+        cm_objects = [
+            o for o in cm_objects
+            if (
+                o.start_date <= period.end_date
+                and (o.end_date == None or o.end_date >= period.start_date)
+            )
+        ]
+
+        cm_count = len(cm_objects)
         if cm_count == 0:
             # No control measures here
             return None
         elif cm_count == 1:
-            cm = cm_queryset.first()
+            cm = cm_objects[0]
             baseline = self._get_baseline(party, group, cm.baseline_type)
             if baseline is None:
                 return Decimal('0')
@@ -118,8 +119,8 @@ class LimitCalculator:
         elif cm_count == 2:
             # This happens for NA5 BDN limits, AI/BI/EI
             # because control measure becomes applicable in July 28, 2000
-            cm1 = cm_queryset[0]
-            cm2 = cm_queryset[1]
+            cm1 = cm_objects[0]
+            cm2 = cm_objects[1]
             baseline1 = self._get_baseline(party, group, cm1.baseline_type)
             baseline2 = self._get_baseline(party, group, cm2.baseline_type)
             if baseline1 is None or baseline2 is None:
