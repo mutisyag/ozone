@@ -2114,7 +2114,7 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
             'substance', 'quantity_essential', 'quantity_critical'
         )
 
-    def get_quantity_essential(self, obj):
+    def get_quantity_critical(self, obj):
         if (
             obj.substance.has_critical_uses
             and obj.quantity is not None
@@ -2123,7 +2123,7 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
             return obj.quantity * odp_gwp if odp_gwp else None
         return None
 
-    def get_quantity_critical(self, obj):
+    def get_quantity_essential(self, obj):
         if (
             not obj.substance.has_critical_uses
             and obj.quantity is not None
@@ -2139,8 +2139,8 @@ class EssentialCriticalMTDetailedSerializer(
     """
     The serializerReturns the essencrit quantities in metric tons.
     """
-    def get_quantity_essential(self, obj):
+    def get_quantity_critical(self, obj):
         return obj.quantity if obj.substance.has_critical_uses else None
 
-    def get_quantity_critical(self, obj):
+    def get_quantity_essential(self, obj):
         return obj.quantity if (not obj.substance.has_critical_uses) else None
