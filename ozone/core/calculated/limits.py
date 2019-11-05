@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+from functools import lru_cache
 import logging
 
 from django.db import transaction
@@ -14,6 +15,7 @@ from ozone.core.models import Group
 from ozone.core.models import Limit
 from ozone.core.models import LimitTypes
 from ozone.core.models import Party
+from ozone.core.models import PartyType
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import ReportingPeriod
@@ -43,8 +45,39 @@ class LimitCalculator:
             _party.abbr: _party
             for _party in Party.get_main_parties()
         }
+        self.party_types = [_pt.name for _pt in PartyType.objects.all()]
+
+        # The number of control measures is relatively low; so to avoid
+        # repeatedly querying the DB, we can keep all ControlMeasure objects
+        # in a dictionary with:
+        # - keys: (group_id, party_type.name, limit_type)
+        # - values: lists of ControlMeasure objects, ordered by start_date
+        self.control_measures = {
+            (_group, _party_type, _limit_type.value): []
+            for _group in self.groups.keys()
+            for _party_type in self.party_types
+            for _limit_type in LimitTypes
+        }
+        for cm in ControlMeasure.objects.select_related(
+            'group', 'party_type'
+        ).order_by('start_date'):
+            key = (cm.group.group_id, cm.party_type.name, cm.limit_type)
+            self.control_measures[key].append(cm)
+
+    @lru_cache(maxsize=1)
+    def _party_in_eu(self, party, period):
+        return party in Party.get_eu_members_at(period)
+
+    @lru_cache(maxsize=1)
+    def _get_control_measure_objects(self, group, period):
+        """
+        Returns ControlMeasure objects relevant for given group and period
+        """
+        return None
 
     def get_limit(self, limit_type, group, party, party_type, period):
+
+        print(f'called get_limit() with {(limit_type, group, party, party_type, period)}')
 
         if party.abbr == 'EU' and limit_type in (
             LimitTypes.BDN.value,
@@ -53,8 +86,10 @@ class LimitCalculator:
             # No BDN or Prod limits for EU/ECE(European Union)
             return None
 
-        _party_in_eu = (party in Party.get_eu_members_at(period))
-        if (_party_in_eu and limit_type == LimitTypes.CONSUMPTION.value):
+        if (
+            self._party_in_eu(party, period)
+            and limit_type == LimitTypes.CONSUMPTION.value
+        ):
             # No consumption baseline for EU member states
             return None
 
