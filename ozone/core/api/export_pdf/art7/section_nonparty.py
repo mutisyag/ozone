@@ -5,7 +5,6 @@ from ..util import format_decimal
 from ..util import get_comments_section
 
 from ..util import (
-    exclude_blend_items,
     get_group_name,
     get_substance_or_blend_name,
     rows_to_table,
@@ -30,8 +29,8 @@ def table_row(obj):
     )
 
 
-def export_nonparty(submission):
-    data = exclude_blend_items(submission.article7nonpartytrades)
+def export_nonparty(submission, queryset):
+    data = list(queryset)
     comments = get_comments_section(submission, 'nonparty')
 
     if not data and not any(comments):

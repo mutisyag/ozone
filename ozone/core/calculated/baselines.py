@@ -19,6 +19,7 @@ from ozone.core.models import Submission
 from ozone.core.models import Transfer
 from ozone.core.models.utils import round_decimal_half_up
 from ozone.core.models.utils import sum_decimals
+from ozone.core.models.utils import decimal_zero_if_none
 
 
 logger = logging.getLogger(__name__)
@@ -32,6 +33,7 @@ class CalculationError(Exception):
 class BaselineCalculator:
 
     def __init__(self):
+        self.current_period = ReportingPeriod.get_current_period()
         self.groups = {
             _group.group_id: _group
             for _group in Group.objects.all()
@@ -44,6 +46,12 @@ class BaselineCalculator:
             _party.abbr: _party
             for _party in Party.get_main_parties()
         }
+        self.party_types = {
+            entry['party__abbr']: entry['party_type__abbr']
+            for entry in PartyHistory.objects.filter(
+                reporting_period=self.current_period,
+            ).values('party__abbr', 'party_type__abbr')
+        }
         self.eu_member_states = [
             _party.abbr
             for _party in Party.get_eu_members()
@@ -54,22 +62,31 @@ class BaselineCalculator:
                 self.reporting_periods['1989']
             )
         ]
+        self.baseline_types = {
+            _baseline_type.name: _baseline_type
+            for _baseline_type in BaselineType.objects.all()
+        }
 
         def _new_eu_member_states_since(period_name):
+            eu_members_for_period = Party.get_eu_members_at(
+                self.reporting_periods[period_name]
+            ).values_list('abbr', flat=True)
             return [
                 self.parties[_party]
                 for _party in self.eu_member_states
-                if _party not in [
-                    _p.abbr
-                    for _p in Party.get_eu_members_at(
-                        self.reporting_periods[period_name]
-                    )
-                ]
+                if _party not in eu_members_for_period
             ]
         self.new_eu_member_states_since = {
             _period: _new_eu_member_states_since(_period)
             for _period in ('1989', '2009', '2010')
         }
+
+    @lru_cache(maxsize=1)
+    def _get_prodcons_objects(self, group, party):
+        prodcons_objects = {p: None for p in self.reporting_periods}
+        for p in ProdCons.objects.filter(group=group, party=party):
+            prodcons_objects[p.reporting_period.name] = p
+        return prodcons_objects
 
     def get_baseline(self, baseline_type, group, party):
         func, periods = getattr(
@@ -77,21 +94,17 @@ class BaselineCalculator:
         )(group, party)
         return func(party, group, periods) if func else None
 
-    @lru_cache(maxsize=128)
+    @lru_cache(maxsize=1)
     def _get_prodcons(self, party, group, period_name):
-        try:
-            return ProdCons.objects.get(
-                party=party,
-                reporting_period__name=period_name,
-                group=group,
-            )
-        except ProdCons.DoesNotExist:
+        prodcons_objects = self._get_prodcons_objects(group, party)
+        p = prodcons_objects.get(period_name, None)
+        if p is None:
             logger.warning("{} has not reported {} for {}".format(
                 party.name,
                 group.group_id,
                 period_name
             ))
-            return None
+        return p
 
     def _get_bdn_transfer(self, party, group, period_name):
         transfers = Transfer.objects.filter(
@@ -209,7 +222,7 @@ class BaselineCalculator:
 
             average_prod = sum_decimals(
                 hcfc_1989.calculated_production,
-                cfc_1989.calculated_production * Decimal('0.028'),
+                decimal_zero_if_none(cfc_1989.calculated_production) * Decimal('0.028'),
                 hcfc_1989.get_calc_consumption(),
                 cfc_1989.get_calc_consumption() * Decimal('0.028'),
             )
@@ -262,10 +275,7 @@ class BaselineCalculator:
             25% for NA5G2
             65% for A5 (G1 and G2)
         """
-        party_type = PartyHistory.objects.get(
-            party=party,
-            reporting_period=ReportingPeriod.get_current_period(),
-        ).party_type.abbr
+        party_type = self.party_types[party.abbr]
         return {
             'NA5G1': Decimal('0.15'),
             'NA5G2': Decimal('0.25'),
@@ -294,17 +304,14 @@ class BaselineCalculator:
              A5 Group 1: Average HFC for 2020–2022 + 65% of HCFC baseline
              A5 Group 2: Average HFC for 2024–2026 + 65% of HCFC baseline
         """
-        try:
-            current_period = ReportingPeriod.get_current_period()
-            party_type = PartyHistory.objects.get(
-                party=party,
-                reporting_period=current_period,
-            ).party_type.abbr
-            if not party_type.startswith(base_party_type):
-                return None
-        except PartyHistory.DoesNotExist:
+
+        party_type = self.party_types.get(party.abbr, None)
+        if party_type is None:
             # can happen for Palestine or new states
-            logger.warning(f"No party history for {party.abbr}/{current_period.name}")
+            logger.warning(f"No party history for {party.abbr}/{self.current_period.name}")
+            return None
+
+        if not party_type.startswith(base_party_type):
             return None
 
         base_periods = {
@@ -481,6 +488,16 @@ class BaselineCalculator:
             func = self.average_production_bdn
         return func, periods
 
+    @lru_cache(maxsize=1)
+    def _get_aggregation_from_submission(self, submission_id):
+        """
+        Helps cache result of expensive call made in _prod_cons_gwp().
+        """
+        submission = Submission.objects.get(pk=submission_id)
+        return submission.get_aggregated_data(
+            baseline=True, populate_baselines=False
+        )
+
     def _prod_cons_gwp(self, party, group, period_name, prod_or_cons):
         """
         Normally should be invoked only for groups A/I (CFC) and C/I (HCFC).
@@ -499,8 +516,7 @@ class BaselineCalculator:
                 )
             )
         submission_id = prodcons.submissions.get('art7')[0]
-        submission = Submission.objects.get(pk=submission_id)
-        agg = submission.get_aggregated_data(baseline=True).get(group)
+        agg = self._get_aggregation_from_submission(submission_id).get(group)
         if prod_or_cons == 'PROD':
             return agg.calculated_production
         else:

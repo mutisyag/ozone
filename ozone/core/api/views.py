@@ -176,8 +176,10 @@ from ..serializers import (
 
 from .export_pdf import (
     export_submissions,
+    export_baseline_hfc_raw,
     export_prodcons,
     export_impexp_new_rec,
+    export_hfc_baseline,
 )
 
 from ..models.utils import round_decimal_half_up
@@ -2336,6 +2338,15 @@ class ReportsViewSet(viewsets.ViewSet):
         )
 
     @action(detail=False, methods=["get"])
+    def baseline_hfc_raw(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'art7raw_{params}',
+            export_baseline_hfc_raw(parties),
+        )
+
+    @action(detail=False, methods=["get"])
     def prodcons(self, request):
         parties = self._get_parties(request)
         periods = self._get_periods(request)
@@ -2373,6 +2384,15 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'impexp_new_rec_{params}',
             export_impexp_new_rec(periods=periods, parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def hfc_baseline(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'hfc_baseline_{params}',
+            export_hfc_baseline(parties=parties)
         )
 
 

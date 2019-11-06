@@ -6,8 +6,6 @@ from ozone.core.models.utils import sum_decimals
 
 from ..util import (
     format_decimal,
-    exclude_blend_items,
-    filter_lab_uses,
     get_substance_or_blend_name,
     get_group_name,
     rows_to_table,
@@ -28,11 +26,9 @@ def table_row(item):
     )
 
 
-def export_labuses(submission):
-    # For lab uses, consumption is actually data from imports
-    # Apparently there aren't any lab uses in exports (?)
-    imports = filter_lab_uses(exclude_blend_items(submission.article7imports))
-    production = filter_lab_uses(submission.article7productions)
+def export_labuses(submission, imports_queryset, production_queryset):
+    imports = list(imports_queryset)
+    production = list(production_queryset)
 
     if not imports and not production:
         return tuple()

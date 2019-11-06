@@ -99,13 +99,15 @@ class Command(BaseCommand):
             party = self.calculator.parties[pk[0]]
             period = self.calculator.reporting_periods[pk[1]]
             group = self.calculator.groups[pk[2] + pk[3]]
-            party_type = PartyHistory.objects.get(
+            ph = PartyHistory.objects.get(
                 party=party,
                 reporting_period=period,
-            ).party_type
+            )
+            party_type = ph.party_type
+            is_eu_member = ph.is_eu_member
 
             computed = self.calculator.get_limit(
-                'BDN', group, party, party_type, period
+                'BDN', group, party, party_type, is_eu_member, period
             )
             legacy = float_to_decimal(row['BDNProdLimit'])
             log_line = f"{pk} Computed={computed} legacy={legacy}"
@@ -133,6 +135,7 @@ class Command(BaseCommand):
         for party_history in qs:
             party = party_history.party
             party_type = party_history.party_type
+            is_eu_member = party_history.is_eu_member
             period = party_history.reporting_period
 
             if period.is_control_period:
@@ -145,7 +148,11 @@ class Command(BaseCommand):
                 has_changed = False
                 for limit_type in LimitTypes:
                     limit = self.calculator.get_limit(
-                        limit_type.value, group, party, party_type, period
+                        limit_type.value,
+                        group, party,
+                        party_type,
+                        is_eu_member,
+                        period
                     )
                     if limit is not None:
                         logger.debug("Got {:10f} for {}/{}/{}/{}".format(

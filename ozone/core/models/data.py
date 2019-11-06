@@ -340,13 +340,25 @@ class AggregationMixin:
                 aggregation.save()
 
     @classmethod
-    def get_aggregated_data(cls, submission, reported_groups, baseline=False):
+    def get_aggregated_data(
+        cls, submission, reported_groups,
+        baseline=False, populate_baselines=True
+    ):
         """
+        Populates reported_groups with newly-calculated aggregation data.
+
         reported_groups: mapping of form:
         {
             group: ProdCons instance,
             ...
         }
+
+        baseline - if True, then quantities are multiplied by the substance's
+        gwp_baseline (useful when calculating baselines)
+
+        populate_baselines - if True, the baselines/limits aggregation fields
+        will be populated from the baselines/limits table.
+
         """
         if not hasattr(cls, 'AGGREGATION_MAPPING'):
             return
@@ -388,7 +400,8 @@ class AggregationMixin:
             # Because these aggregation entries have not been written to the DB,
             # the values for aggregation.is_article5 and is_eu_member are not
             # correct and need to be passed as parameters.
-            aggregation.populate_limits_and_baselines(is_article5)
+            if populate_baselines:
+                aggregation.populate_limits_and_baselines(is_article5)
             aggregation.calculate_totals(is_eu_member)
 
     @classmethod
