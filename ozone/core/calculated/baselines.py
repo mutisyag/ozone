@@ -62,6 +62,10 @@ class BaselineCalculator:
                 self.reporting_periods['1989']
             )
         ]
+        self.baseline_types = {
+            _baseline_type.name: _baseline_type
+            for _baseline_type in BaselineType.objects.all()
+        }
 
         def _new_eu_member_states_since(period_name):
             eu_members_for_period = Party.get_eu_members_at(

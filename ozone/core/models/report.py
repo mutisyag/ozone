@@ -16,6 +16,7 @@ class Reports(enum.Enum):
     PRODCONS = 'prodcons'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
+    HFC_BASELINE = 'hfc_baseline'
 
     @staticmethod
     def args(has_party_param=False, has_period_param=False):
@@ -66,6 +67,18 @@ class Reports(enum.Enum):
             **Reports.args(has_party_param=True, has_period_param=True),
             **{
                 "display_name": "Import and export of new and recovered substances",
+                "description": _(
+                    "Select one or more parties and one reporting period"
+                )
+            },
+        }
+
+    @staticmethod
+    def hfc_baseline_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "HFC baseline",
                 "description": _(
                     "Select one or more parties and one reporting period"
                 )

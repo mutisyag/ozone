@@ -12,6 +12,7 @@ from .reports import (
     prodcons,
     raf,
     impexp_new_rec,
+    hfc_baseline,
 )
 
 from ozone.core.models import (
@@ -99,6 +100,19 @@ def export_impexp_new_rec(periods, parties):
 
     doc.build(
         list(impexp_new_rec.get_flowables(periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_hfc_baseline(parties):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(hfc_baseline.get_flowables(parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )

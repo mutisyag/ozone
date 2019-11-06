@@ -181,6 +181,10 @@ class Party(models.Model):
                   "Only necessary for backwards compatibility"
     )
 
+    @property
+    def is_eu(self):
+        return self.abbr == 'EU'
+
     @classmethod
     def get_main_parties(cls):
         return cls.objects.filter(
