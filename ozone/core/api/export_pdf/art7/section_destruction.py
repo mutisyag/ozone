@@ -4,7 +4,6 @@ from reportlab.platypus import Paragraph
 from ..util import (
     format_decimal,
     get_comments_section,
-    exclude_blend_items,
     get_substance_or_blend_name,
     get_group_name,
     rows_to_table,
@@ -25,8 +24,8 @@ def table_row(obj):
     )
 
 
-def export_destruction(submission):
-    data = exclude_blend_items(submission.article7destructions)
+def export_destruction(submission, queryset):
+    data = list(queryset)
     comments = get_comments_section(submission, 'destruction')
 
     if not data and not any(comments):

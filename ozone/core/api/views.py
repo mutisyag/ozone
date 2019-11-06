@@ -176,6 +176,7 @@ from ..serializers import (
 
 from .export_pdf import (
     export_submissions,
+    export_baseline_hfc_raw,
     export_prodcons,
     export_impexp_new_rec,
     export_hfc_baseline,
@@ -2334,6 +2335,15 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'art7raw_{params}',
             export_submissions(art7, self.get_submissions(art7, periods, parties))
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_hfc_raw(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'art7raw_{params}',
+            export_baseline_hfc_raw(parties),
         )
 
     @action(detail=False, methods=["get"])

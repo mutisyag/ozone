@@ -69,12 +69,23 @@ def export_submissions(obligation, submissions):
         clazz = raf
 
     flowables = (
-        clazz.export_submissions(submissions) or
+        list(clazz.export_submissions(submissions)) or
         [Paragraph('No data', left_paragraph_style)]
     )
 
     doc.build(
         flowables,
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer,
+    )
+    buff.seek(0)
+    return buff
+
+
+def export_baseline_hfc_raw(parties):
+    buff, doc = get_doc_template(landscape=True)
+    doc.build(
+        list(art7.export_baseline_hfc_raw(parties)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer,
     )

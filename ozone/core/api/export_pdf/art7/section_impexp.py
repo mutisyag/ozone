@@ -5,7 +5,6 @@ from ozone.core.models.utils import sum_decimals
 
 from ..util import (
     col_widths,
-    exclude_blend_items,
     format_decimal,
     get_comments_section,
     get_quantity,
@@ -284,8 +283,7 @@ def _export(data, comments, party_field, texts):
     return (subtitle, table) + comments
 
 
-def export_imports(submission):
-    data = exclude_blend_items(submission.article7imports)
+def export_imports(submission, queryset):
     comments = get_comments_section(submission, 'imports')
     texts = {
         'section_title': "%s (%s)" % (_('Imports'), _('metric tonnes')),
@@ -296,11 +294,10 @@ def export_imports(submission):
         'feedstock_quantity': _('Import for feedstock'),
         'qps_quantity': _('Amount imported for QPS applications within your country'),
     }
-    return _export(data, comments, 'source_party', texts)
+    return _export(list(queryset), comments, 'source_party', texts)
 
 
-def export_exports(submission):
-    data = exclude_blend_items(submission.article7exports)
+def export_exports(submission, queryset):
     comments = get_comments_section(submission, 'exports')
     texts = {
         'section_title': "%s (%s)" % (_('Exports'), _('metric tonnes')),
@@ -311,4 +308,4 @@ def export_exports(submission):
         'feedstock_quantity': _('Export for feedstock'),
         'qps_quantity': _('Amount exported for QPS applications'),
     }
-    return _export(data, comments, 'destination_party', texts)
+    return _export(list(queryset), comments, 'destination_party', texts)

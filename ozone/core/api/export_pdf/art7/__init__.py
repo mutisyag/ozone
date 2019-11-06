@@ -1,4 +1,13 @@
-from itertools import chain
+from django.db.models import Q
+from reportlab.platypus import PageBreak
+
+from ozone.core.models import Blend
+from ozone.core.models import Group
+from ozone.core.models import Obligation
+from ozone.core.models import ObligationTypes
+from ozone.core.models import ReportingPeriod
+from ozone.core.models import Submission
+from ozone.core.models import Substance
 
 from .section_info import export_info
 from .section_impexp import export_imports
@@ -9,7 +18,8 @@ from .section_nonparty import export_nonparty
 from .section_emission import export_emission
 from .section_labuses import export_labuses
 
-from reportlab.platypus import PageBreak
+from ..util import exclude_blend_items
+from ..util import filter_lab_uses
 
 __all__ = [
     'export_submissions',
@@ -17,17 +27,150 @@ __all__ = [
 
 
 def export_submissions(submissions):
-    flowables = list()
     for submission in submissions:
-        flowables += list(chain(
-            export_info(submission),
-            export_imports(submission),
-            export_exports(submission),
-            export_production(submission),
-            export_destruction(submission),
-            export_nonparty(submission),
-            export_emission(submission),
-            export_labuses(submission),
-        ))
-        flowables.append(PageBreak())
-    return flowables
+
+        yield from export_info(submission)
+
+        yield from export_imports(
+            submission,
+            exclude_blend_items(submission.article7imports),
+        )
+
+        yield from export_exports(
+            submission,
+            exclude_blend_items(submission.article7exports),
+        )
+
+        yield from export_production(
+            submission,
+            submission.article7productions.all(),
+        )
+
+        yield from export_destruction(
+            submission,
+            exclude_blend_items(submission.article7destructions),
+        )
+
+        yield from export_nonparty(
+            submission,
+            exclude_blend_items(submission.article7nonpartytrades),
+        )
+
+        yield from export_emission(
+            submission,
+            submission.article7emissions.all(),
+        )
+
+        # For lab uses, consumption is actually data from imports
+        # Apparently there aren't any lab uses in exports (?)
+        yield from export_labuses(
+            submission,
+            filter_lab_uses(exclude_blend_items(submission.article7imports)),
+            filter_lab_uses(submission.article7productions),
+        )
+
+        yield PageBreak()
+
+
+class SubstanceFilter:
+
+    def __init__(self, groups):
+        self.groups = groups
+        self.substances = Substance.objects.filter(group__in=groups)
+        self.blends = Blend.objects.filter(components__substance__in=self.substances)
+
+    def filter_substances(self, queryset):
+        return queryset.filter(substance__in=self.substances)
+
+    def filter_substances_blends(self, queryset):
+        return queryset.filter(Q(blend__in=self.blends) | Q(substance__in=self.substances))
+
+
+def baseline_hfc_raw_page(submission, substance_filter):
+    yield from export_info(submission)
+
+    yield from export_imports(
+        submission,
+        substance_filter.filter_substances_blends(
+            exclude_blend_items(
+                submission.article7imports
+            )
+        ),
+    )
+
+    yield from export_exports(
+        submission,
+        substance_filter.filter_substances_blends(
+            exclude_blend_items(
+                submission.article7exports
+            )
+        ),
+    )
+
+    yield from export_production(
+        submission,
+        substance_filter.filter_substances(
+            submission.article7productions
+        ),
+    )
+
+    yield from export_destruction(
+        submission,
+        substance_filter.filter_substances_blends(
+            exclude_blend_items(
+                submission.article7destructions
+            )
+        ),
+    )
+
+    yield PageBreak()
+
+
+def export_baseline_hfc_raw(parties):
+    reporting_periods = {
+        _period.name: _period
+        for _period in ReportingPeriod.objects.all()
+    }
+    current_period = ReportingPeriod.get_current_period()
+    art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
+
+    group_f_filter = SubstanceFilter(Group.objects.filter(group_id='F'))
+    group_ai_ci_filter = SubstanceFilter(Group.objects.filter(group_id__in=['AI', 'CI']))
+
+    for party in parties:
+        current_history = party.history.get(reporting_period=current_period)
+
+        if current_history.is_article5:
+            if current_history.is_group2():
+                years = [
+                    ('2026', group_f_filter),
+                    ('2025', group_f_filter),
+                    ('2024', group_f_filter),
+                    ('2010', group_ai_ci_filter),
+                    ('2009', group_ai_ci_filter),
+                ]
+            else:
+                years = [
+                    ('2022', group_f_filter),
+                    ('2021', group_f_filter),
+                    ('2020', group_f_filter),
+                    ('2010', group_ai_ci_filter),
+                    ('2009', group_ai_ci_filter),
+                ]
+
+        else:
+            years = [
+                ('2013', group_f_filter),
+                ('2012', group_f_filter),
+                ('2011', group_f_filter),
+                ('1989', group_ai_ci_filter),
+            ]
+
+        for year, substance_filter in years:
+            period = reporting_periods[year]
+            submission = Submission.latest_submitted(art7, party, period)
+
+            if submission is None:
+                raise RuntimeError(f"No art7 submission for {party} {period}")
+
+            yield from baseline_hfc_raw_page(submission, substance_filter)

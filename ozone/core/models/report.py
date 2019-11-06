@@ -13,6 +13,7 @@ class Reports(enum.Enum):
     """
 
     ART7_RAW = 'art7_raw'
+    BASELINE_HFC_RAW = 'baseline_hfc_raw'
     PRODCONS = 'prodcons'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
@@ -45,6 +46,18 @@ class Reports(enum.Enum):
                 "display_name": "Raw data reported - Article 7",
                 "description": _(
                     "Select one or more parties and one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_hfc_raw_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline HFC raw data",
+                "description": _(
+                    "Select one or more parties"
                 )
             },
         }

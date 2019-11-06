@@ -94,8 +94,8 @@ def to_row(obj, row_index):
     return (rows, styles)
 
 
-def export_production(submission):
-    data = submission.article7productions.all()
+def export_production(submission, queryset):
+    data = list(queryset)
     comments = get_comments_section(submission, 'production')
 
     if not data and not any(comments):

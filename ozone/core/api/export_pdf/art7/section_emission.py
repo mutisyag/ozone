@@ -33,8 +33,8 @@ def table_row(obj):
     )
 
 
-def export_emission(submission):
-    data = submission.article7emissions.all()
+def export_emission(submission, queryset):
+    data = list(queryset)
     comments = get_comments_section(submission, 'emissions')
     if not data and not any(comments):
         return tuple()
