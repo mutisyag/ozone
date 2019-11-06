@@ -49,7 +49,6 @@ class Report:
         self.group_ai = calculator.groups['AI']
         self.group_ci = calculator.groups['CI']
         self.group_f = calculator.groups['F']
-        self.period_1989 = calculator.reporting_periods['1989']
 
         def period(name):
             return calculator.reporting_periods[name]
@@ -60,6 +59,8 @@ class Report:
         if current_history.is_article5:
             self.baseline_type_prod = baseline_type('A5ProdGWP')
             self.baseline_type_cons = baseline_type('A5ConsGWP')
+            self.cfc_groups = [self.group_ci]
+            self.cfc_periods = ['2009', '2010']
             if current_history.is_group2():
                 self.hfc_periods = [period(p) for p in ['2024', '2025', '2026']]
             else:
@@ -68,6 +69,8 @@ class Report:
         else:
             self.baseline_type_prod = baseline_type('NA5ProdGWP')
             self.baseline_type_cons = baseline_type('NA5ConsGWP')
+            self.cfc_groups = [self.group_ai, self.group_ci]
+            self.cfc_periods = ['1989']
             self.hfc_periods = [period(p) for p in ['2011', '2012', '2013']]
 
         self.hfc_prodcons_map = {
@@ -123,8 +126,9 @@ class Report:
         ]
 
     def rows(self):
-        yield self.prodcons_gwp_row(self.group_ai, '1989')
-        yield self.prodcons_gwp_row(self.group_ci, '1989')
+        for period_name in self.cfc_periods:
+            for group in self.cfc_groups:
+                yield self.prodcons_gwp_row(group, period_name)
         yield self.baseline_row(self.group_ci)
 
         for period in self.hfc_periods:
