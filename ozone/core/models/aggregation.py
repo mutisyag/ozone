@@ -297,21 +297,18 @@ class BaseProdCons(models.Model):
 
     @cached_property
     def is_european_union(self):
-        return self.party == Party.objects.filter(abbr="EU").first()
+        return self.party.abbr == "EU"
 
     @cached_property
     def is_after_2010(self):
-        rp_2010 = ReportingPeriod.objects.get(name="2010")
-        if self.reporting_period.start_date >= rp_2010.start_date:
+        start_date_2010 = datetime.strptime('2010-01-01', "%Y-%m-%d").date()
+        if self.reporting_period.start_date >= start_date_2010:
             return True
         return False
 
     @cached_property
     def is_china_or_brazil(self):
-        return (
-            self.party == Party.objects.filter(abbr="CN").first()
-            or self.party == Party.objects.filter(abbr="BR").first()
-        )
+        return self.party.abbr == "CN" or self.party.abbr == "BR"
 
     def get_production_process_agent(self):
         if (

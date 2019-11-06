@@ -1,5 +1,6 @@
 import json
 from decimal import Decimal
+from functools import lru_cache
 import logging
 
 from django.db import transaction
@@ -14,6 +15,7 @@ from ozone.core.models import Group
 from ozone.core.models import Limit
 from ozone.core.models import LimitTypes
 from ozone.core.models import Party
+from ozone.core.models import PartyType
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import ReportingPeriod
@@ -43,8 +45,37 @@ class LimitCalculator:
             _party.abbr: _party
             for _party in Party.get_main_parties()
         }
+        self.party_types = [_pt.name for _pt in PartyType.objects.all()]
 
-    def get_limit(self, limit_type, group, party, party_type, period):
+        # The number of control measures is relatively low; so to avoid
+        # repeatedly querying the DB, we can keep all ControlMeasure objects
+        # in a dictionary with:
+        # - keys: (group_id, party_type.name, limit_type)
+        # - values: lists of ControlMeasure objects, ordered by start_date
+        self.control_measures = {
+            (_group, _party_type, _limit_type.value): []
+            for _group in self.groups.keys()
+            for _party_type in self.party_types
+            for _limit_type in LimitTypes
+        }
+        for cm in ControlMeasure.objects.select_related(
+            'group', 'party_type', 'baseline_type'
+        ).order_by('start_date'):
+            key = (cm.group.group_id, cm.party_type.name, cm.limit_type)
+            self.control_measures[key].append(cm)
+
+    @lru_cache(maxsize=1)
+    def _party_in_eu(self, party, period):
+        return party in Party.get_eu_members_at(period)
+
+    @lru_cache(maxsize=1)
+    def _get_control_measure_objects(self, group, period):
+        """
+        Returns ControlMeasure objects relevant for given group and period
+        """
+        return None
+
+    def get_limit(self, limit_type, group, party, party_type, is_eu_member, period):
 
         if party.abbr == 'EU' and limit_type in (
             LimitTypes.BDN.value,
@@ -53,25 +84,27 @@ class LimitCalculator:
             # No BDN or Prod limits for EU/ECE(European Union)
             return None
 
-        _party_in_eu = (party in Party.get_eu_members_at(period))
-        if (_party_in_eu and limit_type == LimitTypes.CONSUMPTION.value):
+        if is_eu_member and limit_type == LimitTypes.CONSUMPTION.value:
             # No consumption baseline for EU member states
             return None
 
-        cm_queryset = ControlMeasure.objects.filter(
-            group=group,
-            party_type=party_type,
-            start_date__lte=period.end_date,
-            limit_type=limit_type,
-        ).filter(
-            Q(end_date__gte=period.start_date) | Q(end_date__isnull=True)
-        ).order_by('start_date')
-        cm_count = cm_queryset.count()
+        # Get the control measure objects for these limits
+        key = (group.group_id, party_type.name, limit_type)
+        cm_objects = self.control_measures[key]
+        cm_objects = [
+            o for o in cm_objects
+            if (
+                o.start_date <= period.end_date
+                and (o.end_date == None or o.end_date >= period.start_date)
+            )
+        ]
+
+        cm_count = len(cm_objects)
         if cm_count == 0:
             # No control measures here
             return None
         elif cm_count == 1:
-            cm = cm_queryset.first()
+            cm = cm_objects[0]
             baseline = self._get_baseline(party, group, cm.baseline_type)
             if baseline is None:
                 return Decimal('0')
@@ -83,8 +116,8 @@ class LimitCalculator:
         elif cm_count == 2:
             # This happens for NA5 BDN limits, AI/BI/EI
             # because control measure becomes applicable in July 28, 2000
-            cm1 = cm_queryset[0]
-            cm2 = cm_queryset[1]
+            cm1 = cm_objects[0]
+            cm2 = cm_objects[1]
             baseline1 = self._get_baseline(party, group, cm1.baseline_type)
             baseline2 = self._get_baseline(party, group, cm2.baseline_type)
             if baseline1 is None or baseline2 is None:
@@ -100,16 +133,24 @@ class LimitCalculator:
                 self._get_decimals_for_limits(group, party)
             )
 
+    @lru_cache(maxsize=1)
+    def _get_baselines_for_party(self, party):
+        ret = {}
+        for b in Baseline.objects.filter(party=party).select_related(
+            'group', 'baseline_type'
+        ):
+            key = (b.group.group_id, b.baseline_type.name)
+            ret[key] = b
+        return ret
+
     def _get_baseline(self, party, group, baseline_type):
         if group.group_id in ('CII', 'CIII'):
             # Fake baseline, because control measures start with phase-out
             return Decimal(0)
         else:
-            baseline = Baseline.objects.filter(
-                party=party,
-                group=group,
-                baseline_type=baseline_type
-            ).first()
+            baselines = self._get_baselines_for_party(party)
+            key = (group.group_id, baseline_type.name)
+            baseline = baselines.get(key, None)
             if baseline is None:
                 return None
             else:
@@ -137,12 +178,14 @@ def expected_limits(parties, reporting_periods, groups):
 
     for party in parties:
         qs = PartyHistory.objects.filter(
-            party=party
+            party=party,
+            reporting_period__in=reporting_periods
         ).order_by('reporting_period__start_date')
 
         for party_history in qs:
             party = party_history.party
             party_type = party_history.party_type
+            is_eu_member = party_history.is_eu_member
             period = party_history.reporting_period
 
             if period.is_control_period:
@@ -159,6 +202,7 @@ def expected_limits(parties, reporting_periods, groups):
                         group,
                         party,
                         party_type,
+                        is_eu_member,
                         period,
                     )
                     if limit is None:

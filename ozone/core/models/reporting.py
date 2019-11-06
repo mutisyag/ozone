@@ -1600,10 +1600,16 @@ class Submission(models.Model):
                     )
         return ret
 
-    def get_aggregated_data(self, baseline=False):
+    def get_aggregated_data(self, baseline=False, populate_baselines=True):
         """
         Returns dict of non-persistent calculated aggregated data for this
         submission, without writing to the database.
+
+        baseline - if True, then quantities are multiplied by the substance's
+        gwp_baseline (useful when calculating baselines)
+
+        populate_baselines - if True, the baselines/limits aggregation fields
+        will be populated from the baselines/limits table.
         """
 
         group_mapping = {
@@ -1622,7 +1628,8 @@ class Submission(models.Model):
                 # the next integer upon double rounding.
                 aggregation.decimals = 15
 
-            aggregation.populate_limits_and_baselines()
+            if populate_baselines:
+                aggregation.populate_limits_and_baselines()
             aggregation.calculate_totals()
 
         for related, aggr_flag in self.RELATED_DATA:
@@ -1634,7 +1641,8 @@ class Submission(models.Model):
                     related_manager.model.get_aggregated_data(
                         submission=self,
                         reported_groups=group_mapping,
-                        baseline=baseline
+                        baseline=baseline,
+                        populate_baselines=populate_baselines
                     )
 
         return group_mapping
