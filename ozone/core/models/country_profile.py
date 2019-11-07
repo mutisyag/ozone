@@ -31,6 +31,7 @@ class MultilateralFund(models.Model):
 
     class Meta:
         db_table = "multilateral_fund"
+        ordering = ('party__name',)
 
 
 class ORMReportManager(models.Manager):
@@ -58,6 +59,7 @@ class ORMReport(models.Model):
     class Meta:
         db_table = "orm_report"
         verbose_name = "ORM report"
+        ordering = ('party__name', '-reporting_period__end_date')
 
 
 class IllegalTradeManager(models.Manager):
@@ -113,6 +115,7 @@ class ReclamationFacility(models.Model):
     class Meta:
         db_table = "reclamation_facility"
         verbose_name_plural = "reclamation facilities"
+        ordering = ('party__name', '-date_reported')
 
 
 class OtherCountryProfileDataManager(models.Manager):
@@ -164,6 +167,7 @@ class OtherCountryProfileData(models.Model):
     class Meta:
         db_table = "other_country_profile_data"
         verbose_name_plural = "other country profile data"
+        ordering = ("party__name", "-reporting_period__end_date")
 
 
 class WebsiteManager(models.Manager):
@@ -194,6 +198,7 @@ class Website(models.Model):
 
     class Meta:
         db_table = "website"
+        ordering = ("party__name",)
 
 
 class LicensingSystemManager(models.Manager):
@@ -227,6 +232,7 @@ class LicensingSystem(models.Model):
 
     class Meta:
         db_table = "licensing_system"
+        ordering = ("party__name", "-date_reported_hfc", "-date_reported_ods")
 
 
 class LicensingSystemFile(models.Model):
