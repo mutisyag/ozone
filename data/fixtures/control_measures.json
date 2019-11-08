@@ -1543,7 +1543,7 @@
       "baseline_type": 3,
       "start_date": "2004-01-01",
       "end_date": "2009-12-31",
-      "allowed": "0.65000"
+      "allowed": "1.00000"
     }
   },
   {
@@ -4052,19 +4052,6 @@
       "baseline_type": 4,
       "start_date": "1992-01-01",
       "end_date": "1993-12-31",
-      "allowed": "1.00000"
-    }
-  },
-  {
-    "model": "core.controlmeasure",
-    "pk": 314,
-    "fields": {
-      "limit_type": "Production",
-      "group": 6,
-      "party_type": 4,
-      "baseline_type": 3,
-      "start_date": "1996-01-01",
-      "end_date": "2003-12-31",
       "allowed": "1.00000"
     }
   }
