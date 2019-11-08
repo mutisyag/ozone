@@ -107,10 +107,14 @@ class ProdConsTable:
                 actual_value = '-'
         return actual_value
 
-    def get_formatted_baseline(self, baseline, actual, group):
+    def get_formatted_baseline(self, baseline, actual, group, limit):
         # actual is get_formatted_value(production/consumption)
         if baseline is None:
-            if group not in self.controlled_groups or group.group_id in ['CII', 'CIII']:
+            if (
+                group not in self.controlled_groups or
+                group.group_id in ['CII', 'CIII'] or
+                limit is None
+            ):
                 return '-'
             return 'N.R.'
         else:
@@ -183,11 +187,11 @@ class ProdConsTable:
         ) if self.show_cons else None
 
         baseline_prod = self.get_formatted_baseline(
-            baseline_prod, main_prod, group
+            baseline_prod, main_prod, group, limit_prod
         ) if self.show_prod else None
 
         baseline_cons = self.get_formatted_baseline(
-            baseline_cons, main_cons, group
+            baseline_cons, main_cons, group, limit_cons
         ) if self.show_cons else None
 
         limit_prod = get_formatted_limit(
