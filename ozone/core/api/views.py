@@ -2641,7 +2641,8 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         data = []
         all_values = queryset.values(
             'quantity', 'submission__party', 'submission__reporting_period',
-            'substance__odp', 'substance__group', 'substance__has_critical_uses'
+            'substance_id', 'substance__odp', 'substance__group',
+            'substance__has_critical_uses'
         )
         for reporting_period in reporting_periods:
             # Create in-memory list of dictionaries for each exemption approved
