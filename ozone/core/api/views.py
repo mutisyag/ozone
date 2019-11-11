@@ -610,7 +610,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = ProdCons.objects.filter(
         party=F('party__parent_party')
     ).select_related(
-        'party__region__abbr'
+        'party__subregion__region__abbr'
     )
     serializer_class = AggregationSerializer
 
@@ -641,7 +641,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         return ProdCons.objects.filter(
             party=F('party__parent_party')
         ).select_related(
-            'party__region__abbr'
+            'party__subregion__region__abbr'
         )
 
     def filter_aggregated_data_by_grouping(self, grouping_fields, values_list):
