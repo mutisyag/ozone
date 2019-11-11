@@ -669,8 +669,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         # Keys are possible values for the 'group_by' parameter.
         # Values are corresponding values of field_name
         grouping_mapping = {
-            'article5': 'is_article5',
-            'eu': 'is_eu_member',
+            'is_article5': 'is_article5',
+            'is_eu_member': 'is_eu_member',
             'region': 'party__subregion__region__abbr'
         }
 
@@ -722,8 +722,8 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                 grouping_fields_values = dict(zip(grouping_fields, key))
                 to_add = filtered_values[key]
                 params_dict = {
-                    key: grouping_fields_values.get(key, None)
-                    for key in grouping_mapping.values()
+                    key: grouping_fields_values.get(value, None)
+                    for key, value in grouping_mapping.items()
                 }
 
                 if 'party' in aggregates and 'group' in aggregates:
@@ -750,7 +750,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                                 'group': group,
                                 'reporting_period': period,
                                 'party': None,
-                                ** params_dict
+                                **params_dict
                             })
                             populate_aggregation(aggregation, fields, entries)
                             values.append(aggregation)
