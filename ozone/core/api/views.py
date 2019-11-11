@@ -671,7 +671,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         grouping_mapping = {
             'is_article5': 'is_article5',
             'is_eu_member': 'is_eu_member',
-            'region': 'party__subregion__region__abbr'
+            'region': 'party__subregion__region'
         }
 
         # All decimal fields need to be retrieved from DB

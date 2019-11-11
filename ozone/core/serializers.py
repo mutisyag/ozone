@@ -1797,14 +1797,13 @@ class AuthTokenByValueSerializer(serializers.ModelSerializer):
 
 
 class AggregationSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField()
+    region = serializers.PrimaryKeyRelatedField(
+        source='party.subregion.region.id', read_only=True
+    )
 
     class Meta:
         model = ProdCons
         exclude = ('destroyed', )
-
-    def get_region(self, obj):
-        return obj.party.subregion.region.abbr
 
 
 class AggregationDestructionSerializer(serializers.ModelSerializer):
@@ -1815,14 +1814,13 @@ class AggregationDestructionSerializer(serializers.ModelSerializer):
 
 
 class AggregationMTSerializer(serializers.ModelSerializer):
-    region = serializers.SerializerMethodField()
+    region = serializers.PrimaryKeyRelatedField(
+        source='party.subregion.region.id', read_only=True
+    )
 
     class Meta:
         model = ProdConsMT
         exclude = ('destroyed', )
-
-    def get_region(self, obj):
-        return obj.party.subregion.region.abbr
 
 
 class AggregationDestructionMTSerializer(serializers.ModelSerializer):
