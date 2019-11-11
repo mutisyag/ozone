@@ -787,7 +787,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                         entries[key].append(value)
                     for group in groups:
                         for party in parties:
-                            if entries[(party, group)]:
+                            if entries.get((party, group), []):
                                 aggregation = dict({
                                     'party': party,
                                     'group': group,
