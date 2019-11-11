@@ -811,7 +811,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         """
         queryset = self.filter_queryset(self.get_queryset())
 
-        # Handle aggregation
+        # Handle aggregation & grouping
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
         groupings = request.query_params.get('group_by', None)
@@ -866,11 +866,13 @@ class AggregationMTViewSet(AggregationViewSet):
         """
         queryset = self.filter_queryset(self.get_queryset())
 
-        # Handle aggregation
+        # Handle aggregation & grouping
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else []
+        groupings = request.query_params.get('group_by', None)
+        groupings = groupings.split(',') if groupings else []
         return self.list_aggregated_data(
-            queryset, aggregates, substance_to_group=True
+            queryset, aggregates, groupings, substance_to_group=True
         )
 
 
