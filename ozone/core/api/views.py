@@ -770,19 +770,20 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
                             )
                             values.append(aggregation)
                 elif substance_to_group is True:
-                    # This is used to aggregate MT values (in which entries are per
-                    # substance) into entries that contain total values for each
-                    # group (as this is what the endpoint should actually list).
+                    # This is used to aggregate MT values (in which entries are
+                    # per substance) into entries that contain total values for
+                    # each group (as this is what the endpoint should actually
+                    # list).
                     # It is only done when no other aggregation is performed, as
                     # any of the above aggregations will already have converted
                     # the per-substance entries to per-group entries.
                     entries = {
-                        (party, group): [] for group in groups for party in parties
+                        (party, group): []
+                        for group in groups for party in parties
                     }
                     for value in to_add:
-                        entries[(value['party'], value[self.group_field])].append(
-                            value
-                        )
+                        key = (value['party'], value[self.group_field])
+                        entries[key].append(value)
                     for group in groups:
                         for party in parties:
                             if entries[(party, group)]:
