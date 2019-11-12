@@ -511,10 +511,47 @@ class MultiValueNumberFilter(filters.BaseCSVFilter, filters.NumberFilter):
         return qs
 
 
-class BaseAggregationViewFilterSet(filters.FilterSet):
+class SwitchableOrFilterset(filters.FilterSet):
+    def filter_queryset(self, queryset):
+        # Remove `or_fields` from filters, as it is not a direct filter but a
+        # behavior modifier.
+        or_fields = self.form.cleaned_data.pop('or_fields', [])
+        or_fields = or_fields if or_fields is not None else []
+
+        # First of all perform all AND-based filtering
+        for name, value in self.form.cleaned_data.items():
+            if name in or_fields:
+                continue
+            queryset = self.filters[name].filter(queryset, value)
+            assert isinstance(queryset, QuerySet), \
+                "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
+                % (type(self).__name__, name, type(queryset).__name__)
+
+        # Now perform OR-based filtering
+        or_querysets = [
+            self.filters[name].filter(queryset, self.form.cleaned_data[name])
+            for name in or_fields
+            if self.form.cleaned_data.get(name, None)
+        ]
+        if not or_querysets:
+            return queryset
+
+        # Now union all or_querysets
+        ret = or_querysets[0]
+        for q in or_querysets[1:]:
+            ret = ret | q
+            ret = ret.distinct()
+        return ret
+
+
+class BaseAggregationViewFilterSet(SwitchableOrFilterset):
     """
     Base filterset for aggregation views.
     """
+    or_fields = MultiValueCharFilter(
+        "or_fields",
+        help_text="Use OR instead of AND for the specified request params"
+    )
     party = MultiValueNumberFilter(
         "party", help_text="Filter by party ID"
     )
