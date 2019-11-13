@@ -527,16 +527,32 @@ class SwitchableOrFilterset(filters.FilterSet):
                 "Expected '%s.%s' to return a QuerySet, but got a %s instead." \
                 % (type(self).__name__, name, type(queryset).__name__)
 
-        # Now perform OR-based filtering
+        # Now perform OR-based filtering. If not applicable, return.
+        if not or_fields:
+            return queryset
+
+        # If any of the field names specified in or_fields does not have
+        # a specific value set in the query, it means that we should filter
+        # based on all possible values for that field. Since this is an OR-based
+        # filter, all existing values will satisfy it. So we will
+        # just return the queryset without performing any additional filtering.
+        if any(
+            [
+                (self.form.cleaned_data.get(name, None) is None)
+                for name in or_fields
+            ]
+        ):
+            return queryset
+
+        # Construct list of querysets filtered for each of the or_fields
         or_querysets = [
             self.filters[name].filter(queryset, self.form.cleaned_data[name])
             for name in or_fields
-            if self.form.cleaned_data.get(name, None) is not None
         ]
         if not or_querysets:
             return queryset
 
-        # Now union all or_querysets
+        # And finally return distinct results based on all filtered querysets.
         ret = or_querysets[0]
         for q in or_querysets[1:]:
             ret = ret | q
