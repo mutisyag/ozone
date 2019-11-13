@@ -531,7 +531,7 @@ class SwitchableOrFilterset(filters.FilterSet):
         or_querysets = [
             self.filters[name].filter(queryset, self.form.cleaned_data[name])
             for name in or_fields
-            if self.form.cleaned_data.get(name, None)
+            if self.form.cleaned_data.get(name, None) is not None
         ]
         if not or_querysets:
             return queryset
