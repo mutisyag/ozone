@@ -657,6 +657,27 @@ def populate_aggregation(aggregation, fields, to_add):
             )
 
 
+def filter_aggregated_data_by_grouping(grouping_fields, values_list):
+    """
+    Helper function that returns a dictionary:
+    - with keys being all permutations of different values
+      for grouping_fields found in values_list
+    - with values being lists of elements from values_list that
+      correspond to each permutation
+    """
+    if not grouping_fields:
+        return {(): values_list}
+
+    filtered_values = dict()
+    for value in values_list:
+        value_key = tuple(value[field] for field in grouping_fields)
+        if value_key in filtered_values:
+            filtered_values[value_key].append(value)
+        else:
+            filtered_values[value_key] = [value, ]
+    return filtered_values
+
+
 class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
     # Data for this view is in ODP tons for annexes A-E and
     # CO2-eq tonnes for annex F
@@ -696,24 +717,6 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         ).select_related(
             'party__subregion__region'
         )
-
-    def filter_aggregated_data_by_grouping(self, grouping_fields, values_list):
-        # Construct a dictionary:
-        # - with keys being all permutations of different values
-        #   for grouping_fields found in values_list
-        # - with values being lists of elements from values_list that
-        #   correspond to those fields
-        if not grouping_fields:
-            return {(): values_list}
-
-        filtered_values = dict()
-        for value in values_list:
-            value_key = tuple(value[field] for field in grouping_fields)
-            if value_key in filtered_values:
-                filtered_values[value_key].append(value)
-            else:
-                filtered_values[value_key] = [value, ]
-        return filtered_values
 
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
@@ -766,7 +769,7 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             values_for_period = values_list.get(period, [])
             # Take grouping fields into account to possibly generate several
             # objects for the same reporting period
-            filtered_values = self.filter_aggregated_data_by_grouping(
+            filtered_values = filter_aggregated_data_by_grouping(
                 grouping_fields, values_for_period
             )
             for key in filtered_values.keys():
@@ -962,58 +965,101 @@ class AggregationDestructionViewSet(AggregationViewSet):
         We need to override the default ViewSet list method to handle the
         custom `aggregation` parameter.
         """
+
+        # Maps grouping param value to field names to be retrieved
+        # Keys are possible values for the 'group_by' parameter.
+        # Values are corresponding values of field_name
+        grouping_mapping = {
+            'is_article5': 'is_article5',
+            'is_eu_member': 'is_eu_member',
+            'region': 'party__subregion__region'
+        }
+
         queryset = self.filter_queryset(self.get_queryset())
 
         # Using `distinct()` does not work because this queryset is
         # ordered by fields from related models, which makes similar
         # values seem distinct.
-        periods = set(
-            queryset.values_list('reporting_period', flat=True)
-        )
+        periods = set(queryset.values_list('reporting_period', flat=True))
+        parties = set(queryset.values_list('party', flat=True))
         all_values = queryset.values(
-            'destroyed', 'party', 'reporting_period', self.group_or_substance
+            'destroyed', 'party', 'reporting_period',
+            self.group_or_substance,
+            *grouping_mapping.values()
         )
-        values = []
 
         # Handle aggregation. In this case we always aggregate by group, since
         # only the total destructions sum per party/period is public.
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
+        groupings = request.query_params.get('group_by', None)
+        groupings = groupings.split(',') if groupings else []
+
+        # Field names that will be used for grouping, based on the 'group_by'
+        # parameter
+        grouping_fields = [
+            value for key, value in grouping_mapping.items() if key in groupings
+        ]
+
+        # Use a dictionary of list of dictionaries for in-memory storage to
+        # optimize DB queries.
+        values_list = {period: [] for period in periods}
+        for value in all_values:
+            values_list[value['reporting_period']].append(value)
+
+        # List of values that will be returned
+        values = []
         for period in periods:
-            # Use a list of dictionaries for in-memory storage to optimize
-            # DB queries.
-            values_list = [
-                value for value in all_values
-                if value['reporting_period'] == period
-            ]
-            if aggregates and 'party' in aggregates:
-                # Sum values for all groups (or substances) and all parties for
-                # this reporting period
-                aggregation = dict({
-                    'reporting_period': period,
-                    'party': None,
-                    'group': None
-                })
-                populate_aggregation(aggregation, ['destroyed',], values_list)
-                values.append(aggregation)
-            else:
-                # Sum values for all groups/substances for this reporting period
-                parties = set(queryset.values_list('party', flat=True))
-                for party in parties:
-                    entries = [
-                        value for value in values_list
-                        if value['party'] == party
-                    ]
-                    if entries:
-                        aggregation = dict({
-                            'party': party,
-                            'reporting_period': period,
-                            'group': None
-                        })
-                        populate_aggregation(
-                            aggregation, ['destroyed',], entries
-                        )
-                        values.append(aggregation)
+            # These are all the values retrieved from the DB for the given
+            # reporting period; however they may need to be broken down further
+            # based on grouping.
+            values_for_period = values_list.get(period, [])
+
+            # Take grouping fields into account to possibly generate several
+            # objects for the same reporting period
+            filtered_values = filter_aggregated_data_by_grouping(
+                grouping_fields, values_for_period
+            )
+            for key in filtered_values.keys():
+                # We must construct an aggregation for each key-value item
+                # in the filtered_values dictionary
+                grouping_fields_values = dict(zip(grouping_fields, key))
+                to_add = filtered_values[key]
+                params_dict = {
+                    key: grouping_fields_values.get(value, None)
+                    for key, value in grouping_mapping.items()
+                }
+
+                if aggregates and 'party' in aggregates:
+                    # Sum values for all groups (or substances) and all parties
+                    # for this reporting period & grouping
+                    aggregation = dict({
+                        'reporting_period': period,
+                        'party': None,
+                        'group': None,
+                        **params_dict
+                    })
+                    populate_aggregation(aggregation, ['destroyed',], to_add)
+                    values.append(aggregation)
+                else:
+                    # Sum values for all groups/substances for this reporting
+                    # period & grouping
+                    for party in parties:
+                        entries = [
+                            value for value in to_add
+                            if value['party'] == party
+                        ]
+                        if entries:
+                            aggregation = dict({
+                                'party': party,
+                                'reporting_period': period,
+                                'group': None,
+                                **params_dict
+                            })
+                            populate_aggregation(
+                                aggregation, ['destroyed',], entries
+                            )
+                            values.append(aggregation)
 
         # Aggregating disables pagination. However that is ok given the small
         # number of results that will be returned.
