@@ -2692,7 +2692,11 @@ class EssentialCriticalPaginator(PageNumberPagination):
     page_size_query_param = "page_size"
 
 
-class EssentialCriticalFilterSet(filters.FilterSet):
+class EssentialCriticalFilterSet(SwitchableOrFilterset):
+    or_fields = MultiValueCharFilter(
+        "or_fields",
+        help_text="Use OR instead of AND for the specified request params"
+    )
     party = MultiValueNumberFilter(
         field_name="submission__party", help_text="Filter by party ID"
     )
