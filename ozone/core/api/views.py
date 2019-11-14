@@ -169,8 +169,7 @@ from ..serializers import (
     ORMReportSerializer,
     MultilateralFundSerializer,
     EssentialCriticalSerializer,
-    EssentialCriticalDetailedSerializer,
-    EssentialCriticalMTDetailedSerializer,
+    EssentialCriticalMTSerializer,
 )
 
 
@@ -2754,7 +2753,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         'submission__party', 'submission__reporting_period',
         'substance__group', 'submission__party__subregion',
     )
-    serializer_class = EssentialCriticalDetailedSerializer
+    serializer_class = EssentialCriticalSerializer
 
     permission_classes = (IsAuthenticated,)
     filter_backends = (
@@ -2779,7 +2778,7 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
     def get_queryset(self):
         return ExemptionApproved.objects.all().prefetch_related(
             'submission__party', 'submission__reporting_period',
-            'substance__group'
+            'substance__group', 'submission__party__subregion__region'
         )
 
     def list(self, request, *args, **kwargs):
@@ -2915,7 +2914,7 @@ class EssentialCriticalMTViewSet(EssentialCriticalViewSet):
     The same information as in the EssentialCriticalViewSet, but given in
     metric tons.
     """
-    serializer_class = EssentialCriticalMTDetailedSerializer
+    serializer_class = EssentialCriticalMTSerializer
 
     # Custom class attribute needed for list() to properly work
     odp_tons = False

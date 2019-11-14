@@ -2074,29 +2074,10 @@ class MultilateralFundSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EssentialCriticalSerializer(serializers.Serializer):
-    """
-    This is used to serialize aggregated essencrit data; which means that the
-    quantities for each entry have already been converted to ODP tons.
-    """
-    reporting_period = serializers.IntegerField()
-    party = serializers.IntegerField()
-    group = serializers.IntegerField()
-    quantity_essential = serializers.DecimalField(
-        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        allow_null=True
-    )
-    quantity_critical = serializers.DecimalField(
-        max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
-        allow_null=True
-    )
-
-
-class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
+class EssentialCriticalSerializer(serializers.ModelSerializer):
     """
     Used for serializing more detailed information about approved exemptions
-    (to be used when presenting them non-aggregated), keeping with the format
-    of EssentialCriticalSerializer.
+    (to be used when presenting them non-aggregated).
     The quantities are presented in ODP tons (as is also the case with
     aggregated data).
     """
@@ -2109,6 +2090,9 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
     group = serializers.IntegerField(
         source='substance.group.id', read_only=True
     )
+    region = serializers.IntegerField(
+        source='submission.party.subregion.region.id', read_only=True
+    )
 
     quantity_essential = serializers.SerializerMethodField()
     quantity_critical = serializers.SerializerMethodField()
@@ -2116,7 +2100,9 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
     class Meta:
         model = ExemptionApproved
         fields = (
-            'reporting_period', 'party', 'group', 'decision_approved',
+            'reporting_period', 'group', 'party', 'region',
+            'is_article5', 'is_eu_member',
+            'decision_approved',
             'substance', 'quantity_essential', 'quantity_critical'
         )
 
@@ -2139,9 +2125,7 @@ class EssentialCriticalDetailedSerializer(serializers.ModelSerializer):
         return None
 
 
-class EssentialCriticalMTDetailedSerializer(
-    EssentialCriticalDetailedSerializer
-):
+class EssentialCriticalMTSerializer(EssentialCriticalSerializer):
     """
     The serializerReturns the essencrit quantities in metric tons.
     """
