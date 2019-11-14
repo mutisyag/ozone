@@ -2784,6 +2784,8 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
 
         aggregates = request.query_params.get('aggregation', None)
         aggregates = aggregates.split(',') if aggregates else None
+        groupings = request.query_params.get('group_by', None)
+        groupings = groupings.split(',') if groupings else []
 
         # If there are no aggregations to perform, behave like a normal
         # ModelViewSet.
@@ -2796,6 +2798,20 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
             serializer = self.get_serializer(queryset, many=True)
             return Response(serializer.data)
 
+        # Maps grouping param value to field names to be retrieved
+        # Keys are possible values for the 'group_by' parameter.
+        # Values are corresponding values of field_name
+        grouping_mapping = {
+            'is_article5': 'is_article5',
+            'is_eu_member': 'is_eu_member',
+            'region': 'submission__party__subregion__region'
+        }
+        # Field names that will be used for grouping, based on the 'group_by'
+        # parameter
+        grouping_fields = [
+            value for key, value in grouping_mapping.items() if key in groupings
+        ]
+
         # Otherwise, need to perform the aggregations
         values_list = queryset.values_list(
             'submission__reporting_period',
@@ -2806,68 +2822,88 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
         parties = set(value[1] for value in values_list)
         groups = set(value[2] for value in values_list)
 
-        data = []
         all_values = queryset.values(
             'quantity', 'submission__party', 'submission__reporting_period',
             'substance_id', 'substance__odp', 'substance__group',
-            'substance__has_critical_uses'
+            'substance__has_critical_uses',
+            *grouping_mapping.values()
         )
+        values_dict = {period: [] for period in reporting_periods}
+        for value in all_values:
+            values_dict[value['submission__reporting_period']].append(value)
+
+        # List of values that will be returned
+        data = []
         for reporting_period in reporting_periods:
             # Create in-memory list of dictionaries for each exemption approved
             # for this reporting_period
-            to_add = [
-                value for value in all_values
-                if value['submission__reporting_period'] == reporting_period
-            ]
-            if not to_add:
+            values_for_period = values_dict.get(reporting_period, [])
+            if not values_for_period:
                 continue
 
-            if 'party' in aggregates and 'group' in aggregates:
-                ret = dict({
-                    'reporting_period': reporting_period,
-                    'party': None,
-                    'group': None,
-                })
-                populate_essencrit_aggregation(ret, to_add, self.odp_tons)
-                data.append(ret)
-            elif 'group' in aggregates:
-                for party in parties:
-                    # Do in-memory filtering to avoid yet another DB hit
-                    entries = [
-                        entry for entry in to_add
-                        if entry['submission__party'] == party
-                    ]
-                    if entries:
-                        ret = dict({
-                            'reporting_period': reporting_period,
-                            'party': party,
-                            'group': None,
-                        })
-                        populate_essencrit_aggregation(
-                            ret, entries, self.odp_tons
-                        )
-                        data.append(ret)
-            elif 'party' in aggregates:
-                for group in groups:
-                    # Do in-memory filtering to avoid yet another DB hit
-                    entries = [
-                        entry for entry in to_add
-                        if entry['substance__group'] == group
-                    ]
-                    if entries:
-                        ret = dict({
-                            'reporting_period': reporting_period,
-                            'party': None,
-                            'group': group,
-                        })
-                        populate_essencrit_aggregation(
-                            ret, entries, self.odp_tons
-                        )
-                        data.append(ret)
+            # Take grouping fields into account to possibly generate several
+            # objects for the same reporting period
+            filtered_values = filter_aggregated_data_by_grouping(
+                grouping_fields, values_for_period
+            )
+            for key in filtered_values.keys():
+                # We must construct an aggregation for each key-value item
+                # in the filtered_values dictionary
+                to_add = filtered_values[key]
+                grouping_fields_values = dict(zip(grouping_fields, key))
+                params_dict = {
+                    key: grouping_fields_values.get(value, None)
+                    for key, value in grouping_mapping.items()
+                }
 
-        return Response(
-            EssentialCriticalSerializer(data, many=True).data
-        )
+                # Now aggregate
+                if 'party' in aggregates and 'group' in aggregates:
+                    ret = dict({
+                        'reporting_period': reporting_period,
+                        'party': None,
+                        'group': None,
+                        **params_dict
+                    })
+                    populate_essencrit_aggregation(ret, to_add, self.odp_tons)
+                    data.append(ret)
+                elif 'group' in aggregates:
+                    for party in parties:
+                        # Do in-memory filtering to avoid yet another DB hit
+                        entries = [
+                            entry for entry in to_add
+                            if entry['submission__party'] == party
+                        ]
+                        if entries:
+                            ret = dict({
+                                'reporting_period': reporting_period,
+                                'party': party,
+                                'group': None,
+                                **params_dict
+                            })
+                            populate_essencrit_aggregation(
+                                ret, entries, self.odp_tons
+                            )
+                            data.append(ret)
+                elif 'party' in aggregates:
+                    for group in groups:
+                        # Do in-memory filtering to avoid yet another DB hit
+                        entries = [
+                            entry for entry in to_add
+                            if entry['substance__group'] == group
+                        ]
+                        if entries:
+                            ret = dict({
+                                'reporting_period': reporting_period,
+                                'party': None,
+                                'group': group,
+                                **params_dict
+                            })
+                            populate_essencrit_aggregation(
+                                ret, entries, self.odp_tons
+                            )
+                            data.append(ret)
+
+        return Response(data)
 
 
 class EssentialCriticalMTViewSet(EssentialCriticalViewSet):
