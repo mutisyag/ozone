@@ -760,13 +760,13 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
         values = []
         # Use a dictionary of list of dictionaries for in-memory storage to
         # optimize DB queries.
-        values_list = {period: [] for period in periods}
+        values_dict = {period: [] for period in periods}
         for value in all_values:
-            values_list[value['reporting_period']].append(value)
+            values_dict[value['reporting_period']].append(value)
 
         # Now iterate over all periods and produce the data
         for period in periods:
-            values_for_period = values_list.get(period, [])
+            values_for_period = values_dict.get(period, [])
             # Take grouping fields into account to possibly generate several
             # objects for the same reporting period
             filtered_values = filter_aggregated_data_by_grouping(
@@ -1003,9 +1003,9 @@ class AggregationDestructionViewSet(AggregationViewSet):
 
         # Use a dictionary of list of dictionaries for in-memory storage to
         # optimize DB queries.
-        values_list = {period: [] for period in periods}
+        values_dict = {period: [] for period in periods}
         for value in all_values:
-            values_list[value['reporting_period']].append(value)
+            values_dict[value['reporting_period']].append(value)
 
         # List of values that will be returned
         values = []
@@ -1013,7 +1013,7 @@ class AggregationDestructionViewSet(AggregationViewSet):
             # These are all the values retrieved from the DB for the given
             # reporting period; however they may need to be broken down further
             # based on grouping.
-            values_for_period = values_list.get(period, [])
+            values_for_period = values_dict.get(period, [])
 
             # Take grouping fields into account to possibly generate several
             # objects for the same reporting period
