@@ -1,6 +1,5 @@
 from datetime import datetime
 from decimal import Decimal
-from model_utils import FieldTracker
 
 from django.contrib.postgres import fields
 from django.core.validators import MinValueValidator
@@ -532,8 +531,6 @@ class ProdCons(BaseProdCons):
         blank=True, null=True, default=None
     )
 
-    tracker = FieldTracker()
-
     @cached_property
     def decimals(self):
         """
@@ -638,20 +635,16 @@ class ProdCons(BaseProdCons):
         """
         Overridden to perform extra actions.
         """
-        # TODO: probably should remove tracker!
 
         # Used for marking whether cache should be invalidated at the end.
-        invalidate_cache = False
+        # If the param is not specified, default action is to invalidate.
+        invalidate_cache = kwargs.pop('invalidate_cache', True)
+
         # If this is the first save, only invalidate cache if values have been
         # provided for the decimal fields.
         if not self.pk or kwargs.pop('force_insert', False) is True:
             # If any decimal fields have changed, cache must be invalidated
-            if not self.is_empty():
-                invalidate_cache = True
-        else:
-            # If this is not the first save, use the invalidate_cache param
-            # If the param is not specified, default action is to invalidate.
-            invalidate_cache = kwargs.pop('invalidate_cache', True)
+            invalidate_cache = True if not self.is_empty() else False
 
         # At each save, we need to recalculate the totals.
         self.calculate_totals()
