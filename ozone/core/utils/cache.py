@@ -1,17 +1,38 @@
 import concurrent.futures
 import requests
-import time
+
+from django.conf import settings
 
 
-URL = 'www.github.com'
-
-pool = concurrent.futures.ThreadPoolExecutor(max_workers=10)
+pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 
 
-def invalidate_aggregation_cache():
-    # TODO: replace this with proper stuff
-    print(f'Invalidating - {time.time()}')
+class ConfigurationError(Exception):
+    pass
+
+
+def invalidate_aggregation_cache(instance):
+    """
+    Used to invalidate the aggregation cache based on the instance that was
+    added/modified/deleted.
+
+    For now, due to limitations on the Drupal side, invalidation works by
+    invalidating all data for a specific party.
+    """
+    url = settings.CACHE_INVALIDATON_URL
+    try:
+        timeout = float(settings.CACHE_INVALIDATION_TIMEOUT)
+    except ValueError:
+        raise ConfigurationError(
+            'CACHE_INVALIDATION_TIMEOUT needs to be a numeric value'
+        )
+    if url is None:
+        return
+
+    print('Invalidating')
+
+    # TODO: send this to the pool
     # This will timeout even if it receives data
-    requests.get(URL, timeout=0.01)
-    print(f'Done invalidating - {time.time()}')
-    return True
+    requests.get(url, timeout=timeout)
+
+    print('Done invalidating')
