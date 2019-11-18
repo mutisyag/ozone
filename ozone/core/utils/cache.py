@@ -1,4 +1,5 @@
 import concurrent.futures
+import logging
 import requests
 
 from django.conf import settings
@@ -7,8 +8,8 @@ from django.conf import settings
 pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
 
 
-class ConfigurationError(Exception):
-    pass
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
 
 def invalidate_aggregation_cache(instance):
@@ -19,20 +20,21 @@ def invalidate_aggregation_cache(instance):
     For now, due to limitations on the Drupal side, invalidation works by
     invalidating all data for a specific party.
     """
-    url = settings.CACHE_INVALIDATON_URL
+    url = settings.CACHE_INVALIDATION_URL
     try:
         timeout = float(settings.CACHE_INVALIDATION_TIMEOUT)
     except ValueError:
-        raise ConfigurationError(
-            'CACHE_INVALIDATION_TIMEOUT needs to be a numeric value'
+        logger.error(
+            'Error while invalidating cache. '
+            'CACHE_INVALIDATION_TIMEOUT needs to be a numeric value.'
         )
     if url is None:
         return
 
-    print('Invalidating')
+    logger.info('Invalidating')
 
-    # TODO: send this to the pool
-    # This will timeout even if it receives data
-    requests.get(url, timeout=timeout)
+    # requests.get() will timeout after `timeout` even if it receives data
+    url = f'{url}?party={instance.party}'
+    pool.submit(requests.get, url, timeout=timeout)
 
-    print('Done invalidating')
+    logger.info('Done invalidating')

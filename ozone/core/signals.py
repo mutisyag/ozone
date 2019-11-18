@@ -13,5 +13,4 @@ def clear_aggregation_cache(sender, instance, **kwargs):
     """
     Handler for the clear_cache signal
     """
-    print(f'invalidating the cache for {instance}')
     invalidate_aggregation_cache(instance)
