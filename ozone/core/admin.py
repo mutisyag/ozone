@@ -8,6 +8,8 @@ from django.contrib import admin, messages
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth import logout as auth_logout
 from django.contrib.admin import site, AdminSite, TabularInline
+from django.contrib.admin.models import LogEntry, DELETION
+from django.contrib.admin.views.main import ChangeList
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.db.models import F, Subquery, CharField, TextField
@@ -1094,6 +1096,46 @@ class MultilateralFund(BaseCountryPofileAdmin, admin.ModelAdmin):
     list_filter = (
         ('party', MainPartyFilter),
     )
+
+
+class LogEntryChangeList(ChangeList):
+    def url_for_result(self, result):
+        if result.action_flag == DELETION:
+            return '%s' % (result.pk, )
+        return '/admin/%s/%s/%s/' % (
+            result.content_type.app_label,
+            result.content_type.model,
+            result.object_id
+        )
+
+
+@admin.register(LogEntry)
+class LogEntryAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'object_id',
+        'content_type',
+        'object_repr',
+        'user',
+        'action_flag',
+        'change_message',
+        'action_time',
+    )
+
+    ordering = ('-action_time', )
+    list_filter = (
+        'action_flag',
+        ('content_type__model', custom_title_dropdown_filter('content type')),
+        ('user__username', custom_title_dropdown_filter('user')),
+    )
+
+    def get_changelist(self, request, **kwargs):
+        return LogEntryChangeList
+
+    def get_queryset(self, request):
+        return super(LogEntryAdmin, self).get_queryset(
+            request
+        ).select_related('content_type', 'user')
 
 
 # register all adminactions
