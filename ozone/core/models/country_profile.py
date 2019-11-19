@@ -4,6 +4,8 @@ from django.db import models
 
 from . import Obligation, Party, ReportingPeriod, Submission
 
+from ..signals import clear_focal_point_cache_signal
+
 
 @enum.unique
 class URLTypes(enum.Enum):
@@ -297,3 +299,16 @@ class FocalPoint(models.Model):
     class Meta:
         db_table = "focal_point"
         ordering = ('ordering_id',)
+
+    def save(self, *args, **kwargs):
+        """
+        Overridden to send clear cache signal if successful
+        """
+        super().save(*args, **kwargs)
+
+        # If all went well, send the clear_cache signal.
+        # send_robust() is used to avoid save() not completing in case there
+        # is an error when invalidating the cache.
+        clear_focal_point_cache_signal.send_robust(
+            sender=self.__class__, instance=self
+        )

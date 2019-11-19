@@ -11,6 +11,7 @@ from .party import Party, PartyHistory
 from .substance import Group, Substance
 from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .control import Limit, LimitTypes, Baseline
+from ..signals import clear_aggregation_cache_signal
 
 
 __all__ = [
@@ -223,6 +224,17 @@ class BaseProdCons(models.Model):
         max_digits=DECIMAL_FIELD_DIGITS, decimal_places=DECIMAL_FIELD_DECIMALS,
         null=True, blank=True, default=None
     )
+
+    @classmethod
+    def decimal_fields(cls):
+        return [
+            f.name for f in cls._meta.fields
+            if isinstance(f, models.fields.DecimalField)
+        ]
+
+    @cached_property
+    def decimal_field_names(self):
+        return self.__class__.decimal_fields()
 
     def is_empty(self):
         """Returns True if aggregation has all-zero values"""
@@ -623,6 +635,17 @@ class ProdCons(BaseProdCons):
         """
         Overridden to perform extra actions.
         """
+
+        # Used for marking whether cache should be invalidated at the end.
+        # If the param is not specified, default action is to invalidate.
+        invalidate_cache = kwargs.pop('invalidate_cache', True)
+
+        # If this is the first save, only invalidate cache if values have been
+        # provided for the decimal fields.
+        if not self.pk or kwargs.pop('force_insert', False) is True:
+            # If any decimal fields have changed, cache must be invalidated
+            invalidate_cache = True if not self.is_empty() else False
+
         # At each save, we need to recalculate the totals.
         self.calculate_totals()
 
@@ -636,6 +659,14 @@ class ProdCons(BaseProdCons):
         self.populate_limits_and_baselines()
 
         super().save(*args, **kwargs)
+
+        # If all went well, send the clear_cache signal.
+        # send_robust() is used to avoid save() not completing in case there
+        # is an error when invalidating the cache.
+        if invalidate_cache is True:
+            clear_aggregation_cache_signal.send_robust(
+                sender=self.__class__, instance=self
+            )
 
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"

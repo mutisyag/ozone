@@ -30,6 +30,7 @@ from ..exceptions import (
     TransitionDoesNotExist,
     TransitionNotAvailable,
 )
+from ..utils.cache import invalidate_aggregation_cache
 
 __all__ = [
     'ModifyPreventionMixin',
@@ -1524,7 +1525,7 @@ class Submission(models.Model):
                 submissions_set = set(aggregation.submissions[obligation_type])
                 submissions_set.remove(self.id)
                 aggregation.submissions[obligation_type] = list(submissions_set)
-            aggregation.save()
+            aggregation.save(invalidate_cache=False)
 
         # Set to 0 all values that had been populated by this submission.
         # Any aggregation row that becomes full-zero after that is deleted.
@@ -1579,7 +1580,8 @@ class Submission(models.Model):
                 aggregation.submissions[obligation_type] = list(submissions_set)
             else:
                 aggregation.submissions[obligation_type] = [self.id,]
-            aggregation.save()
+            # Do not invalidate cache as it's already been done
+            aggregation.save(invalidate_cache=False)
             ret.append(aggregation.id)
 
         for related, aggr_flag in self.RELATED_DATA:

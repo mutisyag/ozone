@@ -241,7 +241,7 @@ class AggregationMixin:
 
             # This will automatically trigger the calculation of computed
             # values
-            aggregation.save()
+            aggregation.save(invalidate_cache=False)
 
     @classmethod
     def fill_aggregated_mt_data(cls, submission, queryset):
