@@ -1,6 +1,7 @@
 import concurrent.futures
 import logging
 import requests
+from requests.auth import HTTPBasicAuth
 
 from django.conf import settings
 
@@ -18,6 +19,8 @@ def invalidate_party_cache(party_id):
     invalidating all data for a specific party.
     """
     url = settings.CACHE_INVALIDATION_URL
+    if url is None:
+        return
     try:
         timeout = float(settings.CACHE_INVALIDATION_TIMEOUT)
     except ValueError:
@@ -25,14 +28,16 @@ def invalidate_party_cache(party_id):
             'Error while invalidating cache. '
             'CACHE_INVALIDATION_TIMEOUT needs to be a numeric value.'
         )
-    if url is None:
-        return
+        timeout = 0
 
     logger.info(f'Invalidating cache for party {party_id}')
 
     # requests.get() will timeout after `timeout` even if it receives data
+    auth = HTTPBasicAuth(
+        settings.CACHE_INVALIDATION_USER, settings.CACHE_INVALIDATION_PASS
+    )
     url = f'{url}?party={party_id}'
-    pool.submit(requests.get, url, timeout=timeout)
+    pool.submit(requests.get, url, timeout=timeout, auth=auth)
 
     logger.info('Done invalidating')
 

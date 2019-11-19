@@ -389,4 +389,6 @@ IMPERSONATE = {
 CACHE_INVALIDATION_URL = env('CACHE_INVALIDATION_URL', default=None)
 # Timeout is in seconds
 CACHE_INVALIDATION_TIMEOUT=env('CACHE_INVALIDATION_TIMEOUT', default=1)
-
+# Authentication for cache invalidation (basic by default)
+CACHE_INVALIDATION_USER=env('CACHE_INVALIDATION_USER', default='')
+CACHE_INVALIDATION_PASS=env('CACHE_INVALIDATION_PASS', default='')

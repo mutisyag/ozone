@@ -33,6 +33,9 @@ export POSTGRES_PASSWORD=ozone
 export CACHE_INVALIDATION_URL=http://ozone-website.edw.ro/countries/purge-report-tags
 # Timeout is in seconds
 export CACHE_INVALIDATION_TIMEOUT=1
+# Authentication for cache invalidation (basic by default)
+CACHE_INVALIDATION_USER=XXXXXXXXXXXXXXXX
+CACHE_INVALIDATION_PASS=XXXXXXXXXXXXXXXX
 
 # Other
 # XXX TODO: Why is this needed?
