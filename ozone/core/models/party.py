@@ -7,6 +7,7 @@ from django.db import models
 from .legal import ReportingPeriod
 from .meeting import Treaty
 from .utils import RatificationTypes
+from ..signals import clear_ratification_cache_signal
 
 
 __all__ = [
@@ -336,6 +337,19 @@ class PartyRatification(models.Model):
 
     class Meta:
         db_table = 'party_ratification'
+
+    def save(self, *args, **kwargs):
+        """
+        Overridden to send clear cache signal if successful
+        """
+        super().save(*args, **kwargs)
+
+        # If all went well, send the clear_cache signal.
+        # send_robust() is used to avoid save() not completing in case there
+        # is an error when invalidating the cache.
+        clear_ratification_cache_signal.send_robust(
+            sender=self.__class__, instance=self
+        )
 
 
 class PartyDeclaration(models.Model):

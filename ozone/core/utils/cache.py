@@ -44,15 +44,34 @@ def invalidate_party_cache(party_id):
 
 def invalidate_aggregation_cache(instance):
     """
-    Used to invalidate the aggregation cache based on the ProdCons instance that
-    was added/modified/deleted.
+    Used to invalidate entries in the aggregation cache based on the ProdCons
+    instance that was added/modified/deleted.
     """
     invalidate_party_cache(instance.party.id)
 
 
+def invalidate_aggregations_cache(aggregation_dict_list):
+    """
+    Used to invalidate entries in the aggregation cache based on a list of
+    group/party/period dicts corresponding to a number of ProdCons instances
+    that were modified.
+    """
+    party_id_set = set([item['party'] for item in aggregation_dict_list])
+    for party_id in party_id_set:
+        invalidate_party_cache(party_id)
+
+
 def invalidate_focal_point_cache(instance):
     """
-    Used to invalidate the focal point cache based on the FocalPoint instance
-    that was added/modified/deleted.
+    Used to invalidate entries in the focal point cache based on the FocalPoint
+    instance that was added/modified/deleted.
+    """
+    invalidate_party_cache(instance.party.id)
+
+
+def invalidate_ratification_cache(instance):
+    """
+    Used to invalidate entries in the ratification cache based on the
+    Ratification instance that was added/modified/deleted.
     """
     invalidate_party_cache(instance.party.id)
