@@ -12,11 +12,8 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
 
-def invalidate_aggregation_cache(instance):
+def invalidate_party_cache(party_id):
     """
-    Used to invalidate the aggregation cache based on the instance that was
-    added/modified/deleted.
-
     For now, due to limitations on the Drupal side, invalidation works by
     invalidating all data for a specific party.
     """
@@ -31,10 +28,26 @@ def invalidate_aggregation_cache(instance):
     if url is None:
         return
 
-    logger.info('Invalidating')
+    logger.info(f'Invalidating cache for party {party_id}')
 
     # requests.get() will timeout after `timeout` even if it receives data
-    url = f'{url}?party={instance.party}'
+    url = f'{url}?party={party_id}'
     pool.submit(requests.get, url, timeout=timeout)
 
     logger.info('Done invalidating')
+
+
+def invalidate_aggregation_cache(instance):
+    """
+    Used to invalidate the aggregation cache based on the ProdCons instance that
+    was added/modified/deleted.
+    """
+    invalidate_party_cache(instance.party.id)
+
+
+def invalidate_focal_point_cache(instance):
+    """
+    Used to invalidate the focal point cache based on the FocalPoint instance
+    that was added/modified/deleted.
+    """
+    invalidate_party_cache(instance.party.id)
