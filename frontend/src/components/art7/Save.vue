@@ -38,6 +38,11 @@ export default {
           doNotSave.push(questionnaire_field.name)
         }
       })
+      Object.values(this.form.tabs).filter(tab => !Object.keys(this.form.tabs.questionaire_questions.default_properties).includes(tab.name)).forEach(tab => {
+        if (tab.status !== null && !doNotSave.includes(tab.name)) {
+          justSave.push(tab.name)
+        }
+      })
       let stopSave = false
       Object.values(this.form.tabs).filter(tab => tab.hasOwnProperty('form_fields')).forEach(tab => {
         const url = this.$store.state.current_submission[tab.endpoint_url]

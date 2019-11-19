@@ -60,7 +60,7 @@ const actions = {
   addSubmission({ state, getters, dispatch }, { submission, $gettext }) {
     return new Promise((resolve, reject) => {
       const duplicatesAll = getters.getDuplicateSubmission(submission)
-      const duplicatesByCurrentUser = duplicatesAll.filter(x => x.filled_by_secretariat === state.currentUser.is_secretariat)
+      const duplicatesByCurrentUser = duplicatesAll && duplicatesAll.length ? duplicatesAll.filter(x => x.filled_by_secretariat === state.currentUser.is_secretariat) : []
       if (duplicatesAll.length >= 2 || duplicatesByCurrentUser.length) {
         dispatch('setAlert', {
           $gettext,
@@ -304,6 +304,7 @@ const actions = {
   },
 
   async doSubmissionTransition({ dispatch }, { source, submission, transition, $gettext, noModal, backToDashboard = true }) {
+    // console.log('doing transition')
     if (!noModal) {
       const confirmed = await dispatch('openConfirmModal', { $gettext })
       if (!confirmed) {

@@ -205,6 +205,7 @@ export default {
         try {
           if (this.newTabs.includes(tab.name) && tab.name !== 'files') {
             await post(url, current_tab_data)
+            // console.log('post done', tab.name)
             this.$store.commit('setTabStatus', { tab: tab.name, value: true })
 
             if (isObject(tab.form_fields)) {
@@ -231,6 +232,7 @@ export default {
             }
 
             await update(url, current_tab_data)
+            // console.log('update done', tab.name)
 
             if (tab.name === 'files') {
               await this.getSubmissionFiles()
@@ -259,7 +261,6 @@ export default {
         }
         resolve()
       })
-      // this.checkIfThereIsAnotherActionToDoBeforeReturning(tab.name)
     },
     checkIfThereIsAnotherActionToDoBeforeReturning(tabName) {
       this.tabsToSave = this.tabsToSave.filter(t => t !== tabName)
