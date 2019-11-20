@@ -14,7 +14,12 @@ class Reports(enum.Enum):
 
     ART7_RAW = 'art7_raw'
     BASELINE_HFC_RAW = 'baseline_hfc_raw'
+    LABUSE = 'labuse'
     PRODCONS = 'prodcons'
+    PRODCONS_BY_REGION = 'prodcons_by_region'
+    PRODCONS_A5_SUMMARY = 'prodcons_a5_summary'
+    PRODCONS_A5_PARTIES = 'prodcons_a5_parties'
+    PRODCONS_NA5_PARTIES = 'prodcons_na5_parties'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
     HFC_BASELINE = 'hfc_baseline'
@@ -39,6 +44,54 @@ class Reports(enum.Enum):
         }
 
     @staticmethod
+    def prodcons_by_region_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - by region",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_a5_summary_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Art5 summary",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_a5_parties_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Art5 parties",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_na5_parties_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Non-Art5 parties",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
     def art7_raw_info():
         return {
             **Reports.args(has_party_param=True, has_period_param=True),
@@ -58,6 +111,18 @@ class Reports(enum.Enum):
                 "display_name": "Baseline HFC raw data",
                 "description": _(
                     "Select one or more parties"
+                )
+            },
+        }
+
+    @staticmethod
+    def labuse_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Laboratory and analytical uses",
+                "description": _(
+                    "Select one or more reporting periods"
                 )
             },
         }

@@ -17,12 +17,14 @@ from .section_destruction import export_destruction
 from .section_nonparty import export_nonparty
 from .section_emission import export_emission
 from .section_labuses import export_labuses
+from .labuse_report import export_labuse_report
 
 from ..util import exclude_blend_items
 from ..util import filter_lab_uses
 
 __all__ = [
     'export_submissions',
+    'export_labuse_report',
 ]
 
 
@@ -64,7 +66,6 @@ def export_submissions(submissions):
         # For lab uses, consumption is actually data from imports
         # Apparently there aren't any lab uses in exports (?)
         yield from export_labuses(
-            submission,
             filter_lab_uses(exclude_blend_items(submission.article7imports)),
             filter_lab_uses(submission.article7productions),
         )

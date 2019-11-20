@@ -2,7 +2,12 @@ import enum
 
 from django.db import models
 
-from . import Obligation, Party, ReportingPeriod, Submission
+from . import (
+    Obligation,
+    Party,
+    ReportingPeriod,
+    Submission,
+)
 
 
 @enum.unique

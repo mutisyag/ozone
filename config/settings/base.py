@@ -379,8 +379,16 @@ if SENTRY_DSN:
     )
 
 # Impersonate
-
 IMPERSONATE = {
     'REQUIRE_SUPERUSER': True,
     'REDIRECT_URL': '/',
 }
+
+# Cache invalidation
+# No cache invalidation will be attempted by default if host/port not given
+CACHE_INVALIDATION_URL = env('CACHE_INVALIDATION_URL', default=None)
+# Timeout is in seconds
+CACHE_INVALIDATION_TIMEOUT=env('CACHE_INVALIDATION_TIMEOUT', default=1)
+# Authentication for cache invalidation (basic by default)
+CACHE_INVALIDATION_USER=env('CACHE_INVALIDATION_USER', default='')
+CACHE_INVALIDATION_PASS=env('CACHE_INVALIDATION_PASS', default='')

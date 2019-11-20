@@ -93,11 +93,68 @@ def export_baseline_hfc_raw(parties):
     return buff
 
 
+def export_labuse(periods):
+
+    buff, doc = get_doc_template(landscape=False)
+
+    flowables = (
+        list(art7.export_labuse_report(periods)) or
+        [Paragraph('No data', left_paragraph_style)]
+    )
+
+    doc.build(
+        flowables,
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer,
+    )
+    buff.seek(0)
+    return buff
+
+
 def export_prodcons(submission, periods, parties):
     buff, doc = get_doc_template(landscape=False)
 
     doc.build(
         list(prodcons.get_prodcons_flowables(submission, periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prodcons_by_region(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_by_region_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prodcons_a5_summary(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_a5_summary_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prodcons_parties(periods, is_article5):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_parties_flowables(periods, is_article5)),
         onFirstPage=add_page_footer,
         onLaterPages=add_page_footer
     )

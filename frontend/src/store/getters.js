@@ -90,7 +90,7 @@ const getters = {
 
   getCriticalSubstances: (state) => (substance) => state.initialData.substances.some(s => s.value === substance && s.has_critical_uses),
 
-  getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions.filter(
+  getDuplicateSubmission: (state) => (data) => state.dashboard.mySubmissions && state.dashboard.mySubmissions.filter(
     (sub) => sub.obligation === data.obligation
 			&& sub.party === data.party
 			&& sub.reporting_period === data.reporting_period

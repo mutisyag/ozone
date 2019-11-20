@@ -108,6 +108,10 @@ class Region(models.Model):
         ordering = ('name',)
         db_table = 'region'
 
+    @classmethod
+    def get_real_regions(cls):
+        return cls.objects.exclude(abbr='UNK')
+
 
 class Subregion(models.Model):
     """
