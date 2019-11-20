@@ -1,4 +1,7 @@
+from decimal import Decimal
 from collections import defaultdict
+
+from django.db.models import Avg
 
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -30,12 +33,14 @@ TABLE_CUSTOM_STYLES = (
     ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
 )
 
+
 class ProdImpExpTable:
 
     def __init__(self, period):
         self.period = period
 
         self.all_groups = list(Group.objects.all())
+        self.group_map = {g.group_id: g for g in self.all_groups}
         histories = PartyHistory.objects.filter(reporting_period=period)
         self.history_map = {h.party: h for h in histories}
         self.prodcons_map = self.get_prodcons_map()
@@ -43,8 +48,10 @@ class ProdImpExpTable:
         art7 = Obligation.objects.get(_obligation_type=ObligationTypes.ART7.value)
         self.submission_map = Submission.latest_submitted_for_parties(art7, self.period, self.parties)
 
+        self.normalize = data.ValueNormalizer()
         self.format = data.ValueFormatter()
         self.builder = self.begin_table()
+        self.fields = ['prod', 'imp', 'exp']
 
     def get_prodcons_map(self):
         rv = defaultdict(defaultdict)
@@ -57,9 +64,70 @@ class ProdImpExpTable:
         return dict(rv)
 
     def get_baselines(self, party):
+        def averages(group, years):
+            rows = list(
+                ProdCons.objects
+                .filter(party=party)
+                .filter(reporting_period__name__in=years)
+                .filter(group=group)
+            )
+
+            if not rows:
+                return {f: None for f in self.fields}
+
+            return {
+                'prod': sum(r.calculated_production or d0 for r in rows) / len(rows),
+                'imp': sum(r.import_new or d0 for r in rows) / len(rows),
+                'exp': sum(r.export_new or d0 for r in rows) / len(rows),
+            }
+
+        d0 = Decimal(0)
+        g = self.group_map
+
         history = self.history_map[party]
-        assert not history.is_article5
-        return (0, 0)
+        if history.is_article5:
+            yield g['AI'], averages(g['AI'], ['1995', '1996', '1997'])
+
+            yield g['BI'], averages(g['BI'], ['1998', '1999', '2000'])
+
+            ci_baseline = averages(g['CI'], ['2009', '2010'])
+            yield g['CI'], ci_baseline
+
+            yield g['EI'], averages(g['EI'], ['1995', '1996', '1997', '1998'])
+
+            if history.is_group2:
+                f_years = ['2024', '2025', '2026']
+            else:
+                f_years = ['2020', '2021', '2022']
+            avg_f = averages(g['F'], f_years)
+            f_baseline = {
+                field: (avg_f[field] or d0) + Decimal('.15') * (ci_baseline[field] or d0)
+                for field in self.fields
+            }
+            yield g['F'], f_baseline
+
+        else:
+            yield g['AI'], averages(g['AI'], ['1986'])
+
+            yield g['BI'], averages(g['BI'], ['1989'])
+
+            avg_ci = averages(g['CI'], ['1989'])
+            avg_ai = averages(g['AI'], ['1989'])
+            ci_baseline = {
+                field: (avg_ci[field] or d0) + Decimal('.028') * (avg_ai[field] or d0)
+                for field in self.fields
+            }
+            yield g['CI'], ci_baseline
+
+            yield g['EI'], averages(g['EI'], ['1991'])
+
+            avg_f = averages(g['F'], ['2011', '2012', '2013'])
+            f_baseline = {
+                field: (avg_f[field] or d0) + Decimal('.15') * (ci_baseline[field] or d0)
+                for field in self.fields
+            }
+            yield g['F'], f_baseline
+
 
     def begin_table(self):
         styles = list(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES)
@@ -112,23 +180,28 @@ class ProdImpExpTable:
         date_reported = get_date_of_reporting_str(submission)
         heading = self.party_heading(party, history, date_reported)
         self.builder.add_heading(heading)
+        baselines_map = dict(self.get_baselines(party))
+        _blank_baseline = {f: None for f in self.fields}
 
         for group in self.all_groups:
             prodcons = self.prodcons_map[party].get(group)
             if not prodcons:
                 continue
 
-            value_prod = prodcons.calculated_production
-            value_import = prodcons.import_new
-            value_export = prodcons.export_new
+            values = {
+                'prod': prodcons.calculated_production,
+                'imp': prodcons.import_new,
+                'exp': prodcons.export_new,
+            }
 
-            baseline_prod = prodcons.baseline_prod
-            (baseline_import, baseline_export) = self.get_baselines(party)
+            baselines = baselines_map.get(group, _blank_baseline)
 
             row = [group.name]
-            row += self.format_comparison(value_prod, baseline_prod)
-            row += self.format_comparison(value_import, baseline_import)
-            row += self.format_comparison(value_export, baseline_export)
+            for name in self.fields:
+                row += self.format_comparison(
+                    self.normalize.prodcons(values[name], group),
+                    self.normalize.baseline(baselines[name], group, None),
+                )
 
             self.builder.add_row(row)
 
