@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
@@ -7,24 +5,25 @@ from reportlab.platypus import Table
 
 from ozone.core.api.export_pdf.util import (
     h1_style, h2_style, sm_no_spacing_style,
-    smb_l, sm_l, b_l,
-    format_decimal,
-    DOUBLE_HEADER_TABLE_STYLES,
-    col_widths,
+    smb_l, sm_l,
 )
-
-TABLE_CUSTOM_STYLES = (
-    ('ALIGN', (1, 2), (-1, -1), 'RIGHT'),
-    ('SPAN', (0, 0), (0, 1)),  # annex/group
-    ('SPAN', (1, 0), (4, 0)),  # production
-    ('SPAN', (5, 0), (9, 0)),  # consumption
-)
-
 
 def get_header(party_name):
     return (
         Paragraph(party_name.upper(), style=h1_style),
         Paragraph("Production and Consumption - Comparison with Base Year", style=h2_style),
+    )
+
+
+def get_summary_report_header(period, name):
+    yield Paragraph(
+        _("Production and Consumption of ODSs - Comparison of {period} with")
+        .format(period=period.name),
+        style=h1_style,
+    )
+    yield Paragraph(
+        _("Baseline: {name} (ODP/CO2-eq Tonnes)").format(name=name),
+        style=h1_style,
     )
 
 
@@ -61,63 +60,6 @@ class TableBuilder:
             style=self.styles,
             hAlign='LEFT'
         )
-
-
-def get_party_history(party_data):
-    info = _("""{party_name} - Date Reported: {date_reported}
-                {party_type} {party_region} - Population*: {population}""".format(
-             party_name=party_data['name'],
-             date_reported=party_data['date_reported'],
-             party_type=party_data['party_type'],
-             party_region=party_data['region'],
-             population=party_data['population']))
-    paragraph = b_l(info)
-    paragraph.keepWithNext = True
-    return paragraph
-
-
-def get_table(table_data):
-    ods_caption = _("Production and Consumption of ODSs for {period} (ODP tonnes)")
-    hfc_caption = _("Production and Consumption of HFCs for {period} (CO2-equivalent tonnes)")
-
-    styles = list(DOUBLE_HEADER_TABLE_STYLES + TABLE_CUSTOM_STYLES)
-    column_widths = col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2])
-    table_builder = TableBuilder(styles, column_widths)
-
-    period = table_data['period']
-
-    table_builder.add_row([
-        _('Annex/Group'),
-        "{label}**".format(label=_('PRODUCTION')), '', '', '',
-        "{label}**".format(label=_('CONSUMPTION')), '', '', '', '',
-    ])
-    table_builder.add_row([
-        '',
-        period, _('Base'), _('% Chng'), _('Limit'),
-        period, _('Base'), _('% Chng'), _('Limit'), _('Per Cap. Cons.'),
-    ])
-
-    table_builder.add_heading(ods_caption.format(period=period))
-
-    def _format(row):
-        return (
-            format_decimal(value) if isinstance(value, Decimal) else value
-            for value in row
-        )
-
-    for k, row in table_data['data'].items():
-        if k == 'F':
-            continue
-        table_builder.add_row(_format(row))
-
-    if 'F' in table_data['data']:
-        row = table_data['data']['F']
-        table_builder.add_heading(hfc_caption.format(period=period))
-        table_builder.add_row(_format(row))
-
-    yield get_party_history(table_data['party'])
-    yield table_builder.done()
-    yield Paragraph('', style=h1_style)
 
 
 def get_footer():

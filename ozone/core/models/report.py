@@ -15,6 +15,10 @@ class Reports(enum.Enum):
     ART7_RAW = 'art7_raw'
     BASELINE_HFC_RAW = 'baseline_hfc_raw'
     PRODCONS = 'prodcons'
+    PRODCONS_BY_REGION = 'prodcons_by_region'
+    PRODCONS_A5_SUMMARY = 'prodcons_a5_summary'
+    PRODCONS_A5_PARTIES = 'prodcons_a5_parties'
+    PRODCONS_NA5_PARTIES = 'prodcons_na5_parties'
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
     HFC_BASELINE = 'hfc_baseline'
@@ -34,6 +38,54 @@ class Reports(enum.Enum):
                 "display_name": "Production and consumption - comparison with base year",
                 "description": _(
                     "Select one or more parties and one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_by_region_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - by region",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_a5_summary_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Art5 summary",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_a5_parties_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Art5 parties",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def prodcons_na5_parties_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Production and consumption - Non-Art5 parties",
+                "description": _(
+                    "Select one or more reporting periods"
                 )
             },
         }

@@ -176,6 +176,9 @@ from .export_pdf import (
     export_submissions,
     export_baseline_hfc_raw,
     export_prodcons,
+    export_prodcons_by_region,
+    export_prodcons_a5_summary,
+    export_prodcons_parties,
     export_impexp_new_rec,
     export_hfc_baseline,
 )
@@ -2520,6 +2523,42 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'prodcons_{params}',
             export_prodcons(submission=None, periods=periods, parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def prodcons_by_region(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'prodcons_by_region_{params}',
+            export_prodcons_by_region(periods=periods),
+        )
+
+    @action(detail=False, methods=["get"])
+    def prodcons_a5_summary(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'prodcons_a5_summary_{params}',
+            export_prodcons_a5_summary(periods=periods),
+        )
+
+    @action(detail=False, methods=["get"])
+    def prodcons_a5_parties(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'prodcons_a5_parties_{params}',
+            export_prodcons_parties(periods=periods, is_article5=True),
+        )
+
+    @action(detail=False, methods=["get"])
+    def prodcons_na5_parties(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'prodcons_na5_parties_{params}',
+            export_prodcons_parties(periods=periods, is_article5=False),
         )
 
     @action(detail=False, methods=["get"])

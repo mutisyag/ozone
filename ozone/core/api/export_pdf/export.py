@@ -106,6 +106,45 @@ def export_prodcons(submission, periods, parties):
     return buff
 
 
+def export_prodcons_by_region(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_by_region_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prodcons_a5_summary(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_a5_summary_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
+def export_prodcons_parties(periods, is_article5):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(prodcons.get_prodcons_parties_flowables(periods, is_article5)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
 def export_impexp_new_rec(periods, parties):
     buff, doc = get_doc_template(landscape=False)
 
