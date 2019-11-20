@@ -1,11 +1,10 @@
 from django.utils.translation import gettext_lazy as _
 from reportlab.platypus import PageBreak
 from reportlab.platypus import Paragraph
-from reportlab.platypus import Table
 
 from ozone.core.api.export_pdf.util import (
     h1_style, h2_style, sm_no_spacing_style,
-    smb_l, sm_l,
+    sm_l,
 )
 
 def get_header(party_name):
@@ -36,30 +35,6 @@ def get_groups_description(all_groups):
         )
 
     yield Paragraph("", style=h1_style)
-
-
-class TableBuilder:
-
-    def __init__(self, styles, column_widths):
-        self.styles = list(styles)
-        self.column_widths = column_widths
-        self.rows = []
-
-    def add_row(self, row):
-        self.rows.append(row)
-
-    def add_heading(self, text):
-        self.rows.append([smb_l(text)])
-        current_row = len(self.rows) - 1
-        self.styles.append(('SPAN', (0, current_row), (-1, current_row)))
-
-    def done(self):
-        return Table(
-            self.rows,
-            colWidths=self.column_widths,
-            style=self.styles,
-            hAlign='LEFT'
-        )
 
 
 def get_footer():

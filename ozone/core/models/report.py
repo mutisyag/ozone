@@ -14,6 +14,7 @@ class Reports(enum.Enum):
 
     ART7_RAW = 'art7_raw'
     BASELINE_HFC_RAW = 'baseline_hfc_raw'
+    LABUSE = 'labuse'
     PRODCONS = 'prodcons'
     PRODCONS_BY_REGION = 'prodcons_by_region'
     PRODCONS_A5_SUMMARY = 'prodcons_a5_summary'
@@ -110,6 +111,18 @@ class Reports(enum.Enum):
                 "display_name": "Baseline HFC raw data",
                 "description": _(
                     "Select one or more parties"
+                )
+            },
+        }
+
+    @staticmethod
+    def labuse_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Laboratory and analytical uses",
+                "description": _(
+                    "Select one or more reporting periods"
                 )
             },
         }

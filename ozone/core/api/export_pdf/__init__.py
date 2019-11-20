@@ -1,5 +1,6 @@
 from .export import (
     export_submissions,
+    export_labuse,
     export_baseline_hfc_raw,
     export_prodcons,
     export_prodcons_by_region,
@@ -11,6 +12,7 @@ from .export import (
 
 __all__ = [
     'export_submissions',
+    'export_labuse',
     'export_baseline_hfc_raw',
     'export_prodcons',
     'export_prodcons_by_region',

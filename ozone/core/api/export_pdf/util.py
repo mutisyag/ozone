@@ -463,3 +463,27 @@ def get_date_of_reporting_str(submission):
     if date_of_reporting:
         date_of_reporting = date_of_reporting.strftime('%d %B %Y')
     return date_of_reporting
+
+
+class TableBuilder:
+
+    def __init__(self, styles, column_widths):
+        self.styles = list(styles)
+        self.column_widths = column_widths
+        self.rows = []
+
+    def add_row(self, row):
+        self.rows.append(row)
+
+    def add_heading(self, text):
+        self.rows.append([smb_l(text)])
+        current_row = len(self.rows) - 1
+        self.styles.append(('SPAN', (0, current_row), (-1, current_row)))
+
+    def done(self):
+        return Table(
+            self.rows,
+            colWidths=self.column_widths,
+            style=self.styles,
+            hAlign='LEFT'
+        )

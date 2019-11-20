@@ -26,15 +26,9 @@ def table_row(item):
     )
 
 
-def export_labuses(submission, imports_queryset, production_queryset):
-    imports = list(imports_queryset)
-    production = list(production_queryset)
-
-    if not imports and not production:
-        return tuple()
-
-    # prepare row items
+def join_labuse_data(imports, production):
     data = {}
+
     for item in imports:
         substance_name = get_substance_or_blend_name(item)
         if substance_name not in data:
@@ -74,6 +68,14 @@ def export_labuses(submission, imports_queryset, production_queryset):
                 data[substance_name]['remark'],
                 item.decision_laboratory_analytical_uses
             ]))
+
+    return data
+
+
+def export_labuses(imports, production):
+    data = join_labuse_data(imports, production)
+    if not data:
+        return tuple()
 
     subtitle = Paragraph(
         "%s (%s)" % (_('Laboratory and analytical uses'), _('metric tonnes')),

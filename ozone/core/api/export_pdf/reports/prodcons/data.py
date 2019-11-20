@@ -20,6 +20,7 @@ from ozone.core.api.export_pdf.util import b_l
 from ozone.core.api.export_pdf.util import DOUBLE_HEADER_TABLE_STYLES
 from ozone.core.api.export_pdf.util import col_widths
 from ozone.core.api.export_pdf.util import format_decimal
+from ozone.core.api.export_pdf.util import TableBuilder
 from . import render
 
 
@@ -302,7 +303,7 @@ def render_submission_table(period, table):
 
     styles = list(DOUBLE_HEADER_TABLE_STYLES + SUBMISSION_TABLE_CUSTOM_STYLES)
     column_widths = col_widths([5.5, 1.5, 1.5, 1.2, 1.5, 1.5, 1.5, 1.2, 1.5, 2])
-    table_builder = render.TableBuilder(styles, column_widths)
+    table_builder = TableBuilder(styles, column_widths)
 
     table_builder.add_row([
         _('Annex/Group'),
@@ -445,7 +446,7 @@ class ProdConsSummary:
     def render_table(self):
         styles = list(DOUBLE_HEADER_TABLE_STYLES + PRODCONS_SUMMARY_CUSTOM_STYLES)
         column_widths = col_widths([5.5, 2, 2, 2, 2, 2, 2, 2])
-        table_builder = render.TableBuilder(styles, column_widths)
+        table_builder = TableBuilder(styles, column_widths)
 
         table_builder.add_row([
             "",

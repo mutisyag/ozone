@@ -174,6 +174,7 @@ from ..serializers import (
 
 from .export_pdf import (
     export_submissions,
+    export_labuse,
     export_baseline_hfc_raw,
     export_prodcons,
     export_prodcons_by_region,
@@ -2510,6 +2511,15 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'art7raw_{params}',
             export_baseline_hfc_raw(parties),
+        )
+
+    @action(detail=False, methods=["get"])
+    def labuse(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'art7raw_{params}',
+            export_labuse(periods),
         )
 
     @action(detail=False, methods=["get"])
