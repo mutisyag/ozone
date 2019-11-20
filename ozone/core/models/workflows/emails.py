@@ -42,7 +42,7 @@ def notify_workflow_transitioned(workflow):
     if workflow.state == 'submitted' and workflow.user.email != submission.info.email:
         user = submission.info.email
         data_entry_by = _(
-            _('(Information recorded by {user})').format(
+            '(Information recorded by {user})'.format(
                 user=str(workflow.user)
             )
         )
