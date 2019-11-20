@@ -176,6 +176,20 @@ def export_impexp_new_rec(periods, parties):
     return buff
 
 
+def export_prod_imp_exp(periods):
+    raise RuntimeError
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        # list(impexp_new_rec.get_flowables(periods, parties)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
 def export_hfc_baseline(parties):
     buff, doc = get_doc_template(landscape=False)
 

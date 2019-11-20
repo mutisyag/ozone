@@ -7,6 +7,7 @@ from .export import (
     export_prodcons_a5_summary,
     export_prodcons_parties,
     export_impexp_new_rec,
+    export_prod_imp_exp,
     export_hfc_baseline,
 )
 
@@ -19,5 +20,6 @@ __all__ = [
     'export_prodcons_a5_summary',
     'export_prodcons_parties',
     'export_impexp_new_rec',
+    'export_prod_imp_exp',
     'export_hfc_baseline',
 ]
