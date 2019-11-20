@@ -11,7 +11,6 @@ from .party import Party, PartyHistory
 from .substance import Group, Substance
 from .utils import round_decimal_half_up, DECIMAL_FIELD_DECIMALS, DECIMAL_FIELD_DIGITS
 from .control import Limit, LimitTypes, Baseline
-from ..signals import clear_aggregation_cache_signal
 
 
 __all__ = [
@@ -664,6 +663,7 @@ class ProdCons(BaseProdCons):
         # send_robust() is used to avoid save() not completing in case there
         # is an error when invalidating the cache.
         if invalidate_cache is True:
+            from ..signals import clear_aggregation_cache_signal
             clear_aggregation_cache_signal.send_robust(
                 sender=self.__class__, instance=self
             )
@@ -682,6 +682,7 @@ class ProdCons(BaseProdCons):
         # send_robust() is used to avoid save() not completing in case there
         # is an error when invalidating the cache.
         if invalidate_cache is True:
+            from ..signals import clear_aggregation_cache_signal
             clear_aggregation_cache_signal.send_robust(
                 sender=self.__class__, instance=self
             )
