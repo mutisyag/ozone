@@ -668,6 +668,24 @@ class ProdCons(BaseProdCons):
                 sender=self.__class__, instance=self
             )
 
+    def delete(self, *args, **kwargs):
+        """
+        Overridden to perform cache invalidation if needed.
+        """
+        # Used for marking whether cache should be invalidated at the end.
+        # If the param is not specified, default action is to invalidate.
+        invalidate_cache = kwargs.pop('invalidate_cache', True)
+
+        super().delete(*args, **kwargs)
+
+        # If all went well, send the clear_cache signal.
+        # send_robust() is used to avoid save() not completing in case there
+        # is an error when invalidating the cache.
+        if invalidate_cache is True:
+            clear_aggregation_cache_signal.send_robust(
+                sender=self.__class__, instance=self
+            )
+
     class Meta(BaseProdCons.Meta):
         db_table = "aggregation_prod_cons"
         unique_together = ("party", "reporting_period", "group")
