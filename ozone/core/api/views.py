@@ -2083,7 +2083,8 @@ class UploadHookViewSet(viewsets.ViewSet):
          - a `filename` field is present in `MetaData`
         """
         log.info(f'UPLOAD pre-create: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         filename = meta_data.get('filename')
         try:
@@ -2154,11 +2155,12 @@ class UploadHookViewSet(viewsets.ViewSet):
         Sets the newly issued tus ID on the token.
         """
         log.info(f'UPLOAD post-create: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
-            token.tus_id = request.data.get('ID')
+            token.tus_id = upload.get('ID')
             token.save()
         except UploadToken.DoesNotExist:
             log.error('UPLOAD denied: INVALID TOKEN')
@@ -2176,7 +2178,8 @@ class UploadHookViewSet(viewsets.ViewSet):
         underlying file on disk if one with the same name exists.
         """
         log.info(f'UPLOAD post-finish: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         description = meta_data.get('description', '')
         # filename presence was enforced during pre-create
@@ -2192,7 +2195,7 @@ class UploadHookViewSet(viewsets.ViewSet):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
-            upload_id = request.data.get('ID')
+            upload_id = upload.get('ID')
 
             submission_file = SubmissionFile.objects.create(
                 submission=token.submission,
@@ -2205,7 +2208,7 @@ class UploadHookViewSet(viewsets.ViewSet):
 
             file_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
-                f'{upload_id}.bin'
+                upload_id
             )
             file_info_path = os.path.join(
                 settings.TUSD_UPLOADS_DIR,
@@ -2257,7 +2260,8 @@ class UploadHookViewSet(viewsets.ViewSet):
         Deletes the token issued for the upload.
         """
         log.info(f'UPLOAD post-terminate: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
