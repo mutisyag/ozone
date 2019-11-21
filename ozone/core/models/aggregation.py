@@ -224,6 +224,8 @@ class BaseProdCons(models.Model):
         null=True, blank=True, default=None
     )
 
+    updated_at = models.DateTimeField(auto_now=True, null=True)
+
     @classmethod
     def decimal_fields(cls):
         return [

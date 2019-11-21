@@ -720,6 +720,16 @@ class AggregationViewSet(viewsets.ReadOnlyModelViewSet):
             'party__subregion__region'
         )
 
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(updated_at=None)
+        updated = None if not queryset else queryset.latest(
+            'updated_at'
+        ).updated_at
+
+        return Response({'last_updated': updated})
+
     def list_aggregated_data(
         self, queryset, aggregates, groupings, substance_to_group=False
     ):
@@ -2829,6 +2839,16 @@ class EssentialCriticalViewSet(viewsets.ReadOnlyModelViewSet):
             'submission__party', 'submission__reporting_period',
             'substance__group', 'submission__party__subregion__region'
         )
+
+    @action(methods=["get",], detail=False)
+    def last_updated(self, request):
+        queryset = self.filter_queryset(self.get_queryset())
+        queryset = queryset.exclude(submission__submitted_at=None)
+        updated = None if not queryset else queryset.latest(
+            'submission__submitted_at'
+        ).submission.submitted_at
+
+        return Response({'last_updated': updated})
 
     def list(self, request, *args, **kwargs):
         # First filter queryset according to params
