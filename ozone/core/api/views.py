@@ -2155,11 +2155,12 @@ class UploadHookViewSet(viewsets.ViewSet):
         Sets the newly issued tus ID on the token.
         """
         log.info(f'UPLOAD post-create: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
-            token.tus_id = request.data.get('ID')
+            token.tus_id = upload.get('ID')
             token.save()
         except UploadToken.DoesNotExist:
             log.error('UPLOAD denied: INVALID TOKEN')
@@ -2259,7 +2260,8 @@ class UploadHookViewSet(viewsets.ViewSet):
         Deletes the token issued for the upload.
         """
         log.info(f'UPLOAD post-terminate: {request.data}')
-        meta_data = request.data.get('MetaData', {})
+        upload = request.data.get('Upload', {})
+        meta_data = upload.get('MetaData', {})
         tok = meta_data.get('token', '')
         try:
             token = UploadToken.objects.get(token=tok)
