@@ -6,6 +6,7 @@ from reportlab.platypus import PageBreak
 
 from ozone.core.models import Baseline
 from ozone.core.models import Group
+from ozone.core.models import Party
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import ReportingPeriod
@@ -42,11 +43,11 @@ def reference_periods_a5(group):
 
 class GenericGroupTable:
 
-    def __init__(self, group, histories):
-        self.parties = [h.party for h in histories]
-        self.history_map = {h.party: h for h in histories}
+    def __init__(self, group, parties):
+        self.parties = parties
         self.group = group
-        self.periods = reference_periods_a5(group)
+        self.periods = list(reference_periods_a5(group))
+        self.history_map = self.get_history_map(parties, self.periods[-1])
         self.filler_columns = 4 - len(self.periods)
         self.builder = self.begin_table()
         self.prodcons_map = self.get_prodcons_map()
@@ -54,6 +55,15 @@ class GenericGroupTable:
         self.normalize = ValueNormalizer()
         self.format = ValueFormatter()
         self.totals = defaultdict(Decimal)
+
+    def get_history_map(self, parties, period):
+        history_queryset = (
+            PartyHistory.objects
+            .filter(party__in=parties)
+            .filter(reporting_period=period)
+            .select_related('party')
+        )
+        return {h.party: h for h in history_queryset}
 
     def get_prodcons_map(self):
         prodcons_queryset = ProdCons.objects.filter(
@@ -175,37 +185,33 @@ class ConsumptionGroupTable(GenericGroupTable):
             yield PageBreak()
 
 
-def art5_histories(parties):
-    return list(
+def art5_parties(parties):
+    histories = (
         PartyHistory.objects
         .filter(reporting_period=ReportingPeriod.get_current_period())
         .filter(is_article5=True)
-        .filter(party__in=parties)
-        .select_related('party')
+        .filter(party__in=set(parties))
     )
+    return list(Party.objects.filter(history__in=histories))
 
 
 def get_prod_a5_flowables(parties):
-    histories = art5_histories(parties)
-
     for group in Group.objects.filter(group_id__in=relevant_groups):
         yield Paragraph(
             f"{group.group_id} ({group.description}) "
             f"Production Baseline Data for Article 5 Parties (ODP tonnes)",
             h2_style,
         )
-        table = ProductionGroupTable(group, histories)
+        table = ProductionGroupTable(group, art5_parties(parties))
         yield from table.render()
 
 
 def get_cons_a5_flowables(parties):
-    histories = art5_histories(parties)
-
     for group in Group.objects.filter(group_id__in=relevant_groups):
         yield Paragraph(
             f"{group.group_id} ({group.description}) "
             f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
             h2_style,
         )
-        table = ConsumptionGroupTable(group, histories)
+        table = ConsumptionGroupTable(group, art5_parties(parties))
         yield from table.render()
