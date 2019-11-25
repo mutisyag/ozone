@@ -24,7 +24,7 @@ from .prodcons.data import ValueNormalizer
 from .prodcons.data import ValueFormatter
 
 
-def relevant_periods_a5(group):
+def reference_periods_a5(group):
     if group.group_id in ['AI', 'AII']:
         return ReportingPeriod.objects.filter(name__in=['1995', '1996', '1997'])
 
@@ -43,7 +43,7 @@ class GroupTable:
         self.parties = [h.party for h in histories]
         self.history_map = {h.party: h for h in histories}
         self.group = group
-        self.periods = relevant_periods_a5(group)
+        self.periods = reference_periods_a5(group)
         self.filler_columns = 4 - len(self.periods)
         self.builder = self.begin_table()
         self.prodcons_map = self.get_prodcons_map()
