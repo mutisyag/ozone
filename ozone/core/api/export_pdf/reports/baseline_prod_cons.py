@@ -153,7 +153,11 @@ def get_cons_a5_flowables(parties):
 
     relevant_groups = ['AI', 'AII', 'BI', 'BII', 'BIII', 'EI']
     for group in Group.objects.filter(group_id__in=relevant_groups):
-        yield Paragraph(f"{group}", h2_style)
+        yield Paragraph(
+            f"{group.group_id} ({group.description}) "
+            f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
+            h2_style,
+        )
         table = GroupTable(group, histories)
         yield from table.render()
 
