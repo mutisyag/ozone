@@ -13,7 +13,7 @@ matrix:
         - sudo apt update
         - sudo apt install -y wget
         # Install tusd
-        - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
+        - wget https://github.com/tus/tusd/releases/download/v1.0.2/tusd_linux_amd64.tar.gz
         - tar -xzvf tusd_linux_amd64.tar.gz
         # Load environment variables
         - export DJANGO_SETTINGS_MODULE=config.settings.test
@@ -23,7 +23,7 @@ matrix:
       before_script:
         - psql -c "CREATE DATABASE travisci;" -U postgres
         # Start tusd server
-        - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
+        - nohup tusd_linux_amd64/tusd -upload-dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
       script:
         - coverage run --omit='*/tests/*,*/migrations/*'  --source='ozone' manage.py test --keepdb
       after_success:
@@ -67,7 +67,7 @@ matrix:
         - node --version
         - npm --version
         # Install tusd
-        - wget https://github.com/tus/tusd/releases/download/0.11.0/tusd_linux_amd64.tar.gz
+        - wget https://github.com/tus/tusd/releases/download/v1.0.2/tusd_linux_amd64.tar.gz
         - tar -xzvf tusd_linux_amd64.tar.gz
       install:
         - pip install -r requirements/tests.txt
@@ -79,7 +79,7 @@ matrix:
         # Start backend server
         - nohup python manage.py runserver &
         # Start tusd server
-        - nohup tusd_linux_amd64/tusd -dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
+        - nohup tusd_linux_amd64/tusd -upload-dir $TUSD_UPLOADS_DIR -hooks-http http://$BACKEND_HOST:$BACKEND_PORT/api/uploads/ &
         # Install frontend dependencies
         - cd frontend && npm install
       script:
