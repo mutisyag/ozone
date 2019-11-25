@@ -1,3 +1,6 @@
+from collections import defaultdict
+from decimal import Decimal
+
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
@@ -11,6 +14,9 @@ from ..util import SINGLE_HEADER_TABLE_STYLES
 from ..util import col_widths
 from ..util import TableBuilder
 from ..util import format_decimal
+from ..util import smb_l
+from ..util import smb_r
+from ..util import sm_r
 
 from .prodcons.data import ValueNormalizer
 from .prodcons.data import ValueFormatter
@@ -40,6 +46,7 @@ class GroupTable:
         self.prodcons_map = self.get_prodcons_map()
         self.normalize = ValueNormalizer()
         self.format = ValueFormatter()
+        self.totals = defaultdict(Decimal)
 
     def get_prodcons_map(self):
         prodcons_queryset = ProdCons.objects.filter(
@@ -72,11 +79,22 @@ class GroupTable:
             prodcons_row = self.prodcons_map.get((party, period))
             if prodcons_row:
                 cons = prodcons_row.calculated_consumption
+                self.totals[period] += cons
             else:
                 cons = None
 
             value = self.normalize.prodcons(cons, self.group)
-            row.append(self.format.prodcons(value))
+            row.append(sm_r(self.format.prodcons(value)))
+
+        row += [""] * self.filler_columns
+
+        return row
+
+    def render_totals(self):
+        row = [smb_l(f"Sub-total for Annex {self.group.group_id}")]
+        for period in self.periods:
+            value = self.totals[period]
+            row.append(smb_r(self.format.prodcons(value)))
 
         row += [""] * self.filler_columns
 
@@ -85,6 +103,9 @@ class GroupTable:
     def render(self):
         for party in self.parties:
             self.builder.add_row(self.render_party(party))
+
+        self.builder.add_row(self.render_totals())
+
         yield self.builder.done()
 
         if len(self.parties) > 20:
