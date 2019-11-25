@@ -12,6 +12,9 @@ from ..util import col_widths
 from ..util import TableBuilder
 from ..util import format_decimal
 
+from .prodcons.data import ValueNormalizer
+from .prodcons.data import ValueFormatter
+
 
 def relevant_periods_a5(group):
     if group.group_id in ['AI', 'AII']:
@@ -35,6 +38,8 @@ class GroupTable:
         self.builder = self.begin_table()
         self.parties = parties
         self.prodcons_map = self.get_prodcons_map()
+        self.normalize = ValueNormalizer()
+        self.format = ValueFormatter()
 
     def get_prodcons_map(self):
         prodcons_queryset = ProdCons.objects.filter(
@@ -66,11 +71,12 @@ class GroupTable:
         for period in self.periods:
             prodcons_row = self.prodcons_map.get((party, period))
             if prodcons_row:
-                value = format_decimal(prodcons_row.calculated_consumption)
+                cons = prodcons_row.calculated_consumption
             else:
-                value = "-"
+                cons = None
 
-            row.append(value)
+            value = self.normalize.prodcons(cons, self.group)
+            row.append(self.format.prodcons(value))
 
         row += [""] * self.filler_columns
 
@@ -80,7 +86,9 @@ class GroupTable:
         for party in self.parties:
             self.builder.add_row(self.render_party(party))
         yield self.builder.done()
-        yield PageBreak()
+
+        if len(self.parties) > 20:
+            yield PageBreak()
 
 
 def get_cons_a5_flowables(parties):
