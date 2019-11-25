@@ -9,6 +9,7 @@ from ozone.core.models import Group
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
 from ozone.core.models import ReportingPeriod
+from ozone.core.models.utils import round_decimal_half_up
 
 from ..util import h2_style
 from ..util import SINGLE_HEADER_TABLE_STYLES
@@ -17,6 +18,7 @@ from ..util import TableBuilder
 from ..util import smb_l
 from ..util import smb_r
 from ..util import sm_r
+from ..util import format_decimal
 
 from .prodcons.data import ValueNormalizer
 from .prodcons.data import ValueFormatter
@@ -37,12 +39,13 @@ def relevant_periods_a5(group):
 
 class GroupTable:
 
-    def __init__(self, group, parties):
+    def __init__(self, group, histories):
+        self.parties = [h.party for h in histories]
+        self.history_map = {h.party: h for h in histories}
         self.group = group
         self.periods = relevant_periods_a5(group)
         self.filler_columns = 4 - len(self.periods)
         self.builder = self.begin_table()
-        self.parties = parties
         self.prodcons_map = self.get_prodcons_map()
         self.baseline_map = self.get_baseline_map()
         self.normalize = ValueNormalizer()
@@ -102,6 +105,13 @@ class GroupTable:
         self.totals['baseline'] += baseline
         row.append(sm_r(self.format.baseline(baseline, None)))
 
+        history = self.history_map[party]
+        population = history.population
+        self.totals['per_capita'] += baseline / population
+        row.append(sm_r(self.format.per_capita(baseline, population)))
+        self.totals['population'] += population
+        row.append(sm_r(format_decimal(population)))
+
         return row
 
     def render_totals(self):
@@ -113,6 +123,8 @@ class GroupTable:
         row += [""] * self.filler_columns
 
         row.append(smb_r(self.format.baseline(self.totals['baseline'], None)))
+        row.append(smb_r(format_decimal(round_decimal_half_up(self.totals['per_capita'], 4))))
+        row.append(smb_r(format_decimal(self.totals['population'])))
 
         return row
 
@@ -129,18 +141,18 @@ class GroupTable:
 
 
 def get_cons_a5_flowables(parties):
-    current_period = ReportingPeriod.get_current_period()
-    current_art5_histories = (
+    histories = list(
         PartyHistory.objects
-        .filter(reporting_period=current_period)
+        .filter(reporting_period=ReportingPeriod.get_current_period())
         .filter(is_article5=True)
+        .filter(party__in=parties)
+        .select_related('party')
     )
-    art5_parties = list(parties.filter(history__in=current_art5_histories))
 
     relevant_groups = ['AI', 'AII', 'BI', 'BII', 'BIII', 'EI']
     for group in Group.objects.filter(group_id__in=relevant_groups):
         yield Paragraph(f"{group}", h2_style)
-        table = GroupTable(group, art5_parties)
+        table = GroupTable(group, histories)
         yield from table.render()
 
     # TODO grand total
