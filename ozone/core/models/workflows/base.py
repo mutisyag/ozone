@@ -1,18 +1,29 @@
 import xworkflows
 
+from .emails import notify_workflow_transitioned
+
 
 __all__ = [
+    'BaseStateDescription',
     'BaseWorkflow',
 ]
 
 
 class BaseStateDescription(xworkflows.Workflow):
     """
-    Placeholder class
+    Overrides the xworkflows.Workflow to add sending notification emails in the
+    log_transition() method.
     """
     states = ()
     transitions = ()
     initial_state = None
+
+    def log_transition(self, transition, previous_state, workflow):
+        """
+        Overriding log_transition to send email on each transition.
+        """
+        notify_workflow_transitioned(workflow, transition, previous_state)
+        super().log_transition(transition, previous_state, workflow)
 
 
 class BaseWorkflow(xworkflows.WorkflowEnabled):

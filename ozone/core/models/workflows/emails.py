@@ -12,22 +12,28 @@ def allow_sending_to(email):
     return True
 
 
-def notify_workflow_transitioned(workflow):
+def notify_workflow_transitioned(workflow, transition, previous_state):
     submission = workflow.model_instance
 
-    secretariat_states = {
-        'processing': _('started PROCESSING'),
-        'finalized': _('FINALIZED'),
+    print(workflow, transition, previous_state)
+
+    secretariat_verbs = {
+        'process': _('started PROCESSING'),
+        'finalize': _('FINALIZED'),
     }
-    party_states = {
-        'submitted': _('SUBMITTED'),
-        'recalled': _('RECALLED'),
+    party_verbs = {
+        'submit': _('SUBMITTED'),
+        'recall': _('RECALLED'),
+        'unrecall': _('REINSTATED'),
+        'unrecall_to_submitted': _('REINSTATED'),
+        'unrecall_to_processing': _('REINSTATED'),
+        'unrecall_to_finalized': _('REINSTATED'),
     }
 
-    if workflow.state in secretariat_states:
+    if transition.name in secretariat_verbs:
         intro_text = _(
             'The secretariat has {verb} the report from {party} on'.format(
-                verb=secretariat_states.get(workflow.state),
+                verb=secretariat_verbs.get(transition.name),
                 party=submission.party.name,
             )
         )
@@ -35,7 +41,7 @@ def notify_workflow_transitioned(workflow):
         intro_text = _(
             '{party_name} has {verb} its report on'.format(
                 party_name=submission.party.name,
-                verb=party_states.get(workflow.state),
+                verb=party_verbs.get(transition.name),
             )
         )
 
@@ -50,10 +56,13 @@ def notify_workflow_transitioned(workflow):
         user = str(workflow.user)
         data_entry_by = ''
 
+    new_state_verb = secretariat_verbs.get(transition.name) or \
+        party_verbs.get(transition.name)
+
     context = {
         'user': user,
         'new_state': str(workflow.state).upper(),
-        'new_state_verb': str(workflow.state).title(),
+        'new_state_verb': new_state_verb.lower().title(),
         'intro_text': intro_text,
         'data_entry_by': data_entry_by,
         'submission': str(submission),
