@@ -54,7 +54,7 @@ class GroupTable:
 
     def begin_table(self):
         styles = list(SINGLE_HEADER_TABLE_STYLES)
-        column_widths = col_widths([5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2])
+        column_widths = col_widths([5, 1.5, 1.5, 1.5, 1.5, 1.5, 3, 1.5])
         builder = TableBuilder(styles, column_widths)
 
         header = ["Party Name"]
