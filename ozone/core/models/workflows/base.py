@@ -22,7 +22,7 @@ class BaseStateDescription(xworkflows.Workflow):
         """
         Overriding log_transition to send email on each transition.
         """
-        notify_workflow_transitioned(workflow, transition, previous_state)
+        notify_workflow_transitioned(workflow, transition)
         super().log_transition(transition, previous_state, workflow)
 
 
