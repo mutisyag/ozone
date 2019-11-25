@@ -102,15 +102,17 @@ class GroupTable:
 
         db_baseline = self.baseline_map.get(party)
         baseline = self.normalize.baseline(db_baseline, self.group, None)
-        self.totals['baseline'] += baseline
         row.append(sm_r(self.format.baseline(baseline, None)))
 
         history = self.history_map[party]
         population = history.population
-        self.totals['per_capita'] += baseline / population
         row.append(sm_r(self.format.per_capita(baseline, population)))
-        self.totals['population'] += population
         row.append(sm_r(format_decimal(population)))
+
+        if isinstance(baseline, Decimal):
+            self.totals['baseline'] += baseline
+            self.totals['per_capita'] += baseline / population
+            self.totals['population'] += population
 
         return row
 
