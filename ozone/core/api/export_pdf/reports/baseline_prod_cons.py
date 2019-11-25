@@ -24,6 +24,9 @@ from .prodcons.data import ValueNormalizer
 from .prodcons.data import ValueFormatter
 
 
+relevant_groups = ['AI', 'AII', 'BI', 'BII', 'BIII', 'EI']
+
+
 def reference_periods_a5(group):
     if group.group_id in ['AI', 'AII']:
         return ReportingPeriod.objects.filter(name__in=['1995', '1996', '1997'])
@@ -37,7 +40,7 @@ def reference_periods_a5(group):
     raise RuntimeError(f"Unknown group {group!r}")
 
 
-class GroupTable:
+class GenericGroupTable:
 
     def __init__(self, group, histories):
         self.parties = [h.party for h in histories]
@@ -65,7 +68,7 @@ class GroupTable:
 
     def get_baseline_map(self):
         baseline_queryset = Baseline.objects.filter(
-            baseline_type__name="A5Cons",
+            baseline_type__name=self.baseline_type,
             group=self.group,
             party__in=self.parties,
         )
@@ -79,7 +82,7 @@ class GroupTable:
         header = ["Party Name"]
         header += [p.name for p in self.periods]
         header += [""] * self.filler_columns
-        header += ["Baseline", "Per Capita Consumption", "Population"]
+        header += ["Baseline", f"Per Capita {self.label}", "Population"]
         builder.add_row(header)
 
         return builder
@@ -87,20 +90,27 @@ class GroupTable:
     def render_party(self, party):
         row = [party.name]
 
+        raw_values = {}
         for period in self.periods:
             prodcons_row = self.prodcons_map.get((party, period))
             if prodcons_row:
-                cons = prodcons_row.calculated_consumption
-                self.totals[period] += cons
+                raw_value = self.prodcons_value(prodcons_row)
+                raw_values[period] = raw_value
             else:
-                cons = None
+                raw_value = None
 
-            value = self.normalize.prodcons(cons, self.group)
+            value = self.normalize.prodcons(raw_value, self.group)
             row.append(sm_r(self.format.prodcons(value)))
 
         row += [""] * self.filler_columns
 
         db_baseline = self.baseline_map.get(party)
+        if not db_baseline:
+            return
+
+        for period in self.periods:
+            self.totals[period] += raw_values[period]
+
         baseline = self.normalize.baseline(db_baseline, self.group, None)
         row.append(sm_r(self.format.baseline(baseline, None)))
 
@@ -132,18 +142,41 @@ class GroupTable:
 
     def render(self):
         for party in self.parties:
-            self.builder.add_row(self.render_party(party))
+            row = self.render_party(party)
+            if row:
+                self.builder.add_row(row)
 
         self.builder.add_row(self.render_totals())
 
         yield self.builder.done()
 
+
+class ProductionGroupTable(GenericGroupTable):
+
+    baseline_type = "A5Prod"
+    label = "Production"
+
+    def prodcons_value(self, row):
+        return row.calculated_production
+
+
+class ConsumptionGroupTable(GenericGroupTable):
+
+    baseline_type = "A5Cons"
+    label = "Consumption"
+
+    def prodcons_value(self, row):
+        return row.calculated_consumption
+
+    def render(self):
+        yield from super().render()
+
         if len(self.parties) > 20:
             yield PageBreak()
 
 
-def get_cons_a5_flowables(parties):
-    histories = list(
+def art5_histories(parties):
+    return list(
         PartyHistory.objects
         .filter(reporting_period=ReportingPeriod.get_current_period())
         .filter(is_article5=True)
@@ -151,14 +184,28 @@ def get_cons_a5_flowables(parties):
         .select_related('party')
     )
 
-    relevant_groups = ['AI', 'AII', 'BI', 'BII', 'BIII', 'EI']
+
+def get_prod_a5_flowables(parties):
+    histories = art5_histories(parties)
+
+    for group in Group.objects.filter(group_id__in=relevant_groups):
+        yield Paragraph(
+            f"{group.group_id} ({group.description}) "
+            f"Production Baseline Data for Article 5 Parties (ODP tonnes)",
+            h2_style,
+        )
+        table = ProductionGroupTable(group, histories)
+        yield from table.render()
+
+
+def get_cons_a5_flowables(parties):
+    histories = art5_histories(parties)
+
     for group in Group.objects.filter(group_id__in=relevant_groups):
         yield Paragraph(
             f"{group.group_id} ({group.description}) "
             f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
             h2_style,
         )
-        table = GroupTable(group, histories)
+        table = ConsumptionGroupTable(group, histories)
         yield from table.render()
-
-    # TODO grand total
