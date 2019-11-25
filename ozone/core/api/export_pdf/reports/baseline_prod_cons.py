@@ -4,6 +4,7 @@ from decimal import Decimal
 from reportlab.platypus import Paragraph
 from reportlab.platypus import PageBreak
 
+from ozone.core.models import Baseline
 from ozone.core.models import Group
 from ozone.core.models import PartyHistory
 from ozone.core.models import ProdCons
@@ -13,7 +14,6 @@ from ..util import h2_style
 from ..util import SINGLE_HEADER_TABLE_STYLES
 from ..util import col_widths
 from ..util import TableBuilder
-from ..util import format_decimal
 from ..util import smb_l
 from ..util import smb_r
 from ..util import sm_r
@@ -44,6 +44,7 @@ class GroupTable:
         self.builder = self.begin_table()
         self.parties = parties
         self.prodcons_map = self.get_prodcons_map()
+        self.baseline_map = self.get_baseline_map()
         self.normalize = ValueNormalizer()
         self.format = ValueFormatter()
         self.totals = defaultdict(Decimal)
@@ -58,6 +59,14 @@ class GroupTable:
             (pc.party, pc.reporting_period): pc
             for pc in prodcons_queryset
         }
+
+    def get_baseline_map(self):
+        baseline_queryset = Baseline.objects.filter(
+            baseline_type__name="A5Cons",
+            group=self.group,
+            party__in=self.parties,
+        )
+        return {b.party: b.baseline for b in baseline_queryset}
 
     def begin_table(self):
         styles = list(SINGLE_HEADER_TABLE_STYLES)
@@ -88,6 +97,11 @@ class GroupTable:
 
         row += [""] * self.filler_columns
 
+        db_baseline = self.baseline_map.get(party)
+        baseline = self.normalize.baseline(db_baseline, self.group, None)
+        self.totals['baseline'] += baseline
+        row.append(sm_r(self.format.baseline(baseline, None)))
+
         return row
 
     def render_totals(self):
@@ -97,6 +111,8 @@ class GroupTable:
             row.append(smb_r(self.format.prodcons(value)))
 
         row += [""] * self.filler_columns
+
+        row.append(smb_r(self.format.baseline(self.totals['baseline'], None)))
 
         return row
 
@@ -126,3 +142,5 @@ def get_cons_a5_flowables(parties):
         yield Paragraph(f"{group}", h2_style)
         table = GroupTable(group, art5_parties)
         yield from table.render()
+
+    # TODO grand total
