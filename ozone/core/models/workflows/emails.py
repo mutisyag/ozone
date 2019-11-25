@@ -12,10 +12,8 @@ def allow_sending_to(email):
     return True
 
 
-def notify_workflow_transitioned(workflow, transition, previous_state):
+def notify_workflow_transitioned(workflow, transition):
     submission = workflow.model_instance
-
-    print(workflow, transition, previous_state)
 
     secretariat_verbs = {
         'process': _('started PROCESSING'),
