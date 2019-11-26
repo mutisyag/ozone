@@ -55,18 +55,16 @@ class Command(BaseCommand):
                 qs = ProdCons.objects.filter(
                     party=ph.party, reporting_period=ph.reporting_period
                 )
-                qs.update(
+                updated_odp += qs.update(
                     is_article5=ph.is_article5, is_eu_member=ph.is_eu_member
                 )
-                updated_odp += qs.count()
             if options['mt'] is True:
                 qs = ProdConsMT.objects.filter(
                     party=ph.party, reporting_period=ph.reporting_period
                 )
-                qs.update(
+                updated_mt += qs.update(
                     is_article5=ph.is_article5, is_eu_member=ph.is_eu_member
                 )
-                updated_mt += qs.count()
 
         logger.info(
             f'Updated {updated_odp} ProdCons and {updated_mt} ProdConsMT objects'
