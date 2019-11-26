@@ -195,7 +195,7 @@ class Reports(enum.Enum):
         return {
             **Reports.args(has_party_param=True),
             **{
-                "display_name": "Baseline production and consumption - Non-Art5 parties",
+                "display_name": "Baseline CI production and consumption - Non-Art5 parties",
                 "description": _(
                     "Select one or more parties, or leave blank for all"
                 )

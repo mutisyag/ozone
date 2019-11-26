@@ -207,10 +207,10 @@ class ProdConsBaselineTable:
             "Party Name",
             f"{self.period.name} {self.group_ai.group_id} Production",
             f"{self.period.name} {self.group_ci.group_id} Production",
-            f"Baseline {self.group_ai.group_id} Production",
+            f"Baseline {self.group_ci.group_id} Production",
             f"{self.period.name} {self.group_ai.group_id} Consumption",
             f"{self.period.name} {self.group_ci.group_id} Consumption",
-            f"Baseline {self.group_ai.group_id} Consumption",
+            f"Baseline {self.group_ci.group_id} Consumption",
         ]
         builder.add_row(header)
 
@@ -230,7 +230,7 @@ class ProdConsBaselineTable:
     def get_baseline_map(self):
         baseline_queryset = Baseline.objects.filter(
             party__in=self.parties,
-            group=self.group_ai,
+            group=self.group_ci,
             baseline_type__name__in=["NA5Prod", "NA5Cons"],
         )
         return {
