@@ -185,11 +185,81 @@ class ConsumptionGroupTable(GenericGroupTable):
             yield PageBreak()
 
 
-def art5_parties(parties):
+class ProdConsBaselineTable:
+
+    def __init__(self, period, parties):
+        self.period = period
+        self.parties = parties
+        self.group_ai = Group.objects.get(group_id='AI')
+        self.group_ci = Group.objects.get(group_id='CI')
+        self.builder = self.begin_table()
+        self.prodcons_map = self.get_prodcons_map()
+        self.normalize = ValueNormalizer()
+        self.format = ValueFormatter()
+
+    def begin_table(self):
+        styles = list(SINGLE_HEADER_TABLE_STYLES)
+        column_widths = col_widths([4, 2.5, 2.5, 2.5, 2.5, 2.5, 2.5])
+        builder = TableBuilder(styles, column_widths)
+
+        header = [
+            "Party Name",
+            f"{self.period.name} {self.group_ai.group_id} Production",
+            f"{self.period.name} {self.group_ci.group_id} Production",
+            f"Baseline {self.group_ci.group_id} Production",
+            f"{self.period.name} {self.group_ai.group_id} Consumption",
+            f"{self.period.name} {self.group_ci.group_id} Consumption",
+            f"Baseline {self.group_ci.group_id} Consumption",
+        ]
+        builder.add_row(header)
+
+        return builder
+
+    def get_prodcons_map(self):
+        prodcons_queryset = ProdCons.objects.filter(
+            reporting_period=self.period,
+            party__in=self.parties,
+            group__in=[self.group_ai, self.group_ci],
+        )
+        return {
+            (pc.party, pc.group): pc
+            for pc in prodcons_queryset
+        }
+
+    def prodcons_value(self, party, group, is_prod):
+        row = self.prodcons_map.get((party, group))
+        if row:
+            if is_prod:
+                value = row.calculated_production
+            else:
+                value = row.calculated_consumption
+        else:
+            value = None
+
+        return self.normalize.prodcons(value, group)
+
+    def render_party(self, party):
+        self.builder.add_row([
+            f"{party.name}",
+            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ai, True))),
+            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ci, True))),
+            "",
+            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ai, False))),
+            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ci, False))),
+            "",
+        ])
+
+    def render(self):
+        for party in self.parties:
+            self.render_party(party)
+        return self.builder.done()
+
+
+def filter_by_art5(parties, is_article5):
     histories = (
         PartyHistory.objects
         .filter(reporting_period=ReportingPeriod.get_current_period())
-        .filter(is_article5=True)
+        .filter(is_article5=is_article5)
         .filter(party__in=set(parties))
     )
     return list(Party.objects.filter(history__in=histories))
@@ -202,7 +272,7 @@ def get_prod_a5_flowables(parties):
             f"Production Baseline Data for Article 5 Parties (ODP tonnes)",
             h2_style,
         )
-        table = ProductionGroupTable(group, art5_parties(parties))
+        table = ProductionGroupTable(group, filter_by_art5(parties, True))
         yield from table.render()
 
 
@@ -213,5 +283,17 @@ def get_cons_a5_flowables(parties):
             f"Consumption Baseline Data for Article 5 Parties (ODP tonnes)",
             h2_style,
         )
-        table = ConsumptionGroupTable(group, art5_parties(parties))
+        table = ConsumptionGroupTable(group, filter_by_art5(parties, True))
         yield from table.render()
+
+
+def get_prodcons_na5_flowables(parties):
+    period = ReportingPeriod.objects.get(name="1989")
+    yield Paragraph(
+        f"{period.name} Production and Consumption "
+        f"of CI substances for Non-Article 5 Paties",
+        h2_style,
+    )
+
+    table = ProdConsBaselineTable(period, filter_by_art5(parties, False))
+    yield table.render()
