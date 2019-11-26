@@ -1,7 +1,6 @@
 import xworkflows
 
-from .base import BaseWorkflow
-from .emails import notify_workflow_transitioned
+from .base import BaseStateDescription, BaseWorkflow
 
 
 __all__ = [
@@ -9,7 +8,7 @@ __all__ = [
 ]
 
 
-class AcceleratedArticle7WorkflowStateDescription(xworkflows.Workflow):
+class AcceleratedArticle7WorkflowStateDescription(BaseStateDescription):
     """
     These are the "accelerated" submission states and transitions
     for Article 7 reporting. They do not include the `submitted` or
@@ -73,7 +72,3 @@ class AcceleratedArticle7Workflow(BaseWorkflow):
     @xworkflows.transition('unrecall')
     def unrecall(self):
         self.model_instance.make_current()
-
-    @xworkflows.on_enter_state(*[s.name for s in state.states])
-    def notify_by_email(self, *args, **kwargs):
-        notify_workflow_transitioned(self)
