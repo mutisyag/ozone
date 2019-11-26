@@ -1059,6 +1059,15 @@ class AggregationDestructionViewSet(AggregationViewSet):
                             if value['party'] == party
                         ]
                         if entries:
+                            if not groupings:
+                                # If there is no grouping, since the only
+                                # aggregation performed here is by group,
+                                # it is OK to use the values found
+                                # in the first entry for article5, eu_member
+                                # and region.
+                                for key in params_dict.keys():
+                                    value = entries[0][grouping_mapping[key]]
+                                    params_dict[key] = value
                             aggregation = dict({
                                 'party': party,
                                 'reporting_period': period,
