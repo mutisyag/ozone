@@ -11,8 +11,8 @@ __all__ = [
 
 class BaseStateDescription(xworkflows.Workflow):
     """
-    Overrides the xworkflows.Workflow to add sending notification emails in the
-    log_transition() method.
+    Overrides the xworkflows.Workflow to perform sending notification emails in
+    the log_transition() method.
     """
     states = ()
     transitions = ()
