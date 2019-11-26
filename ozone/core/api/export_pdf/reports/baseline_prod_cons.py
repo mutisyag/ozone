@@ -194,6 +194,7 @@ class ProdConsBaselineTable:
         self.group_ci = Group.objects.get(group_id='CI')
         self.builder = self.begin_table()
         self.prodcons_map = self.get_prodcons_map()
+        self.baseline_map = self.get_baseline_map()
         self.normalize = ValueNormalizer()
         self.format = ValueFormatter()
 
@@ -206,10 +207,10 @@ class ProdConsBaselineTable:
             "Party Name",
             f"{self.period.name} {self.group_ai.group_id} Production",
             f"{self.period.name} {self.group_ci.group_id} Production",
-            f"Baseline {self.group_ci.group_id} Production",
+            f"Baseline {self.group_ai.group_id} Production",
             f"{self.period.name} {self.group_ai.group_id} Consumption",
             f"{self.period.name} {self.group_ci.group_id} Consumption",
-            f"Baseline {self.group_ci.group_id} Consumption",
+            f"Baseline {self.group_ai.group_id} Consumption",
         ]
         builder.add_row(header)
 
@@ -226,7 +227,18 @@ class ProdConsBaselineTable:
             for pc in prodcons_queryset
         }
 
-    def prodcons_value(self, party, group, is_prod):
+    def get_baseline_map(self):
+        baseline_queryset = Baseline.objects.filter(
+            party__in=self.parties,
+            group=self.group_ai,
+            baseline_type__name__in=["NA5Prod", "NA5Cons"],
+        )
+        return {
+            (b.party, b.baseline_type.name):
+            b.baseline for b in baseline_queryset
+        }
+
+    def prodcons_txt(self, party, group, is_prod):
         row = self.prodcons_map.get((party, group))
         if row:
             if is_prod:
@@ -236,22 +248,28 @@ class ProdConsBaselineTable:
         else:
             value = None
 
-        return self.normalize.prodcons(value, group)
+        normalized = self.normalize.prodcons(value, group)
+        return self.format.prodcons(normalized)
 
-    def render_party(self, party):
-        self.builder.add_row([
-            f"{party.name}",
-            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ai, True))),
-            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ci, True))),
-            "",
-            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ai, False))),
-            sm_r(self.format.prodcons(self.prodcons_value(party, self.group_ci, False))),
-            "",
-        ])
+    def baseline_txt(self, party, group, is_prod):
+        baseline_type = "NA5Prod" if is_prod else "NA5Cons"
+        value = self.baseline_map.get((party, baseline_type))
+        normalized = self.normalize.baseline(value, group, None)
+        return self.format.baseline(normalized, None)
 
     def render(self):
         for party in self.parties:
-            self.render_party(party)
+            self.builder.add_row([
+                f"{party.name}",
+
+                sm_r(self.prodcons_txt(party, self.group_ai, True)),
+                sm_r(self.prodcons_txt(party, self.group_ci, True)),
+                sm_r(self.baseline_txt(party, self.group_ci, True)),
+
+                sm_r(self.prodcons_txt(party, self.group_ai, False)),
+                sm_r(self.prodcons_txt(party, self.group_ci, False)),
+                sm_r(self.baseline_txt(party, self.group_ci, False)),
+            ])
         return self.builder.done()
 
 
