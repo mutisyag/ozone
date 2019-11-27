@@ -475,8 +475,8 @@ class TableBuilder:
     def add_row(self, row):
         self.rows.append(row)
 
-    def add_heading(self, text):
-        self.rows.append([smb_l(text)])
+    def add_heading(self, text, style=small_bold_left_paragraph_style):
+        self.rows.append([Paragraph(text, style=style)])
         current_row = len(self.rows) - 1
         self.styles.append(('SPAN', (0, current_row), (-1, current_row)))
 

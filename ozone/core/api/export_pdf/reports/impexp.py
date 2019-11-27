@@ -19,6 +19,7 @@ from ..util import SINGLE_HEADER_TABLE_STYLES
 from ..util import col_widths
 from ..util import TableBuilder
 from ..util import format_decimal
+from ..util import bold_centered_paragraph_style
 
 
 class RecoveredImportExportTable:
@@ -129,11 +130,11 @@ class RecoveredImportExportTable:
     def render(self):
         self.builder = self.begin_table()
 
-        self.builder.add_heading("Article 5 parties")
+        self.builder.add_heading("Article 5 parties", style=bold_centered_paragraph_style)
         for party in self.get_parties(is_article5=True):
             self.render_party(party)
 
-        self.builder.add_heading("Non-Article 5 parties")
+        self.builder.add_heading("Non-Article 5 parties", style=bold_centered_paragraph_style)
         for party in self.get_parties(is_article5=False):
             self.render_party(party)
 
