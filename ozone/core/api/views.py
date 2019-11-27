@@ -183,6 +183,9 @@ from .export_pdf import (
     export_impexp_new_rec,
     export_prod_imp_exp,
     export_hfc_baseline,
+    export_baseline_prod_a5,
+    export_baseline_cons_a5,
+    export_baseline_prodcons_na5,
 )
 
 from ..models.utils import round_decimal_half_up
@@ -2638,6 +2641,33 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'hfc_baseline_{params}',
             export_hfc_baseline(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_prod_a5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_prod_a5_{params}',
+            export_baseline_prod_a5(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_cons_a5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_cons_a5_{params}',
+            export_baseline_cons_a5(parties=parties)
+        )
+
+    @action(detail=False, methods=["get"])
+    def baseline_prodcons_na5(self, request):
+        parties = self._get_parties(request)
+        params = "_".join(p.abbr for p in parties)
+        return self._response_pdf(
+            f'baseline_cons_a5_{params}',
+            export_baseline_prodcons_na5(parties=parties)
         )
 
 

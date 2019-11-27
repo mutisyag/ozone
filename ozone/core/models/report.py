@@ -24,6 +24,9 @@ class Reports(enum.Enum):
     IMPEXP_NEW_REC = 'impexp_new_rec'
     PROD_IMP_EXP = 'prod_imp_exp'
     HFC_BASELINE = 'hfc_baseline'
+    BASELINE_PROD_A5 = 'baseline_prod_a5'
+    BASELINE_CONS_A5 = 'baseline_cons_a5'
+    BASELINE_PRODCONS_NA5 = 'baseline_prodcons_na5'
 
     @staticmethod
     def args(has_party_param=False, has_period_param=False):
@@ -172,6 +175,42 @@ class Reports(enum.Enum):
                 "display_name": "HFC baseline",
                 "description": _(
                     "Select one or more parties and one reporting period"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_prod_a5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline production - Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_cons_a5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline consumption - Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
+                )
+            },
+        }
+
+    @staticmethod
+    def baseline_prodcons_na5_info():
+        return {
+            **Reports.args(has_party_param=True),
+            **{
+                "display_name": "Baseline CI production and consumption - Non-Art5 parties",
+                "description": _(
+                    "Select one or more parties, or leave blank for all"
                 )
             },
         }
