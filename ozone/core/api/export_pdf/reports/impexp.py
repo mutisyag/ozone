@@ -68,7 +68,7 @@ class RecoveredImportExportTable:
 
     def begin_table(self):
         styles = list(SINGLE_HEADER_TABLE_STYLES)
-        column_widths = col_widths([6, 2, 4, 4])
+        column_widths = col_widths([10, 2, 3, 3])
         builder = TableBuilder(styles, column_widths)
 
         builder.add_row([
@@ -113,12 +113,14 @@ class RecoveredImportExportTable:
             row = rows_by_substance[substance]
 
             if isinstance(substance, Substance):
+                substance_txt = str(substance)
                 group_txt = self.group_map[substance.group_id].group_id
             else:
-                group_txt = "blend"
+                substance_txt = f"{substance} ({substance.composition})"
+                group_txt = ""
 
             self.builder.add_row([
-                str(substance),  # TODO show blend composition
+                substance_txt,
                 group_txt,
                 sm_r(self.format_value(row.get('recovered_import'))),
                 sm_r(self.format_value(row.get('recovered_export'))),
