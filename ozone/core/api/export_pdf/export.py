@@ -190,6 +190,19 @@ def export_impexp_rec_subst(periods):
     return buff
 
 
+def export_impexp_new_rec_agg(periods):
+    buff, doc = get_doc_template(landscape=False)
+
+    doc.build(
+        list(impexp.get_impexp_new_rec_agg_flowables(periods)),
+        onFirstPage=add_page_footer,
+        onLaterPages=add_page_footer
+    )
+
+    buff.seek(0)
+    return buff
+
+
 def export_hfc_baseline(parties):
     buff, doc = get_doc_template(landscape=False)
 

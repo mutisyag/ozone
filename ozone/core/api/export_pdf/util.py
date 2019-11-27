@@ -472,13 +472,16 @@ class TableBuilder:
         self.column_widths = column_widths
         self.rows = []
 
+    @property
+    def current_row(self):
+        return len(self.rows) - 1
+
     def add_row(self, row):
         self.rows.append(row)
 
     def add_heading(self, text, style=small_bold_left_paragraph_style):
         self.rows.append([Paragraph(text, style=style)])
-        current_row = len(self.rows) - 1
-        self.styles.append(('SPAN', (0, current_row), (-1, current_row)))
+        self.styles.append(('SPAN', (0, self.current_row), (-1, self.current_row)))
 
     def done(self):
         return Table(

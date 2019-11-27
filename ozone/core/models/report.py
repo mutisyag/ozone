@@ -23,6 +23,7 @@ class Reports(enum.Enum):
     RAF = 'raf'
     IMPEXP_NEW_REC = 'impexp_new_rec'
     IMPEXP_REC_SUBST = 'impexp_rec_subst'
+    IMPEXP_NEW_REC_AGG = 'impexp_new_rec_agg'
     HFC_BASELINE = 'hfc_baseline'
 
     @staticmethod
@@ -158,6 +159,18 @@ class Reports(enum.Enum):
             **Reports.args(has_period_param=True),
             **{
                 "display_name": "Import and export of recovered substances",
+                "description": _(
+                    "Select one or more reporting periods"
+                )
+            },
+        }
+
+    @staticmethod
+    def impexp_new_rec_agg_info():
+        return {
+            **Reports.args(has_period_param=True),
+            **{
+                "display_name": "Aggregate import and export of new and recovered substances",
                 "description": _(
                     "Select one or more reporting periods"
                 )

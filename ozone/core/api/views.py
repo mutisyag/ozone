@@ -182,6 +182,7 @@ from .export_pdf import (
     export_prodcons_parties,
     export_impexp_new_rec,
     export_impexp_rec_subst,
+    export_impexp_new_rec_agg,
     export_hfc_baseline,
 )
 
@@ -2629,6 +2630,15 @@ class ReportsViewSet(viewsets.ViewSet):
         return self._response_pdf(
             f'impexp_rec_subst_{params}',
             export_impexp_rec_subst(periods=periods)
+        )
+
+    @action(detail=False, methods=["get"])
+    def impexp_new_rec_agg(self, request):
+        periods = self._get_periods(request)
+        params = "_".join(p.name for p in periods)
+        return self._response_pdf(
+            f'impexp_rec_subst_{params}',
+            export_impexp_new_rec_agg(periods=periods)
         )
 
     @action(detail=False, methods=["get"])
